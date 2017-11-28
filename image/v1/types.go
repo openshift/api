@@ -207,6 +207,9 @@ type TagReference struct {
 	// Optional; if specified, annotations that are applied to images retrieved via ImageStreamTags.
 	// +optional
 	Annotations map[string]string `json:"annotations" protobuf:"bytes,2,rep,name=annotations"`
+	// Optional; if specified, labels that are applied to images retrieved via ImageStreamTags.
+	// +optional
+	Labels map[string]string `json:"labels" protobuf:"bytes,8,rep,name=labels"`
 	// Optional; if specified, a reference to another image that this tag should point to. Valid values
 	// are ImageStreamTag, ImageStreamImage, and DockerImage.
 	From *corev1.ObjectReference `json:"from,omitempty" protobuf:"bytes,3,opt,name=from"`

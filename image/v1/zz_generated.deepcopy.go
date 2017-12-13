@@ -864,6 +864,13 @@ func (in *TagReference) DeepCopyInto(out *TagReference) {
 			(*out)[key] = val
 		}
 	}
+	if in.Labels != nil {
+		in, out := &in.Labels, &out.Labels
+		*out = make(map[string]string, len(*in))
+		for key, val := range *in {
+			(*out)[key] = val
+		}
+	}
 	if in.From != nil {
 		in, out := &in.From, &out.From
 		if *in == nil {

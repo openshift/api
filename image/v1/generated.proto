@@ -468,6 +468,10 @@ message TagReference {
   // +optional
   map<string, string> annotations = 2;
 
+  // Optional; if specified, labels that are applied to images retrieved via ImageStreamTags.
+  // +optional
+  map<string, string> labels = 8;
+
   // Optional; if specified, a reference to another image that this tag should point to. Valid values
   // are ImageStreamTag, ImageStreamImage, and DockerImage.
   optional k8s.io.api.core.v1.ObjectReference from = 3;

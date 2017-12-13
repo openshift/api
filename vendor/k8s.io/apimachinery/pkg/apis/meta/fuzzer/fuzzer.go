@@ -268,8 +268,7 @@ func v1alpha1FuzzerFuncs(codecs runtimeserializer.CodecFactory) []interface{} {
 				case 0:
 					r.Cells[i] = c.RandString()
 				case 1:
-					// largest representable int (unstructured data parses as floats)
-					r.Cells[i] = float64(c.Int63n(9007199254740991))
+					r.Cells[i] = c.Uint64()
 				case 2:
 					r.Cells[i] = c.RandBool()
 				case 3:
@@ -281,8 +280,7 @@ func v1alpha1FuzzerFuncs(codecs runtimeserializer.CodecFactory) []interface{} {
 				case 4:
 					x := make([]interface{}, c.Intn(10))
 					for i := range x {
-						// largest representable int (unstructured data parses as floats)
-						x[i] = float64(c.Int63n(9007199254740991))
+						x[i] = c.Uint64()
 					}
 					r.Cells[i] = x
 				default:

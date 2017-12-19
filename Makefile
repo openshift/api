@@ -16,6 +16,10 @@ build:
 	go build github.com/openshift/api/user/...
 .PHONY: build
 
+test:
+	go test github.com/openshift/api/pkg/testing/...
+.PHONY: test
+
 verify:
 	hack/verify-deepcopy.sh
 	hack/verify-protobuf.sh

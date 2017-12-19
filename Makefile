@@ -22,10 +22,6 @@ verify:
 	hack/verify-swagger-docs.sh
 .PHONY: verify
 
-clean:
-	rm -rf _output
-.PHONY: clean
-
 update-deps:
 	hack/update-deps.sh
 .PHONY: update-deps

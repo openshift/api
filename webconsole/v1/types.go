@@ -13,55 +13,55 @@ type WebConsoleConfiguration struct {
 	// ServingInfo is the HTTP serving information for these assets
 	ServingInfo HTTPServingInfo `json:"servingInfo" protobuf:"bytes,1,opt,name=servingInfo"`
 
-	// PublicURL is where you can find the asset server (TODO do we really need this?)
-	PublicURL string `json:"publicURL" protobuf:"bytes,2,opt,name=publicURL"`
+	// ClusterInfo holds information the web console needs to talk to the cluster such as master public URL
+	// and metrics public URL
+	ClusterInfo ClusterInfo `json:"clusterInfo" protobuf:"bytes,2,rep,name=clusterInfo"`
 
-	// LogoutURL is an optional, absolute URL to redirect web browsers to after logging out of the web console.
-	// If not specified, the built-in logout page is shown.
-	LogoutURL string `json:"logoutURL" protobuf:"bytes,3,opt,name=logoutURL"`
+	// Features define various feature gates for the web console
+	Features FeaturesConfiguration `json:"features" protobuf:"bytes,3,opt,name=featureInfo"`
 
-	// MasterPublicURL is how the web console can access the OpenShift v1 server
-	MasterPublicURL string `json:"masterPublicURL" protobuf:"bytes,4,opt,name=masterPublicURL"`
-
-	// LoggingPublicURL is the public endpoint for logging (optional)
-	LoggingPublicURL string `json:"loggingPublicURL" protobuf:"bytes,5,opt,name=loggingPublicURL"`
-
-	// MetricsPublicURL is the public endpoint for metrics (optional)
-	MetricsPublicURL string `json:"metricsPublicURL" protobuf:"bytes,6,opt,name=metricsPublicURL"`
-
-	// ExtensionScripts are file paths on the asset server files to load as scripts when the Web
-	// Console loads
-	ExtensionScripts []string `json:"extensionScripts" protobuf:"bytes,7,rep,name=extensionScripts"`
-
-	// ExtensionProperties are key(string) and value(string) pairs that will be injected into the console under
-	// the global variable OPENSHIFT_EXTENSION_PROPERTIES
-	ExtensionProperties map[string]string `json:"extensionProperties" protobuf:"bytes,8,rep,name=extensionProperties"`
-
-	// ExtensionStylesheets are file paths on the asset server files to load as stylesheets when
-	// the Web Console loads
-	ExtensionStylesheets []string `json:"extensionStylesheets" protobuf:"bytes,9,rep,name=extensionStylesheets"`
-
-	// Extensions are files to serve from the asset server filesystem under a subcontext
-	Extensions []AssetExtensionsConfig `json:"extensions" protobuf:"bytes,10,rep,name=extensions"`
-
-	// ExtensionDevelopment when true tells the asset server to reload extension scripts and
-	// stylesheets for every request rather than only at startup. It lets you develop extensions
-	// without having to restart the server for every change.
-	ExtensionDevelopment bool `json:"extensionDevelopment" protobuf:"varint,11,opt,name=extensionDevelopment"`
+	// Extensions define custom scripts, stylesheets, and properties used for web console customization
+	Extensions ExtensionsConfiguration `json:"extensions" protobuf:"bytes,4,rep,name=extensions"`
 }
 
-// AssetExtensionsConfig holds the necessary configuration options for asset extensions
-type AssetExtensionsConfig struct {
-	// SubContext is the path under /<context>/extensions/ to serve files from SourceDirectory
-	Name string `json:"name" protobuf:"bytes,1,opt,name=name"`
-	// SourceDirectory is a directory on the asset server to serve files under Name in the Web
-	// Console. It may have nested folders.
-	SourceDirectory string `json:"sourceDirectory" protobuf:"bytes,2,opt,name=sourceDirectory"`
-	// HTML5Mode determines whether to redirect to the root index.html when a file is not found.
-	// This is needed for apps that use the HTML5 history API like AngularJS apps with HTML5
-	// mode enabled. If HTML5Mode is true, also rewrite the base element in index.html with the
-	// Web Console's context root. Defaults to false.
-	HTML5Mode bool `json:"html5Mode" protobuf:"varint,3,opt,name=html5Mode"`
+// ClusterInfo holds information the web console needs to talk to the cluster such as master public URL and
+// metrics public URL
+type ClusterInfo struct {
+	// ConsolePublicURL is where you can find the web console server (TODO do we really need this?)
+	ConsolePublicURL string `json:"consolePublicURL" protobuf:"bytes,1,opt,name=consolePublicURL"`
+
+	// MasterPublicURL is how the web console can access the OpenShift v1 server
+	MasterPublicURL string `json:"masterPublicURL" protobuf:"bytes,2,opt,name=masterPublicURL"`
+
+	// LoggingPublicURL is the public endpoint for logging (optional)
+	LoggingPublicURL string `json:"loggingPublicURL" protobuf:"bytes,3,opt,name=loggingPublicURL"`
+
+	// MetricsPublicURL is the public endpoint for metrics (optional)
+	MetricsPublicURL string `json:"metricsPublicURL" protobuf:"bytes,4,opt,name=metricsPublicURL"`
+
+	// LogoutPublicURL is an optional, absolute URL to redirect web browsers to after logging out of the web
+	// console. If not specified, the built-in logout page is shown.
+	LogoutPublicURL string `json:"logoutPublicURL" protobuf:"bytes,5,opt,name=logoutPublicURL"`
+}
+
+// FeaturesConfiguration defines various feature gates for the web console
+type FeaturesConfiguration struct {
+	// InactivityTimeoutMinutes is the number of minutes of inactivity before you are automatically logged out of
+	// the web console (optional). If set to 0, inactivity timeout is disabled.
+	InactivityTimeoutMinutes int64 `json:"inactivityTimeoutMinutes" protobuf:"varint,1,opt,name=inactivityTimeoutMinutes"`
+}
+
+// ExtensionsConfiguration holds custom script, stylesheets, and properties used for web console customization
+type ExtensionsConfiguration struct {
+	// ScriptURLs are URLs to load as scripts when the Web Console loads. The URLs must be accessible from
+	// the browser.
+	ScriptURLs []string `json:"scriptURLs" protobuf:"bytes,1,rep,name=scriptURLs"`
+	// StylesheetURLs are URLs to load as stylesheets when the Web Console loads. The URLs must be accessible
+	// from the browser.
+	StylesheetURLs []string `json:"stylesheetURLs" protobuf:"bytes,2,rep,name=stylesheetURLs"`
+	// Properties are key(string) and value(string) pairs that will be injected into the console under the
+	// global variable OPENSHIFT_EXTENSION_PROPERTIES
+	Properties map[string]string `json:"properties" protobuf:"bytes,3,rep,name=properties"`
 }
 
 // HTTPServingInfo holds configuration for serving HTTP

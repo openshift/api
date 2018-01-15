@@ -9,8 +9,10 @@
 		github.com/openshift/api/webconsole/v1/generated.proto
 
 	It has these top-level messages:
-		AssetExtensionsConfig
 		CertInfo
+		ClusterInfo
+		ExtensionsConfiguration
+		FeaturesConfiguration
 		HTTPServingInfo
 		NamedCertificate
 		ServingInfo
@@ -40,72 +42,48 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion2 // please upgrade the proto package
 
-func (m *AssetExtensionsConfig) Reset()                    { *m = AssetExtensionsConfig{} }
-func (*AssetExtensionsConfig) ProtoMessage()               {}
-func (*AssetExtensionsConfig) Descriptor() ([]byte, []int) { return fileDescriptorGenerated, []int{0} }
-
 func (m *CertInfo) Reset()                    { *m = CertInfo{} }
 func (*CertInfo) ProtoMessage()               {}
-func (*CertInfo) Descriptor() ([]byte, []int) { return fileDescriptorGenerated, []int{1} }
+func (*CertInfo) Descriptor() ([]byte, []int) { return fileDescriptorGenerated, []int{0} }
+
+func (m *ClusterInfo) Reset()                    { *m = ClusterInfo{} }
+func (*ClusterInfo) ProtoMessage()               {}
+func (*ClusterInfo) Descriptor() ([]byte, []int) { return fileDescriptorGenerated, []int{1} }
+
+func (m *ExtensionsConfiguration) Reset()                    { *m = ExtensionsConfiguration{} }
+func (*ExtensionsConfiguration) ProtoMessage()               {}
+func (*ExtensionsConfiguration) Descriptor() ([]byte, []int) { return fileDescriptorGenerated, []int{2} }
+
+func (m *FeaturesConfiguration) Reset()                    { *m = FeaturesConfiguration{} }
+func (*FeaturesConfiguration) ProtoMessage()               {}
+func (*FeaturesConfiguration) Descriptor() ([]byte, []int) { return fileDescriptorGenerated, []int{3} }
 
 func (m *HTTPServingInfo) Reset()                    { *m = HTTPServingInfo{} }
 func (*HTTPServingInfo) ProtoMessage()               {}
-func (*HTTPServingInfo) Descriptor() ([]byte, []int) { return fileDescriptorGenerated, []int{2} }
+func (*HTTPServingInfo) Descriptor() ([]byte, []int) { return fileDescriptorGenerated, []int{4} }
 
 func (m *NamedCertificate) Reset()                    { *m = NamedCertificate{} }
 func (*NamedCertificate) ProtoMessage()               {}
-func (*NamedCertificate) Descriptor() ([]byte, []int) { return fileDescriptorGenerated, []int{3} }
+func (*NamedCertificate) Descriptor() ([]byte, []int) { return fileDescriptorGenerated, []int{5} }
 
 func (m *ServingInfo) Reset()                    { *m = ServingInfo{} }
 func (*ServingInfo) ProtoMessage()               {}
-func (*ServingInfo) Descriptor() ([]byte, []int) { return fileDescriptorGenerated, []int{4} }
+func (*ServingInfo) Descriptor() ([]byte, []int) { return fileDescriptorGenerated, []int{6} }
 
 func (m *WebConsoleConfiguration) Reset()                    { *m = WebConsoleConfiguration{} }
 func (*WebConsoleConfiguration) ProtoMessage()               {}
-func (*WebConsoleConfiguration) Descriptor() ([]byte, []int) { return fileDescriptorGenerated, []int{5} }
+func (*WebConsoleConfiguration) Descriptor() ([]byte, []int) { return fileDescriptorGenerated, []int{7} }
 
 func init() {
-	proto.RegisterType((*AssetExtensionsConfig)(nil), "github.com.openshift.api.webconsole.v1.AssetExtensionsConfig")
 	proto.RegisterType((*CertInfo)(nil), "github.com.openshift.api.webconsole.v1.CertInfo")
+	proto.RegisterType((*ClusterInfo)(nil), "github.com.openshift.api.webconsole.v1.ClusterInfo")
+	proto.RegisterType((*ExtensionsConfiguration)(nil), "github.com.openshift.api.webconsole.v1.ExtensionsConfiguration")
+	proto.RegisterType((*FeaturesConfiguration)(nil), "github.com.openshift.api.webconsole.v1.FeaturesConfiguration")
 	proto.RegisterType((*HTTPServingInfo)(nil), "github.com.openshift.api.webconsole.v1.HTTPServingInfo")
 	proto.RegisterType((*NamedCertificate)(nil), "github.com.openshift.api.webconsole.v1.NamedCertificate")
 	proto.RegisterType((*ServingInfo)(nil), "github.com.openshift.api.webconsole.v1.ServingInfo")
 	proto.RegisterType((*WebConsoleConfiguration)(nil), "github.com.openshift.api.webconsole.v1.WebConsoleConfiguration")
 }
-func (m *AssetExtensionsConfig) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *AssetExtensionsConfig) MarshalTo(dAtA []byte) (int, error) {
-	var i int
-	_ = i
-	var l int
-	_ = l
-	dAtA[i] = 0xa
-	i++
-	i = encodeVarintGenerated(dAtA, i, uint64(len(m.Name)))
-	i += copy(dAtA[i:], m.Name)
-	dAtA[i] = 0x12
-	i++
-	i = encodeVarintGenerated(dAtA, i, uint64(len(m.SourceDirectory)))
-	i += copy(dAtA[i:], m.SourceDirectory)
-	dAtA[i] = 0x18
-	i++
-	if m.HTML5Mode {
-		dAtA[i] = 1
-	} else {
-		dAtA[i] = 0
-	}
-	i++
-	return i, nil
-}
-
 func (m *CertInfo) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -129,6 +107,135 @@ func (m *CertInfo) MarshalTo(dAtA []byte) (int, error) {
 	i++
 	i = encodeVarintGenerated(dAtA, i, uint64(len(m.KeyFile)))
 	i += copy(dAtA[i:], m.KeyFile)
+	return i, nil
+}
+
+func (m *ClusterInfo) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *ClusterInfo) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	dAtA[i] = 0xa
+	i++
+	i = encodeVarintGenerated(dAtA, i, uint64(len(m.ConsolePublicURL)))
+	i += copy(dAtA[i:], m.ConsolePublicURL)
+	dAtA[i] = 0x12
+	i++
+	i = encodeVarintGenerated(dAtA, i, uint64(len(m.MasterPublicURL)))
+	i += copy(dAtA[i:], m.MasterPublicURL)
+	dAtA[i] = 0x1a
+	i++
+	i = encodeVarintGenerated(dAtA, i, uint64(len(m.LoggingPublicURL)))
+	i += copy(dAtA[i:], m.LoggingPublicURL)
+	dAtA[i] = 0x22
+	i++
+	i = encodeVarintGenerated(dAtA, i, uint64(len(m.MetricsPublicURL)))
+	i += copy(dAtA[i:], m.MetricsPublicURL)
+	dAtA[i] = 0x2a
+	i++
+	i = encodeVarintGenerated(dAtA, i, uint64(len(m.LogoutPublicURL)))
+	i += copy(dAtA[i:], m.LogoutPublicURL)
+	return i, nil
+}
+
+func (m *ExtensionsConfiguration) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *ExtensionsConfiguration) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if len(m.ScriptURLs) > 0 {
+		for _, s := range m.ScriptURLs {
+			dAtA[i] = 0xa
+			i++
+			l = len(s)
+			for l >= 1<<7 {
+				dAtA[i] = uint8(uint64(l)&0x7f | 0x80)
+				l >>= 7
+				i++
+			}
+			dAtA[i] = uint8(l)
+			i++
+			i += copy(dAtA[i:], s)
+		}
+	}
+	if len(m.StylesheetURLs) > 0 {
+		for _, s := range m.StylesheetURLs {
+			dAtA[i] = 0x12
+			i++
+			l = len(s)
+			for l >= 1<<7 {
+				dAtA[i] = uint8(uint64(l)&0x7f | 0x80)
+				l >>= 7
+				i++
+			}
+			dAtA[i] = uint8(l)
+			i++
+			i += copy(dAtA[i:], s)
+		}
+	}
+	if len(m.Properties) > 0 {
+		keysForProperties := make([]string, 0, len(m.Properties))
+		for k := range m.Properties {
+			keysForProperties = append(keysForProperties, string(k))
+		}
+		github_com_gogo_protobuf_sortkeys.Strings(keysForProperties)
+		for _, k := range keysForProperties {
+			dAtA[i] = 0x1a
+			i++
+			v := m.Properties[string(k)]
+			mapSize := 1 + len(k) + sovGenerated(uint64(len(k))) + 1 + len(v) + sovGenerated(uint64(len(v)))
+			i = encodeVarintGenerated(dAtA, i, uint64(mapSize))
+			dAtA[i] = 0xa
+			i++
+			i = encodeVarintGenerated(dAtA, i, uint64(len(k)))
+			i += copy(dAtA[i:], k)
+			dAtA[i] = 0x12
+			i++
+			i = encodeVarintGenerated(dAtA, i, uint64(len(v)))
+			i += copy(dAtA[i:], v)
+		}
+	}
+	return i, nil
+}
+
+func (m *FeaturesConfiguration) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *FeaturesConfiguration) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	dAtA[i] = 0x8
+	i++
+	i = encodeVarintGenerated(dAtA, i, uint64(m.InactivityTimeoutMinutes))
 	return i, nil
 }
 
@@ -299,96 +406,28 @@ func (m *WebConsoleConfiguration) MarshalTo(dAtA []byte) (int, error) {
 	i += n4
 	dAtA[i] = 0x12
 	i++
-	i = encodeVarintGenerated(dAtA, i, uint64(len(m.PublicURL)))
-	i += copy(dAtA[i:], m.PublicURL)
+	i = encodeVarintGenerated(dAtA, i, uint64(m.ClusterInfo.Size()))
+	n5, err := m.ClusterInfo.MarshalTo(dAtA[i:])
+	if err != nil {
+		return 0, err
+	}
+	i += n5
 	dAtA[i] = 0x1a
 	i++
-	i = encodeVarintGenerated(dAtA, i, uint64(len(m.LogoutURL)))
-	i += copy(dAtA[i:], m.LogoutURL)
+	i = encodeVarintGenerated(dAtA, i, uint64(m.Features.Size()))
+	n6, err := m.Features.MarshalTo(dAtA[i:])
+	if err != nil {
+		return 0, err
+	}
+	i += n6
 	dAtA[i] = 0x22
 	i++
-	i = encodeVarintGenerated(dAtA, i, uint64(len(m.MasterPublicURL)))
-	i += copy(dAtA[i:], m.MasterPublicURL)
-	dAtA[i] = 0x2a
-	i++
-	i = encodeVarintGenerated(dAtA, i, uint64(len(m.LoggingPublicURL)))
-	i += copy(dAtA[i:], m.LoggingPublicURL)
-	dAtA[i] = 0x32
-	i++
-	i = encodeVarintGenerated(dAtA, i, uint64(len(m.MetricsPublicURL)))
-	i += copy(dAtA[i:], m.MetricsPublicURL)
-	if len(m.ExtensionScripts) > 0 {
-		for _, s := range m.ExtensionScripts {
-			dAtA[i] = 0x3a
-			i++
-			l = len(s)
-			for l >= 1<<7 {
-				dAtA[i] = uint8(uint64(l)&0x7f | 0x80)
-				l >>= 7
-				i++
-			}
-			dAtA[i] = uint8(l)
-			i++
-			i += copy(dAtA[i:], s)
-		}
+	i = encodeVarintGenerated(dAtA, i, uint64(m.Extensions.Size()))
+	n7, err := m.Extensions.MarshalTo(dAtA[i:])
+	if err != nil {
+		return 0, err
 	}
-	if len(m.ExtensionProperties) > 0 {
-		keysForExtensionProperties := make([]string, 0, len(m.ExtensionProperties))
-		for k := range m.ExtensionProperties {
-			keysForExtensionProperties = append(keysForExtensionProperties, string(k))
-		}
-		github_com_gogo_protobuf_sortkeys.Strings(keysForExtensionProperties)
-		for _, k := range keysForExtensionProperties {
-			dAtA[i] = 0x42
-			i++
-			v := m.ExtensionProperties[string(k)]
-			mapSize := 1 + len(k) + sovGenerated(uint64(len(k))) + 1 + len(v) + sovGenerated(uint64(len(v)))
-			i = encodeVarintGenerated(dAtA, i, uint64(mapSize))
-			dAtA[i] = 0xa
-			i++
-			i = encodeVarintGenerated(dAtA, i, uint64(len(k)))
-			i += copy(dAtA[i:], k)
-			dAtA[i] = 0x12
-			i++
-			i = encodeVarintGenerated(dAtA, i, uint64(len(v)))
-			i += copy(dAtA[i:], v)
-		}
-	}
-	if len(m.ExtensionStylesheets) > 0 {
-		for _, s := range m.ExtensionStylesheets {
-			dAtA[i] = 0x4a
-			i++
-			l = len(s)
-			for l >= 1<<7 {
-				dAtA[i] = uint8(uint64(l)&0x7f | 0x80)
-				l >>= 7
-				i++
-			}
-			dAtA[i] = uint8(l)
-			i++
-			i += copy(dAtA[i:], s)
-		}
-	}
-	if len(m.Extensions) > 0 {
-		for _, msg := range m.Extensions {
-			dAtA[i] = 0x52
-			i++
-			i = encodeVarintGenerated(dAtA, i, uint64(msg.Size()))
-			n, err := msg.MarshalTo(dAtA[i:])
-			if err != nil {
-				return 0, err
-			}
-			i += n
-		}
-	}
-	dAtA[i] = 0x58
-	i++
-	if m.ExtensionDevelopment {
-		dAtA[i] = 1
-	} else {
-		dAtA[i] = 0
-	}
-	i++
+	i += n7
 	return i, nil
 }
 
@@ -419,17 +458,6 @@ func encodeVarintGenerated(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return offset + 1
 }
-func (m *AssetExtensionsConfig) Size() (n int) {
-	var l int
-	_ = l
-	l = len(m.Name)
-	n += 1 + l + sovGenerated(uint64(l))
-	l = len(m.SourceDirectory)
-	n += 1 + l + sovGenerated(uint64(l))
-	n += 2
-	return n
-}
-
 func (m *CertInfo) Size() (n int) {
 	var l int
 	_ = l
@@ -437,6 +465,55 @@ func (m *CertInfo) Size() (n int) {
 	n += 1 + l + sovGenerated(uint64(l))
 	l = len(m.KeyFile)
 	n += 1 + l + sovGenerated(uint64(l))
+	return n
+}
+
+func (m *ClusterInfo) Size() (n int) {
+	var l int
+	_ = l
+	l = len(m.ConsolePublicURL)
+	n += 1 + l + sovGenerated(uint64(l))
+	l = len(m.MasterPublicURL)
+	n += 1 + l + sovGenerated(uint64(l))
+	l = len(m.LoggingPublicURL)
+	n += 1 + l + sovGenerated(uint64(l))
+	l = len(m.MetricsPublicURL)
+	n += 1 + l + sovGenerated(uint64(l))
+	l = len(m.LogoutPublicURL)
+	n += 1 + l + sovGenerated(uint64(l))
+	return n
+}
+
+func (m *ExtensionsConfiguration) Size() (n int) {
+	var l int
+	_ = l
+	if len(m.ScriptURLs) > 0 {
+		for _, s := range m.ScriptURLs {
+			l = len(s)
+			n += 1 + l + sovGenerated(uint64(l))
+		}
+	}
+	if len(m.StylesheetURLs) > 0 {
+		for _, s := range m.StylesheetURLs {
+			l = len(s)
+			n += 1 + l + sovGenerated(uint64(l))
+		}
+	}
+	if len(m.Properties) > 0 {
+		for k, v := range m.Properties {
+			_ = k
+			_ = v
+			mapEntrySize := 1 + len(k) + sovGenerated(uint64(len(k))) + 1 + len(v) + sovGenerated(uint64(len(v)))
+			n += mapEntrySize + 1 + sovGenerated(uint64(mapEntrySize))
+		}
+	}
+	return n
+}
+
+func (m *FeaturesConfiguration) Size() (n int) {
+	var l int
+	_ = l
+	n += 1 + sovGenerated(uint64(m.InactivityTimeoutMinutes))
 	return n
 }
 
@@ -497,43 +574,12 @@ func (m *WebConsoleConfiguration) Size() (n int) {
 	_ = l
 	l = m.ServingInfo.Size()
 	n += 1 + l + sovGenerated(uint64(l))
-	l = len(m.PublicURL)
+	l = m.ClusterInfo.Size()
 	n += 1 + l + sovGenerated(uint64(l))
-	l = len(m.LogoutURL)
+	l = m.Features.Size()
 	n += 1 + l + sovGenerated(uint64(l))
-	l = len(m.MasterPublicURL)
+	l = m.Extensions.Size()
 	n += 1 + l + sovGenerated(uint64(l))
-	l = len(m.LoggingPublicURL)
-	n += 1 + l + sovGenerated(uint64(l))
-	l = len(m.MetricsPublicURL)
-	n += 1 + l + sovGenerated(uint64(l))
-	if len(m.ExtensionScripts) > 0 {
-		for _, s := range m.ExtensionScripts {
-			l = len(s)
-			n += 1 + l + sovGenerated(uint64(l))
-		}
-	}
-	if len(m.ExtensionProperties) > 0 {
-		for k, v := range m.ExtensionProperties {
-			_ = k
-			_ = v
-			mapEntrySize := 1 + len(k) + sovGenerated(uint64(len(k))) + 1 + len(v) + sovGenerated(uint64(len(v)))
-			n += mapEntrySize + 1 + sovGenerated(uint64(mapEntrySize))
-		}
-	}
-	if len(m.ExtensionStylesheets) > 0 {
-		for _, s := range m.ExtensionStylesheets {
-			l = len(s)
-			n += 1 + l + sovGenerated(uint64(l))
-		}
-	}
-	if len(m.Extensions) > 0 {
-		for _, e := range m.Extensions {
-			l = e.Size()
-			n += 1 + l + sovGenerated(uint64(l))
-		}
-	}
-	n += 2
 	return n
 }
 
@@ -550,18 +596,6 @@ func sovGenerated(x uint64) (n int) {
 func sozGenerated(x uint64) (n int) {
 	return sovGenerated(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-func (this *AssetExtensionsConfig) String() string {
-	if this == nil {
-		return "nil"
-	}
-	s := strings.Join([]string{`&AssetExtensionsConfig{`,
-		`Name:` + fmt.Sprintf("%v", this.Name) + `,`,
-		`SourceDirectory:` + fmt.Sprintf("%v", this.SourceDirectory) + `,`,
-		`HTML5Mode:` + fmt.Sprintf("%v", this.HTML5Mode) + `,`,
-		`}`,
-	}, "")
-	return s
-}
 func (this *CertInfo) String() string {
 	if this == nil {
 		return "nil"
@@ -569,6 +603,52 @@ func (this *CertInfo) String() string {
 	s := strings.Join([]string{`&CertInfo{`,
 		`CertFile:` + fmt.Sprintf("%v", this.CertFile) + `,`,
 		`KeyFile:` + fmt.Sprintf("%v", this.KeyFile) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *ClusterInfo) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&ClusterInfo{`,
+		`ConsolePublicURL:` + fmt.Sprintf("%v", this.ConsolePublicURL) + `,`,
+		`MasterPublicURL:` + fmt.Sprintf("%v", this.MasterPublicURL) + `,`,
+		`LoggingPublicURL:` + fmt.Sprintf("%v", this.LoggingPublicURL) + `,`,
+		`MetricsPublicURL:` + fmt.Sprintf("%v", this.MetricsPublicURL) + `,`,
+		`LogoutPublicURL:` + fmt.Sprintf("%v", this.LogoutPublicURL) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *ExtensionsConfiguration) String() string {
+	if this == nil {
+		return "nil"
+	}
+	keysForProperties := make([]string, 0, len(this.Properties))
+	for k := range this.Properties {
+		keysForProperties = append(keysForProperties, k)
+	}
+	github_com_gogo_protobuf_sortkeys.Strings(keysForProperties)
+	mapStringForProperties := "map[string]string{"
+	for _, k := range keysForProperties {
+		mapStringForProperties += fmt.Sprintf("%v: %v,", k, this.Properties[k])
+	}
+	mapStringForProperties += "}"
+	s := strings.Join([]string{`&ExtensionsConfiguration{`,
+		`ScriptURLs:` + fmt.Sprintf("%v", this.ScriptURLs) + `,`,
+		`StylesheetURLs:` + fmt.Sprintf("%v", this.StylesheetURLs) + `,`,
+		`Properties:` + mapStringForProperties + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *FeaturesConfiguration) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&FeaturesConfiguration{`,
+		`InactivityTimeoutMinutes:` + fmt.Sprintf("%v", this.InactivityTimeoutMinutes) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -616,28 +696,11 @@ func (this *WebConsoleConfiguration) String() string {
 	if this == nil {
 		return "nil"
 	}
-	keysForExtensionProperties := make([]string, 0, len(this.ExtensionProperties))
-	for k := range this.ExtensionProperties {
-		keysForExtensionProperties = append(keysForExtensionProperties, k)
-	}
-	github_com_gogo_protobuf_sortkeys.Strings(keysForExtensionProperties)
-	mapStringForExtensionProperties := "map[string]string{"
-	for _, k := range keysForExtensionProperties {
-		mapStringForExtensionProperties += fmt.Sprintf("%v: %v,", k, this.ExtensionProperties[k])
-	}
-	mapStringForExtensionProperties += "}"
 	s := strings.Join([]string{`&WebConsoleConfiguration{`,
 		`ServingInfo:` + strings.Replace(strings.Replace(this.ServingInfo.String(), "HTTPServingInfo", "HTTPServingInfo", 1), `&`, ``, 1) + `,`,
-		`PublicURL:` + fmt.Sprintf("%v", this.PublicURL) + `,`,
-		`LogoutURL:` + fmt.Sprintf("%v", this.LogoutURL) + `,`,
-		`MasterPublicURL:` + fmt.Sprintf("%v", this.MasterPublicURL) + `,`,
-		`LoggingPublicURL:` + fmt.Sprintf("%v", this.LoggingPublicURL) + `,`,
-		`MetricsPublicURL:` + fmt.Sprintf("%v", this.MetricsPublicURL) + `,`,
-		`ExtensionScripts:` + fmt.Sprintf("%v", this.ExtensionScripts) + `,`,
-		`ExtensionProperties:` + mapStringForExtensionProperties + `,`,
-		`ExtensionStylesheets:` + fmt.Sprintf("%v", this.ExtensionStylesheets) + `,`,
-		`Extensions:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.Extensions), "AssetExtensionsConfig", "AssetExtensionsConfig", 1), `&`, ``, 1) + `,`,
-		`ExtensionDevelopment:` + fmt.Sprintf("%v", this.ExtensionDevelopment) + `,`,
+		`ClusterInfo:` + strings.Replace(strings.Replace(this.ClusterInfo.String(), "ClusterInfo", "ClusterInfo", 1), `&`, ``, 1) + `,`,
+		`Features:` + strings.Replace(strings.Replace(this.Features.String(), "FeaturesConfiguration", "FeaturesConfiguration", 1), `&`, ``, 1) + `,`,
+		`Extensions:` + strings.Replace(strings.Replace(this.Extensions.String(), "ExtensionsConfiguration", "ExtensionsConfiguration", 1), `&`, ``, 1) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -649,134 +712,6 @@ func valueToStringGenerated(v interface{}) string {
 	}
 	pv := reflect.Indirect(rv).Interface()
 	return fmt.Sprintf("*%v", pv)
-}
-func (m *AssetExtensionsConfig) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowGenerated
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: AssetExtensionsConfig: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: AssetExtensionsConfig: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= (uint64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Name = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field SourceDirectory", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= (uint64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.SourceDirectory = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 3:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field HTML5Mode", wireType)
-			}
-			var v int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			m.HTML5Mode = bool(v != 0)
-		default:
-			iNdEx = preIndex
-			skippy, err := skipGenerated(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
 }
 func (m *CertInfo) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
@@ -865,6 +800,494 @@ func (m *CertInfo) Unmarshal(dAtA []byte) error {
 			}
 			m.KeyFile = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipGenerated(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *ClusterInfo) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowGenerated
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ClusterInfo: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ClusterInfo: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ConsolePublicURL", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ConsolePublicURL = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MasterPublicURL", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.MasterPublicURL = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LoggingPublicURL", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.LoggingPublicURL = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MetricsPublicURL", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.MetricsPublicURL = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LogoutPublicURL", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.LogoutPublicURL = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipGenerated(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *ExtensionsConfiguration) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowGenerated
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ExtensionsConfiguration: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ExtensionsConfiguration: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ScriptURLs", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ScriptURLs = append(m.ScriptURLs, string(dAtA[iNdEx:postIndex]))
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field StylesheetURLs", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.StylesheetURLs = append(m.StylesheetURLs, string(dAtA[iNdEx:postIndex]))
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Properties", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			var keykey uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				keykey |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			var stringLenmapkey uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLenmapkey |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLenmapkey := int(stringLenmapkey)
+			if intStringLenmapkey < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postStringIndexmapkey := iNdEx + intStringLenmapkey
+			if postStringIndexmapkey > l {
+				return io.ErrUnexpectedEOF
+			}
+			mapkey := string(dAtA[iNdEx:postStringIndexmapkey])
+			iNdEx = postStringIndexmapkey
+			if m.Properties == nil {
+				m.Properties = make(map[string]string)
+			}
+			if iNdEx < postIndex {
+				var valuekey uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowGenerated
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					valuekey |= (uint64(b) & 0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				var stringLenmapvalue uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowGenerated
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					stringLenmapvalue |= (uint64(b) & 0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				intStringLenmapvalue := int(stringLenmapvalue)
+				if intStringLenmapvalue < 0 {
+					return ErrInvalidLengthGenerated
+				}
+				postStringIndexmapvalue := iNdEx + intStringLenmapvalue
+				if postStringIndexmapvalue > l {
+					return io.ErrUnexpectedEOF
+				}
+				mapvalue := string(dAtA[iNdEx:postStringIndexmapvalue])
+				iNdEx = postStringIndexmapvalue
+				m.Properties[mapkey] = mapvalue
+			} else {
+				var mapvalue string
+				m.Properties[mapkey] = mapvalue
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipGenerated(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *FeaturesConfiguration) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowGenerated
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: FeaturesConfiguration: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: FeaturesConfiguration: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field InactivityTimeoutMinutes", wireType)
+			}
+			m.InactivityTimeoutMinutes = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.InactivityTimeoutMinutes |= (int64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipGenerated(dAtA[iNdEx:])
@@ -1430,181 +1853,7 @@ func (m *WebConsoleConfiguration) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field PublicURL", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= (uint64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.PublicURL = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field LogoutURL", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= (uint64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.LogoutURL = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 4:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field MasterPublicURL", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= (uint64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.MasterPublicURL = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 5:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field LoggingPublicURL", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= (uint64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.LoggingPublicURL = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 6:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field MetricsPublicURL", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= (uint64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.MetricsPublicURL = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 7:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ExtensionScripts", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= (uint64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.ExtensionScripts = append(m.ExtensionScripts, string(dAtA[iNdEx:postIndex]))
-			iNdEx = postIndex
-		case 8:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ExtensionProperties", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ClusterInfo", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -1628,101 +1877,15 @@ func (m *WebConsoleConfiguration) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			var keykey uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				keykey |= (uint64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			var stringLenmapkey uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLenmapkey |= (uint64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLenmapkey := int(stringLenmapkey)
-			if intStringLenmapkey < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postStringIndexmapkey := iNdEx + intStringLenmapkey
-			if postStringIndexmapkey > l {
-				return io.ErrUnexpectedEOF
-			}
-			mapkey := string(dAtA[iNdEx:postStringIndexmapkey])
-			iNdEx = postStringIndexmapkey
-			if m.ExtensionProperties == nil {
-				m.ExtensionProperties = make(map[string]string)
-			}
-			if iNdEx < postIndex {
-				var valuekey uint64
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return ErrIntOverflowGenerated
-					}
-					if iNdEx >= l {
-						return io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					valuekey |= (uint64(b) & 0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-				var stringLenmapvalue uint64
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return ErrIntOverflowGenerated
-					}
-					if iNdEx >= l {
-						return io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					stringLenmapvalue |= (uint64(b) & 0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-				intStringLenmapvalue := int(stringLenmapvalue)
-				if intStringLenmapvalue < 0 {
-					return ErrInvalidLengthGenerated
-				}
-				postStringIndexmapvalue := iNdEx + intStringLenmapvalue
-				if postStringIndexmapvalue > l {
-					return io.ErrUnexpectedEOF
-				}
-				mapvalue := string(dAtA[iNdEx:postStringIndexmapvalue])
-				iNdEx = postStringIndexmapvalue
-				m.ExtensionProperties[mapkey] = mapvalue
-			} else {
-				var mapvalue string
-				m.ExtensionProperties[mapkey] = mapvalue
+			if err := m.ClusterInfo.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
 			}
 			iNdEx = postIndex
-		case 9:
+		case 3:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ExtensionStylesheets", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Features", wireType)
 			}
-			var stringLen uint64
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowGenerated
@@ -1732,22 +1895,23 @@ func (m *WebConsoleConfiguration) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				stringLen |= (uint64(b) & 0x7F) << shift
+				msglen |= (int(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
+			if msglen < 0 {
 				return ErrInvalidLengthGenerated
 			}
-			postIndex := iNdEx + intStringLen
+			postIndex := iNdEx + msglen
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ExtensionStylesheets = append(m.ExtensionStylesheets, string(dAtA[iNdEx:postIndex]))
+			if err := m.Features.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
 			iNdEx = postIndex
-		case 10:
+		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Extensions", wireType)
 			}
@@ -1773,31 +1937,10 @@ func (m *WebConsoleConfiguration) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Extensions = append(m.Extensions, AssetExtensionsConfig{})
-			if err := m.Extensions[len(m.Extensions)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.Extensions.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
-		case 11:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ExtensionDevelopment", wireType)
-			}
-			var v int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			m.ExtensionDevelopment = bool(v != 0)
 		default:
 			iNdEx = preIndex
 			skippy, err := skipGenerated(dAtA[iNdEx:])
@@ -1929,69 +2072,68 @@ func init() {
 }
 
 var fileDescriptorGenerated = []byte{
-	// 1012 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x56, 0xcd, 0x6e, 0xdb, 0x46,
-	0x10, 0x36, 0x2d, 0x3b, 0xb6, 0x56, 0x0e, 0x2c, 0xaf, 0x6d, 0x84, 0x75, 0x5b, 0xc9, 0xd0, 0xa1,
-	0x70, 0x81, 0x56, 0xac, 0xf3, 0x57, 0xa3, 0x45, 0x81, 0x5a, 0xfe, 0x41, 0x82, 0x4a, 0x81, 0xb1,
-	0x72, 0x7f, 0xd0, 0x43, 0x01, 0x8a, 0x1a, 0x53, 0x5b, 0x93, 0xbb, 0xca, 0xee, 0x52, 0x89, 0x6e,
-	0xc9, 0x1b, 0x14, 0xe8, 0x13, 0xf4, 0xd4, 0x53, 0xdf, 0xc3, 0xc7, 0x1c, 0x73, 0x12, 0x6a, 0xf5,
-	0x45, 0x0a, 0xae, 0x28, 0x92, 0xa2, 0x68, 0x54, 0x87, 0xde, 0xc4, 0xf9, 0x7e, 0x76, 0x66, 0x76,
-	0x38, 0x14, 0x7a, 0xea, 0x52, 0xd5, 0x0b, 0x3a, 0x75, 0x87, 0xfb, 0x16, 0xef, 0x03, 0x93, 0x3d,
-	0x7a, 0xa5, 0x2c, 0xbb, 0x4f, 0xad, 0x57, 0xd0, 0x71, 0x38, 0x93, 0xdc, 0x03, 0x6b, 0x70, 0x68,
-	0xb9, 0xc0, 0x40, 0xd8, 0x0a, 0xba, 0xf5, 0xbe, 0xe0, 0x8a, 0xe3, 0x4f, 0x12, 0x5d, 0x3d, 0xd6,
-	0xd5, 0xed, 0x3e, 0xad, 0x27, 0xba, 0xfa, 0xe0, 0x70, 0xef, 0xf3, 0x94, 0xbf, 0xcb, 0x5d, 0x6e,
-	0x69, 0x79, 0x27, 0xb8, 0xd2, 0x4f, 0xfa, 0x41, 0xff, 0x9a, 0xd8, 0xee, 0x3d, 0xbe, 0x3e, 0x92,
-	0x75, 0xca, 0xc3, 0x04, 0x7c, 0xdb, 0xe9, 0x51, 0x06, 0x62, 0x68, 0xf5, 0xaf, 0xdd, 0x30, 0x20,
-	0x2d, 0x1f, 0x94, 0x9d, 0x93, 0xcc, 0x9e, 0x75, 0x97, 0x4a, 0x04, 0x4c, 0x51, 0x1f, 0xe6, 0x04,
-	0x4f, 0xff, 0x4b, 0x20, 0x9d, 0x1e, 0xf8, 0xf6, 0x9c, 0xee, 0xd1, 0x5d, 0xba, 0x40, 0x51, 0xcf,
-	0xa2, 0x4c, 0x49, 0x25, 0xb2, 0xa2, 0xda, 0x5f, 0x06, 0xda, 0x3d, 0x96, 0x12, 0xd4, 0xd9, 0x6b,
-	0x05, 0x4c, 0x52, 0xce, 0xe4, 0x09, 0x67, 0x57, 0xd4, 0xc5, 0xfb, 0x68, 0x85, 0xd9, 0x3e, 0x98,
-	0xc6, 0xbe, 0x71, 0x50, 0x6c, 0x6c, 0xdc, 0x8c, 0xaa, 0x4b, 0xe3, 0x51, 0x75, 0xe5, 0x85, 0xed,
-	0x03, 0xd1, 0x08, 0x3e, 0x46, 0x9b, 0x92, 0x07, 0xc2, 0x81, 0x53, 0x2a, 0xc0, 0x51, 0x5c, 0x0c,
-	0xcd, 0x65, 0x4d, 0x7e, 0x10, 0x91, 0x37, 0xdb, 0xb3, 0x30, 0xc9, 0xf2, 0xb1, 0x85, 0x8a, 0x3d,
-	0xe5, 0x7b, 0x4f, 0x5a, 0xbc, 0x0b, 0x66, 0x61, 0xdf, 0x38, 0x58, 0x6f, 0x6c, 0x45, 0xe2, 0xe2,
-	0xb3, 0xcb, 0x56, 0x53, 0x03, 0x24, 0xe1, 0xd4, 0x1c, 0xb4, 0x7e, 0x02, 0x42, 0x3d, 0x67, 0x57,
-	0x1c, 0x7f, 0x86, 0xd6, 0x1d, 0x10, 0xea, 0x9c, 0x7a, 0xd3, 0x2c, 0xcb, 0x91, 0x56, 0x73, 0xc2,
-	0x38, 0x89, 0x19, 0xf8, 0x53, 0xb4, 0x76, 0x0d, 0x43, 0x4d, 0x9e, 0x64, 0xb9, 0x19, 0x91, 0xd7,
-	0xbe, 0x9b, 0x84, 0xc9, 0x14, 0xaf, 0xfd, 0xb1, 0x8c, 0x36, 0x9f, 0x5d, 0x5e, 0x5e, 0xb4, 0x41,
-	0x0c, 0x28, 0x73, 0xf5, 0x61, 0xbf, 0xa2, 0x92, 0x4c, 0x1e, 0xf5, 0x79, 0xa5, 0x87, 0x8f, 0xea,
-	0x8b, 0x4d, 0x5a, 0x3d, 0xe5, 0xd4, 0xd8, 0x8e, 0xce, 0x2d, 0xa5, 0x82, 0x24, 0x6d, 0x8e, 0x5b,
-	0x68, 0xdb, 0xb7, 0x5f, 0x13, 0x78, 0x19, 0x80, 0x54, 0xf2, 0x39, 0x3b, 0xf7, 0xa8, 0xdb, 0x53,
-	0x3a, 0xed, 0x42, 0xe3, 0xc3, 0x48, 0xbe, 0xdd, 0x9a, 0xa7, 0x90, 0x3c, 0x1d, 0x6e, 0xa3, 0x5d,
-	0x31, 0x89, 0x5d, 0x52, 0x1f, 0x78, 0xa0, 0xda, 0xe0, 0x70, 0xd6, 0x95, 0xba, 0xe1, 0x85, 0xc6,
-	0xc7, 0x91, 0xe1, 0x2e, 0xc9, 0x23, 0x91, 0x7c, 0x6d, 0xed, 0x77, 0x03, 0x95, 0xc3, 0x59, 0xe8,
-	0x86, 0xad, 0xa6, 0x57, 0xd4, 0xb1, 0x15, 0xe0, 0x2a, 0x5a, 0x0d, 0x27, 0x43, 0x9a, 0xc6, 0x7e,
-	0xe1, 0xa0, 0xd8, 0x28, 0x8e, 0x47, 0xd5, 0xd5, 0x90, 0x24, 0xc9, 0x24, 0x8e, 0x7f, 0x99, 0x5c,
-	0x99, 0x6e, 0xe1, 0xb2, 0x6e, 0xe1, 0x17, 0x8b, 0xb6, 0x70, 0x7a, 0xed, 0xb3, 0x97, 0xac, 0x9b,
-	0x17, 0x7b, 0xd6, 0xde, 0xac, 0xa0, 0x74, 0x5b, 0xf1, 0x13, 0x54, 0xea, 0x50, 0xd6, 0x3d, 0xee,
-	0x76, 0x05, 0x48, 0x19, 0x4d, 0x49, 0x7c, 0x01, 0x8d, 0x04, 0x22, 0x69, 0xde, 0x54, 0xf6, 0x02,
-	0xd4, 0x2b, 0x2e, 0xae, 0xa3, 0x79, 0x99, 0x91, 0x45, 0x10, 0x49, 0xf3, 0x66, 0xaa, 0x2b, 0xfc,
-	0xff, 0xd5, 0xe9, 0x81, 0xf7, 0x28, 0x30, 0x75, 0x72, 0x6c, 0xae, 0x64, 0x06, 0x3e, 0x8a, 0x93,
-	0x98, 0x81, 0xdf, 0x1a, 0x68, 0x8b, 0x65, 0x6e, 0x48, 0x9a, 0xab, 0xfb, 0x85, 0x83, 0xd2, 0xc3,
-	0xa3, 0x45, 0xf3, 0xca, 0x5e, 0x71, 0xe3, 0x83, 0xe8, 0xc4, 0xad, 0x2c, 0x22, 0xc9, 0xfc, 0x69,
-	0xf8, 0x6b, 0x74, 0xdf, 0xa7, 0xec, 0xb2, 0xd9, 0xfe, 0x01, 0x44, 0xb8, 0x5c, 0xcc, 0x7b, 0x3a,
-	0xed, 0xdd, 0xc8, 0xe4, 0x7e, 0x2b, 0x0d, 0x92, 0x59, 0x2e, 0x7e, 0x8c, 0x36, 0x1c, 0xda, 0xef,
-	0x81, 0x68, 0x07, 0x34, 0x4c, 0x7d, 0x4d, 0x0f, 0x55, 0x79, 0x3c, 0xaa, 0x6e, 0x9c, 0xa4, 0xe2,
-	0x64, 0x86, 0x55, 0x7b, 0xbb, 0x8e, 0x1e, 0xfc, 0x08, 0x9d, 0x93, 0x49, 0x0d, 0x93, 0x65, 0x16,
-	0x08, 0x5b, 0x85, 0x8e, 0x2c, 0xef, 0x25, 0xfe, 0x72, 0xd1, 0x5e, 0x64, 0x56, 0xc2, 0x02, 0x2f,
-	0xb2, 0x85, 0x8a, 0xfd, 0xa0, 0xe3, 0x51, 0xe7, 0x7b, 0xd2, 0x8c, 0xa6, 0x28, 0x5e, 0x6f, 0x17,
-	0x53, 0x80, 0x24, 0x9c, 0x50, 0xe0, 0x71, 0x97, 0x07, 0x2a, 0x14, 0x14, 0x66, 0x05, 0xcd, 0x29,
-	0x40, 0x12, 0x4e, 0xb8, 0x83, 0x7d, 0x5b, 0x2a, 0x10, 0xb1, 0x5d, 0x34, 0x19, 0xf1, 0x0e, 0x6e,
-	0xcd, 0xc2, 0x24, 0xcb, 0xc7, 0xa7, 0xa8, 0xec, 0x71, 0xd7, 0xa5, 0xcc, 0x4d, 0x3c, 0x56, 0xb5,
-	0x87, 0x19, 0x79, 0x94, 0x9b, 0x19, 0x9c, 0xcc, 0x29, 0x42, 0x17, 0x1f, 0x94, 0xa0, 0x8e, 0x4c,
-	0x5c, 0xee, 0xcd, 0xba, 0xb4, 0x32, 0x38, 0x99, 0x53, 0xe0, 0x6f, 0x51, 0x19, 0xa6, 0x1f, 0xa2,
-	0xb6, 0x23, 0x68, 0x5f, 0x4d, 0xaf, 0x7d, 0x27, 0x74, 0x38, 0xcb, 0x60, 0x64, 0x8e, 0x8d, 0xff,
-	0x34, 0xd0, 0x76, 0x1c, 0xbc, 0x10, 0xbc, 0x1f, 0x8e, 0x23, 0x48, 0x73, 0x5d, 0xcf, 0xfd, 0x4f,
-	0x8b, 0xde, 0xf5, 0x1d, 0x13, 0x54, 0x3f, 0x9b, 0xb7, 0x3e, 0x63, 0x4a, 0x0c, 0x93, 0xb5, 0x9c,
-	0xc3, 0x20, 0x79, 0x19, 0xe1, 0x26, 0xda, 0x49, 0xb2, 0x57, 0x43, 0x0f, 0x64, 0x0f, 0x40, 0x49,
-	0xb3, 0xa8, 0xeb, 0x35, 0xc7, 0xa3, 0xea, 0xce, 0x59, 0x0e, 0x4e, 0x72, 0x55, 0xf8, 0x25, 0x42,
-	0x71, 0x5c, 0x9a, 0x48, 0x57, 0xfb, 0xcd, 0xa2, 0xd5, 0xe6, 0xfe, 0x03, 0x68, 0xe0, 0xa8, 0x24,
-	0x94, 0x20, 0x24, 0x75, 0x08, 0xbe, 0x48, 0x15, 0x70, 0x0a, 0x03, 0xf0, 0x78, 0xdf, 0x07, 0xa6,
-	0xcc, 0x92, 0xfe, 0x8e, 0x7f, 0x14, 0xa9, 0x93, 0x22, 0x52, 0x1c, 0x92, 0xab, 0xdc, 0x3b, 0x47,
-	0xe6, 0x5d, 0x0d, 0xc6, 0x65, 0x54, 0xb8, 0x86, 0xe1, 0x64, 0x85, 0x93, 0xf0, 0x27, 0xde, 0x41,
-	0xab, 0x03, 0xdb, 0x0b, 0xa2, 0xef, 0x39, 0x99, 0x3c, 0x7c, 0xb5, 0x7c, 0x64, 0x34, 0x0e, 0x6e,
-	0x6e, 0x2b, 0x4b, 0xef, 0x6e, 0x2b, 0x4b, 0xef, 0x6f, 0x2b, 0x4b, 0x6f, 0xc6, 0x15, 0xe3, 0x66,
-	0x5c, 0x31, 0xde, 0x8d, 0x2b, 0xc6, 0xfb, 0x71, 0xc5, 0xf8, 0x7b, 0x5c, 0x31, 0x7e, 0xfb, 0xa7,
-	0xb2, 0xf4, 0xf3, 0xf2, 0xe0, 0xf0, 0xdf, 0x00, 0x00, 0x00, 0xff, 0xff, 0x77, 0xe3, 0x35, 0x24,
-	0x63, 0x0a, 0x00, 0x00,
+	// 1007 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x55, 0xdf, 0x6e, 0x1b, 0xc5,
+	0x17, 0xce, 0xda, 0xcd, 0x2f, 0xcd, 0xb8, 0x4d, 0xdc, 0xc9, 0x2f, 0x8a, 0x09, 0xc2, 0x8e, 0x7c,
+	0x81, 0x82, 0x04, 0x6b, 0x92, 0x96, 0x12, 0x15, 0x55, 0x28, 0x36, 0x8d, 0x88, 0x88, 0x4b, 0x34,
+	0x4e, 0x41, 0x42, 0x08, 0x69, 0xbd, 0x3e, 0x5e, 0x4f, 0xb3, 0x3b, 0xe3, 0xce, 0xcc, 0xba, 0xf5,
+	0x5d, 0x11, 0x2f, 0x80, 0xc4, 0x13, 0xf0, 0x36, 0x11, 0x57, 0xbd, 0xec, 0x0d, 0x16, 0x31, 0xe2,
+	0x3d, 0xd0, 0x8e, 0x27, 0xde, 0x3f, 0xb6, 0x85, 0x25, 0xb8, 0xdb, 0x3d, 0xe7, 0xfb, 0xbe, 0x73,
+	0xe6, 0xcc, 0x99, 0x73, 0xd0, 0x43, 0x8f, 0xaa, 0x5e, 0xd8, 0xb6, 0x5d, 0x1e, 0xd4, 0x78, 0x1f,
+	0x98, 0xec, 0xd1, 0xae, 0xaa, 0x39, 0x7d, 0x5a, 0x7b, 0x09, 0x6d, 0x97, 0x33, 0xc9, 0x7d, 0xa8,
+	0x0d, 0x0e, 0x6a, 0x1e, 0x30, 0x10, 0x8e, 0x82, 0x8e, 0xdd, 0x17, 0x5c, 0x71, 0xfc, 0x7e, 0xcc,
+	0xb3, 0xa7, 0x3c, 0xdb, 0xe9, 0x53, 0x3b, 0xe6, 0xd9, 0x83, 0x83, 0xdd, 0x8f, 0x12, 0xfa, 0x1e,
+	0xf7, 0x78, 0x4d, 0xd3, 0xdb, 0x61, 0x57, 0xff, 0xe9, 0x1f, 0xfd, 0x35, 0x91, 0xdd, 0x7d, 0x70,
+	0x79, 0x24, 0x6d, 0xca, 0xa3, 0x04, 0x02, 0xc7, 0xed, 0x51, 0x06, 0x62, 0x58, 0xeb, 0x5f, 0x7a,
+	0x91, 0x41, 0xd6, 0x02, 0x50, 0xce, 0x9c, 0x64, 0x76, 0x6b, 0x8b, 0x58, 0x22, 0x64, 0x8a, 0x06,
+	0x30, 0x43, 0x78, 0xf8, 0x4f, 0x04, 0xe9, 0xf6, 0x20, 0x70, 0x66, 0x78, 0xf7, 0x17, 0xf1, 0x42,
+	0x45, 0xfd, 0x1a, 0x65, 0x4a, 0x2a, 0x91, 0x25, 0x55, 0x5d, 0x74, 0xbb, 0x01, 0x42, 0x9d, 0xb2,
+	0x2e, 0xc7, 0x1f, 0xa2, 0xdb, 0x2e, 0x08, 0x75, 0x42, 0x7d, 0x28, 0x59, 0x7b, 0xd6, 0xfe, 0x7a,
+	0xbd, 0x78, 0x35, 0xaa, 0xac, 0x8c, 0x47, 0x15, 0x8d, 0x89, 0xec, 0x64, 0x8a, 0xc0, 0x1f, 0xa0,
+	0xb5, 0x4b, 0x18, 0x6a, 0x70, 0x4e, 0x83, 0x37, 0x0d, 0x78, 0xed, 0xab, 0x89, 0x99, 0xdc, 0xf8,
+	0xab, 0x7f, 0xe5, 0x50, 0xa1, 0xe1, 0x87, 0x52, 0x81, 0xd0, 0x81, 0xbe, 0x40, 0x45, 0x73, 0x0b,
+	0xe7, 0x61, 0xdb, 0xa7, 0xee, 0x33, 0x72, 0x66, 0x02, 0x96, 0x8c, 0x46, 0xb1, 0x91, 0xf1, 0x93,
+	0x19, 0x06, 0x3e, 0x46, 0x9b, 0x81, 0x13, 0x69, 0xc6, 0x22, 0x93, 0x44, 0x76, 0x8c, 0xc8, 0x66,
+	0x33, 0xed, 0x26, 0x59, 0x7c, 0x94, 0x88, 0xcf, 0x3d, 0x8f, 0x32, 0x2f, 0xd6, 0xc8, 0xa7, 0x13,
+	0x39, 0xcb, 0xf8, 0xc9, 0x0c, 0x23, 0x52, 0x09, 0x40, 0x09, 0xea, 0xca, 0x58, 0xe5, 0x56, 0x5a,
+	0xa5, 0x99, 0xf1, 0x93, 0x19, 0x46, 0x74, 0x1c, 0x9f, 0x7b, 0x3c, 0x54, 0xb1, 0xc8, 0x6a, 0xfa,
+	0x38, 0x67, 0x69, 0x37, 0xc9, 0xe2, 0xab, 0xbf, 0xe5, 0xd0, 0xce, 0x93, 0x57, 0x0a, 0x98, 0xa4,
+	0x9c, 0xc9, 0x06, 0x67, 0x5d, 0xea, 0x85, 0xc2, 0x51, 0x94, 0x33, 0x6c, 0x23, 0x24, 0x5d, 0x41,
+	0xfb, 0xea, 0x19, 0x39, 0x93, 0x25, 0x6b, 0x2f, 0xbf, 0xbf, 0x5e, 0xdf, 0x18, 0x8f, 0x2a, 0xa8,
+	0x35, 0xb5, 0x92, 0x04, 0x02, 0x3f, 0x42, 0x1b, 0x52, 0x0d, 0x7d, 0x90, 0x3d, 0x80, 0x09, 0x27,
+	0xa7, 0x39, 0x78, 0x3c, 0xaa, 0x6c, 0xb4, 0x52, 0x1e, 0x92, 0x41, 0xe2, 0x9f, 0x2c, 0x84, 0xfa,
+	0x82, 0xf7, 0x41, 0x28, 0x0a, 0xb2, 0x94, 0xdf, 0xcb, 0xef, 0x17, 0x0e, 0xbf, 0xb6, 0x97, 0x7b,
+	0x95, 0xf6, 0x82, 0x13, 0xd8, 0xe7, 0x53, 0xc5, 0x27, 0x4c, 0x89, 0x61, 0x1d, 0x9b, 0xba, 0xa0,
+	0xd8, 0x41, 0x12, 0x61, 0x77, 0x1f, 0xa3, 0xcd, 0x0c, 0x05, 0x17, 0x51, 0xfe, 0x12, 0x86, 0x93,
+	0x5e, 0x23, 0xd1, 0x27, 0xfe, 0x3f, 0x5a, 0x1d, 0x38, 0x7e, 0x68, 0x7a, 0x98, 0x4c, 0x7e, 0x1e,
+	0xe5, 0x8e, 0xac, 0x6a, 0x88, 0xb6, 0x4f, 0xc0, 0x51, 0xa1, 0x80, 0x4c, 0x25, 0xbf, 0x47, 0x25,
+	0xca, 0x1c, 0x57, 0xd1, 0x01, 0x55, 0xc3, 0x0b, 0x1a, 0x00, 0x0f, 0x55, 0x93, 0xb2, 0x50, 0x81,
+	0xd4, 0xca, 0xf9, 0xfa, 0x9e, 0xc9, 0xac, 0x74, 0xba, 0x00, 0x47, 0x16, 0x2a, 0x54, 0x7f, 0xcd,
+	0xa1, 0xcd, 0x2f, 0x2f, 0x2e, 0xce, 0x5b, 0x20, 0x06, 0x94, 0x79, 0xfa, 0xbd, 0x3c, 0x47, 0x05,
+	0x19, 0xff, 0xea, 0x20, 0x85, 0xc3, 0xfb, 0xcb, 0xd6, 0x33, 0xa1, 0x54, 0xdf, 0x32, 0x99, 0x15,
+	0x12, 0x46, 0x92, 0x14, 0xc7, 0x4d, 0xb4, 0x15, 0x38, 0xaf, 0x08, 0xbc, 0x08, 0x41, 0x2a, 0x79,
+	0xca, 0x4e, 0x7c, 0xea, 0xf5, 0x94, 0x2e, 0x4f, 0xbe, 0xfe, 0xae, 0xa1, 0x6f, 0x35, 0x67, 0x21,
+	0x64, 0x1e, 0x0f, 0xb7, 0xd0, 0xb6, 0x98, 0xd8, 0xcc, 0x39, 0x5b, 0xe0, 0x72, 0xd6, 0x91, 0xfa,
+	0x99, 0xe5, 0xeb, 0xef, 0x19, 0xc1, 0x6d, 0x32, 0x0f, 0x44, 0xe6, 0x73, 0xab, 0xbf, 0x58, 0xa8,
+	0xf8, 0xd4, 0x09, 0xa0, 0x13, 0x8d, 0x25, 0xda, 0xa5, 0xae, 0xa3, 0x00, 0x57, 0xd0, 0x2a, 0x73,
+	0x02, 0xb8, 0xe9, 0xed, 0xf5, 0xf1, 0xa8, 0xb2, 0x1a, 0x81, 0x24, 0x99, 0xd8, 0xf1, 0x0f, 0x93,
+	0xf1, 0xa6, 0x4b, 0x98, 0xd3, 0x25, 0xfc, 0x78, 0xd9, 0x12, 0xde, 0x8c, 0xc8, 0xf4, 0x40, 0xd4,
+	0xc5, 0x9b, 0x6a, 0x56, 0x5f, 0xdf, 0x42, 0xc9, 0xb2, 0xe2, 0x4f, 0x50, 0xa1, 0x4d, 0x59, 0xe7,
+	0xb8, 0xd3, 0x11, 0x20, 0xa5, 0x19, 0x70, 0xd3, 0x0b, 0xa8, 0xc7, 0x2e, 0x92, 0xc4, 0xdd, 0xd0,
+	0x9e, 0x82, 0x7a, 0xc9, 0xc5, 0xa5, 0x19, 0x69, 0x29, 0x9a, 0x71, 0x91, 0x24, 0x2e, 0x75, 0xba,
+	0xfc, 0x7f, 0x7f, 0x3a, 0xbd, 0x1c, 0x7c, 0x0a, 0x4c, 0x35, 0x8e, 0xcd, 0x70, 0x8b, 0xd1, 0xc6,
+	0x4e, 0xa6, 0x08, 0xfc, 0xa3, 0x85, 0xee, 0xb1, 0xcc, 0x0d, 0xc9, 0xd2, 0xaa, 0x1e, 0x04, 0x47,
+	0xcb, 0xe6, 0x95, 0xbd, 0xe2, 0xfa, 0x3b, 0x26, 0xe2, 0xbd, 0xac, 0x47, 0x92, 0xd9, 0x68, 0xf8,
+	0x33, 0x74, 0x37, 0xa0, 0xec, 0xe2, 0xac, 0xf5, 0x0d, 0x88, 0x68, 0x9c, 0x94, 0xfe, 0xa7, 0xd3,
+	0xde, 0x36, 0x22, 0x77, 0x9b, 0x49, 0x27, 0x49, 0x63, 0xf1, 0x03, 0x74, 0xc7, 0xa5, 0xfd, 0x1e,
+	0x88, 0x56, 0x48, 0xa3, 0xd4, 0xd7, 0x74, 0x53, 0x15, 0xc7, 0xa3, 0xca, 0x9d, 0x46, 0xc2, 0x4e,
+	0x52, 0xa8, 0xea, 0xef, 0x79, 0xb4, 0xf3, 0x2d, 0xb4, 0xcd, 0xf2, 0x4a, 0x8f, 0x0d, 0x36, 0xef,
+	0x11, 0x7f, 0xba, 0x6c, 0x2d, 0x32, 0x23, 0x61, 0x89, 0x87, 0xfc, 0x1c, 0x15, 0xdc, 0x78, 0xe7,
+	0x9a, 0x8e, 0x5f, 0x7a, 0x68, 0x24, 0xd6, 0x75, 0x1c, 0x2b, 0x61, 0x24, 0x49, 0x71, 0xfc, 0x02,
+	0x15, 0xba, 0x93, 0x59, 0x99, 0xe8, 0xbf, 0xc7, 0xcb, 0xc6, 0x9a, 0x3b, 0x66, 0xe3, 0xf6, 0xba,
+	0x71, 0x93, 0x64, 0x0c, 0x2c, 0x11, 0x82, 0xe9, 0xa2, 0xd0, 0x1d, 0x59, 0x38, 0xfc, 0xfc, 0x5f,
+	0xae, 0x98, 0x78, 0xa5, 0xc4, 0x00, 0x92, 0x08, 0x53, 0xdf, 0xbf, 0xba, 0x2e, 0xaf, 0xbc, 0xb9,
+	0x2e, 0xaf, 0xbc, 0xbd, 0x2e, 0xaf, 0xbc, 0x1e, 0x97, 0xad, 0xab, 0x71, 0xd9, 0x7a, 0x33, 0x2e,
+	0x5b, 0x6f, 0xc7, 0x65, 0xeb, 0x8f, 0x71, 0xd9, 0xfa, 0xf9, 0xcf, 0xf2, 0xca, 0x77, 0xb9, 0xc1,
+	0xc1, 0xdf, 0x01, 0x00, 0x00, 0xff, 0xff, 0x50, 0xa2, 0x70, 0x0b, 0xbb, 0x0a, 0x00, 0x00,
 }

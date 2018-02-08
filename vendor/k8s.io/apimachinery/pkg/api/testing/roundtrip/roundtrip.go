@@ -138,6 +138,22 @@ func roundTripTypes(t *testing.T, scheme *runtime.Scheme, codecFactory runtimese
 	}
 }
 
+func RoundTripExternalTypes(t *testing.T, scheme *runtime.Scheme, codecFactory runtimeserializer.CodecFactory, fuzzer *fuzz.Fuzzer, nonRoundTrippableTypes map[schema.GroupVersionKind]bool) {
+	roundTripExternalTypes(t, scheme, codecFactory, fuzzer, nonRoundTrippableTypes)
+}
+
+func roundTripExternalTypes(t *testing.T, scheme *runtime.Scheme, codecFactory runtimeserializer.CodecFactory, fuzzer *fuzz.Fuzzer, nonRoundTrippableTypes map[schema.GroupVersionKind]bool) {
+	kinds := scheme.AllKnownTypes()
+	for gvk, _ := range kinds {
+		if gvk.Version == runtime.APIVersionInternal || globalNonRoundTrippableTypes.Has(gvk.Kind) {
+			continue
+		}
+
+		// FIXME: this is explicitly testing w/o protobuf which was failing if enabled
+		roundTripSpecificKind(t, gvk, scheme, codecFactory, fuzzer, nonRoundTrippableTypes, true)
+	}
+}
+
 func RoundTripSpecificKindWithoutProtobuf(t *testing.T, gvk schema.GroupVersionKind, scheme *runtime.Scheme, codecFactory runtimeserializer.CodecFactory, fuzzer *fuzz.Fuzzer, nonRoundTrippableTypes map[schema.GroupVersionKind]bool) {
 	roundTripSpecificKind(t, gvk, scheme, codecFactory, fuzzer, nonRoundTrippableTypes, true)
 }

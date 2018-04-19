@@ -105,8 +105,9 @@ func (TemplateInstanceList) SwaggerDoc() map[string]string {
 }
 
 var map_TemplateInstanceObject = map[string]string{
-	"":    "TemplateInstanceObject references an object created by a TemplateInstance.",
-	"ref": "ref is a reference to the created object.  When used under .spec, only name and namespace are used; these can contain references to parameters which will be substituted following the usual rules.",
+	"":      "TemplateInstanceObject references an object created by a TemplateInstance.",
+	"ref":   "ref is a reference to the created object.  When used under .spec, only name and namespace are used; these can contain references to parameters which will be substituted following the usual rules.",
+	"index": "index is an index into Template.Spec.Template.Objects[]",
 }
 
 func (TemplateInstanceObject) SwaggerDoc() map[string]string {

@@ -181,6 +181,9 @@ message TemplateInstanceObject {
   // name and namespace are used; these can contain references to parameters
   // which will be substituted following the usual rules.
   optional k8s.io.api.core.v1.ObjectReference ref = 1;
+
+  // index is an index into Template.Spec.Template.Objects[]
+  optional int64 index = 2;
 }
 
 // TemplateInstanceRequester holds the identity of an agent requesting a

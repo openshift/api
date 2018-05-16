@@ -29,12 +29,23 @@ func (DelegatedAuthorization) SwaggerDoc() map[string]string {
 	return map_DelegatedAuthorization
 }
 
+var map_ServiceLocation = map[string]string{
+	"":          "ServiceLocation is the location of a service",
+	"namespace": "namespace of the service to sign the self-serving certificate for",
+	"name":      "name of the service to sign the self-serving certificate for",
+}
+
+func (ServiceLocation) SwaggerDoc() map[string]string {
+	return map_ServiceLocation
+}
+
 var map_ServiceServingCertSignerConfig = map[string]string{
-	"":               "ServiceServingCertSignerConfig provides information to configure a serving serving cert signing controller",
-	"servingInfo":    "ServingInfo is the HTTP serving information for the controller's endpoints",
-	"authentication": "authentication allows configuration of authentication for the endpoints",
-	"authorization":  "authorization allows configuration of authentication for the endpoints",
-	"signer":         "Signer holds the signing information used to automatically sign serving certificates.",
+	"":                 "ServiceServingCertSignerConfig provides information to configure a serving serving cert signing controller",
+	"bootstrapService": "bootstrapService is the location of a service representing the controller. This controller is special, it can mint it's own, valid serving certificate.  Only used if specified.",
+	"servingInfo":      "ServingInfo is the HTTP serving information for the controller's endpoints",
+	"authentication":   "authentication allows configuration of authentication for the endpoints",
+	"authorization":    "authorization allows configuration of authentication for the endpoints",
+	"signer":           "Signer holds the signing information used to automatically sign serving certificates.",
 }
 
 func (ServiceServingCertSignerConfig) SwaggerDoc() map[string]string {

@@ -9,6 +9,7 @@ import "github.com/openshift/api/config/v1/generated.proto";
 import "k8s.io/apimachinery/pkg/apis/meta/v1/generated.proto";
 import "k8s.io/apimachinery/pkg/runtime/generated.proto";
 import "k8s.io/apimachinery/pkg/runtime/schema/generated.proto";
+import "k8s.io/apimachinery/pkg/util/intstr/generated.proto";
 
 // Package-wide variables from generator "generated".
 option go_package = "v1alpha1";
@@ -25,8 +26,21 @@ message DelegatedAuthorization {
   optional bool disabled = 1;
 }
 
+// ServiceLocation is the location of a service
+message ServiceLocation {
+  // namespace of the service to sign the self-serving certificate for
+  optional string namespace = 1;
+
+  // name of the service to sign the self-serving certificate for
+  optional string name = 2;
+}
+
 // ServiceServingCertSignerConfig provides information to configure a serving serving cert signing controller
 message ServiceServingCertSignerConfig {
+  // bootstrapService is the location of a service representing the controller. This controller is special, it
+  // can mint it's own, valid serving certificate.  Only used if specified.
+  optional ServiceLocation bootstrapService = 5;
+
   // ServingInfo is the HTTP serving information for the controller's endpoints
   optional github.com.openshift.api.config.v1.HTTPServingInfo servingInfo = 1;
 

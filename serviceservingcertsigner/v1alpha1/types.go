@@ -14,7 +14,7 @@ type ServiceServingCertSignerConfig struct {
 
 	// bootstrapService is the location of a service representing the controller. This controller is special, it
 	// can mint it's own, valid serving certificate.  Only used if specified.
-	BootstrapService ServiceLocation `json:"bootstrapService"`
+	BootstrapService ServiceLocation `json:"bootstrapService" protobuf:"bytes,5,opt,name=bootstrapService"`
 
 	// ServingInfo is the HTTP serving information for the controller's endpoints
 	ServingInfo configv1.HTTPServingInfo `json:"servingInfo" protobuf:"bytes,1,opt,name=servingInfo"`
@@ -31,9 +31,9 @@ type ServiceServingCertSignerConfig struct {
 // ServiceLocation is the location of a service
 type ServiceLocation struct {
 	// namespace of the service to sign the self-serving certificate for
-	Namespace string `json:"namespace"`
+	Namespace string `json:"namespace" protobuf:"bytes,1,opt,name=namespace"`
 	// name of the service to sign the self-serving certificate for
-	Name string `json:"name"`
+	Name string `json:"name" protobuf:"bytes,2,opt,name=name"`
 }
 
 // DelegatedAuthentication allows authentication to be disabled.

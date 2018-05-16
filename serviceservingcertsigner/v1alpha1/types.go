@@ -13,25 +13,25 @@ type ServiceServingCertSignerConfig struct {
 	metav1.TypeMeta `json:",inline"`
 
 	// ServingInfo is the HTTP serving information for the controller's endpoints
-	ServingInfo configv1.HTTPServingInfo `json:"servingInfo"`
+	ServingInfo configv1.HTTPServingInfo `json:"servingInfo" protobuf:"bytes,1,opt,name=servingInfo"`
 
 	// authentication allows configuration of authentication for the endpoints
-	Authentication DelegatedAuthentication `json:"authentication,omitempty"`
+	Authentication DelegatedAuthentication `json:"authentication,omitempty" protobuf:"bytes,2,opt,name=authentication"`
 	// authorization allows configuration of authentication for the endpoints
-	Authorization DelegatedAuthorization `json:"authorization,omitempty"`
+	Authorization DelegatedAuthorization `json:"authorization,omitempty" protobuf:"bytes,3,opt,name=authorization"`
 
 	// Signer holds the signing information used to automatically sign serving certificates.
-	Signer configv1.CertInfo `json:"signer"`
+	Signer configv1.CertInfo `json:"signer" protobuf:"bytes,4,opt,name=signer"`
 }
 
 // DelegatedAuthentication allows authentication to be disabled.
 type DelegatedAuthentication struct {
 	// disabled indicates that authentication should be disabled.  By default it will use delegated authentication.
-	Disabled bool `json:"disabled,omitempty"`
+	Disabled bool `json:"disabled,omitempty" protobuf:"varint,1,opt,name=disabled"`
 }
 
 // DelegatedAuthorization allows authorization to be disabled.
 type DelegatedAuthorization struct {
 	// disabled indicates that authorization should be disabled.  By default it will use delegated authorization.
-	Disabled bool `json:"disabled,omitempty"`
+	Disabled bool `json:"disabled,omitempty" protobuf:"varint,1,opt,name=disabled"`
 }

@@ -54,13 +54,13 @@ type NamedCertificate struct {
 	CertInfo `json:",inline" protobuf:"bytes,2,opt,name=certInfo"`
 }
 
-// LeaderElection provides information to elect a leader using a configmap
+// LeaderElection provides information to elect a leader
 type LeaderElection struct {
 	// disable allows leader election to be suspended while allowing a fully defaulted "normal" startup case.
 	Disable bool `json:"disable,omitempty" protobuf:"varint,1,opt,name=disable"`
-	// namespace indicates which namespace the configmap is in
+	// namespace indicates which namespace the resource is in
 	Namespace string `json:"namespace,omitempty" protobuf:"bytes,2,opt,name=namespace"`
-	// name indicates what name to use for the configmap
+	// name indicates what name to use for the resource
 	Name string `json:"name,omitempty" protobuf:"bytes,3,opt,name=name"`
 
 	// leaseDuration is the duration that non-leader candidates will wait

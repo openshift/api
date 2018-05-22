@@ -3,7 +3,7 @@
 
 syntax = 'proto2';
 
-package github.com.openshift.api.serviceservingcertsigner.v1alpha1;
+package github.com.openshift.api.servicecertsigner.v1alpha1;
 
 import "github.com/openshift/api/config/v1/generated.proto";
 import "k8s.io/apimachinery/pkg/apis/meta/v1/generated.proto";

@@ -35,15 +35,15 @@ message HTTPServingInfo {
   optional int64 requestTimeoutSeconds = 3;
 }
 
-// LeaderElection provides information to elect a leader using a configmap
+// LeaderElection provides information to elect a leader
 message LeaderElection {
   // disable allows leader election to be suspended while allowing a fully defaulted "normal" startup case.
   optional bool disable = 1;
 
-  // namespace indicates which namespace the configmap is in
+  // namespace indicates which namespace the resource is in
   optional string namespace = 2;
 
-  // name indicates what name to use for the configmap
+  // name indicates what name to use for the resource
   optional string name = 3;
 
   // leaseDuration is the duration that non-leader candidates will wait

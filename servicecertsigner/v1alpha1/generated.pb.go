@@ -11,8 +11,10 @@
 	It has these top-level messages:
 		DelegatedAuthentication
 		DelegatedAuthorization
+		ServiceCertSignerOperatorConfig
+		ServiceCertSignerOperatorConfigSpec
+		ServiceCertSignerOperatorConfigStatus
 		ServiceServingCertSignerConfig
-		ServiceServingCertSignerOperatorConfig
 */
 package v1alpha1
 
@@ -44,25 +46,37 @@ func (m *DelegatedAuthorization) Reset()                    { *m = DelegatedAuth
 func (*DelegatedAuthorization) ProtoMessage()               {}
 func (*DelegatedAuthorization) Descriptor() ([]byte, []int) { return fileDescriptorGenerated, []int{1} }
 
-func (m *ServiceServingCertSignerConfig) Reset()      { *m = ServiceServingCertSignerConfig{} }
-func (*ServiceServingCertSignerConfig) ProtoMessage() {}
-func (*ServiceServingCertSignerConfig) Descriptor() ([]byte, []int) {
+func (m *ServiceCertSignerOperatorConfig) Reset()      { *m = ServiceCertSignerOperatorConfig{} }
+func (*ServiceCertSignerOperatorConfig) ProtoMessage() {}
+func (*ServiceCertSignerOperatorConfig) Descriptor() ([]byte, []int) {
 	return fileDescriptorGenerated, []int{2}
 }
 
-func (m *ServiceServingCertSignerOperatorConfig) Reset() {
-	*m = ServiceServingCertSignerOperatorConfig{}
-}
-func (*ServiceServingCertSignerOperatorConfig) ProtoMessage() {}
-func (*ServiceServingCertSignerOperatorConfig) Descriptor() ([]byte, []int) {
+func (m *ServiceCertSignerOperatorConfigSpec) Reset()      { *m = ServiceCertSignerOperatorConfigSpec{} }
+func (*ServiceCertSignerOperatorConfigSpec) ProtoMessage() {}
+func (*ServiceCertSignerOperatorConfigSpec) Descriptor() ([]byte, []int) {
 	return fileDescriptorGenerated, []int{3}
+}
+
+func (m *ServiceCertSignerOperatorConfigStatus) Reset()      { *m = ServiceCertSignerOperatorConfigStatus{} }
+func (*ServiceCertSignerOperatorConfigStatus) ProtoMessage() {}
+func (*ServiceCertSignerOperatorConfigStatus) Descriptor() ([]byte, []int) {
+	return fileDescriptorGenerated, []int{4}
+}
+
+func (m *ServiceServingCertSignerConfig) Reset()      { *m = ServiceServingCertSignerConfig{} }
+func (*ServiceServingCertSignerConfig) ProtoMessage() {}
+func (*ServiceServingCertSignerConfig) Descriptor() ([]byte, []int) {
+	return fileDescriptorGenerated, []int{5}
 }
 
 func init() {
 	proto.RegisterType((*DelegatedAuthentication)(nil), "github.com.openshift.api.servicecertsigner.v1alpha1.DelegatedAuthentication")
 	proto.RegisterType((*DelegatedAuthorization)(nil), "github.com.openshift.api.servicecertsigner.v1alpha1.DelegatedAuthorization")
+	proto.RegisterType((*ServiceCertSignerOperatorConfig)(nil), "github.com.openshift.api.servicecertsigner.v1alpha1.ServiceCertSignerOperatorConfig")
+	proto.RegisterType((*ServiceCertSignerOperatorConfigSpec)(nil), "github.com.openshift.api.servicecertsigner.v1alpha1.ServiceCertSignerOperatorConfigSpec")
+	proto.RegisterType((*ServiceCertSignerOperatorConfigStatus)(nil), "github.com.openshift.api.servicecertsigner.v1alpha1.ServiceCertSignerOperatorConfigStatus")
 	proto.RegisterType((*ServiceServingCertSignerConfig)(nil), "github.com.openshift.api.servicecertsigner.v1alpha1.ServiceServingCertSignerConfig")
-	proto.RegisterType((*ServiceServingCertSignerOperatorConfig)(nil), "github.com.openshift.api.servicecertsigner.v1alpha1.ServiceServingCertSignerOperatorConfig")
 }
 func (m *DelegatedAuthentication) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
@@ -116,6 +130,108 @@ func (m *DelegatedAuthorization) MarshalTo(dAtA []byte) (int, error) {
 	return i, nil
 }
 
+func (m *ServiceCertSignerOperatorConfig) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *ServiceCertSignerOperatorConfig) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	dAtA[i] = 0xa
+	i++
+	i = encodeVarintGenerated(dAtA, i, uint64(m.ObjectMeta.Size()))
+	n1, err := m.ObjectMeta.MarshalTo(dAtA[i:])
+	if err != nil {
+		return 0, err
+	}
+	i += n1
+	dAtA[i] = 0x12
+	i++
+	i = encodeVarintGenerated(dAtA, i, uint64(m.Spec.Size()))
+	n2, err := m.Spec.MarshalTo(dAtA[i:])
+	if err != nil {
+		return 0, err
+	}
+	i += n2
+	dAtA[i] = 0x1a
+	i++
+	i = encodeVarintGenerated(dAtA, i, uint64(m.Status.Size()))
+	n3, err := m.Status.MarshalTo(dAtA[i:])
+	if err != nil {
+		return 0, err
+	}
+	i += n3
+	return i, nil
+}
+
+func (m *ServiceCertSignerOperatorConfigSpec) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *ServiceCertSignerOperatorConfigSpec) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	dAtA[i] = 0xa
+	i++
+	i = encodeVarintGenerated(dAtA, i, uint64(m.OperatorSpec.Size()))
+	n4, err := m.OperatorSpec.MarshalTo(dAtA[i:])
+	if err != nil {
+		return 0, err
+	}
+	i += n4
+	dAtA[i] = 0x12
+	i++
+	i = encodeVarintGenerated(dAtA, i, uint64(m.ServiceServingCertSignerConfig.Size()))
+	n5, err := m.ServiceServingCertSignerConfig.MarshalTo(dAtA[i:])
+	if err != nil {
+		return 0, err
+	}
+	i += n5
+	return i, nil
+}
+
+func (m *ServiceCertSignerOperatorConfigStatus) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *ServiceCertSignerOperatorConfigStatus) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	dAtA[i] = 0xa
+	i++
+	i = encodeVarintGenerated(dAtA, i, uint64(m.OperatorStatus.Size()))
+	n6, err := m.OperatorStatus.MarshalTo(dAtA[i:])
+	if err != nil {
+		return 0, err
+	}
+	i += n6
+	return i, nil
+}
+
 func (m *ServiceServingCertSignerConfig) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -134,85 +250,35 @@ func (m *ServiceServingCertSignerConfig) MarshalTo(dAtA []byte) (int, error) {
 	dAtA[i] = 0xa
 	i++
 	i = encodeVarintGenerated(dAtA, i, uint64(m.ServingInfo.Size()))
-	n1, err := m.ServingInfo.MarshalTo(dAtA[i:])
-	if err != nil {
-		return 0, err
-	}
-	i += n1
-	dAtA[i] = 0x12
-	i++
-	i = encodeVarintGenerated(dAtA, i, uint64(m.Authentication.Size()))
-	n2, err := m.Authentication.MarshalTo(dAtA[i:])
-	if err != nil {
-		return 0, err
-	}
-	i += n2
-	dAtA[i] = 0x1a
-	i++
-	i = encodeVarintGenerated(dAtA, i, uint64(m.Authorization.Size()))
-	n3, err := m.Authorization.MarshalTo(dAtA[i:])
-	if err != nil {
-		return 0, err
-	}
-	i += n3
-	dAtA[i] = 0x22
-	i++
-	i = encodeVarintGenerated(dAtA, i, uint64(m.Signer.Size()))
-	n4, err := m.Signer.MarshalTo(dAtA[i:])
-	if err != nil {
-		return 0, err
-	}
-	i += n4
-	return i, nil
-}
-
-func (m *ServiceServingCertSignerOperatorConfig) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *ServiceServingCertSignerOperatorConfig) MarshalTo(dAtA []byte) (int, error) {
-	var i int
-	_ = i
-	var l int
-	_ = l
-	dAtA[i] = 0x12
-	i++
-	i = encodeVarintGenerated(dAtA, i, uint64(m.Authentication.Size()))
-	n5, err := m.Authentication.MarshalTo(dAtA[i:])
-	if err != nil {
-		return 0, err
-	}
-	i += n5
-	dAtA[i] = 0x1a
-	i++
-	i = encodeVarintGenerated(dAtA, i, uint64(m.Authorization.Size()))
-	n6, err := m.Authorization.MarshalTo(dAtA[i:])
-	if err != nil {
-		return 0, err
-	}
-	i += n6
-	dAtA[i] = 0x22
-	i++
-	i = encodeVarintGenerated(dAtA, i, uint64(m.ServingInfo.Size()))
 	n7, err := m.ServingInfo.MarshalTo(dAtA[i:])
 	if err != nil {
 		return 0, err
 	}
 	i += n7
-	dAtA[i] = 0x2a
+	dAtA[i] = 0x12
 	i++
-	i = encodeVarintGenerated(dAtA, i, uint64(m.LeaderElection.Size()))
-	n8, err := m.LeaderElection.MarshalTo(dAtA[i:])
+	i = encodeVarintGenerated(dAtA, i, uint64(m.Authentication.Size()))
+	n8, err := m.Authentication.MarshalTo(dAtA[i:])
 	if err != nil {
 		return 0, err
 	}
 	i += n8
+	dAtA[i] = 0x1a
+	i++
+	i = encodeVarintGenerated(dAtA, i, uint64(m.Authorization.Size()))
+	n9, err := m.Authorization.MarshalTo(dAtA[i:])
+	if err != nil {
+		return 0, err
+	}
+	i += n9
+	dAtA[i] = 0x22
+	i++
+	i = encodeVarintGenerated(dAtA, i, uint64(m.Signer.Size()))
+	n10, err := m.Signer.MarshalTo(dAtA[i:])
+	if err != nil {
+		return 0, err
+	}
+	i += n10
 	return i, nil
 }
 
@@ -257,6 +323,36 @@ func (m *DelegatedAuthorization) Size() (n int) {
 	return n
 }
 
+func (m *ServiceCertSignerOperatorConfig) Size() (n int) {
+	var l int
+	_ = l
+	l = m.ObjectMeta.Size()
+	n += 1 + l + sovGenerated(uint64(l))
+	l = m.Spec.Size()
+	n += 1 + l + sovGenerated(uint64(l))
+	l = m.Status.Size()
+	n += 1 + l + sovGenerated(uint64(l))
+	return n
+}
+
+func (m *ServiceCertSignerOperatorConfigSpec) Size() (n int) {
+	var l int
+	_ = l
+	l = m.OperatorSpec.Size()
+	n += 1 + l + sovGenerated(uint64(l))
+	l = m.ServiceServingCertSignerConfig.Size()
+	n += 1 + l + sovGenerated(uint64(l))
+	return n
+}
+
+func (m *ServiceCertSignerOperatorConfigStatus) Size() (n int) {
+	var l int
+	_ = l
+	l = m.OperatorStatus.Size()
+	n += 1 + l + sovGenerated(uint64(l))
+	return n
+}
+
 func (m *ServiceServingCertSignerConfig) Size() (n int) {
 	var l int
 	_ = l
@@ -267,20 +363,6 @@ func (m *ServiceServingCertSignerConfig) Size() (n int) {
 	l = m.Authorization.Size()
 	n += 1 + l + sovGenerated(uint64(l))
 	l = m.Signer.Size()
-	n += 1 + l + sovGenerated(uint64(l))
-	return n
-}
-
-func (m *ServiceServingCertSignerOperatorConfig) Size() (n int) {
-	var l int
-	_ = l
-	l = m.Authentication.Size()
-	n += 1 + l + sovGenerated(uint64(l))
-	l = m.Authorization.Size()
-	n += 1 + l + sovGenerated(uint64(l))
-	l = m.ServingInfo.Size()
-	n += 1 + l + sovGenerated(uint64(l))
-	l = m.LeaderElection.Size()
 	n += 1 + l + sovGenerated(uint64(l))
 	return n
 }
@@ -318,6 +400,39 @@ func (this *DelegatedAuthorization) String() string {
 	}, "")
 	return s
 }
+func (this *ServiceCertSignerOperatorConfig) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&ServiceCertSignerOperatorConfig{`,
+		`ObjectMeta:` + strings.Replace(strings.Replace(this.ObjectMeta.String(), "ObjectMeta", "k8s_io_apimachinery_pkg_apis_meta_v1.ObjectMeta", 1), `&`, ``, 1) + `,`,
+		`Spec:` + strings.Replace(strings.Replace(this.Spec.String(), "ServiceCertSignerOperatorConfigSpec", "ServiceCertSignerOperatorConfigSpec", 1), `&`, ``, 1) + `,`,
+		`Status:` + strings.Replace(strings.Replace(this.Status.String(), "ServiceCertSignerOperatorConfigStatus", "ServiceCertSignerOperatorConfigStatus", 1), `&`, ``, 1) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *ServiceCertSignerOperatorConfigSpec) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&ServiceCertSignerOperatorConfigSpec{`,
+		`OperatorSpec:` + strings.Replace(strings.Replace(this.OperatorSpec.String(), "OperatorSpec", "github_com_openshift_api_operator_v1alpha1.OperatorSpec", 1), `&`, ``, 1) + `,`,
+		`ServiceServingCertSignerConfig:` + strings.Replace(strings.Replace(this.ServiceServingCertSignerConfig.String(), "RawExtension", "k8s_io_apimachinery_pkg_runtime.RawExtension", 1), `&`, ``, 1) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *ServiceCertSignerOperatorConfigStatus) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&ServiceCertSignerOperatorConfigStatus{`,
+		`OperatorStatus:` + strings.Replace(strings.Replace(this.OperatorStatus.String(), "OperatorStatus", "github_com_openshift_api_operator_v1alpha1.OperatorStatus", 1), `&`, ``, 1) + `,`,
+		`}`,
+	}, "")
+	return s
+}
 func (this *ServiceServingCertSignerConfig) String() string {
 	if this == nil {
 		return "nil"
@@ -327,19 +442,6 @@ func (this *ServiceServingCertSignerConfig) String() string {
 		`Authentication:` + strings.Replace(strings.Replace(this.Authentication.String(), "DelegatedAuthentication", "DelegatedAuthentication", 1), `&`, ``, 1) + `,`,
 		`Authorization:` + strings.Replace(strings.Replace(this.Authorization.String(), "DelegatedAuthorization", "DelegatedAuthorization", 1), `&`, ``, 1) + `,`,
 		`Signer:` + strings.Replace(strings.Replace(this.Signer.String(), "CertInfo", "github_com_openshift_api_config_v1.CertInfo", 1), `&`, ``, 1) + `,`,
-		`}`,
-	}, "")
-	return s
-}
-func (this *ServiceServingCertSignerOperatorConfig) String() string {
-	if this == nil {
-		return "nil"
-	}
-	s := strings.Join([]string{`&ServiceServingCertSignerOperatorConfig{`,
-		`Authentication:` + strings.Replace(strings.Replace(this.Authentication.String(), "DelegatedAuthentication", "DelegatedAuthentication", 1), `&`, ``, 1) + `,`,
-		`Authorization:` + strings.Replace(strings.Replace(this.Authorization.String(), "DelegatedAuthorization", "DelegatedAuthorization", 1), `&`, ``, 1) + `,`,
-		`ServingInfo:` + strings.Replace(strings.Replace(this.ServingInfo.String(), "HTTPServingInfo", "github_com_openshift_api_config_v1.HTTPServingInfo", 1), `&`, ``, 1) + `,`,
-		`LeaderElection:` + strings.Replace(strings.Replace(this.LeaderElection.String(), "LeaderElection", "github_com_openshift_api_config_v1.LeaderElection", 1), `&`, ``, 1) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -471,6 +573,336 @@ func (m *DelegatedAuthorization) Unmarshal(dAtA []byte) error {
 				}
 			}
 			m.Disabled = bool(v != 0)
+		default:
+			iNdEx = preIndex
+			skippy, err := skipGenerated(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *ServiceCertSignerOperatorConfig) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowGenerated
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ServiceCertSignerOperatorConfig: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ServiceCertSignerOperatorConfig: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ObjectMeta", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.ObjectMeta.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Spec", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.Spec.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.Status.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipGenerated(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *ServiceCertSignerOperatorConfigSpec) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowGenerated
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ServiceCertSignerOperatorConfigSpec: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ServiceCertSignerOperatorConfigSpec: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field OperatorSpec", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.OperatorSpec.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ServiceServingCertSignerConfig", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.ServiceServingCertSignerConfig.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipGenerated(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *ServiceCertSignerOperatorConfigStatus) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowGenerated
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ServiceCertSignerOperatorConfigStatus: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ServiceCertSignerOperatorConfigStatus: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field OperatorStatus", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.OperatorStatus.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipGenerated(dAtA[iNdEx:])
@@ -662,176 +1094,6 @@ func (m *ServiceServingCertSignerConfig) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *ServiceServingCertSignerOperatorConfig) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowGenerated
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: ServiceServingCertSignerOperatorConfig: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: ServiceServingCertSignerOperatorConfig: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Authentication", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + msglen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if err := m.Authentication.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Authorization", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + msglen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if err := m.Authorization.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 4:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ServingInfo", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + msglen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if err := m.ServingInfo.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 5:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field LeaderElection", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenerated
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			postIndex := iNdEx + msglen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if err := m.LeaderElection.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipGenerated(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthGenerated
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
 func skipGenerated(dAtA []byte) (n int, err error) {
 	l := len(dAtA)
 	iNdEx := 0
@@ -942,38 +1204,48 @@ func init() {
 }
 
 var fileDescriptorGenerated = []byte{
-	// 516 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xec, 0x53, 0x3d, 0x6f, 0xd3, 0x40,
-	0x18, 0x8e, 0x69, 0xa9, 0xa2, 0x8b, 0x1a, 0x21, 0x23, 0x4a, 0x94, 0xe1, 0x8a, 0x32, 0x20, 0x86,
-	0x72, 0xa7, 0xa4, 0x08, 0xb1, 0x92, 0x94, 0x2f, 0x51, 0x09, 0xe4, 0x64, 0x62, 0xbb, 0x38, 0x6f,
-	0xec, 0xa3, 0xf6, 0x9d, 0x75, 0xbe, 0x44, 0x82, 0x89, 0x91, 0x81, 0x81, 0xdf, 0xc0, 0xaf, 0xc9,
-	0xd8, 0xb1, 0x53, 0x45, 0xcc, 0xdf, 0x60, 0x40, 0x3e, 0x3b, 0x1f, 0x4e, 0xb0, 0xa8, 0x8a, 0xd8,
-	0x98, 0x92, 0x7b, 0x73, 0xcf, 0x47, 0x9e, 0xe7, 0x3d, 0xd4, 0xf3, 0xb8, 0xf6, 0x27, 0x43, 0xe2,
-	0xca, 0x90, 0xca, 0x08, 0x44, 0xec, 0xf3, 0xb1, 0xa6, 0x2c, 0xe2, 0x34, 0x06, 0x35, 0xe5, 0x2e,
-	0xb8, 0xa0, 0x74, 0xcc, 0x3d, 0x01, 0x8a, 0x4e, 0xdb, 0x2c, 0x88, 0x7c, 0xd6, 0xa6, 0x1e, 0x08,
-	0x50, 0x4c, 0xc3, 0x88, 0x44, 0x4a, 0x6a, 0x69, 0x1f, 0xaf, 0x48, 0xc8, 0x92, 0x84, 0xb0, 0x88,
-	0x93, 0x2d, 0x12, 0xb2, 0x20, 0x69, 0x3e, 0x5c, 0x53, 0xf6, 0xa4, 0x27, 0xa9, 0xe1, 0x1a, 0x4e,
-	0xc6, 0xe6, 0x64, 0x0e, 0xe6, 0x5b, 0xa6, 0xd1, 0xec, 0x94, 0x1a, 0x75, 0xa5, 0x18, 0x73, 0x8f,
-	0x4e, 0xb7, 0x7c, 0x35, 0x1f, 0x9d, 0x3d, 0x89, 0x09, 0x97, 0xe9, 0xad, 0x90, 0xb9, 0x3e, 0x17,
-	0xa0, 0x3e, 0xd0, 0xe8, 0xcc, 0x4b, 0x07, 0x31, 0x0d, 0x41, 0xb3, 0xdf, 0xa1, 0x68, 0x19, 0x4a,
-	0x4d, 0x84, 0xe6, 0x21, 0x6c, 0x01, 0x1e, 0xff, 0x09, 0x10, 0xbb, 0x3e, 0x84, 0x6c, 0x13, 0xd7,
-	0x7a, 0x81, 0xee, 0x9e, 0x40, 0x00, 0x5e, 0x3a, 0x7a, 0x3a, 0xd1, 0x3e, 0x08, 0xcd, 0x5d, 0xa6,
-	0xb9, 0x14, 0xf6, 0x11, 0xaa, 0x8e, 0x78, 0xcc, 0x86, 0x01, 0x8c, 0x1a, 0xd6, 0x3d, 0xeb, 0x41,
-	0xb5, 0x7b, 0x6b, 0x76, 0x79, 0x58, 0x49, 0x2e, 0x0f, 0xab, 0x27, 0xf9, 0xdc, 0x59, 0xde, 0x68,
-	0x3d, 0x47, 0x07, 0x05, 0x22, 0xa9, 0xf8, 0xc7, 0xeb, 0xf0, 0xfc, 0xdc, 0x41, 0xb8, 0x9f, 0x35,
-	0x66, 0x3e, 0x84, 0xd7, 0x03, 0xa5, 0xfb, 0xa6, 0xb8, 0x9e, 0x49, 0xd9, 0x7e, 0x8f, 0x6a, 0x71,
-	0xf6, 0xd3, 0x2b, 0x31, 0x96, 0x86, 0xb3, 0xd6, 0x39, 0x26, 0xa5, 0x0b, 0x90, 0x95, 0x43, 0xa6,
-	0x6d, 0xf2, 0x72, 0x30, 0x78, 0xdb, 0x5f, 0x41, 0xbb, 0xb7, 0x73, 0x23, 0xb5, 0xb5, 0xa1, 0xb3,
-	0x4e, 0x6e, 0x7f, 0xb1, 0x50, 0x9d, 0x15, 0x72, 0x69, 0xdc, 0x30, 0x7a, 0xa7, 0xe4, 0x1a, 0x0b,
-	0x47, 0x4a, 0xb2, 0xee, 0x1e, 0xe4, 0x46, 0xea, 0xc5, 0xb9, 0xb3, 0xa1, 0x6d, 0x7f, 0xb6, 0xd0,
-	0x3e, 0x5b, 0x4f, 0xb7, 0xb1, 0x63, 0xdc, 0xbc, 0xfe, 0x7b, 0x37, 0x4b, 0xca, 0xee, 0x9d, 0xdc,
-	0xcc, 0x7e, 0x61, 0xec, 0x14, 0x85, 0xed, 0x01, 0xda, 0xcb, 0xf8, 0x1a, 0xbb, 0xc6, 0xc2, 0xd1,
-	0x55, 0x0a, 0x48, 0xbb, 0x34, 0xc9, 0xd7, 0x73, 0x8d, 0xbd, 0xac, 0x59, 0x27, 0xe7, 0x6a, 0x7d,
-	0xdb, 0x45, 0xf7, 0xcb, 0xea, 0x7f, 0x13, 0xa5, 0xab, 0x2b, 0x17, 0x6b, 0xf0, 0xbf, 0x9a, 0xb2,
-	0x6a, 0x36, 0x1e, 0xc8, 0xee, 0xbf, 0x7c, 0x20, 0x0a, 0xd5, 0x03, 0x60, 0x23, 0x50, 0xcf, 0x02,
-	0x70, 0xcd, 0xdf, 0xbe, 0x69, 0xe4, 0x3a, 0x57, 0x91, 0x3b, 0x2d, 0x20, 0x57, 0x51, 0x17, 0xe7,
-	0xce, 0x86, 0x42, 0x97, 0xcc, 0xe6, 0xb8, 0x72, 0x3e, 0xc7, 0x95, 0x8b, 0x39, 0xae, 0x7c, 0x4a,
-	0xb0, 0x35, 0x4b, 0xb0, 0x75, 0x9e, 0x60, 0xeb, 0x22, 0xc1, 0xd6, 0xf7, 0x04, 0x5b, 0x5f, 0x7f,
-	0xe0, 0xca, 0xbb, 0xea, 0x22, 0xcc, 0x5f, 0x01, 0x00, 0x00, 0xff, 0xff, 0x1c, 0x63, 0xb6, 0x45,
-	0x61, 0x06, 0x00, 0x00,
+	// 686 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x54, 0x4d, 0x4f, 0x13, 0x4f,
+	0x18, 0xef, 0x02, 0x21, 0xcd, 0x00, 0xcd, 0x3f, 0xf3, 0x57, 0x6c, 0x7a, 0x58, 0x4c, 0x8d, 0xc6,
+	0x03, 0xcc, 0x0a, 0x18, 0x43, 0xb8, 0xb9, 0xe0, 0x5b, 0xd4, 0x60, 0xa6, 0x1c, 0x0c, 0x27, 0xa7,
+	0xdb, 0xe9, 0x76, 0x80, 0xce, 0x6c, 0x76, 0xa6, 0x55, 0x39, 0x19, 0xe3, 0xc1, 0x83, 0x07, 0xbf,
+	0x80, 0x27, 0x3f, 0x85, 0xdf, 0x80, 0x23, 0x47, 0x4e, 0x44, 0xd6, 0xaf, 0xe1, 0xc1, 0xec, 0xec,
+	0xb4, 0xbb, 0x0b, 0xae, 0x6d, 0x6a, 0xbc, 0x75, 0x9e, 0xce, 0xf3, 0x7b, 0x79, 0x7e, 0xfb, 0x0c,
+	0xd8, 0xf2, 0x99, 0xea, 0xf4, 0x9a, 0xc8, 0x13, 0x5d, 0x47, 0x04, 0x94, 0xcb, 0x0e, 0x6b, 0x2b,
+	0x87, 0x04, 0xcc, 0x91, 0x34, 0xec, 0x33, 0x8f, 0x7a, 0x34, 0x54, 0x92, 0xf9, 0x9c, 0x86, 0x4e,
+	0x7f, 0x95, 0x1c, 0x06, 0x1d, 0xb2, 0xea, 0xf8, 0x94, 0xd3, 0x90, 0x28, 0xda, 0x42, 0x41, 0x28,
+	0x94, 0x80, 0xeb, 0x29, 0x08, 0x1a, 0x82, 0x20, 0x12, 0x30, 0x74, 0x09, 0x04, 0x0d, 0x40, 0x6a,
+	0x2b, 0x19, 0x66, 0x5f, 0xf8, 0xc2, 0xd1, 0x58, 0xcd, 0x5e, 0x5b, 0x9f, 0xf4, 0x41, 0xff, 0x4a,
+	0x38, 0x6a, 0x6b, 0x85, 0x42, 0x3d, 0xc1, 0xdb, 0xcc, 0x77, 0xfa, 0x97, 0x74, 0xd5, 0x36, 0x0b,
+	0x7b, 0x44, 0x10, 0x5f, 0x14, 0xc5, 0x9e, 0x6a, 0x77, 0x0f, 0x36, 0x24, 0x62, 0x22, 0xbe, 0xdd,
+	0x25, 0x5e, 0x87, 0x71, 0x1a, 0xbe, 0x75, 0x82, 0x03, 0x3f, 0x2e, 0x48, 0xa7, 0x4b, 0x15, 0xf9,
+	0x1d, 0xa3, 0x53, 0xd4, 0x15, 0xf6, 0xb8, 0x62, 0x5d, 0x7a, 0xa9, 0xe1, 0xde, 0xa8, 0x06, 0xe9,
+	0x75, 0x68, 0x97, 0x5c, 0xec, 0xab, 0x3f, 0x02, 0xd7, 0xb6, 0xe9, 0x21, 0xf5, 0xe3, 0xd2, 0xfd,
+	0x9e, 0xea, 0x50, 0xae, 0x98, 0x47, 0x14, 0x13, 0x1c, 0x2e, 0x83, 0x72, 0x8b, 0x49, 0xd2, 0x3c,
+	0xa4, 0xad, 0xaa, 0x75, 0xdd, 0xba, 0x5d, 0x76, 0xff, 0x3b, 0x3e, 0x5b, 0x2a, 0x45, 0x67, 0x4b,
+	0xe5, 0x6d, 0x53, 0xc7, 0xc3, 0x1b, 0xf5, 0x87, 0x60, 0x31, 0x07, 0x24, 0x42, 0x76, 0x34, 0x09,
+	0xce, 0x87, 0x69, 0xb0, 0xd4, 0x48, 0xd2, 0xde, 0xa2, 0xa1, 0x6a, 0xe8, 0xb4, 0x77, 0xcc, 0x98,
+	0xb7, 0x74, 0x44, 0xf0, 0x15, 0x28, 0xc7, 0x83, 0x6b, 0x11, 0x45, 0x34, 0xe2, 0xdc, 0xda, 0x1d,
+	0x94, 0xf8, 0x47, 0x59, 0xff, 0x28, 0x38, 0xf0, 0xe3, 0x82, 0x44, 0xf1, 0x6d, 0xd4, 0x5f, 0x45,
+	0x3b, 0xcd, 0x7d, 0xea, 0xa9, 0xe7, 0x54, 0x11, 0x17, 0x1a, 0x0d, 0x20, 0xad, 0xe1, 0x21, 0x2a,
+	0x3c, 0x02, 0x33, 0x32, 0xa0, 0x5e, 0x75, 0x4a, 0xa3, 0xbf, 0x44, 0x13, 0x7c, 0x98, 0x68, 0x84,
+	0x8b, 0x46, 0x40, 0x3d, 0x77, 0xde, 0xa8, 0x98, 0x89, 0x4f, 0x58, 0x73, 0xc2, 0xf7, 0x16, 0x98,
+	0x95, 0x8a, 0xa8, 0x9e, 0xac, 0x4e, 0x6b, 0xfa, 0xbd, 0x7f, 0x42, 0xaf, 0x19, 0xdc, 0x8a, 0x11,
+	0x30, 0x9b, 0x9c, 0xb1, 0x61, 0xae, 0x7f, 0x9b, 0x02, 0x37, 0xc6, 0x30, 0x00, 0x43, 0x30, 0x3f,
+	0xd8, 0x81, 0xf8, 0x6c, 0xe2, 0xd8, 0x28, 0x56, 0x3c, 0xb8, 0x9d, 0x0a, 0xdd, 0xc9, 0xf4, 0xbb,
+	0x57, 0x8c, 0x9e, 0xf9, 0x6c, 0x15, 0xe7, 0x38, 0xe0, 0x17, 0x0b, 0xd8, 0xc6, 0xb8, 0x96, 0xc8,
+	0xfd, 0x54, 0x62, 0x22, 0xcd, 0xe4, 0xb6, 0x52, 0xf8, 0x55, 0x98, 0xad, 0x40, 0x98, 0xbc, 0x7e,
+	0xf0, 0x46, 0x51, 0x2e, 0x99, 0xe0, 0xee, 0x2d, 0xc3, 0x6d, 0x37, 0xfe, 0x08, 0x8e, 0x47, 0x90,
+	0xd7, 0xbf, 0x5a, 0xe0, 0xe6, 0x58, 0xd3, 0x87, 0x47, 0xa0, 0x32, 0x74, 0x96, 0x24, 0x9e, 0xcc,
+	0x6f, 0x73, 0xa2, 0xf9, 0x25, 0x89, 0x2e, 0x1a, 0x17, 0x95, 0x7c, 0x1d, 0x5f, 0x60, 0xaa, 0xff,
+	0x9c, 0x06, 0x23, 0x8c, 0xc2, 0x7d, 0x30, 0x27, 0x93, 0xbf, 0x9e, 0xf0, 0xb6, 0x30, 0xda, 0xd6,
+	0x8b, 0xb5, 0x25, 0x2f, 0x68, 0xbc, 0x68, 0x8f, 0x77, 0x77, 0x5f, 0x34, 0xd2, 0x56, 0xf7, 0x7f,
+	0x23, 0x6a, 0x2e, 0x53, 0xc4, 0x59, 0x70, 0xf8, 0xc9, 0x02, 0x15, 0x92, 0x7b, 0x80, 0x4c, 0x88,
+	0xcf, 0x26, 0xfa, 0xfa, 0x0b, 0x1e, 0xb5, 0x74, 0x3a, 0xf9, 0x3a, 0xbe, 0xc0, 0x0d, 0x3f, 0x5a,
+	0x60, 0x81, 0x64, 0x9f, 0x31, 0xb3, 0x8b, 0x4f, 0xff, 0x5e, 0xcd, 0x10, 0xd2, 0xbd, 0x6a, 0xc4,
+	0x2c, 0xe4, 0xca, 0x38, 0x4f, 0x0c, 0x77, 0xc1, 0x6c, 0x82, 0x57, 0x9d, 0xd1, 0x12, 0x96, 0xc7,
+	0x09, 0x20, 0xce, 0x52, 0x4f, 0x3e, 0x5d, 0x70, 0x8d, 0x81, 0x0d, 0x96, 0x8b, 0x8e, 0xcf, 0xed,
+	0xd2, 0xc9, 0xb9, 0x5d, 0x3a, 0x3d, 0xb7, 0x4b, 0xef, 0x22, 0xdb, 0x3a, 0x8e, 0x6c, 0xeb, 0x24,
+	0xb2, 0xad, 0xd3, 0xc8, 0xb6, 0xbe, 0x47, 0xb6, 0xf5, 0xf9, 0x87, 0x5d, 0xda, 0x2b, 0x0f, 0x2c,
+	0xfc, 0x0a, 0x00, 0x00, 0xff, 0xff, 0xec, 0x26, 0x36, 0xe0, 0xe1, 0x07, 0x00, 0x00,
 }

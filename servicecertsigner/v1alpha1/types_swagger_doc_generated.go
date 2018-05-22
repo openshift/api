@@ -29,6 +29,22 @@ func (DelegatedAuthorization) SwaggerDoc() map[string]string {
 	return map_DelegatedAuthorization
 }
 
+var map_ServiceCertSignerOperatorConfig = map[string]string{
+	"": "ServiceCertSignerOperatorConfig provides information to configure an operator to manage the service cert signing controllers",
+}
+
+func (ServiceCertSignerOperatorConfig) SwaggerDoc() map[string]string {
+	return map_ServiceCertSignerOperatorConfig
+}
+
+var map_ServiceCertSignerOperatorConfigSpec = map[string]string{
+	"serviceServingCertSignerConfig": "serviceServingCertSignerConfig holds a sparse config that the user wants for this component.  It only needs to be the overrides from the defaults it will end up overlaying in the following order: 1. hardcoded default 2. this config",
+}
+
+func (ServiceCertSignerOperatorConfigSpec) SwaggerDoc() map[string]string {
+	return map_ServiceCertSignerOperatorConfigSpec
+}
+
 var map_ServiceServingCertSignerConfig = map[string]string{
 	"":               "ServiceServingCertSignerConfig provides information to configure a serving serving cert signing controller",
 	"servingInfo":    "ServingInfo is the HTTP serving information for the controller's endpoints",
@@ -39,18 +55,6 @@ var map_ServiceServingCertSignerConfig = map[string]string{
 
 func (ServiceServingCertSignerConfig) SwaggerDoc() map[string]string {
 	return map_ServiceServingCertSignerConfig
-}
-
-var map_ServiceServingCertSignerOperatorConfig = map[string]string{
-	"":               "ServiceServingCertSignerOperatorConfig provides information to configure an operator to manage the serving serving cert signing controllers",
-	"servingInfo":    "ServingInfo is the HTTP serving information for the controller's endpoints",
-	"leaderElection": "leaderElection provides information to elect a leader. Only override this if you have a specific need",
-	"authentication": "authentication allows configuration of authentication for the endpoints",
-	"authorization":  "authorization allows configuration of authentication for the endpoints",
-}
-
-func (ServiceServingCertSignerOperatorConfig) SwaggerDoc() map[string]string {
-	return map_ServiceServingCertSignerOperatorConfig
 }
 
 // AUTO-GENERATED FUNCTIONS END HERE

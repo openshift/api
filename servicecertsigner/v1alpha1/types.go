@@ -45,22 +45,22 @@ type DelegatedAuthorization struct {
 // ServiceCertSignerOperatorConfig provides information to configure an operator to manage the service cert signing controllers
 type ServiceCertSignerOperatorConfig struct {
 	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata"`
+	metav1.ObjectMeta `json:"metadata" protobuf:"bytes,1,opt,name=metadata"`
 
-	Spec   ServiceCertSignerOperatorConfigSpec   `json:"spec"`
-	Status ServiceCertSignerOperatorConfigStatus `json:"status"`
+	Spec   ServiceCertSignerOperatorConfigSpec   `json:"spec" protobuf:"bytes,2,opt,name=spec"`
+	Status ServiceCertSignerOperatorConfigStatus `json:"status" protobuf:"bytes,3,opt,name=status"`
 }
 
 type ServiceCertSignerOperatorConfigSpec struct {
-	operatorsv1alpha1api.OperatorSpec `json:",inline"`
+	operatorsv1alpha1api.OperatorSpec `json:",inline" protobuf:"bytes,1,opt,name=operatorSpec"`
 
 	// serviceServingCertSignerConfig holds a sparse config that the user wants for this component.  It only needs to be the overrides from the defaults
 	// it will end up overlaying in the following order:
 	// 1. hardcoded default
 	// 2. this config
-	ServiceServingCertSignerConfig runtime.RawExtension `json:"serviceServingCertSignerConfig"`
+	ServiceServingCertSignerConfig runtime.RawExtension `json:"serviceServingCertSignerConfig" protobuf:"bytes,2,opt,name=serviceServingCertSignerConfig"`
 }
 
 type ServiceCertSignerOperatorConfigStatus struct {
-	operatorsv1alpha1api.OperatorStatus `json:",inline"`
+	operatorsv1alpha1api.OperatorStatus `json:",inline" protobuf:"bytes,1,opt,name=operatorStatus"`
 }

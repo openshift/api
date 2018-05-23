@@ -35,6 +35,15 @@ message ServiceCertSignerOperatorConfig {
   optional ServiceCertSignerOperatorConfigStatus status = 3;
 }
 
+// ServiceCertSignerOperatorConfigList is a collection of items
+message ServiceCertSignerOperatorConfigList {
+  // Standard object's metadata.
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1;
+
+  // Items contains the items
+  repeated ServiceCertSignerOperatorConfig items = 2;
+}
+
 message ServiceCertSignerOperatorConfigSpec {
   optional github.com.openshift.api.operator.v1alpha1.OperatorSpec operatorSpec = 1;
 

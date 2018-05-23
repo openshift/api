@@ -37,6 +37,16 @@ func (ServiceCertSignerOperatorConfig) SwaggerDoc() map[string]string {
 	return map_ServiceCertSignerOperatorConfig
 }
 
+var map_ServiceCertSignerOperatorConfigList = map[string]string{
+	"":         "ServiceCertSignerOperatorConfigList is a collection of items",
+	"metadata": "Standard object's metadata.",
+	"items":    "Items contains the items",
+}
+
+func (ServiceCertSignerOperatorConfigList) SwaggerDoc() map[string]string {
+	return map_ServiceCertSignerOperatorConfigList
+}
+
 var map_ServiceCertSignerOperatorConfigSpec = map[string]string{
 	"serviceServingCertSignerConfig": "serviceServingCertSignerConfig holds a sparse config that the user wants for this component.  It only needs to be the overrides from the defaults it will end up overlaying in the following order: 1. hardcoded default 2. this config",
 }

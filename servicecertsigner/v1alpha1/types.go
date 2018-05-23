@@ -64,3 +64,14 @@ type ServiceCertSignerOperatorConfigSpec struct {
 type ServiceCertSignerOperatorConfigStatus struct {
 	operatorsv1alpha1api.OperatorStatus `json:",inline" protobuf:"bytes,1,opt,name=operatorStatus"`
 }
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// ServiceCertSignerOperatorConfigList is a collection of items
+type ServiceCertSignerOperatorConfigList struct {
+	metav1.TypeMeta `json:",inline"`
+	// Standard object's metadata.
+	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	// Items contains the items
+	Items []ServiceCertSignerOperatorConfig `json:"items" protobuf:"bytes,2,rep,name=items"`
+}

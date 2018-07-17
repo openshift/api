@@ -147,20 +147,16 @@ func (in *OperatorStatus) DeepCopyInto(out *OperatorStatus) {
 	}
 	if in.CurrentAvailability != nil {
 		in, out := &in.CurrentAvailability, &out.CurrentAvailability
-		if *in == nil {
-			*out = nil
-		} else {
-			*out = new(VersionAvailablity)
-			(*in).DeepCopyInto(*out)
+		*out = make([]VersionAvailablity, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
 	if in.TargetAvailability != nil {
 		in, out := &in.TargetAvailability, &out.TargetAvailability
-		if *in == nil {
-			*out = nil
-		} else {
-			*out = new(VersionAvailablity)
-			(*in).DeepCopyInto(*out)
+		*out = make([]VersionAvailablity, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
 	return

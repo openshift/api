@@ -65,6 +65,8 @@ type OperatorCondition struct {
 
 // VersionAvailablity gives information about the synchronization and operational status of a particular version of the component
 type VersionAvailablity struct {
+	// name is a required identifier to understand what particular piece of this operator is at a given level.
+	Name string `json:"name" protobuf:"bytes,6,opt,name=name"`
 	// version is the level this availability applies to
 	Version string `json:"version" protobuf:"bytes,1,opt,name=version"`
 	// updatedReplicas indicates how many replicas are at the desired state
@@ -97,6 +99,10 @@ type OperatorStatus struct {
 	// observedGeneration is the last generation change you've dealt with
 	ObservedGeneration int64 `json:"observedGeneration,omitempty" protobuf:"varint,1,opt,name=observedGeneration"`
 
+	// operatorVersion is required and indicates what level of the operator was used to realize this status.  This knowledge feeds back into
+	// decisions about whether or not to force a workload update since the workload generation will not have changed.
+	OperatorVersion string `json:"operatorVersion" protobuf:"bytes,7,opt,name=operatorVersion"`
+
 	// conditions is a list of conditions and their status
 	Conditions []OperatorCondition `json:"conditions,omitempty" protobuf:"bytes,2,rep,name=conditions"`
 
@@ -107,9 +113,11 @@ type OperatorStatus struct {
 	TaskSummary string `json:"taskSummary,omitempty" protobuf:"bytes,4,opt,name=taskSummary"`
 
 	// currentVersionAvailability is availability information for the current version.  If it is unmanged or removed, this doesn't exist.
-	CurrentAvailability *VersionAvailablity `json:"currentVersionAvailability,omitempty" protobuf:"bytes,5,opt,name=currentVersionAvailability"`
+	// It must not contain two elements with the same name.
+	CurrentAvailability []VersionAvailablity `json:"currentVersionAvailability,omitempty" protobuf:"bytes,5,opt,name=currentVersionAvailability"`
 	// targetVersionAvailability is availability information for the target version if we are migrating
-	TargetAvailability *VersionAvailablity `json:"targetVersionAvailability,omitempty" protobuf:"bytes,6,opt,name=targetVersionAvailability"`
+	// It must not contain two elements with the same name.
+	TargetAvailability []VersionAvailablity `json:"targetVersionAvailability,omitempty" protobuf:"bytes,6,opt,name=targetVersionAvailability"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

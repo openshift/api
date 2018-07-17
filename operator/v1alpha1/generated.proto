@@ -103,6 +103,10 @@ message OperatorStatus {
   // observedGeneration is the last generation change you've dealt with
   optional int64 observedGeneration = 1;
 
+  // operatorVersion is required and indicates what level of the operator was used to realize this status.  This knowledge feeds back into
+  // decisions about whether or not to force a workload update since the workload generation will not have changed.
+  optional string operatorVersion = 7;
+
   // conditions is a list of conditions and their status
   repeated OperatorCondition conditions = 2;
 
@@ -114,14 +118,19 @@ message OperatorStatus {
   optional string taskSummary = 4;
 
   // currentVersionAvailability is availability information for the current version.  If it is unmanged or removed, this doesn't exist.
-  optional VersionAvailablity currentVersionAvailability = 5;
+  // It must not contain two elements with the same name.
+  repeated VersionAvailablity currentVersionAvailability = 5;
 
   // targetVersionAvailability is availability information for the target version if we are migrating
-  optional VersionAvailablity targetVersionAvailability = 6;
+  // It must not contain two elements with the same name.
+  repeated VersionAvailablity targetVersionAvailability = 6;
 }
 
 // VersionAvailablity gives information about the synchronization and operational status of a particular version of the component
 message VersionAvailablity {
+  // name is a required identifier to understand what particular piece of this operator is at a given level.
+  optional string name = 6;
+
   // version is the level this availability applies to
   optional string version = 1;
 

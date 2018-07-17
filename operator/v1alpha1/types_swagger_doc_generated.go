@@ -87,11 +87,12 @@ func (OperatorSpec) SwaggerDoc() map[string]string {
 var map_OperatorStatus = map[string]string{
 	"":                           "OperatorStatus contains common fields for an operator to need.  It is intended to be anonymous included inside of the Status struct for you particular operator.",
 	"observedGeneration":         "observedGeneration is the last generation change you've dealt with",
+	"operatorVersion":            "operatorVersion is required and indicates what level of the operator was used to realize this status.  This knowledge feeds back into decisions about whether or not to force a workload update since the workload generation will not have changed.",
 	"conditions":                 "conditions is a list of conditions and their status",
 	"state":                      "state indicates what the operator has observed to be its current operational status.",
 	"taskSummary":                "taskSummary is a high level summary of what the controller is currently attempting to do.  It is high-level, human-readable and not guaranteed in any way. (I needed this for debugging and realized it made a great summary).",
-	"currentVersionAvailability": "currentVersionAvailability is availability information for the current version.  If it is unmanged or removed, this doesn't exist.",
-	"targetVersionAvailability":  "targetVersionAvailability is availability information for the target version if we are migrating",
+	"currentVersionAvailability": "currentVersionAvailability is availability information for the current version.  If it is unmanged or removed, this doesn't exist. It must not contain two elements with the same name.",
+	"targetVersionAvailability":  "targetVersionAvailability is availability information for the target version if we are migrating It must not contain two elements with the same name.",
 }
 
 func (OperatorStatus) SwaggerDoc() map[string]string {
@@ -100,6 +101,7 @@ func (OperatorStatus) SwaggerDoc() map[string]string {
 
 var map_VersionAvailablity = map[string]string{
 	"":                "VersionAvailablity gives information about the synchronization and operational status of a particular version of the component",
+	"name":            "name is a required identifier to understand what particular piece of this operator is at a given level.",
 	"version":         "version is the level this availability applies to",
 	"updatedReplicas": "updatedReplicas indicates how many replicas are at the desired state",
 	"readyReplicas":   "readyReplicas indicates how many replicas are ready and at the desired state",

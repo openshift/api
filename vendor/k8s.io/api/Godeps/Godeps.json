@@ -1,6 +1,6 @@
 {
 	"ImportPath": "k8s.io/api",
-	"GoVersion": "go1.10",
+	"GoVersion": "go1.9",
 	"GodepVersion": "v80",
 	"Packages": [
 		"./..."
@@ -36,7 +36,7 @@
 		},
 		{
 			"ImportPath": "github.com/json-iterator/go",
-			"Rev": "2ddf6d758266fcb080a4f9e054b9f292c85e6798"
+			"Rev": "f2b4162afba35581b6d4a50d3b8f34e33c144682"
 		},
 		{
 			"ImportPath": "github.com/modern-go/concurrent",
@@ -108,6 +108,10 @@
 		},
 		{
 			"ImportPath": "k8s.io/apimachinery/pkg/api/testing/fuzzer",
+			"Rev": "103fd098999dc9c0c88536f5c9ad2e5da39373ae"
+		},
+		{
+			"ImportPath": "k8s.io/apimachinery/pkg/api/testing/roundtrip",
 			"Rev": "103fd098999dc9c0c88536f5c9ad2e5da39373ae"
 		},
 		{
@@ -232,46 +236,6 @@
 		},
 		{
 			"ImportPath": "k8s.io/apimachinery/third_party/forked/golang/reflect",
-			"Rev": "103fd098999dc9c0c88536f5c9ad2e5da39373ae"
-		},
-		{
-			"ImportPath": "k8s.io/apimachinery/pkg/api/resource",
-			"Rev": "103fd098999dc9c0c88536f5c9ad2e5da39373ae"
-		},
-		{
-			"ImportPath": "k8s.io/apimachinery/pkg/api/testing/fuzzer",
-			"Rev": "103fd098999dc9c0c88536f5c9ad2e5da39373ae"
-		},
-		{
-			"ImportPath": "k8s.io/apimachinery/pkg/api/testing/roundtrip",
-			"Rev": "103fd098999dc9c0c88536f5c9ad2e5da39373ae"
-		},
-		{
-			"ImportPath": "k8s.io/apimachinery/pkg/apis/meta/fuzzer",
-			"Rev": "103fd098999dc9c0c88536f5c9ad2e5da39373ae"
-		},
-		{
-			"ImportPath": "k8s.io/apimachinery/pkg/apis/meta/v1",
-			"Rev": "103fd098999dc9c0c88536f5c9ad2e5da39373ae"
-		},
-		{
-			"ImportPath": "k8s.io/apimachinery/pkg/runtime",
-			"Rev": "103fd098999dc9c0c88536f5c9ad2e5da39373ae"
-		},
-		{
-			"ImportPath": "k8s.io/apimachinery/pkg/runtime/schema",
-			"Rev": "103fd098999dc9c0c88536f5c9ad2e5da39373ae"
-		},
-		{
-			"ImportPath": "k8s.io/apimachinery/pkg/runtime/serializer",
-			"Rev": "103fd098999dc9c0c88536f5c9ad2e5da39373ae"
-		},
-		{
-			"ImportPath": "k8s.io/apimachinery/pkg/types",
-			"Rev": "103fd098999dc9c0c88536f5c9ad2e5da39373ae"
-		},
-		{
-			"ImportPath": "k8s.io/apimachinery/pkg/util/intstr",
 			"Rev": "103fd098999dc9c0c88536f5c9ad2e5da39373ae"
 		}
 	]

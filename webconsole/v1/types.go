@@ -46,7 +46,7 @@ type ClusterInfo struct {
 
 	// AdminConsolePublicURL is an optional, public URL of the OpenShift admin console. If specified, the web
 	// console will add a link to the admin console in a context selector in its masthead.
-	AdminConsolePublicURL string `json:"adminConsolePublicURL"`
+	AdminConsolePublicURL string `json:"adminConsolePublicURL" protobuf:"bytes,6,opt,name=adminConsolePublicURL"`
 }
 
 // FeaturesConfiguration defines various feature gates for the web console

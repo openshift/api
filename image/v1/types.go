@@ -435,6 +435,12 @@ type ImageStreamLayers struct {
 
 // ImageBlobReferences describes the blob references within an image.
 type ImageBlobReferences struct {
+	// imageMissing is true if the image is referenced by the image stream but the image
+	// object has been deleted from the API by an administrator. When this field is set,
+	// layers and config fields may be empty and callers that depend on the image metadata
+	// should consider the image to be unavailable for download or viewing.
+	// +optional
+	ImageMissing bool `json:"imageMissing" protobuf:"varint,3,opt,name=imageMissing"`
 	// layers is the list of blobs that compose this image, from base layer to top layer.
 	// All layers referenced by this array will be defined in the blobs map. Some images
 	// may have zero layers.

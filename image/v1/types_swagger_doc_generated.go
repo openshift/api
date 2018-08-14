@@ -43,9 +43,10 @@ func (Image) SwaggerDoc() map[string]string {
 }
 
 var map_ImageBlobReferences = map[string]string{
-	"":       "ImageBlobReferences describes the blob references within an image.",
-	"layers": "layers is the list of blobs that compose this image, from base layer to top layer. All layers referenced by this array will be defined in the blobs map. Some images may have zero layers.",
-	"config": "config, if set, is the blob that contains the image config. Some images do not have separate config blobs and this field will be set to nil if so.",
+	"":             "ImageBlobReferences describes the blob references within an image.",
+	"imageMissing": "imageMissing is true if the image is referenced by the image stream but the image object has been deleted from the API by an administrator. When this field is set, layers and config fields may be empty and callers that depend on the image metadata should consider the image to be unavailable for download or viewing.",
+	"layers":       "layers is the list of blobs that compose this image, from base layer to top layer. All layers referenced by this array will be defined in the blobs map. Some images may have zero layers.",
+	"config":       "config, if set, is the blob that contains the image config. Some images do not have separate config blobs and this field will be set to nil if so.",
 }
 
 func (ImageBlobReferences) SwaggerDoc() map[string]string {

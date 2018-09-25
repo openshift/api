@@ -184,3 +184,30 @@ type AggregatorConfig struct {
 	// proxyClientInfo specifies the client cert/key to use when proxying to aggregated API servers
 	ProxyClientInfo configv1.CertInfo `json:"proxyClientInfo" protobuf:"bytes,1,opt,name=proxyClientInfo"`
 }
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+type KubeControllerManagerConfig struct {
+	metav1.TypeMeta `json:",inline"`
+
+	// serviceServingCert provides support for the old alpha service serving cert signer CA bundle
+	ServiceServingCert ServiceServingCert `json:"serviceServingCert" protobuf:"bytes,9,opt,name=serviceServingCert"`
+
+	// projectConfig is an optimization for the daemonset controller
+	ProjectConfig KubeControllerManagerProjectConfig `json:"projectConfig" protobuf:"bytes,10,opt,name=projectConfig"`
+
+	// extendedArguments is used to configure the kube-controller-manager
+	ExtendedArguments map[string]Arguments `json:"extendedArguments" protobuf:"bytes,14,rep,name=extendedArguments"`
+}
+
+type KubeControllerManagerProjectConfig struct {
+	// defaultNodeSelector holds default project node label selector
+	DefaultNodeSelector string `json:"defaultNodeSelector" protobuf:"bytes,1,opt,name=defaultNodeSelector"`
+}
+
+// ServiceServingCert holds configuration for service serving cert signer which creates cert/key pairs for
+// pods fulfilling a service to serve with.
+type ServiceServingCert struct {
+	// CertFile is a file containing a PEM-encoded certificate
+	CertFile string `json:"certFile" protobuf:"bytes,1,opt,name=certFile"`
+}

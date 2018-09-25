@@ -97,6 +97,22 @@ message KubeAPIServerProjectConfig {
   optional string defaultNodeSelector = 1;
 }
 
+message KubeControllerManagerConfig {
+  // serviceServingCert provides support for the old alpha service serving cert signer CA bundle
+  optional ServiceServingCert serviceServingCert = 9;
+
+  // projectConfig is an optimization for the daemonset controller
+  optional KubeControllerManagerProjectConfig projectConfig = 10;
+
+  // extendedArguments is used to configure the kube-controller-manager
+  map<string, Arguments> extendedArguments = 14;
+}
+
+message KubeControllerManagerProjectConfig {
+  // defaultNodeSelector holds default project node label selector
+  optional string defaultNodeSelector = 1;
+}
+
 // KubeletConnectionInfo holds information necessary for connecting to a kubelet
 message KubeletConnectionInfo {
   // port is the port to connect to kubelets on
@@ -143,6 +159,13 @@ message RequestHeaderAuthenticationOptions {
 
   // extraHeaderPrefixes is the set of request header prefixes to inspect for user extra. X-Remote-Extra- is suggested.
   repeated string extraHeaderPrefixes = 5;
+}
+
+// ServiceServingCert holds configuration for service serving cert signer which creates cert/key pairs for
+// pods fulfilling a service to serve with.
+message ServiceServingCert {
+  // CertFile is a file containing a PEM-encoded certificate
+  optional string certFile = 1;
 }
 
 // UserAgentDenyRule adds a rejection message that can be used to help a user figure out how to get an approved client

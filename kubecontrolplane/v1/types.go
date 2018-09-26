@@ -19,46 +19,46 @@ type KubeAPIServerConfig struct {
 
 	// authConfig configures authentication options in addition to the standard
 	// oauth token and client certificate authenticators
-	AuthConfig MasterAuthConfig `json:"authConfig" protobuf:"bytes,2,opt,name=authConfig"`
+	AuthConfig MasterAuthConfig `json:"authConfig,omitempty" protobuf:"bytes,2,opt,name=authConfig"`
 
 	// aggregatorConfig has options for configuring the aggregator component of the API server.
-	AggregatorConfig AggregatorConfig `json:"aggregatorConfig" protobuf:"bytes,3,opt,name=aggregatorConfig"`
+	AggregatorConfig AggregatorConfig `json:"aggregatorConfig,omitempty" protobuf:"bytes,3,opt,name=aggregatorConfig"`
 
 	// kubeletClientInfo contains information about how to connect to kubelets
-	KubeletClientInfo KubeletConnectionInfo `json:"kubeletClientInfo" protobuf:"bytes,4,opt,name=kubeletClientInfo"`
+	KubeletClientInfo KubeletConnectionInfo `json:"kubeletClientInfo,omitempty" protobuf:"bytes,4,opt,name=kubeletClientInfo"`
 
 	// servicesSubnet is the subnet to use for assigning service IPs
-	ServicesSubnet string `json:"servicesSubnet" protobuf:"bytes,5,opt,name=servicesSubnet"`
+	ServicesSubnet string `json:"servicesSubnet,omitempty" protobuf:"bytes,5,opt,name=servicesSubnet"`
 	// servicesNodePortRange is the range to use for assigning service public ports on a host.
-	ServicesNodePortRange string `json:"servicesNodePortRange" protobuf:"bytes,6,opt,name=servicesNodePortRange"`
+	ServicesNodePortRange string `json:"servicesNodePortRange,omitempty" protobuf:"bytes,6,opt,name=servicesNodePortRange"`
 
 	// consolePublicURL is an optional URL to provide a redirect from the kube-apiserver to the webconsole
-	ConsolePublicURL string `json:"consolePublicURL" protobuf:"bytes,15,opt,name=consolePublicURL"`
+	ConsolePublicURL string `json:"consolePublicURL,omitempty" protobuf:"bytes,15,opt,name=consolePublicURL"`
 
 	// UserAgentMatchingConfig controls how API calls from *voluntarily* identifying clients will be handled.  THIS DOES NOT DEFEND AGAINST MALICIOUS CLIENTS!
 	// TODO I think we should just drop this feature.
-	UserAgentMatchingConfig UserAgentMatchingConfig `json:"userAgentMatchingConfig" protobuf:"bytes,8,opt,name=userAgentMatchingConfig"`
+	UserAgentMatchingConfig UserAgentMatchingConfig `json:"userAgentMatchingConfig,omitempty" protobuf:"bytes,8,opt,name=userAgentMatchingConfig"`
 
 	// imagePolicyConfig feeds the image policy admission plugin
 	// TODO make it an admission plugin config
-	ImagePolicyConfig KubeAPIServerImagePolicyConfig `json:"imagePolicyConfig" protobuf:"bytes,9,opt,name=imagePolicyConfig"`
+	ImagePolicyConfig KubeAPIServerImagePolicyConfig `json:"imagePolicyConfig,omitempty" protobuf:"bytes,9,opt,name=imagePolicyConfig"`
 
 	// projectConfig feeds an admission plugin
 	// TODO make it an admission plugin config
-	ProjectConfig KubeAPIServerProjectConfig `json:"projectConfig" protobuf:"bytes,10,opt,name=projectConfig"`
+	ProjectConfig KubeAPIServerProjectConfig `json:"projectConfig,omitempty" protobuf:"bytes,10,opt,name=projectConfig"`
 
 	// serviceAccountPublicKeyFiles is a list of files, each containing a PEM-encoded public RSA key.
 	// (If any file contains a private key, the public portion of the key is used)
 	// The list of public keys is used to verify presented service account tokens.
 	// Each key is tried in order until the list is exhausted or verification succeeds.
 	// If no keys are specified, no service account authentication will be available.
-	ServiceAccountPublicKeyFiles []string `json:"serviceAccountPublicKeyFiles" protobuf:"bytes,11,rep,name=serviceAccountPublicKeyFiles"`
+	ServiceAccountPublicKeyFiles []string `json:"serviceAccountPublicKeyFiles,omitempty" protobuf:"bytes,11,rep,name=serviceAccountPublicKeyFiles"`
 
 	// oauthConfig, if present start the /oauth endpoint in this process
-	OAuthConfig *osinv1.OAuthConfig `json:"oauthConfig" protobuf:"bytes,13,opt,name=oauthConfig"`
+	OAuthConfig *osinv1.OAuthConfig `json:"oauthConfig,omitempty" protobuf:"bytes,13,opt,name=oauthConfig"`
 
 	// TODO this needs to be removed.
-	APIServerArguments map[string]Arguments `json:"apiServerArguments" protobuf:"bytes,14,rep,name=apiServerArguments"`
+	APIServerArguments map[string]Arguments `json:"apiServerArguments,omitempty" protobuf:"bytes,14,rep,name=apiServerArguments"`
 }
 
 // Arguments masks the value so protobuf can generate
@@ -75,25 +75,25 @@ type KubeAPIServerImagePolicyConfig struct {
 	// registry. The value must be in "hostname[:port]" format.
 	// For backward compatibility, users can still use OPENSHIFT_DEFAULT_REGISTRY
 	// environment variable but this setting overrides the environment variable.
-	InternalRegistryHostname string `json:"internalRegistryHostname" protobuf:"bytes,1,opt,name=internalRegistryHostname"`
+	InternalRegistryHostname string `json:"internalRegistryHostname,omitempty" protobuf:"bytes,1,opt,name=internalRegistryHostname"`
 	// externalRegistryHostname sets the hostname for the default external image
 	// registry. The external hostname should be set only when the image registry
 	// is exposed externally. The value is used in 'publicDockerImageRepository'
 	// field in ImageStreams. The value must be in "hostname[:port]" format.
-	ExternalRegistryHostname string `json:"externalRegistryHostname" protobuf:"bytes,2,opt,name=externalRegistryHostname"`
+	ExternalRegistryHostname string `json:"externalRegistryHostname,omitempty" protobuf:"bytes,2,opt,name=externalRegistryHostname"`
 }
 
 type KubeAPIServerProjectConfig struct {
 	// defaultNodeSelector holds default project node label selector
-	DefaultNodeSelector string `json:"defaultNodeSelector" protobuf:"bytes,1,opt,name=defaultNodeSelector"`
+	DefaultNodeSelector string `json:"defaultNodeSelector,omitempty" protobuf:"bytes,1,opt,name=defaultNodeSelector"`
 }
 
 // KubeletConnectionInfo holds information necessary for connecting to a kubelet
 type KubeletConnectionInfo struct {
 	// port is the port to connect to kubelets on
-	Port uint32 `json:"port" protobuf:"varint,1,opt,name=port"`
+	Port uint32 `json:"port,omitempty" protobuf:"varint,1,opt,name=port"`
 	// ca is the CA for verifying TLS connections to kubelets
-	CA string `json:"ca" protobuf:"bytes,2,opt,name=ca"`
+	CA string `json:"ca,omitempty" protobuf:"bytes,2,opt,name=ca"`
 	// CertInfo is the TLS client cert information for securing communication to kubelets
 	// this is anonymous so that we can inline it for serialization
 	configv1.CertInfo `json:",inline" protobuf:"bytes,3,opt,name=certInfo"`
@@ -102,13 +102,13 @@ type KubeletConnectionInfo struct {
 // UserAgentMatchingConfig controls how API calls from *voluntarily* identifying clients will be handled.  THIS DOES NOT DEFEND AGAINST MALICIOUS CLIENTS!
 type UserAgentMatchingConfig struct {
 	// requiredClients if this list is non-empty, then a User-Agent must match one of the UserAgentRegexes to be allowed
-	RequiredClients []UserAgentMatchRule `json:"requiredClients" protobuf:"bytes,1,rep,name=requiredClients"`
+	RequiredClients []UserAgentMatchRule `json:"requiredClients,omitempty" protobuf:"bytes,1,rep,name=requiredClients"`
 
 	// deniedClients if this list is non-empty, then a User-Agent must not match any of the UserAgentRegexes
-	DeniedClients []UserAgentDenyRule `json:"deniedClients" protobuf:"bytes,2,rep,name=deniedClients"`
+	DeniedClients []UserAgentDenyRule `json:"deniedClients,omitempty" protobuf:"bytes,2,rep,name=deniedClients"`
 
 	// defaultRejectionMessage is the message shown when rejecting a client.  If it is not a set, a generic message is given.
-	DefaultRejectionMessage string `json:"defaultRejectionMessage" protobuf:"bytes,3,opt,name=defaultRejectionMessage"`
+	DefaultRejectionMessage string `json:"defaultRejectionMessage,omitempty" protobuf:"bytes,3,opt,name=defaultRejectionMessage"`
 }
 
 // UserAgentMatchRule describes how to match a given request based on User-Agent and HTTPVerb
@@ -123,10 +123,10 @@ type UserAgentMatchRule struct {
 	// 6. oadm accessing openshift resources: oadm/v1.1.3 (linux/amd64) openshift/b348c2f
 	// 7. openshift cli accessing kube resources: openshift/v1.2.0 (linux/amd64) kubernetes/bc4550d
 	// 8. openshift cli accessing openshift resources: openshift/v1.1.3 (linux/amd64) openshift/b348c2f
-	Regex string `json:"regex" protobuf:"bytes,1,opt,name=regex"`
+	Regex string `json:"regex,omitempty" protobuf:"bytes,1,opt,name=regex"`
 
 	// httpVerbs specifies which HTTP verbs should be matched.  An empty list means "match all verbs".
-	HTTPVerbs []string `json:"httpVerbs" protobuf:"bytes,2,rep,name=httpVerbs"`
+	HTTPVerbs []string `json:"httpVerbs,omitempty" protobuf:"bytes,2,rep,name=httpVerbs"`
 }
 
 // UserAgentDenyRule adds a rejection message that can be used to help a user figure out how to get an approved client
@@ -134,55 +134,55 @@ type UserAgentDenyRule struct {
 	UserAgentMatchRule `json:",inline" protobuf:"bytes,1,opt,name=userAgentMatchRule"`
 
 	// RejectionMessage is the message shown when rejecting a client.  If it is not a set, the default message is used.
-	RejectionMessage string `json:"rejectionMessage" protobuf:"bytes,2,opt,name=rejectionMessage"`
+	RejectionMessage string `json:"rejectionMessage,omitempty" protobuf:"bytes,2,opt,name=rejectionMessage"`
 }
 
 // MasterAuthConfig configures authentication options in addition to the standard
 // oauth token and client certificate authenticators
 type MasterAuthConfig struct {
 	// requestHeader holds options for setting up a front proxy against the the API.  It is optional.
-	RequestHeader *RequestHeaderAuthenticationOptions `json:"requestHeader" protobuf:"bytes,1,opt,name=requestHeader"`
+	RequestHeader *RequestHeaderAuthenticationOptions `json:"requestHeader,omitempty" protobuf:"bytes,1,opt,name=requestHeader"`
 	// webhookTokenAuthenticators, if present configures remote token reviewers
-	WebhookTokenAuthenticators []WebhookTokenAuthenticator `json:"webhookTokenAuthenticators" protobuf:"bytes,2,rep,name=webhookTokenAuthenticators"`
+	WebhookTokenAuthenticators []WebhookTokenAuthenticator `json:"webhookTokenAuthenticators,omitempty" protobuf:"bytes,2,rep,name=webhookTokenAuthenticators"`
 	// oauthMetadataFile is a path to a file containing the discovery endpoint for OAuth 2.0 Authorization
 	// Server Metadata for an external OAuth server.
 	// See IETF Draft: // https://tools.ietf.org/html/draft-ietf-oauth-discovery-04#section-2
 	// This option is mutually exclusive with OAuthConfig
-	OAuthMetadataFile string `json:"oauthMetadataFile" protobuf:"bytes,3,opt,name=oauthMetadataFile"`
+	OAuthMetadataFile string `json:"oauthMetadataFile,omitempty" protobuf:"bytes,3,opt,name=oauthMetadataFile"`
 }
 
 // WebhookTokenAuthenticators holds the necessary configuation options for
 // external token authenticators
 type WebhookTokenAuthenticator struct {
 	// configFile is a path to a Kubeconfig file with the webhook configuration
-	ConfigFile string `json:"configFile" protobuf:"bytes,1,opt,name=configFile"`
+	ConfigFile string `json:"configFile,omitempty" protobuf:"bytes,1,opt,name=configFile"`
 	// cacheTTL indicates how long an authentication result should be cached.
 	// It takes a valid time duration string (e.g. "5m").
 	// If empty, you get a default timeout of 2 minutes.
 	// If zero (e.g. "0m"), caching is disabled
-	CacheTTL string `json:"cacheTTL" protobuf:"bytes,2,opt,name=cacheTTL"`
+	CacheTTL string `json:"cacheTTL,omitempty" protobuf:"bytes,2,opt,name=cacheTTL"`
 }
 
 // RequestHeaderAuthenticationOptions provides options for setting up a front proxy against the entire
 // API instead of against the /oauth endpoint.
 type RequestHeaderAuthenticationOptions struct {
 	// clientCA is a file with the trusted signer certs.  It is required.
-	ClientCA string `json:"clientCA" protobuf:"bytes,1,opt,name=clientCA"`
+	ClientCA string `json:"clientCA,omitempty" protobuf:"bytes,1,opt,name=clientCA"`
 	// clientCommonNames is a required list of common names to require a match from.
-	ClientCommonNames []string `json:"clientCommonNames" protobuf:"bytes,2,rep,name=clientCommonNames"`
+	ClientCommonNames []string `json:"clientCommonNames,omitempty" protobuf:"bytes,2,rep,name=clientCommonNames"`
 
 	// usernameHeaders is the list of headers to check for user information.  First hit wins.
-	UsernameHeaders []string `json:"usernameHeaders" protobuf:"bytes,3,rep,name=usernameHeaders"`
+	UsernameHeaders []string `json:"usernameHeaders,omitempty" protobuf:"bytes,3,rep,name=usernameHeaders"`
 	// groupHeaders is the set of headers to check for group information.  All are unioned.
-	GroupHeaders []string `json:"groupHeaders" protobuf:"bytes,4,rep,name=groupHeaders"`
+	GroupHeaders []string `json:"groupHeaders,omitempty" protobuf:"bytes,4,rep,name=groupHeaders"`
 	// extraHeaderPrefixes is the set of request header prefixes to inspect for user extra. X-Remote-Extra- is suggested.
-	ExtraHeaderPrefixes []string `json:"extraHeaderPrefixes" protobuf:"bytes,5,rep,name=extraHeaderPrefixes"`
+	ExtraHeaderPrefixes []string `json:"extraHeaderPrefixes,omitempty" protobuf:"bytes,5,rep,name=extraHeaderPrefixes"`
 }
 
 // AggregatorConfig holds information required to make the aggregator function.
 type AggregatorConfig struct {
 	// proxyClientInfo specifies the client cert/key to use when proxying to aggregated API servers
-	ProxyClientInfo configv1.CertInfo `json:"proxyClientInfo" protobuf:"bytes,1,opt,name=proxyClientInfo"`
+	ProxyClientInfo configv1.CertInfo `json:"proxyClientInfo,omitempty" protobuf:"bytes,1,opt,name=proxyClientInfo"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

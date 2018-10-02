@@ -24,4 +24,4 @@ PATH="$PATH:_output/bin" go-to-protobuf \
   --go-header-file=${SCRIPT_ROOT}/hack/empty.txt \
   --proto-import=${SCRIPT_ROOT}/vendor/github.com/gogo/protobuf/protobuf \
   --proto-import=${SCRIPT_ROOT}/vendor \
-  --packages="${API_PACKAGES}"
+  --packages="${API_PROTOBUF_PACKAGES}"

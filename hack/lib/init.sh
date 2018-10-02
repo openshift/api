@@ -30,12 +30,11 @@ template/v1 \
 user/v1 \
 webconsole/v1 \
 "
-API_PACKAGES="\
+API_PROTOBUF_PACKAGES="\
 github.com/openshift/api/apps/v1,\
 github.com/openshift/api/authorization/v1,\
 github.com/openshift/api/build/v1,\
 github.com/openshift/api/image/v1,\
-github.com/openshift/api/network/v1,\
 github.com/openshift/api/oauth/v1,\
 github.com/openshift/api/project/v1,\
 github.com/openshift/api/quota/v1,\

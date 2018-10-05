@@ -65,6 +65,14 @@ type IdentityProvider struct {
 	UseAsLogin bool `json:"login"`
 	// mappingMethod determines how identities from this provider are mapped to users
 	MappingMethod string `json:"mappingMethod"`
+	// unqualifiedGroups determines if groups asserted by this provider should be prepended.
+	// If false, all valid groups asserted by this provider are prepended with openshift:idp:groups:<idp_name>:
+	// If true, all valid groups are used as-is without any modification.
+	// A group name is considered invalid if it:
+	// 1. Is empty
+	// 2. Equals . or .. or ~
+	// 3. Contains / or % or :
+	UnqualifiedGroups bool `json:"unqualifiedGroups"`
 	// provider contains the information about how to set up a specific identity provider
 	Provider runtime.RawExtension `json:"provider"`
 }
@@ -192,6 +200,8 @@ type RequestHeaderIdentityProvider struct {
 	NameHeaders []string `json:"nameHeaders"`
 	// emailHeaders is the set of headers to check for the email address
 	EmailHeaders []string `json:"emailHeaders"`
+	// groupsHeaders is the set of headers to check for groups.  All non-empty values from all headers are aggregated.
+	GroupsHeaders []string `json:"groupsHeaders"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -310,6 +320,10 @@ type OpenIDClaims struct {
 	// email is the list of claims whose values should be used as the email address. Optional.
 	// If unspecified, no email is set for the identity
 	Email []string `json:"email"`
+	// groups is the list of claims whose values should be used as the user's groups. Optional.
+	// If unspecified, no groups are consumed from the claims.
+	// Claim values must either be a string or an array of strings.
+	Groups []string `json:"groups"`
 }
 
 // GrantConfig holds the necessary configuration options for grant handlers

@@ -57,6 +57,9 @@ type TokenConfig struct {
 	AccessTokenInactivityTimeoutSeconds int32 `json:"accessTokenInactivityTimeoutSeconds,omitempty"`
 }
 
+// IdentityProviderQualifiedGroupsPrefix is the base prefix used to qualify groups.
+const IdentityProviderQualifiedGroupsPrefix = "openshift:idp:groups:"
+
 const (
 	// LoginTemplateKey is the default key of the login template
 	LoginTemplateKey = "login.html"
@@ -116,6 +119,16 @@ type OAuthIdentityProvider struct {
 	// Defaults to "prompt" if not set.
 	// +optional
 	GrantMethod GrantHandlerType `json:"grantMethod"`
+
+	// unqualifiedGroups determines if groups asserted by this provider should be prepended.
+	// If false, all valid groups asserted by this provider are prepended with openshift:idp:groups:<idp_name>:
+	// If true, all valid groups are used as-is without any modification.
+	// A group name is considered invalid if it:
+	// 1. Is empty
+	// 2. Equals . or .. or ~
+	// 3. Contains / or % or :
+	// +optional
+	UnqualifiedGroups bool `json:"unqualifiedGroups,omitempty"`
 
 	// IdentityProvidersConfig
 	ProviderConfig IdentityProviderConfig `json:",inline"`
@@ -404,6 +417,10 @@ type RequestHeaderIdentityProvider struct {
 
 	// emailHeaders is the set of headers to check for the email address
 	EmailHeaders []string `json:"emailHeaders"`
+
+	// groupsHeaders is the set of headers to check for groups.  All non-empty values from all headers are aggregated.
+	// +optional
+	GroupsHeaders []string `json:"groupsHeaders,omitempty"`
 }
 
 // GitHubIdentityProvider provides identities for users authenticating using GitHub credentials
@@ -540,6 +557,12 @@ type OpenIDClaims struct {
 	// If unspecified, no email is set for the identity
 	// +optional
 	Email []string `json:"email"`
+
+	// groups is the list of claims whose values should be used as the user's groups. Optional.
+	// If unspecified, no groups are consumed from the claims.
+	// Claim values must either be a string or an array of strings.
+	// +optional
+	Groups []string `json:"groups,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

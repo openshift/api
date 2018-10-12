@@ -76,6 +76,7 @@ var map_OperatorSpec = map[string]string{
 	"":                "OperatorSpec contains common fields for an operator to need.  It is intended to be anonymous included inside of the Spec struct for you particular operator.",
 	"managementState": "managementState indicates whether and how the operator should manage the component",
 	"imagePullSpec":   "imagePullSpec is the image to use for the component.",
+	"imagePullPolicy": "imagePullPolicy specifies the image pull policy. One of Always, Never, IfNotPresent. Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.",
 	"version":         "version is the desired state in major.minor.micro-patch.  Usually patch is ignored.",
 	"logging":         "logging contains glog parameters for the component pods.  It's always a command line arg for the moment",
 }

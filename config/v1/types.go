@@ -5,6 +5,102 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 )
 
+// +genclient
+// +genclient:nonNamespaced
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// Image holds cluster-wide information about how to handle images.  The canonical name is `cluster`
+type Image struct {
+	metav1.TypeMeta `json:",inline"`
+	// Standard object's metadata.
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+
+	// spec holds user settable values for configuration
+	Spec ImageSpec `json:"spec"`
+	// status holds observed values from the cluster. They may not be overridden.
+	Status ImageStatus `json:"status"`
+}
+
+type ImageSpec struct {
+	// TODO remove.  This will be managed at the lowest level in the operator itself
+	// DisableScheduledImport allows scheduled background import of images to be disabled.
+	//DisableScheduledImport bool `json:"disableScheduledImport"`
+
+	// AllowedRegistriesForImport limits the docker registries that normal users may import
+	// images from. Set this list to the registries that you trust to contain valid Docker
+	// images and that you want applications to be able to import from. Users with
+	// permission to create Images or ImageStreamMappings via the API are not affected by
+	// this policy - typically only administrators or system integrations will have those
+	// permissions.
+	AllowedRegistriesForImport []RegistryLocation `json:"allowedRegistriesForImport,omitempty"`
+
+	// ExternalRegistryHostname sets the hostname for the default external image
+	// registry. The external hostname should be set only when the image registry
+	// is exposed externally. The value is used in 'publicDockerImageRepository'
+	// field in ImageStreams. The value must be in "hostname[:port]" format.
+	ExternalRegistryHostname string `json:"externalRegistryHostname,omitempty"`
+	// AdditionalTrustedCA is a path to a pem bundle file containing additional CAs that
+	// should be trusted during imagestream import.
+	AdditionalTrustedCA ConfigMapReference `json:"additionalTrustedCA,omitempty"`
+}
+
+type ImageStatus struct {
+	// These are tuning values which should be set via a tuning controller.  The user is not allowed to configure them here
+
+	// MaxImagesBulkImportedPerRepository controls the number of images that are imported when a user
+	// does a bulk import of a Docker repository. This number defaults to 50 to prevent users from
+	// importing large numbers of images accidentally. Set -1 for no limit.
+	MaxImagesBulkImportedPerRepository int32 `json:"maxImagesBulkImportedPerRepository"`
+	// ScheduledImageImportMinimumIntervalSeconds is the minimum number of seconds that can elapse between when image streams
+	// scheduled for background import are checked against the upstream repository. The default value is 15 minutes.
+	ScheduledImageImportMinimumIntervalSeconds int32 `json:"scheduledImageImportMinimumIntervalSeconds"`
+	// MaxScheduledImageImportsPerMinute is the maximum number of scheduled image streams that will be imported in the
+	// background per minute. The default value is 60. Set to -1 for unlimited.
+	MaxScheduledImageImportsPerMinute int32 `json:"maxScheduledImageImportsPerMinute"`
+
+	// this value is set by the image registry operator which controls the internal registry hostname
+	// InternalRegistryHostname sets the hostname for the default internal image
+	// registry. The value must be in "hostname[:port]" format.
+	// For backward compatibility, users can still use OPENSHIFT_DEFAULT_REGISTRY
+	// environment variable but this setting overrides the environment variable.
+	InternalRegistryHostname string `json:"internalRegistryHostname,omitempty"`
+
+	// Here's a neat thing.  I suspect that we may need to set one in spec and one in status and merge them so that something
+	// like the service serving cert CA bundle can be added here....
+	// AdditionalTrustedCA is a path to a pem bundle file containing additional CAs that
+	// should be trusted during imagestream import.
+	AdditionalTrustedCA ConfigMapReference `json:"additionalTrustedCA,omitempty"`
+}
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+type ImageList struct {
+	metav1.TypeMeta `json:",inline"`
+	// Standard object's metadata.
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []Image `json:"items"`
+}
+
+// RegistryLocation contains a location of the registry specified by the registry domain
+// name. The domain name might include wildcards, like '*' or '??'.
+type RegistryLocation struct {
+	// DomainName specifies a domain name for the registry
+	// In case the registry use non-standard (80 or 443) port, the port should be included
+	// in the domain name as well.
+	DomainName string `json:"domainName"`
+	// Insecure indicates whether the registry is secure (https) or insecure (http)
+	// By default (if not specified) the registry is assumed as secure.
+	Insecure bool `json:"insecure,omitempty"`
+}
+
+// ConfigMapReference references the location of a configmap.
+type ConfigMapReference struct {
+	Namespace string `json:"namespace"`
+	Name      string `json:"name"`
+	// FileName allows pointing to a specific file inside of the configmap.  This is useful for logical file references.
+	FileName string `json:"filename,omitempty"`
+}
+
 // HTTPServingInfo holds configuration for serving HTTP
 type HTTPServingInfo struct {
 	// ServingInfo is the HTTP serving information

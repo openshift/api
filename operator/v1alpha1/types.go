@@ -53,8 +53,13 @@ const (
 	ConditionFalse   ConditionStatus = "False"
 	ConditionUnknown ConditionStatus = "Unknown"
 
-	OperatorStatusTypeAvailable      = "Available"
-	OperatorStatusTypeMigrating      = "Migrating"
+	// these conditions match the conditions for the ClusterOperator type.
+	OperatorStatusTypeAvailable   = "Available"
+	OperatorStatusTypeProgressing = "Progressing"
+	OperatorStatusTypeFailing     = "Failing"
+
+	OperatorStatusTypeMigrating = "Migrating"
+	// TODO this is going to be removed
 	OperatorStatusTypeSyncSuccessful = "SyncSuccessful"
 )
 

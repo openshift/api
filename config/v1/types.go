@@ -38,7 +38,7 @@ type ImageSpec struct {
 
 	// AdditionalTrustedCA is a reference to a ConfigMap containing additional CAs that
 	// should be trusted during imagestream import.
-	AdditionalTrustedCA ConfigMapReference `json:"additionalTrustedCA,omitempty"`
+	AdditionalTrustedCA *ConfigMapReference `json:"additionalTrustedCA,omitempty"`
 }
 
 type ImageStatus struct {

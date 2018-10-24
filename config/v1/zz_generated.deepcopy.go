@@ -249,7 +249,15 @@ func (in *ImageSpec) DeepCopyInto(out *ImageSpec) {
 		*out = make([]RegistryLocation, len(*in))
 		copy(*out, *in)
 	}
-	out.AdditionalTrustedCA = in.AdditionalTrustedCA
+	if in.AdditionalTrustedCA != nil {
+		in, out := &in.AdditionalTrustedCA, &out.AdditionalTrustedCA
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(ConfigMapReference)
+			**out = **in
+		}
+	}
 	return
 }
 

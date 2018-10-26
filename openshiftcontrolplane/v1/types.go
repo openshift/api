@@ -199,7 +199,7 @@ type NetworkControllerConfig struct {
 	// clusterNetworks contains a list of cluster networks that defines the global overlay networks L3 space.
 	ClusterNetworks    []ClusterNetworkEntry `json:"clusterNetworks"`
 	ServiceNetworkCIDR string                `json:"serviceNetworkCIDR"`
-	VXLANPort          uint32                `json:"vxLANPort"`
+	VXLANPort          uint32                `json:"vxlanPort"`
 }
 
 type ServiceAccountControllerConfig struct {

@@ -129,7 +129,7 @@ func (ImageList) SwaggerDoc() map[string]string {
 }
 
 var map_ImageSpec = map[string]string{
-	"allowedRegistriesForImport": "AllowedRegistriesForImport limits the docker registries that normal users may import images from. Set this list to the registries that you trust to contain valid Docker images and that you want applications to be able to import from. Users with permission to create Images or ImageStreamMappings via the API are not affected by this policy - typically only administrators or system integrations will have those permissions.",
+	"allowedRegistriesForImport": "AllowedRegistriesForImport limits the container image registries that normal users may import images from. Set this list to the registries that you trust to contain valid Docker images and that you want applications to be able to import from. Users with permission to create Images or ImageStreamMappings via the API are not affected by this policy - typically only administrators or system integrations will have those permissions.",
 	"externalRegistryHostname":   "ExternalRegistryHostname sets the hostname for the default external image registry. The external hostname should be set only when the image registry is exposed externally. The value is used in 'publicDockerImageRepository' field in ImageStreams. The value must be in \"hostname[:port]\" format.",
 	"additionalTrustedCA":        "AdditionalTrustedCA is a reference to a ConfigMap containing additional CAs that should be trusted during imagestream import.",
 }

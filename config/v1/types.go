@@ -22,7 +22,7 @@ type Image struct {
 }
 
 type ImageSpec struct {
-	// AllowedRegistriesForImport limits the docker registries that normal users may import
+	// AllowedRegistriesForImport limits the container image registries that normal users may import
 	// images from. Set this list to the registries that you trust to contain valid Docker
 	// images and that you want applications to be able to import from. Users with
 	// permission to create Images or ImageStreamMappings via the API are not affected by

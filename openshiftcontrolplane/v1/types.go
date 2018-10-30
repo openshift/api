@@ -177,6 +177,10 @@ type BuildControllerConfig struct {
 
 	BuildDefaults  *BuildDefaultsConfig  `json:"buildDefaults"`
 	BuildOverrides *BuildOverridesConfig `json:"buildOverrides"`
+
+	// additionalTrustedCA is a path to a pem bundle file containing additional CAs that
+	// should be trusted for image pushes and pulls during builds.
+	AdditionalTrustedCA string `json:"additionalTrustedCA"`
 }
 
 type ResourceQuotaControllerConfig struct {
@@ -253,7 +257,7 @@ type BuildDefaultsConfig struct {
 	ImageLabels []buildv1.ImageLabel `json:"imageLabels,omitempty"`
 
 	// nodeSelector is a selector which must be true for the build pod to fit on a node
-	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
+	NodeSelector *metav1.LabelSelector `json:"nodeSelector,omitempty"`
 
 	// annotations are annotations that will be added to the build pod
 	Annotations map[string]string `json:"annotations,omitempty"`

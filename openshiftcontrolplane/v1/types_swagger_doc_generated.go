@@ -60,7 +60,8 @@ func (ClusterNetworkEntry) SwaggerDoc() map[string]string {
 }
 
 var map_DockerPullSecretControllerConfig = map[string]string{
-	"registryURLs": "registryURLs is a list of urls that the docker pull secrets should be valid for.",
+	"registryURLs":             "registryURLs is a list of urls that the docker pull secrets should be valid for.",
+	"internalRegistryHostname": "internalRegistryHostname is the hostname for the default internal image registry. The value must be in \"hostname[:port]\" format.  Docker pull secrets will be generated for this registry.",
 }
 
 func (DockerPullSecretControllerConfig) SwaggerDoc() map[string]string {

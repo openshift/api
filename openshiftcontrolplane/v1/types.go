@@ -215,6 +215,11 @@ type ServiceAccountControllerConfig struct {
 type DockerPullSecretControllerConfig struct {
 	// registryURLs is a list of urls that the docker pull secrets should be valid for.
 	RegistryURLs []string `json:"registryURLs"`
+
+	// internalRegistryHostname is the hostname for the default internal image
+	// registry. The value must be in "hostname[:port]" format.  Docker pull secrets
+	// will be generated for this registry.
+	InternalRegistryHostname string `json:"internalRegistryHostname"`
 }
 
 type ImageImportControllerConfig struct {

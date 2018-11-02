@@ -61,6 +61,14 @@ func (BuildDefaults) SwaggerDoc() map[string]string {
 	return map_BuildDefaults
 }
 
+var map_BuildList = map[string]string{
+	"metadata": "Standard object's metadata.",
+}
+
+func (BuildList) SwaggerDoc() map[string]string {
+	return map_BuildList
+}
+
 var map_BuildOverrides = map[string]string{
 	"imageLabels":  "ImageLabels is a list of docker labels that are applied to the resulting image. If user provided a label in their Build/BuildConfig with the same name as one in this list, the user's label will be overwritten.",
 	"nodeSelector": "NodeSelector is a selector which must be true for the build pod to fit on a node",

@@ -165,9 +165,10 @@ type BuildOverrides struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 type BuildList struct {
-	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Items             []Build `json:"items"`
+	metav1.TypeMeta `json:",inline"`
+	// Standard object's metadata.
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []Build `json:"items"`
 }
 
 // HTTPServingInfo holds configuration for serving HTTP

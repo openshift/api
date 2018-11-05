@@ -262,7 +262,7 @@ type BuildDefaultsConfig struct {
 	ImageLabels []buildv1.ImageLabel `json:"imageLabels,omitempty"`
 
 	// nodeSelector is a selector which must be true for the build pod to fit on a node
-	NodeSelector *metav1.LabelSelector `json:"nodeSelector,omitempty"`
+	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
 
 	// annotations are annotations that will be added to the build pod
 	Annotations map[string]string `json:"annotations,omitempty"`

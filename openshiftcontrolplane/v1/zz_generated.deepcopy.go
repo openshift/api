@@ -8,7 +8,6 @@ import (
 	build_v1 "github.com/openshift/api/build/v1"
 	config_v1 "github.com/openshift/api/config/v1"
 	core_v1 "k8s.io/api/core/v1"
-	meta_v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 )
 
@@ -94,11 +93,9 @@ func (in *BuildDefaultsConfig) DeepCopyInto(out *BuildDefaultsConfig) {
 	}
 	if in.NodeSelector != nil {
 		in, out := &in.NodeSelector, &out.NodeSelector
-		if *in == nil {
-			*out = nil
-		} else {
-			*out = new(meta_v1.LabelSelector)
-			(*in).DeepCopyInto(*out)
+		*out = make(map[string]string, len(*in))
+		for key, val := range *in {
+			(*out)[key] = val
 		}
 	}
 	if in.Annotations != nil {

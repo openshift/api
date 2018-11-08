@@ -30,10 +30,30 @@ func Resource(resource string) schema.GroupResource {
 // Adds the list of known types to api.Scheme.
 func addKnownTypes(scheme *runtime.Scheme) error {
 	scheme.AddKnownTypes(GroupVersion,
-		&Image{},
-		&ImageList{},
+		&Authentication{},
+		&AuthenticationList{},
 		&Build{},
 		&BuildList{},
+		&Console{},
+		&ConsoleList{},
+		&DNS{},
+		&DNSList{},
+		&IdentityProvider{},
+		&IdentityProviderList{},
+		&Image{},
+		&ImageList{},
+		&Infrastructure{},
+		&InfrastructureList{},
+		&Ingress{},
+		&IngressList{},
+		&Network{},
+		&NetworkList{},
+		&OAuth{},
+		&OAuthList{},
+		&Project{},
+		&ProjectList{},
+		&Scheduling{},
+		&SchedulingList{},
 	)
 	metav1.AddToGroupVersion(scheme, GroupVersion)
 	return nil

@@ -26,23 +26,25 @@ type MyOperatorResourceStatus struct {
 type ManagementState string
 
 var (
-	// Force means that the operator is actively managing its resources and ignoring unmet prereqs
+	// Force means that the operator is actively managing its resources but will not block an upgrade
+	// if unmet prereqs exist. This state puts the operator at risk for unsuccessful upgrades
 	Force ManagementState = "Force"
-	// Managed means that the operator is actively managing its resources and trying to keep the component active
+	// Managed means that the operator is actively managing its resources and trying to keep the component active.
+	// It will only upgrade the component if it is safe to do so
 	Managed ManagementState = "Managed"
-	// Unmanaged means that the operator is not taking any action related to the component
+	// Unmanaged means that the operator will not take any action related to the component
 	Unmanaged ManagementState = "Unmanaged"
 	// Removed means that the operator is actively managing its resources and trying to remove all traces of the component
 	Removed ManagementState = "Removed"
 )
 
-// OperatorSpec contains common fields for an operator to need.  It is intended to be anonymous included
-// inside of the Spec struct for you particular operator.
+// OperatorSpec contains common fields operators need.  It is intended to be anonymous included
+// inside of the Spec struct for your particular operator.
 type OperatorSpec struct {
 	// managementState indicates whether and how the operator should manage the component
 	ManagementState ManagementState `json:"managementState"`
 
-	// operandSpecs provide information about customization for particular units
+	// operandSpecs provide customization for functional units within the component
 	OperandSpecs []OperandSpec `json:"operandSpecs"`
 
 	// unsupportedConfigOverrides holds a sparse config that will override any previously set options.  It only needs to be the fields to override
@@ -65,7 +67,7 @@ type ResourcePatch struct {
 	Patch string `json:"patch"`
 }
 
-// OperandSpec holds information for customatization of a particular unit (logical pod)
+// OperandSpec holds information for customization of a particular functional unit - logically maps to a workload
 type OperandSpec struct {
 	// name is the name of this unit.  The operator must be aware of it.
 	Name string `json:"name"`
@@ -73,7 +75,9 @@ type OperandSpec struct {
 	// operandContainerSpecs are per-container options
 	OperandContainerSpecs []OperandContainerSpec `json:"operandContainerSpecs"`
 
-	// Alternatively, we could simply include a RawExtension which is used in place of the "normal" default manifest
+	// unsupportedResourcePatches are applied to the workload resource for this unit. This is an unsupported
+	// workaround if anything needs to be modified on the workload that is not otherwise configurable.
+	// TODO Decide: alternatively, we could simply include a RawExtension which is used in place of the "normal" default manifest
 	UnsupportedResourcePatches []ResourcePatch `json:"unsupportedResourcePatches"`
 }
 
@@ -110,14 +114,14 @@ type CapnsLogConfig struct {
 	// level is passed to capnslog: critical, error, warning, notice, info, debug, trace
 	Level string `json:"level"`
 
-	// There is some kind of repo/package level thing for this
+	// TODO There is some kind of repo/package level thing for this
 }
 
 type JavaLog struct {
 	// level is passed to jsr47: fatal, error, warning, info, fine, finer, finest
 	Level string `json:"level"`
 
-	// There is some kind of repo/package level thing for this.  might end up hierarchical
+	// TODO There is some kind of repo/package level thing for this.  might end up hierarchical
 }
 
 type OperatorStatus struct {
@@ -134,7 +138,7 @@ type OperatorStatus struct {
 	Generations []GenerationStatus `json:"generations"`
 }
 
-// GenerationStatus keeps track of the generation for a given resource so that decisions about forced updated can be made.
+// GenerationStatus keeps track of the generation for a given resource so that decisions about forced updates can be made.
 type GenerationStatus struct {
 	// group is the group of the thing you're tracking
 	Group string `json:"group"`

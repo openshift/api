@@ -9,7 +9,7 @@ import (
 
 var (
 	GroupName     = "operator.openshift.io"
-	GroupVersion  = schema.GroupVersion{Group: GroupName, Version: "v1alpha1"}
+	GroupVersion  = schema.GroupVersion{Group: GroupName, Version: "v1"}
 	schemeBuilder = runtime.NewSchemeBuilder(addKnownTypes, configv1.Install)
 	// Install is a function which adds this version to a scheme
 	Install = schemeBuilder.AddToScheme

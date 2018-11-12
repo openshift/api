@@ -35,6 +35,9 @@ type OperatorSpec struct {
 
 	// logging contains glog parameters for the component pods.  It's always a command line arg for the moment
 	Logging LoggingConfig `json:"logging,omitempty"`
+
+	// revisionHistoryLimit is the number of installer pod attempts to keep a record of (0 being unlimited)
+	RevisionHistoryLimit int `json:"revisionHistoryLimit,omitempty"`
 }
 
 // LoggingConfig holds information about configuring logging

@@ -5,23 +5,13 @@ import (
 	runtime "k8s.io/apimachinery/pkg/runtime"
 )
 
-// ClusterOperatorList is a list of OperatorStatus resources.
-// +k8s:deepcopy-gen=true
+// +genclient
+// +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-type ClusterOperatorList struct {
-	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata"`
-
-	Items []ClusterOperator `json:"items"`
-}
 
 // ClusterOperator is the Custom Resource object which holds the current state
 // of an operator. This object is used by operators to convey their state to
 // the rest of the cluster.
-// +genclient
-// +genclient:nonNamespaced
-// +k8s:deepcopy-gen=true
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type ClusterOperator struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata"`
@@ -105,3 +95,12 @@ const (
 	// available, but the user intent cannot be fulfilled.
 	OperatorFailing ClusterStatusConditionType = "Failing"
 )
+
+// ClusterOperatorList is a list of OperatorStatus resources.
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+type ClusterOperatorList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata"`
+
+	Items []ClusterOperator `json:"items"`
+}

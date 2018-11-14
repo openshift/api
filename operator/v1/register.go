@@ -1,15 +1,16 @@
 package v1
 
 import (
+	configv1 "github.com/openshift/api/config/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
 var (
-	GroupName     = "config.openshift.io"
+	GroupName     = "operator.openshift.io"
 	GroupVersion  = schema.GroupVersion{Group: GroupName, Version: "v1"}
-	schemeBuilder = runtime.NewSchemeBuilder(addKnownTypes)
+	schemeBuilder = runtime.NewSchemeBuilder(addKnownTypes, configv1.Install)
 	// Install is a function which adds this version to a scheme
 	Install = schemeBuilder.AddToScheme
 
@@ -27,39 +28,10 @@ func Resource(resource string) schema.GroupResource {
 	return schema.GroupResource{Group: GroupName, Resource: resource}
 }
 
-// Adds the list of known types to api.Scheme.
 func addKnownTypes(scheme *runtime.Scheme) error {
-	scheme.AddKnownTypes(GroupVersion,
-		&Authentication{},
-		&AuthenticationList{},
-		&Build{},
-		&BuildList{},
-		&ClusterOperator{},
-		&ClusterOperatorList{},
-		&ClusterVersion{},
-		&ClusterVersionList{},
-		&Console{},
-		&ConsoleList{},
-		&DNS{},
-		&DNSList{},
-		&GenericControllerConfig{},
-		&IdentityProvider{},
-		&IdentityProviderList{},
-		&Image{},
-		&ImageList{},
-		&Infrastructure{},
-		&InfrastructureList{},
-		&Ingress{},
-		&IngressList{},
-		&Network{},
-		&NetworkList{},
-		&OAuth{},
-		&OAuthList{},
-		&Project{},
-		&ProjectList{},
-		&Scheduling{},
-		&SchedulingList{},
-	)
 	metav1.AddToGroupVersion(scheme, GroupVersion)
+
+	scheme.AddKnownTypes(GroupVersion)
+
 	return nil
 }

@@ -34,7 +34,7 @@ type ClusterOperatorStatus struct {
 	// conditions describes the state of the operator's reconciliation functionality.
 	// +patchMergeKey=type
 	// +patchStrategy=merge
-	Conditions []ClusterOperatorStatusCondition `json:"conditions"`
+	Conditions []ClusterOperatorStatusCondition `json:"conditions"  patchStrategy:"merge" patchMergeKey:"type"`
 
 	// version indicates which version of the operator updated the current
 	// status object.

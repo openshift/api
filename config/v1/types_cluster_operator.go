@@ -16,7 +16,7 @@ type ClusterOperator struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata"`
 
-	// Spec hold the intent of how this operator should behave.
+	// spec hold the intent of how this operator should behave.
 	Spec ClusterOperatorSpec `json:"spec"`
 
 	// status holds the information about the state of an operator.  It is consistent with status information across
@@ -64,10 +64,10 @@ type ClusterOperatorStatusCondition struct {
 	// type specifies the state of the operator's reconciliation functionality.
 	Type ClusterStatusConditionType `json:"type"`
 
-	// Status of the condition, one of True, False, Unknown.
+	// status of the condition, one of True, False, Unknown.
 	Status ConditionStatus `json:"status"`
 
-	// LastTransitionTime is the time of the last update to the current status object.
+	// lastTransitionTime is the time of the last update to the current status object.
 	LastTransitionTime metav1.Time `json:"lastTransitionTime"`
 
 	// reason is the reason for the condition's last transition.  Reasons are CamelCase

@@ -4,22 +4,12 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// ClusterVersionList is a list of ClusterVersion resources.
-// +k8s:deepcopy-gen=true
+// +genclient
+// +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-type ClusterVersionList struct {
-	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata"`
-
-	Items []ClusterVersion `json:"items"`
-}
 
 // ClusterVersion is the configuration for the ClusterVersionOperator. This is where
 // parameters related to automatic updates can be set.
-// +genclient
-// +genclient:nonNamespaced
-// +k8s:deepcopy-gen=true
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type ClusterVersion struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -165,3 +155,12 @@ type Update struct {
 // if the updates could not be retrieved or recently failed, or True if the
 // availableUpdates field is accurate and recent.
 const RetrievedUpdates ClusterStatusConditionType = "RetrievedUpdates"
+
+// ClusterVersionList is a list of ClusterVersion resources.
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+type ClusterVersionList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata"`
+
+	Items []ClusterVersion `json:"items"`
+}

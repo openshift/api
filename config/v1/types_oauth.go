@@ -1,7 +1,6 @@
 package v1
 
 import (
-	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -19,6 +18,7 @@ type OAuth struct {
 	Status            OAuthStatus `json:"status,omitempty"`
 }
 
+// OAuthSpec contains desired cluster auth configuration
 type OAuthSpec struct {
 	//IdentityProviders is an ordered list of ways for a user to identify themselves
 	IdentityProviders []OAuthIdentityProvider `json:"identityProviders"`
@@ -31,53 +31,10 @@ type OAuthSpec struct {
 	Templates OAuthTemplates `json:"templates"`
 }
 
+// OAuthStatus shows current known state of OAuth server in the cluster
 type OAuthStatus struct {
 	// TODO Fill in
 }
-
-const (
-	// LoginTemplateKey is the key of the login template
-	LoginTemplateKey = "login.html"
-	// ProviderSelectionTemplateKey is the key for the provider selection template
-	ProviderSelectionTemplateKey = "providers.html"
-	// ErrorsTemplateKey is the key for the errors template
-	ErrorsTemplateKey = "errors.html"
-)
-
-// OAuthTemplates allow for customization of pages like the login page
-type OAuthTemplates struct {
-	// Login is a reference to a secret that specifies a go template to use to render the login page.
-	// The secret referenced must contain a key named `login.html` containing the template data.
-	// If unspecified, the default login page is used.
-	// +optional
-	Login corev1.SecretReference `json:"login"`
-
-	// ProviderSelection is a reference to a secret that specifies a go template to use to render
-	// the provider selection page.
-	// The secret referenced must contain a key named `providers.html` containing the template.
-	// If unspecified, the default provider selection page is used.
-	// +optional
-	ProviderSelection corev1.SecretReference `json:"providerSelection"`
-
-	// Error is a reference to a secret that specifies a go template to use to render error pages
-	// during the authentication or grant flow.
-	// The secret referenced must contain a key named `errors.html` containing the template data.
-	// If unspecified, the default error page is used.
-	// +optional
-	Error corev1.SecretReference `json:"error"`
-}
-
-// GrantHandlerType are the valid strategies for handling grant requests
-type GrantHandlerType string
-
-const (
-	// GrantHandlerAuto auto-approves client authorization grant requests
-	GrantHandlerAuto GrantHandlerType = "auto"
-	// GrantHandlerPrompt prompts the user to approve new client authorization grant requests
-	GrantHandlerPrompt GrantHandlerType = "prompt"
-	// GrantHandlerDeny auto-denies client authorization grant requests
-	GrantHandlerDeny GrantHandlerType = "deny"
-)
 
 // TokenConfig holds the necessary configuration options for authorization and access tokens
 type TokenConfig struct {
@@ -100,29 +57,44 @@ type TokenConfig struct {
 	AccessTokenInactivityTimeoutSeconds int32 `json:"accessTokenInactivityTimeoutSeconds,omitempty"`
 }
 
-type MappingMethodType string
-
 const (
-	// MappingMethodLookup does not provision a new identity or user, it only allows identities
-	// already associated with users
-	MappingMethodLookup MappingMethodType = "lookup"
-
-	// MappingMethodClaim associates a new identity with a user with the identity's preferred
-	// username if no other identities are already associated with the user
-	MappingMethodClaim MappingMethodType = "claim"
-
-	// MappingMethodAdd associates a new identity with a user with the identity's preferred username,
-	// creating the user if needed, and adding to any existing identities associated with the user
-	MappingMethodAdd MappingMethodType = "add"
-
-	// MappingMethodGenerate finds an available username for a new identity, based on its preferred username
-	// If a user with the preferred username already exists, a unique username is generated
-	MappingMethodGenerate MappingMethodType = "generate"
+	// LoginTemplateKey is the default key of the login template
+	LoginTemplateKey = "login.html"
+	// ProviderSelectionTemplateKey is the default key for the provider selection template
+	ProviderSelectionTemplateKey = "providers.html"
+	// ErrorsTemplateKey is the default key for the errors template
+	ErrorsTemplateKey = "errors.html"
 )
+
+// OAuthTemplates allow for customization of pages like the login page
+type OAuthTemplates struct {
+	// Login is a reference to a secret that specifies a go template to use to render the login page.
+	// If a key is not specified, the key `login.html` is used to locate the template data.
+	// If unspecified, the default login page is used.
+	// +optional
+	Login LocalSecretReference `json:"login,omitemtpy"`
+
+	// ProviderSelection is a reference to a secret that specifies a go template to use to render
+	// the provider selection page.
+	// If a key is not specified, the key `providers.html` is used to locate the template data.
+	// If unspecified, the default provider selection page is used.
+	// +optional
+	ProviderSelection LocalSecretReference `json:"providerSelection,omitempty"`
+
+	// Error is a reference to a secret that specifies a go template to use to render error pages
+	// during the authentication or grant flow.
+	// If a key is not specified, the key `errrors.html` is used to locate the template data.
+	// If unspecified, the default error page is used.
+	// +optional
+	Error LocalSecretReference `json:"error,omitempty"`
+}
 
 // OAuthIdentityProvider provides identities for users authenticating using credentials
 type OAuthIdentityProvider struct {
-	// Name is used to qualify the identities returned by this provider
+	// Name is used to qualify the identities returned by this provider.
+	// - It MUST be unique and not shared by any other identity provider used
+	// - It MUST be a vlid path segment: name cannot equal "." or ".." or contain "/" or "%"
+	//   Ref: https://godoc.org/k8s.io/apimachinery/pkg/api/validation/path#ValidatePathSegmentName
 	Name string `json:"name"`
 
 	// UseAsChallenger indicates whether to issue WWW-Authenticate challenges for this provider
@@ -146,13 +118,95 @@ type OAuthIdentityProvider struct {
 	GrantMethod GrantHandlerType `json:"grantMethod"`
 
 	// IdentityProvidersConfig
-	ProviderConfig IdentityProvidersConfig `json:",inline"`
+	ProviderConfig IdentityProviderConfig `json:",inline"`
 }
 
-type IdentityProvidersConfig struct {
+// MappingMethodType specifies how new identities should be mapped to users when they log in
+type MappingMethodType string
+
+const (
+	// MappingMethodClaim provisions a user with the identity’s preferred user name. Fails if a user
+	// with that user name is already mapped to another identity.
+	// Default.
+	MappingMethodClaim MappingMethodType = "claim"
+
+	// MappingMethodLookup looks up existing users already mapped to an identity but does not
+	// automatically provision users or identities. Requires identities and users be set up
+	// manually or using an external process.
+	MappingMethodLookup MappingMethodType = "lookup"
+
+	// MappingMethodAdd provisions a user with the identity’s preferred user name. If a user with
+	// that user name already exists, the identity is mapped to the existing user, adding to any
+	// existing identity mappings for the user.
+	MappingMethodAdd MappingMethodType = "add"
+
+	// MappingMethodGenerate provisions a user with the identity’s preferred user name. If a user
+	// with the preferred user name is already mapped to an existing identity, a unique user name is
+	// generated, e.g. myuser2. This method should not be used in combination with external
+	// processes that require exact matches between openshift user names and the idp user name
+	// such as LDAP group sync.
+	MappingMethodGenerate MappingMethodType = "generate"
+)
+
+// GrantHandlerType are the valid strategies for handling grant requests
+type GrantHandlerType string
+
+const (
+	// GrantHandlerAuto auto-approves client authorization grant requests
+	GrantHandlerAuto GrantHandlerType = "auto"
+	// GrantHandlerPrompt prompts the user to approve new client authorization grant requests
+	GrantHandlerPrompt GrantHandlerType = "prompt"
+	// GrantHandlerDeny auto-denies client authorization grant requests
+	GrantHandlerDeny GrantHandlerType = "deny"
+)
+
+type IdentityProviderType string
+
+const (
+	// IdentityProviderTypeBasicAuth provides identities for users authenticating with HTTP Basic Auth
+	IdentityProviderTypeBasicAuth IdentityProviderType = "BasicAuth"
+
+	// IdentityProviderTypeAllowAll provides identities for all users authenticating using non-empty passwords
+	IdentityProviderTypeAllowAll IdentityProviderType = "AllowAll"
+
+	// IdentityProviderTypeDenyAll provides no identities for users
+	IdentityProviderTypeDenyAll IdentityProviderType = "DenyAll"
+
+	// IdentityProviderTypeHTPasswd provides identities from an HTPasswd file
+	IdentityProviderTypeHTPasswd IdentityProviderType = "HTPasswd"
+
+	// IdentityProviderTypeLDAP provides identities for users authenticating using LDAP credentials
+	IdentityProviderTypeLDAP IdentityProviderType = "LDAP"
+
+	// IdentityProviderTypeKeystone provides identitities for users authenticating using keystone password credentials
+	IdentityProviderTypeKeystone IdentityProviderType = "Keystone"
+
+	// IdentityProviderTypeRequestHeader provides identities for users authenticating using request header credentials
+	IdentityProviderTypeRequestHeader IdentityProviderType = "RequestHeader"
+
+	// IdentityProviderTypeGitHub provides identities for users authenticating using GitHub credentials
+	IdentityProviderTypeGitHub IdentityProviderType = "GitHub"
+
+	// IdentityProviderTypeGitLab provides identities for users authenticating using GitLab credentials
+	IdentityProviderTypeGitLab IdentityProviderType = "GitLab"
+
+	// IdentityProviderTypeGoogle provides identities for users authenticating using Google credentials
+	IdentityProviderTypeGoogle IdentityProviderType = "Google"
+
+	// IdentityProviderTypeOpenID provides identities for users authenticating using OpenID credentials
+	IdentityProviderTypeOpenID IdentityProviderType = "OpenID"
+)
+
+// IdentityProviderConfig contains configuration for using a specific identity provider
+type IdentityProviderConfig struct {
+	// IdentityProviderType identifies the identity provider type for this entry.
+	Type IdentityProviderType `json:"type"`
+
 	// Provider-specific configuration
-	// Only ONE
-	// BasicAuth contains configuration optins for the BasicAuth IdP
+	// The json tag MUST match the `Type` specified above, case-insensitively
+	// e.g. For `Type: "LDAP"`, the `LDAPPasswordIdentityProvider` configuration should be provided
+
+	// BasicAuth contains configuration options for the BasicAuth IdP
 	// +optional
 	BasicAuth *BasicAuthPasswordIdentityProvider `json:"basicAuth,omitempty"`
 
@@ -160,14 +214,14 @@ type IdentityProvidersConfig struct {
 	// authenticating using non-empty passwords.
 	// Defaults to `false`, i.e. allowAll set to off
 	// +optional
-	AllowAll bool `json:"allowAll"`
+	AllowAll bool `json:"allowAll,omitempty"`
 
 	// DenyAll enables the DenyAllPasswordIdentityProvider which provides no identities for users
 	// Defaults to `false`, ie. denyAll set to off
 	// +optional
-	DenyAll bool `json:"denyAll"`
+	DenyAll bool `json:"denyAll,omitempty"`
 
-	// HTPasswd
+	// HTPasswd enables user authentication using an HTPasswd file to validate credentials
 	// +optional
 	HTPasswd *HTPasswdPasswordIdentityProvider `json:"htpasswd,omitempty"`
 
@@ -211,25 +265,31 @@ type OAuthRemoteConnectionInfo struct {
 	URL string `json:"url"`
 	// CA is a reference to a ConfigMap containing the CA for verifying TLS connections
 	CA ConfigMapReference `json:"ca"`
-	// TLSRef is the TLS client cert information to present
-	// this is anonymous so that we can inline it for serialization
-	// The secret referenced must have a secret type SecretTypeTLS="kubernetes.io/tls"
-	// Required fields:
-	// - Secret.Data["tls.key"] - TLS private key.
-	//   Secret.Data["tls.crt"] - TLS certificate.
-	TLSRef corev1.SecretReference `json:"tls"`
+
+	// TLSClientCert references a secret containing the TLS client certificate to present when
+	// connecting to the server.
+	// Looks under the key "tls.cert" for the data unless a lookup key is specified in the secret ref
+	TLSClientCert LocalSecretReference `json:"tlsClientCert"`
+
+	// TLSClientKey references a secret containing the TLS private key for the client certificate
+	// Looks under the key "tls.key" for the data unless a lookup key is specified in the secret ref
+	TLSClientKey LocalSecretReference `json:"tlsClientKey"`
 }
+
+// HTPasswdDataKey is the default key for the htpasswd file data in a secret
+const HTPasswdDataKey = "htpasswd"
 
 // HTPasswdPasswordIdentityProvider provides identities for users authenticating using htpasswd credentials
 type HTPasswdPasswordIdentityProvider struct {
-	// File is a reference to your htpasswd file
-	File string `json:"file"`
+	// Data is a reference to a secret containing the data to use as the htpasswd file
+	// Looks under the key `htpasswd` unless a lookup key is specified in the secret ref
+	FileData LocalSecretReference `json:"fileData"`
 }
 
 const (
-	// BindPasswordKey is the key for the LDAP bind password in a secret
+	// BindPasswordKey is default the key for the LDAP bind password in a secret
 	BindPasswordKey = "bindPassword"
-	// ClientSecretKEy is the key for the oauth client secret data in a secret
+	// ClientSecretKey is the key for the oauth client secret data in a secret
 	ClientSecretKey = "clientSecret"
 )
 
@@ -239,22 +299,30 @@ type LDAPPasswordIdentityProvider struct {
 	// The syntax of the URL is:
 	//    ldap://host:port/basedn?attribute?scope?filter
 	URL string `json:"url"`
+
 	// BindDN is an optional DN to bind with during the search phase.
+	// +optional
 	BindDN string `json:"bindDN"`
+
 	// BindPasswordSecretRef is a reference to the secret containing an optional password to bind
 	// with during the search phase.
-	// The secret referenced must contain a key named `bindPassword` containing the password.
-	BindPassword corev1.SecretReference `json:"bindPasswordSecretRef"`
-	// Insecure, if true, indicates the connection should not use TLS.
-	// Cannot be set to true with a URL scheme of "ldaps://"
-	// If false, "ldaps://" URLs connect using TLS, and "ldap://" URLs are upgraded to a TLS
-	// connection using StartTLS as specified in https://tools.ietf.org/html/rfc2830
+	// Looks under the key `bindPassword` unless a lookup key is specified in the secret ref
+	// +optional
+	BindPasswordSecretRef LocalSecretReference `json:"bindPasswordSecretRef"`
+
+	// Insecure, if true, indicates the connection should not use TLS
+	// WARNING: Should not be set to `true` with the URL scheme "ldaps://" as "ldaps://" URLs always
+	//          attempt to connect using TLS, even when `insecure` is set to `true`
+	// When `true`, "ldap://" URLS connect insecurely. When `false`, "ldap://" URLs are upgraded to
+	// a TLS connection using StartTLS as specified in https://tools.ietf.org/html/rfc2830.
 	Insecure bool `json:"insecure"`
+
 	// CA is a reference to a ConfigMap containing an optional trusted certificate authority bundle
 	// to use when making requests to the server.
-	// If empty, the default system roots are used
+	// If empty, the default system roots are used.
 	// +optional
 	CA ConfigMapReference `json:"ca"`
+
 	// Attributes maps LDAP attributes to identities
 	Attributes LDAPAttributeMapping `json:"attributes"`
 }
@@ -262,6 +330,8 @@ type LDAPPasswordIdentityProvider struct {
 // LDAPAttributeMapping maps LDAP attributes to OpenShift identity fields
 type LDAPAttributeMapping struct {
 	// ID is the list of attributes whose values should be used as the user ID. Required.
+	// First non-empty attribute is used. At least one attribute is required. If none of the listed
+	// attribute have a value, authentication fails.
 	// LDAP standard identity attribute is "dn"
 	ID []string `json:"id"`
 	// PreferredUsername is the list of attributes whose values should be used as the preferred username.
@@ -299,6 +369,7 @@ type RequestHeaderIdentityProvider struct {
 	//   https://www.example.com/sso-login?then=${url}
 	// ${query} is replaced with the current query string
 	//   https://www.example.com/auth-proxy/oauth/authorize?${query}
+	// Required when UseAsLogin is set to true.
 	LoginURL string `json:"loginURL"`
 
 	// ChallengeURL is a URL to redirect unauthenticated /authorize requests to
@@ -308,6 +379,7 @@ type RequestHeaderIdentityProvider struct {
 	//   https://www.example.com/sso-login?then=${url}
 	// ${query} is replaced with the current query string
 	//   https://www.example.com/auth-proxy/oauth/authorize?${query}
+	// Required when UseAsChallenger is set to true.
 	ChallengeURL string `json:"challengeURL"`
 
 	// ClientCA is a reference to a configmap with the trusted signer certs. If empty, no request
@@ -341,7 +413,7 @@ type GitHubIdentityProvider struct {
 
 	// ClientSecret is is a reference to the secret containing the oauth client secret
 	// The secret referenced must contain a key named `clientSecret` containing the secret data.
-	ClientSecret corev1.SecretReference `json:"clientSecret"`
+	ClientSecret LocalSecretReference `json:"clientSecret"`
 
 	// Organizations optionally restricts which organizations are allowed to log in
 	// +optional
@@ -381,7 +453,7 @@ type GitLabIdentityProvider struct {
 
 	// ClientSecret is is a reference to the secret containing the oauth client secret
 	// The secret referenced must contain a key named `clientSecret` containing the secret data.
-	ClientSecret corev1.SecretReference `json:"clientSecret"`
+	ClientSecret LocalSecretReference `json:"clientSecret"`
 
 	// LegacyOAuth2 determines that OAuth2 should be used, not OIDC
 	// +optional
@@ -395,7 +467,7 @@ type GoogleIdentityProvider struct {
 
 	// ClientSecret is is a reference to the secret containing the oauth client secret
 	// The secret referenced must contain a key named `clientSecret` containing the secret data.
-	ClientSecret corev1.SecretReference `json:"clientSecret"`
+	ClientSecret LocalSecretReference `json:"clientSecret"`
 
 	// HostedDomain is the optional Google App domain (e.g. "mycompany.com") to restrict logins to
 	// +optional
@@ -415,7 +487,7 @@ type OpenIDIdentityProvider struct {
 
 	// ClientSecret is is a reference to the secret containing the oauth client secret
 	// The secret referenced must contain a key named `clientSecret` containing the secret data.
-	ClientSecret corev1.SecretReference `json:"clientSecret"`
+	ClientSecret LocalSecretReference `json:"clientSecret"`
 
 	// ExtraScopes are any scopes to request in addition to the standard "openid" scope.
 	// +optional

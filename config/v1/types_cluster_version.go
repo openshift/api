@@ -97,13 +97,13 @@ type ClusterVersionStatus struct {
 	// by a temporary or permanent error. Conditions are only valid for the
 	// current desiredUpdate when metadata.generation is equal to
 	// status.generation.
-	Conditions []ClusterOperatorStatusCondition `json:"conditions"`
+	Conditions []ClusterOperatorStatusCondition `json:"conditions,omitempty"`
 
 	// availableUpdates contains the list of updates that are appropriate
 	// for this cluster. This list may be empty if no updates are recommended,
 	// if the update service is unavailable, or if an invalid channel has
 	// been specified.
-	AvailableUpdates []Update `json:"availableUpdates"`
+	AvailableUpdates []Update `json:"availableUpdates,omitempty"`
 }
 
 // ClusterID is string RFC4122 uuid.

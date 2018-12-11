@@ -20,6 +20,9 @@ type DNS struct {
 }
 
 type DNSSpec struct {
+	// BaseDomain is the base domain of the cluster. All managed DNS records will
+	// be sub-domains of this base.
+	BaseDomain string `json:"baseDomain"`
 }
 
 type DNSStatus struct {

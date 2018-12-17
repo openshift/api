@@ -20,8 +20,11 @@ type DNS struct {
 }
 
 type DNSSpec struct {
-	// BaseDomain is the base domain of the cluster. All managed DNS records will
+	// baseDomain is the base domain of the cluster. All managed DNS records will
 	// be sub-domains of this base.
+	//
+	// For example, given the base domain `openshift.example.com`, an API server
+	// DNS record may be created for `cluster-api.openshift.example.com`.
 	BaseDomain string `json:"baseDomain"`
 }
 

@@ -49,8 +49,8 @@ type TokenConfig struct {
 	// used within this temporal window. The user will need to acquire a new
 	// token to regain access once a token times out.
 	// Valid values are integer values:
-	//   x < 0  Tokens never timeout (e.g. `-1`)
-	//   x = 0  Tokens are disabled (default)
+	//   x < 0  Tokens time out is enabled but tokens never timeout unless configured per client (e.g. `-1`)
+	//   x = 0  Tokens time out is disabled (default)
 	//   x > 0  Tokens time out if there is no activity for x seconds
 	// The current minimum allowed value for X is 300 (5 minutes)
 	// +optional

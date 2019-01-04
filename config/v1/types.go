@@ -252,12 +252,8 @@ type ClientConnectionOverrides struct {
 	Burst int32 `json:"burst"`
 }
 
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-
 // GenericControllerConfig provides information to configure a controller
 type GenericControllerConfig struct {
-	metav1.TypeMeta `json:",inline"`
-
 	// ServingInfo is the HTTP serving information for the controller's endpoints
 	ServingInfo HTTPServingInfo `json:"servingInfo,omitempty"`
 

@@ -9,7 +9,7 @@ import (
 type ConfigMapReference struct {
 	Name string `json:"name"`
 	// Key allows pointing to a specific key/value inside of the configmap.  This is useful for logical file references.
-	Key string `json:"filename,omitempty"`
+	Key string `json:"key,omitempty"`
 }
 
 // LocalSecretReference references a secret within the local namespace

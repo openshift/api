@@ -61,8 +61,8 @@ func (ClientConnectionOverrides) SwaggerDoc() map[string]string {
 }
 
 var map_ConfigMapReference = map[string]string{
-	"":         "ConfigMapReference references a configmap in the openshift-config namespace.",
-	"filename": "Key allows pointing to a specific key/value inside of the configmap.  This is useful for logical file references.",
+	"":    "ConfigMapReference references a configmap in the openshift-config namespace.",
+	"key": "Key allows pointing to a specific key/value inside of the configmap.  This is useful for logical file references.",
 }
 
 func (ConfigMapReference) SwaggerDoc() map[string]string {

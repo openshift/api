@@ -56,6 +56,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&OAuthList{},
 		&Project{},
 		&ProjectList{},
+		&Proxy{},
+		&ProxyList{},
 		&Scheduling{},
 		&SchedulingList{},
 	)

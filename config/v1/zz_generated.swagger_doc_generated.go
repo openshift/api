@@ -328,17 +328,6 @@ func (ImageLabel) SwaggerDoc() map[string]string {
 	return map_ImageLabel
 }
 
-var map_ProxyConfig = map[string]string{
-	"":           "ProxyConfig defines what proxies to use for an operation",
-	"httpProxy":  "HttpProxy is the URL of the proxy for HTTP requests",
-	"httpsProxy": "HttpsProxy is the URL of the proxy for HTTPS requests",
-	"noProxy":    "NoProxy is the list of domains for which the proxy should not be used",
-}
-
-func (ProxyConfig) SwaggerDoc() map[string]string {
-	return map_ProxyConfig
-}
-
 var map_ClusterOperator = map[string]string{
 	"":       "ClusterOperator is the Custom Resource object which holds the current state of an operator. This object is used by operators to convey their state to the rest of the cluster.",
 	"spec":   "spec hold the intent of how this operator should behave.",
@@ -944,6 +933,33 @@ var map_ProjectList = map[string]string{
 
 func (ProjectList) SwaggerDoc() map[string]string {
 	return map_ProjectList
+}
+
+var map_Proxy = map[string]string{
+	"":     "Proxy holds cluster-wide information on how to configure default proxies for the cluster. The canonical name is `cluster`",
+	"spec": "Spec holds user-settable values for the proxy configuration",
+}
+
+func (Proxy) SwaggerDoc() map[string]string {
+	return map_Proxy
+}
+
+var map_ProxyList = map[string]string{
+	"metadata": "Standard object's metadata.",
+}
+
+func (ProxyList) SwaggerDoc() map[string]string {
+	return map_ProxyList
+}
+
+var map_ProxySpec = map[string]string{
+	"httpProxy":  "httpProxy is the URL of the proxy for HTTP requests.  Empty means unset and will not result in an env var.",
+	"httpsProxy": "httpsProxy is the URL of the proxy for HTTPS requests.  Empty means unset and will not result in an env var.",
+	"noProxy":    "noProxy is the list of domains for which the proxy should not be used.  Empty means unset and will not result in an env var.",
+}
+
+func (ProxySpec) SwaggerDoc() map[string]string {
+	return map_ProxySpec
 }
 
 var map_Scheduling = map[string]string{

@@ -513,12 +513,28 @@ func (Console) SwaggerDoc() map[string]string {
 	return map_Console
 }
 
+var map_ConsoleAuthentication = map[string]string{
+	"logoutRedirect": "An optional, absolute URL to redirect web browsers to after logging out of the console. If not specified, it will redirect to the default login page. This is required when using an identity provider that supports single sign-on (SSO) such as: - OpenID (Keycloak, Azure) - RequestHeader (GSSAPI, SSPI, SAML) - OAuth (GitHub, GitLab, Google) Logging out of the console will destroy the user's token. The logoutRedirect provides the user the option to perform single logout (SLO) through the identity provider to destroy their single sign-on session.",
+}
+
+func (ConsoleAuthentication) SwaggerDoc() map[string]string {
+	return map_ConsoleAuthentication
+}
+
 var map_ConsoleList = map[string]string{
 	"metadata": "Standard object's metadata.",
 }
 
 func (ConsoleList) SwaggerDoc() map[string]string {
 	return map_ConsoleList
+}
+
+var map_ConsoleStatus = map[string]string{
+	"publicHostname": "The hostname for the console. This will match the host for the route that is created for the console.",
+}
+
+func (ConsoleStatus) SwaggerDoc() map[string]string {
+	return map_ConsoleStatus
 }
 
 var map_DNS = map[string]string{

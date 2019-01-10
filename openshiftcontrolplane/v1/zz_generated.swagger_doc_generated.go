@@ -21,6 +21,7 @@ func (BuildControllerConfig) SwaggerDoc() map[string]string {
 
 var map_BuildDefaultsConfig = map[string]string{
 	"":              "BuildDefaultsConfig controls the default information for Builds",
+	"defaultProxy":  "defaultProxy is the location of the default Proxy Configuration",
 	"gitHTTPProxy":  "gitHTTPProxy is the location of the HTTPProxy for Git source",
 	"gitHTTPSProxy": "gitHTTPSProxy is the location of the HTTPSProxy for Git source",
 	"gitNoProxy":    "gitNoProxy is the list of domains for which the proxy should not be used",

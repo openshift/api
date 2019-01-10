@@ -239,6 +239,9 @@ type ImageImportControllerConfig struct {
 type BuildDefaultsConfig struct {
 	metav1.TypeMeta `json:",inline"`
 
+	// defaultProxy is the location of the default Proxy Configuration
+	DefaultProxy *configv1.ProxySpec `json:"defaultProxy,omitempty"`
+
 	// gitHTTPProxy is the location of the HTTPProxy for Git source
 	GitHTTPProxy string `json:"gitHTTPProxy,omitempty"`
 

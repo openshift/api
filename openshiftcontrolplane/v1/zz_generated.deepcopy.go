@@ -70,6 +70,15 @@ func (in *BuildControllerConfig) DeepCopy() *BuildControllerConfig {
 func (in *BuildDefaultsConfig) DeepCopyInto(out *BuildDefaultsConfig) {
 	*out = *in
 	out.TypeMeta = in.TypeMeta
+	if in.DefaultProxy != nil {
+		in, out := &in.DefaultProxy, &out.DefaultProxy
+		if *in == nil {
+			*out = nil
+		} else {
+			*out = new(config_v1.ProxySpec)
+			**out = **in
+		}
+	}
 	if in.Env != nil {
 		in, out := &in.Env, &out.Env
 		*out = make([]core_v1.EnvVar, len(*in))

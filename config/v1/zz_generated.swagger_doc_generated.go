@@ -364,10 +364,11 @@ func (ClusterOperatorSpec) SwaggerDoc() map[string]string {
 }
 
 var map_ClusterOperatorStatus = map[string]string{
-	"":           "ClusterOperatorStatus provides information about the status of the operator.",
-	"conditions": "conditions describes the state of the operator's reconciliation functionality.",
-	"version":    "version indicates which version of the operator updated the current status object.",
-	"extension":  "extension contains any additional status information specific to the operator which owns this status object.",
+	"":               "ClusterOperatorStatus provides information about the status of the operator.",
+	"conditions":     "conditions describes the state of the operator's reconciliation functionality.",
+	"version":        "version indicates which version of the operator updated the current status object.",
+	"relatedObjects": "relatedObjects is a list of objects that are \"interesting\" or related to this operator.  Common uses are: 1. the detailed resource driving the operator 2. operator namespaces 3. operand namespaces",
+	"extension":      "extension contains any additional status information specific to the operator which owns this status object.",
 }
 
 func (ClusterOperatorStatus) SwaggerDoc() map[string]string {
@@ -385,6 +386,18 @@ var map_ClusterOperatorStatusCondition = map[string]string{
 
 func (ClusterOperatorStatusCondition) SwaggerDoc() map[string]string {
 	return map_ClusterOperatorStatusCondition
+}
+
+var map_ObjectReference = map[string]string{
+	"":          "ObjectReference contains enough information to let you inspect or modify the referred object.",
+	"group":     "group of the referent.",
+	"resource":  "resource of the referent.",
+	"namespace": "namespace of the referent.",
+	"name":      "name of the referent.",
+}
+
+func (ObjectReference) SwaggerDoc() map[string]string {
+	return map_ObjectReference
 }
 
 var map_ClusterVersion = map[string]string{

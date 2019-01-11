@@ -16,6 +16,9 @@ type OpenShiftAPIServerConfig struct {
 	// provides the standard apiserver configuration
 	configv1.GenericAPIServerConfig `json:",inline"`
 
+	// authenticationConfig holds optional authentication information for the openshift-apiserver
+	AuthenticationConfig AuthenticationConfig `json:"authenticationConfig "`
+
 	// imagePolicyConfig feeds the image policy admission plugin
 	ImagePolicyConfig ImagePolicyConfig `json:"imagePolicyConfig"`
 
@@ -46,6 +49,11 @@ type OpenShiftAPIServerConfig struct {
 
 	// TODO this needs to be removed.
 	APIServerArguments map[string][]string `json:"apiServerArguments"`
+}
+
+type AuthenticationConfig struct {
+	// aggregatorCA is a file containing trusted roots for the aggregator. If empty, the cluster default value is used.
+	AggregatorCA string `json:"aggregatorCA "`
 }
 
 type GrantHandlerType string

@@ -44,6 +44,10 @@ type OperatorSpec struct {
 	// managementState indicates whether and how the operator should manage the component
 	ManagementState ManagementState `json:"managementState"`
 
+	// logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a
+	// simple way to manage coarse grained logging choices that operators have to interpret for their operands.
+	LogLevel LogLevel `json:"logLevel"`
+
 	// operandSpecs provide customization for functional units within the component
 	OperandSpecs []OperandSpec `json:"operandSpecs"`
 
@@ -58,6 +62,23 @@ type OperatorSpec struct {
 	// it is an input to the level for the operator
 	ObservedConfig runtime.RawExtension `json:"observedConfig"`
 }
+
+type LogLevel string
+
+var (
+	// Normal is the default.  Normal, working log information, everything is fine, but helpful notices for auditing or common operations.  In kube, this is probably glog=2.
+	Normal LogLevel = "Normal"
+
+	// Debug is used when something went wrong.  Even common operations may be logged, and less helpful but more quantity of notices.  In kube, this is probably glog=4.
+	Debug LogLevel = "Debug"
+
+	// Trace is used when something went really badly and even more verbose logs are needed.  Logging every function call as part of a common operation, to tracing execution of a query.  In kube, this is probably glog=6.
+	Trace LogLevel = "Trace"
+
+	// TraceAll is used when something is broken at the level of API content/decoding.  It will dump complete body content.  If you turn this on in a production cluster
+	// prepare from serious performance issues and massive amounts of logs.  In kube, this is probably glog=8.
+	TraceAll LogLevel = "TraceAll"
+)
 
 // ResourcePatch is a way to represent the patch you would issue to `kubectl patch` in the API
 type ResourcePatch struct {

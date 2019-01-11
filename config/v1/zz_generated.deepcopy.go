@@ -276,7 +276,13 @@ func (in *BuildOverrides) DeepCopyInto(out *BuildOverrides) {
 		*out = make([]ImageLabel, len(*in))
 		copy(*out, *in)
 	}
-	in.NodeSelector.DeepCopyInto(&out.NodeSelector)
+	if in.NodeSelector != nil {
+		in, out := &in.NodeSelector, &out.NodeSelector
+		*out = make(map[string]string, len(*in))
+		for key, val := range *in {
+			(*out)[key] = val
+		}
+	}
 	if in.Tolerations != nil {
 		in, out := &in.Tolerations, &out.Tolerations
 		*out = make([]core_v1.Toleration, len(*in))

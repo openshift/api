@@ -2,7 +2,7 @@ package v1
 
 import (
 	configv1 "github.com/openshift/api/config/v1"
-	osinv1 "github.com/openshift/api/osin/v1"
+	authv1 "github.com/openshift/api/authentication/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 )
@@ -10,7 +10,7 @@ import (
 var (
 	GroupName     = "openshiftcontrolplane.config.openshift.io"
 	GroupVersion  = schema.GroupVersion{Group: GroupName, Version: "v1"}
-	schemeBuilder = runtime.NewSchemeBuilder(addKnownTypes, osinv1.Install, configv1.Install)
+	schemeBuilder = runtime.NewSchemeBuilder(addKnownTypes, authv1.Install, configv1.Install)
 	// Install is a function which adds this version to a scheme
 	Install = schemeBuilder.AddToScheme
 

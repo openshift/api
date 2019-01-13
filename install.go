@@ -44,7 +44,7 @@ import (
 	"github.com/openshift/api/oauth"
 	"github.com/openshift/api/openshiftcontrolplane"
 	"github.com/openshift/api/operator"
-	"github.com/openshift/api/osin"
+	"github.com/openshift/api/authentication"
 	"github.com/openshift/api/project"
 	"github.com/openshift/api/quota"
 	"github.com/openshift/api/route"
@@ -70,7 +70,7 @@ var (
 		oauth.Install,
 		openshiftcontrolplane.Install,
 		operator.Install,
-		osin.Install,
+		authentication.Install,
 		project.Install,
 		quota.Install,
 		route.Install,

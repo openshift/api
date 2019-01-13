@@ -1,18 +1,18 @@
-package osin
+package authentication
 
 import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 
-	osinv1 "github.com/openshift/api/osin/v1"
+	authv1 "github.com/openshift/api/authentication/v1"
 )
 
 const (
-	GroupName = "osin.config.openshift.io"
+	GroupName = "authentication.config.openshift.io"
 )
 
 var (
-	schemeBuilder = runtime.NewSchemeBuilder(osinv1.Install)
+	schemeBuilder = runtime.NewSchemeBuilder(authv1.Install)
 	// Install is a function which adds every version of this group to a scheme
 	Install = schemeBuilder.AddToScheme
 )

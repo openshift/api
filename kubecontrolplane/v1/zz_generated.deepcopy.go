@@ -5,7 +5,7 @@
 package v1
 
 import (
-	osin_v1 "github.com/openshift/api/osin/v1"
+	authentication_v1 "github.com/openshift/api/authentication/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 )
 
@@ -67,7 +67,7 @@ func (in *KubeAPIServerConfig) DeepCopyInto(out *KubeAPIServerConfig) {
 		if *in == nil {
 			*out = nil
 		} else {
-			*out = new(osin_v1.OAuthConfig)
+			*out = new(authentication_v1.OAuthConfig)
 			(*in).DeepCopyInto(*out)
 		}
 	}

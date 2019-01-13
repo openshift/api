@@ -6,7 +6,7 @@ import (
 	"fmt"
 
 	configv1 "github.com/openshift/api/config/v1"
-	osinv1 "github.com/openshift/api/osin/v1"
+	authv1 "github.com/openshift/api/authentication/v1"
 )
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -55,7 +55,7 @@ type KubeAPIServerConfig struct {
 	ServiceAccountPublicKeyFiles []string `json:"serviceAccountPublicKeyFiles"`
 
 	// oauthConfig, if present start the /oauth endpoint in this process
-	OAuthConfig *osinv1.OAuthConfig `json:"oauthConfig"`
+	OAuthConfig *authv1.OAuthConfig `json:"oauthConfig"`
 
 	// TODO this needs to be removed.
 	APIServerArguments map[string]Arguments `json:"apiServerArguments"`

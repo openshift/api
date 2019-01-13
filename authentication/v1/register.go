@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	GroupName     = "osin.config.openshift.io"
+	GroupName     = "authentication.config.openshift.io"
 	GroupVersion  = schema.GroupVersion{Group: GroupName, Version: "v1"}
 	schemeBuilder = runtime.NewSchemeBuilder(addKnownTypes, configv1.Install)
 	// Install is a function which adds this version to a scheme

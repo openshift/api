@@ -23,7 +23,7 @@ type BuildSpec struct {
 	// should be trusted for image pushes and pulls during builds.
 	// The namespace for this config map is openshift-config.
 	// +optional
-	AdditionalTrustedCA ConfigMapFileReference `json:"additionalTrustedCA,omitempty"`
+	AdditionalTrustedCA ConfigMapNameReference `json:"additionalTrustedCA,omitempty"`
 	// BuildDefaults controls the default information for Builds
 	// +optional
 	BuildDefaults BuildDefaults `json:"buildDefaults,omitempty"`

@@ -108,7 +108,7 @@ type BuildOverrides struct {
 
 	// NodeSelector is a selector which must be true for the build pod to fit on a node
 	// +optional
-	NodeSelector metav1.LabelSelector `json:"nodeSelector,omitempty"`
+	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
 
 	// Tolerations is a list of Tolerations that will override any existing
 	// tolerations set on a build pod.

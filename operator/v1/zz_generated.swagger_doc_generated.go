@@ -109,6 +109,16 @@ func (ResourcePatch) SwaggerDoc() map[string]string {
 	return map_ResourcePatch
 }
 
+var map_StaticPodOperatorSpec = map[string]string{
+	"": "StaticPodOperatorSpec is spec for controllers that manage static pods.",
+	"failedRevisionLimit":    "failedRevisionLimit is the number of failed static pod installer revisions to keep on disk and in the api -1 = unlimited, 0 or unset = 5 (default)",
+	"succeededRevisionLimit": "succeededRevisionLimit is the number of successful static pod installer revisions to keep on disk and in the api -1 = unlimited, 0 or unset = 5 (default)",
+}
+
+func (StaticPodOperatorSpec) SwaggerDoc() map[string]string {
+	return map_StaticPodOperatorSpec
+}
+
 var map_StaticPodOperatorStatus = map[string]string{
 	"": "StaticPodOperatorStatus is status for controllers that manage static pods.  There are different needs because individual node status must be tracked.",
 	"latestAvailableRevision": "latestAvailableRevision is the deploymentID of the most recent deployment",

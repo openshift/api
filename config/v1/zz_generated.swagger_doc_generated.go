@@ -945,6 +945,24 @@ func (ProjectList) SwaggerDoc() map[string]string {
 	return map_ProjectList
 }
 
+var map_ProjectSpec = map[string]string{
+	"projectRequestMessage":  "projectRequestMessage is the string presented to a user if they are unable to request a project via the projectrequest api endpoint",
+	"projectRequestTemplate": "projectRequestTemplate is the template to use for creating projects in response to projectrequest. This must point to a template in 'openshift-config' namespace. It is optional. If it is not specified, a default template is used.",
+}
+
+func (ProjectSpec) SwaggerDoc() map[string]string {
+	return map_ProjectSpec
+}
+
+var map_TemplateReference = map[string]string{
+	"":     "TemplateReference references a project request template in a 'openshift-config' namespace.",
+	"name": "name is the metadata.name of the referenced project request template",
+}
+
+func (TemplateReference) SwaggerDoc() map[string]string {
+	return map_TemplateReference
+}
+
 var map_Proxy = map[string]string{
 	"":     "Proxy holds cluster-wide information on how to configure default proxies for the cluster. The canonical name is `cluster`",
 	"spec": "Spec holds user-settable values for the proxy configuration",

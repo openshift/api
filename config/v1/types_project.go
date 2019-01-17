@@ -18,12 +18,14 @@ type Project struct {
 	Status ProjectStatus `json:"status"`
 }
 
-// TemplateReference references a project request template in a 'openshift-config' namespace.
+// TemplateReference references a template in a specific namespace.
+// The namespace must be specified at the point of use.
 type TemplateReference struct {
 	// name is the metadata.name of the referenced project request template
 	Name string `json:"name"`
 }
 
+// ProjectSpec holds the project creation configuration.
 type ProjectSpec struct {
 	// projectRequestMessage is the string presented to a user if they are unable to request a project via the projectrequest api endpoint
 	ProjectRequestMessage string `json:"projectRequestMessage"`
@@ -31,7 +33,9 @@ type ProjectSpec struct {
 	// projectRequestTemplate is the template to use for creating projects in response to projectrequest.
 	// This must point to a template in 'openshift-config' namespace. It is optional.
 	// If it is not specified, a default template is used.
-	ProjectRequestTemplate *TemplateReference `json:"projectRequestTemplate"`
+	//
+	// +optional
+	ProjectRequestTemplate TemplateReference `json:"projectRequestTemplate,omitempty"`
 }
 
 type ProjectStatus struct {

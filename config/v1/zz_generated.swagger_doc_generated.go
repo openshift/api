@@ -787,9 +787,8 @@ func (IdentityProviderConfig) SwaggerDoc() map[string]string {
 }
 
 var map_KeystoneIdentityProvider = map[string]string{
-	"":                    "KeystonePasswordIdentityProvider provides identities for users authenticating using keystone password credentials",
-	"domainName":          "domainName is required for keystone v3",
-	"useUsernameIdentity": "useUsernameIdentity indicates that users should be authenticated by username, not keystone ID DEPRECATED - only use this option for legacy systems to ensure backwards compatibility",
+	"":           "KeystonePasswordIdentityProvider provides identities for users authenticating using keystone password credentials",
+	"domainName": "domainName is required for keystone v3",
 }
 
 func (KeystoneIdentityProvider) SwaggerDoc() map[string]string {

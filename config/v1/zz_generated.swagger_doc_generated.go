@@ -1018,4 +1018,12 @@ func (SchedulingList) SwaggerDoc() map[string]string {
 	return map_SchedulingList
 }
 
+var map_SchedulingSpec = map[string]string{
+	"policy": "policy is a reference to a ConfigMap containing scheduler policy which has user specified predicates and priorities. If this ConfigMap is not available scheduler will default to use DefaultAlgorithmProvider. The namespace for this configmap is openshift-config.",
+}
+
+func (SchedulingSpec) SwaggerDoc() map[string]string {
+	return map_SchedulingSpec
+}
+
 // AUTO-GENERATED FUNCTIONS END HERE

@@ -35,6 +35,16 @@ type InfrastructureStatus struct {
 	// all platforms, and must handle unrecognized platforms as None if they do
 	// not support that platform.
 	Platform PlatformType `json:"platform,omitempty"`
+
+	// etcdDiscoveryDomain is the domain used to fetch the SRV records for discovering
+	// etcd servers and clients.
+	// For more info: https://github.com/etcd-io/etcd/blob/329be66e8b3f9e2e6af83c123ff89297e49ebd15/Documentation/op-guide/clustering.md#dns-discovery
+	EtcdDiscoveryDomain string `json:"etcdDiscoveryDomain"`
+
+	// apiServerURL is a valid URL with scheme(http/https), address and port.
+	// apiServerURL can be used by components like kubelet on machines, to contact the `apisever`
+	// using the infrastructure provider rather than the kubernetes networking.
+	APIServerURL string `json:"apiServerURL"`
 }
 
 // PlatformType is a specific supported infrastructure provider.

@@ -146,6 +146,32 @@ func (ConsoleSpec) SwaggerDoc() map[string]string {
 	return map_ConsoleSpec
 }
 
+var map_Etcd = map[string]string{
+	"": "Etcd provides information to configure an operator to manage kube-apiserver.",
+}
+
+func (Etcd) SwaggerDoc() map[string]string {
+	return map_Etcd
+}
+
+var map_EtcdList = map[string]string{
+	"":         "KubeAPISOperatorConfigList is a collection of items",
+	"metadata": "Standard object's metadata.",
+	"items":    "Items contains the items",
+}
+
+func (EtcdList) SwaggerDoc() map[string]string {
+	return map_EtcdList
+}
+
+var map_EtcdSpec = map[string]string{
+	"forceRedeploymentReason": "forceRedeploymentReason can be used to force the redeployment of the kube-apiserver by providing a unique string. This provides a mechanism to kick a previously failed deployment and provide a reason why you think it will work this time instead of failing again on the same config.",
+}
+
+func (EtcdSpec) SwaggerDoc() map[string]string {
+	return map_EtcdSpec
+}
+
 var map_KubeAPIServer = map[string]string{
 	"": "KubeAPISOperatorConfig provides information to configure an operator to manage kube-apiserver.",
 }

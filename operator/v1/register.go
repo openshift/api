@@ -32,6 +32,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 	metav1.AddToGroupVersion(scheme, GroupVersion)
 
 	scheme.AddKnownTypes(GroupVersion,
+		&Authentication{},
+		&AuthenticationList{},
 		&Console{},
 		&ConsoleList{},
 		&Etcd{},

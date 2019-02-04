@@ -276,4 +276,30 @@ func (OpenShiftControllerManagerList) SwaggerDoc() map[string]string {
 	return map_OpenShiftControllerManagerList
 }
 
+var map_KubeScheduler = map[string]string{
+	"": "KubeScheduler provides information to configure an operator to manage scheduler.",
+}
+
+func (KubeScheduler) SwaggerDoc() map[string]string {
+	return map_KubeScheduler
+}
+
+var map_KubeSchedulerList = map[string]string{
+	"":         "KubeSchedulerList is a collection of items",
+	"metadata": "Standard object's metadata.",
+	"items":    "Items contains the items",
+}
+
+func (KubeSchedulerList) SwaggerDoc() map[string]string {
+	return map_KubeSchedulerList
+}
+
+var map_KubeSchedulerSpec = map[string]string{
+	"forceRedeploymentReason": "forceRedeploymentReason can be used to force the redeployment of the kube-scheduler by providing a unique string. This provides a mechanism to kick a previously failed deployment and provide a reason why you think it will work this time instead of failing again on the same config.",
+}
+
+func (KubeSchedulerSpec) SwaggerDoc() map[string]string {
+	return map_KubeSchedulerSpec
+}
+
 // AUTO-GENERATED FUNCTIONS END HERE

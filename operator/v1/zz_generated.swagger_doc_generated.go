@@ -189,7 +189,7 @@ func (EtcdSpec) SwaggerDoc() map[string]string {
 }
 
 var map_KubeAPIServer = map[string]string{
-	"": "KubeAPISOperatorConfig provides information to configure an operator to manage kube-apiserver.",
+	"": "KubeAPIServer provides information to configure an operator to manage kube-apiserver.",
 }
 
 func (KubeAPIServer) SwaggerDoc() map[string]string {
@@ -197,7 +197,7 @@ func (KubeAPIServer) SwaggerDoc() map[string]string {
 }
 
 var map_KubeAPIServerList = map[string]string{
-	"":         "KubeAPISOperatorConfigList is a collection of items",
+	"":         "KubeAPIServerList is a collection of items",
 	"metadata": "Standard object's metadata.",
 	"items":    "Items contains the items",
 }

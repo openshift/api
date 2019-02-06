@@ -8,9 +8,12 @@ import (
 )
 
 var (
-	legacyGroupVersion            = schema.GroupVersion{Group: "", Version: "v1"}
-	legacySchemeBuilder           = runtime.NewSchemeBuilder(addLegacyKnownTypes, corev1.AddToScheme, extensionsv1beta1.AddToScheme)
-	DeprecatedInstallWithoutGroup = legacySchemeBuilder.AddToScheme
+	LegacyGroupName               = ""
+	LegacyGroupVersion            = schema.GroupVersion{Group: LegacyGroupName, Version: "v1"}
+	LegacySchemeBuilder           = runtime.NewSchemeBuilder(addLegacyKnownTypes, corev1.AddToScheme, extensionsv1beta1.AddToScheme)
+	DeprecatedInstallWithoutGroup = LegacySchemeBuilder.AddToScheme
+
+	LegacySchemeGroupVersion = LegacyGroupVersion
 )
 
 func addLegacyKnownTypes(scheme *runtime.Scheme) error {
@@ -23,6 +26,6 @@ func addLegacyKnownTypes(scheme *runtime.Scheme) error {
 		&DeploymentLogOptions{},
 		&extensionsv1beta1.Scale{},
 	}
-	scheme.AddKnownTypes(legacyGroupVersion, types...)
+	scheme.AddKnownTypes(LegacyGroupVersion, types...)
 	return nil
 }

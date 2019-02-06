@@ -24,6 +24,16 @@ type KubeAPIServerSpec struct {
 	// This provides a mechanism to kick a previously failed deployment and provide a reason why you think it will work
 	// this time instead of failing again on the same config.
 	ForceRedeploymentReason string `json:"forceRedeploymentReason"`
+
+	// unsupportedCertificateRotation contains information for overriding the default rotation times on particular certificates.
+	// You should only change settings here if you are very sure you know what you're doing. Changing defaults can
+	// cause cluster instability
+	CertificateRotation *KubeAPIServerCertificateRotationOverrides `json:"unsupportedCertificateRotation,omitempty"`
+}
+
+type KubeAPIServerCertificateRotationOverrides struct {
+	// aggregatorProxyClientCert is how the kube-apiserver authenticate to aggregated API servers
+	AggregatorProxyClientCert *CertificateRotation `json:"aggregatorProxyClientCert,omitempty"`
 }
 
 type KubeAPIServerStatus struct {

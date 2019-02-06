@@ -3,7 +3,7 @@ package v1
 import (
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	runtime "k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/runtime"
 )
 
 // MyOperatorResource is an example operator configuration type
@@ -177,11 +177,11 @@ const (
 
 // StaticPodOperatorSpec is spec for controllers that manage static pods.
 type StaticPodOperatorSpec struct {
-	OperatorSpec           `json:",inline"`
+	OperatorSpec `json:",inline"`
 
 	// failedRevisionLimit is the number of failed static pod installer revisions to keep on disk and in the api
 	// -1 = unlimited, 0 or unset = 5 (default)
-	FailedRevisionLimit    int32 `json:"failedRevisionLimit,omitempty"`
+	FailedRevisionLimit int32 `json:"failedRevisionLimit,omitempty"`
 	// succeededRevisionLimit is the number of successful static pod installer revisions to keep on disk and in the api
 	// -1 = unlimited, 0 or unset = 5 (default)
 	SucceededRevisionLimit int32 `json:"succeededRevisionLimit,omitempty"`
@@ -213,4 +213,22 @@ type NodeStatus struct {
 
 	// lastFailedRevisionErrors is a list of the errors during the failed deployment referenced in lastFailedRevision
 	LastFailedRevisionErrors []string `json:"lastFailedRevisionErrors"`
+}
+
+// CertificateRotation contains information to control the timing of cert rotation.  You cannot specify rules here,
+// only the times.  Default values for rotation timing can vary by the particular certificate being rotated.
+// Generally these should not be touched.  The names are implementation sensitive and we expect to change the overall
+// mechanism in a future release.
+type CertificateRotation struct {
+	// signerRotationCadence controls how often the signer will rotate
+	SignerRotationCadence CertificateRotationCadence `json:"signerRotationCadence"`
+	// targetRotationCadence controls how often the target will rotate
+	TargetRotationCadence CertificateRotationCadence `json:"targetRotationCadence"`
+}
+
+type CertificateRotationCadence struct {
+	// validity is how long the certificate will be valid for
+	Validity metav1.Duration `json:"validity,omitempty"`
+	// targetRefresh is how long before a new certificate should be created
+	TargetRefresh metav1.Duration `json:"targetRefresh,omitempty"`
 }

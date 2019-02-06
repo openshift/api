@@ -302,4 +302,59 @@ func (KubeSchedulerSpec) SwaggerDoc() map[string]string {
 	return map_KubeSchedulerSpec
 }
 
+var map_APIServiceCABundleInjectorConfig = map[string]string{
+	"":             "APIServiceCABundleInjectorConfig provides information to configure an APIService CA Bundle Injector controller",
+	"caBundleFile": "caBundleFile holds the ca bundle containing the service signer CA to apply to APIServices",
+}
+
+func (APIServiceCABundleInjectorConfig) SwaggerDoc() map[string]string {
+	return map_APIServiceCABundleInjectorConfig
+}
+
+var map_ConfigMapCABundleInjectorConfig = map[string]string{
+	"":             "ConfigMapCABundleInjectorConfig provides information to configure a ConfigMap CA Bundle Injector controller",
+	"caBundleFile": "caBundleFile holds the ca bundle to apply to ConfigMaps",
+}
+
+func (ConfigMapCABundleInjectorConfig) SwaggerDoc() map[string]string {
+	return map_ConfigMapCABundleInjectorConfig
+}
+
+var map_ServiceCA = map[string]string{
+	"": "ServiceCA provides information to configure an operator to manage the service cert controllers",
+}
+
+func (ServiceCA) SwaggerDoc() map[string]string {
+	return map_ServiceCA
+}
+
+var map_ServiceCAList = map[string]string{
+	"":         "ServiceCAList is a collection of items",
+	"metadata": "Standard object's metadata.",
+	"items":    "Items contains the items",
+}
+
+func (ServiceCAList) SwaggerDoc() map[string]string {
+	return map_ServiceCAList
+}
+
+var map_ServiceCASpec = map[string]string{
+	"serviceServingCertSignerConfig":   "serviceServingCertSignerConfig holds a sparse config that the user wants for this component.  It only needs to be the overrides from the defaults it will end up overlaying in the following order: 1. hardcoded default 2. this config",
+	"apiServiceCABundleInjectorConfig": "apiServiceCABundleInjectorConfig holds a sparse config that the user wants for this component.  It only needs to be the overrides from the defaults it will end up overlaying in the following order: 1. hardcoded default 2. this config",
+	"configMapCABundleInjectorConfig":  "configMapCABundleInjectorConfig holds a sparse config that the user wants for this component.  It only needs to be the overrides from the defaults it will end up overlaying in the following order: 1. hardcoded default 2. this config",
+}
+
+func (ServiceCASpec) SwaggerDoc() map[string]string {
+	return map_ServiceCASpec
+}
+
+var map_ServiceServingCertSignerConfig = map[string]string{
+	"":       "ServiceServingCertSignerConfig provides information to configure a serving serving cert signing controller",
+	"signer": "signer holds the signing information used to automatically sign serving certificates.",
+}
+
+func (ServiceServingCertSignerConfig) SwaggerDoc() map[string]string {
+	return map_ServiceServingCertSignerConfig
+}
+
 // AUTO-GENERATED FUNCTIONS END HERE

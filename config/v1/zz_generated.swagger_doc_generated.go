@@ -1073,6 +1073,34 @@ func (ProxySpec) SwaggerDoc() map[string]string {
 	return map_ProxySpec
 }
 
+var map_Registry = map[string]string{
+	"":         "Registry holds cluster-wide information about how to handle the registries config.  The canonical name is `cluster`",
+	"metadata": "Standard object's metadata.",
+	"spec":     "spec holds user settable values for configuration",
+}
+
+func (Registry) SwaggerDoc() map[string]string {
+	return map_Registry
+}
+
+var map_RegistryList = map[string]string{
+	"metadata": "Standard object's metadata.",
+}
+
+func (RegistryList) SwaggerDoc() map[string]string {
+	return map_RegistryList
+}
+
+var map_RegistrySpec = map[string]string{
+	"insecureRegistries": "InsecureRegistries are registries which do not have a valid SSL certificate or only support HTTP connections.",
+	"blockedRegistries":  "BlockedRegistries are blacklisted from image pull/push. All other registries are allowed.\n\nOnly one of BlockedRegistries or AllowedRegistries may be set.",
+	"allowedRegistries":  "AllowedRegistries are whitelisted for image pull/push. All other registries are blocked.\n\nOnly one of BlockedRegistries or AllowedRegistries may be set.",
+}
+
+func (RegistrySpec) SwaggerDoc() map[string]string {
+	return map_RegistrySpec
+}
+
 var map_Scheduling = map[string]string{
 	"":         "Scheduling holds cluster-wide information about Scheduling.  The canonical name is `cluster`",
 	"metadata": "Standard object's metadata.",

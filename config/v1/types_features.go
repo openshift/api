@@ -57,7 +57,7 @@ var (
 	// are listed here.  The feature gates left in their default state not listed.
 	DefaultEnabledKubeFeatures = []string{}
 
-	// DefaultEnabledKubeFeatures is a list of features to turn off when the default featureset is turned on.  Only the exceptions
+	// DefaultDisabledKubeFeatures is a list of features to turn off when the default featureset is turned on.  Only the exceptions
 	// are listed here.  The feature gates left in their default state not listed.
 	DefaultDisabledKubeFeatures = []string{
 		"PersistentLocalVolumes", // disable local volumes for 4.0, owned by sig-storage/hekumar@redhat.com

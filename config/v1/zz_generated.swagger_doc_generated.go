@@ -621,6 +621,33 @@ func (DNSZone) SwaggerDoc() map[string]string {
 	return map_DNSZone
 }
 
+var map_Features = map[string]string{
+	"":         "Features holds cluster-wide information about feature gates.  The canonical name is `cluster`",
+	"metadata": "Standard object's metadata.",
+	"spec":     "spec holds user settable values for configuration",
+	"status":   "status holds observed values from the cluster. They may not be overridden.",
+}
+
+func (Features) SwaggerDoc() map[string]string {
+	return map_Features
+}
+
+var map_FeaturesList = map[string]string{
+	"metadata": "Standard object's metadata.",
+}
+
+func (FeaturesList) SwaggerDoc() map[string]string {
+	return map_FeaturesList
+}
+
+var map_FeaturesSpec = map[string]string{
+	"featureSet": "featureSet changes the list of features in the cluster.  The default is empty.  Be very careful adjusting this setting. Turning on or off features may cause irreversible changes in your cluster which cannot be undone.",
+}
+
+func (FeaturesSpec) SwaggerDoc() map[string]string {
+	return map_FeaturesSpec
+}
+
 var map_Image = map[string]string{
 	"":         "Image holds cluster-wide information about how to handle images.  The canonical name is `cluster`",
 	"metadata": "Standard object's metadata.",

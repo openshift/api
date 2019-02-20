@@ -8,6 +8,7 @@ import (
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
+// +kubebuilder:singular=kubeapiserver
 // KubeAPIServer provides information to configure an operator to manage kube-apiserver.
 type KubeAPIServer struct {
 	metav1.TypeMeta   `json:",inline"`

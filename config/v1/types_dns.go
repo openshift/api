@@ -63,7 +63,11 @@ type DNSZone struct {
 }
 
 type DNSStatus struct {
-	// dnsSuffix (service-ca amongst others)
+	// ClusterDomain is the local cluster DNS domain suffix for cluster DNS
+	// services. The default is `cluster.local`.
+	//
+	// https://kubernetes.io/docs/concepts/services-networking/dns-pod-service
+	ClusterDomain string `json:"clusterDomain"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

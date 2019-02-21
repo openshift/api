@@ -600,6 +600,14 @@ func (DNSSpec) SwaggerDoc() map[string]string {
 	return map_DNSSpec
 }
 
+var map_DNSStatus = map[string]string{
+	"clusterDomain": "ClusterDomain is the local cluster DNS domain suffix for cluster DNS services. The default is `cluster.local`.\n\nhttps://kubernetes.io/docs/concepts/services-networking/dns-pod-service",
+}
+
+func (DNSStatus) SwaggerDoc() map[string]string {
+	return map_DNSStatus
+}
+
 var map_DNSZone = map[string]string{
 	"":     "DNSZone is used to define a DNS hosted zone. A zone can be identified by an ID or tags.",
 	"id":   "id is the identifier that can be used to find the DNS hosted zone.\n\non AWS zone can be fetched using `ID` as id in [1] on Azure zone can be fetched using `ID` as a pre-determined name in [2], on GCP zone can be fetched using `ID` as a pre-determined name in [3].\n\n[1]: https://docs.aws.amazon.com/cli/latest/reference/route53/get-hosted-zone.html#options [2]: https://docs.microsoft.com/en-us/cli/azure/network/dns/zone?view=azure-cli-latest#az-network-dns-zone-show [3]: https://cloud.google.com/dns/docs/reference/v1/managedZones/get",

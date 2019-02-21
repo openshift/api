@@ -303,6 +303,107 @@ func (KubeControllerManagerSpec) SwaggerDoc() map[string]string {
 	return map_KubeControllerManagerSpec
 }
 
+var map_AdditionalNetworkDefinition = map[string]string{
+	"":             "AdditionalNetworkDefinition configures an extra network that is available but not created by default. Instead, pods must request them by name. type must be specified, along with exactly one \"Config\" that matches the type.",
+	"type":         "type is the type of network The only supported value is NetworkTypeRaw",
+	"name":         "name is the name of the network. This will be populated in the resulting CRD This must be unique.",
+	"rawCNIConfig": "rawCNIConfig is the raw CNI configuration json to create in the NetworkAttachmentDefinition CRD",
+}
+
+func (AdditionalNetworkDefinition) SwaggerDoc() map[string]string {
+	return map_AdditionalNetworkDefinition
+}
+
+var map_ClusterNetworkEntry = map[string]string{
+	"": "ClusterNetworkEntry is a subnet from which to allocate PodIPs. A network of size HostPrefix (in CIDR notation) will be allocated when nodes join the cluster. Not all network providers support multiple ClusterNetworks",
+}
+
+func (ClusterNetworkEntry) SwaggerDoc() map[string]string {
+	return map_ClusterNetworkEntry
+}
+
+var map_DefaultNetworkDefinition = map[string]string{
+	"":                    "DefaultNetworkDefinition represents a single network plugin's configuration. type must be specified, along with exactly one \"Config\" that matches the type.",
+	"type":                "type is the type of network All NetworkTypes are supported except for NetworkTypeRaw",
+	"openshiftSDNConfig":  "openShiftSDNConfig configures the openshift-sdn plugin",
+	"ovnKubernetesConfig": "oVNKubernetesConfig configures the ovn-kubernetes plugin. This is currently not implemented.",
+}
+
+func (DefaultNetworkDefinition) SwaggerDoc() map[string]string {
+	return map_DefaultNetworkDefinition
+}
+
+var map_Network = map[string]string{
+	"": "Network describes the cluster's desired network configuration. It is consumed by the cluster-network-operator.",
+}
+
+func (Network) SwaggerDoc() map[string]string {
+	return map_Network
+}
+
+var map_NetworkList = map[string]string{
+	"": "NetworkList contains a list of Network configurations",
+}
+
+func (NetworkList) SwaggerDoc() map[string]string {
+	return map_NetworkList
+}
+
+var map_NetworkSpec = map[string]string{
+	"":                    "NetworkSpec is the top-level network configuration object.",
+	"clusterNetwork":      "clusterNetwork is the IP address pool to use for pod IPs. Some network providers, e.g. OpenShift SDN, support multiple ClusterNetworks. Others only support one. This is equivalent to the cluster-cidr.",
+	"serviceNetwork":      "serviceNetwork is the ip address pool to use for Service IPs Currently, all existing network providers only support a single value here, but this is an array to allow for growth.",
+	"defaultNetwork":      "defaultNetwork is the \"default\" network that all pods will receive",
+	"additionalNetworks":  "additionalNetworks is a list of extra networks to make available to pods when multiple networks are enabled.",
+	"disableMultiNetwork": "disableMultiNetwork specifies whether or not multiple pod network support should be disabled. If unset, this property defaults to 'false' and multiple network support is enabled.",
+	"deployKubeProxy":     "deployKubeProxy specifies whether or not a standalone kube-proxy should be deployed by the operator. Some network providers include kube-proxy or similar functionality. If unset, the plugin will attempt to select the correct value, which is false when OpenShift SDN and ovn-kubernetes are used and true otherwise.",
+	"kubeProxyConfig":     "kubeProxyConfig lets us configure desired proxy configuration. If not specified, sensible defaults will be chosen by OpenShift directly. Not consumed by all network providers - currently only openshift-sdn.",
+}
+
+func (NetworkSpec) SwaggerDoc() map[string]string {
+	return map_NetworkSpec
+}
+
+var map_NetworkStatus = map[string]string{
+	"": "NetworkStatus is currently unused. Instead, status is reported in the Network.config.openshift.io object.",
+}
+
+func (NetworkStatus) SwaggerDoc() map[string]string {
+	return map_NetworkStatus
+}
+
+var map_OVNKubernetesConfig = map[string]string{
+	"":    "ovnKubernetesConfig is the proposed configuration parameters for networks using the ovn-kubernetes network project",
+	"mtu": "mtu is the MTU to use for the tunnel interface. This must be 100 bytes smaller than the uplink mtu. Default is 1400",
+}
+
+func (OVNKubernetesConfig) SwaggerDoc() map[string]string {
+	return map_OVNKubernetesConfig
+}
+
+var map_OpenShiftSDNConfig = map[string]string{
+	"":          "OpenShiftSDNConfig configures the three openshift-sdn plugins",
+	"mode":      "mode is one of \"Multitenant\", \"Subnet\", or \"NetworkPolicy\"",
+	"vxlanPort": "vxlanPort is the port to use for all vxlan packets. The default is 4789.",
+	"mtu":       "mtu is the mtu to use for the tunnel interface. Defaults to 1450 if unset. This must be 50 bytes smaller than the machine's uplink.",
+	"useExternalOpenvswitch": "useExternalOpenvswitch tells the operator not to install openvswitch, because it will be provided separately. If set, you must provide it yourself.",
+}
+
+func (OpenShiftSDNConfig) SwaggerDoc() map[string]string {
+	return map_OpenShiftSDNConfig
+}
+
+var map_ProxyConfig = map[string]string{
+	"":                   "ProxyConfig defines the configuration knobs for kubeproxy All of these are optional and have sensible defaults",
+	"iptablesSyncPeriod": "The period that iptables rules are refreshed. Default: 30s",
+	"bindAddress":        "The address to \"bind\" on Defaults to 0.0.0.0",
+	"proxyArguments":     "Any additional arguments to pass to the kubeproxy process",
+}
+
+func (ProxyConfig) SwaggerDoc() map[string]string {
+	return map_ProxyConfig
+}
+
 var map_OpenShiftAPIServer = map[string]string{
 	"": "OpenShiftAPIServer provides information to configure an operator to manage openshift-apiserver.",
 }

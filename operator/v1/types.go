@@ -42,13 +42,16 @@ var (
 // inside of the Spec struct for your particular operator.
 type OperatorSpec struct {
 	// managementState indicates whether and how the operator should manage the component
+	// +optional
 	ManagementState ManagementState `json:"managementState"`
 
 	// logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a
 	// simple way to manage coarse grained logging choices that operators have to interpret for their operands.
+	// +optional
 	LogLevel LogLevel `json:"logLevel"`
 
 	// operandSpecs provide customization for functional units within the component
+	// +optional
 	OperandSpecs []OperandSpec `json:"operandSpecs"`
 
 	// unsupportedConfigOverrides holds a sparse config that will override any previously set options.  It only needs to be the fields to override
@@ -56,10 +59,12 @@ type OperatorSpec struct {
 	// 1. hardcoded defaults
 	// 2. observedConfig
 	// 3. unsupportedConfigOverrides
+	// +optional
 	UnsupportedConfigOverrides runtime.RawExtension `json:"unsupportedConfigOverrides"`
 
 	// observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because
 	// it is an input to the level for the operator
+	// +optional
 	ObservedConfig runtime.RawExtension `json:"observedConfig"`
 }
 
@@ -94,11 +99,13 @@ type OperandSpec struct {
 	Name string `json:"name"`
 
 	// operandContainerSpecs are per-container options
+	// +optional
 	OperandContainerSpecs []OperandContainerSpec `json:"operandContainerSpecs"`
 
 	// unsupportedResourcePatches are applied to the workload resource for this unit. This is an unsupported
 	// workaround if anything needs to be modified on the workload that is not otherwise configurable.
 	// TODO Decide: alternatively, we could simply include a RawExtension which is used in place of the "normal" default manifest
+	// +optional
 	UnsupportedResourcePatches []ResourcePatch `json:"unsupportedResourcePatches"`
 }
 

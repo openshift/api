@@ -162,6 +162,56 @@ func (ConsoleSpec) SwaggerDoc() map[string]string {
 	return map_ConsoleSpec
 }
 
+var map_DNS = map[string]string{
+	"":       "DNS manages the CoreDNS component to provide a name resolution service for pods and services in the cluster.\n\nThis supports the DNS-based service discovery specification: https://github.com/kubernetes/dns/blob/master/docs/specification.md\n\nMore details: https://kubernetes.io/docs/tasks/administer-cluster/coredns",
+	"spec":   "spec is the specification of the desired behavior of the DNS.",
+	"status": "status is the most recently observed status of the DNS.",
+}
+
+func (DNS) SwaggerDoc() map[string]string {
+	return map_DNS
+}
+
+var map_DNSCondition = map[string]string{
+	"":                   "DNSCondition contains details for the current condition of this DNS.",
+	"type":               "type is the type of the condition.\n\nThese are the supported DNS condition types:\n\n  * Available\n  - True if the following conditions are met:\n    * DNS controller daemonset is available.\n  - False if any of those conditions are unsatisfied.",
+	"status":             "status is the status of the condition. Can be True, False, Unknown.",
+	"lastTransitionTime": "lastTransitionTime is the last time a condition status transitioned from one state to another.",
+	"reason":             "reason is a brief machine readable explanation for the condition's last transition.",
+	"message":            "message is a human readable description of the details of the last transition, complementing reason.",
+}
+
+func (DNSCondition) SwaggerDoc() map[string]string {
+	return map_DNSCondition
+}
+
+var map_DNSList = map[string]string{
+	"": "DNSList contains a list of DNS",
+}
+
+func (DNSList) SwaggerDoc() map[string]string {
+	return map_DNSList
+}
+
+var map_DNSSpec = map[string]string{
+	"": "DNSSpec is the specification of the desired behavior of the DNS.",
+}
+
+func (DNSSpec) SwaggerDoc() map[string]string {
+	return map_DNSSpec
+}
+
+var map_DNSStatus = map[string]string{
+	"":              "DNSStatus defines the observed status of the DNS.",
+	"clusterIP":     "clusterIP is the service IP through which this DNS is made available.\n\nIn the case of the default DNS, this will be a well known IP that is used as the default nameserver for pods that are using the default ClusterFirst DNS policy.\n\nIn general, this IP can be specified in a pod's spec.dnsConfig.nameservers list or used explicitly when performing name resolution from within the cluster. Example: dig foo.com @<service IP>\n\nMore info: https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies",
+	"clusterDomain": "clusterDomain is the local cluster DNS domain suffix for DNS services. This will be a subdomain as defined in RFC 1034, section 3.5: https://tools.ietf.org/html/rfc1034#section-3.5 Example: \"cluster.local\"\n\nMore info: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service",
+	"conditions":    "conditions represent the latest available observations of a DNS's current state.",
+}
+
+func (DNSStatus) SwaggerDoc() map[string]string {
+	return map_DNSStatus
+}
+
 var map_Etcd = map[string]string{
 	"": "Etcd provides information to configure an operator to manage kube-apiserver.",
 }

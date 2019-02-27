@@ -21,6 +21,9 @@ type Features struct {
 type FeatureSet string
 
 var (
+	// Default feature set that allows upgrades.
+	Default FeatureSet = "Default"
+
 	// TechPreviewNoUpgrade turns on tech preview features that are not part of the normal supported platform. Turning
 	// this feature set on CANNOT BE UNDONE and PREVENTS UPGRADES.
 	TechPreviewNoUpgrade FeatureSet = "TechPreviewNoUpgrade"
@@ -44,22 +47,18 @@ type FeaturesList struct {
 	Items           []Features `json:"items"`
 }
 
-var (
-	// TechPreviewEnabledKubeFeatures  is a list of features to turn on when TechPreviewNoUpgrade is turned on.  Only the exceptions
-	// are listed here.  The feature gates left in their default state not listed.
-	TechPreviewEnabledKubeFeatures = []string{}
+type FeatureEnabledDisabled struct {
+	Enabled  []string
+	Disabled []string
+}
 
-	// TechPreviewDisabledKubeFeatures is a list of features to turn on when TechPreviewNoUpgrade is turned on.  Only the exceptions
-	// are listed here.  The feature gates left in their default state not listed.
-	TechPreviewDisabledKubeFeatures = []string{}
-
-	// DefaultEnabledKubeFeatures is a list of features to turn on when the default featureset is turned on.  Only the exceptions
-	// are listed here.  The feature gates left in their default state not listed.
-	DefaultEnabledKubeFeatures = []string{}
-
-	// DefaultDisabledKubeFeatures is a list of features to turn off when the default featureset is turned on.  Only the exceptions
-	// are listed here.  The feature gates left in their default state not listed.
-	DefaultDisabledKubeFeatures = []string{
-		"PersistentLocalVolumes", // disable local volumes for 4.0, owned by sig-storage/hekumar@redhat.com
-	}
-)
+var FeatureSets = map[FeatureSet]FeatureEnabledDisabled{
+	Default: FeatureEnabledDisabled{
+		Enabled:  []string{},
+		Disabled: []string{"PersistentLocalVolumes"},
+	},
+	TechPreviewNoUpgrade: FeatureEnabledDisabled{
+		Enabled:  []string{},
+		Disabled: []string{},
+	},
+}

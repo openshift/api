@@ -53,9 +53,15 @@ type FeatureEnabledDisabled struct {
 }
 
 // FeatureSets Contains a map of Feature names to Enabled/Disabled Features.
+//
 // NOTE: The caller needs to make sure to check for the existence of the value
-// using golang's existence field, ie:
-//    if featureSet, ok := FeaturesSets["SomeFeature"]; ok { }
+// using golang's existence field. A possible scenario is an upgrade where new
+// FeatureSets are added and a controller has not been upgraded with a newer
+// version of this file. In this upgrade scenario the map could return nil.
+//
+// example:
+//   if featureSet, ok := FeaturesSets["SomeNewFeature"]; ok { }
+//
 var FeatureSets = map[FeatureSet]*FeatureEnabledDisabled{
 	Default: &FeatureEnabledDisabled{
 		Enabled:  []string{},

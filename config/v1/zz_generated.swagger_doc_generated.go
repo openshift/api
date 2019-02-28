@@ -1112,31 +1112,4 @@ func (ProxySpec) SwaggerDoc() map[string]string {
 	return map_ProxySpec
 }
 
-var map_Scheduling = map[string]string{
-	"":         "Scheduling holds cluster-wide information about Scheduling.  The canonical name is `cluster`",
-	"metadata": "Standard object's metadata.",
-	"spec":     "spec holds user settable values for configuration",
-	"status":   "status holds observed values from the cluster. They may not be overridden.",
-}
-
-func (Scheduling) SwaggerDoc() map[string]string {
-	return map_Scheduling
-}
-
-var map_SchedulingList = map[string]string{
-	"metadata": "Standard object's metadata.",
-}
-
-func (SchedulingList) SwaggerDoc() map[string]string {
-	return map_SchedulingList
-}
-
-var map_SchedulingSpec = map[string]string{
-	"policy": "policy is a reference to a ConfigMap containing scheduler policy which has user specified predicates and priorities. If this ConfigMap is not available scheduler will default to use DefaultAlgorithmProvider. The namespace for this configmap is openshift-config.",
-}
-
-func (SchedulingSpec) SwaggerDoc() map[string]string {
-	return map_SchedulingSpec
-}
-
 // AUTO-GENERATED FUNCTIONS END HERE

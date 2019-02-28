@@ -52,7 +52,7 @@ type OperatorSpec struct {
 
 	// operandSpecs provide customization for functional units within the component
 	// +optional
-	OperandSpecs []OperandSpec `json:"operandSpecs"`
+	OperandSpecs []OperandSpec `json:"operandSpecs,omitempty"`
 
 	// unsupportedConfigOverrides holds a sparse config that will override any previously set options.  It only needs to be the fields to override
 	// it will end up overlaying in the following order:
@@ -60,11 +60,13 @@ type OperatorSpec struct {
 	// 2. observedConfig
 	// 3. unsupportedConfigOverrides
 	// +optional
+	// +nullable
 	UnsupportedConfigOverrides runtime.RawExtension `json:"unsupportedConfigOverrides"`
 
 	// observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because
 	// it is an input to the level for the operator
 	// +optional
+	// +nullable
 	ObservedConfig runtime.RawExtension `json:"observedConfig"`
 }
 
@@ -100,13 +102,13 @@ type OperandSpec struct {
 
 	// operandContainerSpecs are per-container options
 	// +optional
-	OperandContainerSpecs []OperandContainerSpec `json:"operandContainerSpecs"`
+	OperandContainerSpecs []OperandContainerSpec `json:"operandContainerSpecs,omitempty"`
 
 	// unsupportedResourcePatches are applied to the workload resource for this unit. This is an unsupported
 	// workaround if anything needs to be modified on the workload that is not otherwise configurable.
 	// TODO Decide: alternatively, we could simply include a RawExtension which is used in place of the "normal" default manifest
 	// +optional
-	UnsupportedResourcePatches []ResourcePatch `json:"unsupportedResourcePatches"`
+	UnsupportedResourcePatches []ResourcePatch `json:"unsupportedResourcePatches,omitempty"`
 }
 
 type OperandContainerSpec struct {
@@ -184,11 +186,11 @@ const (
 
 // StaticPodOperatorSpec is spec for controllers that manage static pods.
 type StaticPodOperatorSpec struct {
-	OperatorSpec           `json:",inline"`
+	OperatorSpec `json:",inline"`
 
 	// failedRevisionLimit is the number of failed static pod installer revisions to keep on disk and in the api
 	// -1 = unlimited, 0 or unset = 5 (default)
-	FailedRevisionLimit    int32 `json:"failedRevisionLimit,omitempty"`
+	FailedRevisionLimit int32 `json:"failedRevisionLimit,omitempty"`
 	// succeededRevisionLimit is the number of successful static pod installer revisions to keep on disk and in the api
 	// -1 = unlimited, 0 or unset = 5 (default)
 	SucceededRevisionLimit int32 `json:"succeededRevisionLimit,omitempty"`
@@ -203,7 +205,7 @@ type StaticPodOperatorStatus struct {
 	LatestAvailableRevision int32 `json:"latestAvailableRevision"`
 
 	// nodeStatuses track the deployment values and errors across individual nodes
-	NodeStatuses []NodeStatus `json:"nodeStatuses"`
+	NodeStatuses []NodeStatus `json:"nodeStatuses,omitempty"`
 }
 
 // NodeStatus provides information about the current state of a particular node managed by this operator.
@@ -214,10 +216,10 @@ type NodeStatus struct {
 	// currentRevision is the generation of the most recently successful deployment
 	CurrentRevision int32 `json:"currentRevision"`
 	// targetRevision is the generation of the deployment we're trying to apply
-	TargetRevision int32 `json:"targetRevision"`
+	TargetRevision int32 `json:"targetRevision,omitempty"`
 	// lastFailedRevision is the generation of the deployment we tried and failed to deploy.
-	LastFailedRevision int32 `json:"lastFailedRevision"`
+	LastFailedRevision int32 `json:"lastFailedRevision,omitempty"`
 
 	// lastFailedRevisionErrors is a list of the errors during the failed deployment referenced in lastFailedRevision
-	LastFailedRevisionErrors []string `json:"lastFailedRevisionErrors"`
+	LastFailedRevisionErrors []string `json:"lastFailedRevisionErrors,omitempty"`
 }

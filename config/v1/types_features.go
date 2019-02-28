@@ -22,7 +22,7 @@ type FeatureSet string
 
 var (
 	// Default feature set that allows upgrades.
-	Default FeatureSet = "Default"
+	Default FeatureSet = ""
 
 	// TechPreviewNoUpgrade turns on tech preview features that are not part of the normal supported platform. Turning
 	// this feature set on CANNOT BE UNDONE and PREVENTS UPGRADES.
@@ -52,12 +52,16 @@ type FeatureEnabledDisabled struct {
 	Disabled []string
 }
 
-var FeatureSets = map[FeatureSet]FeatureEnabledDisabled{
-	Default: FeatureEnabledDisabled{
+// FeatureSets Contains a map of Feature names to Enabled/Disabled Features.
+// NOTE: The caller needs to make sure to check for the existence of the value
+// using golang's existence field, ie:
+//    if featureSet, ok := FeaturesSets["SomeFeature"]; ok { }
+var FeatureSets = map[FeatureSet]*FeatureEnabledDisabled{
+	Default: &FeatureEnabledDisabled{
 		Enabled:  []string{},
 		Disabled: []string{"PersistentLocalVolumes"},
 	},
-	TechPreviewNoUpgrade: FeatureEnabledDisabled{
+	TechPreviewNoUpgrade: &FeatureEnabledDisabled{
 		Enabled:  []string{},
 		Disabled: []string{},
 	},

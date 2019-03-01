@@ -115,8 +115,8 @@ type ClusterVersionStatus struct {
 	// for this cluster. This list may be empty if no updates are recommended,
 	// if the update service is unavailable, or if an invalid channel has
 	// been specified.
-	// +optional
-	AvailableUpdates []Update `json:"availableUpdates,omitempty"`
+	// +nullable
+	AvailableUpdates []Update `json:"availableUpdates"`
 }
 
 // UpdateState is a constant representing whether an update was successfully
@@ -146,8 +146,8 @@ type UpdateHistory struct {
 	// that is currently being applied will have a null completion time.
 	// Completion time will always be set for entries that are not the current
 	// update (usually to the started time of the next update).
-	// +optional
-	CompletionTime *metav1.Time `json:"completionTime,omitempty"`
+	// +nullable
+	CompletionTime *metav1.Time `json:"completionTime"`
 
 	// version is a semantic versioning identifying the update version. If the
 	// requested image does not define a version, or if a failure occurs

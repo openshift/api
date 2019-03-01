@@ -332,18 +332,18 @@ type LDAPAttributeMapping struct {
 	// preferredUsername is the list of attributes whose values should be used as the preferred username.
 	// LDAP standard login attribute is "uid"
 	// +optional
-	PreferredUsername []string `json:"preferredUsername"`
+	PreferredUsername []string `json:"preferredUsername,omitempty"`
 
 	// name is the list of attributes whose values should be used as the display name. Optional.
 	// If unspecified, no display name is set for the identity
 	// LDAP standard display name attribute is "cn"
 	// +optional
-	Name []string `json:"name"`
+	Name []string `json:"name,omitempty"`
 
 	// email is the list of attributes whose values should be used as the email address. Optional.
 	// If unspecified, no email is set for the identity
 	// +optional
-	Email []string `json:"email"`
+	Email []string `json:"email,omitempty"`
 }
 
 // KeystonePasswordIdentityProvider provides identities for users authenticating using keystone password credentials
@@ -394,7 +394,7 @@ type RequestHeaderIdentityProvider struct {
 	// clientCommonNames is an optional list of common names to require a match from. If empty, any
 	// client certificate validated against the clientCA bundle is considered authoritative.
 	// +optional
-	ClientCommonNames []string `json:"clientCommonNames"`
+	ClientCommonNames []string `json:"clientCommonNames,omitempty"`
 
 	// headers is the set of headers to check for identity information
 	Headers []string `json:"headers"`
@@ -422,11 +422,11 @@ type GitHubIdentityProvider struct {
 
 	// organizations optionally restricts which organizations are allowed to log in
 	// +optional
-	Organizations []string `json:"organizations"`
+	Organizations []string `json:"organizations,omitempty"`
 
 	// teams optionally restricts which teams are allowed to log in. Format is <org>/<team>.
 	// +optional
-	Teams []string `json:"teams"`
+	Teams []string `json:"teams,omitempty"`
 
 	// hostname is the optional domain (e.g. "mycompany.com") for use with a hosted instance of
 	// GitHub Enterprise.
@@ -510,11 +510,11 @@ type OpenIDIdentityProvider struct {
 
 	// extraScopes are any scopes to request in addition to the standard "openid" scope.
 	// +optional
-	ExtraScopes []string `json:"extraScopes"`
+	ExtraScopes []string `json:"extraScopes,omitempty"`
 
 	// extraAuthorizeParameters are any custom parameters to add to the authorize request.
 	// +optional
-	ExtraAuthorizeParameters map[string]string `json:"extraAuthorizeParameters"`
+	ExtraAuthorizeParameters map[string]string `json:"extraAuthorizeParameters,omitempty"`
 
 	// urls to use to authenticate
 	URLs OpenIDURLs `json:"urls"`
@@ -552,17 +552,17 @@ type OpenIDClaims struct {
 	// preferredUsername is the list of claims whose values should be used as the preferred username.
 	// If unspecified, the preferred username is determined from the value of the sub claim
 	// +optional
-	PreferredUsername []string `json:"preferredUsername"`
+	PreferredUsername []string `json:"preferredUsername,omitempty"`
 
 	// name is the list of claims whose values should be used as the display name. Optional.
 	// If unspecified, no display name is set for the identity
 	// +optional
-	Name []string `json:"name"`
+	Name []string `json:"name,omitempty"`
 
 	// email is the list of claims whose values should be used as the email address. Optional.
 	// If unspecified, no email is set for the identity
 	// +optional
-	Email []string `json:"email"`
+	Email []string `json:"email,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

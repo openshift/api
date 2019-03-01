@@ -20,7 +20,7 @@ type Console struct {
 
 type ConsoleSpec struct {
 	// +optional
-	Authentication ConsoleAuthentication `json:"authentication,omitempty"`
+	Authentication ConsoleAuthentication `json:"authentication"`
 }
 
 type ConsoleStatus struct {

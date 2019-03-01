@@ -35,7 +35,7 @@ type ProjectSpec struct {
 	// If it is not specified, a default template is used.
 	//
 	// +optional
-	ProjectRequestTemplate TemplateReference `json:"projectRequestTemplate,omitempty"`
+	ProjectRequestTemplate TemplateReference `json:"projectRequestTemplate"`
 }
 
 type ProjectStatus struct {

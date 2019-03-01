@@ -18,7 +18,8 @@ type ConsoleSpec struct {
 	OperatorSpec `json:",inline"`
 	// customization is used to optionally provide a small set of
 	// customization options to the web console.
-	Customization ConsoleCustomization `json:"customization,omitempty"`
+	// +optional
+	Customization ConsoleCustomization `json:"customization"`
 }
 
 type ConsoleStatus struct {

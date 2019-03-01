@@ -18,12 +18,15 @@ type Proxy struct {
 
 type ProxySpec struct {
 	// httpProxy is the URL of the proxy for HTTP requests.  Empty means unset and will not result in an env var.
+	// +optional
 	HTTPProxy string `json:"httpProxy,omitempty"`
 
 	// httpsProxy is the URL of the proxy for HTTPS requests.  Empty means unset and will not result in an env var.
+	// +optional
 	HTTPSProxy string `json:"httpsProxy,omitempty"`
 
 	// noProxy is the list of domains for which the proxy should not be used.  Empty means unset and will not result in an env var.
+	// +optional
 	NoProxy string `json:"noProxy,omitempty"`
 }
 

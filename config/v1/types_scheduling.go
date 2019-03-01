@@ -24,7 +24,7 @@ type SchedulerSpec struct {
 	// scheduler will default to use DefaultAlgorithmProvider.
 	// The namespace for this configmap is openshift-config.
 	// +optional
-	Policy ConfigMapNameReference `json:"policy,omitempty"`
+	Policy ConfigMapNameReference `json:"policy"`
 }
 
 type SchedulerStatus struct {

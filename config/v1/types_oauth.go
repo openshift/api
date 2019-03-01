@@ -89,7 +89,7 @@ type OAuthTemplates struct {
 	// If unspecified, the default login page is used.
 	// The namespace for this secret is openshift-config.
 	// +optional
-	Login SecretNameReference `json:"login,omitempty"`
+	Login SecretNameReference `json:"login"`
 
 	// providerSelection is the name of a secret that specifies a go template to use to render
 	// the provider selection page.
@@ -99,7 +99,7 @@ type OAuthTemplates struct {
 	// If unspecified, the default provider selection page is used.
 	// The namespace for this secret is openshift-config.
 	// +optional
-	ProviderSelection SecretNameReference `json:"providerSelection,omitempty"`
+	ProviderSelection SecretNameReference `json:"providerSelection"`
 
 	// error is the name of a secret that specifies a go template to use to render error pages
 	// during the authentication or grant flow.
@@ -109,7 +109,7 @@ type OAuthTemplates struct {
 	// If unspecified, the default error page is used.
 	// The namespace for this secret is openshift-config.
 	// +optional
-	Error SecretNameReference `json:"error,omitempty"`
+	Error SecretNameReference `json:"error"`
 }
 
 // IdentityProvider provides identities for users authenticating using credentials
@@ -129,7 +129,7 @@ type IdentityProvider struct {
 	// mappingMethod determines how identities from this provider are mapped to users
 	// Defaults to "claim"
 	// +optional
-	MappingMethod MappingMethodType `json:"mappingMethod"`
+	MappingMethod MappingMethodType `json:"mappingMethod,omitempty"`
 
 	IdentityProviderConfig `json:",inline"`
 }

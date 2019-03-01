@@ -49,7 +49,9 @@ type ClusterOperatorStatus struct {
 
 	// extension contains any additional status information specific to the
 	// operator which owns this status object.
-	Extension runtime.RawExtension `json:"extension,omitempty"`
+	// +nullable
+	// +optional
+	Extension runtime.RawExtension `json:"extension"`
 }
 
 type OperandVersion struct {

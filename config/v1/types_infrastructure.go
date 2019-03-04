@@ -13,8 +13,10 @@ type Infrastructure struct {
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	// spec holds user settable values for configuration
+	// +required
 	Spec InfrastructureSpec `json:"spec"`
 	// status holds observed values from the cluster. They may not be overridden.
+	// +optional
 	Status InfrastructureStatus `json:"status"`
 }
 

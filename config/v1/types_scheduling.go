@@ -13,8 +13,10 @@ type Scheduler struct {
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	// spec holds user settable values for configuration
+	// +required
 	Spec SchedulerSpec `json:"spec"`
 	// status holds observed values from the cluster. They may not be overridden.
+	// +optional
 	Status SchedulerStatus `json:"status"`
 }
 
@@ -24,7 +26,7 @@ type SchedulerSpec struct {
 	// scheduler will default to use DefaultAlgorithmProvider.
 	// The namespace for this configmap is openshift-config.
 	// +optional
-	Policy ConfigMapNameReference `json:"policy,omitempty"`
+	Policy ConfigMapNameReference `json:"policy"`
 }
 
 type SchedulerStatus struct {

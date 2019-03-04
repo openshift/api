@@ -13,7 +13,9 @@ type ServiceCA struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata"`
 
+	// +required
 	Spec   ServiceCASpec   `json:"spec"`
+	// +optional
 	Status ServiceCAStatus `json:"status"`
 }
 

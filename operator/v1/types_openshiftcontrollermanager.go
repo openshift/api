@@ -13,7 +13,9 @@ type OpenShiftControllerManager struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata"`
 
+	// +required
 	Spec   OpenShiftControllerManagerSpec   `json:"spec"`
+	// +optional
 	Status OpenShiftControllerManagerStatus `json:"status"`
 }
 

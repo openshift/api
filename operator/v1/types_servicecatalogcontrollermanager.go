@@ -13,8 +13,10 @@ type ServiceCatalogControllerManager struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   ServiceCatalogControllerManagerSpec   `json:"spec,omitempty"`
-	Status ServiceCatalogControllerManagerStatus `json:"status,omitempty"`
+	// +required
+	Spec ServiceCatalogControllerManagerSpec `json:"spec"`
+	// +optional
+	Status ServiceCatalogControllerManagerStatus `json:"status"`
 }
 
 type ServiceCatalogControllerManagerSpec struct {

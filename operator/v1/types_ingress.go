@@ -78,7 +78,7 @@ type IngressControllerSpec struct {
 	Replicas *int32 `json:"replicas,omitempty"`
 
 	// endpointPublishingStrategy is used to publish the ingress controller
-	// endpoints to other netowrks, enable load balancer integrations, etc.
+	// endpoints to other networks, enable load balancer integrations, etc.
 	//
 	// If empty, the default is based on the cluster platform:
 	//
@@ -154,8 +154,27 @@ type NodePlacement struct {
 type EndpointPublishingStrategyType string
 
 const (
-	// LoadBalancerService publishes the ingress controler using a Kubernetes
+	// LoadBalancerService publishes the ingress controller using a Kubernetes
 	// LoadBalancer Service.
+	LoadBalancerServiceStrategyType EndpointPublishingStrategyType = "LoadBalancerService"
+
+	// HostNetwork publishes the ingress controller on node ports where the
+	// ingress controller is deployed.
+	HostNetworkStrategyType EndpointPublishingStrategyType = "HostNetwork"
+
+	// Private does not publish the ingress controller.
+	PrivateStrategyType EndpointPublishingStrategyType = "Private"
+)
+
+// EndpointPublishingStrategy is a way to publish the endpoints of an
+// IngressController, and represents the type and any additional configuration
+// for a specific type.
+type EndpointPublishingStrategy struct {
+	// type is the publishing strategy to use. Valid values are:
+	//
+	// * LoadBalancerService
+	//
+	// Publishes the ingress controller using a Kubernetes LoadBalancer Service.
 	//
 	// In this configuration, the ingress controller deployment uses container
 	// networking. A LoadBalancer Service is created to publish the deployment. If
@@ -163,31 +182,24 @@ const (
 	// Service's external name.
 	//
 	// See: https://kubernetes.io/docs/concepts/services-networking/#loadbalancer
-	LoadBalancerServiceStrategyType EndpointPublishingStrategyType = "LoadBalancerService"
-
-	// HostNetwork publishes the ingress controller on node ports where the
-	// ingress controller is deployed.
+	//
+	// * HostNetwork
+	//
+	// Publishes the ingress controller on node ports where the ingress controller
+	// is deployed.
 	//
 	// In this configuration, the ingress controller deployment uses host
 	// networking, bound to node ports 80 and 443. The user is responsible for
 	// configuring an external load balancer to publish the ingress controller via
 	// the node ports.
-	HostNetworkStrategyType EndpointPublishingStrategyType = "HostNetwork"
-
-	// Private does not publish the ingress controller.
+	//
+	// * Private
+	//
+	// Does not publish the ingress controller.
 	//
 	// In this configuration, the ingress controller deployment uses container
 	// networking, and is not explicitly published. The user must manually publish
 	// the ingress controller.
-	PrivateStrategyType = "Private"
-)
-
-// EndpointPublishingStrategy is the a way to publish the endpoints of an
-// IngressController, and represents the type and any additional configuration
-// for a specific type.
-type EndpointPublishingStrategy struct {
-	// type is the publishing strategy to use. Valid values are
-	// LoadBalancerService, HostNetwork, or Private.
 	Type EndpointPublishingStrategyType `json:"type"`
 }
 

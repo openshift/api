@@ -23,13 +23,14 @@ import (
 // Additional features are available by default and through explicit
 // configuration.
 //
-// 1. To expose the ingress controller to other networks and the Internet, use
-//    the highAvailability configuration.
+// 1. To publish the ingress controller endpoints to the Internet, other
+//    networks, or external load balancers, configure an endpoint publishing
+//    strategy.
 //
-// 2. When exposing an ingress controller on supported cloud platforms, managed
-//    wildcard DNS pointing to the ingress controller is automatically enabled.
-//    DNS records are managed only in DNS zones defined in the DNS cluster
-//    configuration resource.
+// 2. On certain cloud platforms, when publishing an ingress controller, managed
+//    wildcard DNS is automatically enabled. OpenShift will manage a DNS record
+//    pointing to the ingress controller. DNS records are managed only in DNS
+//    zones defined in the DNS cluster configuration resource.
 //
 // 3. If an ingress controller does not specify a default certificate, a new
 //    self-signed certificate valid for the specified domain is generated for
@@ -50,7 +51,7 @@ type IngressController struct {
 // IngressControllerSpec is the specification of the desired behavior of the
 // IngressController.
 type IngressControllerSpec struct {
-	// domain is a DNS name used to configure various features that help expose
+	// domain is a DNS name used to configure various features that help publish
 	// the ingress controller and enable external integrations.
 	//
 	// * The value is published to individual Route statuses so that end-users
@@ -76,21 +77,18 @@ type IngressControllerSpec struct {
 	// +optional
 	Replicas *int32 `json:"replicas,omitempty"`
 
-	// highAvailability is used to expose the ingress controller and enable high
-	// availability strategies. For example, by placing a Kubernetes LoadBalancer
-	// Service in front of the ingress controller, or using host networking so an
-	// external load balancer can be directly wired the ingress controller via the
-	// nodes on which the ingress controller is deployed.
+	// endpointPublishingStrategy is used to publish the ingress controller
+	// endpoints to other netowrks, enable load balancer integrations, etc.
 	//
 	// If empty, the default is based on the cluster platform:
 	//
-	//   AWS: Cloud
-	//   All other platform types: None
+	//   AWS: LoadBalancerService
+	//   All other platform types: Private
 	//
-	// highAvailability cannot be updated.
+	// endpointPublishingStrategy cannot be updated.
 	//
 	// +optional
-	HighAvailability HighAvailabilityType `json:"highAvailability,omitempty"`
+	EndpointPublishingStrategy EndpointPublishingStrategy `json:"endpointPublishingStrategy,omitempty"`
 
 	// defaultCertificate is a reference to a secret containing the default
 	// certificate served by the ingress controller. The secret must contain the
@@ -152,47 +150,45 @@ type NodePlacement struct {
 	NodeSelector *metav1.LabelSelector `json:"nodeSelector,omitempty"`
 }
 
-// HighAvailabilityType is a way to expose ingress controllers and enable high
-// availability strategies.
-type HighAvailabilityType string
+// EndpointPublishingStrategyType is a way to publish ingress controller endpoints.
+type EndpointPublishingStrategyType string
 
 const (
-	// Cloud exposes the ingress controler using a Kubernetes LoadBalancer
-	// Service.
+	// LoadBalancerService publishes the ingress controler using a Kubernetes
+	// LoadBalancer Service.
 	//
-	// In this configuration, the ingress controller deployment is container
-	// networked. A LoadBalancer Service is created to expose the deployment. If
+	// In this configuration, the ingress controller deployment uses container
+	// networking. A LoadBalancer Service is created to publish the deployment. If
 	// domain is set, a wildcard DNS record will point to the LoadBalancer
 	// Service's external name.
 	//
 	// See: https://kubernetes.io/docs/concepts/services-networking/#loadbalancer
-	CloudHighAvailability HighAvailabilityType = "Cloud"
+	LoadBalancerServiceStrategyType EndpointPublishingStrategyType = "LoadBalancerService"
 
-	// Host exposes the ingress controller on node ports where the ingress
-	// controller is deployed.
+	// HostNetwork publishes the ingress controller on node ports where the
+	// ingress controller is deployed.
 	//
 	// In this configuration, the ingress controller deployment uses host
 	// networking, bound to node ports 80 and 443. The user is responsible for
-	// configuring an external load balancer to expose the ingress controller via
+	// configuring an external load balancer to publish the ingress controller via
 	// the node ports.
-	HostHighAvailability HighAvailabilityType = "Host"
+	HostNetworkStrategyType EndpointPublishingStrategyType = "HostNetwork"
 
-	// None leaves all ingress controller exposure and high availability tasks to
-	// the user.
+	// Private does not publish the ingress controller.
 	//
-	// In this configuration, the ingress controller deployment is container
-	// networked, and is not exposed. The user must manually expose the ingress
-	// controller.
-	NoneHighAvailability HighAvailabilityType = "None"
+	// In this configuration, the ingress controller deployment uses container
+	// networking, and is not explicitly published. The user must manually publish
+	// the ingress controller.
+	PrivateStrategyType = "Private"
 )
 
-// IngressControllerHighAvailability is the high availability configuration for
-// an IngressController, and represents the type and any additional
-// configuration for a specific type.
-type IngressControllerHighAvailability struct {
-	// type is the type of high availability to use. Valid values are Cloud, Host,
-	// or None.
-	Type HighAvailabilityType `json:"type"`
+// EndpointPublishingStrategy is the a way to publish the endpoints of an
+// IngressController, and represents the type and any additional configuration
+// for a specific type.
+type EndpointPublishingStrategy struct {
+	// type is the publishing strategy to use. Valid values are
+	// LoadBalancerService, HostNetwork, or Private.
+	Type EndpointPublishingStrategyType `json:"type"`
 }
 
 // IngressControllerStatus defines the observed status of the IngressController.
@@ -209,8 +205,8 @@ type IngressControllerStatus struct {
 	// domain is the actual domain in use.
 	Domain string `json:"domain"`
 
-	// highAvailability is the actual high availability configuration in use.
-	HighAvailability IngressControllerHighAvailability `json:"highAvailability"`
+	// endpointPublishingStrategy is the actual strategy in use.
+	EndpointPublishingStrategy EndpointPublishingStrategy `json:"endpointPublishingStrategy"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

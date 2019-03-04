@@ -188,23 +188,23 @@ func (EtcdSpec) SwaggerDoc() map[string]string {
 	return map_EtcdSpec
 }
 
+var map_EndpointPublishingStrategy = map[string]string{
+	"":     "EndpointPublishingStrategy is the a way to publish the endpoints of an IngressController, and represents the type and any additional configuration for a specific type.",
+	"type": "type is the publishing strategy to use. Valid values are LoadBalancerService, HostNetwork, or Private.",
+}
+
+func (EndpointPublishingStrategy) SwaggerDoc() map[string]string {
+	return map_EndpointPublishingStrategy
+}
+
 var map_IngressController = map[string]string{
-	"":       "IngressController describes a managed ingress controller for the cluster. The controller can service OpenShift Route and Kubernetes Ingress resources.\n\nWhen an IngressController is created, a new ingress controller deployment is created to allow external traffic to reach the services that expose Ingress or Route resources. Updating this resource may lead to disruption for public facing network connections as a new ingress controller revision may be rolled out.\n\nhttps://kubernetes.io/docs/concepts/services-networking/ingress-controllers\n\nAdditional features are available by default and through explicit configuration.\n\n1. To expose the ingress controller to other networks and the Internet, use\n   the highAvailability configuration.\n\n2. When exposing an ingress controller on supported cloud platforms, managed\n   wildcard DNS pointing to the ingress controller is automatically enabled.\n   DNS records are managed only in DNS zones defined in the DNS cluster\n   configuration resource.\n\n3. If an ingress controller does not specify a default certificate, a new\n   self-signed certificate valid for the specified domain is generated for\n   the ingress controller.\n\nWhenever possible, sensible defaults for the platform are used. See each field for more details.",
+	"":       "IngressController describes a managed ingress controller for the cluster. The controller can service OpenShift Route and Kubernetes Ingress resources.\n\nWhen an IngressController is created, a new ingress controller deployment is created to allow external traffic to reach the services that expose Ingress or Route resources. Updating this resource may lead to disruption for public facing network connections as a new ingress controller revision may be rolled out.\n\nhttps://kubernetes.io/docs/concepts/services-networking/ingress-controllers\n\nAdditional features are available by default and through explicit configuration.\n\n1. To publish the ingress controller endpoints to the Internet, other\n   networks, or external load balancers, configure an endpoint publishing\n   strategy.\n\n2. On certain cloud platforms, when publishing an ingress controller, managed\n   wildcard DNS is automatically enabled. OpenShift will manage a DNS record\n   pointing to the ingress controller. DNS records are managed only in DNS\n   zones defined in the DNS cluster configuration resource.\n\n3. If an ingress controller does not specify a default certificate, a new\n   self-signed certificate valid for the specified domain is generated for\n   the ingress controller.\n\nWhenever possible, sensible defaults for the platform are used. See each field for more details.",
 	"spec":   "spec is the specification of the desired behavior of the IngressController.",
 	"status": "status is the most recently observed status of the IngressController.",
 }
 
 func (IngressController) SwaggerDoc() map[string]string {
 	return map_IngressController
-}
-
-var map_IngressControllerHighAvailability = map[string]string{
-	"":     "IngressControllerHighAvailability is the high availability configuration for an IngressController, and represents the type and any additional configuration for a specific type.",
-	"type": "type is the type of high availability to use. Valid values are Cloud, Host, or None.",
-}
-
-func (IngressControllerHighAvailability) SwaggerDoc() map[string]string {
-	return map_IngressControllerHighAvailability
 }
 
 var map_IngressControllerList = map[string]string{
@@ -216,14 +216,14 @@ func (IngressControllerList) SwaggerDoc() map[string]string {
 }
 
 var map_IngressControllerSpec = map[string]string{
-	"":                   "IngressControllerSpec is the specification of the desired behavior of the IngressController.",
-	"domain":             "domain is a DNS name used to configure various features that help expose the ingress controller and enable external integrations.\n\n* The value is published to individual Route statuses so that end-users\n  know where to target external DNS records.\n\n* When wildcard DNS management is enabled, domain is the base domain used\n  to construct the wildcard host name.\n\n* If a generated default certificate is used for the ingress controller,\n  the certificate will be valid for domain.\n\ndomain must be unique among all IngressControllers, and cannot be updated.\n\nIf empty, defaults to the cluster Ingress config domain.",
-	"replicas":           "replicas is the desired number of ingress controller replicas. If unset, defaults to 2.",
-	"highAvailability":   "highAvailability is used to expose the ingress controller and enable high availability strategies. For example, by placing a Kubernetes LoadBalancer Service in front of the ingress controller, or using host networking so an external load balancer can be directly wired the ingress controller via the nodes on which the ingress controller is deployed.\n\nIf empty, the default is based on the cluster platform:\n\n  AWS: Cloud\n  All other platform types: None\n\nhighAvailability cannot be updated.",
-	"defaultCertificate": "defaultCertificate is a reference to a secret containing the default certificate served by the ingress controller. The secret must contain the following data:\n\n  tls.crt: the certificate file\n  tls.key: the certificate secret file\n\nIf unset, a wildcard certificate is automatically generated and used. The certificate is valid for the domain (and subdomains) and the certificate's CA will be automatically integrated with the cluster's trust store.\n\nWhatever certificate is used (whether the generated default or explicitly provided), the certificate will be automatically integrated with the built-in authentication service.",
-	"namespaceSelector":  "namespaceSelector is used to filter the set of namespaces serviced by the ingress controller. This is useful for implementing shards.\n\nIf unset, the default is no filtering.",
-	"routeSelector":      "routeSelector is used to filter the set of Routes serviced by the ingress controller. This is useful for implementing shards.\n\nIf unset, the default is no filtering.",
-	"nodePlacement":      "nodePlacement enables explicit control over the scheduling of the ingress controller.\n\nIf unset, defaults are used. See NodePlacement for more details.",
+	"":                           "IngressControllerSpec is the specification of the desired behavior of the IngressController.",
+	"domain":                     "domain is a DNS name used to configure various features that help publish the ingress controller and enable external integrations.\n\n* The value is published to individual Route statuses so that end-users\n  know where to target external DNS records.\n\n* When wildcard DNS management is enabled, domain is the base domain used\n  to construct the wildcard host name.\n\n* If a generated default certificate is used for the ingress controller,\n  the certificate will be valid for domain.\n\ndomain must be unique among all IngressControllers, and cannot be updated.\n\nIf empty, defaults to the cluster Ingress config domain.",
+	"replicas":                   "replicas is the desired number of ingress controller replicas. If unset, defaults to 2.",
+	"endpointPublishingStrategy": "endpointPublishingStrategy is used to publish the ingress controller endpoints to other netowrks, enable load balancer integrations, etc.\n\nIf empty, the default is based on the cluster platform:\n\n  AWS: LoadBalancerService\n  All other platform types: Private\n\nendpointPublishingStrategy cannot be updated.",
+	"defaultCertificate":         "defaultCertificate is a reference to a secret containing the default certificate served by the ingress controller. The secret must contain the following data:\n\n  tls.crt: the certificate file\n  tls.key: the certificate secret file\n\nIf unset, a wildcard certificate is automatically generated and used. The certificate is valid for the domain (and subdomains) and the certificate's CA will be automatically integrated with the cluster's trust store.\n\nWhatever certificate is used (whether the generated default or explicitly provided), the certificate will be automatically integrated with the built-in authentication service.",
+	"namespaceSelector":          "namespaceSelector is used to filter the set of namespaces serviced by the ingress controller. This is useful for implementing shards.\n\nIf unset, the default is no filtering.",
+	"routeSelector":              "routeSelector is used to filter the set of Routes serviced by the ingress controller. This is useful for implementing shards.\n\nIf unset, the default is no filtering.",
+	"nodePlacement":              "nodePlacement enables explicit control over the scheduling of the ingress controller.\n\nIf unset, defaults are used. See NodePlacement for more details.",
 }
 
 func (IngressControllerSpec) SwaggerDoc() map[string]string {
@@ -231,11 +231,11 @@ func (IngressControllerSpec) SwaggerDoc() map[string]string {
 }
 
 var map_IngressControllerStatus = map[string]string{
-	"":                  "IngressControllerStatus defines the observed status of the IngressController.",
-	"availableReplicas": "availableReplicas is number of observed available replicas according to the ingress controller deployment.",
-	"selector":          "selector is a label selector, in string format, for ingress controller pods corresponding to the IngressController. The number of matching pods should equal the value of availableReplicas.",
-	"domain":            "domain is the actual domain in use.",
-	"highAvailability":  "highAvailability is the actual high availability configuration in use.",
+	"":                           "IngressControllerStatus defines the observed status of the IngressController.",
+	"availableReplicas":          "availableReplicas is number of observed available replicas according to the ingress controller deployment.",
+	"selector":                   "selector is a label selector, in string format, for ingress controller pods corresponding to the IngressController. The number of matching pods should equal the value of availableReplicas.",
+	"domain":                     "domain is the actual domain in use.",
+	"endpointPublishingStrategy": "endpointPublishingStrategy is the actual strategy in use.",
 }
 
 func (IngressControllerStatus) SwaggerDoc() map[string]string {

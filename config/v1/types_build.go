@@ -14,7 +14,7 @@ type Build struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 	// Spec holds user-settable values for the build controller configuration
-	// +optional
+	// +required
 	Spec BuildSpec `json:"spec"`
 }
 

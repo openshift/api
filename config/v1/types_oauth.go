@@ -15,8 +15,9 @@ type OAuth struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata"`
 
+	// +required
 	Spec OAuthSpec `json:"spec"`
-
+	// +optional
 	Status OAuthStatus `json:"status"`
 }
 

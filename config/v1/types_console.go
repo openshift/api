@@ -13,8 +13,10 @@ type Console struct {
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	// spec holds user settable values for configuration
+	// +required
 	Spec ConsoleSpec `json:"spec"`
 	// status holds observed values from the cluster. They may not be overridden.
+	// +optional
 	Status ConsoleStatus `json:"status"`
 }
 

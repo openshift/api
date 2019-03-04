@@ -17,10 +17,12 @@ type ClusterOperator struct {
 	metav1.ObjectMeta `json:"metadata"`
 
 	// spec hold the intent of how this operator should behave.
+	// +required
 	Spec ClusterOperatorSpec `json:"spec"`
 
 	// status holds the information about the state of an operator.  It is consistent with status information across
 	// the kube ecosystem.
+	// +optional
 	Status ClusterOperatorStatus `json:"status"`
 }
 

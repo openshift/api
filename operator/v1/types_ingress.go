@@ -50,7 +50,7 @@ type IngressControllerSpec struct {
 	// domain must be unique among all IngressControllers, and cannot be
 	// updated.
 	//
-	// If empty, defaults to the cluster Ingress config domain value.
+	// If empty, defaults to ingress.config.openshift.io/cluster .spec.domain.
 	//
 	// +optional
 	Domain string `json:"domain,omitempty"`
@@ -64,7 +64,8 @@ type IngressControllerSpec struct {
 	// endpointPublishingStrategy is used to publish the ingress controller
 	// endpoints to other networks, enable load balancer integrations, etc.
 	//
-	// If empty, the default is based on the cluster platform:
+	// If empty, the default is based on
+	// infrastructure.config.openshift.io/cluster .status.platform:
 	//
 	//   AWS: LoadBalancerService
 	//   All other platform types: Private

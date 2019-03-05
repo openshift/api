@@ -75,8 +75,8 @@ type IngressControllerSpec struct {
 	EndpointPublishingStrategy EndpointPublishingStrategy `json:"endpointPublishingStrategy,omitempty"`
 
 	// defaultCertificate is a reference to a secret containing the default
-	// certificate served by the ingress controller. When specific routes don't
-	// specify their own certificate, defaultCertificate is used.
+	// certificate served by the ingress controller. When Routes don't specify
+	// their own certificate, defaultCertificate is used.
 	//
 	// The secret must contain the following keys and data:
 	//

@@ -43,7 +43,6 @@ var (
 // inside of the Spec struct for your particular operator.
 type OperatorSpec struct {
 	// managementState indicates whether and how the operator should manage the component
-	// +optional
 	// +kubebuilder:validation:Pattern=^Managed|Unmanaged|Force|Removed$
 	ManagementState ManagementState `json:"managementState"`
 

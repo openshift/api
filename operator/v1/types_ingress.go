@@ -20,22 +20,6 @@ import (
 //
 // https://kubernetes.io/docs/concepts/services-networking/ingress-controllers
 //
-// Additional features are available by default and through explicit
-// configuration.
-//
-// 1. To publish the ingress controller endpoints to the Internet, other
-//    networks, or external load balancers, configure an endpoint publishing
-//    strategy.
-//
-// 2. On certain cloud platforms, when publishing an ingress controller, managed
-//    wildcard DNS is automatically enabled. OpenShift will manage a DNS record
-//    pointing to the ingress controller. DNS records are managed only in DNS
-//    zones defined in the DNS cluster configuration resource.
-//
-// 3. If an ingress controller does not specify a default certificate, a new
-//    self-signed certificate valid for the specified domain is generated for
-//    the ingress controller.
-//
 // Whenever possible, sensible defaults for the platform are used. See each
 // field for more details.
 type IngressController struct {
@@ -51,22 +35,22 @@ type IngressController struct {
 // IngressControllerSpec is the specification of the desired behavior of the
 // IngressController.
 type IngressControllerSpec struct {
-	// domain is a DNS name used to configure various features that help publish
-	// the ingress controller and enable external integrations.
+	// domain is a DNS name serviced by the ingress controller and is used to
+	// configure multiple features:
+	//
+	// * For the LoadBalancerService endpoint publishing strategy, domain is
+	//   used to configure DNS records. See endpointPublishingStrategy.
+	//
+	// * When using a generated default certificate, the certificate will be valid
+	//   for domain and its subdomains. See defaultCertificate.
 	//
 	// * The value is published to individual Route statuses so that end-users
 	//   know where to target external DNS records.
 	//
-	// * When wildcard DNS management is enabled, domain is the base domain used
-	//   to construct the wildcard host name.
-	//
-	// * If a generated default certificate is used for the ingress controller,
-	//   the certificate will be valid for domain.
-	//
 	// domain must be unique among all IngressControllers, and cannot be
 	// updated.
 	//
-	// If empty, defaults to the cluster Ingress config domain.
+	// If empty, defaults to the cluster Ingress config domain value.
 	//
 	// +optional
 	Domain string `json:"domain,omitempty"`
@@ -91,19 +75,21 @@ type IngressControllerSpec struct {
 	EndpointPublishingStrategy EndpointPublishingStrategy `json:"endpointPublishingStrategy,omitempty"`
 
 	// defaultCertificate is a reference to a secret containing the default
-	// certificate served by the ingress controller. The secret must contain the
-	// following data:
+	// certificate served by the ingress controller. When specific routes don't
+	// specify their own certificate, defaultCertificate is used.
 	//
-	//   tls.crt: the certificate file
-	//   tls.key: the certificate secret file
+	// The secret must contain the following keys and data:
+	//
+	//   tls.crt: certificate file contents
+	//   tls.key: key file contents
 	//
 	// If unset, a wildcard certificate is automatically generated and used. The
-	// certificate is valid for the domain (and subdomains) and the certificate's
-	// CA will be automatically integrated with the cluster's trust store.
+	// certificate is valid for the ingress controller domain (and subdomains) and
+	// the generated certificate's CA will be automatically integrated with the
+	// cluster's trust store.
 	//
-	// Whatever certificate is used (whether the generated default or explicitly
-	// provided), the certificate will be automatically integrated with the
-	// built-in authentication service.
+	// The in-use certificate (whether generated or user-specified) will be
+	// automatically integrated with OpenShift's built-in OAuth server.
 	//
 	// +optional
 	DefaultCertificate *corev1.LocalObjectReference `json:"defaultCertificate,omitempty"`
@@ -177,11 +163,15 @@ type EndpointPublishingStrategy struct {
 	// Publishes the ingress controller using a Kubernetes LoadBalancer Service.
 	//
 	// In this configuration, the ingress controller deployment uses container
-	// networking. A LoadBalancer Service is created to publish the deployment. If
-	// domain is set, a wildcard DNS record will point to the LoadBalancer
-	// Service's external name.
+	// networking. A LoadBalancer Service is created to publish the deployment.
 	//
 	// See: https://kubernetes.io/docs/concepts/services-networking/#loadbalancer
+	//
+	// If domain is set, a wildcard DNS record will be managed to point at the
+	// LoadBalancer Service's external name. DNS records are managed only in DNS
+	// zones defined in the DNS cluster configuration resource.
+	//
+	// Wildcard DNS management is currently supported only on the AWS platform.
 	//
 	// * HostNetwork
 	//

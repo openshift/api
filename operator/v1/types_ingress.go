@@ -170,7 +170,8 @@ type EndpointPublishingStrategy struct {
 	//
 	// If domain is set, a wildcard DNS record will be managed to point at the
 	// LoadBalancer Service's external name. DNS records are managed only in DNS
-	// zones defined in the DNS cluster configuration resource.
+	// zones defined by dns.config.openshift.io/cluster .spec.publicZone and
+	// .spec.privateZone.
 	//
 	// Wildcard DNS management is currently supported only on the AWS platform.
 	//

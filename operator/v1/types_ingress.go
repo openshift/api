@@ -63,17 +63,7 @@ type IngressControllerSpec struct {
 
 	// endpointPublishingStrategy is used to publish the ingress controller
 	// endpoints to other networks, enable load balancer integrations, etc.
-	//
-	// If empty, the default is based on
-	// infrastructure.config.openshift.io/cluster .status.platform:
-	//
-	//   AWS: LoadBalancerService
-	//   All other platform types: Private
-	//
-	// endpointPublishingStrategy cannot be updated.
-	//
-	// +optional
-	EndpointPublishingStrategy EndpointPublishingStrategy `json:"endpointPublishingStrategy,omitempty"`
+	EndpointPublishingStrategy EndpointPublishingStrategy `json:"endpointPublishingStrategy"`
 
 	// defaultCertificate is a reference to a secret containing the default
 	// certificate served by the ingress controller. When Routes don't specify
@@ -161,38 +151,48 @@ type EndpointPublishingStrategy struct {
 	//
 	// * LoadBalancerService
 	//
-	// Publishes the ingress controller using a Kubernetes LoadBalancer Service.
+	//   Publishes the ingress controller using a Kubernetes LoadBalancer Service.
 	//
-	// In this configuration, the ingress controller deployment uses container
-	// networking. A LoadBalancer Service is created to publish the deployment.
+	//   In this configuration, the ingress controller deployment uses container
+	//   networking. A LoadBalancer Service is created to publish the deployment.
 	//
-	// See: https://kubernetes.io/docs/concepts/services-networking/#loadbalancer
+	//   See: https://kubernetes.io/docs/concepts/services-networking/#loadbalancer
 	//
-	// If domain is set, a wildcard DNS record will be managed to point at the
-	// LoadBalancer Service's external name. DNS records are managed only in DNS
-	// zones defined by dns.config.openshift.io/cluster .spec.publicZone and
-	// .spec.privateZone.
+	//   If domain is set, a wildcard DNS record will be managed to point at the
+	//   LoadBalancer Service's external name. DNS records are managed only in DNS
+	//   zones defined by dns.config.openshift.io/cluster .spec.publicZone and
+	//   .spec.privateZone.
 	//
-	// Wildcard DNS management is currently supported only on the AWS platform.
+	//   Wildcard DNS management is currently supported only on the AWS platform.
 	//
 	// * HostNetwork
 	//
-	// Publishes the ingress controller on node ports where the ingress controller
-	// is deployed.
+	//   Publishes the ingress controller on node ports where the ingress controller
+	//   is deployed.
 	//
-	// In this configuration, the ingress controller deployment uses host
-	// networking, bound to node ports 80 and 443. The user is responsible for
-	// configuring an external load balancer to publish the ingress controller via
-	// the node ports.
+	//   In this configuration, the ingress controller deployment uses host
+	//   networking, bound to node ports 80 and 443. The user is responsible for
+	//   configuring an external load balancer to publish the ingress controller via
+	//   the node ports.
 	//
 	// * Private
 	//
-	// Does not publish the ingress controller.
+	//   Does not publish the ingress controller.
 	//
-	// In this configuration, the ingress controller deployment uses container
-	// networking, and is not explicitly published. The user must manually publish
-	// the ingress controller.
-	Type EndpointPublishingStrategyType `json:"type"`
+	//   In this configuration, the ingress controller deployment uses container
+	//   networking, and is not explicitly published. The user must manually publish
+	//   the ingress controller.
+	//
+	// If empty, the default is based on
+	// infrastructure.config.openshift.io/cluster .status.platform:
+	//
+	//   AWS: LoadBalancerService
+	//   All other platform types: Private
+	//
+	// Note: at this time, type cannot be updated.
+	//
+	// +optional
+	Type EndpointPublishingStrategyType `json:"type,omitempty"`
 }
 
 // IngressControllerStatus defines the observed status of the IngressController.

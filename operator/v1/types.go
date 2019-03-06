@@ -34,8 +34,11 @@ var (
 	// It will only upgrade the component if it is safe to do so
 	Managed ManagementState = "Managed"
 	// Unmanaged means that the operator will not take any action related to the component
+	// Some operators might not support this management state as it might damage the cluster and lead to manual recovery.
 	Unmanaged ManagementState = "Unmanaged"
 	// Removed means that the operator is actively managing its resources and trying to remove all traces of the component
+	// Some operators (like kube-apiserver-operator) might not support this management state as removing the API server will
+	// brick the cluster.
 	Removed ManagementState = "Removed"
 )
 
@@ -43,7 +46,6 @@ var (
 // inside of the Spec struct for your particular operator.
 type OperatorSpec struct {
 	// managementState indicates whether and how the operator should manage the component
-	// +optional
 	// +kubebuilder:validation:Pattern=^Managed|Unmanaged|Force|Removed$
 	ManagementState ManagementState `json:"managementState"`
 

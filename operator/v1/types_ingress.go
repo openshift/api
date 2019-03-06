@@ -145,10 +145,6 @@ const (
 	// LoadBalancer Service.
 	LoadBalancerServiceStrategyType EndpointPublishingStrategyType = "LoadBalancerService"
 
-	// HostNetwork publishes the ingress controller on node ports where the
-	// ingress controller is deployed.
-	HostNetworkStrategyType EndpointPublishingStrategyType = "HostNetwork"
-
 	// Private does not publish the ingress controller.
 	PrivateStrategyType EndpointPublishingStrategyType = "Private"
 )
@@ -175,23 +171,13 @@ type EndpointPublishingStrategy struct {
 	//
 	// Wildcard DNS management is currently supported only on the AWS platform.
 	//
-	// * HostNetwork
-	//
-	// Publishes the ingress controller on node ports where the ingress controller
-	// is deployed.
-	//
-	// In this configuration, the ingress controller deployment uses host
-	// networking, bound to node ports 80 and 443. The user is responsible for
-	// configuring an external load balancer to publish the ingress controller via
-	// the node ports.
-	//
 	// * Private
 	//
 	// Does not publish the ingress controller.
 	//
 	// In this configuration, the ingress controller deployment uses container
 	// networking, and is not explicitly published. The user must manually publish
-	// the ingress controller.
+	// the ingress controller (for example, using a NodePort service).
 	Type EndpointPublishingStrategyType `json:"type"`
 }
 

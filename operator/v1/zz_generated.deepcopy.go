@@ -487,6 +487,13 @@ func (in *IngressControllerStatus) DeepCopyInto(out *IngressControllerStatus) {
 			**out = **in
 		}
 	}
+	if in.Conditions != nil {
+		in, out := &in.Conditions, &out.Conditions
+		*out = make([]OperatorCondition, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
+	}
 	return
 }
 

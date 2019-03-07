@@ -55,11 +55,8 @@ type IngressControllerSpec struct {
 	// +optional
 	Domain string `json:"domain,omitempty"`
 
-	// replicas is the desired number of ingress controller replicas. If unset,
-	// defaults to 2.
-	//
-	// +optional
-	Replicas *int32 `json:"replicas,omitempty"`
+	// replicas is the desired number of ingress controller replicas.
+	Replicas int32 `json:"replicas"`
 
 	// endpointPublishingStrategy is used to publish the ingress controller
 	// endpoints to other networks, enable load balancer integrations, etc.

@@ -44,19 +44,17 @@ type NetworkSpec struct {
 // NetworkStatus is the current network configuration.
 type NetworkStatus struct {
 	// IP address pool to use for pod IPs.
-	// +nullable
-	ClusterNetwork []ClusterNetworkEntry `json:"clusterNetwork"`
+	ClusterNetwork []ClusterNetworkEntry `json:"clusterNetwork,omitempty"`
 
 	// IP address pool for services.
 	// Currently, we only support a single entry here.
-	// +nullable
-	ServiceNetwork []string `json:"serviceNetwork"`
+	ServiceNetwork []string `json:"serviceNetwork,omitempty"`
 
 	// NetworkType is the plugin that is deployed (e.g. OpenShiftSDN).
-	NetworkType string `json:"networkType"`
+	NetworkType string `json:"networkType,omitempty"`
 
 	// ClusterNetworkMTU is the MTU for inter-pod networking.
-	ClusterNetworkMTU int `json:"clusterNetworkMTU"`
+	ClusterNetworkMTU int `json:"clusterNetworkMTU,omitempty"`
 }
 
 // ClusterNetworkEntry is a contiguous block of IP addresses from which pod IPs

@@ -6,10 +6,10 @@ import:
 - package: k8s.io/code-generator
   repo:    git@github.com:openshift/kubernetes-code-generator
   version: origin-4.0-kubernetes-1.12.4
-# this matches the 1.12.5 GA level of apimachinery which glide isn't wanting to pick
+# this matches the 1.13.4 GA level of apimachinery which glide isn't wanting to pick
 - package: github.com/json-iterator/go
-  version: f2b4162afba35581b6d4a50d3b8f34e33c144682
+  version: ab8a2e0c74be9d3be70b3184d9acc634935ded82
 - package: k8s.io/apimachinery
-  version: kubernetes-1.12.5
+  version: kubernetes-1.13.4
 - package: k8s.io/api
-  version: kubernetes-1.12.5
+  version: kubernetes-1.13.4

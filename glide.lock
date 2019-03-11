@@ -1,5 +1,5 @@
 hash: b7aba7d584f746f71384bdde9f991d181c684adc8f841ea23e1047761c57cad0
-updated: 2019-01-28T08:23:58.779331783-05:00
+updated: 2019-03-11T10:51:16.16281549-05:00
 imports:
 - name: github.com/davecgh/go-spew
   version: 782f4967f2dc4564575ca782fe2d04090b5faca8
@@ -121,7 +121,7 @@ imports:
   - pkg/watch
   - third_party/forked/golang/reflect
 - name: k8s.io/code-generator
-  version: aef8d122b95ddd821e3bd35d4013593b1e5eda16
+  version: 13d81ee386d3d039027dd42e7b3d1d30d8d788f2
   repo: git@github.com:openshift/kubernetes-code-generator
 - name: k8s.io/gengo
   version: 01a732e01d00cb9a81bb0ca050d3e6d2b947927b

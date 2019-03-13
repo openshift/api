@@ -68,6 +68,7 @@ type IngressControllerSpec struct {
 	// infrastructure.config.openshift.io/cluster .status.platform:
 	//
 	//   AWS: LoadBalancerService
+	//   Libvirt: HostNetwork
 	//   All other platform types: Private
 	//
 	// endpointPublishingStrategy cannot be updated.

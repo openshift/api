@@ -1,5 +1,5 @@
-hash: b4facd1db04feab9e2f1dbd19224cc7dcd541c2677191445ba246dfc873f998e
-updated: 2019-03-08T09:31:10.598827077-05:00
+hash: 0774e6b638f20bd2ebf8d85eacf08a3420bc61b550edcfadefc6509b42a30657
+updated: 2019-03-15T11:46:30.566427098-04:00
 imports:
 - name: github.com/davecgh/go-spew
   version: 782f4967f2dc4564575ca782fe2d04090b5faca8
@@ -10,8 +10,6 @@ imports:
   subpackages:
   - proto
   - sortkeys
-- name: github.com/golang/glog
-  version: 44145f04b68cf362d9c4df2182967c2275eaefed
 - name: github.com/golang/protobuf
   version: b4deda0973fb4c70b50d226b1af49f3da59f5265
   subpackages:
@@ -119,11 +117,10 @@ imports:
   - pkg/watch
   - third_party/forked/golang/reflect
 - name: k8s.io/code-generator
-  version: 1bdf8e8a8fde675de375d9d0a8fa77c4034be0a0
+  version: 2bf47b06188b89cc41d68422aa52509f2cbb4cc8
   repo: git@github.com:openshift/kubernetes-code-generator
 - name: k8s.io/gengo
-  version: 01a732e01d00cb9a81bb0ca050d3e6d2b947927b
-  repo: git@github.com:openshift/kubernetes-gengo
+  version: 51747d6e00da1fc578d5a333a93bb2abcbce7a95
 - name: k8s.io/klog
   version: 8139d8cb77af419532b33dfa7dd09fbc5f1d344f
 - name: sigs.k8s.io/yaml

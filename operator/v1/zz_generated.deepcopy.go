@@ -5,8 +5,8 @@
 package v1
 
 import (
-	core_v1 "k8s.io/api/core/v1"
-	meta_v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 )
 
@@ -410,49 +410,29 @@ func (in *IngressControllerSpec) DeepCopyInto(out *IngressControllerSpec) {
 	*out = *in
 	if in.Replicas != nil {
 		in, out := &in.Replicas, &out.Replicas
-		if *in == nil {
-			*out = nil
-		} else {
-			*out = new(int32)
-			**out = **in
-		}
+		*out = new(int32)
+		**out = **in
 	}
 	out.EndpointPublishingStrategy = in.EndpointPublishingStrategy
 	if in.DefaultCertificate != nil {
 		in, out := &in.DefaultCertificate, &out.DefaultCertificate
-		if *in == nil {
-			*out = nil
-		} else {
-			*out = new(core_v1.LocalObjectReference)
-			**out = **in
-		}
+		*out = new(corev1.LocalObjectReference)
+		**out = **in
 	}
 	if in.NamespaceSelector != nil {
 		in, out := &in.NamespaceSelector, &out.NamespaceSelector
-		if *in == nil {
-			*out = nil
-		} else {
-			*out = new(meta_v1.LabelSelector)
-			(*in).DeepCopyInto(*out)
-		}
+		*out = new(metav1.LabelSelector)
+		(*in).DeepCopyInto(*out)
 	}
 	if in.RouteSelector != nil {
 		in, out := &in.RouteSelector, &out.RouteSelector
-		if *in == nil {
-			*out = nil
-		} else {
-			*out = new(meta_v1.LabelSelector)
-			(*in).DeepCopyInto(*out)
-		}
+		*out = new(metav1.LabelSelector)
+		(*in).DeepCopyInto(*out)
 	}
 	if in.NodePlacement != nil {
 		in, out := &in.NodePlacement, &out.NodePlacement
-		if *in == nil {
-			*out = nil
-		} else {
-			*out = new(NodePlacement)
-			(*in).DeepCopyInto(*out)
-		}
+		*out = new(NodePlacement)
+		(*in).DeepCopyInto(*out)
 	}
 	return
 }
@@ -828,12 +808,8 @@ func (in *NodePlacement) DeepCopyInto(out *NodePlacement) {
 	*out = *in
 	if in.NodeSelector != nil {
 		in, out := &in.NodeSelector, &out.NodeSelector
-		if *in == nil {
-			*out = nil
-		} else {
-			*out = new(meta_v1.LabelSelector)
-			(*in).DeepCopyInto(*out)
-		}
+		*out = new(metav1.LabelSelector)
+		(*in).DeepCopyInto(*out)
 	}
 	return
 }
@@ -1064,12 +1040,8 @@ func (in *OperandContainerSpec) DeepCopyInto(out *OperandContainerSpec) {
 	*out = *in
 	if in.Resources != nil {
 		in, out := &in.Resources, &out.Resources
-		if *in == nil {
-			*out = nil
-		} else {
-			*out = new(core_v1.ResourceRequirements)
-			(*in).DeepCopyInto(*out)
-		}
+		*out = new(corev1.ResourceRequirements)
+		(*in).DeepCopyInto(*out)
 	}
 	return
 }

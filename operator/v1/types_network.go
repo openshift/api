@@ -111,6 +111,10 @@ type AdditionalNetworkDefinition struct {
 	// rawCNIConfig is the raw CNI configuration json to create in the
 	// NetworkAttachmentDefinition CRD
 	RawCNIConfig string `json:"rawCNIConfig"`
+
+	// sriovConfig configures the openshiftSRIOV plugin.
+	// +optional
+	SRIOVConfig *SRIOVConfig `json:"sriovConfig,omitempty"`
 }
 
 // OpenShiftSDNConfig configures the three openshift-sdn plugins
@@ -142,6 +146,13 @@ type OVNKubernetesConfig struct {
 	MTU *uint32 `json:"mtu,omitempty"`
 }
 
+// SRIOVConfig is the proposed configuration parameters for OpenShiftSRIOV networks
+type SRIOVConfig struct {
+	// CNIConfig is the OpenShiftSRIOV CNI configuration json to create in the
+	// NetworkAttachmentDefinition CRD
+	CNIConfig string `json:"cniConfig,omitempty"`
+}
+
 // NetworkType describes the network plugin type to configure
 type NetworkType string
 
@@ -170,6 +181,9 @@ const (
 
 	// NetworkTypeRaw
 	NetworkTypeRaw NetworkType = "Raw"
+
+	// NetworkTypeOpenShiftSRIOV
+	NetworkTypeOpenShiftSRIOV NetworkType = "OpenShiftSRIOV"
 )
 
 // SDNMode is the Mode the openshift-sdn plugin is in

@@ -309,6 +309,7 @@ var map_AdditionalNetworkDefinition = map[string]string{
 	"type":         "type is the type of network The only supported value is NetworkTypeRaw",
 	"name":         "name is the name of the network. This will be populated in the resulting CRD This must be unique.",
 	"rawCNIConfig": "rawCNIConfig is the raw CNI configuration json to create in the NetworkAttachmentDefinition CRD",
+	"sriovConfig":  "sriovConfig configures the openshiftSRIOV plugin.",
 }
 
 func (AdditionalNetworkDefinition) SwaggerDoc() map[string]string {
@@ -403,6 +404,15 @@ var map_ProxyConfig = map[string]string{
 
 func (ProxyConfig) SwaggerDoc() map[string]string {
 	return map_ProxyConfig
+}
+
+var map_SRIOVConfig = map[string]string{
+	"":          "SRIOVConfig is the proposed configuration parameters for OpenShiftSRIOV networks",
+	"cniConfig": "CNIConfig is the OpenShiftSRIOV CNI configuration json to create in the NetworkAttachmentDefinition CRD",
+}
+
+func (SRIOVConfig) SwaggerDoc() map[string]string {
+	return map_SRIOVConfig
 }
 
 var map_OpenShiftAPIServer = map[string]string{

@@ -67,9 +67,10 @@ type IngressControllerSpec struct {
 	// If unset, the default is based on
 	// infrastructure.config.openshift.io/cluster .status.platform:
 	//
-	//   AWS: LoadBalancerService
-	//   Libvirt: HostNetwork
-	//   All other platform types: Private
+	//   AWS:      LoadBalancerService
+	//   Libvirt:  HostNetwork
+	//
+	// Any other platform types (including None) default to HostNetwork.
 	//
 	// endpointPublishingStrategy cannot be updated.
 	//

@@ -355,10 +355,11 @@ func (KubeControllerManagerSpec) SwaggerDoc() map[string]string {
 }
 
 var map_AdditionalNetworkDefinition = map[string]string{
-	"":             "AdditionalNetworkDefinition configures an extra network that is available but not created by default. Instead, pods must request them by name. type must be specified, along with exactly one \"Config\" that matches the type.",
-	"type":         "type is the type of network The only supported value is NetworkTypeRaw",
-	"name":         "name is the name of the network. This will be populated in the resulting CRD This must be unique.",
-	"rawCNIConfig": "rawCNIConfig is the raw CNI configuration json to create in the NetworkAttachmentDefinition CRD",
+	"":              "AdditionalNetworkDefinition is extra networks that are available but not created by default. Instead, pods must request them by name. type must be specified, along with exactly one \"Config\" that matches the type.",
+	"type":          "The type of network The supported values are NetworkTypeRaw, NetworkTypeMacvlan",
+	"name":          "name is the name of the network. This will be populated in the resulting CRD This must be unique.",
+	"rawCNIConfig":  "rawCNIConfig is the raw CNI configuration json to create in the NetworkAttachmentDefinition CRD",
+	"macVlanConfig": "MacVlanConfig configures the maclvan interface",
 }
 
 func (AdditionalNetworkDefinition) SwaggerDoc() map[string]string {
@@ -382,6 +383,18 @@ var map_DefaultNetworkDefinition = map[string]string{
 
 func (DefaultNetworkDefinition) SwaggerDoc() map[string]string {
 	return map_DefaultNetworkDefinition
+}
+
+var map_MacVlanConfig = map[string]string{
+	"":       "MacVlanConfig contains configurations for macvlan interface.",
+	"master": "Host interface to enslave interface.",
+	"ipam":   "Ipam indicates which IPAM module will be used for IP Address Management(IPAM) Ipam for now supports 'dhcp'",
+	"mode":   "Mode is the macvlan mode: bridge, private, vepa, passthru. The default is bridge",
+	"mtu":    "MTU is the mtu to use for the tunnel interface. Defaults to the value from kernel if unset.",
+}
+
+func (MacVlanConfig) SwaggerDoc() map[string]string {
+	return map_MacVlanConfig
 }
 
 var map_Network = map[string]string{

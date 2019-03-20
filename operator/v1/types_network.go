@@ -96,12 +96,32 @@ type DefaultNetworkDefinition struct {
 	OVNKubernetesConfig *OVNKubernetesConfig `json:"ovnKubernetesConfig,omitempty"`
 }
 
-// AdditionalNetworkDefinition configures an extra network that is available but not
+// MacVlanConfig contains configurations for macvlan interface.
+type MacVlanConfig struct {
+
+	// Host interface to enslave interface.
+	Master string `json:"master"`
+
+	// Ipam indicates which IPAM module will be used for IP Address Management(IPAM)
+	// Ipam for now supports 'dhcp'
+	// +optional
+	IPAM string `json:"ipam,omitempty"`
+
+	// Mode is the macvlan mode: bridge, private, vepa, passthru. The default is bridge
+	// +optional
+	Mode string `json:"mode,omitempty"`
+
+	// MTU is the mtu to use for the tunnel interface. Defaults to the value from kernel if unset.
+	// +optional
+	MTU *uint32 `json:"mtu,omitempty"`
+}
+
+// AdditionalNetworkDefinition is extra networks that are available but not
 // created by default. Instead, pods must request them by name.
 // type must be specified, along with exactly one "Config" that matches the type.
 type AdditionalNetworkDefinition struct {
-	// type is the type of network
-	// The only supported value is NetworkTypeRaw
+	// The type of network
+	// The supported values are NetworkTypeRaw, NetworkTypeMacvlan
 	Type NetworkType `json:"type"`
 
 	// name is the name of the network. This will be populated in the resulting CRD
@@ -110,7 +130,12 @@ type AdditionalNetworkDefinition struct {
 
 	// rawCNIConfig is the raw CNI configuration json to create in the
 	// NetworkAttachmentDefinition CRD
-	RawCNIConfig string `json:"rawCNIConfig"`
+	// +optional
+	RawCNIConfig string `json:"rawCNIConfig,omitempty"`
+
+	// MacVlanConfig configures the maclvan interface
+	// +optional
+	MacVlanConfig MacVlanConfig `json:"macVlanConfig,omitempty"`
 }
 
 // OpenShiftSDNConfig configures the three openshift-sdn plugins
@@ -170,6 +195,9 @@ const (
 
 	// NetworkTypeRaw
 	NetworkTypeRaw NetworkType = "Raw"
+
+	// NetworkTypeMacvlan
+	NetworkTypeMacVlan NetworkType = "MacVlan"
 )
 
 // SDNMode is the Mode the openshift-sdn plugin is in

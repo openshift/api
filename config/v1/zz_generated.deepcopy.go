@@ -1294,15 +1294,6 @@ func (in *GenericAPIServerConfig) DeepCopyInto(out *GenericAPIServerConfig) {
 	in.AuditConfig.DeepCopyInto(&out.AuditConfig)
 	in.StorageConfig.DeepCopyInto(&out.StorageConfig)
 	in.AdmissionConfig.DeepCopyInto(&out.AdmissionConfig)
-	if in.AdmissionPluginConfig != nil {
-		in, out := &in.AdmissionPluginConfig, &out.AdmissionPluginConfig
-		*out = make(map[string]AdmissionPluginConfig, len(*in))
-		for key, val := range *in {
-			newVal := new(AdmissionPluginConfig)
-			val.DeepCopyInto(newVal)
-			(*out)[key] = *newVal
-		}
-	}
 	out.KubeClientConfig = in.KubeClientConfig
 	return
 }

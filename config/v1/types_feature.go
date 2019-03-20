@@ -73,7 +73,6 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		},
 		Disabled: []string{
 			"LocalStorageCapacityIsolation", // sig-pod, sjenning
-			"PersistentLocalVolumes",        // sig-storage, hekumar@redhat.com
 		},
 	},
 	TechPreviewNoUpgrade: &FeatureGateEnabledDisabled{
@@ -83,7 +82,6 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		},
 		Disabled: []string{
 			"LocalStorageCapacityIsolation", // sig-pod, sjenning
-			"PersistentLocalVolumes",        // sig-storage, hekumar@redhat.com
 		},
 	},
 }

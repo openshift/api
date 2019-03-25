@@ -511,26 +511,12 @@ type OpenIDIdentityProvider struct {
 	// +optional
 	ExtraAuthorizeParameters map[string]string `json:"extraAuthorizeParameters,omitempty"`
 
-	// urls to use to authenticate
-	URLs OpenIDURLs `json:"urls"`
+	// issuer is the URL that the OpenID Provider asserts as its Issuer Identifier.
+	// It must use the https scheme with no query or fragment component.
+	Issuer string `json:"issuer"`
 
 	// claims mappings
 	Claims OpenIDClaims `json:"claims"`
-}
-
-// OpenIDURLs are URLs to use when authenticating with an OpenID identity provider
-type OpenIDURLs struct {
-	// authorize is the oauth authorization URL
-	Authorize string `json:"authorize"`
-
-	// token is the oauth token granting URL
-	Token string `json:"token"`
-
-	// userInfo is the optional userinfo URL.
-	// If present, a granted access_token is used to request claims
-	// If empty, a granted id_token is parsed for claims
-	// +optional
-	UserInfo string `json:"userInfo"`
 }
 
 // UserIDClaim is the claim used to provide a stable identifier for OIDC identities.

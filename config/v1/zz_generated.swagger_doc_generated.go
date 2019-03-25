@@ -872,8 +872,6 @@ func (HTPasswdIdentityProvider) SwaggerDoc() map[string]string {
 var map_IdentityProvider = map[string]string{
 	"":              "IdentityProvider provides identities for users authenticating using credentials",
 	"name":          "name is used to qualify the identities returned by this provider. - It MUST be unique and not shared by any other identity provider used - It MUST be a valid path segment: name cannot equal \".\" or \"..\" or contain \"/\" or \"%\" or \":\"\n  Ref: https://godoc.org/github.com/openshift/origin/pkg/user/apis/user/validation#ValidateIdentityProviderName",
-	"challenge":     "challenge indicates whether to issue WWW-Authenticate challenges for this provider",
-	"login":         "login indicates whether to use this identity provider for unauthenticated browsers to login against",
 	"mappingMethod": "mappingMethod determines how identities from this provider are mapped to users Defaults to \"claim\"",
 }
 
@@ -1002,23 +1000,12 @@ var map_OpenIDIdentityProvider = map[string]string{
 	"ca":                       "ca is an optional reference to a config map by name containing the PEM-encoded CA bundle. It is used as a trust anchor to validate the TLS certificate presented by the remote server. The key \"ca.crt\" is used to locate the data. If specified and the config map or expected key is not found, the identity provider is not honored. If the specified ca data is not valid, the identity provider is not honored. If empty, the default system roots are used. The namespace for this config map is openshift-config.",
 	"extraScopes":              "extraScopes are any scopes to request in addition to the standard \"openid\" scope.",
 	"extraAuthorizeParameters": "extraAuthorizeParameters are any custom parameters to add to the authorize request.",
-	"urls":   "urls to use to authenticate",
-	"claims": "claims mappings",
+	"issuer":                   "issuer is the URL that the OpenID Provider asserts as its Issuer Identifier. It must use the https scheme with no query or fragment component.",
+	"claims":                   "claims mappings",
 }
 
 func (OpenIDIdentityProvider) SwaggerDoc() map[string]string {
 	return map_OpenIDIdentityProvider
-}
-
-var map_OpenIDURLs = map[string]string{
-	"":          "OpenIDURLs are URLs to use when authenticating with an OpenID identity provider",
-	"authorize": "authorize is the oauth authorization URL",
-	"token":     "token is the oauth token granting URL",
-	"userInfo":  "userInfo is the optional userinfo URL. If present, a granted access_token is used to request claims If empty, a granted id_token is parsed for claims",
-}
-
-func (OpenIDURLs) SwaggerDoc() map[string]string {
-	return map_OpenIDURLs
 }
 
 var map_RequestHeaderIdentityProvider = map[string]string{

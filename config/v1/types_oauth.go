@@ -121,12 +121,6 @@ type IdentityProvider struct {
 	//   Ref: https://godoc.org/github.com/openshift/origin/pkg/user/apis/user/validation#ValidateIdentityProviderName
 	Name string `json:"name"`
 
-	// challenge indicates whether to issue WWW-Authenticate challenges for this provider
-	UseAsChallenger bool `json:"challenge"`
-
-	// login indicates whether to use this identity provider for unauthenticated browsers to login against
-	UseAsLogin bool `json:"login"`
-
 	// mappingMethod determines how identities from this provider are mapped to users
 	// Defaults to "claim"
 	// +optional

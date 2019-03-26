@@ -43,11 +43,6 @@ type InfrastructureStatus struct {
 	// not support that platform.
 	Platform PlatformType `json:"platform,omitempty"`
 
-	// platformStatus holds status informations that are specific to the underlying
-	// infrastructure provider of the cluster.
-	// +optional
-	PlatformStatus *PlatformStatus `json:"platformStatus,omitempty"`
-
 	// etcdDiscoveryDomain is the domain used to fetch the SRV records for discovering
 	// etcd servers and clients.
 	// For more info: https://github.com/etcd-io/etcd/blob/329be66e8b3f9e2e6af83c123ff89297e49ebd15/Documentation/op-guide/clustering.md#dns-discovery
@@ -84,21 +79,6 @@ const (
 	// VSpherePlatformType represents VMWare vSphere infrastructure.
 	VSpherePlatformType PlatformType = "VSphere"
 )
-
-// PlatformStatus holds the current status specific to the underlying infrastructure provider
-// of the current cluster. Since these are used at status-level for the underlying cluster, it
-// is supposed that only one of the status structs is set.
-type PlatformStatus struct {
-	// AWSPlatformStatus contains settings specific to the Amazon Web Services infrastructure provider.
-	// +optional
-	AWSPlatformStatus *AWSPlatformStatus `json:"awsPlatformStatus,omitempty"`
-}
-
-// AWSPlatformStatus holds the current status of the Amazon Web Services infrastructure provider.
-type AWSPlatformStatus struct {
-	// tags holds key and value pairs that are set as tags in the AWS resources created by the cluster.
-	Tags map[string]string `json:"tags,omitempty"`
-}
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 

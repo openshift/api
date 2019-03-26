@@ -718,7 +718,8 @@ func (InfrastructureList) SwaggerDoc() map[string]string {
 }
 
 var map_InfrastructureSpec = map[string]string{
-	"": "InfrastructureSpec contains settings that apply to the cluster infrastructure.",
+	"":            "InfrastructureSpec contains settings that apply to the cluster infrastructure.",
+	"cloudConfig": "cloudConfig is a reference to a ConfigMap containing the cloud provider configuration file. This configuration file is used to configure the Kubernetes cloud provider integration when using the built-in cloud provider integration or the external cloud controller manager. The namespace for this config map is openshift-config.",
 }
 
 func (InfrastructureSpec) SwaggerDoc() map[string]string {

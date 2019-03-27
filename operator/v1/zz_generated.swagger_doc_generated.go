@@ -356,10 +356,10 @@ func (KubeControllerManagerSpec) SwaggerDoc() map[string]string {
 
 var map_AdditionalNetworkDefinition = map[string]string{
 	"":              "AdditionalNetworkDefinition is extra networks that are available but not created by default. Instead, pods must request them by name. type must be specified, along with exactly one \"Config\" that matches the type.",
-	"type":          "The type of network The supported values are NetworkTypeRaw, NetworkTypeMacvlan",
+	"type":          "type is the type of network The supported values are NetworkTypeRaw, NetworkTypeMacvlan",
 	"name":          "name is the name of the network. This will be populated in the resulting CRD This must be unique.",
 	"rawCNIConfig":  "rawCNIConfig is the raw CNI configuration json to create in the NetworkAttachmentDefinition CRD",
-	"macVlanConfig": "MacVlanConfig configures the maclvan interface",
+	"macvlanConfig": "macvlanConfig configures the maclvan interface",
 }
 
 func (AdditionalNetworkDefinition) SwaggerDoc() map[string]string {
@@ -385,16 +385,16 @@ func (DefaultNetworkDefinition) SwaggerDoc() map[string]string {
 	return map_DefaultNetworkDefinition
 }
 
-var map_MacVlanConfig = map[string]string{
-	"":       "MacVlanConfig contains configurations for macvlan interface.",
-	"master": "Host interface to enslave interface.",
-	"ipam":   "Ipam indicates which IPAM module will be used for IP Address Management(IPAM) Ipam for now supports 'dhcp'",
-	"mode":   "Mode is the macvlan mode: bridge, private, vepa, passthru. The default is bridge",
-	"mtu":    "MTU is the mtu to use for the tunnel interface. Defaults to the value from kernel if unset.",
+var map_MacvlanConfig = map[string]string{
+	"":       "MacvlanConfig contains configurations for macvlan interface.",
+	"master": "master is the host interface to create the macvlan interface from",
+	"ipam":   "ipam indicates which IPAM module will be used for IP Address Management (IPAM) now supports 'dhcp'",
+	"mode":   "mode is the macvlan mode: bridge, private, vepa, passthru. The default is bridge",
+	"mtu":    "mtu is the mtu to use for the macvlan interface. Defaults to the value from kernel if unset.",
 }
 
-func (MacVlanConfig) SwaggerDoc() map[string]string {
-	return map_MacVlanConfig
+func (MacvlanConfig) SwaggerDoc() map[string]string {
+	return map_MacvlanConfig
 }
 
 var map_Network = map[string]string{

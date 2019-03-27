@@ -96,22 +96,22 @@ type DefaultNetworkDefinition struct {
 	OVNKubernetesConfig *OVNKubernetesConfig `json:"ovnKubernetesConfig,omitempty"`
 }
 
-// MacVlanConfig contains configurations for macvlan interface.
-type MacVlanConfig struct {
+// MacvlanConfig contains configurations for macvlan interface.
+type MacvlanConfig struct {
 
-	// Host interface to enslave interface.
+	// master is the host interface to create the macvlan interface from
 	Master string `json:"master"`
 
-	// Ipam indicates which IPAM module will be used for IP Address Management(IPAM)
-	// Ipam for now supports 'dhcp'
+	// ipam indicates which IPAM module will be used for IP Address Management (IPAM)
+	// now supports 'dhcp'
 	// +optional
 	IPAM string `json:"ipam,omitempty"`
 
-	// Mode is the macvlan mode: bridge, private, vepa, passthru. The default is bridge
+	// mode is the macvlan mode: bridge, private, vepa, passthru. The default is bridge
 	// +optional
-	Mode string `json:"mode,omitempty"`
+	Mode MACVLANMode `json:"mode,omitempty"`
 
-	// MTU is the mtu to use for the tunnel interface. Defaults to the value from kernel if unset.
+	// mtu is the mtu to use for the macvlan interface. Defaults to the value from kernel if unset.
 	// +optional
 	MTU *uint32 `json:"mtu,omitempty"`
 }
@@ -120,7 +120,7 @@ type MacVlanConfig struct {
 // created by default. Instead, pods must request them by name.
 // type must be specified, along with exactly one "Config" that matches the type.
 type AdditionalNetworkDefinition struct {
-	// The type of network
+	// type is the type of network
 	// The supported values are NetworkTypeRaw, NetworkTypeMacvlan
 	Type NetworkType `json:"type"`
 
@@ -133,9 +133,9 @@ type AdditionalNetworkDefinition struct {
 	// +optional
 	RawCNIConfig string `json:"rawCNIConfig,omitempty"`
 
-	// MacVlanConfig configures the maclvan interface
+	// macvlanConfig configures the maclvan interface
 	// +optional
-	MacVlanConfig MacVlanConfig `json:"macVlanConfig,omitempty"`
+	MacvlanConfig MacvlanConfig `json:"macvlanConfig,omitempty"`
 }
 
 // OpenShiftSDNConfig configures the three openshift-sdn plugins
@@ -197,7 +197,7 @@ const (
 	NetworkTypeRaw NetworkType = "Raw"
 
 	// NetworkTypeMacvlan
-	NetworkTypeMacVlan NetworkType = "MacVlan"
+	NetworkTypeMacvlan NetworkType = "Macvlan"
 )
 
 // SDNMode is the Mode the openshift-sdn plugin is in
@@ -214,4 +214,20 @@ const (
 	// SDNModeNetworkPolicy is a full NetworkPolicy implementation that allows
 	// for sophisticated network isolation and segmenting. This is the default.
 	SDNModeNetworkPolicy SDNMode = "NetworkPolicy"
+)
+
+// MACVLANMode is the Mode of macvlan. The value should be decapitalize
+// due to the CNI plugin
+type MACVLANMode string
+
+const (
+	// MACVLANModeBridge is the macvlan with thin bridge function.
+	MACVLANModeBridge MACVLANMode = "bridge"
+	// MACVLANModePrivate
+	MACVLANModePrivate MACVLANMode = "private"
+	// MACVLANModeVEPA is used with Virtual Ethernet Port Aggregator
+	// (802.1qbg) swtich
+	MACVLANModeVEPA MACVLANMode = "vepa"
+	// MACVLANModePassthru
+	MACVLANModePassthru MACVLANMode = "passthru"
 )

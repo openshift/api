@@ -100,6 +100,7 @@ type DefaultNetworkDefinition struct {
 type MacvlanConfig struct {
 
 	// master is the host interface to create the macvlan interface from
+	// +optional
 	Master string `json:"master"`
 
 	// ipam indicates which IPAM module will be used for IP Address Management (IPAM)

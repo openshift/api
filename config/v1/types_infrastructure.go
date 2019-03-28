@@ -1,6 +1,7 @@
 package v1
 
 import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+import corev1 "k8s.io/api/core/v1"
 
 // +genclient
 // +genclient:nonNamespaced
@@ -22,12 +23,87 @@ type Infrastructure struct {
 
 // InfrastructureSpec contains settings that apply to the cluster infrastructure.
 type InfrastructureSpec struct {
-	// cloudConfig is a reference to a ConfigMap containing the cloud provider configuration file.
-	// This configuration file is used to configure the Kubernetes cloud provider integration
-	// when using the built-in cloud provider integration or the external cloud controller manager.
-	// The namespace for this config map is openshift-config.
+	// VSphereInfrastructureConfig specifies configuration when the cluster is installed on a VSphere platform.
+	// This is only settable if the platform type is VSphere.
 	// +optional
-	CloudConfig ConfigMapFileReference `json:"cloudConfig"`
+	VSphereInfrastructureConfig *VSphereInfrastructureConfig `json:"vsphereInfrastructureConfig,omitempty"`
+}
+
+// VSphereInfrastructureConfig specifies the configuration of one or more Virtual Centers where
+// the control plane and worker nodes are running in the cluster.  This information is used to
+// control the configuration of the vsphere cloud provider support in Kubernetes as supported
+// by OpenShift.
+type VSphereInfrastructureConfig struct {
+	// secretRef is name of the authentication secret for access to the VSphere infrastructure.
+	SecretRef corev1.SecretReference `json:"secretRef"`
+
+	// port is the vCenter Server Port.
+	// defaults to 443 if not specified.
+	// +optional
+	Port *int32 `json:"port,omitempty"`
+
+	// insecure if true means vCenter is configured with a self-signed cert.
+	// defaults to false.
+	// +optional
+	Insecure bool `json:"insecure,omitempty"`
+
+	// datacenters in which VMs are located.
+	// +optional
+	Datacenters []string `json:"datacenters,omitempty"`
+
+	// Per virtual center coniguration overrides.
+	// +optional
+	VirtualCenters []VSphereVirtualCenterConfig `json:"virtualCenters,omitempty"`
+
+	// Workspace describes the endpoint to create volumes.
+	// +optional
+	Workspace VSphereWorkspaceConfig `json:"workspace,omitempty"`
+
+	// Network is the configuration information for networking.
+	// +optional
+	Network VSphereNetworkConfig `json:"network,omitempty"`
+
+	// Disk is the configuration for disks
+	// +optional
+	Disk VSphereDiskConfig `json:"disk,omitempty"`
+}
+
+// VSphereVirtualCenterConfig specifies the configuration for a single
+// Virtual Center.  It overrides the default configuration options
+// specific to the Virtual Center with the specified name.
+type VSphereVirtualCenterConfig struct {
+	// server is the name of the virtual center instance (e.g. 1.1.1.1)
+	Server string `json:"server"`
+	// port is the vCenter Server Port for this virtual center instance.
+	// defaults to 443 if not specified.
+	// +optional
+	Port *int32 `json:"port,omitempty"`
+	// Datacenters in which VMs are located.
+	Datacenters []string `json:"datacenters,omitempty"`
+}
+
+// VSphereNetworkConfig specifies configuration for networking.
+type VSphereNetworkConfig struct {
+	// publicNetwork is the name of the network the VMs are joined to.
+	PublicNetwork string `json:"publicNetwork"`
+}
+
+// VSphereDiskConfig specifies configuration for
+type VSphereDiskConfig struct {
+	// scsiControllerType defines SCSI controller to be used.
+	SCSIControllerType string `json:"scsiControllerType"`
+}
+
+// VSphereWorkspaceConfig describes the endpoint used to create volumes.
+type VSphereWorkspaceConfig struct {
+	// server is the virtual center server, for example 1.1.1.1
+	Server string `json:"server"`
+	// datacenter is the name of datacenter in virtual center server.
+	Datacenter string `json:"datacenter"`
+	// folder is the virtual center VM folder path under the datacenter.
+	Folder string `json:"folder"`
+	// resourcePoolPath is the path to the resource pool under the datacenter.
+	ResourcePoolPath string `json:"resourcePoolPath"`
 }
 
 // InfrastructureStatus describes the infrastructure the cluster is leveraging.

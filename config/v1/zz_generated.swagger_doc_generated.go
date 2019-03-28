@@ -718,8 +718,8 @@ func (InfrastructureList) SwaggerDoc() map[string]string {
 }
 
 var map_InfrastructureSpec = map[string]string{
-	"":            "InfrastructureSpec contains settings that apply to the cluster infrastructure.",
-	"cloudConfig": "cloudConfig is a reference to a ConfigMap containing the cloud provider configuration file. This configuration file is used to configure the Kubernetes cloud provider integration when using the built-in cloud provider integration or the external cloud controller manager. The namespace for this config map is openshift-config.",
+	"": "InfrastructureSpec contains settings that apply to the cluster infrastructure.",
+	"vsphereInfrastructureConfig": "VSphereInfrastructureConfig specifies configuration when the cluster is installed on a VSphere platform. This is only settable if the platform type is VSphere.",
 }
 
 func (InfrastructureSpec) SwaggerDoc() map[string]string {
@@ -735,6 +735,63 @@ var map_InfrastructureStatus = map[string]string{
 
 func (InfrastructureStatus) SwaggerDoc() map[string]string {
 	return map_InfrastructureStatus
+}
+
+var map_VSphereDiskConfig = map[string]string{
+	"":                   "VSphereDiskConfig specifies configuration for",
+	"scsiControllerType": "scsiControllerType defines SCSI controller to be used.",
+}
+
+func (VSphereDiskConfig) SwaggerDoc() map[string]string {
+	return map_VSphereDiskConfig
+}
+
+var map_VSphereInfrastructureConfig = map[string]string{
+	"":               "VSphereInfrastructureConfig specifies the configuration of one or more Virtual Centers where the control plane and worker nodes are running in the cluster.  This information is used to control the configuration of the vsphere cloud provider support in Kubernetes as supported by OpenShift.",
+	"secretRef":      "secretRef is name of the authentication secret for access to the VSphere infrastructure.",
+	"port":           "port is the vCenter Server Port. defaults to 443 if not specified.",
+	"insecure":       "insecure if true means vCenter is configured with a self-signed cert. defaults to false.",
+	"datacenters":    "datacenters in which VMs are located.",
+	"virtualCenters": "Per virtual center coniguration overrides.",
+	"workspace":      "Workspace describes the endpoint to create volumes.",
+	"network":        "Network is the configuration information for networking.",
+	"disk":           "Disk is the configuration for disks",
+}
+
+func (VSphereInfrastructureConfig) SwaggerDoc() map[string]string {
+	return map_VSphereInfrastructureConfig
+}
+
+var map_VSphereNetworkConfig = map[string]string{
+	"":              "VSphereNetworkConfig specifies configuration for networking.",
+	"publicNetwork": "publicNetwork is the name of the network the VMs are joined to.",
+}
+
+func (VSphereNetworkConfig) SwaggerDoc() map[string]string {
+	return map_VSphereNetworkConfig
+}
+
+var map_VSphereVirtualCenterConfig = map[string]string{
+	"":            "VSphereVirtualCenterConfig specifies the configuration for a single Virtual Center.  It overrides the default configuration options specific to the Virtual Center with the specified name.",
+	"server":      "server is the name of the virtual center instance (e.g. 1.1.1.1)",
+	"port":        "port is the vCenter Server Port for this virtual center instance. defaults to 443 if not specified.",
+	"datacenters": "Datacenters in which VMs are located.",
+}
+
+func (VSphereVirtualCenterConfig) SwaggerDoc() map[string]string {
+	return map_VSphereVirtualCenterConfig
+}
+
+var map_VSphereWorkspaceConfig = map[string]string{
+	"":                 "VSphereWorkspaceConfig describes the endpoint used to create volumes.",
+	"server":           "server is the virtual center server, for example 1.1.1.1",
+	"datacenter":       "datacenter is the name of datacenter in virtual center server.",
+	"folder":           "folder is the virtual center VM folder path under the datacenter.",
+	"resourcePoolPath": "resourcePoolPath is the path to the resource pool under the datacenter.",
+}
+
+func (VSphereWorkspaceConfig) SwaggerDoc() map[string]string {
+	return map_VSphereWorkspaceConfig
 }
 
 var map_Ingress = map[string]string{

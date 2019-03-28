@@ -283,6 +283,7 @@ func (IngressControllerStatus) SwaggerDoc() map[string]string {
 var map_NodePlacement = map[string]string{
 	"":             "NodePlacement describes node scheduling configuration for an ingress controller.",
 	"nodeSelector": "nodeSelector is the node selector applied to ingress controller deployments.\n\nIf unset, the default is:\n\n  beta.kubernetes.io/os: linux\n  node-role.kubernetes.io/worker: ''\n\nIf set, the specified selector is used and replaces the default.",
+	"tolerations":  "tolerations is a list of tolerations applied to ingress controller deployments.\n\nThe default is an empty list.\n\nSee https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/",
 }
 
 func (NodePlacement) SwaggerDoc() map[string]string {

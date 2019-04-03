@@ -13,3 +13,8 @@ import:
   version: kubernetes-1.14.0
 - package: k8s.io/api
   version: kubernetes-1.14.0
+
+# required for generator.  this is the level origin uses
+- package: gonum.org/v1/gonum
+  repo: https://github.com/gonum/gonum.git
+  version: cebdade430ccb61c1feba4878085f6cf8cb3320e

@@ -63,9 +63,9 @@ type OperandVersion struct {
 	// name is the name of the particular operand this version is for.  It usually matches container images, not operators.
 	Name string `json:"name"`
 
-	// version indicates which version of a particular operand is currently being manage.  It must always match the Available
-	// condition.  If 1.0.0 is Available, then this must indicate 1.0.0 even if the operator is trying to rollout
-	// 1.1.0
+	// version indicates which version of a particular operand is currently being managed.  When set by an operator, it must
+	// match the Available condition.  The only time it is allowed not to match Available is in a release payload manifest.
+	// If 1.0.0 is Available, then this must indicate 1.0.0 even if the operator is trying to rollout 1.1.0
 	Version string `json:"version"`
 }
 

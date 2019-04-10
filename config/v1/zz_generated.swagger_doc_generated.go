@@ -149,7 +149,7 @@ func (GenericControllerConfig) SwaggerDoc() map[string]string {
 }
 
 var map_HTTPServingInfo = map[string]string{
-	"": "HTTPServingInfo holds configuration for serving HTTP",
+	"":                      "HTTPServingInfo holds configuration for serving HTTP",
 	"maxRequestsInFlight":   "MaxRequestsInFlight is the number of concurrent requests allowed to the server. If zero, no limit.",
 	"requestTimeoutSeconds": "RequestTimeoutSeconds is the number of seconds before requests are timed out. The default is 60 minutes, if -1 there is no limit on requests.",
 }
@@ -1027,7 +1027,7 @@ func (RequestHeaderIdentityProvider) SwaggerDoc() map[string]string {
 }
 
 var map_TokenConfig = map[string]string{
-	"": "TokenConfig holds the necessary configuration options for authorization and access tokens",
+	"":                                    "TokenConfig holds the necessary configuration options for authorization and access tokens",
 	"accessTokenMaxAgeSeconds":            "accessTokenMaxAgeSeconds defines the maximum age of access tokens",
 	"accessTokenInactivityTimeoutSeconds": "accessTokenInactivityTimeoutSeconds defines the default token inactivity timeout for tokens granted by any client. The value represents the maximum amount of time that can occur between consecutive uses of the token. Tokens become invalid if they are not used within this temporal window. The user will need to acquire a new token to regain access once a token times out. Valid values are integer values:\n  x < 0  Tokens time out is enabled but tokens never timeout unless configured per client (e.g. `-1`)\n  x = 0  Tokens time out is disabled (default)\n  x > 0  Tokens time out if there is no activity for x seconds\nThe current minimum allowed value for X is 300 (5 minutes)",
 }
@@ -1056,7 +1056,7 @@ func (ProjectList) SwaggerDoc() map[string]string {
 }
 
 var map_ProjectSpec = map[string]string{
-	"": "ProjectSpec holds the project creation configuration.",
+	"":                       "ProjectSpec holds the project creation configuration.",
 	"projectRequestMessage":  "projectRequestMessage is the string presented to a user if they are unable to request a project via the projectrequest api endpoint",
 	"projectRequestTemplate": "projectRequestTemplate is the template to use for creating projects in response to projectrequest. This must point to a template in 'openshift-config' namespace. It is optional. If it is not specified, a default template is used.",
 }

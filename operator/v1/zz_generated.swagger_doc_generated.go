@@ -507,7 +507,9 @@ func (KubeSchedulerSpec) SwaggerDoc() map[string]string {
 }
 
 var map_ServiceCA = map[string]string{
-	"": "ServiceCA provides information to configure an operator to manage the service cert controllers",
+	"":       "ServiceCA provides information to configure an operator to manage the service cert controllers",
+	"spec":   "spec holds user settable values for configuration",
+	"status": "status holds observed values from the cluster. They may not be overridden.",
 }
 
 func (ServiceCA) SwaggerDoc() map[string]string {

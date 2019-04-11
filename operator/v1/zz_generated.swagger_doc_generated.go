@@ -46,26 +46,6 @@ func (NodeStatus) SwaggerDoc() map[string]string {
 	return map_NodeStatus
 }
 
-var map_OperandContainerSpec = map[string]string{
-	"name":      "name is the name of the container to modify",
-	"resources": "resources are the requests and limits to place in the container.  Nil means to accept the defaults.",
-}
-
-func (OperandContainerSpec) SwaggerDoc() map[string]string {
-	return map_OperandContainerSpec
-}
-
-var map_OperandSpec = map[string]string{
-	"":                           "OperandSpec holds information for customization of a particular functional unit - logically maps to a workload",
-	"name":                       "name is the name of this unit.  The operator must be aware of it.",
-	"operandContainerSpecs":      "operandContainerSpecs are per-container options",
-	"unsupportedResourcePatches": "unsupportedResourcePatches are applied to the workload resource for this unit. This is an unsupported workaround if anything needs to be modified on the workload that is not otherwise configurable.",
-}
-
-func (OperandSpec) SwaggerDoc() map[string]string {
-	return map_OperandSpec
-}
-
 var map_OperatorCondition = map[string]string{
 	"": "OperatorCondition is just the standard condition fields.",
 }
@@ -79,7 +59,6 @@ var map_OperatorSpec = map[string]string{
 	"managementState":            "managementState indicates whether and how the operator should manage the component",
 	"logLevel":                   "logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for their operands.",
 	"operatorLogLevel":           "operatorLogLevel is an intent based logging for the operator itself.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for themselves.",
-	"operandSpecs":               "operandSpecs provide customization for functional units within the component",
 	"unsupportedConfigOverrides": "unsupportedConfigOverrides holds a sparse config that will override any previously set options.  It only needs to be the fields to override it will end up overlaying in the following order: 1. hardcoded defaults 2. observedConfig 3. unsupportedConfigOverrides",
 	"observedConfig":             "observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because it is an input to the level for the operator",
 }
@@ -100,20 +79,11 @@ func (OperatorStatus) SwaggerDoc() map[string]string {
 	return map_OperatorStatus
 }
 
-var map_ResourcePatch = map[string]string{
-	"":      "ResourcePatch is a way to represent the patch you would issue to `kubectl patch` in the API",
-	"type":  "type is the type of patch to apply: jsonmerge, strategicmerge",
-	"patch": "patch the patch itself",
-}
-
-func (ResourcePatch) SwaggerDoc() map[string]string {
-	return map_ResourcePatch
-}
-
 var map_StaticPodOperatorSpec = map[string]string{
 	"": "StaticPodOperatorSpec is spec for controllers that manage static pods.",
-	"failedRevisionLimit":    "failedRevisionLimit is the number of failed static pod installer revisions to keep on disk and in the api -1 = unlimited, 0 or unset = 5 (default)",
-	"succeededRevisionLimit": "succeededRevisionLimit is the number of successful static pod installer revisions to keep on disk and in the api -1 = unlimited, 0 or unset = 5 (default)",
+	"forceRedeploymentReason": "forceRedeploymentReason can be used to force the redeployment of the operand by providing a unique string. This provides a mechanism to kick a previously failed deployment and provide a reason why you think it will work this time instead of failing again on the same config.",
+	"failedRevisionLimit":     "failedRevisionLimit is the number of failed static pod installer revisions to keep on disk and in the api -1 = unlimited, 0 or unset = 5 (default)",
+	"succeededRevisionLimit":  "succeededRevisionLimit is the number of successful static pod installer revisions to keep on disk and in the api -1 = unlimited, 0 or unset = 5 (default)",
 }
 
 func (StaticPodOperatorSpec) SwaggerDoc() map[string]string {
@@ -309,14 +279,6 @@ func (KubeAPIServerList) SwaggerDoc() map[string]string {
 	return map_KubeAPIServerList
 }
 
-var map_KubeAPIServerSpec = map[string]string{
-	"forceRedeploymentReason": "forceRedeploymentReason can be used to force the redeployment of the kube-apiserver by providing a unique string. This provides a mechanism to kick a previously failed deployment and provide a reason why you think it will work this time instead of failing again on the same config.",
-}
-
-func (KubeAPIServerSpec) SwaggerDoc() map[string]string {
-	return map_KubeAPIServerSpec
-}
-
 var map_KubeControllerManager = map[string]string{
 	"": "KubeControllerManager provides information to configure an operator to manage kube-controller-manager.",
 }
@@ -333,14 +295,6 @@ var map_KubeControllerManagerList = map[string]string{
 
 func (KubeControllerManagerList) SwaggerDoc() map[string]string {
 	return map_KubeControllerManagerList
-}
-
-var map_KubeControllerManagerSpec = map[string]string{
-	"forceRedeploymentReason": "forceRedeploymentReason can be used to force the redeployment of the kube-controller-manager by providing a unique string. This provides a mechanism to kick a previously failed deployment and provide a reason why you think it will work this time instead of failing again on the same config.",
-}
-
-func (KubeControllerManagerSpec) SwaggerDoc() map[string]string {
-	return map_KubeControllerManagerSpec
 }
 
 var map_AdditionalNetworkDefinition = map[string]string{
@@ -496,14 +450,6 @@ var map_KubeSchedulerList = map[string]string{
 
 func (KubeSchedulerList) SwaggerDoc() map[string]string {
 	return map_KubeSchedulerList
-}
-
-var map_KubeSchedulerSpec = map[string]string{
-	"forceRedeploymentReason": "forceRedeploymentReason can be used to force the redeployment of the kube-scheduler by providing a unique string. This provides a mechanism to kick a previously failed deployment and provide a reason why you think it will work this time instead of failing again on the same config.",
-}
-
-func (KubeSchedulerSpec) SwaggerDoc() map[string]string {
-	return map_KubeSchedulerSpec
 }
 
 var map_ServiceCA = map[string]string{

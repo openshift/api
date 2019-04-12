@@ -15,7 +15,7 @@ type ServiceCA struct {
 
 	// +required
 	//spec holds user settable values for configuration
-	Spec   ServiceCASpec   `json:"spec"`
+	Spec ServiceCASpec `json:"spec"`
 	// +optional
 	// status holds observed values from the cluster. They may not be overridden.
 	Status ServiceCAStatus `json:"status"`

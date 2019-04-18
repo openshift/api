@@ -24,7 +24,7 @@ update-deps:
 
 generate-with-container: Dockerfile.build
 	$(RUNTIME) build -t $(RUNTIME_IMAGE_NAME) -f Dockerfile.build .
-	$(RUNTIME) run -ti --rm -v $(PWD):/go/src/github.com/openshift/api -w /go/src/github.com/openshift/api $(RUNTIME_IMAGE_NAME) make generate
+	$(RUNTIME) run -ti --rm -v $(PWD):/go/src/github.com/openshift/api:z -w /go/src/github.com/openshift/api $(RUNTIME_IMAGE_NAME) make generate
 
 generate:
 	hack/update-deepcopy.sh

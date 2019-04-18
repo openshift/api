@@ -74,9 +74,6 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		},
 		Disabled: []string{
 			"LocalStorageCapacityIsolation", // sig-pod, sjenning
-			"ResourceQuotaScopeSelectors",   // sig-pod, ravig
-			"TaintNodesByCondition",         // sig-pod, ravig
-			"TaintBasedEvictions",           // sig-pod, ravig
 		},
 	},
 	TechPreviewNoUpgrade: {
@@ -88,9 +85,6 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		},
 		Disabled: []string{
 			"LocalStorageCapacityIsolation", // sig-pod, sjenning
-			"ResourceQuotaScopeSelectors",   // sig-pod, ravig
-                        "TaintNodesByCondition",         // sig-pod, ravig
-                        "TaintBasedEvictions",           // sig-pod, ravig
 		},
 	},
 }

@@ -517,6 +517,7 @@ var map_Update = map[string]string{
 	"":        "Update represents a release of the ClusterVersionOperator, referenced by the Image member.",
 	"version": "version is a semantic versioning identifying the update version. When this field is part of spec, version is optional if image is specified.",
 	"image":   "image is a container image location that contains the update. When this field is part of spec, image is optional if version is specified and the availableUpdates field contains a matching version.",
+	"force":   "force allows an administrator to update to an image that has failed verification, does not appear in the availableUpdates list, or otherwise would be blocked by normal protections on update. This option should only be used when the authenticity of the provided image has been verified out of band because the provided image will run with full administrative access to the cluster. Do not use this flag with images that comes from unknown or potentially malicious sources.\n\nThis flag does not override other forms of consistency checking that are required before a new update is deployed.",
 }
 
 func (Update) SwaggerDoc() map[string]string {
@@ -530,6 +531,7 @@ var map_UpdateHistory = map[string]string{
 	"completionTime": "completionTime, if set, is when the update was fully applied. The update that is currently being applied will have a null completion time. Completion time will always be set for entries that are not the current update (usually to the started time of the next update).",
 	"version":        "version is a semantic versioning identifying the update version. If the requested image does not define a version, or if a failure occurs retrieving the image, this value may be empty.",
 	"image":          "image is a container image location that contains the update. This value is always populated.",
+	"verified":       "verified indicates whether the provided update was properly verified before it was installed. If this is false the cluster may not be trusted.",
 }
 
 func (UpdateHistory) SwaggerDoc() map[string]string {

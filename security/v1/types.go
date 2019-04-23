@@ -80,12 +80,16 @@ type SecurityContextConstraints struct {
 	// +nullable
 	AllowPrivilegeEscalation *bool `json:"allowPrivilegeEscalation,omitempty" protobuf:"varint,23,rep,name=allowPrivilegeEscalation"`
 	// SELinuxContext is the strategy that will dictate what labels will be set in the SecurityContext.
+	// +nullable
 	SELinuxContext SELinuxContextStrategyOptions `json:"seLinuxContext,omitempty" protobuf:"bytes,13,opt,name=seLinuxContext"`
 	// RunAsUser is the strategy that will dictate what RunAsUser is used in the SecurityContext.
+	// +nullable
 	RunAsUser RunAsUserStrategyOptions `json:"runAsUser,omitempty" protobuf:"bytes,14,opt,name=runAsUser"`
 	// SupplementalGroups is the strategy that will dictate what supplemental groups are used by the SecurityContext.
+	// +nullable
 	SupplementalGroups SupplementalGroupsStrategyOptions `json:"supplementalGroups,omitempty" protobuf:"bytes,15,opt,name=supplementalGroups"`
 	// FSGroup is the strategy that will dictate what fs group is used by the SecurityContext.
+	// +nullable
 	FSGroup FSGroupStrategyOptions `json:"fsGroup,omitempty" protobuf:"bytes,16,opt,name=fsGroup"`
 	// ReadOnlyRootFilesystem when set to true will force containers to run with a read only root file
 	// system.  If the container specifically requests to run with a non-read only root file system
@@ -108,6 +112,7 @@ type SecurityContextConstraints struct {
 	// be specifid by the pod or container.	The wildcard '*' may be used to allow all profiles.  When
 	// used to generate a value for a pod the first non-wildcard profile will be used as
 	// the default.
+	// +nullable
 	SeccompProfiles []string `json:"seccompProfiles,omitempty" protobuf:"bytes,20,opt,name=seccompProfiles"`
 
 	// AllowedUnsafeSysctls is a list of explicitly allowed unsafe sysctls, defaults to none.

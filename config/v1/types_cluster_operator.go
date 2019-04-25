@@ -42,6 +42,7 @@ type ClusterOperatorStatus struct {
 	// versions is a slice of operand version tuples.  Operators which manage multiple operands will have multiple
 	// entries in the array.  If an operator is Available, it must have at least one entry.  You must report the version of
 	// the operator itself with the name "operator".
+	// +nullable
 	// +optional
 	Versions []OperandVersion `json:"versions,omitempty"`
 
@@ -49,6 +50,7 @@ type ClusterOperatorStatus struct {
 	// 1. the detailed resource driving the operator
 	// 2. operator namespaces
 	// 3. operand namespaces
+	// +nullable
 	// +optional
 	RelatedObjects []ObjectReference `json:"relatedObjects,omitempty"`
 

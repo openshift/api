@@ -34,6 +34,7 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&ServiceServingCertSignerConfig{},
 		&APIServiceCABundleInjectorConfig{},
 		&ConfigMapCABundleInjectorConfig{},
+		&WebhookConfigurationCABundleInjectorConfig{},
 		&ServiceCertSignerOperatorConfig{},
 		&ServiceCertSignerOperatorConfigList{},
 	)

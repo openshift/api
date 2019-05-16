@@ -56,6 +56,22 @@ type ConfigMapCABundleInjectorConfig struct {
 	CABundleFile string `json:"caBundleFile"`
 }
 
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// WebhookConfigurationCABundleInjectorConfig provides information to configure a ConfigMap CA Bundle Injector controller
+type WebhookConfigurationCABundleInjectorConfig struct {
+	metav1.TypeMeta `json:",inline"`
+
+	// This configuration is not meant to be edited by humans as
+	// it is normally managed by the service cert signer operator.
+	// ServiceCertSignerOperatorConfig's spec.webhookConfigurationCABundleInjectorConfig
+	// can be used to override the defaults for this configuration.
+	configv1.GenericControllerConfig `json:",inline"`
+
+	// caBundleFile holds the ca bundle to apply to ConfigMaps.
+	CABundleFile string `json:"caBundleFile"`
+}
+
 // +genclient
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -89,6 +105,12 @@ type ServiceCertSignerOperatorConfigSpec struct {
 	// 1. hardcoded default
 	// 2. this config
 	ConfigMapCABundleInjectorConfig runtime.RawExtension `json:"configMapCABundleInjectorConfig"`
+
+	// webhookConfigurationCABundleInjectorConfig holds a sparse config that the user wants for this component.  It only needs to be the overrides from the defaults
+	// it will end up overlaying in the following order:
+	// 1. hardcoded default
+	// 2. this config
+	WebhookConfigurationCABundleInjectorConfig runtime.RawExtension `json:"webhookConfigurationCABundleInjectorConfig"`
 }
 
 type ServiceCertSignerOperatorConfigStatus struct {

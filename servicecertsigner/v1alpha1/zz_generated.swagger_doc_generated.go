@@ -48,9 +48,10 @@ func (ServiceCertSignerOperatorConfigList) SwaggerDoc() map[string]string {
 }
 
 var map_ServiceCertSignerOperatorConfigSpec = map[string]string{
-	"serviceServingCertSignerConfig":   "serviceServingCertSignerConfig holds a sparse config that the user wants for this component.  It only needs to be the overrides from the defaults it will end up overlaying in the following order: 1. hardcoded default 2. this config",
-	"apiServiceCABundleInjectorConfig": "apiServiceCABundleInjectorConfig holds a sparse config that the user wants for this component.  It only needs to be the overrides from the defaults it will end up overlaying in the following order: 1. hardcoded default 2. this config",
-	"configMapCABundleInjectorConfig":  "configMapCABundleInjectorConfig holds a sparse config that the user wants for this component.  It only needs to be the overrides from the defaults it will end up overlaying in the following order: 1. hardcoded default 2. this config",
+	"serviceServingCertSignerConfig":             "serviceServingCertSignerConfig holds a sparse config that the user wants for this component.  It only needs to be the overrides from the defaults it will end up overlaying in the following order: 1. hardcoded default 2. this config",
+	"apiServiceCABundleInjectorConfig":           "apiServiceCABundleInjectorConfig holds a sparse config that the user wants for this component.  It only needs to be the overrides from the defaults it will end up overlaying in the following order: 1. hardcoded default 2. this config",
+	"configMapCABundleInjectorConfig":            "configMapCABundleInjectorConfig holds a sparse config that the user wants for this component.  It only needs to be the overrides from the defaults it will end up overlaying in the following order: 1. hardcoded default 2. this config",
+	"webhookConfigurationCABundleInjectorConfig": "webhookConfigurationCABundleInjectorConfig holds a sparse config that the user wants for this component.  It only needs to be the overrides from the defaults it will end up overlaying in the following order: 1. hardcoded default 2. this config",
 }
 
 func (ServiceCertSignerOperatorConfigSpec) SwaggerDoc() map[string]string {
@@ -64,6 +65,15 @@ var map_ServiceServingCertSignerConfig = map[string]string{
 
 func (ServiceServingCertSignerConfig) SwaggerDoc() map[string]string {
 	return map_ServiceServingCertSignerConfig
+}
+
+var map_WebhookConfigurationCABundleInjectorConfig = map[string]string{
+	"":             "WebhookConfigurationCABundleInjectorConfig provides information to configure a ConfigMap CA Bundle Injector controller",
+	"caBundleFile": "caBundleFile holds the ca bundle to apply to ConfigMaps.",
+}
+
+func (WebhookConfigurationCABundleInjectorConfig) SwaggerDoc() map[string]string {
+	return map_WebhookConfigurationCABundleInjectorConfig
 }
 
 // AUTO-GENERATED FUNCTIONS END HERE

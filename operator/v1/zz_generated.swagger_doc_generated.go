@@ -91,9 +91,10 @@ func (StaticPodOperatorSpec) SwaggerDoc() map[string]string {
 }
 
 var map_StaticPodOperatorStatus = map[string]string{
-	"":                        "StaticPodOperatorStatus is status for controllers that manage static pods.  There are different needs because individual node status must be tracked.",
-	"latestAvailableRevision": "latestAvailableRevision is the deploymentID of the most recent deployment",
-	"nodeStatuses":            "nodeStatuses track the deployment values and errors across individual nodes",
+	"":                              "StaticPodOperatorStatus is status for controllers that manage static pods.  There are different needs because individual node status must be tracked.",
+	"latestAvailableRevision":       "latestAvailableRevision is the deploymentID of the most recent deployment",
+	"latestAvailableRevisionReason": "latestAvailableRevisionReason describe the detailed reason for the most recent deployment",
+	"nodeStatuses":                  "nodeStatuses track the deployment values and errors across individual nodes",
 }
 
 func (StaticPodOperatorStatus) SwaggerDoc() map[string]string {

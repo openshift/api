@@ -209,6 +209,16 @@ func (EtcdList) SwaggerDoc() map[string]string {
 	return map_EtcdList
 }
 
+var map_Ciphers = map[string]string{
+	"":               "Ciphers defines the cipher algorithms used by an IngressController for performing encryption or decryption of network connections. A profile can be specified or a custom strategy of ciphers.",
+	"profile":        "Profile is one of three recommended cipher configurations from [1].\n\n[1] https://wiki.mozilla.org/Security/Server_Side_TLS#Recommended_configurations",
+	"customStrategy": "CustomStrategy consists of a manually defined list of ciphers with each cipher separated by a \":\".",
+}
+
+func (Ciphers) SwaggerDoc() map[string]string {
+	return map_Ciphers
+}
+
 var map_EndpointPublishingStrategy = map[string]string{
 	"":     "EndpointPublishingStrategy is a way to publish the endpoints of an IngressController, and represents the type and any additional configuration for a specific type.",
 	"type": "type is the publishing strategy to use. Valid values are:\n\n* LoadBalancerService\n\nPublishes the ingress controller using a Kubernetes LoadBalancer Service.\n\nIn this configuration, the ingress controller deployment uses container networking. A LoadBalancer Service is created to publish the deployment.\n\nSee: https://kubernetes.io/docs/concepts/services-networking/#loadbalancer\n\nIf domain is set, a wildcard DNS record will be managed to point at the LoadBalancer Service's external name. DNS records are managed only in DNS zones defined by dns.config.openshift.io/cluster .spec.publicZone and .spec.privateZone.\n\nWildcard DNS management is currently supported only on the AWS platform.\n\n* HostNetwork\n\nPublishes the ingress controller on node ports where the ingress controller is deployed.\n\nIn this configuration, the ingress controller deployment uses host networking, bound to node ports 80 and 443. The user is responsible for configuring an external load balancer to publish the ingress controller via the node ports.\n\n* Private\n\nDoes not publish the ingress controller.\n\nIn this configuration, the ingress controller deployment uses container networking, and is not explicitly published. The user must manually publish the ingress controller.",
@@ -245,6 +255,8 @@ var map_IngressControllerSpec = map[string]string{
 	"namespaceSelector":          "namespaceSelector is used to filter the set of namespaces serviced by the ingress controller. This is useful for implementing shards.\n\nIf unset, the default is no filtering.",
 	"routeSelector":              "routeSelector is used to filter the set of Routes serviced by the ingress controller. This is useful for implementing shards.\n\nIf unset, the default is no filtering.",
 	"nodePlacement":              "nodePlacement enables explicit control over the scheduling of the ingress controller.\n\nIf unset, defaults are used. See NodePlacement for more details.",
+	"bindCiphers":                "bindCiphers is used to specify the cipher algorithms that are negotiated during the SSL/TLS handshake with an IngressController.\n\nIf unset, the CipherProfileIntermediateType profile is used.",
+	"bindSecurityProtocol":       "bindSecurityProtocol is used to specify one or more encryption protocols that are negotiated during the SSL/TLS handshake with the IngressController.\n\nIf unset, all protocolTypes are used except SecurityProtocolSSLv3Version.",
 }
 
 func (IngressControllerSpec) SwaggerDoc() map[string]string {
@@ -272,6 +284,14 @@ var map_NodePlacement = map[string]string{
 
 func (NodePlacement) SwaggerDoc() map[string]string {
 	return map_NodePlacement
+}
+
+var map_SecurityProtocol = map[string]string{
+	"": "SecurityProtocol defines one or more security protocols used by an IngressController to secure network connections.",
+}
+
+func (SecurityProtocol) SwaggerDoc() map[string]string {
+	return map_SecurityProtocol
 }
 
 var map_KubeAPIServer = map[string]string{

@@ -125,6 +125,22 @@ type IngressControllerSpec struct {
 	//
 	// +optional
 	NodePlacement *NodePlacement `json:"nodePlacement,omitempty"`
+
+	// bindCiphers is used to specify the cipher algorithms that are negotiated
+	// during the SSL/TLS handshake with an IngressController.
+	//
+	// If unset, the CipherProfileIntermediateType profile is used.
+	//
+	// +optional
+	BindCiphers *Ciphers `json:"bindCiphers,omitempty"`
+
+	// bindSecurityProtocol is used to specify one or more encryption protocols
+	// that are negotiated during the SSL/TLS handshake with the IngressController.
+	//
+	// If unset, all protocolTypes are used except SecurityProtocolSSLv3Version.
+	//
+	// +optional
+	BindSecurityProtocol *SecurityProtocol `json:"bindSecurityProtocol,omitempty"`
 }
 
 // NodePlacement describes node scheduling configuration for an ingress
@@ -227,6 +243,65 @@ var (
 	// DNSReady indicates the ready state of any DNS records for the ingress
 	// controller.
 	DNSReadyIngressConditionType = "DNSReady"
+)
+
+// Ciphers defines the cipher algorithms used by an IngressController for performing
+// encryption or decryption of network connections. A profile can be specified or a
+// custom strategy of ciphers.
+type Ciphers struct {
+	// Profile is one of three recommended cipher configurations from [1].
+	//
+	// [1] https://wiki.mozilla.org/Security/Server_Side_TLS#Recommended_configurations
+	//
+	// +optional
+	Profile CipherProfile `json:"profile,omitempty"`
+	// CustomStrategy consists of a manually defined list of ciphers with each
+	// cipher separated by a ":".
+	//
+	// +optional
+	CustomStrategy *string `json:"customStrategy,omitempty"`
+}
+
+// CipherProfile is a way to specify a supported cipher profile.
+type CipherProfile string
+
+const (
+	// old is a cipher profile that works with all clients back to Windows XP/IE6.
+	CipherProfileOldType CipherProfile = "old"
+	// intermediate is is a cipher profile for services that do not need compatibility
+	// with legacy clients (mostly WinXP), but still need to support a wide range of
+	// clients, this configuration is recommended. It is is compatible with Firefox 1,
+	// Chrome 1, IE 7, Opera 5 and Safari 1.
+	CipherProfileIntermediateType CipherProfile = "intermediate"
+	// modern is a cipher profile for services that do not need backward compatibility,
+	// the parameters below provide a higher level of security. This profile is
+	// compatible with Firefox 27, Chrome 30, IE 11 on Windows 7, Edge, Opera 17,
+	// Safari 9, Android 5.0, and Java 8.
+	CipherProfileModernType CipherProfile = "modern"
+)
+
+// SecurityProtocol defines one or more security protocols used by
+// an IngressController to secure network connections.
+type SecurityProtocol struct {
+	MinimumVersion SecurityProtocolVersion
+	MaximumVersion SecurityProtocolVersion
+}
+
+// SecurityProtocolVersion is a way to specify a supported IngressController
+// security protocol.
+type SecurityProtocolVersion string
+
+const (
+	// SSLv3 is v3 of the SSL security protocol.
+	SecurityProtocolSSLv3Version SecurityProtocolVersion = "SSLv3"
+	// TLSv1.0 is v1.0 of the TLS security protocol.
+	SecurityProtocolTLS10Version SecurityProtocolVersion = "TLSv1.0"
+	// TLSv1.1 is v1.1 of the TLS security protocol.
+	SecurityProtocolTLS11Version SecurityProtocolVersion = "TLSv1.1"
+	// TLSv1.2 is v1.2 of the TLS security protocol.
+	SecurityProtocolTLS12Version SecurityProtocolVersion = "TLSv1.2"
+	// TLSv1.3 is v1.3 of the TLS security protocol.
+	SecurityProtocolTLS13Version SecurityProtocolVersion = "TLSv1.3"
 )
 
 // IngressControllerStatus defines the observed status of the IngressController.

@@ -100,12 +100,32 @@ type DefaultNetworkDefinition struct {
 	KuryrConfig *KuryrConfig `json:"kuryrConfig,omitempty"`
 }
 
+// MacvlanConfig contains configurations for macvlan interface.
+type MacvlanConfig struct {
+	// master is the host interface to create the macvlan interface from
+	// +optional
+	Master string `json:"master"`
+
+	// ipam indicates which IPAM module will be used for IP Address Management (IPAM)
+	// now supports 'dhcp'
+	// +optional
+	IPAM string `json:"ipam,omitempty"`
+
+	// mode is the macvlan mode: bridge, private, vepa, passthru. The default is bridge
+	// +optional
+	Mode MACVLANMode `json:"mode,omitempty"`
+
+	// mtu is the mtu to use for the macvlan interface. Defaults to the value from kernel if unset.
+	// +optional
+	MTU *uint32 `json:"mtu,omitempty"`
+}
+
 // AdditionalNetworkDefinition configures an extra network that is available but not
 // created by default. Instead, pods must request them by name.
 // type must be specified, along with exactly one "Config" that matches the type.
 type AdditionalNetworkDefinition struct {
 	// type is the type of network
-	// The only supported value is NetworkTypeRaw
+	// The supported values are NetworkTypeRaw, NetworkTypeMacvlan
 	Type NetworkType `json:"type"`
 
 	// name is the name of the network. This will be populated in the resulting CRD
@@ -119,6 +139,10 @@ type AdditionalNetworkDefinition struct {
 	// rawCNIConfig is the raw CNI configuration json to create in the
 	// NetworkAttachmentDefinition CRD
 	RawCNIConfig string `json:"rawCNIConfig"`
+
+	// macvlanConfig configures the maclvan interface
+	// +optional
+	MacvlanConfig MacvlanConfig `json:"macvlanConfig,omitempty"`
 }
 
 // OpenShiftSDNConfig configures the three openshift-sdn plugins
@@ -195,6 +219,9 @@ const (
 
 	// NetworkTypeRaw
 	NetworkTypeRaw NetworkType = "Raw"
+
+	// NetworkTypeMacvlan
+	NetworkTypeMacvlan NetworkType = "Macvlan"
 )
 
 // SDNMode is the Mode the openshift-sdn plugin is in
@@ -211,4 +238,20 @@ const (
 	// SDNModeNetworkPolicy is a full NetworkPolicy implementation that allows
 	// for sophisticated network isolation and segmenting. This is the default.
 	SDNModeNetworkPolicy SDNMode = "NetworkPolicy"
+)
+
+// MACVLANMode is the Mode of macvlan. The value should be decapitalize
+// due to the CNI plugin
+type MACVLANMode string
+
+const (
+	// MACVLANModeBridge is the macvlan with thin bridge function.
+	MACVLANModeBridge MACVLANMode = "bridge"
+	// MACVLANModePrivate
+	MACVLANModePrivate MACVLANMode = "private"
+	// MACVLANModeVEPA is used with Virtual Ethernet Port Aggregator
+	// (802.1qbg) swtich
+	MACVLANModeVEPA MACVLANMode = "vepa"
+	// MACVLANModePassthru
+	MACVLANModePassthru MACVLANMode = "passthru"
 )

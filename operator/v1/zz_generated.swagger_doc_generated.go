@@ -358,11 +358,12 @@ func (KubeControllerManagerList) SwaggerDoc() map[string]string {
 }
 
 var map_AdditionalNetworkDefinition = map[string]string{
-	"":             "AdditionalNetworkDefinition configures an extra network that is available but not created by default. Instead, pods must request them by name. type must be specified, along with exactly one \"Config\" that matches the type.",
-	"type":         "type is the type of network The only supported value is NetworkTypeRaw",
-	"name":         "name is the name of the network. This will be populated in the resulting CRD This must be unique.",
-	"namespace":    "namespace is the namespace of the network. This will be populated in the resulting CRD If not given the network will be created in the default namespace.",
-	"rawCNIConfig": "rawCNIConfig is the raw CNI configuration json to create in the NetworkAttachmentDefinition CRD",
+	"":              "AdditionalNetworkDefinition configures an extra network that is available but not created by default. Instead, pods must request them by name. type must be specified, along with exactly one \"Config\" that matches the type.",
+	"type":          "type is the type of network The supported values are NetworkTypeRaw, NetworkTypeMacvlan",
+	"name":          "name is the name of the network. This will be populated in the resulting CRD This must be unique.",
+	"namespace":     "namespace is the namespace of the network. This will be populated in the resulting CRD If not given the network will be created in the default namespace.",
+	"rawCNIConfig":  "rawCNIConfig is the raw CNI configuration json to create in the NetworkAttachmentDefinition CRD",
+	"macvlanConfig": "macvlanConfig configures the maclvan interface",
 }
 
 func (AdditionalNetworkDefinition) SwaggerDoc() map[string]string {
@@ -397,6 +398,18 @@ var map_KuryrConfig = map[string]string{
 
 func (KuryrConfig) SwaggerDoc() map[string]string {
 	return map_KuryrConfig
+}
+
+var map_MacvlanConfig = map[string]string{
+	"":       "MacvlanConfig contains configurations for macvlan interface.",
+	"master": "master is the host interface to create the macvlan interface from",
+	"ipam":   "ipam indicates which IPAM module will be used for IP Address Management (IPAM) now supports 'dhcp'",
+	"mode":   "mode is the macvlan mode: bridge, private, vepa, passthru. The default is bridge",
+	"mtu":    "mtu is the mtu to use for the macvlan interface. Defaults to the value from kernel if unset.",
+}
+
+func (MacvlanConfig) SwaggerDoc() map[string]string {
+	return map_MacvlanConfig
 }
 
 var map_Network = map[string]string{

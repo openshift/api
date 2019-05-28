@@ -126,21 +126,12 @@ type IngressControllerSpec struct {
 	// +optional
 	NodePlacement *NodePlacement `json:"nodePlacement,omitempty"`
 
-	// bindCiphers is used to specify the cipher algorithms that are negotiated
-	// during the SSL/TLS handshake with an IngressController.
+	// securitySpec specifies settings for securing IngressController connections.
 	//
-	// If unset, the CipherProfileIntermediateType profile is used.
-	//
-	// +optional
-	BindCiphers *Ciphers `json:"bindCiphers,omitempty"`
-
-	// bindSecurityProtocol is used to specify one or more encryption protocols
-	// that are negotiated during the SSL/TLS handshake with the IngressController.
-	//
-	// If unset, all protocolTypes are used except SecurityProtocolSSLv3Version.
+	// If unset, the "Intermediate" security profile is used.
 	//
 	// +optional
-	BindSecurityProtocol *SecurityProtocol `json:"bindSecurityProtocol,omitempty"`
+	SecuritySpec *SecuritySpec `json:"securitySpec,omitempty"`
 }
 
 // NodePlacement describes node scheduling configuration for an ingress
@@ -245,63 +236,136 @@ var (
 	DNSReadyIngressConditionType = "DNSReady"
 )
 
-// Ciphers defines the cipher algorithms used by an IngressController for performing
-// encryption or decryption of network connections. A profile can be specified or a
-// custom strategy of ciphers.
-type Ciphers struct {
-	// Profile is one of three recommended cipher configurations from [1].
+// SecuritySpec defines the settings for securing IngressController connections.
+type SecuritySpec struct {
+	// profile is one of "Old", "Intermediate", "Modern" or "Custom". "Old",
+	// "Intermediate" and "Modern" profiles map to security configurations from [1]:
 	//
 	// [1] https://wiki.mozilla.org/Security/Server_Side_TLS#Recommended_configurations
 	//
-	// +optional
-	Profile CipherProfile `json:"profile,omitempty"`
-	// CustomStrategy consists of a manually defined list of ciphers with each
-	// cipher separated by a ":".
+	// When a profile of type "Old", "Intermediate" or "Modern" is set, the CustomSettings
+	// field is forbidden.
+	//
+	// customSettings must be provided if, and only if, profile is "Custom".
+	//
+	// If unset, the "Intermediate" profile is used.
+	//
+	Profile SecurityProfileType `json:"profile"`
+	// customSettings defines the schema for settings of a "Custom" profile
+	// and is ignored unless a "Custom" profile is specified.
 	//
 	// +optional
-	CustomStrategy *string `json:"customStrategy,omitempty"`
+	CustomSettings *CustomProfileSettings `json:"customSettings,omitempty"`
+
 }
 
-// CipherProfile is a way to specify a supported cipher profile.
-type CipherProfile string
+// SecurityProfileType defines a security profile.
+type SecurityProfileType string
 
 const (
-	// old is a cipher profile that works with all clients back to Windows XP/IE6.
-	CipherProfileOldType CipherProfile = "old"
-	// intermediate is is a cipher profile for services that do not need compatibility
-	// with legacy clients (mostly WinXP), but still need to support a wide range of
-	// clients, this configuration is recommended. It is is compatible with Firefox 1,
-	// Chrome 1, IE 7, Opera 5 and Safari 1.
-	CipherProfileIntermediateType CipherProfile = "intermediate"
-	// modern is a cipher profile for services that do not need backward compatibility,
-	// the parameters below provide a higher level of security. This profile is
-	// compatible with Firefox 27, Chrome 30, IE 11 on Windows 7, Edge, Opera 17,
-	// Safari 9, Android 5.0, and Java 8.
-	CipherProfileModernType CipherProfile = "modern"
+	// SecurityProfileOldType is a security profile that maps to:
+	// https://wiki.mozilla.org/Security/Server_Side_TLS#Old_backward_compatibility
+	SecurityProfileOldType SecurityProfileType = "Old"
+	// SecurityProfileIntermediateType is a security profile that maps to:
+	// https://wiki.mozilla.org/Security/Server_Side_TLS#Intermediate_compatibility_.28default.29
+	SecurityProfileIntermediateType SecurityProfileType = "Intermediate"
+	// SecurityProfileModernType is a security profile that maps to:
+	// https://wiki.mozilla.org/Security/Server_Side_TLS#Modern_compatibility
+	SecurityProfileModernType SecurityProfileType = "Modern"
+	// SecurityProfileCustomType is a security profile that allows for custom settings
+	// through type CustomProfileSettings.
+	SecurityProfileCustomType SecurityProfileType = "Custom"
+
 )
+
+// CustomProfileSettings defines the schema for a custom security profile.
+type CustomProfileSettings struct {
+	// ciphers is used to specify the cipher algorithms that are negotiated
+	// during the SSL/TLS handshake with an IngressController. Each cipher must
+	// be an explicit, colon-delimited list of ciphers.
+	//
+	// If unset, the "Intermediate" Ciphersuites [1] are used:
+	//
+	// [1] https://wiki.mozilla.org/Security/Server_Side_TLS#Intermediate_compatibility_.28default.29
+	//
+	// +optional
+	Ciphers *string `json:"ciphers,omitempty"`
+	// securityProtocol is used to specify one or more encryption protocols
+	// that are negotiated during the SSL/TLS handshake with the IngressController.
+	//
+	// If unset, the "Intermediate" Versions [1] are used:
+	//
+	// [1] https://wiki.mozilla.org/Security/Server_Side_TLS#Intermediate_compatibility_.28default.29
+	//
+	//
+	// +optional
+	SecurityProtocol *SecurityProtocol `json:"securityProtocol,omitempty"`
+	// dhParamSize sets the maximum size of the Diffie-Hellman parameters used for generating
+	// the ephemeral/temporary Diffie-Hellman key in case of DHE key exchange. The final size
+	// will try to match the size of the server's RSA (or DSA) key (e.g, a 2048 bits temporary
+	// DH key for a 2048 bits RSA key), but will not exceed this maximum value. Only 1024 or 2048
+	// values are allowed.
+	//
+	// If unset, the "Intermediate" DH Parameter size [1] is used:
+	//
+	// [1] https://wiki.mozilla.org/Security/Server_Side_TLS#Intermediate_compatibility_.28default.29
+	//
+	// +optional
+	DHParamSize *DHParamSize `json:"dHParamSize,omitempty"`
+}
 
 // SecurityProtocol defines one or more security protocols used by
 // an IngressController to secure network connections.
 type SecurityProtocol struct {
-	MinimumVersion SecurityProtocolVersion
-	MaximumVersion SecurityProtocolVersion
+	// minimumVersion enforces use of SecurityProtocolVersion or newer on
+	// SSL connections instantiated from an IngressController. minimumVersion
+	// must be lower than maximumVersion.
+	//
+	// If unset and maximumVersion is set, minimumVersion will be set
+	// to maximumVersion. If minimumVersion and maximumVersion are unset,
+	// the minimum version in "Intermediate" Versions [1] is used:
+	//
+	// [1] https://wiki.mozilla.org/Security/Server_Side_TLS#Intermediate_compatibility_.28default.29
+	//
+	// +optional
+	MinimumVersion *SecurityProtocolVersion `json:"minimumVersion,omitempty"`
+	// maximumVersion enforces use of SecurityProtocolVersion or older on
+	// SSL connections instantiated from an IngressController. maximumVersion
+	// must be higher than minimumVersion.
+	//
+	// If unset and minimumVersion is set, maximumVersion will be set
+	// to minimumVersion. If minimumVersion and maximumVersion are unset,
+	// the maximum version in "Intermediate" Versions [1] is used:
+	//
+	// [1] https://wiki.mozilla.org/Security/Server_Side_TLS#Intermediate_compatibility_.28default.29
+	//
+	// +optional
+	MaximumVersion *SecurityProtocolVersion `json:"maximumVersion,omitempty"`
 }
 
-// SecurityProtocolVersion is a way to specify a supported IngressController
-// security protocol.
+// SecurityProtocolVersion is a way to specify an IngressController security protocol.
 type SecurityProtocolVersion string
 
 const (
-	// SSLv3 is v3 of the SSL security protocol.
-	SecurityProtocolSSLv3Version SecurityProtocolVersion = "SSLv3"
-	// TLSv1.0 is v1.0 of the TLS security protocol.
+	// SecurityProtocolTLS10Version is v1.0 of the TLS security protocol.
 	SecurityProtocolTLS10Version SecurityProtocolVersion = "TLSv1.0"
-	// TLSv1.1 is v1.1 of the TLS security protocol.
+	// SecurityProtocolTLS11Version is v1.1 of the TLS security protocol.
 	SecurityProtocolTLS11Version SecurityProtocolVersion = "TLSv1.1"
-	// TLSv1.2 is v1.2 of the TLS security protocol.
+	// SecurityProtocolTLS12Version is v1.2 of the TLS security protocol.
 	SecurityProtocolTLS12Version SecurityProtocolVersion = "TLSv1.2"
-	// TLSv1.3 is v1.3 of the TLS security protocol.
+	// SecurityProtocolTLS13Version is v1.3 of the TLS security protocol.
 	SecurityProtocolTLS13Version SecurityProtocolVersion = "TLSv1.3"
+)
+
+// DHParamSize sets the maximum size of the Diffie-Hellman parameters used for generating
+// the ephemeral/temporary Diffie-Hellman key in case of DHE key exchange.
+type DHParamSize string
+
+const (
+	// DHParamSize1024 is a Diffie-Hellman parameter of 1024 bits.
+	DHParamSize1024 DHParamSize = "1024"
+	// DHParamSize2048 is a Diffie-Hellman parameter of 2048 bits.
+	DHParamSize2048 DHParamSize = "2048"
 )
 
 // IngressControllerStatus defines the observed status of the IngressController.
@@ -320,6 +384,9 @@ type IngressControllerStatus struct {
 
 	// endpointPublishingStrategy is the actual strategy in use.
 	EndpointPublishingStrategy *EndpointPublishingStrategy `json:"endpointPublishingStrategy,omitempty"`
+
+	// securityProfileType is the actual security profile in use.
+	SecurityProfile *SecurityProfileType `json:"securityProfile,omitempty"`
 
 	// conditions is a list of conditions and their status.
 	//

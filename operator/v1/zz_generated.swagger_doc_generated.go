@@ -209,14 +209,15 @@ func (EtcdList) SwaggerDoc() map[string]string {
 	return map_EtcdList
 }
 
-var map_Ciphers = map[string]string{
-	"":               "Ciphers defines the cipher algorithms used by an IngressController for performing encryption or decryption of network connections. A profile can be specified or a custom strategy of ciphers.",
-	"profile":        "Profile is one of three recommended cipher configurations from [1].\n\n[1] https://wiki.mozilla.org/Security/Server_Side_TLS#Recommended_configurations",
-	"customStrategy": "CustomStrategy consists of a manually defined list of ciphers with each cipher separated by a \":\".",
+var map_CustomProfileSettings = map[string]string{
+	"":                 "CustomProfileSettings defines the schema for a custom security profile.",
+	"ciphers":          "ciphers is used to specify the cipher algorithms that are negotiated during the SSL/TLS handshake with an IngressController. Each cipher must be an explicit, colon-delimited list of ciphers.\n\nIf unset, the \"Intermediate\" Ciphersuites [1] are used:\n\n[1] https://wiki.mozilla.org/Security/Server_Side_TLS#Intermediate_compatibility_.28default.29",
+	"securityProtocol": "securityProtocol is used to specify one or more encryption protocols that are negotiated during the SSL/TLS handshake with the IngressController.\n\nIf unset, the \"Intermediate\" Versions [1] are used:\n\n[1] https://wiki.mozilla.org/Security/Server_Side_TLS#Intermediate_compatibility_.28default.29",
+	"dHParamSize":      "dhParamSize sets the maximum size of the Diffie-Hellman parameters used for generating the ephemeral/temporary Diffie-Hellman key in case of DHE key exchange. The final size will try to match the size of the server's RSA (or DSA) key (e.g, a 2048 bits temporary DH key for a 2048 bits RSA key), but will not exceed this maximum value. Only 1024 or 2048 values are allowed.\n\nIf unset, the \"Intermediate\" DH Parameter size [1] is used:\n\n[1] https://wiki.mozilla.org/Security/Server_Side_TLS#Intermediate_compatibility_.28default.29",
 }
 
-func (Ciphers) SwaggerDoc() map[string]string {
-	return map_Ciphers
+func (CustomProfileSettings) SwaggerDoc() map[string]string {
+	return map_CustomProfileSettings
 }
 
 var map_EndpointPublishingStrategy = map[string]string{
@@ -255,8 +256,7 @@ var map_IngressControllerSpec = map[string]string{
 	"namespaceSelector":          "namespaceSelector is used to filter the set of namespaces serviced by the ingress controller. This is useful for implementing shards.\n\nIf unset, the default is no filtering.",
 	"routeSelector":              "routeSelector is used to filter the set of Routes serviced by the ingress controller. This is useful for implementing shards.\n\nIf unset, the default is no filtering.",
 	"nodePlacement":              "nodePlacement enables explicit control over the scheduling of the ingress controller.\n\nIf unset, defaults are used. See NodePlacement for more details.",
-	"bindCiphers":                "bindCiphers is used to specify the cipher algorithms that are negotiated during the SSL/TLS handshake with an IngressController.\n\nIf unset, the CipherProfileIntermediateType profile is used.",
-	"bindSecurityProtocol":       "bindSecurityProtocol is used to specify one or more encryption protocols that are negotiated during the SSL/TLS handshake with the IngressController.\n\nIf unset, all protocolTypes are used except SecurityProtocolSSLv3Version.",
+	"securitySpec":               "securitySpec specifies settings for securing IngressController connections.\n\nIf unset, the \"Intermediate\" security profile is used.",
 }
 
 func (IngressControllerSpec) SwaggerDoc() map[string]string {
@@ -269,6 +269,7 @@ var map_IngressControllerStatus = map[string]string{
 	"selector":                   "selector is a label selector, in string format, for ingress controller pods corresponding to the IngressController. The number of matching pods should equal the value of availableReplicas.",
 	"domain":                     "domain is the actual domain in use.",
 	"endpointPublishingStrategy": "endpointPublishingStrategy is the actual strategy in use.",
+	"securityProfile":            "securityProfileType is the actual security profile in use.",
 	"conditions":                 "conditions is a list of conditions and their status.\n\nAvailable means the ingress controller deployment is available and servicing route and ingress resources (i.e, .status.availableReplicas equals .spec.replicas)\n\nThere are additional conditions which indicate the status of other ingress controller features and capabilities.\n\n  * LoadBalancerManaged\n  - True if the following conditions are met:\n    * The endpoint publishing strategy requires a service load balancer.\n  - False if any of those conditions are unsatisfied.\n\n  * LoadBalancerReady\n  - True if the following conditions are met:\n    * A load balancer is managed.\n    * The load balancer is ready.\n  - False if any of those conditions are unsatisfied.\n\n  * DNSManaged\n  - True if the following conditions are met:\n    * The endpoint publishing strategy and platform support DNS.\n    * The ingress controller domain is set.\n    * dns.config.openshift.io/cluster configures DNS zones.\n  - False if any of those conditions are unsatisfied.\n\n  * DNSReady\n  - True if the following conditions are met:\n    * DNS is managed.\n    * DNS records have been successfully created.\n  - False if any of those conditions are unsatisfied.",
 }
 
@@ -287,11 +288,23 @@ func (NodePlacement) SwaggerDoc() map[string]string {
 }
 
 var map_SecurityProtocol = map[string]string{
-	"": "SecurityProtocol defines one or more security protocols used by an IngressController to secure network connections.",
+	"":               "SecurityProtocol defines one or more security protocols used by an IngressController to secure network connections.",
+	"minimumVersion": "minimumVersion enforces use of SecurityProtocolVersion or newer on SSL connections instantiated from an IngressController. minimumVersion must be lower than maximumVersion.\n\nIf unset and maximumVersion is set, minimumVersion will be set to maximumVersion. If minimumVersion and maximumVersion are unset, the minimum version in \"Intermediate\" Versions [1] is used:\n\n[1] https://wiki.mozilla.org/Security/Server_Side_TLS#Intermediate_compatibility_.28default.29",
+	"maximumVersion": "maximumVersion enforces use of SecurityProtocolVersion or older on SSL connections instantiated from an IngressController. maximumVersion must be higher than minimumVersion.\n\nIf unset and minimumVersion is set, maximumVersion will be set to minimumVersion. If minimumVersion and maximumVersion are unset, the maximum version in \"Intermediate\" Versions [1] is used:\n\n[1] https://wiki.mozilla.org/Security/Server_Side_TLS#Intermediate_compatibility_.28default.29",
 }
 
 func (SecurityProtocol) SwaggerDoc() map[string]string {
 	return map_SecurityProtocol
+}
+
+var map_SecuritySpec = map[string]string{
+	"":               "SecuritySpec defines the settings for securing IngressController connections.",
+	"profile":        "profile is one of \"Old\", \"Intermediate\", \"Modern\" or \"Custom\". \"Old\", \"Intermediate\" and \"Modern\" profiles map to security configurations from [1]:\n\n[1] https://wiki.mozilla.org/Security/Server_Side_TLS#Recommended_configurations\n\nWhen a profile of type \"Old\", \"Intermediate\" or \"Modern\" is set, the CustomSettings field is forbidden.\n\ncustomSettings must be provided if, and only if, profile is \"Custom\".\n\nIf unset, the \"Intermediate\" profile is used.",
+	"customSettings": "customSettings defines the schema for settings of a \"Custom\" profile and is ignored unless a \"Custom\" profile is specified.",
+}
+
+func (SecuritySpec) SwaggerDoc() map[string]string {
+	return map_SecuritySpec
 }
 
 var map_KubeAPIServer = map[string]string{

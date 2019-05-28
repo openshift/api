@@ -317,10 +317,21 @@ var map_DefaultNetworkDefinition = map[string]string{
 	"type":                "type is the type of network All NetworkTypes are supported except for NetworkTypeRaw",
 	"openshiftSDNConfig":  "openShiftSDNConfig configures the openshift-sdn plugin",
 	"ovnKubernetesConfig": "oVNKubernetesConfig configures the ovn-kubernetes plugin. This is currently not implemented.",
+	"kuryrConfig":         "KuryrConfig configures the kuryr plugin",
 }
 
 func (DefaultNetworkDefinition) SwaggerDoc() map[string]string {
 	return map_DefaultNetworkDefinition
+}
+
+var map_KuryrConfig = map[string]string{
+	"":                     "KuryrConfig configures the Kuryr-Kubernetes SDN",
+	"daemonProbesPort":     "The port kuryr-daemon will listen for readiness and liveness requests.",
+	"controllerProbesPort": "The port kuryr-controller will listen for readiness and liveness requests.",
+}
+
+func (KuryrConfig) SwaggerDoc() map[string]string {
+	return map_KuryrConfig
 }
 
 var map_Network = map[string]string{

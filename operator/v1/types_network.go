@@ -98,6 +98,19 @@ type DefaultNetworkDefinition struct {
 	// KuryrConfig configures the kuryr plugin
 	// +optional
 	KuryrConfig *KuryrConfig `json:"kuryrConfig,omitempty"`
+
+	// chainedPlugins is an array of CNI plugins to append as chained plugins
+	// as part of the default network CNI configuration.
+	// +optional
+	ChainedPlugins []ChainedPluginEntry `json:"chainedPlugins,omitempty"`
+}
+
+// ChainedPluginEntry is a single chained plugin to install.
+type ChainedPluginEntry struct {
+	// rawCNIConfig is a raw CNI json snippet to add to the "plugins" array.
+	// If you use this, you must ensure that the referenced CNI binary is already
+	// written to disk.
+	RawCNIConfig string `json:"rawCNIConfig,omitempty"`
 }
 
 // AdditionalNetworkDefinition configures an extra network that is available but not

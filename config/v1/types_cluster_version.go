@@ -50,6 +50,10 @@ type ClusterVersionSpec struct {
 	// +optional
 	DesiredUpdate *Update `json:"desiredUpdate,omitempty"`
 
+	// automaticUpdates enables automatic updates.
+	// +optional
+	AutomaticUpdates bool `json:"automaticUpdates,omitempty"`
+
 	// upstream may be used to specify the preferred update server. By default
 	// it will use the appropriate update server for the cluster and region.
 	//

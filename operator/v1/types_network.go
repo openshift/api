@@ -100,24 +100,21 @@ type DefaultNetworkDefinition struct {
 	KuryrConfig *KuryrConfig `json:"kuryrConfig,omitempty"`
 }
 
-// MacvlanConfig contains configurations for macvlan interface.
-type MacvlanConfig struct {
-	// master is the host interface to create the macvlan interface from
+// SimpleMacvlanConfig contains configurations for macvlan interface.
+type SimpleMacvlanConfig struct {
+	// master is the host interface to create the macvlan interface from.
+	// If not specified, it will be default route interface
 	// +optional
-	Master string `json:"master"`
-
-	// ipam indicates which IPAM module will be used for IP Address Management (IPAM)
-	// now supports 'dhcp'
-	// +optional
-	IPAM string `json:"ipam,omitempty"`
+	Master string `json:"master,omitempty"`
 
 	// mode is the macvlan mode: bridge, private, vepa, passthru. The default is bridge
 	// +optional
-	Mode MACVLANMode `json:"mode,omitempty"`
+	Mode MacvlanMode `json:"mode,omitempty"`
 
-	// mtu is the mtu to use for the macvlan interface. Defaults to the value from kernel if unset.
+	// mtu is the mtu to use for the macvlan interface. if unset, host's
+	// kernel will select the value.
 	// +optional
-	MTU *uint32 `json:"mtu,omitempty"`
+	MTU uint32 `json:"mtu,omitempty"`
 }
 
 // AdditionalNetworkDefinition configures an extra network that is available but not
@@ -125,7 +122,7 @@ type MacvlanConfig struct {
 // type must be specified, along with exactly one "Config" that matches the type.
 type AdditionalNetworkDefinition struct {
 	// type is the type of network
-	// The supported values are NetworkTypeRaw, NetworkTypeMacvlan
+	// The supported values are NetworkTypeRaw, NetworkTypeSimpleMacvlan
 	Type NetworkType `json:"type"`
 
 	// name is the name of the network. This will be populated in the resulting CRD
@@ -138,11 +135,11 @@ type AdditionalNetworkDefinition struct {
 
 	// rawCNIConfig is the raw CNI configuration json to create in the
 	// NetworkAttachmentDefinition CRD
-	RawCNIConfig string `json:"rawCNIConfig"`
+	RawCNIConfig string `json:"rawCNIConfig,omitempty"`
 
-	// macvlanConfig configures the maclvan interface
+	// SimpleMacvlanConfig configures the macvlan interface in case of type:NetworkTypeSimpleMacvlan
 	// +optional
-	MacvlanConfig MacvlanConfig `json:"macvlanConfig,omitempty"`
+	SimpleMacvlanConfig *SimpleMacvlanConfig `json:"simpleMacvlanConfig,omitempty"`
 }
 
 // OpenShiftSDNConfig configures the three openshift-sdn plugins
@@ -220,8 +217,8 @@ const (
 	// NetworkTypeRaw
 	NetworkTypeRaw NetworkType = "Raw"
 
-	// NetworkTypeMacvlan
-	NetworkTypeMacvlan NetworkType = "Macvlan"
+	// NetworkTypeSimpleMacvlan
+	NetworkTypeSimpleMacvlan NetworkType = "SimpleMacvlan"
 )
 
 // SDNMode is the Mode the openshift-sdn plugin is in
@@ -240,18 +237,18 @@ const (
 	SDNModeNetworkPolicy SDNMode = "NetworkPolicy"
 )
 
-// MACVLANMode is the Mode of macvlan. The value should be decapitalize
-// due to the CNI plugin
-type MACVLANMode string
+// MacvlanMode is the Mode of macvlan. The value are lowercase to match the CNI plugin
+// config values. See "man ip-link" for its detail.
+type MacvlanMode string
 
 const (
-	// MACVLANModeBridge is the macvlan with thin bridge function.
-	MACVLANModeBridge MACVLANMode = "bridge"
-	// MACVLANModePrivate
-	MACVLANModePrivate MACVLANMode = "private"
-	// MACVLANModeVEPA is used with Virtual Ethernet Port Aggregator
+	// MacvlanModeBridge is the macvlan with thin bridge function.
+	MacvlanModeBridge MacvlanMode = "bridge"
+	// MacvlanModePrivate
+	MacvlanModePrivate MacvlanMode = "private"
+	// MacvlanModeVEPA is used with Virtual Ethernet Port Aggregator
 	// (802.1qbg) swtich
-	MACVLANModeVEPA MACVLANMode = "vepa"
-	// MACVLANModePassthru
-	MACVLANModePassthru MACVLANMode = "passthru"
+	MacvlanModeVEPA MacvlanMode = "vepa"
+	// MacvlanModePassthru
+	MacvlanModePassthru MacvlanMode = "passthru"
 )

@@ -25,6 +25,9 @@ const (
 	// Limit that applies to image streams. Used with a max[resource] LimitRangeItem to set the maximum number
 	// of resource. Where the resource is one of "openshift.io/images" and "openshift.io/image-tags".
 	LimitTypeImageStream corev1.LimitType = "openshift.io/ImageStream"
+
+	// ManagedByOpenShiftAnnotation indicates that an image is managed by OpenShift's registry.
+	ManagedByOpenShiftAnnotation = "openshift.io/image.managed"
 )
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

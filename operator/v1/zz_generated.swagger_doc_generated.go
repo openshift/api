@@ -228,6 +228,14 @@ func (EtcdList) SwaggerDoc() map[string]string {
 	return map_EtcdList
 }
 
+var map_CustomSecurityProfile = map[string]string{
+	"": "CustomSecurityProfile defines the schema for a custom security profile.",
+}
+
+func (CustomSecurityProfile) SwaggerDoc() map[string]string {
+	return map_CustomSecurityProfile
+}
+
 var map_EndpointPublishingStrategy = map[string]string{
 	"":             "EndpointPublishingStrategy is a way to publish the endpoints of an IngressController, and represents the type and any additional configuration for a specific type.",
 	"type":         "type is the publishing strategy to use. Valid values are:\n\n* LoadBalancerService\n\nPublishes the ingress controller using a Kubernetes LoadBalancer Service.\n\nIn this configuration, the ingress controller deployment uses container networking. A LoadBalancer Service is created to publish the deployment.\n\nSee: https://kubernetes.io/docs/concepts/services-networking/#loadbalancer\n\nIf domain is set, a wildcard DNS record will be managed to point at the LoadBalancer Service's external name. DNS records are managed only in DNS zones defined by dns.config.openshift.io/cluster .spec.publicZone and .spec.privateZone.\n\nWildcard DNS management is currently supported only on the AWS platform.\n\n* HostNetwork\n\nPublishes the ingress controller on node ports where the ingress controller is deployed.\n\nIn this configuration, the ingress controller deployment uses host networking, bound to node ports 80 and 443. The user is responsible for configuring an external load balancer to publish the ingress controller via the node ports.\n\n* Private\n\nDoes not publish the ingress controller.\n\nIn this configuration, the ingress controller deployment uses container networking, and is not explicitly published. The user must manually publish the ingress controller.",
@@ -275,6 +283,7 @@ var map_IngressControllerSpec = map[string]string{
 	"namespaceSelector":          "namespaceSelector is used to filter the set of namespaces serviced by the ingress controller. This is useful for implementing shards.\n\nIf unset, the default is no filtering.",
 	"routeSelector":              "routeSelector is used to filter the set of Routes serviced by the ingress controller. This is useful for implementing shards.\n\nIf unset, the default is no filtering.",
 	"nodePlacement":              "nodePlacement enables explicit control over the scheduling of the ingress controller.\n\nIf unset, defaults are used. See NodePlacement for more details.",
+	"securitySpec":               "securitySpec specifies settings for securing an IngressController.",
 }
 
 func (IngressControllerSpec) SwaggerDoc() map[string]string {
@@ -287,6 +296,7 @@ var map_IngressControllerStatus = map[string]string{
 	"selector":                   "selector is a label selector, in string format, for ingress controller pods corresponding to the IngressController. The number of matching pods should equal the value of availableReplicas.",
 	"domain":                     "domain is the actual domain in use.",
 	"endpointPublishingStrategy": "endpointPublishingStrategy is the actual strategy in use.",
+	"securityProfile":            "securityProfile is the actual security profile in use.",
 	"conditions":                 "conditions is a list of conditions and their status.\n\nAvailable means the ingress controller deployment is available and servicing route and ingress resources (i.e, .status.availableReplicas equals .spec.replicas)\n\nThere are additional conditions which indicate the status of other ingress controller features and capabilities.\n\n  * LoadBalancerManaged\n  - True if the following conditions are met:\n    * The endpoint publishing strategy requires a service load balancer.\n  - False if any of those conditions are unsatisfied.\n\n  * LoadBalancerReady\n  - True if the following conditions are met:\n    * A load balancer is managed.\n    * The load balancer is ready.\n  - False if any of those conditions are unsatisfied.\n\n  * DNSManaged\n  - True if the following conditions are met:\n    * The endpoint publishing strategy and platform support DNS.\n    * The ingress controller domain is set.\n    * dns.config.openshift.io/cluster configures DNS zones.\n  - False if any of those conditions are unsatisfied.\n\n  * DNSReady\n  - True if the following conditions are met:\n    * DNS is managed.\n    * DNS records have been successfully created.\n  - False if any of those conditions are unsatisfied.",
 }
 
@@ -319,6 +329,49 @@ var map_PrivateStrategy = map[string]string{
 
 func (PrivateStrategy) SwaggerDoc() map[string]string {
 	return map_PrivateStrategy
+}
+
+var map_SecurityProfile = map[string]string{
+	"":                 "SecurityProfile defines the schema for a security profile.",
+	"ciphers":          "ciphers is used to specify the cipher algorithms that are negotiated during the SSL/TLS handshake with an IngressController. Preface a cipher with a \"!\" to disable a specific cipher from being negotiated. For example, to use DES-CBC3-SHA but not EDH-DSS-DES-CBC3-SHA (yaml):\n\n  ciphers:\n    - DES-CBC3-SHA\n    - !EDH-DSS-DES-CBC3-SHA\n\nIf unset, Ciphersuites are determined by the security profile type.",
+	"securityProtocol": "securityProtocol is used to specify one or more encryption protocols that are negotiated during the SSL/TLS handshake with the IngressController.\n\nIf unset, the security protocol is determined by the security profile type.",
+	"dhParamSize":      "dhParamSize sets the maximum size of the Diffie-Hellman parameters used for generating the ephemeral/temporary Diffie-Hellman key in case of DHE key exchange. The final size will try to match the size of the server's RSA (or DSA) key (e.g, a 2048 bits temporary DH key for a 2048 bits RSA key), but will not exceed this maximum value.\n\nIf unset, the DH parameter size is determined by the security profile type.\n\n  SecurityProfileType Modern:       DHParamSize2048\n  SecurityProfileType Intermediate: DHParamSize2048\n  SecurityProfileType Old:          DHParamSize1024\n\nSupported DH Parameter sizes are:\n\n  \"2048\": A Diffie-Hellman parameter of 2048 bits.\n  \"1024\": A Diffie-Hellman parameter of 1024 bits.",
+}
+
+func (SecurityProfile) SwaggerDoc() map[string]string {
+	return map_SecurityProfile
+}
+
+var map_SecurityProfileSpec = map[string]string{
+	"":             "SecurityProfileSpec defines the schema for a security profile.",
+	"type":         "type is one of Old, Intermediate, Modern or Custom. Custom provides the ability to specify individual security profile parameters. Old, Intermediate and Modern are security profiles based on:\n\nhttps://wiki.mozilla.org/Security/Server_Side_TLS#Recommended_configurations\n\nIf unset, Intermediate is used.\n\nUpdating any fields of a SecurityProfileSpec will trigger a Rolling Update of the IngressController. For more on Rolling Updates see:\n\nhttps://kubernetes.io/docs/tutorials/kubernetes-basics/update/update-intro/",
+	"old":          "old is a security profile based on:\n\nhttps://wiki.mozilla.org/Security/Server_Side_TLS#Old_backward_compatibility\n\nand looks like this (yaml):\n\n  ciphers:\n    - ECDHE-ECDSA-CHACHA20-POLY1305\n    - ECDHE-RSA-CHACHA20-POLY1305\n    - ECDHE-RSA-AES128-GCM-SHA256\n    - ECDHE-ECDSA-AES128-GCM-SHA256\n    - ECDHE-RSA-AES256-GCM-SHA384\n    - ECDHE-ECDSA-AES256-GCM-SHA384\n    - DHE-RSA-AES128-GCM-SHA256\n    - DHE-DSS-AES128-GCM-SHA256\n    - kEDH+AESGCM\n    - ECDHE-RSA-AES128-SHA256\n    - ECDHE-ECDSA-AES128-SHA256\n    - ECDHE-RSA-AES128-SHA\n    - ECDHE-ECDSA-AES128-SHA\n    - ECDHE-RSA-AES256-SHA384\n    - ECDHE-ECDSA-AES256-SHA384\n    - ECDHE-RSA-AES256-SHA\n    - ECDHE-ECDSA-AES256-SHA\n    - DHE-RSA-AES128-SHA256\n    - DHE-RSA-AES128-SHA\n    - DHE-DSS-AES128-SHA256\n    - DHE-RSA-AES256-SHA256\n    - DHE-DSS-AES256-SHA\n    - DHE-RSA-AES256-SHA\n    - ECDHE-RSA-DES-CBC3-SHA\n    - ECDHE-ECDSA-DES-CBC3-SHA\n    - EDH-RSA-DES-CBC3-SHA\n    - AES128-GCM-SHA256\n    - AES256-GCM-SHA384\n    - AES128-SHA256\n    - AES256-SHA256\n    - AES128-SHA\n    - AES256-SHA\n    - AES\n    - DES-CBC3-SHA\n    - HIGH\n    - SEED\n    - !aNULL\n    - !eNULL\n    - !EXPORT\n    - !DES\n    - !RC4\n    - !MD5\n    - !PSK\n    - !RSAPSK\n    - !aDH\n    - !aECDH\n    - !EDH-DSS-DES-CBC3-SHA\n    - !KRB5-DES-CBC3-SHA\n    - !SRP\n  securityProtocol:\n    minimumVersion: TLSv1.0\n    maximumVersion: TLSv1.2\n  dhParamSize: 1024",
+	"intermediate": "intermediate is a security profile based on:\n\nhttps://wiki.mozilla.org/Security/Server_Side_TLS#Intermediate_compatibility_.28default.29\n\nand looks like this (yaml):\n\n  ciphers:\n    - ECDHE-ECDSA-CHACHA20-POLY1305\n    - ECDHE-RSA-CHACHA20-POLY1305\n    - ECDHE-ECDSA-AES128-GCM-SHA256\n    - ECDHE-RSA-AES128-GCM-SHA256\n    - ECDHE-ECDSA-AES256-GCM-SHA384\n    - ECDHE-RSA-AES256-GCM-SHA384\n    - DHE-RSA-AES128-GCM-SHA256\n    - DHE-RSA-AES256-GCM-SHA384\n    - ECDHE-ECDSA-AES128-SHA256\n    - ECDHE-RSA-AES128-SHA256\n    - ECDHE-ECDSA-AES128-SHA\n    - ECDHE-RSA-AES256-SHA384\n    - ECDHE-RSA-AES128-SHA\n    - ECDHE-ECDSA-AES256-SHA384\n    - ECDHE-ECDSA-AES256-SHA\n    - ECDHE-RSA-AES256-SHA\n    - DHE-RSA-AES128-SHA256\n    - DHE-RSA-AES128-SHA\n    - DHE-RSA-AES256-SHA256\n    - DHE-RSA-AES256-SHA\n    - ECDHE-ECDSA-DES-CBC3-SHA\n    - ECDHE-RSA-DES-CBC3-SHA\n    - EDH-RSA-DES-CBC3-SHA\n    - AES128-GCM-SHA256\n    - AES256-GCM-SHA384\n    - AES128-SHA256\n    - AES256-SHA256\n    - AES128-SHA\n    - AES256-SHA\n    - DES-CBC3-SHA\n    - !DSS\n  securityProtocol:\n    minimumVersion: TLSv1.0\n    maximumVersion: TLSv1.2\n  dhParamSize: 2048",
+	"modern":       "modern is a security profile based on:\n\nhttps://wiki.mozilla.org/Security/Server_Side_TLS#Modern_compatibility\n\nand looks like this (yaml):\n\n  ciphers:\n    - ECDHE-ECDSA-AES256-GCM-SHA384\n    - ECDHE-RSA-AES256-GCM-SHA384\n    - ECDHE-ECDSA-CHACHA20-POLY1305\n    - ECDHE-RSA-CHACHA20-POLY1305\n    - ECDHE-ECDSA-AES128-GCM-SHA256\n    - ECDHE-RSA-AES128-GCM-SHA256\n    - ECDHE-ECDSA-AES256-SHA384\n    - ECDHE-RSA-AES256-SHA384\n    - ECDHE-ECDSA-AES128-SHA256\n    - ECDHE-RSA-AES128-SHA256\n  securityProtocol:\n    minimumVersion: TLSv1.2\n    maximumVersion: TLSv1.2\n  dhParamSize: 2048",
+	"custom":       "custom is a user-defined security profile. An example custom profile looks like this:\n\n  ciphers:\n    - ECDHE-ECDSA-CHACHA20-POLY1305\n    - ECDHE-RSA-CHACHA20-POLY1305\n    - ECDHE-RSA-AES128-GCM-SHA256\n    - ECDHE-ECDSA-AES128-GCM-SHA256\n  securityProtocol:\n    minimumVersion: TLSv1.1\n    maximumVersion: TLSv1.2\n  dhParamSize: 1024\n\nAny unset fields of a custom security profile default to the \"Intermediate\" security profile.",
+}
+
+func (SecurityProfileSpec) SwaggerDoc() map[string]string {
+	return map_SecurityProfileSpec
+}
+
+var map_SecurityProtocol = map[string]string{
+	"":               "SecurityProtocol defines one or more security protocols used by an IngressController to secure network connections.",
+	"minimumVersion": "minimumVersion enforces use of the specified SecurityProtocolVersion or newer on SSL connections initiated by an IngressController. minimumVersion must be lower than or equal to maximumVersion.\n\nIf unset and maximumVersion is set, minimumVersion will be set to maximumVersion. If minimumVersion and maximumVersion are unset, the minimum version is determined by the security profile type.\n\n  SecurityProfileType Modern:       SecurityProtocolTLS12Version\n  SecurityProfileType Intermediate: SecurityProtocolTLS10Version\n  SecurityProfileType Old:          SecurityProtocolTLS10Version\n\nSupported minimum versions are:\n\n  \"TLSv1.3\": Version 1.3 of the TLS security protocol used for securing\n  IngressController network connections.\n  \"TLSv1.2\": Version 1.2 of the TLS security protocol used for securing\n  IngressController network connections.\n  \"TLSv1.1\": Version 1.1 of the TLS security protocol used for securing\n  IngressController network connections.\n  \"TLSv1.0\": Version 1.0 of the TLS security protocol used for securing\n  IngressController network connections.",
+	"maximumVersion": "maximumVersion enforces use of the specified SecurityProtocolVersion or older on SSL connections initiated by an IngressController. maximumVersion must be higher than or equal to minimumVersion.\n\nIf unset and minimumVersion is set, maximumVersion will be set to minimumVersion. If minimumVersion and maximumVersion are unset, the maximum version is determined by the security profile type.\n\n  SecurityProfileType Modern:       SecurityProtocolTLS12Version\n  SecurityProfileType Intermediate: SecurityProtocolTLS12Version\n  SecurityProfileType Old:          SecurityProtocolTLS12Version\n\nSupported maximum versions are the same as minimum versions.",
+}
+
+func (SecurityProtocol) SwaggerDoc() map[string]string {
+	return map_SecurityProtocol
+}
+
+var map_SecuritySpec = map[string]string{
+	"":        "SecuritySpec defines the schema for securing an IngressController.",
+	"profile": "profile defines the schema for a security profile.",
+}
+
+func (SecuritySpec) SwaggerDoc() map[string]string {
+	return map_SecuritySpec
 }
 
 var map_KubeAPIServer = map[string]string{

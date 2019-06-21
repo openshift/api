@@ -539,7 +539,7 @@ func (UpdateHistory) SwaggerDoc() map[string]string {
 }
 
 var map_Console = map[string]string{
-	"":         "Console holds cluster-wide information about Console.  The canonical name is `cluster`",
+	"":         "Console holds cluster-wide information about Console.  The canonical name is `cluster`.",
 	"metadata": "Standard object's metadata.",
 	"spec":     "spec holds user settable values for configuration",
 	"status":   "status holds observed values from the cluster. They may not be overridden.",
@@ -550,6 +550,7 @@ func (Console) SwaggerDoc() map[string]string {
 }
 
 var map_ConsoleAuthentication = map[string]string{
+	"":               "ConsoleAuthentication defines a list of optional configuration for console authentication.",
 	"logoutRedirect": "An optional, absolute URL to redirect web browsers to after logging out of the console. If not specified, it will redirect to the default login page. This is required when using an identity provider that supports single sign-on (SSO) such as: - OpenID (Keycloak, Azure) - RequestHeader (GSSAPI, SSPI, SAML) - OAuth (GitHub, GitLab, Google) Logging out of the console will destroy the user's token. The logoutRedirect provides the user the option to perform single logout (SLO) through the identity provider to destroy their single sign-on session.",
 }
 
@@ -565,7 +566,16 @@ func (ConsoleList) SwaggerDoc() map[string]string {
 	return map_ConsoleList
 }
 
+var map_ConsoleSpec = map[string]string{
+	"": "ConsoleSpec is the specification of the desired behavior of the Console.",
+}
+
+func (ConsoleSpec) SwaggerDoc() map[string]string {
+	return map_ConsoleSpec
+}
+
 var map_ConsoleStatus = map[string]string{
+	"":           "ConsoleStatus defines the observed status of the Console.",
 	"consoleURL": "The URL for the console. This will be derived from the host for the route that is created for the console.",
 }
 

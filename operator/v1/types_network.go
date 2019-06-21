@@ -107,6 +107,10 @@ type SimpleMacvlanConfig struct {
 	// +optional
 	Master string `json:"master,omitempty"`
 
+	// IPAMConfig configures IPAM module will be used for IP Address Management (IPAM).
+	// +optional
+	IPAMConfig *IPAMConfig `json:"ipamConfig,omitempty"`
+
 	// mode is the macvlan mode: bridge, private, vepa, passthru. The default is bridge
 	// +optional
 	Mode MacvlanMode `json:"mode,omitempty"`
@@ -115,6 +119,63 @@ type SimpleMacvlanConfig struct {
 	// kernel will select the value.
 	// +optional
 	MTU uint32 `json:"mtu,omitempty"`
+}
+
+// StaticIPAMAddresses provides IP address and Gateway for static IPAM addresses
+type StaticIPAMAddresses struct {
+	// Address is the IP address in CIDR format
+	// +optional
+	Address string `json:"address"`
+	// Gateway is IP inside of subnet to designate as the gateway
+	// +optional
+	Gateway string `json:"gateway,omitempty"`
+}
+
+// StaticIPAMRoutes provides Destination/Gateway pairs for static IPAM routes
+type StaticIPAMRoutes struct {
+	// Destination points the IP route destination
+	Destination string `json:"destination"`
+	// Gateway is the route's next-hop IP address
+	// If unset, a default gateway is assumed (as determined by the CNI plugin).
+	// +optional
+	Gateway string `json:"gateway,omitempty"`
+}
+
+// StaticIPAMDNS provides DNS related information for static IPAM
+type StaticIPAMDNS struct {
+	// Nameservers points DNS servers for IP lookup
+	// +optional
+	Nameservers []string `json:"nameservers,omitempty"`
+	// Domain configures the domainname the local domain used for short hostname lookups
+	// +optional
+	Domain string `json:"domain,omitempty"`
+	// Search configures priority ordered search domains for short hostname lookups
+	// +optional
+	Search []string `json:"search,omitempty"`
+}
+
+// StaticIPAMConfig contains configurations for static IPAM (IP Address Management)
+type StaticIPAMConfig struct {
+	// Addresses configures IP address for the interface
+	// +optional
+	Addresses []StaticIPAMAddresses `json:"addresses,omitempty"`
+	// Routes configures IP routes for the interface
+	// +optional
+	Routes []StaticIPAMRoutes `json:"routes,omitempty"`
+	// DNS configures DNS for the interface
+	// +optional
+	DNS *StaticIPAMDNS `json:"dns,omitempty"`
+}
+
+// IPAMConfig contains configurations for IPAM (IP Address Management)
+type IPAMConfig struct {
+	// Type is the type of IPAM module will be used for IP Address Management(IPAM).
+	// The supported values are IPAMTypeDHCP, IPAMTypeStatic
+	Type IPAMType `json:"type"`
+
+	// StaticIPAMConfig configures the static IP address in case of type:IPAMTypeStatic
+	// +optional
+	StaticIPAMConfig *StaticIPAMConfig `json:"staticIPAMConfig,omitempty"`
 }
 
 // AdditionalNetworkDefinition configures an extra network that is available but not
@@ -243,12 +304,22 @@ type MacvlanMode string
 
 const (
 	// MacvlanModeBridge is the macvlan with thin bridge function.
-	MacvlanModeBridge MacvlanMode = "bridge"
+	MacvlanModeBridge MacvlanMode = "Bridge"
 	// MacvlanModePrivate
-	MacvlanModePrivate MacvlanMode = "private"
+	MacvlanModePrivate MacvlanMode = "Private"
 	// MacvlanModeVEPA is used with Virtual Ethernet Port Aggregator
 	// (802.1qbg) swtich
-	MacvlanModeVEPA MacvlanMode = "vepa"
+	MacvlanModeVEPA MacvlanMode = "VEPA"
 	// MacvlanModePassthru
-	MacvlanModePassthru MacvlanMode = "passthru"
+	MacvlanModePassthru MacvlanMode = "Passthru"
+)
+
+// IPAMType describes the IP address management type to configure
+type IPAMType string
+
+const (
+	// IPAMTypeDHCP uses DHCP for IP management
+	IPAMTypeDHCP IPAMType = "DHCP"
+	// IPAMTypeStatic uses static IP
+	IPAMTypeStatic IPAMType = "Static"
 )

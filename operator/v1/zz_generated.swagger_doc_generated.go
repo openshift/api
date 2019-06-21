@@ -390,6 +390,16 @@ func (DefaultNetworkDefinition) SwaggerDoc() map[string]string {
 	return map_DefaultNetworkDefinition
 }
 
+var map_IPAMConfig = map[string]string{
+	"":                 "IPAMConfig contains configurations for IPAM (IP Address Management)",
+	"type":             "Type is the type of IPAM module will be used for IP Address Management(IPAM). The supported values are IPAMTypeDHCP, IPAMTypeStatic",
+	"staticIPAMConfig": "StaticIPAMConfig configures the static IP address in case of type:IPAMTypeStatic",
+}
+
+func (IPAMConfig) SwaggerDoc() map[string]string {
+	return map_IPAMConfig
+}
+
 var map_KuryrConfig = map[string]string{
 	"":                     "KuryrConfig configures the Kuryr-Kubernetes SDN",
 	"daemonProbesPort":     "The port kuryr-daemon will listen for readiness and liveness requests.",
@@ -472,14 +482,57 @@ func (ProxyConfig) SwaggerDoc() map[string]string {
 }
 
 var map_SimpleMacvlanConfig = map[string]string{
-	"":       "SimpleMacvlanConfig contains configurations for macvlan interface.",
-	"master": "master is the host interface to create the macvlan interface from. If not specified, it will be default route interface",
-	"mode":   "mode is the macvlan mode: bridge, private, vepa, passthru. The default is bridge",
-	"mtu":    "mtu is the mtu to use for the macvlan interface. if unset, host's kernel will select the value.",
+	"":           "SimpleMacvlanConfig contains configurations for macvlan interface.",
+	"master":     "master is the host interface to create the macvlan interface from. If not specified, it will be default route interface",
+	"ipamConfig": "IPAMConfig configures IPAM module will be used for IP Address Management (IPAM).",
+	"mode":       "mode is the macvlan mode: bridge, private, vepa, passthru. The default is bridge",
+	"mtu":        "mtu is the mtu to use for the macvlan interface. if unset, host's kernel will select the value.",
 }
 
 func (SimpleMacvlanConfig) SwaggerDoc() map[string]string {
 	return map_SimpleMacvlanConfig
+}
+
+var map_StaticIPAMAddresses = map[string]string{
+	"":        "StaticIPAMAddresses provides IP address and Gateway for static IPAM addresses",
+	"address": "Address is the IP address in CIDR format",
+	"gateway": "Gateway is IP inside of subnet to designate as the gateway",
+}
+
+func (StaticIPAMAddresses) SwaggerDoc() map[string]string {
+	return map_StaticIPAMAddresses
+}
+
+var map_StaticIPAMConfig = map[string]string{
+	"":          "StaticIPAMConfig contains configurations for static IPAM (IP Address Management)",
+	"addresses": "Addresses configures IP address for the interface",
+	"routes":    "Routes configures IP routes for the interface",
+	"dns":       "DNS configures DNS for the interface",
+}
+
+func (StaticIPAMConfig) SwaggerDoc() map[string]string {
+	return map_StaticIPAMConfig
+}
+
+var map_StaticIPAMDNS = map[string]string{
+	"":            "StaticIPAMDNS provides DNS related information for static IPAM",
+	"nameservers": "Nameservers points DNS servers for IP lookup",
+	"domain":      "Domain configures the domainname the local domain used for short hostname lookups",
+	"search":      "Search configures priority ordered search domains for short hostname lookups",
+}
+
+func (StaticIPAMDNS) SwaggerDoc() map[string]string {
+	return map_StaticIPAMDNS
+}
+
+var map_StaticIPAMRoutes = map[string]string{
+	"":            "StaticIPAMRoutes provides Destination/Gateway pairs for static IPAM routes",
+	"destination": "Destination points the IP route destination",
+	"gateway":     "Gateway is the route's next-hop IP address If unset, a default gateway is assumed (as determined by the CNI plugin).",
+}
+
+func (StaticIPAMRoutes) SwaggerDoc() map[string]string {
+	return map_StaticIPAMRoutes
 }
 
 var map_OpenShiftAPIServer = map[string]string{

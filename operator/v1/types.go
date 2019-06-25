@@ -140,6 +140,9 @@ var (
 	OperatorStatusTypePrereqsSatisfied = "PrereqsSatisfied"
 	// Upgradeable indicates that the operator configuration itself (not prereqs) can be auto-upgraded by the CVO
 	OperatorStatusTypeUpgradeable = "Upgradeable"
+	// AttentionRecommended indicates that a cluster admin should investigate the cluster operator whose condition, although not
+	// adversely affecting Available, Degraded, or Upgradeable, is sub-optimal
+	OperatorStatusTypeAttentionRecommended = "AttentionRecommended"
 )
 
 // OperatorCondition is just the standard condition fields.

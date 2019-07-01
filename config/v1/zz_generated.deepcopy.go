@@ -121,6 +121,11 @@ func (in *APIServerSpec) DeepCopyInto(out *APIServerSpec) {
 	*out = *in
 	in.ServingCerts.DeepCopyInto(&out.ServingCerts)
 	out.ClientCA = in.ClientCA
+	if in.AdditionalCORSAllowedOrigins != nil {
+		in, out := &in.AdditionalCORSAllowedOrigins, &out.AdditionalCORSAllowedOrigins
+		*out = make([]string, len(*in))
+		copy(*out, *in)
+	}
 	return
 }
 

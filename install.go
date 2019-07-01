@@ -37,6 +37,7 @@ import (
 	"github.com/openshift/api/authorization"
 	"github.com/openshift/api/build"
 	"github.com/openshift/api/config"
+	"github.com/openshift/api/etcd"
 	"github.com/openshift/api/image"
 	"github.com/openshift/api/kubecontrolplane"
 	"github.com/openshift/api/network"
@@ -63,6 +64,7 @@ var (
 		authorization.Install,
 		build.Install,
 		config.Install,
+		etcd.Install,
 		image.Install,
 		kubecontrolplane.Install,
 		network.Install,

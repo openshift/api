@@ -35,7 +35,7 @@ type APIServerSpec struct {
 	// server from JavaScript applications.
 	// The values are regular expressions that correspond to the Golang regular expression language.
 	// +optional
-	AdditionalCORSAllowedOrigins []string `json:additionalCORSAllowedOrigins,omitempty`
+	AdditionalCORSAllowedOrigins []string `json:"additionalCORSAllowedOrigins,omitempty"`
 }
 
 type APIServerServingCerts struct {

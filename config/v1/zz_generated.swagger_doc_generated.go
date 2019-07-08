@@ -1310,4 +1310,70 @@ func (SchedulerSpec) SwaggerDoc() map[string]string {
 	return map_SchedulerSpec
 }
 
+var map_CustomSecurityProfile = map[string]string{
+	"": "CustomSecurityProfile is a user-defined security profile. Be extremely careful using a custom profile as invalid configurations can be catastrophic.",
+}
+
+func (CustomSecurityProfile) SwaggerDoc() map[string]string {
+	return map_CustomSecurityProfile
+}
+
+var map_IntermediateSecurityProfile = map[string]string{
+	"": "IntermediateSecurityProfile is a security profile based on: https://wiki.mozilla.org/Security/Server_Side_TLS#Intermediate_compatibility_.28default.29",
+}
+
+func (IntermediateSecurityProfile) SwaggerDoc() map[string]string {
+	return map_IntermediateSecurityProfile
+}
+
+var map_ModernSecurityProfile = map[string]string{
+	"": "ModernSecurityProfile is a security profile based on: https://wiki.mozilla.org/Security/Server_Side_TLS#Modern_compatibility",
+}
+
+func (ModernSecurityProfile) SwaggerDoc() map[string]string {
+	return map_ModernSecurityProfile
+}
+
+var map_OldSecurityProfile = map[string]string{
+	"": "OldSecurityProfile is a security profile based on: https://wiki.mozilla.org/Security/Server_Side_TLS#Old_backward_compatibility",
+}
+
+func (OldSecurityProfile) SwaggerDoc() map[string]string {
+	return map_OldSecurityProfile
+}
+
+var map_SecurityProfile = map[string]string{
+	"":             "SecurityProfile defines the schema for a security profile. This object is used by operators to apply network security settings to operands.",
+	"type":         "type is one of Old, Intermediate, Modern or Custom. Custom provides the ability to specify individual security profile parameters. Old, Intermediate and Modern are security profiles based on:\n\nhttps://wiki.mozilla.org/Security/Server_Side_TLS#Recommended_configurations",
+	"old":          "old is a security profile based on:\n\nhttps://wiki.mozilla.org/Security/Server_Side_TLS#Old_backward_compatibility\n\nand looks like this (yaml):\n\n  ciphers:\n    - ECDHE-ECDSA-CHACHA20-POLY1305\n    - ECDHE-RSA-CHACHA20-POLY1305\n    - ECDHE-RSA-AES128-GCM-SHA256\n    - ECDHE-ECDSA-AES128-GCM-SHA256\n    - ECDHE-RSA-AES256-GCM-SHA384\n    - ECDHE-ECDSA-AES256-GCM-SHA384\n    - DHE-RSA-AES128-GCM-SHA256\n    - DHE-DSS-AES128-GCM-SHA256\n    - kEDH+AESGCM\n    - ECDHE-RSA-AES128-SHA256\n    - ECDHE-ECDSA-AES128-SHA256\n    - ECDHE-RSA-AES128-SHA\n    - ECDHE-ECDSA-AES128-SHA\n    - ECDHE-RSA-AES256-SHA384\n    - ECDHE-ECDSA-AES256-SHA384\n    - ECDHE-RSA-AES256-SHA\n    - ECDHE-ECDSA-AES256-SHA\n    - DHE-RSA-AES128-SHA256\n    - DHE-RSA-AES128-SHA\n    - DHE-DSS-AES128-SHA256\n    - DHE-RSA-AES256-SHA256\n    - DHE-DSS-AES256-SHA\n    - DHE-RSA-AES256-SHA\n    - ECDHE-RSA-DES-CBC3-SHA\n    - ECDHE-ECDSA-DES-CBC3-SHA\n    - EDH-RSA-DES-CBC3-SHA\n    - AES128-GCM-SHA256\n    - AES256-GCM-SHA384\n    - AES128-SHA256\n    - AES256-SHA256\n    - AES128-SHA\n    - AES256-SHA\n    - AES\n    - DES-CBC3-SHA\n    - HIGH\n    - SEED\n    - \"!aNULL\"\n    - \"!eNULL\"\n    - \"!EXPORT\"\n    - \"!RC4\"\n    - \"!MD5\"\n    - \"!PSK\"\n    - \"!RSAPSK\"\n    - \"!aDH\"\n    - \"!aECDH\"\n    - \"!EDH-DSS-DES-CBC3-SHA\"\n    - \"!KRB5-DES-CBC3-SHA\"\n    - \"!SRP\"\n  securityProtocol:\n    minimumVersion: TLSv1.0\n    maximumVersion: TLSv1.2\n  dhParamSize: 1024",
+	"intermediate": "intermediate is a security profile based on:\n\nhttps://wiki.mozilla.org/Security/Server_Side_TLS#Intermediate_compatibility_.28default.29\n\nand looks like this (yaml):\n\n  ciphers:\n    - ECDHE-ECDSA-CHACHA20-POLY1305\n    - ECDHE-RSA-CHACHA20-POLY1305\n    - ECDHE-ECDSA-AES128-GCM-SHA256\n    - ECDHE-RSA-AES128-GCM-SHA256\n    - ECDHE-ECDSA-AES256-GCM-SHA384\n    - ECDHE-RSA-AES256-GCM-SHA384\n    - DHE-RSA-AES128-GCM-SHA256\n    - DHE-RSA-AES256-GCM-SHA384\n    - ECDHE-ECDSA-AES128-SHA256\n    - ECDHE-RSA-AES128-SHA256\n    - ECDHE-ECDSA-AES128-SHA\n    - ECDHE-RSA-AES256-SHA384\n    - ECDHE-RSA-AES128-SHA\n    - ECDHE-ECDSA-AES256-SHA384\n    - ECDHE-ECDSA-AES256-SHA\n    - ECDHE-RSA-AES256-SHA\n    - DHE-RSA-AES128-SHA256\n    - DHE-RSA-AES128-SHA\n    - DHE-RSA-AES256-SHA256\n    - DHE-RSA-AES256-SHA\n    - ECDHE-ECDSA-DES-CBC3-SHA\n    - ECDHE-RSA-DES-CBC3-SHA\n    - EDH-RSA-DES-CBC3-SHA\n    - AES128-GCM-SHA256\n    - AES256-GCM-SHA384\n    - AES128-SHA256\n    - AES256-SHA256\n    - AES128-SHA\n    - AES256-SHA\n    - DES-CBC3-SHA\n    - \"!DSS\"\n  securityProtocol:\n    minimumVersion: TLSv1.0\n    maximumVersion: TLSv1.2\n  dhParamSize: 2048",
+	"modern":       "modern is a security profile based on:\n\nhttps://wiki.mozilla.org/Security/Server_Side_TLS#Modern_compatibility\n\nand looks like this (yaml):\n\n  ciphers:\n    - ECDHE-ECDSA-AES256-GCM-SHA384\n    - ECDHE-RSA-AES256-GCM-SHA384\n    - ECDHE-ECDSA-CHACHA20-POLY1305\n    - ECDHE-RSA-CHACHA20-POLY1305\n    - ECDHE-ECDSA-AES128-GCM-SHA256\n    - ECDHE-RSA-AES128-GCM-SHA256\n    - ECDHE-ECDSA-AES256-SHA384\n    - ECDHE-RSA-AES256-SHA384\n    - ECDHE-ECDSA-AES128-SHA256\n    - ECDHE-RSA-AES128-SHA256\n  securityProtocol:\n    minimumVersion: TLSv1.2\n    maximumVersion: TLSv1.2\n  dhParamSize: 2048",
+	"custom":       "custom is a user-defined security profile. Be extremely careful using a custom profile as invalid configurations can be catastrophic. An example custom profile looks like this:\n\n  ciphers:\n    - ECDHE-ECDSA-CHACHA20-POLY1305\n    - ECDHE-RSA-CHACHA20-POLY1305\n    - ECDHE-RSA-AES128-GCM-SHA256\n    - ECDHE-ECDSA-AES128-GCM-SHA256\n  securityProtocol:\n    minimumVersion: TLSv1.1\n    maximumVersion: TLSv1.2\n  dhParamSize: 1024",
+}
+
+func (SecurityProfile) SwaggerDoc() map[string]string {
+	return map_SecurityProfile
+}
+
+var map_SecurityProfileSpec = map[string]string{
+	"":                 "SecurityProfileSpec is the desired behavior of a SecurityProfile.",
+	"ciphers":          "ciphers is used to specify the cipher algorithms that are negotiated during the SSL/TLS handshake. Preface a cipher with a \"!\" to disable a specific cipher from being negotiated. Note that disabled ciphers must be quoted due to the leading \"!\". For example, to use 3DES but not EDH-DSS-DES-CBC3-SHA (yaml):\n\n  ciphers:\n    - 3DES\n    - \"!EDH-DSS-DES-CBC3-SHA\"",
+	"securityProtocol": "securityProtocol is used to specify one or more encryption protocols that are negotiated during the SSL/TLS handshake. For example, to use TLS versions 1.1, 1.2 and 1.3 (yaml):\n\n  securityProtocol:\n    minimumVersion: TLSv1.1\n    maximumVersion: TLSv1.3",
+	"dhParamSize":      "dhParamSize sets the maximum size of the Diffie-Hellman parameters used for generating the ephemeral/temporary Diffie-Hellman key in case of DHE key exchange. The final size will try to match the size of the server's RSA (or DSA) key (e.g, a 2048 bits temporary DH key for a 2048 bits RSA key), but will not exceed this maximum value.\n\nAvailable DH Parameter sizes are:\n\n  \"2048\": A Diffie-Hellman parameter of 2048 bits.\n  \"1024\": A Diffie-Hellman parameter of 1024 bits.\n\nFor example, to use a Diffie-Hellman parameter of 2048 bits (yaml):\n\n  dhParamSize: 2048",
+}
+
+func (SecurityProfileSpec) SwaggerDoc() map[string]string {
+	return map_SecurityProfileSpec
+}
+
+var map_SecurityProtocol = map[string]string{
+	"":               "SecurityProtocol defines one or more security protocols used to secure network connections.",
+	"minimumVersion": "minimumVersion enforces use of the specified SecurityProtocolVersion or newer on SSL connections. minimumVersion must be lower than or equal to maximumVersion.\n\nIf unset and maximumVersion is set, minimumVersion will be set to maximumVersion. If minimumVersion and maximumVersion are unset, the minimum version is determined by the security profile type.\n\n  SecurityProfileType Modern:       SecurityProtocolTLS12Version\n  SecurityProfileType Intermediate: SecurityProtocolTLS10Version\n  SecurityProfileType Old:          SecurityProtocolTLS10Version\n\nSupported minimum versions are:\n\n  \"TLSv1.3\": Version 1.3 of the TLS security protocol used for securing network connections.\n  \"TLSv1.2\": Version 1.2 of the TLS security protocol used for securing network connections.\n  \"TLSv1.1\": Version 1.1 of the TLS security protocol used for securing network connections.\n  \"TLSv1.0\": Version 1.0 of the TLS security protocol used for securing network connections.",
+	"maximumVersion": "maximumVersion enforces use of the specified SecurityProtocolVersion or older on SSL connections. maximumVersion must be higher than or equal to minimumVersion.\n\nIf unset and minimumVersion is set, maximumVersion will be set to minimumVersion. If minimumVersion and maximumVersion are unset, the maximum version is determined by the security profile type.\n\n  SecurityProfileType Modern:       SecurityProtocolTLS12Version\n  SecurityProfileType Intermediate: SecurityProtocolTLS12Version\n  SecurityProfileType Old:          SecurityProtocolTLS12Version\n\nSupported maximum versions are the same as minimum versions.",
+}
+
+func (SecurityProtocol) SwaggerDoc() map[string]string {
+	return map_SecurityProtocol
+}
+
 // AUTO-GENERATED FUNCTIONS END HERE

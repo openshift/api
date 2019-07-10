@@ -34,6 +34,10 @@ type ProxySpec struct {
 	// Empty means unset and will not result in an env var.
 	// +optional
 	NoProxy string `json:"noProxy,omitempty"`
+
+	// readinessEndpoints is a list of endpoints used to verify readiness of the proxy.
+	// +optional
+	ReadinessEndpoints []string `json:"readinessEndpoints,omitempty"`
 }
 
 // ProxyStatus shows current known state of the cluster proxy.

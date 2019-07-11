@@ -12,6 +12,7 @@ import (
 type APIServer struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
+	// +kubebuilder:validation:Required
 	// +required
 	Spec APIServerSpec `json:"spec"`
 	// +optional

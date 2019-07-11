@@ -82,6 +82,8 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 			"ExperimentalCriticalPodAnnotation", // sig-pod, sjenning
 			"RotateKubeletServerCertificate",    // sig-pod, sjenning
 			"SupportPodPidsLimit",               // sig-pod, sjenning
+			"ExpandCSIVolumes",                  // sig-storage, jsafrane
+			"VolumeSnapshotDataSource",          // sig-storage, jsafrane
 		},
 		Disabled: []string{
 			"LocalStorageCapacityIsolation", // sig-pod, sjenning

@@ -622,6 +622,15 @@ func (DNSZone) SwaggerDoc() map[string]string {
 	return map_DNSZone
 }
 
+var map_CustomFeatureGates = map[string]string{
+	"enabled":  "enabled is a list of all feature gates that you want to force on",
+	"disabled": "disabled is a list of all feature gates that you want to force off",
+}
+
+func (CustomFeatureGates) SwaggerDoc() map[string]string {
+	return map_CustomFeatureGates
+}
+
 var map_FeatureGate = map[string]string{
 	"":         "Feature holds cluster-wide information about feature gates.  The canonical name is `cluster`",
 	"metadata": "Standard object's metadata.",
@@ -641,12 +650,13 @@ func (FeatureGateList) SwaggerDoc() map[string]string {
 	return map_FeatureGateList
 }
 
-var map_FeatureGateSpec = map[string]string{
-	"featureSet": "featureSet changes the list of features in the cluster.  The default is empty.  Be very careful adjusting this setting. Turning on or off features may cause irreversible changes in your cluster which cannot be undone.",
+var map_FeatureGateSelection = map[string]string{
+	"featureSet":      "featureSet changes the list of features in the cluster.  The default is empty.  Be very careful adjusting this setting. Turning on or off features may cause irreversible changes in your cluster which cannot be undone.",
+	"customNoUpgrade": "customNoUpgrade allows the enabling or disabling of any feature. Turning this feature set on IS NOT SUPPORTED, CANNOT BE UNDONE, and PREVENTS UPGRADES. Because of its nature, this setting cannot be validated.  If you have any typos or accidentally apply invalid combinations your cluster may fail in an unrecoverable way.  featureSet must equal \"CustomNoUpgrade\" must be set to use this field.",
 }
 
-func (FeatureGateSpec) SwaggerDoc() map[string]string {
-	return map_FeatureGateSpec
+func (FeatureGateSelection) SwaggerDoc() map[string]string {
+	return map_FeatureGateSelection
 }
 
 var map_Image = map[string]string{

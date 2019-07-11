@@ -30,12 +30,40 @@ var (
 	// TechPreviewNoUpgrade turns on tech preview features that are not part of the normal supported platform. Turning
 	// this feature set on CANNOT BE UNDONE and PREVENTS UPGRADES.
 	TechPreviewNoUpgrade FeatureSet = "TechPreviewNoUpgrade"
+
+	// CustomNoUpgrade allows the enabling or disabling of any feature. Turning this feature set on IS NOT SUPPORTED, CANNOT BE UNDONE, and PREVENTS UPGRADES.
+	// Because of its nature, this setting cannot be validated.  If you have any typos or accidentally apply invalid combinations
+	// your cluster may fail in an unrecoverable way.
+	CustomNoUpgrade FeatureSet = "CustomNoUpgrade"
 )
 
 type FeatureGateSpec struct {
+	FeatureGateSelection `json:",inline"`
+}
+
+// +union
+type FeatureGateSelection struct {
 	// featureSet changes the list of features in the cluster.  The default is empty.  Be very careful adjusting this setting.
 	// Turning on or off features may cause irreversible changes in your cluster which cannot be undone.
+	// +unionDiscriminator
+	// +optional
 	FeatureSet FeatureSet `json:"featureSet,omitempty"`
+
+	// customNoUpgrade allows the enabling or disabling of any feature. Turning this feature set on IS NOT SUPPORTED, CANNOT BE UNDONE, and PREVENTS UPGRADES.
+	// Because of its nature, this setting cannot be validated.  If you have any typos or accidentally apply invalid combinations
+	// your cluster may fail in an unrecoverable way.  featureSet must equal "CustomNoUpgrade" must be set to use this field.
+	// +optional
+	// +nullable
+	CustomNoUpgrade *CustomFeatureGates `json:"customNoUpgrade,omitempty"`
+}
+
+type CustomFeatureGates struct {
+	// enabled is a list of all feature gates that you want to force on
+	// +optional
+	Enabled []string `json:"enabled,omitempty"`
+	// disabled is a list of all feature gates that you want to force off
+	// +optional
+	Disabled []string `json:"disabled,omitempty"`
 }
 
 type FeatureGateStatus struct {

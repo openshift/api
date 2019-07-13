@@ -1190,10 +1190,11 @@ func (ProxyList) SwaggerDoc() map[string]string {
 }
 
 var map_ProxySpec = map[string]string{
-	"":           "ProxySpec contains cluster proxy creation configuration.",
-	"httpProxy":  "httpProxy is the URL of the proxy for HTTP requests.  Empty means unset and will not result in an env var.",
-	"httpsProxy": "httpsProxy is the URL of the proxy for HTTPS requests.  Empty means unset and will not result in an env var.",
-	"noProxy":    "noProxy is a comma-separated list of hostnames and/or CIDRs for which the proxy should not be used. Empty means unset and will not result in an env var.",
+	"":                   "ProxySpec contains cluster proxy creation configuration.",
+	"httpProxy":          "httpProxy is the URL of the proxy for HTTP requests.  Empty means unset and will not result in an env var.",
+	"httpsProxy":         "httpsProxy is the URL of the proxy for HTTPS requests.  Empty means unset and will not result in an env var.",
+	"noProxy":            "noProxy is a comma-separated list of hostnames and/or CIDRs for which the proxy should not be used. Empty means unset and will not result in an env var.",
+	"readinessEndpoints": "readinessEndpoints is a list of endpoints used to verify readiness of the proxy.",
 }
 
 func (ProxySpec) SwaggerDoc() map[string]string {

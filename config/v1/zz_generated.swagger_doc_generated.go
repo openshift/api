@@ -244,7 +244,7 @@ func (StringSourceSpec) SwaggerDoc() map[string]string {
 }
 
 var map_APIServer = map[string]string{
-	"": "APIServer holds cluster-wide information about api-servers.  The canonical name is `cluster`",
+	"": "APIServer holds configuration (like serving certificates, client CA and CORS domains) shared by all API servers in the system, among them especially kube-apiserver and openshift-apiserver. The canonical name of an instance is 'cluster'.",
 }
 
 func (APIServer) SwaggerDoc() map[string]string {

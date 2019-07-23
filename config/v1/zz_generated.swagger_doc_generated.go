@@ -280,7 +280,7 @@ func (APIServerSpec) SwaggerDoc() map[string]string {
 }
 
 var map_Authentication = map[string]string{
-	"":         "Authentication holds cluster-wide information about Authentication.  The canonical name is `cluster`",
+	"":         "Authentication specifies cluster-wide settings for authentication (like OAuth and webhook token authenticators). The canonical name of an instance is `cluster`.",
 	"metadata": "Standard object's metadata.",
 	"spec":     "spec holds user settable values for configuration",
 	"status":   "status holds observed values from the cluster. They may not be overridden.",

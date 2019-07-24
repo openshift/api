@@ -682,9 +682,9 @@ func (in *IngressControllerSpec) DeepCopyInto(out *IngressControllerSpec) {
 		*out = new(NodePlacement)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.SecurityProfile != nil {
-		in, out := &in.SecurityProfile, &out.SecurityProfile
-		*out = new(configv1.SecurityProfileSpec)
+	if in.TLSSecurityProfile != nil {
+		in, out := &in.TLSSecurityProfile, &out.TLSSecurityProfile
+		*out = new(configv1.TLSSecurityProfile)
 		(*in).DeepCopyInto(*out)
 	}
 	return
@@ -708,9 +708,9 @@ func (in *IngressControllerStatus) DeepCopyInto(out *IngressControllerStatus) {
 		*out = new(EndpointPublishingStrategy)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.SecurityProfileSpec != nil {
-		in, out := &in.SecurityProfileSpec, &out.SecurityProfileSpec
-		*out = new(configv1.SecurityProfileSpec)
+	if in.TLSProfileSpec != nil {
+		in, out := &in.TLSProfileSpec, &out.TLSProfileSpec
+		*out = new(configv1.TLSProfileSpec)
 		(*in).DeepCopyInto(*out)
 	}
 	if in.Conditions != nil {

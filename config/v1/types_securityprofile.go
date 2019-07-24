@@ -1,19 +1,19 @@
 package v1
 
-// SecurityProfile defines the schema for a security profile. This object is used
-// by operators to apply network security settings to operands.
+// TLSSecurityProfile defines the schema for a TLS security profile. This object
+// is used by operators to apply TLS security settings to operands.
 // +union
-type SecurityProfile struct {
+type TLSSecurityProfile struct {
 	// type is one of Old, Intermediate, Modern or Custom. Custom provides
-	// the ability to specify individual security profile parameters. Old,
-	// Intermediate and Modern are security profiles based on:
+	// the ability to specify individual TLS security profile parameters.
+	// Old, Intermediate and Modern are TLS security profiles based on:
 	//
 	// https://wiki.mozilla.org/Security/Server_Side_TLS#Recommended_configurations
 	//
 	// +unionDiscriminator
 	// +optional
-	Type SecurityProfileType `json:"type"`
-	// old is a security profile based on:
+	Type TLSProfileType `json:"type"`
+	// old is a TLS security profile based on:
 	//
 	// https://wiki.mozilla.org/Security/Server_Side_TLS#Old_backward_compatibility
 	//
@@ -68,15 +68,15 @@ type SecurityProfile struct {
 	//     - "!EDH-DSS-DES-CBC3-SHA"
 	//     - "!KRB5-DES-CBC3-SHA"
 	//     - "!SRP"
-	//   securityProtocol:
+	//   tlsVersion:
 	//     minimumVersion: TLSv1.0
 	//     maximumVersion: TLSv1.2
 	//   dhParamSize: 1024
 	//
 	// +optional
 	// +nullable
-	Old *OldSecurityProfile `json:"old,omitempty"`
-	// intermediate is a security profile based on:
+	Old *OldTLSProfile `json:"old,omitempty"`
+	// intermediate is a TLS security profile based on:
 	//
 	// https://wiki.mozilla.org/Security/Server_Side_TLS#Intermediate_compatibility_.28default.29
 	//
@@ -114,15 +114,15 @@ type SecurityProfile struct {
 	//     - AES256-SHA
 	//     - DES-CBC3-SHA
 	//     - "!DSS"
-	//   securityProtocol:
+	//   tlsVersion:
 	//     minimumVersion: TLSv1.0
 	//     maximumVersion: TLSv1.2
 	//   dhParamSize: 2048
 	//
 	// +optional
 	// +nullable
-	Intermediate *IntermediateSecurityProfile `json:"intermediate,omitempty"`
-	// modern is a security profile based on:
+	Intermediate *IntermediateTLSProfile `json:"intermediate,omitempty"`
+	// modern is a TLS security profile based on:
 	//
 	// https://wiki.mozilla.org/Security/Server_Side_TLS#Modern_compatibility
 	//
@@ -139,15 +139,15 @@ type SecurityProfile struct {
 	//     - ECDHE-RSA-AES256-SHA384
 	//     - ECDHE-ECDSA-AES128-SHA256
 	//     - ECDHE-RSA-AES128-SHA256
-	//   securityProtocol:
+	//   tlsVersion:
 	//     minimumVersion: TLSv1.2
 	//     maximumVersion: TLSv1.2
 	//   dhParamSize: 2048
 	//
 	// +optional
 	// +nullable
-	Modern *ModernSecurityProfile `json:"modern,omitempty"`
-	// custom is a user-defined security profile. Be extremely careful using a custom
+	Modern *ModernTLSProfile `json:"modern,omitempty"`
+	// custom is a user-defined TLS security profile. Be extremely careful using a custom
 	// profile as invalid configurations can be catastrophic. An example custom profile
 	// looks like this:
 	//
@@ -156,56 +156,56 @@ type SecurityProfile struct {
 	//     - ECDHE-RSA-CHACHA20-POLY1305
 	//     - ECDHE-RSA-AES128-GCM-SHA256
 	//     - ECDHE-ECDSA-AES128-GCM-SHA256
-	//   securityProtocol:
+	//   tlsVersion:
 	//     minimumVersion: TLSv1.1
 	//     maximumVersion: TLSv1.2
 	//   dhParamSize: 1024
 	//
 	// +optional
 	// +nullable
-	Custom *CustomSecurityProfile `json:"custom,omitempty"`
+	Custom *CustomTLSProfile `json:"custom,omitempty"`
 }
 
-// OldSecurityProfile is a security profile based on:
+// OldTLSProfile is a TLS security profile based on:
 // https://wiki.mozilla.org/Security/Server_Side_TLS#Old_backward_compatibility
-type OldSecurityProfile struct{}
+type OldTLSProfile struct{}
 
-// IntermediateSecurityProfile is a security profile based on:
+// IntermediateTLSProfile is a TLS security profile based on:
 // https://wiki.mozilla.org/Security/Server_Side_TLS#Intermediate_compatibility_.28default.29
-type IntermediateSecurityProfile struct{}
+type IntermediateTLSProfile struct{}
 
-// ModernSecurityProfile is a security profile based on:
+// ModernTLSProfile is a TLS security profile based on:
 // https://wiki.mozilla.org/Security/Server_Side_TLS#Modern_compatibility
-type ModernSecurityProfile struct{}
+type ModernTLSProfile struct{}
 
-// CustomSecurityProfile is a user-defined security profile. Be extremely careful using
-// a custom profile as invalid configurations can be catastrophic.
-type CustomSecurityProfile struct {
-	SecurityProfileSpec `json:",inline"`
+// CustomTLSProfile is a user-defined TLS security profile. Be extremely careful
+// using a custom TLS profile as invalid configurations can be catastrophic.
+type CustomTLSProfile struct {
+	TLSProfileSpec `json:",inline"`
 }
 
-// SecurityProfileType defines a security profile type.
-type SecurityProfileType string
+// TLSProfileType defines a TLS security profile type.
+type TLSProfileType string
 
 const (
-	// Old is a security profile based on:
+	// Old is a TLS security profile based on:
 	// https://wiki.mozilla.org/Security/Server_Side_TLS#Old_backward_compatibility
-	SecurityProfileOldType SecurityProfileType = "Old"
-	// Intermediate is a security profile based on:
+	TLSProfileOldType TLSProfileType = "Old"
+	// Intermediate is a TLS security profile based on:
 	// https://wiki.mozilla.org/Security/Server_Side_TLS#Intermediate_compatibility_.28default.29
-	SecurityProfileIntermediateType SecurityProfileType = "Intermediate"
-	// Modern is a security profile based on:
+	TLSProfileIntermediateType TLSProfileType = "Intermediate"
+	// Modern is a TLS security profile based on:
 	// https://wiki.mozilla.org/Security/Server_Side_TLS#Modern_compatibility
-	SecurityProfileModernType SecurityProfileType = "Modern"
-	// Custom is a security profile that allows for user-defined parameters.
-	SecurityProfileCustomType SecurityProfileType = "Custom"
+	TLSProfileModernType TLSProfileType = "Modern"
+	// Custom is a TLS security profile that allows for user-defined parameters.
+	TLSProfileCustomType TLSProfileType = "Custom"
 )
 
-// SecurityProfileSpec is the desired behavior of a SecurityProfile.
-type SecurityProfileSpec struct {
+// TLSProfileSpec is the desired behavior of a TLSSecurityProfile.
+type TLSProfileSpec struct {
 	// ciphers is used to specify the cipher algorithms that are negotiated
-	// during the SSL/TLS handshake. Preface a cipher with a "!" to disable
-	// a specific cipher from being negotiated. Note that disabled ciphers must
+	// during the TLS handshake. Preface a cipher with a "!" to disable a
+	// specific cipher from being negotiated. Note that disabled ciphers must
 	// be quoted due to the leading "!". For example, to use 3DES but not
 	// EDH-DSS-DES-CBC3-SHA (yaml):
 	//
@@ -214,15 +214,15 @@ type SecurityProfileSpec struct {
 	//     - "!EDH-DSS-DES-CBC3-SHA"
 	//
 	Ciphers []string `json:"ciphers"`
-	// securityProtocol is used to specify one or more encryption protocols
-	// that are negotiated during the SSL/TLS handshake. For example, to use
-	// TLS versions 1.1, 1.2 and 1.3 (yaml):
+	// tlsVersion is used to specify one or more versions of the TLS protocol
+	// that is negotiated during the TLS handshake. For example, to use TLS
+	// versions 1.1, 1.2 and 1.3 (yaml):
 	//
-	//   securityProtocol:
+	//   tlsVersion:
 	//     minimumVersion: TLSv1.1
 	//     maximumVersion: TLSv1.3
 	//
-	SecurityProtocol SecurityProtocol `json:"securityProtocol"`
+	TLSVersion TLSVersion `json:"tlsVersion"`
 	// dhParamSize sets the maximum size of the Diffie-Hellman parameters used for generating
 	// the ephemeral/temporary Diffie-Hellman key in case of DHE key exchange. The final size
 	// will try to match the size of the server's RSA (or DSA) key (e.g, a 2048 bits temporary
@@ -240,56 +240,64 @@ type SecurityProfileSpec struct {
 	DHParamSize DHParamSize `json:"dhParamSize"`
 }
 
-// SecurityProtocol defines one or more security protocols used to secure network connections.
-type SecurityProtocol struct {
-	// minimumVersion enforces use of the specified SecurityProtocolVersion or newer
-	// on SSL connections. minimumVersion must be lower than or equal to maximumVersion.
+// TLSVersion defines one or more versions of the TLS protocol that are negotiated
+// during the TLS handshake.
+type TLSVersion struct {
+	// minimumVersion enforces use of the specified TLSProtocolVersion or newer
+	// that are negotiated during the TLS handshake. minimumVersion must be lower
+	// than or equal to maximumVersion.
 	//
 	// If unset and maximumVersion is set, minimumVersion will be set
 	// to maximumVersion. If minimumVersion and maximumVersion are unset,
-	// the minimum version is determined by the security profile type.
+	// the minimum version is determined by the TLS security profile type.
 	//
-	//   SecurityProfileType Modern:       SecurityProtocolTLS12Version
-	//   SecurityProfileType Intermediate: SecurityProtocolTLS10Version
-	//   SecurityProfileType Old:          SecurityProtocolTLS10Version
+	//   TLSProfileType Modern:       VersionTLS12
+	//   TLSProfileType Intermediate: VersionTLS10
+	//   TLSProfileType Old:          VersionTLS10
 	//
 	// Supported minimum versions are:
 	//
-	//   "TLSv1.3": Version 1.3 of the TLS security protocol used for securing network connections.
-	//   "TLSv1.2": Version 1.2 of the TLS security protocol used for securing network connections.
-	//   "TLSv1.1": Version 1.1 of the TLS security protocol used for securing network connections.
-	//   "TLSv1.0": Version 1.0 of the TLS security protocol used for securing network connections.
+	//   "TLSv1.3": Version 1.3 of the TLS security protocol.
+	//   "TLSv1.2": Version 1.2 of the TLS security protocol.
+	//   "TLSv1.1": Version 1.1 of the TLS security protocol.
+	//   "TLSv1.0": Version 1.0 of the TLS security protocol.
 	//
-	MinimumVersion SecurityProtocolVersion `json:"minimumVersion"`
-	// maximumVersion enforces use of the specified SecurityProtocolVersion or older
-	// on SSL connections. maximumVersion must be higher than or equal to minimumVersion.
+	MinimumVersion TLSProtocolVersion `json:"minimumVersion"`
+	// maximumVersion enforces use of the specified TLSProtocolVersion or older
+	// that are negotiated during the TLS handshake. maximumVersion must be higher
+	// than or equal to minimumVersion.
 	//
 	// If unset and minimumVersion is set, maximumVersion will be set
 	// to minimumVersion. If minimumVersion and maximumVersion are unset,
-	// the maximum version is determined by the security profile type.
+	// the maximum version is determined by the TLS security profile type.
 	//
-	//   SecurityProfileType Modern:       SecurityProtocolTLS12Version
-	//   SecurityProfileType Intermediate: SecurityProtocolTLS12Version
-	//   SecurityProfileType Old:          SecurityProtocolTLS12Version
+	//   TLSProfileType Modern:       VersionTLS12
+	//   TLSProfileType Intermediate: VersionTLS12
+	//   TLSProfileType Old:          VersionTLS12
 	//
 	// Supported maximum versions are the same as minimum versions.
 	//
-	MaximumVersion SecurityProtocolVersion `json:"maximumVersion"`
+	MaximumVersion TLSProtocolVersion `json:"maximumVersion"`
 }
 
-// SecurityProtocolVersion is a way to specify the TLS security protocol version used to
-// secure network connections.
-type SecurityProtocolVersion string
+// TLSProtocolVersion is a way to specify the protocol version used for TLS connections.
+// Protocol versions are based on the following most common TLS configurations:
+//
+//   https://ssl-config.mozilla.org/
+//
+// Note that SSLv3.0 is not a supported protocol version due to well known
+// vulnerabilities such as POODLE: https://en.wikipedia.org/wiki/POODLE
+type TLSProtocolVersion string
 
 const (
-	// TLSv1.0 is version 1.0 of the TLS security protocol used for securing network connections.
-	SecurityProtocolTLS10Version SecurityProtocolVersion = "TLSv1.0"
-	// TLSv1.1 is version 1.1 of the TLS security protocol used for securing network connections.
-	SecurityProtocolTLS11Version SecurityProtocolVersion = "TLSv1.1"
-	// TLSv1.2 is version 1.2 of the TLS security protocol used for securing network connections.
-	SecurityProtocolTLS12Version SecurityProtocolVersion = "TLSv1.2"
-	// TLSv1.3 is version 1.3 of the TLS security protocol used for securing network connections.
-	SecurityProtocolTLS13Version SecurityProtocolVersion = "TLSv1.3"
+	// TLSv1.0 is version 1.0 of the TLS security protocol.
+	VersionTLS10 TLSProtocolVersion = "TLSv1.0"
+	// TLSv1.1 is version 1.1 of the TLS security protocol.
+	VersionTLS11 TLSProtocolVersion = "TLSv1.1"
+	// TLSv1.2 is version 1.2 of the TLS security protocol.
+	VersionTLS12 TLSProtocolVersion = "TLSv1.2"
+	// TLSv1.3 is version 1.3 of the TLS security protocol.
+	VersionTLS13 TLSProtocolVersion = "TLSv1.3"
 )
 
 // DHParamSize sets the maximum size of the Diffie-Hellman parameters used for

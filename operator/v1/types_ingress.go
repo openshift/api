@@ -128,11 +128,12 @@ type IngressControllerSpec struct {
 	// +optional
 	NodePlacement *NodePlacement `json:"nodePlacement,omitempty"`
 
-	// securityProfile specifies settings for securing an IngressController.
+	// tlsSecurityProfile specifies settings for securing IngressController
+	// TLS connections.
 	//
-	// If unset, the "Intermediate" security profile is used.
+	// If unset, the "Intermediate" TLS security profile is used.
 	// +optional
-	SecurityProfile *configv1.SecurityProfileSpec `json:"securityProfile,omitempty"`
+	TLSSecurityProfile *configv1.TLSSecurityProfile `json:"tlsSecurityProfile,omitempty"`
 }
 
 // NodePlacement describes node scheduling configuration for an ingress
@@ -307,8 +308,8 @@ type IngressControllerStatus struct {
 	// endpointPublishingStrategy is the actual strategy in use.
 	EndpointPublishingStrategy *EndpointPublishingStrategy `json:"endpointPublishingStrategy,omitempty"`
 
-	// securityProfileSpec is the security profile settings being used.
-	SecurityProfileSpec *configv1.SecurityProfileSpec `json:"securityProfileSpec,omitempty"`
+	// tlsProfileSpec is the TLS profile settings in use.
+	TLSProfileSpec *configv1.TLSProfileSpec `json:"tlsProfileSpec,omitempty"`
 
 	// conditions is a list of conditions and their status.
 	//

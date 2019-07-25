@@ -13,10 +13,15 @@ type Proxy struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 	// Spec holds user-settable values for the proxy configuration
+	// +kubebuilder:validation:Required
 	// +required
 	Spec ProxySpec `json:"spec"`
+	// status holds observed values from the cluster. They may not be overridden.
+	// +optional
+	Status ProxyStatus `json:"status"`
 }
 
+// ProxySpec contains cluster proxy creation configuration.
 type ProxySpec struct {
 	// httpProxy is the URL of the proxy for HTTP requests.  Empty means unset and will not result in an env var.
 	// +optional
@@ -26,7 +31,50 @@ type ProxySpec struct {
 	// +optional
 	HTTPSProxy string `json:"httpsProxy,omitempty"`
 
-	// noProxy is the list of domains for which the proxy should not be used.  Empty means unset and will not result in an env var.
+	// noProxy is a comma-separated list of hostnames and/or CIDRs for which the proxy should not be used.
+	// Empty means unset and will not result in an env var.
+	// +optional
+	NoProxy string `json:"noProxy,omitempty"`
+
+	// readinessEndpoints is a list of endpoints used to verify readiness of the proxy.
+	// +optional
+	ReadinessEndpoints []string `json:"readinessEndpoints,omitempty"`
+
+	// trustedCA is a reference to a ConfigMap containing a CA certificate bundle used
+	// for client egress HTTPS connections. The certificate bundle must be from the CA
+	// that signed the proxy's certificate and be signed for everything. trustedCA should
+	// only be consumed by a proxy validator. The validator is responsible for reading
+	// ConfigMapNameReference, validating the certificate and copying "ca-bundle.crt"
+	// from data to a ConfigMap in the namespace of an operator configured for proxy.
+	// The namespace for this ConfigMap is "openshift-config-managed". Here is an example
+	// ConfigMap (in yaml):
+	//
+	// apiVersion: v1
+	// kind: ConfigMap
+	// metadata:
+	//  name: proxy-ca
+	//  namespace: openshift-config-managed
+	//  data:
+	//    ca-bundle.crt: |
+	//      -----BEGIN CERTIFICATE-----
+	//      Custom CA certificate bundle.
+	//      -----END CERTIFICATE-----
+	//
+	// +optional
+	TrustedCA ConfigMapNameReference `json:"trustedCA,omitempty"`
+}
+
+// ProxyStatus shows current known state of the cluster proxy.
+type ProxyStatus struct {
+	// httpProxy is the URL of the proxy for HTTP requests.
+	// +optional
+	HTTPProxy string `json:"httpProxy,omitempty"`
+
+	// httpsProxy is the URL of the proxy for HTTPS requests.
+	// +optional
+	HTTPSProxy string `json:"httpsProxy,omitempty"`
+
+	// noProxy is a comma-separated list of hostnames and/or CIDRs for which the proxy should not be used.
 	// +optional
 	NoProxy string `json:"noProxy,omitempty"`
 }

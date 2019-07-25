@@ -8,10 +8,13 @@ import (
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// APIServer holds cluster-wide information about api-servers.  The canonical name is `cluster`
+// APIServer holds configuration (like serving certificates, client CA and CORS domains)
+// shared by all API servers in the system, among them especially kube-apiserver
+// and openshift-apiserver. The canonical name of an instance is 'cluster'.
 type APIServer struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
+	// +kubebuilder:validation:Required
 	// +required
 	Spec APIServerSpec `json:"spec"`
 	// +optional
@@ -30,6 +33,12 @@ type APIServerSpec struct {
 	// - ConfigMap.Data["ca-bundle.crt"] - CA bundle.
 	// +optional
 	ClientCA ConfigMapNameReference `json:"clientCA"`
+	// additionalCORSAllowedOrigins lists additional, user-defined regular expressions describing hosts for which the
+	// API server allows access using the CORS headers. This may be needed to access the API and the integrated OAuth
+	// server from JavaScript applications.
+	// The values are regular expressions that correspond to the Golang regular expression language.
+	// +optional
+	AdditionalCORSAllowedOrigins []string `json:"additionalCORSAllowedOrigins,omitempty"`
 }
 
 type APIServerServingCerts struct {

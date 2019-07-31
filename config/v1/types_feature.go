@@ -27,6 +27,11 @@ var (
 	// Default feature set that allows upgrades.
 	Default FeatureSet = ""
 
+	// TechPreviewWithUpgrade turns on tech preview features that are not part of the normal supported platform. Turning
+	// this feature set may introduce instability.  It may be undone, but some system instability may remain.  It does not
+	// prevent upgrades.
+	TechPreviewWithUpgrade FeatureSet = "TechPreviewWithUpgrade"
+
 	// TechPreviewNoUpgrade turns on tech preview features that are not part of the normal supported platform. Turning
 	// this feature set on CANNOT BE UNDONE and PREVENTS UPGRADES.
 	TechPreviewNoUpgrade FeatureSet = "TechPreviewNoUpgrade"
@@ -96,6 +101,16 @@ type FeatureGateEnabledDisabled struct {
 // If you put an item in either of these lists, put your area and name on it so we can find owners.
 var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 	Default: {
+		Enabled: []string{
+			"ExperimentalCriticalPodAnnotation", // sig-pod, sjenning
+			"RotateKubeletServerCertificate",    // sig-pod, sjenning
+			"SupportPodPidsLimit",               // sig-pod, sjenning
+		},
+		Disabled: []string{
+			"LocalStorageCapacityIsolation", // sig-pod, sjenning
+		},
+	},
+	TechPreviewWithUpgrade: {
 		Enabled: []string{
 			"ExperimentalCriticalPodAnnotation", // sig-pod, sjenning
 			"RotateKubeletServerCertificate",    // sig-pod, sjenning

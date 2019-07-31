@@ -1,6 +1,11 @@
 package v1
 
-import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+import (
+	"fmt"
+
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/util/uuid"
+)
 
 // +genclient
 // +genclient:nonNamespaced
@@ -100,6 +105,10 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 			"ExperimentalCriticalPodAnnotation", // sig-pod, sjenning
 			"RotateKubeletServerCertificate",    // sig-pod, sjenning
 			"SupportPodPidsLimit",               // sig-pod, sjenning
+
+			// This introduces an essentially random value for a featuregate that will cause most processes to fail if they.
+			// This will force operators to correctly whitelist for their operands.
+			fmt.Sprintf("%v", uuid.NewUUID()),
 		},
 		Disabled: []string{
 			"LocalStorageCapacityIsolation", // sig-pod, sjenning

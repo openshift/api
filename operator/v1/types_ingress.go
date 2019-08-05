@@ -223,7 +223,8 @@ type EndpointPublishingStrategy struct {
 	// zones defined by dns.config.openshift.io/cluster .spec.publicZone and
 	// .spec.privateZone.
 	//
-	// Wildcard DNS management is currently supported only on the AWS platform.
+	// Wildcard DNS management is currently supported only on the AWS, Azure,
+	// and GCP platforms.
 	//
 	// * HostNetwork
 	//

@@ -1146,6 +1146,62 @@ func (TokenConfig) SwaggerDoc() map[string]string {
 	return map_TokenConfig
 }
 
+var map_HubSource = map[string]string{
+	"":         "HubSource is used to specify the OperatorSource and its configuration",
+	"name":     "name is the name of one of the default OperatorSources",
+	"disabled": "disabled is used to disable a default OperatorSource on cluster",
+}
+
+func (HubSource) SwaggerDoc() map[string]string {
+	return map_HubSource
+}
+
+var map_HubSourceStatus = map[string]string{
+	"":              "HubSourceStatus is used to reflect the current state of applying the configuration to a default source",
+	"name":          "name is the name of one of the default OperatorSources",
+	"configuration": "configuration is the state of the default OperatorSources configuration",
+	"status":        "status indicates success or failure in applying the configuration",
+	"message":       "message provides more information regarding failures",
+}
+
+func (HubSourceStatus) SwaggerDoc() map[string]string {
+	return map_HubSourceStatus
+}
+
+var map_OperatorHub = map[string]string{
+	"": "OperatorHub is the Schema for the operatorhubs API",
+}
+
+func (OperatorHub) SwaggerDoc() map[string]string {
+	return map_OperatorHub
+}
+
+var map_OperatorHubList = map[string]string{
+	"": "OperatorHubList contains a list of OperatorHub",
+}
+
+func (OperatorHubList) SwaggerDoc() map[string]string {
+	return map_OperatorHubList
+}
+
+var map_OperatorHubSpec = map[string]string{
+	"":           "OperatorHubSpec defines the desired state of OperatorHub",
+	"hubSources": "hubSources is the list of default OperatorSources and their configuration",
+}
+
+func (OperatorHubSpec) SwaggerDoc() map[string]string {
+	return map_OperatorHubSpec
+}
+
+var map_OperatorHubStatus = map[string]string{
+	"":                 "OperatorHubStatus defines the observed state of OperatorHub",
+	"hubSourcesStatus": "hubSourcesStatus encapsulates the result applying the configuration",
+}
+
+func (OperatorHubStatus) SwaggerDoc() map[string]string {
+	return map_OperatorHubStatus
+}
+
 var map_Project = map[string]string{
 	"":         "Project holds cluster-wide information about Project.  The canonical name is `cluster`",
 	"metadata": "Standard object's metadata.",

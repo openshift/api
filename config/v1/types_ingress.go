@@ -6,8 +6,8 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// Ingress holds cluster-wide information about Ingress.  The canonical name is `cluster`
-// TODO this object is an example of a possible grouping and is subject to change or removal
+// Ingress holds cluster-wide information about ingress, including the default ingress domain
+// used for routes. The canonical name is `cluster`.
 type Ingress struct {
 	metav1.TypeMeta `json:",inline"`
 	// Standard object's metadata.
@@ -26,6 +26,8 @@ type IngressSpec struct {
 	// domain is used to generate a default host name for a route when the
 	// route's host name is empty.  The generated host name will follow this
 	// pattern: "<route-name>.<route-namespace>.<domain>".
+	//
+	// Once set, domain cannot be updated.
 	Domain string `json:"domain"`
 }
 

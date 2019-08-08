@@ -1283,7 +1283,7 @@ func (ProxyStatus) SwaggerDoc() map[string]string {
 }
 
 var map_Scheduler = map[string]string{
-	"":         "Scheduler holds cluster-wide information about Scheduler.  The canonical name is `cluster`",
+	"":         "Scheduler holds cluster-wide config information to run the Kubernetes Scheduler and influence its placement decisions. The canonical name for this config is `cluster`.",
 	"metadata": "Standard object's metadata.",
 	"spec":     "spec holds user settable values for configuration",
 	"status":   "status holds observed values from the cluster. They may not be overridden.",

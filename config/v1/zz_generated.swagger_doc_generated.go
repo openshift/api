@@ -1147,9 +1147,9 @@ func (TokenConfig) SwaggerDoc() map[string]string {
 }
 
 var map_HubSource = map[string]string{
-	"":         "HubSource is used to specify the OperatorSource and its configuration",
-	"name":     "name is the name of one of the default OperatorSources",
-	"disabled": "disabled is used to disable a default OperatorSource on cluster",
+	"":         "HubSource is used to specify the hub source and its configuration",
+	"name":     "name is the name of one of the default hub sources",
+	"disabled": "disabled is used to disable a default hub source on cluster",
 }
 
 func (HubSource) SwaggerDoc() map[string]string {
@@ -1157,11 +1157,9 @@ func (HubSource) SwaggerDoc() map[string]string {
 }
 
 var map_HubSourceStatus = map[string]string{
-	"":              "HubSourceStatus is used to reflect the current state of applying the configuration to a default source",
-	"name":          "name is the name of one of the default OperatorSources",
-	"configuration": "configuration is the state of the default OperatorSources configuration",
-	"status":        "status indicates success or failure in applying the configuration",
-	"message":       "message provides more information regarding failures",
+	"":        "HubSourceStatus is used to reflect the current state of applying the configuration to a default source",
+	"status":  "status indicates success or failure in applying the configuration",
+	"message": "message provides more information regarding failures",
 }
 
 func (HubSourceStatus) SwaggerDoc() map[string]string {
@@ -1169,7 +1167,7 @@ func (HubSourceStatus) SwaggerDoc() map[string]string {
 }
 
 var map_OperatorHub = map[string]string{
-	"": "OperatorHub is the Schema for the operatorhubs API",
+	"": "OperatorHub is the Schema for the operatorhubs API. It can be used to change the state of the default hub sources for OperatorHub on the cluster from enabled to disabled and vice versa.",
 }
 
 func (OperatorHub) SwaggerDoc() map[string]string {
@@ -1185,8 +1183,8 @@ func (OperatorHubList) SwaggerDoc() map[string]string {
 }
 
 var map_OperatorHubSpec = map[string]string{
-	"":           "OperatorHubSpec defines the desired state of OperatorHub",
-	"hubSources": "hubSources is the list of default OperatorSources and their configuration",
+	"":        "OperatorHubSpec defines the desired state of OperatorHub",
+	"sources": "sources is the list of default hub sources and their configuration. If the list is empty, it indicates that the default hub sources are enabled on the cluster. The list of default hub sources and their current state will always be reflected in the status block.",
 }
 
 func (OperatorHubSpec) SwaggerDoc() map[string]string {
@@ -1194,8 +1192,8 @@ func (OperatorHubSpec) SwaggerDoc() map[string]string {
 }
 
 var map_OperatorHubStatus = map[string]string{
-	"":                 "OperatorHubStatus defines the observed state of OperatorHub",
-	"hubSourcesStatus": "hubSourcesStatus encapsulates the result applying the configuration",
+	"":        "OperatorHubStatus defines the observed state of OperatorHub. The current state of the default hub sources will always be reflected here.",
+	"sources": "sources encapsulates the result of applying the configuration for each hub source",
 }
 
 func (OperatorHubStatus) SwaggerDoc() map[string]string {

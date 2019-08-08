@@ -24,10 +24,13 @@ type Ingress struct {
 
 type IngressSpec struct {
 	// domain is used to generate a default host name for a route when the
-	// route's host name is empty.  The generated host name will follow this
+	// route's host name is empty. The generated host name will follow this
 	// pattern: "<route-name>.<route-namespace>.<domain>".
 	//
-	// Once set, domain cannot be updated.
+	// It is also used as the default wildcard domain suffix for ingress. The
+	// default ingresscontroller domain will follow this pattern: "*.<domain>".
+	//
+	// Once set, changing domain is not currently supported.
 	Domain string `json:"domain"`
 }
 

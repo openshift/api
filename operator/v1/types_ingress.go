@@ -125,6 +125,18 @@ type IngressControllerSpec struct {
 	//
 	// +optional
 	NodePlacement *NodePlacement `json:"nodePlacement,omitempty"`
+
+	// disableNamespaceOwnershipCheck disables the namespace ownership checks for
+	// a route host with different paths or for overlapping host names in the case
+	// of wildcard routes. Please be aware that if namespace ownership checks are
+	// disabled, routes in a different namespace can use this mechanism to 'steal'
+	// sub-paths for existing domains. This is only safe if route creation
+	// privileges are restricted, or if all the users can be trusted.
+	//
+	// If unset, the default is false
+	//
+	// +optional
+	DisableNamespaceOwnershipCheck *bool `json:"disableNamespaceOwnershipCheck,omitempty"`
 }
 
 // NodePlacement describes node scheduling configuration for an ingress

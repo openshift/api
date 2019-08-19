@@ -681,6 +681,11 @@ func (in *IngressControllerSpec) DeepCopyInto(out *IngressControllerSpec) {
 		*out = new(NodePlacement)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.DisableNamespaceOwnershipCheck != nil {
+		in, out := &in.DisableNamespaceOwnershipCheck, &out.DisableNamespaceOwnershipCheck
+		*out = new(bool)
+		**out = **in
+	}
 	return
 }
 

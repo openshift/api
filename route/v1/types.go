@@ -34,7 +34,7 @@ type Route struct {
 	// spec is the desired state of the route
 	Spec RouteSpec `json:"spec" protobuf:"bytes,2,opt,name=spec"`
 	// status is the current state of the route
-	Status RouteStatus `json:"status" protobuf:"bytes,3,opt,name=status"`
+	Status RouteStatus `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

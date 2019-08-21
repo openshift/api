@@ -3,7 +3,7 @@ The canonical location of the OpenShift API definition.  This repo holds the API
 
 ## pull request process
 
-Pull requests that change API types in this repo that have corresponding "internal" API objects in the 
+Pull requests that change API types in this repo that have corresponding "internal" API objects in the
 [openshift/origin](https://github.com/openshift/origin) repo must be paired with a pull request to
 [openshift/origin](https://github.com/openshift/origin).
 
@@ -20,10 +20,11 @@ To ensure the corresponding origin pull request is ready to merge as soon as the
       ```
 
     2. Update your `bump(*)` commit to include the result of running `hack/update-deps.sh`, which will pull in the changes from your openshift/api pull request
-    3. Make sure CI is green on your openshift/origin pull request 
+    3. Make sure CI is green on your openshift/origin pull request
     4. Get LGTM on your openshift/api pull request (for API changes) and your openshift/origin pull request (for code changes)
 
 Once both pull requests are ready, the openshift/api pull request can be merged.
+
 
 Then do the following with your openshift/origin pull request:
 1. Drop the TMP commit (pointing glide back at openshift/api#master)

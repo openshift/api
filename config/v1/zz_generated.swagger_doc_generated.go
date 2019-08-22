@@ -885,9 +885,9 @@ func (ExternalIPPolicy) SwaggerDoc() map[string]string {
 }
 
 var map_Network = map[string]string{
-	"":         "Network holds cluster-wide information about Network.  The canonical name is `cluster`",
+	"":         "Network holds cluster-wide information about Network. The canonical name is `cluster`. It is used to configure the desired network configuration, such as: IP address pools for services/pod IPs, network plugin, etc. Please view network.spec for an explanation on what applies when configuring this resource.",
 	"metadata": "Standard object's metadata.",
-	"spec":     "spec holds user settable values for configuration.",
+	"spec":     "spec holds user settable values for configuration. As a general rule, this SHOULD NOT be read directly. Instead, you should consume the NetworkStatus, as it indicates the currently deployed configuration. Currently, most spec fields are immutable after installation. Please view the individual ones for further details on each.",
 	"status":   "status holds observed values from the cluster. They may not be overridden.",
 }
 
@@ -904,10 +904,10 @@ func (NetworkList) SwaggerDoc() map[string]string {
 }
 
 var map_NetworkSpec = map[string]string{
-	"":               "NetworkSpec is the desired network configuration. As a general rule, this SHOULD NOT be read directly. Instead, you should consume the NetworkStatus, as it indicates the currently deployed configuration. Currently, changing ClusterNetwork, ServiceNetwork, or NetworkType after installation is not supported.",
-	"clusterNetwork": "IP address pool to use for pod IPs.",
-	"serviceNetwork": "IP address pool for services. Currently, we only support a single entry here.",
-	"networkType":    "NetworkType is the plugin that is to be deployed (e.g. OpenShiftSDN). This should match a value that the cluster-network-operator understands, or else no networking will be installed. Currently supported values are: - OpenShiftSDN",
+	"":               "NetworkSpec is the desired network configuration. As a general rule, this SHOULD NOT be read directly. Instead, you should consume the NetworkStatus, as it indicates the currently deployed configuration. Currently, most spec fields are immutable after installation. Please view the individual ones for further details on each.",
+	"clusterNetwork": "IP address pool to use for pod IPs. This field is immutable after installation.",
+	"serviceNetwork": "IP address pool for services. Currently, we only support a single entry here. This field is immutable after installation.",
+	"networkType":    "NetworkType is the plugin that is to be deployed (e.g. OpenShiftSDN). This should match a value that the cluster-network-operator understands, or else no networking will be installed. Currently supported values are: - OpenShiftSDN This field is immutable after installation.",
 	"externalIP":     "externalIP defines configuration for controllers that affect Service.ExternalIP",
 }
 

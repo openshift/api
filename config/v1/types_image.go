@@ -6,7 +6,12 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// Image holds cluster-wide information about how to handle images.  The canonical name is `cluster`
+// Image governs policies related to imagestream imports and runtime configuration
+// for external registries. It allows cluster admins to configure which registries
+// OpenShift is allowed to import images from, extra CA trust bundles for external
+// registries, and policies to blacklist/whitelist registry hostnames.
+// When exposing OpenShift's image registry to the public, this also lets cluster
+// admins specify the external hostname.
 type Image struct {
 	metav1.TypeMeta `json:",inline"`
 	// Standard object's metadata.

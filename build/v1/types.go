@@ -84,7 +84,7 @@ type CommonSpec struct {
 	// If nil, it can be overridden by default build nodeselector values for the cluster.
 	// If set to an empty map or a map with any values, default build nodeselector values
 	// are ignored.
-	NodeSelector OptionalNodeSelector `json:"nodeSelector" protobuf:"bytes,9,name=nodeSelector"`
+	NodeSelector OptionalNodeSelector `json:"nodeSelector,omitempty" protobuf:"bytes,9,name=nodeSelector"`
 }
 
 // BuildTriggerCause holds information about a triggered build. It is used for
@@ -882,7 +882,7 @@ type BuildConfig struct {
 	// to trigger them.
 	Spec BuildConfigSpec `json:"spec" protobuf:"bytes,2,opt,name=spec"`
 	// status holds any relevant information about a build config
-	Status BuildConfigStatus `json:"status" protobuf:"bytes,3,opt,name=status"`
+	Status BuildConfigStatus `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
 }
 
 // BuildConfigSpec describes when and how builds are created
@@ -891,7 +891,7 @@ type BuildConfigSpec struct {
 	//triggers determine how new Builds can be launched from a BuildConfig. If
 	//no triggers are defined, a new build can only occur as a result of an
 	//explicit client build creation.
-	Triggers []BuildTriggerPolicy `json:"triggers" protobuf:"bytes,1,rep,name=triggers"`
+	Triggers []BuildTriggerPolicy `json:"triggers,omitempty" protobuf:"bytes,1,rep,name=triggers"`
 
 	// RunPolicy describes how the new build created from this build
 	// configuration will be scheduled for execution.

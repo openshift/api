@@ -1,5 +1,5 @@
-hash: 39d68c56c06ab2c8d5c522653b00e1ee49e3f0c0c434f9d6c58ee52d25af2ffa
-updated: 2019-08-30T09:59:21.592827+02:00
+hash: e0102ba94e0b9f057d5e7bc8834552382df35f21c4df1eadfb9cc007af26dbfe
+updated: 2019-09-05T11:38:49.1049+02:00
 imports:
 - name: github.com/davecgh/go-spew
   version: 8991bc29aa16c548c550c7ff78260e27b9ab7c73
@@ -11,7 +11,7 @@ imports:
   - proto
   - sortkeys
 - name: github.com/golang/protobuf
-  version: aa810b61a9c79d51363740d207bb46cf8e620ed5
+  version: b5d812f8a3706043e23a9cd5babf2e5423744d30
   subpackages:
   - proto
 - name: github.com/google/go-cmp
@@ -54,7 +54,7 @@ imports:
 - name: gopkg.in/yaml.v2
   version: 51d6538a90f86fe93ac480b35f37b2be17fef232
 - name: k8s.io/api
-  version: 6185379c914ac524c99740fc4be563ad68f31b20
+  version: bacad065d7c32c51666e1f8feb94c50504b19fb4
   subpackages:
   - admission/v1beta1
   - admissionregistration/v1beta1
@@ -87,7 +87,7 @@ imports:
   - storage/v1alpha1
   - storage/v1beta1
 - name: k8s.io/apimachinery
-  version: 31b1e1ea64dcd6d47a3b0066ccacf721f864d295
+  version: 93cd198ca677b0e97b9f205a027831ac68fb302b
   subpackages:
   - pkg/api/apitesting
   - pkg/api/apitesting/fuzzer
@@ -127,7 +127,7 @@ imports:
   - pkg/watch
   - third_party/forked/golang/reflect
 - name: k8s.io/code-generator
-  version: 060a3d12ce804924ca5f4089c2c457975664960f
+  version: 969864c73cc186fb0ff5f7b0e3c49547404185a1
 - name: k8s.io/gengo
   version: 26a664648505d962332bda642b27306bc10d1082
 - name: k8s.io/klog

@@ -41,3 +41,10 @@ type ConsoleExternalLogLinkSpec struct {
 	// + optional
 	NamespaceFilter string `json:"namespaceFilter,omitempty"`
 }
+
+type ConsoleExternalLogLinkList struct {
+	metav1.TypeMeta `json:",inline"`
+	// Standard object's metadata.
+	metav1.ListMeta `json:"metadata"`
+	Items           []ConsoleExternalLogLink `json:"items"`
+}

@@ -10,6 +10,10 @@ type TLSSecurityProfile struct {
 	//
 	// https://wiki.mozilla.org/Security/Server_Side_TLS#Recommended_configurations
 	//
+	// The profiles are intent based, so they may change over time as new ciphers are developed and existing ciphers
+	// are found to be insecure.  Depending on precisely which ciphers are available to a process, the list may be
+	// reduced.
+	//
 	// +unionDiscriminator
 	// +optional
 	Type TLSProfileType `json:"type"`

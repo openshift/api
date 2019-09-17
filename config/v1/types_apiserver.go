@@ -39,6 +39,12 @@ type APIServerSpec struct {
 	// The values are regular expressions that correspond to the Golang regular expression language.
 	// +optional
 	AdditionalCORSAllowedOrigins []string `json:"additionalCORSAllowedOrigins,omitempty"`
+
+	// tlsSecurityProfile specifies settings for TLS connections for externally exposed servers.
+	//
+	// If unset, a default (which may change between releases is chosen.
+	// +optional
+	TLSSecurityProfile *TLSSecurityProfile `json:"tlsSecurityProfile,omitempty"`
 }
 
 type APIServerServingCerts struct {

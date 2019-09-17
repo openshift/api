@@ -58,20 +58,6 @@ type TLSSecurityProfile struct {
 	//     - AES256-SHA
 	//     - AES
 	//     - DES-CBC3-SHA
-	//     - HIGH
-	//     - SEED
-	//     - "!aNULL"
-	//     - "!eNULL"
-	//     - "!EXPORT"
-	//     - "!RC4"
-	//     - "!MD5"
-	//     - "!PSK"
-	//     - "!RSAPSK"
-	//     - "!aDH"
-	//     - "!aECDH"
-	//     - "!EDH-DSS-DES-CBC3-SHA"
-	//     - "!KRB5-DES-CBC3-SHA"
-	//     - "!SRP"
 	//   tlsVersion:
 	//     minimumVersion: TLSv1.0
 	//     maximumVersion: TLSv1.2
@@ -117,9 +103,8 @@ type TLSSecurityProfile struct {
 	//     - AES128-SHA
 	//     - AES256-SHA
 	//     - DES-CBC3-SHA
-	//     - "!DSS"
 	//   tlsVersion:
-	//     minimumVersion: TLSv1.0
+	//     minimumVersion: TLSv1.2
 	//     maximumVersion: TLSv1.2
 	//   dhParamSize: 2048
 	//
@@ -208,14 +193,11 @@ const (
 // TLSProfileSpec is the desired behavior of a TLSSecurityProfile.
 type TLSProfileSpec struct {
 	// ciphers is used to specify the cipher algorithms that are negotiated
-	// during the TLS handshake. Preface a cipher with a "!" to disable a
-	// specific cipher from being negotiated. Note that disabled ciphers must
-	// be quoted due to the leading "!". For example, to use 3DES but not
-	// EDH-DSS-DES-CBC3-SHA (yaml):
+	// during the TLS handshake.  Operators may remove entries their operands
+	// do not support.  For example, to use 3DES  (yaml):
 	//
 	//   ciphers:
 	//     - 3DES
-	//     - "!EDH-DSS-DES-CBC3-SHA"
 	//
 	Ciphers []string `json:"ciphers"`
 	// tlsVersion is used to specify one or more versions of the TLS protocol
@@ -314,3 +296,111 @@ const (
 	// 2048 is a Diffie-Hellman parameter of 2048 bits.
 	DHParamSize2048 DHParamSize = "2048"
 )
+
+// TLSProfiles Contains a map of TLSProfileType names to TLSProfileSpec.
+//
+// NOTE: The caller needs to make sure to check that these constants are valid for their binary. Not all
+// entries map to values for all binaries.  In the case of ties, the kube-apiserver wins.  Do not fail,
+// just be sure to whitelist only and everything will be ok.
+var TLSProfiles = map[TLSProfileType]*TLSProfileSpec{
+	TLSProfileOldType: {
+		Ciphers: []string{
+			"ECDHE-ECDSA-CHACHA20-POLY1305",
+			"ECDHE-RSA-CHACHA20-POLY1305",
+			"ECDHE-RSA-AES128-GCM-SHA256",
+			"ECDHE-ECDSA-AES128-GCM-SHA256",
+			"ECDHE-RSA-AES256-GCM-SHA384",
+			"ECDHE-ECDSA-AES256-GCM-SHA384",
+			"DHE-RSA-AES128-GCM-SHA256",
+			"DHE-DSS-AES128-GCM-SHA256",
+			"kEDH+AESGCM",
+			"ECDHE-RSA-AES128-SHA256",
+			"ECDHE-ECDSA-AES128-SHA256",
+			"ECDHE-RSA-AES128-SHA",
+			"ECDHE-ECDSA-AES128-SHA",
+			"ECDHE-RSA-AES256-SHA384",
+			"ECDHE-ECDSA-AES256-SHA384",
+			"ECDHE-RSA-AES256-SHA",
+			"ECDHE-ECDSA-AES256-SHA",
+			"DHE-RSA-AES128-SHA256",
+			"DHE-RSA-AES128-SHA",
+			"DHE-DSS-AES128-SHA256",
+			"DHE-RSA-AES256-SHA256",
+			"DHE-DSS-AES256-SHA",
+			"DHE-RSA-AES256-SHA",
+			"ECDHE-RSA-DES-CBC3-SHA",
+			"ECDHE-ECDSA-DES-CBC3-SHA",
+			"EDH-RSA-DES-CBC3-SHA",
+			"AES128-GCM-SHA256",
+			"AES256-GCM-SHA384",
+			"AES128-SHA256",
+			"AES256-SHA256",
+			"AES128-SHA",
+			"AES256-SHA",
+			"AES",
+			"DES-CBC3-SHA",
+		},
+		TLSVersion: TLSVersion{
+			MaximumVersion: VersionTLS13,
+			MinimumVersion: VersionTLS10,
+		},
+		DHParamSize: DHParamSize1024,
+	},
+	TLSProfileIntermediateType: {
+		Ciphers: []string{
+			"ECDHE-ECDSA-CHACHA20-POLY1305",
+			"ECDHE-RSA-CHACHA20-POLY1305",
+			"ECDHE-ECDSA-AES128-GCM-SHA256",
+			"ECDHE-RSA-AES128-GCM-SHA256",
+			"ECDHE-ECDSA-AES256-GCM-SHA384",
+			"ECDHE-RSA-AES256-GCM-SHA384",
+			"DHE-RSA-AES128-GCM-SHA256",
+			"DHE-RSA-AES256-GCM-SHA384",
+			"ECDHE-ECDSA-AES128-SHA256",
+			"ECDHE-RSA-AES128-SHA256",
+			"ECDHE-ECDSA-AES128-SHA",
+			"ECDHE-RSA-AES256-SHA384",
+			"ECDHE-RSA-AES128-SHA",
+			"ECDHE-ECDSA-AES256-SHA384",
+			"ECDHE-ECDSA-AES256-SHA",
+			"ECDHE-RSA-AES256-SHA",
+			"DHE-RSA-AES128-SHA256",
+			"DHE-RSA-AES128-SHA",
+			"DHE-RSA-AES256-SHA256",
+			"DHE-RSA-AES256-SHA",
+			"ECDHE-ECDSA-DES-CBC3-SHA",
+			"ECDHE-RSA-DES-CBC3-SHA",
+			"EDH-RSA-DES-CBC3-SHA",
+			"AES128-GCM-SHA256",
+			"AES256-GCM-SHA384",
+			"AES128-SHA256",
+			"AES256-SHA256",
+			"AES128-SHA",
+			"AES256-SHA",
+			"DES-CBC3-SHA",
+		},
+		TLSVersion: TLSVersion{
+			MaximumVersion: VersionTLS13,
+			MinimumVersion: VersionTLS12,
+		},
+		DHParamSize: DHParamSize2048,
+	},
+	TLSProfileModernType: {
+		Ciphers: []string{
+			"ECDHE-ECDSA-AES256-GCM-SHA384",
+			"ECDHE-RSA-AES256-GCM-SHA384",
+			"ECDHE-ECDSA-CHACHA20-POLY1305",
+			"ECDHE-RSA-CHACHA20-POLY1305",
+			"ECDHE-ECDSA-AES128-GCM-SHA256",
+			"ECDHE-RSA-AES128-GCM-SHA256",
+			"ECDHE-ECDSA-AES256-SHA384",
+			"ECDHE-RSA-AES256-SHA384",
+			"ECDHE-ECDSA-AES128-SHA256",
+			"ECDHE-RSA-AES128-SHA256",
+		},
+		TLSVersion: TLSVersion{
+			MaximumVersion: VersionTLS13,
+			MinimumVersion: VersionTLS12,
+		},
+	},
+}

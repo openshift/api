@@ -44,7 +44,7 @@ type APIServerSpec struct {
 	Encryption APIServerEncryption `json:"encryption"`
 	// tlsSecurityProfile specifies settings for TLS connections for externally exposed servers.
 	//
-	// If unset, a default (which may change between releases is chosen.
+	// If unset, a default (which may change between releases) is chosen.
 	// +optional
 	TLSSecurityProfile *TLSSecurityProfile `json:"tlsSecurityProfile,omitempty"`
 }

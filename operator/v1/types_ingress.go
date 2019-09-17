@@ -4,8 +4,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	corev1 "k8s.io/api/core/v1"
-
-	configv1 "github.com/openshift/api/config/v1"
 )
 
 // +genclient
@@ -127,13 +125,6 @@ type IngressControllerSpec struct {
 	//
 	// +optional
 	NodePlacement *NodePlacement `json:"nodePlacement,omitempty"`
-
-	// tlsSecurityProfile specifies settings for securing IngressController
-	// TLS connections.
-	//
-	// If unset, the "Intermediate" TLS security profile is used.
-	// +optional
-	TLSSecurityProfile *configv1.TLSSecurityProfile `json:"tlsSecurityProfile,omitempty"`
 }
 
 // NodePlacement describes node scheduling configuration for an ingress
@@ -307,9 +298,6 @@ type IngressControllerStatus struct {
 
 	// endpointPublishingStrategy is the actual strategy in use.
 	EndpointPublishingStrategy *EndpointPublishingStrategy `json:"endpointPublishingStrategy,omitempty"`
-
-	// tlsProfileSpec is the TLS profile settings in use.
-	TLSProfileSpec *configv1.TLSProfileSpec `json:"tlsProfileSpec,omitempty"`
 
 	// conditions is a list of conditions and their status.
 	//

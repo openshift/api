@@ -243,7 +243,6 @@ type EndpointPublishingStrategy struct {
 	// networking, and is not explicitly published. The user must manually publish
 	// the ingress controller.
 	// +unionDiscriminator
-	// +optional
 	Type EndpointPublishingStrategyType `json:"type"`
 
 	// loadBalancer holds parameters for the load balancer. Present only if

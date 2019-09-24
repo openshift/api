@@ -848,6 +848,7 @@ func (IngressList) SwaggerDoc() map[string]string {
 
 var map_IngressSpec = map[string]string{
 	"domain": "domain is used to generate a default host name for a route when the route's host name is empty. The generated host name will follow this pattern: \"<route-name>.<route-namespace>.<domain>\".\n\nIt is also used as the default wildcard domain suffix for ingress. The default ingresscontroller domain will follow this pattern: \"*.<domain>\".\n\nOnce set, changing domain is not currently supported.",
+	"scope":  "scope is the default publishing scope for new ingress controllers on this cluster which are exposed by an OpenShift-managed load balancer.\n\nThe default is \"External\".\n\nChanges to this field after creation will only be recognized by new ingress controllers.",
 }
 
 func (IngressSpec) SwaggerDoc() map[string]string {

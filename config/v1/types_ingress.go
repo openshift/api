@@ -32,7 +32,30 @@ type IngressSpec struct {
 	//
 	// Once set, changing domain is not currently supported.
 	Domain string `json:"domain"`
+
+	// scope is the default publishing scope for new ingress controllers on this
+	// cluster which are exposed by an OpenShift-managed load balancer.
+	//
+	// The default is "External".
+	//
+	// Changes to this field after creation will only be recognized by new
+	// ingress controllers.
+	// +optional
+	Scope *LoadBalancerScope `json:"scope,omitempty"`
 }
+
+// LoadBalancerScope is the scope at which a load balancer is exposed.
+type LoadBalancerScope string
+
+var (
+	// InternalLoadBalancer is a load balancer that is exposed only on the
+	// cluster's private network.
+	InternalLoadBalancer LoadBalancerScope = "Internal"
+
+	// ExternalLoadBalancer is a load balancer that is exposed on the
+	// cluster's public network (which is typically on the Internet).
+	ExternalLoadBalancer LoadBalancerScope = "External"
+)
 
 type IngressStatus struct {
 }

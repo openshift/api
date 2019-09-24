@@ -249,19 +249,16 @@ type EndpointPublishingStrategy struct {
 	// loadBalancer holds parameters for the load balancer. Present only if
 	// type is LoadBalancerService.
 	// +optional
-	// +nullable
 	LoadBalancer *LoadBalancerStrategy `json:"loadBalancer,omitempty"`
 
 	// hostNetwork holds parameters for the HostNetwork endpoint publishing
 	// strategy. Present only if type is HostNetwork.
 	// +optional
-	// +nullable
 	HostNetwork *HostNetworkStrategy `json:"hostNetwork,omitempty"`
 
 	// private holds parameters for the Private endpoint publishing
 	// strategy. Present only if type is Private.
 	// +optional
-	// +nullable
 	Private *PrivateStrategy `json:"private,omitempty"`
 }
 

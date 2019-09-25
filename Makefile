@@ -1,6 +1,8 @@
 all: build
 .PHONY: all
 
+include hack/update-crds.mk
+
 RUNTIME ?= podman
 RUNTIME_IMAGE_NAME ?= openshift-api-generator
 
@@ -31,3 +33,9 @@ generate:
 	hack/update-protobuf.sh
 	hack/update-swagger-docs.sh
 .PHONY: generate
+
+CRD_SCHEMA_GEN_APIS :=./config/v1
+CRD_SCHEMA_GEN_MANIFESTS :=./config/v1
+CRD_SCHEMA_GEN_OUTPUT :=./config/v1
+update-crds: update-codegen-crds
+.PHONY: update-crds

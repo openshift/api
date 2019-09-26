@@ -188,7 +188,6 @@ type LoadBalancerStrategy struct {
 	// scope indicates the scope at which the load balancer is exposed.
 	// Possible values are "External" and "Internal".  The default is
 	// "External".
-	// +optional
 	Scope LoadBalancerScope `json:"scope"`
 }
 

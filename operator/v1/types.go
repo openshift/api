@@ -145,7 +145,11 @@ var (
 
 // OperatorCondition is just the standard condition fields.
 type OperatorCondition struct {
+	// +kubebuilder:validation:Required
+	// +required
 	Type               string          `json:"type"`
+	// +kubebuilder:validation:Required
+	// +required
 	Status             ConditionStatus `json:"status"`
 	LastTransitionTime metav1.Time     `json:"lastTransitionTime,omitempty"`
 	Reason             string          `json:"reason,omitempty"`

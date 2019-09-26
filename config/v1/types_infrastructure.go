@@ -182,6 +182,30 @@ type BareMetalPlatformStatus struct {
 	// datacenter DNS, a DNS service is hosted as a static pod to serve those hostnames
 	// to the nodes in the cluster.
 	NodeDNSIP string `json:"nodeDNSIP,omitempty"`
+
+	// provisioningInterface is the name of the network interface on a Baremetal server connected
+	// to the provisioning network.
+	ProvisioningInterface string `json:"provisioningInterface"`
+
+	// provisioningIP is the IP address assigned to the provisioningInterface for provisioning
+	// the baremetal node. This IP address should be within the provisioning subnet, and
+	// outside of the DHCP range.
+	ProvisioningIP string `json:"provisioningIP"`
+
+	// provisioningNetworkCIDR is the network on which the baremetal nodes are provisioned.
+	// The provisioningIP and the IPs in the dhcpRange all come from within this network.
+	ProvisioningNetworkCIDR string `json:"provisioningNetworkCIDR"`
+
+	// dhcpRange is the IP address range on the provisioning subnet from which baremetal hosts
+	// can be assigned an IP address.
+	DHCPRange string `json:"dhcpRange"`
+
+	// cacheURL is the location where images have been previously downloaded and available
+	// for faster image downloads within the cluster.
+	CacheURL string `json:"cacheURL,omitempty"`
+
+	// rhcosImageURL is the URL for RHCOS Image for deploying new nodes in the cluster.
+	RHCOSImageURL string `json:"rhcosImageURL"`
 }
 
 // OpenStackPlatformStatus holds the current status of the OpenStack infrastructure provider.

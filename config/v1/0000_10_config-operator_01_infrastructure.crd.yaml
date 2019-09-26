@@ -123,6 +123,15 @@ spec:
                         points to. It is the IP for a self-hosted load balancer in
                         front of the API servers.
                       type: string
+                    cacheURL:
+                      description: cacheURL is the location where images have been
+                        previously downloaded and available for faster image downloads
+                        within the cluster.
+                      type: string
+                    dhcpRange:
+                      description: dhcpRange is the IP address range on the provisioning
+                        subnet from which baremetal hosts can be assigned an IP address.
+                      type: string
                     ingressIP:
                       description: ingressIP is an external IP which routes to the
                         default ingress controller. The IP is a suitable target of
@@ -136,6 +145,26 @@ spec:
                         order to minimize necessary changes to the datacenter DNS,
                         a DNS service is hosted as a static pod to serve those hostnames
                         to the nodes in the cluster.
+                      type: string
+                    provisioningIP:
+                      description: provisioningIP is the IP address assigned to the
+                        provisioningInterface for provisioning the baremetal node.
+                        This IP address should be within the provisioning subnet,
+                        and outside of the DHCP range.
+                      type: string
+                    provisioningInterface:
+                      description: provisioningInterface is the name of the network
+                        interface on a Baremetal server connected to the provisioning
+                        network.
+                      type: string
+                    provisioningNetworkCIDR:
+                      description: provisioningNetworkCIDR is the network on which
+                        the baremetal nodes are provisioned. The provisioningIP and
+                        the IPs in the dhcpRange all come from within this network.
+                      type: string
+                    rhcosImageURL:
+                      description: rhcosImageURL is the URL for RHCOS Image for deploying
+                        new nodes in the cluster.
                       type: string
                 gcp:
                   description: GCP contains settings specific to the Google Cloud

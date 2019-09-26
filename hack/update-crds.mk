@@ -55,34 +55,37 @@ clean-yq:
 
 clean: clean-yq
 
-CRD_SCHEMA_GEN_APIS ?=$(error CRD_SCHEMA_GEN_APIS is required)
-CRD_SCHEMA_GEN_MANIFESTS ?=./manifests
-CRD_SCHEMA_GEN_OUTPUT ?=./manifests
-
 crd_patches =$(subst $(CRD_SCHEMA_GEN_MANIFESTS),$(CRD_SCHEMA_GEN_OUTPUT),$(wildcard $(CRD_SCHEMA_GEN_MANIFESTS)/*.crd.yaml-merge-patch))
 
 # $1 - crd file
 # $2 - patch file
 define patch-crd
-	cp -n $(CRD_SCHEMA_GEN_MANIFESTS)/$(notdir $2) '$(CRD_SCHEMA_GEN_OUTPUT)/' || true
+	cp -n $(2) '$(CRD_SCHEMA_GEN_OUTPUT)/' || true
 	$(YQ) m -i '$(1)' '$(2)'
 
 endef
 
+define update-crds
+$(eval $(call crd-schema-gen,$(1),$(2)))
+endef
+
 empty :=
-update-codegen-crds: ensure-controller-gen ensure-yq
+define crd-schema-gen
+CRD_SCHEMA_GEN_OUTPUT =$(2)
+CRD_SCHEMA_GEN_MANIFESTS =$(2)
+update-codegen-crds-$(1): ensure-controller-gen ensure-yq
 	'$(CONTROLLER_GEN)' \
-		schemapatch:manifests="$(CRD_SCHEMA_GEN_MANIFESTS)" \
-		paths="$(subst $(empty) ,;,$(CRD_SCHEMA_GEN_APIS))" \
-		output:dir="$(CRD_SCHEMA_GEN_OUTPUT)"
+		schemapatch:manifests="$(2)" \
+		paths="$(2)" \
+		output:dir="$$(CRD_SCHEMA_GEN_OUTPUT)"
 	$(foreach p,$(crd_patches),$(call patch-crd,$(basename $(p)).yaml,$(p)))
-.PHONY: update-codegen-crds
+.PHONY: update-codegen-crds-$(1)
 
-update-generated: update-codegen-crds
-.PHONY: update-generated
-
-update: update-generated
-.PHONY: update
+verify-codegen-crds-$(1): CRD_SCHEMA_GEN_OUTPUT := $$(shell mktemp -d)
+verify-codegen-crds-$(1): update-codegen-crds-$(1)
+	$(foreach p,$(wildcard $$(2)/*.crd.yaml),$(call diff-crd,$(p),$(subst $$(2),$(CRD_SCHEMA_GEN_OUTPUT),$(p))))
+.PHONY: verify-codegen-crds-$(1)
+endef
 
 # $1 - manifest (actual) crd
 # $2 - temp crd
@@ -90,14 +93,3 @@ define diff-crd
 	diff -Naup $(1) $(2)
 
 endef
-
-verify-codegen-crds: CRD_SCHEMA_GEN_OUTPUT :=$(shell mktemp -d)
-verify-codegen-crds: update-codegen-crds
-	$(foreach p,$(wildcard $(CRD_SCHEMA_GEN_MANIFESTS)/*.crd.yaml),$(call diff-crd,$(p),$(subst $(CRD_SCHEMA_GEN_MANIFESTS),$(CRD_SCHEMA_GEN_OUTPUT),$(p))))
-.PHONY: verify-codegen-crds
-
-verify-generated: verify-codegen-crds
-.PHONY: verify-generated
-
-verify: verify-generated
-.PHONY: verify

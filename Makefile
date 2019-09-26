@@ -34,8 +34,9 @@ generate:
 	hack/update-swagger-docs.sh
 .PHONY: generate
 
-CRD_SCHEMA_GEN_APIS :=./config/v1
-CRD_SCHEMA_GEN_MANIFESTS :=./config/v1
-CRD_SCHEMA_GEN_OUTPUT :=./config/v1
-update-crds: update-codegen-crds
+$(call update-crds,config,./config/v1)
+$(call update-crds,security,./security/v1)
+update-crds: update-codegen-crds-config update-codegen-crds-security
 .PHONY: update-crds
+verify-crds: verify-codegen-crds-config verify-codegen-crds-security
+.PHONY: verify-crds

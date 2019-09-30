@@ -251,6 +251,14 @@ func (APIServer) SwaggerDoc() map[string]string {
 	return map_APIServer
 }
 
+var map_APIServerEncryption = map[string]string{
+	"type": "type defines what encryption type should be used to encrypt resources at the datastore layer. When this field is unset (i.e. when it is set to the empty string), identity is implied. The behavior of unset can and will change over time.  Even if encryption is enabled by default, the meaning of unset may change to a different encryption type based on changes in best practices.\n\nWhen encryption is enabled, all sensitive resources shipped with the platform are encrypted. This list of sensitive resources can and will change over time.  The current authoritative list is:\n\n  1. secrets\n  2. configmaps\n  3. routes.route.openshift.io\n  4. oauthaccesstokens.oauth.openshift.io\n  5. oauthauthorizetokens.oauth.openshift.io",
+}
+
+func (APIServerEncryption) SwaggerDoc() map[string]string {
+	return map_APIServerEncryption
+}
+
 var map_APIServerNamedServingCert = map[string]string{
 	"":                   "APIServerNamedServingCert maps a server DNS name, as understood by a client, to a certificate.",
 	"names":              "names is a optional list of explicit DNS names (leading wildcards allowed) that should use this certificate to serve secure traffic. If no names are provided, the implicit names will be extracted from the certificates. Exact names trump over wildcard names. Explicit names defined here trump over extracted implicit names.",
@@ -273,6 +281,7 @@ var map_APIServerSpec = map[string]string{
 	"servingCerts":                 "servingCert is the TLS cert info for serving secure traffic. If not specified, operator managed certificates will be used for serving secure traffic.",
 	"clientCA":                     "clientCA references a ConfigMap containing a certificate bundle for the signers that will be recognized for incoming client certificates in addition to the operator managed signers. If this is empty, then only operator managed signers are valid. You usually only have to set this if you have your own PKI you wish to honor client certificates from. The ConfigMap must exist in the openshift-config namespace and contain the following required fields: - ConfigMap.Data[\"ca-bundle.crt\"] - CA bundle.",
 	"additionalCORSAllowedOrigins": "additionalCORSAllowedOrigins lists additional, user-defined regular expressions describing hosts for which the API server allows access using the CORS headers. This may be needed to access the API and the integrated OAuth server from JavaScript applications. The values are regular expressions that correspond to the Golang regular expression language.",
+	"encryption":                   "encryption allows the configuration of encryption of resources at the datastore layer.",
 }
 
 func (APIServerSpec) SwaggerDoc() map[string]string {

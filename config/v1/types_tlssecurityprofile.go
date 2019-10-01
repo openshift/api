@@ -24,43 +24,38 @@ type TLSSecurityProfile struct {
 	// and looks like this (yaml):
 	//
 	//   ciphers:
+	//     - TLS_AES_128_GCM_SHA256
+	//     - TLS_AES_256_GCM_SHA384
+	//     - TLS_CHACHA20_POLY1305_SHA256
+	//     - ECDHE-ECDSA-AES128-GCM-SHA256
+	//     - ECDHE-RSA-AES128-GCM-SHA256
+	//     - ECDHE-ECDSA-AES256-GCM-SHA384
+	//     - ECDHE-RSA-AES256-GCM-SHA384
 	//     - ECDHE-ECDSA-CHACHA20-POLY1305
 	//     - ECDHE-RSA-CHACHA20-POLY1305
-	//     - ECDHE-RSA-AES128-GCM-SHA256
-	//     - ECDHE-ECDSA-AES128-GCM-SHA256
-	//     - ECDHE-RSA-AES256-GCM-SHA384
-	//     - ECDHE-ECDSA-AES256-GCM-SHA384
 	//     - DHE-RSA-AES128-GCM-SHA256
-	//     - DHE-DSS-AES128-GCM-SHA256
-	//     - kEDH+AESGCM
-	//     - ECDHE-RSA-AES128-SHA256
+	//     - DHE-RSA-AES256-GCM-SHA384
+	//     - DHE-RSA-CHACHA20-POLY1305
 	//     - ECDHE-ECDSA-AES128-SHA256
-	//     - ECDHE-RSA-AES128-SHA
+	//     - ECDHE-RSA-AES128-SHA256
 	//     - ECDHE-ECDSA-AES128-SHA
-	//     - ECDHE-RSA-AES256-SHA384
+	//     - ECDHE-RSA-AES128-SHA
 	//     - ECDHE-ECDSA-AES256-SHA384
-	//     - ECDHE-RSA-AES256-SHA
+	//     - ECDHE-RSA-AES256-SHA384
 	//     - ECDHE-ECDSA-AES256-SHA
+	//     - ECDHE-RSA-AES256-SHA
 	//     - DHE-RSA-AES128-SHA256
-	//     - DHE-RSA-AES128-SHA
-	//     - DHE-DSS-AES128-SHA256
 	//     - DHE-RSA-AES256-SHA256
-	//     - DHE-DSS-AES256-SHA
-	//     - DHE-RSA-AES256-SHA
-	//     - ECDHE-RSA-DES-CBC3-SHA
-	//     - ECDHE-ECDSA-DES-CBC3-SHA
-	//     - EDH-RSA-DES-CBC3-SHA
 	//     - AES128-GCM-SHA256
 	//     - AES256-GCM-SHA384
 	//     - AES128-SHA256
 	//     - AES256-SHA256
 	//     - AES128-SHA
 	//     - AES256-SHA
-	//     - AES
 	//     - DES-CBC3-SHA
 	//   tlsVersion:
 	//     minimumVersion: TLSv1.0
-	//     maximumVersion: TLSv1.2
+	//     maximumVersion: TLSv1.3
 	//   dhParamSize: 1024
 	//
 	// +optional
@@ -68,44 +63,25 @@ type TLSSecurityProfile struct {
 	Old *OldTLSProfile `json:"old,omitempty"`
 	// intermediate is a TLS security profile based on:
 	//
-	// https://wiki.mozilla.org/Security/Server_Side_TLS#Intermediate_compatibility_.28default.29
+	// https://wiki.mozilla.org/Security/Server_Side_TLS#Intermediate_compatibility_.28recommended.29
 	//
 	// and looks like this (yaml):
 	//
 	//   ciphers:
-	//     - ECDHE-ECDSA-CHACHA20-POLY1305
-	//     - ECDHE-RSA-CHACHA20-POLY1305
+	//     - TLS_AES_128_GCM_SHA256
+	//     - TLS_AES_256_GCM_SHA384
+	//     - TLS_CHACHA20_POLY1305_SHA256
 	//     - ECDHE-ECDSA-AES128-GCM-SHA256
 	//     - ECDHE-RSA-AES128-GCM-SHA256
 	//     - ECDHE-ECDSA-AES256-GCM-SHA384
 	//     - ECDHE-RSA-AES256-GCM-SHA384
+	//     - ECDHE-ECDSA-CHACHA20-POLY1305
+	//     - ECDHE-RSA-CHACHA20-POLY1305
 	//     - DHE-RSA-AES128-GCM-SHA256
 	//     - DHE-RSA-AES256-GCM-SHA384
-	//     - ECDHE-ECDSA-AES128-SHA256
-	//     - ECDHE-RSA-AES128-SHA256
-	//     - ECDHE-ECDSA-AES128-SHA
-	//     - ECDHE-RSA-AES256-SHA384
-	//     - ECDHE-RSA-AES128-SHA
-	//     - ECDHE-ECDSA-AES256-SHA384
-	//     - ECDHE-ECDSA-AES256-SHA
-	//     - ECDHE-RSA-AES256-SHA
-	//     - DHE-RSA-AES128-SHA256
-	//     - DHE-RSA-AES128-SHA
-	//     - DHE-RSA-AES256-SHA256
-	//     - DHE-RSA-AES256-SHA
-	//     - ECDHE-ECDSA-DES-CBC3-SHA
-	//     - ECDHE-RSA-DES-CBC3-SHA
-	//     - EDH-RSA-DES-CBC3-SHA
-	//     - AES128-GCM-SHA256
-	//     - AES256-GCM-SHA384
-	//     - AES128-SHA256
-	//     - AES256-SHA256
-	//     - AES128-SHA
-	//     - AES256-SHA
-	//     - DES-CBC3-SHA
 	//   tlsVersion:
 	//     minimumVersion: TLSv1.2
-	//     maximumVersion: TLSv1.2
+	//     maximumVersion: TLSv1.3
 	//   dhParamSize: 2048
 	//
 	// +optional
@@ -118,19 +94,12 @@ type TLSSecurityProfile struct {
 	// and looks like this (yaml):
 	//
 	//   ciphers:
-	//     - ECDHE-ECDSA-AES256-GCM-SHA384
-	//     - ECDHE-RSA-AES256-GCM-SHA384
-	//     - ECDHE-ECDSA-CHACHA20-POLY1305
-	//     - ECDHE-RSA-CHACHA20-POLY1305
-	//     - ECDHE-ECDSA-AES128-GCM-SHA256
-	//     - ECDHE-RSA-AES128-GCM-SHA256
-	//     - ECDHE-ECDSA-AES256-SHA384
-	//     - ECDHE-RSA-AES256-SHA384
-	//     - ECDHE-ECDSA-AES128-SHA256
-	//     - ECDHE-RSA-AES128-SHA256
+	//     - TLS_AES_128_GCM_SHA256
+	//     - TLS_AES_256_GCM_SHA384
+	//     - TLS_CHACHA20_POLY1305_SHA256
 	//   tlsVersion:
-	//     minimumVersion: TLSv1.2
-	//     maximumVersion: TLSv1.2
+	//     minimumVersion: TLSv1.3
+	//     maximumVersion: TLSv1.3
 	//   dhParamSize: 2048
 	//
 	// +optional
@@ -237,8 +206,8 @@ type TLSVersion struct {
 	// to maximumVersion. If minimumVersion and maximumVersion are unset,
 	// the minimum version is determined by the TLS security profile type.
 	//
-	//   TLSProfileType Modern:       VersionTLS12
-	//   TLSProfileType Intermediate: VersionTLS10
+	//   TLSProfileType Modern:       VersionTLS13
+	//   TLSProfileType Intermediate: VersionTLS12
 	//   TLSProfileType Old:          VersionTLS10
 	//
 	// Supported minimum versions are:
@@ -257,9 +226,9 @@ type TLSVersion struct {
 	// to minimumVersion. If minimumVersion and maximumVersion are unset,
 	// the maximum version is determined by the TLS security profile type.
 	//
-	//   TLSProfileType Modern:       VersionTLS12
-	//   TLSProfileType Intermediate: VersionTLS12
-	//   TLSProfileType Old:          VersionTLS12
+	//   TLSProfileType Modern:       VersionTLS13
+	//   TLSProfileType Intermediate: VersionTLS13
+	//   TLSProfileType Old:          VersionTLS13
 	//
 	// Supported maximum versions are the same as minimum versions.
 	//
@@ -305,102 +274,71 @@ const (
 var TLSProfiles = map[TLSProfileType]*TLSProfileSpec{
 	TLSProfileOldType: {
 		Ciphers: []string{
+			"TLS_AES_128_GCM_SHA256",
+			"TLS_AES_256_GCM_SHA384",
+			"TLS_CHACHA20_POLY1305_SHA256",
+			"ECDHE-ECDSA-AES128-GCM-SHA256",
+			"ECDHE-RSA-AES128-GCM-SHA256",
+			"ECDHE-ECDSA-AES256-GCM-SHA384",
+			"ECDHE-RSA-AES256-GCM-SHA384",
 			"ECDHE-ECDSA-CHACHA20-POLY1305",
 			"ECDHE-RSA-CHACHA20-POLY1305",
-			"ECDHE-RSA-AES128-GCM-SHA256",
-			"ECDHE-ECDSA-AES128-GCM-SHA256",
-			"ECDHE-RSA-AES256-GCM-SHA384",
-			"ECDHE-ECDSA-AES256-GCM-SHA384",
 			"DHE-RSA-AES128-GCM-SHA256",
-			"DHE-DSS-AES128-GCM-SHA256",
-			"kEDH+AESGCM",
-			"ECDHE-RSA-AES128-SHA256",
+			"DHE-RSA-AES256-GCM-SHA384",
+			"DHE-RSA-CHACHA20-POLY1305",
 			"ECDHE-ECDSA-AES128-SHA256",
-			"ECDHE-RSA-AES128-SHA",
+			"ECDHE-RSA-AES128-SHA256",
 			"ECDHE-ECDSA-AES128-SHA",
-			"ECDHE-RSA-AES256-SHA384",
+			"ECDHE-RSA-AES128-SHA",
 			"ECDHE-ECDSA-AES256-SHA384",
-			"ECDHE-RSA-AES256-SHA",
+			"ECDHE-RSA-AES256-SHA384",
 			"ECDHE-ECDSA-AES256-SHA",
+			"ECDHE-RSA-AES256-SHA",
 			"DHE-RSA-AES128-SHA256",
-			"DHE-RSA-AES128-SHA",
-			"DHE-DSS-AES128-SHA256",
 			"DHE-RSA-AES256-SHA256",
-			"DHE-DSS-AES256-SHA",
-			"DHE-RSA-AES256-SHA",
-			"ECDHE-RSA-DES-CBC3-SHA",
-			"ECDHE-ECDSA-DES-CBC3-SHA",
-			"EDH-RSA-DES-CBC3-SHA",
 			"AES128-GCM-SHA256",
 			"AES256-GCM-SHA384",
 			"AES128-SHA256",
 			"AES256-SHA256",
 			"AES128-SHA",
 			"AES256-SHA",
-			"AES",
 			"DES-CBC3-SHA",
 		},
 		TLSVersion: TLSVersion{
-			MaximumVersion: VersionTLS13,
 			MinimumVersion: VersionTLS10,
+			MaximumVersion: VersionTLS13,
 		},
 		DHParamSize: DHParamSize1024,
 	},
 	TLSProfileIntermediateType: {
 		Ciphers: []string{
-			"ECDHE-ECDSA-CHACHA20-POLY1305",
-			"ECDHE-RSA-CHACHA20-POLY1305",
+			"TLS_AES_128_GCM_SHA256",
+			"TLS_AES_256_GCM_SHA384",
+			"TLS_CHACHA20_POLY1305_SHA256",
 			"ECDHE-ECDSA-AES128-GCM-SHA256",
 			"ECDHE-RSA-AES128-GCM-SHA256",
 			"ECDHE-ECDSA-AES256-GCM-SHA384",
 			"ECDHE-RSA-AES256-GCM-SHA384",
+			"ECDHE-ECDSA-CHACHA20-POLY1305",
+			"ECDHE-RSA-CHACHA20-POLY1305",
 			"DHE-RSA-AES128-GCM-SHA256",
 			"DHE-RSA-AES256-GCM-SHA384",
-			"ECDHE-ECDSA-AES128-SHA256",
-			"ECDHE-RSA-AES128-SHA256",
-			"ECDHE-ECDSA-AES128-SHA",
-			"ECDHE-RSA-AES256-SHA384",
-			"ECDHE-RSA-AES128-SHA",
-			"ECDHE-ECDSA-AES256-SHA384",
-			"ECDHE-ECDSA-AES256-SHA",
-			"ECDHE-RSA-AES256-SHA",
-			"DHE-RSA-AES128-SHA256",
-			"DHE-RSA-AES128-SHA",
-			"DHE-RSA-AES256-SHA256",
-			"DHE-RSA-AES256-SHA",
-			"ECDHE-ECDSA-DES-CBC3-SHA",
-			"ECDHE-RSA-DES-CBC3-SHA",
-			"EDH-RSA-DES-CBC3-SHA",
-			"AES128-GCM-SHA256",
-			"AES256-GCM-SHA384",
-			"AES128-SHA256",
-			"AES256-SHA256",
-			"AES128-SHA",
-			"AES256-SHA",
-			"DES-CBC3-SHA",
 		},
 		TLSVersion: TLSVersion{
-			MaximumVersion: VersionTLS13,
 			MinimumVersion: VersionTLS12,
+			MaximumVersion: VersionTLS13,
 		},
 		DHParamSize: DHParamSize2048,
 	},
 	TLSProfileModernType: {
 		Ciphers: []string{
-			"ECDHE-ECDSA-AES256-GCM-SHA384",
-			"ECDHE-RSA-AES256-GCM-SHA384",
-			"ECDHE-ECDSA-CHACHA20-POLY1305",
-			"ECDHE-RSA-CHACHA20-POLY1305",
-			"ECDHE-ECDSA-AES128-GCM-SHA256",
-			"ECDHE-RSA-AES128-GCM-SHA256",
-			"ECDHE-ECDSA-AES256-SHA384",
-			"ECDHE-RSA-AES256-SHA384",
-			"ECDHE-ECDSA-AES128-SHA256",
-			"ECDHE-RSA-AES128-SHA256",
+			"TLS_AES_128_GCM_SHA256",
+			"TLS_AES_256_GCM_SHA384",
+			"TLS_CHACHA20_POLY1305_SHA256",
 		},
 		TLSVersion: TLSVersion{
+			MinimumVersion: VersionTLS13,
 			MaximumVersion: VersionTLS13,
-			MinimumVersion: VersionTLS12,
 		},
 	},
 }

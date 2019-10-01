@@ -142,6 +142,11 @@ func (in *APIServerSpec) DeepCopyInto(out *APIServerSpec) {
 		copy(*out, *in)
 	}
 	out.Encryption = in.Encryption
+	if in.TLSSecurityProfile != nil {
+		in, out := &in.TLSSecurityProfile, &out.TLSSecurityProfile
+		*out = new(TLSSecurityProfile)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 

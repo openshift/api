@@ -86,6 +86,7 @@ type APIServerEncryption struct {
 	Type EncryptionType `json:"type,omitempty"`
 }
 
+// +kubebuilder:validation:Enum="";identity;aescbc
 type EncryptionType string
 
 const (

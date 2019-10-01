@@ -4,6 +4,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	corev1 "k8s.io/api/core/v1"
+
+	configv1 "github.com/openshift/api/config/v1"
 )
 
 // +genclient
@@ -125,6 +127,12 @@ type IngressControllerSpec struct {
 	//
 	// +optional
 	NodePlacement *NodePlacement `json:"nodePlacement,omitempty"`
+
+	// tlsSecurityProfile specifies settings for TLS connections for externally exposed servers.
+	//
+	// If unset, a default (which may change between releases) is chosen.
+	// +optional
+	TLSSecurityProfile *configv1.TLSSecurityProfile `json:"tlsSecurityProfile,omitempty"`
 }
 
 // NodePlacement describes node scheduling configuration for an ingress
@@ -332,6 +340,10 @@ type IngressControllerStatus struct {
 	//     * DNS records have been successfully created.
 	//   - False if any of those conditions are unsatisfied.
 	Conditions []OperatorCondition `json:"conditions,omitempty"`
+
+	// tlsSecurityProfile is the observed TLS connection configuration.
+	// +optional
+	TLSSecurityProfile *configv1.TLSSecurityProfile `json:"tlsSecurityProfile,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

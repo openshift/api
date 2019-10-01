@@ -32,6 +32,12 @@ type IngressSpec struct {
 	//
 	// Once set, changing domain is not currently supported.
 	Domain string `json:"domain"`
+
+	// tlsSecurityProfile specifies settings for TLS connections for ingresscontrollers.
+	//
+	// If unset, a default (which may change between releases) is chosen.
+	// +optional
+	TLSSecurityProfile *TLSSecurityProfile `json:"tlsSecurityProfile,omitempty"`
 }
 
 type IngressStatus struct {

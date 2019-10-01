@@ -128,9 +128,10 @@ type IngressControllerSpec struct {
 	// +optional
 	NodePlacement *NodePlacement `json:"nodePlacement,omitempty"`
 
-	// tlsSecurityProfile specifies settings for TLS connections for externally exposed servers.
+	// tlsSecurityProfile specifies settings for TLS connections for ingresscontrollers.
 	//
-	// If unset, a default (which may change between releases) is chosen.
+	// If unset, the default is based on the ingresses.config.openshift.io/cluster resource.
+	//
 	// +optional
 	TLSSecurityProfile *configv1.TLSSecurityProfile `json:"tlsSecurityProfile,omitempty"`
 }

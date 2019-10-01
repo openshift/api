@@ -341,9 +341,9 @@ type IngressControllerStatus struct {
 	//   - False if any of those conditions are unsatisfied.
 	Conditions []OperatorCondition `json:"conditions,omitempty"`
 
-	// tlsSecurityProfile is the observed TLS connection configuration.
+	// tlsProfile is the TLS connection configuration that is in effect.
 	// +optional
-	TLSSecurityProfile *configv1.TLSSecurityProfile `json:"tlsSecurityProfile,omitempty"`
+	TLSProfile *configv1.TLSProfileSpec `json:"tlsProfile,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

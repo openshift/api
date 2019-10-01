@@ -715,9 +715,9 @@ func (in *IngressControllerStatus) DeepCopyInto(out *IngressControllerStatus) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
-	if in.TLSSecurityProfile != nil {
-		in, out := &in.TLSSecurityProfile, &out.TLSSecurityProfile
-		*out = new(configv1.TLSSecurityProfile)
+	if in.TLSProfile != nil {
+		in, out := &in.TLSProfile, &out.TLSProfile
+		*out = new(configv1.TLSProfileSpec)
 		(*in).DeepCopyInto(*out)
 	}
 	return

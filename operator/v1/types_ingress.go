@@ -135,7 +135,7 @@ type IngressControllerSpec struct {
 	// diverges from the ingresscontroller's effective default, the ingresscontroller will
 	// continue to use the defaults applied at the time of creation.
 	//
-	// Note that when using the Old, Intermediate, and Custom profile types, the effective
+	// Note that when using the Old, Intermediate, and Modern profile types, the effective
 	// profile configuration is subject to change between releases. For example, given
 	// a specification to use the Intermediate profile deployed on release X.Y.Z, an upgrade
 	// to release X.Y.Z+1 may cause a new profile configuration to be applied to the ingress

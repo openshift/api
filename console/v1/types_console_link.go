@@ -17,7 +17,8 @@ type ConsoleLink struct {
 // ConsoleLinkSpec is the desired console link configuration.
 type ConsoleLinkSpec struct {
 	Link `json:",inline"`
-	// location determines which location in the console the link will be appended to.
+	// location determines which location in the console the link will be appended to (ApplicationMenu, HelpMenu, UserMenu, NamespaceDashboard).
+	// +kubebuilder:validation:Pattern=^(ApplicationMenu|HelpMenu|UserMenu|NamespaceDashboard)$
 	Location ConsoleLinkLocation `json:"location"`
 	// applicationMenu holds information about section and icon used for the link in the
 	// application menu, and it is applicable only when location is set to ApplicationMenu.
@@ -35,6 +36,8 @@ type ConsoleLinkSpec struct {
 // ApplicationMenuSpec is the specification of the desired section and icon used for the link in the application menu.
 type ApplicationMenuSpec struct {
 	// section is the section of the application menu in which the link should appear.
+	// This can be any text that will appear as a subheading in the application menu dropdown.
+	// A new section will be created if the text does not match text of an existing section.
 	Section string `json:"section"`
 	// imageUrl is the URL for the icon used in front of the link in the application menu.
 	// The URL must be an HTTPS URL or a Data URI. The image should be square and will be shown at 24x24 pixels.

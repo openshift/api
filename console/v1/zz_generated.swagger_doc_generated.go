@@ -21,6 +21,15 @@ func (Link) SwaggerDoc() map[string]string {
 	return map_Link
 }
 
+var map_CLIDownloadLink = map[string]string{
+	"text": "text is the display text for the link",
+	"href": "href is the absolute secure URL for the link (must use https)",
+}
+
+func (CLIDownloadLink) SwaggerDoc() map[string]string {
+	return map_CLIDownloadLink
+}
+
 var map_ConsoleCLIDownload = map[string]string{
 	"":         "ConsoleCLIDownload is an extension for configuring openshift web console command line interface (CLI) downloads.",
 	"metadata": "Standard object's metadata.",
@@ -79,7 +88,7 @@ func (ConsoleExternalLogLinkSpec) SwaggerDoc() map[string]string {
 
 var map_ApplicationMenuSpec = map[string]string{
 	"":         "ApplicationMenuSpec is the specification of the desired section and icon used for the link in the application menu.",
-	"section":  "section is the section of the application menu in which the link should appear.",
+	"section":  "section is the section of the application menu in which the link should appear. This can be any text that will appear as a subheading in the application menu dropdown. A new section will be created if the text does not match text of an existing section.",
 	"imageURL": "imageUrl is the URL for the icon used in front of the link in the application menu. The URL must be an HTTPS URL or a Data URI. The image should be square and will be shown at 24x24 pixels.",
 }
 
@@ -106,7 +115,7 @@ func (ConsoleLinkList) SwaggerDoc() map[string]string {
 
 var map_ConsoleLinkSpec = map[string]string{
 	"":                   "ConsoleLinkSpec is the desired console link configuration.",
-	"location":           "location determines which location in the console the link will be appended to.",
+	"location":           "location determines which location in the console the link will be appended to (ApplicationMenu, HelpMenu, UserMenu, NamespaceDashboard).",
 	"applicationMenu":    "applicationMenu holds information about section and icon used for the link in the application menu, and it is applicable only when location is set to ApplicationMenu.",
 	"namespaceDashboard": "namespaceDashboard holds information about namespaces in which the dashboard link should appear, and it is applicable only when location is set to NamespaceDashboard. If not specified, the link will appear in all namespaces.",
 }

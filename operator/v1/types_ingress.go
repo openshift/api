@@ -131,6 +131,15 @@ type IngressControllerSpec struct {
 	// tlsSecurityProfile specifies settings for TLS connections for ingresscontrollers.
 	//
 	// If unset, the default is based on the ingresses.config.openshift.io/cluster resource.
+	// If the default is used, and the ingresses.config.openshift.io/cluster resource
+	// diverges from the ingresscontroller's effective default, the ingresscontroller will
+	// continue to use the defaults applied at the time of creation.
+	//
+	// Note that when using the Old, Intermediate, and Custom profile types, the effective
+	// profile configuration is subject to change between releases. For example, given
+	// a specification to use the Intermediate profile deployed on release X.Y.Z, an upgrade
+	// to release X.Y.Z+1 may cause a new profile configuration to be applied to the ingress
+	// controller, resulting in a rollout.
 	//
 	// +optional
 	TLSSecurityProfile *configv1.TLSSecurityProfile `json:"tlsSecurityProfile,omitempty"`

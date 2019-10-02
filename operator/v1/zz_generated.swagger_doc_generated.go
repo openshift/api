@@ -275,7 +275,7 @@ var map_IngressControllerSpec = map[string]string{
 	"namespaceSelector":          "namespaceSelector is used to filter the set of namespaces serviced by the ingress controller. This is useful for implementing shards.\n\nIf unset, the default is no filtering.",
 	"routeSelector":              "routeSelector is used to filter the set of Routes serviced by the ingress controller. This is useful for implementing shards.\n\nIf unset, the default is no filtering.",
 	"nodePlacement":              "nodePlacement enables explicit control over the scheduling of the ingress controller.\n\nIf unset, defaults are used. See NodePlacement for more details.",
-	"tlsSecurityProfile":         "tlsSecurityProfile specifies settings for TLS connections for ingresscontrollers.\n\nIf unset, the default is based on the ingresses.config.openshift.io/cluster resource.",
+	"tlsSecurityProfile":         "tlsSecurityProfile specifies settings for TLS connections for ingresscontrollers.\n\nIf unset, the default is based on the ingresses.config.openshift.io/cluster resource. If the default is used, and the ingresses.config.openshift.io/cluster resource diverges from the ingresscontroller's effective default, the ingresscontroller will continue to use the defaults applied at the time of creation.\n\nNote that when using the Old, Intermediate, and Custom profile types, the effective profile configuration is subject to change between releases. For example, given a specification to use the Intermediate profile deployed on release X.Y.Z, an upgrade to release X.Y.Z+1 may cause a new profile configuration to be applied to the ingress controller, resulting in a rollout.",
 }
 
 func (IngressControllerSpec) SwaggerDoc() map[string]string {

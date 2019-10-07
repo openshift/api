@@ -24,6 +24,7 @@ CONTROLLER_GEN_VERSION :=v0.2.1
 $(call add-crd-gen,authorization,./authorization/v1,./authorization/v1,./authorization/v1)
 $(call add-crd-gen,config,./config/v1,./config/v1,./config/v1)
 $(call add-crd-gen,console,./console/v1,./console/v1,./console/v1)
+$(call add-crd-gen,operator,./operator/v1alpha1,./operator/v1alpha1,./operator/v1alpha1)
 
 RUNTIME ?= podman
 RUNTIME_IMAGE_NAME ?= openshift-api-generator

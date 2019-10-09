@@ -108,8 +108,7 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 			"ServiceNodeExclusion",              // sig-scheduling, ccoleman
 		},
 		Disabled: []string{
-			"LocalStorageCapacityIsolation", // sig-pod, sjenning
-			"LegacyNodeRoleBehavior",        // sig-scheduling, ccoleman
+			"LegacyNodeRoleBehavior", // sig-scheduling, ccoleman
 		},
 	},
 	CustomNoUpgrade: {
@@ -126,8 +125,7 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 			"ServiceNodeExclusion",              // sig-scheduling, ccoleman
 		},
 		Disabled: []string{
-			"LocalStorageCapacityIsolation", // sig-pod, sjenning
-			"LegacyNodeRoleBehavior",        // sig-scheduling, ccoleman
+			"LegacyNodeRoleBehavior", // sig-scheduling, ccoleman
 		},
 	},
 	LatencySensitive: {
@@ -140,8 +138,7 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 			"ServiceNodeExclusion",              // sig-scheduling, ccoleman
 		},
 		Disabled: []string{
-			"LocalStorageCapacityIsolation", // sig-pod, sjenning
-			"LegacyNodeRoleBehavior",        // sig-scheduling, ccoleman
+			"LegacyNodeRoleBehavior", // sig-scheduling, ccoleman
 		},
 	},
 }

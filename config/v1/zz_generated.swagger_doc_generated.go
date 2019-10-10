@@ -823,6 +823,17 @@ func (OpenStackPlatformStatus) SwaggerDoc() map[string]string {
 	return map_OpenStackPlatformStatus
 }
 
+var map_OvirtPlatformStatus = map[string]string{
+	"":                    "OvirtPlatformStatus holds the current status of the  oVirt infrastructure provider.",
+	"apiServerInternalIP": "apiServerInternalIP is an IP address to contact the Kubernetes API server that can be used by components inside the cluster, like kubelets using the infrastructure rather than Kubernetes networking. It is the IP that the Infrastructure.status.apiServerInternalURI points to. It is the IP for a self-hosted load balancer in front of the API servers.",
+	"ingressIP":           "ingressIP is an external IP which routes to the default ingress controller. The IP is a suitable target of a wildcard DNS record used to resolve default route host names.",
+	"nodeDNSIP":           "nodeDNSIP is the IP address for the internal DNS used by the nodes. Unlike the one managed by the DNS operator, `NodeDNSIP` provides name resolution for the nodes themselves. There is no DNS-as-a-service for oVirt deployments. In order to minimize necessary changes to the datacenter DNS, a DNS service is hosted as a static pod to serve those hostnames to the nodes in the cluster.",
+}
+
+func (OvirtPlatformStatus) SwaggerDoc() map[string]string {
+	return map_OvirtPlatformStatus
+}
+
 var map_PlatformStatus = map[string]string{
 	"":          "PlatformStatus holds the current status specific to the underlying infrastructure provider of the current cluster. Since these are used at status-level for the underlying cluster, it is supposed that only one of the status structs is set.",
 	"type":      "type is the underlying infrastructure provider for the cluster. This value controls whether infrastructure automation such as service load balancers, dynamic volume provisioning, machine creation and deletion, and other integrations are enabled. If None, no infrastructure automation is enabled. Allowed values are \"AWS\", \"Azure\", \"BareMetal\", \"GCP\", \"Libvirt\", \"OpenStack\", \"VSphere\", \"oVirt\", and \"None\". Individual components may not support all platforms, and must handle unrecognized platforms as None if they do not support that platform.",
@@ -831,6 +842,7 @@ var map_PlatformStatus = map[string]string{
 	"gcp":       "GCP contains settings specific to the Google Cloud Platform infrastructure provider.",
 	"baremetal": "BareMetal contains settings specific to the BareMetal platform.",
 	"openstack": "OpenStack contains settings specific to the OpenStack infrastructure provider.",
+	"ovirt":     "Ovirt contains settings specific to the oVirt infrastructure provider.",
 }
 
 func (PlatformStatus) SwaggerDoc() map[string]string {

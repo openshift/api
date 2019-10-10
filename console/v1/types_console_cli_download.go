@@ -21,7 +21,16 @@ type ConsoleCLIDownloadSpec struct {
 	// description is the description of the CLI download (can include markdown).
 	Description string `json:"description"`
 	// links is a list of objects that provide CLI download link details.
-	Links []Link `json:"links"`
+	Links []CLIDownloadLink `json:"links"`
+}
+
+type CLIDownloadLink struct {
+	// text is the display text for the link
+	// +optional
+	Text string `json:"text"`
+	// href is the absolute secure URL for the link (must use https)
+	// +kubebuilder:validation:Pattern=^https://([\w-]+.)+[\w-]+(/[\w- ./?%&=])?$
+	Href string `json:"href"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

@@ -29,6 +29,7 @@ type ConsoleExternalLogLinkSpec struct {
 	//               - e.g. `11111111-2222-3333-4444-555555555555`
 	// - ${containerName} - name of the resource's container that contains the logs
 	// - ${resourceNamespace} - namespace of the resource that contains the logs
+	// - ${resourceNamespaceUID} - namespace UID of the resource that contains the logs
 	// - ${podLabels} - JSON representation of labels matching the pod with the logs
 	//             - e.g. `{"key1":"value1","key2":"value2"}`
 	//

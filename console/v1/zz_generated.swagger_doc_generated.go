@@ -163,4 +163,33 @@ func (ConsoleNotificationSpec) SwaggerDoc() map[string]string {
 	return map_ConsoleNotificationSpec
 }
 
+var map_ConsoleYAMLSample = map[string]string{
+	"":         "ConsoleYAMLSample is an extension for customizing OpenShift web console YAML samples.",
+	"metadata": "Standard object's metadata.",
+}
+
+func (ConsoleYAMLSample) SwaggerDoc() map[string]string {
+	return map_ConsoleYAMLSample
+}
+
+var map_ConsoleYAMLSampleList = map[string]string{
+	"metadata": "Standard object's metadata.",
+}
+
+func (ConsoleYAMLSampleList) SwaggerDoc() map[string]string {
+	return map_ConsoleYAMLSampleList
+}
+
+var map_ConsoleYAMLSampleSpec = map[string]string{
+	"":               "ConsoleYAMLSampleSpec is the desired YAML sample configuration. Samples will appear with their descriptions in a samples sidebar when creating a resources in the web console.",
+	"TargetResource": "targetResource contains apiVersion and kind of the resource YAML sample is representating.",
+	"title":          "title of the YAML sample.",
+	"description":    "description of the YAML sample.",
+	"yaml":           "yaml is the YAML sample to display.",
+}
+
+func (ConsoleYAMLSampleSpec) SwaggerDoc() map[string]string {
+	return map_ConsoleYAMLSampleSpec
+}
+
 // AUTO-GENERATED FUNCTIONS END HERE

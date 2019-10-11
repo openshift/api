@@ -146,6 +146,11 @@ type AWSPlatformStatus struct {
 type AzurePlatformStatus struct {
 	// resourceGroupName is the Resource Group for new Azure resources created for the cluster.
 	ResourceGroupName string `json:"resourceGroupName"`
+
+	// networkResourceGroupName is the Resource Group for network resources like the Virtual Network and Subnets used by the cluster.
+	// If empty, the value is same as ResourceGroupName.
+	// +optional
+	NetworkResourceGroupName string `json:"networkResourceGroupName,omitempty"`
 }
 
 // GCPPlatformStatus holds the current status of the Google Cloud Platform infrastructure provider.

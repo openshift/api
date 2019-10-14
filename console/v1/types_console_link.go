@@ -18,7 +18,6 @@ type ConsoleLink struct {
 type ConsoleLinkSpec struct {
 	Link `json:",inline"`
 	// location determines which location in the console the link will be appended to (ApplicationMenu, HelpMenu, UserMenu, NamespaceDashboard).
-	// +kubebuilder:validation:Pattern=^(ApplicationMenu|HelpMenu|UserMenu|NamespaceDashboard)$
 	Location ConsoleLinkLocation `json:"location"`
 	// applicationMenu holds information about section and icon used for the link in the
 	// application menu, and it is applicable only when location is set to ApplicationMenu.
@@ -52,6 +51,7 @@ type NamespaceDashboardSpec struct {
 }
 
 // ConsoleLinkLocationSelector is a set of possible menu targets to which a link may be appended.
+// +kubebuilder:validation:Pattern=^(ApplicationMenu|HelpMenu|UserMenu|NamespaceDashboard)$
 type ConsoleLinkLocation string
 
 const (

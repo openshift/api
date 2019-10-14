@@ -20,7 +20,6 @@ type ConsoleNotificationSpec struct {
 	Text string `json:"text"`
 	// location is the location of the notification in the console.
 	// +optional
-	// +kubebuilder:validation:Pattern=^(BannerTop|BannerBottom|BannerTopBottom)$
 	Location ConsoleNotificationLocation `json:"location,omitempty"`
 	// link is an object that holds notification link details.
 	// +optional
@@ -35,6 +34,7 @@ type ConsoleNotificationSpec struct {
 
 // ConsoleNotificationLocationSelector is a set of possible notification targets
 // to which a notification may be appended.
+// +kubebuilder:validation:Pattern=^(BannerTop|BannerBottom|BannerTopBottom)$
 type ConsoleNotificationLocation string
 
 const (

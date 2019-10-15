@@ -163,6 +163,8 @@ type GCPPlatformStatus struct {
 }
 
 // BareMetalPlatformStatus holds the current status of the BareMetal infrastructure provider.
+// For more information about the network architecture used with the BareMetal platform type, see:
+// https://github.com/openshift/installer/blob/master/docs/design/baremetal/networking-infrastructure.md
 type BareMetalPlatformStatus struct {
 	// apiServerInternalIP is an IP address to contact the Kubernetes API server that can be used
 	// by components inside the cluster, like kubelets using the infrastructure rather

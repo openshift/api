@@ -232,7 +232,7 @@ type EndpointPublishingStrategy struct {
 	// In this configuration, the ingress controller deployment uses container
 	// networking. A LoadBalancer Service is created to publish the deployment.
 	//
-	// See: https://kubernetes.io/docs/concepts/services-networking/#loadbalancer
+	// See: https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer
 	//
 	// If domain is set, a wildcard DNS record will be managed to point at the
 	// LoadBalancer Service's external name. DNS records are managed only in DNS

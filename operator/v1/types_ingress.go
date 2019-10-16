@@ -351,6 +351,10 @@ type IngressControllerStatus struct {
 	// tlsProfile is the TLS connection configuration that is in effect.
 	// +optional
 	TLSProfile *configv1.TLSProfileSpec `json:"tlsProfile,omitempty"`
+
+	// observedGeneration is the most recent generation observed.
+	// +optional
+	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

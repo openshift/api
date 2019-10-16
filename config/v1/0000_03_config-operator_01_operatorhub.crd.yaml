@@ -10,6 +10,7 @@ spec:
     plural: operatorhubs
     singular: operatorhub
   scope: Cluster
+  preserveUnknownField: false
   subresources:
     status: {}
   version: v1

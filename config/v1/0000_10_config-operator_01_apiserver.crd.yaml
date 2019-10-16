@@ -5,6 +5,7 @@ metadata:
 spec:
   group: config.openshift.io
   scope: Cluster
+  preserveUnknownField: false
   names:
     kind: APIServer
     singular: apiserver

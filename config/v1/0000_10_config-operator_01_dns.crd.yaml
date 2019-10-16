@@ -10,6 +10,7 @@ spec:
     plural: dnses
     singular: dns
   scope: Cluster
+  preserveUnknownField: false
   versions:
   - name: v1
     served: true

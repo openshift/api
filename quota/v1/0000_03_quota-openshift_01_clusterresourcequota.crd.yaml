@@ -12,19 +12,11 @@ spec:
   scope: Cluster
   subresources:
     status: {}
-  versions:
-  - name: v1
-    served: true
-    storage: true
-  "validation":
-    "openAPIV3Schema":
+  validation:
+    openAPIV3Schema:
       description: ClusterResourceQuota mirrors ResourceQuota at a cluster scope.  This
         object is easily convertible to synthetic ResourceQuota object to allow quota
         evaluation re-use.
-      type: object
-      required:
-      - metadata
-      - spec
       properties:
         apiVersion:
           description: 'APIVersion defines the versioned schema of this representation
@@ -41,41 +33,33 @@ spec:
           type: object
         spec:
           description: Spec defines the desired quota
-          type: object
-          required:
-          - quota
-          - selector
           properties:
             quota:
               description: Quota defines the desired quota
-              type: object
               properties:
                 hard:
+                  additionalProperties:
+                    anyOf:
+                    - type: string
+                    - type: integer
+                    type: string
                   description: 'hard is the set of desired hard limits for each named
                     resource. More info: https://kubernetes.io/docs/concepts/policy/resource-quotas/'
                   type: object
-                  additionalProperties:
-                    type: string
                 scopeSelector:
                   description: scopeSelector is also a collection of filters like
                     scopes that must match each object tracked by a quota but expressed
                     using ScopeSelectorOperator in combination with possible values.
                     For a resource to match, both scopes AND scopeSelector (if specified
                     in spec), must be matched.
-                  type: object
                   properties:
                     matchExpressions:
                       description: A list of scope selector requirements by scope
                         of the resources.
-                      type: array
                       items:
                         description: A scoped-resource selector requirement is a selector
                           that contains values, a scope name, and an operator that
                           relates the scope name and values.
-                        type: object
-                        required:
-                        - operator
-                        - scopeName
                         properties:
                           operator:
                             description: Represents a scope's relationship to a set
@@ -91,46 +75,47 @@ spec:
                               If the operator is Exists or DoesNotExist, the values
                               array must be empty. This array is replaced during a
                               strategic merge patch.
-                            type: array
                             items:
                               type: string
+                            type: array
+                        required:
+                        - operator
+                        - scopeName
+                        type: object
+                      type: array
+                  type: object
                 scopes:
                   description: A collection of filters that must match each object
                     tracked by a quota. If not specified, the quota matches all objects.
-                  type: array
                   items:
                     description: A ResourceQuotaScope defines a filter that must match
                       each object tracked by a quota
                     type: string
+                  type: array
+              type: object
             selector:
               description: Selector is the selector used to match projects. It should
                 only select active projects on the scale of dozens (though it can
                 select many more less active projects).  These projects will contend
                 on object creation through this resource.
-              type: object
               properties:
                 annotations:
-                  description: AnnotationSelector is used to select projects by annotation.
-                  type: object
                   additionalProperties:
                     type: string
+                  description: AnnotationSelector is used to select projects by annotation.
                   nullable: true
+                  type: object
                 labels:
                   description: LabelSelector is used to select projects by label.
-                  type: object
+                  nullable: true
                   properties:
                     matchExpressions:
                       description: matchExpressions is a list of label selector requirements.
                         The requirements are ANDed.
-                      type: array
                       items:
                         description: A label selector requirement is a selector that
                           contains values, a key, and an operator that relates the
                           key and values.
-                        type: object
-                        required:
-                        - key
-                        - operator
                         properties:
                           key:
                             description: key is the label key that the selector applies
@@ -147,38 +132,40 @@ spec:
                               If the operator is Exists or DoesNotExist, the values
                               array must be empty. This array is replaced during a
                               strategic merge patch.
-                            type: array
                             items:
                               type: string
+                            type: array
+                        required:
+                        - key
+                        - operator
+                        type: object
+                      type: array
                     matchLabels:
+                      additionalProperties:
+                        type: string
                       description: matchLabels is a map of {key,value} pairs. A single
                         {key,value} in the matchLabels map is equivalent to an element
                         of matchExpressions, whose key field is "key", the operator
                         is "In", and the values array contains only "value". The requirements
                         are ANDed.
                       type: object
-                      additionalProperties:
-                        type: string
-                  nullable: true
+                  type: object
+              type: object
+          required:
+          - quota
+          - selector
+          type: object
         status:
           description: Status defines the actual enforced quota and its current usage
-          type: object
-          required:
-          - total
           properties:
             namespaces:
               description: Namespaces slices the usage by project.  This division
                 allows for quick resolution of deletion reconciliation inside of a
                 single project without requiring a recalculation across all projects.  This
                 can be used to pull the deltas for a given project.
-              type: array
               items:
                 description: ResourceQuotaStatusByNamespace gives status for a particular
                   project
-                type: object
-                required:
-                - namespace
-                - status
                 properties:
                   namespace:
                     description: Namespace the project this status applies to
@@ -186,35 +173,51 @@ spec:
                   status:
                     description: Status indicates how many resources have been consumed
                       by this project
-                    type: object
                     properties:
                       hard:
+                        additionalProperties:
+                          type: string
                         description: 'Hard is the set of enforced hard limits for
                           each named resource. More info: https://kubernetes.io/docs/concepts/policy/resource-quotas/'
                         type: object
+                      used:
                         additionalProperties:
                           type: string
-                      used:
                         description: Used is the current observed total usage of the
                           resource in the namespace.
                         type: object
-                        additionalProperties:
-                          type: string
+                    type: object
+                required:
+                - namespace
+                - status
+                type: object
               nullable: true
+              type: array
             total:
               description: Total defines the actual enforced quota and its current
                 usage across all projects
-              type: object
               properties:
                 hard:
+                  additionalProperties:
+                    type: string
                   description: 'Hard is the set of enforced hard limits for each named
                     resource. More info: https://kubernetes.io/docs/concepts/policy/resource-quotas/'
                   type: object
+                used:
                   additionalProperties:
                     type: string
-                used:
                   description: Used is the current observed total usage of the resource
                     in the namespace.
                   type: object
-                  additionalProperties:
-                    type: string
+              type: object
+          required:
+          - total
+          type: object
+      required:
+      - metadata
+      - spec
+      type: object
+  versions:
+  - name: v1
+    served: true
+    storage: true

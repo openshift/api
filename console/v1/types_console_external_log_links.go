@@ -8,10 +8,10 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 // ConsoleExternalLogLink is an extension for customizing OpenShift web console log links.
 type ConsoleExternalLogLink struct {
-	metav1.TypeMeta `json:",inline"`
-	// Standard object's metadata.
+	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              ConsoleExternalLogLinkSpec `json:"spec"`
+
+	Spec ConsoleExternalLogLinkSpec `json:"spec"`
 }
 
 // ConsoleExternalLogLinkSpec is the desired log link configuration.
@@ -48,7 +48,7 @@ type ConsoleExternalLogLinkSpec struct {
 
 type ConsoleExternalLogLinkList struct {
 	metav1.TypeMeta `json:",inline"`
-	// Standard object's metadata.
 	metav1.ListMeta `json:"metadata"`
-	Items           []ConsoleExternalLogLink `json:"items"`
+
+	Items []ConsoleExternalLogLink `json:"items"`
 }

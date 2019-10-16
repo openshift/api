@@ -100,8 +100,8 @@ type ServiceCertSignerOperatorConfigStatus struct {
 // ServiceCertSignerOperatorConfigList is a collection of items
 type ServiceCertSignerOperatorConfigList struct {
 	metav1.TypeMeta `json:",inline"`
-	// Standard object's metadata.
 	metav1.ListMeta `json:"metadata,omitempty"`
+
 	// Items contains the items
 	Items []ServiceCertSignerOperatorConfig `json:"items"`
 }

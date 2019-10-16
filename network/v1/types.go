@@ -16,8 +16,7 @@ const (
 // named "default", which is created by the SDN network plugin based on the master configuration
 // when the cluster is brought up for the first time.
 type ClusterNetwork struct {
-	metav1.TypeMeta `json:",inline"`
-	// Standard object's metadata.
+	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 
 	// Network is a CIDR string specifying the global overlay network's L3 space
@@ -49,8 +48,8 @@ type ClusterNetworkEntry struct {
 // ClusterNetworkList is a collection of ClusterNetworks
 type ClusterNetworkList struct {
 	metav1.TypeMeta `json:",inline"`
-	// Standard object's metadata.
 	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+
 	// Items is the list of cluster networks
 	Items []ClusterNetwork `json:"items" protobuf:"bytes,2,rep,name=items"`
 }
@@ -62,8 +61,7 @@ type ClusterNetworkList struct {
 // HostSubnet describes the container subnet network on a node. The HostSubnet object must have the
 // same name as the Node object it corresponds to.
 type HostSubnet struct {
-	metav1.TypeMeta `json:",inline"`
-	// Standard object's metadata.
+	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 
 	// Host is the name of the node. (This is the same as the object's name, but both fields must be set.)
@@ -90,8 +88,8 @@ type HostSubnet struct {
 // HostSubnetList is a collection of HostSubnets
 type HostSubnetList struct {
 	metav1.TypeMeta `json:",inline"`
-	// Standard object's metadata.
 	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+
 	// Items is the list of host subnets
 	Items []HostSubnet `json:"items" protobuf:"bytes,2,rep,name=items"`
 }
@@ -104,8 +102,7 @@ type HostSubnetList struct {
 // plugin, every Namespace will have a corresponding NetNamespace object with the same name.
 // (When using redhat/openshift-ovs-subnet, NetNamespaces are not used.)
 type NetNamespace struct {
-	metav1.TypeMeta `json:",inline"`
-	// Standard object's metadata.
+	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 
 	// NetName is the name of the network namespace. (This is the same as the object's name, but both fields must be set.)
@@ -123,8 +120,8 @@ type NetNamespace struct {
 // NetNamespaceList is a collection of NetNamespaces
 type NetNamespaceList struct {
 	metav1.TypeMeta `json:",inline"`
-	// Standard object's metadata.
 	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+
 	// Items is the list of net namespaces
 	Items []NetNamespace `json:"items" protobuf:"bytes,2,rep,name=items"`
 }
@@ -168,8 +165,7 @@ type EgressNetworkPolicySpec struct {
 // namespace's EgressNetworkPolicy, in order. If no rule matches (or no EgressNetworkPolicy
 // is present) then the traffic will be allowed by default.
 type EgressNetworkPolicy struct {
-	metav1.TypeMeta `json:",inline"`
-	// metadata for EgressNetworkPolicy
+	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 
 	// spec is the specification of the current egress network policy
@@ -181,8 +177,8 @@ type EgressNetworkPolicy struct {
 // EgressNetworkPolicyList is a collection of EgressNetworkPolicy
 type EgressNetworkPolicyList struct {
 	metav1.TypeMeta `json:",inline"`
-	// metadata for EgressNetworkPolicyList
 	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+
 	// items is the list of policies
 	Items []EgressNetworkPolicy `json:"items" protobuf:"bytes,2,rep,name=items"`
 }

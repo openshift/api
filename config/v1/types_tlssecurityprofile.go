@@ -37,7 +37,6 @@ type TLSSecurityProfile struct {
 	//     - ECDHE-RSA-AES128-SHA256
 	//     - ECDHE-ECDSA-AES128-SHA
 	//     - ECDHE-RSA-AES128-SHA
-	//     - ECDHE-RSA-AES256-SHA384
 	//     - ECDHE-ECDSA-AES256-SHA
 	//     - ECDHE-RSA-AES256-SHA
 	//     - AES128-GCM-SHA256
@@ -168,13 +167,13 @@ type TLSProtocolVersion string
 
 const (
 	// VersionTLSv10 is version 1.0 of the TLS security protocol.
-	VersionTLS10 TLSProtocolVersion = "VersionTLSv10"
+	VersionTLS10 TLSProtocolVersion = "VersionTLS10"
 	// VersionTLSv11 is version 1.1 of the TLS security protocol.
-	VersionTLS11 TLSProtocolVersion = "VersionTLSv11"
+	VersionTLS11 TLSProtocolVersion = "VersionTLS11"
 	// VersionTLSv12 is version 1.2 of the TLS security protocol.
-	VersionTLS12 TLSProtocolVersion = "VersionTLSv12"
+	VersionTLS12 TLSProtocolVersion = "VersionTLS12"
 	// VersionTLSv13 is version 1.3 of the TLS security protocol.
-	VersionTLS13 TLSProtocolVersion = "VersionTLSv13"
+	VersionTLS13 TLSProtocolVersion = "VersionTLS13"
 )
 
 // TLSProfiles Contains a map of TLSProfileType names to TLSProfileSpec.
@@ -198,7 +197,6 @@ var TLSProfiles = map[TLSProfileType]*TLSProfileSpec{
 			"ECDHE-RSA-AES128-SHA256",
 			"ECDHE-ECDSA-AES128-SHA",
 			"ECDHE-RSA-AES128-SHA",
-			"ECDHE-RSA-AES256-SHA384",
 			"ECDHE-ECDSA-AES256-SHA",
 			"ECDHE-RSA-AES256-SHA",
 			"AES128-GCM-SHA256",

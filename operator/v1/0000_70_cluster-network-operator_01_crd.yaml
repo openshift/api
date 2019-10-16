@@ -1,0 +1,158 @@
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: networks.operator.openshift.io
+spec:
+  group: operator.openshift.io
+  names:
+    kind: Network
+    listKind: NetworkList
+    plural: networks
+    singular: network
+  scope: Cluster
+  versions:
+    - name: v1
+      served: true
+      storage: true
+  validation:
+    # Ensure we will be able to deserialize the object into the golang type
+    openAPIV3Schema:
+      properties:
+        spec:
+          type: object
+          required: ["defaultNetwork"]
+          properties:
+            clusterNetwork:
+              type: array
+              items:
+                type: object
+                required: ["cidr", "hostPrefix"]
+                properties:
+                  cidr:
+                    type: string
+                  hostPrefix:
+                    type: integer
+                    minimum: 0
+            serviceNetwork:
+              type: array
+              items:
+                type: string
+            defaultNetwork:
+              type: object
+              required: ["type"]
+              properties:
+                type:
+                  type: string
+                openshiftSDNConfig:
+                  type: object
+                  properties:
+                    mode:
+                      type: string
+                    vxlanPort:
+                      type: integer
+                      minimum: 0
+                    mtu:
+                      type: integer
+                      minimum: 0
+                    useExternalOpenvswitch:
+                      type: boolean
+                    enableUnidling:
+                      type: boolean
+                ovnKubernetesConfig:
+                  type: object
+                  properties:
+                    mtu:
+                      type: integer
+                      minimum: 0
+                kuryrConfig:
+                  type: object
+                  properties:
+                    daemonProbesPort:
+                      type: integer
+                      minimum: 0
+                    controllerProbesPort:
+                      type: integer
+                      minimum: 0
+                    openStackServiceNetwork:
+                      type: string
+            additionalNetworks:
+              type: array
+              items:
+                type: object
+                required: ["type", "name"]
+                properties:
+                  type:
+                    type: string
+                  name:
+                    type: string
+                  namespace:
+                    type: string
+                  rawCNIConfig:
+                    type: string
+                  simpleMacvlanConfig:
+                    type: object
+                    properties:
+                      master:
+                        type: string
+                      ipamConfig:
+                        type: object
+                        properties:
+                          type:
+                            type: string
+                          staticIPAMConfig:
+                            type: object
+                            properties:
+                              addresses:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    address:
+                                      type: string
+                                    gateway:
+                                      type: string
+                              routes:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    destination:
+                                      type: string
+                                    gateway:
+                                      type: string
+                              dns:
+                                type: object
+                                properties:
+                                  nameservers:
+                                    type: array
+                                    items:
+                                      type: string
+                                  domain:
+                                    type: string
+                                  search:
+                                    type: array
+                                    items:
+                                      type: string
+                      mode:
+                        type: string
+                      mtu:
+                        type: integer
+            disableMultiNetwork:
+              type: boolean
+            deployKubeProxy:
+              type: boolean
+            kubeProxyConfig:
+              type: object
+              properties:
+                iptablesSyncPeriod:
+                  type: string
+                bindAddress:
+                  type: string
+                proxyArguments:
+                  type: object
+                  additionalProperties:
+                    type: array
+                    items:
+                      type: string
+        status:
+          type: object

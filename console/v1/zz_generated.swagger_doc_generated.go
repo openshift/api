@@ -31,20 +31,11 @@ func (CLIDownloadLink) SwaggerDoc() map[string]string {
 }
 
 var map_ConsoleCLIDownload = map[string]string{
-	"":         "ConsoleCLIDownload is an extension for configuring openshift web console command line interface (CLI) downloads.",
-	"metadata": "Standard object's metadata.",
+	"": "ConsoleCLIDownload is an extension for configuring openshift web console command line interface (CLI) downloads.",
 }
 
 func (ConsoleCLIDownload) SwaggerDoc() map[string]string {
 	return map_ConsoleCLIDownload
-}
-
-var map_ConsoleCLIDownloadList = map[string]string{
-	"metadata": "Standard object's metadata.",
-}
-
-func (ConsoleCLIDownloadList) SwaggerDoc() map[string]string {
-	return map_ConsoleCLIDownloadList
 }
 
 var map_ConsoleCLIDownloadSpec = map[string]string{
@@ -59,20 +50,11 @@ func (ConsoleCLIDownloadSpec) SwaggerDoc() map[string]string {
 }
 
 var map_ConsoleExternalLogLink = map[string]string{
-	"":         "ConsoleExternalLogLink is an extension for customizing OpenShift web console log links.",
-	"metadata": "Standard object's metadata.",
+	"": "ConsoleExternalLogLink is an extension for customizing OpenShift web console log links.",
 }
 
 func (ConsoleExternalLogLink) SwaggerDoc() map[string]string {
 	return map_ConsoleExternalLogLink
-}
-
-var map_ConsoleExternalLogLinkList = map[string]string{
-	"metadata": "Standard object's metadata.",
-}
-
-func (ConsoleExternalLogLinkList) SwaggerDoc() map[string]string {
-	return map_ConsoleExternalLogLinkList
 }
 
 var map_ConsoleExternalLogLinkSpec = map[string]string{
@@ -97,20 +79,11 @@ func (ApplicationMenuSpec) SwaggerDoc() map[string]string {
 }
 
 var map_ConsoleLink = map[string]string{
-	"":         "ConsoleLink is an extension for customizing OpenShift web console links.",
-	"metadata": "Standard object's metadata.",
+	"": "ConsoleLink is an extension for customizing OpenShift web console links.",
 }
 
 func (ConsoleLink) SwaggerDoc() map[string]string {
 	return map_ConsoleLink
-}
-
-var map_ConsoleLinkList = map[string]string{
-	"metadata": "Standard object's metadata.",
-}
-
-func (ConsoleLinkList) SwaggerDoc() map[string]string {
-	return map_ConsoleLinkList
 }
 
 var map_ConsoleLinkSpec = map[string]string{
@@ -134,20 +107,11 @@ func (NamespaceDashboardSpec) SwaggerDoc() map[string]string {
 }
 
 var map_ConsoleNotification = map[string]string{
-	"":         "ConsoleNotification is the extension for configuring openshift web console notifications.",
-	"metadata": "Standard object's metadata.",
+	"": "ConsoleNotification is the extension for configuring openshift web console notifications.",
 }
 
 func (ConsoleNotification) SwaggerDoc() map[string]string {
 	return map_ConsoleNotification
-}
-
-var map_ConsoleNotificationList = map[string]string{
-	"metadata": "Standard object's metadata.",
-}
-
-func (ConsoleNotificationList) SwaggerDoc() map[string]string {
-	return map_ConsoleNotificationList
 }
 
 var map_ConsoleNotificationSpec = map[string]string{
@@ -164,20 +128,11 @@ func (ConsoleNotificationSpec) SwaggerDoc() map[string]string {
 }
 
 var map_ConsoleYAMLSample = map[string]string{
-	"":         "ConsoleYAMLSample is an extension for customizing OpenShift web console YAML samples.",
-	"metadata": "Standard object's metadata.",
+	"": "ConsoleYAMLSample is an extension for customizing OpenShift web console YAML samples.",
 }
 
 func (ConsoleYAMLSample) SwaggerDoc() map[string]string {
 	return map_ConsoleYAMLSample
-}
-
-var map_ConsoleYAMLSampleList = map[string]string{
-	"metadata": "Standard object's metadata.",
-}
-
-func (ConsoleYAMLSampleList) SwaggerDoc() map[string]string {
-	return map_ConsoleYAMLSampleList
 }
 
 var map_ConsoleYAMLSampleSpec = map[string]string{

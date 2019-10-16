@@ -360,6 +360,24 @@ func (KubeControllerManagerList) SwaggerDoc() map[string]string {
 	return map_KubeControllerManagerList
 }
 
+var map_KubeStorageVersionMigrator = map[string]string{
+	"": "KubeStorageVersionMigrator provides information to configure an operator to manage kube-storage-version-migrator.",
+}
+
+func (KubeStorageVersionMigrator) SwaggerDoc() map[string]string {
+	return map_KubeStorageVersionMigrator
+}
+
+var map_KubeStorageVersionMigratorList = map[string]string{
+	"":         "KubeStorageVersionMigratorList is a collection of items",
+	"metadata": "Standard object's metadata.",
+	"items":    "Items contains the items",
+}
+
+func (KubeStorageVersionMigratorList) SwaggerDoc() map[string]string {
+	return map_KubeStorageVersionMigratorList
+}
+
 var map_AdditionalNetworkDefinition = map[string]string{
 	"":                    "AdditionalNetworkDefinition configures an extra network that is available but not created by default. Instead, pods must request them by name. type must be specified, along with exactly one \"Config\" that matches the type.",
 	"type":                "type is the type of network The supported values are NetworkTypeRaw, NetworkTypeSimpleMacvlan",

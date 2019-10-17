@@ -30,15 +30,15 @@ type ConsoleYAMLSampleSpec struct {
 }
 
 // ConsoleYAMLSampleTitle of the YAML sample.
-// +kubebuilder:validation:Pattern=^(.|\s)*\S(.|\s)*$
+// +kubebuilder:validation:Pattern=`^(.|\s)*\S(.|\s)*$`
 type ConsoleYAMLSampleTitle string
 
 // ConsoleYAMLSampleDescription of the YAML sample.
-// +kubebuilder:validation:Pattern=^(.|\s)*\S(.|\s)*$
+// +kubebuilder:validation:Pattern=`^(.|\s)*\S(.|\s)*$`
 type ConsoleYAMLSampleDescription string
 
 // ConsoleYAMLSampleYAML is the YAML sample to display.
-// +kubebuilder:validation:Pattern=^(.|\s)*\S(.|\s)*$
+// +kubebuilder:validation:Pattern=`^(.|\s)*\S(.|\s)*$`
 type ConsoleYAMLSampleYAML string
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

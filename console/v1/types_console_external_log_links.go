@@ -34,13 +34,13 @@ type ConsoleExternalLogLinkSpec struct {
 	//             - e.g. `{"key1":"value1","key2":"value2"}`
 	//
 	// e.g., https://example.com/logs?resourceName=${resourceName}&containerName=${containerName}&resourceNamespace=${resourceNamespace}&podLabels=${podLabels}
-	// +kubebuilder:validation:Pattern=^https://
+	// +kubebuilder:validation:Pattern=`^https://`
 	HrefTemplate string `json:"hrefTemplate"`
 	// namespaceFilter is a regular expression used to restrict a log link to a
 	// matching set of namespaces (e.g., `^openshift-`). The string is converted
 	// into a regular expression using the JavaScript RegExp constructor.
 	// If not specified, links will be displayed for all the namespaces.
-	// + optional
+	// +optional
 	NamespaceFilter string `json:"namespaceFilter,omitempty"`
 }
 

@@ -51,7 +51,7 @@ type NamespaceDashboardSpec struct {
 }
 
 // ConsoleLinkLocationSelector is a set of possible menu targets to which a link may be appended.
-// +kubebuilder:validation:Pattern=^(ApplicationMenu|HelpMenu|UserMenu|NamespaceDashboard)$
+// +kubebuilder:validation:Pattern=`^(ApplicationMenu|HelpMenu|UserMenu|NamespaceDashboard)$`
 type ConsoleLinkLocation string
 
 const (

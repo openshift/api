@@ -14,9 +14,6 @@ GO_BUILD_PACKAGES_EXPANDED :=$(GO_BUILD_PACKAGES)
 # LDFLAGS are not needed for dummy builds (saving time on calling git commands)
 GO_LD_FLAGS:=
 
-# Set crd-schema-gen variables
-CONTROLLER_GEN_VERSION :=v0.2.1
-
 # $1 - target name
 # $2 - apis
 # $3 - manifests

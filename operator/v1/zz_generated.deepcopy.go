@@ -1147,6 +1147,11 @@ func (in *KuryrConfig) DeepCopyInto(out *KuryrConfig) {
 		*out = new(uint32)
 		**out = **in
 	}
+	if in.PoolBatchPorts != nil {
+		in, out := &in.PoolBatchPorts, &out.PoolBatchPorts
+		*out = new(uint)
+		**out = **in
+	}
 	return
 }
 

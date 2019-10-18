@@ -32,6 +32,7 @@ verify-scripts:
 	bash -x hack/verify-deepcopy.sh
 	bash -x hack/verify-protobuf.sh
 	bash -x hack/verify-swagger-docs.sh
+	bash -x hack/verify-crds.sh
 .PHONY: verify-scripts
 verify: verify-scripts
 

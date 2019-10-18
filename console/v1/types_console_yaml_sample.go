@@ -8,10 +8,10 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 // ConsoleYAMLSample is an extension for customizing OpenShift web console YAML samples.
 type ConsoleYAMLSample struct {
-	metav1.TypeMeta `json:",inline"`
-	// Standard object's metadata.
+	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata"`
-	Spec              ConsoleYAMLSampleSpec `json:"spec"`
+
+	Spec ConsoleYAMLSampleSpec `json:"spec"`
 }
 
 // ConsoleYAMLSampleSpec is the desired YAML sample configuration.
@@ -30,22 +30,22 @@ type ConsoleYAMLSampleSpec struct {
 }
 
 // ConsoleYAMLSampleTitle of the YAML sample.
-// +kubebuilder:validation:Pattern=^(.|\s)*\S(.|\s)*$
+// +kubebuilder:validation:Pattern=`^(.|\s)*\S(.|\s)*$`
 type ConsoleYAMLSampleTitle string
 
 // ConsoleYAMLSampleDescription of the YAML sample.
-// +kubebuilder:validation:Pattern=^(.|\s)*\S(.|\s)*$
+// +kubebuilder:validation:Pattern=`^(.|\s)*\S(.|\s)*$`
 type ConsoleYAMLSampleDescription string
 
 // ConsoleYAMLSampleYAML is the YAML sample to display.
-// +kubebuilder:validation:Pattern=^(.|\s)*\S(.|\s)*$
+// +kubebuilder:validation:Pattern=`^(.|\s)*\S(.|\s)*$`
 type ConsoleYAMLSampleYAML string
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 type ConsoleYAMLSampleList struct {
 	metav1.TypeMeta `json:",inline"`
-	// Standard object's metadata.
 	metav1.ListMeta `json:"metadata"`
-	Items           []ConsoleYAMLSample `json:"items"`
+
+	Items []ConsoleYAMLSample `json:"items"`
 }

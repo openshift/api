@@ -8,10 +8,10 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 // ConsoleCLIDownload is an extension for configuring openshift web console command line interface (CLI) downloads.
 type ConsoleCLIDownload struct {
-	metav1.TypeMeta `json:",inline"`
-	// Standard object's metadata.
+	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              ConsoleCLIDownloadSpec `json:"spec"`
+
+	Spec ConsoleCLIDownloadSpec `json:"spec"`
 }
 
 // ConsoleCLIDownloadSpec is the desired cli download configuration.
@@ -29,7 +29,7 @@ type CLIDownloadLink struct {
 	// +optional
 	Text string `json:"text"`
 	// href is the absolute secure URL for the link (must use https)
-	// +kubebuilder:validation:Pattern=^https://([\w-]+.)+[\w-]+(/[\w- ./?%&=])?$
+	// +kubebuilder:validation:Pattern=`^https://([\w-]+.)+[\w-]+(/[\w- ./?%&=])?$`
 	Href string `json:"href"`
 }
 
@@ -37,7 +37,7 @@ type CLIDownloadLink struct {
 
 type ConsoleCLIDownloadList struct {
 	metav1.TypeMeta `json:",inline"`
-	// Standard object's metadata.
 	metav1.ListMeta `json:"metadata"`
-	Items           []ConsoleCLIDownload `json:"items"`
+
+	Items []ConsoleCLIDownload `json:"items"`
 }

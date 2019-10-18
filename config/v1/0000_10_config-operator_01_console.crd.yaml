@@ -4,6 +4,7 @@ metadata:
   name: consoles.config.openshift.io
 spec:
   scope: Cluster
+  preserveUnknownField: false
   group: config.openshift.io
   names:
     kind: Console
@@ -36,7 +37,6 @@ spec:
             submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
           type: string
         metadata:
-          description: Standard object's metadata.
           type: object
         spec:
           description: spec holds user settable values for configuration

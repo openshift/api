@@ -8,8 +8,7 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 // Feature holds cluster-wide information about feature gates.  The canonical name is `cluster`
 type FeatureGate struct {
-	metav1.TypeMeta `json:",inline"`
-	// Standard object's metadata.
+	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	// spec holds user settable values for configuration
@@ -76,9 +75,9 @@ type FeatureGateStatus struct {
 
 type FeatureGateList struct {
 	metav1.TypeMeta `json:",inline"`
-	// Standard object's metadata.
 	metav1.ListMeta `json:"metadata"`
-	Items           []FeatureGate `json:"items"`
+
+	Items []FeatureGate `json:"items"`
 }
 
 type FeatureGateEnabledDisabled struct {

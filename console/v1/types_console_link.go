@@ -8,10 +8,10 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 // ConsoleLink is an extension for customizing OpenShift web console links.
 type ConsoleLink struct {
-	metav1.TypeMeta `json:",inline"`
-	// Standard object's metadata.
+	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              ConsoleLinkSpec `json:"spec"`
+
+	Spec ConsoleLinkSpec `json:"spec"`
 }
 
 // ConsoleLinkSpec is the desired console link configuration.
@@ -51,7 +51,7 @@ type NamespaceDashboardSpec struct {
 }
 
 // ConsoleLinkLocationSelector is a set of possible menu targets to which a link may be appended.
-// +kubebuilder:validation:Pattern=^(ApplicationMenu|HelpMenu|UserMenu|NamespaceDashboard)$
+// +kubebuilder:validation:Pattern=`^(ApplicationMenu|HelpMenu|UserMenu|NamespaceDashboard)$`
 type ConsoleLinkLocation string
 
 const (
@@ -69,7 +69,7 @@ const (
 
 type ConsoleLinkList struct {
 	metav1.TypeMeta `json:",inline"`
-	// Standard object's metadata.
 	metav1.ListMeta `json:"metadata"`
-	Items           []ConsoleLink `json:"items"`
+
+	Items []ConsoleLink `json:"items"`
 }

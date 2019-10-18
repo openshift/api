@@ -33,8 +33,8 @@ type OpenShiftAPIServerStatus struct {
 // OpenShiftAPIServerList is a collection of items
 type OpenShiftAPIServerList struct {
 	metav1.TypeMeta `json:",inline"`
-	// Standard object's metadata.
 	metav1.ListMeta `json:"metadata"`
+
 	// Items contains the items
 	Items []OpenShiftAPIServer `json:"items"`
 }

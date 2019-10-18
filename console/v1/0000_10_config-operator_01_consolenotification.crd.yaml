@@ -7,6 +7,7 @@ metadata:
     description: Extension for configuring openshift web console notifications.
 spec:
   scope: Cluster
+  preserveUnknownField: false
   group: console.openshift.io
   versions:
   - name: v1
@@ -48,7 +49,6 @@ spec:
             submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
           type: string
         metadata:
-          description: Standard object's metadata.
           type: object
         spec:
           description: ConsoleNotificationSpec is the desired console notification

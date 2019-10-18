@@ -9,6 +9,7 @@ spec:
     listKind: ClusterResourceQuotaList
     plural: clusterresourcequotas
     singular: clusterresourcequota
+  preserveUnknownField: false
   scope: Cluster
   subresources:
     status: {}
@@ -29,7 +30,6 @@ spec:
             submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
           type: string
         metadata:
-          description: Standard object's metadata.
           type: object
         spec:
           description: Spec defines the desired quota

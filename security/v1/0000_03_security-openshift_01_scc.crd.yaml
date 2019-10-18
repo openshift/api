@@ -10,6 +10,7 @@ spec:
     plural: securitycontextconstraints
     singular: securitycontextconstraints
   scope: Cluster
+  preserveUnknownField: false
   versions:
   - name: v1
     served: true
@@ -176,7 +177,6 @@ spec:
             submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
           type: string
         metadata:
-          description: 'Standard object''s metadata. More info: http://releases.k8s.io/HEAD/docs/devel/api-conventions.md#metadata'
           type: object
         priority:
           description: Priority influences the sort order of SCCs when evaluating

@@ -9,6 +9,7 @@ spec:
     plural: kubeapiservers
     singular: kubeapiserver
   scope: Cluster
+  preserveUnknownField: false
   subresources:
     status: {}
   validation:

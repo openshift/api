@@ -11,6 +11,7 @@ spec:
     plural: kubecontrollermanagers
     singular: kubecontrollermanager
   scope: Cluster
+  preserveUnknownField: false
   subresources:
     status: {}
   validation:

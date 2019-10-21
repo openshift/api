@@ -13,6 +13,7 @@ spec:
     plural: dnses
     singular: dns
   scope: Cluster
+  preserveUnknownField: false
   subresources:
     status: {}
   validation:

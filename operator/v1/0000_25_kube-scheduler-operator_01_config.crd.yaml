@@ -11,6 +11,7 @@ spec:
     plural: kubeschedulers
     singular: kubescheduler
   scope: Cluster
+  preserveUnknownField: false
   subresources:
     status: {}
   validation:

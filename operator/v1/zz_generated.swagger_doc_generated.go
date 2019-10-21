@@ -407,6 +407,14 @@ func (DefaultNetworkDefinition) SwaggerDoc() map[string]string {
 	return map_DefaultNetworkDefinition
 }
 
+var map_HybridOverlayConfig = map[string]string{
+	"hybridClusterNetwork": "HybridClusterNetwork defines a network space given to nodes on an additional overlay network.",
+}
+
+func (HybridOverlayConfig) SwaggerDoc() map[string]string {
+	return map_HybridOverlayConfig
+}
+
 var map_IPAMConfig = map[string]string{
 	"":                 "IPAMConfig contains configurations for IPAM (IP Address Management)",
 	"type":             "Type is the type of IPAM module will be used for IP Address Management(IPAM). The supported values are IPAMTypeDHCP, IPAMTypeStatic",
@@ -468,9 +476,10 @@ func (NetworkStatus) SwaggerDoc() map[string]string {
 }
 
 var map_OVNKubernetesConfig = map[string]string{
-	"":           "ovnKubernetesConfig contains the configuration parameters for networks using the ovn-kubernetes network project",
-	"mtu":        "mtu is the MTU to use for the tunnel interface. This must be 100 bytes smaller than the uplink mtu. Default is 1400",
-	"genevePort": "geneve port is the UDP port to be used by geneve encapulation. Default is 6081",
+	"":                    "ovnKubernetesConfig contains the configuration parameters for networks using the ovn-kubernetes network project",
+	"mtu":                 "mtu is the MTU to use for the tunnel interface. This must be 100 bytes smaller than the uplink mtu. Default is 1400",
+	"genevePort":          "geneve port is the UDP port to be used by geneve encapulation. Default is 6081",
+	"hybridOverlayConfig": "HybridOverlayConfig configures an additional overlay network for peers that are not using OVN.",
 }
 
 func (OVNKubernetesConfig) SwaggerDoc() map[string]string {

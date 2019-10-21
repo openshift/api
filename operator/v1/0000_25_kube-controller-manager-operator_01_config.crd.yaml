@@ -10,8 +10,8 @@ spec:
     kind: KubeControllerManager
     plural: kubecontrollermanagers
     singular: kubecontrollermanager
-  scope: Cluster
   preserveUnknownField: false
+  scope: Cluster
   subresources:
     status: {}
   validation:
@@ -55,7 +55,7 @@ spec:
             managementState:
               description: managementState indicates whether and how the operator
                 should manage the component
-              pattern: ^(Managed|Unmanaged|Force|Removed)$
+              pattern: ^(Managed|Force)$
               type: string
             observedConfig:
               description: observedConfig holds a sparse config that controller has

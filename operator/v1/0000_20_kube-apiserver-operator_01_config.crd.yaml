@@ -8,8 +8,8 @@ spec:
     kind: KubeAPIServer
     plural: kubeapiservers
     singular: kubeapiserver
-  scope: Cluster
   preserveUnknownField: false
+  scope: Cluster
   subresources:
     status: {}
   validation:

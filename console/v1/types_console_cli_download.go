@@ -29,7 +29,7 @@ type CLIDownloadLink struct {
 	// +optional
 	Text string `json:"text"`
 	// href is the absolute secure URL for the link (must use https)
-	// +kubebuilder:validation:Pattern=`^https://([\w-]+.)+[\w-]+(/[\w- ./?%&=])?$`
+	// +kubebuilder:validation:Pattern=`^https://`
 	Href string `json:"href"`
 }
 

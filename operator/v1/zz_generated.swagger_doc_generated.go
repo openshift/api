@@ -581,6 +581,14 @@ func (OpenShiftAPIServerList) SwaggerDoc() map[string]string {
 	return map_OpenShiftAPIServerList
 }
 
+var map_OpenShiftAPIServerStatus = map[string]string{
+	"latestAvailableRevision": "latestAvailableRevision is the latest revision used as suffix of revisioned secrets like encryption-config. A new revision causes a new deployment of pods.",
+}
+
+func (OpenShiftAPIServerStatus) SwaggerDoc() map[string]string {
+	return map_OpenShiftAPIServerStatus
+}
+
 var map_OpenShiftControllerManager = map[string]string{
 	"": "OpenShiftControllerManager provides information to configure an operator to manage openshift-controller-manager.",
 }

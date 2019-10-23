@@ -11,6 +11,7 @@ spec:
     plural: ingresscontrollers
     singular: ingresscontroller
   scope: ""
+  preserveUnknownField: false
   subresources:
     scale:
       labelSelectorPath: .status.selector

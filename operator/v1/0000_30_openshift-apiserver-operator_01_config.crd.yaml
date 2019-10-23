@@ -120,6 +120,13 @@ spec:
                     description: resource is the resource type of the thing you're
                       tracking
                     type: string
+            latestAvailableRevision:
+              description: latestAvailableRevision is the latest revision used as
+                suffix of revisioned secrets like encryption-config. A new revision
+                causes a new deployment of pods.
+              type: integer
+              format: int32
+              minimum: 0
             observedGeneration:
               description: observedGeneration is the last generation change you've
                 dealt with

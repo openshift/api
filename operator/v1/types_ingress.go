@@ -138,6 +138,11 @@ type IngressControllerSpec struct {
 	// to release X.Y.Z+1 may cause a new profile configuration to be applied to the ingress
 	// controller, resulting in a rollout.
 	//
+	// Note that the minimum TLS version for ingress controllers is 1.1, and
+	// the maximum TLS version is 1.2.  An implication of this restriction
+	// is that the Modern TLS profile type cannot be used because it
+	// requires TLS 1.3.
+	//
 	// +optional
 	TLSSecurityProfile *configv1.TLSSecurityProfile `json:"tlsSecurityProfile,omitempty"`
 }

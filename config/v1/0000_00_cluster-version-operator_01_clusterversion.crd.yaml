@@ -15,6 +15,7 @@ spec:
     plural: clusterversions
     singular: clusterversion
     kind: ClusterVersion
+  preserveUnknownFields: false
   additionalPrinterColumns:
   - name: Version
     type: string

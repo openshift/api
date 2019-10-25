@@ -10,7 +10,7 @@ spec:
     plural: rolebindingrestrictions
     singular: rolebindingrestriction
   scope: Namespaced
-  preserveUnknownField: false
+  preserveUnknownFields: false
   versions:
   - name: v1
     served: true

@@ -11,7 +11,7 @@ spec:
     plural: dnses
     singular: dns
   scope: Cluster
-  preserveUnknownField: false
+  preserveUnknownFields: false
   subresources:
     status: {}
   validation:

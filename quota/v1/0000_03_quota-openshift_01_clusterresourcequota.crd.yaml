@@ -9,7 +9,7 @@ spec:
     listKind: ClusterResourceQuotaList
     plural: clusterresourcequotas
     singular: clusterresourcequota
-  preserveUnknownField: false
+  preserveUnknownFields: false
   scope: Cluster
   subresources:
     status: {}

@@ -4,7 +4,7 @@ metadata:
   name: servicecas.operator.openshift.io
 spec:
   scope: Cluster
-  preserveUnknownField: false
+  preserveUnknownFields: false
   group: operator.openshift.io
   version: v1
   names:

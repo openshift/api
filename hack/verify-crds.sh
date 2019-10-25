@@ -21,8 +21,8 @@ do
         FAILS=true
     fi
 
-    if [[ $(./_output/tools/bin/yq r $f spec.preserveUnknownField) == "null" ]]; then
-        echo "Error: pruning not enabled (spec.preserveUnknownField != false) in $f"
+    if [[ $(./_output/tools/bin/yq r $f spec.preserveUnknownFields) == "null" ]]; then
+        echo "Error: pruning not enabled (spec.preserveUnknownFields != false) in $f"
         FAILS=true
     fi
 done

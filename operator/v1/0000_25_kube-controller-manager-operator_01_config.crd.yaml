@@ -10,7 +10,7 @@ spec:
     kind: KubeControllerManager
     plural: kubecontrollermanagers
     singular: kubecontrollermanager
-  preserveUnknownField: false
+  preserveUnknownFields: false
   scope: Cluster
   subresources:
     status: {}

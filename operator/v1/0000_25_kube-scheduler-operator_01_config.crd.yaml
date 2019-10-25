@@ -10,7 +10,7 @@ spec:
     kind: KubeScheduler
     plural: kubeschedulers
     singular: kubescheduler
-  preserveUnknownField: false
+  preserveUnknownFields: false
   scope: Cluster
   subresources:
     status: {}

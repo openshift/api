@@ -8,7 +8,7 @@ metadata:
       web console log links.
 spec:
   scope: Cluster
-  preserveUnknownField: false
+  preserveUnknownFields: false
   group: console.openshift.io
   versions:
   - name: v1

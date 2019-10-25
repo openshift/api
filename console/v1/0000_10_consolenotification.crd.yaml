@@ -7,7 +7,7 @@ metadata:
     description: Extension for configuring openshift web console notifications.
 spec:
   scope: Cluster
-  preserveUnknownField: false
+  preserveUnknownFields: false
   group: console.openshift.io
   versions:
   - name: v1

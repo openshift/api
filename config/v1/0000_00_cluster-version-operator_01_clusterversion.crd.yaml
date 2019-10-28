@@ -203,6 +203,10 @@ spec:
                 description: ClusterOperatorStatusCondition represents the state of
                   the operator's reconciliation functionality.
                 type: object
+                required:
+                - lastTransitionTime
+                - status
+                - type
                 properties:
                   lastTransitionTime:
                     description: lastTransitionTime is the time of the last update

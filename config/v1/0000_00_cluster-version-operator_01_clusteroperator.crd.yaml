@@ -32,6 +32,7 @@ spec:
     singular: clusteroperator
     shortNames:
     - co
+  preserveUnknownFields: false
   scope: Cluster
   subresources:
     status: {}

@@ -22,7 +22,7 @@ type ClusterOperator struct {
 	Spec ClusterOperatorSpec `json:"spec"`
 
 	// status holds the information about the state of an operator.  It is consistent with status information across
-	// the kube ecosystem.
+	// the Kubernetes ecosystem.
 	// +optional
 	Status ClusterOperatorStatus `json:"status"`
 }

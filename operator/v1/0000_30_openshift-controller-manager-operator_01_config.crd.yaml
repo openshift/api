@@ -3,15 +3,14 @@ kind: CustomResourceDefinition
 metadata:
   name: openshiftcontrollermanagers.operator.openshift.io
 spec:
-  scope: Cluster
   group: operator.openshift.io
-  version: v1
   names:
+    categories:
+    - coreoperators
     kind: OpenShiftControllerManager
     plural: openshiftcontrollermanagers
     singular: openshiftcontrollermanager
-    categories:
-    - coreoperators
+  scope: Cluster
   subresources:
     status: {}
   validation:
@@ -501,3 +500,4 @@ spec:
       required:
       - spec
       type: object
+  version: v1

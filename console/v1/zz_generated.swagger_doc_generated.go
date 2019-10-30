@@ -98,8 +98,9 @@ func (ConsoleLinkSpec) SwaggerDoc() map[string]string {
 }
 
 var map_NamespaceDashboardSpec = map[string]string{
-	"":           "NamespaceDashboardSpec is a specification of namespaces in which the dashboard link should appear.",
-	"namespaces": "namespaces is an array of namespace names in which the dashboard link should appear.",
+	"":                  "NamespaceDashboardSpec is a specification of namespaces in which the dashboard link should appear. If both namespaces and namespaceSelector are specified, the link will appear in namespaces that match either",
+	"namespaces":        "namespaces is an array of namespace names in which the dashboard link should appear.",
+	"namespaceSelector": "namespaceSelector is used to select the Namespaces that should contain dashboard link by label. If the namespace labels match, dashboard link will be shown for the namespaces.",
 }
 
 func (NamespaceDashboardSpec) SwaggerDoc() map[string]string {

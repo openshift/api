@@ -108,6 +108,7 @@ spec:
                 to the operator which owns this status object.
               type: object
               nullable: true
+              x-kubernetes-preserve-unknown-fields: true
             relatedObjects:
               description: 'relatedObjects is a list of objects that are "interesting"
                 or related to this operator.  Common uses are: 1. the detailed resource

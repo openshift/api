@@ -138,7 +138,7 @@ func (ConsoleYAMLSample) SwaggerDoc() map[string]string {
 
 var map_ConsoleYAMLSampleSpec = map[string]string{
 	"":               "ConsoleYAMLSampleSpec is the desired YAML sample configuration. Samples will appear with their descriptions in a samples sidebar when creating a resources in the web console.",
-	"TargetResource": "targetResource contains apiVersion and kind of the resource YAML sample is representating.",
+	"targetResource": "targetResource contains apiVersion and kind of the resource YAML sample is representating.",
 	"title":          "title of the YAML sample.",
 	"description":    "description of the YAML sample.",
 	"yaml":           "yaml is the YAML sample to display.",

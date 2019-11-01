@@ -20,7 +20,7 @@ type ConsoleYAMLSample struct {
 type ConsoleYAMLSampleSpec struct {
 	// targetResource contains apiVersion and kind of the resource
 	// YAML sample is representating.
-	TargetResource metav1.TypeMeta `json:",targetResource"`
+	TargetResource metav1.TypeMeta `json:"targetResource"`
 	// title of the YAML sample.
 	Title ConsoleYAMLSampleTitle `json:"title"`
 	// description of the YAML sample.

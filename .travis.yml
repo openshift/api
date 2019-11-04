@@ -8,7 +8,13 @@ install:
   - mkdir protoc
   - export PATH=`pwd`/protoc/bin:${PATH}
   - unzip protoc-3.0.2-linux-x86_64.zip -d protoc/
-  - go get golang.org/x/tools/cmd/goimports
+  - mkdir -p $GOPATH/src/golang.org/x
+  - cd $GOPATH/src/golang.org/x
+  - git clone https://github.com/golang/tools.git
+  - cd tools
+  - git checkout release-branch.go1.8
+  - go install ./cmd/goimports/
+  - cd $GOPATH/src/github.com/openshift/api
 
 script:
   - make verify build test

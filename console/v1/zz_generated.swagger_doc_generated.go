@@ -142,6 +142,7 @@ var map_ConsoleYAMLSampleSpec = map[string]string{
 	"title":          "title of the YAML sample.",
 	"description":    "description of the YAML sample.",
 	"yaml":           "yaml is the YAML sample to display.",
+	"snippet":        "snippet indicates that the YAML sample is not the full YAML resource definition, but a fragment that can be inserted into the existing YAML document at the user's cursor.",
 }
 
 func (ConsoleYAMLSampleSpec) SwaggerDoc() map[string]string {

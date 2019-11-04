@@ -27,6 +27,11 @@ type ConsoleYAMLSampleSpec struct {
 	Description ConsoleYAMLSampleDescription `json:"description"`
 	// yaml is the YAML sample to display.
 	YAML ConsoleYAMLSampleYAML `json:"yaml"`
+	// snippet indicates that the YAML sample is not the full YAML resource
+	// definition, but a fragment that can be inserted into the existing
+	// YAML document at the user's cursor.
+	// +optional
+	Snippet bool `json:"snippet"`
 }
 
 // ConsoleYAMLSampleTitle of the YAML sample.

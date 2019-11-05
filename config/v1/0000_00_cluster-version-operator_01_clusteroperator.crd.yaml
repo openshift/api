@@ -67,7 +67,7 @@ spec:
           type: object
         status:
           description: status holds the information about the state of an operator.  It
-            is consistent with status information across the kube ecosystem.
+            is consistent with status information across the Kubernetes ecosystem.
           type: object
           properties:
             conditions:

@@ -35,14 +35,14 @@ verify-scripts:
 	bash -x hack/verify-swagger-docs.sh
 	bash -x hack/verify-crds.sh
 .PHONY: verify-scripts
-verify: verify-scripts
+verify: verify-scripts verify-codegen-crds
 
 update-scripts:
 	hack/update-deepcopy.sh
 	hack/update-protobuf.sh
 	hack/update-swagger-docs.sh
 .PHONY: update-scripts
-update: update-scripts
+update: update-scripts update-codegen-crds
 
 generate-with-container: Dockerfile.build
 	$(RUNTIME) build -t $(RUNTIME_IMAGE_NAME) -f Dockerfile.build .

@@ -101,7 +101,6 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		Enabled: []string{
 			"RotateKubeletServerCertificate", // sig-pod, sjenning
 			"SupportPodPidsLimit",            // sig-pod, sjenning
-			"TLSSecurityProfile",             // sig-network, danehans
 			"NodeDisruptionExclusion",        // sig-scheduling, ccoleman
 			"ServiceNodeExclusion",           // sig-scheduling, ccoleman
 		},
@@ -117,7 +116,6 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		Enabled: []string{
 			"RotateKubeletServerCertificate", // sig-pod, sjenning
 			"SupportPodPidsLimit",            // sig-pod, sjenning
-			"TLSSecurityProfile",             // sig-network, danehans
 			"NodeDisruptionExclusion",        // sig-scheduling, ccoleman
 			"ServiceNodeExclusion",           // sig-scheduling, ccoleman
 		},

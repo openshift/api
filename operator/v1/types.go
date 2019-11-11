@@ -177,6 +177,10 @@ type StaticPodOperatorSpec struct {
 	// succeededRevisionLimit is the number of successful static pod installer revisions to keep on disk and in the api
 	// -1 = unlimited, 0 or unset = 5 (default)
 	SucceededRevisionLimit int32 `json:"succeededRevisionLimit,omitempty"`
+
+	// newFakeField is a fake field which I am not going to attempt to regenerate in order to intentionally trigger
+	// a CI failure.
+	NewFakeField string `json:"newFakeField,omitempty"`
 }
 
 // StaticPodOperatorStatus is status for controllers that manage static pods.  There are different needs because individual

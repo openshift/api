@@ -12,9 +12,7 @@ package v1
 
 // AUTO-GENERATED FUNCTIONS START HERE
 var map_Config = map[string]string{
-	"":       "Config contains the configuration and detailed condition status for the Samples Operator.",
-	"spec":   "Spec contains the desired configuration and state for the Samples Operator, controlling various behavior around the imagestreams and templates it creates/updates in the openshift namespace.",
-	"status": "Status contains the actual configuration in effect, as well as various details that describe the state of the Samples Operator.",
+	"": "Config contains the configuration and detailed condition status for the Samples Operator.",
 }
 
 func (Config) SwaggerDoc() map[string]string {
@@ -23,12 +21,12 @@ func (Config) SwaggerDoc() map[string]string {
 
 var map_ConfigCondition = map[string]string{
 	"":                   "ConfigCondition captures various conditions of the Config as entries are processed.",
-	"type":               "Type of condition.",
-	"status":             "Status of the condition, one of True, False, Unknown.",
-	"lastUpdateTime":     "The last time this condition was updated.",
-	"lastTransitionTime": "The last time the condition transitioned from one status to another.",
-	"reason":             "The reason for the condition's last transition.",
-	"message":            "A human readable message indicating details about the transition.",
+	"type":               "type of condition.",
+	"status":             "status of the condition, one of True, False, Unknown.",
+	"lastUpdateTime":     "lastUpdateTime is the last time this condition was updated.",
+	"lastTransitionTime": "lastTransitionTime is the last time the condition transitioned from one status to another.",
+	"reason":             "reason is what caused the condition's last transition.",
+	"message":            "message is a human readable message indicating details about the transition.",
 }
 
 func (ConfigCondition) SwaggerDoc() map[string]string {
@@ -36,11 +34,12 @@ func (ConfigCondition) SwaggerDoc() map[string]string {
 }
 
 var map_ConfigSpec = map[string]string{
-	"managementState":     "ManagementState is top level on/off type of switch for all operators. When \"Managed\", this operator processes config and manipulates the samples accordingly. When \"Unmanaged\", this operator ignores any updates to the resources it watches. When \"Removed\", it reacts that same wasy as it does if the Config object is deleted, meaning any ImageStreams or Templates it manages (i.e. it honors the skipped lists) and the registry secret are deleted, along with the ConfigMap in the operator's namespace that represents the last config used to manipulate the samples,",
-	"samplesRegistry":     "SamplesRegistry allows for the specification of which registry is accessed by the ImageStreams for their image content.  Defaults on the content in https://github.com/openshift/library that are pulled into this github repository, but based on our pulling only ocp content it typically defaults to registry.redhat.io.",
-	"architectures":       "Architectures determine which hardware architecture(s) to install, where x86_64, ppc64le, and s390x are the only supported choices currently.",
-	"skippedImagestreams": "SkippedImagestreams specifies names of image streams that should NOT be created/updated.  Admins can use this to allow them to delete content they don’t want.  They will still have to manually delete the content but the operator will not recreate(or update) anything listed here.",
-	"skippedTemplates":    "SkippedTemplates specifies names of templates that should NOT be created/updated.  Admins can use this to allow them to delete content they don’t want.  They will still have to manually delete the content but the operator will not recreate(or update) anything listed here.",
+	"":                    "ConfigSpec contains the desired configuration and state for the Samples Operator, controlling various behavior around the imagestreams and templates it creates/updates in the openshift namespace.",
+	"managementState":     "managementState is top level on/off type of switch for all operators. When \"Managed\", this operator processes config and manipulates the samples accordingly. When \"Unmanaged\", this operator ignores any updates to the resources it watches. When \"Removed\", it reacts that same wasy as it does if the Config object is deleted, meaning any ImageStreams or Templates it manages (i.e. it honors the skipped lists) and the registry secret are deleted, along with the ConfigMap in the operator's namespace that represents the last config used to manipulate the samples,",
+	"samplesRegistry":     "samplesRegistry allows for the specification of which registry is accessed by the ImageStreams for their image content.  Defaults on the content in https://github.com/openshift/library that are pulled into this github repository, but based on our pulling only ocp content it typically defaults to registry.redhat.io.",
+	"architectures":       "architectures determine which hardware architecture(s) to install, where x86_64, ppc64le, and s390x are the only supported choices currently.",
+	"skippedImagestreams": "skippedImagestreams specifies names of image streams that should NOT be created/updated.  Admins can use this to allow them to delete content they don’t want.  They will still have to manually delete the content but the operator will not recreate(or update) anything listed here.",
+	"skippedTemplates":    "skippedTemplates specifies names of templates that should NOT be created/updated.  Admins can use this to allow them to delete content they don’t want.  They will still have to manually delete the content but the operator will not recreate(or update) anything listed here.",
 }
 
 func (ConfigSpec) SwaggerDoc() map[string]string {
@@ -48,13 +47,14 @@ func (ConfigSpec) SwaggerDoc() map[string]string {
 }
 
 var map_ConfigStatus = map[string]string{
-	"managementState":     "operatorv1.ManagementState reflects the current operational status of the on/off switch for the operator.  This operator compares the ManagementState as part of determining that we are turning the operator back on (i.e. \"Managed\") when it was previously \"Unmanaged\".",
-	"conditions":          "Conditions represents the available maintenance status of the sample imagestreams and templates.",
-	"samplesRegistry":     "SamplesRegistry allows for the specification of which registry is accessed by the ImageStreams for their image content.  Defaults on the content in https://github.com/openshift/library that are pulled into this github repository, but based on our pulling only ocp content it typically defaults to registry.redhat.io.",
-	"architectures":       "Architectures determine which hardware architecture(s) to install, where x86_64 and ppc64le are the supported choices.",
-	"skippedImagestreams": "SkippedImagestreams specifies names of image streams that should NOT be created/updated.  Admins can use this to allow them to delete content they don’t want.  They will still have to manually delete the content but the operator will not recreate(or update) anything listed here.",
-	"skippedTemplates":    "SkippedTemplates specifies names of templates that should NOT be created/updated.  Admins can use this to allow them to delete content they don’t want.  They will still have to manually delete the content but the operator will not recreate(or update) anything listed here.",
-	"version":             "Version is the value of the operator's payload based version indicator when it was last successfully processed",
+	"":                    "ConfigStatus contains the actual configuration in effect, as well as various details that describe the state of the Samples Operator.",
+	"managementState":     "managementState reflects the current operational status of the on/off switch for the operator.  This operator compares the ManagementState as part of determining that we are turning the operator back on (i.e. \"Managed\") when it was previously \"Unmanaged\".",
+	"conditions":          "conditions represents the available maintenance status of the sample imagestreams and templates.",
+	"samplesRegistry":     "samplesRegistry allows for the specification of which registry is accessed by the ImageStreams for their image content.  Defaults on the content in https://github.com/openshift/library that are pulled into this github repository, but based on our pulling only ocp content it typically defaults to registry.redhat.io.",
+	"architectures":       "architectures determine which hardware architecture(s) to install, where x86_64 and ppc64le are the supported choices.",
+	"skippedImagestreams": "skippedImagestreams specifies names of image streams that should NOT be created/updated.  Admins can use this to allow them to delete content they don’t want.  They will still have to manually delete the content but the operator will not recreate(or update) anything listed here.",
+	"skippedTemplates":    "skippedTemplates specifies names of templates that should NOT be created/updated.  Admins can use this to allow them to delete content they don’t want.  They will still have to manually delete the content but the operator will not recreate(or update) anything listed here.",
+	"version":             "version is the value of the operator's payload based version indicator when it was last successfully processed",
 }
 
 func (ConfigStatus) SwaggerDoc() map[string]string {

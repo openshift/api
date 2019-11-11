@@ -10,27 +10,101 @@ import (
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-type ConfigList struct {
-	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata" protobuf:"bytes,1,opt,name=metadata"`
-	Items           []Config `json:"items" protobuf:"bytes,2,rep,name=items"`
-}
-
-// +genclient
-// +genclient:nonNamespaced
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-
 // Config contains the configuration and detailed condition status for the Samples Operator.
 type Config struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata" protobuf:"bytes,1,opt,name=metadata"`
-	// Spec contains the desired configuration and state for the Samples Operator, controlling
-	// various behavior around the imagestreams and templates it creates/updates in the
-	// openshift namespace.
+
+	// +kubebuilder:validation:Required
+	// +required
 	Spec ConfigSpec `json:"spec" protobuf:"bytes,2,opt,name=spec"`
-	// Status contains the actual configuration in effect, as well as various details
-	// that describe the state of the Samples Operator.
+	// +optional
 	Status ConfigStatus `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
+}
+
+// ConfigSpec contains the desired configuration and state for the Samples Operator, controlling
+// various behavior around the imagestreams and templates it creates/updates in the
+// openshift namespace.
+type ConfigSpec struct {
+	// managementState is top level on/off type of switch for all operators.
+	// When "Managed", this operator processes config and manipulates the samples accordingly.
+	// When "Unmanaged", this operator ignores any updates to the resources it watches.
+	// When "Removed", it reacts that same wasy as it does if the Config object
+	// is deleted, meaning any ImageStreams or Templates it manages (i.e. it honors the skipped
+	// lists) and the registry secret are deleted, along with the ConfigMap in the operator's
+	// namespace that represents the last config used to manipulate the samples,
+	ManagementState operatorv1.ManagementState `json:"managementState,omitempty" protobuf:"bytes,1,opt,name=managementState"`
+
+	// samplesRegistry allows for the specification of which registry is accessed
+	// by the ImageStreams for their image content.  Defaults on the content in https://github.com/openshift/library
+	// that are pulled into this github repository, but based on our pulling only ocp content it typically
+	// defaults to registry.redhat.io.
+	SamplesRegistry string `json:"samplesRegistry,omitempty" protobuf:"bytes,2,opt,name=samplesRegistry"`
+
+	// architectures determine which hardware architecture(s) to install, where x86_64, ppc64le, and s390x are the only
+	// supported choices currently.
+	Architectures []string `json:"architectures,omitempty" protobuf:"bytes,4,opt,name=architectures"`
+
+	// skippedImagestreams specifies names of image streams that should NOT be
+	// created/updated.  Admins can use this to allow them to delete content
+	// they don’t want.  They will still have to manually delete the
+	// content but the operator will not recreate(or update) anything
+	// listed here.
+	SkippedImagestreams []string `json:"skippedImagestreams,omitempty" protobuf:"bytes,5,opt,name=skippedImagestreams"`
+
+	// skippedTemplates specifies names of templates that should NOT be
+	// created/updated.  Admins can use this to allow them to delete content
+	// they don’t want.  They will still have to manually delete the
+	// content but the operator will not recreate(or update) anything
+	// listed here.
+	SkippedTemplates []string `json:"skippedTemplates,omitempty" protobuf:"bytes,6,opt,name=skippedTemplates"`
+}
+
+// ConfigStatus contains the actual configuration in effect, as well as various details
+// that describe the state of the Samples Operator.
+type ConfigStatus struct {
+	// managementState reflects the current operational status of the on/off switch for
+	// the operator.  This operator compares the ManagementState as part of determining that we are turning
+	// the operator back on (i.e. "Managed") when it was previously "Unmanaged".
+	ManagementState operatorv1.ManagementState `json:"managementState,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,1,rep,name=managementState"`
+	// conditions represents the available maintenance status of the sample
+	// imagestreams and templates.
+	Conditions []ConfigCondition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,2,rep,name=conditions"`
+
+	// samplesRegistry allows for the specification of which registry is accessed
+	// by the ImageStreams for their image content.  Defaults on the content in https://github.com/openshift/library
+	// that are pulled into this github repository, but based on our pulling only ocp content it typically
+	// defaults to registry.redhat.io.
+	SamplesRegistry string `json:"samplesRegistry,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,3,rep,name=samplesRegistry"`
+
+	// architectures determine which hardware architecture(s) to install, where x86_64 and ppc64le are the
+	// supported choices.
+	Architectures []string `json:"architectures,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,5,rep,name=architectures"`
+
+	// skippedImagestreams specifies names of image streams that should NOT be
+	// created/updated.  Admins can use this to allow them to delete content
+	// they don’t want.  They will still have to manually delete the
+	// content but the operator will not recreate(or update) anything
+	// listed here.
+	SkippedImagestreams []string `json:"skippedImagestreams,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,6,rep,name=skippedImagestreams"`
+
+	// skippedTemplates specifies names of templates that should NOT be
+	// created/updated.  Admins can use this to allow them to delete content
+	// they don’t want.  They will still have to manually delete the
+	// content but the operator will not recreate(or update) anything
+	// listed here.
+	SkippedTemplates []string `json:"skippedTemplates,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,7,rep,name=skippedTemplates"`
+
+	// version is the value of the operator's payload based version indicator when it was last successfully processed
+	Version string `json:"version,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,8,rep,name=version"`
+}
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+type ConfigList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata" protobuf:"bytes,1,opt,name=metadata"`
+	Items           []Config `json:"items" protobuf:"bytes,2,rep,name=items"`
 }
 
 const (
@@ -76,77 +150,6 @@ const (
 	OperatorNamespace = "openshift-cluster-samples-operator"
 )
 
-type ConfigSpec struct {
-	// ManagementState is top level on/off type of switch for all operators.
-	// When "Managed", this operator processes config and manipulates the samples accordingly.
-	// When "Unmanaged", this operator ignores any updates to the resources it watches.
-	// When "Removed", it reacts that same wasy as it does if the Config object
-	// is deleted, meaning any ImageStreams or Templates it manages (i.e. it honors the skipped
-	// lists) and the registry secret are deleted, along with the ConfigMap in the operator's
-	// namespace that represents the last config used to manipulate the samples,
-	ManagementState operatorv1.ManagementState `json:"managementState,omitempty" protobuf:"bytes,1,opt,name=managementState"`
-
-	// SamplesRegistry allows for the specification of which registry is accessed
-	// by the ImageStreams for their image content.  Defaults on the content in https://github.com/openshift/library
-	// that are pulled into this github repository, but based on our pulling only ocp content it typically
-	// defaults to registry.redhat.io.
-	SamplesRegistry string `json:"samplesRegistry,omitempty" protobuf:"bytes,2,opt,name=samplesRegistry"`
-
-	// Architectures determine which hardware architecture(s) to install, where x86_64, ppc64le, and s390x are the only
-	// supported choices currently.
-	Architectures []string `json:"architectures,omitempty" protobuf:"bytes,4,opt,name=architectures"`
-
-	// SkippedImagestreams specifies names of image streams that should NOT be
-	// created/updated.  Admins can use this to allow them to delete content
-	// they don’t want.  They will still have to manually delete the
-	// content but the operator will not recreate(or update) anything
-	// listed here.
-	SkippedImagestreams []string `json:"skippedImagestreams,omitempty" protobuf:"bytes,5,opt,name=skippedImagestreams"`
-
-	// SkippedTemplates specifies names of templates that should NOT be
-	// created/updated.  Admins can use this to allow them to delete content
-	// they don’t want.  They will still have to manually delete the
-	// content but the operator will not recreate(or update) anything
-	// listed here.
-	SkippedTemplates []string `json:"skippedTemplates,omitempty" protobuf:"bytes,6,opt,name=skippedTemplates"`
-}
-type ConfigStatus struct {
-	// operatorv1.ManagementState reflects the current operational status of the on/off switch for
-	// the operator.  This operator compares the ManagementState as part of determining that we are turning
-	// the operator back on (i.e. "Managed") when it was previously "Unmanaged".
-	ManagementState operatorv1.ManagementState `json:"managementState,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,1,rep,name=managementState"`
-	// Conditions represents the available maintenance status of the sample
-	// imagestreams and templates.
-	Conditions []ConfigCondition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,2,rep,name=conditions"`
-
-	// SamplesRegistry allows for the specification of which registry is accessed
-	// by the ImageStreams for their image content.  Defaults on the content in https://github.com/openshift/library
-	// that are pulled into this github repository, but based on our pulling only ocp content it typically
-	// defaults to registry.redhat.io.
-	SamplesRegistry string `json:"samplesRegistry,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,3,rep,name=samplesRegistry"`
-
-	// Architectures determine which hardware architecture(s) to install, where x86_64 and ppc64le are the
-	// supported choices.
-	Architectures []string `json:"architectures,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,5,rep,name=architectures"`
-
-	// SkippedImagestreams specifies names of image streams that should NOT be
-	// created/updated.  Admins can use this to allow them to delete content
-	// they don’t want.  They will still have to manually delete the
-	// content but the operator will not recreate(or update) anything
-	// listed here.
-	SkippedImagestreams []string `json:"skippedImagestreams,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,6,rep,name=skippedImagestreams"`
-
-	// SkippedTemplates specifies names of templates that should NOT be
-	// created/updated.  Admins can use this to allow them to delete content
-	// they don’t want.  They will still have to manually delete the
-	// content but the operator will not recreate(or update) anything
-	// listed here.
-	SkippedTemplates []string `json:"skippedTemplates,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,7,rep,name=skippedTemplates"`
-
-	// Version is the value of the operator's payload based version indicator when it was last successfully processed
-	Version string `json:"version,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,8,rep,name=version"`
-}
-
 type ConfigConditionType string
 
 // the valid conditions of the Config
@@ -189,24 +192,21 @@ const (
 	// change cycle as complete in both ClusterOperator and Config; retry on import will
 	// occur by the next relist interval if it was an intermittent issue;
 	ImportImageErrorsExist ConfigConditionType = "ImportImageErrorsExist"
-	// numConfigConditionType is a helper constant that captures the number possible conditions
-	// defined above in this const block
-	numconfigConditionType = 7
 )
 
 // ConfigCondition captures various conditions of the Config
 // as entries are processed.
 type ConfigCondition struct {
-	// Type of condition.
+	// type of condition.
 	Type ConfigConditionType `json:"type" protobuf:"bytes,1,opt,name=type,casttype=ConfigConditionType"`
-	// Status of the condition, one of True, False, Unknown.
+	// status of the condition, one of True, False, Unknown.
 	Status corev1.ConditionStatus `json:"status" protobuf:"bytes,2,opt,name=status,casttype=k8s.io/kubernetes/pkg/api/v1.ConditionStatus"`
-	// The last time this condition was updated.
+	// lastUpdateTime is the last time this condition was updated.
 	LastUpdateTime metav1.Time `json:"lastUpdateTime,omitempty" protobuf:"bytes,3,opt,name=lastUpdateTime"`
-	// The last time the condition transitioned from one status to another.
+	// lastTransitionTime is the last time the condition transitioned from one status to another.
 	LastTransitionTime metav1.Time `json:"lastTransitionTime,omitempty" protobuf:"bytes,4,opt,name=lastTransitionTime"`
-	// The reason for the condition's last transition.
+	// reason is what caused the condition's last transition.
 	Reason string `json:"reason,omitempty" protobuf:"bytes,5,opt,name=reason"`
-	// A human readable message indicating details about the transition.
+	// message is a human readable message indicating details about the transition.
 	Message string `json:"message,omitempty" protobuf:"bytes,6,opt,name=message"`
 }

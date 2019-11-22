@@ -67,6 +67,10 @@ type NetworkStatus struct {
 
 	// ClusterNetworkMTU is the MTU for inter-pod networking.
 	ClusterNetworkMTU int `json:"clusterNetworkMTU,omitempty"`
+
+	// externalIP defines configuration for controllers that
+	// affect Service.ExternalIP.
+	ExternalIP *ExternalIPConfig `json:"externalIP,omitempty"`
 }
 
 // ClusterNetworkEntry is a contiguous block of IP addresses from which pod IPs

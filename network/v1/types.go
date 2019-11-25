@@ -15,7 +15,6 @@ const (
 // +kubebuilder:printcolumn:name="Cluster Network",type=string,JSONPath=`.network`,description="The primary cluster network CIDR"
 // +kubebuilder:printcolumn:name="Service Network",type=string,JSONPath=`.serviceNetwork`,description="The service network CIDR"
 // +kubebuilder:printcolumn:name="Plugin Name",type=string,JSONPath=`.pluginName`,description="The Openshift SDN network plug-in in use"
-
 // ClusterNetwork describes the cluster network. There is normally only one object of this type,
 // named "default", which is created by the SDN network plugin based on the master configuration
 // when the cluster is brought up for the first time.
@@ -92,7 +91,6 @@ type HostSubnetEgressCIDR string
 // +kubebuilder:printcolumn:name="Subnet",type=string,JSONPath=`.subnet`,description="The CIDR range of the overlay network assigned to the node for its pods"
 // +kubebuilder:printcolumn:name="Egress CIDRs",type=string,JSONPath=`.egressCIDRs`,description="The network egress CIDRs"
 // +kubebuilder:printcolumn:name="Egress IPs",type=string,JSONPath=`.egressIPs`,description="The network egress IP addresses"
-
 // HostSubnet describes the container subnet network on a node. The HostSubnet object must have the
 // same name as the Node object it corresponds to.
 type HostSubnet struct {
@@ -201,7 +199,6 @@ type EgressNetworkPolicyPeer struct {
 type EgressNetworkPolicyRule struct {
 	// type marks this as an "Allow" or "Deny" rule
 	Type EgressNetworkPolicyRuleType `json:"type" protobuf:"bytes,1,rep,name=type"`
-	// +kubebuilder:validation:
 	// to is the target that traffic is allowed/denied to
 	To EgressNetworkPolicyPeer `json:"to" protobuf:"bytes,2,rep,name=to"`
 }

@@ -12,6 +12,10 @@ const (
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
+// +kubebuilder:printcolumn:name="Cluster Network",type=string,JSONPath=`.network`,description="The primary cluster network CIDR"
+// +kubebuilder:printcolumn:name="Service Network",type=string,JSONPath=`.serviceNetwork`,description="The service network CIDR"
+// +kubebuilder:printcolumn:name="Plugin Name",type=string,JSONPath=`.pluginName`,description="The Openshift SDN network plug-in in use"
+
 // ClusterNetwork describes the cluster network. There is normally only one object of this type,
 // named "default", which is created by the SDN network plugin based on the master configuration
 // when the cluster is brought up for the first time.
@@ -19,18 +23,30 @@ type ClusterNetwork struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 
+	// +kubebuilder:validation:Pattern=`^(([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/([0-9]|[12][0-9]|3[0-2])$`
 	// Network is a CIDR string specifying the global overlay network's L3 space
 	Network string `json:"network,omitempty" protobuf:"bytes,2,opt,name=network"`
+
+	// +kubebuilder:validation:Minimum=2
+	// +kubebuilder:validation:Maximum=30
 	// HostSubnetLength is the number of bits of network to allocate to each node. eg, 8 would mean that each node would have a /24 slice of the overlay network for its pods
 	HostSubnetLength uint32 `json:"hostsubnetlength,omitempty" protobuf:"varint,3,opt,name=hostsubnetlength"`
+
+	// +kubebuilder:validation:Pattern=`^(([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/([0-9]|[12][0-9]|3[0-2])$`
 	// ServiceNetwork is the CIDR range that Service IP addresses are allocated from
 	ServiceNetwork string `json:"serviceNetwork" protobuf:"bytes,4,opt,name=serviceNetwork"`
 	// PluginName is the name of the network plugin being used
 	PluginName string `json:"pluginName,omitempty" protobuf:"bytes,5,opt,name=pluginName"`
 	// ClusterNetworks is a list of ClusterNetwork objects that defines the global overlay network's L3 space by specifying a set of CIDR and netmasks that the SDN can allocate addresses from.
 	ClusterNetworks []ClusterNetworkEntry `json:"clusterNetworks" protobuf:"bytes,6,rep,name=clusterNetworks"`
+
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=65535
 	// VXLANPort sets the VXLAN destination port used by the cluster. It is set by the master configuration file on startup and cannot be edited manually. Valid values for VXLANPort are integers 1-65535 inclusive and if unset defaults to 4789. Changing VXLANPort allows users to resolve issues between openshift SDN and other software trying to use the same VXLAN destination port.
 	VXLANPort *uint32 `json:"vxlanPort,omitempty" protobuf:"varint,7,opt,name=vxlanPort"`
+
+	// +kubebuilder:validation:Minimum=576
+	// +kubebuilder:validation:Maximum=65536
 	// MTU is the MTU for the overlay network. This should be 50 less than the MTU of the network connecting the nodes. It is normally autodetected by the cluster network operator.
 	MTU *uint32 `json:"mtu,omitempty" protobuf:"varint,8,opt,name=mtu"`
 }
@@ -40,6 +56,9 @@ type ClusterNetworkEntry struct {
 	// CIDR defines the total range of a cluster networks address space.
 	CIDR string `json:"CIDR" protobuf:"bytes,1,opt,name=cidr"`
 	// HostSubnetLength is the number of bits of the accompanying CIDR address to allocate to each node. eg, 8 would mean that each node would have a /24 slice of the overlay network for its pods.
+
+	// +kubebuilder:validation:Minimum=2
+	// +kubebuilder:validation:Maximum=30
 	HostSubnetLength uint32 `json:"hostSubnetLength" protobuf:"varint,2,opt,name=hostSubnetLength"`
 }
 
@@ -54,9 +73,25 @@ type ClusterNetworkList struct {
 	Items []ClusterNetwork `json:"items" protobuf:"bytes,2,rep,name=items"`
 }
 
+// +kubebuilder:validation:Pattern=`^(([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$`
+// HostSubnetEgressIP represents one egress IP address currently hosted on the node represented by
+// HostSubnet
+type HostSubnetEgressIP string
+
+// +kubebuilder:validation:Pattern=`^(([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/([0-9]|[12][0-9]|3[0-2])$`
+// HostSubnetEgressCIDR represents one egress CIDR from which to assign IP addresses for this node
+// represented by the HostSubnet
+type HostSubnetEgressCIDR string
+
 // +genclient
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// +kubebuilder:printcolumn:name="Host",type=string,JSONPath=`.host`,description="The name of the node"
+// +kubebuilder:printcolumn:name="Host IP",type=string,JSONPath=`.hostIP`,description="The IP address to be used as a VTEP by other nodes in the overlay network"
+// +kubebuilder:printcolumn:name="Subnet",type=string,JSONPath=`.subnet`,description="The CIDR range of the overlay network assigned to the node for its pods"
+// +kubebuilder:printcolumn:name="Egress CIDRs",type=string,JSONPath=`.egressCIDRs`,description="The network egress CIDRs"
+// +kubebuilder:printcolumn:name="Egress IPs",type=string,JSONPath=`.egressIPs`,description="The network egress IP addresses"
 
 // HostSubnet describes the container subnet network on a node. The HostSubnet object must have the
 // same name as the Node object it corresponds to.
@@ -64,10 +99,15 @@ type HostSubnet struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 
+	// +kubebuilder:validation:Pattern=`^[a-z0-9.-]+$`
 	// Host is the name of the node. (This is the same as the object's name, but both fields must be set.)
 	Host string `json:"host" protobuf:"bytes,2,opt,name=host"`
+
+	// +kubebuilder:validation:Pattern=`^(([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$`
 	// HostIP is the IP address to be used as a VTEP by other nodes in the overlay network
 	HostIP string `json:"hostIP" protobuf:"bytes,3,opt,name=hostIP"`
+
+	// +kubebuilder:validation:Pattern=`^(([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/([0-9]|[12][0-9]|3[0-2])$`
 	// Subnet is the CIDR range of the overlay network assigned to the node for its pods
 	Subnet string `json:"subnet" protobuf:"bytes,4,opt,name=subnet"`
 
@@ -75,12 +115,13 @@ type HostSubnet struct {
 	// If EgressCIDRs is empty, this can be set by hand; if EgressCIDRs is set then the
 	// master will overwrite the value here with its own allocation of egress IPs.
 	// +optional
-	EgressIPs []string `json:"egressIPs,omitempty" protobuf:"bytes,5,rep,name=egressIPs"`
+	EgressIPs []HostSubnetEgressIP `json:"egressIPs,omitempty" protobuf:"bytes,5,rep,name=egressIPs"`
+
 	// EgressCIDRs is the list of CIDR ranges available for automatically assigning
 	// egress IPs to this node from. If this field is set then EgressIPs should be
 	// treated as read-only.
 	// +optional
-	EgressCIDRs []string `json:"egressCIDRs,omitempty" protobuf:"bytes,6,rep,name=egressCIDRs"`
+	EgressCIDRs []HostSubnetEgressCIDR `json:"egressCIDRs,omitempty" protobuf:"bytes,6,rep,name=egressCIDRs"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -94,10 +135,17 @@ type HostSubnetList struct {
 	Items []HostSubnet `json:"items" protobuf:"bytes,2,rep,name=items"`
 }
 
+// +kubebuilder:validation:Pattern=`^(([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$`
+// NetNamespaceEgressIP is a single egress IP out of a list of reserved IPs used as source of external traffic coming
+// from pods in this namespace
+type NetNamespaceEgressIP string
+
 // +genclient
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
+// +kubebuilder:printcolumn:name="NetID",type=integer,JSONPath=`.netid`,description="The network identifier of the network namespace"
+// +kubebuilder:printcolumn:name="Egress IPs",type=string,JSONPath=`.egressIPs`,description="The network egress IP addresses"
 // NetNamespace describes a single isolated network. When using the redhat/openshift-ovs-multitenant
 // plugin, every Namespace will have a corresponding NetNamespace object with the same name.
 // (When using redhat/openshift-ovs-subnet, NetNamespaces are not used.)
@@ -105,14 +153,18 @@ type NetNamespace struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 
+	// +kubebuilder:validation:Pattern=`^[a-z0-9.-]+$`
 	// NetName is the name of the network namespace. (This is the same as the object's name, but both fields must be set.)
 	NetName string `json:"netname" protobuf:"bytes,2,opt,name=netname"`
+
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=16777215
 	// NetID is the network identifier of the network namespace assigned to each overlay network packet. This can be manipulated with the "oc adm pod-network" commands.
 	NetID uint32 `json:"netid" protobuf:"varint,3,opt,name=netid"`
 
 	// EgressIPs is a list of reserved IPs that will be used as the source for external traffic coming from pods in this namespace. (If empty, external traffic will be masqueraded to Node IPs.)
 	// +optional
-	EgressIPs []string `json:"egressIPs,omitempty" protobuf:"bytes,4,rep,name=egressIPs"`
+	EgressIPs []NetNamespaceEgressIP `json:"egressIPs,omitempty" protobuf:"bytes,4,rep,name=egressIPs"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -126,6 +178,7 @@ type NetNamespaceList struct {
 	Items []NetNamespace `json:"items" protobuf:"bytes,2,rep,name=items"`
 }
 
+// +kubebuilder:validation:Pattern=`^Allow|Deny$`
 // EgressNetworkPolicyRuleType indicates whether an EgressNetworkPolicyRule allows or denies traffic
 type EgressNetworkPolicyRuleType string
 
@@ -136,8 +189,10 @@ const (
 
 // EgressNetworkPolicyPeer specifies a target to apply egress network policy to
 type EgressNetworkPolicyPeer struct {
+	// +kubebuilder:validation:Pattern=`^(([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/([0-9]|[12][0-9]|3[0-2])$`
 	// cidrSelector is the CIDR range to allow/deny traffic to. If this is set, dnsName must be unset
 	CIDRSelector string `json:"cidrSelector,omitempty" protobuf:"bytes,1,rep,name=cidrSelector"`
+	// +kubebuilder:validation:Pattern=`^([A-Za-z0-9-]+\.)*[A-Za-z0-9-]+\.?$`
 	// dnsName is the domain name to allow/deny traffic to. If this is set, cidrSelector must be unset
 	DNSName string `json:"dnsName,omitempty" protobuf:"bytes,2,rep,name=dnsName"`
 }
@@ -146,6 +201,7 @@ type EgressNetworkPolicyPeer struct {
 type EgressNetworkPolicyRule struct {
 	// type marks this as an "Allow" or "Deny" rule
 	Type EgressNetworkPolicyRuleType `json:"type" protobuf:"bytes,1,rep,name=type"`
+	// +kubebuilder:validation:
 	// to is the target that traffic is allowed/denied to
 	To EgressNetworkPolicyPeer `json:"to" protobuf:"bytes,2,rep,name=to"`
 }

@@ -226,8 +226,8 @@ type HostNetworkStrategy struct {
 type PrivateStrategy struct {
 }
 
-// NodePortServiceStrategy holds parameters for the NodePortService endpoint publishing strategy.
-type NodePortServiceStrategy struct {
+// NodePortStrategy holds parameters for the NodePortService endpoint publishing strategy.
+type NodePortStrategy struct {
 }
 
 // EndpointPublishingStrategy is a way to publish the endpoints of an
@@ -305,7 +305,7 @@ type EndpointPublishingStrategy struct {
 	// nodePort holds parameters for the NodePortService endpoint publishing strategy.
 	// Present only if type is NodePortService.
 	// +optional
-	NodePort *NodePortServiceStrategy `json:"nodePort,omitempty"`
+	NodePort *NodePortStrategy `json:"nodePort,omitempty"`
 }
 
 var (

@@ -337,12 +337,12 @@ func (NodePlacement) SwaggerDoc() map[string]string {
 	return map_NodePlacement
 }
 
-var map_NodePortServiceStrategy = map[string]string{
-	"": "NodePortServiceStrategy holds parameters for the NodePortService endpoint publishing strategy.",
+var map_NodePortStrategy = map[string]string{
+	"": "NodePortStrategy holds parameters for the NodePortService endpoint publishing strategy.",
 }
 
-func (NodePortServiceStrategy) SwaggerDoc() map[string]string {
-	return map_NodePortServiceStrategy
+func (NodePortStrategy) SwaggerDoc() map[string]string {
+	return map_NodePortStrategy
 }
 
 var map_PrivateStrategy = map[string]string{

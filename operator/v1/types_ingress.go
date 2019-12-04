@@ -189,8 +189,8 @@ const (
 	// Private does not publish the ingress controller.
 	PrivateStrategyType EndpointPublishingStrategyType = "Private"
 
-	// NodePort publishes the ingress controller using a Kubernetes NodePort Service.
-	NodePortStrategyType EndpointPublishingStrategyType = "NodePort"
+	// NodePortService publishes the ingress controller using a Kubernetes NodePort Service.
+	NodePortServiceStrategyType EndpointPublishingStrategyType = "NodePortService"
 )
 
 // LoadBalancerScope is the scope at which a load balancer is exposed.
@@ -226,8 +226,8 @@ type HostNetworkStrategy struct {
 type PrivateStrategy struct {
 }
 
-// NodePortStrategy holds parameters for the NodePort endpoint publishing strategy.
-type NodePortStrategy struct {
+// NodePortServiceStrategy holds parameters for the NodePortService endpoint publishing strategy.
+type NodePortServiceStrategy struct {
 }
 
 // EndpointPublishingStrategy is a way to publish the endpoints of an
@@ -272,7 +272,7 @@ type EndpointPublishingStrategy struct {
 	// networking, and is not explicitly published. The user must manually publish
 	// the ingress controller.
 	//
-	// * NodePort
+	// * NodePortService
 	//
 	// Publishes the ingress controller using a Kubernetes NodePort Service.
 	//
@@ -302,10 +302,10 @@ type EndpointPublishingStrategy struct {
 	// +optional
 	Private *PrivateStrategy `json:"private,omitempty"`
 
-	// nodePort holds parameters for the NodePort endpoint publishing strategy.
-	// Present only if type is NodePort.
+	// nodePort holds parameters for the NodePortService endpoint publishing strategy.
+	// Present only if type is NodePortService.
 	// +optional
-	NodePort *NodePortStrategy `json:"nodePort,omitempty"`
+	NodePort *NodePortServiceStrategy `json:"nodePort,omitempty"`
 }
 
 var (

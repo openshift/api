@@ -94,6 +94,9 @@ const (
 
 	// OvirtPlatformType represents oVirt/RHV infrastructure.
 	OvirtPlatformType PlatformType = "oVirt"
+
+	// IBMCloudPlatformType represents IBM CLoud infrastructure.
+	IBMCloudPlatformType PlatformType = "IBMCloud"
 )
 
 // PlatformStatus holds the current status specific to the underlying infrastructure provider

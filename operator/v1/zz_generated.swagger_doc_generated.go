@@ -399,6 +399,53 @@ func (KubeStorageVersionMigratorList) SwaggerDoc() map[string]string {
 	return map_KubeStorageVersionMigratorList
 }
 
+var map_Metal3Provisioning = map[string]string{
+	"":       "Metal3Provisioning contains configuration used by the Provisioning service (Ironic) to provision baremetal hosts.\n\nMetal3Provisioning is created by the Openshift installer using admin or user provided information about the provisioning network and the NIC on the server that can be used to PXE boot it.\n\nThis CR is a singleton, created by the installer and currently only consumed by the machine-api-operator to bring up and update containers in a metal3 cluster.",
+	"spec":   "spec is the specification of the desired behavior of the Metal3Provisioning.",
+	"status": "status is the most recently observed status of the Metal3Provisioning.",
+}
+
+func (Metal3Provisioning) SwaggerDoc() map[string]string {
+	return map_Metal3Provisioning
+}
+
+var map_Metal3ProvisioningList = map[string]string{
+	"": "Metal3ProvisioningList contains a list of Metal3Provisioning.",
+}
+
+func (Metal3ProvisioningList) SwaggerDoc() map[string]string {
+	return map_Metal3ProvisioningList
+}
+
+var map_Metal3ProvisioningSpec = map[string]string{
+	"":                        "Metal3ProvisioningSpec is the specification of the desired behavior of the Metal3Provisioning.",
+	"provisioningInterface":   "provisioningInterface is the name of the network interface on a Baremetal server to the provisioning network. It can have values like \"eth1\" or \"ens3\".",
+	"provisioningIP":          "provisioningIP is the IP address assigned to the provisioningInterface of the baremetal server. This IP address should be within the provisioning subnet, and outside of the DHCP range.",
+	"provisioningNetworkCIDR": "provisioningNetworkCIDR is the network on which the baremetal nodes are provisioned. The provisioningIP and the IPs in the dhcpRange all come from within this network.",
+	"provisioningDHCP":        "provisioningDHCP consists of two parameters that represents whether the DHCP server is internal or external to the metal3 cluster. If it is internal, the second parameter represents the DHCP address range to be provided to the baremetal hosts.",
+}
+
+func (Metal3ProvisioningSpec) SwaggerDoc() map[string]string {
+	return map_Metal3ProvisioningSpec
+}
+
+var map_Metal3ProvisioningStatus = map[string]string{
+	"": "Metal3ProvisioningStatus defines the observed status of Metal3Provisioning.",
+}
+
+func (Metal3ProvisioningStatus) SwaggerDoc() map[string]string {
+	return map_Metal3ProvisioningStatus
+}
+
+var map_ProvisioningDHCP = map[string]string{
+	"":          "ProvisioningDHCP represents just the configuration required to fully identify the way DHCP would be handled during baremetal host bringup.\n\nDHCP services could be provided external to the metal3 cluster, in which case, IP address assignment for the baremetal servers should happen via this external DHCP server and not via a DHCP server started within the metal3 cluster. If IP address assignment needs to happen via the DHCP server within the metal3 cluster, then the CR needs to contain the DHCP address range that this internal DHCP server needs to use.",
+	"DHCPRange": "If the ManagementState within the OperatorStatus is set to \"Managed\", then the DHCPRange represents the range of IP addresses that the DHCP server running within the metal3 cluster can use while provisioning baremetal servers. If the value of ManagementState is set to \"Removed\", then the value of DHCPRange will be ignored. If the ManagementState is \"Managed\" and the value of DHCPRange is not set, then the DHCP range is taken to be the default range which goes from .10 to .100 of the ProvisioningNetworkCIDR. This is the only value in all of the provisioning configuration that can be changed after the installer has created the CR.",
+}
+
+func (ProvisioningDHCP) SwaggerDoc() map[string]string {
+	return map_ProvisioningDHCP
+}
+
 var map_AdditionalNetworkDefinition = map[string]string{
 	"":                    "AdditionalNetworkDefinition configures an extra network that is available but not created by default. Instead, pods must request them by name. type must be specified, along with exactly one \"Config\" that matches the type.",
 	"type":                "type is the type of network The supported values are NetworkTypeRaw, NetworkTypeSimpleMacvlan",

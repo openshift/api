@@ -62,6 +62,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&ServiceCatalogControllerManagerList{},
 		&IngressController{},
 		&IngressControllerList{},
+		&Metal3Provisioning{},
+		&Metal3ProvisioningList{},
 	)
 
 	return nil

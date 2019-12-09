@@ -208,6 +208,7 @@ message TemplateInstanceSpec {
 
   // requester holds the identity of the agent requesting the template
   // instantiation.
+  // +optional
   optional TemplateInstanceRequester requester = 3;
 }
 

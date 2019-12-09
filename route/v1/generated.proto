@@ -183,6 +183,7 @@ message RouteTargetReference {
 
   // weight as an integer between 0 and 256, default 100, that specifies the target's relative weight
   // against other target reference objects. 0 suppresses requests to this backend.
+  // +optional
   optional int32 weight = 3;
 }
 

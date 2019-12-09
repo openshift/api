@@ -37,9 +37,9 @@ type PolicyRule struct {
 	// APIGroups is the name of the APIGroup that contains the resources.  If this field is empty, then both kubernetes and origin API groups are assumed.
 	// That means that if an action is requested against one of the enumerated resources in either the kubernetes or the origin API group, the request
 	// will be allowed
-	APIGroups []string `json:"apiGroups" protobuf:"bytes,3,rep,name=apiGroups"`
+	APIGroups []string `json:"apiGroups,omitempty" protobuf:"bytes,3,rep,name=apiGroups"`
 	// Resources is a list of resources this rule applies to.  ResourceAll represents all resources.
-	Resources []string `json:"resources" protobuf:"bytes,4,rep,name=resources"`
+	Resources []string `json:"resources,omitempty" protobuf:"bytes,4,rep,name=resources"`
 	// ResourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.
 	ResourceNames []string `json:"resourceNames,omitempty" protobuf:"bytes,5,rep,name=resourceNames"`
 	// NonResourceURLsSlice is a set of partial urls that a user should have access to.  *s are allowed, but only as the full, final step in the path
@@ -63,7 +63,7 @@ type Role struct {
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 
 	// Rules holds all the PolicyRules for this Role
-	Rules []PolicyRule `json:"rules" protobuf:"bytes,2,rep,name=rules"`
+	Rules []PolicyRule `json:"rules,omitempty" protobuf:"bytes,2,rep,name=rules"`
 }
 
 // OptionalNames is an array that may also be left nil to distinguish between set and unset.
@@ -363,7 +363,7 @@ type ClusterRole struct {
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 
 	// Rules holds all the PolicyRules for this ClusterRole
-	Rules []PolicyRule `json:"rules" protobuf:"bytes,2,rep,name=rules"`
+	Rules []PolicyRule `json:"rules,omitempty" protobuf:"bytes,2,rep,name=rules"`
 
 	// AggregationRule is an optional field that describes how to build the Rules for this ClusterRole.
 	// If AggregationRule is set, then the Rules are controller managed and direct changes to Rules will be

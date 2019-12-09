@@ -123,8 +123,8 @@ type RouteTargetReference struct {
 
 	// weight as an integer between 0 and 256, default 100, that specifies the target's relative weight
 	// against other target reference objects. 0 suppresses requests to this backend.
-	Weight *int32 `json:"weight" protobuf:"varint,3,opt,name=weight"`
 	// +optional
+	Weight *int32 `json:"weight,omitempty" protobuf:"varint,3,opt,name=weight"`
 }
 
 // RoutePort defines a port mapping from a router to an endpoint in the service endpoints.

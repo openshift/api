@@ -126,8 +126,8 @@ type TemplateInstanceSpec struct {
 
 	// requester holds the identity of the agent requesting the template
 	// instantiation.
-	Requester *TemplateInstanceRequester `json:"requester" protobuf:"bytes,3,opt,name=requester"`
 	// +optional
+	Requester *TemplateInstanceRequester `json:"requester,omitempty" protobuf:"bytes,3,opt,name=requester"`
 }
 
 // TemplateInstanceRequester holds the identity of an agent requesting a

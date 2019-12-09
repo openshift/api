@@ -137,6 +137,7 @@ message TemplateInstance {
   optional TemplateInstanceSpec spec = 2;
 
   // status describes the current state of this TemplateInstance.
+  // +optional
   optional TemplateInstanceStatus status = 3;
 }
 

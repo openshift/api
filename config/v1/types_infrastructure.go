@@ -136,6 +136,10 @@ type PlatformStatus struct {
 	// Ovirt contains settings specific to the oVirt infrastructure provider.
 	// +optional
 	Ovirt *OvirtPlatformStatus `json:"ovirt,omitempty"`
+
+	// IBMCloud contains settings specific to the IBMCloud infrastructure provider.
+	// +optional
+	IBMCloud *IBMCloudPlatformStatus `json:"ibmcloud,omitempty"`
 }
 
 // AWSPlatformStatus holds the current status of the Amazon Web Services infrastructure provider.
@@ -232,6 +236,20 @@ type OvirtPlatformStatus struct {
 	// to the nodes in the cluster.
 	NodeDNSIP string `json:"nodeDNSIP,omitempty"`
 }
+
+//IBMCloudPlatformStatus holds the current status of the IBMCloud infrastructure provider.
+type IBMCloudPlatformStatus struct {
+	// Location is where the cluster has been deployed 
+        Location string `json:"location,omitempty"`
+
+        // ResourceGroupName is the Resource Group for new IBMCloud resources created for the cluster.
+        ResourceGroupName string `json:"resourceGroupName,omitempty"`
+
+        // ProviderType  Indicates the type of cluster that was created
+        ProviderType string `json:"providerType,omitempty"`
+
+}
+
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 

@@ -716,6 +716,17 @@ func (GCPPlatformStatus) SwaggerDoc() map[string]string {
 	return map_GCPPlatformStatus
 }
 
+var map_IBMCloudPlatformStatus = map[string]string{
+	"":                  "IBMCloudPlatformStatus holds the current status of the IBMCloud infrastructure provider.",
+	"location":          "Location is where the cluster has been deployed",
+	"resourceGroupName": "ResourceGroupName is the Resource Group for new IBMCloud resources created for the cluster.",
+	"providerType":      "ProviderType  Indicates the type of cluster that was created",
+}
+
+func (IBMCloudPlatformStatus) SwaggerDoc() map[string]string {
+	return map_IBMCloudPlatformStatus
+}
+
 var map_Infrastructure = map[string]string{
 	"":       "Infrastructure holds cluster-wide information about Infrastructure.  The canonical name is `cluster`",
 	"spec":   "spec holds user settable values for configuration",
@@ -789,6 +800,7 @@ var map_PlatformStatus = map[string]string{
 	"baremetal": "BareMetal contains settings specific to the BareMetal platform.",
 	"openstack": "OpenStack contains settings specific to the OpenStack infrastructure provider.",
 	"ovirt":     "Ovirt contains settings specific to the oVirt infrastructure provider.",
+	"ibmcloud":  "IBMCloud contains settings specific to the IBMCloud infrastructure provider.",
 }
 
 func (PlatformStatus) SwaggerDoc() map[string]string {

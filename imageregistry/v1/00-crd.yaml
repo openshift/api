@@ -11,6 +11,7 @@ spec:
     listKind: ConfigList
     plural: configs
     singular: config
+  preserveUnknownFields: false
   subresources:
     status: {}
   validation:

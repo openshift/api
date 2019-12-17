@@ -239,17 +239,15 @@ type OvirtPlatformStatus struct {
 
 //IBMCloudPlatformStatus holds the current status of the IBMCloud infrastructure provider.
 type IBMCloudPlatformStatus struct {
-	// Location is where the cluster has been deployed 
-        Location string `json:"location,omitempty"`
+	// Location is where the cluster has been deployed
+	Location string `json:"location,omitempty"`
 
-        // ResourceGroupName is the Resource Group for new IBMCloud resources created for the cluster.
-        ResourceGroupName string `json:"resourceGroupName,omitempty"`
+	// ResourceGroupName is the Resource Group for new IBMCloud resources created for the cluster.
+	ResourceGroupName string `json:"resourceGroupName,omitempty"`
 
-        // ProviderType  Indicates the type of cluster that was created
-        ProviderType string `json:"providerType,omitempty"`
-
+	// ProviderType  Indicates the type of cluster that was created
+	ProviderType string `json:"providerType,omitempty"`
 }
-
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 

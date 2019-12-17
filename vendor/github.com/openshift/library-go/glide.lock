@@ -228,8 +228,7 @@ imports:
 - name: github.com/konsorten/go-windows-terminal-sequences
   version: 5c8c8bd35d3832f5d134ae1e1e375b69a4d25242
 - name: github.com/kubernetes-sigs/kube-storage-version-migrator
-  version: bdca3bf7d454105b7853d0d60b385877486a9dc6
-  repo: https://github.com/openshift/kubernetes-kube-storage-version-migrator.git
+  version: 51849bc15f171db0427fbcbc40989b483eb73e13
   subpackages:
   - pkg/apis/migration/v1alpha1
   - pkg/clients/clientset

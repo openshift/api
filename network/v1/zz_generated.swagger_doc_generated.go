@@ -27,8 +27,9 @@ func (ClusterNetwork) SwaggerDoc() map[string]string {
 }
 
 var map_ClusterNetworkEntry = map[string]string{
-	"":     "ClusterNetworkEntry defines an individual cluster network. The CIDRs cannot overlap with other cluster network CIDRs, CIDRs reserved for external ips, CIDRs reserved for service networks, and CIDRs reserved for ingress ips.",
-	"CIDR": "CIDR defines the total range of a cluster networks address space.",
+	"":                 "ClusterNetworkEntry defines an individual cluster network. The CIDRs cannot overlap with other cluster network CIDRs, CIDRs reserved for external ips, CIDRs reserved for service networks, and CIDRs reserved for ingress ips.",
+	"CIDR":             "CIDR defines the total range of a cluster networks address space.",
+	"hostSubnetLength": "HostSubnetLength is the number of bits of the accompanying CIDR address to allocate to each node. eg, 8 would mean that each node would have a /24 slice of the overlay network for its pods.",
 }
 
 func (ClusterNetworkEntry) SwaggerDoc() map[string]string {
@@ -64,8 +65,8 @@ func (EgressNetworkPolicyList) SwaggerDoc() map[string]string {
 
 var map_EgressNetworkPolicyPeer = map[string]string{
 	"":             "EgressNetworkPolicyPeer specifies a target to apply egress network policy to",
-	"cidrSelector": "cidrSelector is the CIDR range to allow/deny traffic to. If this is set, dnsName must be unset",
-	"dnsName":      "dnsName is the domain name to allow/deny traffic to. If this is set, cidrSelector must be unset",
+	"cidrSelector": "CIDRSelector is the CIDR range to allow/deny traffic to. If this is set, dnsName must be unset Ideally we would have liked to use the cidr openapi format for this property. But openshift-sdn only supports v4 while specifying the cidr format allows both v4 and v6 cidrs We are therefore using a regex pattern to validate instead.",
+	"dnsName":      "DNSName is the domain name to allow/deny traffic to. If this is set, cidrSelector must be unset",
 }
 
 func (EgressNetworkPolicyPeer) SwaggerDoc() map[string]string {

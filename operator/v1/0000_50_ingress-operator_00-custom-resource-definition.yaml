@@ -290,16 +290,16 @@ spec:
             routeAdmission:
               description: "routeAdmission defines a policy for handling new route
                 claims (for example, to allow or deny claims across namespaces). \n
-                The default policy is Strict."
+                The empty, the default is Strict."
               type: object
               properties:
                 namespaceOwnership:
                   description: "namespaceOwnership describes how host name claims
-                    across namespaces should be handled. The default is Strict. \n
-                    Value must be one of: \n - Strict: do not allow routes to claim
-                    the same host name across namespaces. - InterNamespaceAllowed:
-                    allow routes to claim different paths of the same host name across
-                    namespaces. \n The default is Strict."
+                    across namespaces should be handled. \n Value must be one of:
+                    \n - Strict: do not allow routes to claim the same host name across
+                    namespaces. - InterNamespaceAllowed: allow routes to claim different
+                    paths of the same host name across namespaces. \n If empty, the
+                    default is Strict."
                   type: string
             routeSelector:
               description: "routeSelector is used to filter the set of Routes serviced
@@ -550,11 +550,11 @@ spec:
               properties:
                 namespaceOwnership:
                   description: "namespaceOwnership describes how host name claims
-                    across namespaces should be handled. The default is Strict. \n
-                    Value must be one of: \n - Strict: do not allow routes to claim
-                    the same host name across namespaces. - InterNamespaceAllowed:
-                    allow routes to claim different paths of the same host name across
-                    namespaces. \n The default is Strict."
+                    across namespaces should be handled. \n Value must be one of:
+                    \n - Strict: do not allow routes to claim the same host name across
+                    namespaces. - InterNamespaceAllowed: allow routes to claim different
+                    paths of the same host name across namespaces. \n If empty, the
+                    default is Strict."
                   type: string
             selector:
               description: selector is a label selector, in string format, for ingress

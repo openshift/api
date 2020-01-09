@@ -173,6 +173,40 @@ func (StatuspageProvider) SwaggerDoc() map[string]string {
 	return map_StatuspageProvider
 }
 
+var map_CSISnapshotController = map[string]string{
+	"":       "CSISnapshotController provides a means to configure an operator to manage the CSI snapshots. `cluster` is the canonical name.",
+	"spec":   "spec holds user settable values for configuration",
+	"status": "status holds observed values from the cluster. They may not be overridden.",
+}
+
+func (CSISnapshotController) SwaggerDoc() map[string]string {
+	return map_CSISnapshotController
+}
+
+var map_CSISnapshotControllerList = map[string]string{
+	"": "CSISnapshotControllerList contains a list of CSISnapshotControllers.",
+}
+
+func (CSISnapshotControllerList) SwaggerDoc() map[string]string {
+	return map_CSISnapshotControllerList
+}
+
+var map_CSISnapshotControllerSpec = map[string]string{
+	"": "CSISnapshotControllerSpec is the specification of the desired behavior of the CSISnapshotController operator.",
+}
+
+func (CSISnapshotControllerSpec) SwaggerDoc() map[string]string {
+	return map_CSISnapshotControllerSpec
+}
+
+var map_CSISnapshotControllerStatus = map[string]string{
+	"": "CSISnapshotControllerStatus defines the observed status of the CSISnapshotController operator.",
+}
+
+func (CSISnapshotControllerStatus) SwaggerDoc() map[string]string {
+	return map_CSISnapshotControllerStatus
+}
+
 var map_DNS = map[string]string{
 	"":       "DNS manages the CoreDNS component to provide a name resolution service for pods and services in the cluster.\n\nThis supports the DNS-based service discovery specification: https://github.com/kubernetes/dns/blob/master/docs/specification.md\n\nMore details: https://kubernetes.io/docs/tasks/administer-cluster/coredns",
 	"spec":   "spec is the specification of the desired behavior of the DNS.",

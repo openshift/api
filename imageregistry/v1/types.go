@@ -86,7 +86,7 @@ type ImageRegistrySpec struct {
 	// deployment.
 	// +optional
 	// +kubebuilder:validation:Pattern=`^(RollingUpdate|Recreate)$`
-	RolloutStrategy string `json:"rolloutStrategy" protobuf:"bytes,15,opt,name=rolloutStrategy"`
+	RolloutStrategy string `json:"rolloutStrategy,omitempty" protobuf:"bytes,15,opt,name=rolloutStrategy"`
 }
 
 // ImageRegistryStatus reports image registry operational status.

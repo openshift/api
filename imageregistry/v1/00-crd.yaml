@@ -156,7 +156,7 @@ spec:
                     type: string
             rolloutStrategy:
               description: rolloutStrategy defines rollout strategy for the image
-                registry deployment. Valid values are RollingUpdate (default) and Recreate.
+                registry deployment.
               type: string
               pattern: ^(RollingUpdate|Recreate)$
             routes:

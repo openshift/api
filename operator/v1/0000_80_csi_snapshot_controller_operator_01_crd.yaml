@@ -19,9 +19,11 @@ spec:
     storage: true
   validation:
     openAPIV3Schema:
-      description: CSISnapshotController provides information to configure an operator to
-        manage the CSISnapshotController.
+      description: CSISnapshotController provides a means to configure an operator
+        to manage the CSI snapshots. `cluster` is the canonical name.
       type: object
+      required:
+      - spec
       properties:
         apiVersion:
           description: 'APIVersion defines the versioned schema of this representation
@@ -36,8 +38,7 @@ spec:
         metadata:
           type: object
         spec:
-          description: CSISnapshotControllerSpec is the specification of the desired behavior of
-            the CSISnapshotController operator.
+          description: spec holds user settable values for configuration
           type: object
           properties:
             logLevel:
@@ -73,8 +74,8 @@ spec:
               nullable: true
               x-kubernetes-preserve-unknown-fields: true
         status:
-          description: CSISnapshotControllerStatus defines the observed status of 
-            the CSISnapshotController operator.
+          description: status holds observed values from the cluster. They may not
+            be overridden.
           type: object
           properties:
             conditions:

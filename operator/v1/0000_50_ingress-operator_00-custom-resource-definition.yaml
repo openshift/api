@@ -287,6 +287,21 @@ spec:
                 If unset, defaults to 2.
               type: integer
               format: int32
+            routeAdmission:
+              description: "routeAdmission defines a policy for handling new route
+                claims (for example, to allow or deny claims across namespaces). \n
+                The empty, defaults will be applied. See specific routeAdmission fields
+                for details about their defaults."
+              type: object
+              properties:
+                namespaceOwnership:
+                  description: "namespaceOwnership describes how host name claims
+                    across namespaces should be handled. \n Value must be one of:
+                    \n - Strict: Do not allow routes in different namespaces to claim
+                    the same host. \n - InterNamespaceAllowed: allow routes to claim
+                    different paths of the same   host name across namespaces. \n
+                    If empty, the default is Strict."
+                  type: string
             routeSelector:
               description: "routeSelector is used to filter the set of Routes serviced
                 by the ingress controller. This is useful for implementing shards.
@@ -529,6 +544,19 @@ spec:
               description: observedGeneration is the most recent generation observed.
               type: integer
               format: int64
+            routeAdmission:
+              description: routeAdmission is the route admission policy that is in
+                effect.
+              type: object
+              properties:
+                namespaceOwnership:
+                  description: "namespaceOwnership describes how host name claims
+                    across namespaces should be handled. \n Value must be one of:
+                    \n - Strict: Do not allow routes in different namespaces to claim
+                    the same host. \n - InterNamespaceAllowed: allow routes to claim
+                    different paths of the same   host name across namespaces. \n
+                    If empty, the default is Strict."
+                  type: string
             selector:
               description: selector is a label selector, in string format, for ingress
                 controller pods corresponding to the IngressController. The number

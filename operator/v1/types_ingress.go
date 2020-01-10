@@ -149,7 +149,8 @@ type IngressControllerSpec struct {
 	// routeAdmission defines a policy for handling new route claims (for example,
 	// to allow or deny claims across namespaces).
 	//
-	// The empty, the default is Strict.
+	// The empty, defaults will be applied. See specific routeAdmission fields
+	// for details about their defaults.
 	//
 	// +optional
 	RouteAdmission *RouteAdmissionPolicy `json:"routeAdmission,omitempty"`
@@ -323,8 +324,10 @@ type RouteAdmissionPolicy struct {
 	//
 	// Value must be one of:
 	//
-	// - Strict: do not allow routes to claim the same host name across namespaces.
-	// - InterNamespaceAllowed: allow routes to claim different paths of the same host name across namespaces.
+	// - Strict: Do not allow routes in different namespaces to claim the same host.
+	//
+	// - InterNamespaceAllowed: allow routes to claim different paths of the same
+	//   host name across namespaces.
 	//
 	// If empty, the default is Strict.
 	// +optional

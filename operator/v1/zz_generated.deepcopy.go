@@ -874,11 +874,6 @@ func (in *IngressControllerStatus) DeepCopyInto(out *IngressControllerStatus) {
 		*out = new(configv1.TLSProfileSpec)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.RouteAdmission != nil {
-		in, out := &in.RouteAdmission, &out.RouteAdmission
-		*out = new(RouteAdmissionPolicy)
-		**out = **in
-	}
 	return
 }
 

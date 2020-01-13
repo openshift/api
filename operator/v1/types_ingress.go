@@ -421,10 +421,6 @@ type IngressControllerStatus struct {
 	// observedGeneration is the most recent generation observed.
 	// +optional
 	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
-
-	// routeAdmission is the route admission policy that is in effect.
-	// +optional
-	RouteAdmission *RouteAdmissionPolicy `json:"routeAdmission,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

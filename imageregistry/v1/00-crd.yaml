@@ -506,6 +506,11 @@ spec:
                       description: claim defines the Persisent Volume Claim's name
                         to be used.
                       type: string
+                    accessMode:
+                      description: accessMode defines the type of the PVC access mode.
+                        ReadWriteMany (default) and ReadWriteOnce modes are supported.
+                      type: string
+                      pattern: ^(ReadWriteMany|ReadWriteOnce)$
                 s3:
                   description: s3 represents configuration that uses Amazon Simple
                     Storage Service.

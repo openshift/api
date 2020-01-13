@@ -229,6 +229,10 @@ type ImageRegistryConfigStoragePVC struct {
 	// claim defines the Persisent Volume Claim's name to be used.
 	// +optional
 	Claim string `json:"claim" protobuf:"bytes,1,opt,name=claim"`
+	// accessMode defines the type of the PVC access mode.
+	// +optional
+	// +kubebuilder:validation:Pattern=`^(ReadWriteMany|ReadWriteOnce)$`
+	AccessMode string `json:"accessMode,omitempty" protobuf:"bytes,2,opt,name=accessMode"`
 }
 
 // ImageRegistryConfigStorageAzure holds the information to configure

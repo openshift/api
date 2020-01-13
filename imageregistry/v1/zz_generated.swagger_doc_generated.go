@@ -115,8 +115,9 @@ func (ImageRegistryConfigStorageGCS) SwaggerDoc() map[string]string {
 }
 
 var map_ImageRegistryConfigStoragePVC = map[string]string{
-	"":      "ImageRegistryConfigStoragePVC holds Persistent Volume Claims data to be used by the registry.",
-	"claim": "claim defines the Persisent Volume Claim's name to be used.",
+	"":           "ImageRegistryConfigStoragePVC holds Persistent Volume Claims data to be used by the registry.",
+	"claim":      "claim defines the Persisent Volume Claim's name to be used.",
+	"accessMode": "accessMode defines the type of the PVC access mode.",
 }
 
 func (ImageRegistryConfigStoragePVC) SwaggerDoc() map[string]string {

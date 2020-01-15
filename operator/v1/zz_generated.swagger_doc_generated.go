@@ -117,6 +117,14 @@ func (AuthenticationList) SwaggerDoc() map[string]string {
 	return map_AuthenticationList
 }
 
+var map_AuthenticationStatus = map[string]string{
+	"managingOAuthAPIServer": "ManagingOAuthAPIServer indicates whether this operator is managing OAuth related APIs. Setting this field to true will cause OAS-O to step down. Note that this field will be removed in the future releases, once https://github.com/openshift/enhancements/blob/master/enhancements/authentication/separate-oauth-resources.md is fully implemented",
+}
+
+func (AuthenticationStatus) SwaggerDoc() map[string]string {
+	return map_AuthenticationStatus
+}
+
 var map_Console = map[string]string{
 	"": "Console provides a means to configure an operator to manage the console.",
 }

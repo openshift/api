@@ -626,7 +626,7 @@ func (FeatureGateSelection) SwaggerDoc() map[string]string {
 }
 
 var map_Image = map[string]string{
-	"":       "Image governs policies related to imagestream imports and runtime configuration for external registries. It allows cluster admins to configure which registries OpenShift is allowed to import images from, extra CA trust bundles for external registries, and policies to blacklist/whitelist registry hostnames. When exposing OpenShift's image registry to the public, this also lets cluster admins specify the external hostname.",
+	"":       "Image governs policies related to imagestream imports and runtime configuration for external registries. It allows cluster admins to configure which registries OpenShift is allowed to import images from, extra CA trust bundles for external registries, and policies to block or allow registry hostnames. When exposing OpenShift's image registry to the public, this also lets cluster admins specify the external hostname.",
 	"spec":   "spec holds user settable values for configuration",
 	"status": "status holds observed values from the cluster. They may not be overridden.",
 }
@@ -668,8 +668,8 @@ func (RegistryLocation) SwaggerDoc() map[string]string {
 var map_RegistrySources = map[string]string{
 	"":                   "RegistrySources holds cluster-wide information about how to handle the registries config.",
 	"insecureRegistries": "insecureRegistries are registries which do not have a valid TLS certificates or only support HTTP connections.",
-	"blockedRegistries":  "blockedRegistries are blacklisted from image pull/push. All other registries are allowed.\n\nOnly one of BlockedRegistries or AllowedRegistries may be set.",
-	"allowedRegistries":  "allowedRegistries are whitelisted for image pull/push. All other registries are blocked.\n\nOnly one of BlockedRegistries or AllowedRegistries may be set.",
+	"blockedRegistries":  "blockedRegistries cannot be used for image pull and push actions. All other registries are permitted.\n\nOnly one of BlockedRegistries or AllowedRegistries may be set.",
+	"allowedRegistries":  "allowedRegistries are the only registries permitted for image pull and push actions. All other registries are denied.\n\nOnly one of BlockedRegistries or AllowedRegistries may be set.",
 }
 
 func (RegistrySources) SwaggerDoc() map[string]string {

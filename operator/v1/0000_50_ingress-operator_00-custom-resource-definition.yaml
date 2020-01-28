@@ -463,7 +463,11 @@ spec:
                 zones.   - False if any of those conditions are unsatisfied. \n   *
                 DNSReady   - True if the following conditions are met:     * DNS is
                 managed.     * DNS records have been successfully created.   - False
-                if any of those conditions are unsatisfied."
+                if any of those conditions are unsatisfied. \n   * NodeReady   - True
+                if the following conditions are met:     * If the number of worker
+                nodes is greater than or equal to       the number of configured ingresscontroller
+                replicas.     * If each node is reporting a Ready=True state.   -
+                False if any of those conditions are unsatisfied."
               type: array
               items:
                 description: OperatorCondition is just the standard condition fields.

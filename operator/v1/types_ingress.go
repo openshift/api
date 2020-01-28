@@ -362,6 +362,8 @@ var (
 	// DNSReady indicates the ready state of any DNS records for the ingress
 	// controller.
 	DNSReadyIngressConditionType = "DNSReady"
+	// NodeReady indicates the node state for the ingress controller.
+	NodeReadyIngressConditionType = "NodeReady"
 )
 
 // IngressControllerStatus defines the observed status of the IngressController.
@@ -412,6 +414,13 @@ type IngressControllerStatus struct {
 	//   - True if the following conditions are met:
 	//     * DNS is managed.
 	//     * DNS records have been successfully created.
+	//   - False if any of those conditions are unsatisfied.
+	//
+	//   * NodeReady
+	//   - True if the following conditions are met:
+	//     * If the number of worker nodes is greater than or equal to
+	//       the number of configured ingresscontroller replicas.
+	//     * If each node is reporting a Ready=True state.
 	//   - False if any of those conditions are unsatisfied.
 	Conditions []OperatorCondition `json:"conditions,omitempty"`
 

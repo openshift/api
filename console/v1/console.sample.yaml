@@ -1,0 +1,16 @@
+apiVersion: console.openshift.io/v1
+kind: ConsoleYAMLSample
+metadata:
+  name: example
+spec:
+  targetResource:
+    apiVersion: config.openshift.io/v1
+    kind: Console
+  title: Example Console
+  description: An example Console YAML sample
+  yaml: |
+    apiVersion: config.openshift.io/v1
+    kind: Console
+    metadata:
+      name: cluster
+    spec: {}

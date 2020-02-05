@@ -1,0 +1,127 @@
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  creationTimestamp: null
+  name: dnsrecords.ingress.operator.openshift.io
+spec:
+  group: ingress.operator.openshift.io
+  names:
+    kind: DNSRecord
+    listKind: DNSRecordList
+    plural: dnsrecords
+    singular: dnsrecord
+  scope: ""
+  preserveUnknownFields: false
+  subresources:
+    status: {}
+  validation:
+    openAPIV3Schema:
+      description: "DNSRecord is a DNS record managed in the zones defined by dns.config.openshift.io/cluster
+        .spec.publicZone and .spec.privateZone. \n Cluster admin manipulation of this
+        resource is not supported. This resource is only for internal communication
+        of OpenShift operators."
+      type: object
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+          type: string
+        metadata:
+          type: object
+        spec:
+          description: spec is the specification of the desired behavior of the dnsecord.
+          type: object
+          required:
+          - dnsName
+          - recordType
+          - targets
+          properties:
+            dnsName:
+              description: dnsName is the hostname of the DNS record
+              type: string
+            recordTTL:
+              description: ttl is the resource record TTL in seconds. The default
+                is 30.
+              type: integer
+              format: int64
+            recordType:
+              description: "recordType is a resource record type. \n The currently
+                supported values are A and CNAME."
+              type: string
+            targets:
+              description: targets are DNS resource record targets.
+              type: array
+              items:
+                type: string
+        status:
+          description: status is the most recently observed status of the dnsRecord.
+          type: object
+          properties:
+            zones:
+              description: zones are the status of the record per zone.
+              type: array
+              items:
+                description: dnsZoneStatus is the status of a record within a specific
+                  zone.
+                type: object
+                required:
+                - dnsZone
+                properties:
+                  conditions:
+                    description: conditions are any conditions associated with the
+                      record in the zone.
+                    type: array
+                    items:
+                      description: dnsZoneCondition is just the standard condition
+                        fields.
+                      type: object
+                      properties:
+                        lastTransitionTime:
+                          type: string
+                          format: date-time
+                        message:
+                          type: string
+                        reason:
+                          type: string
+                        status:
+                          type: string
+                        type:
+                          type: string
+                  dnsZone:
+                    description: dnsZone is the zone where the record is expected
+                      to be managed.
+                    type: object
+                    properties:
+                      id:
+                        description: "id is the identifier that can be used to find
+                          the DNS hosted zone. \n on AWS zone can be fetched using
+                          `ID` as id in [1] on Azure zone can be fetched using `ID`
+                          as a pre-determined name in [2], on GCP zone can be fetched
+                          using `ID` as a pre-determined name in [3]. \n [1]: https://docs.aws.amazon.com/cli/latest/reference/route53/get-hosted-zone.html#options
+                          [2]: https://docs.microsoft.com/en-us/cli/azure/network/dns/zone?view=azure-cli-latest#az-network-dns-zone-show
+                          [3]: https://cloud.google.com/dns/docs/reference/v1/managedZones/get"
+                        type: string
+                      tags:
+                        description: "tags can be used to query the DNS hosted zone.
+                          \n on AWS, resourcegroupstaggingapi [1] can be used to fetch
+                          a zone using `Tags` as tag-filters, \n [1]: https://docs.aws.amazon.com/cli/latest/reference/resourcegroupstaggingapi/get-resources.html#options"
+                        type: object
+                        additionalProperties:
+                          type: string
+  version: v1
+  versions:
+  - name: v1
+    served: true
+    storage: true
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []

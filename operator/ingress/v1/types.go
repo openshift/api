@@ -26,49 +26,50 @@ type DNSRecord struct {
 	Status DNSRecordStatus `json:"status,omitempty"`
 }
 
-// dnsRecordSpec are the details of a DNS record.
+// DNSRecordSpec contains the details of a DNS record.
 type DNSRecordSpec struct {
 	// dnsName is the hostname of the DNS record
 	//
 	// +kubebuilder:validation:Required
 	// +required
 	DNSName string `json:"dnsName,omitempty"`
-	// targets are DNS resource record targets.
+	// targets are record targets.
 	//
 	// +kubebuilder:validation:Required
 	// +required
 	Targets []string `json:"targets,omitempty"`
-	// recordType is a resource record type.
-	//
-	// The currently supported values are A and CNAME.
+	// recordType is the DNS record type. For example, "A" or "CNAME".
 	//
 	// +kubebuilder:validation:Required
 	// +required
 	RecordType DNSRecordType `json:"recordType,omitempty"`
-	// ttl is the resource record TTL in seconds. The default is 30.
+	// recordTTL is the record TTL in seconds. The default is 30.
 	//
 	// +kubebuilder:validation:Optional
 	// +optional
 	RecordTTL int64 `json:"recordTTL,omitempty"`
 }
 
-// dnsRecordStatus is the more recently observed status of the record.
+// DNSRecordStatus is the most recently observed status of each record.
 type DNSRecordStatus struct {
-	// zones are the status of the record per zone.
+	// zones are the status of the record in each zone.
 	//
 	// +kubebuilder:validation:Optional
 	// +optional
 	Zones []DNSZoneStatus `json:"zones,omitempty"`
 }
 
-// dnsZoneStatus is the status of a record within a specific zone.
+// DNSZoneStatus is the status of a record within a specific zone.
 type DNSZoneStatus struct {
-	// dnsZone is the zone where the record is expected to be managed.
+	// dnsZone is the zone where the record is published.
 	//
 	// +kubebuilder:validation:Required
 	// +required
 	DNSZone configv1.DNSZone `json:"dnsZone"`
 	// conditions are any conditions associated with the record in the zone.
+	//
+	// If publishing the record fails, the "Failed" condition will be set with a
+	// reason and message describing the cause of the failure.
 	//
 	// +kubebuilder:validation:Optional
 	// +optional
@@ -80,7 +81,7 @@ var (
 	DNSRecordFailedConditionType = "Failed"
 )
 
-// dnsZoneCondition is just the standard condition fields.
+// DNSZoneCondition is just the standard condition fields.
 type DNSZoneCondition struct {
 	Type               string      `json:"type"`
 	Status             string      `json:"status"`
@@ -102,7 +103,7 @@ const (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +kubebuilder:object:root=true
 
-// dnsRecordList contains a list of dnsrecords.
+// DNSRecordList contains a list of dnsrecords.
 type DNSRecordList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`

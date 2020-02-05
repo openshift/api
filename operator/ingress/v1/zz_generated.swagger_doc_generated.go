@@ -22,7 +22,7 @@ func (DNSRecord) SwaggerDoc() map[string]string {
 }
 
 var map_DNSRecordList = map[string]string{
-	"": "dnsRecordList contains a list of dnsrecords.",
+	"": "DNSRecordList contains a list of dnsrecords.",
 }
 
 func (DNSRecordList) SwaggerDoc() map[string]string {
@@ -30,11 +30,11 @@ func (DNSRecordList) SwaggerDoc() map[string]string {
 }
 
 var map_DNSRecordSpec = map[string]string{
-	"":           "dnsRecordSpec are the details of a DNS record.",
+	"":           "DNSRecordSpec contains the details of a DNS record.",
 	"dnsName":    "dnsName is the hostname of the DNS record",
-	"targets":    "targets are DNS resource record targets.",
-	"recordType": "recordType is a resource record type.\n\nThe currently supported values are A and CNAME.",
-	"recordTTL":  "ttl is the resource record TTL in seconds. The default is 30.",
+	"targets":    "targets are record targets.",
+	"recordType": "recordType is the DNS record type. For example, \"A\" or \"CNAME\".",
+	"recordTTL":  "recordTTL is the record TTL in seconds. The default is 30.",
 }
 
 func (DNSRecordSpec) SwaggerDoc() map[string]string {
@@ -42,8 +42,8 @@ func (DNSRecordSpec) SwaggerDoc() map[string]string {
 }
 
 var map_DNSRecordStatus = map[string]string{
-	"":      "dnsRecordStatus is the more recently observed status of the record.",
-	"zones": "zones are the status of the record per zone.",
+	"":      "DNSRecordStatus is the most recently observed status of each record.",
+	"zones": "zones are the status of the record in each zone.",
 }
 
 func (DNSRecordStatus) SwaggerDoc() map[string]string {
@@ -51,7 +51,7 @@ func (DNSRecordStatus) SwaggerDoc() map[string]string {
 }
 
 var map_DNSZoneCondition = map[string]string{
-	"": "dnsZoneCondition is just the standard condition fields.",
+	"": "DNSZoneCondition is just the standard condition fields.",
 }
 
 func (DNSZoneCondition) SwaggerDoc() map[string]string {
@@ -59,9 +59,9 @@ func (DNSZoneCondition) SwaggerDoc() map[string]string {
 }
 
 var map_DNSZoneStatus = map[string]string{
-	"":           "dnsZoneStatus is the status of a record within a specific zone.",
-	"dnsZone":    "dnsZone is the zone where the record is expected to be managed.",
-	"conditions": "conditions are any conditions associated with the record in the zone.",
+	"":           "DNSZoneStatus is the status of a record within a specific zone.",
+	"dnsZone":    "dnsZone is the zone where the record is published.",
+	"conditions": "conditions are any conditions associated with the record in the zone.\n\nIf publishing the record fails, the \"Failed\" condition will be set with a reason and message describing the cause of the failure.",
 }
 
 func (DNSZoneStatus) SwaggerDoc() map[string]string {

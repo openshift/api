@@ -46,16 +46,16 @@ spec:
               description: dnsName is the hostname of the DNS record
               type: string
             recordTTL:
-              description: ttl is the resource record TTL in seconds. The default
-                is 30.
+              description: recordTTL is the record TTL in seconds. The default is
+                30.
               type: integer
               format: int64
             recordType:
-              description: "recordType is a resource record type. \n The currently
-                supported values are A and CNAME."
+              description: recordType is the DNS record type. For example, "A" or
+                "CNAME".
               type: string
             targets:
-              description: targets are DNS resource record targets.
+              description: targets are record targets.
               type: array
               items:
                 type: string
@@ -64,21 +64,23 @@ spec:
           type: object
           properties:
             zones:
-              description: zones are the status of the record per zone.
+              description: zones are the status of the record in each zone.
               type: array
               items:
-                description: dnsZoneStatus is the status of a record within a specific
+                description: DNSZoneStatus is the status of a record within a specific
                   zone.
                 type: object
                 required:
                 - dnsZone
                 properties:
                   conditions:
-                    description: conditions are any conditions associated with the
-                      record in the zone.
+                    description: "conditions are any conditions associated with the
+                      record in the zone. \n If publishing the record fails, the \"Failed\"
+                      condition will be set with a reason and message describing the
+                      cause of the failure."
                     type: array
                     items:
-                      description: dnsZoneCondition is just the standard condition
+                      description: DNSZoneCondition is just the standard condition
                         fields.
                       type: object
                       properties:
@@ -94,8 +96,7 @@ spec:
                         type:
                           type: string
                   dnsZone:
-                    description: dnsZone is the zone where the record is expected
-                      to be managed.
+                    description: dnsZone is the zone where the record is published.
                     type: object
                     properties:
                       id:

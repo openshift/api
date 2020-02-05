@@ -1,4 +1,4 @@
-package operator
+package ingress
 
 import (
 	"k8s.io/apimachinery/pkg/runtime"

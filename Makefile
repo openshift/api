@@ -19,6 +19,8 @@ GO_LD_FLAGS:=
 # $3 - manifests
 # $4 - output
 $(call add-crd-gen,authorization,./authorization/v1,./authorization/v1,./authorization/v1)
+$(call add-crd-gen,autoscaling,./autoscaling/v1,./autoscaling/v1,./autoscaling/v1)
+$(call add-crd-gen,autoscaling-beta,./autoscaling/v1beta1,./autoscaling/v1beta1,./autoscaling/v1beta1)
 $(call add-crd-gen,config,./config/v1,./config/v1,./config/v1)
 $(call add-crd-gen,console,./console/v1,./console/v1,./console/v1)
 $(call add-crd-gen,imageregistry,./imageregistry/v1,./imageregistry/v1,./imageregistry/v1)

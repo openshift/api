@@ -12,6 +12,8 @@ set -o pipefail
 API_GROUP_VERSIONS="\
 apps/v1 \
 authorization/v1 \
+autoscaling/v1 \
+autoscaling/v1beta1 \
 build/v1 \
 console/v1 \
 config/v1 \
@@ -36,6 +38,8 @@ user/v1 \
 API_PACKAGES="\
 github.com/openshift/api/apps/v1,\
 github.com/openshift/api/authorization/v1,\
+github.com/openshift/api/autoscaling/v1,\
+github.com/openshift/api/autoscaling/v1beta1,\
 github.com/openshift/api/build/v1,\
 github.com/openshift/api/image/v1,\
 github.com/openshift/api/network/v1,\

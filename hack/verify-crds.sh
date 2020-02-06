@@ -7,6 +7,8 @@ if [ ! -f ./_output/tools/bin/yq ]; then
 fi
 
 FILES="authorization/v1/*.crd.yaml
+autoscaling/v1/*.crd.yaml
+autoscaling/v1beta1/*.crd.yaml
 config/v1/*.crd.yaml
 console/v1/*.crd.yaml
 imageregistry/v1/*crd.yaml

@@ -35,6 +35,7 @@ import (
 
 	"github.com/openshift/api/apps"
 	"github.com/openshift/api/authorization"
+	"github.com/openshift/api/autoscaling"
 	"github.com/openshift/api/build"
 	"github.com/openshift/api/config"
 	"github.com/openshift/api/image"
@@ -62,6 +63,7 @@ var (
 	schemeBuilder = runtime.NewSchemeBuilder(
 		apps.Install,
 		authorization.Install,
+		autoscaling.Install,
 		build.Install,
 		config.Install,
 		image.Install,

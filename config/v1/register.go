@@ -36,6 +36,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&AuthenticationList{},
 		&Build{},
 		&BuildList{},
+		&ClusterCLI{},
+		&ClusterCLIList{},
 		&ClusterOperator{},
 		&ClusterOperatorList{},
 		&ClusterVersion{},

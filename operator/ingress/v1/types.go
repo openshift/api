@@ -90,14 +90,16 @@ type DNSZoneCondition struct {
 	Message            string      `json:"message,omitempty"`
 }
 
+// DNSRecordType is a DNS resource record type.
+// +kubebuilder:validation:Enum=CNAME;A
 type DNSRecordType string
 
 const (
 	// CNAME is an RFC 1035 CNAME record.
-	CNAMERecordType string = "CNAME"
+	CNAMERecordType DNSRecordType = "CNAME"
 
 	// CNAME is an RFC 1035 A record.
-	ARecordType string = "A"
+	ARecordType DNSRecordType = "A"
 )
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

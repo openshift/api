@@ -54,6 +54,9 @@ spec:
               description: recordType is the DNS record type. For example, "A" or
                 "CNAME".
               type: string
+              enum:
+              - CNAME
+              - A
             targets:
               description: targets are record targets.
               type: array

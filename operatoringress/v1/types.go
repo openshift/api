@@ -21,9 +21,12 @@ type DNSRecord struct {
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	// spec is the specification of the desired behavior of the dnsecord.
-	Spec DNSRecordSpec `json:"spec,omitempty"`
+	//
+	// +kubebuilder:validation:Required
+	// +required
+	Spec DNSRecordSpec `json:"spec"`
 	// status is the most recently observed status of the dnsRecord.
-	Status DNSRecordStatus `json:"status,omitempty"`
+	Status DNSRecordStatus `json:"status"`
 }
 
 // DNSRecordSpec contains the details of a DNS record.
@@ -32,22 +35,23 @@ type DNSRecordSpec struct {
 	//
 	// +kubebuilder:validation:Required
 	// +required
-	DNSName string `json:"dnsName,omitempty"`
+	DNSName string `json:"dnsName"`
 	// targets are record targets.
 	//
 	// +kubebuilder:validation:Required
 	// +required
-	Targets []string `json:"targets,omitempty"`
+	Targets []string `json:"targets"`
 	// recordType is the DNS record type. For example, "A" or "CNAME".
 	//
 	// +kubebuilder:validation:Required
 	// +required
-	RecordType DNSRecordType `json:"recordType,omitempty"`
-	// recordTTL is the record TTL in seconds. The default is 30.
+	RecordType DNSRecordType `json:"recordType"`
+	// recordTTL is the record TTL in seconds. If <= zero, the default is 30.
 	//
-	// +kubebuilder:validation:Optional
-	// +optional
-	RecordTTL int64 `json:"recordTTL,omitempty"`
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Minimum=0
+	// +required
+	RecordTTL int64 `json:"recordTTL"`
 }
 
 // DNSRecordStatus is the most recently observed status of each record.
@@ -83,7 +87,11 @@ var (
 
 // DNSZoneCondition is just the standard condition fields.
 type DNSZoneCondition struct {
-	Type               string      `json:"type"`
+	// +kubebuilder:validation:Required
+	// +required
+	Type string `json:"type"`
+	// +kubebuilder:validation:Required
+	// +required
 	Status             string      `json:"status"`
 	LastTransitionTime metav1.Time `json:"lastTransitionTime,omitempty"`
 	Reason             string      `json:"reason,omitempty"`

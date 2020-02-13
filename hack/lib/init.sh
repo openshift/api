@@ -23,7 +23,7 @@ network/v1 \
 oauth/v1 \
 openshiftcontrolplane/v1 \
 operator/v1 \
-operator/ingress/v1 \
+operatoringress/v1 \
 operator/v1alpha1 \
 project/v1 \
 quota/v1 \

@@ -55,9 +55,6 @@ type DNSRecordSpec struct {
 // DNSRecordStatus is the most recently observed status of each record.
 type DNSRecordStatus struct {
 	// zones are the status of the record in each zone.
-	//
-	// +kubebuilder:validation:Optional
-	// +optional
 	Zones []DNSZoneStatus `json:"zones,omitempty"`
 }
 
@@ -69,9 +66,6 @@ type DNSZoneStatus struct {
 	//
 	// If publishing the record fails, the "Failed" condition will be set with a
 	// reason and message describing the cause of the failure.
-	//
-	// +kubebuilder:validation:Optional
-	// +optional
 	Conditions []DNSZoneCondition `json:"conditions,omitempty"`
 }
 

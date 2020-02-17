@@ -44,7 +44,7 @@ type DNSRecordSpec struct {
 	// +kubebuilder:validation:Required
 	// +required
 	RecordType DNSRecordType `json:"recordType"`
-	// recordTTL is the record TTL in seconds. If <= zero, the default is 30.
+	// recordTTL is the record TTL in seconds. If zero, the default is 30.
 	//
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Minimum=0

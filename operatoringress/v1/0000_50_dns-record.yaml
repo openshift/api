@@ -47,8 +47,8 @@ spec:
               type: string
               minLength: 1
             recordTTL:
-              description: recordTTL is the record TTL in seconds. If <= zero, the
-                default is 30.
+              description: recordTTL is the record TTL in seconds. If zero, the default
+                is 30.
               type: integer
               format: int64
               minimum: 0

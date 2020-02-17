@@ -20,8 +20,6 @@ spec:
         resource is not supported. This resource is only for internal communication
         of OpenShift operators."
       type: object
-      required:
-      - spec
       properties:
         apiVersion:
           description: 'APIVersion defines the versioned schema of this representation
@@ -47,6 +45,7 @@ spec:
             dnsName:
               description: dnsName is the hostname of the DNS record
               type: string
+              minLength: 1
             recordTTL:
               description: recordTTL is the record TTL in seconds. If <= zero, the
                 default is 30.
@@ -63,6 +62,7 @@ spec:
             targets:
               description: targets are record targets.
               type: array
+              minItems: 1
               items:
                 type: string
         status:
@@ -76,8 +76,6 @@ spec:
                 description: DNSZoneStatus is the status of a record within a specific
                   zone.
                 type: object
-                required:
-                - dnsZone
                 properties:
                   conditions:
                     description: "conditions are any conditions associated with the
@@ -102,8 +100,10 @@ spec:
                           type: string
                         status:
                           type: string
+                          minLength: 1
                         type:
                           type: string
+                          minLength: 1
                   dnsZone:
                     description: dnsZone is the zone where the record is published.
                     type: object

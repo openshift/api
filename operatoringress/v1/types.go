@@ -21,9 +21,6 @@ type DNSRecord struct {
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	// spec is the specification of the desired behavior of the dnsecord.
-	//
-	// +kubebuilder:validation:Required
-	// +required
 	Spec DNSRecordSpec `json:"spec"`
 	// status is the most recently observed status of the dnsRecord.
 	Status DNSRecordStatus `json:"status"`
@@ -34,15 +31,16 @@ type DNSRecordSpec struct {
 	// dnsName is the hostname of the DNS record
 	//
 	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=1
 	// +required
 	DNSName string `json:"dnsName"`
 	// targets are record targets.
 	//
 	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinItems=1
 	// +required
 	Targets []string `json:"targets"`
 	// recordType is the DNS record type. For example, "A" or "CNAME".
-	//
 	// +kubebuilder:validation:Required
 	// +required
 	RecordType DNSRecordType `json:"recordType"`
@@ -66,9 +64,6 @@ type DNSRecordStatus struct {
 // DNSZoneStatus is the status of a record within a specific zone.
 type DNSZoneStatus struct {
 	// dnsZone is the zone where the record is published.
-	//
-	// +kubebuilder:validation:Required
-	// +required
 	DNSZone configv1.DNSZone `json:"dnsZone"`
 	// conditions are any conditions associated with the record in the zone.
 	//
@@ -88,9 +83,11 @@ var (
 // DNSZoneCondition is just the standard condition fields.
 type DNSZoneCondition struct {
 	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=1
 	// +required
 	Type string `json:"type"`
 	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=1
 	// +required
 	Status             string      `json:"status"`
 	LastTransitionTime metav1.Time `json:"lastTransitionTime,omitempty"`

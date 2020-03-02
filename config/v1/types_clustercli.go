@@ -53,6 +53,4 @@ type ClusterCLIMapping struct {
 	Arch string `json:"arch,omitempty"`
 	// From is the directory or file in the image to extract
 	From string `json:"from,omitempty"`
-	// To is the directory to extract the contents of the directory or the named file into.
-	To string `json:"to,omitempty"`
 }

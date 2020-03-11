@@ -3,7 +3,7 @@ module github.com/openshift/api
 go 1.13
 
 require (
-	github.com/gogo/protobuf v1.2.2-0.20190723190241-65acae22fc9d
+	github.com/gogo/protobuf v1.3.1
 	github.com/openshift/build-machinery-go v0.0.0-20200211121458-5e3d6e570160
 	github.com/spf13/pflag v1.0.5
 	golang.org/x/net v0.0.0-20191209160850-c0dbc17a3553 // indirect

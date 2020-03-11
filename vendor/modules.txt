@@ -15,7 +15,7 @@ github.com/go-openapi/jsonreference
 github.com/go-openapi/spec
 # github.com/go-openapi/swag v0.19.5
 github.com/go-openapi/swag
-# github.com/gogo/protobuf v1.2.2-0.20190723190241-65acae22fc9d
+# github.com/gogo/protobuf v1.3.1
 github.com/gogo/protobuf/gogoproto
 github.com/gogo/protobuf/plugin/compare
 github.com/gogo/protobuf/plugin/defaultcheck
@@ -50,7 +50,7 @@ github.com/google/go-cmp/cmp/internal/diff
 github.com/google/go-cmp/cmp/internal/flags
 github.com/google/go-cmp/cmp/internal/function
 github.com/google/go-cmp/cmp/internal/value
-# github.com/google/gofuzz v1.0.0
+# github.com/google/gofuzz v1.1.0
 github.com/google/gofuzz
 # github.com/json-iterator/go v1.1.8
 github.com/json-iterator/go
@@ -92,36 +92,11 @@ golang.org/x/tools/internal/gopathwalk
 golang.org/x/tools/internal/imports
 golang.org/x/tools/internal/module
 golang.org/x/tools/internal/semver
-# gonum.org/v1/gonum v0.0.0-20190331200053-3d26580ed485
-gonum.org/v1/gonum/blas
-gonum.org/v1/gonum/blas/blas64
-gonum.org/v1/gonum/blas/cblas128
-gonum.org/v1/gonum/blas/gonum
-gonum.org/v1/gonum/floats
-gonum.org/v1/gonum/graph
-gonum.org/v1/gonum/graph/internal/linear
-gonum.org/v1/gonum/graph/internal/ordered
-gonum.org/v1/gonum/graph/internal/set
-gonum.org/v1/gonum/graph/internal/uid
-gonum.org/v1/gonum/graph/iterator
-gonum.org/v1/gonum/graph/simple
-gonum.org/v1/gonum/graph/topo
-gonum.org/v1/gonum/graph/traverse
-gonum.org/v1/gonum/internal/asm/c128
-gonum.org/v1/gonum/internal/asm/c64
-gonum.org/v1/gonum/internal/asm/f32
-gonum.org/v1/gonum/internal/asm/f64
-gonum.org/v1/gonum/internal/cmplx64
-gonum.org/v1/gonum/internal/math32
-gonum.org/v1/gonum/lapack
-gonum.org/v1/gonum/lapack/gonum
-gonum.org/v1/gonum/lapack/lapack64
-gonum.org/v1/gonum/mat
 # gopkg.in/inf.v0 v0.9.1
 gopkg.in/inf.v0
-# gopkg.in/yaml.v2 v2.2.4
+# gopkg.in/yaml.v2 v2.2.8
 gopkg.in/yaml.v2
-# k8s.io/api v0.17.1
+# k8s.io/api v0.18.0-beta.2
 k8s.io/api/admission/v1beta1
 k8s.io/api/admissionregistration/v1beta1
 k8s.io/api/apps/v1
@@ -152,7 +127,7 @@ k8s.io/api/settings/v1alpha1
 k8s.io/api/storage/v1
 k8s.io/api/storage/v1alpha1
 k8s.io/api/storage/v1beta1
-# k8s.io/apimachinery v0.17.1
+# k8s.io/apimachinery v0.18.0-beta.2
 k8s.io/apimachinery/pkg/api/apitesting
 k8s.io/apimachinery/pkg/api/apitesting/fuzzer
 k8s.io/apimachinery/pkg/api/apitesting/roundtrip
@@ -190,7 +165,7 @@ k8s.io/apimachinery/pkg/util/validation/field
 k8s.io/apimachinery/pkg/util/yaml
 k8s.io/apimachinery/pkg/watch
 k8s.io/apimachinery/third_party/forked/golang/reflect
-# k8s.io/code-generator v0.17.1
+# k8s.io/code-generator v0.18.0-beta.2
 k8s.io/code-generator
 k8s.io/code-generator/cmd/client-gen
 k8s.io/code-generator/cmd/client-gen/args
@@ -225,7 +200,7 @@ k8s.io/code-generator/cmd/set-gen
 k8s.io/code-generator/pkg/namer
 k8s.io/code-generator/pkg/util
 k8s.io/code-generator/third_party/forked/golang/reflect
-# k8s.io/gengo v0.0.0-20190822140433-26a664648505
+# k8s.io/gengo v0.0.0-20200114144118-36b2048a9120
 k8s.io/gengo/args
 k8s.io/gengo/examples/deepcopy-gen/generators
 k8s.io/gengo/examples/defaulter-gen/generators
@@ -238,11 +213,13 @@ k8s.io/gengo/parser
 k8s.io/gengo/types
 # k8s.io/klog v1.0.0
 k8s.io/klog
-# k8s.io/kube-openapi v0.0.0-20191107075043-30be4d16710a
+# k8s.io/kube-openapi v0.0.0-20200121204235-bf4fb3bd569c
 k8s.io/kube-openapi/cmd/openapi-gen/args
 k8s.io/kube-openapi/pkg/common
 k8s.io/kube-openapi/pkg/generators
 k8s.io/kube-openapi/pkg/generators/rules
 k8s.io/kube-openapi/pkg/util/sets
-# sigs.k8s.io/yaml v1.1.0
+# sigs.k8s.io/structured-merge-diff/v3 v3.0.0
+sigs.k8s.io/structured-merge-diff/v3/value
+# sigs.k8s.io/yaml v1.2.0
 sigs.k8s.io/yaml

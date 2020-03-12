@@ -1,0 +1,138 @@
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: helmchartrepositories.helm.openshift.io
+spec:
+  scope: Cluster
+  preserveUnknownFields: false
+  group: helm.openshift.io
+  names:
+    kind: HelmChartRepository
+    listKind: HelmChartRepositoryList
+    plural: helmchartrepositories
+    singular: helmchartrepository
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+  subresources:
+    status: {}
+  "validation":
+    "openAPIV3Schema":
+      description: HelmChartRepository holds cluster-wide configuration for proxied
+        Helm chart repository
+      type: object
+      required:
+      - spec
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+          type: string
+        metadata:
+          type: object
+        spec:
+          description: spec holds user settable values for configuration
+          type: object
+          properties:
+            ca:
+              description: ca is an optional reference to a config map by name containing
+                the PEM-encoded CA bundle. It is used as a trust anchor to validate
+                the TLS certificate presented by the remote server. The key "ca.crt"
+                is used to locate the data. If empty, the default system roots are
+                used. The namespace for this config map is openshift-config.
+              type: object
+              required:
+              - name
+              properties:
+                name:
+                  description: name is the metadata.name of the referenced config
+                    map
+                  type: string
+            description:
+              description: Optional human readable repository description, it can
+                be used by UI for displaying purposes
+              type: string
+              minLength: 1
+            insecure_skip_tls_verify:
+              description: Skip verification of the chart repo certificate
+              type: boolean
+            name:
+              description: Optional associated human readable repository name, it
+                can be used by UI for displaying purposes
+              type: string
+              minLength: 1
+            password:
+              description: Password is an optional reference to a secret by name that
+                contains the password used for authenticating access to the chart
+                repository The key "password" is used to locate the data. The namespace
+                for this secret is openshift-config.
+              type: object
+              required:
+              - name
+              properties:
+                name:
+                  description: name is the metadata.name of the referenced secret
+                  type: string
+            tlsClientCert:
+              description: tlsClientCert is an optional reference to a secret by name
+                that contains the PEM-encoded TLS client certificate to present when
+                connecting to the server. The key "client.crt" is used to locate the
+                data. The namespace for this secret is openshift-config.
+              type: object
+              required:
+              - name
+              properties:
+                name:
+                  description: name is the metadata.name of the referenced secret
+                  type: string
+            tlsClientKey:
+              description: tlsClientKey is an optional reference to a secret by name
+                that contains the PEM-encoded TLS private key for the client certificate
+                referenced in tlsClientCert. The key "client.key" is used to locate
+                the data. The namespace for this secret is openshift-config.
+              type: object
+              required:
+              - name
+              properties:
+                name:
+                  description: name is the metadata.name of the referenced secret
+                  type: string
+            url:
+              description: Chart repository URL
+              type: string
+              pattern: ^https?:\/\/
+            username:
+              description: Optional Username used for authenticating access to the
+                chart repository
+              type: string
+        status:
+          description: status holds observed values from the cluster. They may not
+            be overridden.
+          type: object
+          properties:
+            conditions:
+              description: conditions is a list of conditions and their status
+              type: array
+              items:
+                description: HelmChartRepositoryCondition is just the standard condition
+                  fields.
+                type: object
+                properties:
+                  lastTransitionTime:
+                    type: string
+                    format: date-time
+                  message:
+                    type: string
+                  reason:
+                    type: string
+                  status:
+                    type: string
+                  type:
+                    type: string

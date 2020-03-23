@@ -105,7 +105,8 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 	TechPreviewNoUpgrade: newDefaultFeatures().toFeatures(),
 	LatencySensitive: newDefaultFeatures().
 		with(
-			"TopologyManager", // sig-pod, sjenning
+			"HugePageStorageMediumSize", // cnf, alukiano
+			"TopologyManager",           // sig-pod, sjenning
 		).
 		toFeatures(),
 }

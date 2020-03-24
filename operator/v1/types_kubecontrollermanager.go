@@ -25,6 +25,12 @@ type KubeControllerManager struct {
 
 type KubeControllerManagerSpec struct {
 	StaticPodOperatorSpec `json:",inline"`
+
+	// enableDeprecatedAndRemovedServiceCAKeyUntilNextRelease_ThisMakesClusterImpossibleToUpgrade
+	// enables service ca injection into all legacy service account token secrets. Defaults to
+	// false. If set to true, will make it impossible to upgrade the cluster.
+	// +optional
+	EnableDeprecatedAndRemovedServiceCAKeyUntilNextRelease_ThisMakesClusterImpossibleToUpgrade bool `json:"enableDeprecatedAndRemovedServiceCAKeyUntilNextRelease_ThisMakesClusterImpossibleToUpgrade"`
 }
 
 type KubeControllerManagerStatus struct {

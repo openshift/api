@@ -533,6 +533,14 @@ func (KubeControllerManagerList) SwaggerDoc() map[string]string {
 	return map_KubeControllerManagerList
 }
 
+var map_KubeControllerManagerSpec = map[string]string{
+	"enableDeprecatedAndRemovedServiceCAKeyUntilNextRelease_ThisMakesClusterImpossibleToUpgrade": "enableDeprecatedAndRemovedServiceCAKeyUntilNextRelease_ThisMakesClusterImpossibleToUpgrade enables service ca injection into all legacy service account token secrets. Defaults to false. If set to true, will make it impossible to upgrade the cluster.",
+}
+
+func (KubeControllerManagerSpec) SwaggerDoc() map[string]string {
+	return map_KubeControllerManagerSpec
+}
+
 var map_KubeStorageVersionMigrator = map[string]string{
 	"": "KubeStorageVersionMigrator provides information to configure an operator to manage kube-storage-version-migrator.",
 }

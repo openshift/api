@@ -35,6 +35,12 @@ spec:
           description: spec is the specification of the desired behavior of the Kubernetes
             Controller Manager
           properties:
+            enableDeprecatedAndRemovedServiceCAKeyUntilNextRelease_ThisMakesClusterImpossibleToUpgrade:
+              description: enableDeprecatedAndRemovedServiceCAKeyUntilNextRelease_ThisMakesClusterImpossibleToUpgrade
+                enables service ca injection into all legacy service account token
+                secrets. Defaults to false. If set to true, will make it impossible
+                to upgrade the cluster.
+              type: boolean
             failedRevisionLimit:
               description: failedRevisionLimit is the number of failed static pod
                 installer revisions to keep on disk and in the api -1 = unlimited,

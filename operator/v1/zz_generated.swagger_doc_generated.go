@@ -161,6 +161,16 @@ func (Console) SwaggerDoc() map[string]string {
 	return map_Console
 }
 
+var map_ConsoleConfigRoute = map[string]string{
+	"":         "ConsoleConfigRoute holds information on external route access to console.",
+	"hostname": "hostname is the desired custom domain under which console will be available.",
+	"secret":   "secret points to secret in the openshift-config namespace that contains custom certificate and key and needs to be created manually by the cluster admin. Referenced Secret is required to contain following key value pairs: - \"tls.crt\" - to specifies custom certificate - \"tls.key\" - to specifies private key of the custom certificate If the custom hostname uses the default routing suffix of the cluster, the Secret specification for a serving certificate will not be needed.",
+}
+
+func (ConsoleConfigRoute) SwaggerDoc() map[string]string {
+	return map_ConsoleConfigRoute
+}
+
 var map_ConsoleCustomization = map[string]string{
 	"":                     "ConsoleCustomization defines a list of optional configuration for the console UI.",
 	"brand":                "brand is the default branding of the web console which can be overridden by providing the brand field.  There is a limited set of specific brand options. This field controls elements of the console such as the logo. Invalid value will prevent a console rollout.",
@@ -186,6 +196,7 @@ var map_ConsoleSpec = map[string]string{
 	"":              "ConsoleSpec is the specification of the desired behavior of the Console.",
 	"customization": "customization is used to optionally provide a small set of customization options to the web console.",
 	"providers":     "providers contains configuration for using specific service providers.",
+	"route":         "route contains hostname and secret reference that contains the serving certificate. If a custom route is specified, a new route will be created with the provided hostname, under which console will be available. In case of custom hostname uses the default routing suffix of the cluster, the Secret specification for a serving certificate will not be needed. In case of custom hostname points to an arbitrary domain, manual DNS configurations steps are necessary. The default console route will be maintained to reserve the default hostname for console if the custom route is removed. If not specified, default route will be used.",
 }
 
 func (ConsoleSpec) SwaggerDoc() map[string]string {

@@ -26,6 +26,8 @@ spec:
       description: ContainerRuntimeConfig describes a customized Container Runtime
         configuration.
       type: object
+      required:
+      - spec
       properties:
         apiVersion:
           description: 'APIVersion defines the versioned schema of this representation
@@ -47,6 +49,9 @@ spec:
               description: ContainerRuntimeConfiguration defines the tuneables of
                 the container runtime
               type: object
+              required:
+              - logSizeMax
+              - overlaySize
               properties:
                 logLevel:
                   description: logLevel specifies the verbosity of the logs based
@@ -128,6 +133,10 @@ spec:
                 description: ContainerRuntimeConfigCondition defines the state of
                   the ContainerRuntimeConfig
                 type: object
+                required:
+                - lastTransitionTime
+                - status
+                - type
                 properties:
                   lastTransitionTime:
                     description: lastTransitionTime is the time of the last update

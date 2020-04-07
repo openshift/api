@@ -23,6 +23,8 @@ spec:
     "openAPIV3Schema":
       description: KubeletConfig describes a customized Kubelet configuration.
       type: object
+      required:
+      - spec
       properties:
         apiVersion:
           description: 'APIVersion defines the versioned schema of this representation
@@ -42,7 +44,6 @@ spec:
           properties:
             kubeletConfig:
               type: object
-              x-kubernetes-preserve-unknown-fields: true
             machineConfigPoolSelector:
               description: A label selector is a label query over a set of resources.
                 The result of matchLabels and matchExpressions are ANDed. An empty
@@ -100,6 +101,10 @@ spec:
               items:
                 description: KubeletConfigCondition defines the state of the KubeletConfig
                 type: object
+                required:
+                - lastTransitionTime
+                - status
+                - type
                 properties:
                   lastTransitionTime:
                     description: lastTransitionTime is the time of the last update

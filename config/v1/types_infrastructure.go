@@ -378,14 +378,6 @@ type VSpherePlatformStatus struct {
 	// ingressIP is an external IP which routes to the default ingress controller.
 	// The IP is a suitable target of a wildcard DNS record used to resolve default route host names.
 	IngressIP string `json:"ingressIP,omitempty"`
-
-	// nodeDNSIP is the IP address for the internal DNS used by the
-	// nodes. Unlike the one managed by the DNS operator, `NodeDNSIP`
-	// provides name resolution for the nodes themselves. There is no DNS-as-a-service for
-	// vSphere deployments. In order to minimize necessary changes to the
-	// datacenter DNS, a DNS service is hosted as a static pod to serve those hostnames
-	// to the nodes in the cluster.
-	NodeDNSIP string `json:"nodeDNSIP,omitempty"`
 }
 
 // IBMCloudPlatformSpec holds the desired state of the IBMCloud infrastructure provider.

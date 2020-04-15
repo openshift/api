@@ -384,12 +384,3 @@ spec:
                         default ingress controller. The IP is a suitable target of
                         a wildcard DNS record used to resolve default route host names.
                       type: string
-                    nodeDNSIP:
-                      description: nodeDNSIP is the IP address for the internal DNS
-                        used by the nodes. Unlike the one managed by the DNS operator,
-                        `NodeDNSIP` provides name resolution for the nodes themselves.
-                        There is no DNS-as-a-service for vSphere deployments. In order
-                        to minimize necessary changes to the datacenter DNS, a DNS
-                        service is hosted as a static pod to serve those hostnames
-                        to the nodes in the cluster.
-                      type: string

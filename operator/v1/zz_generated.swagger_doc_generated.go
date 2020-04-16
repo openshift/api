@@ -134,6 +134,40 @@ func (OAuthAPIServerStatus) SwaggerDoc() map[string]string {
 	return map_OAuthAPIServerStatus
 }
 
+var map_CloudCredential = map[string]string{
+	"":       "CloudCredential provides a means to configure an operator to manage the cloud-credential-operator. `cluster` is the canonical name.",
+	"spec":   "spec holds user settable values for configuration",
+	"status": "status holds observed values from the cluster. They may not be overridden.",
+}
+
+func (CloudCredential) SwaggerDoc() map[string]string {
+	return map_CloudCredential
+}
+
+var map_CloudCredentialList = map[string]string{
+	"": "CloudCredentialList contains a list of CloudCredentials.",
+}
+
+func (CloudCredentialList) SwaggerDoc() map[string]string {
+	return map_CloudCredentialList
+}
+
+var map_CloudCredentialSpec = map[string]string{
+	"": "CloudCredentialSpec is the specification of the desired behavior of the CloudCredential operator.",
+}
+
+func (CloudCredentialSpec) SwaggerDoc() map[string]string {
+	return map_CloudCredentialSpec
+}
+
+var map_CloudCredentialStatus = map[string]string{
+	"": "CloudCredentialStatus defines the observed status of the CloudCredential operator.",
+}
+
+func (CloudCredentialStatus) SwaggerDoc() map[string]string {
+	return map_CloudCredentialStatus
+}
+
 var map_Config = map[string]string{
 	"":       "Config provides information to configure the config operator.",
 	"spec":   "spec is the specification of the desired behavior of the Config Operator.",

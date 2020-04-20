@@ -1,0 +1,21 @@
+apiVersion: apis.openshift.io/v1
+kind: KnownAPIList
+items:
+  metadata:
+    name: group.openshift.io
+  spec:
+    owner:
+      component: NameOfTheComponentOrProduct
+      # must have at least two contacts.  Please don't win the lottery at the same time.
+      contacts:
+        - firstcontact@redhat.com
+        - secondcontact@redhat.com
+      # this gives a clear primary location, with failover or historical locations.
+      repo: https://github.com/somewhere/over-the-rainbow
+      additionalRepos:
+        - https://github.com/somewhere/old-location-to-handle-moves
+    group: group.openshift.io
+    # kinds are conceptually the same across all versions, so if it is owned in one version, it is owned in all versions
+    kinds:
+      - kind: KindOne
+      - kind: KindTwo

@@ -62,7 +62,7 @@ github.com/mailru/easyjson/jwriter
 github.com/modern-go/concurrent
 # github.com/modern-go/reflect2 v1.0.1
 github.com/modern-go/reflect2
-# github.com/openshift/build-machinery-go v0.0.0-20200211121458-5e3d6e570160
+# github.com/openshift/build-machinery-go v0.0.0-20200424080330-082bf86082cc
 github.com/openshift/build-machinery-go
 github.com/openshift/build-machinery-go/make
 github.com/openshift/build-machinery-go/make/lib

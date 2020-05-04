@@ -645,6 +645,11 @@ spec:
               type: object
               additionalProperties:
                 type: string
+            operatorLogLevel:
+              description: operatorLogLevel determines the level of logging enabled
+                in the registry operator.
+              type: integer
+              format: int64
             proxy:
               description: proxy defines the proxy to be used when calling master
                 api, upstream registries, etc.

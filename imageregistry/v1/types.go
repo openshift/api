@@ -72,6 +72,9 @@ type ImageRegistrySpec struct {
 	Replicas int32 `json:"replicas" protobuf:"varint,10,opt,name=replicas"`
 	// logging determines the level of logging enabled in the registry.
 	LogLevel int64 `json:"logging" protobuf:"varint,11,opt,name=logging"`
+	// operatorLogLevel determines the level of logging enabled in the registry operator.
+	// +optional
+	OperatorLogLevel int64 `json:"operatorLogLevel" protobuf:"varint,11,opt,name=operatorLogLevel"`
 	// resources defines the resource requests+limits for the registry pod.
 	// +optional
 	Resources *corev1.ResourceRequirements `json:"resources,omitempty" protobuf:"bytes,12,opt,name=resources"`

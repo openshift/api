@@ -41,6 +41,8 @@ type Config struct {
 
 // ImageRegistrySpec defines the specs for the running registry.
 type ImageRegistrySpec struct {
+	// operatorSpec allows operator specific configuration to be made.
+	operatorv1.OperatorSpec `json:",inline"`
 	// managementState indicates whether the registry instance represented
 	// by this config instance is under operator management or not.  Valid
 	// values are Managed, Unmanaged, and Removed.
@@ -78,8 +80,8 @@ type ImageRegistrySpec struct {
 	Routes []ImageRegistryConfigRoute `json:"routes,omitempty"`
 	// replicas determines the number of registry instances to run.
 	Replicas int32 `json:"replicas"`
-	// logging determines the level of logging enabled in the registry.
-	LogLevel int64 `json:"logging"`
+	// logging is deprecated, use logLevel instead.
+	Logging int64 `json:"logging"`
 	// resources defines the resource requests+limits for the registry pod.
 	// +optional
 	Resources *corev1.ResourceRequirements `json:"resources,omitempty"`

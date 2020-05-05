@@ -180,7 +180,7 @@ var map_ImageRegistrySpec = map[string]string{
 	"defaultRoute":    "defaultRoute indicates whether an external facing route for the registry should be created using the default generated hostname.",
 	"routes":          "routes defines additional external facing routes which should be created for the registry.",
 	"replicas":        "replicas determines the number of registry instances to run.",
-	"logging":         "logging determines the level of logging enabled in the registry.",
+	"logging":         "logging is deprecated, use logLevel instead.",
 	"resources":       "resources defines the resource requests+limits for the registry pod.",
 	"nodeSelector":    "nodeSelector defines the node selection constraints for the registry pod.",
 	"tolerations":     "tolerations defines the tolerations for the registry pod.",

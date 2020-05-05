@@ -125,8 +125,8 @@ spec:
                     creation and deletion, and other integrations are enabled. If
                     None, no infrastructure automation is enabled. Allowed values
                     are "AWS", "Azure", "BareMetal", "GCP", "Libvirt", "OpenStack",
-                    "VSphere", "oVirt", and "None". Individual components may not
-                    support all platforms, and must handle unrecognized platforms
+                    "VSphere", "oVirt", "KubeVirt" and "None". Individual components
+                    may not support all platforms, and must handle unrecognized platforms
                     as None if they do not support that platform.
                   type: string
                   enum:
@@ -141,6 +141,7 @@ spec:
                   - VSphere
                   - oVirt
                   - IBMCloud
+                  - KubeVirt
                 vsphere:
                   description: VSphere contains settings specific to the VSphere infrastructure
                     provider.
@@ -186,6 +187,7 @@ spec:
               - VSphere
               - oVirt
               - IBMCloud
+              - KubeVirt
             platformStatus:
               description: platformStatus holds status information specific to the
                 underlying infrastructure provider.
@@ -375,6 +377,7 @@ spec:
                   - VSphere
                   - oVirt
                   - IBMCloud
+                  - KubeVirt
                 vsphere:
                   description: VSphere contains settings specific to the VSphere infrastructure
                     provider.

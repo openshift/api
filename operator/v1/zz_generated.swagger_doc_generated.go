@@ -84,6 +84,7 @@ var map_StaticPodOperatorSpec = map[string]string{
 	"forceRedeploymentReason": "forceRedeploymentReason can be used to force the redeployment of the operand by providing a unique string. This provides a mechanism to kick a previously failed deployment and provide a reason why you think it will work this time instead of failing again on the same config.",
 	"failedRevisionLimit":     "failedRevisionLimit is the number of failed static pod installer revisions to keep on disk and in the api -1 = unlimited, 0 or unset = 5 (default)",
 	"succeededRevisionLimit":  "succeededRevisionLimit is the number of successful static pod installer revisions to keep on disk and in the api -1 = unlimited, 0 or unset = 5 (default)",
+	"unknownRevisionLimit":    "unknownRevisionLimit is the number of static pod installer revisions in an unknown state (anything besides failed, succeeded, or inprogress) to keep on disk and in the api. -1 = unlimited, 0 or unset = 5 (default)",
 }
 
 func (StaticPodOperatorSpec) SwaggerDoc() map[string]string {

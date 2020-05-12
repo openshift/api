@@ -177,6 +177,10 @@ type StaticPodOperatorSpec struct {
 	// succeededRevisionLimit is the number of successful static pod installer revisions to keep on disk and in the api
 	// -1 = unlimited, 0 or unset = 5 (default)
 	SucceededRevisionLimit int32 `json:"succeededRevisionLimit,omitempty"`
+	// unknownRevisionLimit is the number of static pod installer revisions in an unknown state (anything besides
+	// failed, succeeded, or inprogress) to keep on disk and in the api.
+	// -1 = unlimited, 0 or unset = 5 (default)
+	UnknownRevisionLimit int32 `json:"unknownRevisionLimit,omitempty"`
 }
 
 // StaticPodOperatorStatus is status for controllers that manage static pods.  There are different needs because individual

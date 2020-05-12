@@ -78,6 +78,13 @@ spec:
                 0 or unset = 5 (default)
               format: int32
               type: integer
+            unknownRevisionLimit:
+              description: unknownRevisionLimit is the number of static pod installer
+                revisions in an unknown state (anything besides failed, succeeded,
+                or inprogress) to keep on disk and in the api. -1 = unlimited, 0 or
+                unset = 5 (default)
+              format: int32
+              type: integer
             unsupportedConfigOverrides:
               description: 'unsupportedConfigOverrides holds a sparse config that
                 will override any previously set options.  It only needs to be the

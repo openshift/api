@@ -5,10 +5,9 @@
 package v1
 
 import (
-	time "time"
-
 	operatorv1 "github.com/openshift/api/operator/v1"
 	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 )
 
@@ -149,7 +148,7 @@ func (in *ImagePrunerSpec) DeepCopyInto(out *ImagePrunerSpec) {
 	}
 	if in.KeepYoungerThan != nil {
 		in, out := &in.KeepYoungerThan, &out.KeepYoungerThan
-		*out = new(time.Duration)
+		*out = new(metav1.Duration)
 		**out = **in
 	}
 	if in.Resources != nil {

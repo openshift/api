@@ -625,8 +625,7 @@ spec:
               description: keepYoungerThan specifies the minimum age of an image and
                 its referrers for it to be considered a candidate for pruning. Defaults
                 to 96h (96 hours).
-              type: integer
-              format: int64
+              type: string
             nodeSelector:
               description: nodeSelector defines the node selection constraints for
                 the image pruner pod.

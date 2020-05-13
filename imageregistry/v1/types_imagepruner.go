@@ -1,8 +1,6 @@
 package v1
 
 import (
-	"time"
-
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
@@ -50,7 +48,7 @@ type ImagePrunerSpec struct {
 	// keepYoungerThan specifies the minimum age of an image and its referrers for it to be considered a candidate for pruning.
 	// Defaults to 96h (96 hours).
 	// +optional
-	KeepYoungerThan *time.Duration `json:"keepYoungerThan,omitempty" protobuf:"varint,4,opt,name=keepYoungerThan,casttype=time.Duration"`
+	KeepYoungerThan *metav1.Duration `json:"keepYoungerThan,omitempty" protobuf:"bytes,4,opt,name=keepYoungerThan"`
 	// resources defines the resource requests and limits for the image pruner pod.
 	// +optional
 	Resources *corev1.ResourceRequirements `json:"resources,omitempty" protobuf:"bytes,5,opt,name=resources"`

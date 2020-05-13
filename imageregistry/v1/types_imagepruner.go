@@ -42,11 +42,11 @@ type ImagePrunerSpec struct {
 	// +optional
 	Suspend *bool `json:"suspend,omitempty" protobuf:"bytes,2,opt,name=suspend"`
 	// keepTagRevisions specifies the number of image revisions for a tag in an image stream that will be preserved.
-	// Defaults to 5.
+	// Defaults to 3.
 	// +optional
 	KeepTagRevisions *int `json:"keepTagRevisions,omitempty" protobuf:"bytes,3,opt,name=keepTagRevisions"`
 	// keepYoungerThan specifies the minimum age of an image and its referrers for it to be considered a candidate for pruning.
-	// Defaults to 96h (96 hours).
+	// Defaults to 60m (60 minutes).
 	// +optional
 	KeepYoungerThan *metav1.Duration `json:"keepYoungerThan,omitempty" protobuf:"bytes,4,opt,name=keepYoungerThan"`
 	// resources defines the resource requests and limits for the image pruner pod.

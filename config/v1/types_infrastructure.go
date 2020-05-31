@@ -67,7 +67,7 @@ type InfrastructureStatus struct {
 	EtcdDiscoveryDomain string `json:"etcdDiscoveryDomain"`
 
 	// apiServerURL is a valid URI with scheme(http/https), address and
-	// port(only if not using default port HTTP 80 and HTTP/TLS 443).  apiServerURL can be used by components like the web console
+	// port and optionally a port (defaulting to 80 for http and 443 for https).  apiServerURL can be used by components like the web console
 	// to tell users where to find the Kubernetes API.
 	APIServerURL string `json:"apiServerURL"`
 

@@ -720,6 +720,7 @@ var map_AzurePlatformStatus = map[string]string{
 	"":                         "AzurePlatformStatus holds the current status of the Azure infrastructure provider.",
 	"resourceGroupName":        "resourceGroupName is the Resource Group for new Azure resources created for the cluster.",
 	"networkResourceGroupName": "networkResourceGroupName is the Resource Group for network resources like the Virtual Network and Subnets used by the cluster. If empty, the value is same as ResourceGroupName.",
+	"cloudName":                "cloudName is the name of the Azure cloud environment which can be used to configure the Azure SDK with the appropriate Azure API endpoints. If empty, the value is equal to `AzurePublicCloud`.",
 }
 
 func (AzurePlatformStatus) SwaggerDoc() map[string]string {

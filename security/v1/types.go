@@ -68,7 +68,7 @@ type SecurityContextConstraints struct {
 	// To allow no volumes, set to ["none"].
 	// +nullable
 	Volumes []FSType `json:"volumes" protobuf:"bytes,8,rep,name=volumes,casttype=FSType"`
-	// AllowedFlexVolumes is a whitelist of allowed Flexvolumes.  Empty or nil indicates that all
+	// AllowedFlexVolumes is a allowlist of allowed Flexvolumes.  Empty or nil indicates that all
 	// Flexvolumes may be used.  This parameter is effective only when the usage of the Flexvolumes
 	// is allowed in the "Volumes" field.
 	// +optional
@@ -131,7 +131,7 @@ type SecurityContextConstraints struct {
 	// AllowedUnsafeSysctls is a list of explicitly allowed unsafe sysctls, defaults to none.
 	// Each entry is either a plain sysctl name or ends in "*" in which case it is considered
 	// as a prefix of allowed sysctls. Single * means all unsafe sysctls are allowed.
-	// Kubelet has to whitelist all allowed unsafe sysctls explicitly to avoid rejection.
+	// Kubelet has to allowlist all allowed unsafe sysctls explicitly to avoid rejection.
 	//
 	// Examples:
 	// e.g. "foo/*" allows "foo/bar", "foo/baz", etc.

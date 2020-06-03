@@ -70,7 +70,7 @@ func (ClusterRoleList) SwaggerDoc() map[string]string {
 
 var map_GroupRestriction = map[string]string{
 	"":       "GroupRestriction matches a group either by a string match on the group name or a label selector applied to group labels.",
-	"groups": "Groups is a list of groups used to match against an individual user's groups. If the user is a member of one of the whitelisted groups, the user is allowed to be bound to a role.",
+	"groups": "Groups is a list of groups used to match against an individual user's groups. If the user is a member of one of the allowlisted groups, the user is allowed to be bound to a role.",
 	"labels": "Selectors specifies a list of label selectors over group labels.",
 }
 
@@ -269,7 +269,7 @@ func (SelfSubjectRulesReviewSpec) SwaggerDoc() map[string]string {
 var map_ServiceAccountReference = map[string]string{
 	"":          "ServiceAccountReference specifies a service account and namespace by their names.",
 	"name":      "Name is the name of the service account.",
-	"namespace": "Namespace is the namespace of the service account.  Service accounts from inside the whitelisted namespaces are allowed to be bound to roles.  If Namespace is empty, then the namespace of the RoleBindingRestriction in which the ServiceAccountReference is embedded is used.",
+	"namespace": "Namespace is the namespace of the service account.  Service accounts from inside the allowlisted namespaces are allowed to be bound to roles.  If Namespace is empty, then the namespace of the RoleBindingRestriction in which the ServiceAccountReference is embedded is used.",
 }
 
 func (ServiceAccountReference) SwaggerDoc() map[string]string {

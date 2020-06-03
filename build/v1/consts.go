@@ -165,8 +165,8 @@ const (
 )
 
 // env vars
-// WhitelistEnvVarNames is a list of special env vars allows s2i containers
-var WhitelistEnvVarNames = []string{"BUILD_LOGLEVEL", "GIT_SSL_NO_VERIFY", "HTTP_PROXY", "HTTPS_PROXY", "LANG", "NO_PROXY"}
+// AllowlistEnvVarNames is a list of special env vars allows s2i containers
+var AllowlistEnvVarNames = []string{"BUILD_LOGLEVEL", "GIT_SSL_NO_VERIFY", "HTTP_PROXY", "HTTPS_PROXY", "LANG", "NO_PROXY"}
 
 // env vars
 const (

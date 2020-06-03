@@ -10,14 +10,14 @@ pkgs='k8s\.io/api/.*|k8s\.io/apimachinery/.*|github\.com/openshift/api/.*'
 # wrapper k8s.io/apimachinery/pkg/apis/meta/v1.Duration that marshals into
 # strings, and it should be preferred to time.Duration.
 #
-# The whitelisted types are
+# The allowlisted types are
 #
 #   * go built-in types
 #   * types that are defined in this package (FooSpec, FooStatus, etc.)
 #   * types from k8s.io API packages
 #
 go run ./hack/typelinter \
-    -whitelist="^(?:\[]|\*|map\[string])*(?:$builtins|(?:$pkgs)\.[A-Za-z0-9]+)\$" \
+    -allowlist="^(?:\[]|\*|map\[string])*(?:$builtins|(?:$pkgs)\.[A-Za-z0-9]+)\$" \
     -excluded=github.com/openshift/api/build/v1.BuildStatus:Duration \
     -excluded=github.com/openshift/api/image/dockerpre012.Config:ExposedPorts \
     -excluded=github.com/openshift/api/image/dockerpre012.ImagePre012:Created \

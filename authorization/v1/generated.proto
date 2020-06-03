@@ -113,7 +113,7 @@ message ClusterRoleList {
 // or a label selector applied to group labels.
 message GroupRestriction {
   // Groups is a list of groups used to match against an individual user's
-  // groups. If the user is a member of one of the whitelisted groups, the user
+  // groups. If the user is a member of one of the allowlisted groups, the user
   // is allowed to be bound to a role.
   // +nullable
   repeated string groups = 1;
@@ -378,7 +378,7 @@ message ServiceAccountReference {
   optional string name = 1;
 
   // Namespace is the namespace of the service account.  Service accounts from
-  // inside the whitelisted namespaces are allowed to be bound to roles.  If
+  // inside the allowlisted namespaces are allowed to be bound to roles.  If
   // Namespace is empty, then the namespace of the RoleBindingRestriction in
   // which the ServiceAccountReference is embedded is used.
   optional string namespace = 2;

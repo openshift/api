@@ -30,12 +30,12 @@ func (sl *stringListVar) Set(value string) error {
 
 var (
 	excludedFields stringListVar
-	typesWhitelist string
+	typesAllowlist string
 
-	typesWhitelistRegexp *regexp.Regexp
+	typesAllowlistRegexp *regexp.Regexp
 )
 
-// validStruct checks whether the structure s uses only the whitelisted types.
+// validStruct checks whether the structure s uses only the allowlisted types.
 // structName is the name of s in format `example.com/package.TypeName`.
 func validStruct(structName string, s *types.Struct) bool {
 	valid := true
@@ -46,7 +46,7 @@ func validStruct(structName string, s *types.Struct) bool {
 			continue
 		}
 		typ := field.Type().String()
-		if !typesWhitelistRegexp.MatchString(typ) {
+		if !typesAllowlistRegexp.MatchString(typ) {
 			fmt.Fprintf(os.Stderr, "%s: type %s is not allowed to be used\n", fieldName, typ)
 			valid = false
 		}
@@ -55,7 +55,7 @@ func validStruct(structName string, s *types.Struct) bool {
 }
 
 // validPackage checks whether pkg's exported structures use only the
-// whitelisted types.
+// allowlisted types.
 func validPackage(pkg *packages.Package) bool {
 	valid := true
 	scope := pkg.Types.Scope()
@@ -79,13 +79,13 @@ func validPackage(pkg *packages.Package) bool {
 
 func main() {
 	flag.Var(&excludedFields, "excluded", "exclude the field from being checked (e.g. -excluded=github.com/openshift/api/image/dockerpre012.ImagePre012:Created), can be used multiple times")
-	flag.StringVar(&typesWhitelist, "whitelist", "", "regular expression that specifies allowed types")
+	flag.StringVar(&typesAllowlist, "allowlist", "", "regular expression that specifies allowed types")
 	flag.Parse()
 
 	var err error
-	typesWhitelistRegexp, err = regexp.Compile(typesWhitelist)
+	typesAllowlistRegexp, err = regexp.Compile(typesAllowlist)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "failed to compile whitelist regexp: %v\n", err)
+		fmt.Fprintf(os.Stderr, "failed to compile allowlist regexp: %v\n", err)
 		os.Exit(1)
 	}
 

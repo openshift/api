@@ -199,7 +199,7 @@ const (
 //
 // NOTE: The caller needs to make sure to check that these constants are valid for their binary. Not all
 // entries map to values for all binaries.  In the case of ties, the kube-apiserver wins.  Do not fail,
-// just be sure to whitelist only and everything will be ok.
+// just be sure to allowlist only and everything will be ok.
 var TLSProfiles = map[TLSProfileType]*TLSProfileSpec{
 	TLSProfileOldType: {
 		Ciphers: []string{

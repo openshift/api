@@ -13,6 +13,7 @@ API_GROUP_VERSIONS="\
 apps/v1 \
 authorization/v1 \
 build/v1 \
+cloudcredential/v1 \
 console/v1 \
 config/v1 \
 image/v1 \

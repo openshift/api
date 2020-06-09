@@ -357,9 +357,10 @@ func (AWSNetworkLoadBalancerParameters) SwaggerDoc() map[string]string {
 }
 
 var map_AccessLogging = map[string]string{
-	"":              "AccessLogging describes how client requests should be logged.",
-	"destination":   "destination is where access logs go.",
-	"httpLogFormat": "httpLogFormat specifies the format of the log message for an HTTP request.\n\nIf this field is empty, log messages use the implementation's default HTTP log format.  For HAProxy's default HTTP log format, see the HAProxy documentation: http://cbonte.github.io/haproxy-dconv/2.0/configuration.html#8.2.3",
+	"":                   "AccessLogging describes how client requests should be logged.",
+	"destination":        "destination is where access logs go.",
+	"httpLogFormat":      "httpLogFormat specifies the format of the log message for an HTTP request.\n\nIf this field is empty, log messages use the implementation's default HTTP log format.  For HAProxy's default HTTP log format, see the HAProxy documentation: http://cbonte.github.io/haproxy-dconv/2.0/configuration.html#8.2.3\n\nNote that this format only applies to cleartext HTTP connections and to secure HTTP connections for which the ingress controller terminates encryption (that is, edge-terminated or reencrypt connections).  It does not affect the log format for TLS passthrough connections.",
+	"httpCaptureHeaders": "httpCaptureHeaders defines HTTP headers that should be captured in access logs.  If this field is empty, no headers are captured.\n\nNote that this option only applies to cleartext HTTP connections and to secure HTTP connections for which the ingress controller terminates encryption (that is, edge-terminated or reencrypt connections).  Headers cannot be captured for TLS passthrough connections.",
 }
 
 func (AccessLogging) SwaggerDoc() map[string]string {
@@ -403,6 +404,26 @@ var map_IngressController = map[string]string{
 
 func (IngressController) SwaggerDoc() map[string]string {
 	return map_IngressController
+}
+
+var map_IngressControllerCaptureHTTPHeader = map[string]string{
+	"":          "IngressControllerCaptureHTTPHeader describes an HTTP header that should be captured.",
+	"name":      "name specifies a header name.  Its value must be a valid HTTP header name as defined in RFC 2616 section 4.2.",
+	"maxLength": "maxLength specifies a maximum length for the header value.  If a header value exceeds this length, the value will be truncated in the log message.",
+}
+
+func (IngressControllerCaptureHTTPHeader) SwaggerDoc() map[string]string {
+	return map_IngressControllerCaptureHTTPHeader
+}
+
+var map_IngressControllerCaptureHTTPHeaders = map[string]string{
+	"":         "IngressControllerCaptureHTTPHeaders specifies which HTTP headers the IngressController captures.",
+	"request":  "request specifies which HTTP request headers to capture.\n\nIf this field is empty, no request headers are captured.",
+	"response": "response specifies which HTTP response headers to capture.\n\nIf this field is empty, no response headers are captured.",
+}
+
+func (IngressControllerCaptureHTTPHeaders) SwaggerDoc() map[string]string {
+	return map_IngressControllerCaptureHTTPHeaders
 }
 
 var map_IngressControllerHTTPHeaders = map[string]string{

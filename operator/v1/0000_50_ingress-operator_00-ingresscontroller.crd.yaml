@@ -322,12 +322,81 @@ spec:
                       required:
                       - type
                       type: object
+                    httpCaptureHeaders:
+                      description: "httpCaptureHeaders defines HTTP headers that should
+                        be captured in access logs.  If this field is empty, no headers
+                        are captured. \n Note that this option only applies to cleartext
+                        HTTP connections and to secure HTTP connections for which
+                        the ingress controller terminates encryption (that is, edge-terminated
+                        or reencrypt connections).  Headers cannot be captured for
+                        TLS passthrough connections."
+                      properties:
+                        request:
+                          description: "request specifies which HTTP request headers
+                            to capture. \n If this field is empty, no request headers
+                            are captured."
+                          items:
+                            description: IngressControllerCaptureHTTPHeader describes
+                              an HTTP header that should be captured.
+                            properties:
+                              maxLength:
+                                description: maxLength specifies a maximum length
+                                  for the header value.  If a header value exceeds
+                                  this length, the value will be truncated in the
+                                  log message.
+                                minimum: 1
+                                type: integer
+                              name:
+                                description: name specifies a header name.  Its value
+                                  must be a valid HTTP header name as defined in RFC
+                                  2616 section 4.2.
+                                pattern: ^[-!#$%&'*+.0-9A-Z^_`a-z|~]+$
+                                type: string
+                            required:
+                            - maxLength
+                            - name
+                            type: object
+                          nullable: true
+                          type: array
+                        response:
+                          description: "response specifies which HTTP response headers
+                            to capture. \n If this field is empty, no response headers
+                            are captured."
+                          items:
+                            description: IngressControllerCaptureHTTPHeader describes
+                              an HTTP header that should be captured.
+                            properties:
+                              maxLength:
+                                description: maxLength specifies a maximum length
+                                  for the header value.  If a header value exceeds
+                                  this length, the value will be truncated in the
+                                  log message.
+                                minimum: 1
+                                type: integer
+                              name:
+                                description: name specifies a header name.  Its value
+                                  must be a valid HTTP header name as defined in RFC
+                                  2616 section 4.2.
+                                pattern: ^[-!#$%&'*+.0-9A-Z^_`a-z|~]+$
+                                type: string
+                            required:
+                            - maxLength
+                            - name
+                            type: object
+                          nullable: true
+                          type: array
+                      type: object
                     httpLogFormat:
                       description: "httpLogFormat specifies the format of the log
                         message for an HTTP request. \n If this field is empty, log
                         messages use the implementation's default HTTP log format.
                         \ For HAProxy's default HTTP log format, see the HAProxy documentation:
-                        http://cbonte.github.io/haproxy-dconv/2.0/configuration.html#8.2.3"
+                        http://cbonte.github.io/haproxy-dconv/2.0/configuration.html#8.2.3
+                        \n Note that this format only applies to cleartext HTTP connections
+                        and to secure HTTP connections for which the ingress controller
+                        terminates encryption (that is, edge-terminated or reencrypt
+                        connections).  It does not affect the log format for TLS passthrough
+                        connections."
                       type: string
                   required:
                   - destination

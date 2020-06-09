@@ -585,6 +585,47 @@ type LoggingDestination struct {
 	Container *ContainerLoggingDestinationParameters `json:"container,omitempty"`
 }
 
+// IngressControllerCaptureHTTPHeader describes an HTTP header that should be
+// captured.
+type IngressControllerCaptureHTTPHeader struct {
+	// name specifies a header name.  Its value must be a valid HTTP header
+	// name as defined in RFC 2616 section 4.2.
+	//
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern="^[-!#$%&'*+.0-9A-Z^_`a-z|~]+$"
+	// +required
+	Name string `json:"name"`
+
+	// maxLength specifies a maximum length for the header value.  If a
+	// header value exceeds this length, the value will be truncated in
+	// the log message.
+	//
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Minimum=1
+	// +required
+	MaxLength int `json:"maxLength"`
+}
+
+// IngressControllerCaptureHTTPHeaders specifies which HTTP headers the
+// IngressController captures.
+type IngressControllerCaptureHTTPHeaders struct {
+	// request specifies which HTTP request headers to capture.
+	//
+	// If this field is empty, no request headers are captured.
+	//
+	// +nullable
+	// +optional
+	Request []IngressControllerCaptureHTTPHeader `json:"request,omitempty"`
+
+	// response specifies which HTTP response headers to capture.
+	//
+	// If this field is empty, no response headers are captured.
+	//
+	// +nullable
+	// +optional
+	Response []IngressControllerCaptureHTTPHeader `json:"response,omitempty"`
+}
+
 // AccessLogging describes how client requests should be logged.
 type AccessLogging struct {
 	// destination is where access logs go.
@@ -601,8 +642,26 @@ type AccessLogging struct {
 	// HAProxy documentation:
 	// http://cbonte.github.io/haproxy-dconv/2.0/configuration.html#8.2.3
 	//
+	// Note that this format only applies to cleartext HTTP connections
+	// and to secure HTTP connections for which the ingress controller
+	// terminates encryption (that is, edge-terminated or reencrypt
+	// connections).  It does not affect the log format for TLS passthrough
+	// connections.
+	//
 	// +optional
 	HttpLogFormat string `json:"httpLogFormat,omitempty"`
+
+	// httpCaptureHeaders defines HTTP headers that should be captured in
+	// access logs.  If this field is empty, no headers are captured.
+	//
+	// Note that this option only applies to cleartext HTTP connections
+	// and to secure HTTP connections for which the ingress controller
+	// terminates encryption (that is, edge-terminated or reencrypt
+	// connections).  Headers cannot be captured for TLS passthrough
+	// connections.
+	//
+	// +optional
+	HTTPCaptureHeaders IngressControllerCaptureHTTPHeaders `json:"httpCaptureHeaders,omitempty"`
 }
 
 // IngressControllerLogging describes what should be logged where.

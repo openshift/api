@@ -54,6 +54,7 @@ type ImagePrunerSpec struct {
 	// keepYoungerThanDuration specifies the minimum age of an image and its referrers for it to be considered a candidate for pruning.
 	// Defaults to 60m (60 minutes).
 	// +optional
+	// +kubebuilder:validation:Format=duration
 	KeepYoungerThanDuration *metav1.Duration `json:"keepYoungerThanDuration,omitempty"`
 	// resources defines the resource requests and limits for the image pruner pod.
 	// +optional

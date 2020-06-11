@@ -634,6 +634,7 @@ spec:
                 image and its referrers for it to be considered a candidate for pruning.
                 Defaults to 60m (60 minutes).
               type: string
+              format: duration
             nodeSelector:
               description: nodeSelector defines the node selection constraints for
                 the image pruner pod.

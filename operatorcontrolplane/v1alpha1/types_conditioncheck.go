@@ -25,6 +25,7 @@ type PodNetworkConnectivityCheck struct {
 }
 
 type PodNetworkConnectivityCheckSpec struct {
+
 	// SourcePod names the pod from which the condition will be checked
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$`
@@ -38,6 +39,10 @@ type PodNetworkConnectivityCheckSpec struct {
 	// +kubebuilder:validation:Pattern=`^\S+:\d*$`
 	// +required
 	TargetEndpoint string `json:"targetEndpoint"`
+
+	// Description of target endpoint in a human readable format.
+	// +optional
+	Description string `json:"description,omitempty"`
 }
 
 // +k8s:deepcopy-gen=true
@@ -68,11 +73,6 @@ type LogEntry struct {
 	// +required
 	// +nullable
 	Start metav1.Time `json:"time"`
-
-	// Success indicates if the log entry indicates a success or failure.
-	// +kubebuilder:validation:Required
-	// +required
-	Success bool `json:"success"`
 
 	// Reason for status in a machine readable format.
 	// +optional

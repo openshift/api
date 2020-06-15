@@ -14,7 +14,6 @@ package v1alpha1
 var map_LogEntry = map[string]string{
 	"":        "LogEntry records events",
 	"time":    "Start time of check action.",
-	"success": "Success indicates if the log entry indicates a success or failure.",
 	"reason":  "Reason for status in a machine readable format.",
 	"message": "Message explaining status in a human readable format.",
 	"latency": "Latency records how long the action mentioned in the entry took.",
@@ -69,6 +68,7 @@ func (PodNetworkConnectivityCheckList) SwaggerDoc() map[string]string {
 var map_PodNetworkConnectivityCheckSpec = map[string]string{
 	"sourcePod":      "SourcePod names the pod from which the condition will be checked",
 	"targetEndpoint": "EndpointAddress to check. A TCP address of the form host:port. Note that if host is a DNS name, then the check would fail if the DNS name cannot be resolved. Specify an IP address for host to bypass DNS name lookup.",
+	"description":    "Description of target endpoint in a human readable format.",
 }
 
 func (PodNetworkConnectivityCheckSpec) SwaggerDoc() map[string]string {

@@ -39,6 +39,9 @@ spec:
           - sourcePod
           - targetEndpoint
           properties:
+            description:
+              description: Description of target endpoint in a human readable format.
+              type: string
             sourcePod:
               description: SourcePod names the pod from which the condition will be
                 checked
@@ -94,7 +97,6 @@ spec:
                 description: LogEntry records events
                 type: object
                 required:
-                - success
                 - time
                 properties:
                   latency:
@@ -108,10 +110,6 @@ spec:
                   reason:
                     description: Reason for status in a machine readable format.
                     type: string
-                  success:
-                    description: Success indicates if the log entry indicates a success
-                      or failure.
-                    type: boolean
                   time:
                     description: Start time of check action.
                     type: string
@@ -143,7 +141,6 @@ spec:
                 description: LogEntry records events
                 type: object
                 required:
-                - success
                 - time
                 properties:
                   latency:
@@ -157,10 +154,6 @@ spec:
                   reason:
                     description: Reason for status in a machine readable format.
                     type: string
-                  success:
-                    description: Success indicates if the log entry indicates a success
-                      or failure.
-                    type: boolean
                   time:
                     description: Start time of check action.
                     type: string

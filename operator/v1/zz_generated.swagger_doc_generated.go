@@ -861,4 +861,38 @@ func (ServiceCatalogControllerManagerList) SwaggerDoc() map[string]string {
 	return map_ServiceCatalogControllerManagerList
 }
 
+var map_Storage = map[string]string{
+	"":       "Storage provides a means to configure an operator to manage the cluster storage operator. `cluster` is the canonical name.",
+	"spec":   "spec holds user settable values for configuration",
+	"status": "status holds observed values from the cluster. They may not be overridden.",
+}
+
+func (Storage) SwaggerDoc() map[string]string {
+	return map_Storage
+}
+
+var map_StorageList = map[string]string{
+	"": "StorageList contains a list of Storages.",
+}
+
+func (StorageList) SwaggerDoc() map[string]string {
+	return map_StorageList
+}
+
+var map_StorageSpec = map[string]string{
+	"": "StorageSpec is the specification of the desired behavior of the cluster storage operator.",
+}
+
+func (StorageSpec) SwaggerDoc() map[string]string {
+	return map_StorageSpec
+}
+
+var map_StorageStatus = map[string]string{
+	"": "StorageStatus defines the observed status of the cluster storage operator.",
+}
+
+func (StorageStatus) SwaggerDoc() map[string]string {
+	return map_StorageStatus
+}
+
 // AUTO-GENERATED FUNCTIONS END HERE

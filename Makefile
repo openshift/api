@@ -18,6 +18,7 @@ GO_LD_FLAGS:=
 # $2 - apis
 # $3 - manifests
 # $4 - output
+$(call add-crd-gen,apiserver,./apiserver/v1,./apiserver/v1,./apiserver/v1)
 $(call add-crd-gen,authorization,./authorization/v1,./authorization/v1,./authorization/v1)
 $(call add-crd-gen,config,./config/v1,./config/v1,./config/v1)
 $(call add-crd-gen,console,./console/v1,./console/v1,./console/v1)

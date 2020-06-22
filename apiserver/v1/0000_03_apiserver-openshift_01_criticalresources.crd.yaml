@@ -1,0 +1,96 @@
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: criticalresources.apiserver.openshift.io
+spec:
+  group: apiserver.openshift.io
+  names:
+    kind: CriticalResource
+    listKind: CriticalResourceList
+    plural: criticalresources
+    singular: criticalresource
+  scope: Namespaced
+  preserveUnknownFields: false
+  subresources:
+    status: {}
+  versions:
+  - name: v1
+    served: true
+    storage: true
+  "validation":
+    "openAPIV3Schema":
+      description: CriticalResource prevents the .spec.provider from being deleted
+        until the .spec.criteria are satisfied. Because the ability to block deletion
+        of a namespace scoped resource implies the ability to prevent namespaces from
+        being cleaned up, these are namespace scoped, but they have a higher degree
+        of privilege required for mutation than namespace admin. TODO in a future
+        release we can consider making the permissions broader, but because criteria
+        span namespaces,  it seems unlikely that we can broaden the permissions.
+      type: object
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+          type: string
+        metadata:
+          type: object
+        spec:
+          type: object
+          properties:
+            criteria:
+              type: array
+              items:
+                type: object
+                properties:
+                  finalizer:
+                    type: object
+                    properties:
+                      finalizerName:
+                        type: string
+                      group:
+                        description: TODO provide validation
+                        type: string
+                      resource:
+                        description: TODO provide validation
+                        type: string
+                  specificResource:
+                    type: object
+                    properties:
+                      group:
+                        description: TODO provide validation
+                        type: string
+                      name:
+                        type: string
+                      namespace:
+                        description: namespace can be empty for cluster scoped resources.
+                        type: string
+                      resource:
+                        description: TODO provide validation
+                        type: string
+                  type:
+                    type: string
+            provider:
+              description: provider indicates the resource which provides critical
+                functionality.  It must be in the same namespace as the critical resource.
+                TODO if we need to protect cluster scoped resources, we will need
+                to create a resource type.  We cannot reasonably  block deletion of
+                a cluster scoped resource from within a namespace.
+              type: object
+              properties:
+                group:
+                  description: TODO provide validation
+                  type: string
+                name:
+                  description: TODO provide validation
+                  type: string
+                resource:
+                  description: TODO provide validation
+                  type: string
+        status:
+          type: object

@@ -252,6 +252,11 @@ type ImageRegistryConfigStorageAzure struct {
 	// +kubebuilder:validation:MinLength=3
 	// +kubebuilder:validation:Pattern=`^[0-9a-z]+(-[0-9a-z]+)*$`
 	Container string `json:"container,omitempty" protobuf:"bytes,2,opt,name=container"`
+	// cloudName is the name of the Azure cloud environment to be used by the
+	// registry. If empty, the operator will set it based on the infrastructure
+	// object.
+	// +optional
+	CloudName string `json:"cloudName,omitempty"`
 }
 
 // ImageRegistryConfigStorage describes how the storage should be configured

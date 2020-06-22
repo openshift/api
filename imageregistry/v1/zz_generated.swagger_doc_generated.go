@@ -88,6 +88,7 @@ var map_ImageRegistryConfigStorageAzure = map[string]string{
 	"":            "ImageRegistryConfigStorageAzure holds the information to configure the registry to use Azure Blob Storage for backend storage.",
 	"accountName": "accountName defines the account to be used by the registry.",
 	"container":   "container defines Azure's container to be used by registry.",
+	"cloudName":   "cloudName is the name of the Azure cloud environment to be used by the registry. If empty, the operator will set it based on the infrastructure object.",
 }
 
 func (ImageRegistryConfigStorageAzure) SwaggerDoc() map[string]string {

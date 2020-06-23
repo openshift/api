@@ -603,6 +603,11 @@ func (in *BuildOverrides) DeepCopyInto(out *BuildOverrides) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	if in.ForcePull != nil {
+		in, out := &in.ForcePull, &out.ForcePull
+		*out = new(bool)
+		**out = **in
+	}
 	return
 }
 

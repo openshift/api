@@ -354,6 +354,7 @@ var map_BuildOverrides = map[string]string{
 	"imageLabels":  "ImageLabels is a list of docker labels that are applied to the resulting image. If user provided a label in their Build/BuildConfig with the same name as one in this list, the user's label will be overwritten.",
 	"nodeSelector": "NodeSelector is a selector which must be true for the build pod to fit on a node",
 	"tolerations":  "Tolerations is a list of Tolerations that will override any existing tolerations set on a build pod.",
+	"forcePull":    "ForcePull overrides, if set, the equivalent value in the builds, i.e. false disables force pull for all builds, true enables force pull for all builds, independently of what each build specifies itself",
 }
 
 func (BuildOverrides) SwaggerDoc() map[string]string {

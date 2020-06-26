@@ -304,7 +304,8 @@ func (Authentication) SwaggerDoc() map[string]string {
 var map_AuthenticationSpec = map[string]string{
 	"type":                       "type identifies the cluster managed, user facing authentication mode in use. Specifically, it manages the component that responds to login attempts. The default is IntegratedOAuth.",
 	"oauthMetadata":              "oauthMetadata contains the discovery endpoint data for OAuth 2.0 Authorization Server Metadata for an external OAuth server. This discovery document can be viewed from its served location: oc get --raw '/.well-known/oauth-authorization-server' For further details, see the IETF Draft: https://tools.ietf.org/html/draft-ietf-oauth-discovery-04#section-2 If oauthMetadata.name is non-empty, this value has precedence over any metadata reference stored in status. The key \"oauthMetadata\" is used to locate the data. If specified and the config map or expected key is not found, no metadata is served. If the specified metadata is not valid, no metadata is served. The namespace for this config map is openshift-config.",
-	"webhookTokenAuthenticators": "webhookTokenAuthenticators configures remote token reviewers. These remote authentication webhooks can be used to verify bearer tokens via the tokenreviews.authentication.k8s.io REST API.  This is required to honor bearer tokens that are provisioned by an external authentication service. The namespace for these secrets is openshift-config.",
+	"webhookTokenAuthenticators": "webhookTokenAuthenticators is DEPRECATED, setting it has no effect.",
+	"webhookTokenAuthenticator":  "webhookTokenAuthenticator configures a remote token reviewer. These remote authentication webhooks can be used to verify bearer tokens via the tokenreviews.authentication.k8s.io REST API. This is required to honor bearer tokens that are provisioned by an external authentication service.",
 	"serviceAccountIssuer":       "serviceAccountIssuer is the identifier of the bound service account token issuer. The default is https://kubernetes.default.svc",
 }
 
@@ -320,9 +321,18 @@ func (AuthenticationStatus) SwaggerDoc() map[string]string {
 	return map_AuthenticationStatus
 }
 
+var map_DeprecatedWebhookTokenAuthenticator = map[string]string{
+	"":           "deprecatedWebhookTokenAuthenticator holds the necessary configuration options for a remote token authenticator. It's the same as WebhookTokenAuthenticator but it's missing the 'required' validation on KubeConfig field.",
+	"kubeConfig": "kubeConfig contains kube config file data which describes how to access the remote webhook service. For further details, see: https://kubernetes.io/docs/reference/access-authn-authz/authentication/#webhook-token-authentication The key \"kubeConfig\" is used to locate the data. If the secret or expected key is not found, the webhook is not honored. If the specified kube config data is not valid, the webhook is not honored. The namespace for this secret is determined by the point of use.",
+}
+
+func (DeprecatedWebhookTokenAuthenticator) SwaggerDoc() map[string]string {
+	return map_DeprecatedWebhookTokenAuthenticator
+}
+
 var map_WebhookTokenAuthenticator = map[string]string{
 	"":           "webhookTokenAuthenticator holds the necessary configuration options for a remote token authenticator",
-	"kubeConfig": "kubeConfig contains kube config file data which describes how to access the remote webhook service. For further details, see: https://kubernetes.io/docs/reference/access-authn-authz/authentication/#webhook-token-authentication The key \"kubeConfig\" is used to locate the data. If the secret or expected key is not found, the webhook is not honored. If the specified kube config data is not valid, the webhook is not honored. The namespace for this secret is determined by the point of use.",
+	"kubeConfig": "kubeConfig references a secret that contains kube config file data which describes how to access the remote webhook service. The namespace for the referenced secret is openshift-config.\n\nFor further details, see:\n\nhttps://kubernetes.io/docs/reference/access-authn-authz/authentication/#webhook-token-authentication\n\nThe key \"kubeConfig\" is used to locate the data. If the secret or expected key is not found, the webhook is not honored. If the specified kube config data is not valid, the webhook is not honored.",
 }
 
 func (WebhookTokenAuthenticator) SwaggerDoc() map[string]string {

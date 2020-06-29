@@ -65,6 +65,12 @@ type NetworkSpec struct {
 	// +optional
 	DeployKubeProxy *bool `json:"deployKubeProxy,omitempty"`
 
+	// useDHCP specifies whether or not DHCP CNI daemon, which is required for DHCP
+	// CNI plugin, should be started by the operator. If unset, this property
+	// defaults to 'false' and DHCP CNI daemon is not started.
+	// +optional
+	UseDHCP *bool `json:"useDHCP,omitempty"`
+
 	// kubeProxyConfig lets us configure desired proxy configuration.
 	// If not specified, sensible defaults will be chosen by OpenShift directly.
 	// Not consumed by all network providers - currently only openshift-sdn.

@@ -640,6 +640,7 @@ var map_NetworkSpec = map[string]string{
 	"additionalNetworks":  "additionalNetworks is a list of extra networks to make available to pods when multiple networks are enabled.",
 	"disableMultiNetwork": "disableMultiNetwork specifies whether or not multiple pod network support should be disabled. If unset, this property defaults to 'false' and multiple network support is enabled.",
 	"deployKubeProxy":     "deployKubeProxy specifies whether or not a standalone kube-proxy should be deployed by the operator. Some network providers include kube-proxy or similar functionality. If unset, the plugin will attempt to select the correct value, which is false when OpenShift SDN and ovn-kubernetes are used and true otherwise.",
+	"useDHCP":             "useDHCP specifies whether or not DHCP CNI daemon, which is required for DHCP CNI plugin, should be started by the operator. If unset, this property defaults to 'false' and DHCP CNI daemon is not started.",
 	"kubeProxyConfig":     "kubeProxyConfig lets us configure desired proxy configuration. If not specified, sensible defaults will be chosen by OpenShift directly. Not consumed by all network providers - currently only openshift-sdn.",
 	"logLevel":            "logLevel allows configuring the logging level of the components deployed by the operator. Currently only Kuryr SDN is affected by this setting. Please note that turning on extensive logging may affect performance. The default value is \"Normal\".",
 }

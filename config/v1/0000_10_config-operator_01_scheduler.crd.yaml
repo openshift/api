@@ -89,6 +89,18 @@ spec:
                   description: name is the metadata.name of the referenced config
                     map
                   type: string
+            profile:
+              description: "profile sets which scheduling profile should be set in
+                order to configure scheduling decisions for new pods. \n Valid values
+                are \"LowNodeUtilization\", \"HighNodeUtilization\", \"NoScoring\"
+                Defaults to \"LowNodeUtilization\""
+              type: string
+              default: LowNodeUtilization
+              enum:
+              - ""
+              - LowNodeUtilization
+              - HighNodeUtilization
+              - NoScoring
         status:
           description: status holds observed values from the cluster. They may not
             be overridden.

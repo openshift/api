@@ -233,6 +233,68 @@ type LoadBalancerStrategy struct {
 	// +kubebuilder:validation:Required
 	// +required
 	Scope LoadBalancerScope `json:"scope"`
+	// aws provides configuration settings that are specific to AWS
+	// load balancers.
+	//
+	// If this field is empty, "Classic" is used as the load balancer
+	// type.
+	//
+	// +optional
+	AWS *AWSLoadBalancerParameters `json:"aws,omitempty"`
+}
+
+// AWSLoadBalancerParameters provides configuration settings that are
+// specific to AWS load balancers.
+// +union
+type AWSLoadBalancerParameters struct {
+	// type is the AWS load balancer type to instantiate for an ingresscontroller.
+	//
+	// Valid values are:
+	//
+	// * "Classic": A Classic Load Balancer that makes routing decisions at either
+	//   the transport layer (TCP/SSL) or the application layer (HTTP/HTTPS). See
+	//   the following for additional details:
+	//
+	//     https://docs.aws.amazon.com/AmazonECS/latest/developerguide/load-balancer-types.html#clb
+	//
+	// * "NLB": A Network Load Balancer that makes routing decisions at the
+	//   transport layer (TCP/SSL). See the following for additional details:
+	//
+	//     https://docs.aws.amazon.com/AmazonECS/latest/developerguide/load-balancer-types.html#nlb
+	//
+	// +unionDiscriminator
+	// +kubebuilder:validation:Required
+	// +required
+	Type AWSLoadBalancerType `json:"type"`
+
+	// awsClassicLoadBalancer holds configuration parameters for an AWS
+	// Classic load balancer. Present only if type is Classic.
+	// +optional
+	AWSClassicLoadBalancer *AWSClassicLoadBalancerParameters `json:"awsClassicLoadBalancer,omitempty"`
+
+	// awsNetworkLoadBalancer holds configuration parameters for an AWS
+	// Network load balancer. Present only if type is NLB.
+	// +optional
+	AWSNetworkLoadBalancer *AWSNetworkLoadBalancerParameters `json:"awsNetworkLoadBalancer,omitempty"`
+}
+
+// AWSLoadBalancerType is the type of AWS load balancer to instantiate.
+// +kubebuilder:validation:Enum=Classic;NLB
+type AWSLoadBalancerType string
+
+const (
+	AWSClassicLoadBalancer AWSLoadBalancerType = "Classic"
+	AWSNetworkLoadBalancer AWSLoadBalancerType = "NLB"
+)
+
+// AWSClassicLoadBalancerParameters holds configuration parameters for an
+// AWS Classic load balancer.
+type AWSClassicLoadBalancerParameters struct {
+}
+
+// AWSNetworkLoadBalancerParameters holds configuration parameters for an
+// AWS Network load balancer.
+type AWSNetworkLoadBalancerParameters struct {
 }
 
 // HostNetworkStrategy holds parameters for the HostNetwork endpoint publishing

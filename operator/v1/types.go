@@ -101,7 +101,7 @@ type OperatorStatus struct {
 
 	// conditions is a list of conditions and their status
 	// +optional
-	Conditions []OperatorCondition `json:"conditions,omitempty"`
+	Conditions []metav1.Condition `json:"conditions,omitempty"`
 
 	// version is the level this availability applies to
 	// +optional

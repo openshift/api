@@ -61,7 +61,7 @@ type TokenConfig struct {
 	// If this value is not set, then tokens are valid until their expiry.
 	// Takes valid time duration string such as "5m", "1.5h" or "2h45m".
 	// +optional
-	AccessTokenInactivityTimeout metav1.Duration `json:"accessTokenInactivityTimeout,omitempty"`
+	AccessTokenInactivityTimeout *metav1.Duration `json:"accessTokenInactivityTimeout,omitempty"`
 }
 
 const (

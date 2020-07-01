@@ -850,6 +850,11 @@ func (in *HybridOverlayConfig) DeepCopyInto(out *HybridOverlayConfig) {
 		*out = make([]ClusterNetworkEntry, len(*in))
 		copy(*out, *in)
 	}
+	if in.HybridOverlayVXLANPort != nil {
+		in, out := &in.HybridOverlayVXLANPort, &out.HybridOverlayVXLANPort
+		*out = new(uint32)
+		**out = **in
+	}
 	return
 }
 

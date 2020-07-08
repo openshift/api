@@ -13,4 +13,4 @@ require (
 	k8s.io/klog v1.0.0
 )
 
-replace k8s.io/apimachinery => github.com/damemi/apimachinery v0.19.0-beta.2.0.20200630191726-2cf00ecaa7ef
+replace k8s.io/apimachinery => github.com/damemi/apimachinery v0.19.0-beta.2.0.20200708135353-70a0274fe4b5

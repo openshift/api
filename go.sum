@@ -9,8 +9,8 @@ github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 h1:d+Bc7a5rLufV
 github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578/go.mod h1:uGdkoq3SwY9Y+13GIhn11/XLaGBb4BfwItxLd5jeuXE=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
-github.com/damemi/apimachinery v0.19.0-beta.2.0.20200630191726-2cf00ecaa7ef h1:W+u6lW92qYpjljHDcHTKbIc7kBpHWkZs5NRkiXesEVw=
-github.com/damemi/apimachinery v0.19.0-beta.2.0.20200630191726-2cf00ecaa7ef/go.mod h1:m5QoVMHU94aieNFPfLqf7WmU8HLVLm3JasG64COkSXQ=
+github.com/damemi/apimachinery v0.19.0-beta.2.0.20200708135353-70a0274fe4b5 h1:iQC0vFr72DmJGgD/otzFdNhVW697iYk3BMwh4c9hCYw=
+github.com/damemi/apimachinery v0.19.0-beta.2.0.20200708135353-70a0274fe4b5/go.mod h1:m5QoVMHU94aieNFPfLqf7WmU8HLVLm3JasG64COkSXQ=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

@@ -128,21 +128,23 @@ spec:
                     type: string
                     maxLength: 1024
                     minLength: 1
-                    pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+                    pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
                   status:
                     description: status of the condition, one of True, False, Unknown.
                     type: string
+                    enum:
+                    - "True"
+                    - "False"
+                    - Unknown
                   type:
                     description: type of condition in CamelCase or in foo.example.com/CamelCase.
                       --- Many .condition.type values are consistent across resources
                       like Available, but because arbitrary conditions can be useful
                       (see .node.status.conditions), the ability to deconflict is
-                      important.
+                      important. The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
                     type: string
-                    enum:
-                    - Available
-                    - Progressing
-                    - Degraded
+                    maxLength: 316
+                    pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
             generations:
               description: generations are used to determine when an item needs to
                 be reconciled or has changed in a way that needs a reaction.

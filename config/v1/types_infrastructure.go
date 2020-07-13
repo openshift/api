@@ -388,12 +388,7 @@ type OvirtPlatformStatus struct {
 	// The IP is a suitable target of a wildcard DNS record used to resolve default route host names.
 	IngressIP string `json:"ingressIP,omitempty"`
 
-	// nodeDNSIP is the IP address for the internal DNS used by the
-	// nodes. Unlike the one managed by the DNS operator, `NodeDNSIP`
-	// provides name resolution for the nodes themselves. There is no DNS-as-a-service for
-	// oVirt deployments. In order to minimize necessary changes to the
-	// datacenter DNS, a DNS service is hosted as a static pod to serve those hostnames
-	// to the nodes in the cluster.
+	// deprecated: as of 4.6, this field is no longer set or honored.  It will be removed in a future release.
 	NodeDNSIP string `json:"nodeDNSIP,omitempty"`
 }
 

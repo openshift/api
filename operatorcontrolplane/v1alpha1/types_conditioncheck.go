@@ -2,6 +2,7 @@
 package v1alpha1
 
 import (
+	v1 "github.com/openshift/api/config/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -38,6 +39,14 @@ type PodNetworkConnectivityCheckSpec struct {
 	// +kubebuilder:validation:Pattern=`^\S+:\d*$`
 	// +required
 	TargetEndpoint string `json:"targetEndpoint"`
+
+	// TLSClientCert, if specified, references a kubernetes.io/tls type secret with 'tls.crt' and
+	// 'tls.key' entries containing an optional TLS client certificate and key to be used when
+	// checking endpoints that require a client certificate in order to gracefully preform the
+	// scan without causing excessive logging in the endpoint process. The secret must exist in
+	// the same namespace as this resource.
+	// +optional
+	TLSClientCert v1.SecretNameReference `json:"tlsClientCert,omitempty"`
 }
 
 // +k8s:deepcopy-gen=true

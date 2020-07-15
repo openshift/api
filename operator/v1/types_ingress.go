@@ -233,21 +233,52 @@ type LoadBalancerStrategy struct {
 	// +kubebuilder:validation:Required
 	// +required
 	Scope LoadBalancerScope `json:"scope"`
+
+	// providerParameters holds desired load balancer information specific to
+	// the underlying infrastructure provider.
+	//
+	// If empty, defaults will be applied. See specific providerParameters
+	// fields for details about their defaults.
+	//
+	// +optional
+	ProviderParameters ProviderLoadBalancerParameters `json:"providerParameters,omitempty"`
+}
+
+// ProviderLoadBalancerParameters holds desired load balancer information
+// specific to the underlying infrastructure provider.
+// +union
+type ProviderLoadBalancerParameters struct {
+	// type is the underlying infrastructure provider for the load balancer.
+	// Allowed values are "AWS", "Azure", "BareMetal", "GCP", "OpenStack",
+	// and "VSphere".
+	//
+	// +unionDiscriminator
+	// +kubebuilder:validation:Required
+	// +required
+	Type LoadBalancerProviderType `json:"type"`
+
 	// aws provides configuration settings that are specific to AWS
 	// load balancers.
 	//
-	// If this field is empty, "Classic" is used as the load balancer
-	// type.
+	// If empty, defaults will be applied. See specific aws fields for
+	// details about their defaults.
 	//
 	// +optional
 	AWS *AWSLoadBalancerParameters `json:"aws,omitempty"`
 }
 
+// LoadBalancerProviderType is the underlying infrastructure provider for the
+// load balancer. Allowed values are "AWS", "Azure", "BareMetal", "GCP",
+// "OpenStack", and "VSphere".
+//
+// +kubebuilder:validation:Enum=AWS;Azure;BareMetal;GCP;OpenStack;VSphere
+type LoadBalancerProviderType string
+
 // AWSLoadBalancerParameters provides configuration settings that are
 // specific to AWS load balancers.
 // +union
 type AWSLoadBalancerParameters struct {
-	// type is the AWS load balancer type to instantiate for an ingresscontroller.
+	// type is the type of AWS load balancer to instantiate for an ingresscontroller.
 	//
 	// Valid values are:
 	//
@@ -267,15 +298,17 @@ type AWSLoadBalancerParameters struct {
 	// +required
 	Type AWSLoadBalancerType `json:"type"`
 
-	// awsClassicLoadBalancer holds configuration parameters for an AWS
-	// Classic load balancer. Present only if type is Classic.
+	// classicLoadBalancerParameters holds configuration parameters for an AWS
+	// classic load balancer. Present only if type is Classic.
+	//
 	// +optional
-	AWSClassicLoadBalancer *AWSClassicLoadBalancerParameters `json:"awsClassicLoadBalancer,omitempty"`
+	ClassicLoadBalancerParameters *AWSClassicLoadBalancerParameters `json:"classicLoadBalancer,omitempty"`
 
-	// awsNetworkLoadBalancer holds configuration parameters for an AWS
-	// Network load balancer. Present only if type is NLB.
+	// networkLoadBalancerParameters holds configuration parameters for an AWS
+	// network load balancer. Present only if type is NLB.
+	//
 	// +optional
-	AWSNetworkLoadBalancer *AWSNetworkLoadBalancerParameters `json:"awsNetworkLoadBalancer,omitempty"`
+	NetworkLoadBalancerParameters *AWSNetworkLoadBalancerParameters `json:"networkLoadBalancer,omitempty"`
 }
 
 // AWSLoadBalancerType is the type of AWS load balancer to instantiate.

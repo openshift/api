@@ -26,6 +26,18 @@ type EtcdSpec struct {
 
 type EtcdStatus struct {
 	StaticPodOperatorStatus `json:",inline"`
+
+	// leader describes the etcd member which is currently the leader. This field
+	// is a hint and shouldn't be considered authoritative.
+	Leader LeaderStatus `json:"leader"`
+}
+
+// leaderStatus describes the etcd leader member details.
+type LeaderStatus struct {
+	// name is the etcd leader member name, if available.
+	Name string `json:"name,omitempty"`
+	// node is the etcd leader member node, if available.
+	Node string `json:"node,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

@@ -162,6 +162,13 @@ type IngressControllerSpec struct {
 	//
 	// +optional
 	Logging *IngressControllerLogging `json:"logging,omitempty"`
+
+	// httpHeaders defines policy for HTTP headers.
+	//
+	// If this field is empty, the default values are used.
+	//
+	// +optional
+	HTTPHeaders *IngressControllerHTTPHeaders `json:"httpHeaders,omitempty"`
 }
 
 // NodePlacement describes node scheduling configuration for an ingress
@@ -606,6 +613,49 @@ type IngressControllerLogging struct {
 	//
 	// +optional
 	Access *AccessLogging `json:"access,omitempty"`
+}
+
+// IngressControllerHTTPHeaderPolicy is a policy for setting HTTP headers.
+//
+// +kubebuilder:validation:Enum=Append;Replace;IfNone;Never
+type IngressControllerHTTPHeaderPolicy string
+
+const (
+	// AppendHTTPHeaderPolicy appends the header, preserving any existing header.
+	AppendHTTPHeaderPolicy IngressControllerHTTPHeaderPolicy = "Append"
+	// ReplaceHTTPHeaderPolicy sets the header, removing any existing header.
+	ReplaceHTTPHeaderPolicy IngressControllerHTTPHeaderPolicy = "Replace"
+	// IfNoneHTTPHeaderPolicy sets the header if it is not already set.
+	IfNoneHTTPHeaderPolicy IngressControllerHTTPHeaderPolicy = "IfNone"
+	// NeverHTTPHeaderPolicy never sets the header, preserving any existing
+	// header.
+	NeverHTTPHeaderPolicy IngressControllerHTTPHeaderPolicy = "Never"
+)
+
+// IngressControllerHTTPHeaders specifies how the IngressController handles
+// certain HTTP headers.
+type IngressControllerHTTPHeaders struct {
+	// forwardedHeaderPolicy specifies when and how the IngressController
+	// sets the Forwarded, X-Forwarded-For, X-Forwarded-Host,
+	// X-Forwarded-Port, X-Forwarded-Proto, and X-Forwarded-Proto-Version
+	// HTTP headers.  The value may be one of the following:
+	//
+	// * "Append", which specifies that the IngressController appends the
+	//   headers, preserving existing headers.
+	//
+	// * "Replace", which specifies that the IngressController sets the
+	//   headers, replacing any existing Forwarded or X-Forwarded-* headers.
+	//
+	// * "IfNone", which specifies that the IngressController sets the
+	//   headers if they are not already set.
+	//
+	// * "Never", which specifies that the IngressController never sets the
+	//   headers, preserving any existing headers.
+	//
+	// By default, the policy is "Append".
+	//
+	// +optional
+	ForwardedHeaderPolicy IngressControllerHTTPHeaderPolicy `json:"forwardedHeaderPolicy,omitempty"`
 }
 
 var (

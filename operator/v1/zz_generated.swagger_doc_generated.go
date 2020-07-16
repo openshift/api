@@ -329,6 +329,33 @@ func (EtcdList) SwaggerDoc() map[string]string {
 	return map_EtcdList
 }
 
+var map_AWSClassicLoadBalancerParameters = map[string]string{
+	"": "AWSClassicLoadBalancerParameters holds configuration parameters for an AWS Classic load balancer.",
+}
+
+func (AWSClassicLoadBalancerParameters) SwaggerDoc() map[string]string {
+	return map_AWSClassicLoadBalancerParameters
+}
+
+var map_AWSLoadBalancerParameters = map[string]string{
+	"":                    "AWSLoadBalancerParameters provides configuration settings that are specific to AWS load balancers.",
+	"type":                "type is the type of AWS load balancer to instantiate for an ingresscontroller.\n\nValid values are:\n\n* \"Classic\": A Classic Load Balancer that makes routing decisions at either\n  the transport layer (TCP/SSL) or the application layer (HTTP/HTTPS). See\n  the following for additional details:\n\n    https://docs.aws.amazon.com/AmazonECS/latest/developerguide/load-balancer-types.html#clb\n\n* \"NLB\": A Network Load Balancer that makes routing decisions at the\n  transport layer (TCP/SSL). See the following for additional details:\n\n    https://docs.aws.amazon.com/AmazonECS/latest/developerguide/load-balancer-types.html#nlb",
+	"classicLoadBalancer": "classicLoadBalancerParameters holds configuration parameters for an AWS classic load balancer. Present only if type is Classic.",
+	"networkLoadBalancer": "networkLoadBalancerParameters holds configuration parameters for an AWS network load balancer. Present only if type is NLB.",
+}
+
+func (AWSLoadBalancerParameters) SwaggerDoc() map[string]string {
+	return map_AWSLoadBalancerParameters
+}
+
+var map_AWSNetworkLoadBalancerParameters = map[string]string{
+	"": "AWSNetworkLoadBalancerParameters holds configuration parameters for an AWS Network load balancer.",
+}
+
+func (AWSNetworkLoadBalancerParameters) SwaggerDoc() map[string]string {
+	return map_AWSNetworkLoadBalancerParameters
+}
+
 var map_AccessLogging = map[string]string{
 	"":              "AccessLogging describes how client requests should be logged.",
 	"destination":   "destination is where access logs go.",
@@ -429,8 +456,9 @@ func (IngressControllerStatus) SwaggerDoc() map[string]string {
 }
 
 var map_LoadBalancerStrategy = map[string]string{
-	"":      "LoadBalancerStrategy holds parameters for a load balancer.",
-	"scope": "scope indicates the scope at which the load balancer is exposed. Possible values are \"External\" and \"Internal\".",
+	"":                   "LoadBalancerStrategy holds parameters for a load balancer.",
+	"scope":              "scope indicates the scope at which the load balancer is exposed. Possible values are \"External\" and \"Internal\".",
+	"providerParameters": "providerParameters holds desired load balancer information specific to the underlying infrastructure provider.\n\nIf empty, defaults will be applied. See specific providerParameters fields for details about their defaults.",
 }
 
 func (LoadBalancerStrategy) SwaggerDoc() map[string]string {
@@ -472,6 +500,16 @@ var map_PrivateStrategy = map[string]string{
 
 func (PrivateStrategy) SwaggerDoc() map[string]string {
 	return map_PrivateStrategy
+}
+
+var map_ProviderLoadBalancerParameters = map[string]string{
+	"":     "ProviderLoadBalancerParameters holds desired load balancer information specific to the underlying infrastructure provider.",
+	"type": "type is the underlying infrastructure provider for the load balancer. Allowed values are \"AWS\", \"Azure\", \"BareMetal\", \"GCP\", \"OpenStack\", and \"VSphere\".",
+	"aws":  "aws provides configuration settings that are specific to AWS load balancers.\n\nIf empty, defaults will be applied. See specific aws fields for details about their defaults.",
+}
+
+func (ProviderLoadBalancerParameters) SwaggerDoc() map[string]string {
+	return map_ProviderLoadBalancerParameters
 }
 
 var map_RouteAdmissionPolicy = map[string]string{

@@ -236,16 +236,15 @@ type Update struct {
 	//
 	// +optional
 	Image string `json:"image"`
-	// force allows an administrator to update to an image that has failed
-	// verification, does not appear in the availableUpdates list, or otherwise
-	// would be blocked by normal protections on update. This option should only
-	// be used when the authenticity of the provided image has been verified out
-	// of band because the provided image will run with full administrative access
-	// to the cluster. Do not use this flag with images that comes from unknown
-	// or potentially malicious sources.
-	//
-	// This flag does not override other forms of consistency checking that are
-	// required before a new update is deployed.
+
+	// force allows an administrator to update to an image that has
+	// failed verification, failed precondition checks, or would
+	// otherwise be blocked by normal protections on update. This option
+	// should only be used when the authenticity of the provided image
+	// has been verified out of band because the provided image will run
+	// with full administrative access to the cluster. Do not use this
+	// flag with images that comes from unknown or potentially malicious
+	// sources.
 	//
 	// +optional
 	Force bool `json:"force"`

@@ -248,7 +248,7 @@ type LoadBalancerStrategy struct {
 	// fields for details about their defaults.
 	//
 	// +optional
-	ProviderParameters ProviderLoadBalancerParameters `json:"providerParameters,omitempty"`
+	ProviderParameters *ProviderLoadBalancerParameters `json:"providerParameters,omitempty"`
 }
 
 // ProviderLoadBalancerParameters holds desired load balancer information

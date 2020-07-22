@@ -72,7 +72,7 @@ type InfrastructureStatus struct {
 	APIServerURL string `json:"apiServerURL"`
 
 	// apiServerInternalURL is a valid URI with scheme(http/https),
-	// address and port.  apiServerInternalURL can be used by components
+	// address and optionally a port (defaulting to 80 for http and 443 for https).  apiServerInternalURL can be used by components
 	// like kubelets, to contact the Kubernetes API server using the
 	// infrastructure provider rather than Kubernetes networking.
 	APIServerInternalURL string `json:"apiServerInternalURI"`

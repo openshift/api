@@ -390,6 +390,13 @@ type OvirtPlatformStatus struct {
 
 	// deprecated: as of 4.6, this field is no longer set or honored.  It will be removed in a future release.
 	NodeDNSIP string `json:"nodeDNSIP,omitempty"`
+
+	// StorageDomainID is the ID of the storage domain used by oVirt to create disks for the cluster nodes and
+	// for disks created by the default storage class.
+	StorageDomainID string `json:"storageDomainID,omitempty"`
+
+	// ClusterID is the ID of oVirt's cluster, where we create VMs.
+	ClusterID string `json:"clusterID,omitempty"`
 }
 
 // VSpherePlatformSpec holds the desired state of the vSphere infrastructure provider.

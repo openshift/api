@@ -349,6 +349,10 @@ spec:
                         points to. It is the IP for a self-hosted load balancer in
                         front of the API servers.
                       type: string
+                    clusterID:
+                      description: ClusterID is the ID of oVirt's cluster, where we
+                        create VMs.
+                      type: string
                     ingressIP:
                       description: ingressIP is an external IP which routes to the
                         default ingress controller. The IP is a suitable target of
@@ -357,6 +361,11 @@ spec:
                     nodeDNSIP:
                       description: 'deprecated: as of 4.6, this field is no longer
                         set or honored.  It will be removed in a future release.'
+                      type: string
+                    storageDomainID:
+                      description: StorageDomainID is the ID of the storage domain
+                        used by oVirt to create disks for the cluster nodes and for
+                        disks created by the default storage class.
                       type: string
                 type:
                   description: "type is the underlying infrastructure provider for

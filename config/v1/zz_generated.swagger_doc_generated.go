@@ -869,6 +869,8 @@ var map_OvirtPlatformStatus = map[string]string{
 	"apiServerInternalIP": "apiServerInternalIP is an IP address to contact the Kubernetes API server that can be used by components inside the cluster, like kubelets using the infrastructure rather than Kubernetes networking. It is the IP that the Infrastructure.status.apiServerInternalURI points to. It is the IP for a self-hosted load balancer in front of the API servers.",
 	"ingressIP":           "ingressIP is an external IP which routes to the default ingress controller. The IP is a suitable target of a wildcard DNS record used to resolve default route host names.",
 	"nodeDNSIP":           "deprecated: as of 4.6, this field is no longer set or honored.  It will be removed in a future release.",
+	"storageDomainID":     "StorageDomainID is the ID of the storage domain used by oVirt to create disks for the cluster nodes and for disks created by the default storage class.",
+	"clusterID":           "ClusterID is the ID of oVirt's cluster, where we create VMs.",
 }
 
 func (OvirtPlatformStatus) SwaggerDoc() map[string]string {

@@ -51,6 +51,41 @@ type APIServerSpec struct {
 	// is VersionTLS12.
 	// +optional
 	TLSSecurityProfile *TLSSecurityProfile `json:"tlsSecurityProfile,omitempty"`
+	// audit specifies the settings for audit configuration to be applied to all OpenShift-provided
+	// API servers in the cluster.
+	// +optional
+	// +kubebuilder:default={profile: Default}
+	Audit Audit `json:"audit"`
+}
+
+// AuditProfileType defines the audit policy profile type.
+// +kubebuilder:validation:Enum=Default;WriteRequestBodies;AllRequestBodies
+type AuditProfileType string
+
+const (
+	// "Default" is the existing default audit configuration policy.
+	AuditProfileDefaultType AuditProfileType = "Default"
+
+	// "WriteRequestBodies" is similar to Default but it logs request and response
+	// HTTP payloads for write requests (create, update, patch)
+	WriteRequestBodiesAuditProfileType AuditProfileType = "WriteRequestBodies"
+
+	// "AllRequestBodies" is similar to WriteRequestBodies, but also logs request
+	// and response HTTP payloads for read requests (get, list).
+	AllRequestBodiesAuditProfileType AuditProfileType = "AllRequestBodies"
+)
+
+type Audit struct {
+	// profile specifies the name of the desired audit policy configuration to be deployed to
+	// all OpenShift-provided API servers in the cluster
+	//
+	// We provide the following profiles
+	// - Default
+	// - WriteRequestBodies
+	// - AllRequestBodies
+	// If unset, the 'Default' profile is used as the default.
+	// +kubebuilder:default=Default
+	Profile AuditProfileType `json:"profile,omitempty"`
 }
 
 type APIServerServingCerts struct {

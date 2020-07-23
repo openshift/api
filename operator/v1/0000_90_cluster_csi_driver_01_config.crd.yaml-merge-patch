@@ -7,6 +7,6 @@ spec:
             name:
               type: string
               enum:
-              - ebs.csi.aws.com-ebs
+              - ebs.csi.aws.com
               - manila.csi.openstack.org
               - csi.ovirt.org

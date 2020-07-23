@@ -31,7 +31,7 @@ spec:
           properties:
             name:
               enum:
-              - ebs.csi.aws.com-ebs
+              - ebs.csi.aws.com
               - manila.csi.openstack.org
               - csi.ovirt.org
               type: string
@@ -45,7 +45,7 @@ spec:
                 driverName:
                   description: DriverName holds the name of the CSI driver
                   enum:
-                  - ebs.csi.aws.com-ebs
+                  - ebs.csi.aws.com
                   - manila.csi.openstack.org
                   - csi.ovirt.org
                   type: string

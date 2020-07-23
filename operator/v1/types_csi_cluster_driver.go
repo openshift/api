@@ -6,14 +6,14 @@ import (
 
 // ClusterCSIDriver is used to manage and configure CSI driver installed by default
 // in OpenShift. An example configuration may look like:
-//   apiVersion: operator.openshift.io/v1alpha1
+//   apiVersion: operator.openshift.io/v1
 //   kind: "ClusterCSIDriver"
 //   metadata:
-//     name: "ebs.csi.aws.com-ebs"
+//     name: "ebs.csi.aws.com"
 //   spec:
 //     logLevel: Debug
 //     driverConfig:
-//       driverName: "ebs.csi.aws.com-ebs"
+//       driverName: "ebs.csi.aws.com"
 
 // +genclient
 // +genclient:nonNamespaced
@@ -36,13 +36,13 @@ type ClusterCSIDriver struct {
 }
 
 // CSIDriverName is the name of the CSI driver
-// +kubebuilder:validation:Enum=ebs.csi.aws.com-ebs;manila.csi.openstack.org;csi.ovirt.org
+// +kubebuilder:validation:Enum=ebs.csi.aws.com;manila.csi.openstack.org;csi.ovirt.org
 type CSIDriverName string
 
 // If you are adding a new driver name here, ensure that kubebuilder:validation:Enum is updated above
 // and 0000_90_cluster_csi_driver_01_config.crd.yaml-merge-patch file is also updated with new driver name.
 const (
-	AWSEBSCSIDriver CSIDriverName = "ebs.csi.aws.com-ebs"
+	AWSEBSCSIDriver CSIDriverName = "ebs.csi.aws.com"
 	ManilaCSIDriver CSIDriverName = "manila.csi.openstack.org"
 	OvirtCSIDriver  CSIDriverName = "csi.ovirt.org"
 )

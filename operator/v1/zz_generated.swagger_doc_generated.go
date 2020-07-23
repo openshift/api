@@ -220,6 +220,49 @@ func (StatuspageProvider) SwaggerDoc() map[string]string {
 	return map_StatuspageProvider
 }
 
+var map_CSIDriverConfig = map[string]string{
+	"":           "CSIDriverConfig is the CSI driver specific configuration",
+	"driverName": "DriverName holds the name of the CSI driver",
+}
+
+func (CSIDriverConfig) SwaggerDoc() map[string]string {
+	return map_CSIDriverConfig
+}
+
+var map_ClusterCSIDriver = map[string]string{
+	"":       "ClusterCSIDriver object allows management and configuration of a CSI driver operator installed by default in OpenShift.",
+	"spec":   "spec holds user settable values for configuration",
+	"status": "status holds observed values from the cluster. They may not be overridden.",
+}
+
+func (ClusterCSIDriver) SwaggerDoc() map[string]string {
+	return map_ClusterCSIDriver
+}
+
+var map_ClusterCSIDriverList = map[string]string{
+	"": "ClusterCSIDriverList contains a list of ClusterCSIDriver",
+}
+
+func (ClusterCSIDriverList) SwaggerDoc() map[string]string {
+	return map_ClusterCSIDriverList
+}
+
+var map_ClusterCSIDriverSpec = map[string]string{
+	"": "ClusterCSIDriverSpec is the desired behavior of CSI driver operator",
+}
+
+func (ClusterCSIDriverSpec) SwaggerDoc() map[string]string {
+	return map_ClusterCSIDriverSpec
+}
+
+var map_ClusterCSIDriverStatus = map[string]string{
+	"": "ClusterCSIDriverStatus is the observed status of CSI driver operator",
+}
+
+func (ClusterCSIDriverStatus) SwaggerDoc() map[string]string {
+	return map_ClusterCSIDriverStatus
+}
+
 var map_CSISnapshotController = map[string]string{
 	"":       "CSISnapshotController provides a means to configure an operator to manage the CSI snapshots. `cluster` is the canonical name.",
 	"spec":   "spec holds user settable values for configuration",

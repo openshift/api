@@ -47,7 +47,7 @@ type HelmChartRepositorySpec struct {
 	Description string `json:"description,omitempty"`
 
 	// Required configuration for connecting to the chart repo
-	ConnectionConfig `json:",inline"`
+	ConnectionConfig ConnectionConfig `json:"connectionConfig"`
 }
 
 type ConnectionConfig struct {
@@ -58,25 +58,19 @@ type ConnectionConfig struct {
 
 	// ca is an optional reference to a config map by name containing the PEM-encoded CA bundle.
 	// It is used as a trust anchor to validate the TLS certificate presented by the remote server.
-	// The key "ca.crt" is used to locate the data.
+	// The key "ca-bundle.crt" is used to locate the data.
 	// If empty, the default system roots are used.
 	// The namespace for this config map is openshift-config.
 	// +optional
-	CA *configv1.ConfigMapNameReference `json:"ca,omitempty"`
+	CA configv1.ConfigMapNameReference `json:"ca,omitempty"`
 
-	// tlsClientCert is an optional reference to a secret by name that contains the
-	// PEM-encoded TLS client certificate to present when connecting to the server.
-	// The key "client.crt" is used to locate the data.
+	// tlsClientConfig is an optional reference to a secret by name that contains the
+	// PEM-encoded TLS client certificate and private key to present when connecting to the server.
+	// The key "tls.crt" is used to locate the client certificate.
+	// The key "tls.key" is used to locate the private key.
 	// The namespace for this secret is openshift-config.
 	// +optional
-	TLSClientCert *configv1.SecretNameReference `json:"tlsClientCert,omitempty"`
-
-	// tlsClientKey is an optional reference to a secret by name that contains the
-	// PEM-encoded TLS private key for the client certificate referenced in tlsClientCert.
-	// The key "client.key" is used to locate the data.
-	// The namespace for this secret is openshift-config.
-	// +optional
-	TLSClientKey *configv1.SecretNameReference `json:"tlsClientKey,omitempty"`
+	TLSClientConfig configv1.SecretNameReference `json:"tlsClientConfig,omitempty"`
 }
 
 type HelmChartRepositoryStatus struct {

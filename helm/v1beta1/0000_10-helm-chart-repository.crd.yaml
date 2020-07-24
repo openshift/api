@@ -11,8 +11,6 @@ spec:
     listKind: HelmChartRepositoryList
     plural: helmchartrepositories
     singular: helmchartrepository
-    shortNames:
-    - hcr
   versions:
   - name: v1beta1
     served: true
@@ -43,20 +41,43 @@ spec:
           description: spec holds user settable values for configuration
           type: object
           properties:
-            ca:
-              description: ca is an optional reference to a config map by name containing
-                the PEM-encoded CA bundle. It is used as a trust anchor to validate
-                the TLS certificate presented by the remote server. The key "ca.crt"
-                is used to locate the data. If empty, the default system roots are
-                used. The namespace for this config map is openshift-config.
+            connectionConfig:
+              description: Required configuration for connecting to the chart repo
               type: object
-              required:
-              - name
               properties:
-                name:
-                  description: name is the metadata.name of the referenced config
-                    map
+                ca:
+                  description: ca is an optional reference to a config map by name
+                    containing the PEM-encoded CA bundle. It is used as a trust anchor
+                    to validate the TLS certificate presented by the remote server.
+                    The key "ca-bundle.crt" is used to locate the data. If empty,
+                    the default system roots are used. The namespace for this config
+                    map is openshift-config.
+                  type: object
+                  required:
+                  - name
+                  properties:
+                    name:
+                      description: name is the metadata.name of the referenced config
+                        map
+                      type: string
+                tlsClientConfig:
+                  description: tlsClientConfig is an optional reference to a secret
+                    by name that contains the PEM-encoded TLS client certificate and
+                    private key to present when connecting to the server. The key
+                    "tls.crt" is used to locate the client certificate. The key "tls.key"
+                    is used to locate the private key. The namespace for this secret
+                    is openshift-config.
+                  type: object
+                  required:
+                  - name
+                  properties:
+                    name:
+                      description: name is the metadata.name of the referenced secret
+                      type: string
+                url:
+                  description: Chart repository URL
                   type: string
+                  pattern: ^https?:\/\/
             description:
               description: Optional human readable repository description, it can
                 be used by UI for displaying purposes
@@ -67,34 +88,6 @@ spec:
                 can be used by UI for displaying purposes
               type: string
               minLength: 1
-            tlsClientCert:
-              description: tlsClientCert is an optional reference to a secret by name
-                that contains the PEM-encoded TLS client certificate to present when
-                connecting to the server. The key "client.crt" is used to locate the
-                data. The namespace for this secret is openshift-config.
-              type: object
-              required:
-              - name
-              properties:
-                name:
-                  description: name is the metadata.name of the referenced secret
-                  type: string
-            tlsClientKey:
-              description: tlsClientKey is an optional reference to a secret by name
-                that contains the PEM-encoded TLS private key for the client certificate
-                referenced in tlsClientCert. The key "client.key" is used to locate
-                the data. The namespace for this secret is openshift-config.
-              type: object
-              required:
-              - name
-              properties:
-                name:
-                  description: name is the metadata.name of the referenced secret
-                  type: string
-            url:
-              description: Chart repository URL
-              type: string
-              pattern: ^https?:\/\/
         status:
           description: Observed status of the repository within the cluster..
           type: object

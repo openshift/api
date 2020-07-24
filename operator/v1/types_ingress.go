@@ -278,8 +278,18 @@ type ProviderLoadBalancerParameters struct {
 // load balancer. Allowed values are "AWS", "Azure", "BareMetal", "GCP",
 // "OpenStack", and "VSphere".
 //
-// +kubebuilder:validation:Enum=AWS;Azure;BareMetal;GCP;OpenStack;VSphere
+// +kubebuilder:validation:Enum=AWS;Azure;BareMetal;GCP;OpenStack;VSphere;IBM
 type LoadBalancerProviderType string
+
+const (
+	AWSLoadBalancerProvider       LoadBalancerProviderType = "AWS"
+	AzureLoadBalancerProvider     LoadBalancerProviderType = "Azure"
+	GCPLoadBalancerProvider       LoadBalancerProviderType = "GCP"
+	OpenStackLoadBalancerProvider LoadBalancerProviderType = "OpenStack"
+	VSphereLoadBalancerProvider   LoadBalancerProviderType = "VSphere"
+	IBMLoadBalancerProvider       LoadBalancerProviderType = "IBM"
+	BareMetalLoadBalancerProvider LoadBalancerProviderType = "BareMetal"
+)
 
 // AWSLoadBalancerParameters provides configuration settings that are
 // specific to AWS load balancers.

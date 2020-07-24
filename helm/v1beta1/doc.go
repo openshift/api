@@ -5,4 +5,4 @@
 // +kubebuilder:validation:Optional
 // +groupName=helm.openshift.io
 // Package v1 is the v1 version of the API.
-package v1alpha1
+package v1beta1

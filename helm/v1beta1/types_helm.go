@@ -1,4 +1,4 @@
-package v1alpha1
+package v1beta1
 
 import (
 	configv1 "github.com/openshift/api/config/v1"
@@ -20,13 +20,12 @@ type HelmChartRepository struct {
 	// +required
 	Spec HelmChartRepositorySpec `json:"spec"`
 
-	// status holds observed values from the cluster. They may not be overridden.
+	// Observed status of the repository within the cluster..
 	// +optional
 	Status HelmChartRepositoryStatus `json:"status"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-
 type HelmChartRepositoryList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata"`
@@ -37,10 +36,6 @@ type HelmChartRepositoryList struct {
 // Helm chart repository exposed within the cluster
 type HelmChartRepositorySpec struct {
 
-	// Chart repository URL
-	// +kubebuilder:validation:Pattern=`^https?:\/\/`
-	URL string `json:"url"`
-
 	// Optional associated human readable repository name, it can be used by UI for displaying purposes
 	// +kubebuilder:validation:MinLength=1
 	// +optional
@@ -50,6 +45,16 @@ type HelmChartRepositorySpec struct {
 	// +kubebuilder:validation:MinLength=1
 	// +optional
 	Description string `json:"description,omitempty"`
+
+	// Required configuration for connecting to the chart repo
+	ConnectionConfig `json:",inline"`
+}
+
+type ConnectionConfig struct {
+
+	// Chart repository URL
+	// +kubebuilder:validation:Pattern=`^https?:\/\/`
+	URL string `json:"url"`
 
 	// ca is an optional reference to a config map by name containing the PEM-encoded CA bundle.
 	// It is used as a trust anchor to validate the TLS certificate presented by the remote server.
@@ -72,37 +77,11 @@ type HelmChartRepositorySpec struct {
 	// The namespace for this secret is openshift-config.
 	// +optional
 	TLSClientKey *configv1.SecretNameReference `json:"tlsClientKey,omitempty"`
-
-	// Skip verification of the chart repo certificate
-	// +optional
-	InsecureSkipTLSVerify bool `json:"insecure_skip_tls_verify,omitempty"`
-
-	// Optional Username used for authenticating access to the chart repository
-	// +optional
-	Username *string `json:"username,omitempty"`
-
-	// Password is an optional reference to a secret by name that contains
-	// the password used for authenticating access to the chart repository
-	// The key "password" is used to locate the data.
-	// The namespace for this secret is openshift-config.
-	// +optional
-	Password *configv1.SecretNameReference `json:"password,omitempty"`
 }
 
 type HelmChartRepositoryStatus struct {
 
-	// conditions is a list of conditions and their status
+	// conditions is a list of conditions and their statuses
 	// +optional
-	Conditions []HelmChartRepositoryCondition `json:"conditions,omitempty"`
+	Conditions []metav1.Condition `json:"conditions,omitempty"`
 }
-
-// HelmChartRepositoryCondition is just the standard condition fields.
-type HelmChartRepositoryCondition struct {
-	Type               string          `json:"type"`
-	Status             ConditionStatus `json:"status"`
-	LastTransitionTime metav1.Time     `json:"lastTransitionTime,omitempty"`
-	Reason             string          `json:"reason,omitempty"`
-	Message            string          `json:"message,omitempty"`
-}
-
-type ConditionStatus string

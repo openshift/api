@@ -27,7 +27,7 @@ type MyOperatorResourceStatus struct {
 // +kubebuilder:validation:Pattern=`^(Managed|Unmanaged|Force|Removed)$`
 type ManagementState string
 
-var (
+const (
 	// Force means that the operator is actively managing its resources but will not block an upgrade
 	// if unmet prereqs exist. This state puts the operator at risk for unsuccessful upgrades
 	Force ManagementState = "Force"
@@ -79,7 +79,7 @@ type OperatorSpec struct {
 
 type LogLevel string
 
-var (
+const (
 	// Normal is the default.  Normal, working log information, everything is fine, but helpful notices for auditing or common operations.  In kube, this is probably glog=2.
 	Normal LogLevel = "Normal"
 
@@ -131,7 +131,7 @@ type GenerationStatus struct {
 	Hash string `json:"hash"`
 }
 
-var (
+const (
 	// Available indicates that the operand is present and accessible in the cluster
 	OperatorStatusTypeAvailable = "Available"
 	// Progressing indicates that the operator is trying to transition the operand to a different state

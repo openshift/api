@@ -617,6 +617,10 @@ spec:
                 pruner jobs to retain. Defaults to 3 if not set.
               type: integer
               format: int32
+            ignoreInvalidImageReferences:
+              description: ignoreInvalidImageReferences indicates whether the pruner
+                can ignore errors while parsing image references.
+              type: boolean
             keepTagRevisions:
               description: keepTagRevisions specifies the number of image revisions
                 for a tag in an image stream that will be preserved. Defaults to 3.

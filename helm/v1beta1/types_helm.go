@@ -38,11 +38,13 @@ type HelmChartRepositorySpec struct {
 
 	// Optional associated human readable repository name, it can be used by UI for displaying purposes
 	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=100
 	// +optional
 	DisplayName string `json:"name,omitempty"`
 
 	// Optional human readable repository description, it can be used by UI for displaying purposes
 	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=2048
 	// +optional
 	Description string `json:"description,omitempty"`
 
@@ -54,6 +56,7 @@ type ConnectionConfig struct {
 
 	// Chart repository URL
 	// +kubebuilder:validation:Pattern=`^https?:\/\/`
+	// +kubebuilder:validation:MaxLength=2048
 	URL string `json:"url"`
 
 	// ca is an optional reference to a config map by name containing the PEM-encoded CA bundle.

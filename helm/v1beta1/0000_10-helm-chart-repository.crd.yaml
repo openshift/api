@@ -77,16 +77,19 @@ spec:
                 url:
                   description: Chart repository URL
                   type: string
+                  maxLength: 2048
                   pattern: ^https?:\/\/
             description:
               description: Optional human readable repository description, it can
                 be used by UI for displaying purposes
               type: string
+              maxLength: 2048
               minLength: 1
             name:
               description: Optional associated human readable repository name, it
                 can be used by UI for displaying purposes
               type: string
+              maxLength: 100
               minLength: 1
         status:
           description: Observed status of the repository within the cluster..

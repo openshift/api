@@ -485,10 +485,21 @@ func (IngressControllerCaptureHTTPHeaders) SwaggerDoc() map[string]string {
 var map_IngressControllerHTTPHeaders = map[string]string{
 	"":                      "IngressControllerHTTPHeaders specifies how the IngressController handles certain HTTP headers.",
 	"forwardedHeaderPolicy": "forwardedHeaderPolicy specifies when and how the IngressController sets the Forwarded, X-Forwarded-For, X-Forwarded-Host, X-Forwarded-Port, X-Forwarded-Proto, and X-Forwarded-Proto-Version HTTP headers.  The value may be one of the following:\n\n* \"Append\", which specifies that the IngressController appends the\n  headers, preserving existing headers.\n\n* \"Replace\", which specifies that the IngressController sets the\n  headers, replacing any existing Forwarded or X-Forwarded-* headers.\n\n* \"IfNone\", which specifies that the IngressController sets the\n  headers if they are not already set.\n\n* \"Never\", which specifies that the IngressController never sets the\n  headers, preserving any existing headers.\n\nBy default, the policy is \"Append\".",
+	"uniqueId":              "uniqueId describes configuration for a custom HTTP header that the ingress controller should inject into incoming HTTP requests. Typically, this header is configured to have a value that is unique to the HTTP request.  The header can be used by applications or included in access logs to facilitate tracing individual HTTP requests.\n\nIf this field is empty, no such header is injected into requests.",
 }
 
 func (IngressControllerHTTPHeaders) SwaggerDoc() map[string]string {
 	return map_IngressControllerHTTPHeaders
+}
+
+var map_IngressControllerHTTPUniqueIdHeaderPolicy = map[string]string{
+	"":       "IngressControllerHTTPUniqueIdHeaderPolicy describes configuration for a unique id header.",
+	"name":   "name specifies the name of the HTTP header (for example, \"unique-id\") that the ingress controller should inject into HTTP requests.  The field's value must be a valid HTTP header name as defined in RFC 2616 section 4.2.  If the field is empty, no header is injected.",
+	"format": "format specifies the format for the injected HTTP header's value. This field has no effect unless name is specified.  For the HAProxy-based ingress controller implementation, this format uses the same syntax as the HTTP log format.  If the field is empty, the default value is \"%{+X}o\\ %ci:%cp_%fi:%fp_%Ts_%rt:%pid\"; see the corresponding HAProxy documentation: http://cbonte.github.io/haproxy-dconv/2.0/configuration.html#8.2.3",
+}
+
+func (IngressControllerHTTPUniqueIdHeaderPolicy) SwaggerDoc() map[string]string {
+	return map_IngressControllerHTTPUniqueIdHeaderPolicy
 }
 
 var map_IngressControllerList = map[string]string{

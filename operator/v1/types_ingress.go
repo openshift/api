@@ -607,8 +607,9 @@ type IngressControllerCaptureHTTPHeader struct {
 	Name string `json:"name"`
 
 	// maxLength specifies a maximum length for the header value.  If a
-	// header value exceeds this length, the value will be truncated in
-	// the log message.
+	// header value exceeds this length, the value will be truncated in the
+	// log message.  Note that the ingress controller may impose a separate
+	// bound on the total length of HTTP headers in a request.
 	//
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Minimum=1
@@ -634,6 +635,68 @@ type IngressControllerCaptureHTTPHeaders struct {
 	// +nullable
 	// +optional
 	Response []IngressControllerCaptureHTTPHeader `json:"response,omitempty"`
+}
+
+// CookieMatchType indicates the type of matching used against cookie names to
+// select a cookie for capture.
+// +kubebuilder:validation:Enum=Exact;Prefix
+type CookieMatchType string
+
+const (
+	// CookieMatchTypeExact indicates that an exact string match should be
+	// performed.
+	CookieMatchTypeExact CookieMatchType = "Exact"
+	// CookieMatchTypePrefix indicates that a string prefix match should be
+	// performed.
+	CookieMatchTypePrefix CookieMatchType = "Prefix"
+)
+
+// IngressControllerCaptureHTTPCookie describes an HTTP cookie that should be
+// captured.
+// +union
+type IngressControllerCaptureHTTPCookie struct {
+	// matchType specifies the type of match to be performed on the cookie
+	// name.  Allowed values are "Exact" for an exact string match and
+	// "Prefix" for a string prefix match.  If "Exact" is specified, a name
+	// must be specified in the name field.  If "Prefix" is provided, a
+	// prefix must be specified in the namePrefix field.  For example,
+	// specifying matchType "Prefix" and namePrefix "foo" will capture a
+	// cookie named "foo" or "foobar" but not one named "bar".  The first
+	// matching cookie is captured.
+	//
+	// +unionDiscriminator
+	// +kubebuilder:validation:Required
+	// +required
+	MatchType CookieMatchType `json:"matchType,omitempty"`
+
+	// name specifies a cookie name.  Its value must be a valid HTTP cookie
+	// name as defined in RFC 6265 section 4.1.
+	//
+	// +kubebuilder:validation:Pattern="^[-!#$%&'*+.0-9A-Z^_`a-z|~]+$"
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=1024
+	// +optional
+	Name string `json:"name"`
+
+	// namePrefix specifies a cookie name prefix.  Its value must be a valid
+	// HTTP cookie name as defined in RFC 6265 section 4.1.
+	//
+	// +kubebuilder:validation:Pattern="^[-!#$%&'*+.0-9A-Z^_`a-z|~]+$"
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=1024
+	// +optional
+	NamePrefix string `json:"namePrefix"`
+
+	// maxLength specifies a maximum length for the cookie value.  If a
+	// cookie value exceeds this length, the value will be truncated in the
+	// log message.  Note that the ingress controller may impose a separate
+	// bound on the total length of HTTP headers in a request.
+	//
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=1024
+	// +required
+	MaxLength int `json:"maxLength"`
 }
 
 // AccessLogging describes how client requests should be logged.
@@ -672,6 +735,14 @@ type AccessLogging struct {
 	//
 	// +optional
 	HTTPCaptureHeaders IngressControllerCaptureHTTPHeaders `json:"httpCaptureHeaders,omitempty"`
+
+	// httpCaptureCookies specifies HTTP cookies that should be captured in
+	// access logs.  If this field is empty, no cookies are captured.
+	//
+	// +nullable
+	// +optional
+	// +kubebuilder:validation:MaxItems=1
+	HTTPCaptureCookies []IngressControllerCaptureHTTPCookie `json:"httpCaptureCookies,omitempty"`
 }
 
 // IngressControllerLogging describes what should be logged where.

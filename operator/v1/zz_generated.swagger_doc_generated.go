@@ -404,6 +404,7 @@ var map_AccessLogging = map[string]string{
 	"destination":        "destination is where access logs go.",
 	"httpLogFormat":      "httpLogFormat specifies the format of the log message for an HTTP request.\n\nIf this field is empty, log messages use the implementation's default HTTP log format.  For HAProxy's default HTTP log format, see the HAProxy documentation: http://cbonte.github.io/haproxy-dconv/2.0/configuration.html#8.2.3\n\nNote that this format only applies to cleartext HTTP connections and to secure HTTP connections for which the ingress controller terminates encryption (that is, edge-terminated or reencrypt connections).  It does not affect the log format for TLS passthrough connections.",
 	"httpCaptureHeaders": "httpCaptureHeaders defines HTTP headers that should be captured in access logs.  If this field is empty, no headers are captured.\n\nNote that this option only applies to cleartext HTTP connections and to secure HTTP connections for which the ingress controller terminates encryption (that is, edge-terminated or reencrypt connections).  Headers cannot be captured for TLS passthrough connections.",
+	"httpCaptureCookies": "httpCaptureCookies specifies HTTP cookies that should be captured in access logs.  If this field is empty, no cookies are captured.",
 }
 
 func (AccessLogging) SwaggerDoc() map[string]string {
@@ -449,10 +450,22 @@ func (IngressController) SwaggerDoc() map[string]string {
 	return map_IngressController
 }
 
+var map_IngressControllerCaptureHTTPCookie = map[string]string{
+	"":           "IngressControllerCaptureHTTPCookie describes an HTTP cookie that should be captured.",
+	"matchType":  "matchType specifies the type of match to be performed on the cookie name.  Allowed values are \"Exact\" for an exact string match and \"Prefix\" for a string prefix match.  If \"Exact\" is specified, a name must be specified in the name field.  If \"Prefix\" is provided, a prefix must be specified in the namePrefix field.  For example, specifying matchType \"Prefix\" and namePrefix \"foo\" will capture a cookie named \"foo\" or \"foobar\" but not one named \"bar\".  The first matching cookie is captured.",
+	"name":       "name specifies a cookie name.  Its value must be a valid HTTP cookie name as defined in RFC 6265 section 4.1.",
+	"namePrefix": "namePrefix specifies a cookie name prefix.  Its value must be a valid HTTP cookie name as defined in RFC 6265 section 4.1.",
+	"maxLength":  "maxLength specifies a maximum length for the cookie value.  If a cookie value exceeds this length, the value will be truncated in the log message.  Note that the ingress controller may impose a separate bound on the total length of HTTP headers in a request.",
+}
+
+func (IngressControllerCaptureHTTPCookie) SwaggerDoc() map[string]string {
+	return map_IngressControllerCaptureHTTPCookie
+}
+
 var map_IngressControllerCaptureHTTPHeader = map[string]string{
 	"":          "IngressControllerCaptureHTTPHeader describes an HTTP header that should be captured.",
 	"name":      "name specifies a header name.  Its value must be a valid HTTP header name as defined in RFC 2616 section 4.2.",
-	"maxLength": "maxLength specifies a maximum length for the header value.  If a header value exceeds this length, the value will be truncated in the log message.",
+	"maxLength": "maxLength specifies a maximum length for the header value.  If a header value exceeds this length, the value will be truncated in the log message.  Note that the ingress controller may impose a separate bound on the total length of HTTP headers in a request.",
 }
 
 func (IngressControllerCaptureHTTPHeader) SwaggerDoc() map[string]string {

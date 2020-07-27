@@ -323,6 +323,74 @@ spec:
                       required:
                       - type
                       type: object
+                    httpCaptureCookies:
+                      description: httpCaptureCookies specifies HTTP cookies that
+                        should be captured in access logs.  If this field is empty,
+                        no cookies are captured.
+                      items:
+                        description: IngressControllerCaptureHTTPCookie describes
+                          an HTTP cookie that should be captured.
+                        oneOf:
+                        - properties:
+                            matchType:
+                              enum:
+                              - Exact
+                          required:
+                          - name
+                        - properties:
+                            matchType:
+                              enum:
+                              - Prefix
+                          required:
+                          - namePrefix
+                        properties:
+                          matchType:
+                            description: matchType specifies the type of match to
+                              be performed on the cookie name.  Allowed values are
+                              "Exact" for an exact string match and "Prefix" for a
+                              string prefix match.  If "Exact" is specified, a name
+                              must be specified in the name field.  If "Prefix" is
+                              provided, a prefix must be specified in the namePrefix
+                              field.  For example, specifying matchType "Prefix" and
+                              namePrefix "foo" will capture a cookie named "foo" or
+                              "foobar" but not one named "bar".  The first matching
+                              cookie is captured.
+                            enum:
+                            - Exact
+                            - Prefix
+                            type: string
+                          maxLength:
+                            description: maxLength specifies a maximum length for
+                              the cookie value.  If a cookie value exceeds this length,
+                              the value will be truncated in the log message.  Note
+                              that the ingress controller may impose a separate bound
+                              on the total length of HTTP headers in a request.
+                            maximum: 1024
+                            minimum: 1
+                            type: integer
+                          name:
+                            description: name specifies a cookie name.  Its value
+                              must be a valid HTTP cookie name as defined in RFC 6265
+                              section 4.1.
+                            maxLength: 1024
+                            minLength: 1
+                            pattern: ^[-!#$%&'*+.0-9A-Z^_`a-z|~]+$
+                            type: string
+                          namePrefix:
+                            description: namePrefix specifies a cookie name prefix.  Its
+                              value must be a valid HTTP cookie name as defined in
+                              RFC 6265 section 4.1.
+                            maxLength: 1024
+                            minLength: 1
+                            pattern: ^[-!#$%&'*+.0-9A-Z^_`a-z|~]+$
+                            type: string
+                        required:
+                        - matchType
+                        - maxLength
+                        type: object
+                      maxItems: 1
+                      nullable: true
+                      type: array
                     httpCaptureHeaders:
                       description: "httpCaptureHeaders defines HTTP headers that should
                         be captured in access logs.  If this field is empty, no headers
@@ -344,7 +412,9 @@ spec:
                                 description: maxLength specifies a maximum length
                                   for the header value.  If a header value exceeds
                                   this length, the value will be truncated in the
-                                  log message.
+                                  log message.  Note that the ingress controller may
+                                  impose a separate bound on the total length of HTTP
+                                  headers in a request.
                                 minimum: 1
                                 type: integer
                               name:
@@ -371,7 +441,9 @@ spec:
                                 description: maxLength specifies a maximum length
                                   for the header value.  If a header value exceeds
                                   this length, the value will be truncated in the
-                                  log message.
+                                  log message.  Note that the ingress controller may
+                                  impose a separate bound on the total length of HTTP
+                                  headers in a request.
                                 minimum: 1
                                 type: integer
                               name:

@@ -20,6 +20,7 @@ GO_LD_FLAGS:=
 # $4 - output
 $(call add-crd-gen,authorization,./authorization/v1,./authorization/v1,./authorization/v1)
 $(call add-crd-gen,config,./config/v1,./config/v1,./config/v1)
+$(call add-crd-gen,helm,./helm/v1beta1,./helm/v1beta1,./helm/v1beta1)
 $(call add-crd-gen,console,./console/v1,./console/v1,./console/v1)
 $(call add-crd-gen,imageregistry,./imageregistry/v1,./imageregistry/v1,./imageregistry/v1)
 $(call add-crd-gen,operator,./operator/v1,./operator/v1,./operator/v1)
@@ -52,4 +53,4 @@ update: update-scripts update-codegen-crds
 
 generate-with-container: Dockerfile.build
 	$(RUNTIME) build -t $(RUNTIME_IMAGE_NAME) -f Dockerfile.build .
-	$(RUNTIME) run -ti --rm -v $(PWD):/go/src/github.com/openshift/api:z -w /go/src/github.com/openshift/api $(RUNTIME_IMAGE_NAME) make update-scripts
+	$(RUNTIME) run -ti --rm -v $(PWD):/go/src/github.com/openshift/api:z -w /go/src/github.com/openshift/api $(RUNTIME_IMAGE_NAME) make update

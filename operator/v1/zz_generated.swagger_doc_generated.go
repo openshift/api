@@ -134,6 +134,31 @@ func (OAuthAPIServerStatus) SwaggerDoc() map[string]string {
 	return map_OAuthAPIServerStatus
 }
 
+var map_CloudCredential = map[string]string{
+	"": "CloudCredential provides a means to configure an operator to manage CredentialsRequests.",
+}
+
+func (CloudCredential) SwaggerDoc() map[string]string {
+	return map_CloudCredential
+}
+
+var map_CloudCredentialSpec = map[string]string{
+	"":                "CloudCredentialSpec is the specification of the desired behavior of the cloud-credential-operator.",
+	"credentialsMode": "CredentialsMode allows informing CCO that it should not attempt to dynamically determine the root cloud credentials capabilities, and it should just run in the specified mode. It also allows putting the operator into \"manual\" mode if desired. Leaving the field in default mode runs CCO so that the cluster's cloud credentials will be dynamically probed for capabilities (on supported clouds/platforms).",
+}
+
+func (CloudCredentialSpec) SwaggerDoc() map[string]string {
+	return map_CloudCredentialSpec
+}
+
+var map_CloudCredentialStatus = map[string]string{
+	"": "CloudCredentialStatus defines the observed status of the cloud-credential-operator.",
+}
+
+func (CloudCredentialStatus) SwaggerDoc() map[string]string {
+	return map_CloudCredentialStatus
+}
+
 var map_Config = map[string]string{
 	"":       "Config provides information to configure the config operator.",
 	"spec":   "spec is the specification of the desired behavior of the Config Operator.",

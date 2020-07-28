@@ -672,8 +672,8 @@ type IngressControllerCaptureHTTPCookie struct {
 	// name specifies a cookie name.  Its value must be a valid HTTP cookie
 	// name as defined in RFC 6265 section 4.1.
 	//
-	// +kubebuilder:validation:Pattern="^[-!#$%&'*+.0-9A-Z^_`a-z|~]+$"
-	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:Pattern="^[-!#$%&'*+.0-9A-Z^_`a-z|~]*$"
+	// +kubebuilder:validation:MinLength=0
 	// +kubebuilder:validation:MaxLength=1024
 	// +optional
 	Name string `json:"name"`
@@ -681,16 +681,18 @@ type IngressControllerCaptureHTTPCookie struct {
 	// namePrefix specifies a cookie name prefix.  Its value must be a valid
 	// HTTP cookie name as defined in RFC 6265 section 4.1.
 	//
-	// +kubebuilder:validation:Pattern="^[-!#$%&'*+.0-9A-Z^_`a-z|~]+$"
-	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:Pattern="^[-!#$%&'*+.0-9A-Z^_`a-z|~]*$"
+	// +kubebuilder:validation:MinLength=0
 	// +kubebuilder:validation:MaxLength=1024
 	// +optional
 	NamePrefix string `json:"namePrefix"`
 
-	// maxLength specifies a maximum length for the cookie value.  If a
-	// cookie value exceeds this length, the value will be truncated in the
-	// log message.  Note that the ingress controller may impose a separate
-	// bound on the total length of HTTP headers in a request.
+	// maxLength specifies a maximum length of the string that will be
+	// logged, which includes the cookie name, cookie value, and
+	// one-character delimiter.  If the log entry exceeds this length, the
+	// value will be truncated in the log message.  Note that the ingress
+	// controller may impose a separate bound on the total length of HTTP
+	// headers in a request.
 	//
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Minimum=1

@@ -361,19 +361,6 @@ spec:
                       items:
                         description: IngressControllerCaptureHTTPCookie describes
                           an HTTP cookie that should be captured.
-                        oneOf:
-                        - properties:
-                            matchType:
-                              enum:
-                              - Exact
-                          required:
-                          - name
-                        - properties:
-                            matchType:
-                              enum:
-                              - Prefix
-                          required:
-                          - namePrefix
                         properties:
                           matchType:
                             description: matchType specifies the type of match to
@@ -391,11 +378,13 @@ spec:
                             - Prefix
                             type: string
                           maxLength:
-                            description: maxLength specifies a maximum length for
-                              the cookie value.  If a cookie value exceeds this length,
-                              the value will be truncated in the log message.  Note
-                              that the ingress controller may impose a separate bound
-                              on the total length of HTTP headers in a request.
+                            description: maxLength specifies a maximum length of the
+                              string that will be logged, which includes the cookie
+                              name, cookie value, and one-character delimiter.  If
+                              the log entry exceeds this length, the value will be
+                              truncated in the log message.  Note that the ingress
+                              controller may impose a separate bound on the total
+                              length of HTTP headers in a request.
                             maximum: 1024
                             minimum: 1
                             type: integer
@@ -404,16 +393,16 @@ spec:
                               must be a valid HTTP cookie name as defined in RFC 6265
                               section 4.1.
                             maxLength: 1024
-                            minLength: 1
-                            pattern: ^[-!#$%&'*+.0-9A-Z^_`a-z|~]+$
+                            minLength: 0
+                            pattern: ^[-!#$%&'*+.0-9A-Z^_`a-z|~]*$
                             type: string
                           namePrefix:
                             description: namePrefix specifies a cookie name prefix.  Its
                               value must be a valid HTTP cookie name as defined in
                               RFC 6265 section 4.1.
                             maxLength: 1024
-                            minLength: 1
-                            pattern: ^[-!#$%&'*+.0-9A-Z^_`a-z|~]+$
+                            minLength: 0
+                            pattern: ^[-!#$%&'*+.0-9A-Z^_`a-z|~]*$
                             type: string
                         required:
                         - matchType

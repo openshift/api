@@ -18,14 +18,3 @@ spec:
                           - properties:
                               address:
                                 format: ipv6
-                    httpCaptureCookies:
-                      items:
-                        oneOf:
-                        - required: ["name"]
-                          properties:
-                            matchType:
-                              enum: ["Exact"]
-                        - required: ["namePrefix"]
-                          properties:
-                            matchType:
-                              enum: ["Prefix"]

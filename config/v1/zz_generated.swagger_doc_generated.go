@@ -970,7 +970,7 @@ func (IngressSpec) SwaggerDoc() map[string]string {
 var map_ClusterNetworkEntry = map[string]string{
 	"":           "ClusterNetworkEntry is a contiguous block of IP addresses from which pod IPs are allocated.",
 	"cidr":       "The complete block for pod IPs.",
-	"hostPrefix": "The size (prefix) of block to allocate to each node.",
+	"hostPrefix": "The size (prefix) of block to allocate to each node. If this field is not used by the plugin, it can be left unset.",
 }
 
 func (ClusterNetworkEntry) SwaggerDoc() map[string]string {

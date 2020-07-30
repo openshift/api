@@ -725,7 +725,7 @@ func (AdditionalNetworkDefinition) SwaggerDoc() map[string]string {
 }
 
 var map_ClusterNetworkEntry = map[string]string{
-	"": "ClusterNetworkEntry is a subnet from which to allocate PodIPs. A network of size HostPrefix (in CIDR notation) will be allocated when nodes join the cluster. Not all network providers support multiple ClusterNetworks",
+	"": "ClusterNetworkEntry is a subnet from which to allocate PodIPs. A network of size HostPrefix (in CIDR notation) will be allocated when nodes join the cluster. If the HostPrefix field is not used by the plugin, it can be left unset. Not all network providers support multiple ClusterNetworks",
 }
 
 func (ClusterNetworkEntry) SwaggerDoc() map[string]string {

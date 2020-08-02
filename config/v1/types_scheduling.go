@@ -60,6 +60,14 @@ type SchedulerSpec struct {
 	// Please turn on this field after doing due diligence.
 	// +optional
 	MastersSchedulable bool `json:"mastersSchedulable"`
+	// CustomSchedulerImage allows to override the default scheduler image
+	// set through IMAGE environment variable in the scheduler operator
+	// deployment manifest.
+	// Important Note: It's completely at your own risk to provide
+	// a custom image. Read available documentation to make sure
+	// all the required bits are provided by the custom image.
+	// +optional
+	CustomSchedulerImage string `json:"customSchedulerImage"`
 }
 
 type SchedulerStatus struct {

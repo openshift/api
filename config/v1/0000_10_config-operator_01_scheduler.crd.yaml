@@ -42,6 +42,13 @@ spec:
           description: spec holds user settable values for configuration
           type: object
           properties:
+            customSchedulerImage:
+              description: 'CustomSchedulerImage allows to override the default scheduler
+                image set through IMAGE environment variable in the scheduler operator
+                deployment manifest. Important Note: It''s completely at your own
+                risk to provide a custom image. Read available documentation to make
+                sure all the required bits are provided by the custom image.'
+              type: string
             defaultNodeSelector:
               description: 'defaultNodeSelector helps set the cluster-wide default
                 node selector to restrict pod placement to specific nodes. This is

@@ -62,9 +62,13 @@ spec:
                   profile:
                     description: "profile specifies the name of the desired audit
                       policy configuration to be deployed to all OpenShift-provided
-                      API servers in the cluster \n We provide the following profiles
-                      - Default - WriteRequestBodies - AllRequestBodies If unset,
-                      the 'Default' profile is used as the default."
+                      API servers in the cluster. \n The following profiles are provided:
+                      - Default: the existing default policy. - WriteRequestBodies:
+                      like 'Default', but logs request and response HTTP payloads
+                      for write requests (create, update, patch). - AllRequestBodies:
+                      like 'WriteRequestBodies', but also logs request and response
+                      HTTP payloads for read requests (get, list). \n If unset, the
+                      'Default' profile is used as the default."
                     type: string
                     default: Default
                     enum:

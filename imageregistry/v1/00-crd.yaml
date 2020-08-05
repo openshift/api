@@ -819,6 +819,12 @@ spec:
                       description: region is the GCS location in which your bucket
                         exists. Optional, will be set based on the installed GCS Region.
                       type: string
+                managementState:
+                  description: managementState indicates if the operator manages the
+                    underlying storage unit. If Managed the operator will remove the
+                    storage when this operator gets Removed.
+                  type: string
+                  pattern: ^(Managed|Unmanaged)$
                 pvc:
                   description: pvc represents configuration that uses a PersistentVolumeClaim.
                   type: object
@@ -1097,6 +1103,12 @@ spec:
                       description: region is the GCS location in which your bucket
                         exists. Optional, will be set based on the installed GCS Region.
                       type: string
+                managementState:
+                  description: managementState indicates if the operator manages the
+                    underlying storage unit. If Managed the operator will remove the
+                    storage when this operator gets Removed.
+                  type: string
+                  pattern: ^(Managed|Unmanaged)$
                 pvc:
                   description: pvc represents configuration that uses a PersistentVolumeClaim.
                   type: object
@@ -1214,8 +1226,7 @@ spec:
                         registry.
                       type: string
             storageManaged:
-              description: storageManaged is a boolean which denotes whether or not
-                we created the registry storage medium (such as an S3 bucket).
+              description: storageManaged is deprecated, please refer to Storage.managementState
               type: boolean
             version:
               description: version is the level this availability applies to

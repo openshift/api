@@ -42,8 +42,9 @@ type NetworkSpec struct {
 	// This should match a value that the cluster-network-operator understands,
 	// or else no networking will be installed.
 	// Currently supported values are:
-	// - OpenShiftSDN
+	// - OpenShiftSDN, OVNKubernetes, Kuryr.
 	// This field is immutable after installation.
+	// +kubebuilder:validation:Enum=OpenShiftSDN;OVNKubernetes;Kuryr
 	NetworkType string `json:"networkType"`
 
 	// externalIP defines configuration for controllers that

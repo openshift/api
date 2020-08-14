@@ -326,6 +326,10 @@ spec:
                   description: type is the type of network All NetworkTypes are supported
                     except for NetworkTypeRaw
                   type: string
+                  enum:
+                  - OpenShiftSDN
+                  - OVNKubernetes
+                  - Kuryr
             deployKubeProxy:
               description: deployKubeProxy specifies whether or not a standalone kube-proxy
                 should be deployed by the operator. Some network providers include

@@ -99,8 +99,13 @@ spec:
               description: 'NetworkType is the plugin that is to be deployed (e.g.
                 OpenShiftSDN). This should match a value that the cluster-network-operator
                 understands, or else no networking will be installed. Currently supported
-                values are: - OpenShiftSDN This field is immutable after installation.'
+                values are: - OpenShiftSDN, OVNKubernetes, Kuryr. This field is immutable
+                after installation.'
               type: string
+              enum:
+              - OpenShiftSDN
+              - OVNKubernetes
+              - Kuryr
             serviceNetwork:
               description: IP address pool for services. Currently, we only support
                 a single entry here. This field is immutable after installation.

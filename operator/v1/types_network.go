@@ -94,6 +94,7 @@ type ClusterNetworkEntry struct {
 type DefaultNetworkDefinition struct {
 	// type is the type of network
 	// All NetworkTypes are supported except for NetworkTypeRaw
+	// +kubebuilder:validation:Enum=OpenShiftSDN;OVNKubernetes;Kuryr
 	Type NetworkType `json:"type"`
 
 	// openShiftSDNConfig configures the openshift-sdn plugin

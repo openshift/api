@@ -12,4 +12,5 @@ import (
 	_ "github.com/spf13/pflag"
 	_ "k8s.io/code-generator"
 	_ "k8s.io/code-generator/cmd/go-to-protobuf/protoc-gen-gogo"
+	_ "sigs.k8s.io/controller-tools/cmd/controller-gen"
 )

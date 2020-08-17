@@ -15,7 +15,9 @@ spec:
   validation:
     openAPIV3Schema:
       description: ClusterCSIDriver object allows management and configuration of
-        a CSI driver operator installed by default in OpenShift.
+        a CSI driver operator installed by default in OpenShift. Name of the object
+        must be name of the CSI driver it operates. See CSIDriverName type for list
+        of allowed values.
       properties:
         apiVersion:
           description: 'APIVersion defines the versioned schema of this representation
@@ -39,19 +41,6 @@ spec:
         spec:
           description: spec holds user settable values for configuration
           properties:
-            driverConfig:
-              description: CSIDriverConfig is the CSI driver specific configuration
-              properties:
-                driverName:
-                  description: DriverName holds the name of the CSI driver
-                  enum:
-                  - ebs.csi.aws.com
-                  - manila.csi.openstack.org
-                  - csi.ovirt.org
-                  type: string
-              required:
-              - driverName
-              type: object
             logLevel:
               description: logLevel is an intent based logging for an overall component.  It
                 does not give fine grained control, but it is a simple way to manage
@@ -84,8 +73,6 @@ spec:
               nullable: true
               type: object
               x-kubernetes-preserve-unknown-fields: true
-          required:
-          - driverConfig
           type: object
         status:
           description: status holds observed values from the cluster. They may not

@@ -245,17 +245,8 @@ func (StatuspageProvider) SwaggerDoc() map[string]string {
 	return map_StatuspageProvider
 }
 
-var map_CSIDriverConfig = map[string]string{
-	"":           "CSIDriverConfig is the CSI driver specific configuration",
-	"driverName": "DriverName holds the name of the CSI driver",
-}
-
-func (CSIDriverConfig) SwaggerDoc() map[string]string {
-	return map_CSIDriverConfig
-}
-
 var map_ClusterCSIDriver = map[string]string{
-	"":       "ClusterCSIDriver object allows management and configuration of a CSI driver operator installed by default in OpenShift.",
+	"":       "ClusterCSIDriver object allows management and configuration of a CSI driver operator installed by default in OpenShift. Name of the object must be name of the CSI driver it operates. See CSIDriverName type for list of allowed values.",
 	"spec":   "spec holds user settable values for configuration",
 	"status": "status holds observed values from the cluster. They may not be overridden.",
 }

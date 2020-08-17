@@ -14,7 +14,7 @@ cleanup
 
 for gv in ${API_GROUP_VERSIONS}; do
   mkdir -p "${TMP_ROOT}/${gv}"
-  cp -a "${SCRIPT_ROOT}/${gv}"/* "${TMP_ROOT}/${gv}"
+  cp -a --no-preserve=timestamp "${SCRIPT_ROOT}/${gv}"/* "${TMP_ROOT}/${gv}"
 done
 
 "${SCRIPT_ROOT}/hack/update-swagger-docs.sh"
@@ -23,7 +23,7 @@ for gv in ${API_GROUP_VERSIONS}; do
   ret=0
   diff -Naupr "${SCRIPT_ROOT}/${gv}"/zz_generated.swagger_doc_generated.go "${TMP_ROOT}/${gv}"/zz_generated.swagger_doc_generated.go || ret=$?
   if [[ $ret -ne 0 ]]; then
-    cp -a "${TMP_ROOT}"/* "${SCRIPT_ROOT}/"
+    cp -a --no-preserve=timestamp "${TMP_ROOT}"/* "${SCRIPT_ROOT}/"
     echo "Swagger is out of date. Please run hack/update-swagger-docs.sh"
     exit 1
   fi

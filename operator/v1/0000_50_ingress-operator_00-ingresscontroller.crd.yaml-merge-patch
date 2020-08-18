@@ -1,20 +1,22 @@
 spec:
-  validation:
-    openAPIV3Schema:
-      properties:
-        spec:
-          properties:
-            logging:
-              properties:
-                access:
-                  properties:
-                    destination:
-                      properties:
-                        syslog:
-                          oneOf:
-                          - properties:
-                              address:
-                                format: ipv4
-                          - properties:
-                              address:
-                                format: ipv6
+  versions:
+  - name: v1
+    schema:
+      openAPIV3Schema:
+        properties:
+          spec:
+            properties:
+              logging:
+                properties:
+                  access:
+                    properties:
+                      destination:
+                        properties:
+                          syslog:
+                            oneOf:
+                            - properties:
+                                address:
+                                  format: ipv4
+                            - properties:
+                                address:
+                                  format: ipv6

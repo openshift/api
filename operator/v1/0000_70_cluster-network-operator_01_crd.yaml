@@ -52,13 +52,13 @@ spec:
                         in the resulting CRD This must be unique.
                       type: string
                     namespace:
-                      description: namespace is the namespace of the network. This will
-                        be populated in the resulting CRD If not given the network will
-                        be created in the default namespace.
+                      description: namespace is the namespace of the network. This
+                        will be populated in the resulting CRD If not given the network
+                        will be created in the default namespace.
                       type: string
                     rawCNIConfig:
-                      description: rawCNIConfig is the raw CNI configuration json to
-                        create in the NetworkAttachmentDefinition CRD
+                      description: rawCNIConfig is the raw CNI configuration json
+                        to create in the NetworkAttachmentDefinition CRD
                       type: string
                     simpleMacvlanConfig:
                       description: SimpleMacvlanConfig configures the macvlan interface
@@ -71,13 +71,13 @@ spec:
                           type: object
                           properties:
                             staticIPAMConfig:
-                              description: StaticIPAMConfig configures the static IP
-                                address in case of type:IPAMTypeStatic
+                              description: StaticIPAMConfig configures the static
+                                IP address in case of type:IPAMTypeStatic
                               type: object
                               properties:
                                 addresses:
-                                  description: Addresses configures IP address for the
-                                    interface
+                                  description: Addresses configures IP address for
+                                    the interface
                                   type: array
                                   items:
                                     description: StaticIPAMAddresses provides IP address
@@ -85,8 +85,8 @@ spec:
                                     type: object
                                     properties:
                                       address:
-                                        description: Address is the IP address in CIDR
-                                          format
+                                        description: Address is the IP address in
+                                          CIDR format
                                         type: string
                                       gateway:
                                         description: Gateway is IP inside of subnet
@@ -101,8 +101,8 @@ spec:
                                         the local domain used for short hostname lookups
                                       type: string
                                     nameservers:
-                                      description: Nameservers points DNS servers for
-                                        IP lookup
+                                      description: Nameservers points DNS servers
+                                        for IP lookup
                                       type: array
                                       items:
                                         type: string
@@ -113,7 +113,8 @@ spec:
                                       items:
                                         type: string
                                 routes:
-                                  description: Routes configures IP routes for the interface
+                                  description: Routes configures IP routes for the
+                                    interface
                                   type: array
                                   items:
                                     description: StaticIPAMRoutes provides Destination/Gateway
@@ -130,18 +131,18 @@ spec:
                                           assumed (as determined by the CNI plugin).
                                         type: string
                             type:
-                              description: Type is the type of IPAM module will be used
-                                for IP Address Management(IPAM). The supported values
-                                are IPAMTypeDHCP, IPAMTypeStatic
+                              description: Type is the type of IPAM module will be
+                                used for IP Address Management(IPAM). The supported
+                                values are IPAMTypeDHCP, IPAMTypeStatic
                               type: string
                         master:
-                          description: master is the host interface to create the macvlan
-                            interface from. If not specified, it will be default route
-                            interface
+                          description: master is the host interface to create the
+                            macvlan interface from. If not specified, it will be default
+                            route interface
                           type: string
                         mode:
-                          description: 'mode is the macvlan mode: bridge, private, vepa,
-                            passthru. The default is bridge'
+                          description: 'mode is the macvlan mode: bridge, private,
+                            vepa, passthru. The default is bridge'
                           type: string
                         mtu:
                           description: mtu is the mtu to use for the macvlan interface.
@@ -154,16 +155,17 @@ spec:
                         are NetworkTypeRaw, NetworkTypeSimpleMacvlan
                       type: string
               clusterNetwork:
-                description: clusterNetwork is the IP address pool to use for pod IPs.
-                  Some network providers, e.g. OpenShift SDN, support multiple ClusterNetworks.
-                  Others only support one. This is equivalent to the cluster-cidr.
+                description: clusterNetwork is the IP address pool to use for pod
+                  IPs. Some network providers, e.g. OpenShift SDN, support multiple
+                  ClusterNetworks. Others only support one. This is equivalent to
+                  the cluster-cidr.
                 type: array
                 items:
                   description: ClusterNetworkEntry is a subnet from which to allocate
                     PodIPs. A network of size HostPrefix (in CIDR notation) will be
-                    allocated when nodes join the cluster. If the HostPrefix field is
-                    not used by the plugin, it can be left unset. Not all network providers
-                    support multiple ClusterNetworks
+                    allocated when nodes join the cluster. If the HostPrefix field
+                    is not used by the plugin, it can be left unset. Not all network
+                    providers support multiple ClusterNetworks
                   type: object
                   properties:
                     cidr:
@@ -173,8 +175,8 @@ spec:
                       format: int32
                       minimum: 0
               defaultNetwork:
-                description: defaultNetwork is the "default" network that all pods will
-                  receive
+                description: defaultNetwork is the "default" network that all pods
+                  will receive
                 type: object
                 properties:
                   kuryrConfig:
@@ -198,40 +200,42 @@ spec:
                           Kuryr prepopulate each newly created port pool with a minimum
                           number of ports. Kuryr uses Neutron port pooling to fight
                           the fact that it takes a significant amount of time to create
-                          one. Instead of creating it when pod is being deployed, Kuryr
-                          keeps a number of ports ready to be attached to pods. By default
-                          port prepopulation is disabled.
+                          one. Instead of creating it when pod is being deployed,
+                          Kuryr keeps a number of ports ready to be attached to pods.
+                          By default port prepopulation is disabled.
                         type: boolean
                       openStackServiceNetwork:
-                        description: openStackServiceNetwork contains the CIDR of network
-                          from which to allocate IPs for OpenStack Octavia's Amphora
-                          VMs. Please note that with Amphora driver Octavia uses two
-                          IPs from that network for each loadbalancer - one given by
-                          OpenShift and second for VRRP connections. As the first one
-                          is managed by OpenShift's and second by Neutron's IPAMs, those
-                          need to come from different pools. Therefore `openStackServiceNetwork`
-                          needs to be at least twice the size of `serviceNetwork`, and
-                          whole `serviceNetwork` must be overlapping with `openStackServiceNetwork`.
-                          cluster-network-operator will then make sure VRRP IPs are
-                          taken from the ranges inside `openStackServiceNetwork` that
-                          are not overlapping with `serviceNetwork`, effectivly preventing
-                          conflicts. If not set cluster-network-operator will use `serviceNetwork`
-                          expanded by decrementing the prefix size by 1.
+                        description: openStackServiceNetwork contains the CIDR of
+                          network from which to allocate IPs for OpenStack Octavia's
+                          Amphora VMs. Please note that with Amphora driver Octavia
+                          uses two IPs from that network for each loadbalancer - one
+                          given by OpenShift and second for VRRP connections. As the
+                          first one is managed by OpenShift's and second by Neutron's
+                          IPAMs, those need to come from different pools. Therefore
+                          `openStackServiceNetwork` needs to be at least twice the
+                          size of `serviceNetwork`, and whole `serviceNetwork` must
+                          be overlapping with `openStackServiceNetwork`. cluster-network-operator
+                          will then make sure VRRP IPs are taken from the ranges inside
+                          `openStackServiceNetwork` that are not overlapping with
+                          `serviceNetwork`, effectivly preventing conflicts. If not
+                          set cluster-network-operator will use `serviceNetwork` expanded
+                          by decrementing the prefix size by 1.
                         type: string
                       poolBatchPorts:
                         description: poolBatchPorts sets a number of ports that should
-                          be created in a single batch request to extend the port pool.
-                          The default is 3. For more information about port pools see
-                          enablePortPoolsPrepopulation setting.
+                          be created in a single batch request to extend the port
+                          pool. The default is 3. For more information about port
+                          pools see enablePortPoolsPrepopulation setting.
                         type: integer
                         minimum: 0
                       poolMaxPorts:
                         description: poolMaxPorts sets a maximum number of free ports
                           that are being kept in a port pool. If the number of ports
                           exceeds this setting, free ports will get deleted. Setting
-                          0 will disable this upper bound, effectively preventing pools
-                          from shrinking and this is the default value. For more information
-                          about port pools see enablePortPoolsPrepopulation setting.
+                          0 will disable this upper bound, effectively preventing
+                          pools from shrinking and this is the default value. For
+                          more information about port pools see enablePortPoolsPrepopulation
+                          setting.
                         type: integer
                         minimum: 0
                       poolMinPorts:
@@ -256,14 +260,14 @@ spec:
                         type: string
                       mtu:
                         description: mtu is the mtu to use for the tunnel interface.
-                          Defaults to 1450 if unset. This must be 50 bytes smaller than
-                          the machine's uplink.
+                          Defaults to 1450 if unset. This must be 50 bytes smaller
+                          than the machine's uplink.
                         type: integer
                         format: int32
                         minimum: 0
                       useExternalOpenvswitch:
-                        description: useExternalOpenvswitch tells the operator not to
-                          install openvswitch, because it will be provided separately.
+                        description: useExternalOpenvswitch tells the operator not
+                          to install openvswitch, because it will be provided separately.
                           If set, you must provide it yourself.
                         type: boolean
                       vxlanPort:
@@ -273,8 +277,8 @@ spec:
                         format: int32
                         minimum: 0
                   ovnKubernetesConfig:
-                    description: oVNKubernetesConfig configures the ovn-kubernetes plugin.
-                      This is currently not implemented.
+                    description: oVNKubernetesConfig configures the ovn-kubernetes
+                      plugin. This is currently not implemented.
                     type: object
                     properties:
                       genevePort:
@@ -284,8 +288,8 @@ spec:
                         format: int32
                         minimum: 1
                       hybridOverlayConfig:
-                        description: HybridOverlayConfig configures an additional overlay
-                          network for peers that are not using OVN.
+                        description: HybridOverlayConfig configures an additional
+                          overlay network for peers that are not using OVN.
                         type: object
                         properties:
                           hybridClusterNetwork:
@@ -308,9 +312,9 @@ spec:
                                   format: int32
                                   minimum: 0
                           hybridOverlayVXLANPort:
-                            description: HybridOverlayVXLANPort defines the VXLAN port
-                              number to be used by the additional overlay network. Default
-                              is 4789
+                            description: HybridOverlayVXLANPort defines the VXLAN
+                              port number to be used by the additional overlay network.
+                              Default is 4789
                             type: integer
                             format: int32
                       mtu:
@@ -321,25 +325,26 @@ spec:
                         format: int32
                         minimum: 0
                   type:
-                    description: type is the type of network All NetworkTypes are supported
-                      except for NetworkTypeRaw
+                    description: type is the type of network All NetworkTypes are
+                      supported except for NetworkTypeRaw
                     type: string
               deployKubeProxy:
-                description: deployKubeProxy specifies whether or not a standalone kube-proxy
-                  should be deployed by the operator. Some network providers include
-                  kube-proxy or similar functionality. If unset, the plugin will attempt
-                  to select the correct value, which is false when OpenShift SDN and
-                  ovn-kubernetes are used and true otherwise.
+                description: deployKubeProxy specifies whether or not a standalone
+                  kube-proxy should be deployed by the operator. Some network providers
+                  include kube-proxy or similar functionality. If unset, the plugin
+                  will attempt to select the correct value, which is false when OpenShift
+                  SDN and ovn-kubernetes are used and true otherwise.
                 type: boolean
               disableMultiNetwork:
-                description: disableMultiNetwork specifies whether or not multiple pod
-                  network support should be disabled. If unset, this property defaults
-                  to 'false' and multiple network support is enabled.
+                description: disableMultiNetwork specifies whether or not multiple
+                  pod network support should be disabled. If unset, this property
+                  defaults to 'false' and multiple network support is enabled.
                 type: boolean
               kubeProxyConfig:
                 description: kubeProxyConfig lets us configure desired proxy configuration.
-                  If not specified, sensible defaults will be chosen by OpenShift directly.
-                  Not consumed by all network providers - currently only openshift-sdn.
+                  If not specified, sensible defaults will be chosen by OpenShift
+                  directly. Not consumed by all network providers - currently only
+                  openshift-sdn.
                 type: object
                 properties:
                   bindAddress:
@@ -350,7 +355,8 @@ spec:
                       30s'
                     type: string
                   proxyArguments:
-                    description: Any additional arguments to pass to the kubeproxy process
+                    description: Any additional arguments to pass to the kubeproxy
+                      process
                     type: object
                     additionalProperties:
                       description: ProxyArgumentList is a list of arguments to pass
@@ -359,10 +365,10 @@ spec:
                       items:
                         type: string
               logLevel:
-                description: logLevel allows configuring the logging level of the components
-                  deployed by the operator. Currently only Kuryr SDN is affected by
-                  this setting. Please note that turning on extensive logging may affect
-                  performance. The default value is "Normal".
+                description: logLevel allows configuring the logging level of the
+                  components deployed by the operator. Currently only Kuryr SDN is
+                  affected by this setting. Please note that turning on extensive
+                  logging may affect performance. The default value is "Normal".
                 type: string
               serviceNetwork:
                 description: serviceNetwork is the ip address pool to use for Service

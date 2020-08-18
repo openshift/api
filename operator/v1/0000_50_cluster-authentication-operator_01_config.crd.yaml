@@ -17,8 +17,8 @@ spec:
       status: {}
     schema:
       openAPIV3Schema:
-        description: Authentication provides information to configure an operator to
-          manage authentication.
+        description: Authentication provides information to configure an operator
+          to manage authentication.
         type: object
         required:
         - spec
@@ -39,28 +39,30 @@ spec:
             type: object
             properties:
               logLevel:
-                description: logLevel is an intent based logging for an overall component.  It
-                  does not give fine grained control, but it is a simple way to manage
-                  coarse grained logging choices that operators have to interpret for
-                  their operands.
+                description: "logLevel is an intent based logging for an overall component.
+                  \ It does not give fine grained control, but it is a simple way
+                  to manage coarse grained logging choices that operators have to
+                  interpret for their operands. \n Valid values are: \"Normal\", \"Debug\",
+                  \"Trace\", \"TraceAll\". Defaults to \"Normal\"."
                 type: string
+                default: Normal
               managementState:
                 description: managementState indicates whether and how the operator
                   should manage the component
                 type: string
                 pattern: ^(Managed|Unmanaged|Force|Removed)$
               observedConfig:
-                description: observedConfig holds a sparse config that controller has
-                  observed from the cluster state.  It exists in spec because it is
-                  an input to the level for the operator
+                description: observedConfig holds a sparse config that controller
+                  has observed from the cluster state.  It exists in spec because
+                  it is an input to the level for the operator
                 type: object
                 nullable: true
                 x-kubernetes-preserve-unknown-fields: true
               operatorLogLevel:
                 description: operatorLogLevel is an intent based logging for the operator
                   itself.  It does not give fine grained control, but it is a simple
-                  way to manage coarse grained logging choices that operators have to
-                  interpret for themselves.
+                  way to manage coarse grained logging choices that operators have
+                  to interpret for themselves.
                 type: string
               unsupportedConfigOverrides:
                 description: 'unsupportedConfigOverrides holds a sparse config that
@@ -92,12 +94,13 @@ spec:
                     type:
                       type: string
               generations:
-                description: generations are used to determine when an item needs to
-                  be reconciled or has changed in a way that needs a reaction.
+                description: generations are used to determine when an item needs
+                  to be reconciled or has changed in a way that needs a reaction.
                 type: array
                 items:
-                  description: GenerationStatus keeps track of the generation for a
-                    given resource so that decisions about forced updates can be made.
+                  description: GenerationStatus keeps track of the generation for
+                    a given resource so that decisions about forced updates can be
+                    made.
                   type: object
                   properties:
                     group:
@@ -124,9 +127,9 @@ spec:
                       type: string
               managingOAuthAPIServer:
                 description: ManagingOAuthAPIServer indicates whether this operator
-                  is managing OAuth related APIs. Setting this field to true will cause
-                  OAS-O to step down. Note that this field will be removed in the future
-                  releases, once https://github.com/openshift/enhancements/blob/master/enhancements/authentication/separate-oauth-resources.md
+                  is managing OAuth related APIs. Setting this field to true will
+                  cause OAS-O to step down. Note that this field will be removed in
+                  the future releases, once https://github.com/openshift/enhancements/blob/master/enhancements/authentication/separate-oauth-resources.md
                   is fully implemented
                 type: boolean
               oauthAPIServer:

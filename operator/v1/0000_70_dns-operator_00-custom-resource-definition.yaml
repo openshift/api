@@ -37,18 +37,19 @@ spec:
           metadata:
             type: object
           spec:
-            description: spec is the specification of the desired behavior of the DNS.
+            description: spec is the specification of the desired behavior of the
+              DNS.
             type: object
             properties:
               servers:
-                description: "servers is a list of DNS resolvers that provide name query
-                  delegation for one or more subdomains outside the scope of the cluster
-                  domain. If servers consists of more than one Server, longest suffix
-                  match will be used to determine the Server. \n For example, if there
-                  are two Servers, one for \"foo.com\" and another for \"a.foo.com\",
-                  and the name query is for \"www.a.foo.com\", it will be routed to
-                  the Server with Zone \"a.foo.com\". \n If this field is nil, no servers
-                  are created."
+                description: "servers is a list of DNS resolvers that provide name
+                  query delegation for one or more subdomains outside the scope of
+                  the cluster domain. If servers consists of more than one Server,
+                  longest suffix match will be used to determine the Server. \n For
+                  example, if there are two Servers, one for \"foo.com\" and another
+                  for \"a.foo.com\", and the name query is for \"www.a.foo.com\",
+                  it will be routed to the Server with Zone \"a.foo.com\". \n If this
+                  field is nil, no servers are created."
                 type: array
                 items:
                   description: Server defines the schema for a server that runs per
@@ -56,34 +57,34 @@ spec:
                   type: object
                   properties:
                     forwardPlugin:
-                      description: forwardPlugin defines a schema for configuring CoreDNS
-                        to proxy DNS messages to upstream resolvers.
+                      description: forwardPlugin defines a schema for configuring
+                        CoreDNS to proxy DNS messages to upstream resolvers.
                       type: object
                       properties:
                         upstreams:
                           description: "upstreams is a list of resolvers to forward
                             name queries for subdomains of Zones. Upstreams are randomized
-                            when more than 1 upstream is specified. Each instance of
-                            CoreDNS performs health checking of Upstreams. When a healthy
-                            upstream returns an error during the exchange, another resolver
-                            is tried from Upstreams. Each upstream is represented by
-                            an IP address or IP:port if the upstream listens on a port
-                            other than 53. \n A maximum of 15 upstreams is allowed per
-                            ForwardPlugin."
+                            when more than 1 upstream is specified. Each instance
+                            of CoreDNS performs health checking of Upstreams. When
+                            a healthy upstream returns an error during the exchange,
+                            another resolver is tried from Upstreams. Each upstream
+                            is represented by an IP address or IP:port if the upstream
+                            listens on a port other than 53. \n A maximum of 15 upstreams
+                            is allowed per ForwardPlugin."
                           type: array
                           maxItems: 15
                           items:
                             type: string
                     name:
                       description: name is required and specifies a unique name for
-                        the server. Name must comply with the Service Name Syntax of
-                        rfc6335.
+                        the server. Name must comply with the Service Name Syntax
+                        of rfc6335.
                       type: string
                     zones:
-                      description: zones is required and specifies the subdomains that
-                        Server is authoritative for. Zones must conform to the rfc1123
-                        definition of a subdomain. Specifying the cluster domain (i.e.,
-                        "cluster.local") is invalid.
+                      description: zones is required and specifies the subdomains
+                        that Server is authoritative for. Zones must conform to the
+                        rfc1123 definition of a subdomain. Specifying the cluster
+                        domain (i.e., "cluster.local") is invalid.
                       type: array
                       items:
                         type: string
@@ -95,26 +96,26 @@ spec:
             - clusterIP
             properties:
               clusterDomain:
-                description: "clusterDomain is the local cluster DNS domain suffix for
-                  DNS services. This will be a subdomain as defined in RFC 1034, section
-                  3.5: https://tools.ietf.org/html/rfc1034#section-3.5 Example: \"cluster.local\"
-                  \n More info: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service"
+                description: "clusterDomain is the local cluster DNS domain suffix
+                  for DNS services. This will be a subdomain as defined in RFC 1034,
+                  section 3.5: https://tools.ietf.org/html/rfc1034#section-3.5 Example:
+                  \"cluster.local\" \n More info: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service"
                 type: string
               clusterIP:
                 description: "clusterIP is the service IP through which this DNS is
-                  made available. \n In the case of the default DNS, this will be a
-                  well known IP that is used as the default nameserver for pods that
-                  are using the default ClusterFirst DNS policy. \n In general, this
-                  IP can be specified in a pod's spec.dnsConfig.nameservers list or
-                  used explicitly when performing name resolution from within the cluster.
-                  Example: dig foo.com @<service IP> \n More info: https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies"
+                  made available. \n In the case of the default DNS, this will be
+                  a well known IP that is used as the default nameserver for pods
+                  that are using the default ClusterFirst DNS policy. \n In general,
+                  this IP can be specified in a pod's spec.dnsConfig.nameservers list
+                  or used explicitly when performing name resolution from within the
+                  cluster. Example: dig foo.com @<service IP> \n More info: https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies"
                 type: string
               conditions:
                 description: "conditions provide information about the state of the
                   DNS on the cluster. \n These are the supported DNS conditions: \n
                   \  * Available   - True if the following conditions are met:     *
-                  DNS controller daemonset is available.   - False if any of those conditions
-                  are unsatisfied."
+                  DNS controller daemonset is available.   - False if any of those
+                  conditions are unsatisfied."
                 type: array
                 items:
                   description: OperatorCondition is just the standard condition fields.

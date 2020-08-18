@@ -16,6 +16,14 @@ type ConfigList struct {
 	Items           []Config `json:"items"`
 }
 
+const (
+	// StorageManagementStateManaged indicates the operator is managing the underlying storage.
+	StorageManagementStateManaged = "Managed"
+	// StorageManagementStateUnmanaged indicates the operator is not managing the underlying
+	// storage.
+	StorageManagementStateUnmanaged = "Unmanaged"
+)
+
 // +genclient
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -96,9 +104,7 @@ type ImageRegistrySpec struct {
 type ImageRegistryStatus struct {
 	operatorv1.OperatorStatus `json:",inline"`
 
-	// storageManaged is a boolean which denotes whether or not
-	// we created the registry storage medium (such as an
-	// S3 bucket).
+	// storageManaged is deprecated, please refer to Storage.managementState
 	StorageManaged bool `json:"storageManaged"`
 	// storage indicates the current applied storage configuration of the
 	// registry.
@@ -283,6 +289,12 @@ type ImageRegistryConfigStorage struct {
 	// azure represents configuration that uses Azure Blob Storage.
 	// +optional
 	Azure *ImageRegistryConfigStorageAzure `json:"azure,omitempty"`
+	// managementState indicates if the operator manages the underlying
+	// storage unit. If Managed the operator will remove the storage when
+	// this operator gets Removed.
+	// +optional
+	// +kubebuilder:validation:Pattern=`^(Managed|Unmanaged)$`
+	ManagementState string `json:"managementState,omitempty"`
 }
 
 // ImageRegistryConfigRequests defines registry limits on requests read and write.

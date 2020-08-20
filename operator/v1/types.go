@@ -81,6 +81,7 @@ type OperatorSpec struct {
 	ObservedConfig runtime.RawExtension `json:"observedConfig"`
 }
 
+// +kubebuilder:validation:Enum=Normal;Debug;Trace;TraceAll
 type LogLevel string
 
 var (

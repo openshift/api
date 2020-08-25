@@ -36,7 +36,6 @@ spec:
             description: ImageRegistrySpec defines the specs for the running registry.
             type: object
             required:
-            - logging
             - managementState
             - replicas
             properties:

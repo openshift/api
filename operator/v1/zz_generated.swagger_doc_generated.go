@@ -528,7 +528,8 @@ func (EtcdList) SwaggerDoc() map[string]string {
 }
 
 var map_AWSClassicLoadBalancerParameters = map[string]string{
-	"": "AWSClassicLoadBalancerParameters holds configuration parameters for an AWS Classic load balancer.",
+	"":                      "AWSClassicLoadBalancerParameters holds configuration parameters for an AWS Classic load balancer.",
+	"connectionIdleTimeout": "connectionIdleTimeout specifies the maximum time period that a connection may be idle before the load balancer closes the connection.  The value must be parseable as a time duration value; see <https://pkg.go.dev/time#ParseDuration>.  A nil or zero value means no opinion, in which case a default value is used.  The default value for this field is 60s.  This default is subject to change.",
 }
 
 func (AWSClassicLoadBalancerParameters) SwaggerDoc() map[string]string {

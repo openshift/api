@@ -500,6 +500,17 @@ func (AccessLogging) SwaggerDoc() map[string]string {
 	return map_AccessLogging
 }
 
+var map_ClientTLS = map[string]string{
+	"":                        "ClientTLS specifies TLS configuration to enable client-to-server authentication, which can be used for mutual TLS.",
+	"clientCertificatePolicy": "clientCertificatePolicy specifies whether the ingress controller requires clients to provide certificates.  This field accepts the values \"Required\" or \"Optional\".\n\nNote that the ingress controller only checks client certificates for edge-terminated and reencrypt TLS routes; it cannot check certificates for cleartext HTTP or passthrough TLS routes.",
+	"clientCA":                "clientCA specifies a configmap containing the PEM-encoded CA certificate bundle that should be used to verify a client's certificate.  The administrator must create this configmap in the openshift-config namespace.",
+	"allowedSubjectPatterns":  "allowedSubjectPatterns specifies a list of regular expressions that should be matched against the distinguished name on a valid client certificate to filter requests.  The regular expressions must use PCRE syntax.  If this list is empty, no filtering is performed.  If the list is nonempty, then at least one pattern must match a client certificate's distinguished name or else the ingress controller rejects the certificate and denies the connection.",
+}
+
+func (ClientTLS) SwaggerDoc() map[string]string {
+	return map_ClientTLS
+}
+
 var map_ContainerLoggingDestinationParameters = map[string]string{
 	"": "ContainerLoggingDestinationParameters describes parameters for the Container logging destination type.",
 }
@@ -638,6 +649,7 @@ var map_IngressControllerSpec = map[string]string{
 	"routeSelector":              "routeSelector is used to filter the set of Routes serviced by the ingress controller. This is useful for implementing shards.\n\nIf unset, the default is no filtering.",
 	"nodePlacement":              "nodePlacement enables explicit control over the scheduling of the ingress controller.\n\nIf unset, defaults are used. See NodePlacement for more details.",
 	"tlsSecurityProfile":         "tlsSecurityProfile specifies settings for TLS connections for ingresscontrollers.\n\nIf unset, the default is based on the apiservers.config.openshift.io/cluster resource.\n\nNote that when using the Old, Intermediate, and Modern profile types, the effective profile configuration is subject to change between releases. For example, given a specification to use the Intermediate profile deployed on release X.Y.Z, an upgrade to release X.Y.Z+1 may cause a new profile configuration to be applied to the ingress controller, resulting in a rollout.",
+	"clientTLS":                  "clientTLS specifies settings for requesting and verifying client certificates, which can be used to enable mutual TLS for edge-terminated and reencrypt routes.",
 	"routeAdmission":             "routeAdmission defines a policy for handling new route claims (for example, to allow or deny claims across namespaces).\n\nIf empty, defaults will be applied. See specific routeAdmission fields for details about their defaults.",
 	"logging":                    "logging defines parameters for what should be logged where.  If this field is empty, operational logs are enabled but access logs are disabled.",
 	"httpHeaders":                "httpHeaders defines policy for HTTP headers.\n\nIf this field is empty, the default values are used.",

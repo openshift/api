@@ -810,14 +810,24 @@ func (NetworkStatus) SwaggerDoc() map[string]string {
 }
 
 var map_OVNKubernetesConfig = map[string]string{
-	"":                    "ovnKubernetesConfig contains the configuration parameters for networks using the ovn-kubernetes network project",
-	"mtu":                 "mtu is the MTU to use for the tunnel interface. This must be 100 bytes smaller than the uplink mtu. Default is 1400",
-	"genevePort":          "geneve port is the UDP port to be used by geneve encapulation. Default is 6081",
-	"hybridOverlayConfig": "HybridOverlayConfig configures an additional overlay network for peers that are not using OVN.",
+	"":                         "ovnKubernetesConfig contains the configuration parameters for networks using the ovn-kubernetes network project",
+	"mtu":                      "mtu is the MTU to use for the tunnel interface. This must be 100 bytes smaller than the uplink mtu. Default is 1400",
+	"genevePort":               "geneve port is the UDP port to be used by geneve encapulation. Default is 6081",
+	"hybridOverlayConfig":      "HybridOverlayConfig configures an additional overlay network for peers that are not using OVN.",
+	"ovsHardwareOffloadConfig": "OVSHardwareOffloadConfig configures hardware offload for OVS dataplane",
 }
 
 func (OVNKubernetesConfig) SwaggerDoc() map[string]string {
 	return map_OVNKubernetesConfig
+}
+
+var map_OVSHardwareOffloadConfig = map[string]string{
+	"enableHardwareOffload":   "enableHardwareOffload specifies whether or not OVS hardware offload should be enabled. If unset, this property defaults to 'false' and OVS hardware offload is disabled.",
+	"ovsTrafficControlPolicy": "ovsTrafficControlPolicy is the Traffic Control Policy (tc-policy) specified for OVS. This field is only relevant if EnableHardwareOffload is enabled. If unset, this property defaults to 'none'. The supported values are 'none', 'skip_hw' and 'skip_sw'. none: Do not control datapath for tc filter processing. Tc filter will be processed by one of the datapaths in order: hardware, OVS tc software, OVS kernel. skip_sw: Do not process tc filter by OVS software. skip_hw: Do not process tc filter by hardware.",
+}
+
+func (OVSHardwareOffloadConfig) SwaggerDoc() map[string]string {
+	return map_OVSHardwareOffloadConfig
 }
 
 var map_OpenShiftSDNConfig = map[string]string{

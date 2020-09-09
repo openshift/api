@@ -326,6 +326,29 @@ spec:
                         type: integer
                         format: int32
                         minimum: 0
+                      ovsHardwareOffloadConfig:
+                        description: OVSHardwareOffloadConfig configures hardware
+                          offload for OVS dataplane
+                        type: object
+                        properties:
+                          enableHardwareOffload:
+                            description: enableHardwareOffload specifies whether or
+                              not OVS hardware offload should be enabled. If unset,
+                              this property defaults to 'false' and OVS hardware offload
+                              is disabled.
+                            type: boolean
+                          ovsTrafficControlPolicy:
+                            description: 'ovsTrafficControlPolicy is the Traffic Control
+                              Policy (tc-policy) specified for OVS. This field is
+                              only relevant if EnableHardwareOffload is enabled. If
+                              unset, this property defaults to ''none''. The supported
+                              values are ''none'', ''skip_hw'' and ''skip_sw''. none:
+                              Do not control datapath for tc filter processing. Tc
+                              filter will be processed by one of the datapaths in
+                              order: hardware, OVS tc software, OVS kernel. skip_sw:
+                              Do not process tc filter by OVS software. skip_hw: Do
+                              not process tc filter by hardware.'
+                            type: string
                   type:
                     description: type is the type of network All NetworkTypes are
                       supported except for NetworkTypeRaw

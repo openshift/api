@@ -317,6 +317,9 @@ type OVNKubernetesConfig struct {
 	// not using OVN.
 	// +optional
 	HybridOverlayConfig *HybridOverlayConfig `json:"hybridOverlayConfig,omitempty"`
+	// OVSHardwareOffloadConfig configures hardware offload for OVS dataplane
+	// +optional
+	OVSHardwareOffloadConfig *OVSHardwareOffloadConfig `json:"ovsHardwareOffloadConfig,omitempty"`
 }
 
 type HybridOverlayConfig struct {
@@ -326,6 +329,24 @@ type HybridOverlayConfig struct {
 	// Default is 4789
 	// +optional
 	HybridOverlayVXLANPort *uint32 `json:"hybridOverlayVXLANPort,omitempty"`
+}
+
+type OVSHardwareOffloadConfig struct {
+	// enableHardwareOffload specifies whether or not OVS hardware offload
+	// should be enabled. If unset, this property defaults to 'false' and
+	// OVS hardware offload is disabled.
+	EnableHardwareOffload bool `json:"enableHardwareOffload"`
+	// ovsTrafficControlPolicy is the Traffic Control Policy (tc-policy) specified
+	// for OVS. This field is only relevant if EnableHardwareOffload is enabled.
+	// If unset, this property defaults to 'none'. The supported values are
+	// 'none', 'skip_hw' and 'skip_sw'.
+	// none: Do not control datapath for tc filter processing. Tc filter will be
+	// processed by one of the datapaths in order: hardware, OVS tc software,
+	// OVS kernel.
+	// skip_sw: Do not process tc filter by OVS software.
+	// skip_hw: Do not process tc filter by hardware.
+	// +optional
+	OVSTrafficControlPolicy TrafficControlPolicy `json:"ovsTrafficControlPolicy"`
 }
 
 // NetworkType describes the network plugin type to configure
@@ -407,4 +428,21 @@ const (
 	IPAMTypeDHCP IPAMType = "DHCP"
 	// IPAMTypeStatic uses static IP
 	IPAMTypeStatic IPAMType = "Static"
+)
+
+// TrafficControlPolicy defines the Traffic Control Policy of OVS
+type TrafficControlPolicy string
+
+const (
+	// OVS Hardware Offload Traffic Control Policy is none.
+	// none: Add tc filter to OVS software datapath and hardware if present
+	TrafficControlPolicyNone TrafficControlPolicy = "none"
+
+	// OVS Hardware Offload Traffic Control Policy is skipping software.
+	// skip_sw: Do not process tc filter by OVS tc software.
+	TrafficControlPolicySkipSW TrafficControlPolicy = "skip_sw"
+
+	// OVS Hardware Offload Traffic Control Policy is skipping hardware.
+	// skip_hw: Do not process tc filter by hardware
+	TrafficControlPolicySkipHW TrafficControlPolicy = "skip_hw"
 )

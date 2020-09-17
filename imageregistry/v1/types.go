@@ -70,7 +70,9 @@ type ImageRegistrySpec struct {
 	Routes []ImageRegistryConfigRoute `json:"routes,omitempty" protobuf:"bytes,9,rep,name=routes"`
 	// replicas determines the number of registry instances to run.
 	Replicas int32 `json:"replicas" protobuf:"varint,10,opt,name=replicas"`
-	// logging determines the level of logging enabled in the registry.
+	// logging determines the level of logging enabled in the image registry.
+	// Valid values are: 0) log only error messages, 1) log error and warning messages,
+	// 2) or 3) log error, warning and information messages, 4) enables debug log.
 	LogLevel int64 `json:"logging" protobuf:"varint,11,opt,name=logging"`
 	// resources defines the resource requests+limits for the registry pod.
 	// +optional

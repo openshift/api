@@ -57,6 +57,11 @@ type NetworkSpec struct {
 	// 'false' and multiple network support is enabled.
 	DisableMultiNetwork *bool `json:"disableMultiNetwork,omitempty"`
 
+	// useMultiNetworkPolicy specifies whether or not multiNetworkPolicy
+	// should be used. If unset, this property defaults to 'false'
+	// and multiNetworkPolicy is not used.
+	UseMultiNetworkPolicy *bool `json:"useMultiNetworkPolicy,omitempty"`
+
 	// deployKubeProxy specifies whether or not a standalone kube-proxy should
 	// be deployed by the operator. Some network providers include kube-proxy
 	// or similar functionality. If unset, the plugin will attempt to select

@@ -313,6 +313,40 @@ func (CSISnapshotControllerStatus) SwaggerDoc() map[string]string {
 	return map_CSISnapshotControllerStatus
 }
 
+var map_KubeDescheduler = map[string]string{
+	"":       "KubeDescheduler provides information to configure an operator to manage kube-descheduler.",
+	"spec":   "spec holds user settable values for configuration",
+	"status": "status holds observed values from the cluster. They may not be overridden.",
+}
+
+func (KubeDescheduler) SwaggerDoc() map[string]string {
+	return map_KubeDescheduler
+}
+
+var map_KubeDeschedulerList = map[string]string{
+	"": "KubeDeschedulerList contains a list of KubeDescheduler",
+}
+
+func (KubeDeschedulerList) SwaggerDoc() map[string]string {
+	return map_KubeDeschedulerList
+}
+
+var map_KubeDeschedulerSpec = map[string]string{
+	"": "KubeDeschedulerSpec defines the desired state of KubeDescheduler",
+}
+
+func (KubeDeschedulerSpec) SwaggerDoc() map[string]string {
+	return map_KubeDeschedulerSpec
+}
+
+var map_KubeDeschedulerStatus = map[string]string{
+	"": "KubeDeschedulerStatus defines the observed state of KubeDescheduler",
+}
+
+func (KubeDeschedulerStatus) SwaggerDoc() map[string]string {
+	return map_KubeDeschedulerStatus
+}
+
 var map_DNS = map[string]string{
 	"":       "DNS manages the CoreDNS component to provide a name resolution service for pods and services in the cluster.\n\nThis supports the DNS-based service discovery specification: https://github.com/kubernetes/dns/blob/master/docs/specification.md\n\nMore details: https://kubernetes.io/docs/tasks/administer-cluster/coredns",
 	"spec":   "spec is the specification of the desired behavior of the DNS.",

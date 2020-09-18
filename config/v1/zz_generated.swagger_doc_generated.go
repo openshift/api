@@ -602,6 +602,26 @@ func (ConsoleStatus) SwaggerDoc() map[string]string {
 	return map_ConsoleStatus
 }
 
+var map_Descheduler = map[string]string{
+	"":       "Descheduler holds cluster-wide config information to run the Kubernetes Descheduler and influence its placement decisions. The canonical name for this config is `cluster`.",
+	"spec":   "spec holds user settable values for configuration",
+	"status": "status holds observed values from the cluster. They may not be overridden.",
+}
+
+func (Descheduler) SwaggerDoc() map[string]string {
+	return map_Descheduler
+}
+
+var map_DeschedulerSpec = map[string]string{
+	"policy":                      "Policy contains the name of an upstream Descheduler policy configmap in the openshift-kube-descheduler-operator project",
+	"deschedulingIntervalSeconds": "DeschedulingIntervalSeconds is the number of seconds between descheduler runs",
+	"dryRun":                      "DryRun sets whether to run the Descheduler in dry-run mode (with no actual evictions)",
+}
+
+func (DeschedulerSpec) SwaggerDoc() map[string]string {
+	return map_DeschedulerSpec
+}
+
 var map_DNS = map[string]string{
 	"":       "DNS holds cluster-wide information about DNS. The canonical name is `cluster`",
 	"spec":   "spec holds user settable values for configuration",

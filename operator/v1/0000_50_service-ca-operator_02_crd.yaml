@@ -7,6 +7,11 @@ metadata:
 spec:
   scope: Cluster
   group: operator.openshift.io
+  names:
+    kind: ServiceCA
+    listKind: ServiceCAList
+    plural: servicecas
+    singular: serviceca
   versions:
   - name: v1
     served: true

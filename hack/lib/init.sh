@@ -31,6 +31,7 @@ quota/v1 \
 route/v1 \
 samples/v1 \
 security/v1 \
+securityinternal/v1 \
 servicecertsigner/v1alpha1 \
 template/v1 \
 user/v1 \

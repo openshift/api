@@ -16,6 +16,7 @@ operator/v1alpha1/*.crd.yaml
 quota/v1/*.crd.yaml
 samples/v1/*.crd.yaml
 security/v1/*.crd.yaml
+securityinternal/v1/*.crd.yaml
 "
 FAILS=false
 for f in $FILES

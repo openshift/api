@@ -50,6 +50,7 @@ spec:
                   interpret for their operands. \n Valid values are: \"Normal\", \"Debug\",
                   \"Trace\", \"TraceAll\". Defaults to \"Normal\"."
                 enum:
+                - ""
                 - Normal
                 - Debug
                 - Trace
@@ -68,12 +69,14 @@ spec:
                 type: object
                 x-kubernetes-preserve-unknown-fields: true
               operatorLogLevel:
+                default: Normal
                 description: "operatorLogLevel is an intent based logging for the
                   operator itself.  It does not give fine grained control, but it
                   is a simple way to manage coarse grained logging choices that operators
                   have to interpret for themselves. \n Valid values are: \"Normal\",
-                  \"Debug\", \"Trace\", \"TraceAll\"."
+                  \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\"."
                 enum:
+                - ""
                 - Normal
                 - Debug
                 - Trace

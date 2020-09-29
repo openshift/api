@@ -373,6 +373,7 @@ spec:
                   logging may affect performance. The default value is "Normal".
                 type: string
                 enum:
+                - ""
                 - Normal
                 - Debug
                 - Trace

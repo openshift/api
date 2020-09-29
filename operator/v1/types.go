@@ -60,6 +60,8 @@ type OperatorSpec struct {
 
 	// operatorLogLevel is an intent based logging for the operator itself.  It does not give fine grained control, but it is a
 	// simple way to manage coarse grained logging choices that operators have to interpret for themselves.
+	//
+	// Valid values are: "Normal", "Debug", "Trace", "TraceAll".
 	// +optional
 	OperatorLogLevel LogLevel `json:"operatorLogLevel"`
 
@@ -81,6 +83,7 @@ type OperatorSpec struct {
 	ObservedConfig runtime.RawExtension `json:"observedConfig"`
 }
 
+// +kubebuilder:validation:Enum=Normal;Debug;Trace;TraceAll
 type LogLevel string
 
 var (

@@ -372,6 +372,11 @@ spec:
                   affected by this setting. Please note that turning on extensive
                   logging may affect performance. The default value is "Normal".
                 type: string
+                enum:
+                - Normal
+                - Debug
+                - Trace
+                - TraceAll
               serviceNetwork:
                 description: serviceNetwork is the ip address pool to use for Service
                   IPs Currently, all existing network providers only support a single

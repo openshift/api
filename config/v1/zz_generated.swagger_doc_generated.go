@@ -566,6 +566,54 @@ func (UpdateHistory) SwaggerDoc() map[string]string {
 	return map_UpdateHistory
 }
 
+var map_ClusterCLI = map[string]string{
+	"":       "ClusterCLI is the Schema for the cluster cli API",
+	"status": "status holds observed values from the cluster. They may not be overridden.",
+}
+
+func (ClusterCLI) SwaggerDoc() map[string]string {
+	return map_ClusterCLI
+}
+
+var map_ClusterCLIList = map[string]string{
+	"": "ClusterCLIList contains a list of ClusterCLI",
+}
+
+func (ClusterCLIList) SwaggerDoc() map[string]string {
+	return map_ClusterCLIList
+}
+
+var map_ClusterCLIMapping = map[string]string{
+	"":     "ClusterCLIMapping holds mapping information from cli images for extracting clis",
+	"os":   "OS is GOOS",
+	"arch": "Arch is GOARCH",
+	"from": "From is the directory or file in the image to extract",
+}
+
+func (ClusterCLIMapping) SwaggerDoc() map[string]string {
+	return map_ClusterCLIMapping
+}
+
+var map_ClusterCLISpec = map[string]string{
+	"":            "ClusterCLISpec defines the desired state of ClusterCLI",
+	"description": "Description of ClusterCLI",
+	"displayName": "DisplayName for CLI",
+	"image":       "Image is the cli image that contains the cli artifacts",
+	"mapping":     "Mapping defines extract targets for ClusterCLIs",
+}
+
+func (ClusterCLISpec) SwaggerDoc() map[string]string {
+	return map_ClusterCLISpec
+}
+
+var map_ClusterCLIStatus = map[string]string{
+	"": "ClusterCLIStatus defines the observed state of ClusterCLI",
+}
+
+func (ClusterCLIStatus) SwaggerDoc() map[string]string {
+	return map_ClusterCLIStatus
+}
+
 var map_Console = map[string]string{
 	"":       "Console holds cluster-wide configuration for the web console, including the logout URL, and reports the public URL of the console. The canonical name is `cluster`.",
 	"spec":   "spec holds user settable values for configuration",

@@ -202,6 +202,7 @@ var map_ConsoleCustomization = map[string]string{
 	"documentationBaseURL": "documentationBaseURL links to external documentation are shown in various sections of the web console.  Providing documentationBaseURL will override the default documentation URL. Invalid value will prevent a console rollout.",
 	"customProductName":    "customProductName is the name that will be displayed in page titles, logo alt text, and the about dialog instead of the normal OpenShift product name.",
 	"customLogoFile":       "customLogoFile replaces the default OpenShift logo in the masthead and about dialog. It is a reference to a ConfigMap in the openshift-config namespace. This can be created with a command like 'oc create configmap custom-logo --from-file=/path/to/file -n openshift-config'. Image size must be less than 1 MB due to constraints on the ConfigMap size. The ConfigMap key should include a file extension so that the console serves the file with the correct MIME type. Recommended logo specifications: Dimensions: Max height of 68px and max width of 200px SVG format preferred",
+	"developerCatalog":     "developerCatalog allows to configure the shown developer catalog categories.",
 }
 
 func (ConsoleCustomization) SwaggerDoc() map[string]string {
@@ -234,6 +235,35 @@ var map_ConsoleStatus = map[string]string{
 
 func (ConsoleStatus) SwaggerDoc() map[string]string {
 	return map_ConsoleStatus
+}
+
+var map_DeveloperConsoleCatalogCategory = map[string]string{
+	"":              "DeveloperConsoleCatalogCategory for the developer console catalog.",
+	"subcategories": "subcategories defines a list of child categories.",
+}
+
+func (DeveloperConsoleCatalogCategory) SwaggerDoc() map[string]string {
+	return map_DeveloperConsoleCatalogCategory
+}
+
+var map_DeveloperConsoleCatalogCategoryMeta = map[string]string{
+	"":      "DeveloperConsoleCatalogCategoryMeta are the key identifiers of a developer catalog category.",
+	"id":    "ID is an identifier used in the URL to enable deep linking in console. ID is required and must have 1-32 URL safe (A-Z, a-z, 0-9, - and _) characters.",
+	"label": "label defines a category display label. It is required and must have 1-64 characters.",
+	"tags":  "tags is a list of strings that will match the category. A selected category show all items which has at least one overlapping tag between category and item.",
+}
+
+func (DeveloperConsoleCatalogCategoryMeta) SwaggerDoc() map[string]string {
+	return map_DeveloperConsoleCatalogCategoryMeta
+}
+
+var map_DeveloperConsoleCatalogCustomization = map[string]string{
+	"":           "DeveloperConsoleCatalogCustomization allow cluster admin to configure developer catalog.",
+	"categories": "categories which are shown in the developer catalog.",
+}
+
+func (DeveloperConsoleCatalogCustomization) SwaggerDoc() map[string]string {
+	return map_DeveloperConsoleCatalogCustomization
 }
 
 var map_StatuspageProvider = map[string]string{

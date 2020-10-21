@@ -195,6 +195,16 @@ message OAuthRedirectReference {
   optional RedirectReference reference = 2;
 }
 
+message PersonalAccessToken {
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
+}
+
+message PersonalAccessTokenList {
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1;
+
+  repeated OAuthAccessToken items = 2;
+}
+
 // RedirectReference specifies the target in the current namespace that resolves into redirect URIs.  Only the 'Route' kind is currently allowed.
 message RedirectReference {
   // The group of the target that is being referred to.

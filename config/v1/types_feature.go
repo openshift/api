@@ -40,6 +40,9 @@ var (
 
 	// IPv6DualStackNoUpgrade enables dual-stack. Turning this feature set on IS NOT SUPPORTED, CANNOT BE UNDONE, and PREVENTS UPGRADES.
 	IPv6DualStackNoUpgrade FeatureSet = "IPv6DualStackNoUpgrade"
+
+	// CSIMigrationNoUpgrade enables CSIMigration support. Turning this feature set on IS NOT SUPPORTED, CANNOT BE UNDONE, and PREVENTS UPGRADES.
+	CSIMigrationNoUpgrade FeatureSet = "CSIMigrationNoUpgrade"
 )
 
 type FeatureGateSpec struct {
@@ -114,6 +117,16 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 	IPv6DualStackNoUpgrade: newDefaultFeatures().
 		with(
 			"IPv6DualStack", // sig-network, danwinship
+		).
+		toFeatures(),
+	CSIMigrationNoUpgrade: newDefaultFeatures().
+		with(
+			"CSIMigrationAWS",       // sig-storage, jsafrane
+			"CSIMigrationAzureDisk", // sig-storage, jsafrane
+			"CSIMigrationAzureFile", // sig-storage, jsafrane
+			"CSIMigrationGCE",       // sig-storage, jsafrane
+			"CSIMigrationOpenStack", // shiftstack, mfedosin
+			"CSIMigrationvSphere",   // sig-storage, jsafrane
 		).
 		toFeatures(),
 }

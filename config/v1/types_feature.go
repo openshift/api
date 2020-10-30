@@ -120,12 +120,14 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 
 var defaultFeatures = &FeatureGateEnabledDisabled{
 	Enabled: []string{
-		"APIPriorityAndFairness",         // sig-apimachinery, deads2k
-		"RotateKubeletServerCertificate", // sig-pod, sjenning
-		"SupportPodPidsLimit",            // sig-pod, sjenning
-		"NodeDisruptionExclusion",        // sig-scheduling, ccoleman
-		"ServiceNodeExclusion",           // sig-scheduling, ccoleman
-		"SCTPSupport",                    // sig-network, ccallend
+		"APIPriorityAndFairness",            // sig-apimachinery, deads2k
+		"RotateKubeletServerCertificate",    // sig-pod, sjenning
+		"SupportPodPidsLimit",               // sig-pod, sjenning
+		"NodeDisruptionExclusion",           // sig-scheduling, ccoleman
+		"ServiceNodeExclusion",              // sig-scheduling, ccoleman
+		"SCTPSupport",                       // sig-network, ccallend
+		"EndpointSliceProxying",             // sig-network, mmasters
+		"EndpointSliceTerminatingCondition", // sig-network, mmasters
 	},
 	Disabled: []string{
 		"LegacyNodeRoleBehavior", // sig-scheduling, ccoleman

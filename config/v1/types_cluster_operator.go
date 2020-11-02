@@ -173,6 +173,9 @@ const (
 	// of what the administrator should do to allow the operator to successfully update.  A missing condition, True,
 	// and Unknown are all treated by the CVO as allowing an upgrade.
 	OperatorUpgradeable ClusterStatusConditionType = "Upgradeable"
+
+	// Disabled indicates that the operator is disabled.
+	OperatorDisabled ClusterStatusConditionType = "Disabled"
 )
 
 // ClusterOperatorList is a list of OperatorStatus resources.

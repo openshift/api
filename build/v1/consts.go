@@ -197,4 +197,7 @@ const (
 
 	// ServiceCAKey is the ConfigMap key for the service signing certificate authority mounted into build pods.
 	ServiceCAKey = "service-ca.crt"
+
+	// MountsConfKey is the ConfigMap key for the build pod's container mount configuration file.
+	MountsConfKey = "mounts.conf"
 )

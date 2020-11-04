@@ -86,6 +86,11 @@ type CommonSpec struct {
 	// are ignored.
 	// +optional
 	NodeSelector OptionalNodeSelector `json:"nodeSelector" protobuf:"bytes,9,name=nodeSelector"`
+
+	// UseClusterCA denotes whether the builder container will use CAs from the cluster, or the CAs included in the builder image's own /etc/pki/ca-trust directory.
+	// Setting this to true will overwrite the contents of /etc/pki/ca-trust w/ the CA trust values from the cluster. Default: false
+	// +optional
+	UseClusterCA bool `json:"useClusterCA,omitempty" protobuf:"bool,10,opt,name=useClusterCA"`
 }
 
 // BuildTriggerCause holds information about a triggered build. It is used for

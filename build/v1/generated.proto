@@ -602,6 +602,11 @@ message CommonSpec {
   // are ignored.
   // +optional
   optional OptionalNodeSelector nodeSelector = 9;
+
+  // UseClusterCA denotes whether the builder container will use CAs from the cluster, or the CAs included in the builder image's own /etc/pki/ca-trust directory.
+  // Setting this to true will overwrite the contents of /etc/pki/ca-trust w/ the CA trust values from the cluster. Default: false
+  // +optional
+  optional bool useClusterCA = 10;
 }
 
 // CommonWebHookCause factors out the identical format of these webhook

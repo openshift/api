@@ -72,6 +72,15 @@ spec:
                 to be an RFC4122 UUID value (xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
                 in hexadecimal values). This is a required field.
               type: string
+            clusterProfile:
+              description: "ClusterProfile is the identifier that the Cluster Version
+                Operator uses to determine which manifests to apply. Operators can
+                be excluded completely or can have different manifests for each supported
+                profile. \n The following annotation is used to include manifests
+                for a given profile: include.release.openshift.io/[identifier]=true
+                \n If ClusterProfile is empty, self-managed-high-availability profile
+                is used."
+              type: string
             desiredUpdate:
               description: "desiredUpdate is an optional field that indicates the
                 desired value of the cluster version. Setting this value will trigger

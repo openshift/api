@@ -70,6 +70,19 @@ type ClusterVersionSpec struct {
 	// the operator from creating or updating the object.
 	// +optional
 	Overrides []ComponentOverride `json:"overrides,omitempty"`
+
+	// ClusterProfile is the identifier that the Cluster Version Operator
+	// uses to determine which manifests to apply. Operators can be excluded
+	// completely or can have different manifests for each supported profile.
+	//
+	// The following annotation is used to include manifests for a given profile:
+	// include.release.openshift.io/[identifier]=true
+	//
+	// If ClusterProfile is empty, self-managed-high-availability profile is
+	// used.
+	//
+	// +optional
+	ClusterProfile string `json:"clusterProfile,omitempty"`
 }
 
 // ClusterVersionStatus reports the status of the cluster versioning,

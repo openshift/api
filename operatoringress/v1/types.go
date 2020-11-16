@@ -45,6 +45,8 @@ type DNSRecordSpec struct {
 	// +required
 	RecordType DNSRecordType `json:"recordType"`
 	// recordTTL is the record TTL in seconds. If zero, the default is 30.
+	// RecordTTL will not be used in AWS regions Alias targets, but
+	// will be used in CNAME targets, per AWS API contract.
 	//
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Minimum=0
@@ -103,10 +105,10 @@ type DNSZoneCondition struct {
 type DNSRecordType string
 
 const (
-	// CNAME is an RFC 1035 CNAME record.
+	// CNAMERecordType is an RFC 1035 CNAME record.
 	CNAMERecordType DNSRecordType = "CNAME"
 
-	// CNAME is an RFC 1035 A record.
+	// ARecordType is an RFC 1035 A record.
 	ARecordType DNSRecordType = "A"
 )
 

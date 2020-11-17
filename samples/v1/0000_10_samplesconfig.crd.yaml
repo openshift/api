@@ -5,6 +5,7 @@ metadata:
   annotations:
     description: Extension for configuring openshif samples operator.
     displayName: ConfigsSamples
+    include.release.openshift.io/ibm-cloud-managed: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
 spec:
   scope: Cluster

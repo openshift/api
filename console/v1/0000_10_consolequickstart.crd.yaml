@@ -3,10 +3,11 @@ kind: CustomResourceDefinition
 metadata:
   name: consolequickstarts.console.openshift.io
   annotations:
-    include.release.openshift.io/self-managed-high-availability: "true"
-    displayName: ConsoleQuickStart
     description: Extension for guiding user through various workflows in the OpenShift
       web console.
+    displayName: ConsoleQuickStart
+    include.release.openshift.io/ibm-cloud-managed: "true"
+    include.release.openshift.io/self-managed-high-availability: "true"
 spec:
   scope: Cluster
   group: console.openshift.io

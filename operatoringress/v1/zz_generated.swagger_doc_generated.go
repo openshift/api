@@ -34,7 +34,7 @@ var map_DNSRecordSpec = map[string]string{
 	"dnsName":    "dnsName is the hostname of the DNS record",
 	"targets":    "targets are record targets.",
 	"recordType": "recordType is the DNS record type. For example, \"A\" or \"CNAME\".",
-	"recordTTL":  "recordTTL is the record TTL in seconds. If zero, the default is 30.",
+	"recordTTL":  "recordTTL is the record TTL in seconds. If zero, the default is 30. RecordTTL will not be used in AWS regions Alias targets, but will be used in CNAME targets, per AWS API contract.",
 }
 
 func (DNSRecordSpec) SwaggerDoc() map[string]string {

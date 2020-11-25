@@ -171,4 +171,48 @@ func (RepositoryDigestMirrors) SwaggerDoc() map[string]string {
 	return map_RepositoryDigestMirrors
 }
 
+var map_VSphereHealthCheck = map[string]string{
+	"": "VSphereHealthCheck is used for reporting various health checks the operator performs on VSphere and OpenShift integration.",
+}
+
+func (VSphereHealthCheck) SwaggerDoc() map[string]string {
+	return map_VSphereHealthCheck
+}
+
+var map_VSphereProblemDetector = map[string]string{
+	"":       "VSphereProblemDetector objects allows configuration and health reporting of Vsphere problem detector operator.",
+	"spec":   "spec holds user settable values for configuration",
+	"status": "status holds observed values from the cluster. They may not be overridden.",
+}
+
+func (VSphereProblemDetector) SwaggerDoc() map[string]string {
+	return map_VSphereProblemDetector
+}
+
+var map_VSphereProblemDetectorList = map[string]string{
+	"": "VSphereProblemDetectorList contains a list of VSphereProblemDetector",
+}
+
+func (VSphereProblemDetectorList) SwaggerDoc() map[string]string {
+	return map_VSphereProblemDetectorList
+}
+
+var map_VSphereProblemDetectorSpec = map[string]string{
+	"": "VSphereProblemDetectorSpec is the desired configuration of vSphere problem detector operator.",
+}
+
+func (VSphereProblemDetectorSpec) SwaggerDoc() map[string]string {
+	return map_VSphereProblemDetectorSpec
+}
+
+var map_VSphereProblemDetectorStatus = map[string]string{
+	"":              "VSphereProblemDetectorStatus is the status of vSphere problem detector operator and health of Openshift and vSphere integration.",
+	"lastCheckTime": "LastCheckTime reports timestamp of last check",
+	"checks":        "List of checks and their status",
+}
+
+func (VSphereProblemDetectorStatus) SwaggerDoc() map[string]string {
+	return map_VSphereProblemDetectorStatus
+}
+
 // AUTO-GENERATED FUNCTIONS END HERE

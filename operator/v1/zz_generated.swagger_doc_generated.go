@@ -811,7 +811,6 @@ var map_NetworkSpec = map[string]string{
 	"deployKubeProxy":           "deployKubeProxy specifies whether or not a standalone kube-proxy should be deployed by the operator. Some network providers include kube-proxy or similar functionality. If unset, the plugin will attempt to select the correct value, which is false when OpenShift SDN and ovn-kubernetes are used and true otherwise.",
 	"disableNetworkDiagnostics": "disableNetworkDiagnostics specifies whether or not PodNetworkConnectivityCheck CRs from a test pod to every node, apiserver and LB should be disabled or not. If unset, this property defaults to 'false' and network diagnostics is enabled. Setting this to 'true' would reduce the additional load of the pods performing the checks.",
 	"kubeProxyConfig":           "kubeProxyConfig lets us configure desired proxy configuration. If not specified, sensible defaults will be chosen by OpenShift directly. Not consumed by all network providers - currently only openshift-sdn.",
-	"logLevel":                  "logLevel allows configuring the logging level of the components deployed by the operator. Currently only Kuryr SDN is affected by this setting. Please note that turning on extensive logging may affect performance. The default value is \"Normal\".\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
 }
 
 func (NetworkSpec) SwaggerDoc() map[string]string {
@@ -819,7 +818,7 @@ func (NetworkSpec) SwaggerDoc() map[string]string {
 }
 
 var map_NetworkStatus = map[string]string{
-	"": "NetworkStatus is currently unused. Instead, status is reported in the Network.config.openshift.io object.",
+	"": "NetworkStatus is detailed operator status, which is distilled up to the Network clusteroperator object.",
 }
 
 func (NetworkStatus) SwaggerDoc() map[string]string {

@@ -19,9 +19,10 @@ type Network struct {
 	Status NetworkStatus `json:"status,omitempty"`
 }
 
-// NetworkStatus is currently unused. Instead, status
-// is reported in the Network.config.openshift.io object.
+// NetworkStatus is detailed operator status, which is distilled
+// up to the Network clusteroperator object.
 type NetworkStatus struct {
+	OperatorStatus `json:",inline"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -35,6 +36,8 @@ type NetworkList struct {
 
 // NetworkSpec is the top-level network configuration object.
 type NetworkSpec struct {
+	OperatorSpec `json:",inline"`
+
 	// clusterNetwork is the IP address pool to use for pod IPs.
 	// Some network providers, e.g. OpenShift SDN, support multiple ClusterNetworks.
 	// Others only support one. This is equivalent to the cluster-cidr.
@@ -77,17 +80,6 @@ type NetworkSpec struct {
 	// If not specified, sensible defaults will be chosen by OpenShift directly.
 	// Not consumed by all network providers - currently only openshift-sdn.
 	KubeProxyConfig *ProxyConfig `json:"kubeProxyConfig,omitempty"`
-
-	// logLevel allows configuring the logging level of the components deployed
-	// by the operator. Currently only Kuryr SDN is affected by this setting.
-	// Please note that turning on extensive logging may affect performance.
-	// The default value is "Normal".
-	//
-	// Valid values are: "Normal", "Debug", "Trace", "TraceAll".
-	// Defaults to "Normal".
-	// +optional
-	// +kubebuilder:default=Normal
-	LogLevel LogLevel `json:"logLevel,omitempty"`
 }
 
 // ClusterNetworkEntry is a subnet from which to allocate PodIPs. A network of size

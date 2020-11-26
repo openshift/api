@@ -1266,6 +1266,11 @@ func (in *IngressControllerCaptureHTTPHeaders) DeepCopy() *IngressControllerCapt
 func (in *IngressControllerHTTPHeaders) DeepCopyInto(out *IngressControllerHTTPHeaders) {
 	*out = *in
 	out.UniqueId = in.UniqueId
+	if in.HeaderNameCaseAdjustments != nil {
+		in, out := &in.HeaderNameCaseAdjustments, &out.HeaderNameCaseAdjustments
+		*out = make([]IngressControllerHTTPHeaderNameCaseAdjustment, len(*in))
+		copy(*out, *in)
+	}
 	return
 }
 
@@ -1400,7 +1405,7 @@ func (in *IngressControllerSpec) DeepCopyInto(out *IngressControllerSpec) {
 	if in.HTTPHeaders != nil {
 		in, out := &in.HTTPHeaders, &out.HTTPHeaders
 		*out = new(IngressControllerHTTPHeaders)
-		**out = **in
+		(*in).DeepCopyInto(*out)
 	}
 	return
 }

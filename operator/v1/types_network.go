@@ -337,11 +337,6 @@ type HybridOverlayConfig struct {
 }
 
 type IPsecConfig struct {
-	// enable enables IPsec encryption for pod-to-pod traffic on the pod network
-	// within the cluster. Default is false.
-	// +optional
-	// +kubebuilder:default:=false
-	Enable bool `json:"enable"`
 }
 
 // NetworkType describes the network plugin type to configure

@@ -762,14 +762,6 @@ func (IPAMConfig) SwaggerDoc() map[string]string {
 	return map_IPAMConfig
 }
 
-var map_IPsecConfig = map[string]string{
-	"enable": "enable enables IPsec encryption for pod-to-pod traffic on the pod network within the cluster. Default is false.",
-}
-
-func (IPsecConfig) SwaggerDoc() map[string]string {
-	return map_IPsecConfig
-}
-
 var map_KuryrConfig = map[string]string{
 	"":                             "KuryrConfig configures the Kuryr-Kubernetes SDN",
 	"daemonProbesPort":             "The port kuryr-daemon will listen for readiness and liveness requests.",

@@ -40,6 +40,11 @@ var (
 
 	// IPv6DualStackNoUpgrade enables dual-stack. Turning this feature set on IS NOT SUPPORTED, CANNOT BE UNDONE, and PREVENTS UPGRADES.
 	IPv6DualStackNoUpgrade FeatureSet = "IPv6DualStackNoUpgrade"
+
+	// IPv6DualStackOCP47 enables dual-stack, pinned to the OCP 4.7 dual-stack API even if
+	// the upstream API changes in the future. Turning this feature set on IS NOT SUPPORTED
+	// without a support exception.
+	IPv6DualStackOCP47 FeatureSet = "IPv6DualStackOCP47"
 )
 
 type FeatureGateSpec struct {
@@ -112,6 +117,11 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		).
 		toFeatures(),
 	IPv6DualStackNoUpgrade: newDefaultFeatures().
+		with(
+			"IPv6DualStack", // sig-network, danwinship
+		).
+		toFeatures(),
+	IPv6DualStackOCP47: newDefaultFeatures().
 		with(
 			"IPv6DualStack", // sig-network, danwinship
 		).

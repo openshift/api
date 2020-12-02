@@ -234,8 +234,9 @@ type OpenShiftSDNConfig struct {
 	// +optional
 	MTU *uint32 `json:"mtu,omitempty"`
 
-	// useExternalOpenvswitch tells the operator not to install openvswitch, because
-	// it will be provided separately. If set, you must provide it yourself.
+	// useExternalOpenvswitch is ignored. This used to control whether Open vSwitch
+	// was run as a system service or in a container, but as of OpenShift 4.7,
+	// OpenShift always runs it as a system service.
 	// +optional
 	UseExternalOpenvswitch *bool `json:"useExternalOpenvswitch,omitempty"`
 

@@ -835,7 +835,7 @@ var map_OpenShiftSDNConfig = map[string]string{
 	"mode":                   "mode is one of \"Multitenant\", \"Subnet\", or \"NetworkPolicy\"",
 	"vxlanPort":              "vxlanPort is the port to use for all vxlan packets. The default is 4789.",
 	"mtu":                    "mtu is the mtu to use for the tunnel interface. Defaults to 1450 if unset. This must be 50 bytes smaller than the machine's uplink.",
-	"useExternalOpenvswitch": "useExternalOpenvswitch tells the operator not to install openvswitch, because it will be provided separately. If set, you must provide it yourself.",
+	"useExternalOpenvswitch": "useExternalOpenvswitch is ignored. This used to control whether Open vSwitch was run as a system service or in a container, but as of OpenShift 4.7, OpenShift always runs it as a system service.",
 	"enableUnidling":         "enableUnidling controls whether or not the service proxy will support idling and unidling of services. By default, unidling is enabled.",
 }
 

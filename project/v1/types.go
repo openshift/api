@@ -8,6 +8,7 @@ import (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // ProjectList is a list of Project objects.
+// +openshift:compatibility-gen:level=1
 type ProjectList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
@@ -63,6 +64,7 @@ type ProjectStatus struct {
 // An OpenShift project is an alternative representation of a Kubernetes namespace. Projects are exposed
 // as editable to end users while namespaces are not. Direct creation of a project is typically restricted
 // to administrators, while end users should use the requestproject resource.
+// +openshift:compatibility-gen:level=1
 type Project struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
@@ -82,6 +84,7 @@ type Project struct {
 // +genclient:method=Create,verb=create,result=Project
 
 // ProjectRequest is the set of options necessary to fully qualify a project request
+// +openshift:compatibility-gen:level=1
 type ProjectRequest struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`

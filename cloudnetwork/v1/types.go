@@ -21,6 +21,7 @@ import (
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:path=cloudprivateipconfigs,scope=Cluster
+// +openshift:compatibility-gen:level=1
 type CloudPrivateIPConfig struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
@@ -71,6 +72,7 @@ const (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +resource:path=cloudprivateipconfig
 // CloudPrivateIPConfigList is the list of CloudPrivateIPConfigList.
+// +openshift:compatibility-gen:level=1
 type CloudPrivateIPConfigList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`

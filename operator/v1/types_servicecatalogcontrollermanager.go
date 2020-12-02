@@ -10,6 +10,7 @@ import (
 
 // ServiceCatalogControllerManager provides information to configure an operator to manage Service Catalog Controller Manager
 // DEPRECATED: will be removed in 4.6
+// +openshift:compatibility-gen:level=1
 type ServiceCatalogControllerManager struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata"`
@@ -33,6 +34,7 @@ type ServiceCatalogControllerManagerStatus struct {
 
 // ServiceCatalogControllerManagerList is a collection of items
 // DEPRECATED: will be removed in 4.6
+// +openshift:compatibility-gen:level=1
 type ServiceCatalogControllerManagerList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata"`

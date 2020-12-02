@@ -9,6 +9,7 @@ import (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // OpenShiftAPIServer provides information to configure an operator to manage openshift-apiserver.
+// +openshift:compatibility-gen:level=1
 type OpenShiftAPIServer struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata"`
@@ -41,6 +42,7 @@ type OpenShiftAPIServerStatus struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // OpenShiftAPIServerList is a collection of items
+// +openshift:compatibility-gen:level=1
 type OpenShiftAPIServerList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata"`

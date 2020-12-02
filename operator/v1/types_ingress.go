@@ -28,6 +28,7 @@ import (
 //
 // Whenever possible, sensible defaults for the platform are used. See each
 // field for more details.
+// +openshift:compatibility-gen:level=1
 type IngressController struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -1158,6 +1159,7 @@ type IngressControllerStatus struct {
 // +kubebuilder:object:root=true
 
 // IngressControllerList contains a list of IngressControllers.
+// +openshift:compatibility-gen:level=1
 type IngressControllerList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`

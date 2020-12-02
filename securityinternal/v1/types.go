@@ -10,6 +10,7 @@ import (
 
 // RangeAllocation is used so we can easily expose a RangeAllocation typed for security group
 // This is an internal API, not intended for external consumption.
+// +openshift:compatibility-gen:level=1
 type RangeAllocation struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -26,6 +27,7 @@ type RangeAllocation struct {
 
 // RangeAllocationList is a list of RangeAllocations objects
 // This is an internal API, not intended for external consumption.
+// +openshift:compatibility-gen:level=1
 type RangeAllocationList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`

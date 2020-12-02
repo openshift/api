@@ -12,6 +12,7 @@ import (
 // ClusterOperator is the Custom Resource object which holds the current state
 // of an operator. This object is used by operators to convey their state to
 // the rest of the cluster.
+// +openshift:compatibility-gen:level=1
 type ClusterOperator struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata"`
@@ -182,6 +183,7 @@ const (
 
 // ClusterOperatorList is a list of OperatorStatus resources.
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +openshift:compatibility-gen:level=1
 type ClusterOperatorList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata"`

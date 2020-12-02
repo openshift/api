@@ -39,6 +39,7 @@ type OperatorHubStatus struct {
 // +kubebuilder:subresource:status
 // +genclient
 // +genclient:nonNamespaced
+// +openshift:compatibility-gen:level=1
 type OperatorHub struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata"`
@@ -50,6 +51,7 @@ type OperatorHub struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // OperatorHubList contains a list of OperatorHub
+// +openshift:compatibility-gen:level=1
 type OperatorHubList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata"`

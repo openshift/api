@@ -10,6 +10,7 @@ import (
 
 // ClusterVersion is the configuration for the ClusterVersionOperator. This is where
 // parameters related to automatic updates can be set.
+// +openshift:compatibility-gen:level=1
 type ClusterVersion struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -289,6 +290,7 @@ const RetrievedUpdates ClusterStatusConditionType = "RetrievedUpdates"
 
 // ClusterVersionList is a list of ClusterVersion resources.
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +openshift:compatibility-gen:level=1
 type ClusterVersionList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata"`

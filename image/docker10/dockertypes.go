@@ -8,6 +8,7 @@ import (
 
 // DockerImage is the type representing a container image and its various properties when
 // retrieved from the Docker client API.
+// +openshift:compatibility-gen:level=4
 type DockerImage struct {
 	metav1.TypeMeta `json:",inline"`
 

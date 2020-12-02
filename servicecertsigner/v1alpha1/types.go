@@ -11,6 +11,7 @@ import (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // ServiceCertSignerOperatorConfig provides information to configure an operator to manage the service cert signing controllers
+// +openshift:compatibility-gen:level=4
 type ServiceCertSignerOperatorConfig struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata"`
@@ -30,6 +31,7 @@ type ServiceCertSignerOperatorConfigStatus struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // ServiceCertSignerOperatorConfigList is a collection of items
+// +openshift:compatibility-gen:level=4
 type ServiceCertSignerOperatorConfigList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`

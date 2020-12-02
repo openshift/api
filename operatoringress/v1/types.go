@@ -16,6 +16,7 @@ import (
 //
 // Cluster admin manipulation of this resource is not supported. This resource
 // is only for internal communication of OpenShift operators.
+// +openshift:compatibility-gen:level=1
 type DNSRecord struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -116,6 +117,7 @@ const (
 // +kubebuilder:object:root=true
 
 // DNSRecordList contains a list of dnsrecords.
+// +openshift:compatibility-gen:level=1
 type DNSRecordList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`

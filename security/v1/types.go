@@ -30,6 +30,7 @@ var AllowAllCapabilities corev1.Capability = "*"
 // +kubebuilder:printcolumn:name="ReadOnlyRootFS",type=string,JSONPath=`.readOnlyRootFilesystem`,description="Force containers to run with a read only root file system"
 // +kubebuilder:printcolumn:name="Volumes",type=string,JSONPath=`.volumes`,description="White list of allowed volume plugins"
 // +kubebuilder:singular=securitycontextconstraint
+// +openshift:compatibility-gen:level=1
 type SecurityContextConstraints struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
@@ -287,6 +288,7 @@ const (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // SecurityContextConstraintsList is a list of SecurityContextConstraints objects
+// +openshift:compatibility-gen:level=1
 type SecurityContextConstraintsList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
@@ -300,6 +302,7 @@ type SecurityContextConstraintsList struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // PodSecurityPolicySubjectReview checks whether a particular user/SA tuple can create the PodTemplateSpec.
+// +openshift:compatibility-gen:level=1
 type PodSecurityPolicySubjectReview struct {
 	metav1.TypeMeta `json:",inline"`
 
@@ -346,6 +349,7 @@ type PodSecurityPolicySubjectReviewStatus struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // PodSecurityPolicySelfSubjectReview checks whether this user/SA tuple can create the PodTemplateSpec
+// +openshift:compatibility-gen:level=1
 type PodSecurityPolicySelfSubjectReview struct {
 	metav1.TypeMeta `json:",inline"`
 
@@ -367,6 +371,7 @@ type PodSecurityPolicySelfSubjectReviewSpec struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // PodSecurityPolicyReview checks which service accounts (not users, since that would be cluster-wide) can create the `PodTemplateSpec` in question.
+// +openshift:compatibility-gen:level=1
 type PodSecurityPolicyReview struct {
 	metav1.TypeMeta `json:",inline"`
 
@@ -411,6 +416,7 @@ type ServiceAccountPodSecurityPolicyReviewStatus struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // RangeAllocation is used so we can easily expose a RangeAllocation typed for security group
+// +openshift:compatibility-gen:level=1
 type RangeAllocation struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
@@ -426,6 +432,7 @@ type RangeAllocation struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // RangeAllocationList is a list of RangeAllocations objects
+// +openshift:compatibility-gen:level=1
 type RangeAllocationList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`

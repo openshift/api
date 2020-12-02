@@ -11,6 +11,7 @@ import (
 // APIServer holds configuration (like serving certificates, client CA and CORS domains)
 // shared by all API servers in the system, among them especially kube-apiserver
 // and openshift-apiserver. The canonical name of an instance is 'cluster'.
+// +openshift:compatibility-gen:level=1
 type APIServer struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -198,6 +199,7 @@ type APIServerStatus struct {
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
+// +openshift:compatibility-gen:level=1
 type APIServerList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata"`

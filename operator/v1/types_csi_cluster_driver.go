@@ -20,6 +20,7 @@ import (
 // ClusterCSIDriver object allows management and configuration of a CSI driver operator
 // installed by default in OpenShift. Name of the object must be name of the CSI driver
 // it operates. See CSIDriverName type for list of allowed values.
+// +openshift:compatibility-gen:level=1
 type ClusterCSIDriver struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -65,6 +66,7 @@ type ClusterCSIDriverStatus struct {
 // +kubebuilder:object:root=true
 
 // ClusterCSIDriverList contains a list of ClusterCSIDriver
+// +openshift:compatibility-gen:level=1
 type ClusterCSIDriverList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`

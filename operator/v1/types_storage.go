@@ -9,6 +9,7 @@ import (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // Storage provides a means to configure an operator to manage the cluster storage operator. `cluster` is the canonical name.
+// +openshift:compatibility-gen:level=1
 type Storage struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -37,6 +38,7 @@ type StorageStatus struct {
 // +kubebuilder:object:root=true
 
 // StorageList contains a list of Storages.
+// +openshift:compatibility-gen:level=1
 type StorageList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`

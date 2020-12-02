@@ -9,6 +9,7 @@ import (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // Etcd provides information to configure an operator to manage etcd.
+// +openshift:compatibility-gen:level=1
 type Etcd struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata"`
@@ -31,6 +32,7 @@ type EtcdStatus struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // KubeAPISOperatorConfigList is a collection of items
+// +openshift:compatibility-gen:level=1
 type EtcdList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata"`

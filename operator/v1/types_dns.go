@@ -20,6 +20,7 @@ import (
 // https://github.com/kubernetes/dns/blob/master/docs/specification.md
 //
 // More details: https://kubernetes.io/docs/tasks/administer-cluster/coredns
+// +openshift:compatibility-gen:level=1
 type DNS struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -175,6 +176,7 @@ type DNSStatus struct {
 // +kubebuilder:object:root=true
 
 // DNSList contains a list of DNS
+// +openshift:compatibility-gen:level=1
 type DNSList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`

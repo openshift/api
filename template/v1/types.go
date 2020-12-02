@@ -12,6 +12,7 @@ import (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // Template contains the inputs needed to produce a Config.
+// +openshift:compatibility-gen:level=1
 type Template struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
@@ -45,6 +46,7 @@ type Template struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // TemplateList is a list of Template objects.
+// +openshift:compatibility-gen:level=1
 type TemplateList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
@@ -103,6 +105,7 @@ type Parameter struct {
 
 // TemplateInstance requests and records the instantiation of a Template.
 // TemplateInstance is part of an experimental API.
+// +openshift:compatibility-gen:level=1
 type TemplateInstance struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
@@ -209,6 +212,7 @@ type TemplateInstanceObject struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // TemplateInstanceList is a list of TemplateInstance objects.
+// +openshift:compatibility-gen:level=1
 type TemplateInstanceList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
@@ -223,6 +227,7 @@ type TemplateInstanceList struct {
 
 // BrokerTemplateInstance holds the service broker-related state associated with
 // a TemplateInstance.  BrokerTemplateInstance is part of an experimental API.
+// +openshift:compatibility-gen:level=1
 type BrokerTemplateInstance struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
@@ -249,6 +254,7 @@ type BrokerTemplateInstanceSpec struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // BrokerTemplateInstanceList is a list of BrokerTemplateInstance objects.
+// +openshift:compatibility-gen:level=1
 type BrokerTemplateInstanceList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`

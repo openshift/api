@@ -10,6 +10,7 @@ import (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // ConfigList is a slice of Config objects.
+// +openshift:compatibility-gen:level=1
 type ConfigList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata"`
@@ -30,6 +31,7 @@ const (
 
 // Config is the configuration object for a registry instance managed by
 // the registry operator
+// +openshift:compatibility-gen:level=1
 type Config struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata"`

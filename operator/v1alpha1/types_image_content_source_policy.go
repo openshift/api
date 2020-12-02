@@ -8,6 +8,7 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 // ImageContentSourcePolicy holds cluster-wide information about how to handle registry mirror rules.
 // When multiple policies are defined, the outcome of the behavior is defined on each field.
+// +openshift:compatibility-gen:level=4
 type ImageContentSourcePolicy struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -43,6 +44,7 @@ type ImageContentSourcePolicySpec struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // ImageContentSourcePolicyList lists the items in the ImageContentSourcePolicy CRD.
+// +openshift:compatibility-gen:level=4
 type ImageContentSourcePolicyList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata"`

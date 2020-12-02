@@ -11,6 +11,7 @@ import (
 // Network describes the cluster's desired network configuration. It is
 // consumed by the cluster-network-operator.
 // +k8s:openapi-gen=true
+// +openshift:compatibility-gen:level=1
 type Network struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -28,6 +29,7 @@ type NetworkStatus struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // NetworkList contains a list of Network configurations
+// +openshift:compatibility-gen:level=1
 type NetworkList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`

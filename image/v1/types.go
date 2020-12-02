@@ -9,6 +9,7 @@ import (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // ImageList is a list of Image objects.
+// +openshift:compatibility-gen:level=1
 type ImageList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
@@ -29,6 +30,7 @@ type ImageList struct {
 // image metadata is stored in the API, any integration that implements the container image
 // registry API must provide its own storage for the raw manifest data, image config, and
 // layer contents.
+// +openshift:compatibility-gen:level=1
 type Image struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
@@ -77,6 +79,7 @@ type ImageLayer struct {
 // to those matching cluster-wide policy.
 // Mandatory fields should be parsed by clients doing image verification. The others are parsed from
 // signature's content by the server. They serve just an informative purpose.
+// +openshift:compatibility-gen:level=1
 type ImageSignature struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
@@ -153,6 +156,7 @@ type SignatureSubject struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // ImageStreamList is a list of ImageStream objects.
+// +openshift:compatibility-gen:level=1
 type ImageStreamList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
@@ -180,6 +184,7 @@ type ImageStreamList struct {
 // administrator runs the prune operation, which removes references that are no longer in
 // use. To preserve a historical image, ensure there is a tag in spec pointing to that image
 // by its digest.
+// +openshift:compatibility-gen:level=1
 type ImageStream struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
@@ -358,6 +363,7 @@ type TagEventCondition struct {
 // mappings where the user has proven they have access to the image contents directly.
 // The only operation supported for this resource is create and the metadata name and
 // namespace should be set to the image stream containing the tag that should be updated.
+// +openshift:compatibility-gen:level=1
 type ImageStreamMapping struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
@@ -380,6 +386,7 @@ type ImageStreamMapping struct {
 // failed the previous image will be shown. Deleting an image stream tag clears both the
 // status and spec fields of an image stream. If no image can be retrieved for a given tag,
 // a not found error will be returned.
+// +openshift:compatibility-gen:level=1
 type ImageStreamTag struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
@@ -408,6 +415,7 @@ type ImageStreamTag struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // ImageStreamTagList is a list of ImageStreamTag objects.
+// +openshift:compatibility-gen:level=1
 type ImageStreamTagList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
@@ -428,6 +436,7 @@ type ImageStreamTagList struct {
 // A create operation will succeed if no spec tag has already been defined and the
 // spec field is set. Delete will remove both spec and status elements from the
 // image stream.
+// +openshift:compatibility-gen:level=1
 type ImageTag struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
@@ -451,6 +460,7 @@ type ImageTag struct {
 // ImageTagList is a list of ImageTag objects. When listing image tags, the image
 // field is not populated. Tags are returned in alphabetical order by image stream
 // and then tag.
+// +openshift:compatibility-gen:level=1
 type ImageTagList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
@@ -475,6 +485,7 @@ type ImageTagList struct {
 // ImageStreamImages as the from.kind of an image stream spec tag to reference an image
 // exactly. The only operations supported on the imagestreamimage endpoint are retrieving
 // the image.
+// +openshift:compatibility-gen:level=1
 type ImageStreamImage struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
@@ -501,6 +512,7 @@ type DockerImageReference struct {
 
 // ImageStreamLayers describes information about the layers referenced by images in this
 // image stream.
+// +openshift:compatibility-gen:level=1
 type ImageStreamLayers struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
@@ -552,6 +564,7 @@ type ImageLayerData struct {
 // This API is intended for end-user tools that need to see the metadata of the image prior to import
 // (for instance, to generate an application from it). Clients that know the desired image can continue
 // to create spec.tags directly into their image streams.
+// +openshift:compatibility-gen:level=1
 type ImageStreamImport struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
@@ -636,4 +649,5 @@ type ImageImportStatus struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // SecretList is a list of Secret.
+// +openshift:compatibility-gen:level=1
 type SecretList corev1.SecretList

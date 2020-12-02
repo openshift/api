@@ -13,6 +13,7 @@ import (
 // This includes default settings that can be overridden in BuildConfig objects, and overrides which are applied to all builds.
 //
 // The canonical name is "cluster"
+// +openshift:compatibility-gen:level=1
 type Build struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -108,6 +109,7 @@ type BuildOverrides struct {
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
+// +openshift:compatibility-gen:level=1
 type BuildList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata"`

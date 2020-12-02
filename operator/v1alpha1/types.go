@@ -124,6 +124,7 @@ type OperatorStatus struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // GenericOperatorConfig provides information to configure an operator
+// +openshift:compatibility-gen:level=4
 type GenericOperatorConfig struct {
 	metav1.TypeMeta `json:",inline"`
 

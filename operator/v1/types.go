@@ -6,6 +6,7 @@ import (
 )
 
 // MyOperatorResource is an example operator configuration type
+// +openshift:compatibility-gen:level=1
 type MyOperatorResource struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata"`

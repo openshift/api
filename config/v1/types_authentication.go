@@ -8,6 +8,7 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 // Authentication specifies cluster-wide settings for authentication (like OAuth and
 // webhook token authenticators). The canonical name of an instance is `cluster`.
+// +openshift:compatibility-gen:level=1
 type Authentication struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -88,6 +89,7 @@ type AuthenticationStatus struct {
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
+// +openshift:compatibility-gen:level=1
 type AuthenticationList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata"`

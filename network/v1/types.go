@@ -19,6 +19,7 @@ const (
 // +kubebuilder:printcolumn:name="Cluster Network",type=string,JSONPath=`.network`,description="The primary cluster network CIDR"
 // +kubebuilder:printcolumn:name="Service Network",type=string,JSONPath=`.serviceNetwork`,description="The service network CIDR"
 // +kubebuilder:printcolumn:name="Plugin Name",type=string,JSONPath=`.pluginName`,description="The Openshift SDN network plug-in in use"
+// +openshift:compatibility-gen:level=1
 type ClusterNetwork struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
@@ -75,6 +76,7 @@ type ClusterNetworkEntry struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // ClusterNetworkList is a collection of ClusterNetworks
+// +openshift:compatibility-gen:level=1
 type ClusterNetworkList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
@@ -104,6 +106,7 @@ type HostSubnetEgressCIDR string
 // +kubebuilder:printcolumn:name="Subnet",type=string,JSONPath=`.subnet`,description="The CIDR range of the overlay network assigned to the node for its pods"
 // +kubebuilder:printcolumn:name="Egress CIDRs",type=string,JSONPath=`.egressCIDRs`,description="The network egress CIDRs"
 // +kubebuilder:printcolumn:name="Egress IPs",type=string,JSONPath=`.egressIPs`,description="The network egress IP addresses"
+// +openshift:compatibility-gen:level=1
 type HostSubnet struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
@@ -136,6 +139,7 @@ type HostSubnet struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // HostSubnetList is a collection of HostSubnets
+// +openshift:compatibility-gen:level=1
 type HostSubnetList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
@@ -158,6 +162,7 @@ type NetNamespaceEgressIP string
 // (When using redhat/openshift-ovs-subnet, NetNamespaces are not used.)
 // +kubebuilder:printcolumn:name="NetID",type=integer,JSONPath=`.netid`,description="The network identifier of the network namespace"
 // +kubebuilder:printcolumn:name="Egress IPs",type=string,JSONPath=`.egressIPs`,description="The network egress IP addresses"
+// +openshift:compatibility-gen:level=1
 type NetNamespace struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
@@ -180,6 +185,7 @@ type NetNamespace struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // NetNamespaceList is a collection of NetNamespaces
+// +openshift:compatibility-gen:level=1
 type NetNamespaceList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
@@ -232,6 +238,7 @@ type EgressNetworkPolicySpec struct {
 // outside the cluster will be checked against each EgressNetworkPolicyRule in the pod's
 // namespace's EgressNetworkPolicy, in order. If no rule matches (or no EgressNetworkPolicy
 // is present) then the traffic will be allowed by default.
+// +openshift:compatibility-gen:level=1
 type EgressNetworkPolicy struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
@@ -243,6 +250,7 @@ type EgressNetworkPolicy struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // EgressNetworkPolicyList is a collection of EgressNetworkPolicy
+// +openshift:compatibility-gen:level=1
 type EgressNetworkPolicyList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`

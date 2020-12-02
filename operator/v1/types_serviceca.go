@@ -9,6 +9,7 @@ import (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // ServiceCA provides information to configure an operator to manage the service cert controllers
+// +openshift:compatibility-gen:level=1
 type ServiceCA struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata"`
@@ -33,6 +34,7 @@ type ServiceCAStatus struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // ServiceCAList is a collection of items
+// +openshift:compatibility-gen:level=1
 type ServiceCAList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata"`

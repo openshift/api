@@ -11,6 +11,7 @@ import (
 
 // PodNetworkConnectivityCheck
 // +kubebuilder:subresource:status
+// +openshift:compatibility-gen:level=4
 type PodNetworkConnectivityCheck struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata"`
@@ -172,6 +173,7 @@ const (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // PodNetworkConnectivityCheckList is a collection of PodNetworkConnectivityCheck
+// +openshift:compatibility-gen:level=4
 type PodNetworkConnectivityCheckList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata"`

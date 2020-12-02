@@ -11,6 +11,8 @@ import (
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
+// +openshift:compatibility-gen:level=4
+// +openshift:compatibility-gen:exposed=false
 type KubeAPIServerConfig struct {
 	metav1.TypeMeta `json:",inline"`
 
@@ -187,6 +189,8 @@ type AggregatorConfig struct {
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
+// +openshift:compatibility-gen:level=4
+// +openshift:compatibility-gen:exposed=false
 type KubeControllerManagerConfig struct {
 	metav1.TypeMeta `json:",inline"`
 

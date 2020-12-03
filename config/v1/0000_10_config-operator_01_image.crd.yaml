@@ -128,7 +128,6 @@ spec:
                   type: array
                   format: hostname
                   minItems: 1
-                  uniqueItems: true
                   items:
                     type: string
                   x-kubernetes-list-type: set

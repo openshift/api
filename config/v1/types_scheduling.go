@@ -81,7 +81,7 @@ var (
 
 	// HighNodeUtilization defines a scheduling profile which packs as many pods as possible onto
 	// as few nodes as possible targeting a small node count but high resource usage on each node.
-	HighNodeUtililzation SchedulerProfile = "HighNodeUtilization"
+	HighNodeUtilization SchedulerProfile = "HighNodeUtilization"
 
 	// NoScoring defines a scheduling profile which tries to provide lower-latency scheduling
 	// at the expense of potentially less optimal pod placement decisions.

@@ -48,9 +48,10 @@ spec:
                 type: object
                 properties:
                   groups:
-                    description: Groups is a list of groups used to match against an
-                      individual user's groups. If the user is a member of one of the
-                      whitelisted groups, the user is allowed to be bound to a role.
+                    description: Groups is a list of groups used to match against
+                      an individual user's groups. If the user is a member of one
+                      of the whitelisted groups, the user is allowed to be bound to
+                      a role.
                     type: array
                     items:
                       type: string
@@ -60,10 +61,10 @@ spec:
                       group labels.
                     type: array
                     items:
-                      description: A label selector is a label query over a set of resources.
-                        The result of matchLabels and matchExpressions are ANDed. An
-                        empty label selector matches all objects. A null label selector
-                        matches no objects.
+                      description: A label selector is a label query over a set of
+                        resources. The result of matchLabels and matchExpressions
+                        are ANDed. An empty label selector matches all objects. A
+                        null label selector matches no objects.
                       type: object
                       properties:
                         matchExpressions:
@@ -89,20 +90,20 @@ spec:
                                   Exists and DoesNotExist.
                                 type: string
                               values:
-                                description: values is an array of string values. If
-                                  the operator is In or NotIn, the values array must
-                                  be non-empty. If the operator is Exists or DoesNotExist,
-                                  the values array must be empty. This array is replaced
-                                  during a strategic merge patch.
+                                description: values is an array of string values.
+                                  If the operator is In or NotIn, the values array
+                                  must be non-empty. If the operator is Exists or
+                                  DoesNotExist, the values array must be empty. This
+                                  array is replaced during a strategic merge patch.
                                 type: array
                                 items:
                                   type: string
                         matchLabels:
-                          description: matchLabels is a map of {key,value} pairs. A
-                            single {key,value} in the matchLabels map is equivalent
-                            to an element of matchExpressions, whose key field is "key",
-                            the operator is "In", and the values array contains only
-                            "value". The requirements are ANDed.
+                          description: matchLabels is a map of {key,value} pairs.
+                            A single {key,value} in the matchLabels map is equivalent
+                            to an element of matchExpressions, whose key field is
+                            "key", the operator is "In", and the values array contains
+                            only "value". The requirements are ANDed.
                           type: object
                           additionalProperties:
                             type: string
@@ -114,7 +115,8 @@ spec:
                 type: object
                 properties:
                   namespaces:
-                    description: Namespaces specifies a list of literal namespace names.
+                    description: Namespaces specifies a list of literal namespace
+                      names.
                     type: array
                     items:
                       type: string
@@ -133,8 +135,8 @@ spec:
                         namespace:
                           description: Namespace is the namespace of the service account.  Service
                             accounts from inside the whitelisted namespaces are allowed
-                            to be bound to roles.  If Namespace is empty, then the namespace
-                            of the RoleBindingRestriction in which the ServiceAccountReference
+                            to be bound to roles.  If Namespace is empty, then the
+                            namespace of the RoleBindingRestriction in which the ServiceAccountReference
                             is embedded is used.
                           type: string
                 nullable: true
@@ -153,10 +155,10 @@ spec:
                       user labels.
                     type: array
                     items:
-                      description: A label selector is a label query over a set of resources.
-                        The result of matchLabels and matchExpressions are ANDed. An
-                        empty label selector matches all objects. A null label selector
-                        matches no objects.
+                      description: A label selector is a label query over a set of
+                        resources. The result of matchLabels and matchExpressions
+                        are ANDed. An empty label selector matches all objects. A
+                        null label selector matches no objects.
                       type: object
                       properties:
                         matchExpressions:
@@ -182,20 +184,20 @@ spec:
                                   Exists and DoesNotExist.
                                 type: string
                               values:
-                                description: values is an array of string values. If
-                                  the operator is In or NotIn, the values array must
-                                  be non-empty. If the operator is Exists or DoesNotExist,
-                                  the values array must be empty. This array is replaced
-                                  during a strategic merge patch.
+                                description: values is an array of string values.
+                                  If the operator is In or NotIn, the values array
+                                  must be non-empty. If the operator is Exists or
+                                  DoesNotExist, the values array must be empty. This
+                                  array is replaced during a strategic merge patch.
                                 type: array
                                 items:
                                   type: string
                         matchLabels:
-                          description: matchLabels is a map of {key,value} pairs. A
-                            single {key,value} in the matchLabels map is equivalent
-                            to an element of matchExpressions, whose key field is "key",
-                            the operator is "In", and the values array contains only
-                            "value". The requirements are ANDed.
+                          description: matchLabels is a map of {key,value} pairs.
+                            A single {key,value} in the matchLabels map is equivalent
+                            to an element of matchExpressions, whose key field is
+                            "key", the operator is "In", and the values array contains
+                            only "value". The requirements are ANDed.
                           type: object
                           additionalProperties:
                             type: string

@@ -23,8 +23,8 @@ spec:
     schema:
       openAPIV3Schema:
         description: Authentication specifies cluster-wide settings for authentication
-          (like OAuth and webhook token authenticators). The canonical name of an instance
-          is `cluster`.
+          (like OAuth and webhook token authenticators). The canonical name of an
+          instance is `cluster`.
         type: object
         required:
         - spec
@@ -48,12 +48,12 @@ spec:
               oauthMetadata:
                 description: 'oauthMetadata contains the discovery endpoint data for
                   OAuth 2.0 Authorization Server Metadata for an external OAuth server.
-                  This discovery document can be viewed from its served location: oc
-                  get --raw ''/.well-known/oauth-authorization-server'' For further
+                  This discovery document can be viewed from its served location:
+                  oc get --raw ''/.well-known/oauth-authorization-server'' For further
                   details, see the IETF Draft: https://tools.ietf.org/html/draft-ietf-oauth-discovery-04#section-2
                   If oauthMetadata.name is non-empty, this value has precedence over
-                  any metadata reference stored in status. The key "oauthMetadata" is
-                  used to locate the data. If specified and the config map or expected
+                  any metadata reference stored in status. The key "oauthMetadata"
+                  is used to locate the data. If specified and the config map or expected
                   key is not found, no metadata is served. If the specified metadata
                   is not valid, no metadata is served. The namespace for this config
                   map is openshift-config.'
@@ -77,8 +77,8 @@ spec:
               webhookTokenAuthenticator:
                 description: webhookTokenAuthenticator configures a remote token reviewer.
                   These remote authentication webhooks can be used to verify bearer
-                  tokens via the tokenreviews.authentication.k8s.io REST API. This is
-                  required to honor bearer tokens that are provisioned by an external
+                  tokens via the tokenreviews.authentication.k8s.io REST API. This
+                  is required to honor bearer tokens that are provisioned by an external
                   authentication service.
                 type: object
                 required:
@@ -89,9 +89,10 @@ spec:
                       config file data which describes how to access the remote webhook
                       service. The namespace for the referenced secret is openshift-config.
                       \n For further details, see: \n https://kubernetes.io/docs/reference/access-authn-authz/authentication/#webhook-token-authentication
-                      \n The key \"kubeConfig\" is used to locate the data. If the secret
-                      or expected key is not found, the webhook is not honored. If the
-                      specified kube config data is not valid, the webhook is not honored."
+                      \n The key \"kubeConfig\" is used to locate the data. If the
+                      secret or expected key is not found, the webhook is not honored.
+                      If the specified kube config data is not valid, the webhook
+                      is not honored."
                     type: object
                     required:
                     - name
@@ -100,8 +101,8 @@ spec:
                         description: name is the metadata.name of the referenced secret
                         type: string
               webhookTokenAuthenticators:
-                description: webhookTokenAuthenticators is DEPRECATED, setting it has
-                  no effect.
+                description: webhookTokenAuthenticators is DEPRECATED, setting it
+                  has no effect.
                 type: array
                 items:
                   description: deprecatedWebhookTokenAuthenticator holds the necessary
@@ -115,16 +116,17 @@ spec:
                         describes how to access the remote webhook service. For further
                         details, see: https://kubernetes.io/docs/reference/access-authn-authz/authentication/#webhook-token-authentication
                         The key "kubeConfig" is used to locate the data. If the secret
-                        or expected key is not found, the webhook is not honored. If
-                        the specified kube config data is not valid, the webhook is
-                        not honored. The namespace for this secret is determined by
-                        the point of use.'
+                        or expected key is not found, the webhook is not honored.
+                        If the specified kube config data is not valid, the webhook
+                        is not honored. The namespace for this secret is determined
+                        by the point of use.'
                       type: object
                       required:
                       - name
                       properties:
                         name:
-                          description: name is the metadata.name of the referenced secret
+                          description: name is the metadata.name of the referenced
+                            secret
                           type: string
           status:
             description: status holds observed values from the cluster. They may not
@@ -138,12 +140,12 @@ spec:
                   its served location: oc get --raw ''/.well-known/oauth-authorization-server''
                   For further details, see the IETF Draft: https://tools.ietf.org/html/draft-ietf-oauth-discovery-04#section-2
                   This contains the observed value based on cluster state. An explicitly
-                  set value in spec.oauthMetadata has precedence over this field. This
-                  field has no meaning if authentication spec.type is not set to IntegratedOAuth.
-                  The key "oauthMetadata" is used to locate the data. If the config
-                  map or expected key is not found, no metadata is served. If the specified
-                  metadata is not valid, no metadata is served. The namespace for this
-                  config map is openshift-config-managed.'
+                  set value in spec.oauthMetadata has precedence over this field.
+                  This field has no meaning if authentication spec.type is not set
+                  to IntegratedOAuth. The key "oauthMetadata" is used to locate the
+                  data. If the config map or expected key is not found, no metadata
+                  is served. If the specified metadata is not valid, no metadata is
+                  served. The namespace for this config map is openshift-config-managed.'
                 type: object
                 required:
                 - name

@@ -2122,6 +2122,11 @@ func (in *NetworkSpec) DeepCopyInto(out *NetworkSpec) {
 		*out = new(bool)
 		**out = **in
 	}
+	if in.UseMultiNetworkPolicy != nil {
+		in, out := &in.UseMultiNetworkPolicy, &out.UseMultiNetworkPolicy
+		*out = new(bool)
+		**out = **in
+	}
 	if in.DeployKubeProxy != nil {
 		in, out := &in.DeployKubeProxy, &out.DeployKubeProxy
 		*out = new(bool)

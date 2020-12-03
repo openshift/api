@@ -2,6 +2,10 @@ apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
 metadata:
   name: schedulers.config.openshift.io
+  annotations:
+    include.release.openshift.io/ibm-cloud-managed: "true"
+    include.release.openshift.io/self-managed-high-availability: "true"
+    include.release.openshift.io/single-node-developer: "true"
 spec:
   group: config.openshift.io
   scope: Cluster
@@ -71,10 +75,12 @@ spec:
                 after doing due diligence.'
               type: boolean
             policy:
-              description: policy is a reference to a ConfigMap containing scheduler
-                policy which has user specified predicates and priorities. If this
-                ConfigMap is not available scheduler will default to use DefaultAlgorithmProvider.
-                The namespace for this configmap is openshift-config.
+              description: 'DEPRECATED: the scheduler Policy API has been deprecated
+                and will be removed in a future release. policy is a reference to
+                a ConfigMap containing scheduler policy which has user specified predicates
+                and priorities. If this ConfigMap is not available scheduler will
+                default to use DefaultAlgorithmProvider. The namespace for this configmap
+                is openshift-config.'
               type: object
               required:
               - name
@@ -83,6 +89,18 @@ spec:
                   description: name is the metadata.name of the referenced config
                     map
                   type: string
+            profile:
+              description: "profile sets which scheduling profile should be set in
+                order to configure scheduling decisions for new pods. \n Valid values
+                are \"LowNodeUtilization\", \"HighNodeUtilization\", \"NoScoring\"
+                Defaults to \"LowNodeUtilization\""
+              type: string
+              default: LowNodeUtilization
+              enum:
+              - ""
+              - LowNodeUtilization
+              - HighNodeUtilization
+              - NoScoring
         status:
           description: status holds observed values from the cluster. They may not
             be overridden.

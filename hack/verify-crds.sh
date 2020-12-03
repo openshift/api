@@ -6,27 +6,19 @@ if [ ! -f ./_output/tools/bin/yq ]; then
     chmod +x ./_output/tools/bin/yq
 fi
 
-FILES="authorization/v1/*.crd.yaml
-config/v1/*.crd.yaml
-console/v1/*.crd.yaml
-imageregistry/v1/*crd.yaml
-operator/v1/*.crd.yaml
-operator/v1alpha1/*.crd.yaml
-quota/v1/*.crd.yaml
-samples/v1/*.crd.yaml
-security/v1/*.crd.yaml
-"
 FAILS=false
-for f in $FILES
+for f in `find . -name "*crd.yaml" -type f`
 do
-    if [[ $(./_output/tools/bin/yq r $f spec.validation.openAPIV3Schema.properties.metadata.description) != "null" ]]; then
-        echo "Error: cannot have a metadata description in $f"
-        FAILS=true
-    fi
+    if [[ $(./_output/tools/bin/yq r $f apiVersion) == "apiextensions.k8s.io/v1beta1" ]]; then
+        if [[ $(./_output/tools/bin/yq r $f spec.validation.openAPIV3Schema.properties.metadata.description) != "null" ]]; then
+            echo "Error: cannot have a metadata description in $f"
+            FAILS=true
+        fi
 
-    if [[ $(./_output/tools/bin/yq r $f spec.preserveUnknownFields) != "false" ]]; then
-        echo "Error: pruning not enabled (spec.preserveUnknownFields != false) in $f"
-        FAILS=true
+        if [[ $(./_output/tools/bin/yq r $f spec.preserveUnknownFields) != "false" ]]; then
+            echo "Error: pruning not enabled (spec.preserveUnknownFields != false) in $f"
+            FAILS=true
+        fi
     fi
 done
 

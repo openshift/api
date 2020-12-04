@@ -15,6 +15,7 @@ option go_package = "v1";
 
 // BrokerTemplateInstance holds the service broker-related state associated with
 // a TemplateInstance.  BrokerTemplateInstance is part of an experimental API.
+// +openshift:compatibility-gen:level=1
 message BrokerTemplateInstance {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
 
@@ -23,6 +24,7 @@ message BrokerTemplateInstance {
 }
 
 // BrokerTemplateInstanceList is a list of BrokerTemplateInstance objects.
+// +openshift:compatibility-gen:level=1
 message BrokerTemplateInstanceList {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1;
 
@@ -99,6 +101,7 @@ message Parameter {
 }
 
 // Template contains the inputs needed to produce a Config.
+// +openshift:compatibility-gen:level=1
 message Template {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
 
@@ -130,6 +133,7 @@ message Template {
 
 // TemplateInstance requests and records the instantiation of a Template.
 // TemplateInstance is part of an experimental API.
+// +openshift:compatibility-gen:level=1
 message TemplateInstance {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
 
@@ -164,6 +168,7 @@ message TemplateInstanceCondition {
 }
 
 // TemplateInstanceList is a list of TemplateInstance objects.
+// +openshift:compatibility-gen:level=1
 message TemplateInstanceList {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1;
 
@@ -223,6 +228,7 @@ message TemplateInstanceStatus {
 }
 
 // TemplateList is a list of Template objects.
+// +openshift:compatibility-gen:level=1
 message TemplateList {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1;
 

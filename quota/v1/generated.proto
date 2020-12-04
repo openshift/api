@@ -15,6 +15,7 @@ option go_package = "v1";
 // AppliedClusterResourceQuota mirrors ClusterResourceQuota at a project scope, for projection
 // into a project.  It allows a project-admin to know which ClusterResourceQuotas are applied to
 // his project and their associated usage.
+// +openshift:compatibility-gen:level=1
 message AppliedClusterResourceQuota {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
 
@@ -26,6 +27,7 @@ message AppliedClusterResourceQuota {
 }
 
 // AppliedClusterResourceQuotaList is a collection of AppliedClusterResourceQuotas
+// +openshift:compatibility-gen:level=1
 message AppliedClusterResourceQuotaList {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1;
 
@@ -35,6 +37,7 @@ message AppliedClusterResourceQuotaList {
 
 // ClusterResourceQuota mirrors ResourceQuota at a cluster scope.  This object is easily convertible to
 // synthetic ResourceQuota object to allow quota evaluation re-use.
+// +openshift:compatibility-gen:level=1
 message ClusterResourceQuota {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
 
@@ -46,6 +49,7 @@ message ClusterResourceQuota {
 }
 
 // ClusterResourceQuotaList is a collection of ClusterResourceQuotas
+// +openshift:compatibility-gen:level=1
 message ClusterResourceQuotaList {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1;
 

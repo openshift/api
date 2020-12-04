@@ -14,6 +14,7 @@ import "k8s.io/apimachinery/pkg/runtime/schema/generated.proto";
 option go_package = "v1";
 
 // Config contains the configuration and detailed condition status for the Samples Operator.
+// +openshift:compatibility-gen:level=1
 message Config {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
 
@@ -47,6 +48,7 @@ message ConfigCondition {
   optional string message = 6;
 }
 
+// +openshift:compatibility-gen:level=1
 message ConfigList {
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1;
 

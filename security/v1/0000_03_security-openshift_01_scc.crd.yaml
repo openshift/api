@@ -21,40 +21,40 @@ spec:
     additionalPrinterColumns:
     - name: Priv
       type: string
-      JSONPath: .allowPrivilegedContainer
+      jsonPath: .allowPrivilegedContainer
       description: Determines if a container can request to be run as privileged
     - name: Caps
       type: string
-      JSONPath: .allowedCapabilities
+      jsonPath: .allowedCapabilities
       description: A list of capabilities that can be requested to add to the container
     - name: SELinux
       type: string
-      JSONPath: .seLinuxContext.type
+      jsonPath: .seLinuxContext.type
       description: Strategy that will dictate what labels will be set in the SecurityContext
     - name: RunAsUser
       type: string
-      JSONPath: .runAsUser.type
+      jsonPath: .runAsUser.type
       description: Strategy that will dictate what RunAsUser is used in the SecurityContext
     - name: FSGroup
       type: string
-      JSONPath: .fsGroup.type
+      jsonPath: .fsGroup.type
       description: Strategy that will dictate what fs group is used by the SecurityContext
     - name: SupGroup
       type: string
-      JSONPath: .supplementalGroups.type
+      jsonPath: .supplementalGroups.type
       description: Strategy that will dictate what supplemental groups are used by
         the SecurityContext
     - name: Priority
       type: string
-      JSONPath: .priority
+      jsonPath: .priority
       description: Sort order of SCCs
     - name: ReadOnlyRootFS
       type: string
-      JSONPath: .readOnlyRootFilesystem
+      jsonPath: .readOnlyRootFilesystem
       description: Force containers to run with a read only root file system
     - name: Volumes
       type: string
-      JSONPath: .volumes
+      jsonPath: .volumes
       description: White list of allowed volume plugins
     schema:
       openAPIV3Schema:

@@ -18,18 +18,17 @@ func TestFeatureBuilder(t *testing.T) {
 		},
 		{
 			name:   "disable-existing",
-			actual: newDefaultFeatures().without("SCTPSupport").toFeatures(),
+			actual: newDefaultFeatures().without("SupportPodPidsLimit").toFeatures(),
 			expected: &FeatureGateEnabledDisabled{
 				Enabled: []string{
 					"APIPriorityAndFairness",
 					"RotateKubeletServerCertificate",
-					"SupportPodPidsLimit",
 					"NodeDisruptionExclusion",
 					"ServiceNodeExclusion",
 				},
 				Disabled: []string{
 					"LegacyNodeRoleBehavior",
-					"SCTPSupport",
+					"SupportPodPidsLimit",
 				},
 			},
 		},
@@ -43,7 +42,6 @@ func TestFeatureBuilder(t *testing.T) {
 					"SupportPodPidsLimit",
 					"NodeDisruptionExclusion",
 					"ServiceNodeExclusion",
-					"SCTPSupport",
 					"LegacyNodeRoleBehavior",
 				},
 				Disabled: []string{},
@@ -51,18 +49,17 @@ func TestFeatureBuilder(t *testing.T) {
 		},
 		{
 			name:   "disable-more",
-			actual: newDefaultFeatures().without("SCTPSupport", "other").toFeatures(),
+			actual: newDefaultFeatures().without("SupportPodPidsLimit", "other").toFeatures(),
 			expected: &FeatureGateEnabledDisabled{
 				Enabled: []string{
 					"APIPriorityAndFairness",
 					"RotateKubeletServerCertificate",
-					"SupportPodPidsLimit",
 					"NodeDisruptionExclusion",
 					"ServiceNodeExclusion",
 				},
 				Disabled: []string{
 					"LegacyNodeRoleBehavior",
-					"SCTPSupport",
+					"SupportPodPidsLimit",
 					"other",
 				},
 			},
@@ -77,7 +74,6 @@ func TestFeatureBuilder(t *testing.T) {
 					"SupportPodPidsLimit",
 					"NodeDisruptionExclusion",
 					"ServiceNodeExclusion",
-					"SCTPSupport",
 					"LegacyNodeRoleBehavior",
 					"other",
 				},

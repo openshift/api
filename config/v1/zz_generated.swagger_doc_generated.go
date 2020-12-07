@@ -399,6 +399,24 @@ func (ImageLabel) SwaggerDoc() map[string]string {
 	return map_ImageLabel
 }
 
+var map_Capability = map[string]string{
+	"":       "Capability holds the expected high-availability mode of the cluster. The canonical name is `cluster`",
+	"spec":   "spec holds user settable values for configuration",
+	"status": "status holds observed values from the cluster. They may not be overridden.",
+}
+
+func (Capability) SwaggerDoc() map[string]string {
+	return map_Capability
+}
+
+var map_CapabilitySpec = map[string]string{
+	"highAvailabilityMode": "HighAvailabilityMode express the high-availability expectations.\n\nThe default is 'Full', which represents the behavior operators have in a \"normal\" cluster. The 'None' mode will be used in single-node deployments (developer and production) for example, and the operators should not configure the operand for highly-available operation\n\nOnce set, this field cannot be changed.",
+}
+
+func (CapabilitySpec) SwaggerDoc() map[string]string {
+	return map_CapabilitySpec
+}
+
 var map_ClusterOperator = map[string]string{
 	"":       "ClusterOperator is the Custom Resource object which holds the current state of an operator. This object is used by operators to convey their state to the rest of the cluster.",
 	"spec":   "spec holds configuration that could apply to any operator.",

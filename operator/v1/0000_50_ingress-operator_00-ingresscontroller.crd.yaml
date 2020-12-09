@@ -98,6 +98,18 @@ spec:
                     description: loadBalancer holds parameters for the load balancer.
                       Present only if type is LoadBalancerService.
                     properties:
+                      allowedSourceRanges:
+                        description: allowedSourceRanges specifies a list of IP address
+                          ranges to which access to the load balancer should be restricted.  Each
+                          range must be specified using CIDR notation (e.g., "10.0.0.0/8").  If
+                          this field is empty, all source addresses are allowed (which
+                          is equivalent to specifying "0.0.0.0/0").
+                        items:
+                          description: CIDR is an IP address range in CIDR notation
+                            (for example, "10.0.0.0/8" or "fd00::/8").
+                          type: string
+                        nullable: true
+                        type: array
                       providerParameters:
                         description: "providerParameters holds desired load balancer
                           information specific to the underlying infrastructure provider.
@@ -908,6 +920,18 @@ spec:
                     description: loadBalancer holds parameters for the load balancer.
                       Present only if type is LoadBalancerService.
                     properties:
+                      allowedSourceRanges:
+                        description: allowedSourceRanges specifies a list of IP address
+                          ranges to which access to the load balancer should be restricted.  Each
+                          range must be specified using CIDR notation (e.g., "10.0.0.0/8").  If
+                          this field is empty, all source addresses are allowed (which
+                          is equivalent to specifying "0.0.0.0/0").
+                        items:
+                          description: CIDR is an IP address range in CIDR notation
+                            (for example, "10.0.0.0/8" or "fd00::/8").
+                          type: string
+                        nullable: true
+                        type: array
                       providerParameters:
                         description: "providerParameters holds desired load balancer
                           information specific to the underlying infrastructure provider.

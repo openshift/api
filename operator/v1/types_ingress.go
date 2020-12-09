@@ -239,6 +239,10 @@ var (
 	ExternalLoadBalancer LoadBalancerScope = "External"
 )
 
+// CIDR is an IP address range in CIDR notation (for example, "10.0.0.0/8"
+// or "fd00::/8").
+type CIDR string
+
 // LoadBalancerStrategy holds parameters for a load balancer.
 type LoadBalancerStrategy struct {
 	// scope indicates the scope at which the load balancer is exposed.
@@ -247,6 +251,16 @@ type LoadBalancerStrategy struct {
 	// +kubebuilder:validation:Required
 	// +required
 	Scope LoadBalancerScope `json:"scope"`
+
+	// allowedSourceRanges specifies a list of IP address ranges to which
+	// access to the load balancer should be restricted.  Each range must be
+	// specified using CIDR notation (e.g., "10.0.0.0/8").  If this field is
+	// empty, all source addresses are allowed (which is equivalent to
+	// specifying "0.0.0.0/0").
+	//
+	// +nullable
+	// +optional
+	AllowedSourceRanges []CIDR `json:"allowedSourceRanges,omitempty"`
 
 	// providerParameters holds desired load balancer information specific to
 	// the underlying infrastructure provider.

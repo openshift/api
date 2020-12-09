@@ -609,9 +609,10 @@ func (IngressControllerStatus) SwaggerDoc() map[string]string {
 }
 
 var map_LoadBalancerStrategy = map[string]string{
-	"":                   "LoadBalancerStrategy holds parameters for a load balancer.",
-	"scope":              "scope indicates the scope at which the load balancer is exposed. Possible values are \"External\" and \"Internal\".",
-	"providerParameters": "providerParameters holds desired load balancer information specific to the underlying infrastructure provider.\n\nIf empty, defaults will be applied. See specific providerParameters fields for details about their defaults.",
+	"":                    "LoadBalancerStrategy holds parameters for a load balancer.",
+	"scope":               "scope indicates the scope at which the load balancer is exposed. Possible values are \"External\" and \"Internal\".",
+	"allowedSourceRanges": "allowedSourceRanges specifies a list of IP address ranges to which access to the load balancer should be restricted.  Each range must be specified using CIDR notation (e.g., \"10.0.0.0/8\").  If this field is empty, all source addresses are allowed (which is equivalent to specifying \"0.0.0.0/0\").",
+	"providerParameters":  "providerParameters holds desired load balancer information specific to the underlying infrastructure provider.\n\nIf empty, defaults will be applied. See specific providerParameters fields for details about their defaults.",
 }
 
 func (LoadBalancerStrategy) SwaggerDoc() map[string]string {

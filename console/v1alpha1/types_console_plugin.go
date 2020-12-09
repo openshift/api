@@ -5,6 +5,7 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // +genclient
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +openshift:compatibility-gen:level=4
 
 // ConsolePlugin is an extension for customizing OpenShift web console by
 // dynamically loading code from another service running on the cluster.
@@ -42,6 +43,7 @@ type ConsolePluginService struct {
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +openshift:compatibility-gen:level=4
 
 type ConsolePluginList struct {
 	metav1.TypeMeta `json:",inline"`

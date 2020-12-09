@@ -11,7 +11,7 @@ import (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // +openshift:compatibility-gen:level=4
-// +openshift:compatibility-gen:exposed=false
+// +openshift:compatibility-gen:internal
 type OpenShiftAPIServerConfig struct {
 	metav1.TypeMeta `json:",inline"`
 
@@ -158,7 +158,7 @@ type JenkinsPipelineConfig struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // +openshift:compatibility-gen:level=4
-// +openshift:compatibility-gen:exposed=false
+// +openshift:compatibility-gen:internal
 type OpenShiftControllerManagerConfig struct {
 	metav1.TypeMeta `json:",inline"`
 
@@ -258,7 +258,7 @@ type ImageImportControllerConfig struct {
 
 // BuildDefaultsConfig controls the default information for Builds
 // +openshift:compatibility-gen:level=4
-// +openshift:compatibility-gen:exposed=false
+// +openshift:compatibility-gen:internal
 type BuildDefaultsConfig struct {
 	metav1.TypeMeta `json:",inline"`
 
@@ -307,7 +307,7 @@ type SourceStrategyDefaultsConfig struct {
 
 // BuildOverridesConfig controls override settings for builds
 // +openshift:compatibility-gen:level=4
-// +openshift:compatibility-gen:exposed=false
+// +openshift:compatibility-gen:internal
 type BuildOverridesConfig struct {
 	metav1.TypeMeta `json:",inline"`
 

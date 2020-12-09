@@ -10,7 +10,7 @@ import (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // +openshift:compatibility-gen:level=4
-// +openshift:compatibility-gen:exposed=false
+// +openshift:compatibility-gen:internal
 type OsinServerConfig struct {
 	metav1.TypeMeta `json:",inline"`
 
@@ -115,7 +115,7 @@ type IdentityProvider struct {
 
 // BasicAuthPasswordIdentityProvider provides identities for users authenticating using HTTP basic auth credentials
 // +openshift:compatibility-gen:level=4
-// +openshift:compatibility-gen:exposed=false
+// +openshift:compatibility-gen:internal
 type BasicAuthPasswordIdentityProvider struct {
 	metav1.TypeMeta `json:",inline"`
 
@@ -127,7 +127,7 @@ type BasicAuthPasswordIdentityProvider struct {
 
 // AllowAllPasswordIdentityProvider provides identities for users authenticating using non-empty passwords
 // +openshift:compatibility-gen:level=4
-// +openshift:compatibility-gen:exposed=false
+// +openshift:compatibility-gen:internal
 type AllowAllPasswordIdentityProvider struct {
 	metav1.TypeMeta `json:",inline"`
 }
@@ -136,7 +136,7 @@ type AllowAllPasswordIdentityProvider struct {
 
 // DenyAllPasswordIdentityProvider provides no identities for users
 // +openshift:compatibility-gen:level=4
-// +openshift:compatibility-gen:exposed=false
+// +openshift:compatibility-gen:internal
 type DenyAllPasswordIdentityProvider struct {
 	metav1.TypeMeta `json:",inline"`
 }
@@ -145,7 +145,7 @@ type DenyAllPasswordIdentityProvider struct {
 
 // HTPasswdPasswordIdentityProvider provides identities for users authenticating using htpasswd credentials
 // +openshift:compatibility-gen:level=4
-// +openshift:compatibility-gen:exposed=false
+// +openshift:compatibility-gen:internal
 type HTPasswdPasswordIdentityProvider struct {
 	metav1.TypeMeta `json:",inline"`
 
@@ -157,7 +157,7 @@ type HTPasswdPasswordIdentityProvider struct {
 
 // LDAPPasswordIdentityProvider provides identities for users authenticating using LDAP credentials
 // +openshift:compatibility-gen:level=4
-// +openshift:compatibility-gen:exposed=false
+// +openshift:compatibility-gen:internal
 type LDAPPasswordIdentityProvider struct {
 	metav1.TypeMeta `json:",inline"`
 	// url is an RFC 2255 URL which specifies the LDAP search parameters to use. The syntax of the URL is
@@ -200,7 +200,7 @@ type LDAPAttributeMapping struct {
 
 // KeystonePasswordIdentityProvider provides identities for users authenticating using keystone password credentials
 // +openshift:compatibility-gen:level=4
-// +openshift:compatibility-gen:exposed=false
+// +openshift:compatibility-gen:internal
 type KeystonePasswordIdentityProvider struct {
 	metav1.TypeMeta `json:",inline"`
 	// RemoteConnectionInfo contains information about how to connect to the keystone server
@@ -215,7 +215,7 @@ type KeystonePasswordIdentityProvider struct {
 
 // RequestHeaderIdentityProvider provides identities for users authenticating using request header credentials
 // +openshift:compatibility-gen:level=4
-// +openshift:compatibility-gen:exposed=false
+// +openshift:compatibility-gen:internal
 type RequestHeaderIdentityProvider struct {
 	metav1.TypeMeta `json:",inline"`
 
@@ -254,7 +254,7 @@ type RequestHeaderIdentityProvider struct {
 
 // GitHubIdentityProvider provides identities for users authenticating using GitHub credentials
 // +openshift:compatibility-gen:level=4
-// +openshift:compatibility-gen:exposed=false
+// +openshift:compatibility-gen:internal
 type GitHubIdentityProvider struct {
 	metav1.TypeMeta `json:",inline"`
 
@@ -278,7 +278,7 @@ type GitHubIdentityProvider struct {
 
 // GitLabIdentityProvider provides identities for users authenticating using GitLab credentials
 // +openshift:compatibility-gen:level=4
-// +openshift:compatibility-gen:exposed=false
+// +openshift:compatibility-gen:internal
 type GitLabIdentityProvider struct {
 	metav1.TypeMeta `json:",inline"`
 
@@ -305,7 +305,7 @@ type GitLabIdentityProvider struct {
 
 // GoogleIdentityProvider provides identities for users authenticating using Google credentials
 // +openshift:compatibility-gen:level=4
-// +openshift:compatibility-gen:exposed=false
+// +openshift:compatibility-gen:internal
 type GoogleIdentityProvider struct {
 	metav1.TypeMeta `json:",inline"`
 
@@ -322,7 +322,7 @@ type GoogleIdentityProvider struct {
 
 // OpenIDIdentityProvider provides identities for users authenticating using OpenID credentials
 // +openshift:compatibility-gen:level=4
-// +openshift:compatibility-gen:exposed=false
+// +openshift:compatibility-gen:internal
 type OpenIDIdentityProvider struct {
 	metav1.TypeMeta `json:",inline"`
 
@@ -441,7 +441,7 @@ type TokenConfig struct {
 
 // SessionSecrets list the secrets to use to sign/encrypt and authenticate/decrypt created sessions.
 // +openshift:compatibility-gen:level=4
-// +openshift:compatibility-gen:exposed=false
+// +openshift:compatibility-gen:internal
 type SessionSecrets struct {
 	metav1.TypeMeta `json:",inline"`
 

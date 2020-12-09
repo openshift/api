@@ -12,6 +12,7 @@ import (
 
 // ServiceCertSignerOperatorConfig provides information to configure an operator to manage the service cert signing controllers
 // +openshift:compatibility-gen:level=4
+// +openshift:compatibility-gen:internal
 type ServiceCertSignerOperatorConfig struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata"`
@@ -32,6 +33,7 @@ type ServiceCertSignerOperatorConfigStatus struct {
 
 // ServiceCertSignerOperatorConfigList is a collection of items
 // +openshift:compatibility-gen:level=4
+// +openshift:compatibility-gen:internal
 type ServiceCertSignerOperatorConfigList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`

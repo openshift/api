@@ -87,6 +87,8 @@ type NetworkSpec struct {
 // the HostPrefix field is not used by the plugin, it can be left unset.
 // Not all network providers support multiple ClusterNetworks
 type ClusterNetworkEntry struct {
+	// +required
+	// +kubebuilder:validation:Required
 	CIDR string `json:"cidr"`
 	// +kubebuilder:validation:Minimum=0
 	// +optional
@@ -98,6 +100,8 @@ type ClusterNetworkEntry struct {
 type DefaultNetworkDefinition struct {
 	// type is the type of network
 	// All NetworkTypes are supported except for NetworkTypeRaw
+	// +required
+	// +kubebuilder:validation:Required
 	Type NetworkType `json:"type"`
 
 	// openShiftSDNConfig configures the openshift-sdn plugin
@@ -199,10 +203,14 @@ type IPAMConfig struct {
 type AdditionalNetworkDefinition struct {
 	// type is the type of network
 	// The supported values are NetworkTypeRaw, NetworkTypeSimpleMacvlan
+	// +required
+	// +kubebuilder:validation:Required
 	Type NetworkType `json:"type"`
 
 	// name is the name of the network. This will be populated in the resulting CRD
 	// This must be unique.
+	// +required
+	// +kubebuilder:validation:Required
 	Name string `json:"name"`
 
 	// namespace is the namespace of the network. This will be populated in the resulting CRD
@@ -332,6 +340,7 @@ type HybridOverlayConfig struct {
 	HybridClusterNetwork []ClusterNetworkEntry `json:"hybridClusterNetwork"`
 	// HybridOverlayVXLANPort defines the VXLAN port number to be used by the additional overlay network.
 	// Default is 4789
+	// +kubebuilder:validation:Minimum=0
 	// +optional
 	HybridOverlayVXLANPort *uint32 `json:"hybridOverlayVXLANPort,omitempty"`
 }

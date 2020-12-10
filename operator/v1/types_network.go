@@ -411,6 +411,22 @@ type OVNKubernetesConfig struct {
 	// gatewayConfig holds the configuration for node gateway options.
 	// +optional
 	GatewayConfig *GatewayConfig `json:"gatewayConfig,omitempty"`
+	// v4InternalSubnet is a v4 subnet used internally by ovn-kubernetes in case the
+	// default one is being already used by something else. It must not overlap with
+	// any other subnet being used by OpenShift or by the node network. The size of the
+	// subnet must be larger than the number of nodes. The value cannot be changed
+	// after installation.
+	// Default is 100.64.0.0/16
+	// +optional
+	V4InternalSubnet string `json:"v4InternalSubnet,omitempty"`
+	// v6InternalSubnet is a v6 subnet used internally by ovn-kubernetes in case the
+	// default one is being already used by something else. It must not overlap with
+	// any other subnet being used by OpenShift or by the node network. The size of the
+	// subnet must be larger than the number of nodes. The value cannot be changed
+	// after installation.
+	// Default is fd98::/48
+	// +optional
+	V6InternalSubnet string `json:"v6InternalSubnet,omitempty"`
 }
 
 type HybridOverlayConfig struct {

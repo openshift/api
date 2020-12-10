@@ -325,6 +325,16 @@ type OVNKubernetesConfig struct {
 	// cluster.
 	// +optional
 	IPsecConfig *IPsecConfig `json:"ipsecConfig,omitempty"`
+	// v4JoinSubnet is the v4 join subnet to be used by ovn-kubernetes in case the
+	// default one is being already used by something else.
+	// Default is 100.64.0.0/16
+	// +optional
+	V4JoinSubnet string `json:"v4JoinSubnet,omitempty"`
+	// v6JoinSubnet is the v6 join subnet to be used by ovn-kubernetes in case the
+	// default one is being already used by something else.
+	// Default is fd98::/48
+	// +optional
+	V6JoinSubnet string `json:"v6JoinSubnet,omitempty"`
 }
 
 type HybridOverlayConfig struct {

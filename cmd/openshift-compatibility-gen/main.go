@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 
 	generatorargs "github.com/openshift/api/cmd/openshift-compatibility-gen/args"
+	"github.com/openshift/api/cmd/openshift-compatibility-gen/comments"
 	"github.com/openshift/api/cmd/openshift-compatibility-gen/generators"
 	"github.com/spf13/pflag"
 	"k8s.io/gengo/args"
@@ -35,6 +36,9 @@ func main() {
 		generators.DefaultNameSystem(),
 		generators.Packages,
 	); err != nil {
+		klog.Fatalf("Error: %v", err)
+	}
+	if err := comments.GenerateCompatibilityComments(genericArgs.InputDirs); err != nil {
 		klog.Fatalf("Error: %v", err)
 	}
 	klog.V(2).Info("Completed successfully.")

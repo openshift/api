@@ -854,6 +854,8 @@ var map_OVNKubernetesConfig = map[string]string{
 	"genevePort":          "geneve port is the UDP port to be used by geneve encapulation. Default is 6081",
 	"hybridOverlayConfig": "HybridOverlayConfig configures an additional overlay network for peers that are not using OVN.",
 	"ipsecConfig":         "ipsecConfig enables and configures IPsec for pods on the pod network within the cluster.",
+	"v4JoinSubnet":        "v4JoinSubnet is the v4 join subnet to be used by ovn-kubernetes in case the default one is being already used by something else. Default is 100.64.0.0/16",
+	"v6JoinSubnet":        "v6JoinSubnet is the v6 join subnet to be used by ovn-kubernetes in case the default one is being already used by something else. Default is fd98::/48",
 }
 
 func (OVNKubernetesConfig) SwaggerDoc() map[string]string {

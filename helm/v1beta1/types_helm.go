@@ -26,6 +26,7 @@ type HelmChartRepository struct {
 	Status HelmChartRepositoryStatus `json:"status"`
 }
 
+// HelmChartRepositoryList contains a list of HelmChartRepository.
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +openshift:compatibility-gen:level=2
 type HelmChartRepositoryList struct {

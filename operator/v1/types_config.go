@@ -9,6 +9,9 @@ import (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // Config provides information to configure the config operator.
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+//
 // +openshift:compatibility-gen:level=1
 type Config struct {
 	metav1.TypeMeta   `json:",inline"`
@@ -35,6 +38,9 @@ type ConfigStatus struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // ConfigList is a collection of items
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+//
 // +openshift:compatibility-gen:level=1
 type ConfigList struct {
 	metav1.TypeMeta `json:",inline"`

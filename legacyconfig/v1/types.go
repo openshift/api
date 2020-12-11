@@ -14,6 +14,9 @@ type ExtendedArguments map[string][]string
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // NodeConfig is the fully specified config starting an OpenShift node
+//
+// Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+//
 // +openshift:compatibility-gen:level=4
 // +openshift:compatibility-gen:exposed=false
 type NodeConfig struct {
@@ -188,6 +191,9 @@ type FeatureList []string
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // MasterConfig holds the necessary configuration options for the OpenShift master
+//
+// Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+//
 // +openshift:compatibility-gen:level=4
 // +openshift:compatibility-gen:exposed=false
 type MasterConfig struct {
@@ -825,6 +831,9 @@ type SessionConfig struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // SessionSecrets list the secrets to use to sign/encrypt and authenticate/decrypt created sessions.
+//
+// Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+//
 // +openshift:compatibility-gen:level=4
 // +openshift:compatibility-gen:exposed=false
 type SessionSecrets struct {
@@ -861,6 +870,9 @@ type IdentityProvider struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // BasicAuthPasswordIdentityProvider provides identities for users authenticating using HTTP basic auth credentials
+//
+// Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+//
 // +openshift:compatibility-gen:level=4
 // +openshift:compatibility-gen:exposed=false
 type BasicAuthPasswordIdentityProvider struct {
@@ -873,6 +885,9 @@ type BasicAuthPasswordIdentityProvider struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // AllowAllPasswordIdentityProvider provides identities for users authenticating using non-empty passwords
+//
+// Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+//
 // +openshift:compatibility-gen:level=4
 // +openshift:compatibility-gen:exposed=false
 type AllowAllPasswordIdentityProvider struct {
@@ -882,6 +897,9 @@ type AllowAllPasswordIdentityProvider struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // DenyAllPasswordIdentityProvider provides no identities for users
+//
+// Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+//
 // +openshift:compatibility-gen:level=4
 // +openshift:compatibility-gen:exposed=false
 type DenyAllPasswordIdentityProvider struct {
@@ -891,6 +909,9 @@ type DenyAllPasswordIdentityProvider struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // HTPasswdPasswordIdentityProvider provides identities for users authenticating using htpasswd credentials
+//
+// Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+//
 // +openshift:compatibility-gen:level=4
 // +openshift:compatibility-gen:exposed=false
 type HTPasswdPasswordIdentityProvider struct {
@@ -903,6 +924,9 @@ type HTPasswdPasswordIdentityProvider struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // LDAPPasswordIdentityProvider provides identities for users authenticating using LDAP credentials
+//
+// Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+//
 // +openshift:compatibility-gen:level=4
 // +openshift:compatibility-gen:exposed=false
 type LDAPPasswordIdentityProvider struct {
@@ -946,6 +970,9 @@ type LDAPAttributeMapping struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // KeystonePasswordIdentityProvider provides identities for users authenticating using keystone password credentials
+//
+// Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+//
 // +openshift:compatibility-gen:level=4
 // +openshift:compatibility-gen:exposed=false
 type KeystonePasswordIdentityProvider struct {
@@ -961,6 +988,9 @@ type KeystonePasswordIdentityProvider struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // RequestHeaderIdentityProvider provides identities for users authenticating using request header credentials
+//
+// Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+//
 // +openshift:compatibility-gen:level=4
 // +openshift:compatibility-gen:exposed=false
 type RequestHeaderIdentityProvider struct {
@@ -1000,6 +1030,9 @@ type RequestHeaderIdentityProvider struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // GitHubIdentityProvider provides identities for users authenticating using GitHub credentials
+//
+// Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+//
 // +openshift:compatibility-gen:level=4
 // +openshift:compatibility-gen:exposed=false
 type GitHubIdentityProvider struct {
@@ -1024,6 +1057,9 @@ type GitHubIdentityProvider struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // GitLabIdentityProvider provides identities for users authenticating using GitLab credentials
+//
+// Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+//
 // +openshift:compatibility-gen:level=4
 // +openshift:compatibility-gen:exposed=false
 type GitLabIdentityProvider struct {
@@ -1051,6 +1087,9 @@ type GitLabIdentityProvider struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // GoogleIdentityProvider provides identities for users authenticating using Google credentials
+//
+// Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+//
 // +openshift:compatibility-gen:level=4
 // +openshift:compatibility-gen:exposed=false
 type GoogleIdentityProvider struct {
@@ -1068,6 +1107,9 @@ type GoogleIdentityProvider struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // OpenIDIdentityProvider provides identities for users authenticating using OpenID credentials
+//
+// Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+//
 // +openshift:compatibility-gen:level=4
 // +openshift:compatibility-gen:exposed=false
 type OpenIDIdentityProvider struct {
@@ -1251,6 +1293,9 @@ type StringSourceSpec struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // LDAPSyncConfig holds the necessary configuration options to define an LDAP group sync
+//
+// Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+//
 // +openshift:compatibility-gen:level=4
 // +openshift:compatibility-gen:exposed=false
 type LDAPSyncConfig struct {
@@ -1477,6 +1522,9 @@ type ServiceServingCert struct {
 // DefaultAdmissionConfig can be used to enable or disable various admission plugins.
 // When this type is present as the `configuration` object under `pluginConfig` and *if* the admission plugin supports it,
 // this will cause an "off by default" admission plugin to be enabled
+//
+// Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+//
 // +openshift:compatibility-gen:level=4
 // +openshift:compatibility-gen:exposed=false
 type DefaultAdmissionConfig struct {
@@ -1489,6 +1537,9 @@ type DefaultAdmissionConfig struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // BuildDefaultsConfig controls the default information for Builds
+//
+// Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+//
 // +openshift:compatibility-gen:level=4
 // +openshift:compatibility-gen:exposed=false
 type BuildDefaultsConfig struct {
@@ -1538,6 +1589,9 @@ type SourceStrategyDefaultsConfig struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // BuildOverridesConfig controls override settings for builds
+//
+// Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+//
 // +openshift:compatibility-gen:level=4
 // +openshift:compatibility-gen:exposed=false
 type BuildOverridesConfig struct {

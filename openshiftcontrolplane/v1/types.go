@@ -9,7 +9,8 @@ import (
 )
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-
+// Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+//
 // +openshift:compatibility-gen:level=4
 // +openshift:compatibility-gen:exposed=false
 type OpenShiftAPIServerConfig struct {
@@ -156,7 +157,8 @@ type JenkinsPipelineConfig struct {
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-
+// Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+//
 // +openshift:compatibility-gen:level=4
 // +openshift:compatibility-gen:exposed=false
 type OpenShiftControllerManagerConfig struct {
@@ -257,6 +259,9 @@ type ImageImportControllerConfig struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // BuildDefaultsConfig controls the default information for Builds
+//
+// Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+//
 // +openshift:compatibility-gen:level=4
 // +openshift:compatibility-gen:exposed=false
 type BuildDefaultsConfig struct {
@@ -306,6 +311,9 @@ type SourceStrategyDefaultsConfig struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // BuildOverridesConfig controls override settings for builds
+//
+// Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+//
 // +openshift:compatibility-gen:level=4
 // +openshift:compatibility-gen:exposed=false
 type BuildOverridesConfig struct {

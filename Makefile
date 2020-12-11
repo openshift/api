@@ -50,11 +50,14 @@ verify: verify-scripts verify-codegen-crds
 
 update-scripts:
 	hack/update-deepcopy.sh
-	hack/update-compatibility.sh
 	hack/update-protobuf.sh
 	hack/update-swagger-docs.sh
 .PHONY: update-scripts
-update: update-scripts update-codegen-crds
+update: update-scripts update-compatibiity update-codegen-crds
+
+update-compatibiity:
+	hack/update-compatibility.sh
+
 
 generate-with-container: Dockerfile.build
 	$(RUNTIME) build -t $(RUNTIME_IMAGE_NAME) -f Dockerfile.build .

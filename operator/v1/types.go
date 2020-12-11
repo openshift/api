@@ -6,6 +6,9 @@ import (
 )
 
 // MyOperatorResource is an example operator configuration type
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+//
 // +openshift:compatibility-gen:level=1
 type MyOperatorResource struct {
 	metav1.TypeMeta   `json:",inline"`

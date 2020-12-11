@@ -12,7 +12,7 @@ package v1
 
 // AUTO-GENERATED FUNCTIONS START HERE
 var map_RangeAllocation = map[string]string{
-	"":      "RangeAllocation is used so we can easily expose a RangeAllocation typed for security group This is an internal API, not intended for external consumption.",
+	"":      "RangeAllocation is used so we can easily expose a RangeAllocation typed for security group This is an internal API, not intended for external consumption.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 	"range": "range is a string representing a unique label for a range of uids, \"1000000000-2000000000/10000\".",
 	"data":  "data is a byte array representing the serialized state of a range allocation.  It is a bitmap with each bit set to one to represent a range is taken.",
 }
@@ -22,7 +22,7 @@ func (RangeAllocation) SwaggerDoc() map[string]string {
 }
 
 var map_RangeAllocationList = map[string]string{
-	"":      "RangeAllocationList is a list of RangeAllocations objects This is an internal API, not intended for external consumption.",
+	"":      "RangeAllocationList is a list of RangeAllocations objects This is an internal API, not intended for external consumption.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 	"items": "List of RangeAllocations.",
 }
 

@@ -9,6 +9,9 @@ import (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // KubeControllerManager provides information to configure an operator to manage kube-controller-manager.
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+//
 // +openshift:compatibility-gen:level=1
 type KubeControllerManager struct {
 	metav1.TypeMeta   `json:",inline"`
@@ -35,6 +38,9 @@ type KubeControllerManagerStatus struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // KubeControllerManagerList is a collection of items
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+//
 // +openshift:compatibility-gen:level=1
 type KubeControllerManagerList struct {
 	metav1.TypeMeta `json:",inline"`

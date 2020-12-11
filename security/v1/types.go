@@ -20,6 +20,9 @@ var AllowAllCapabilities corev1.Capability = "*"
 // That exposure is deprecated and will be removed in a future release - users
 // should instead use the security.openshift.io group to manage
 // SecurityContextConstraints.
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+//
 // +kubebuilder:printcolumn:name="Priv",type=string,JSONPath=`.allowPrivilegedContainer`,description="Determines if a container can request to be run as privileged"
 // +kubebuilder:printcolumn:name="Caps",type=string,JSONPath=`.allowedCapabilities`,description="A list of capabilities that can be requested to add to the container"
 // +kubebuilder:printcolumn:name="SELinux",type=string,JSONPath=`.seLinuxContext.type`,description="Strategy that will dictate what labels will be set in the SecurityContext"
@@ -288,6 +291,9 @@ const (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // SecurityContextConstraintsList is a list of SecurityContextConstraints objects
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+//
 // +openshift:compatibility-gen:level=1
 type SecurityContextConstraintsList struct {
 	metav1.TypeMeta `json:",inline"`
@@ -302,6 +308,9 @@ type SecurityContextConstraintsList struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // PodSecurityPolicySubjectReview checks whether a particular user/SA tuple can create the PodTemplateSpec.
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+//
 // +openshift:compatibility-gen:level=1
 type PodSecurityPolicySubjectReview struct {
 	metav1.TypeMeta `json:",inline"`
@@ -349,6 +358,9 @@ type PodSecurityPolicySubjectReviewStatus struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // PodSecurityPolicySelfSubjectReview checks whether this user/SA tuple can create the PodTemplateSpec
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+//
 // +openshift:compatibility-gen:level=1
 type PodSecurityPolicySelfSubjectReview struct {
 	metav1.TypeMeta `json:",inline"`
@@ -371,6 +383,9 @@ type PodSecurityPolicySelfSubjectReviewSpec struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // PodSecurityPolicyReview checks which service accounts (not users, since that would be cluster-wide) can create the `PodTemplateSpec` in question.
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+//
 // +openshift:compatibility-gen:level=1
 type PodSecurityPolicyReview struct {
 	metav1.TypeMeta `json:",inline"`
@@ -416,6 +431,9 @@ type ServiceAccountPodSecurityPolicyReviewStatus struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // RangeAllocation is used so we can easily expose a RangeAllocation typed for security group
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+//
 // +openshift:compatibility-gen:level=1
 type RangeAllocation struct {
 	metav1.TypeMeta   `json:",inline"`
@@ -432,6 +450,9 @@ type RangeAllocation struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // RangeAllocationList is a list of RangeAllocations objects
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+//
 // +openshift:compatibility-gen:level=1
 type RangeAllocationList struct {
 	metav1.TypeMeta `json:",inline"`

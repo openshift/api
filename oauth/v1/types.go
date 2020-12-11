@@ -9,6 +9,9 @@ import (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // OAuthAccessToken describes an OAuth access token
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+//
 // +openshift:compatibility-gen:level=1
 type OAuthAccessToken struct {
 	metav1.TypeMeta   `json:",inline"`
@@ -49,6 +52,9 @@ type OAuthAccessToken struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // OAuthAuthorizeToken describes an OAuth authorization token
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+//
 // +openshift:compatibility-gen:level=1
 type OAuthAuthorizeToken struct {
 	metav1.TypeMeta   `json:",inline"`
@@ -88,6 +94,9 @@ type OAuthAuthorizeToken struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // OAuthClient describes an OAuth client
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+//
 // +openshift:compatibility-gen:level=1
 type OAuthClient struct {
 	metav1.TypeMeta   `json:",inline"`
@@ -171,6 +180,9 @@ type ClusterRoleScopeRestriction struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // OAuthClientAuthorization describes an authorization created by an OAuth client
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+//
 // +openshift:compatibility-gen:level=1
 type OAuthClientAuthorization struct {
 	metav1.TypeMeta   `json:",inline"`
@@ -193,6 +205,9 @@ type OAuthClientAuthorization struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // OAuthAccessTokenList is a collection of OAuth access tokens
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+//
 // +openshift:compatibility-gen:level=1
 type OAuthAccessTokenList struct {
 	metav1.TypeMeta `json:",inline"`
@@ -205,6 +220,9 @@ type OAuthAccessTokenList struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // OAuthAuthorizeTokenList is a collection of OAuth authorization tokens
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+//
 // +openshift:compatibility-gen:level=1
 type OAuthAuthorizeTokenList struct {
 	metav1.TypeMeta `json:",inline"`
@@ -217,6 +235,9 @@ type OAuthAuthorizeTokenList struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // OAuthClientList is a collection of OAuth clients
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+//
 // +openshift:compatibility-gen:level=1
 type OAuthClientList struct {
 	metav1.TypeMeta `json:",inline"`
@@ -229,6 +250,9 @@ type OAuthClientList struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // OAuthClientAuthorizationList is a collection of OAuth client authorizations
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+//
 // +openshift:compatibility-gen:level=1
 type OAuthClientAuthorizationList struct {
 	metav1.TypeMeta `json:",inline"`
@@ -241,6 +265,9 @@ type OAuthClientAuthorizationList struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // OAuthRedirectReference is a reference to an OAuth redirect object.
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+//
 // +openshift:compatibility-gen:level=1
 type OAuthRedirectReference struct {
 	metav1.TypeMeta   `json:",inline"`
@@ -268,6 +295,9 @@ type RedirectReference struct {
 
 // UserOAuthAccessToken is a virtual resource to mirror OAuthAccessTokens to
 // the user the access token was issued for
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+//
 // +openshift:compatibility-gen:level=1
 type UserOAuthAccessToken OAuthAccessToken
 
@@ -275,6 +305,9 @@ type UserOAuthAccessToken OAuthAccessToken
 
 // UserOAuthAccessTokenList is a collection of access tokens issued on behalf of
 // the requesting user
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+//
 // +openshift:compatibility-gen:level=1
 type UserOAuthAccessTokenList struct {
 	metav1.TypeMeta `json:",inline"`

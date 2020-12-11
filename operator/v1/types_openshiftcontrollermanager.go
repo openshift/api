@@ -9,6 +9,9 @@ import (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // OpenShiftControllerManager provides information to configure an operator to manage openshift-controller-manager.
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+//
 // +openshift:compatibility-gen:level=1
 type OpenShiftControllerManager struct {
 	metav1.TypeMeta   `json:",inline"`
@@ -32,6 +35,9 @@ type OpenShiftControllerManagerStatus struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // OpenShiftControllerManagerList is a collection of items
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+//
 // +openshift:compatibility-gen:level=1
 type OpenShiftControllerManagerList struct {
 	metav1.TypeMeta `json:",inline"`

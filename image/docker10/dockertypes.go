@@ -8,6 +8,9 @@ import (
 
 // DockerImage is the type representing a container image and its various properties when
 // retrieved from the Docker client API.
+//
+// Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+//
 // +openshift:compatibility-gen:level=4
 // +openshift:compatibility-gen:exposed=false
 type DockerImage struct {

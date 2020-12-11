@@ -262,7 +262,7 @@ func (APIServerEncryption) SwaggerDoc() map[string]string {
 }
 
 var map_APIServerList = map[string]string{
-	"": "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"": "\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 }
 
 func (APIServerList) SwaggerDoc() map[string]string {
@@ -319,7 +319,7 @@ func (Authentication) SwaggerDoc() map[string]string {
 }
 
 var map_AuthenticationList = map[string]string{
-	"": "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"": "\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 }
 
 func (AuthenticationList) SwaggerDoc() map[string]string {
@@ -386,7 +386,7 @@ func (BuildDefaults) SwaggerDoc() map[string]string {
 }
 
 var map_BuildList = map[string]string{
-	"": "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"": "\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 }
 
 func (BuildList) SwaggerDoc() map[string]string {
@@ -610,7 +610,7 @@ func (ConsoleAuthentication) SwaggerDoc() map[string]string {
 }
 
 var map_ConsoleList = map[string]string{
-	"": "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"": "\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 }
 
 func (ConsoleList) SwaggerDoc() map[string]string {
@@ -645,7 +645,7 @@ func (DNS) SwaggerDoc() map[string]string {
 }
 
 var map_DNSList = map[string]string{
-	"": "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"": "\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 }
 
 func (DNSList) SwaggerDoc() map[string]string {
@@ -692,7 +692,7 @@ func (FeatureGate) SwaggerDoc() map[string]string {
 }
 
 var map_FeatureGateList = map[string]string{
-	"": "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"": "\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 }
 
 func (FeatureGateList) SwaggerDoc() map[string]string {
@@ -719,7 +719,7 @@ func (Image) SwaggerDoc() map[string]string {
 }
 
 var map_ImageList = map[string]string{
-	"": "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"": "\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 }
 
 func (ImageList) SwaggerDoc() map[string]string {
@@ -1037,7 +1037,7 @@ func (Ingress) SwaggerDoc() map[string]string {
 }
 
 var map_IngressList = map[string]string{
-	"": "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"": "\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 }
 
 func (IngressList) SwaggerDoc() map[string]string {
@@ -1094,7 +1094,7 @@ func (Network) SwaggerDoc() map[string]string {
 }
 
 var map_NetworkList = map[string]string{
-	"": "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"": "\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 }
 
 func (NetworkList) SwaggerDoc() map[string]string {
@@ -1254,7 +1254,7 @@ func (OAuth) SwaggerDoc() map[string]string {
 }
 
 var map_OAuthList = map[string]string{
-	"": "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"": "\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 }
 
 func (OAuthList) SwaggerDoc() map[string]string {
@@ -1422,7 +1422,7 @@ func (Project) SwaggerDoc() map[string]string {
 }
 
 var map_ProjectList = map[string]string{
-	"": "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"": "\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 }
 
 func (ProjectList) SwaggerDoc() map[string]string {
@@ -1459,7 +1459,7 @@ func (Proxy) SwaggerDoc() map[string]string {
 }
 
 var map_ProxyList = map[string]string{
-	"": "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"": "\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 }
 
 func (ProxyList) SwaggerDoc() map[string]string {
@@ -1501,7 +1501,7 @@ func (Scheduler) SwaggerDoc() map[string]string {
 }
 
 var map_SchedulerList = map[string]string{
-	"": "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"": "\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 }
 
 func (SchedulerList) SwaggerDoc() map[string]string {

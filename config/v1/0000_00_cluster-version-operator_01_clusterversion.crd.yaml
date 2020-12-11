@@ -37,8 +37,10 @@ spec:
     JSONPath: .status.conditions[?(@.type=="Progressing")].message
   validation:
     openAPIV3Schema:
-      description: ClusterVersion is the configuration for the ClusterVersionOperator.
-        This is where parameters related to automatic updates can be set.
+      description: "ClusterVersion is the configuration for the ClusterVersionOperator.
+        This is where parameters related to automatic updates can be set. \n Compatibility
+        level 1: Stable within a major release for a minimum of 12 months or 3 minor
+        releases (whichever is longer)."
       type: object
       required:
       - spec

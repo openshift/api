@@ -22,9 +22,10 @@ spec:
       status: {}
     schema:
       openAPIV3Schema:
-        description: Authentication specifies cluster-wide settings for authentication
+        description: "Authentication specifies cluster-wide settings for authentication
           (like OAuth and webhook token authenticators). The canonical name of an
-          instance is `cluster`.
+          instance is `cluster`. \n Compatibility level 1: Stable within a major release
+          for a minimum of 12 months or 3 minor releases (whichever is longer)."
         type: object
         required:
         - spec

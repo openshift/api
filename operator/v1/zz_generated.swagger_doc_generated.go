@@ -143,7 +143,7 @@ func (CloudCredential) SwaggerDoc() map[string]string {
 }
 
 var map_CloudCredentialList = map[string]string{
-	"": "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"": "\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 }
 
 func (CloudCredentialList) SwaggerDoc() map[string]string {
@@ -218,7 +218,7 @@ func (ConsoleCustomization) SwaggerDoc() map[string]string {
 }
 
 var map_ConsoleList = map[string]string{
-	"": "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"": "\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 }
 
 func (ConsoleList) SwaggerDoc() map[string]string {

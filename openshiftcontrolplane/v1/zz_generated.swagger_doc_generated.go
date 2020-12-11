@@ -143,7 +143,7 @@ func (NetworkControllerConfig) SwaggerDoc() map[string]string {
 }
 
 var map_OpenShiftAPIServerConfig = map[string]string{
-	"":                               "Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"":                               "\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 	"aggregatorConfig":               "aggregatorConfig contains information about how to verify the aggregator front proxy",
 	"imagePolicyConfig":              "imagePolicyConfig feeds the image policy admission plugin",
 	"projectConfig":                  "projectConfig feeds an admission plugin",
@@ -158,7 +158,7 @@ func (OpenShiftAPIServerConfig) SwaggerDoc() map[string]string {
 }
 
 var map_OpenShiftControllerManagerConfig = map[string]string{
-	"":               "Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"":               "\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 	"servingInfo":    "servingInfo describes how to start serving",
 	"leaderElection": "leaderElection defines the configuration for electing a controller instance to make changes to the cluster. If unspecified, the ControllerTTL value is checked to determine whether the legacy direct etcd election code will be used.",
 	"controllers":    "controllers is a list of controllers to enable.  '*' enables all on-by-default controllers, 'foo' enables the controller \"+ named 'foo', '-foo' disables the controller named 'foo'. Defaults to \"*\".",

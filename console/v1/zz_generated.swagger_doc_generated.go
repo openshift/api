@@ -39,7 +39,7 @@ func (ConsoleCLIDownload) SwaggerDoc() map[string]string {
 }
 
 var map_ConsoleCLIDownloadList = map[string]string{
-	"": "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"": "\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 }
 
 func (ConsoleCLIDownloadList) SwaggerDoc() map[string]string {
@@ -66,7 +66,7 @@ func (ConsoleExternalLogLink) SwaggerDoc() map[string]string {
 }
 
 var map_ConsoleExternalLogLinkList = map[string]string{
-	"": "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"": "\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 }
 
 func (ConsoleExternalLogLinkList) SwaggerDoc() map[string]string {
@@ -103,7 +103,7 @@ func (ConsoleLink) SwaggerDoc() map[string]string {
 }
 
 var map_ConsoleLinkList = map[string]string{
-	"": "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"": "\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 }
 
 func (ConsoleLinkList) SwaggerDoc() map[string]string {
@@ -140,7 +140,7 @@ func (ConsoleNotification) SwaggerDoc() map[string]string {
 }
 
 var map_ConsoleNotificationList = map[string]string{
-	"": "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"": "\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 }
 
 func (ConsoleNotificationList) SwaggerDoc() map[string]string {
@@ -169,7 +169,7 @@ func (ConsoleQuickStart) SwaggerDoc() map[string]string {
 }
 
 var map_ConsoleQuickStartList = map[string]string{
-	"": "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"": "\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 }
 
 func (ConsoleQuickStartList) SwaggerDoc() map[string]string {
@@ -236,7 +236,7 @@ func (ConsoleYAMLSample) SwaggerDoc() map[string]string {
 }
 
 var map_ConsoleYAMLSampleList = map[string]string{
-	"": "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"": "\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 }
 
 func (ConsoleYAMLSampleList) SwaggerDoc() map[string]string {

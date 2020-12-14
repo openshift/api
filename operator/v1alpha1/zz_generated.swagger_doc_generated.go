@@ -14,6 +14,7 @@ package v1alpha1
 var map_DelegatedAuthentication = map[string]string{
 	"":         "DelegatedAuthentication allows authentication to be disabled.",
 	"disabled": "disabled indicates that authentication should be disabled.  By default it will use delegated authentication.",
+	"cacheTTL": "CacheTTL is the length of time that a token authentication answer will be cached.",
 }
 
 func (DelegatedAuthentication) SwaggerDoc() map[string]string {
@@ -21,8 +22,9 @@ func (DelegatedAuthentication) SwaggerDoc() map[string]string {
 }
 
 var map_DelegatedAuthorization = map[string]string{
-	"":         "DelegatedAuthorization allows authorization to be disabled.",
-	"disabled": "disabled indicates that authorization should be disabled.  By default it will use delegated authorization.",
+	"":              "DelegatedAuthorization allows authorization to be disabled.",
+	"disabled":      "disabled indicates that authorization should be disabled.  By default it will use delegated authorization.",
+	"allowCacheTTL": "AllowCacheTTL is the length of time that a successful authorization response will be cached",
 }
 
 func (DelegatedAuthorization) SwaggerDoc() map[string]string {

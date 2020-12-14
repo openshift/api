@@ -143,12 +143,16 @@ type GenericOperatorConfig struct {
 type DelegatedAuthentication struct {
 	// disabled indicates that authentication should be disabled.  By default it will use delegated authentication.
 	Disabled bool `json:"disabled,omitempty"`
+	// CacheTTL is the length of time that a token authentication answer will be cached.
+	CacheTTL metav1.Duration `json:"cacheTTL,omitempty"`
 }
 
 // DelegatedAuthorization allows authorization to be disabled.
 type DelegatedAuthorization struct {
 	// disabled indicates that authorization should be disabled.  By default it will use delegated authorization.
 	Disabled bool `json:"disabled,omitempty"`
+	// AllowCacheTTL is the length of time that a successful authorization response will be cached
+	AllowCacheTTL metav1.Duration `json:"allowCacheTTL,omitempty"`
 }
 
 // StaticPodOperatorStatus is status for controllers that manage static pods.  There are different needs because individual

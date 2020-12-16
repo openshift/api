@@ -29,6 +29,7 @@ func TestFeatureBuilder(t *testing.T) {
 				},
 				Disabled: []string{
 					"LegacyNodeRoleBehavior",
+					"RemoveSelfLink",
 					"SCTPSupport",
 				},
 			},
@@ -46,7 +47,9 @@ func TestFeatureBuilder(t *testing.T) {
 					"SCTPSupport",
 					"LegacyNodeRoleBehavior",
 				},
-				Disabled: []string{},
+				Disabled: []string{
+					"RemoveSelfLink",
+				},
 			},
 		},
 		{
@@ -62,6 +65,7 @@ func TestFeatureBuilder(t *testing.T) {
 				},
 				Disabled: []string{
 					"LegacyNodeRoleBehavior",
+					"RemoveSelfLink",
 					"SCTPSupport",
 					"other",
 				},
@@ -81,7 +85,9 @@ func TestFeatureBuilder(t *testing.T) {
 					"LegacyNodeRoleBehavior",
 					"other",
 				},
-				Disabled: []string{},
+				Disabled: []string{
+					"RemoveSelfLink",
+				},
 			},
 		},
 	}

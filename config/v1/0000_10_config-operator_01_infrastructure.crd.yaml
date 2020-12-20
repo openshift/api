@@ -173,6 +173,18 @@ spec:
                   used by components like the web console to tell users where to find
                   the Kubernetes API.
                 type: string
+              controlPlaneTopology:
+                description: controlPlaneTopology expresses the expectations for operands
+                  that normally run on control nodes. The default is 'HighlyAvailable',
+                  which represents the behavior operators have in a "normal" cluster.
+                  The 'SingleReplica' mode will be used in single-node deployments
+                  and the operators should not configure the operand for highly-available
+                  operation
+                type: string
+                default: HighlyAvailable
+                enum:
+                - HighlyAvailable
+                - SingleReplica
               etcdDiscoveryDomain:
                 description: 'etcdDiscoveryDomain is the domain used to fetch the
                   SRV records for discovering etcd servers and clients. For more info:
@@ -185,6 +197,19 @@ spec:
                   a human friendly name. Once set it should not be changed. Must be
                   of max length 27 and must have only alphanumeric or hyphen characters.
                 type: string
+              infrastructureTopology:
+                description: infrastructureTopology expresses the expectations for
+                  infrastructure services that do not run on control plane nodes,
+                  usually indicated by a node selector for a `role` value other than
+                  `master`. The default is 'HighlyAvailable', which represents the
+                  behavior operators have in a "normal" cluster. The 'SingleReplica'
+                  mode will be used in single-node deployments and the operators should
+                  not configure the operand for highly-available operation
+                type: string
+                default: HighlyAvailable
+                enum:
+                - HighlyAvailable
+                - SingleReplica
               platform:
                 description: "platform is the underlying infrastructure provider for
                   the cluster. \n Deprecated: Use platformStatus.type instead."

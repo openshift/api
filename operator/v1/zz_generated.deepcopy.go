@@ -729,6 +729,11 @@ func (in *ConsoleSpec) DeepCopyInto(out *ConsoleSpec) {
 	in.Customization.DeepCopyInto(&out.Customization)
 	in.Providers.DeepCopyInto(&out.Providers)
 	out.Route = in.Route
+	if in.Plugins != nil {
+		in, out := &in.Plugins, &out.Plugins
+		*out = make([]string, len(*in))
+		copy(*out, *in)
+	}
 	return
 }
 

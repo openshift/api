@@ -14,6 +14,7 @@ apps/v1 \
 authorization/v1 \
 build/v1 \
 console/v1 \
+console/v1alpha1 \
 config/v1 \
 image/v1 \
 imageregistry/v1 \

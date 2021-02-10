@@ -279,6 +279,25 @@ spec:
                 required:
                 - type
                 type: object
+              httpErrorCodePages:
+                description: httpErrorCodePages specifies a configmap with custom
+                  error pages. The administrator must create this configmap in the
+                  openshift-config namespace. This configmap should have keys in the
+                  format "error-page-<error code>.http", where <error code> is an
+                  HTTP error code. For example, "error-page-503.http" defines an error
+                  page for HTTP 503 responses. Currently only error pages for 503
+                  and 404 responses can be customized. Each value in the configmap
+                  should be the full response, including HTTP headers. Eg- https://raw.githubusercontent.com/openshift/router/fadab45747a9b30cc3f0a4b41ad2871f95827a93/images/router/haproxy/conf/error-page-503.http
+                  If this field is empty, the ingress controller uses the default
+                  error pages.
+                properties:
+                  name:
+                    description: name is the metadata.name of the referenced config
+                      map
+                    type: string
+                required:
+                - name
+                type: object
               httpHeaders:
                 description: "httpHeaders defines policy for HTTP headers. \n If this
                   field is empty, the default values are used."

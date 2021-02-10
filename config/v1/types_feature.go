@@ -110,6 +110,7 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		with("CSIDriverVSphere").      // sig-storage, jsafrane, OCP specific
 		with("CSIMigrationAWS").       // sig-storage, jsafrane, Kubernetes feature gate
 		with("CSIMigrationOpenStack"). // sig-storage, jsafrane, Kubernetes feature gate
+		with("MemoryManager").         // kni-telco-compute, alukiano
 		toFeatures(),
 	LatencySensitive: newDefaultFeatures().
 		with(

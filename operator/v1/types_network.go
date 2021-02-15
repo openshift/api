@@ -80,6 +80,13 @@ type NetworkSpec struct {
 	// If not specified, sensible defaults will be chosen by OpenShift directly.
 	// Not consumed by all network providers - currently only openshift-sdn.
 	KubeProxyConfig *ProxyConfig `json:"kubeProxyConfig,omitempty"`
+
+	// exportNetworkFlows enables and configures the export of network flow metadata from the pod network
+	// by using protocols NetFlow, SFlow or IPFIX. Currently only supported on OVN-Kubernetes plugin.
+	// If unset, flows will not be exported to any collector.
+	// +optional
+	// +kubebuilder:validation:MinProperties=1
+	ExportNetworkFlows *ExportNetworkFlows `json:"exportNetworkFlows,omitempty"`
 }
 
 // ClusterNetworkEntry is a subnet from which to allocate PodIPs. A network of size
@@ -338,6 +345,40 @@ type HybridOverlayConfig struct {
 
 type IPsecConfig struct {
 }
+
+type ExportNetworkFlows struct {
+	// netFlow defines the NetFlow configuration.
+	// +optional
+	NetFlow *NetFlowConfig `json:"netFlow,omitempty"`
+	// sFlow defines the SFlow configuration.
+	// +optional
+	SFlow *SFlowConfig `json:"sFlow,omitempty"`
+	// ipfix defines IPFIX configuration.
+	// +optional
+	IPFIX *IPFIXConfig `json:"ipfix,omitempty"`
+}
+
+type NetFlowConfig struct {
+	// netFlow defines the NetFlow collectors that will consume the flow data exported from OVS.
+	// It is a list of strings formatted as ip:port
+	// +kubebuilder:validation:MinItems=1
+	Collectors []IPPort `json:"collectors,omitempty"`
+}
+
+type SFlowConfig struct {
+	// sFlowCollectors is list of strings formatted as ip:port
+	// +kubebuilder:validation:MinItems=1
+	Collectors []IPPort `json:"collectors,omitempty"`
+}
+
+type IPFIXConfig struct {
+	// ipfixCollectors is list of strings formatted as ip:port
+	// +kubebuilder:validation:MinItems=1
+	Collectors []IPPort `json:"collectors,omitempty"`
+}
+
+// +kubebuilder:validation:Pattern=`^(([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]):[0-9]+$`
+type IPPort string
 
 // NetworkType describes the network plugin type to configure
 type NetworkType string

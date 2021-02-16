@@ -46,6 +46,7 @@ const (
 	CinderCSIDriver    CSIDriverName = "cinder.csi.openstack.org"
 	ManilaCSIDriver    CSIDriverName = "manila.csi.openstack.org"
 	OvirtCSIDriver     CSIDriverName = "csi.ovirt.org"
+	KubevirtCSIDriver  CSIDriverName = "csi.kubevirt.io"
 )
 
 // ClusterCSIDriverSpec is the desired behavior of CSI driver operator

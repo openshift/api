@@ -10,3 +10,4 @@
       - cinder.csi.openstack.org
       - manila.csi.openstack.org
       - csi.ovirt.org
+      - csi.kubevirt.io

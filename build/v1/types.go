@@ -1008,7 +1008,31 @@ type ImageChangeTrigger struct {
 
 // BuildTriggerPolicy describes a policy for a single trigger that results in a new Build.
 type BuildTriggerPolicy struct {
-	// type is the type of build trigger
+	// type is the type of build trigger. Valid values:
+	//
+	// - GitHub
+	// GitHubWebHookBuildTriggerType represents a trigger that launches builds on
+	// GitHub webhook invocations
+	//
+	// - Generic
+	// GenericWebHookBuildTriggerType represents a trigger that launches builds on
+	// generic webhook invocations
+	//
+	// - GitLab
+	// GitLabWebHookBuildTriggerType represents a trigger that launches builds on
+	// GitLab webhook invocations
+	//
+	// - Bitbucket
+	// BitbucketWebHookBuildTriggerType represents a trigger that launches builds on
+	// Bitbucket webhook invocations
+	//
+	// - ImageChange
+	// ImageChangeBuildTriggerType represents a trigger that launches builds on
+	// availability of a new version of an image
+	//
+	// - ConfigChange
+	// ConfigChangeBuildTriggerType will trigger a build on an initial build config creation
+	// WARNING: In the future the behavior will change to trigger a build on any config change
 	Type BuildTriggerType `json:"type" protobuf:"bytes,1,opt,name=type,casttype=BuildTriggerType"`
 
 	// github contains the parameters for a GitHub webhook type of trigger

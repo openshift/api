@@ -276,7 +276,7 @@ func (BuildTriggerCause) SwaggerDoc() map[string]string {
 
 var map_BuildTriggerPolicy = map[string]string{
 	"":            "BuildTriggerPolicy describes a policy for a single trigger that results in a new Build.",
-	"type":        "type is the type of build trigger",
+	"type":        "type is the type of build trigger. Valid values:\n\n- GitHub GitHubWebHookBuildTriggerType represents a trigger that launches builds on GitHub webhook invocations\n\n- Generic GenericWebHookBuildTriggerType represents a trigger that launches builds on generic webhook invocations\n\n- GitLab GitLabWebHookBuildTriggerType represents a trigger that launches builds on GitLab webhook invocations\n\n- Bitbucket BitbucketWebHookBuildTriggerType represents a trigger that launches builds on Bitbucket webhook invocations\n\n- ImageChange ImageChangeBuildTriggerType represents a trigger that launches builds on availability of a new version of an image\n\n- ConfigChange ConfigChangeBuildTriggerType will trigger a build on an initial build config creation WARNING: In the future the behavior will change to trigger a build on any config change",
 	"github":      "github contains the parameters for a GitHub webhook type of trigger",
 	"generic":     "generic contains the parameters for a Generic webhook type of trigger",
 	"imageChange": "imageChange contains parameters for an ImageChange type of trigger",

@@ -31,6 +31,7 @@ import (
 	kstoragev1beta1 "k8s.io/api/storage/v1beta1"
 	"k8s.io/apimachinery/pkg/runtime"
 
+	"github.com/openshift/api/apiserver"
 	"github.com/openshift/api/apps"
 	"github.com/openshift/api/authorization"
 	"github.com/openshift/api/build"
@@ -61,6 +62,7 @@ import (
 
 var (
 	schemeBuilder = runtime.NewSchemeBuilder(
+		apiserver.Install,
 		apps.Install,
 		authorization.Install,
 		build.Install,

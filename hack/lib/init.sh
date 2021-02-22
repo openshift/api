@@ -10,6 +10,7 @@ set -o nounset
 set -o pipefail
 
 API_GROUP_VERSIONS="\
+apiserver/v1 \
 apps/v1 \
 authorization/v1 \
 build/v1 \

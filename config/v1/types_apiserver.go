@@ -73,6 +73,10 @@ const (
 	// "AllRequestBodies" is similar to WriteRequestBodies, but also logs request
 	// and response HTTP payloads for read requests (get, list).
 	AllRequestBodiesAuditProfileType AuditProfileType = "AllRequestBodies"
+
+	// "UserRequests is a policy that filters logs on resource requests from
+	//  users in the system:authenticated:oauth user group
+	UserRequestsAuditProfileType = "UserRequests"
 )
 
 type Audit struct {
@@ -85,6 +89,7 @@ type Audit struct {
 	// write requests (create, update, patch).
 	// - AllRequestBodies: like 'WriteRequestBodies', but also logs request and response
 	// HTTP payloads for read requests (get, list).
+	// - UserRequests: logs resource requests from system:authenticated:oauth users
 	//
 	// If unset, the 'Default' profile is used as the default.
 	// +kubebuilder:default=Default

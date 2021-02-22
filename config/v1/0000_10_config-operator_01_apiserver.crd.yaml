@@ -71,7 +71,9 @@ spec:
                       like 'Default', but logs request and response HTTP payloads
                       for write requests (create, update, patch). - AllRequestBodies:
                       like 'WriteRequestBodies', but also logs request and response
-                      HTTP payloads for read requests (get, list). \n If unset, the
+                      HTTP payloads for read requests (get, list). - UserRequests:
+                      logs resources requested bu users in the `system:authenticated:oauth` group.
+                      \n If unset, the
                       'Default' profile is used as the default."
                     type: string
                     default: Default
@@ -79,6 +81,7 @@ spec:
                     - Default
                     - WriteRequestBodies
                     - AllRequestBodies
+                    - UserRequests
               clientCA:
                 description: 'clientCA references a ConfigMap containing a certificate
                   bundle for the signers that will be recognized for incoming client

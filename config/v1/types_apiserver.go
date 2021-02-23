@@ -76,7 +76,7 @@ const (
 
 	// "UserRequests is a policy that filters logs on resource requests from
 	//  users in the system:authenticated:oauth user group
-	UserRequestsAuditProfileType = "UserRequests"
+	UserRequestsAuditProfileType AuditProfileType = "UserRequests"
 )
 
 type Audit struct {

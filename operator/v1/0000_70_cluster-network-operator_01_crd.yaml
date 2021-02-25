@@ -331,6 +331,40 @@ spec:
                         type: integer
                         format: int32
                         minimum: 0
+                      policyAuditConfig:
+                        description: PolicyAuditConfig is the configuration for network
+                          policy audit events. If unset, reported defaults are used.
+                        type: object
+                        properties:
+                          destination:
+                            description: 'Messages are output in syslog format. Destination
+                              is the destination for policy log messages. Regardless
+                              of this config logs will always be dumped to ovn at
+                              /var/log/ovn/ however you may also configure additional
+                              output as follows. Messages are output in syslog format.
+                              Valid values are: - "libc" -> to use the libc syslog()
+                              function of the host node''s journdald process - "udp:host:port"
+                              -> for sending syslog over UDP - "unix:file" -> for
+                              using the UNIX domain socket directly - "null" -> to
+                              discard all messages logged to syslog The default is
+                              "null"'
+                            type: string
+                          maxFileSize:
+                            description: MaxFilesSize is the max size an ACL_audit
+                              log file is allowed to reach before rotation occurs
+                              Default is 50MB
+                            type: integer
+                            format: int32
+                          rateLimit:
+                            description: RateLimit is the approximate maximum number
+                              of messages to generate per-second per-node. If unset
+                              the default of 20 msg/sec is used.
+                            type: integer
+                            format: int32
+                          syslogFacility:
+                            description: SyslogFacility the RFC5424 facility for generated
+                              messages, e.g. "kern". Default is "local0"
+                            type: string
                   type:
                     description: type is the type of network All NetworkTypes are
                       supported except for NetworkTypeRaw

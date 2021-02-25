@@ -74,8 +74,8 @@ const (
 	// and response HTTP payloads for read requests (get, list).
 	AllRequestBodiesAuditProfileType AuditProfileType = "AllRequestBodies"
 
-	// "UserRequests is a policy that filters logs on resource requests from
-	//  users in the system:authenticated:oauth user group
+	// "UserRequests" is a policy that filters logs on resource requests from
+	// users in the system:authenticated:oauth user group.
 	UserRequestsAuditProfileType AuditProfileType = "UserRequests"
 )
 

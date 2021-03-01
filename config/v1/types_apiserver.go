@@ -59,7 +59,7 @@ type APIServerSpec struct {
 }
 
 // AuditProfileType defines the audit policy profile type.
-// +kubebuilder:validation:Enum=Default;WriteRequestBodies;AllRequestBodies
+// +kubebuilder:validation:Enum=Default;WriteRequestBodies;AllRequestBodies;UserRequests
 type AuditProfileType string
 
 const (

@@ -73,14 +73,14 @@ spec:
                       like 'WriteRequestBodies', but also logs request and response
                       HTTP payloads for read requests (get, list). - UserRequests:
                       logs resource requests from system:authenticated:oauth users
-                      and oauthaccesstokens. \n If unset, the 'Default' profile is used as the default."
+                      \n If unset, the 'Default' profile is used as the default."
                     type: string
                     default: Default
                     enum:
                     - Default
                     - WriteRequestBodies
                     - AllRequestBodies
-                    - UserRequests
+                    - UserRequests 
               clientCA:
                 description: 'clientCA references a ConfigMap containing a certificate
                   bundle for the signers that will be recognized for incoming client

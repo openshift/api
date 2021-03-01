@@ -80,7 +80,7 @@ spec:
                     - Default
                     - WriteRequestBodies
                     - AllRequestBodies
-                    - UserRequests 
+                    - UserRequests
               clientCA:
                 description: 'clientCA references a ConfigMap containing a certificate
                   bundle for the signers that will be recognized for incoming client

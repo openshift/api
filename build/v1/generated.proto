@@ -144,6 +144,10 @@ message BuildConfigSpec {
 message BuildConfigStatus {
   // lastVersion is used to inform about number of last triggered build.
   optional int64 lastVersion = 1;
+
+  // ImageChangeTriggers is used to capture the runtime state of any ImageChangeTrigger specified in the BuildConfigSpec,
+  // including reconciled values of the lastTriggeredImageID and paused fields.
+  repeated ImageChangeTriggerStatus imageChangeTriggers = 2;
 }
 
 // BuildList is a collection of Builds.
@@ -857,6 +861,8 @@ message ImageChangeCause {
 message ImageChangeTrigger {
   // lastTriggeredImageID is used internally by the ImageChangeController to save last
   // used image ID for build
+  // This field is deprecated and will be removed in a future release.
+  // Deprecated
   optional string lastTriggeredImageID = 1;
 
   // from is a reference to an ImageStreamTag that will trigger a build when updated
@@ -867,6 +873,25 @@ message ImageChangeTrigger {
 
   // paused is true if this trigger is temporarily disabled. Optional.
   optional bool paused = 3;
+}
+
+// ImageChangeTriggerStatus tracks the latest resolved status of the associated ImageChangeTrigger policy
+// specified in the BuildConfigSpec.Triggers struct.
+message ImageChangeTriggerStatus {
+  // lastTriggeredImageID is the sha/id of the imageref cited in the 'from' field the last time this BuildConfig was triggered.
+  // It is not necessarily the sha/id of the image change that triggered a build.
+  // This field is updated for all image change triggers when any of them triggers a build.
+  optional string lastTriggeredImageID = 1;
+
+  // from is the ImageStreamTag that is used as the source of the trigger.
+  // This can come from an ImageStream tag referenced in this BuildConfig's triggers, or the From image in this BuildConfig's build strategy.
+  optional k8s.io.api.core.v1.ObjectReference from = 2;
+
+  // paused is true if this trigger is temporarily disabled, and the setting on the spec has been reconciled. Optional.
+  optional bool paused = 3;
+
+  // lastTriggerTime is the last time the BuildConfig was triggered by a change in the ImageStreamTag associated with this trigger.
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.Time lastTriggerTime = 4;
 }
 
 // ImageLabel represents a label applied to the resulting image.

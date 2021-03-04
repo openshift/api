@@ -437,6 +437,17 @@ spec:
                 type: object
                 nullable: true
                 x-kubernetes-preserve-unknown-fields: true
+              useMultiNetworkPolicy:
+                description: useMultiNetworkPolicy enables a controller which allows
+                  for MultiNetworkPolicy objects to be used on additional networks
+                  as created by Multus CNI. MultiNetworkPolicy are similar to NetworkPolicy
+                  objects, but NetworkPolicy objects only apply to the primary interface.
+                  With MultiNetworkPolicy, you can control the traffic that a pod
+                  can receive over the secondary interfaces. If unset, this property
+                  defaults to 'false' and MultiNetworkPolicy objects are ignored.
+                  If 'disableMultiNetwork' is 'true' then the value of this field
+                  is ignored.
+                type: boolean
           status:
             description: NetworkStatus is detailed operator status, which is distilled
               up to the Network clusteroperator object.

@@ -59,7 +59,7 @@ type APIServerSpec struct {
 }
 
 // AuditProfileType defines the audit policy profile type.
-// +kubebuilder:validation:Enum=Default;WriteRequestBodies;AllRequestBodies;UserRequests
+// +kubebuilder:validation:Enum=Default;WriteRequestBodies;AllRequestBodies;UserRequestBodies
 type AuditProfileType string
 
 const (
@@ -76,7 +76,7 @@ const (
 
 	// "UserRequests" is a policy that filters logs on resource requests from
 	// users in the system:authenticated:oauth user group.
-	UserRequestsAuditProfileType AuditProfileType = "UserRequests"
+	UserRequestAuditProfileType AuditProfileType = "UserRequestBodies"
 )
 
 type Audit struct {
@@ -89,7 +89,7 @@ type Audit struct {
 	// write requests (create, update, patch).
 	// - AllRequestBodies: like 'WriteRequestBodies', but also logs request and response
 	// HTTP payloads for read requests (get, list).
-	// - UserRequests: logs resource requests from system:authenticated:oauth users
+	// - UserRequestBodies: logs resource requests from system:authenticated:oauth users
 	//
 	// If unset, the 'Default' profile is used as the default.
 	// +kubebuilder:default=Default

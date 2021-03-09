@@ -99,8 +99,9 @@ func (BuildConfigSpec) SwaggerDoc() map[string]string {
 }
 
 var map_BuildConfigStatus = map[string]string{
-	"":            "BuildConfigStatus contains current state of the build config object.",
-	"lastVersion": "lastVersion is used to inform about number of last triggered build.",
+	"":                    "BuildConfigStatus contains current state of the build config object.",
+	"lastVersion":         "lastVersion is used to inform about number of last triggered build.",
+	"imageChangeTriggers": "ImageChangeTriggers is used to capture the runtime state of any ImageChangeTrigger specified in the BuildConfigSpec, including reconciled values of the lastTriggeredImageID and paused fields.",
 }
 
 func (BuildConfigStatus) SwaggerDoc() map[string]string {
@@ -458,13 +459,25 @@ func (ImageChangeCause) SwaggerDoc() map[string]string {
 
 var map_ImageChangeTrigger = map[string]string{
 	"":                     "ImageChangeTrigger allows builds to be triggered when an ImageStream changes",
-	"lastTriggeredImageID": "lastTriggeredImageID is used internally by the ImageChangeController to save last used image ID for build",
+	"lastTriggeredImageID": "lastTriggeredImageID is used internally by the ImageChangeController to save last used image ID for build This field is deprecated and will be removed in a future release. Deprecated",
 	"from":                 "from is a reference to an ImageStreamTag that will trigger a build when updated It is optional. If no From is specified, the From image from the build strategy will be used. Only one ImageChangeTrigger with an empty From reference is allowed in a build configuration.",
 	"paused":               "paused is true if this trigger is temporarily disabled. Optional.",
 }
 
 func (ImageChangeTrigger) SwaggerDoc() map[string]string {
 	return map_ImageChangeTrigger
+}
+
+var map_ImageChangeTriggerStatus = map[string]string{
+	"":                     "ImageChangeTriggerStatus tracks the latest resolved status of the associated ImageChangeTrigger policy specified in the BuildConfigSpec.Triggers struct.",
+	"lastTriggeredImageID": "lastTriggeredImageID is the sha/id of the imageref cited in the 'from' field the last time this BuildConfig was triggered. It is not necessarily the sha/id of the image change that triggered a build. This field is updated for all image change triggers when any of them triggers a build.",
+	"from":                 "from is the ImageStreamTag that is used as the source of the trigger. This can come from an ImageStream tag referenced in this BuildConfig's triggers, or the From image in this BuildConfig's build strategy.",
+	"paused":               "paused is true if this trigger is temporarily disabled, and the setting on the spec has been reconciled. Optional.",
+	"lastTriggerTime":      "lastTriggerTime is the last time the BuildConfig was triggered by a change in the ImageStreamTag associated with this trigger.",
+}
+
+func (ImageChangeTriggerStatus) SwaggerDoc() map[string]string {
+	return map_ImageChangeTriggerStatus
 }
 
 var map_ImageLabel = map[string]string{

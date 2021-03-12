@@ -894,7 +894,7 @@ var map_OVNKubernetesConfig = map[string]string{
 	"genevePort":          "geneve port is the UDP port to be used by geneve encapulation. Default is 6081",
 	"hybridOverlayConfig": "HybridOverlayConfig configures an additional overlay network for peers that are not using OVN.",
 	"ipsecConfig":         "ipsecConfig enables and configures IPsec for pods on the pod network within the cluster.",
-	"policyAuditConfig":   "PolicyAuditConfig is the configuration for network policy audit events. If unset, reported defaults are used.",
+	"policyAuditConfig":   "policyAuditConfig is the configuration for network policy audit events. If unset, reported defaults are used.",
 }
 
 func (OVNKubernetesConfig) SwaggerDoc() map[string]string {
@@ -915,10 +915,10 @@ func (OpenShiftSDNConfig) SwaggerDoc() map[string]string {
 }
 
 var map_PolicyAuditConfig = map[string]string{
-	"rateLimit":      "RateLimit is the approximate maximum number of messages to generate per-second per-node. If unset the default of 20 msg/sec is used.",
-	"maxFileSize":    "MaxFilesSize is the max size an ACL_audit log file is allowed to reach before rotation occurs Default is 50MB",
-	"destination":    "Messages are output in syslog format. Destination is the destination for policy log messages. Regardless of this config logs will always be dumped to ovn at /var/log/ovn/ however you may also configure additional output as follows. Messages are output in syslog format. Valid values are: - \"libc\" -> to use the libc syslog() function of the host node's journdald process - \"udp:host:port\" -> for sending syslog over UDP - \"unix:file\" -> for using the UNIX domain socket directly - \"null\" -> to discard all messages logged to syslog The default is \"null\"",
-	"syslogFacility": "SyslogFacility the RFC5424 facility for generated messages, e.g. \"kern\". Default is \"local0\"",
+	"rateLimit":      "rateLimit is the approximate maximum number of messages to generate per-second per-node. If unset the default of 20 msg/sec is used.",
+	"maxFileSize":    "maxFilesSize is the max size an ACL_audit log file is allowed to reach before rotation occurs Units are in MB and the Default is 50MB",
+	"destination":    "destination is the location for policy log messages. Regardless of this config, persistent logs will always be dumped to the host at /var/log/ovn/ however Additionally syslog output may be configured as follows. Valid values are: - \"libc\" -> to use the libc syslog() function of the host node's journdald process - \"udp:host:port\" -> for sending syslog over UDP - \"unix:file\" -> for using the UNIX domain socket directly - \"null\" -> to discard all messages logged to syslog The default is \"null\"",
+	"syslogFacility": "syslogFacility the RFC5424 facility for generated messages, e.g. \"kern\". Default is \"local0\"",
 }
 
 func (PolicyAuditConfig) SwaggerDoc() map[string]string {

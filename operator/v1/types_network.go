@@ -342,7 +342,7 @@ type OVNKubernetesConfig struct {
 	// cluster.
 	// +optional
 	IPsecConfig *IPsecConfig `json:"ipsecConfig,omitempty"`
-	// PolicyAuditConfig is the configuration for network policy audit events. If unset,
+	// policyAuditConfig is the configuration for network policy audit events. If unset,
 	// reported defaults are used.
 	// +optional
 	PolicyAuditConfig *PolicyAuditConfig `json:"policyAuditConfig,omitempty"`
@@ -395,30 +395,38 @@ type IPFIXConfig struct {
 type IPPort string
 
 type PolicyAuditConfig struct {
-	// RateLimit is the approximate maximum number of messages to generate per-second per-node. If
+	// rateLimit is the approximate maximum number of messages to generate per-second per-node. If
 	// unset the default of 20 msg/sec is used.
+	// +kubebuilder:default=20
+	// +kubebuilder:validation:Minimum=1
 	// +optional
 	RateLimit *uint32 `json:"rateLimit,omitempty"`
 
-	// MaxFilesSize is the max size an ACL_audit log file is allowed to reach before rotation occurs
-	// Default is 50MB
+	// maxFilesSize is the max size an ACL_audit log file is allowed to reach before rotation occurs
+	// Units are in MB and the Default is 50MB
+	// +kubebuilder:default=50
+	// +kubebuilder:validation:Minimum=1
 	// +optional
 	MaxFileSize *uint32 `json:"maxFileSize,omitempty"`
 
-	// Messages are output in syslog format. Destination is the destination for policy log messages.
-	// Regardless of this config logs will always be dumped to ovn at /var/log/ovn/ however
-	// you may also configure additional output as follows.
-	// Messages are output in syslog format.
+	// destination is the location for policy log messages.
+	// Regardless of this config, persistent logs will always be dumped to the host
+	// at /var/log/ovn/ however
+	// Additionally syslog output may be configured as follows.
 	// Valid values are:
 	// - "libc" -> to use the libc syslog() function of the host node's journdald process
 	// - "udp:host:port" -> for sending syslog over UDP
 	// - "unix:file" -> for using the UNIX domain socket directly
 	// - "null" -> to discard all messages logged to syslog
 	// The default is "null"
+	// +kubebuilder:default=null
+	// +kubebuilder:pattern='^libc$|^null$|^udp:(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]):([0-9]){0,5}$|^unix:(\/[^\/ ]*)+([^\/\s])$'
 	// +optional
 	Destination string `json:"destination,omitempty"`
 
-	// SyslogFacility the RFC5424 facility for generated messages, e.g. "kern". Default is "local0"
+	// syslogFacility the RFC5424 facility for generated messages, e.g. "kern". Default is "local0"
+	// +kubebuilder:default=local0
+	// +kubebuilder:Enum=kern;user;mail;daemon;auth;syslog;lpr;news;uucp;clock;ftp;ntp;audit;alert;clock2;local0;local1;local2;local3;local4;local5;local6;local7
 	// +optional
 	SyslogFacility string `json:"syslogFacility,omitempty"`
 }

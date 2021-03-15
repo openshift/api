@@ -44,6 +44,7 @@ const (
 	AzureDiskCSIDriver CSIDriverName = "disk.csi.azure.com"
 	GCPPDCSIDriver     CSIDriverName = "pd.csi.storage.gke.io"
 	CinderCSIDriver    CSIDriverName = "cinder.csi.openstack.org"
+	VSphereCSIDriver   CSIDriverName = "csi.vsphere.vmware.com"
 	ManilaCSIDriver    CSIDriverName = "manila.csi.openstack.org"
 	OvirtCSIDriver     CSIDriverName = "csi.ovirt.org"
 	KubevirtCSIDriver  CSIDriverName = "csi.kubevirt.io"

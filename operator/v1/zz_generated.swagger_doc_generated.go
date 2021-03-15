@@ -786,6 +786,16 @@ func (DefaultNetworkDefinition) SwaggerDoc() map[string]string {
 	return map_DefaultNetworkDefinition
 }
 
+var map_ExportNetworkFlows = map[string]string{
+	"netFlow": "netFlow defines the NetFlow configuration.",
+	"sFlow":   "sFlow defines the SFlow configuration.",
+	"ipfix":   "ipfix defines IPFIX configuration.",
+}
+
+func (ExportNetworkFlows) SwaggerDoc() map[string]string {
+	return map_ExportNetworkFlows
+}
+
 var map_HybridOverlayConfig = map[string]string{
 	"hybridClusterNetwork":   "HybridClusterNetwork defines a network space given to nodes on an additional overlay network.",
 	"hybridOverlayVXLANPort": "HybridOverlayVXLANPort defines the VXLAN port number to be used by the additional overlay network. Default is 4789",
@@ -805,6 +815,14 @@ func (IPAMConfig) SwaggerDoc() map[string]string {
 	return map_IPAMConfig
 }
 
+var map_IPFIXConfig = map[string]string{
+	"collectors": "ipfixCollectors is list of strings formatted as ip:port",
+}
+
+func (IPFIXConfig) SwaggerDoc() map[string]string {
+	return map_IPFIXConfig
+}
+
 var map_KuryrConfig = map[string]string{
 	"":                             "KuryrConfig configures the Kuryr-Kubernetes SDN",
 	"daemonProbesPort":             "The port kuryr-daemon will listen for readiness and liveness requests.",
@@ -818,6 +836,14 @@ var map_KuryrConfig = map[string]string{
 
 func (KuryrConfig) SwaggerDoc() map[string]string {
 	return map_KuryrConfig
+}
+
+var map_NetFlowConfig = map[string]string{
+	"collectors": "netFlow defines the NetFlow collectors that will consume the flow data exported from OVS. It is a list of strings formatted as ip:port",
+}
+
+func (NetFlowConfig) SwaggerDoc() map[string]string {
+	return map_NetFlowConfig
 }
 
 var map_Network = map[string]string{
@@ -847,6 +873,7 @@ var map_NetworkSpec = map[string]string{
 	"deployKubeProxy":           "deployKubeProxy specifies whether or not a standalone kube-proxy should be deployed by the operator. Some network providers include kube-proxy or similar functionality. If unset, the plugin will attempt to select the correct value, which is false when OpenShift SDN and ovn-kubernetes are used and true otherwise.",
 	"disableNetworkDiagnostics": "disableNetworkDiagnostics specifies whether or not PodNetworkConnectivityCheck CRs from a test pod to every node, apiserver and LB should be disabled or not. If unset, this property defaults to 'false' and network diagnostics is enabled. Setting this to 'true' would reduce the additional load of the pods performing the checks.",
 	"kubeProxyConfig":           "kubeProxyConfig lets us configure desired proxy configuration. If not specified, sensible defaults will be chosen by OpenShift directly. Not consumed by all network providers - currently only openshift-sdn.",
+	"exportNetworkFlows":        "exportNetworkFlows enables and configures the export of network flow metadata from the pod network by using protocols NetFlow, SFlow or IPFIX. Currently only supported on OVN-Kubernetes plugin. If unset, flows will not be exported to any collector.",
 }
 
 func (NetworkSpec) SwaggerDoc() map[string]string {
@@ -895,6 +922,14 @@ var map_ProxyConfig = map[string]string{
 
 func (ProxyConfig) SwaggerDoc() map[string]string {
 	return map_ProxyConfig
+}
+
+var map_SFlowConfig = map[string]string{
+	"collectors": "sFlowCollectors is list of strings formatted as ip:port",
+}
+
+func (SFlowConfig) SwaggerDoc() map[string]string {
+	return map_SFlowConfig
 }
 
 var map_SimpleMacvlanConfig = map[string]string{

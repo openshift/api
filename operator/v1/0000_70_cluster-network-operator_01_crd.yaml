@@ -331,6 +331,45 @@ spec:
                         type: integer
                         format: int32
                         minimum: 0
+                      policyAuditConfig:
+                        description: policyAuditConfig is the configuration for network
+                          policy audit events. If unset, reported defaults are used.
+                        type: object
+                        properties:
+                          destination:
+                            description: 'destination is the location for policy log
+                              messages. Regardless of this config, persistent logs
+                              will always be dumped to the host at /var/log/ovn/ however
+                              Additionally syslog output may be configured as follows.
+                              Valid values are: - "libc" -> to use the libc syslog()
+                              function of the host node''s journdald process - "udp:host:port"
+                              -> for sending syslog over UDP - "unix:file" -> for
+                              using the UNIX domain socket directly - "null" -> to
+                              discard all messages logged to syslog The default is
+                              "null"'
+                            type: string
+                            default: "null"
+                          maxFileSize:
+                            description: maxFilesSize is the max size an ACL_audit
+                              log file is allowed to reach before rotation occurs
+                              Units are in MB and the Default is 50MB
+                            type: integer
+                            format: int32
+                            default: 50
+                            minimum: 1
+                          rateLimit:
+                            description: rateLimit is the approximate maximum number
+                              of messages to generate per-second per-node. If unset
+                              the default of 20 msg/sec is used.
+                            type: integer
+                            format: int32
+                            default: 20
+                            minimum: 1
+                          syslogFacility:
+                            description: syslogFacility the RFC5424 facility for generated
+                              messages, e.g. "kern". Default is "local0"
+                            type: string
+                            default: local0
                   type:
                     description: type is the type of network All NetworkTypes are
                       supported except for NetworkTypeRaw

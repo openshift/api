@@ -176,6 +176,17 @@ type IngressControllerSpec struct {
 	//
 	// +optional
 	HTTPHeaders *IngressControllerHTTPHeaders `json:"httpHeaders,omitempty"`
+
+	// httpHeaderBuffer defines parameters for header buffer size values.
+	// If this field is empty, the default values are used. See specific
+	// httpHeaderBuffer fields for their respective default values.
+	// Setting this field is generally not recommended as header buffer
+	// values that are too small may break the IngressController and header
+	// buffer values that are too large could cause the IngressController to
+	// use significantly more memory than necessary.
+	//
+	// +optional
+	HTTPHeaderBuffer IngressControllerHTTPHeaderBuffer `json:"httpHeaderBuffer,omitempty"`
 }
 
 // NodePlacement describes node scheduling configuration for an ingress
@@ -923,6 +934,36 @@ type IngressControllerHTTPHeaders struct {
 	// +nullable
 	// +optional
 	HeaderNameCaseAdjustments []IngressControllerHTTPHeaderNameCaseAdjustment `json:"headerNameCaseAdjustments,omitempty"`
+}
+
+// IngressControllerHTTPHeaderBuffer specifies the size of the
+// per-connection HTTP header buffers.
+type IngressControllerHTTPHeaderBuffer struct {
+	// headerBufferBytes describes how much memory should be reserved
+	// (in bytes) for IngressController connection sessions.
+	// Note that this value must be at least 16384 if HTTP/2 is
+	// enabled for the IngressController (https://tools.ietf.org/html/rfc7540).
+	// If this field is empty, the IngressController will use a default value
+	// of 32768 bytes.
+	//
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Minimum=16384
+	// +optional
+	HeaderBufferBytes int32 `json:"headerBufferBytes"`
+
+	// headerBufferMaxRewriteBytes describes how much memory should be reserved
+	// (in bytes) from headerBufferBytes for HTTP header rewriting
+	// and appending for IngressController connection sessions.
+	// Note that incoming HTTP requests will be limited to
+	// (headerBufferBytes - headerBufferMaxRewriteBytes) bytes, meaning
+	// headerBufferBytes must be greater than headerBufferMaxRewriteBytes.
+	// If this field is empty, the IngressController will use a default value
+	// of 8192 bytes.
+	//
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Minimum=4096
+	// +optional
+	HeaderBufferMaxRewriteBytes int32 `json:"headerBufferMaxRewriteBytes"`
 }
 
 var (

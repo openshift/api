@@ -547,6 +547,16 @@ func (IngressControllerCaptureHTTPHeaders) SwaggerDoc() map[string]string {
 	return map_IngressControllerCaptureHTTPHeaders
 }
 
+var map_IngressControllerHTTPHeaderBuffer = map[string]string{
+	"":                            "IngressControllerHTTPHeaderBuffer specifies the size of the per-connection HTTP header buffers.",
+	"headerBufferBytes":           "headerBufferBytes describes how much memory should be reserved (in bytes) for IngressController connection sessions. Note that this value must be at least 16384 if HTTP/2 is enabled for the IngressController (https://tools.ietf.org/html/rfc7540). If this field is empty, the IngressController will use a default value of 32768 bytes.",
+	"headerBufferMaxRewriteBytes": "headerBufferMaxRewriteBytes describes how much memory should be reserved (in bytes) from headerBufferBytes for HTTP header rewriting and appending for IngressController connection sessions. Note that incoming HTTP requests will be limited to (headerBufferBytes - headerBufferMaxRewriteBytes) bytes, meaning headerBufferBytes must be greater than headerBufferMaxRewriteBytes. If this field is empty, the IngressController will use a default value of 8192 bytes.",
+}
+
+func (IngressControllerHTTPHeaderBuffer) SwaggerDoc() map[string]string {
+	return map_IngressControllerHTTPHeaderBuffer
+}
+
 var map_IngressControllerHTTPHeaders = map[string]string{
 	"":                          "IngressControllerHTTPHeaders specifies how the IngressController handles certain HTTP headers.",
 	"forwardedHeaderPolicy":     "forwardedHeaderPolicy specifies when and how the IngressController sets the Forwarded, X-Forwarded-For, X-Forwarded-Host, X-Forwarded-Port, X-Forwarded-Proto, and X-Forwarded-Proto-Version HTTP headers.  The value may be one of the following:\n\n* \"Append\", which specifies that the IngressController appends the\n  headers, preserving existing headers.\n\n* \"Replace\", which specifies that the IngressController sets the\n  headers, replacing any existing Forwarded or X-Forwarded-* headers.\n\n* \"IfNone\", which specifies that the IngressController sets the\n  headers if they are not already set.\n\n* \"Never\", which specifies that the IngressController never sets the\n  headers, preserving any existing headers.\n\nBy default, the policy is \"Append\".",
@@ -598,6 +608,7 @@ var map_IngressControllerSpec = map[string]string{
 	"routeAdmission":             "routeAdmission defines a policy for handling new route claims (for example, to allow or deny claims across namespaces).\n\nIf empty, defaults will be applied. See specific routeAdmission fields for details about their defaults.",
 	"logging":                    "logging defines parameters for what should be logged where.  If this field is empty, operational logs are enabled but access logs are disabled.",
 	"httpHeaders":                "httpHeaders defines policy for HTTP headers.\n\nIf this field is empty, the default values are used.",
+	"httpHeaderBuffer":           "httpHeaderBuffer defines parameters for header buffer size values. If this field is empty, the default values are used. See specific httpHeaderBuffer fields for their respective default values. Setting this field is generally not recommended as header buffer values that are too small may break the IngressController and header buffer values that are too large could cause the IngressController to use significantly more memory than necessary.",
 }
 
 func (IngressControllerSpec) SwaggerDoc() map[string]string {

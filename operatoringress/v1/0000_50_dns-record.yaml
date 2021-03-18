@@ -13,7 +13,7 @@ spec:
     listKind: DNSRecordList
     plural: dnsrecords
     singular: dnsrecord
-  scope: ""
+  scope: Namespaced
   versions:
   - name: v1
     served: true

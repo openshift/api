@@ -949,7 +949,7 @@ type IngressControllerHTTPHeaderBuffer struct {
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Minimum=16384
 	// +optional
-	HeaderBufferBytes int32 `json:"headerBufferBytes"`
+	HeaderBufferBytes int32 `json:"headerBufferBytes,omitempty"`
 
 	// headerBufferMaxRewriteBytes describes how much memory should be reserved
 	// (in bytes) from headerBufferBytes for HTTP header rewriting
@@ -963,7 +963,7 @@ type IngressControllerHTTPHeaderBuffer struct {
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Minimum=4096
 	// +optional
-	HeaderBufferMaxRewriteBytes int32 `json:"headerBufferMaxRewriteBytes"`
+	HeaderBufferMaxRewriteBytes int32 `json:"headerBufferMaxRewriteBytes,omitempty"`
 }
 
 var (

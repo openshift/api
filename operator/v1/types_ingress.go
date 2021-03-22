@@ -187,6 +187,14 @@ type IngressControllerSpec struct {
 	//
 	// +optional
 	HTTPHeaderBuffer IngressControllerHTTPHeaderBuffer `json:"httpHeaderBuffer,omitempty"`
+
+	// threading defines parameters for configuring threading options within
+	// ingress controller pods created under this IngressController. See
+	// specific threading fields for their respective definitions and default
+	// values.
+	//
+	// +optional
+	Threading IngressControllerThreading `json:"threading,omitempty"`
 }
 
 // NodePlacement describes node scheduling configuration for an ingress
@@ -1030,6 +1038,19 @@ type IngressControllerHTTPHeaderBuffer struct {
 	// +kubebuilder:validation:Minimum=4096
 	// +optional
 	HeaderBufferMaxRewriteBytes int32 `json:"headerBufferMaxRewriteBytes,omitempty"`
+}
+
+type IngressControllerThreading struct {
+	// count defines the number of threads created per ingress controller pod.
+	// Creating more threads allows each ingress controller pod to handle more
+	// connections, at the cost of more system resources being used. If this
+	// field is empty, the IngressController will use the default value. The
+	// current default is 4 threads, but this may change in future releases.
+	//
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Minimum=1
+	// +optional
+	Count int32 `json:"count,omitempty"`
 }
 
 var (

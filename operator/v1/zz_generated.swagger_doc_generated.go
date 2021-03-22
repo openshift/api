@@ -621,6 +621,7 @@ var map_IngressControllerSpec = map[string]string{
 	"logging":                    "logging defines parameters for what should be logged where.  If this field is empty, operational logs are enabled but access logs are disabled.",
 	"httpHeaders":                "httpHeaders defines policy for HTTP headers.\n\nIf this field is empty, the default values are used.",
 	"httpHeaderBuffer":           "httpHeaderBuffer defines parameters for header buffer size values. If this field is empty, the default values are used. See specific httpHeaderBuffer fields for their respective default values. Setting this field is generally not recommended as header buffer values that are too small may break the IngressController and header buffer values that are too large could cause the IngressController to use significantly more memory than necessary.",
+	"threading":                  "threading defines parameters for configuring threading options within ingress controller pods created under this IngressController. See specific threading fields for their respective definitions and default values.",
 }
 
 func (IngressControllerSpec) SwaggerDoc() map[string]string {
@@ -640,6 +641,14 @@ var map_IngressControllerStatus = map[string]string{
 
 func (IngressControllerStatus) SwaggerDoc() map[string]string {
 	return map_IngressControllerStatus
+}
+
+var map_IngressControllerThreading = map[string]string{
+	"count": "count defines the number of threads created per ingress controller pod. Creating more threads allows each ingress controller pod to handle more connections, at the cost of more system resources being used. If this field is empty, the IngressController will use the default value. The current default is 4 threads, but this may change in future releases.",
+}
+
+func (IngressControllerThreading) SwaggerDoc() map[string]string {
+	return map_IngressControllerThreading
 }
 
 var map_LoadBalancerStrategy = map[string]string{

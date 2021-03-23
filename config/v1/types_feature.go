@@ -127,7 +127,8 @@ var defaultFeatures = &FeatureGateEnabledDisabled{
 		"ServiceNodeExclusion",           // sig-scheduling, ccoleman
 	},
 	Disabled: []string{
-		"LegacyNodeRoleBehavior", // sig-scheduling, ccoleman
+		"LegacyNodeRoleBehavior",           // sig-scheduling, ccoleman
+		"PowerOfTwoRandomChoicesBalancing", // sig-network-edge, mmasters
 	},
 }
 

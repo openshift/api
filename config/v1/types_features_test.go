@@ -28,6 +28,7 @@ func TestFeatureBuilder(t *testing.T) {
 				},
 				Disabled: []string{
 					"LegacyNodeRoleBehavior",
+					"PowerOfTwoRandomChoicesBalancing",
 					"SupportPodPidsLimit",
 				},
 			},
@@ -44,7 +45,9 @@ func TestFeatureBuilder(t *testing.T) {
 					"ServiceNodeExclusion",
 					"LegacyNodeRoleBehavior",
 				},
-				Disabled: []string{},
+				Disabled: []string{
+					"PowerOfTwoRandomChoicesBalancing",
+				},
 			},
 		},
 		{
@@ -59,6 +62,7 @@ func TestFeatureBuilder(t *testing.T) {
 				},
 				Disabled: []string{
 					"LegacyNodeRoleBehavior",
+					"PowerOfTwoRandomChoicesBalancing",
 					"SupportPodPidsLimit",
 					"other",
 				},
@@ -77,7 +81,9 @@ func TestFeatureBuilder(t *testing.T) {
 					"LegacyNodeRoleBehavior",
 					"other",
 				},
-				Disabled: []string{},
+				Disabled: []string{
+					"PowerOfTwoRandomChoicesBalancing",
+				},
 			},
 		},
 	}

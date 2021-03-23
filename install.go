@@ -40,6 +40,7 @@ import (
 	"github.com/openshift/api/imageregistry"
 	"github.com/openshift/api/kubecontrolplane"
 	"github.com/openshift/api/network"
+	"github.com/openshift/api/networkoperator"
 	"github.com/openshift/api/oauth"
 	"github.com/openshift/api/openshiftcontrolplane"
 	"github.com/openshift/api/operator"
@@ -69,6 +70,7 @@ var (
 		imageregistry.Install,
 		kubecontrolplane.Install,
 		network.Install,
+		networkoperator.Install,
 		oauth.Install,
 		openshiftcontrolplane.Install,
 		operator.Install,

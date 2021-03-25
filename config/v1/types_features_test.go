@@ -25,6 +25,7 @@ func TestFeatureBuilder(t *testing.T) {
 					"RotateKubeletServerCertificate",
 					"NodeDisruptionExclusion",
 					"ServiceNodeExclusion",
+					"DownwardAPIHugePages",
 				},
 				Disabled: []string{
 					"LegacyNodeRoleBehavior",
@@ -42,6 +43,7 @@ func TestFeatureBuilder(t *testing.T) {
 					"SupportPodPidsLimit",
 					"NodeDisruptionExclusion",
 					"ServiceNodeExclusion",
+					"DownwardAPIHugePages",
 					"LegacyNodeRoleBehavior",
 				},
 				Disabled: []string{},
@@ -56,6 +58,7 @@ func TestFeatureBuilder(t *testing.T) {
 					"RotateKubeletServerCertificate",
 					"NodeDisruptionExclusion",
 					"ServiceNodeExclusion",
+					"DownwardAPIHugePages",
 				},
 				Disabled: []string{
 					"LegacyNodeRoleBehavior",
@@ -74,6 +77,7 @@ func TestFeatureBuilder(t *testing.T) {
 					"SupportPodPidsLimit",
 					"NodeDisruptionExclusion",
 					"ServiceNodeExclusion",
+					"DownwardAPIHugePages",
 					"LegacyNodeRoleBehavior",
 					"other",
 				},

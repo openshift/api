@@ -410,6 +410,34 @@ type AWSNetworkLoadBalancerParameters struct {
 // HostNetworkStrategy holds parameters for the HostNetwork endpoint publishing
 // strategy.
 type HostNetworkStrategy struct {
+	// protocol specifies whether the IngressController expects incoming
+	// connections to use plain TCP or whether the IngressController expects
+	// PROXY protocol.
+	//
+	// PROXY protocol can be used with load balancers that support it to
+	// communicate the source addresses of client connections when
+	// forwarding those connections to the IngressController.  Using PROXY
+	// protocol enables the IngressController to report those source
+	// addresses instead of reporting the load balancer's address in HTTP
+	// headers and logs.  Note that enabling PROXY protocol on the
+	// IngressController will cause connections to fail if you are not using
+	// a load balancer that uses PROXY protocol to forward connections to
+	// the IngressController.  See
+	// http://www.haproxy.org/download/2.2/doc/proxy-protocol.txt for
+	// information about PROXY protocol.
+	//
+	// The following values are valid for this field:
+	//
+	// * The empty string.
+	// * "TCP".
+	// * "PROXY".
+	//
+	// The empty string specifies the default, which is TCP without PROXY
+	// protocol.  Note that the default is subject to change.
+	//
+	// +kubebuilder:validation:Optional
+	// +optional
+	Protocol IngressControllerProtocol `json:"protocol,omitempty"`
 }
 
 // PrivateStrategy holds parameters for the Private endpoint publishing
@@ -419,7 +447,45 @@ type PrivateStrategy struct {
 
 // NodePortStrategy holds parameters for the NodePortService endpoint publishing strategy.
 type NodePortStrategy struct {
+	// protocol specifies whether the IngressController expects incoming
+	// connections to use plain TCP or whether the IngressController expects
+	// PROXY protocol.
+	//
+	// PROXY protocol can be used with load balancers that support it to
+	// communicate the source addresses of client connections when
+	// forwarding those connections to the IngressController.  Using PROXY
+	// protocol enables the IngressController to report those source
+	// addresses instead of reporting the load balancer's address in HTTP
+	// headers and logs.  Note that enabling PROXY protocol on the
+	// IngressController will cause connections to fail if you are not using
+	// a load balancer that uses PROXY protocol to forward connections to
+	// the IngressController.  See
+	// http://www.haproxy.org/download/2.2/doc/proxy-protocol.txt for
+	// information about PROXY protocol.
+	//
+	// The following values are valid for this field:
+	//
+	// * The empty string.
+	// * "TCP".
+	// * "PROXY".
+	//
+	// The empty string specifies the default, which is TCP without PROXY
+	// protocol.  Note that the default is subject to change.
+	//
+	// +kubebuilder:validation:Optional
+	// +optional
+	Protocol IngressControllerProtocol `json:"protocol,omitempty"`
 }
+
+// IngressControllerProtocol specifies whether PROXY protocol is enabled or not.
+// +kubebuilder:validation:Enum="";TCP;PROXY
+type IngressControllerProtocol string
+
+const (
+	DefaultProtocol IngressControllerProtocol = ""
+	TCPProtocol     IngressControllerProtocol = "TCP"
+	ProxyProtocol   IngressControllerProtocol = "PROXY"
+)
 
 // EndpointPublishingStrategy is a way to publish the endpoints of an
 // IngressController, and represents the type and any additional configuration

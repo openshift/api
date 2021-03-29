@@ -105,7 +105,10 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		Enabled:  []string{},
 		Disabled: []string{},
 	},
-	TechPreviewNoUpgrade: newDefaultFeatures().toFeatures(),
+	TechPreviewNoUpgrade: newDefaultFeatures().
+		with("CSIDriverAzureDisk"). // sig-storage, jsafrane
+		with("CSIDriverVSphere").   // sig-storage, jsafrane
+		toFeatures(),
 	LatencySensitive: newDefaultFeatures().
 		with(
 			"TopologyManager", // sig-pod, sjenning

@@ -280,6 +280,57 @@ spec:
                 required:
                 - type
                 type: object
+              hstsHeaderPolicy:
+                description: hstsHeaderPolicy defines Global HTTP Strict Transport
+                  Security (HSTS) policy for header values.  If this field is empty,
+                  only route annotations can be used to set the HSTS header, per-route.  See
+                  the description of fields under IngressControllerHSTSHeaderPolicy.
+                properties:
+                  hstsDirectives:
+                    description: HSTSDirectives is a list of optional HSTS directives
+                      that direct HSTS Policy configuration.
+                    items:
+                      description: HSTSDirectiveType is an optional directive that
+                        directs HSTS Policy configuration.
+                      enum:
+                      - preload
+                      - includeSubDomains
+                      type: string
+                    type: array
+                    uniqueItems: true
+                  inScopeDomains:
+                    description: inScopeDomains is a list of router domains that require
+                      HSTS, when not all routes require HSTS. If scope = All then
+                      this field is ignored.  If scope = Limited, HSTS policy is limited
+                      to hosts with domains in the inScopeDomains list.
+                    items:
+                      type: string
+                    type: array
+                  maxAgeSeconds:
+                    description: maxAgeSeconds is the delta time range in seconds
+                      during which hosts are regarded as HSTS hosts. If set to 0,
+                      it negates the effect and hosts are no longer regarded as HSTS
+                      hosts. maxAgeSeconds is a time-to-live value, and if this policy
+                      is not refreshed on a client, the HSTS policy will eventually
+                      expire on that client.
+                    format: int32
+                    maximum: 2147483647
+                    minimum: 0
+                    type: integer
+                  scope:
+                    description: scope indicates whether this header policy is enabled
+                      for a limited set of routes that have hosts with domains in
+                      the list specified in inScopeDomains (limited scope) or for
+                      all TLS routes (all scope).  If HSTS is desired for all routes,
+                      set the scope field to "All". If HSTS is desired for only a
+                      limited set of routes, set the scope field to "Limited" and
+                      add a list of subdomains to the InScopeDomains field.  If scope
+                      is omitted, no HSTS header policy will be added.
+                    enum:
+                    - All
+                    - Limited
+                    type: string
+                type: object
               httpErrorCodePages:
                 description: httpErrorCodePages specifies a configmap with custom
                   error pages. The administrator must create this configmap in the

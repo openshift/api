@@ -589,6 +589,17 @@ func (IngressControllerCaptureHTTPHeaders) SwaggerDoc() map[string]string {
 	return map_IngressControllerCaptureHTTPHeaders
 }
 
+var map_IngressControllerHSTSHeaderPolicy = map[string]string{
+	"maxAgeSeconds":  "maxAgeSeconds is the delta time range in seconds during which hosts are regarded as HSTS hosts. If set to 0, it negates the effect and hosts are no longer regarded as HSTS hosts. maxAgeSeconds is a time-to-live value, and if this policy is not refreshed on a client, the HSTS policy will eventually expire on that client.",
+	"hstsDirectives": "HSTSDirectives is a list of optional HSTS directives that direct HSTS Policy configuration.",
+	"scope":          "scope indicates whether this header policy is enabled for a limited set of routes that have hosts with domains in the list specified in inScopeDomains (limited scope) or for all TLS routes (all scope).  If HSTS is desired for all routes, set the scope field to \"All\". If HSTS is desired for only a limited set of routes, set the scope field to \"Limited\" and add a list of subdomains to the InScopeDomains field.  If scope is omitted, no HSTS header policy will be added.",
+	"inScopeDomains": "inScopeDomains is a list of router domains that require HSTS, when not all routes require HSTS. If scope = All then this field is ignored.  If scope = Limited, HSTS policy is limited to hosts with domains in the inScopeDomains list.",
+}
+
+func (IngressControllerHSTSHeaderPolicy) SwaggerDoc() map[string]string {
+	return map_IngressControllerHSTSHeaderPolicy
+}
+
 var map_IngressControllerHTTPHeaders = map[string]string{
 	"":                          "IngressControllerHTTPHeaders specifies how the IngressController handles certain HTTP headers.",
 	"forwardedHeaderPolicy":     "forwardedHeaderPolicy specifies when and how the IngressController sets the Forwarded, X-Forwarded-For, X-Forwarded-Host, X-Forwarded-Port, X-Forwarded-Proto, and X-Forwarded-Proto-Version HTTP headers.  The value may be one of the following:\n\n* \"Append\", which specifies that the IngressController appends the\n  headers, preserving existing headers.\n\n* \"Replace\", which specifies that the IngressController sets the\n  headers, replacing any existing Forwarded or X-Forwarded-* headers.\n\n* \"IfNone\", which specifies that the IngressController sets the\n  headers if they are not already set.\n\n* \"Never\", which specifies that the IngressController never sets the\n  headers, preserving any existing headers.\n\nBy default, the policy is \"Append\".",
@@ -643,6 +654,7 @@ var map_IngressControllerSpec = map[string]string{
 	"httpHeaders":                "httpHeaders defines policy for HTTP headers.\n\nIf this field is empty, the default values are used.",
 	"tuningOptions":              "tuningOptions defines parameters for adjusting the performance of ingress controller pods. All fields are optional and will use their respective defaults if not set. See specific tuningOptions fields for more details.\n\nSetting fields within tuningOptions is generally not recommended. The default values are suitable for most configurations.",
 	"unsupportedConfigOverrides": "unsupportedConfigOverrides allows specifying unsupported configuration options.  Its use is unsupported.",
+	"hstsHeaderPolicy":           "hstsHeaderPolicy defines Global HTTP Strict Transport Security (HSTS) policy for header values.  If this field is empty, only route annotations can be used to set the HSTS header, per-route.  See the description of fields under IngressControllerHSTSHeaderPolicy.",
 }
 
 func (IngressControllerSpec) SwaggerDoc() map[string]string {

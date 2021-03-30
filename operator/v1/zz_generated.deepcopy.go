@@ -1607,6 +1607,7 @@ func (in *IngressControllerSpec) DeepCopyInto(out *IngressControllerSpec) {
 	}
 	out.TuningOptions = in.TuningOptions
 	in.UnsupportedConfigOverrides.DeepCopyInto(&out.UnsupportedConfigOverrides)
+	in.HSTSHeaderPolicy.DeepCopyInto(&out.HSTSHeaderPolicy)
 	return
 }
 

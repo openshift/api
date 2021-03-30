@@ -207,6 +207,13 @@ type IngressControllerSpec struct {
 	// +nullable
 	// +kubebuilder:pruning:PreserveUnknownFields
 	UnsupportedConfigOverrides runtime.RawExtension `json:"unsupportedConfigOverrides"`
+
+	// hstsHeaderPolicy defines Global HTTP Strict Transport Security (HSTS) policy for header
+	// values.  If this field is empty, only route annotations can be used to set the HSTS header,
+	// per-route.  See the description of fields under IngressControllerHSTSHeaderPolicy.
+	//
+	// +optional
+	HSTSHeaderPolicy IngressControllerHSTSHeaderPolicy `json:"hstsHeaderPolicy,omitempty"`
 }
 
 // NodePlacement describes node scheduling configuration for an ingress
@@ -1080,6 +1087,63 @@ type IngressControllerTuningOptions struct {
 	// +kubebuilder:validation:Maximum=64
 	// +optional
 	ThreadCount int32 `json:"threadCount,omitempty"`
+}
+
+// HSTSDirectiveType is an optional directive that directs HSTS Policy configuration.
+// +kubebuilder:validation:Enum=preload;includeSubDomains
+type HSTSDirectiveType string
+
+// HSTSHeaderPolicyScope indicates whether the HSTS header policy is enabled for a limited
+// set of routes (Limited), or for all TLS routes (All).
+// +kubebuilder:validation:Enum=All;Limited
+type HSTSHeaderPolicyScope string
+
+const (
+	// PreloadHSTSDirective directs the client to include hosts in its host preload list so that
+	// it never needs to do an initial load to get the HSTS header (note that this is not defined
+	// in RFC 6797 and is therefore client implementation-dependent).
+	PreloadHSTSDirective HSTSDirectiveType = "preload"
+
+	// IncludeSubDomainsHSTSDirective means the HSTS Policy applies to any subdomains of the host's
+	// domain name, when the route admission policy allows wildcards.  If wildcard routes aren't allowed,
+	// this directive has no effect.
+	IncludeSubDomainsHSTSDirective HSTSDirectiveType = "includeSubDomains"
+
+	// HSTSHeaderPolicyScope indicates whether the HSTS header policy is enabled for a limited
+	// set of routes that have hosts with domains in the list specified in
+	// IngressControllerHSTSHeaderPolicy.inScopeDomains (Limited) or for all TLS routes (All).
+	AllHSTSHeaderPolicyScope     HSTSHeaderPolicyScope = "All"
+	LimitedHSTSHeaderPolicyScope HSTSHeaderPolicyScope = "Limited"
+)
+
+type IngressControllerHSTSHeaderPolicy struct {
+	// maxAgeSeconds is the delta time range in seconds during which hosts are regarded as HSTS hosts.
+	// If set to 0, it negates the effect and hosts are no longer regarded as HSTS hosts.
+	// maxAgeSeconds is a time-to-live value, and if this policy is not refreshed on a client, the HSTS
+	// policy will eventually expire on that client.
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=2147483647
+	// +required
+	MaxAgeSeconds int32 `json:"maxAgeSeconds"`
+
+	// HSTSDirectives is a list of optional HSTS directives that direct HSTS Policy configuration.
+	// +kubebuilder:validation:UniqueItems=true
+	// +optional
+	HSTSDirectives []HSTSDirectiveType `json:"hstsDirectives,omitempty"`
+
+	// scope indicates whether this header policy is enabled for a limited set of routes that have hosts
+	// with domains in the list specified in inScopeDomains (limited scope) or for all TLS routes
+	// (all scope).  If HSTS is desired for all routes, set the scope field to "All". If HSTS is desired
+	// for only a limited set of routes, set the scope field to "Limited" and add a list of subdomains
+	// to the InScopeDomains field.  If scope is omitted, no HSTS header policy will be added.
+	// +optional
+	Scope HSTSHeaderPolicyScope `json:"scope,omitempty"`
+
+	// inScopeDomains is a list of router domains that require HSTS, when not all routes require HSTS.
+	// If scope = All then this field is ignored.  If scope = Limited, HSTS policy is limited to hosts with
+	// domains in the inScopeDomains list.
+	// +optional
+	InScopeDomains []string `json:"inScopeDomains,omitempty"`
 }
 
 var (

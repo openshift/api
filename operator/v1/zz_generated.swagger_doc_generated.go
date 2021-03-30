@@ -590,6 +590,7 @@ var map_IngressControllerSpec = map[string]string{
 	"routeAdmission":             "routeAdmission defines a policy for handling new route claims (for example, to allow or deny claims across namespaces).\n\nIf empty, defaults will be applied. See specific routeAdmission fields for details about their defaults.",
 	"logging":                    "logging defines parameters for what should be logged where.  If this field is empty, operational logs are enabled but access logs are disabled.",
 	"httpHeaders":                "httpHeaders defines policy for HTTP headers.\n\nIf this field is empty, the default values are used.",
+	"unsupportedConfigOverrides": "unsupportedConfigOverrides allows specifying unsupported configuration options.  Its use is unsupported.",
 }
 
 func (IngressControllerSpec) SwaggerDoc() map[string]string {

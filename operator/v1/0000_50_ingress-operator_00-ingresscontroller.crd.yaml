@@ -849,6 +849,12 @@ spec:
                     - Custom
                     type: string
                 type: object
+              unsupportedConfigOverrides:
+                description: unsupportedConfigOverrides allows specifying unsupported
+                  configuration options.  Its use is unsupported.
+                nullable: true
+                type: object
+                x-kubernetes-preserve-unknown-fields: true
             type: object
           status:
             description: status is the most recently observed status of the IngressController.

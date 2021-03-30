@@ -1481,6 +1481,7 @@ func (in *IngressControllerSpec) DeepCopyInto(out *IngressControllerSpec) {
 		*out = new(IngressControllerHTTPHeaders)
 		(*in).DeepCopyInto(*out)
 	}
+	in.UnsupportedConfigOverrides.DeepCopyInto(&out.UnsupportedConfigOverrides)
 	return
 }
 

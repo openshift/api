@@ -1012,10 +1012,10 @@ type IngressControllerTuningOptions struct {
 	// If this field is empty, the IngressController will use a default value
 	// of 32768 bytes.
 	//
-	// Setting this field is generally not recommended as header buffer
-	// values that are too small may break the IngressController and header
-	// buffer values that are too large could cause the IngressController to
-	// use significantly more memory than necessary.
+	// Setting this field is generally not recommended as headerBufferBytes
+	// values that are too small may break the IngressController and
+	// headerBufferBytes values that are too large could cause the
+	// IngressController to use significantly more memory than necessary.
 	//
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Minimum=16384
@@ -1031,10 +1031,17 @@ type IngressControllerTuningOptions struct {
 	// If this field is empty, the IngressController will use a default value
 	// of 8192 bytes.
 	//
+	// Setting this field is generally not recommended as
+	// headerBufferMaxRewriteBytes values that are too small may break the
+	// IngressController and headerBufferMaxRewriteBytes values that are too
+	// large could cause the IngressController to use significantly more memory
+	// than necessary.
+	//
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Minimum=4096
 	// +optional
 	HeaderBufferMaxRewriteBytes int32 `json:"headerBufferMaxRewriteBytes,omitempty"`
+
 	// threadCount defines the number of threads created per HAProxy process.
 	// Creating more threads allows each ingress controller pod to handle more
 	// connections, at the cost of more system resources being used. If this

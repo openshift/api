@@ -935,22 +935,26 @@ spec:
                       for the IngressController (https://tools.ietf.org/html/rfc7540).
                       If this field is empty, the IngressController will use a default
                       value of 32768 bytes. \n Setting this field is generally not
-                      recommended as header buffer values that are too small may break
-                      the IngressController and header buffer values that are too
-                      large could cause the IngressController to use significantly
+                      recommended as headerBufferBytes values that are too small may
+                      break the IngressController and headerBufferBytes values that
+                      are too large could cause the IngressController to use significantly
                       more memory than necessary."
                     format: int32
                     minimum: 16384
                     type: integer
                   headerBufferMaxRewriteBytes:
-                    description: headerBufferMaxRewriteBytes describes how much memory
+                    description: "headerBufferMaxRewriteBytes describes how much memory
                       should be reserved (in bytes) from headerBufferBytes for HTTP
                       header rewriting and appending for IngressController connection
                       sessions. Note that incoming HTTP requests will be limited to
                       (headerBufferBytes - headerBufferMaxRewriteBytes) bytes, meaning
                       headerBufferBytes must be greater than headerBufferMaxRewriteBytes.
                       If this field is empty, the IngressController will use a default
-                      value of 8192 bytes.
+                      value of 8192 bytes. \n Setting this field is generally not
+                      recommended as headerBufferMaxRewriteBytes values that are too
+                      small may break the IngressController and headerBufferMaxRewriteBytes
+                      values that are too large could cause the IngressController
+                      to use significantly more memory than necessary."
                     format: int32
                     minimum: 4096
                     type: integer

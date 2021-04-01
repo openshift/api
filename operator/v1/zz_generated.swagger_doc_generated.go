@@ -610,7 +610,7 @@ var map_IngressControllerSpec = map[string]string{
 	"routeAdmission":             "routeAdmission defines a policy for handling new route claims (for example, to allow or deny claims across namespaces).\n\nIf empty, defaults will be applied. See specific routeAdmission fields for details about their defaults.",
 	"logging":                    "logging defines parameters for what should be logged where.  If this field is empty, operational logs are enabled but access logs are disabled.",
 	"httpHeaders":                "httpHeaders defines policy for HTTP headers.\n\nIf this field is empty, the default values are used.",
-	"tuningOptions":              "tuningOptions defines parameters for adjusting the performance of ingress controller pods. All fields are optional and will use their respective defaults if not set. See specific tuningOptions fields for more details.",
+	"tuningOptions":              "tuningOptions defines parameters for adjusting the performance of ingress controller pods. All fields are optional and will use their respective defaults if not set. See specific tuningOptions fields for more details.\n\nSetting fields within tuningOptions is generally not recommended. The default values are suitable for most configurations.",
 }
 
 func (IngressControllerSpec) SwaggerDoc() map[string]string {
@@ -633,10 +633,10 @@ func (IngressControllerStatus) SwaggerDoc() map[string]string {
 }
 
 var map_IngressControllerTuningOptions = map[string]string{
-	"":                            "IngressControllerHTTPHeaderBuffer specifies the size of the per-connection HTTP header buffers.",
+	"":                            "IngressControllerTuningOptions specifies options for tuning the performance of ingress controller pods",
 	"headerBufferBytes":           "headerBufferBytes describes how much memory should be reserved (in bytes) for IngressController connection sessions. Note that this value must be at least 16384 if HTTP/2 is enabled for the IngressController (https://tools.ietf.org/html/rfc7540). If this field is empty, the IngressController will use a default value of 32768 bytes.\n\nSetting this field is generally not recommended as header buffer values that are too small may break the IngressController and header buffer values that are too large could cause the IngressController to use significantly more memory than necessary.",
 	"headerBufferMaxRewriteBytes": "headerBufferMaxRewriteBytes describes how much memory should be reserved (in bytes) from headerBufferBytes for HTTP header rewriting and appending for IngressController connection sessions. Note that incoming HTTP requests will be limited to (headerBufferBytes - headerBufferMaxRewriteBytes) bytes, meaning headerBufferBytes must be greater than headerBufferMaxRewriteBytes. If this field is empty, the IngressController will use a default value of 8192 bytes.",
-	"threadCount":                 "threadCount defines the number of threads created per ingress controller pod. Creating more threads allows each ingress controller pod to handle more connections, at the cost of more system resources being used. If this field is empty, the IngressController will use the default value. The current default is 4 threads, but this may change in future releases.",
+	"threadCount":                 "threadCount defines the number of threads created per HAProxy process. Creating more threads allows each ingress controller pod to handle more connections, at the cost of more system resources being used. If this field is empty, the IngressController will use the default value.  The current default is 4 threads, but this may change in future releases.\n\nSetting this field is generally not recommended. Increasing the number of HAProxy threads allows ingress controller pods to utilize more CPU time under load, potentially starving other pods if set too high. Reducing the number of threads may cause the ingress controller to perform poorly.",
 }
 
 func (IngressControllerTuningOptions) SwaggerDoc() map[string]string {

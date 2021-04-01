@@ -182,6 +182,9 @@ type IngressControllerSpec struct {
 	// respective defaults if not set. See specific tuningOptions fields for
 	// more details.
 	//
+	// Setting fields within tuningOptions is generally not recommended. The
+	// default values are suitable for most configurations.
+	//
 	// +optional
 	TuningOptions IngressControllerTuningOptions `json:"tuningOptions,omitempty"`
 }
@@ -999,8 +1002,8 @@ type IngressControllerHTTPHeaders struct {
 	HeaderNameCaseAdjustments []IngressControllerHTTPHeaderNameCaseAdjustment `json:"headerNameCaseAdjustments,omitempty"`
 }
 
-// IngressControllerHTTPHeaderBuffer specifies the size of the
-// per-connection HTTP header buffers.
+// IngressControllerTuningOptions specifies options for tuning the performance
+// of ingress controller pods
 type IngressControllerTuningOptions struct {
 	// headerBufferBytes describes how much memory should be reserved
 	// (in bytes) for IngressController connection sessions.
@@ -1032,12 +1035,17 @@ type IngressControllerTuningOptions struct {
 	// +kubebuilder:validation:Minimum=4096
 	// +optional
 	HeaderBufferMaxRewriteBytes int32 `json:"headerBufferMaxRewriteBytes,omitempty"`
-	// threadCount defines the number of threads created per ingress controller
-	// pod. Creating more threads allows each ingress controller pod to handle
-	// more connections, at the cost of more system resources being used. If
-	// this field is empty, the IngressController will use the default value.
-	// The current default is 4 threads, but this may change in future
-	// releases.
+	// threadCount defines the number of threads created per HAProxy process.
+	// Creating more threads allows each ingress controller pod to handle more
+	// connections, at the cost of more system resources being used. If this
+	// field is empty, the IngressController will use the default value.  The
+	// current default is 4 threads, but this may change in future releases.
+	//
+	// Setting this field is generally not recommended. Increasing the number
+	// of HAProxy threads allows ingress controller pods to utilize more CPU
+	// time under load, potentially starving other pods if set too high.
+	// Reducing the number of threads may cause the ingress controller to
+	// perform poorly.
 	//
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Minimum=1

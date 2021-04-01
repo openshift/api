@@ -921,10 +921,12 @@ spec:
                     type: string
                 type: object
               tuningOptions:
-                description: tuningOptions defines parameters for adjusting the performance
+                description: "tuningOptions defines parameters for adjusting the performance
                   of ingress controller pods. All fields are optional and will use
                   their respective defaults if not set. See specific tuningOptions
-                  fields for more details.
+                  fields for more details. \n Setting fields within tuningOptions
+                  is generally not recommended. The default values are suitable for
+                  most configurations."
                 properties:
                   headerBufferBytes:
                     description: "headerBufferBytes describes how much memory should
@@ -953,12 +955,17 @@ spec:
                     minimum: 4096
                     type: integer
                   threadCount:
-                    description: threadCount defines the number of threads created
-                      per ingress controller pod. Creating more threads allows each
-                      ingress controller pod to handle more connections, at the cost
-                      of more system resources being used. If this field is empty,
-                      the IngressController will use the default value. The current
-                      default is 4 threads, but this may change in future releases.
+                    description: "threadCount defines the number of threads created
+                      per HAProxy process. Creating more threads allows each ingress
+                      controller pod to handle more connections, at the cost of more
+                      system resources being used. If this field is empty, the IngressController
+                      will use the default value.  The current default is 4 threads,
+                      but this may change in future releases. \n Setting this field
+                      is generally not recommended. Increasing the number of HAProxy
+                      threads allows ingress controller pods to utilize more CPU time
+                      under load, potentially starving other pods if set too high.
+                      Reducing the number of threads may cause the ingress controller
+                      to perform poorly."
                     format: int32
                     minimum: 1
                     type: integer

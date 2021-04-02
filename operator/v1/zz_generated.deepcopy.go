@@ -2042,6 +2042,11 @@ func (in *KuryrConfig) DeepCopyInto(out *KuryrConfig) {
 		*out = new(uint)
 		**out = **in
 	}
+	if in.MTU != nil {
+		in, out := &in.MTU, &out.MTU
+		*out = new(uint32)
+		**out = **in
+	}
 	return
 }
 

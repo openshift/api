@@ -1582,6 +1582,7 @@ func (in *IngressControllerSpec) DeepCopyInto(out *IngressControllerSpec) {
 		(*in).DeepCopyInto(*out)
 	}
 	out.TuningOptions = in.TuningOptions
+	in.UnsupportedConfigOverrides.DeepCopyInto(&out.UnsupportedConfigOverrides)
 	return
 }
 

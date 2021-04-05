@@ -2,6 +2,7 @@ package v1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
 
 	corev1 "k8s.io/api/core/v1"
 
@@ -187,6 +188,14 @@ type IngressControllerSpec struct {
 	//
 	// +optional
 	TuningOptions IngressControllerTuningOptions `json:"tuningOptions,omitempty"`
+
+	// unsupportedConfigOverrides allows specifying unsupported
+	// configuration options.  Its use is unsupported.
+	//
+	// +optional
+	// +nullable
+	// +kubebuilder:pruning:PreserveUnknownFields
+	UnsupportedConfigOverrides runtime.RawExtension `json:"unsupportedConfigOverrides"`
 }
 
 // NodePlacement describes node scheduling configuration for an ingress

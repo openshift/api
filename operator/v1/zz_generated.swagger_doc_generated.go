@@ -205,6 +205,7 @@ var map_ConsoleCustomization = map[string]string{
 	"customLogoFile":       "customLogoFile replaces the default OpenShift logo in the masthead and about dialog. It is a reference to a ConfigMap in the openshift-config namespace. This can be created with a command like 'oc create configmap custom-logo --from-file=/path/to/file -n openshift-config'. Image size must be less than 1 MB due to constraints on the ConfigMap size. The ConfigMap key should include a file extension so that the console serves the file with the correct MIME type. Recommended logo specifications: Dimensions: Max height of 68px and max width of 200px SVG format preferred",
 	"developerCatalog":     "developerCatalog allows to configure the shown developer catalog categories.",
 	"projectAccess":        "projectAccess allows customizing the available list of ClusterRoles in the Developer perspective Project access page which can be used by a project admin to specify roles to other users and restrict access within the project. If set, the list will replace the default ClusterRole options.",
+	"quickStarts":          "quickStarts allows customization of available ConsoleQuickStart resources in console.",
 }
 
 func (ConsoleCustomization) SwaggerDoc() map[string]string {
@@ -276,6 +277,15 @@ var map_ProjectAccess = map[string]string{
 
 func (ProjectAccess) SwaggerDoc() map[string]string {
 	return map_ProjectAccess
+}
+
+var map_QuickStarts = map[string]string{
+	"":         "QuickStarts allow cluster admins to customize available ConsoleQuickStart resources.",
+	"disabled": "disabled is a list of ConsoleQuickStart resource names that are not shown to users.",
+}
+
+func (QuickStarts) SwaggerDoc() map[string]string {
+	return map_QuickStarts
 }
 
 var map_StatuspageProvider = map[string]string{

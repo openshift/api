@@ -179,6 +179,15 @@ func (ConfigList) SwaggerDoc() map[string]string {
 	return map_ConfigList
 }
 
+var map_AddPage = map[string]string{
+	"":                "AddPage allows customizing actions on the Add page in developer perspective.",
+	"disabledActions": "disabledActions is a list of actions that are not shown to users. Each action in the list is represented by its ID.",
+}
+
+func (AddPage) SwaggerDoc() map[string]string {
+	return map_AddPage
+}
+
 var map_Console = map[string]string{
 	"": "Console provides a means to configure an operator to manage the console.",
 }
@@ -206,6 +215,7 @@ var map_ConsoleCustomization = map[string]string{
 	"developerCatalog":     "developerCatalog allows to configure the shown developer catalog categories.",
 	"projectAccess":        "projectAccess allows customizing the available list of ClusterRoles in the Developer perspective Project access page which can be used by a project admin to specify roles to other users and restrict access within the project. If set, the list will replace the default ClusterRole options.",
 	"quickStarts":          "quickStarts allows customization of available ConsoleQuickStart resources in console.",
+	"addPage":              "addPage allows customizing actions on the Add page in developer perspective.",
 }
 
 func (ConsoleCustomization) SwaggerDoc() map[string]string {

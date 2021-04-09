@@ -23,7 +23,8 @@ option go_package = "v1";
 // next time the network plugin reconciles the object. Note: the CR's name
 // must specify the requested private IP address (can be IPv4 or IPv6).
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-// +k8s:openapi-gen=true +kubebuilder:object:root=true
+// +k8s:openapi-gen=true
+// +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:path=cloudprivateipconfig,scope=Cluster
 message CloudPrivateIPConfig {

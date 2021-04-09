@@ -11,6 +11,9 @@ var (
 	SchemeGroupVersion = schema.GroupVersion{Group: GroupName, Version: "v1"}
 	SchemeBuilder      = runtime.NewSchemeBuilder(addKnownTypes)
 	Install            = SchemeBuilder.AddToScheme
+	// AddToScheme exists solely to keep the old generators creating valid code
+	// DEPRECATED
+	AddToScheme = SchemeBuilder.AddToScheme
 )
 
 // Resource takes an unqualified resource and returns a Group qualified GroupResource

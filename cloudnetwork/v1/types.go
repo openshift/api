@@ -14,6 +14,8 @@ import (
 // decides to edit it for some reason, their changes will be overwritten the
 // next time the network plugin reconciles the object. Note: the CR's name
 // must specify the requested private IP address (can be IPv4 or IPv6).
+// +genclient
+// +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +k8s:openapi-gen=true
 // +kubebuilder:object:root=true

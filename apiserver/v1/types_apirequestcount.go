@@ -50,10 +50,11 @@ type APIRequestCountStatus struct {
 	Conditions []metav1.Condition `json:"conditions"`
 
 	// removedInRelease is when the API will be removed.
+	// +kubebuilder:validation:MinLength=0
 	// +kubebuilder:validation:Pattern=^[0-9][0-9]*\.[0-9][0-9]*$
 	// +kubebuilder:validation:MaxLength=64
 	// +optional
-	RemovedInRelease string `json:"removedInRelease"`
+	RemovedInRelease string `json:"removedInRelease,omitempty"`
 
 	// requestCount is a sum of all requestCounts across all current hours, nodes, and users.
 	// +kubebuilder:validation:Minimum=0

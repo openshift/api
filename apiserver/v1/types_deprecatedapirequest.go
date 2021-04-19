@@ -39,7 +39,7 @@ type DeprecatedAPIRequestStatus struct {
 	// conditions contains details of the current status of this API Resource.
 	// +patchMergeKey=type
 	// +patchStrategy=merge
-	Conditions []metav1.Condition `json:"conditions"`
+	Conditions []metav1.Condition `json:"conditions" patchStrategy:"merge" patchMergeKey:"type"`
 
 	// requestsLastHour contains request history for the current hour. This is porcelain to make the API
 	// easier to read by humans seeing if they addressed a problem. This field is reset on the hour.

@@ -47,7 +47,7 @@ type APIRequestCountStatus struct {
 	// conditions contains details of the current status of this API Resource.
 	// +patchMergeKey=type
 	// +patchStrategy=merge
-	Conditions []metav1.Condition `json:"conditions"`
+	Conditions []metav1.Condition `json:"conditions" patchStrategy:"merge" patchMergeKey:"type"`
 
 	// removedInRelease is when the API will be removed.
 	// +kubebuilder:validation:Pattern=^[0-9][0-9]*\.[0-9][0-9]*$

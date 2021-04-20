@@ -417,8 +417,9 @@ spec:
                     properties:
                       collectors:
                         description: ipfixCollectors is list of strings formatted
-                          as ip:port
+                          as ip:port with a maximum of ten items
                         type: array
+                        maxItems: 10
                         minItems: 1
                         items:
                           type: string
@@ -430,8 +431,9 @@ spec:
                       collectors:
                         description: netFlow defines the NetFlow collectors that will
                           consume the flow data exported from OVS. It is a list of
-                          strings formatted as ip:port
+                          strings formatted as ip:port with a maximum of ten items
                         type: array
+                        maxItems: 10
                         minItems: 1
                         items:
                           type: string
@@ -442,8 +444,9 @@ spec:
                     properties:
                       collectors:
                         description: sFlowCollectors is list of strings formatted
-                          as ip:port
+                          as ip:port with a maximum of ten items
                         type: array
+                        maxItems: 10
                         minItems: 1
                         items:
                           type: string

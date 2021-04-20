@@ -395,20 +395,23 @@ type ExportNetworkFlows struct {
 
 type NetFlowConfig struct {
 	// netFlow defines the NetFlow collectors that will consume the flow data exported from OVS.
-	// It is a list of strings formatted as ip:port
+	// It is a list of strings formatted as ip:port with a maximum of ten items
 	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:MaxItems=10
 	Collectors []IPPort `json:"collectors,omitempty"`
 }
 
 type SFlowConfig struct {
-	// sFlowCollectors is list of strings formatted as ip:port
+	// sFlowCollectors is list of strings formatted as ip:port with a maximum of ten items
 	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:MaxItems=10
 	Collectors []IPPort `json:"collectors,omitempty"`
 }
 
 type IPFIXConfig struct {
-	// ipfixCollectors is list of strings formatted as ip:port
+	// ipfixCollectors is list of strings formatted as ip:port with a maximum of ten items
 	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:MaxItems=10
 	Collectors []IPPort `json:"collectors,omitempty"`
 }
 

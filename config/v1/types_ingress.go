@@ -105,6 +105,8 @@ type ComponentRouteSpec struct {
 	// The serving cert/key pair must match and will be used by the operator to fulfill the intent of serving with this name.
 	// If the custom hostname uses the default routing suffix of the cluster,
 	// the Secret specification for a serving certificate will not be needed.
+	// If the custom hostname uses the same hostname as customized route,
+	// the Secret specification will used on that route, without creating a custom route.
 	// +optional
 	ServingCertKeyPairSecret SecretNameReference `json:"servingCertKeyPairSecret"`
 }

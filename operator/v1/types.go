@@ -137,7 +137,8 @@ type GenerationStatus struct {
 	// lastGeneration is the last generation of the workload controller involved
 	LastGeneration int64 `json:"lastGeneration"`
 	// hash is an optional field set for resources without generation that are content sensitive like secrets and configmaps
-	Hash string `json:"hash"`
+	// +optional
+	Hash string `json:"hash,omitempty"`
 }
 
 var (

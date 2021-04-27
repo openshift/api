@@ -124,7 +124,7 @@ const (
 )
 
 // PlatformType is a specific supported infrastructure provider.
-// +kubebuilder:validation:Enum="";AWS;Azure;BareMetal;GCP;Libvirt;OpenStack;None;VSphere;oVirt;IBMCloud;KubeVirt;EquinixMetal
+// +kubebuilder:validation:Enum="";AWS;Azure;BareMetal;GCP;Libvirt;OpenStack;None;VSphere;oVirt;IBMCloud;KubeVirt;EquinixMetal;Aliyun
 type PlatformType string
 
 const (
@@ -163,6 +163,9 @@ const (
 
 	// EquinixMetalPlatformType represents Equinix Metal infrastructure.
 	EquinixMetalPlatformType PlatformType = "EquinixMetal"
+
+	// AliyunPlatformType represents Aliyun infrastructure.
+	AliyunPlatformType PlatformType = "Aliyun"
 )
 
 // IBMCloudProviderType is a specific supported IBM Cloud provider cluster type
@@ -185,7 +188,7 @@ type PlatformSpec struct {
 	// balancers, dynamic volume provisioning, machine creation and deletion, and
 	// other integrations are enabled. If None, no infrastructure automation is
 	// enabled. Allowed values are "AWS", "Azure", "BareMetal", "GCP", "Libvirt",
-	// "OpenStack", "VSphere", "oVirt", "KubeVirt", "EquinixMetal", and "None". Individual components may not support
+	// "OpenStack", "VSphere", "oVirt", "KubeVirt", "EquinixMetal", "Aliyun", and "None". Individual components may not support
 	// all platforms, and must handle unrecognized platforms as None if they do
 	// not support that platform.
 	//
@@ -231,6 +234,10 @@ type PlatformSpec struct {
 	// EquinixMetal contains settings specific to the Equinix Metal infrastructure provider.
 	// +optional
 	EquinixMetal *EquinixMetalPlatformSpec `json:"equinixMetal,omitempty"`
+
+	// Aliyun contains settings specific to the Alibaba Cloud infrastructure provider.
+	// +optional
+	Aliyun *AliyunPlatformSpec `json:"aliyun,omitempty"`
 }
 
 // PlatformStatus holds the current status specific to the underlying infrastructure provider
@@ -242,7 +249,7 @@ type PlatformStatus struct {
 	// balancers, dynamic volume provisioning, machine creation and deletion, and
 	// other integrations are enabled. If None, no infrastructure automation is
 	// enabled. Allowed values are "AWS", "Azure", "BareMetal", "GCP", "Libvirt",
-	// "OpenStack", "VSphere", "oVirt", "EquinixMetal", and "None". Individual components may not support
+	// "OpenStack", "VSphere", "oVirt", "EquinixMetal", "Aliyun", and "None". Individual components may not support
 	// all platforms, and must handle unrecognized platforms as None if they do
 	// not support that platform.
 	//
@@ -562,6 +569,23 @@ type EquinixMetalPlatformSpec struct{}
 
 // EquinixMetalPlatformStatus holds the current status of the Equinix Metal infrastructure provider.
 type EquinixMetalPlatformStatus struct {
+	// apiServerInternalIP is an IP address to contact the Kubernetes API server that can be used
+	// by components inside the cluster, like kubelets using the infrastructure rather
+	// than Kubernetes networking. It is the IP that the Infrastructure.status.apiServerInternalURI
+	// points to. It is the IP for a self-hosted load balancer in front of the API servers.
+	APIServerInternalIP string `json:"apiServerInternalIP,omitempty"`
+
+	// ingressIP is an external IP which routes to the default ingress controller.
+	// The IP is a suitable target of a wildcard DNS record used to resolve default route host names.
+	IngressIP string `json:"ingressIP,omitempty"`
+}
+
+// AliyunPlatformSpec holds the desired state of the Alibaba Cloud infrastructure provider.
+// This only includes fields that can be modified in the cluster.
+type AliyunPlatformSpec struct{}
+
+// AliyunPlatformStatus holds the current status of the Alibaba Cloud infrastructure provider.
+type AliyunPlatformStatus struct {
 	// apiServerInternalIP is an IP address to contact the Kubernetes API server that can be used
 	// by components inside the cluster, like kubelets using the infrastructure rather
 	// than Kubernetes networking. It is the IP that the Infrastructure.status.apiServerInternalURI

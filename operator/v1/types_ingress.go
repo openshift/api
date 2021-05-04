@@ -1076,6 +1076,7 @@ type IngressControllerTuningOptions struct {
 	//
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=64
 	// +optional
 	ThreadCount int32 `json:"threadCount,omitempty"`
 }

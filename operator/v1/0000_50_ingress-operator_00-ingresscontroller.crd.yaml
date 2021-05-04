@@ -990,6 +990,7 @@ spec:
                       Reducing the number of threads may cause the ingress controller
                       to perform poorly."
                     format: int32
+                    maximum: 64
                     minimum: 1
                     type: integer
                 type: object

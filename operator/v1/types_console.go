@@ -40,6 +40,7 @@ type ConsoleSpec struct {
 	// The default console route will be maintained to reserve the default hostname
 	// for console if the custom route is removed.
 	// If not specified, default route will be used.
+	// DEPRECATED
 	// +optional
 	Route ConsoleConfigRoute `json:"route"`
 	// plugins defines a list of enabled console plugin names.
@@ -48,6 +49,7 @@ type ConsoleSpec struct {
 }
 
 // ConsoleConfigRoute holds information on external route access to console.
+// DEPRECATED
 type ConsoleConfigRoute struct {
 	// hostname is the desired custom domain under which console will be available.
 	Hostname string `json:"hostname"`

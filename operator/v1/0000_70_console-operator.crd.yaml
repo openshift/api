@@ -269,7 +269,7 @@ spec:
                   domain, manual DNS configurations steps are necessary. The default
                   console route will be maintained to reserve the default hostname
                   for console if the custom route is removed. If not specified, default
-                  route will be used.
+                  route will be used. DEPRECATED
                 type: object
                 properties:
                   hostname:

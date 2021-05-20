@@ -72,9 +72,6 @@ spec:
                         be automatically determined. Can be IPv4 or IPv6.
                       type: string
                     ip:
-                      anyOf:
-                      - format: ipv4
-                      - format: ipv6
                       description: IP is the address to configure on the router's
                         interface. Can be IPv4 or IPv6.
                       type: string

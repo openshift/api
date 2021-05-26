@@ -14,6 +14,7 @@ spec:
     singular: imagecontentsourcepolicy
     plural: imagecontentsourcepolicies
     listKind: ImageContentSourcePolicyList
+    short: icsp
   versions:
   - name: v1alpha1
     served: true

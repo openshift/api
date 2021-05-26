@@ -73,7 +73,18 @@ const (
 	// "AllRequestBodies" is similar to WriteRequestBodies, but also logs request
 	// and response HTTP payloads for read requests (get, list).
 	AllRequestBodiesAuditProfileType AuditProfileType = "AllRequestBodies"
+
 )
+
+type AuditGroupType string
+const (
+	Group AuditProfileType = ""
+)
+
+type CustomRule struct {
+	Profile AuditProfileType `json:"profile,omitempty"`
+	Group AuditGroupType `json:"profile,omitempty"`
+}
 
 type Audit struct {
 	// profile specifies the name of the desired audit policy configuration to be deployed to
@@ -89,6 +100,7 @@ type Audit struct {
 	// If unset, the 'Default' profile is used as the default.
 	// +kubebuilder:default=Default
 	Profile AuditProfileType `json:"profile,omitempty"`
+	CustomRules []CustomRule
 }
 
 type APIServerServingCerts struct {

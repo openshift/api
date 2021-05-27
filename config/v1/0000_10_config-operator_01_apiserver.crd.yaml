@@ -16,6 +16,7 @@ spec:
     singular: apiserver
   scope: Cluster
   versions:
+<<<<<<< HEAD
     - name: v1
       schema:
         openAPIV3Schema:
@@ -40,7 +41,6 @@ spec:
                   description: additionalCORSAllowedOrigins lists additional, user-defined regular expressions describing hosts for which the API server allows access using the CORS headers. This may be needed to access the API and the integrated OAuth server from JavaScript applications. The values are regular expressions that correspond to the Golang regular expression language.
                   type: array
                   items:
-                    type: string
                 audit:
                   description: audit specifies the settings for audit configuration to be applied to all OpenShift-provided API servers in the cluster.
                   type: object

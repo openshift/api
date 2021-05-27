@@ -7,8 +7,11 @@ if [ ! -f ./_output/tools/bin/yq ]; then
 fi
 
 FAILS=false
-for f in `find . -name "*crd.yaml" -type f`
-do
+
+for f in $(find . -name "*.yaml" -type f); do
+    grep -qre "kind:\(.*\)CustomResourceDefinition" || continue
+    grep -qre "name:\(.*\).openshift.io"  || continue
+
     if [[ $(./_output/tools/bin/yq r $f apiVersion) == "apiextensions.k8s.io/v1beta1" ]]; then
         if [[ $(./_output/tools/bin/yq r $f spec.validation.openAPIV3Schema.properties.metadata.description) != "null" ]]; then
             echo "Error: cannot have a metadata description in $f"
@@ -19,6 +22,11 @@ do
             echo "Error: pruning not enabled (spec.preserveUnknownFields != false) in $f"
             FAILS=true
         fi
+    fi
+
+    if [[ $(./_output/tools/bin/yq r $f metadata.annotations[api-approved.openshift.io]) == "null" ]]; then
+        echo "Error: missing 'api-approved.openshift.io' annotation pointing to openshift/api pull request in $f"
+        FAILS=true
     fi
 done
 

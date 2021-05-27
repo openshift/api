@@ -47,8 +47,9 @@ CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 LAST_COMMIT=$(git rev-parse HEAD~1)
 # Switch to master branch and apply all the existing v1beta1 crds
 git checkout $LAST_COMMIT
-for f in `find . -name "*crd.yaml" -type f`
-do
+for f in $(find . -name "*.yaml" -type f); do
+    grep -qre "kind:\(.*\)CustomResourceDefinition" || continue
+    grep -qre "name:\(.*\).openshift.io"  || continue
     if [[ $(./_output/tools/bin/yq r $f apiVersion) == "apiextensions.k8s.io/v1beta1" ]]; then
         v1beta1CRDName=$(./_output/tools/bin/yq r $f metadata.name)
         v1beta1CRDNames=("${v1beta1CRDNames[*]}" $v1beta1CRDName)
@@ -61,8 +62,9 @@ done
 # Switch to current branch and apply the crd with v1 version
 FALSE=false
 git checkout $CURRENT_BRANCH
-for f in `find . -name "*crd.yaml" -type f`
-do
+for f in $(find . -name "*.yaml" -type f); do
+    grep -qre "kind:\(.*\)CustomResourceDefinition" || continue
+    grep -qre "name:\(.*\).openshift.io"  || continue
     if [[ $(./_output/tools/bin/yq r $f apiVersion) == "apiextensions.k8s.io/v1" ]]; then
         v1CRDName=$(./_output/tools/bin/yq r $f metadata.name)
         $KUBECTL apply -f $f || FALSE=true

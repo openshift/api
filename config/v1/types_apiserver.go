@@ -99,6 +99,13 @@ type Audit struct {
 	//
 	// If unset, the 'Default' profile is used as the default.
 	// +kubebuilder:default=Default
+	// customRules specify profiles per group. These profile take precedence over the
+	// top-level profile field if they apply. They are evaluation from top to bottom and
+	// the first one that matches, applies.
+	//
+	// +listType=map
+	// +listMapKey=group
+	// +optional
 	Profile     AuditProfileType `json:"profile,omitempty"`
 	CustomRules []CustomRule     `json:"group,omitempty"`
 }

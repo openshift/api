@@ -83,7 +83,7 @@ const (
 
 type CustomRule struct {
 	Profile AuditProfileType `json:"profile,omitempty"`
-	Group   AuditGroupType   `json:"profile,omitempty"`
+	Group   AuditGroupType   `json:"group,omitempty"`
 }
 
 type Audit struct {
@@ -100,7 +100,7 @@ type Audit struct {
 	// If unset, the 'Default' profile is used as the default.
 	// +kubebuilder:default=Default
 	Profile     AuditProfileType `json:"profile,omitempty"`
-	CustomRules []CustomRule
+	CustomRules []CustomRule     `json:"group,omitempty"`
 }
 
 type APIServerServingCerts struct {

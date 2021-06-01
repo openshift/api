@@ -17,6 +17,7 @@ spec:
   scope: Cluster
   versions:
 <<<<<<< HEAD
+<<<<<<< HEAD
     - name: v1
       schema:
         openAPIV3Schema:

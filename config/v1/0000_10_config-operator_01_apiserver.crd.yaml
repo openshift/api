@@ -159,7 +159,7 @@ spec:
                       for write requests (create, update, patch). - AllRequestBodies:
                       like 'WriteRequestBodies', but also logs request and response
                       HTTP payloads for read requests (get, list). \n If unset, the
-                      'Default' profile is used as the default.
+                      'Default' profile is used as the default."
                     type: string
                     default: Default
                     enum:

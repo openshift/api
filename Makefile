@@ -22,7 +22,7 @@ CONTROLLER_GEN_VERSION :=v0.2.5
 $(call add-crd-gen,authorization,./authorization/v1,./authorization/v1,./authorization/v1)
 $(call add-crd-gen,apiserver,./apiserver/v1,./apiserver/v1,./apiserver/v1)
 $(call add-crd-gen,config,./config/v1,./config/v1,./config/v1)
-$(call add-crd-gen,helm,./helm/v1beta1,./helm/v1beta1,./helm/v1beta1)
+$(call add-crd-gen,helm,./helm/v1,./helm/v1,./helm/v1)
 $(call add-crd-gen,console,./console/v1,./console/v1,./console/v1)
 $(call add-crd-gen,console-alpha,./console/v1alpha1,./console/v1alpha1,./console/v1alpha1)
 $(call add-crd-gen,imageregistry,./imageregistry/v1,./imageregistry/v1,./imageregistry/v1)

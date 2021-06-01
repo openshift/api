@@ -1,4 +1,4 @@
-package v1beta1
+package v1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -8,7 +8,7 @@ import (
 
 var (
 	GroupName     = "helm.openshift.io"
-	GroupVersion  = schema.GroupVersion{Group: GroupName, Version: "v1beta1"}
+	GroupVersion  = schema.GroupVersion{Group: GroupName, Version: "v1"}
 	schemeBuilder = runtime.NewSchemeBuilder(addKnownTypes)
 	// Install is a function which adds this version to a scheme
 	Install = schemeBuilder.AddToScheme

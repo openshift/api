@@ -81,11 +81,6 @@ const (
 	Group AuditProfileType = ""
 )
 
-type CustomRule struct {
-	Profile AuditProfileType `json:"profile,omitempty"`
-	Group   AuditGroupType   `json:"group,omitempty"`
-}
-
 type Audit struct {
 	// profile specifies the name of the desired audit policy configuration to be deployed to
 	// all OpenShift-provided API servers in the cluster.
@@ -108,6 +103,11 @@ type Audit struct {
 	// +optional
 	Profile     AuditProfileType `json:"profile,omitempty"`
 	CustomRules []CustomRule     `json:"group,omitempty"`
+}
+
+type CustomRule struct {
+	Profile AuditProfileType `json:"profile,omitempty"`
+	Group   AuditGroupType   `json:"group,omitempty"`
 }
 
 type APIServerServingCerts struct {

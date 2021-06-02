@@ -150,6 +150,21 @@ spec:
                 default:
                   profile: Default
                 properties:
+                  group:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        group:
+                          type: string
+                        profile:
+                          description: AuditProfileType defines the audit policy profile
+                            type.
+                          type: string
+                          enum:
+                          - Default
+                          - WriteRequestBodies
+                          - AllRequestBodies
                   profile:
                     description: "profile specifies the name of the desired audit
                       policy configuration to be deployed to all OpenShift-provided
@@ -159,7 +174,10 @@ spec:
                       for write requests (create, update, patch). - AllRequestBodies:
                       like 'WriteRequestBodies', but also logs request and response
                       HTTP payloads for read requests (get, list). \n If unset, the
-                      'Default' profile is used as the default."
+                      'Default' profile is used as the default. customRules specify
+                      profiles per group. These profile take precedence over the top-level
+                      profile field if they apply. They are evaluation from top to
+                      bottom and the first one that matches, applies."
                     type: string
                     default: Default
                     enum:

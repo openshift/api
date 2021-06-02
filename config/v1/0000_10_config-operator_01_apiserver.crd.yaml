@@ -162,9 +162,9 @@ spec:
               tlsSecurityProfile:
                 description: "tlsSecurityProfile specifies settings for TLS connections
                   for externally exposed servers. \n If unset, a default (which may
-                  change between releases) is chosen. Note that only Old and Intermediate
-                  profiles are currently supported, and the maximum available MinTLSVersions
-                  is VersionTLS12."
+                  change between releases) is chosen. Note that only Old, Intermediate
+                  and Custom profiles are currently supported, and the maximum available
+                  MinTLSVersions is VersionTLS12."
                 type: object
                 properties:
                   custom:

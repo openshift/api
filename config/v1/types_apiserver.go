@@ -101,13 +101,13 @@ type Audit struct {
 	// +listType=map
 	// +listMapKey=group
 	// +optional
-	Profile     AuditProfileType `json:"profile,omitempty"`
 	CustomRules []CustomRule     `json:"group,omitempty"`
+//	Profile     AuditProfileType `json:"profile,omitempty"`
 }
 
 type CustomRule struct {
-	Profile AuditProfileType `json:"profile,omitempty"`
 	Group   AuditGroupType   `json:"group,omitempty"`
+	Profile AuditProfileType `json:"profile,omitempty"`
 }
 
 type APIServerServingCerts struct {

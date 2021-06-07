@@ -98,9 +98,8 @@ type Audit struct {
 	// top-level profile field if they apply. They are evaluation from top to bottom and
 	// the first one that matches, applies.
 	//
-	// +listType=map
-	// +listMapKey=group
-	// +optional
+	// +listType=string
+
 	CustomRules []CustomRule     `json:"group,omitempty"`
 	Profile     AuditProfileType `json:"profile,omitempty"`
 }

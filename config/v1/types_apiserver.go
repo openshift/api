@@ -102,7 +102,7 @@ type Audit struct {
 	// +listMapKey=group
 	// +optional
 	CustomRules []CustomRule     `json:"group,omitempty"`
-//	Profile     AuditProfileType `json:"profile,omitempty"`
+	Profile     AuditProfileType `json:"profile,omitempty"`
 }
 
 type CustomRule struct {

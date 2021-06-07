@@ -189,6 +189,13 @@ type IngressControllerSpec struct {
 	// +optional
 	HTTPHeaders *IngressControllerHTTPHeaders `json:"httpHeaders,omitempty"`
 
+	// securityContext defines the security context for the ingress controller pods.
+	//
+	// If this field is empty, the default values are used.
+	//
+	// +optional
+	SecurityContext *corev1.PodSecurityContext `json:"securityContext,omitempty"`
+
 	// tuningOptions defines parameters for adjusting the performance of
 	// ingress controller pods. All fields are optional and will use their
 	// respective defaults if not set. See specific tuningOptions fields for

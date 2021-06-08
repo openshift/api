@@ -1,0 +1,1031 @@
+{
+  "LogicalName": "etcd Certificates",
+  "Description": "Used to secure etcd internal communication and by apiservers to access etcd.",
+  "CertificateAuthorityBundles": {
+    "Items": [
+      {
+        "LogicalName": "etcd-ca",
+        "Description": "CA for recognizing etcd serving, peer, and client certificates.",
+        "Name": "etcd-signer",
+        "Spec": {
+          "ConfigMapLocations": [
+            {
+              "Namespace": "openshift-apiserver",
+              "Name": "etcd-serving-ca"
+            },
+            {
+              "Namespace": "openshift-config",
+              "Name": "etcd-ca-bundle"
+            },
+            {
+              "Namespace": "openshift-config",
+              "Name": "etcd-serving-ca"
+            },
+            {
+              "Namespace": "openshift-etcd",
+              "Name": "etcd-ca-bundle"
+            },
+            {
+              "Namespace": "openshift-etcd",
+              "Name": "etcd-peer-client-ca"
+            },
+            {
+              "Namespace": "openshift-etcd",
+              "Name": "etcd-peer-client-ca-2"
+            },
+            {
+              "Namespace": "openshift-etcd",
+              "Name": "etcd-peer-client-ca-3"
+            },
+            {
+              "Namespace": "openshift-etcd",
+              "Name": "etcd-serving-ca"
+            },
+            {
+              "Namespace": "openshift-etcd",
+              "Name": "etcd-serving-ca-2"
+            },
+            {
+              "Namespace": "openshift-etcd",
+              "Name": "etcd-serving-ca-3"
+            },
+            {
+              "Namespace": "openshift-etcd-operator",
+              "Name": "etcd-ca-bundle"
+            },
+            {
+              "Namespace": "openshift-kube-apiserver",
+              "Name": "etcd-serving-ca"
+            },
+            {
+              "Namespace": "openshift-kube-apiserver",
+              "Name": "etcd-serving-ca-2"
+            },
+            {
+              "Namespace": "openshift-kube-apiserver",
+              "Name": "etcd-serving-ca-3"
+            },
+            {
+              "Namespace": "openshift-kube-apiserver",
+              "Name": "etcd-serving-ca-4"
+            },
+            {
+              "Namespace": "openshift-oauth-apiserver",
+              "Name": "etcd-serving-ca"
+            }
+          ],
+          "OnDiskLocations": [
+            {
+              "Path": "/etc/kubernetes/static-pod-resources/etcd-certs/configmaps/etcd-peer-client-ca/ca-bundle.crt/ca-bundle.crt",
+              "User": "root",
+              "Group": "root",
+              "Permissions": "-rw-r--r--.",
+              "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+            },
+            {
+              "Path": "/etc/kubernetes/static-pod-resources/etcd-certs/configmaps/etcd-serving-ca/ca-bundle.crt/ca-bundle.crt",
+              "User": "root",
+              "Group": "root",
+              "Permissions": "-rw-r--r--.",
+              "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+            },
+            {
+              "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-2/configmaps/etcd-peer-client-ca/ca-bundle.crt/ca-bundle.crt",
+              "User": "root",
+              "Group": "root",
+              "Permissions": "-rw-r--r--.",
+              "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+            },
+            {
+              "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-2/configmaps/etcd-serving-ca/ca-bundle.crt/ca-bundle.crt",
+              "User": "root",
+              "Group": "root",
+              "Permissions": "-rw-r--r--.",
+              "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+            },
+            {
+              "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-3/configmaps/etcd-peer-client-ca/ca-bundle.crt/ca-bundle.crt",
+              "User": "root",
+              "Group": "root",
+              "Permissions": "-rw-r--r--.",
+              "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+            },
+            {
+              "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-3/configmaps/etcd-serving-ca/ca-bundle.crt/ca-bundle.crt",
+              "User": "root",
+              "Group": "root",
+              "Permissions": "-rw-r--r--.",
+              "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+            },
+            {
+              "Path": "/etc/kubernetes/static-pod-resources/kube-apiserver-pod-2/configmaps/etcd-serving-ca/ca-bundle.crt/ca-bundle.crt",
+              "User": "root",
+              "Group": "root",
+              "Permissions": "-rw-r--r--.",
+              "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+            },
+            {
+              "Path": "/etc/kubernetes/static-pod-resources/kube-apiserver-pod-3/configmaps/etcd-serving-ca/ca-bundle.crt/ca-bundle.crt",
+              "User": "root",
+              "Group": "root",
+              "Permissions": "-rw-r--r--.",
+              "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+            },
+            {
+              "Path": "/etc/kubernetes/static-pod-resources/kube-apiserver-pod-4/configmaps/etcd-serving-ca/ca-bundle.crt/ca-bundle.crt",
+              "User": "root",
+              "Group": "root",
+              "Permissions": "-rw-r--r--.",
+              "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+            }
+          ],
+          "CertificateMetadata": [
+            {
+              "CertIdentifier": {
+                "CommonName": "etcd-signer",
+                "SerialNumber": "5150005387928405585",
+                "Issuer": {
+                  "CommonName": "etcd-signer",
+                  "SerialNumber": "",
+                  "Issuer": null
+                }
+              },
+              "SignatureAlgorithm": "SHA256-RSA",
+              "PublicKeyAlgorithm": "RSA",
+              "PublicKeyBitSize": "2048 bit",
+              "ValidityDuration": "10y",
+              "Usages": [
+                "KeyUsageDigitalSignature",
+                "KeyUsageKeyEncipherment",
+                "KeyUsageCertSign"
+              ],
+              "ExtendedUsages": []
+            }
+          ]
+        },
+        "Status": {
+          "Errors": null
+        }
+      }
+    ]
+  },
+  "CertKeyPairs": {
+    "Items": [
+      {
+        "LogicalName": "",
+        "Description": "",
+        "Name": "system:etcd-peer:etcd-client::8953043022604429717",
+        "Spec": {
+          "SecretLocations": [
+            {
+              "Namespace": "openshift-etcd",
+              "Name": "etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-0"
+            }
+          ],
+          "OnDiskLocations": [
+            {
+              "Cert": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-peer/etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-0.crt/etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-0.crt",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              },
+              "Key": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-peer/etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-0.crt/etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-0.key",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              }
+            },
+            {
+              "Cert": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-2/secrets/etcd-all-peer/etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-0.crt/etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-0.crt",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              },
+              "Key": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-2/secrets/etcd-all-peer/etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-0.crt/etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-0.key",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              }
+            },
+            {
+              "Cert": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-3/secrets/etcd-all-peer/etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-0.crt/etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-0.crt",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              },
+              "Key": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-3/secrets/etcd-all-peer/etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-0.crt/etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-0.key",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              }
+            }
+          ],
+          "CertMetadata": {
+            "CertIdentifier": {
+              "CommonName": "system:etcd-peer:etcd-client",
+              "SerialNumber": "8953043022604429717",
+              "Issuer": {
+                "CommonName": "etcd-signer",
+                "SerialNumber": "",
+                "Issuer": null
+              }
+            },
+            "SignatureAlgorithm": "SHA256-RSA",
+            "PublicKeyAlgorithm": "RSA",
+            "PublicKeyBitSize": "2048 bit",
+            "ValidityDuration": "3y",
+            "Usages": [
+              "KeyUsageDigitalSignature",
+              "KeyUsageKeyEncipherment"
+            ],
+            "ExtendedUsages": [
+              "ExtKeyUsageClientAuth",
+              "ExtKeyUsageServerAuth"
+            ]
+          },
+          "Details": {
+            "CertType": "Multiple",
+            "SignerDetails": null,
+            "ServingCertDetails": {
+              "DNSNames": [
+                "localhost",
+                "10.0.0.4"
+              ],
+              "IPAddresses": [
+                "10.0.0.4"
+              ]
+            },
+            "ClientCertDetails": {
+              "Organizations": [
+                "system:etcd-peers"
+              ]
+            }
+          }
+        },
+        "Status": {
+          "Errors": [
+            "you have a cert for more than one?  We don't do that. :("
+          ]
+        }
+      },
+      {
+        "LogicalName": "etcd-signer",
+        "Description": "Signer for etcd to create client and serving certificates.",
+        "Name": "etcd-signer::5150005387928405585",
+        "Spec": {
+          "SecretLocations": [
+            {
+              "Namespace": "openshift-config",
+              "Name": "etcd-signer"
+            }
+          ],
+          "OnDiskLocations": null,
+          "CertMetadata": {
+            "CertIdentifier": {
+              "CommonName": "etcd-signer",
+              "SerialNumber": "5150005387928405585",
+              "Issuer": {
+                "CommonName": "etcd-signer",
+                "SerialNumber": "",
+                "Issuer": null
+              }
+            },
+            "SignatureAlgorithm": "SHA256-RSA",
+            "PublicKeyAlgorithm": "RSA",
+            "PublicKeyBitSize": "2048 bit",
+            "ValidityDuration": "10y",
+            "Usages": [
+              "KeyUsageDigitalSignature",
+              "KeyUsageKeyEncipherment",
+              "KeyUsageCertSign"
+            ],
+            "ExtendedUsages": []
+          },
+          "Details": {
+            "CertType": "SignerCertDetails",
+            "SignerDetails": {},
+            "ServingCertDetails": null,
+            "ClientCertDetails": null
+          }
+        },
+        "Status": {
+          "Errors": null
+        }
+      },
+      {
+        "LogicalName": "",
+        "Description": "",
+        "Name": "system:etcd-server:etcd-client::4042752185256536799",
+        "Spec": {
+          "SecretLocations": [
+            {
+              "Namespace": "openshift-etcd",
+              "Name": "etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-2"
+            }
+          ],
+          "OnDiskLocations": [
+            {
+              "Cert": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-serving/etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-2.crt/etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-2.crt",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              },
+              "Key": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-serving/etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-2.crt/etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-2.key",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              }
+            },
+            {
+              "Cert": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-2/secrets/etcd-all-serving/etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-2.crt/etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-2.crt",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              },
+              "Key": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-2/secrets/etcd-all-serving/etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-2.crt/etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-2.key",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              }
+            },
+            {
+              "Cert": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-3/secrets/etcd-all-serving/etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-2.crt/etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-2.crt",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              },
+              "Key": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-3/secrets/etcd-all-serving/etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-2.crt/etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-2.key",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              }
+            }
+          ],
+          "CertMetadata": {
+            "CertIdentifier": {
+              "CommonName": "system:etcd-server:etcd-client",
+              "SerialNumber": "4042752185256536799",
+              "Issuer": {
+                "CommonName": "etcd-signer",
+                "SerialNumber": "",
+                "Issuer": null
+              }
+            },
+            "SignatureAlgorithm": "SHA256-RSA",
+            "PublicKeyAlgorithm": "RSA",
+            "PublicKeyBitSize": "2048 bit",
+            "ValidityDuration": "3y",
+            "Usages": [
+              "KeyUsageDigitalSignature",
+              "KeyUsageKeyEncipherment"
+            ],
+            "ExtendedUsages": [
+              "ExtKeyUsageClientAuth",
+              "ExtKeyUsageServerAuth"
+            ]
+          },
+          "Details": {
+            "CertType": "Multiple",
+            "SignerDetails": null,
+            "ServingCertDetails": {
+              "DNSNames": [
+                "etcd.kube-system.svc",
+                "etcd.kube-system.svc.cluster.local",
+                "etcd.openshift-etcd.svc",
+                "etcd.openshift-etcd.svc.cluster.local",
+                "localhost",
+                "::1",
+                "10.0.0.5",
+                "127.0.0.1",
+                "::1"
+              ],
+              "IPAddresses": [
+                "::1",
+                "10.0.0.5",
+                "127.0.0.1",
+                "::1"
+              ]
+            },
+            "ClientCertDetails": {
+              "Organizations": [
+                "system:etcd-servers"
+              ]
+            }
+          }
+        },
+        "Status": {
+          "Errors": [
+            "you have a cert for more than one?  We don't do that. :("
+          ]
+        }
+      },
+      {
+        "LogicalName": "",
+        "Description": "",
+        "Name": "system:etcd-server:etcd-client::9191087523657495108",
+        "Spec": {
+          "SecretLocations": [
+            {
+              "Namespace": "openshift-etcd",
+              "Name": "etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-1"
+            }
+          ],
+          "OnDiskLocations": [
+            {
+              "Cert": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-serving/etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-1.crt/etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-1.crt",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              },
+              "Key": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-serving/etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-1.crt/etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-1.key",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              }
+            },
+            {
+              "Cert": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-2/secrets/etcd-all-serving/etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-1.crt/etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-1.crt",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              },
+              "Key": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-2/secrets/etcd-all-serving/etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-1.crt/etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-1.key",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              }
+            },
+            {
+              "Cert": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-3/secrets/etcd-all-serving/etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-1.crt/etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-1.crt",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              },
+              "Key": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-3/secrets/etcd-all-serving/etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-1.crt/etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-1.key",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              }
+            }
+          ],
+          "CertMetadata": {
+            "CertIdentifier": {
+              "CommonName": "system:etcd-server:etcd-client",
+              "SerialNumber": "9191087523657495108",
+              "Issuer": {
+                "CommonName": "etcd-signer",
+                "SerialNumber": "",
+                "Issuer": null
+              }
+            },
+            "SignatureAlgorithm": "SHA256-RSA",
+            "PublicKeyAlgorithm": "RSA",
+            "PublicKeyBitSize": "2048 bit",
+            "ValidityDuration": "3y",
+            "Usages": [
+              "KeyUsageDigitalSignature",
+              "KeyUsageKeyEncipherment"
+            ],
+            "ExtendedUsages": [
+              "ExtKeyUsageClientAuth",
+              "ExtKeyUsageServerAuth"
+            ]
+          },
+          "Details": {
+            "CertType": "Multiple",
+            "SignerDetails": null,
+            "ServingCertDetails": {
+              "DNSNames": [
+                "etcd.kube-system.svc",
+                "etcd.kube-system.svc.cluster.local",
+                "etcd.openshift-etcd.svc",
+                "etcd.openshift-etcd.svc.cluster.local",
+                "localhost",
+                "::1",
+                "10.0.0.3",
+                "127.0.0.1",
+                "::1"
+              ],
+              "IPAddresses": [
+                "::1",
+                "10.0.0.3",
+                "127.0.0.1",
+                "::1"
+              ]
+            },
+            "ClientCertDetails": {
+              "Organizations": [
+                "system:etcd-servers"
+              ]
+            }
+          }
+        },
+        "Status": {
+          "Errors": [
+            "you have a cert for more than one?  We don't do that. :("
+          ]
+        }
+      },
+      {
+        "LogicalName": "",
+        "Description": "",
+        "Name": "system:etcd-server:etcd-client::91037334659722482",
+        "Spec": {
+          "SecretLocations": [
+            {
+              "Namespace": "openshift-etcd",
+              "Name": "etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-0"
+            }
+          ],
+          "OnDiskLocations": [
+            {
+              "Cert": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-serving/etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-0.crt/etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-0.crt",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              },
+              "Key": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-serving/etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-0.crt/etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-0.key",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              }
+            },
+            {
+              "Cert": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-2/secrets/etcd-all-serving/etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-0.crt/etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-0.crt",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              },
+              "Key": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-2/secrets/etcd-all-serving/etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-0.crt/etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-0.key",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              }
+            },
+            {
+              "Cert": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-3/secrets/etcd-all-serving/etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-0.crt/etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-0.crt",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              },
+              "Key": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-3/secrets/etcd-all-serving/etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-0.crt/etcd-serving-ci-ln-z2l4snt-f76d1-prqp5-master-0.key",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              }
+            }
+          ],
+          "CertMetadata": {
+            "CertIdentifier": {
+              "CommonName": "system:etcd-server:etcd-client",
+              "SerialNumber": "91037334659722482",
+              "Issuer": {
+                "CommonName": "etcd-signer",
+                "SerialNumber": "",
+                "Issuer": null
+              }
+            },
+            "SignatureAlgorithm": "SHA256-RSA",
+            "PublicKeyAlgorithm": "RSA",
+            "PublicKeyBitSize": "2048 bit",
+            "ValidityDuration": "3y",
+            "Usages": [
+              "KeyUsageDigitalSignature",
+              "KeyUsageKeyEncipherment"
+            ],
+            "ExtendedUsages": [
+              "ExtKeyUsageClientAuth",
+              "ExtKeyUsageServerAuth"
+            ]
+          },
+          "Details": {
+            "CertType": "Multiple",
+            "SignerDetails": null,
+            "ServingCertDetails": {
+              "DNSNames": [
+                "etcd.kube-system.svc",
+                "etcd.kube-system.svc.cluster.local",
+                "etcd.openshift-etcd.svc",
+                "etcd.openshift-etcd.svc.cluster.local",
+                "localhost",
+                "::1",
+                "10.0.0.4",
+                "127.0.0.1",
+                "::1"
+              ],
+              "IPAddresses": [
+                "::1",
+                "10.0.0.4",
+                "127.0.0.1",
+                "::1"
+              ]
+            },
+            "ClientCertDetails": {
+              "Organizations": [
+                "system:etcd-servers"
+              ]
+            }
+          }
+        },
+        "Status": {
+          "Errors": [
+            "you have a cert for more than one?  We don't do that. :("
+          ]
+        }
+      },
+      {
+        "LogicalName": "",
+        "Description": "",
+        "Name": "system:etcd-peer:etcd-client::1580301937651503313",
+        "Spec": {
+          "SecretLocations": [
+            {
+              "Namespace": "openshift-etcd",
+              "Name": "etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-2"
+            }
+          ],
+          "OnDiskLocations": [
+            {
+              "Cert": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-peer/etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-2.crt/etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-2.crt",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              },
+              "Key": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-peer/etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-2.crt/etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-2.key",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              }
+            },
+            {
+              "Cert": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-2/secrets/etcd-all-peer/etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-2.crt/etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-2.crt",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              },
+              "Key": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-2/secrets/etcd-all-peer/etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-2.crt/etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-2.key",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              }
+            },
+            {
+              "Cert": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-3/secrets/etcd-all-peer/etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-2.crt/etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-2.crt",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              },
+              "Key": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-3/secrets/etcd-all-peer/etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-2.crt/etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-2.key",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              }
+            }
+          ],
+          "CertMetadata": {
+            "CertIdentifier": {
+              "CommonName": "system:etcd-peer:etcd-client",
+              "SerialNumber": "1580301937651503313",
+              "Issuer": {
+                "CommonName": "etcd-signer",
+                "SerialNumber": "",
+                "Issuer": null
+              }
+            },
+            "SignatureAlgorithm": "SHA256-RSA",
+            "PublicKeyAlgorithm": "RSA",
+            "PublicKeyBitSize": "2048 bit",
+            "ValidityDuration": "3y",
+            "Usages": [
+              "KeyUsageDigitalSignature",
+              "KeyUsageKeyEncipherment"
+            ],
+            "ExtendedUsages": [
+              "ExtKeyUsageClientAuth",
+              "ExtKeyUsageServerAuth"
+            ]
+          },
+          "Details": {
+            "CertType": "Multiple",
+            "SignerDetails": null,
+            "ServingCertDetails": {
+              "DNSNames": [
+                "localhost",
+                "10.0.0.5"
+              ],
+              "IPAddresses": [
+                "10.0.0.5"
+              ]
+            },
+            "ClientCertDetails": {
+              "Organizations": [
+                "system:etcd-peers"
+              ]
+            }
+          }
+        },
+        "Status": {
+          "Errors": [
+            "you have a cert for more than one?  We don't do that. :("
+          ]
+        }
+      },
+      {
+        "LogicalName": "",
+        "Description": "",
+        "Name": "system:etcd-peer:etcd-client::4885834619064510976",
+        "Spec": {
+          "SecretLocations": [
+            {
+              "Namespace": "openshift-etcd",
+              "Name": "etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-1"
+            }
+          ],
+          "OnDiskLocations": [
+            {
+              "Cert": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-peer/etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-1.crt/etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-1.crt",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              },
+              "Key": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-peer/etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-1.crt/etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-1.key",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              }
+            },
+            {
+              "Cert": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-2/secrets/etcd-all-peer/etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-1.crt/etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-1.crt",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              },
+              "Key": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-2/secrets/etcd-all-peer/etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-1.crt/etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-1.key",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              }
+            },
+            {
+              "Cert": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-3/secrets/etcd-all-peer/etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-1.crt/etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-1.crt",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              },
+              "Key": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-3/secrets/etcd-all-peer/etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-1.crt/etcd-peer-ci-ln-z2l4snt-f76d1-prqp5-master-1.key",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              }
+            }
+          ],
+          "CertMetadata": {
+            "CertIdentifier": {
+              "CommonName": "system:etcd-peer:etcd-client",
+              "SerialNumber": "4885834619064510976",
+              "Issuer": {
+                "CommonName": "etcd-signer",
+                "SerialNumber": "",
+                "Issuer": null
+              }
+            },
+            "SignatureAlgorithm": "SHA256-RSA",
+            "PublicKeyAlgorithm": "RSA",
+            "PublicKeyBitSize": "2048 bit",
+            "ValidityDuration": "3y",
+            "Usages": [
+              "KeyUsageDigitalSignature",
+              "KeyUsageKeyEncipherment"
+            ],
+            "ExtendedUsages": [
+              "ExtKeyUsageClientAuth",
+              "ExtKeyUsageServerAuth"
+            ]
+          },
+          "Details": {
+            "CertType": "Multiple",
+            "SignerDetails": null,
+            "ServingCertDetails": {
+              "DNSNames": [
+                "localhost",
+                "10.0.0.3"
+              ],
+              "IPAddresses": [
+                "10.0.0.3"
+              ]
+            },
+            "ClientCertDetails": {
+              "Organizations": [
+                "system:etcd-peers"
+              ]
+            }
+          }
+        },
+        "Status": {
+          "Errors": [
+            "you have a cert for more than one?  We don't do that. :("
+          ]
+        }
+      },
+      {
+        "LogicalName": "",
+        "Description": "",
+        "Name": "etcd::7239217573520392488",
+        "Spec": {
+          "SecretLocations": [
+            {
+              "Namespace": "openshift-apiserver",
+              "Name": "etcd-client"
+            },
+            {
+              "Namespace": "openshift-config",
+              "Name": "etcd-client"
+            },
+            {
+              "Namespace": "openshift-etcd",
+              "Name": "etcd-client"
+            },
+            {
+              "Namespace": "openshift-etcd-operator",
+              "Name": "etcd-client"
+            },
+            {
+              "Namespace": "openshift-kube-apiserver",
+              "Name": "etcd-client"
+            },
+            {
+              "Namespace": "openshift-kube-apiserver",
+              "Name": "etcd-client-2"
+            },
+            {
+              "Namespace": "openshift-kube-apiserver",
+              "Name": "etcd-client-3"
+            },
+            {
+              "Namespace": "openshift-kube-apiserver",
+              "Name": "etcd-client-4"
+            },
+            {
+              "Namespace": "openshift-oauth-apiserver",
+              "Name": "etcd-client"
+            }
+          ],
+          "OnDiskLocations": [
+            {
+              "Cert": {
+                "Path": "/etc/kubernetes/static-pod-resources/kube-apiserver-pod-2/secrets/etcd-client/tls.crt/tls.crt",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              },
+              "Key": {
+                "Path": "/etc/kubernetes/static-pod-resources/kube-apiserver-pod-2/secrets/etcd-client/tls.crt/tls.key",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              }
+            },
+            {
+              "Cert": {
+                "Path": "/etc/kubernetes/static-pod-resources/kube-apiserver-pod-3/secrets/etcd-client/tls.crt/tls.crt",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              },
+              "Key": {
+                "Path": "/etc/kubernetes/static-pod-resources/kube-apiserver-pod-3/secrets/etcd-client/tls.crt/tls.key",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              }
+            },
+            {
+              "Cert": {
+                "Path": "/etc/kubernetes/static-pod-resources/kube-apiserver-pod-4/secrets/etcd-client/tls.crt/tls.crt",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              },
+              "Key": {
+                "Path": "/etc/kubernetes/static-pod-resources/kube-apiserver-pod-4/secrets/etcd-client/tls.crt/tls.key",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              }
+            }
+          ],
+          "CertMetadata": {
+            "CertIdentifier": {
+              "CommonName": "etcd",
+              "SerialNumber": "7239217573520392488",
+              "Issuer": {
+                "CommonName": "etcd-signer",
+                "SerialNumber": "",
+                "Issuer": null
+              }
+            },
+            "SignatureAlgorithm": "SHA256-RSA",
+            "PublicKeyAlgorithm": "RSA",
+            "PublicKeyBitSize": "2048 bit",
+            "ValidityDuration": "10y",
+            "Usages": [
+              "KeyUsageKeyEncipherment"
+            ],
+            "ExtendedUsages": [
+              "ExtKeyUsageClientAuth"
+            ]
+          },
+          "Details": {
+            "CertType": "ClientCertDetails",
+            "SignerDetails": null,
+            "ServingCertDetails": null,
+            "ClientCertDetails": {
+              "Organizations": null
+            }
+          }
+        },
+        "Status": {
+          "Errors": null
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,142 @@
+digraph "OpenShift Certificates" {
+  // Node definitions.
+  0 [
+    label="certkeypair/kube-control-plane-signer\n\nsecret/kube-control-plane-signer -nopenshift-kube-apiserver-operator\n"
+    style=filled
+    fillcolor="#c7bfff"
+  ];
+  1 [
+    label="certkeypair/kube-scheduler-client\n\nsecret/kube-scheduler-client-cert-key -nopenshift-config-managed\n    secret/kube-scheduler-client-cert-key -nopenshift-kube-scheduler\n    file:///etc/kubernetes/static-pod-resources/kube-scheduler-certs/secrets/kube-scheduler-client-cert-key/tls.crt/tls.crt,file:///etc/kubernetes/static-pod-resources/kube-scheduler-certs/secrets/kube-scheduler-client-cert-key/tls.crt/tls.key\n"
+    style=filled
+    fillcolor="#c8fbcd"
+  ];
+  2 [
+    label="certkeypair/kube-controller-manager-client\n\nsecret/kube-controller-manager-client-cert-key -nopenshift-config-managed\n    secret/kube-controller-manager-client-cert-key -nopenshift-kube-controller-manager\n    file:///etc/kubernetes/static-pod-resources/kube-controller-manager-certs/secrets/kube-controller-manager-client-cert-key/tls.crt/tls.crt,file:///etc/kubernetes/static-pod-resources/kube-controller-manager-certs/secrets/kube-controller-manager-client-cert-key/tls.crt/tls.key\n"
+    style=filled
+    fillcolor="#c8fbcd"
+  ];
+  3 [
+    label="certkeypair/kube-controller-manager-csr-signer-signer\n\nsecret/csr-signer-signer -nopenshift-kube-controller-manager-operator\n"
+    style=filled
+    fillcolor="#c7bfff"
+  ];
+  4 [
+    label="certkeypair/kube-controller-manager-csr-signer\n\nsecret/csr-signer -nopenshift-kube-controller-manager\n    secret/csr-signer -nopenshift-kube-controller-manager-operator\n    file:///etc/kubernetes/static-pod-resources/kube-controller-manager-certs/secrets/csr-signer/tls.crt/tls.crt,file:///etc/kubernetes/static-pod-resources/kube-controller-manager-certs/secrets/csr-signer/tls.crt/tls.key\n"
+    style=filled
+    fillcolor="#c7bfff"
+  ];
+  5 [
+    label="certkeypair/admin-kubeconfig-signer::7222735057655048698\n\nfile:///etc/kubernetes/kubelet-ca.crt/kubelet-ca.crt,file://\n"
+    style=filled
+    fillcolor="#c7bfff"
+  ];
+  6 [
+    label="certkeypair/per-master-debugging-signer\n\nsecret/node-system-admin-signer -nopenshift-kube-apiserver-operator\n"
+    style=filled
+    fillcolor="#c7bfff"
+  ];
+  7 [
+    label="certkeypair/per-master-debugging-client\n\nsecret/node-system-admin-client -nopenshift-kube-apiserver-operator\n"
+    style=filled
+    fillcolor="#c8fbcd"
+  ];
+  8 [
+    label="certkeypair/kubelet-bootstrap-kubeconfig-signer\n\n\n"
+    style=filled
+    fillcolor=white
+  ];
+  9 [
+    label="certkeypair/kube-apiserver-to-kubelet-signer\n\nsecret/kube-apiserver-to-kubelet-signer -nopenshift-kube-apiserver-operator\n"
+    style=filled
+    fillcolor="#c7bfff"
+  ];
+  10 [
+    label="certkeypair/kube-apiserver-to-kubelet-client\n\nsecret/kubelet-client -nopenshift-kube-apiserver\n    secret/kubelet-client-2 -nopenshift-kube-apiserver\n    secret/kubelet-client-3 -nopenshift-kube-apiserver\n    secret/kubelet-client-4 -nopenshift-kube-apiserver\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-2/secrets/kubelet-client/tls.crt/tls.crt,file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-2/secrets/kubelet-client/tls.crt/tls.key\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-3/secrets/kubelet-client/tls.crt/tls.crt,file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-3/secrets/kubelet-client/tls.crt/tls.key\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-4/secrets/kubelet-client/tls.crt/tls.crt,file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-4/secrets/kubelet-client/tls.crt/tls.key\n"
+    style=filled
+    fillcolor="#c8fbcd"
+  ];
+  11 [
+    label="certkeypair/system:control-plane-node-admin::6179025970239051547\n\nsecret/control-plane-node-admin-client-cert-key -nopenshift-kube-apiserver\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-certs/secrets/control-plane-node-admin-client-cert-key/tls.crt/tls.crt,file:///etc/kubernetes/static-pod-resources/kube-apiserver-certs/secrets/control-plane-node-admin-client-cert-key/tls.crt/tls.key\n"
+    style=filled
+    fillcolor="#c8fbcd"
+  ];
+  12 [
+    label="certkeypair/kube-apiserver-check-endpoints\n\nsecret/check-endpoints-client-cert-key -nopenshift-kube-apiserver\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-certs/secrets/check-endpoints-client-cert-key/tls.crt/tls.crt,file:///etc/kubernetes/static-pod-resources/kube-apiserver-certs/secrets/check-endpoints-client-cert-key/tls.crt/tls.key\n"
+    style=filled
+    fillcolor="#c8fbcd"
+  ];
+  13 [
+    label="cabundle/kube-apiserver-kcm-and-ks-client-ca\n\nconfigmaps/kube-control-plane-signer-ca -nopenshift-kube-apiserver-operator\n"
+    style=filled
+    fillcolor="#fda172"
+  ];
+  14 [
+    label="cabundle/kube-apiserver-total-client-ca\n\nconfigmaps/kube-apiserver-client-ca -nopenshift-config-managed\n    configmaps/client-ca -nopenshift-controller-manager\n    configmaps/client-ca -nopenshift-kube-apiserver\n    configmaps/client-ca -nopenshift-kube-controller-manager\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-certs/configmaps/client-ca/ca-bundle.crt/ca-bundle.crt\n    file:///etc/kubernetes/static-pod-resources/kube-controller-manager-certs/configmaps/client-ca/ca-bundle.crt/ca-bundle.crt\n"
+    style=filled
+    fillcolor="#fda172"
+  ];
+  15 [
+    label="cabundle/kube-controller-manager-csr-ca\n\nconfigmaps/csr-controller-ca -nopenshift-config-managed\n    configmaps/kubelet-serving-ca -nopenshift-config-managed\n    configmaps/kubelet-serving-ca -nopenshift-kube-apiserver\n    configmaps/kubelet-serving-ca-2 -nopenshift-kube-apiserver\n    configmaps/kubelet-serving-ca-3 -nopenshift-kube-apiserver\n    configmaps/kubelet-serving-ca-4 -nopenshift-kube-apiserver\n    configmaps/csr-controller-ca -nopenshift-kube-controller-manager-operator\n    configmaps/csr-signer-ca -nopenshift-kube-controller-manager-operator\n    configmaps/kubelet-serving-ca-bundle -nopenshift-monitoring\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-2/configmaps/kubelet-serving-ca/ca-bundle.crt/ca-bundle.crt\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-3/configmaps/kubelet-serving-ca/ca-bundle.crt/ca-bundle.crt\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-4/configmaps/kubelet-serving-ca/ca-bundle.crt/ca-bundle.crt\n"
+    style=filled
+    fillcolor="#fda172"
+  ];
+  16 [
+    label="cabundle/kube-controller-manager-csr-signer-signer-ca\n\nconfigmaps/csr-controller-signer-ca -nopenshift-kube-controller-manager-operator\n"
+    style=filled
+    fillcolor="#fda172"
+  ];
+  17 [
+    label="cabundle/kube-apiserver-admin-kubeconfig-client-ca\n\nconfigmaps/admin-kubeconfig-client-ca -nopenshift-config\n"
+    style=filled
+    fillcolor="#fda172"
+  ];
+  18 [
+    label="cabundle/kube-apiserver-per-master-debugging-client-ca\n\nconfigmaps/node-system-admin-ca -nopenshift-kube-apiserver-operator\n"
+    style=filled
+    fillcolor="#fda172"
+  ];
+  19 [
+    label="cabundle/kubelet-bootstrap-kubeconfig-signer\n\nconfigmaps/kubelet-bootstrap-kubeconfig -nopenshift-config-managed\n"
+    style=filled
+    fillcolor="#fda172"
+  ];
+  20 [
+    label="cabundle/kubelet-to-recognize-kube-apiserver-client-ca\n\nconfigmaps/kube-apiserver-to-kubelet-client-ca -nopenshift-kube-apiserver-operator\n"
+    style=filled
+    fillcolor="#fda172"
+  ];
+  21 [
+    label="cabundle/kube-apiserver-from-installer-client-ca\n\nconfigmaps/initial-kube-apiserver-server-ca -nopenshift-config\n"
+    style=filled
+    fillcolor="#fda172"
+  ];
+
+  // Edge definitions.
+  0 -> 1;
+  0 -> 2;
+  0 -> 11;
+  0 -> 12;
+  0 -> 13;
+  0 -> 14;
+  0 -> 21;
+  3 -> 4;
+  3 -> 14;
+  3 -> 15;
+  3 -> 16;
+  3 -> 21;
+  4 -> 14;
+  4 -> 15;
+  5 -> 14;
+  5 -> 17;
+  5 -> 21;
+  6 -> 7;
+  6 -> 14;
+  6 -> 18;
+  8 -> 14;
+  8 -> 19;
+  8 -> 21;
+  9 -> 10;
+  9 -> 14;
+  9 -> 20;
+  9 -> 21;
+}

@@ -73,6 +73,13 @@ const (
 	// "AllRequestBodies" is similar to WriteRequestBodies, but also logs request
 	// and response HTTP payloads for read requests (get, list).
 	AllRequestBodiesAuditProfileType AuditProfileType = "AllRequestBodies"
+
+)
+
+type AuditGroupType string
+
+const (
+	Group AuditProfileType = ""
 )
 
 type Audit struct {
@@ -88,8 +95,21 @@ type Audit struct {
 	//
 	// If unset, the 'Default' profile is used as the default.
 	// +kubebuilder:default=Default
+	// customRules specify profiles per group. These profile take precedence over the
+	// top-level profile field if they apply. They are evaluation from top to bottom and
+	// the first one that matches, applies.
+	// +listType=map
+	// +listMapKey=group
+	// + kubebuilder:default=Default
+	CustomRules []CustomRule     `json:"group,omitempty"`
+	Profile     AuditProfileType `json:"profile,omitempty"`
+}
+
+type CustomRule struct {
+	Group   AuditGroupType   `json:"group,omitempty"`
 	Profile AuditProfileType `json:"profile,omitempty"`
 }
+
 
 type APIServerServingCerts struct {
 	// namedCertificates references secrets containing the TLS cert info for serving secure traffic to specific hostnames.

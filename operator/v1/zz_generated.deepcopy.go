@@ -1605,6 +1605,11 @@ func (in *IngressControllerSpec) DeepCopyInto(out *IngressControllerSpec) {
 		*out = new(IngressControllerHTTPHeaders)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.SecurityContext != nil {
+		in, out := &in.SecurityContext, &out.SecurityContext
+		*out = new(corev1.PodSecurityContext)
+		(*in).DeepCopyInto(*out)
+	}
 	out.TuningOptions = in.TuningOptions
 	in.UnsupportedConfigOverrides.DeepCopyInto(&out.UnsupportedConfigOverrides)
 	return

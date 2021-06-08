@@ -641,6 +641,7 @@ var map_IngressControllerSpec = map[string]string{
 	"routeAdmission":             "routeAdmission defines a policy for handling new route claims (for example, to allow or deny claims across namespaces).\n\nIf empty, defaults will be applied. See specific routeAdmission fields for details about their defaults.",
 	"logging":                    "logging defines parameters for what should be logged where.  If this field is empty, operational logs are enabled but access logs are disabled.",
 	"httpHeaders":                "httpHeaders defines policy for HTTP headers.\n\nIf this field is empty, the default values are used.",
+	"securityContext":            "securityContext defines the security context for the ingress controller pods.\n\nIf this field is empty, the default values are used.",
 	"tuningOptions":              "tuningOptions defines parameters for adjusting the performance of ingress controller pods. All fields are optional and will use their respective defaults if not set. See specific tuningOptions fields for more details.\n\nSetting fields within tuningOptions is generally not recommended. The default values are suitable for most configurations.",
 	"unsupportedConfigOverrides": "unsupportedConfigOverrides allows specifying unsupported configuration options.  Its use is unsupported.",
 }

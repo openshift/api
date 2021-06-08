@@ -101,7 +101,6 @@ type Audit struct {
 	// +listMapKey=group
 	// +kubebuilder:default=Default
 
-
 	CustomRules []CustomRule     `json:"group,omitempty"`
 	Profile     AuditProfileType `json:"profile,omitempty"`
 }

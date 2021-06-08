@@ -95,7 +95,6 @@ type NetworkSpec struct {
 	// by using protocols NetFlow, SFlow or IPFIX. Currently only supported on OVN-Kubernetes plugin.
 	// If unset, flows will not be exported to any collector.
 	// +optional
-	// +kubebuilder:validation:MinProperties=1
 	ExportNetworkFlows *ExportNetworkFlows `json:"exportNetworkFlows,omitempty"`
 
 	// migration enables and configures the cluster network migration.

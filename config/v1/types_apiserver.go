@@ -73,7 +73,6 @@ const (
 	// "AllRequestBodies" is similar to WriteRequestBodies, but also logs request
 	// and response HTTP payloads for read requests (get, list).
 	AllRequestBodiesAuditProfileType AuditProfileType = "AllRequestBodies"
-
 )
 
 type AuditGroupType string
@@ -109,7 +108,6 @@ type CustomRule struct {
 	Group   AuditGroupType   `json:"group,omitempty"`
 	Profile AuditProfileType `json:"profile,omitempty"`
 }
-
 
 type APIServerServingCerts struct {
 	// namedCertificates references secrets containing the TLS cert info for serving secure traffic to specific hostnames.

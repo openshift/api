@@ -135,6 +135,128 @@ func (VersionAvailability) SwaggerDoc() map[string]string {
 	return map_VersionAvailability
 }
 
+var map_ExternalDNS = map[string]string{
+	"":       "\n\nExternalDNS describes a managed ExternalDNS controller instance for a cluster. The controller is responsible for creating external DNS records in supported DNS providers based off of instances of select Kubernetes resources.",
+	"spec":   "spec is the specification of the desired behavior of the ExternalDNS.",
+	"status": "status is the most recently observed status of the ExternalDNS.",
+}
+
+func (ExternalDNS) SwaggerDoc() map[string]string {
+	return map_ExternalDNS
+}
+
+var map_ExternalDNSCRDSourceOptions = map[string]string{
+	"kind":        "Kind is the kind of the CRD source resource type to be consumed by ExternalDNS.\n\ne.g. \"DNSEndpoint\"",
+	"version":     "Version is the API version of the given resource kind for ExternalDNS to use.\n\ne.g. \"externaldns.k8s.io/v1alpha1\"",
+	"labelFilter": "LabelFilter specifies a label filter to be used to filter CRD resource instances. Only one label filter can be specified on an ExternalDNS instance.",
+}
+
+func (ExternalDNSCRDSourceOptions) SwaggerDoc() map[string]string {
+	return map_ExternalDNSCRDSourceOptions
+}
+
+var map_ExternalDNSDomain = map[string]string{
+	"":           "ExternalDNSDomain describes how sets of included or excluded domains are to be constructed.",
+	"filterType": "FilterType marks the Name or Pattern field as an included or excluded set of domains.\n\nNote that excluded domains that have not been included will be ignored.\n\nThis field accepts the following values:\n\n \"Include\": Include the domain set specified\n by name or pattern.\n\n \"Exclude\": Exclude the domain set specified\n by name or pattern.",
+}
+
+func (ExternalDNSDomain) SwaggerDoc() map[string]string {
+	return map_ExternalDNSDomain
+}
+
+var map_ExternalDNSDomainUnion = map[string]string{
+	"":          "ExternalDNSDomainUnion describes optional fields of an External domain that should be captured.",
+	"matchType": "MatchType specifies the type of match to be performed by ExternalDNS when determining whether or not to publish DNS records for a given source resource based on the resource's requested hostname.\n\nThis field accepts the following values:\n\n \"Exact\": Explicitly match the full domain string\n  specified via the name field, including any subdomains\n  of the given name.\n\n \"Pattern\": Match potential domains against\n the provided regular expression pattern string.",
+	"names":     "Name is a string representing a single domain value.\n\ne.g. my-app.my-cluster-domain.com",
+	"pattern":   "Pattern is a regular expression used to match a set of domains.",
+}
+
+func (ExternalDNSDomainUnion) SwaggerDoc() map[string]string {
+	return map_ExternalDNSDomainUnion
+}
+
+var map_ExternalDNSList = map[string]string{
+	"": "\n\nExternalDNSList contains a list of ExternalDNS",
+}
+
+func (ExternalDNSList) SwaggerDoc() map[string]string {
+	return map_ExternalDNSList
+}
+
+var map_ExternalDNSProvider = map[string]string{
+	"":            "ExternalDNSProvider specifies configuration options for the desired ExternalDNS DNS provider.",
+	"credentials": "Credentials is a reference to a secret containing the relevant credentials for the given provider, to be used by an ExternalDNS controller for creating, updating, and viewing DNS records.",
+}
+
+func (ExternalDNSProvider) SwaggerDoc() map[string]string {
+	return map_ExternalDNSProvider
+}
+
+var map_ExternalDNSProviderUnion = map[string]string{
+	"":     "ExternalDNSProviderUnion describes optional fields for an ExternalDNS provider that should be captured.",
+	"type": "Type describes which DNS provider ExternalDNS should publish records to. The following DNS providers are supported:\n\n * AWS\n * GCP\n * Azure\n * BlueCat\n * Infoblox",
+}
+
+func (ExternalDNSProviderUnion) SwaggerDoc() map[string]string {
+	return map_ExternalDNSProviderUnion
+}
+
+var map_ExternalDNSServiceSourceOptions = map[string]string{
+	"":              "ExternalDNSServiceSourceOptions describes options specific to the ExternalDNS service source.",
+	"publishPolicy": "PublishPolicy determines what kinds of Service resources are published to the given DNS provider.\n\nThe following publishing policies are available:\n\n \"PublishExternal\": Only publish DNS records for\n service that are externally reachable,\n such as NodePort, ExternalName, and LoadBalancer\n services. This is the default behavior of ExternalDNS.\n\n \"PublishInternalExternal\": Publish DNS records\n  for externally reachable services, in addition to\n  internally reachable services, such as ClusterIP\n  services.",
+	"serviceType":   "ServiceType determines what types of Service resources are watched by ExternalDNS. The following types are available options:\n\n \"NodePort\"\n \"ExternalName\"\n \"LoadBalancer\"\n \"ClusterIP\" (requires a publishPolicy of \"PublishInternalExternal\")\n\nOne or more Service types can be specified, if desired.\n\nIf no service types are provided, ExternalDNS will be configured to create DNS records for LoadBalancer services only by default.",
+}
+
+func (ExternalDNSServiceSourceOptions) SwaggerDoc() map[string]string {
+	return map_ExternalDNSServiceSourceOptions
+}
+
+var map_ExternalDNSSource = map[string]string{
+	"":                   "ExternalDNSSource describes which Source resource the ExternalDNS should create DNS records for.",
+	"hostnameAnnotation": "HostnameAnnotationPolicy specifies whether or not ExternalDNS should ignore the \"external-dns.alpha.kubernetes.io/hostname\" annotation, which overrides DNS hostnames on a given source resource.\n\nThe following values are accepted:\n\n \"Ignore\": Ignore any hostname annotation overrides.\n \"Allow\": Allow all hostname annotation overrides.\n\nThe default behavior of the ExternalDNS is \"Ignore\".",
+}
+
+func (ExternalDNSSource) SwaggerDoc() map[string]string {
+	return map_ExternalDNSSource
+}
+
+var map_ExternalDNSSourceUnion = map[string]string{
+	"":                 "ExternalDNSSourceUnion describes optional fields for an ExternalDNS source that should be captured.",
+	"type":             "Type specifies an ExternalDNS source resource to create DNS records for.",
+	"annotationFilter": "AnnotationFilter describes an annotation filter used to filter which source instance resources ExternalDNS publishes records for. The annotation filter uses label selector semantics against source resource annotations.",
+	"namespace":        "Namespace instructs ExternalDNS to only acknowledge source resource instances in a specific namespace.",
+	"service":          "Service describes source configuration options specific to the service source resource.",
+	"crd":              "CRD describes source configuration options specific to the CRD source resource.",
+}
+
+func (ExternalDNSSourceUnion) SwaggerDoc() map[string]string {
+	return map_ExternalDNSSourceUnion
+}
+
+var map_ExternalDNSSpec = map[string]string{
+	"":         "ExternalDNSSpec defines the desired state of the ExternalDNS.",
+	"domains":  "Domains specifies which domains that ExternalDNS should create DNS records for. Multiple domain values can be specified such that subdomains of an included domain can effectively be ignored using the \"Include\" and \"Exclude\" domain filter options.\n\nAn entry that excludes a domain that isn't a subdomain of some included domain will be ignored.\n\nAn empty list of domains means ExternalDNS will create DNS records for any included source resource regardless of the resource's desired hostname.",
+	"provider": "Provider refers to the DNS provider that ExternalDNS should publish records to. Note that each ExternalDNS is tied to a single provider.",
+	"source":   "Source describes which source resource ExternalDNS will be configured to create DNS records for.\n\nMultiple ExternalDNS CRs must be created if multiple ExternalDNS source resources are desired.",
+	"zones":    "Zones describes which DNS Zone IDs ExternalDNS should publish records to.",
+}
+
+func (ExternalDNSSpec) SwaggerDoc() map[string]string {
+	return map_ExternalDNSSpec
+}
+
+var map_ExternalDNSStatus = map[string]string{
+	"":                   "ExternalDNSStatus defines the observed state of ExternalDNS",
+	"conditions":         "Conditions is a list of operator-specific conditions and their status.",
+	"observedGeneration": "ObservedGeneration is the most recent generation observed.",
+	"provider":           "Provider is the configured provider in use by ExternalDNS.",
+	"zones":              "Zones is the configured zones in use by ExternalDNS.",
+}
+
+func (ExternalDNSStatus) SwaggerDoc() map[string]string {
+	return map_ExternalDNSStatus
+}
+
 var map_ImageContentSourcePolicy = map[string]string{
 	"":     "ImageContentSourcePolicy holds cluster-wide information about how to handle registry mirror rules. When multiple policies are defined, the outcome of the behavior is defined on each field.",
 	"spec": "spec holds user settable values for configuration",

@@ -1,0 +1,230 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.4.1
+    api-approved.openshift.io: https://github.com/openshift/api/pull/956
+  creationTimestamp: null
+  name: externaldnses.operator.openshift.io
+spec:
+  group: operator.openshift.io
+  names:
+    kind: ExternalDNS
+    listKind: ExternalDNSList
+    plural: externaldnses
+    singular: externaldns
+  scope: Namespaced
+  versions:
+    - name: v1alpha1
+      schema:
+        openAPIV3Schema:
+          description: ExternalDNS describes a managed ExternalDNS controller instance for a cluster. The controller is responsible for creating external DNS records in supported DNS providers based off of instances of select Kubernetes resources.
+          type: object
+          required:
+            - spec
+            - status
+          properties:
+            apiVersion:
+              description: 'APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+              type: string
+            kind:
+              description: 'Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+              type: string
+            metadata:
+              type: object
+            spec:
+              description: spec is the specification of the desired behavior of the ExternalDNS.
+              type: object
+              required:
+                - provider
+                - source
+              properties:
+                domains:
+                  description: "Domains specifies which domains that ExternalDNS should create DNS records for. Multiple domain values can be specified such that subdomains of an included domain can effectively be ignored using the \"Include\" and \"Exclude\" domain filter options. \n An entry that excludes a domain that isn't a subdomain of some included domain will be ignored. \n An empty list of domains means ExternalDNS will create DNS records for any included source resource regardless of the resource's desired hostname."
+                  type: array
+                  items:
+                    description: ExternalDNSDomain describes how sets of included or excluded domains are to be constructed.
+                    type: object
+                    required:
+                      - filterType
+                      - matchType
+                    properties:
+                      filterType:
+                        description: "FilterType marks the Name or Pattern field as an included or excluded set of domains. \n Note that excluded domains that have not been included will be ignored. \n This field accepts the following values: \n  \"Include\": Include the domain set specified  by name or pattern. \n  \"Exclude\": Exclude the domain set specified  by name or pattern."
+                        type: string
+                        enum:
+                          - Include
+                          - Exclude
+                      matchType:
+                        description: "MatchType specifies the type of match to be performed by ExternalDNS when determining whether or not to publish DNS records for a given source resource based on the resource's requested hostname. \n This field accepts the following values: \n  \"Exact\": Explicitly match the full domain string   specified via the name field, including any subdomains   of the given name. \n  \"Pattern\": Match potential domains against  the provided regular expression pattern string."
+                        type: string
+                        enum:
+                          - Exact
+                          - Pattern
+                      names:
+                        description: "Name is a string representing a single domain value. \n e.g. my-app.my-cluster-domain.com"
+                        type: string
+                      pattern:
+                        description: Pattern is a regular expression used to match a set of domains.
+                        type: string
+                provider:
+                  description: Provider refers to the DNS provider that ExternalDNS should publish records to. Note that each ExternalDNS is tied to a single provider.
+                  type: object
+                  required:
+                    - credentials
+                    - type
+                  properties:
+                    credentials:
+                      description: Credentials is a reference to a secret containing the relevant credentials for the given provider, to be used by an ExternalDNS controller for creating, updating, and viewing DNS records.
+                      type: object
+                      properties:
+                        name:
+                          description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?'
+                          type: string
+                    type:
+                      description: "Type describes which DNS provider ExternalDNS should publish records to. The following DNS providers are supported: \n  * AWS  * GCP  * Azure  * BlueCat  * Infoblox"
+                      type: string
+                      enum:
+                        - AWS
+                        - GCP
+                        - Azure
+                        - BlueCat
+                        - Infoblox
+                source:
+                  description: "Source describes which source resource ExternalDNS will be configured to create DNS records for. \n Multiple ExternalDNS CRs must be created if multiple ExternalDNS source resources are desired."
+                  type: object
+                  required:
+                    - hostnameAnnotation
+                    - type
+                  properties:
+                    annotationFilter:
+                      description: AnnotationFilter describes an annotation filter used to filter which source instance resources ExternalDNS publishes records for. The annotation filter uses label selector semantics against source resource annotations.
+                      type: object
+                      additionalProperties:
+                        type: string
+                    crd:
+                      description: CRD describes source configuration options specific to the CRD source resource.
+                      type: object
+                      required:
+                        - kind
+                        - version
+                      properties:
+                        kind:
+                          description: "Kind is the kind of the CRD source resource type to be consumed by ExternalDNS. \n e.g. \"DNSEndpoint\""
+                          type: string
+                          minLength: 1
+                        labelFilter:
+                          description: LabelFilter specifies a label filter to be used to filter CRD resource instances. Only one label filter can be specified on an ExternalDNS instance.
+                          type: object
+                          additionalProperties:
+                            type: string
+                        version:
+                          description: "Version is the API version of the given resource kind for ExternalDNS to use. \n e.g. \"externaldns.k8s.io/v1alpha1\""
+                          type: string
+                          minLength: 1
+                    hostnameAnnotation:
+                      description: "HostnameAnnotationPolicy specifies whether or not ExternalDNS should ignore the \"external-dns.alpha.kubernetes.io/hostname\" annotation, which overrides DNS hostnames on a given source resource. \n The following values are accepted: \n  \"Ignore\": Ignore any hostname annotation overrides.  \"Allow\": Allow all hostname annotation overrides. \n The default behavior of the ExternalDNS is \"Ignore\"."
+                      type: string
+                      default: Ignore
+                      enum:
+                        - Ignore
+                        - Allow
+                    namespace:
+                      description: Namespace instructs ExternalDNS to only acknowledge source resource instances in a specific namespace.
+                      type: string
+                    service:
+                      description: Service describes source configuration options specific to the service source resource.
+                      type: object
+                      properties:
+                        publishPolicy:
+                          description: "PublishPolicy determines what kinds of Service resources are published to the given DNS provider. \n The following publishing policies are available: \n  \"PublishExternal\": Only publish DNS records for  service that are externally reachable,  such as NodePort, ExternalName, and LoadBalancer  services. This is the default behavior of ExternalDNS. \n  \"PublishInternalExternal\": Publish DNS records   for externally reachable services, in addition to   internally reachable services, such as ClusterIP   services."
+                          type: string
+                        serviceType:
+                          description: "ServiceType determines what types of Service resources are watched by ExternalDNS. The following types are available options: \n  \"NodePort\"  \"ExternalName\"  \"LoadBalancer\"  \"ClusterIP\" (requires a publishPolicy of \"PublishInternalExternal\") \n One or more Service types can be specified, if desired. \n If no service types are provided, ExternalDNS will be configured to create DNS records for LoadBalancer services only by default."
+                          type: array
+                          default:
+                            - LoadBalancer
+                          minItems: 1
+                          items:
+                            description: Service Type string describes ingress methods for a service
+                            type: string
+                    type:
+                      description: Type specifies an ExternalDNS source resource to create DNS records for.
+                      type: string
+                      enum:
+                        - OpenShiftRoute
+                        - Service
+                        - CRD
+                zones:
+                  description: Zones describes which DNS Zone IDs ExternalDNS should publish records to.
+                  type: array
+                  items:
+                    type: string
+            status:
+              description: status is the most recently observed status of the ExternalDNS.
+              type: object
+              properties:
+                conditions:
+                  description: Conditions is a list of operator-specific conditions and their status.
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - status
+                      - type
+                    properties:
+                      lastTransitionTime:
+                        type: string
+                        format: date-time
+                      message:
+                        type: string
+                      reason:
+                        type: string
+                      status:
+                        type: string
+                        minLength: 1
+                      type:
+                        type: string
+                        minLength: 1
+                observedGeneration:
+                  description: ObservedGeneration is the most recent generation observed.
+                  type: integer
+                  format: int64
+                provider:
+                  description: Provider is the configured provider in use by ExternalDNS.
+                  type: object
+                  required:
+                    - credentials
+                    - type
+                  properties:
+                    credentials:
+                      description: Credentials is a reference to a secret containing the relevant credentials for the given provider, to be used by an ExternalDNS controller for creating, updating, and viewing DNS records.
+                      type: object
+                      properties:
+                        name:
+                          description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?'
+                          type: string
+                    type:
+                      description: "Type describes which DNS provider ExternalDNS should publish records to. The following DNS providers are supported: \n  * AWS  * GCP  * Azure  * BlueCat  * Infoblox"
+                      type: string
+                      enum:
+                        - AWS
+                        - GCP
+                        - Azure
+                        - BlueCat
+                        - Infoblox
+                zones:
+                  description: Zones is the configured zones in use by ExternalDNS.
+                  type: array
+                  items:
+                    type: string
+      served: true
+      storage: true
+      subresources:
+        status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []

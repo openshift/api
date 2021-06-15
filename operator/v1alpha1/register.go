@@ -35,6 +35,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&GenericOperatorConfig{},
 		&ImageContentSourcePolicy{},
 		&ImageContentSourcePolicyList{},
+		&ExternalDNS{},
+		&ExternalDNSList{},
 	)
 
 	return nil

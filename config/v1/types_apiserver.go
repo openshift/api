@@ -75,11 +75,6 @@ const (
 	AllRequestBodiesAuditProfileType AuditProfileType = "AllRequestBodies"
 )
 
-type AuditGroupType string
-
-const (
-	Group AuditProfileType = ""
-)
 type Audit struct {
 	// profile specifies the name of the desired top-level audit profile to be applied to all requests
 	// sent to any of the OpenShift-provided API servers in the cluster (kube-apiserver,

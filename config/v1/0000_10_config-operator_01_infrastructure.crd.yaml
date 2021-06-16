@@ -304,6 +304,10 @@ spec:
                       provider.
                     type: object
                     properties:
+                      armEndpoint:
+                        description: armEndpoint specifies a URL to use for resource
+                          management in non-soverign clouds such as Azure Stack.
+                        type: string
                       cloudName:
                         description: cloudName is the name of the Azure cloud environment
                           which can be used to configure the Azure SDK with the appropriate
@@ -315,6 +319,7 @@ spec:
                         - AzureUSGovernmentCloud
                         - AzureChinaCloud
                         - AzureGermanCloud
+                        - AzureStackCloud
                       networkResourceGroupName:
                         description: networkResourceGroupName is the Resource Group
                           for network resources like the Virtual Network and Subnets

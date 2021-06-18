@@ -278,9 +278,11 @@ spec:
                         format: int32
                         minimum: 0
                       useExternalOpenvswitch:
-                        description: useExternalOpenvswitch tells the operator not
-                          to install openvswitch, because it will be provided separately.
-                          If set, you must provide it yourself.
+                        description: 'useExternalOpenvswitch used to control whether
+                          the operator would deploy an OVS DaemonSet itself or expect
+                          someone else to start OVS. As of 4.6, OVS is always run
+                          as a system service, and this flag is ignored. DEPRECATED:
+                          non-functional as of 4.6'
                         type: boolean
                       vxlanPort:
                         description: vxlanPort is the port to use for all vxlan packets.

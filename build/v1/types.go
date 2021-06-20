@@ -1385,7 +1385,6 @@ type BuildVolumeSource struct {
 	// type is the BuildVolumeSourceType for the volume source.
 	// Type must match the populated volume source.
 	// Valid types are: Secret, ConfigMap
-	// +k8s:conversion-gen=false
 	Type BuildVolumeSourceType `json:"type" protobuf:"bytes,1,opt,name=type,casttype=BuildVolumeSourceType"`
 
 	// secret represents a Secret that should populate this volume.

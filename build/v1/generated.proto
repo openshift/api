@@ -629,7 +629,6 @@ message BuildVolumeSource {
   // type is the BuildVolumeSourceType for the volume source.
   // Type must match the populated volume source.
   // Valid types are: Secret, ConfigMap
-  // +k8s:conversion-gen=false
   optional string type = 1;
 
   // secret represents a Secret that should populate this volume.

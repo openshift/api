@@ -1349,6 +1349,13 @@ type SecretSpec struct {
 	MountPath string `json:"mountPath" protobuf:"bytes,2,opt,name=mountPath"`
 }
 
+const (
+	// BuildVolumeMountPath is where user defined BuildVolumes get mounted
+	BuildVolumeMountPath = "/var/run/openshift.io/volumes"
+	// BuildVolumeSuffix is a suffix for BuildVolume names
+	BuildVolumeSuffix = "user-build-volume"
+)
+
 // BuildVolume describes a volume that is made available to build pods,
 // such that it can be mounted into buildah's runtime environment.
 // Only a subset of Kubernetes Volume sources are supported.

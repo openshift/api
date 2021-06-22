@@ -20,7 +20,7 @@ type DNSRecord struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	// spec is the specification of the desired behavior of the dnsecord.
+	// spec is the specification of the desired behavior of the dnsRecord.
 	Spec DNSRecordSpec `json:"spec"`
 	// status is the most recently observed status of the dnsRecord.
 	Status DNSRecordStatus `json:"status"`

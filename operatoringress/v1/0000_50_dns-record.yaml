@@ -35,7 +35,7 @@ spec:
             metadata:
               type: object
             spec:
-              description: spec is the specification of the desired behavior of the dnsecord.
+              description: spec is the specification of the desired behavior of the dnsRecord.
               type: object
               required:
                 - dnsName

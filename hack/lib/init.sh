@@ -39,6 +39,7 @@ securityinternal/v1 \
 servicecertsigner/v1alpha1 \
 template/v1 \
 user/v1 \
+machine/v1beta1 \
 "
 API_PACKAGES="\
 github.com/openshift/api/apps/v1,\
@@ -55,5 +56,6 @@ github.com/openshift/api/route/v1,\
 github.com/openshift/api/samples/v1,\
 github.com/openshift/api/security/v1,\
 github.com/openshift/api/template/v1,\
-github.com/openshift/api/user/v1\
+github.com/openshift/api/user/v1,\
+github.com/openshift/api/machine/v1beta1\
 "

@@ -746,6 +746,8 @@ type DockerBuildStrategy struct {
 	// volumes is a list of input volumes that can be mounted into the builds runtime environment.
 	// Only a subset of Kubernetes Volume sources are supported by builds.
 	// More info: https://kubernetes.io/docs/concepts/storage/volumes
+	// +listType=map
+	// +listMapKey=name
 	// +patchMergeKey=name
 	// +patchStrategy=merge
 	Volumes []BuildVolume `json:"volumes,omitempty" patchStrategy:"merge" patchMergeKey:"name" protobuf:"bytes,9,opt,name=volumes"`
@@ -783,6 +785,8 @@ type SourceBuildStrategy struct {
 	// volumes is a list of input volumes that can be mounted into the builds runtime environment.
 	// Only a subset of Kubernetes Volume sources are supported by builds.
 	// More info: https://kubernetes.io/docs/concepts/storage/volumes
+	// +listType=map
+	// +listMapKey=name
 	// +patchMergeKey=name
 	// +patchStrategy=merge
 	Volumes []BuildVolume `json:"volumes,omitempty" patchStrategy:"merge" patchMergeKey:"name" protobuf:"bytes,9,opt,name=volumes"`
@@ -1358,13 +1362,20 @@ type BuildVolume struct {
 	// Names that collide with those added by the build controller will result in a
 	// failed build with an error message detailing which name caused the error.
 	// More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+	// +required
 	Name string `json:"name" protobuf:"bytes,1,opt,name=name"`
 
 	// source represents the location and type of the mounted volume.
+	// +required
 	Source BuildVolumeSource `json:"source" protobuf:"bytes,2,opt,name=source"`
 
 	// mounts represents the location of the volume in the image build container
-	Mounts []BuildVolumeMount `json:"mounts" protobuf:"bytes,3,opt,name=mounts"`
+	// +required
+	// +listType=map
+	// +listMapKey=destinationPath
+	// +patchMergeKey=destinationPath
+	// +patchStrategy=merge
+	Mounts []BuildVolumeMount `json:"mounts" patchStrategy:"merge" patchMergeKey:"destinationPath" protobuf:"bytes,3,opt,name=mounts"`
 }
 
 // BuildVolumeSourceType represents a build volume source type

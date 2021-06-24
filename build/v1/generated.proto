@@ -603,12 +603,19 @@ message BuildVolume {
   // Names that collide with those added by the build controller will result in a
   // failed build with an error message detailing which name caused the error.
   // More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+  // +required
   optional string name = 1;
 
   // source represents the location and type of the mounted volume.
+  // +required
   optional BuildVolumeSource source = 2;
 
   // mounts represents the location of the volume in the image build container
+  // +required
+  // +listType=map
+  // +listMapKey=destinationPath
+  // +patchMergeKey=destinationPath
+  // +patchStrategy=merge
   repeated BuildVolumeMount mounts = 3;
 }
 
@@ -796,6 +803,8 @@ message DockerBuildStrategy {
   // volumes is a list of input volumes that can be mounted into the builds runtime environment.
   // Only a subset of Kubernetes Volume sources are supported by builds.
   // More info: https://kubernetes.io/docs/concepts/storage/volumes
+  // +listType=map
+  // +listMapKey=name
   // +patchMergeKey=name
   // +patchStrategy=merge
   repeated BuildVolume volumes = 9;
@@ -1105,6 +1114,8 @@ message SourceBuildStrategy {
   // volumes is a list of input volumes that can be mounted into the builds runtime environment.
   // Only a subset of Kubernetes Volume sources are supported by builds.
   // More info: https://kubernetes.io/docs/concepts/storage/volumes
+  // +listType=map
+  // +listMapKey=name
   // +patchMergeKey=name
   // +patchStrategy=merge
   repeated BuildVolume volumes = 9;

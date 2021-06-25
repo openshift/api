@@ -85,6 +85,7 @@ type InfrastructureStatus struct {
 	// The 'External' mode indicates that the control plane is hosted externally to the cluster and that
 	// its components are not visible within the cluster.
 	// +kubebuilder:default=HighlyAvailable
+	// +kubebuilder:validation:Enum=HighlyAvailable;SingleReplica;External
 	ControlPlaneTopology TopologyMode `json:"controlPlaneTopology"`
 
 	// infrastructureTopology expresses the expectations for infrastructure services that do not run on control
@@ -93,12 +94,16 @@ type InfrastructureStatus struct {
 	// The default is 'HighlyAvailable', which represents the behavior operators have in a "normal" cluster.
 	// The 'SingleReplica' mode will be used in single-node deployments
 	// and the operators should not configure the operand for highly-available operation
+	// NOTE: External topology mode is not applicable for this field.
 	// +kubebuilder:default=HighlyAvailable
+	// +kubebuilder:validation:Enum=HighlyAvailable;SingleReplica
 	InfrastructureTopology TopologyMode `json:"infrastructureTopology"`
 }
 
 // TopologyMode defines the topology mode of the control/infra nodes.
-// +kubebuilder:validation:Enum=HighlyAvailable;SingleReplica;External
+// NOTE: Enum validation is specified in each field that uses this type,
+// given that External value is not applicable to the InfrastructureTopology
+// field.
 type TopologyMode string
 
 const (

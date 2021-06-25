@@ -270,6 +270,9 @@ spec:
                       description: IBMCloud contains settings specific to the IBMCloud infrastructure provider.
                       type: object
                       properties:
+                        cisInstanceCRN:
+                          description: CISInstanceCRN is the CRN of the Cloud Internet Services instance managing the DNS zone for the cluster's base domain
+                          type: string
                         location:
                           description: Location is where the cluster has been deployed
                           type: string

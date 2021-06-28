@@ -13,7 +13,7 @@ package v1
 // AUTO-GENERATED FUNCTIONS START HERE
 var map_DNSRecord = map[string]string{
 	"":       "DNSRecord is a DNS record managed in the zones defined by dns.config.openshift.io/cluster .spec.publicZone and .spec.privateZone.\n\nCluster admin manipulation of this resource is not supported. This resource is only for internal communication of OpenShift operators.",
-	"spec":   "spec is the specification of the desired behavior of the dnsecord.",
+	"spec":   "spec is the specification of the desired behavior of the dnsRecord.",
 	"status": "status is the most recently observed status of the dnsRecord.",
 }
 

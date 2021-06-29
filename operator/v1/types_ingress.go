@@ -1181,6 +1181,66 @@ type IngressControllerTuningOptions struct {
 	// +kubebuilder:validation:Maximum=64
 	// +optional
 	ThreadCount int32 `json:"threadCount,omitempty"`
+
+	// clientTimeout defines how long a connection will be held open while
+	// waiting for a client response.
+	//
+	// If unset, the default timeout is 30s
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Format=duration
+	// +optional
+	ClientTimeout *metav1.Duration `json:"clientTimeout,omitempty"`
+
+	// clientFinTimeout defines how long a connection will be held open while
+	// waiting for the client response to the server/backend closing the
+	// connection.
+	//
+	// If unset, the default timeout is 1s
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Format=duration
+	// +optional
+	ClientFinTimeout *metav1.Duration `json:"clientFinTimeout,omitempty"`
+
+	// serverTimeout defines how long a connection will be held open while
+	// waiting for a server/backend response.
+	//
+	// If unset, the default timeout is 30s
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Format=duration
+	// +optional
+	ServerTimeout *metav1.Duration `json:"serverTimeout,omitempty"`
+
+	// serverFinTimeout defines how long a connection will be held open while
+	// waiting for the server/backend response to the client closing the
+	// connection.
+	//
+	// If unset, the default timeout is 1s
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Format=duration
+	// +optional
+	ServerFinTimeout *metav1.Duration `json:"serverFinTimeout,omitempty"`
+
+	// tunnelTimeout defines how long a tunnel connection (including
+	// websockets) will be held open while the tunnel is idle.
+	//
+	// If unset, the default timeout is 1h
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Format=duration
+	// +optional
+	TunnelTimeout *metav1.Duration `json:"tunnelTimeout,omitempty"`
+
+	// tlsInspectDelay defines how long the router can hold data to find a
+	// matching route.
+	//
+	// Setting this too short can cause the router to fall back to the default
+	// certificate for edge-terminated or reencrypt routes even when a better
+	// matching certificate could be used.
+	//
+	// If unset, the default inspect delay is 5s
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Format=duration
+	// +optional
+	TLSInspectDelay *metav1.Duration `json:"tlsInspectDelay,omitempty"`
 }
 
 // HTTPEmptyRequestsPolicy indicates how HTTP connections for which no request

@@ -112,6 +112,7 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		with("CSIMigrationOpenStack"). // sig-storage, jsafrane, Kubernetes feature gate
 		with("CSIMigrationGCE").       // sig-storage, fbertina, Kubernetes feature gate
 		with("CSIMigrationAzureDisk"). // sig-storage, fbertina, Kubernetes feature gate
+		with("ExternalCloudProvider"). // sig-cloud-provider, jspeed, OCP specific
 		toFeatures(),
 	LatencySensitive: newDefaultFeatures().
 		with(

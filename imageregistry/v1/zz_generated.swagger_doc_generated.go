@@ -78,6 +78,7 @@ var map_ImageRegistryConfigStorage = map[string]string{
 	"swift":           "swift represents configuration that uses OpenStack Object Storage.",
 	"pvc":             "pvc represents configuration that uses a PersistentVolumeClaim.",
 	"azure":           "azure represents configuration that uses Azure Blob Storage.",
+	"ibmcos":          "ibmcos represents configuration that uses IBM Cloud Object Storage.",
 	"managementState": "managementState indicates if the operator manages the underlying storage unit. If Managed the operator will remove the storage when this operator gets Removed.",
 }
 
@@ -114,6 +115,19 @@ var map_ImageRegistryConfigStorageGCS = map[string]string{
 
 func (ImageRegistryConfigStorageGCS) SwaggerDoc() map[string]string {
 	return map_ImageRegistryConfigStorageGCS
+}
+
+var map_ImageRegistryConfigStorageIBMCOS = map[string]string{
+	"":                   "ImageRegistryConfigStorageIBMCOS holds the information to configure the registry to use IBM Cloud Object Storage for backend storage.",
+	"bucket":             "bucket is the bucket name in which you want to store the registry's data. Optional, will be generated if not provided.",
+	"location":           "location is the IBM Cloud location in which your bucket exists. Optional, will be set based on the installed IBM Cloud location.",
+	"resourceGroupName":  "resourceGroupName is the name of the IBM Cloud resource group that this bucket and its service instance is associated with. Optional, will be set based on the installed IBM Cloud resource group.",
+	"resourceKeyCRN":     "resourceKeyCRN is the CRN of the IBM Cloud resource key that is created for the service instance. Commonly referred as a service credential and must contain HMAC type credentials. Optional, will be computed if not provided.",
+	"serviceInstanceCRN": "serviceInstanceCRN is the CRN of the IBM Cloud Object Storage service instance that this bucket is associated with. Optional, will be computed if not provided.",
+}
+
+func (ImageRegistryConfigStorageIBMCOS) SwaggerDoc() map[string]string {
+	return map_ImageRegistryConfigStorageIBMCOS
 }
 
 var map_ImageRegistryConfigStoragePVC = map[string]string{

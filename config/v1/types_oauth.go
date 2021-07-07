@@ -539,6 +539,11 @@ type OpenIDIdentityProvider struct {
 //   iss Claim and the sub Claim."
 const UserIDClaim = "sub"
 
+// OpenIDClaim represents a claim retrieved from an OpenID provider's tokens or userInfo
+// responses
+// +kubebuilder:validation:MinLength=1
+type OpenIDClaim string
+
 // OpenIDClaims contains a list of OpenID claims to use when authenticating with an OpenID identity provider
 type OpenIDClaims struct {
 	// preferredUsername is the list of claims whose values should be used as the preferred username.
@@ -555,6 +560,13 @@ type OpenIDClaims struct {
 	// If unspecified, no email is set for the identity
 	// +optional
 	Email []string `json:"email,omitempty"`
+
+	// groups is the list of claims value of which should be used to synchronize groups
+	// from the OIDC provider to OpenShift for the user.
+	// If multiple claims are specified, the first one with a non-empty value is used.
+	// +listType=atomic
+	// +optional
+	Groups []OpenIDClaim `json:"groups,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

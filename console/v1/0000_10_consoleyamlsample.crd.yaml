@@ -44,6 +44,9 @@ spec:
                 - title
                 - yaml
               properties:
+                default:
+                  description: default indicates that the YAML sample should be used as the default sample when creating new resources. The console YALM editor will be pre-populated with the sample marked as default.
+                  type: boolean
                 description:
                   description: description of the YAML sample.
                   type: string

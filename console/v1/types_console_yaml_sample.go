@@ -32,6 +32,11 @@ type ConsoleYAMLSampleSpec struct {
 	// YAML document at the user's cursor.
 	// +optional
 	Snippet bool `json:"snippet"`
+	// default indicates that the YAML sample should be used as the default
+	// sample when creating new resources. The console YALM editor will be
+	// pre-populated with the sample marked as default.
+	// +optional
+	Default bool `json:"default"`
 }
 
 // ConsoleYAMLSampleTitle of the YAML sample.

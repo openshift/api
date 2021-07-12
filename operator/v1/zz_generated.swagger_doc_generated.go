@@ -793,6 +793,14 @@ func (KubeControllerManagerList) SwaggerDoc() map[string]string {
 	return map_KubeControllerManagerList
 }
 
+var map_KubeControllerManagerSpec = map[string]string{
+	"useMoreSecureServiceCA": "useMoreSecureServiceCA indicates that the service-ca.crt provided in SA token volumes should include only enough certificates to validate service serving certificates. Once set to true, it cannot be set to false. Even if someone finds a way to set it back to false, the service-ca.crt files that previously existed will only have the more secure content.",
+}
+
+func (KubeControllerManagerSpec) SwaggerDoc() map[string]string {
+	return map_KubeControllerManagerSpec
+}
+
 var map_KubeStorageVersionMigrator = map[string]string{
 	"": "KubeStorageVersionMigrator provides information to configure an operator to manage kube-storage-version-migrator.",
 }

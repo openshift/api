@@ -124,7 +124,7 @@ const (
 )
 
 // PlatformType is a specific supported infrastructure provider.
-// +kubebuilder:validation:Enum="";AWS;Azure;BareMetal;GCP;Libvirt;OpenStack;None;VSphere;oVirt;IBMCloud;KubeVirt;EquinixMetal;PowerVS
+// +kubebuilder:validation:Enum="";AWS;Azure;BareMetal;GCP;Libvirt;OpenStack;None;VSphere;oVirt;IBMCloud;KubeVirt;EquinixMetal;PowerVS;AlibabaCloud
 type PlatformType string
 
 const (
@@ -166,6 +166,9 @@ const (
 
 	// PowerVSPlatformType represents IBM Power Systems Virtual Servers infrastructure.
 	PowerVSPlatformType PlatformType = "PowerVS"
+
+	// AlibabaCloudPlatformType represents Alibaba Cloud infrastructure
+	AlibabaCloudPlatformType PlatformType = "AlibabaCloud"
 )
 
 // IBMCloudProviderType is a specific supported IBM Cloud provider cluster type
@@ -189,8 +192,8 @@ type PlatformSpec struct {
 	// other integrations are enabled. If None, no infrastructure automation is
 	// enabled. Allowed values are "AWS", "Azure", "BareMetal", "GCP", "Libvirt",
 	// "OpenStack", "VSphere", "oVirt", "KubeVirt", "EquinixMetal", "PowerVS",
-	// and "None". Individual components may not support all platforms, and must
-	// handle unrecognized platforms as None if they do not support that platform.
+	// "AlibabaCloud" and "None". Individual components may not support all platforms,
+	// and must handle unrecognized platforms as None if they do not support that platform.
 	//
 	// +unionDiscriminator
 	Type PlatformType `json:"type"`

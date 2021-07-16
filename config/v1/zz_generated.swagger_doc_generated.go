@@ -181,6 +181,16 @@ func (LeaderElection) SwaggerDoc() map[string]string {
 	return map_LeaderElection
 }
 
+var map_MaxAgePolicy = map[string]string{
+	"":               "MaxAgePolicy contains a numeric range for specifying a compliant HSTS max-age for the enclosing RequiredHSTSPolicy",
+	"largestMaxAge":  "The largest allowed value (in seconds) of the RequiredHSTSPolicy max-age This value can be left unspecified, in which case no upper limit is enforced. kubebuilder:validation:minimum=0:maximum=2147483647",
+	"smallestMaxAge": "The smallest allowed value (in seconds) of the RequiredHSTSPolicy max-age Setting max-age=0 allows the deletion of an existing HSTS header from a host.  This is a necessary tool for administrators to quickly correct mistakes. This value can be left unspecified, in which case no lower limit is enforced. kubebuilder:validation:minimum=0:maximum=2147483647",
+}
+
+func (MaxAgePolicy) SwaggerDoc() map[string]string {
+	return map_MaxAgePolicy
+}
+
 var map_NamedCertificate = map[string]string{
 	"":      "NamedCertificate specifies a certificate/key, and the names it should be served for",
 	"names": "Names is a list of DNS names this certificate should be used to secure A name can be a normal DNS name, or can contain leading wildcard segments.",
@@ -198,6 +208,18 @@ var map_RemoteConnectionInfo = map[string]string{
 
 func (RemoteConnectionInfo) SwaggerDoc() map[string]string {
 	return map_RemoteConnectionInfo
+}
+
+var map_RequiredHSTSPolicy = map[string]string{
+	"namespaceSelector":       "namespaceSelector specifies a label selector such that the policy applies only to those routes that are in namespaces with labels that match the selector, and are in one of the DomainPatterns. Defaults to the empty LabelSelector, which matches everything.",
+	"domainPatterns":          "domainPatterns is a list of domains for which the desired HSTS annotations are required. If domainPatterns is specified and a route is created with a spec.host matching one of the domains, the route must specify the HSTS Policy components described in the matching RequiredHSTSPolicy.\n\nThe use of wildcards is allowed like this: *.foo.com matches everything under foo.com. foo.com only matches foo.com, so to cover foo.com and everything under it, you must specify *both*. kubebuilder:validation:MinLength=1",
+	"maxAge":                  "maxAge is the delta time range in seconds during which hosts are regarded as HSTS hosts. If set to 0, it negates the effect, and hosts are removed as HSTS hosts. If set to 0 and includeSubdomains is specified, all subdomains of the host are also removed as HSTS hosts. maxAge is a time-to-live value, and if this policy is not refreshed on a client, the HSTS policy will eventually expire on that client.",
+	"preloadPolicy":           "preloadPolicy directs the client to include hosts in its host preload list so that it never needs to do an initial load to get the HSTS header (note that this is not defined in RFC 6797 and is therefore client implementation-dependent).",
+	"includeSubDomainsPolicy": "includeSubDomainsPolicy means the HSTS Policy should apply to any subdomains of the host's domain name.  Thus, for the host bar.foo.com, if includeSubDomainsPolicy was set to RequireIncludeSubDomains: - the host app.bar.foo.com would inherit the HSTS Policy of bar.foo.com - the host bar.foo.com would inherit the HSTS Policy of bar.foo.com - the host foo.com would NOT inherit the HSTS Policy of bar.foo.com - the host def.foo.com would NOT inherit the HSTS Policy of bar.foo.com",
+}
+
+func (RequiredHSTSPolicy) SwaggerDoc() map[string]string {
+	return map_RequiredHSTSPolicy
 }
 
 var map_SecretNameReference = map[string]string{
@@ -1054,9 +1076,10 @@ func (Ingress) SwaggerDoc() map[string]string {
 }
 
 var map_IngressSpec = map[string]string{
-	"domain":          "domain is used to generate a default host name for a route when the route's host name is empty. The generated host name will follow this pattern: \"<route-name>.<route-namespace>.<domain>\".\n\nIt is also used as the default wildcard domain suffix for ingress. The default ingresscontroller domain will follow this pattern: \"*.<domain>\".\n\nOnce set, changing domain is not currently supported.",
-	"appsDomain":      "appsDomain is an optional domain to use instead of the one specified in the domain field when a Route is created without specifying an explicit host. If appsDomain is nonempty, this value is used to generate default host values for Route. Unlike domain, appsDomain may be modified after installation. This assumes a new ingresscontroller has been setup with a wildcard certificate.",
-	"componentRoutes": "componentRoutes is an optional list of routes that are managed by OpenShift components that a cluster-admin is able to configure the hostname and serving certificate for. The namespace and name of each route in this list should match an existing entry in the status.componentRoutes list.\n\nTo determine the set of configurable Routes, look at namespace and name of entries in the .status.componentRoutes list, where participating operators write the status of configurable routes.",
+	"domain":               "domain is used to generate a default host name for a route when the route's host name is empty. The generated host name will follow this pattern: \"<route-name>.<route-namespace>.<domain>\".\n\nIt is also used as the default wildcard domain suffix for ingress. The default ingresscontroller domain will follow this pattern: \"*.<domain>\".\n\nOnce set, changing domain is not currently supported.",
+	"appsDomain":           "appsDomain is an optional domain to use instead of the one specified in the domain field when a Route is created without specifying an explicit host. If appsDomain is nonempty, this value is used to generate default host values for Route. Unlike domain, appsDomain may be modified after installation. This assumes a new ingresscontroller has been setup with a wildcard certificate.",
+	"componentRoutes":      "componentRoutes is an optional list of routes that are managed by OpenShift components that a cluster-admin is able to configure the hostname and serving certificate for. The namespace and name of each route in this list should match an existing entry in the status.componentRoutes list.\n\nTo determine the set of configurable Routes, look at namespace and name of entries in the .status.componentRoutes list, where participating operators write the status of configurable routes.",
+	"requiredHSTSPolicies": "requiredHSTSPolicies specifies HSTS policies that are required to be set on newly created  or updated routes matching the domainPattern/s and namespaceSelector/s that are specified in the policy. Each requiredHSTSPolicy must have at least a domainPattern and a maxAge to validate a route HSTS Policy route annotation, and affect route admission.\n\nA candidate route is checked for HSTS Policies if it has the HSTS Policy route annotation: \"haproxy.router.openshift.io/hsts_header\" E.g. haproxy.router.openshift.io/hsts_header: max-age=31536000;preload;includeSubDomains\n\n- For each candidate route, if it matches a requiredHSTSPolicy domainPattern and optional namespaceSelector, then the maxAge, preloadPolicy, and includeSubdomainsPolicy must be valid to be admitted.  Otherwise, the route is rejected. - The first match, by domainPattern and optional namespaceSelector, in the ordering of the RequiredHSTSPolicies determines the route's admission status. - If the candidate route doesn't match any requiredHSTSPolicy domainPattern and optional namespaceSelector, then it may use any HSTS Policy annotation.\n\nThe HSTS policy configuration may be changed after routes have already been created. An update to a previously admitted route may then fail if the updated route does not conform to the updated HSTS policy configuration. However, changing the HSTS policy configuration will not cause a route that is already admitted to stop working.\n\nNote that if there are no RequiredHSTSPolicies, any HSTS Policy annotation on the route is valid.",
 }
 
 func (IngressSpec) SwaggerDoc() map[string]string {

@@ -241,6 +241,10 @@ type PlatformSpec struct {
 	// PowerVS contains settings specific to the IBM Power Systems Virtual Servers infrastructure provider.
 	// +optional
 	PowerVS *PowerVSPlatformSpec `json:"powervs,omitempty"`
+
+	// AlibabaCloud contains settings specific to the Alibaba Cloud infrastructure provider.
+	// +optional
+	AlibabaCloud *AlibabaCloudPlatformSpec `json:"alibabaCloud,omitempty"`
 }
 
 // PlatformStatus holds the current status specific to the underlying infrastructure provider
@@ -252,7 +256,7 @@ type PlatformStatus struct {
 	// balancers, dynamic volume provisioning, machine creation and deletion, and
 	// other integrations are enabled. If None, no infrastructure automation is
 	// enabled. Allowed values are "AWS", "Azure", "BareMetal", "GCP", "Libvirt",
-	// "OpenStack", "VSphere", "oVirt", "EquinixMetal", "PowerVS", and "None".
+	// "OpenStack", "VSphere", "oVirt", "EquinixMetal", "PowerVS", "AlibabaCloud" and "None".
 	// Individual components may not support all platforms, and must handle
 	// unrecognized platforms as None if they do not support that platform.
 	//
@@ -303,6 +307,10 @@ type PlatformStatus struct {
 	// PowerVS contains settings specific to the Power Systems Virtual Servers infrastructure provider.
 	// +optional
 	PowerVS *PowerVSPlatformStatus `json:"powervs,omitempty"`
+
+	// AlibabaCloud contains settings specific to the Alibaba Cloud infrastructure provider.
+	// +optional
+	AlibabaCloud *AlibabaCloudPlatformStatus `json:"alibabaCloud,omitempty"`
 }
 
 // AWSServiceEndpoint store the configuration of a custom url to
@@ -628,6 +636,18 @@ type PowerVSPlatformStatus struct {
 	// CISInstanceCRN is the CRN of the Cloud Internet Services instance managing
 	// the DNS zone for the cluster's base domain
 	CISInstanceCRN string `json:"cisInstanceCRN,omitempty"`
+}
+
+// AlibabaCloudPlatformSpec holds the desired state of the Alibaba Cloud infrastructure provider.
+// This only includes fields that can be modified in the cluster.
+type AlibabaCloudPlatformSpec struct{}
+
+// AlibabaCloudPlatformStatus holds the current status of the Alibaba Cloud infrastructure provider.
+type AlibabaCloudPlatformStatus struct {
+	// Location specifics the Alibaba Cloud region where the cluster in.
+	Location string `json:"location,omitempty"`
+	// ResourceGroupName is the ID of the resource group for the cluster.
+	ResourceGroupName string `json:"resourceGroupName,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

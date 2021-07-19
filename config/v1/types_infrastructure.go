@@ -644,10 +644,18 @@ type AlibabaCloudPlatformSpec struct{}
 
 // AlibabaCloudPlatformStatus holds the current status of the Alibaba Cloud infrastructure provider.
 type AlibabaCloudPlatformStatus struct {
-	// Location specifics the Alibaba Cloud region where the cluster in.
-	Location string `json:"location,omitempty"`
-	// ResourceGroupName is the ID of the resource group for the cluster.
-	ResourceGroupName string `json:"resourceGroupName,omitempty"`
+	// region specifics the Alibaba Cloud region where the cluster in.
+	Region string `json:"region,omitempty"`
+	// resourceGroupID is the ID of the resource group for the cluster.
+	ResourceGroupID string `json:"resourceGroupID,omitempty"`
+	// resourceTags is a list of additional tags to apply to Alibaba Cloud resources created for the cluster.
+	ResourceTags []AlibabaCloudResourceTag `json:"resourceTags,omitempty"`
+}
+
+// AlibabaCloudResourceTag is the set of tags to add to apply to resources
+type AlibabaCloudResourceTag struct {
+	Value string `json:"Value,omitempty"`
+	Key   string `json:"Key,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

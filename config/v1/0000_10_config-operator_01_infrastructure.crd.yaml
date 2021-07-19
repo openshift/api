@@ -178,12 +178,23 @@ spec:
                       description: AlibabaCloud contains settings specific to the Alibaba Cloud infrastructure provider.
                       type: object
                       properties:
-                        location:
-                          description: Location specifics the Alibaba Cloud region where the cluster in.
+                        region:
+                          description: region specifics the Alibaba Cloud region where the cluster in.
                           type: string
-                        resourceGroupName:
-                          description: ResourceGroupName is the ID of the resource group for the cluster.
+                        resourceGroupID:
+                          description: resourceGroupID is the ID of the resource group for the cluster.
                           type: string
+                        resourceTags:
+                          description: resourceTags is a list of additional tags to apply to Alibaba Cloud resources created for the cluster.
+                          type: array
+                          items:
+                            description: AlibabaCloudResourceTag is the set of tags to add to apply to resources
+                            type: object
+                            properties:
+                              Key:
+                                type: string
+                              Value:
+                                type: string
                     aws:
                       description: AWS contains settings specific to the Amazon Web Services infrastructure provider.
                       type: object

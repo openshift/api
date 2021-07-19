@@ -115,7 +115,8 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		toFeatures(),
 	LatencySensitive: newDefaultFeatures().
 		with(
-			"TopologyManager", // sig-pod, sjenning
+			"CPUManagerPolicyOptions", // sig-node, fromanirh
+			"TopologyManager",         // sig-pod, sjenning
 		).
 		toFeatures(),
 	IPv6DualStackNoUpgrade: newDefaultFeatures().

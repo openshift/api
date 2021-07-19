@@ -62,6 +62,11 @@ type DNSSpec struct {
 	//
 	// +optional
 	NodePlacement DNSNodePlacement `json:"nodePlacement,omitempty"`
+
+	// managementState indicates whether the DNS operator should manage cluster
+	// DNS
+	// +optional
+	ManagementState ManagementState `json:"managementState,omitempty"`
 }
 
 // Server defines the schema for a server that runs per instance of CoreDNS.

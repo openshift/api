@@ -40,8 +40,10 @@ var map_NodeStatus = map[string]string{
 	"targetRevision":           "targetRevision is the generation of the deployment we're trying to apply",
 	"lastFailedRevision":       "lastFailedRevision is the generation of the deployment we tried and failed to deploy.",
 	"lastFailedTime":           "lastFailedTime is the time the last failed revision failed the last time.",
-	"lastFailedCount":          "lastFailedCount is how often the last failed revision failed.",
-	"lastFailedRevisionErrors": "lastFailedRevisionErrors is a list of the errors during the failed deployment referenced in lastFailedRevision",
+	"lastFailedReason":         "lastFailedReason is a machine readable failure reason string.",
+	"lastFailedCount":          "lastFailedCount is how often the last failed revision failed. This includes failed installers and fallbacks to previous revisions.",
+	"lastFallbackCount":        "lastFallbackCount is how often a fallback to a previous revision happened.",
+	"lastFailedRevisionErrors": "lastFailedRevisionErrors is a list of human readable errors during the failed deployment referenced in lastFailedRevision",
 }
 
 func (NodeStatus) SwaggerDoc() map[string]string {

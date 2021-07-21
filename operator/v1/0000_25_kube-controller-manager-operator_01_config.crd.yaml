@@ -193,16 +193,21 @@ spec:
                       type: integer
                     lastFailedCount:
                       description: lastFailedCount is how often the last failed revision
-                        failed.
+                        failed. This includes failed installers and fallbacks to previous
+                        revisions.
                       type: integer
+                    lastFailedReason:
+                      description: lastFailedReason is a machine readable failure
+                        reason string.
+                      type: string
                     lastFailedRevision:
                       description: lastFailedRevision is the generation of the deployment
                         we tried and failed to deploy.
                       format: int32
                       type: integer
                     lastFailedRevisionErrors:
-                      description: lastFailedRevisionErrors is a list of the errors
-                        during the failed deployment referenced in lastFailedRevision
+                      description: lastFailedRevisionErrors is a list of human readable
+                        errors during the failed deployment referenced in lastFailedRevision
                       items:
                         type: string
                       type: array
@@ -211,6 +216,10 @@ spec:
                         failed the last time.
                       format: date-time
                       type: string
+                    lastFallbackCount:
+                      description: lastFallbackCount is how often a fallback to a
+                        previous revision happened.
+                      type: integer
                     nodeName:
                       description: nodeName is the name of the node
                       type: string

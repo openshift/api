@@ -220,8 +220,12 @@ type NodeStatus struct {
 	LastFailedRevision int32 `json:"lastFailedRevision,omitempty"`
 	// lastFailedTime is the time the last failed revision failed the last time.
 	LastFailedTime *metav1.Time `json:"lastFailedTime,omitempty"`
-	// lastFailedCount is how often the last failed revision failed.
+	// lastFailedReason is a machine readable failure reason string.
+	LastFailedReason string `json:"lastFailedReason,omitempty"`
+	// lastFailedCount is how often the last failed revision failed. This includes failed installers and fallbacks to previous revisions.
 	LastFailedCount int `json:"lastFailedCount,omitempty"`
-	// lastFailedRevisionErrors is a list of the errors during the failed deployment referenced in lastFailedRevision
+	// lastFallbackCount is how often a fallback to a previous revision happened.
+	LastFallbackCount int `json:"lastFallbackCount,omitempty"`
+	// lastFailedRevisionErrors is a list of human readable errors during the failed deployment referenced in lastFailedRevision
 	LastFailedRevisionErrors []string `json:"lastFailedRevisionErrors,omitempty"`
 }

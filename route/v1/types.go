@@ -287,10 +287,10 @@ const (
 const (
 	// AllowNonDNSCompliantHostAnnotation indicates that the host name in a route
 	// configuration is not required to follow strict DNS compliance.
-	// Unless the annotation is set to true, the route host name must have
-	// at least two labels, with each label no more than 63 characters from the set of
+	// Unless the annotation is set to true, the route host name must have at least one label.
+	// Label's must have no more than 63 characters from the set of
 	// alphanumeric characters, '-' or '.', and must start and end with an alphanumeric
-	// character. A trailing dot is allowed. The total host name length must be no more
+	// character. A trailing dot is not allowed. The total host name length must be no more
 	// than 253 characters.
 	//
 	// When the annotation is set to true, the host name must pass a smaller set of

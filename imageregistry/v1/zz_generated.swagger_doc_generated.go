@@ -12,7 +12,7 @@ package v1
 
 // AUTO-GENERATED FUNCTIONS START HERE
 var map_Config = map[string]string{
-	"": "Config is the configuration object for a registry instance managed by the registry operator",
+	"": "Config is the configuration object for a registry instance managed by the registry operator\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 }
 
 func (Config) SwaggerDoc() map[string]string {
@@ -20,7 +20,7 @@ func (Config) SwaggerDoc() map[string]string {
 }
 
 var map_ConfigList = map[string]string{
-	"": "ConfigList is a slice of Config objects.",
+	"": "ConfigList is a slice of Config objects.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 }
 
 func (ConfigList) SwaggerDoc() map[string]string {
@@ -217,7 +217,7 @@ func (ImageRegistryStatus) SwaggerDoc() map[string]string {
 }
 
 var map_ImagePruner = map[string]string{
-	"": "ImagePruner is the configuration object for an image registry pruner managed by the registry operator.",
+	"": "ImagePruner is the configuration object for an image registry pruner managed by the registry operator.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 }
 
 func (ImagePruner) SwaggerDoc() map[string]string {
@@ -225,7 +225,7 @@ func (ImagePruner) SwaggerDoc() map[string]string {
 }
 
 var map_ImagePrunerList = map[string]string{
-	"": "ImagePrunerList is a slice of ImagePruner objects.",
+	"": "ImagePrunerList is a slice of ImagePruner objects.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 }
 
 func (ImagePrunerList) SwaggerDoc() map[string]string {

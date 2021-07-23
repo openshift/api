@@ -12,7 +12,7 @@ package v1
 
 // AUTO-GENERATED FUNCTIONS START HERE
 var map_DNSRecord = map[string]string{
-	"":       "DNSRecord is a DNS record managed in the zones defined by dns.config.openshift.io/cluster .spec.publicZone and .spec.privateZone.\n\nCluster admin manipulation of this resource is not supported. This resource is only for internal communication of OpenShift operators.",
+	"":       "DNSRecord is a DNS record managed in the zones defined by dns.config.openshift.io/cluster .spec.publicZone and .spec.privateZone.\n\nCluster admin manipulation of this resource is not supported. This resource is only for internal communication of OpenShift operators.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 	"spec":   "spec is the specification of the desired behavior of the dnsRecord.",
 	"status": "status is the most recently observed status of the dnsRecord.",
 }
@@ -22,7 +22,7 @@ func (DNSRecord) SwaggerDoc() map[string]string {
 }
 
 var map_DNSRecordList = map[string]string{
-	"": "DNSRecordList contains a list of dnsrecords.",
+	"": "DNSRecordList contains a list of dnsrecords.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 }
 
 func (DNSRecordList) SwaggerDoc() map[string]string {

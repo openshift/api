@@ -9,6 +9,8 @@ import (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // ImageList is a list of Image objects.
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=1
 type ImageList struct {
 	metav1.TypeMeta `json:",inline"`
@@ -30,6 +32,8 @@ type ImageList struct {
 // image metadata is stored in the API, any integration that implements the container image
 // registry API must provide its own storage for the raw manifest data, image config, and
 // layer contents.
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=1
 type Image struct {
 	metav1.TypeMeta   `json:",inline"`
@@ -79,6 +83,8 @@ type ImageLayer struct {
 // to those matching cluster-wide policy.
 // Mandatory fields should be parsed by clients doing image verification. The others are parsed from
 // signature's content by the server. They serve just an informative purpose.
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=1
 type ImageSignature struct {
 	metav1.TypeMeta   `json:",inline"`
@@ -156,6 +162,8 @@ type SignatureSubject struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // ImageStreamList is a list of ImageStream objects.
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=1
 type ImageStreamList struct {
 	metav1.TypeMeta `json:",inline"`
@@ -184,6 +192,8 @@ type ImageStreamList struct {
 // administrator runs the prune operation, which removes references that are no longer in
 // use. To preserve a historical image, ensure there is a tag in spec pointing to that image
 // by its digest.
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=1
 type ImageStream struct {
 	metav1.TypeMeta   `json:",inline"`
@@ -363,6 +373,8 @@ type TagEventCondition struct {
 // mappings where the user has proven they have access to the image contents directly.
 // The only operation supported for this resource is create and the metadata name and
 // namespace should be set to the image stream containing the tag that should be updated.
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=1
 type ImageStreamMapping struct {
 	metav1.TypeMeta   `json:",inline"`
@@ -386,6 +398,8 @@ type ImageStreamMapping struct {
 // failed the previous image will be shown. Deleting an image stream tag clears both the
 // status and spec fields of an image stream. If no image can be retrieved for a given tag,
 // a not found error will be returned.
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=1
 type ImageStreamTag struct {
 	metav1.TypeMeta   `json:",inline"`
@@ -415,6 +429,8 @@ type ImageStreamTag struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // ImageStreamTagList is a list of ImageStreamTag objects.
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=1
 type ImageStreamTagList struct {
 	metav1.TypeMeta `json:",inline"`
@@ -436,6 +452,8 @@ type ImageStreamTagList struct {
 // A create operation will succeed if no spec tag has already been defined and the
 // spec field is set. Delete will remove both spec and status elements from the
 // image stream.
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=1
 type ImageTag struct {
 	metav1.TypeMeta   `json:",inline"`
@@ -460,6 +478,8 @@ type ImageTag struct {
 // ImageTagList is a list of ImageTag objects. When listing image tags, the image
 // field is not populated. Tags are returned in alphabetical order by image stream
 // and then tag.
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=1
 type ImageTagList struct {
 	metav1.TypeMeta `json:",inline"`
@@ -485,6 +505,8 @@ type ImageTagList struct {
 // ImageStreamImages as the from.kind of an image stream spec tag to reference an image
 // exactly. The only operations supported on the imagestreamimage endpoint are retrieving
 // the image.
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=1
 type ImageStreamImage struct {
 	metav1.TypeMeta   `json:",inline"`
@@ -512,6 +534,8 @@ type DockerImageReference struct {
 
 // ImageStreamLayers describes information about the layers referenced by images in this
 // image stream.
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=1
 type ImageStreamLayers struct {
 	metav1.TypeMeta   `json:",inline"`
@@ -564,6 +588,8 @@ type ImageLayerData struct {
 // This API is intended for end-user tools that need to see the metadata of the image prior to import
 // (for instance, to generate an application from it). Clients that know the desired image can continue
 // to create spec.tags directly into their image streams.
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=1
 type ImageStreamImport struct {
 	metav1.TypeMeta   `json:",inline"`

@@ -11,6 +11,8 @@ import (
 // APIServer holds configuration (like serving certificates, client CA and CORS domains)
 // shared by all API servers in the system, among them especially kube-apiserver
 // and openshift-apiserver. The canonical name of an instance is 'cluster'.
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=1
 type APIServer struct {
 	metav1.TypeMeta   `json:",inline"`
@@ -199,6 +201,7 @@ type APIServerStatus struct {
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=1
 type APIServerList struct {
 	metav1.TypeMeta `json:",inline"`

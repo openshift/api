@@ -10,6 +10,8 @@ import (
 
 // Network describes the cluster's desired network configuration. It is
 // consumed by the cluster-network-operator.
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
 // +k8s:openapi-gen=true
 // +openshift:compatibility-gen:level=1
 type Network struct {
@@ -29,6 +31,8 @@ type NetworkStatus struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // NetworkList contains a list of Network configurations
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=1
 type NetworkList struct {
 	metav1.TypeMeta `json:",inline"`

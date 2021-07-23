@@ -10,6 +10,8 @@ import (
 
 // Ingress holds cluster-wide information about ingress, including the default ingress domain
 // used for routes. The canonical name is `cluster`.
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=1
 type Ingress struct {
 	metav1.TypeMeta   `json:",inline"`
@@ -173,6 +175,7 @@ type ComponentRouteStatus struct {
 	RelatedObjects []ObjectReference `json:"relatedObjects"`
 }
 
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +openshift:compatibility-gen:level=1
 type IngressList struct {

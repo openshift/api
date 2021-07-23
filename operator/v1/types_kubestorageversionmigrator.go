@@ -9,6 +9,8 @@ import (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // KubeStorageVersionMigrator provides information to configure an operator to manage kube-storage-version-migrator.
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=1
 type KubeStorageVersionMigrator struct {
 	metav1.TypeMeta   `json:",inline"`
@@ -32,6 +34,8 @@ type KubeStorageVersionMigratorStatus struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // KubeStorageVersionMigratorList is a collection of items
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=1
 type KubeStorageVersionMigratorList struct {
 	metav1.TypeMeta `json:",inline"`

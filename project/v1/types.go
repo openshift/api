@@ -8,6 +8,8 @@ import (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // ProjectList is a list of Project objects.
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=1
 type ProjectList struct {
 	metav1.TypeMeta `json:",inline"`
@@ -64,6 +66,8 @@ type ProjectStatus struct {
 // An OpenShift project is an alternative representation of a Kubernetes namespace. Projects are exposed
 // as editable to end users while namespaces are not. Direct creation of a project is typically restricted
 // to administrators, while end users should use the requestproject resource.
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=1
 type Project struct {
 	metav1.TypeMeta   `json:",inline"`
@@ -84,6 +88,8 @@ type Project struct {
 // +genclient:method=Create,verb=create,result=Project
 
 // ProjectRequest is the set of options necessary to fully qualify a project request
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=1
 type ProjectRequest struct {
 	metav1.TypeMeta   `json:",inline"`

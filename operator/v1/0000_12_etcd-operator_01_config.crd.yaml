@@ -147,7 +147,7 @@ spec:
                         type: integer
                         format: int32
                       lastFailedCount:
-                        description: lastFailedCount is how often the last failed revision failed. This includes failed installers and fallbacks to previous revisions.
+                        description: lastFailedCount is how often the installer pod of the last failed revision failed.
                         type: integer
                       lastFailedReason:
                         description: lastFailedReason is a machine readable failure reason string.
@@ -157,7 +157,7 @@ spec:
                         type: integer
                         format: int32
                       lastFailedRevisionErrors:
-                        description: lastFailedRevisionErrors is a list of human readable errors during the failed deployment referenced in lastFailedRevision
+                        description: lastFailedRevisionErrors is a list of human readable errors during the failed deployment referenced in lastFailedRevision.
                         type: array
                         items:
                           type: string

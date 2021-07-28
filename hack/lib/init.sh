@@ -31,6 +31,7 @@ operatorcontrolplane/v1alpha1 \
 operatoringress/v1 \
 operator/v1alpha1 \
 project/v1 \
+sharedresource/v1alpha1 \
 quota/v1 \
 route/v1 \
 samples/v1 \

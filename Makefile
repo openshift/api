@@ -32,6 +32,7 @@ $(call add-crd-gen,imageregistry,./imageregistry/v1,./imageregistry/v1,./imagere
 $(call add-crd-gen,operator,./operator/v1,./operator/v1,./operator/v1)
 $(call add-crd-gen,operator-alpha,./operator/v1alpha1,./operator/v1alpha1,./operator/v1alpha1)
 $(call add-crd-gen,operatoringress,./operatoringress/v1,./operatoringress/v1,./operatoringress/v1)
+$(call add-crd-gen,sharedresource,./sharedresource/v1alpha1,./sharedresource/v1alpha1,./sharedresource/v1alpha1)
 $(call add-crd-gen,quota,./quota/v1,./quota/v1,./quota/v1)
 $(call add-crd-gen,samples,./samples/v1,./samples/v1,./samples/v1)
 $(call add-crd-gen,security,./security/v1,./security/v1,./security/v1)

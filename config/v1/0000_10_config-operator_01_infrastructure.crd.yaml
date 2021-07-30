@@ -191,9 +191,9 @@ spec:
                             description: AlibabaCloudResourceTag is the set of tags to add to apply to resources
                             type: object
                             properties:
-                              Key:
+                              key:
                                 type: string
-                              Value:
+                              value:
                                 type: string
                     aws:
                       description: AWS contains settings specific to the Amazon Web Services infrastructure provider.

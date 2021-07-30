@@ -40,6 +40,10 @@ var (
 
 	// IPv6DualStackNoUpgrade enables dual-stack. Turning this feature set on IS NOT SUPPORTED, CANNOT BE UNDONE, and PREVENTS UPGRADES.
 	IPv6DualStackNoUpgrade FeatureSet = "IPv6DualStackNoUpgrade"
+
+	// KubeletPodResources enables the kubelet node-local podresources API. This enables resource allocation monitoring.
+	// Upgrades are enabled with this feature.
+	KubeletPodResources FeatureSet = "KubeletPodResources"
 )
 
 type FeatureGateSpec struct {
@@ -122,6 +126,9 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		with(
 			"IPv6DualStack", // sig-network, danwinship
 		).
+		toFeatures(),
+	KubeletPodResources: newDefaultFeatures().
+		with("KubeletPodResourcesGetAllocatable"). // sig-node, fromani
 		toFeatures(),
 }
 

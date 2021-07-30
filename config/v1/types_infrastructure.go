@@ -654,8 +654,8 @@ type AlibabaCloudPlatformStatus struct {
 
 // AlibabaCloudResourceTag is the set of tags to add to apply to resources
 type AlibabaCloudResourceTag struct {
-	Value string `json:"Value,omitempty"`
-	Key   string `json:"Key,omitempty"`
+	Value string `json:"value,omitempty"`
+	Key   string `json:"key,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

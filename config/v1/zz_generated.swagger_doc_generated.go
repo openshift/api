@@ -851,7 +851,7 @@ func (AlibabaCloudPlatformSpec) SwaggerDoc() map[string]string {
 
 var map_AlibabaCloudPlatformStatus = map[string]string{
 	"":                "AlibabaCloudPlatformStatus holds the current status of the Alibaba Cloud infrastructure provider.",
-	"region":          "region specifics the Alibaba Cloud region where the cluster in.",
+	"region":          "region specifies the region for Alibaba Cloud resources created for the cluster.",
 	"resourceGroupID": "resourceGroupID is the ID of the resource group for the cluster.",
 	"resourceTags":    "resourceTags is a list of additional tags to apply to Alibaba Cloud resources created for the cluster.",
 }
@@ -861,7 +861,9 @@ func (AlibabaCloudPlatformStatus) SwaggerDoc() map[string]string {
 }
 
 var map_AlibabaCloudResourceTag = map[string]string{
-	"": "AlibabaCloudResourceTag is the set of tags to add to apply to resources",
+	"":      "AlibabaCloudResourceTag is the set of tags to add to apply to resources.",
+	"Key":   "key is the key of the tag.",
+	"Value": "value is the value of the tag.",
 }
 
 func (AlibabaCloudResourceTag) SwaggerDoc() map[string]string {

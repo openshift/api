@@ -167,7 +167,7 @@ const (
 	// PowerVSPlatformType represents IBM Power Systems Virtual Servers infrastructure.
 	PowerVSPlatformType PlatformType = "PowerVS"
 
-	// AlibabaCloudPlatformType represents Alibaba Cloud infrastructure
+	// AlibabaCloudPlatformType represents Alibaba Cloud infrastructure.
 	AlibabaCloudPlatformType PlatformType = "AlibabaCloud"
 )
 
@@ -644,18 +644,32 @@ type AlibabaCloudPlatformSpec struct{}
 
 // AlibabaCloudPlatformStatus holds the current status of the Alibaba Cloud infrastructure provider.
 type AlibabaCloudPlatformStatus struct {
-	// region specifics the Alibaba Cloud region where the cluster in.
-	Region string `json:"region,omitempty"`
+	// region specifies the region for Alibaba Cloud resources created for the cluster.
+	Region string `json:"region"`
 	// resourceGroupID is the ID of the resource group for the cluster.
 	ResourceGroupID string `json:"resourceGroupID,omitempty"`
 	// resourceTags is a list of additional tags to apply to Alibaba Cloud resources created for the cluster.
+	// +kubebuilder:validation:MaxItems=20
+	// +optional
 	ResourceTags []AlibabaCloudResourceTag `json:"resourceTags,omitempty"`
 }
 
-// AlibabaCloudResourceTag is the set of tags to add to apply to resources
+// AlibabaCloudResourceTag is the set of tags to add to apply to resources.
 type AlibabaCloudResourceTag struct {
-	Value string `json:"value,omitempty"`
-	Key   string `json:"key,omitempty"`
+	// key is the key of the tag.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=128
+	// +kubebuilder:validation:Pattern=`^(?!aliyun)(?!acs:)(?!(.*https://.*))(?!(.*http://.*)).*$`
+	// +required
+	Key string `json:"Key"`
+	// value is the value of the tag.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=128
+	// +kubebuilder:validation:Pattern=`^(?!aliyun)(?!acs:)(?!(.*https://.*))(?!(.*http://.*)).*$`
+	// +required
+	Value string `json:"Value"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

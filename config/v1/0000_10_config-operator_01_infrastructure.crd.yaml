@@ -179,7 +179,7 @@ spec:
                       type: object
                       properties:
                         region:
-                          description: region specifics the Alibaba Cloud region where the cluster in.
+                          description: region specifies the region for Alibaba Cloud resources created for the cluster.
                           type: string
                         resourceGroupID:
                           description: resourceGroupID is the ID of the resource group for the cluster.
@@ -187,14 +187,26 @@ spec:
                         resourceTags:
                           description: resourceTags is a list of additional tags to apply to Alibaba Cloud resources created for the cluster.
                           type: array
+                          maxItems: 20
                           items:
-                            description: AlibabaCloudResourceTag is the set of tags to add to apply to resources
+                            description: AlibabaCloudResourceTag is the set of tags to add to apply to resources.
                             type: object
+                            required:
+                              - Key
+                              - Value
                             properties:
-                              key:
+                              Key:
+                                description: key is the key of the tag.
                                 type: string
-                              value:
+                                maxLength: 128
+                                minLength: 1
+                                pattern: ^(?!aliyun)(?!acs:)(?!(.*https://.*))(?!(.*http://.*)).*$
+                              Value:
+                                description: value is the value of the tag.
                                 type: string
+                                maxLength: 128
+                                minLength: 1
+                                pattern: ^(?!aliyun)(?!acs:)(?!(.*https://.*))(?!(.*http://.*)).*$
                     aws:
                       description: AWS contains settings specific to the Amazon Web Services infrastructure provider.
                       type: object

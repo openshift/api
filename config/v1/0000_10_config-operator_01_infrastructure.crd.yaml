@@ -181,9 +181,11 @@ spec:
                         region:
                           description: region specifies the region for Alibaba Cloud resources created for the cluster.
                           type: string
+                          pattern: ^[0-9A-Za-z-]+$
                         resourceGroupID:
                           description: resourceGroupID is the ID of the resource group for the cluster.
                           type: string
+                          pattern: ^rg-[0-9A-Za-z]+$
                         resourceTags:
                           description: resourceTags is a list of additional tags to apply to Alibaba Cloud resources created for the cluster.
                           type: array

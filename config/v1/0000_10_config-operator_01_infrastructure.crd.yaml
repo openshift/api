@@ -202,13 +202,11 @@ spec:
                                 type: string
                                 maxLength: 128
                                 minLength: 1
-                                pattern: ^(?!aliyun)(?!acs:)(?!(.*https://.*))(?!(.*http://.*)).*$
                               Value:
                                 description: value is the value of the tag.
                                 type: string
                                 maxLength: 128
                                 minLength: 1
-                                pattern: ^(?!aliyun)(?!acs:)(?!(.*https://.*))(?!(.*http://.*)).*$
                     aws:
                       description: AWS contains settings specific to the Amazon Web Services infrastructure provider.
                       type: object

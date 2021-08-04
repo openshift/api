@@ -662,14 +662,12 @@ type AlibabaCloudResourceTag struct {
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=128
-	// +kubebuilder:validation:Pattern=`^(?!aliyun)(?!acs:)(?!(.*https://.*))(?!(.*http://.*)).*$`
 	// +required
 	Key string `json:"Key"`
 	// value is the value of the tag.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=128
-	// +kubebuilder:validation:Pattern=`^(?!aliyun)(?!acs:)(?!(.*https://.*))(?!(.*http://.*)).*$`
 	// +required
 	Value string `json:"Value"`
 }

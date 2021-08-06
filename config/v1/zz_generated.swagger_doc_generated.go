@@ -862,8 +862,8 @@ func (AlibabaCloudPlatformStatus) SwaggerDoc() map[string]string {
 
 var map_AlibabaCloudResourceTag = map[string]string{
 	"":      "AlibabaCloudResourceTag is the set of tags to add to apply to resources.",
-	"Key":   "key is the key of the tag.",
-	"Value": "value is the value of the tag.",
+	"key":   "key is the key of the tag.",
+	"value": "value is the value of the tag.",
 }
 
 func (AlibabaCloudResourceTag) SwaggerDoc() map[string]string {

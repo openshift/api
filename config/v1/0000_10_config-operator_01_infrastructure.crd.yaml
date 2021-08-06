@@ -194,15 +194,15 @@ spec:
                             description: AlibabaCloudResourceTag is the set of tags to add to apply to resources.
                             type: object
                             required:
-                              - Key
-                              - Value
+                              - key
+                              - value
                             properties:
-                              Key:
+                              key:
                                 description: key is the key of the tag.
                                 type: string
                                 maxLength: 128
                                 minLength: 1
-                              Value:
+                              value:
                                 description: value is the value of the tag.
                                 type: string
                                 maxLength: 128

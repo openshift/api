@@ -646,10 +646,12 @@ type AlibabaCloudPlatformSpec struct{}
 type AlibabaCloudPlatformStatus struct {
 	// region specifies the region for Alibaba Cloud resources created for the cluster.
 	// +kubebuilder:validation:Pattern=`^[0-9A-Za-z-]+$`
+	// +required
 	Region string `json:"region"`
 	// resourceGroupID is the ID of the resource group for the cluster.
 	// +kubebuilder:validation:Pattern=`^rg-[0-9A-Za-z]+$`
-	ResourceGroupID string `json:"resourceGroupID,omitempty"`
+	// +required
+	ResourceGroupID string `json:"resourceGroupID"`
 	// resourceTags is a list of additional tags to apply to Alibaba Cloud resources created for the cluster.
 	// +kubebuilder:validation:MaxItems=20
 	// +optional
@@ -663,13 +665,13 @@ type AlibabaCloudResourceTag struct {
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=128
 	// +required
-	Key string `json:"Key"`
+	Key string `json:"key"`
 	// value is the value of the tag.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=128
 	// +required
-	Value string `json:"Value"`
+	Value string `json:"value"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

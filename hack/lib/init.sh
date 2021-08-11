@@ -33,7 +33,6 @@ operator/v1alpha1 \
 project/v1 \
 sharedresource/v1alpha1 \
 quota/v1 \
-release/v1alpha1 \
 route/v1 \
 samples/v1 \
 security/v1 \
@@ -55,7 +54,6 @@ github.com/openshift/api/networkoperator/v1,\
 github.com/openshift/api/oauth/v1,\
 github.com/openshift/api/project/v1,\
 github.com/openshift/api/quota/v1,\
-github.com/openshift/api/release/v1alpha1,\
 github.com/openshift/api/route/v1,\
 github.com/openshift/api/samples/v1,\
 github.com/openshift/api/security/v1,\

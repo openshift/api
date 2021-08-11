@@ -2,38 +2,46 @@ package v1alpha1
 
 import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
+// +genclient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// PromotionTestResults encapsulates the inputs to produce a new set of promotion tests and
-// the status of the promotion tests
+// PromotionTestResults aggregates the outputs of the promotion tests
 //
 // Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
 // +openshift:compatibility-gen:level=4
 type PromotionTestResults struct {
 	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	// Spec the inputs used to create the promotion test
-	Spec PromotionTestSpec `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
+	Spec PromotionTestSpec `json:"spec,omitempty"`
 
 	// Status is the current status of the promotion test
-	Status PromotionTestResultsStatus `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
+	Status PromotionTestResultsStatus `json:"status,omitempty"`
 }
 
 // PromotionTestSpec has the information to represent a PromotionTest
 type PromotionTestSpec struct {
-	Name string `json:"name,omitempty" protobuf:"bytes,1,opt,name=name"`
+	//TODO: What are the required pieces for this...
+	Name string `json:"name,omitempty"`
 }
 
 // PromotionTestResultsStatus the status of all the promotion test jobs
 type PromotionTestResultsStatus struct {
-	JobResults []JobResults `json:"results,omitempty" protobuf:"bytes,1,rep,name=results"`
+	// BlockingJobResults stores the results of all blocking jobs
+	BlockingJobResults []JobResults `json:"blockingJobResults,omitempty"`
+	// InformingJobResults stores the results of all informing jobs
+	InformingJobResults []JobResults `json:"informingJobResults,omitempty"`
+	// AnalysisJobResults stores the results of all analysis jobs
+	AnalysisJobResults []JobResults `json:"analysisJobResults,omitempty"`
 }
 
 // JobAggregateResultState the final state of the job
 type JobAggregateResultState string
 
 const (
+	// PendingJobAggregateResultState job currently running
+	PendingJobAggregateResultState JobAggregateResultState = "Pending"
 	// FailedJobAggregateResultState failed job aggregation
 	FailedJobAggregateResultState JobAggregateResultState = "Failed"
 	// SuccessJobAggregateResultState successful job aggregation
@@ -44,11 +52,11 @@ const (
 // result of all the jobs
 type JobResults struct {
 	// jobName is the name of the job
-	JobName string `json:"name,omitempty" protobuf:"bytes,1,opt,name=name"`
+	JobName string `json:"name,omitempty"`
 	// AggregateState is the overall success/failure of all the executed jobs
-	AggregateState JobAggregateResultState `json:"state,omitempty" protobuf:"bytes,2,opt,name=state,casttype=AggregateState"`
+	AggregateState JobAggregateResultState `json:"state,omitempty"`
 	// JobRunResults contains the links for individual jobs
-	JobRunResults []JobRunResult `json:"results,omitempty" protobuf:"bytes,3,rep,name=results"`
+	JobRunResults []JobRunResult `json:"results,omitempty"`
 }
 
 // JobExecutionState the status of a job
@@ -57,6 +65,8 @@ type JobExecutionState string
 const (
 	// PendingJobExecutionState job currently running
 	PendingJobExecutionState JobExecutionState = "Pending"
+	// RunningJobExecutionState job currently running
+	RunningJobExecutionState JobExecutionState = "Running"
 	// FailedJobExecutionState job failed
 	FailedJobExecutionState JobExecutionState = "Failed"
 	// SuccessJobExecutionState job successful
@@ -65,12 +75,14 @@ const (
 
 // JobRunResult the results of a job run
 type JobRunResult struct {
+	// RunID the id of the job
+	RunId int `json:"runId"`
 	// State the current state of the job run
-	State JobExecutionState `json:"state" protobuf:"bytes,1,opt,name=state"`
+	State JobExecutionState `json:"state"`
 	// URL the html link to the prow results
-	URL string `json:"url" protobuf:"bytes,2,opt,name=url"`
-	// Retries the number of times the job has been retried
-	Retries int `json:"retries,omitempty" protobuf:"varint,3,opt,name=retries"`
+	URL string `json:"url"`
 	// TransitionTime the timestamp of the last result change
-	TransitionTime *metav1.Time `json:"transitionTime,omitempty" protobuf:"bytes,4,opt,name=transitionTime"`
+	TransitionTime *metav1.Time `json:"transitionTime,omitempty"`
+
+	//TODO: Add field for GCS bucket
 }

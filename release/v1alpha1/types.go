@@ -104,6 +104,9 @@ type JobStatus struct {
 	// jobName is the name of the job
 	JobName string `json:"name,omitempty"`
 
+	// MaxRetries maximum times to retry a job
+	MaxRetries int `json:"maxRetries,omitempty"`
+
 	// AggregateState is the overall success/failure of all the executed jobs
 	AggregateState JobState `json:"state,omitempty"`
 
@@ -115,24 +118,47 @@ type JobStatus struct {
 type JobRunState string
 
 const (
-	// JobRunStatePending job is not running, failed, or succeeded
+	// JobRunStateTriggered job has been created but not scheduled
+	JobRunStateTriggered JobRunState = "Triggered"
+
+	// JobRunStatePending job is running and awaiting completion
 	JobRunStatePending JobRunState = "Pending"
 
-	// JobRunStateRunning job running
-	JobRunStateRunning JobRunState = "Running"
+	// JobRunStateFailure job completed with errors
+	JobRunStateFailure JobRunState = "Failure"
 
-	// JobRunStateFailed job failed
-	JobRunStateFailed JobRunState = "Failed"
-
-	// JobRunStateSuccess job successful
+	// JobRunStateSuccess job completed without errors
 	JobRunStateSuccess JobRunState = "Success"
+
+	// JobRunStateAborted job was terminated early
+	JobRunStateAborted JobRunState = "Aborted"
+
+	// JobRunStateError job could not be scheduled
+	JobRunStateError JobRunState = "Error"
 )
 
 // JobRunResult the results of a job run
-// The release-controller monitors for prowjobs, that it creates, and creates/updates these results accordingly
+// The release-controller creates prowjobs during the sync_ready control loop and relies on an informer to process jobs,
+// that it created, as they are completed. The JobRunResults will be created, by the release-controller during the sync_ready
+// loop and updated whenever any changes, to the respective job is received by the informer.
 type JobRunResult struct {
-	// RunID the id of the job
+	// Name unique name for the job run
+	Name string `json:"name,omitempty"`
+
+	// Namespace location where the job ran
+	Namespace string `json:"namespace,omitempty"`
+
+	// Cluster is which Kubernetes cluster is used to run the job
+	Cluster string `json:"cluster,omitempty"`
+
+	// RunID the unique identifier of the job
 	RunId int `json:"runId"`
+
+	// StartTime timestamp for when the job was created
+	StartTime metav1.Time `json:"startTime,omitempty"`
+
+	// CompletionTime timestamp for when the job goes into a final state
+	CompletionTime *metav1.Time `json:"completionTime,omitempty"`
 
 	// State the current state of the job run
 	State JobRunState `json:"state"`
@@ -141,4 +167,5 @@ type JobRunResult struct {
 	HumanProwResultsURL string `json:"humanProwResultsURL"`
 
 	//TODO: Add field for GCS bucket
+	// The GCS details are embedded inside the ProwJobSpec.DecorationConfig.GCSConfiguration
 }

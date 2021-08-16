@@ -323,7 +323,7 @@ type RequiredHSTSPolicy struct {
 	//
 	// The use of wildcards is allowed like this: *.foo.com matches everything under foo.com.
 	// foo.com only matches foo.com, so to cover foo.com and everything under it, you must specify *both*.
-	// kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MinItems=1
 	// +required
 	DomainPatterns []string `json:"domainPatterns"`
 
@@ -355,14 +355,16 @@ type RequiredHSTSPolicy struct {
 type MaxAgePolicy struct {
 	// The largest allowed value (in seconds) of the RequiredHSTSPolicy max-age
 	// This value can be left unspecified, in which case no upper limit is enforced.
-	// kubebuilder:validation:minimum=0:maximum=2147483647
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=2147483647
 	LargestMaxAge *int32 `json:"largestMaxAge,omitempty"`
 
 	// The smallest allowed value (in seconds) of the RequiredHSTSPolicy max-age
 	// Setting max-age=0 allows the deletion of an existing HSTS header from a host.  This is a necessary
 	// tool for administrators to quickly correct mistakes.
 	// This value can be left unspecified, in which case no lower limit is enforced.
-	// kubebuilder:validation:minimum=0:maximum=2147483647
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=2147483647
 	SmallestMaxAge *int32 `json:"smallestMaxAge,omitempty"`
 }
 

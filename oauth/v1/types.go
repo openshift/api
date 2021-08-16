@@ -139,6 +139,8 @@ type OAuthClient struct {
 	// - 0: Tokens for this client never time out
 	// - X: Tokens time out if there is no activity for X seconds
 	// The current minimum allowed value for X is 300 (5 minutes)
+	//
+	// WARNING: existing tokens' timeout will not be affected (lowered) by changing this value
 	AccessTokenInactivityTimeoutSeconds *int32 `json:"accessTokenInactivityTimeoutSeconds,omitempty" protobuf:"varint,9,opt,name=accessTokenInactivityTimeoutSeconds"`
 }
 

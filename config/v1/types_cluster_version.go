@@ -236,14 +236,14 @@ type Update struct {
 	// field is part of spec, version is optional if image is specified.
 	//
 	// +optional
-	Version string `json:"version"`
+	Version string `json:"version,omitempty"`
 
 	// image is a container image location that contains the update. When this
 	// field is part of spec, image is optional if version is specified and the
 	// availableUpdates field contains a matching version.
 	//
 	// +optional
-	Image string `json:"image"`
+	Image string `json:"image,omitempty"`
 
 	// force allows an administrator to update to an image that has failed
 	// verification or upgradeable checks. This option should only
@@ -253,7 +253,7 @@ type Update struct {
 	// or potentially malicious sources.
 	//
 	// +optional
-	Force bool `json:"force"`
+	Force bool `json:"force,omitempty"`
 }
 
 // Release represents an OpenShift release image and associated metadata.

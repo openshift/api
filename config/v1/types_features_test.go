@@ -21,6 +21,7 @@ func TestFeatureBuilder(t *testing.T) {
 			actual: newDefaultFeatures().without("SupportPodPidsLimit").toFeatures(),
 			expected: &FeatureGateEnabledDisabled{
 				Enabled: []string{
+					"APIServerTracing",
 					"APIPriorityAndFairness",
 					"RotateKubeletServerCertificate",
 					"NodeDisruptionExclusion",
@@ -38,6 +39,7 @@ func TestFeatureBuilder(t *testing.T) {
 			actual: newDefaultFeatures().with("LegacyNodeRoleBehavior").toFeatures(),
 			expected: &FeatureGateEnabledDisabled{
 				Enabled: []string{
+					"APIServerTracing",
 					"APIPriorityAndFairness",
 					"RotateKubeletServerCertificate",
 					"SupportPodPidsLimit",
@@ -54,6 +56,7 @@ func TestFeatureBuilder(t *testing.T) {
 			actual: newDefaultFeatures().without("SupportPodPidsLimit", "other").toFeatures(),
 			expected: &FeatureGateEnabledDisabled{
 				Enabled: []string{
+					"APIServerTracing",
 					"APIPriorityAndFairness",
 					"RotateKubeletServerCertificate",
 					"NodeDisruptionExclusion",
@@ -72,6 +75,7 @@ func TestFeatureBuilder(t *testing.T) {
 			actual: newDefaultFeatures().with("LegacyNodeRoleBehavior", "other").toFeatures(),
 			expected: &FeatureGateEnabledDisabled{
 				Enabled: []string{
+					"APIServerTracing",
 					"APIPriorityAndFairness",
 					"RotateKubeletServerCertificate",
 					"SupportPodPidsLimit",

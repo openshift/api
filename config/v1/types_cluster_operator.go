@@ -176,10 +176,16 @@ const (
 	// unexpected errors are handled as operators mature.
 	OperatorDegraded ClusterStatusConditionType = "Degraded"
 
-	// Upgradeable indicates whether the operator safe to upgrade based on the current cluster state. When status is `False`
-	// administrators should not upgrade their cluster and the message field should contain a human readable description
-	// of what the administrator should do to allow the operator to successfully update.  A missing condition, True,
-	// and Unknown are all treated by the CVO as allowing an upgrade.
+	// Upgradeable indicates whether the operator is safe to upgrade based on the
+	// current cluster state. When status is False, the cluster-version operator
+	// will prevent the cluster from performing impacted updates unless forced.
+	// When set on ClusterVersion, the message will explain which updates (minor
+	// or patch) are impacted. When set on ClusterOperator, False will block
+	// minor OpenShift updates. The message field should contain a human
+	// readable description of what the administrator should do to allow the
+	// cluster or operator to successfully update. The cluster-version operator
+	// will allow updates when this condition is not False, including when it is
+	// missing, True, or Unknown.
 	OperatorUpgradeable ClusterStatusConditionType = "Upgradeable"
 )
 

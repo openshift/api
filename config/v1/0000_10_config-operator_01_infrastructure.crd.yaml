@@ -207,6 +207,9 @@ spec:
                                 type: string
                                 maxLength: 128
                                 minLength: 1
+                          x-kubernetes-list-map-keys:
+                            - key
+                          x-kubernetes-list-type: map
                     aws:
                       description: AWS contains settings specific to the Amazon Web Services infrastructure provider.
                       type: object
@@ -396,11 +399,7 @@ spec:
                           description: 'zone holds the default zone for the new Power VS resources created by the cluster. Note: Currently only single-zone OCP clusters are supported'
                           type: string
                     type:
-<<<<<<< HEAD
-                      description: "type is the underlying infrastructure provider for the cluster. This value controls whether infrastructure automation such as service load balancers, dynamic volume provisioning, machine creation and deletion, and other integrations are enabled. If None, no infrastructure automation is enabled. Allowed values are \"AWS\", \"Azure\", \"BareMetal\", \"GCP\", \"Libvirt\", \"OpenStack\", \"VSphere\", \"oVirt\", \"EquinixMetal\", \"PowerVS\", and \"None\". Individual components may not support all platforms, and must handle unrecognized platforms as None if they do not support that platform. \n This value will be synced with to the `status.platform` and `status.platformStatus.type`. Currently this value cannot be changed once set."
-=======
-                      description: "type is the underlying infrastructure provider for the cluster. This value controls whether infrastructure automation such as service load balancers, dynamic volume provisioning, machine creation and deletion, and other integrations are enabled. If None, no infrastructure automation is enabled. Allowed values are \"AWS\", \"Azure\", \"BareMetal\", \"GCP\", \"Libvirt\", \"OpenStack\", \"VSphere\", \"oVirt\", \"EquinixMetal\", \"AlibabaCloud\", and \"None\". Individual components may not support all platforms, and must handle unrecognized platforms as None if they do not support that platform. \n This value will be synced with to the `status.platform` and `status.platformStatus.type`. Currently this value cannot be changed once set."
->>>>>>> 41471f17 (add PlatformSpec & PlatformStatus for Alibaba Cloud)
+                      description: "type is the underlying infrastructure provider for the cluster. This value controls whether infrastructure automation such as service load balancers, dynamic volume provisioning, machine creation and deletion, and other integrations are enabled. If None, no infrastructure automation is enabled. Allowed values are \"AWS\", \"Azure\", \"BareMetal\", \"GCP\", \"Libvirt\", \"OpenStack\", \"VSphere\", \"oVirt\", \"EquinixMetal\", \"PowerVS\", \"AlibabaCloud\" and \"None\". Individual components may not support all platforms, and must handle unrecognized platforms as None if they do not support that platform. \n This value will be synced with to the `status.platform` and `status.platformStatus.type`. Currently this value cannot be changed once set."
                       type: string
                       enum:
                         - ""

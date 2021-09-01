@@ -654,6 +654,8 @@ type AlibabaCloudPlatformStatus struct {
 	ResourceGroupID string `json:"resourceGroupID"`
 	// resourceTags is a list of additional tags to apply to Alibaba Cloud resources created for the cluster.
 	// +kubebuilder:validation:MaxItems=20
+	// +listType=map
+	// +listMapKey=key
 	// +optional
 	ResourceTags []AlibabaCloudResourceTag `json:"resourceTags,omitempty"`
 }

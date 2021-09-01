@@ -645,15 +645,19 @@ type AlibabaCloudPlatformSpec struct{}
 // AlibabaCloudPlatformStatus holds the current status of the Alibaba Cloud infrastructure provider.
 type AlibabaCloudPlatformStatus struct {
 	// region specifies the region for Alibaba Cloud resources created for the cluster.
+	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`^[0-9A-Za-z-]+$`
 	// +required
 	Region string `json:"region"`
 	// resourceGroupID is the ID of the resource group for the cluster.
+	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`^rg-[0-9A-Za-z]+$`
 	// +required
 	ResourceGroupID string `json:"resourceGroupID"`
 	// resourceTags is a list of additional tags to apply to Alibaba Cloud resources created for the cluster.
 	// +kubebuilder:validation:MaxItems=20
+	// +listType=map
+	// +listMapKey=key
 	// +optional
 	ResourceTags []AlibabaCloudResourceTag `json:"resourceTags,omitempty"`
 }

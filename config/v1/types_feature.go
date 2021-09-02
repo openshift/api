@@ -140,6 +140,7 @@ var defaultFeatures = &FeatureGateEnabledDisabled{
 		"NodeDisruptionExclusion",        // sig-scheduling, ccoleman
 		"ServiceNodeExclusion",           // sig-scheduling, ccoleman
 		"DownwardAPIHugePages",           // sig-node, rphillips
+		"PodSecurity",                    // sig-auth, s-urbaniak
 	},
 	Disabled: []string{
 		"LegacyNodeRoleBehavior", // sig-scheduling, ccoleman

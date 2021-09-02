@@ -23,7 +23,7 @@ func (ClusterRoleScopeRestriction) SwaggerDoc() map[string]string {
 }
 
 var map_OAuthAccessToken = map[string]string{
-	"":                         "OAuthAccessToken describes an OAuth access token\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"":                         "OAuthAccessToken describes an OAuth access token. The name of a token must be prefixed with a `sha256~` string, must not contain \"/\" or \"%\" characters and must be at least 32 characters long.\n\nThe name of the token is constructed from the actual token by sha256-hashing it and using URL-safe unpadded base64-encoding (as described in RFC4648) on the hashed result.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 	"clientName":               "ClientName references the client that created this token.",
 	"expiresIn":                "ExpiresIn is the seconds from CreationTime before this token expires.",
 	"scopes":                   "Scopes is an array of the requested scopes.",

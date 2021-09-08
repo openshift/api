@@ -306,6 +306,36 @@ type ImageRegistryConfigStorageIBMCOS struct {
 	ServiceInstanceCRN string `json:"serviceInstanceCRN,omitempty"`
 }
 
+// ImageRegistryConfigStorageOSS holds Alibaba Cloud OSS configuration.
+type ImageRegistryConfigStorageOSS struct {
+	// bucket is the bucket name in which you want to store the registry's
+	// data.
+	// Optional, will be generated if not provided.
+	// +optional
+	Bucket string `json:"bucket,omitempty"`
+	// region is the GCS location in which your bucket exists.
+	// Optional, will be set based on the installed GCS Region.
+	// +optional
+	Region string `json:"region,omitempty"`
+	// regionEndpoint is the endpoint for S3 compatible storage services.
+	// Optional, defaults based on the Region that is provided.
+	// +optional
+	RegionEndpoint string `json:"regionEndpoint,omitempty"`
+	// internal specifies whether the registry use the OSS VPC internal endpoint
+	// Optional, defaults to false. if RegionEndpoint is specified, this config will be ignored
+	// +optional
+	Internal bool `json:"internal,omitempty"`
+	// encrypt specifies whether the registry stores the image in encrypted
+	// format or not.
+	// Optional, defaults to false.
+	// +optional
+	Encrypt bool `json:"encrypt,omitempty"`
+	// keyID is the KMS key ID to use for encryption.
+	// Optional, Encrypt must be true, or this parameter is ignored.
+	// +optional
+	KeyID string `json:"keyID,omitempty"`
+}
+
 // ImageRegistryConfigStorage describes how the storage should be configured
 // for the image registry.
 type ImageRegistryConfigStorage struct {
@@ -333,6 +363,9 @@ type ImageRegistryConfigStorage struct {
 	// ibmcos represents configuration that uses IBM Cloud Object Storage.
 	// +optional
 	IBMCOS *ImageRegistryConfigStorageIBMCOS `json:"ibmcos,omitempty"`
+	// OSS represents configuration that uses Alibaba Cloud Object Storage.
+	// +optional
+	OSS *ImageRegistryConfigStorageOSS `json:"oss,omitempty"`
 	// managementState indicates if the operator manages the underlying
 	// storage unit. If Managed the operator will remove the storage when
 	// this operator gets Removed.

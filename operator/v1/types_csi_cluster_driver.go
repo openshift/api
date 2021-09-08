@@ -52,6 +52,7 @@ const (
 	OvirtCSIDriver           CSIDriverName = "csi.ovirt.org"
 	KubevirtCSIDriver        CSIDriverName = "csi.kubevirt.io"
 	SharedResourcesCSIDriver CSIDriverName = "csi.shared-resources.openshift.io"
+	AlibabaDiskCSIDriver     CSIDriverName = "diskplugin.csi.alibabacloud.com"
 )
 
 // ClusterCSIDriverSpec is the desired behavior of CSI driver operator

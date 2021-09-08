@@ -257,30 +257,10 @@ type AWSMachineProviderStatus struct {
 	Conditions []AWSMachineProviderCondition `json:"conditions,omitempty" protobuf:"bytes,3,rep,name=conditions"`
 }
 
-// AWSMachineProviderConditionType is a valid value for AWSMachineProviderCondition.Type
-type AWSMachineProviderConditionType string
-
-// Valid conditions for an AWS machine instance.
-const (
-	// MachineCreation indicates whether the machine has been created or not. If not,
-	// it should include a reason and message for the failure.
-	MachineCreation AWSMachineProviderConditionType = "MachineCreation"
-)
-
-// AWSMachineProviderConditionReason is reason for the condition's last transition.
-type AWSMachineProviderConditionReason string
-
-const (
-	// MachineCreationSucceeded indicates machine creation success.
-	MachineCreationSucceeded AWSMachineProviderConditionReason = "MachineCreationSucceeded"
-	// MachineCreationFailed indicates machine creation failure.
-	MachineCreationFailed AWSMachineProviderConditionReason = "MachineCreationFailed"
-)
-
 // AWSMachineProviderCondition is a condition in a AWSMachineProviderStatus.
 type AWSMachineProviderCondition struct {
 	// Type is the type of the condition.
-	Type AWSMachineProviderConditionType `json:"type" protobuf:"bytes,1,opt,name=type,casttype=AWSMachineProviderConditionType"`
+	Type ConditionType `json:"type" protobuf:"bytes,1,opt,name=type,casttype=AWSMachineProviderConditionType"`
 	// Status is the status of the condition.
 	Status corev1.ConditionStatus `json:"status" protobuf:"bytes,2,opt,name=status,casttype=k8s.io/api/core/v1.ConditionStatus"`
 	// LastProbeTime is the last time we probed the condition.
@@ -291,7 +271,7 @@ type AWSMachineProviderCondition struct {
 	LastTransitionTime metav1.Time `json:"lastTransitionTime,omitempty" protobuf:"bytes,4,opt,name=lastTransitionTime"`
 	// Reason is a unique, one-word, CamelCase reason for the condition's last transition.
 	// +optional
-	Reason AWSMachineProviderConditionReason `json:"reason,omitempty" protobuf:"bytes,5,opt,name=reason,casttype=AWSMachineProviderConditionReason"`
+	Reason string `json:"reason,omitempty" protobuf:"bytes,5,opt,name=reason"`
 	// Message is a human-readable message indicating details about last transition.
 	// +optional
 	Message string `json:"message,omitempty" protobuf:"bytes,6,opt,name=message"`

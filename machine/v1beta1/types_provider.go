@@ -124,6 +124,24 @@ const (
 // ConditionType is a valid value for Condition.Type.
 type ConditionType string
 
+// Valid conditions for a machine.
+const (
+	// MachineCreated indicates whether the machine has been created or not. If not,
+	// it should include a reason and message for the failure.
+	// NOTE: MachineCreation is here for historical reasons, MachineCreated should be used instead
+	MachineCreation ConditionType = "MachineCreation"
+	// MachineCreated indicates whether the machine has been created or not. If not,
+	// it should include a reason and message for the failure.
+	MachineCreated ConditionType = "MachineCreated"
+)
+
+const (
+	// MachineCreationSucceeded indicates machine creation success.
+	MachineCreationSucceededConditionReason string = "MachineCreationSucceeded"
+	// MachineCreationFailed indicates machine creation failure.
+	MachineCreationFailedConditionReason string = "MachineCreationFailed"
+)
+
 // Condition defines an observation of a Machine API resource operational state.
 type Condition struct {
 	// Type of condition in CamelCase or in foo.example.com/CamelCase.

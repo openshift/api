@@ -6,6 +6,7 @@ syntax = "proto2";
 package github.com.openshift.api.machine.v1beta1;
 
 import "k8s.io/api/core/v1/generated.proto";
+import "k8s.io/apimachinery/pkg/api/resource/generated.proto";
 import "k8s.io/apimachinery/pkg/apis/meta/v1/generated.proto";
 import "k8s.io/apimachinery/pkg/runtime/generated.proto";
 import "k8s.io/apimachinery/pkg/runtime/schema/generated.proto";
@@ -144,6 +145,124 @@ message AWSResourceReference {
   repeated Filter filters = 3;
 }
 
+// AzureMachineProviderCondition is a condition in a AzureMachineProviderStatus
+message AzureMachineProviderCondition {
+  // Type is the type of the condition.
+  optional string type = 1;
+
+  // Status is the status of the condition.
+  optional string status = 2;
+
+  // LastProbeTime is the last time we probed the condition.
+  // +optional
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.Time lastProbeTime = 3;
+
+  // LastTransitionTime is the last time the condition transitioned from one status to another.
+  // +optional
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.Time lastTransitionTime = 4;
+
+  // Reason is a unique, one-word, CamelCase reason for the condition's last transition.
+  // +optional
+  optional string reason = 5;
+
+  // Message is a human-readable message indicating details about last transition.
+  // +optional
+  optional string message = 6;
+}
+
+// AzureMachineProviderSpec is the type that will be embedded in a Machine.Spec.ProviderSpec field
+// for an Azure virtual machine. It is used by the Azure machine actuator to create a single Machine.
+// Required parameters such as location that are not specified by this configuration, will be defaulted
+// by the actuator.
+// Compatibility level 2: Stable within a major release for a minimum of 9 months or 3 minor releases (whichever is longer).
+// +openshift:compatibility-gen:level=2
+message AzureMachineProviderSpec {
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
+
+  // UserDataSecret contains a local reference to a secret that contains the
+  // UserData to apply to the instance
+  optional k8s.io.api.core.v1.SecretReference userDataSecret = 2;
+
+  // CredentialsSecret is a reference to the secret with Azure credentials.
+  optional k8s.io.api.core.v1.SecretReference credentialsSecret = 3;
+
+  optional string location = 4;
+
+  optional string vmSize = 5;
+
+  optional Image image = 6;
+
+  optional OSDisk osDisk = 7;
+
+  optional string sshPublicKey = 8;
+
+  optional bool publicIP = 9;
+
+  map<string, string> tags = 10;
+
+  // Network Security Group that needs to be attached to the machine's interface.
+  // No security group will be attached if empty.
+  optional string securityGroup = 11;
+
+  // Application Security Groups that need to be attached to the machine's interface.
+  // No application security groups will be attached if zero-length.
+  repeated string applicationSecurityGroups = 12;
+
+  // Subnet to use for this instance
+  optional string subnet = 13;
+
+  // PublicLoadBalancer to use for this instance
+  optional string publicLoadBalancer = 14;
+
+  // InternalLoadBalancerName to use for this instance
+  optional string internalLoadBalancer = 15;
+
+  // NatRule to set inbound NAT rule of the load balancer
+  optional int64 natRule = 16;
+
+  // ManagedIdentity to set managed identity name
+  optional string managedIdentity = 17;
+
+  // Vnet to set virtual network name
+  optional string vnet = 18;
+
+  // Availability Zone for the virtual machine.
+  // If nil, the virtual machine should be deployed to no zone
+  optional string zone = 19;
+
+  optional string networkResourceGroup = 20;
+
+  optional string resourceGroup = 21;
+
+  // SpotVMOptions allows the ability to specify the Machine should use a Spot VM
+  optional SpotVMOptions spotVMOptions = 22;
+
+  // SecurityProfile specifies the Security profile settings for a virtual machine.
+  // +optional
+  optional SecurityProfile securityProfile = 23;
+}
+
+// AzureMachineProviderStatus is the type that will be embedded in a Machine.Status.ProviderStatus field.
+// It contains Azure-specific status information.
+// Compatibility level 2: Stable within a major release for a minimum of 9 months or 3 minor releases (whichever is longer).
+// +openshift:compatibility-gen:level=2
+message AzureMachineProviderStatus {
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
+
+  // VMID is the ID of the virtual machine created in Azure.
+  // +optional
+  optional string vmId = 2;
+
+  // VMState is the provisioning state of the Azure virtual machine.
+  // +optional
+  optional string vmState = 3;
+
+  // Conditions is a set of conditions associated with the Machine to indicate
+  // errors or other status.
+  // +optional
+  repeated AzureMachineProviderCondition conditions = 4;
+}
+
 // BlockDeviceMappingSpec describes a block device mapping
 message BlockDeviceMappingSpec {
   // The device name exposed to the machine (for example, /dev/sdh or xvdh).
@@ -206,6 +325,10 @@ message Condition {
   optional string message = 6;
 }
 
+message DiskEncryptionSetParameters {
+  optional string id = 1;
+}
+
 // EBSBlockDeviceSpec describes a block device for an EBS volume.
 // https://docs.aws.amazon.com/goto/WebAPI/ec2-2016-11-15/EbsBlockDevice
 message EBSBlockDeviceSpec {
@@ -259,6 +382,180 @@ message Filter {
 
   // Values includes one or more filter values. Filter values are case-sensitive.
   repeated string values = 2;
+}
+
+// GCPDisk describes disks for GCP.
+message GCPDisk {
+  optional bool autoDelete = 1;
+
+  optional bool boot = 2;
+
+  optional int64 sizeGb = 3;
+
+  optional string type = 4;
+
+  optional string image = 5;
+
+  map<string, string> labels = 6;
+
+  optional GCPEncryptionKeyReference encryptionKey = 7;
+}
+
+// GCPEncryptionKeyReference describes the encryptionKey to use for a disk's encryption.
+message GCPEncryptionKeyReference {
+  optional GCPKMSKeyReference kmsKey = 1;
+
+  // KMSKeyServiceAccount is the service account being used for the
+  // encryption request for the given KMS key. If absent, the Compute
+  // Engine default service account is used.
+  // See https://cloud.google.com/compute/docs/access/service-accounts#compute_engine_service_account
+  // for details on the default service account.
+  optional string kmsKeyServiceAccount = 2;
+}
+
+// GCPKMSKeyReference gathers required fields for looking up a GCP KMS Key
+message GCPKMSKeyReference {
+  // Name is the name of the customer managed encryption key to be used for the disk encryption.
+  optional string name = 1;
+
+  // KeyRing is the name of the KMS Key Ring which the KMS Key belongs to.
+  optional string keyRing = 2;
+
+  // ProjectID is the ID of the Project in which the KMS Key Ring exists.
+  // Defaults to the VM ProjectID if not set.
+  optional string projectID = 3;
+
+  // Location is the GCP location in which the Key Ring exists.
+  optional string location = 4;
+}
+
+// GCPMachineProviderCondition is a condition in a GCPMachineProviderStatus
+message GCPMachineProviderCondition {
+  // Type is the type of the condition.
+  optional string type = 1;
+
+  // Status is the status of the condition.
+  optional string status = 2;
+
+  // LastProbeTime is the last time we probed the condition.
+  // +optional
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.Time lastProbeTime = 3;
+
+  // LastTransitionTime is the last time the condition transitioned from one status to another.
+  // +optional
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.Time lastTransitionTime = 4;
+
+  // Reason is a unique, one-word, CamelCase reason for the condition's last transition.
+  // +optional
+  optional string reason = 5;
+
+  // Message is a human-readable message indicating details about last transition.
+  // +optional
+  optional string message = 6;
+}
+
+// GCPMachineProviderSpec is the type that will be embedded in a Machine.Spec.ProviderSpec field
+// for an GCP virtual machine. It is used by the GCP machine actuator to create a single Machine.
+// Compatibility level 2: Stable within a major release for a minimum of 9 months or 3 minor releases (whichever is longer).
+// +openshift:compatibility-gen:level=2
+message GCPMachineProviderSpec {
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
+
+  // UserDataSecret contains a local reference to a secret that contains the
+  // UserData to apply to the instance
+  optional k8s.io.api.core.v1.LocalObjectReference userDataSecret = 2;
+
+  // CredentialsSecret is a reference to the secret with GCP credentials.
+  optional k8s.io.api.core.v1.LocalObjectReference credentialsSecret = 3;
+
+  optional bool canIPForward = 4;
+
+  optional bool deletionProtection = 5;
+
+  repeated GCPDisk disks = 6;
+
+  map<string, string> labels = 7;
+
+  repeated GCPMetadata gcpMetadata = 8;
+
+  repeated GCPNetworkInterface networkInterfaces = 9;
+
+  repeated GCPServiceAccount serviceAccounts = 10;
+
+  repeated string tags = 11;
+
+  repeated string targetPools = 12;
+
+  optional string machineType = 13;
+
+  optional string region = 14;
+
+  optional string zone = 15;
+
+  optional string projectID = 16;
+
+  // Preemptible indicates if created instance is preemptible
+  optional bool preemptible = 17;
+}
+
+// GCPMachineProviderStatus is the type that will be embedded in a Machine.Status.ProviderStatus field.
+// It contains GCP-specific status information.
+// Compatibility level 2: Stable within a major release for a minimum of 9 months or 3 minor releases (whichever is longer).
+// +openshift:compatibility-gen:level=2
+message GCPMachineProviderStatus {
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
+
+  // InstanceID is the ID of the instance in GCP
+  // +optional
+  optional string instanceId = 2;
+
+  // InstanceState is the provisioning state of the GCP Instance.
+  // +optional
+  optional string instanceState = 3;
+
+  // Conditions is a set of conditions associated with the Machine to indicate
+  // errors or other status
+  repeated GCPMachineProviderCondition conditions = 4;
+}
+
+// GCPMetadata describes metadata for GCP.
+message GCPMetadata {
+  optional string key = 1;
+
+  optional string value = 2;
+}
+
+// GCPNetworkInterface describes network interfaces for GCP
+message GCPNetworkInterface {
+  optional bool publicIP = 1;
+
+  optional string network = 2;
+
+  optional string projectID = 3;
+
+  optional string subnetwork = 4;
+}
+
+// GCPServiceAccount describes service accounts for GCP.
+message GCPServiceAccount {
+  optional string email = 1;
+
+  repeated string scopes = 2;
+}
+
+// Image is a mirror of azure sdk compute.ImageReference
+message Image {
+  // Fields below refer to os images in marketplace
+  optional string publisher = 1;
+
+  optional string offer = 2;
+
+  optional string sku = 3;
+
+  optional string version = 4;
+
+  // ResourceID represents the location of OS Image in azure subscription
+  optional string resourceID = 5;
 }
 
 // LastOperation represents the detail of the last performed operation on the MachineObject.
@@ -426,6 +723,33 @@ message MachineStatus {
   repeated Condition conditions = 9;
 }
 
+message ManagedDiskParameters {
+  optional string storageAccountType = 1;
+
+  optional DiskEncryptionSetParameters diskEncryptionSet = 2;
+}
+
+// NetworkDeviceSpec defines the network configuration for a virtual machine's
+// network device.
+message NetworkDeviceSpec {
+  // NetworkName is the name of the vSphere network to which the device
+  // will be connected.
+  optional string networkName = 1;
+}
+
+// NetworkSpec defines the virtual machine's network configuration.
+message NetworkSpec {
+  repeated NetworkDeviceSpec devices = 1;
+}
+
+message OSDisk {
+  optional string osType = 1;
+
+  optional ManagedDiskParameters managedDisk = 2;
+
+  optional int32 diskSizeGB = 3;
+}
+
 // ObjectMeta is metadata that all persisted resources must have, which includes all objects
 // users must create. This is a copy of customizable fields from metav1.ObjectMeta.
 //
@@ -534,6 +858,15 @@ message ProviderSpec {
   optional k8s.io.apimachinery.pkg.runtime.RawExtension value = 1;
 }
 
+// SecurityProfile specifies the Security profile settings for a
+// virtual machine or virtual machine scale set.
+message SecurityProfile {
+  // This field indicates whether Host Encryption should be enabled
+  // or disabled for a virtual machine or virtual machine scale
+  // set. Default is disabled.
+  optional bool encryptionAtHost = 1;
+}
+
 // SpotMarketOptions defines the options available to a user when configuring
 // Machines to run on Spot instances.
 // Most users should provide an empty struct.
@@ -543,6 +876,12 @@ message SpotMarketOptions {
   optional string maxPrice = 1;
 }
 
+// SpotVMOptions defines the options relevant to running the Machine on Spot VMs
+message SpotVMOptions {
+  // MaxPrice defines the maximum price the user is willing to pay for Spot VM instances
+  optional k8s.io.apimachinery.pkg.api.resource.Quantity maxPrice = 1;
+}
+
 // TagSpecification is the name/value pair for a tag
 message TagSpecification {
   // Name of the tag
@@ -550,5 +889,145 @@ message TagSpecification {
 
   // Value of the tag
   optional string value = 2;
+}
+
+// VSphereMachineProviderCondition is a condition in a VSphereMachineProviderStatus.
+message VSphereMachineProviderCondition {
+  // Type is the type of the condition.
+  optional string type = 1;
+
+  // Status is the status of the condition.
+  optional string status = 2;
+
+  // LastProbeTime is the last time we probed the condition.
+  // +optional
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.Time lastProbeTime = 3;
+
+  // LastTransitionTime is the last time the condition transitioned from one status to another.
+  // +optional
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.Time lastTransitionTime = 4;
+
+  // Reason is a unique, one-word, CamelCase reason for the condition's last transition.
+  // +optional
+  optional string reason = 7;
+
+  // Message is a human-readable message indicating details about last transition.
+  // +optional
+  optional string message = 6;
+}
+
+// VSphereMachineProviderSpec is the type that will be embedded in a Machine.Spec.ProviderSpec field
+// for an VSphere virtual machine. It is used by the vSphere machine actuator to create a single Machine.
+// Compatibility level 2: Stable within a major release for a minimum of 9 months or 3 minor releases (whichever is longer).
+// +openshift:compatibility-gen:level=2
+message VSphereMachineProviderSpec {
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
+
+  // UserDataSecret contains a local reference to a secret that contains the
+  // UserData to apply to the instance
+  optional k8s.io.api.core.v1.LocalObjectReference userDataSecret = 2;
+
+  // CredentialsSecret is a reference to the secret with vSphere credentials.
+  optional k8s.io.api.core.v1.LocalObjectReference credentialsSecret = 3;
+
+  // Template is the name, inventory path, or instance UUID of the template
+  // used to clone new machines.
+  optional string template = 4;
+
+  optional Workspace workspace = 5;
+
+  // Network is the network configuration for this machine's VM.
+  optional NetworkSpec network = 6;
+
+  // NumCPUs is the number of virtual processors in a virtual machine.
+  // Defaults to the analogue property value in the template from which this
+  // machine is cloned.
+  // +optional
+  optional int32 numCPUs = 7;
+
+  // NumCPUs is the number of cores among which to distribute CPUs in this
+  // virtual machine.
+  // Defaults to the analogue property value in the template from which this
+  // machine is cloned.
+  // +optional
+  optional int32 numCoresPerSocket = 8;
+
+  // MemoryMiB is the size of a virtual machine's memory, in MiB.
+  // Defaults to the analogue property value in the template from which this
+  // machine is cloned.
+  // +optional
+  optional int64 memoryMiB = 9;
+
+  // DiskGiB is the size of a virtual machine's disk, in GiB.
+  // Defaults to the analogue property value in the template from which this
+  // machine is cloned.
+  // +optional
+  optional int32 diskGiB = 10;
+
+  // Snapshot is the name of the snapshot from which the VM was cloned
+  // +optional
+  optional string snapshot = 11;
+
+  // CloneMode specifies the type of clone operation.
+  // The LinkedClone mode is only support for templates that have at least
+  // one snapshot. If the template has no snapshots, then CloneMode defaults
+  // to FullClone.
+  // When LinkedClone mode is enabled the DiskGiB field is ignored as it is
+  // not possible to expand disks of linked clones.
+  // Defaults to LinkedClone, but fails gracefully to FullClone if the source
+  // of the clone operation has no snapshots.
+  // +optional
+  optional string cloneMode = 12;
+}
+
+// VSphereMachineProviderStatus is the type that will be embedded in a Machine.Status.ProviderStatus field.
+// It contains VSphere-specific status information.
+// Compatibility level 2: Stable within a major release for a minimum of 9 months or 3 minor releases (whichever is longer).
+// +openshift:compatibility-gen:level=2
+message VSphereMachineProviderStatus {
+  // TODO: populate what we need here:
+  // InstanceID is the ID of the instance in VSphere
+  // +optional
+  optional string instanceId = 1;
+
+  // InstanceState is the provisioning state of the VSphere Instance.
+  // +optional
+  optional string instanceState = 2;
+
+  // TaskRef?
+  // Ready?
+  // Conditions is a set of conditions associated with the Machine to indicate
+  // errors or other status
+  repeated VSphereMachineProviderCondition conditions = 3;
+
+  // TaskRef is a managed object reference to a Task related to the machine.
+  // This value is set automatically at runtime and should not be set or
+  // modified by users.
+  // +optional
+  optional string taskRef = 4;
+}
+
+// WorkspaceConfig defines a workspace configuration for the vSphere cloud
+// provider.
+message Workspace {
+  // Server is the IP address or FQDN of the vSphere endpoint.
+  // +optional
+  optional string server = 1;
+
+  // Datacenter is the datacenter in which VMs are created/located.
+  // +optional
+  optional string datacenter = 2;
+
+  // Folder is the folder in which VMs are created/located.
+  // +optional
+  optional string folder = 3;
+
+  // Datastore is the datastore in which VMs are created/located.
+  // +optional
+  optional string datastore = 4;
+
+  // ResourcePool is the resource pool in which VMs are created/located.
+  // +optional
+  optional string resourcePool = 5;
 }
 

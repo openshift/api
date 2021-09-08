@@ -26,6 +26,7 @@ func TestFeatureBuilder(t *testing.T) {
 					"NodeDisruptionExclusion",
 					"ServiceNodeExclusion",
 					"DownwardAPIHugePages",
+					"PodSecurity",
 				},
 				Disabled: []string{
 					"LegacyNodeRoleBehavior",
@@ -44,6 +45,7 @@ func TestFeatureBuilder(t *testing.T) {
 					"NodeDisruptionExclusion",
 					"ServiceNodeExclusion",
 					"DownwardAPIHugePages",
+					"PodSecurity",
 					"LegacyNodeRoleBehavior",
 				},
 				Disabled: []string{},
@@ -59,6 +61,7 @@ func TestFeatureBuilder(t *testing.T) {
 					"NodeDisruptionExclusion",
 					"ServiceNodeExclusion",
 					"DownwardAPIHugePages",
+					"PodSecurity",
 				},
 				Disabled: []string{
 					"LegacyNodeRoleBehavior",
@@ -78,6 +81,7 @@ func TestFeatureBuilder(t *testing.T) {
 					"NodeDisruptionExclusion",
 					"ServiceNodeExclusion",
 					"DownwardAPIHugePages",
+					"PodSecurity",
 					"LegacyNodeRoleBehavior",
 					"other",
 				},

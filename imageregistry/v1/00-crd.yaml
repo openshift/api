@@ -709,26 +709,23 @@ spec:
                       type: string
                       pattern: ^(Managed|Unmanaged)$
                     oss:
-                      description: OSS represents configuration that uses Alibaba Cloud Object Storage.
+                      description: OSS represents configuration that uses Alibaba Cloud Object Storage Service.
                       type: object
                       properties:
                         bucket:
-                          description: bucket is the bucket name in which you want to store the registry's data. Optional, will be generated if not provided.
+                          description: bucket is the bucket name in which you want to store the registry's data. Optional, will be generated if not provided. About Bucket naming, more details you can look at the [official documentation](https://www.alibabacloud.com/help/doc-detail/257087.htm)
                           type: string
                         encrypt:
-                          description: encrypt specifies whether the registry stores the image in encrypted format or not. Optional, defaults to false.
+                          description: encrypt specifies whether you would like your data encrypted on the server side. Defaults to false if not specified. Optional, defaults to false. More details, you can look cat the [official documentation](https://www.alibabacloud.com/help/doc-detail/117914.htm)
                           type: boolean
                         internal:
                           description: internal specifies whether the registry use the OSS VPC internal endpoint Optional, defaults to false. if RegionEndpoint is specified, this config will be ignored
                           type: boolean
-                        keyID:
-                          description: keyID is the KMS key ID to use for encryption. Optional, Encrypt must be true, or this parameter is ignored.
-                          type: string
                         region:
-                          description: region is the GCS location in which your bucket exists. Optional, will be set based on the installed GCS Region.
+                          description: region is the Alibaba Cloud Region in which your bucket exists. Optional, will be set based on the installed Alibaba Cloud Region. For a list of regions, you can look at the [official documentation](https://www.alibabacloud.com/help/doc-detail/31837.html).
                           type: string
                         regionEndpoint:
-                          description: regionEndpoint is the endpoint for S3 compatible storage services. Optional, defaults based on the Region that is provided.
+                          description: regionEndpoint is the endpoint for OSS compatible storage services. Optional, defaults based on the Region that is provided. An endpoint which defaults to [bucket].[region].aliyuncs.com or [bucket].[region]-internal.aliyuncs.com (when internal=true). You can change the default endpoint by changing this value.
                           type: string
                     pvc:
                       description: pvc represents configuration that uses a PersistentVolumeClaim.
@@ -972,26 +969,23 @@ spec:
                       type: string
                       pattern: ^(Managed|Unmanaged)$
                     oss:
-                      description: OSS represents configuration that uses Alibaba Cloud Object Storage.
+                      description: OSS represents configuration that uses Alibaba Cloud Object Storage Service.
                       type: object
                       properties:
                         bucket:
-                          description: bucket is the bucket name in which you want to store the registry's data. Optional, will be generated if not provided.
+                          description: bucket is the bucket name in which you want to store the registry's data. Optional, will be generated if not provided. About Bucket naming, more details you can look at the [official documentation](https://www.alibabacloud.com/help/doc-detail/257087.htm)
                           type: string
                         encrypt:
-                          description: encrypt specifies whether the registry stores the image in encrypted format or not. Optional, defaults to false.
+                          description: encrypt specifies whether you would like your data encrypted on the server side. Defaults to false if not specified. Optional, defaults to false. More details, you can look cat the [official documentation](https://www.alibabacloud.com/help/doc-detail/117914.htm)
                           type: boolean
                         internal:
                           description: internal specifies whether the registry use the OSS VPC internal endpoint Optional, defaults to false. if RegionEndpoint is specified, this config will be ignored
                           type: boolean
-                        keyID:
-                          description: keyID is the KMS key ID to use for encryption. Optional, Encrypt must be true, or this parameter is ignored.
-                          type: string
                         region:
-                          description: region is the GCS location in which your bucket exists. Optional, will be set based on the installed GCS Region.
+                          description: region is the Alibaba Cloud Region in which your bucket exists. Optional, will be set based on the installed Alibaba Cloud Region. For a list of regions, you can look at the [official documentation](https://www.alibabacloud.com/help/doc-detail/31837.html).
                           type: string
                         regionEndpoint:
-                          description: regionEndpoint is the endpoint for S3 compatible storage services. Optional, defaults based on the Region that is provided.
+                          description: regionEndpoint is the endpoint for OSS compatible storage services. Optional, defaults based on the Region that is provided. An endpoint which defaults to [bucket].[region].aliyuncs.com or [bucket].[region]-internal.aliyuncs.com (when internal=true). You can change the default endpoint by changing this value.
                           type: string
                     pvc:
                       description: pvc represents configuration that uses a PersistentVolumeClaim.

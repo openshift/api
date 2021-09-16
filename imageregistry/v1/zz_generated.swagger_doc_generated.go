@@ -79,7 +79,7 @@ var map_ImageRegistryConfigStorage = map[string]string{
 	"pvc":             "pvc represents configuration that uses a PersistentVolumeClaim.",
 	"azure":           "azure represents configuration that uses Azure Blob Storage.",
 	"ibmcos":          "ibmcos represents configuration that uses IBM Cloud Object Storage.",
-	"oss":             "OSS represents configuration that uses Alibaba Cloud Object Storage.",
+	"oss":             "OSS represents configuration that uses Alibaba Cloud Object Storage Service.",
 	"managementState": "managementState indicates if the operator manages the underlying storage unit. If Managed the operator will remove the storage when this operator gets Removed.",
 }
 
@@ -132,13 +132,12 @@ func (ImageRegistryConfigStorageIBMCOS) SwaggerDoc() map[string]string {
 }
 
 var map_ImageRegistryConfigStorageOSS = map[string]string{
-	"":               "ImageRegistryConfigStorageOSS holds Alibaba Cloud OSS configuration.",
-	"bucket":         "bucket is the bucket name in which you want to store the registry's data. Optional, will be generated if not provided.",
-	"region":         "region is the GCS location in which your bucket exists. Optional, will be set based on the installed GCS Region.",
-	"regionEndpoint": "regionEndpoint is the endpoint for S3 compatible storage services. Optional, defaults based on the Region that is provided.",
+	"":               "ImageRegistryConfigStorageOSS holds Alibaba Cloud OSS configuration. the registry to use Alibaba Cloud Object Storage Service for backend storage. More about oss, you can look at the [official documentation](https://www.alibabacloud.com/help/product/31815.htm)",
+	"bucket":         "bucket is the bucket name in which you want to store the registry's data. Optional, will be generated if not provided. About Bucket naming, more details you can look at the [official documentation](https://www.alibabacloud.com/help/doc-detail/257087.htm)",
+	"region":         "region is the Alibaba Cloud Region in which your bucket exists. Optional, will be set based on the installed Alibaba Cloud Region. For a list of regions, you can look at the [official documentation](https://www.alibabacloud.com/help/doc-detail/31837.html).",
+	"regionEndpoint": "regionEndpoint is the endpoint for OSS compatible storage services. Optional, defaults based on the Region that is provided. An endpoint which defaults to [bucket].[region].aliyuncs.com or [bucket].[region]-internal.aliyuncs.com (when internal=true). You can change the default endpoint by changing this value.",
 	"internal":       "internal specifies whether the registry use the OSS VPC internal endpoint Optional, defaults to false. if RegionEndpoint is specified, this config will be ignored",
-	"encrypt":        "encrypt specifies whether the registry stores the image in encrypted format or not. Optional, defaults to false.",
-	"keyID":          "keyID is the KMS key ID to use for encryption. Optional, Encrypt must be true, or this parameter is ignored.",
+	"encrypt":        "encrypt specifies whether you would like your data encrypted on the server side. Defaults to false if not specified. Optional, defaults to false. More details, you can look cat the [official documentation](https://www.alibabacloud.com/help/doc-detail/117914.htm)",
 }
 
 func (ImageRegistryConfigStorageOSS) SwaggerDoc() map[string]string {

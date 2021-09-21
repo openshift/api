@@ -15,58 +15,52 @@ import (
 type AzureMachineProviderSpec struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-
 	// UserDataSecret contains a local reference to a secret that contains the
 	// UserData to apply to the instance
 	UserDataSecret *corev1.SecretReference `json:"userDataSecret,omitempty" protobuf:"bytes,2,opt,name=userDataSecret"`
-
 	// CredentialsSecret is a reference to the secret with Azure credentials.
 	CredentialsSecret *corev1.SecretReference `json:"credentialsSecret,omitempty" protobuf:"bytes,3,opt,name=credentialsSecret"`
-
-	Location     string            `json:"location,omitempty" protobuf:"bytes,4,opt,name=location"`
-	VMSize       string            `json:"vmSize,omitempty" protobuf:"bytes,5,opt,name=vmSize"`
-	Image        Image             `json:"image" protobuf:"bytes,6,opt,name=image"`
-	OSDisk       OSDisk            `json:"osDisk" protobuf:"bytes,7,opt,name=osDisk"`
-	SSHPublicKey string            `json:"sshPublicKey,omitempty" protobuf:"bytes,8,opt,name=sshPublicKey"`
-	PublicIP     bool              `json:"publicIP" protobuf:"varint,9,opt,name=publicIP"`
-	Tags         map[string]string `json:"tags,omitempty" protobuf:"bytes,10,rep,name=tags"`
-
+	// Location is the region to use to create the instance
+	Location string `json:"location,omitempty" protobuf:"bytes,4,opt,name=location"`
+	// VMSize is the size of the VM to create.
+	VMSize string `json:"vmSize,omitempty" protobuf:"bytes,5,opt,name=vmSize"`
+	// Image is the OS image to use to create the instance.
+	Image Image `json:"image" protobuf:"bytes,6,opt,name=image"`
+	// OSDisk represents the parameters for creating the OS disk.
+	OSDisk OSDisk `json:"osDisk" protobuf:"bytes,7,opt,name=osDisk"`
+	// SSHPublicKey is the public key to use to SSH to the virtual machine.
+	SSHPublicKey string `json:"sshPublicKey,omitempty" protobuf:"bytes,8,opt,name=sshPublicKey"`
+	// PublicIP if true a public IP will be used
+	PublicIP bool `json:"publicIP" protobuf:"varint,9,opt,name=publicIP"`
+	// Tags is a list of tags to apply to the machine.
+	Tags map[string]string `json:"tags,omitempty" protobuf:"bytes,10,rep,name=tags"`
 	// Network Security Group that needs to be attached to the machine's interface.
 	// No security group will be attached if empty.
 	SecurityGroup string `json:"securityGroup,omitempty" protobuf:"bytes,11,opt,name=securityGroup"`
-
 	// Application Security Groups that need to be attached to the machine's interface.
 	// No application security groups will be attached if zero-length.
 	ApplicationSecurityGroups []string `json:"applicationSecurityGroups,omitempty" protobuf:"bytes,12,rep,name=applicationSecurityGroups"`
-
 	// Subnet to use for this instance
 	Subnet string `json:"subnet" protobuf:"bytes,13,opt,name=subnet"`
-
 	// PublicLoadBalancer to use for this instance
 	PublicLoadBalancer string `json:"publicLoadBalancer,omitempty" protobuf:"bytes,14,opt,name=publicLoadBalancer"`
-
 	// InternalLoadBalancerName to use for this instance
 	InternalLoadBalancer string `json:"internalLoadBalancer,omitempty" protobuf:"bytes,15,opt,name=internalLoadBalancer"`
-
 	// NatRule to set inbound NAT rule of the load balancer
 	NatRule *int64 `json:"natRule,omitempty" protobuf:"varint,16,opt,name=natRule"`
-
 	// ManagedIdentity to set managed identity name
 	ManagedIdentity string `json:"managedIdentity,omitempty" protobuf:"bytes,17,opt,name=managedIdentity"`
-
 	// Vnet to set virtual network name
 	Vnet string `json:"vnet,omitempty" protobuf:"bytes,18,opt,name=vnet"`
-
 	// Availability Zone for the virtual machine.
 	// If nil, the virtual machine should be deployed to no zone
 	Zone *string `json:"zone,omitempty" protobuf:"bytes,19,opt,name=zone"`
-
+	// NetworkResourceGroup is the resource group for the virtual machine's network
 	NetworkResourceGroup string `json:"networkResourceGroup,omitempty" protobuf:"bytes,20,opt,name=networkResourceGroup"`
-	ResourceGroup        string `json:"resourceGroup,omitempty" protobuf:"bytes,21,opt,name=resourceGroup"`
-
+	// ResourceGroup is the resource group for the virtual machine
+	ResourceGroup string `json:"resourceGroup,omitempty" protobuf:"bytes,21,opt,name=resourceGroup"`
 	// SpotVMOptions allows the ability to specify the Machine should use a Spot VM
 	SpotVMOptions *SpotVMOptions `json:"spotVMOptions,omitempty" protobuf:"bytes,22,opt,name=spotVMOptions"`
-
 	// SecurityProfile specifies the Security profile settings for a virtual machine.
 	// +optional
 	SecurityProfile *SecurityProfile `json:"securityProfile,omitempty" protobuf:"bytes,23,opt,name=securityProfile"`
@@ -88,11 +82,9 @@ type AzureMachineProviderStatus struct {
 	// VMID is the ID of the virtual machine created in Azure.
 	// +optional
 	VMID *string `json:"vmId,omitempty" protobuf:"bytes,2,opt,name=vmId"`
-
 	// VMState is the provisioning state of the Azure virtual machine.
 	// +optional
-	VMState *VMState `json:"vmState,omitempty" protobuf:"bytes,3,opt,name=vmState,casttype=VMState"`
-
+	VMState *AzureVMState `json:"vmState,omitempty" protobuf:"bytes,3,opt,name=vmState,casttype=VMState"`
 	// Conditions is a set of conditions associated with the Machine to indicate
 	// errors or other status.
 	// +optional
@@ -100,64 +92,80 @@ type AzureMachineProviderStatus struct {
 }
 
 // VMState describes the state of an Azure virtual machine.
-type VMState string
+type AzureVMState string
 
-var (
+const (
 	// ProvisioningState related values
 	// VMStateCreating ...
-	VMStateCreating = VMState("Creating")
+	VMStateCreating = AzureVMState("Creating")
 	// VMStateDeleting ...
-	VMStateDeleting = VMState("Deleting")
+	VMStateDeleting = AzureVMState("Deleting")
 	// VMStateFailed ...
-	VMStateFailed = VMState("Failed")
+	VMStateFailed = AzureVMState("Failed")
 	// VMStateMigrating ...
-	VMStateMigrating = VMState("Migrating")
+	VMStateMigrating = AzureVMState("Migrating")
 	// VMStateSucceeded ...
-	VMStateSucceeded = VMState("Succeeded")
+	VMStateSucceeded = AzureVMState("Succeeded")
 	// VMStateUpdating ...
-	VMStateUpdating = VMState("Updating")
+	VMStateUpdating = AzureVMState("Updating")
 
 	// PowerState related values
 	// VMStateStarting ...
-	VMStateStarting = VMState("Starting")
+	VMStateStarting = AzureVMState("Starting")
 	// VMStateRunning ...
-	VMStateRunning = VMState("Running")
+	VMStateRunning = AzureVMState("Running")
 	// VMStateStopping ...
-	VMStateStopping = VMState("Stopping")
+	VMStateStopping = AzureVMState("Stopping")
 	// VMStateStopped ...
-	VMStateStopped = VMState("Stopped")
+	VMStateStopped = AzureVMState("Stopped")
 	// VMStateDeallocating ...
-	VMStateDeallocating = VMState("Deallocating")
+	VMStateDeallocating = AzureVMState("Deallocating")
 	// VMStateDeallocated ...
-	VMStateDeallocated = VMState("Deallocated")
-
+	VMStateDeallocated = AzureVMState("Deallocated")
 	// VMStateUnknown ...
-	VMStateUnknown = VMState("Unknown")
+	VMStateUnknown = AzureVMState("Unknown")
 )
 
 // Image is a mirror of azure sdk compute.ImageReference
 type Image struct {
-	// Fields below refer to os images in marketplace
+	// Publisher is the name of the organization that created the image
 	Publisher string `json:"publisher" protobuf:"bytes,1,opt,name=publisher"`
-	Offer     string `json:"offer" protobuf:"bytes,2,opt,name=offer"`
-	SKU       string `json:"sku" protobuf:"bytes,3,opt,name=sku"`
-	Version   string `json:"version" protobuf:"bytes,4,opt,name=version"`
-	// ResourceID represents the location of OS Image in azure subscription
+	// Offer specifies the name of a group of related images created by the publisher.
+	// For example, UbuntuServer, WindowsServer
+	Offer string `json:"offer" protobuf:"bytes,2,opt,name=offer"`
+	// SKU specifies an instance of an offer, such as a major release of a distribution.
+	// For example, 18.04-LTS, 2019-Datacenter
+	SKU string `json:"sku" protobuf:"bytes,3,opt,name=sku"`
+	// Version specifies the version of an image sku. The allowed formats
+	// are Major.Minor.Build or 'latest'. Major, Minor, and Build are decimal numbers.
+	// Specify 'latest' to use the latest version of an image available at deploy time.
+	// Even if you use 'latest', the VM image will not automatically update after deploy
+	// time even if a new version becomes available.
+	Version string `json:"version" protobuf:"bytes,4,opt,name=version"`
+	// ResourceID specifies an image to use by ID
 	ResourceID string `json:"resourceID" protobuf:"bytes,5,opt,name=resourceID"`
 }
 
 type OSDisk struct {
-	OSType      string                `json:"osType" protobuf:"bytes,1,opt,name=osType"`
+	// OSType is the operating system type of the OS disk. Possible values include "Linux" and "Windows".
+	OSType string `json:"osType" protobuf:"bytes,1,opt,name=osType"`
+	// ManagedDisk specifies the Managed Disk parameters for the OS disk.
 	ManagedDisk ManagedDiskParameters `json:"managedDisk" protobuf:"bytes,2,opt,name=managedDisk"`
-	DiskSizeGB  int32                 `json:"diskSizeGB" protobuf:"varint,3,opt,name=diskSizeGB"`
+	// DiskSizeGB is the size in GB to assign to the data disk.
+	DiskSizeGB int32 `json:"diskSizeGB" protobuf:"varint,3,opt,name=diskSizeGB"`
 }
 
+// ManagedDiskParameters is the parameters of a managed disk.
 type ManagedDiskParameters struct {
-	StorageAccountType string                       `json:"storageAccountType" protobuf:"bytes,1,opt,name=storageAccountType"`
-	DiskEncryptionSet  *DiskEncryptionSetParameters `json:"diskEncryptionSet,omitempty" protobuf:"bytes,2,opt,name=diskEncryptionSet"`
+	// StorageAccountType is the storage account type to use. Possible values include "Standard_LRS" and "Premium_LRS".
+	StorageAccountType string `json:"storageAccountType" protobuf:"bytes,1,opt,name=storageAccountType"`
+	// DiskEncryptionSet is the disk encryption set properties
+	DiskEncryptionSet *DiskEncryptionSetParameters `json:"diskEncryptionSet,omitempty" protobuf:"bytes,2,opt,name=diskEncryptionSet"`
 }
 
+// DiskEncryptionSetParameters is the disk encryption set properties
 type DiskEncryptionSetParameters struct {
+	// ID is the disk encryption set ID
 	ID string `json:"id,omitempty" protobuf:"bytes,1,opt,name=id"`
 }
 

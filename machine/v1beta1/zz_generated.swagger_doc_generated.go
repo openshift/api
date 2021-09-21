@@ -170,6 +170,13 @@ var map_AzureMachineProviderSpec = map[string]string{
 	"":                          "AzureMachineProviderSpec is the type that will be embedded in a Machine.Spec.ProviderSpec field for an Azure virtual machine. It is used by the Azure machine actuator to create a single Machine. Required parameters such as location that are not specified by this configuration, will be defaulted by the actuator. Compatibility level 2: Stable within a major release for a minimum of 9 months or 3 minor releases (whichever is longer).",
 	"userDataSecret":            "UserDataSecret contains a local reference to a secret that contains the UserData to apply to the instance",
 	"credentialsSecret":         "CredentialsSecret is a reference to the secret with Azure credentials.",
+	"location":                  "Location is the region to use to create the instance",
+	"vmSize":                    "VMSize is the size of the VM to create.",
+	"image":                     "Image is the OS image to use to create the instance.",
+	"osDisk":                    "OSDisk represents the parameters for creating the OS disk.",
+	"sshPublicKey":              "SSHPublicKey is the public key to use to SSH to the virtual machine.",
+	"publicIP":                  "PublicIP if true a public IP will be used",
+	"tags":                      "Tags is a list of tags to apply to the machine.",
 	"securityGroup":             "Network Security Group that needs to be attached to the machine's interface. No security group will be attached if empty.",
 	"applicationSecurityGroups": "Application Security Groups that need to be attached to the machine's interface. No application security groups will be attached if zero-length.",
 	"subnet":                    "Subnet to use for this instance",
@@ -179,6 +186,8 @@ var map_AzureMachineProviderSpec = map[string]string{
 	"managedIdentity":           "ManagedIdentity to set managed identity name",
 	"vnet":                      "Vnet to set virtual network name",
 	"zone":                      "Availability Zone for the virtual machine. If nil, the virtual machine should be deployed to no zone",
+	"networkResourceGroup":      "NetworkResourceGroup is the resource group for the virtual machine's network",
+	"resourceGroup":             "ResourceGroup is the resource group for the virtual machine",
 	"spotVMOptions":             "SpotVMOptions allows the ability to specify the Machine should use a Spot VM",
 	"securityProfile":           "SecurityProfile specifies the Security profile settings for a virtual machine.",
 }
@@ -198,14 +207,46 @@ func (AzureMachineProviderStatus) SwaggerDoc() map[string]string {
 	return map_AzureMachineProviderStatus
 }
 
+var map_DiskEncryptionSetParameters = map[string]string{
+	"":   "DiskEncryptionSetParameters is the disk encryption set properties",
+	"id": "ID is the disk encryption set ID",
+}
+
+func (DiskEncryptionSetParameters) SwaggerDoc() map[string]string {
+	return map_DiskEncryptionSetParameters
+}
+
 var map_Image = map[string]string{
 	"":           "Image is a mirror of azure sdk compute.ImageReference",
-	"publisher":  "Fields below refer to os images in marketplace",
-	"resourceID": "ResourceID represents the location of OS Image in azure subscription",
+	"publisher":  "Publisher is the name of the organization that created the image",
+	"offer":      "Offer specifies the name of a group of related images created by the publisher. For example, UbuntuServer, WindowsServer",
+	"sku":        "SKU specifies an instance of an offer, such as a major release of a distribution. For example, 18.04-LTS, 2019-Datacenter",
+	"version":    "Version specifies the version of an image sku. The allowed formats are Major.Minor.Build or 'latest'. Major, Minor, and Build are decimal numbers. Specify 'latest' to use the latest version of an image available at deploy time. Even if you use 'latest', the VM image will not automatically update after deploy time even if a new version becomes available.",
+	"resourceID": "ResourceID specifies an image to use by ID",
 }
 
 func (Image) SwaggerDoc() map[string]string {
 	return map_Image
+}
+
+var map_ManagedDiskParameters = map[string]string{
+	"":                   "ManagedDiskParameters is the parameters of a managed disk.",
+	"storageAccountType": "StorageAccountType is the storage account type to use. Possible values include \"Standard_LRS\" and \"Premium_LRS\".",
+	"diskEncryptionSet":  "DiskEncryptionSet is the disk encryption set properties",
+}
+
+func (ManagedDiskParameters) SwaggerDoc() map[string]string {
+	return map_ManagedDiskParameters
+}
+
+var map_OSDisk = map[string]string{
+	"osType":      "OSType is the operating system type of the OS disk. Possible values include \"Linux\" and \"Windows\".",
+	"managedDisk": "ManagedDisk specifies the Managed Disk parameters for the OS disk.",
+	"diskSizeGB":  "DiskSizeGB is the size in GB to assign to the data disk.",
+}
+
+func (OSDisk) SwaggerDoc() map[string]string {
+	return map_OSDisk
 }
 
 var map_SecurityProfile = map[string]string{
@@ -227,7 +268,14 @@ func (SpotVMOptions) SwaggerDoc() map[string]string {
 }
 
 var map_GCPDisk = map[string]string{
-	"": "GCPDisk describes disks for GCP.",
+	"":              "GCPDisk describes disks for GCP.",
+	"autoDelete":    "AutoDelete indicates if the disk will be auto-deleted when the instance is deleted (default false).",
+	"boot":          "Boot indicates if this is a boot disk (default false).",
+	"sizeGb":        "SizeGB is the size of the disk (in GB).",
+	"type":          "Type is the type of the disk (eg: pd-standard).",
+	"image":         "Image is the source image to create this disk.",
+	"labels":        "Labels list of labels to apply to the disk.",
+	"encryptionKey": "EncryptionKey is the customer-supplied encryption key of the disk.",
 }
 
 func (GCPDisk) SwaggerDoc() map[string]string {
@@ -236,6 +284,7 @@ func (GCPDisk) SwaggerDoc() map[string]string {
 
 var map_GCPEncryptionKeyReference = map[string]string{
 	"":                     "GCPEncryptionKeyReference describes the encryptionKey to use for a disk's encryption.",
+	"kmsKey":               "KMSKeyName is the reference KMS key, in the format",
 	"kmsKeyServiceAccount": "KMSKeyServiceAccount is the service account being used for the encryption request for the given KMS key. If absent, the Compute Engine default service account is used. See https://cloud.google.com/compute/docs/access/service-accounts#compute_engine_service_account for details on the default service account.",
 }
 
@@ -270,10 +319,23 @@ func (GCPMachineProviderCondition) SwaggerDoc() map[string]string {
 }
 
 var map_GCPMachineProviderSpec = map[string]string{
-	"":                  "GCPMachineProviderSpec is the type that will be embedded in a Machine.Spec.ProviderSpec field for an GCP virtual machine. It is used by the GCP machine actuator to create a single Machine. Compatibility level 2: Stable within a major release for a minimum of 9 months or 3 minor releases (whichever is longer).",
-	"userDataSecret":    "UserDataSecret contains a local reference to a secret that contains the UserData to apply to the instance",
-	"credentialsSecret": "CredentialsSecret is a reference to the secret with GCP credentials.",
-	"preemptible":       "Preemptible indicates if created instance is preemptible",
+	"":                   "GCPMachineProviderSpec is the type that will be embedded in a Machine.Spec.ProviderSpec field for an GCP virtual machine. It is used by the GCP machine actuator to create a single Machine. Compatibility level 2: Stable within a major release for a minimum of 9 months or 3 minor releases (whichever is longer).",
+	"userDataSecret":     "UserDataSecret contains a local reference to a secret that contains the UserData to apply to the instance",
+	"credentialsSecret":  "CredentialsSecret is a reference to the secret with GCP credentials.",
+	"canIPForward":       "CanIPForward Allows this instance to send and receive packets with non-matching destination or source IPs. This is required if you plan to use this instance to forward routes.",
+	"deletionProtection": "DeletionProtection whether the resource should be protected against deletion.",
+	"disks":              "Disks is a list of disks to be attached to the VM.",
+	"labels":             "Labels list of labels to apply to the VM.",
+	"gcpMetadata":        "Metadata key/value pairs to apply to the VM.",
+	"networkInterfaces":  "NetworkInterfaces is a list of network interfaces to be attached to the VM.",
+	"serviceAccounts":    "ServiceAccounts is a list of GCP service accounts to be used by the VM.",
+	"tags":               "Tags list of tags to apply to the VM.",
+	"targetPools":        "TargetPools are used for network TCP/UDP load balancing. A target pool references member instances, an associated legacy HttpHealthCheck resource, and, optionally, a backup target pool",
+	"machineType":        "MachineType is the machine type to use for the VM.",
+	"region":             "Region is the region in which the GCP machine provider will create the VM.",
+	"zone":               "Zone is the zone in which the GCP machine provider will create the VM.",
+	"projectID":          "ProjectID is the project in which the GCP machine provider will create the VM.",
+	"preemptible":        "Preemptible indicates if created instance is preemptible",
 }
 
 func (GCPMachineProviderSpec) SwaggerDoc() map[string]string {
@@ -292,7 +354,9 @@ func (GCPMachineProviderStatus) SwaggerDoc() map[string]string {
 }
 
 var map_GCPMetadata = map[string]string{
-	"": "GCPMetadata describes metadata for GCP.",
+	"":      "GCPMetadata describes metadata for GCP.",
+	"key":   "Key is the metadata key.",
+	"value": "Value is the metadata value.",
 }
 
 func (GCPMetadata) SwaggerDoc() map[string]string {
@@ -300,7 +364,11 @@ func (GCPMetadata) SwaggerDoc() map[string]string {
 }
 
 var map_GCPNetworkInterface = map[string]string{
-	"": "GCPNetworkInterface describes network interfaces for GCP",
+	"":           "GCPNetworkInterface describes network interfaces for GCP",
+	"publicIP":   "PublicIP indicates if true a public IP will be used",
+	"network":    "Network is the network name.",
+	"projectID":  "ProjectID is the project in which the GCP machine provider will create the VM.",
+	"subnetwork": "Subnetwork is the subnetwork name.",
 }
 
 func (GCPNetworkInterface) SwaggerDoc() map[string]string {
@@ -308,7 +376,9 @@ func (GCPNetworkInterface) SwaggerDoc() map[string]string {
 }
 
 var map_GCPServiceAccount = map[string]string{
-	"": "GCPServiceAccount describes service accounts for GCP.",
+	"":       "GCPServiceAccount describes service accounts for GCP.",
+	"email":  "Email is the service account email.",
+	"scopes": "Scopes list of scopes to be assigned to the service account.",
 }
 
 func (GCPServiceAccount) SwaggerDoc() map[string]string {
@@ -419,7 +489,8 @@ func (NetworkDeviceSpec) SwaggerDoc() map[string]string {
 }
 
 var map_NetworkSpec = map[string]string{
-	"": "NetworkSpec defines the virtual machine's network configuration.",
+	"":        "NetworkSpec defines the virtual machine's network configuration.",
+	"devices": "Devices defines the virtual machine's network interfaces.",
 }
 
 func (NetworkSpec) SwaggerDoc() map[string]string {
@@ -445,6 +516,7 @@ var map_VSphereMachineProviderSpec = map[string]string{
 	"userDataSecret":    "UserDataSecret contains a local reference to a secret that contains the UserData to apply to the instance",
 	"credentialsSecret": "CredentialsSecret is a reference to the secret with vSphere credentials.",
 	"template":          "Template is the name, inventory path, or instance UUID of the template used to clone new machines.",
+	"workspace":         "Workspace describes the workspace to use for the machine.",
 	"network":           "Network is the network configuration for this machine's VM.",
 	"numCPUs":           "NumCPUs is the number of virtual processors in a virtual machine. Defaults to the analogue property value in the template from which this machine is cloned.",
 	"numCoresPerSocket": "NumCPUs is the number of cores among which to distribute CPUs in this virtual machine. Defaults to the analogue property value in the template from which this machine is cloned.",
@@ -462,7 +534,7 @@ var map_VSphereMachineProviderStatus = map[string]string{
 	"":              "VSphereMachineProviderStatus is the type that will be embedded in a Machine.Status.ProviderStatus field. It contains VSphere-specific status information. Compatibility level 2: Stable within a major release for a minimum of 9 months or 3 minor releases (whichever is longer).",
 	"instanceId":    "InstanceID is the ID of the instance in VSphere",
 	"instanceState": "InstanceState is the provisioning state of the VSphere Instance.",
-	"conditions":    "TaskRef? Ready? Conditions is a set of conditions associated with the Machine to indicate errors or other status",
+	"conditions":    "Conditions is a set of conditions associated with the Machine to indicate errors or other status",
 	"taskRef":       "TaskRef is a managed object reference to a Task related to the machine. This value is set automatically at runtime and should not be set or modified by users.",
 }
 

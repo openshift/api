@@ -12,23 +12,18 @@ import (
 type VSphereMachineProviderSpec struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-
 	// UserDataSecret contains a local reference to a secret that contains the
 	// UserData to apply to the instance
 	UserDataSecret *corev1.LocalObjectReference `json:"userDataSecret,omitempty" protobuf:"bytes,2,opt,name=userDataSecret"`
-
 	// CredentialsSecret is a reference to the secret with vSphere credentials.
 	CredentialsSecret *corev1.LocalObjectReference `json:"credentialsSecret,omitempty" protobuf:"bytes,3,opt,name=credentialsSecret"`
-
 	// Template is the name, inventory path, or instance UUID of the template
 	// used to clone new machines.
 	Template string `json:"template" protobuf:"bytes,4,opt,name=template"`
-
+	// Workspace describes the workspace to use for the machine.
 	Workspace *Workspace `json:"workspace,omitempty" protobuf:"bytes,5,opt,name=workspace"`
-
 	// Network is the network configuration for this machine's VM.
 	Network NetworkSpec `json:"network" protobuf:"bytes,6,opt,name=network"`
-
 	// NumCPUs is the number of virtual processors in a virtual machine.
 	// Defaults to the analogue property value in the template from which this
 	// machine is cloned.
@@ -53,7 +48,6 @@ type VSphereMachineProviderSpec struct {
 	// Snapshot is the name of the snapshot from which the VM was cloned
 	// +optional
 	Snapshot string `json:"snapshot" protobuf:"bytes,11,opt,name=snapshot"`
-
 	// CloneMode specifies the type of clone operation.
 	// The LinkedClone mode is only support for templates that have at least
 	// one snapshot. If the template has no snapshots, then CloneMode defaults
@@ -74,7 +68,6 @@ const (
 	// clone operation once the operation is complete. This is the safest clone
 	// mode, but it is not the fastest.
 	FullClone CloneMode = "fullClone"
-
 	// LinkedClone means resulting VMs will be dependent upon the snapshot of
 	// the source VM/template from which the VM was cloned. This is the fastest
 	// clone mode, but it also prevents expanding a VMs disk beyond the size of
@@ -84,6 +77,7 @@ const (
 
 // NetworkSpec defines the virtual machine's network configuration.
 type NetworkSpec struct {
+	// Devices defines the virtual machine's network interfaces.
 	Devices []NetworkDeviceSpec `json:"devices" protobuf:"bytes,1,rep,name=devices"`
 }
 
@@ -101,19 +95,15 @@ type Workspace struct {
 	// Server is the IP address or FQDN of the vSphere endpoint.
 	// +optional
 	Server string `gcfg:"server,omitempty" json:"server,omitempty" protobuf:"bytes,1,opt,name=server"`
-
 	// Datacenter is the datacenter in which VMs are created/located.
 	// +optional
 	Datacenter string `gcfg:"datacenter,omitempty" json:"datacenter,omitempty" protobuf:"bytes,2,opt,name=datacenter"`
-
 	// Folder is the folder in which VMs are created/located.
 	// +optional
 	Folder string `gcfg:"folder,omitempty" json:"folder,omitempty" protobuf:"bytes,3,opt,name=folder"`
-
 	// Datastore is the datastore in which VMs are created/located.
 	// +optional
 	Datastore string `gcfg:"default-datastore,omitempty" json:"datastore,omitempty" protobuf:"bytes,4,opt,name=datastore"`
-
 	// ResourcePool is the resource pool in which VMs are created/located.
 	// +optional
 	ResourcePool string `gcfg:"resourcepool-path,omitempty" json:"resourcePool,omitempty" protobuf:"bytes,5,opt,name=resourcePool"`
@@ -146,21 +136,15 @@ type VSphereMachineProviderCondition struct {
 type VSphereMachineProviderStatus struct {
 	metav1.TypeMeta `json:",inline"`
 
-	// TODO: populate what we need here:
 	// InstanceID is the ID of the instance in VSphere
 	// +optional
 	InstanceID *string `json:"instanceId,omitempty" protobuf:"bytes,1,opt,name=instanceId"`
-
 	// InstanceState is the provisioning state of the VSphere Instance.
 	// +optional
 	InstanceState *string `json:"instanceState,omitempty" protobuf:"bytes,2,opt,name=instanceState"`
-	//
-	// TaskRef?
-	// Ready?
 	// Conditions is a set of conditions associated with the Machine to indicate
 	// errors or other status
 	Conditions []VSphereMachineProviderCondition `json:"conditions,omitempty" protobuf:"bytes,3,rep,name=conditions"`
-
 	// TaskRef is a managed object reference to a Task related to the machine.
 	// This value is set automatically at runtime and should not be set or
 	// modified by users.

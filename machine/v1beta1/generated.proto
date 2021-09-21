@@ -186,18 +186,25 @@ message AzureMachineProviderSpec {
   // CredentialsSecret is a reference to the secret with Azure credentials.
   optional k8s.io.api.core.v1.SecretReference credentialsSecret = 3;
 
+  // Location is the region to use to create the instance
   optional string location = 4;
 
+  // VMSize is the size of the VM to create.
   optional string vmSize = 5;
 
+  // Image is the OS image to use to create the instance.
   optional Image image = 6;
 
+  // OSDisk represents the parameters for creating the OS disk.
   optional OSDisk osDisk = 7;
 
+  // SSHPublicKey is the public key to use to SSH to the virtual machine.
   optional string sshPublicKey = 8;
 
+  // PublicIP if true a public IP will be used
   optional bool publicIP = 9;
 
+  // Tags is a list of tags to apply to the machine.
   map<string, string> tags = 10;
 
   // Network Security Group that needs to be attached to the machine's interface.
@@ -230,8 +237,10 @@ message AzureMachineProviderSpec {
   // If nil, the virtual machine should be deployed to no zone
   optional string zone = 19;
 
+  // NetworkResourceGroup is the resource group for the virtual machine's network
   optional string networkResourceGroup = 20;
 
+  // ResourceGroup is the resource group for the virtual machine
   optional string resourceGroup = 21;
 
   // SpotVMOptions allows the ability to specify the Machine should use a Spot VM
@@ -325,7 +334,9 @@ message Condition {
   optional string message = 6;
 }
 
+// DiskEncryptionSetParameters is the disk encryption set properties
 message DiskEncryptionSetParameters {
+  // ID is the disk encryption set ID
   optional string id = 1;
 }
 
@@ -386,23 +397,31 @@ message Filter {
 
 // GCPDisk describes disks for GCP.
 message GCPDisk {
+  // AutoDelete indicates if the disk will be auto-deleted when the instance is deleted (default false).
   optional bool autoDelete = 1;
 
+  // Boot indicates if this is a boot disk (default false).
   optional bool boot = 2;
 
+  // SizeGB is the size of the disk (in GB).
   optional int64 sizeGb = 3;
 
+  // Type is the type of the disk (eg: pd-standard).
   optional string type = 4;
 
+  // Image is the source image to create this disk.
   optional string image = 5;
 
+  // Labels list of labels to apply to the disk.
   map<string, string> labels = 6;
 
+  // EncryptionKey is the customer-supplied encryption key of the disk.
   optional GCPEncryptionKeyReference encryptionKey = 7;
 }
 
 // GCPEncryptionKeyReference describes the encryptionKey to use for a disk's encryption.
 message GCPEncryptionKeyReference {
+  // KMSKeyName is the reference KMS key, in the format
   optional GCPKMSKeyReference kmsKey = 1;
 
   // KMSKeyServiceAccount is the service account being used for the
@@ -468,30 +487,45 @@ message GCPMachineProviderSpec {
   // CredentialsSecret is a reference to the secret with GCP credentials.
   optional k8s.io.api.core.v1.LocalObjectReference credentialsSecret = 3;
 
+  // CanIPForward Allows this instance to send and receive packets with non-matching destination or source IPs.
+  // This is required if you plan to use this instance to forward routes.
   optional bool canIPForward = 4;
 
+  // DeletionProtection whether the resource should be protected against deletion.
   optional bool deletionProtection = 5;
 
+  // Disks is a list of disks to be attached to the VM.
   repeated GCPDisk disks = 6;
 
+  // Labels list of labels to apply to the VM.
   map<string, string> labels = 7;
 
+  // Metadata key/value pairs to apply to the VM.
   repeated GCPMetadata gcpMetadata = 8;
 
+  // NetworkInterfaces is a list of network interfaces to be attached to the VM.
   repeated GCPNetworkInterface networkInterfaces = 9;
 
+  // ServiceAccounts is a list of GCP service accounts to be used by the VM.
   repeated GCPServiceAccount serviceAccounts = 10;
 
+  // Tags list of tags to apply to the VM.
   repeated string tags = 11;
 
+  // TargetPools are used for network TCP/UDP load balancing. A target pool references member instances,
+  // an associated legacy HttpHealthCheck resource, and, optionally, a backup target pool
   repeated string targetPools = 12;
 
+  // MachineType is the machine type to use for the VM.
   optional string machineType = 13;
 
+  // Region is the region in which the GCP machine provider will create the VM.
   optional string region = 14;
 
+  // Zone is the zone in which the GCP machine provider will create the VM.
   optional string zone = 15;
 
+  // ProjectID is the project in which the GCP machine provider will create the VM.
   optional string projectID = 16;
 
   // Preemptible indicates if created instance is preemptible
@@ -520,41 +554,58 @@ message GCPMachineProviderStatus {
 
 // GCPMetadata describes metadata for GCP.
 message GCPMetadata {
+  // Key is the metadata key.
   optional string key = 1;
 
+  // Value is the metadata value.
   optional string value = 2;
 }
 
 // GCPNetworkInterface describes network interfaces for GCP
 message GCPNetworkInterface {
+  // PublicIP indicates if true a public IP will be used
   optional bool publicIP = 1;
 
+  // Network is the network name.
   optional string network = 2;
 
+  // ProjectID is the project in which the GCP machine provider will create the VM.
   optional string projectID = 3;
 
+  // Subnetwork is the subnetwork name.
   optional string subnetwork = 4;
 }
 
 // GCPServiceAccount describes service accounts for GCP.
 message GCPServiceAccount {
+  // Email is the service account email.
   optional string email = 1;
 
+  // Scopes list of scopes to be assigned to the service account.
   repeated string scopes = 2;
 }
 
 // Image is a mirror of azure sdk compute.ImageReference
 message Image {
-  // Fields below refer to os images in marketplace
+  // Publisher is the name of the organization that created the image
   optional string publisher = 1;
 
+  // Offer specifies the name of a group of related images created by the publisher.
+  // For example, UbuntuServer, WindowsServer
   optional string offer = 2;
 
+  // SKU specifies an instance of an offer, such as a major release of a distribution.
+  // For example, 18.04-LTS, 2019-Datacenter
   optional string sku = 3;
 
+  // Version specifies the version of an image sku. The allowed formats
+  // are Major.Minor.Build or 'latest'. Major, Minor, and Build are decimal numbers.
+  // Specify 'latest' to use the latest version of an image available at deploy time.
+  // Even if you use 'latest', the VM image will not automatically update after deploy
+  // time even if a new version becomes available.
   optional string version = 4;
 
-  // ResourceID represents the location of OS Image in azure subscription
+  // ResourceID specifies an image to use by ID
   optional string resourceID = 5;
 }
 
@@ -723,9 +774,12 @@ message MachineStatus {
   repeated Condition conditions = 9;
 }
 
+// ManagedDiskParameters is the parameters of a managed disk.
 message ManagedDiskParameters {
+  // StorageAccountType is the storage account type to use. Possible values include "Standard_LRS" and "Premium_LRS".
   optional string storageAccountType = 1;
 
+  // DiskEncryptionSet is the disk encryption set properties
   optional DiskEncryptionSetParameters diskEncryptionSet = 2;
 }
 
@@ -739,14 +793,18 @@ message NetworkDeviceSpec {
 
 // NetworkSpec defines the virtual machine's network configuration.
 message NetworkSpec {
+  // Devices defines the virtual machine's network interfaces.
   repeated NetworkDeviceSpec devices = 1;
 }
 
 message OSDisk {
+  // OSType is the operating system type of the OS disk. Possible values include "Linux" and "Windows".
   optional string osType = 1;
 
+  // ManagedDisk specifies the Managed Disk parameters for the OS disk.
   optional ManagedDiskParameters managedDisk = 2;
 
+  // DiskSizeGB is the size in GB to assign to the data disk.
   optional int32 diskSizeGB = 3;
 }
 
@@ -934,6 +992,7 @@ message VSphereMachineProviderSpec {
   // used to clone new machines.
   optional string template = 4;
 
+  // Workspace describes the workspace to use for the machine.
   optional Workspace workspace = 5;
 
   // Network is the network configuration for this machine's VM.
@@ -985,7 +1044,6 @@ message VSphereMachineProviderSpec {
 // Compatibility level 2: Stable within a major release for a minimum of 9 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=2
 message VSphereMachineProviderStatus {
-  // TODO: populate what we need here:
   // InstanceID is the ID of the instance in VSphere
   // +optional
   optional string instanceId = 1;
@@ -994,8 +1052,6 @@ message VSphereMachineProviderStatus {
   // +optional
   optional string instanceState = 2;
 
-  // TaskRef?
-  // Ready?
   // Conditions is a set of conditions associated with the Machine to indicate
   // errors or other status
   repeated VSphereMachineProviderCondition conditions = 3;

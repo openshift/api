@@ -1567,6 +1567,7 @@ var map_OpenIDClaims = map[string]string{
 	"preferredUsername": "preferredUsername is the list of claims whose values should be used as the preferred username. If unspecified, the preferred username is determined from the value of the sub claim",
 	"name":              "name is the list of claims whose values should be used as the display name. Optional. If unspecified, no display name is set for the identity",
 	"email":             "email is the list of claims whose values should be used as the email address. Optional. If unspecified, no email is set for the identity",
+	"groups":            "groups is the list of claims value of which should be used to synchronize groups from the OIDC provider to OpenShift for the user. If multiple claims are specified, the first one with a non-empty value is used.",
 }
 
 func (OpenIDClaims) SwaggerDoc() map[string]string {

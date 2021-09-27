@@ -1,20 +1,39 @@
 package v1alpha1
 
-import (
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-)
+import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 // +genclient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// ReleasePayload encapsulates the information for the creation of the ReleasePayload
-// and aggregates the outputs of the verification tests.
-// The release-controller monitors a specific set of imagestreams for updates.  If/when
-// an update occurs to these imagestreams, the release-controller will:
-//   1) Create a new ReleasePayload
-//      a: in the namespace configured by the --release-namespace parameter of the release-controller
-//      b. named after the name or mirrorPrefix in the aforementioned monitored imagestreams
-//   2) Start any number of tests specified as an annotation on the aforementioned monitored imagestreams
+// ReleasePayload encapsulates the information for the creation of a ReleasePayload
+// and aggregates the results of its respective verification tests.
+//
+// The release-controller is configured to monitor imagestreams, in a specific namespace, that are annotated with a
+// ReleaseConfig.  The ReleaseConfig is a definition of how releases are calculated.  If/when an update occurs, to
+// one of these imagestreams, the release-controller will:
+//   1) Create a point-in-time mirror of the updated imagestream
+//   2) Create a new Release from the mirror
+//        - Any errors before this point will cause the release to marked `Failed`
+//   3) Launches a set of release analysis jobs
+//   4) Launches an aggregation job
+//   5) Launches a set of release verification jobs
+//        - These can either be `Blocking Jobs` which will prevent release acceptance or `Informing Jobs` which will
+//          not prevent release acceptance.
+//   6) Monitors for job completions
+//        - If all `Blocking Jobs` complete successfully, then the release is `Accepted`.  If any `Blocking Jobs` fail,
+//          the release will be marked `Rejected`
+//   7) Publishes all results to the respective webpage
+//
+// Example:
+// ART:
+//   1) Publishes an update to the `ocp/4.9-art-latest` imagestream
+//
+// Release-controller:
+//   1) Creates a mirror named: `4.9-art-latest-2021-09-27-105859`
+//   2) Creates an OpenShift Release: `ocp/release:4.9.0-0.nightly-2021-09-27-105859`
+//   3) Launches: 4.9.0-0.nightly-2021-09-27-105859-aggregated-<name>-analysis-<count>
+//   4) Launches: 4.9.0-0.nightly-2021-09-27-105859-aggregated-<name>-aggregator
+//   5) Launches: 4.9.0-0.nightly-2021-09-27-105859-<name>
 //
 // Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
 // +openshift:compatibility-gen:level=4

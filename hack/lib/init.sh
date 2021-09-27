@@ -56,6 +56,5 @@ github.com/openshift/api/route/v1,\
 github.com/openshift/api/samples/v1,\
 github.com/openshift/api/security/v1,\
 github.com/openshift/api/template/v1,\
-github.com/openshift/api/user/v1,\
-github.com/openshift/api/machine/v1beta1\
+github.com/openshift/api/user/v1\
 "

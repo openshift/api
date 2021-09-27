@@ -11,113 +11,113 @@ import (
 // +openshift:compatibility-gen:level=2
 type GCPMachineProviderSpec struct {
 	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
 	// UserDataSecret contains a local reference to a secret that contains the
 	// UserData to apply to the instance
-	UserDataSecret *corev1.LocalObjectReference `json:"userDataSecret,omitempty" protobuf:"bytes,2,opt,name=userDataSecret"`
+	UserDataSecret *corev1.LocalObjectReference `json:"userDataSecret,omitempty"`
 	// CredentialsSecret is a reference to the secret with GCP credentials.
-	CredentialsSecret *corev1.LocalObjectReference `json:"credentialsSecret,omitempty" protobuf:"bytes,3,opt,name=credentialsSecret"`
+	CredentialsSecret *corev1.LocalObjectReference `json:"credentialsSecret,omitempty"`
 	// CanIPForward Allows this instance to send and receive packets with non-matching destination or source IPs.
 	// This is required if you plan to use this instance to forward routes.
-	CanIPForward bool `json:"canIPForward" protobuf:"varint,4,opt,name=canIPForward"`
+	CanIPForward bool `json:"canIPForward"`
 	// DeletionProtection whether the resource should be protected against deletion.
-	DeletionProtection bool `json:"deletionProtection" protobuf:"varint,5,opt,name=deletionProtection"`
+	DeletionProtection bool `json:"deletionProtection"`
 	// Disks is a list of disks to be attached to the VM.
-	Disks []*GCPDisk `json:"disks,omitempty" protobuf:"bytes,6,rep,name=disks"`
+	Disks []*GCPDisk `json:"disks,omitempty"`
 	// Labels list of labels to apply to the VM.
-	Labels map[string]string `json:"labels,omitempty" protobuf:"bytes,7,rep,name=labels"`
+	Labels map[string]string `json:"labels,omitempty"`
 	// Metadata key/value pairs to apply to the VM.
-	Metadata []*GCPMetadata `json:"gcpMetadata,omitempty" protobuf:"bytes,8,rep,name=gcpMetadata"`
+	Metadata []*GCPMetadata `json:"gcpMetadata,omitempty"`
 	// NetworkInterfaces is a list of network interfaces to be attached to the VM.
-	NetworkInterfaces []*GCPNetworkInterface `json:"networkInterfaces,omitempty" protobuf:"bytes,9,rep,name=networkInterfaces"`
+	NetworkInterfaces []*GCPNetworkInterface `json:"networkInterfaces,omitempty"`
 	// ServiceAccounts is a list of GCP service accounts to be used by the VM.
-	ServiceAccounts []GCPServiceAccount `json:"serviceAccounts" protobuf:"bytes,10,rep,name=serviceAccounts"`
+	ServiceAccounts []GCPServiceAccount `json:"serviceAccounts"`
 	// Tags list of tags to apply to the VM.
-	Tags []string `json:"tags,omitempty" protobuf:"bytes,11,rep,name=tags"`
+	Tags []string `json:"tags,omitempty"`
 	// TargetPools are used for network TCP/UDP load balancing. A target pool references member instances,
 	// an associated legacy HttpHealthCheck resource, and, optionally, a backup target pool
-	TargetPools []string `json:"targetPools,omitempty" protobuf:"bytes,12,rep,name=targetPools"`
+	TargetPools []string `json:"targetPools,omitempty"`
 	// MachineType is the machine type to use for the VM.
-	MachineType string `json:"machineType" protobuf:"bytes,13,opt,name=machineType"`
+	MachineType string `json:"machineType"`
 	// Region is the region in which the GCP machine provider will create the VM.
-	Region string `json:"region" protobuf:"bytes,14,opt,name=region"`
+	Region string `json:"region"`
 	// Zone is the zone in which the GCP machine provider will create the VM.
-	Zone string `json:"zone" protobuf:"bytes,15,opt,name=zone"`
+	Zone string `json:"zone"`
 	// ProjectID is the project in which the GCP machine provider will create the VM.
-	ProjectID string `json:"projectID,omitempty" protobuf:"bytes,16,opt,name=projectID"`
+	ProjectID string `json:"projectID,omitempty"`
 	// Preemptible indicates if created instance is preemptible
-	Preemptible bool `json:"preemptible,omitempty" protobuf:"varint,17,opt,name=preemptible"`
+	Preemptible bool `json:"preemptible,omitempty"`
 }
 
 // GCPDisk describes disks for GCP.
 type GCPDisk struct {
 	// AutoDelete indicates if the disk will be auto-deleted when the instance is deleted (default false).
-	AutoDelete bool `json:"autoDelete" protobuf:"varint,1,opt,name=autoDelete"`
+	AutoDelete bool `json:"autoDelete"`
 	// Boot indicates if this is a boot disk (default false).
-	Boot bool `json:"boot" protobuf:"varint,2,opt,name=boot"`
+	Boot bool `json:"boot"`
 	// SizeGB is the size of the disk (in GB).
-	SizeGB int64 `json:"sizeGb" protobuf:"varint,3,opt,name=sizeGb"`
+	SizeGB int64 `json:"sizeGb"`
 	// Type is the type of the disk (eg: pd-standard).
-	Type string `json:"type" protobuf:"bytes,4,opt,name=type"`
+	Type string `json:"type"`
 	// Image is the source image to create this disk.
-	Image string `json:"image" protobuf:"bytes,5,opt,name=image"`
+	Image string `json:"image"`
 	// Labels list of labels to apply to the disk.
-	Labels map[string]string `json:"labels" protobuf:"bytes,6,rep,name=labels"`
+	Labels map[string]string `json:"labels"`
 	// EncryptionKey is the customer-supplied encryption key of the disk.
-	EncryptionKey *GCPEncryptionKeyReference `json:"encryptionKey,omitempty" protobuf:"bytes,7,opt,name=encryptionKey"`
+	EncryptionKey *GCPEncryptionKeyReference `json:"encryptionKey,omitempty"`
 }
 
 // GCPMetadata describes metadata for GCP.
 type GCPMetadata struct {
 	// Key is the metadata key.
-	Key string `json:"key" protobuf:"bytes,1,opt,name=key"`
+	Key string `json:"key"`
 	// Value is the metadata value.
-	Value *string `json:"value" protobuf:"bytes,2,opt,name=value"`
+	Value *string `json:"value"`
 }
 
 // GCPNetworkInterface describes network interfaces for GCP
 type GCPNetworkInterface struct {
 	// PublicIP indicates if true a public IP will be used
-	PublicIP bool `json:"publicIP,omitempty" protobuf:"varint,1,opt,name=publicIP"`
+	PublicIP bool `json:"publicIP,omitempty"`
 	// Network is the network name.
-	Network string `json:"network,omitempty" protobuf:"bytes,2,opt,name=network"`
+	Network string `json:"network,omitempty"`
 	// ProjectID is the project in which the GCP machine provider will create the VM.
-	ProjectID string `json:"projectID,omitempty" protobuf:"bytes,3,opt,name=projectID"`
+	ProjectID string `json:"projectID,omitempty"`
 	// Subnetwork is the subnetwork name.
-	Subnetwork string `json:"subnetwork,omitempty" protobuf:"bytes,4,opt,name=subnetwork"`
+	Subnetwork string `json:"subnetwork,omitempty"`
 }
 
 // GCPServiceAccount describes service accounts for GCP.
 type GCPServiceAccount struct {
 	// Email is the service account email.
-	Email string `json:"email" protobuf:"bytes,1,opt,name=email"`
+	Email string `json:"email"`
 	// Scopes list of scopes to be assigned to the service account.
-	Scopes []string `json:"scopes" protobuf:"bytes,2,rep,name=scopes"`
+	Scopes []string `json:"scopes"`
 }
 
 // GCPEncryptionKeyReference describes the encryptionKey to use for a disk's encryption.
 type GCPEncryptionKeyReference struct {
 	// KMSKeyName is the reference KMS key, in the format
-	KMSKey *GCPKMSKeyReference `json:"kmsKey,omitempty" protobuf:"bytes,1,opt,name=kmsKey"`
+	KMSKey *GCPKMSKeyReference `json:"kmsKey,omitempty"`
 	// KMSKeyServiceAccount is the service account being used for the
 	// encryption request for the given KMS key. If absent, the Compute
 	// Engine default service account is used.
 	// See https://cloud.google.com/compute/docs/access/service-accounts#compute_engine_service_account
 	// for details on the default service account.
-	KMSKeyServiceAccount string `json:"kmsKeyServiceAccount,omitempty" protobuf:"bytes,2,opt,name=kmsKeyServiceAccount"`
+	KMSKeyServiceAccount string `json:"kmsKeyServiceAccount,omitempty"`
 }
 
 // GCPKMSKeyReference gathers required fields for looking up a GCP KMS Key
 type GCPKMSKeyReference struct {
 	// Name is the name of the customer managed encryption key to be used for the disk encryption.
-	Name string `json:"name" protobuf:"bytes,1,opt,name=name"`
+	Name string `json:"name"`
 	// KeyRing is the name of the KMS Key Ring which the KMS Key belongs to.
-	KeyRing string `json:"keyRing" protobuf:"bytes,2,opt,name=keyRing"`
+	KeyRing string `json:"keyRing"`
 	// ProjectID is the ID of the Project in which the KMS Key Ring exists.
 	// Defaults to the VM ProjectID if not set.
-	ProjectID string `json:"projectID,omitempty" protobuf:"bytes,3,opt,name=projectID"`
+	ProjectID string `json:"projectID,omitempty"`
 	// Location is the GCP location in which the Key Ring exists.
-	Location string `json:"location" protobuf:"bytes,4,opt,name=location"`
+	Location string `json:"location"`
 }
 
 // GCPMachineProviderStatus is the type that will be embedded in a Machine.Status.ProviderStatus field.
@@ -126,34 +126,34 @@ type GCPKMSKeyReference struct {
 // +openshift:compatibility-gen:level=2
 type GCPMachineProviderStatus struct {
 	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
 	// InstanceID is the ID of the instance in GCP
 	// +optional
-	InstanceID *string `json:"instanceId,omitempty" protobuf:"bytes,2,opt,name=instanceId"`
+	InstanceID *string `json:"instanceId,omitempty"`
 	// InstanceState is the provisioning state of the GCP Instance.
 	// +optional
-	InstanceState *string `json:"instanceState,omitempty" protobuf:"bytes,3,opt,name=instanceState"`
+	InstanceState *string `json:"instanceState,omitempty"`
 	// Conditions is a set of conditions associated with the Machine to indicate
 	// errors or other status
-	Conditions []GCPMachineProviderCondition `json:"conditions,omitempty" protobuf:"bytes,4,rep,name=conditions"`
+	Conditions []GCPMachineProviderCondition `json:"conditions,omitempty"`
 }
 
 // GCPMachineProviderCondition is a condition in a GCPMachineProviderStatus
 type GCPMachineProviderCondition struct {
 	// Type is the type of the condition.
-	Type ConditionType `json:"type" protobuf:"bytes,1,opt,name=type,casttype=GCPMachineProviderConditionType"`
+	Type ConditionType `json:"type"`
 	// Status is the status of the condition.
-	Status corev1.ConditionStatus `json:"status" protobuf:"bytes,2,opt,name=status,casttype=k8s.io/api/core/v1.ConditionStatus"`
+	Status corev1.ConditionStatus `json:"status"`
 	// LastProbeTime is the last time we probed the condition.
 	// +optional
-	LastProbeTime metav1.Time `json:"lastProbeTime,omitempty" protobuf:"bytes,3,opt,name=lastProbeTime"`
+	LastProbeTime metav1.Time `json:"lastProbeTime,omitempty"`
 	// LastTransitionTime is the last time the condition transitioned from one status to another.
 	// +optional
-	LastTransitionTime metav1.Time `json:"lastTransitionTime,omitempty" protobuf:"bytes,4,opt,name=lastTransitionTime"`
+	LastTransitionTime metav1.Time `json:"lastTransitionTime,omitempty"`
 	// Reason is a unique, one-word, CamelCase reason for the condition's last transition.
 	// +optional
-	Reason string `json:"reason,omitempty" protobuf:"bytes,5,opt,name=reason"`
+	Reason string `json:"reason,omitempty"`
 	// Message is a human-readable message indicating details about last transition.
 	// +optional
-	Message string `json:"message,omitempty" protobuf:"bytes,6,opt,name=message"`
+	Message string `json:"message,omitempty"`
 }

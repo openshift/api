@@ -1,6 +1,9 @@
 package v1alpha1
 
-import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+import (
+	v1 "github.com/openshift/api/image/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+)
 
 // +genclient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -45,19 +48,19 @@ type ReleasePayload struct {
 	Spec ReleasePayloadSpec `json:"spec,omitempty"`
 
 	// Status is the current status of the ReleasePayload
-	Status ReleasePayloadStatus `json:"status,omitempty"`
+	Status ReleasePayloadStatus `json:"status,omitempty"`e
 }
 
 // ReleasePayloadSpec has the information to represent a PromotionTest
 type ReleasePayloadSpec struct {
 	// Source the name of the imagestream where this imagestream (aka mirror) was created from
-	Source string `json:"source,omitempty"`
+	Source v1.ImageStream `json:"source,omitempty"`
 
 	// ReleaseTag is the name of the imagestreamtag in the "Target" imagestream
 	ReleaseTag string `json:"releaseTag,omitempty"`
 
 	// Target the name of the imagestream where the "ReleaseTag" to this imagestream will be located
-	Target string `json:"target,omitempty"`
+	Target v1.ImageStream `json:"target,omitempty"`
 
 	// Hash is a sha256 encoded string of the image or dockerImageReference of the first element
 	// in Status.Tags of the Source imagestream.  This is used, by the release-controller, to

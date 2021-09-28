@@ -48,7 +48,7 @@ type ReleasePayload struct {
 	Spec ReleasePayloadSpec `json:"spec,omitempty"`
 
 	// Status is the current status of the ReleasePayload
-	Status ReleasePayloadStatus `json:"status,omitempty"`e
+	Status ReleasePayloadStatus `json:"status,omitempty"`
 }
 
 // ReleasePayloadSpec has the information to represent a PromotionTest

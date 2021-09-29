@@ -12,8 +12,9 @@ import (
 // and aggregates the results of its respective verification tests.
 //
 // The release-controller is configured to monitor imagestreams, in a specific namespace, that are annotated with a
-// ReleaseConfig.  The ReleaseConfig is a definition of how releases are calculated.  If/when an update occurs, to
-// one of these imagestreams, the release-controller will:
+// ReleaseConfig.  The ReleaseConfig is a definition of how releases are calculated.  When a ReleasePayload is
+// generated, it will be generated in the same namespace as the imagstream that produced it. If/when an update
+// occurs, to one of these imagestreams, the release-controller will:
 //   1) Create a point-in-time mirror of the updated imagestream
 //   2) Create a new Release from the mirror
 //        - Any errors before this point will cause the release to marked `Failed`
@@ -32,7 +33,7 @@ import (
 //   1) Publishes an update to the `ocp/4.9-art-latest` imagestream
 //
 // Release-controller:
-//   1) Creates a mirror named: `4.9-art-latest-2021-09-27-105859`
+//   1) Creates a mirror named: `ocp/4.9-art-latest-2021-09-27-105859`
 //   2) Creates an OpenShift Release: `ocp/release:4.9.0-0.nightly-2021-09-27-105859`
 //   3) Launches: 4.9.0-0.nightly-2021-09-27-105859-aggregated-<name>-analysis-<count>
 //   4) Launches: 4.9.0-0.nightly-2021-09-27-105859-aggregated-<name>-aggregator
@@ -53,39 +54,30 @@ type ReleasePayload struct {
 
 // ReleasePayloadSpec has the information to represent a PromotionTest
 type ReleasePayloadSpec struct {
-	// Source the name of the imagestream where this imagestream (aka mirror) was created from
-	Source v1.ImageStream `json:"source,omitempty"`
+	// ReleaseTag a pointer to the imagestreamtag in the TargetImageStream
+	ReleaseTag v1.ImageStreamTag `json:"releaseTag,omitempty"`
 
-	// ReleaseTag is the name of the imagestreamtag in the "Target" imagestream
-	ReleaseTag string `json:"releaseTag,omitempty"`
+	// SourceImageStream a pointer to the imagestream where this ReleasePayload was created from
+	SourceImageStream *v1.ImageStream `json:"source,omitempty"`
 
-	// Target the name of the imagestream where the "ReleaseTag" to this imagestream will be located
-	Target v1.ImageStream `json:"target,omitempty"`
-
-	// Hash is a sha256 encoded string of the image or dockerImageReference of the first element
-	// in Status.Tags of the Source imagestream.  This is used, by the release-controller, to
-	// determine if the Source imagestream has any new images
-	Hash string `json:"hash,omitempty"`
+	// TargetImageStream a pointer to the imagestream where this ReleasePayload will be located
+	TargetImageStream *v1.ImageStream `json:"target,omitempty"`
 }
 
 // ReleasePayloadStatus the status of all the promotion test jobs
 type ReleasePayloadStatus struct {
 	// Conditions communicates the state of the ReleasePayload.
 	//
-	// Supported conditions include Pending, Ready, Failed, Accepted, and Rejected.
+	// Supported conditions include PayloadCreated, Failed, Accepted, and Rejected.
 	//
-	// If Pending is true the release tag is waiting for an updated payload to be created and pushed
-	// Transitions to Failed or Ready
+	// If PayloadCreated is false the ReleasePayload is waiting for a release image to be created and pushed to the
+	// TargetImageStream.  If PayloadCreated is true a release image has been created and pushed to the TargetImageStream.
+	// Verification jobs should begin and will update the status as they complete.
 	//
 	// If Failed is true a ReleasePayload image cannot be created for the given set of image mirrors
 	// This condition is terminal
 	//
-	// if Ready is true a ReleasePayload has a valid update payload image created and pushed to the
-	// release image stream.  Verification jobs should begin and will update the status as they
-	// complete
-	// Transitions to Accepted or Rejected
-	//
-	// if Accepted is true the ReleasePayload has passed its verification criteria and can safely
+	// If Accepted is true the ReleasePayload has passed its verification criteria and can safely
 	// be promoted to an external location
 	// This condition is terminal
 	//
@@ -159,10 +151,10 @@ const (
 	JobRunStateError JobRunState = "Error"
 )
 
-// JobRunResult the results of a job run
-// The release-controller creates prowjobs during the sync_ready control loop and relies on an informer to process jobs,
-// that it created, as they are completed. The JobRunResults will be created, by the release-controller during the sync_ready
-// loop and updated whenever any changes, to the respective job is received by the informer.
+// JobRunResult the results of a prowjob run
+// The release-controller creates ProwJobs (prowv1.ProwJob) during the sync_ready control loop and relies on an informer
+// to process jobs, that it created, as they are completed. The JobRunResults will be created, by the release-controller
+// during the sync_ready loop and updated whenever any changes, to the respective job is received by the informer.
 type JobRunResult struct {
 	// Name unique name for the job run
 	Name string `json:"name,omitempty"`
@@ -188,6 +180,6 @@ type JobRunResult struct {
 	// HumanProwResultsURL the html link to the prow results
 	HumanProwResultsURL string `json:"humanProwResultsURL"`
 
-	//TODO: Add field for GCS bucket
-	// The GCS details are embedded inside the ProwJobSpec.DecorationConfig.GCSConfiguration
+	// Bucket the bucket artifacts have been upload into
+	Bucket string `json:"bucket,omitempty"`
 }

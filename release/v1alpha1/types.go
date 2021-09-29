@@ -1,7 +1,6 @@
 package v1alpha1
 
 import (
-	v1 "github.com/openshift/api/image/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -54,14 +53,13 @@ type ReleasePayload struct {
 
 // ReleasePayloadSpec has the information to represent a PromotionTest
 type ReleasePayloadSpec struct {
-	// ReleaseTag a pointer to the imagestreamtag in the TargetImageStream
-	ReleaseTag v1.ImageStreamTag `json:"releaseTag,omitempty"`
+	payloadCoordinates PayloadCoordinates
+}
 
-	// SourceImageStream a pointer to the imagestream where this ReleasePayload was created from
-	SourceImageStream *v1.ImageStream `json:"source,omitempty"`
-
-	// TargetImageStream a pointer to the imagestream where this ReleasePayload will be located
-	TargetImageStream *v1.ImageStream `json:"target,omitempty"`
+type PayloadCoordinates struct {
+	namespace          string
+	imagestreamName    string
+	imagestreamTagName string
 }
 
 // ReleasePayloadStatus the status of all the promotion test jobs

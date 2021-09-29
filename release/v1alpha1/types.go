@@ -66,13 +66,13 @@ type PayloadCoordinates struct {
 type ReleasePayloadStatus struct {
 	// Conditions communicates the state of the ReleasePayload.
 	//
-	// Supported conditions include PayloadCreated, Failed, Accepted, and Rejected.
+	// Supported conditions include PayloadCreated, PayloadCreationFailed, Accepted, and Rejected.
 	//
 	// If PayloadCreated is false the ReleasePayload is waiting for a release image to be created and pushed to the
 	// TargetImageStream.  If PayloadCreated is true a release image has been created and pushed to the TargetImageStream.
 	// Verification jobs should begin and will update the status as they complete.
 	//
-	// If Failed is true a ReleasePayload image cannot be created for the given set of image mirrors
+	// If PayloadCreationFailed is true a ReleasePayload image cannot be created for the given set of image mirrors
 	// This condition is terminal
 	//
 	// If Accepted is true the ReleasePayload has passed its verification criteria and can safely
@@ -80,8 +80,7 @@ type ReleasePayloadStatus struct {
 	// This condition is terminal
 	//
 	// if Rejected is true the ReleasePayload has failed one or more of its verification criteria
-	// The release-controller will take no more action in this phase, but a human may set the
-	// phase back to Ready to retry and the controller will attempt verification again.
+	// The release-controller will take no more action in this phase.
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
 
 	// BlockingJobResults stores the results of all blocking jobs
@@ -166,10 +165,12 @@ type JobRunResult struct {
 	// RunID the unique identifier of the job
 	RunId int `json:"runId"`
 
-	// StartTime timestamp for when the job was created
+	// StartTime timestamp for when the prowjob was created
 	StartTime metav1.Time `json:"startTime,omitempty"`
 
-	// CompletionTime timestamp for when the job goes into a final state
+	// CompletionTime timestamp for when the prow pipeline controller observes the final state of the ProwJob
+	// For instance, if a client Aborts a ProwJob, the Pipeline controller will receive notification of the change
+	// and update the PtowJob's Status accordingly.
 	CompletionTime *metav1.Time `json:"completionTime,omitempty"`
 
 	// State the current state of the job run
@@ -177,7 +178,4 @@ type JobRunResult struct {
 
 	// HumanProwResultsURL the html link to the prow results
 	HumanProwResultsURL string `json:"humanProwResultsURL"`
-
-	// Bucket the bucket artifacts have been upload into
-	Bucket string `json:"bucket,omitempty"`
 }

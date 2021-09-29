@@ -3,6 +3,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.7.0
+    api-approved.openshift.io: https://github.com/openshift/api/pull/987
   creationTimestamp: null
   name: releasepayloads.release.openshift.io
 spec:

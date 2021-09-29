@@ -53,13 +53,13 @@ type ReleasePayload struct {
 
 // ReleasePayloadSpec has the information to represent a PromotionTest
 type ReleasePayloadSpec struct {
-	payloadCoordinates PayloadCoordinates
+	PayloadCoordinates PayloadCoordinates `json:"payloadCoordinates,omitempty"`
 }
 
 type PayloadCoordinates struct {
-	namespace          string
-	imagestreamName    string
-	imagestreamTagName string
+	Namespace          string `json:"namespace,omitempty"`
+	ImagestreamName    string `json:"imagestreamName,omitempty"`
+	ImagestreamTagName string `json:"imagestreamTagName,omitempty"`
 }
 
 // ReleasePayloadStatus the status of all the promotion test jobs

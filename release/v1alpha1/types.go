@@ -1,6 +1,7 @@
 package v1alpha1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -51,11 +52,29 @@ type ReleasePayload struct {
 	Status ReleasePayloadStatus `json:"status,omitempty"`
 }
 
-// ReleasePayloadSpec has the information to represent a PromotionTest
+// ReleasePayloadSpec has the information to represent a ReleasePayload
 type ReleasePayloadSpec struct {
 	PayloadCoordinates PayloadCoordinates `json:"payloadCoordinates,omitempty"`
 }
 
+// PayloadCoordinates houses the information pointing to the location of the imagesteamtag that this ReleasePayload
+// is verifying.
+// The expectations here are:
+//   1) Namespace must match that of the ReleasePayload
+//   2) ImagestreamName is the location of the configured "release" imagestream
+//       - This is a configurable parameter ("to") passed into the release-controller via the ReleaseConfig's defined here:
+//         https://github.com/openshift/release/blob/master/core-services/release-controller/_releases
+//   3) ImagestreamTagName is the name of the actual release
+//
+// Example:
+// For a ReleasePayload named: "4.9.0-0.nightly-2021-09-27-105859-<random-string>" in the "ocp" namespace, and configured
+// to be written into the "release" imagestream, we expect:
+//   1) Namespace to equal "ocp
+//   2) ImagestreamName to equal "release"
+//   3) ImagestreamTagName to equal "4.9.0-0.nightly-2021-09-27-105859"
+//
+// These coordinates can then be used to get the release imagestreamtag itself:
+//    # oc -n ocp get imagestreamtag release:4.9.0-0.nightly-2021-09-27-105859
 type PayloadCoordinates struct {
 	Namespace          string `json:"namespace,omitempty"`
 	ImagestreamName    string `json:"imagestreamName,omitempty"`
@@ -65,22 +84,7 @@ type PayloadCoordinates struct {
 // ReleasePayloadStatus the status of all the promotion test jobs
 type ReleasePayloadStatus struct {
 	// Conditions communicates the state of the ReleasePayload.
-	//
-	// Supported conditions include PayloadCreated, PayloadCreationFailed, Accepted, and Rejected.
-	//
-	// If PayloadCreated is false the ReleasePayload is waiting for a release image to be created and pushed to the
-	// TargetImageStream.  If PayloadCreated is true a release image has been created and pushed to the TargetImageStream.
-	// Verification jobs should begin and will update the status as they complete.
-	//
-	// If PayloadCreationFailed is true a ReleasePayload image cannot be created for the given set of image mirrors
-	// This condition is terminal
-	//
-	// If Accepted is true the ReleasePayload has passed its verification criteria and can safely
-	// be promoted to an external location
-	// This condition is terminal
-	//
-	// if Rejected is true the ReleasePayload has failed one or more of its verification criteria
-	// The release-controller will take no more action in this phase.
+	// Supported conditions include PayloadCreated, PayloadFailed, PayloadAccepted, and PayloadRejected.
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
 
 	// BlockingJobResults stores the results of all blocking jobs
@@ -91,6 +95,45 @@ type ReleasePayloadStatus struct {
 
 	// AnalysisJobResults stores the results of all analysis jobs
 	AnalysisJobResults []JobStatus `json:"analysisJobResults,omitempty"`
+}
+
+type ReleasePayloadStatusConditionType string
+
+// These are valid conditions of ReleasePayloadStatus.
+const (
+	// PayloadCreated is false the ReleasePayload is waiting for a release image to be created and pushed to the
+	// TargetImageStream.  If PayloadCreated is true a release image has been created and pushed to the TargetImageStream.
+	// Verification jobs should begin and will update the status as they complete.
+	PayloadCreated ReleasePayloadStatusConditionType = "PayloadCreated"
+
+	// PayloadFailed is true if a ReleasePayload image cannot be created for the given set of image mirrors
+	// This condition is terminal
+	PayloadFailed ReleasePayloadStatusConditionType = "PayloadFailed"
+
+	// PayloadAccepted is true if the ReleasePayload has passed its verification criteria and can safely
+	// be promoted to an external location
+	// This condition is terminal
+	PayloadAccepted ReleasePayloadStatusConditionType = "PayloadAccepted"
+
+	// PayloadRejected is true if the ReleasePayload has failed one or more of its verification criteria
+	// The release-controller will take no more action in this phase.
+	PayloadRejected ReleasePayloadStatusConditionType = "PayloadRejected"
+)
+
+// ReleasePayloadStatusCondition contains condition information for a tag event.
+type ReleasePayloadStatusCondition struct {
+	// Type of release payload status condition
+	Type ReleasePayloadStatusConditionType `json:"type"`
+	// Status of the condition, one of True, False, Unknown.
+	Status corev1.ConditionStatus `json:"status"`
+	// LastTransitionTIme is the time the condition transitioned from one status to another.
+	LastTransitionTime metav1.Time `json:"lastTransitionTime,omitempty"`
+	// Reason is a brief machine readable explanation for the condition's last transition.
+	Reason string `json:"reason,omitempty"`
+	// Message is a human readable description of the details about last transition, complementing reason.
+	Message string `json:"message,omitempty"`
+	// Generation is the spec tag generation that this status corresponds to
+	Generation int64 `json:"generation"`
 }
 
 // JobState the aggregate state of the job
@@ -148,22 +191,20 @@ const (
 	JobRunStateError JobRunState = "Error"
 )
 
+// JobRunCoordinates houses the information necessary to locate individual job executions
+type JobRunCoordinates struct {
+	Name      string `json:"name,omitempty"`
+	Namespace string `json:"namespace,omitempty"`
+	Cluster   string `json:"cluster,omitempty"`
+}
+
 // JobRunResult the results of a prowjob run
 // The release-controller creates ProwJobs (prowv1.ProwJob) during the sync_ready control loop and relies on an informer
 // to process jobs, that it created, as they are completed. The JobRunResults will be created, by the release-controller
 // during the sync_ready loop and updated whenever any changes, to the respective job is received by the informer.
 type JobRunResult struct {
-	// Name unique name for the job run
-	Name string `json:"name,omitempty"`
-
-	// Namespace location where the job ran
-	Namespace string `json:"namespace,omitempty"`
-
-	// Cluster is which Kubernetes cluster is used to run the job
-	Cluster string `json:"cluster,omitempty"`
-
-	// RunID the unique identifier of the job
-	RunId int `json:"runId"`
+	// Coordinates the location of the job
+	Coordinates JobRunCoordinates `json:"coordinates,omitempty"`
 
 	// StartTime timestamp for when the prowjob was created
 	StartTime metav1.Time `json:"startTime,omitempty"`

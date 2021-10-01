@@ -34,10 +34,16 @@ import (
 //
 // Release-controller:
 //   1) Creates a mirror named: `ocp/4.9-art-latest-2021-09-27-105859`
-//   2) Creates an OpenShift Release: `ocp/release:4.9.0-0.nightly-2021-09-27-105859`
-//   3) Launches: 4.9.0-0.nightly-2021-09-27-105859-aggregated-<name>-analysis-<count>
-//   4) Launches: 4.9.0-0.nightly-2021-09-27-105859-aggregated-<name>-aggregator
-//   5) Launches: 4.9.0-0.nightly-2021-09-27-105859-<name>
+//   2) Creates a ReleasePayload: `ocp/4.9.0-0.nightly-2021-09-27-105859-<random-string>`
+//       -Labels:
+//         release.openshift.io/imagestream=release
+//         release.openshift.io/imagestreamtag-name=4.9.0-0.nightly-2021-09-27-105859
+//   3) Creates an OpenShift Release: `ocp/release:4.9.0-0.nightly-2021-09-27-105859`
+//   4) Update ReleasePayload conditions with results of release creation job
+//   If the release was created successfully, the release-controller:
+//   5) Launches: 4.9.0-0.nightly-2021-09-27-105859-aggregated-<name>-analysis-<count>
+//   6) Launches: 4.9.0-0.nightly-2021-09-27-105859-aggregated-<name>-aggregator
+//   7) Launches: 4.9.0-0.nightly-2021-09-27-105859-<name>
 //
 // Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
 // +openshift:compatibility-gen:level=4
@@ -59,25 +65,26 @@ type ReleasePayloadSpec struct {
 
 // PayloadCoordinates houses the information pointing to the location of the imagesteamtag that this ReleasePayload
 // is verifying.
-// The expectations here are:
-//   1) Namespace must match that of the ReleasePayload
-//   2) ImagestreamName is the location of the configured "release" imagestream
-//       - This is a configurable parameter ("to") passed into the release-controller via the ReleaseConfig's defined here:
-//         https://github.com/openshift/release/blob/master/core-services/release-controller/_releases
-//   3) ImagestreamTagName is the name of the actual release
 //
 // Example:
 // For a ReleasePayload named: "4.9.0-0.nightly-2021-09-27-105859-<random-string>" in the "ocp" namespace, and configured
 // to be written into the "release" imagestream, we expect:
 //   1) Namespace to equal "ocp
 //   2) ImagestreamName to equal "release"
-//   3) ImagestreamTagName to equal "4.9.0-0.nightly-2021-09-27-105859"
+//   3) ImagestreamTagName to equal "4.9.0-0.nightly-2021-09-27-105859", which will also serves as the prefix of the ReleasePayload
 //
 // These coordinates can then be used to get the release imagestreamtag itself:
 //    # oc -n ocp get imagestreamtag release:4.9.0-0.nightly-2021-09-27-105859
 type PayloadCoordinates struct {
-	Namespace          string `json:"namespace,omitempty"`
-	ImagestreamName    string `json:"imagestreamName,omitempty"`
+	// Namespace must match that of the ReleasePayload
+	Namespace string `json:"namespace,omitempty"`
+
+	// ImagestreamName is the location of the configured "release" imagestream
+	//   - This is a configurable parameter ("to") passed into the release-controller via the ReleaseConfig's defined here:
+	//     https://github.com/openshift/release/blob/master/core-services/release-controller/_releases
+	ImagestreamName string `json:"imagestreamName,omitempty"`
+
+	// ImagestreamTagName is the name of the actual release
 	ImagestreamTagName string `json:"imagestreamTagName,omitempty"`
 }
 

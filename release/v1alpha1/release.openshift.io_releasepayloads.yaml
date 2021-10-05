@@ -66,6 +66,21 @@ spec:
           spec:
             description: Spec the inputs used to create the ReleasePayload
             properties:
+              forceAcceptanceOverride:
+                description: AcceptanceOverride houses the required information to
+                  force the manual Acceptance of a ReleasePayload. ART, rarely, needs
+                  the ability to manually accept a Release that, for some reason or
+                  another, won't pass one or more of it's blocking jobs. This would
+                  be the only scenario where another party, besides the release-controller,
+                  would update a ReleasePayload instance.  Upon doing so, the release-controller
+                  should see that an update occurred and make all the necessary changes
+                  to formally accept the respective release.
+                properties:
+                  forceAcceptance:
+                    type: boolean
+                  reason:
+                    type: string
+                type: object
               payloadCoordinates:
                 description: "PayloadCoordinates houses the information pointing to
                   the location of the imagesteamtag that this ReleasePayload is verifying.

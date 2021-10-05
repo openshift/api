@@ -60,7 +60,8 @@ type ReleasePayload struct {
 
 // ReleasePayloadSpec has the information to represent a ReleasePayload
 type ReleasePayloadSpec struct {
-	PayloadCoordinates PayloadCoordinates `json:"payloadCoordinates,omitempty"`
+	PayloadCoordinates      PayloadCoordinates `json:"payloadCoordinates,omitempty"`
+	ForceAcceptanceOverride AcceptanceOverride `json:"forceAcceptanceOverride,omitempty"`
 }
 
 // PayloadCoordinates houses the information pointing to the location of the imagesteamtag that this ReleasePayload
@@ -86,6 +87,17 @@ type PayloadCoordinates struct {
 
 	// ImagestreamTagName is the name of the actual release
 	ImagestreamTagName string `json:"imagestreamTagName,omitempty"`
+}
+
+// AcceptanceOverride houses the required information to force the manual Acceptance of a ReleasePayload.
+// ART, rarely, needs the ability to manually accept a Release that, for some reason or another, won't pass one or
+// more of it's blocking jobs.
+// This would be the only scenario where another party, besides the release-controller, would update a
+// ReleasePayload instance.  Upon doing so, the release-controller should see that an update occurred and make all
+// the necessary changes to formally accept the respective release.
+type AcceptanceOverride struct {
+	ForceAcceptance bool   `json:"forceAcceptance"`
+	Reason          string `json:"reason"`
 }
 
 // ReleasePayloadStatus the status of all the promotion test jobs

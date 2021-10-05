@@ -36,11 +36,12 @@ type ImageContentPolicySpec struct {
 	// If the "mirrors" is not specified, the image will continue to be pulled from the specified
 	// repository in the pull spec.
 	//
-	// When multiple policies are defined for the same “source” repository, the sets of defined
+	// When multiple ImageContenPolicy objects are defined for the same “source” repository, the sets of defined
 	// mirrors will be merged together, preserving the relative order of the mirrors, if possible.
 	// For example, if policy A has mirrors `a, b, c` and policy B has mirrors `c, d, e`, the
 	// mirrors will be used in the order `a, b, c, d, e`.  If the orders of mirror entries conflict
 	// (e.g. `a, b` vs. `b, a`) the configuration is not rejected but the resulting order is unspecified.
+	// Define for multiple same “source” repository in one ImageContenPolicy is not allowed.
 	// +optional
 	// +listType=map
 	// +listMapKey=source
@@ -68,10 +69,11 @@ type RepositoryDigestMirrors struct {
 	// +kubebuilder:validation:Pattern=`^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])(:[0-9]+)?(\/[^\/:\n]+)*(\/[^\/:\n]+((:[^\/:\n]+)|(@[^\n]+)))?$`
 	Source string `json:"source"`
 	// allowMirrorByTags if true, the mirrors can be used to pull the images that are referenced by their tags. Default is false, the mirrors only work when pulling the images that are referenced by their digests.
+	// Setting different allowMirrorByTags values for the same source will be rejected.
 	// Pulling images by tag can potentially yield different images, depending on which endpoint
 	// we pull from. Forcing digest-pulls for mirrors avoids that issue.
 	// +optional
-	AllowMirrorByTags bool `json:"allowMirrorByTags,omitempty"`
+	AllowMirrorByTags *bool `json:"allowMirrorByTags,omitempty"`
 	// mirrors is zero or more repositories that may also contain the same images.
 	// If the "mirrors" is not specified, the image will continue to be pulled from the specified
 	// repository in the pull spec. No mirror will be configured.

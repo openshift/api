@@ -59,8 +59,8 @@ type SharedConfigMapList struct {
 	Items           []SharedConfigMap `json:"items"`
 }
 
-// ConfigMapReference contains information about which ConfigMap to share
-type ConfigMapReference struct {
+// SharedConfigMapReference contains information about which ConfigMap to share
+type SharedConfigMapReference struct {
 	// name represents the name of the ConfigMap that is being referenced.
 	// +kubebuilder:validation:Required
 	Name string `json:"name"`
@@ -74,7 +74,7 @@ type ConfigMapReference struct {
 type SharedConfigMapSpec struct {
 	//configMapRef is a reference to the ConfigMap to share
 	// +kubebuilder:validation:Required
-	ConfigMapRef ConfigMapReference `json:"configMapRef"`
+	ConfigMapRef SharedConfigMapReference `json:"configMapRef"`
 	// description is a user readable explanation of what the backing resource provides.
 	Description string `json:"description,omitempty"`
 }

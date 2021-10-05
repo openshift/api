@@ -108,8 +108,8 @@ type ReleasePayloadStatusConditionType string
 
 // These are valid conditions of ReleasePayloadStatus.
 const (
-	// PayloadCreated is false the ReleasePayload is waiting for a release image to be created and pushed to the
-	// TargetImageStream.  If PayloadCreated is true a release image has been created and pushed to the TargetImageStream.
+	// PayloadCreated if false, the ReleasePayload is waiting for a release image to be created and pushed to the
+	// TargetImageStream.  If PayloadCreated is true, a release image has been created and pushed to the TargetImageStream.
 	// Verification jobs should begin and will update the status as they complete.
 	PayloadCreated ReleasePayloadStatusConditionType = "PayloadCreated"
 
@@ -144,7 +144,7 @@ type ReleasePayloadStatusCondition struct {
 }
 
 // JobState the aggregate state of the job
-// Supported values include Pending, Failed, and Success.
+// Supported values include Pending, Failed, Success, and Ignored.
 type JobState string
 
 const (
@@ -157,6 +157,10 @@ const (
 
 	// JobStateSuccess successful job aggregation
 	JobStateSuccess JobState = "Success"
+
+	// JobStateIgnored ignored job aggregation
+	// This is specifically for Analysis jobs that are not being monitored directly.
+	JobStateIgnored JobState = "Ignored"
 )
 
 // JobStatus encapsulates the name of the job, all the results of the jobs, and an aggregated
@@ -196,6 +200,10 @@ const (
 
 	// JobRunStateError job could not be scheduled
 	JobRunStateError JobRunState = "Error"
+
+	// JobRunStateIgnored job that is submitted to the system but is not monitored for success/failure
+	// This is specifically for Analysis jobs that are monitored by the JobRunAggregator.
+	JobRunStateIgnored JobRunState = "Ignored"
 )
 
 // JobRunCoordinates houses the information necessary to locate individual job executions

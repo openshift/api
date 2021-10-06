@@ -96,8 +96,8 @@ type PayloadCoordinates struct {
 // ReleasePayload instance.  Upon doing so, the release-controller should see that an update occurred and make all
 // the necessary changes to formally accept the respective release.
 type AcceptanceOverride struct {
-	ForceAcceptance bool   `json:"forceAcceptance"`
-	Reason          string `json:"reason"`
+	// Reason is a human-readable string that specifies the reason for manually accepting a ReleasePayload
+	Reason string `json:"reason"`
 }
 
 // ReleasePayloadStatus the status of all the promotion test jobs

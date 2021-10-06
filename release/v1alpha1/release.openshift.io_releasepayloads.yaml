@@ -76,9 +76,9 @@ spec:
                   should see that an update occurred and make all the necessary changes
                   to formally accept the respective release.
                 properties:
-                  forceAcceptance:
-                    type: boolean
                   reason:
+                    description: Reason is a human-readable string that specifies
+                      the reason for manually accepting a ReleasePayload
                     type: string
                 type: object
               payloadCoordinates:

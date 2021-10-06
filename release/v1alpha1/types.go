@@ -247,3 +247,21 @@ type JobRunResult struct {
 	// HumanProwResultsURL the html link to the prow results
 	HumanProwResultsURL string `json:"humanProwResultsURL"`
 }
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// ReleasePayloadList is a list of ReleasePayloads
+//
+// Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+// +openshift:compatibility-gen:level=4
+type ReleasePayloadList struct {
+	metav1.TypeMeta `json:",inline"`
+
+	// Standard list metadata.
+	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+	// +optional
+	metav1.ListMeta `json:"metadata,omitempty"`
+
+	// List of ReleasePayloads
+	Items []ReleasePayload `json:"items"`
+}

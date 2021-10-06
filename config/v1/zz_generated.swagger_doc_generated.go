@@ -1190,7 +1190,8 @@ func (PlatformStatus) SwaggerDoc() map[string]string {
 }
 
 var map_PowerVSPlatformSpec = map[string]string{
-	"": "PowerVSPlatformSpec holds the desired state of the IBM Power Systems Virtual Servers infrastructure provider. This only includes fields that can be modified in the cluster.",
+	"":                 "PowerVSPlatformSpec holds the desired state of the IBM Power Systems Virtual Servers infrastructure provider. This only includes fields that can be modified in the cluster.",
+	"serviceEndpoints": "ServiceEndpoints list contains custom endpoints which will override default service endpoint of Power VS Services.",
 }
 
 func (PowerVSPlatformSpec) SwaggerDoc() map[string]string {

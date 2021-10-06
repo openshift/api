@@ -617,7 +617,12 @@ type PowerVSServiceEndpoint struct {
 
 // PowerVSPlatformSpec holds the desired state of the IBM Power Systems Virtual Servers infrastructure provider.
 // This only includes fields that can be modified in the cluster.
-type PowerVSPlatformSpec struct{}
+type PowerVSPlatformSpec struct {
+	// ServiceEndpoints list contains custom endpoints which will override default
+	// service endpoint of Power VS Services.
+	// +optional
+	ServiceEndpoints []PowerVSServiceEndpoint `json:"serviceEndpoints,omitempty"`
+}
 
 // PowerVSPlatformStatus holds the current status of the IBM Power Systems Virtual Servers infrastrucutre provider.
 type PowerVSPlatformStatus struct {

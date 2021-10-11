@@ -14,8 +14,10 @@ type GCPMachineProviderSpec struct {
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 	// UserDataSecret contains a local reference to a secret that contains the
 	// UserData to apply to the instance
+	// +optional
 	UserDataSecret *corev1.LocalObjectReference `json:"userDataSecret,omitempty"`
 	// CredentialsSecret is a reference to the secret with GCP credentials.
+	// +optional
 	CredentialsSecret *corev1.LocalObjectReference `json:"credentialsSecret,omitempty"`
 	// CanIPForward Allows this instance to send and receive packets with non-matching destination or source IPs.
 	// This is required if you plan to use this instance to forward routes.
@@ -23,12 +25,16 @@ type GCPMachineProviderSpec struct {
 	// DeletionProtection whether the resource should be protected against deletion.
 	DeletionProtection bool `json:"deletionProtection"`
 	// Disks is a list of disks to be attached to the VM.
+	// +optional
 	Disks []*GCPDisk `json:"disks,omitempty"`
 	// Labels list of labels to apply to the VM.
+	// +optional
 	Labels map[string]string `json:"labels,omitempty"`
 	// Metadata key/value pairs to apply to the VM.
+	// +optional
 	Metadata []*GCPMetadata `json:"gcpMetadata,omitempty"`
 	// NetworkInterfaces is a list of network interfaces to be attached to the VM.
+	// +optional
 	NetworkInterfaces []*GCPNetworkInterface `json:"networkInterfaces,omitempty"`
 	// ServiceAccounts is a list of GCP service accounts to be used by the VM.
 	ServiceAccounts []GCPServiceAccount `json:"serviceAccounts"`
@@ -36,6 +42,7 @@ type GCPMachineProviderSpec struct {
 	Tags []string `json:"tags,omitempty"`
 	// TargetPools are used for network TCP/UDP load balancing. A target pool references member instances,
 	// an associated legacy HttpHealthCheck resource, and, optionally, a backup target pool
+	// +optional
 	TargetPools []string `json:"targetPools,omitempty"`
 	// MachineType is the machine type to use for the VM.
 	MachineType string `json:"machineType"`
@@ -44,8 +51,10 @@ type GCPMachineProviderSpec struct {
 	// Zone is the zone in which the GCP machine provider will create the VM.
 	Zone string `json:"zone"`
 	// ProjectID is the project in which the GCP machine provider will create the VM.
+	// +optional
 	ProjectID string `json:"projectID,omitempty"`
 	// Preemptible indicates if created instance is preemptible
+	// +optional
 	Preemptible bool `json:"preemptible,omitempty"`
 }
 
@@ -64,6 +73,7 @@ type GCPDisk struct {
 	// Labels list of labels to apply to the disk.
 	Labels map[string]string `json:"labels"`
 	// EncryptionKey is the customer-supplied encryption key of the disk.
+	// +optional
 	EncryptionKey *GCPEncryptionKeyReference `json:"encryptionKey,omitempty"`
 }
 
@@ -98,12 +108,14 @@ type GCPServiceAccount struct {
 // GCPEncryptionKeyReference describes the encryptionKey to use for a disk's encryption.
 type GCPEncryptionKeyReference struct {
 	// KMSKeyName is the reference KMS key, in the format
+	// +optional
 	KMSKey *GCPKMSKeyReference `json:"kmsKey,omitempty"`
 	// KMSKeyServiceAccount is the service account being used for the
 	// encryption request for the given KMS key. If absent, the Compute
 	// Engine default service account is used.
 	// See https://cloud.google.com/compute/docs/access/service-accounts#compute_engine_service_account
 	// for details on the default service account.
+	// +optional
 	KMSKeyServiceAccount string `json:"kmsKeyServiceAccount,omitempty"`
 }
 
@@ -115,6 +127,7 @@ type GCPKMSKeyReference struct {
 	KeyRing string `json:"keyRing"`
 	// ProjectID is the ID of the Project in which the KMS Key Ring exists.
 	// Defaults to the VM ProjectID if not set.
+	// +optional
 	ProjectID string `json:"projectID,omitempty"`
 	// Location is the GCP location in which the Key Ring exists.
 	Location string `json:"location"`
@@ -125,7 +138,8 @@ type GCPKMSKeyReference struct {
 // Compatibility level 2: Stable within a major release for a minimum of 9 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=2
 type GCPMachineProviderStatus struct {
-	metav1.TypeMeta   `json:",inline"`
+	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 	// InstanceID is the ID of the instance in GCP
 	// +optional
@@ -135,6 +149,7 @@ type GCPMachineProviderStatus struct {
 	InstanceState *string `json:"instanceState,omitempty"`
 	// Conditions is a set of conditions associated with the Machine to indicate
 	// errors or other status
+	// +optional
 	Conditions []GCPMachineProviderCondition `json:"conditions,omitempty"`
 }
 

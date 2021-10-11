@@ -10,17 +10,21 @@ import (
 // Compatibility level 2: Stable within a major release for a minimum of 9 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=2
 type VSphereMachineProviderSpec struct {
-	metav1.TypeMeta   `json:",inline"`
+	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 	// UserDataSecret contains a local reference to a secret that contains the
 	// UserData to apply to the instance
+	// +optional
 	UserDataSecret *corev1.LocalObjectReference `json:"userDataSecret,omitempty"`
 	// CredentialsSecret is a reference to the secret with vSphere credentials.
+	// +optional
 	CredentialsSecret *corev1.LocalObjectReference `json:"credentialsSecret,omitempty"`
 	// Template is the name, inventory path, or instance UUID of the template
 	// used to clone new machines.
 	Template string `json:"template"`
 	// Workspace describes the workspace to use for the machine.
+	// +optional
 	Workspace *Workspace `json:"workspace,omitempty"`
 	// Network is the network configuration for this machine's VM.
 	Network NetworkSpec `json:"network"`

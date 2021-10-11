@@ -13,53 +13,71 @@ import (
 // Compatibility level 2: Stable within a major release for a minimum of 9 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=2
 type AzureMachineProviderSpec struct {
-	metav1.TypeMeta   `json:",inline"`
+	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 	// UserDataSecret contains a local reference to a secret that contains the
 	// UserData to apply to the instance
+	// +optional
 	UserDataSecret *corev1.SecretReference `json:"userDataSecret,omitempty"`
 	// CredentialsSecret is a reference to the secret with Azure credentials.
+	// +optional
 	CredentialsSecret *corev1.SecretReference `json:"credentialsSecret,omitempty"`
 	// Location is the region to use to create the instance
+	// +optional
 	Location string `json:"location,omitempty"`
 	// VMSize is the size of the VM to create.
+	// +optional
 	VMSize string `json:"vmSize,omitempty"`
 	// Image is the OS image to use to create the instance.
 	Image Image `json:"image"`
 	// OSDisk represents the parameters for creating the OS disk.
 	OSDisk OSDisk `json:"osDisk"`
 	// SSHPublicKey is the public key to use to SSH to the virtual machine.
+	// +optional
 	SSHPublicKey string `json:"sshPublicKey,omitempty"`
 	// PublicIP if true a public IP will be used
 	PublicIP bool `json:"publicIP"`
 	// Tags is a list of tags to apply to the machine.
+	// +optional
 	Tags map[string]string `json:"tags,omitempty"`
 	// Network Security Group that needs to be attached to the machine's interface.
 	// No security group will be attached if empty.
+	// +optional
 	SecurityGroup string `json:"securityGroup,omitempty"`
 	// Application Security Groups that need to be attached to the machine's interface.
 	// No application security groups will be attached if zero-length.
+	// +optional
 	ApplicationSecurityGroups []string `json:"applicationSecurityGroups,omitempty"`
 	// Subnet to use for this instance
 	Subnet string `json:"subnet"`
 	// PublicLoadBalancer to use for this instance
+	// +optional
 	PublicLoadBalancer string `json:"publicLoadBalancer,omitempty"`
 	// InternalLoadBalancerName to use for this instance
+	// +optional
 	InternalLoadBalancer string `json:"internalLoadBalancer,omitempty"`
 	// NatRule to set inbound NAT rule of the load balancer
+	// +optional
 	NatRule *int64 `json:"natRule,omitempty"`
 	// ManagedIdentity to set managed identity name
+	// +optional
 	ManagedIdentity string `json:"managedIdentity,omitempty"`
 	// Vnet to set virtual network name
+	// +optional
 	Vnet string `json:"vnet,omitempty"`
 	// Availability Zone for the virtual machine.
 	// If nil, the virtual machine should be deployed to no zone
+	// +optional
 	Zone *string `json:"zone,omitempty"`
 	// NetworkResourceGroup is the resource group for the virtual machine's network
+	// +optional
 	NetworkResourceGroup string `json:"networkResourceGroup,omitempty"`
 	// ResourceGroup is the resource group for the virtual machine
+	// +optional
 	ResourceGroup string `json:"resourceGroup,omitempty"`
 	// SpotVMOptions allows the ability to specify the Machine should use a Spot VM
+	// +optional
 	SpotVMOptions *SpotVMOptions `json:"spotVMOptions,omitempty"`
 	// SecurityProfile specifies the Security profile settings for a virtual machine.
 	// +optional
@@ -69,6 +87,7 @@ type AzureMachineProviderSpec struct {
 // SpotVMOptions defines the options relevant to running the Machine on Spot VMs
 type SpotVMOptions struct {
 	// MaxPrice defines the maximum price the user is willing to pay for Spot VM instances
+	// +optional
 	MaxPrice *resource.Quantity `json:"maxPrice,omitempty"`
 }
 
@@ -77,7 +96,8 @@ type SpotVMOptions struct {
 // Compatibility level 2: Stable within a major release for a minimum of 9 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=2
 type AzureMachineProviderStatus struct {
-	metav1.TypeMeta   `json:",inline"`
+	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 	// VMID is the ID of the virtual machine created in Azure.
 	// +optional
@@ -160,12 +180,14 @@ type ManagedDiskParameters struct {
 	// StorageAccountType is the storage account type to use. Possible values include "Standard_LRS" and "Premium_LRS".
 	StorageAccountType string `json:"storageAccountType"`
 	// DiskEncryptionSet is the disk encryption set properties
+	// +optional
 	DiskEncryptionSet *DiskEncryptionSetParameters `json:"diskEncryptionSet,omitempty"`
 }
 
 // DiskEncryptionSetParameters is the disk encryption set properties
 type DiskEncryptionSetParameters struct {
 	// ID is the disk encryption set ID
+	// +optional
 	ID string `json:"id,omitempty"`
 }
 
@@ -175,6 +197,7 @@ type SecurityProfile struct {
 	// This field indicates whether Host Encryption should be enabled
 	// or disabled for a virtual machine or virtual machine scale
 	// set. Default is disabled.
+	// +optional
 	EncryptionAtHost *bool `json:"encryptionAtHost,omitempty"`
 }
 

@@ -1190,7 +1190,8 @@ func (PlatformStatus) SwaggerDoc() map[string]string {
 }
 
 var map_PowerVSPlatformSpec = map[string]string{
-	"": "PowerVSPlatformSpec holds the desired state of the IBM Power Systems Virtual Servers infrastructure provider. This only includes fields that can be modified in the cluster.",
+	"":                 "PowerVSPlatformSpec holds the desired state of the IBM Power Systems Virtual Servers infrastructure provider. This only includes fields that can be modified in the cluster.",
+	"serviceEndpoints": "serviceEndpoints is a list of custom endpoints which will override the default service endpoints of a Power VS service.",
 }
 
 func (PowerVSPlatformSpec) SwaggerDoc() map[string]string {
@@ -1211,7 +1212,7 @@ func (PowerVSPlatformStatus) SwaggerDoc() map[string]string {
 
 var map_PowerVSServiceEndpoint = map[string]string{
 	"":     "PowervsServiceEndpoint stores the configuration of a custom url to override existing defaults of PowerVS Services.",
-	"name": "name is the name of the Power VS service.",
+	"name": "name is the name of the Power VS service. Few of the services are IAM - https://cloud.ibm.com/apidocs/iam-identity-token-api ResourceController - https://cloud.ibm.com/apidocs/resource-controller/resource-controller Power Cloud - https://cloud.ibm.com/apidocs/power-cloud",
 	"url":  "url is fully qualified URI with scheme https, that overrides the default generated endpoint for a client. This must be provided and cannot be empty.",
 }
 

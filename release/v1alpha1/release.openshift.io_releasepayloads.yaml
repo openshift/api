@@ -46,10 +46,26 @@ spec:
           job   If the release was created successfully, the release-controller:   5)
           Launches: 4.9.0-0.nightly-2021-09-27-105859-aggregated-<name>-analysis-<count>
           \  6) Launches: 4.9.0-0.nightly-2021-09-27-105859-aggregated-<name>-aggregator
-          \  7) Launches: 4.9.0-0.nightly-2021-09-27-105859-<name> \n Compatibility
-          level 4: No compatibility is provided, the API can change at any point for
-          any reason. These capabilities should not be used by applications needing
-          long term support."
+          \  7) Launches: 4.9.0-0.nightly-2021-09-27-105859-<name> \n Mapping from
+          a Release to ReleasePayload: A ReleasePayload will always be named after
+          the Release that it corresponds to, with the addition of a random string
+          suffix.  Both objects will reside in the same namespace.   For a release:
+          `ocp/release:4.9.0-0.nightly-2021-09-27-105859`   A corresponding ReleasePayload
+          will exist: `ocp/4.9.0-0.nightly-2021-09-27-105859-<random-string>` \n Mapping
+          from ReleasePayload to Release: A ReleasePayload is decorated with a couple
+          labels that will point back to the Release that it corresponds to:   - release.openshift.io/imagestream=release
+          \  - release.openshift.io/imagestreamtag-name=4.9.0-0.nightly-2021-09-27-105859
+          Because the ReleasePayload and the Release will both reside in the same
+          namespace, the release that created the ReleasePayload will be located here:
+          \  <namespace>/<release.openshift.io/imagestream>:<release.openshift.io/imagestreamtag-name>
+          Similarly, the ReleasePayload object itself also has the PayloadCoordinates
+          (.spec.payloadCoordinates) that point back to the Release as well:   spec:
+          \    payloadCoordinates:       imagestreamName: release       imagestreamTagName:
+          4.9.0-0.nightly-2021-09-27-105859       namespace: ocp The release that
+          created the ReleasePayload will be located here:   <namespace>/<imagestreamName>:<imagestreamTagName>
+          \n Compatibility level 4: No compatibility is provided, the API can change
+          at any point for any reason. These capabilities should not be used by applications
+          needing long term support."
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation

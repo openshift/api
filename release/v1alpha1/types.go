@@ -60,8 +60,8 @@ type ReleasePayload struct {
 
 // ReleasePayloadSpec has the information to represent a ReleasePayload
 type ReleasePayloadSpec struct {
-	PayloadCoordinates      PayloadCoordinates `json:"payloadCoordinates,omitempty"`
-	ForceAcceptanceOverride AcceptanceOverride `json:"forceAcceptanceOverride,omitempty"`
+	PayloadCoordinates PayloadCoordinates     `json:"payloadCoordinates,omitempty"`
+	PayloadOverride    ReleasePayloadOverride `json:"payloadOverride,omitempty"`
 }
 
 // PayloadCoordinates houses the information pointing to the location of the imagesteamtag that this ReleasePayload
@@ -89,14 +89,30 @@ type PayloadCoordinates struct {
 	ImagestreamTagName string `json:"imagestreamTagName,omitempty"`
 }
 
-// AcceptanceOverride houses the required information to force the manual Acceptance of a ReleasePayload.
-// ART, rarely, needs the ability to manually accept a Release that, for some reason or another, won't pass one or
-// more of it's blocking jobs.
-// This would be the only scenario where another party, besides the release-controller, would update a
+type ReleasePayloadOverrideType string
+
+// These are the supported ReleasePayloadOverride values.
+const (
+	// ReleasePayloadOverrideAccepted enables the manual Acceptance of a ReleasePayload.
+	ReleasePayloadOverrideAccepted ReleasePayloadOverrideType = "Accepted"
+
+	// ReleasePayloadOverrideRejected enables the manual Rejection of a ReleasePayload.
+	ReleasePayloadOverrideRejected ReleasePayloadOverrideType = "Rejected"
+)
+
+// ReleasePayloadOverride provides the ability to manually Accept/Reject a ReleasePayload
+// ART, occasionally, needs the ability to manually accept/reject a Release that, for some reason or another:
+//   - won't pass one or more of it's blocking jobs.
+//   - shouldn't proceed with the normal release verification processing
+// This would be the one scenario where another party, besides the release-controller, would update a
 // ReleasePayload instance.  Upon doing so, the release-controller should see that an update occurred and make all
-// the necessary changes to formally accept the respective release.
-type AcceptanceOverride struct {
-	// Reason is a human-readable string that specifies the reason for manually accepting a ReleasePayload
+// the necessary changes to formally accept/reject the respective release.
+type ReleasePayloadOverride struct {
+	// Override specifies the ReleasePayloadOverride to apply to the ReleasePayload
+	Override ReleasePayloadOverrideType `json:"override"`
+
+	// Reason is a human-readable string that specifies the reason for manually overriding the
+	// Acceptance/Rejections of a ReleasePayload
 	Reason string `json:"reason"`
 }
 

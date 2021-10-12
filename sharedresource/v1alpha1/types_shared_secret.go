@@ -82,5 +82,5 @@ type SharedSecretStatus struct {
 	// conditions represents any observations made on this particular shared resource by the underlying CSI driver or Share controller.
 	// +patchMergeKey=type
 	// +patchStrategy=merge
-	Conditions []metav1.Condition `json:"conditions,omitempty"`
+	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 }

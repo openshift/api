@@ -139,8 +139,7 @@ type DefaultNetworkDefinition struct {
 	// +optional
 	OpenShiftSDNConfig *OpenShiftSDNConfig `json:"openshiftSDNConfig,omitempty"`
 
-	// oVNKubernetesConfig configures the ovn-kubernetes plugin. This is currently
-	// not implemented.
+	// ovnKubernetesConfig configures the ovn-kubernetes plugin.
 	// +optional
 	OVNKubernetesConfig *OVNKubernetesConfig `json:"ovnKubernetesConfig,omitempty"`
 
@@ -374,6 +373,9 @@ type OVNKubernetesConfig struct {
 	// reported defaults are used.
 	// +optional
 	PolicyAuditConfig *PolicyAuditConfig `json:"policyAuditConfig,omitempty"`
+	// gatewayConfig holds the configuration for node gateway options.
+	// +optional
+	GatewayConfig *GatewayConfig `json:"gatewayConfig,omitempty"`
 }
 
 type HybridOverlayConfig struct {
@@ -386,6 +388,17 @@ type HybridOverlayConfig struct {
 }
 
 type IPsecConfig struct {
+}
+
+// GatewayConfig holds node gateway-related parsed config file parameters and command-line overrides
+type GatewayConfig struct {
+	// RoutingViaHost allows pod egress traffic to exit via the ovn-k8s-mp0 management port
+	// into the host before sending it out. If this is not set, traffic will always egress directly
+	// from OVN to outside without touching the host stack. Setting this to true means hardware
+	// offload will not be supported. Default is false if GatewayConfig is specified.
+	// +kubebuilder:default:=false
+	// +optional
+	RoutingViaHost bool `json:"routingViaHost,omitempty"`
 }
 
 type ExportNetworkFlows struct {

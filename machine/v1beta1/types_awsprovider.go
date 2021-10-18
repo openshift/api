@@ -8,6 +8,7 @@ import (
 // AWSMachineProviderConfig is the Schema for the awsmachineproviderconfigs API
 // Compatibility level 2: Stable within a major release for a minimum of 9 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=2
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type AWSMachineProviderConfig struct {
 	metav1.TypeMeta `json:",inline"`
 	// +optional

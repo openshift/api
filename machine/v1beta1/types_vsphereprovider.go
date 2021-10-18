@@ -9,6 +9,7 @@ import (
 // for an VSphere virtual machine. It is used by the vSphere machine actuator to create a single Machine.
 // Compatibility level 2: Stable within a major release for a minimum of 9 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=2
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type VSphereMachineProviderSpec struct {
 	metav1.TypeMeta `json:",inline"`
 	// +optional

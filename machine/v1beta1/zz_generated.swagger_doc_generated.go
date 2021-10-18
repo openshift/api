@@ -190,6 +190,8 @@ var map_AzureMachineProviderSpec = map[string]string{
 	"resourceGroup":             "ResourceGroup is the resource group for the virtual machine",
 	"spotVMOptions":             "SpotVMOptions allows the ability to specify the Machine should use a Spot VM",
 	"securityProfile":           "SecurityProfile specifies the Security profile settings for a virtual machine.",
+	"acceleratedNetworking":     "AcceleratedNetworking enables or disables Azure accelerated networking feature. Set to false by default. If true, then this will depend on whether the requested VMSize is supported. If set to true with an unsupported VMSize, Azure will return an error.",
+	"availabilitySet":           "AvailabilitySet specifies the availability set to use for this instance. Availability set should be precreated, before using this field.",
 }
 
 func (AzureMachineProviderSpec) SwaggerDoc() map[string]string {

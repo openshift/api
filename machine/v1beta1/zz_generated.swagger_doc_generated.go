@@ -442,6 +442,111 @@ func (MachineStatus) SwaggerDoc() map[string]string {
 	return map_MachineStatus
 }
 
+var map_MachineHealthCheck = map[string]string{
+	"":       "MachineHealthCheck is the Schema for the machinehealthchecks API Compatibility level 2: Stable within a major release for a minimum of 9 months or 3 minor releases (whichever is longer).",
+	"spec":   "Specification of machine health check policy",
+	"status": "Most recently observed status of MachineHealthCheck resource",
+}
+
+func (MachineHealthCheck) SwaggerDoc() map[string]string {
+	return map_MachineHealthCheck
+}
+
+var map_MachineHealthCheckList = map[string]string{
+	"": "MachineHealthCheckList contains a list of MachineHealthCheck Compatibility level 2: Stable within a major release for a minimum of 9 months or 3 minor releases (whichever is longer).",
+}
+
+func (MachineHealthCheckList) SwaggerDoc() map[string]string {
+	return map_MachineHealthCheckList
+}
+
+var map_MachineHealthCheckSpec = map[string]string{
+	"":                    "MachineHealthCheckSpec defines the desired state of MachineHealthCheck",
+	"selector":            "Label selector to match machines whose health will be exercised. Note: An empty selector will match all machines.",
+	"unhealthyConditions": "UnhealthyConditions contains a list of the conditions that determine whether a node is considered unhealthy.  The conditions are combined in a logical OR, i.e. if any of the conditions is met, the node is unhealthy.",
+	"maxUnhealthy":        "Any farther remediation is only allowed if at most \"MaxUnhealthy\" machines selected by \"selector\" are not healthy. Expects either a postive integer value or a percentage value. Percentage values must be positive whole numbers and are capped at 100%. Both 0 and 0% are valid and will block all remediation.",
+	"nodeStartupTimeout":  "Machines older than this duration without a node will be considered to have failed and will be remediated. To prevent Machines without Nodes from being removed, disable startup checks by setting this value explicitly to \"0\". Expects an unsigned duration string of decimal numbers each with optional fraction and a unit suffix, eg \"300ms\", \"1.5h\" or \"2h45m\". Valid time units are \"ns\", \"us\" (or \"µs\"), \"ms\", \"s\", \"m\", \"h\".",
+	"remediationTemplate": "RemediationTemplate is a reference to a remediation template provided by an infrastructure provider.\n\nThis field is completely optional, when filled, the MachineHealthCheck controller creates a new object from the template referenced and hands off remediation of the machine to a controller that lives outside of Machine API Operator.",
+}
+
+func (MachineHealthCheckSpec) SwaggerDoc() map[string]string {
+	return map_MachineHealthCheckSpec
+}
+
+var map_MachineHealthCheckStatus = map[string]string{
+	"":                    "MachineHealthCheckStatus defines the observed state of MachineHealthCheck",
+	"expectedMachines":    "total number of machines counted by this machine health check",
+	"currentHealthy":      "total number of machines counted by this machine health check",
+	"remediationsAllowed": "RemediationsAllowed is the number of further remediations allowed by this machine health check before maxUnhealthy short circuiting will be applied",
+	"conditions":          "Conditions defines the current state of the MachineHealthCheck",
+}
+
+func (MachineHealthCheckStatus) SwaggerDoc() map[string]string {
+	return map_MachineHealthCheckStatus
+}
+
+var map_UnhealthyCondition = map[string]string{
+	"":        "UnhealthyCondition represents a Node condition type and value with a timeout specified as a duration.  When the named condition has been in the given status for at least the timeout value, a node is considered unhealthy.",
+	"timeout": "Expects an unsigned duration string of decimal numbers each with optional fraction and a unit suffix, eg \"300ms\", \"1.5h\" or \"2h45m\". Valid time units are \"ns\", \"us\" (or \"µs\"), \"ms\", \"s\", \"m\", \"h\".",
+}
+
+func (UnhealthyCondition) SwaggerDoc() map[string]string {
+	return map_UnhealthyCondition
+}
+
+var map_MachineSet = map[string]string{
+	"": "MachineSet ensures that a specified number of machines replicas are running at any given time. Compatibility level 2: Stable within a major release for a minimum of 9 months or 3 minor releases (whichever is longer).",
+}
+
+func (MachineSet) SwaggerDoc() map[string]string {
+	return map_MachineSet
+}
+
+var map_MachineSetList = map[string]string{
+	"": "MachineSetList contains a list of MachineSet Compatibility level 2: Stable within a major release for a minimum of 9 months or 3 minor releases (whichever is longer).",
+}
+
+func (MachineSetList) SwaggerDoc() map[string]string {
+	return map_MachineSetList
+}
+
+var map_MachineSetSpec = map[string]string{
+	"":                "MachineSetSpec defines the desired state of MachineSet",
+	"replicas":        "Replicas is the number of desired replicas. This is a pointer to distinguish between explicit zero and unspecified. Defaults to 1.",
+	"minReadySeconds": "MinReadySeconds is the minimum number of seconds for which a newly created machine should be ready. Defaults to 0 (machine will be considered available as soon as it is ready)",
+	"deletePolicy":    "DeletePolicy defines the policy used to identify nodes to delete when downscaling. Defaults to \"Random\".  Valid values are \"Random, \"Newest\", \"Oldest\"",
+	"selector":        "Selector is a label query over machines that should match the replica count. Label keys and values that must match in order to be controlled by this MachineSet. It must match the machine template's labels. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors",
+	"template":        "Template is the object that describes the machine that will be created if insufficient replicas are detected.",
+}
+
+func (MachineSetSpec) SwaggerDoc() map[string]string {
+	return map_MachineSetSpec
+}
+
+var map_MachineSetStatus = map[string]string{
+	"":                     "MachineSetStatus defines the observed state of MachineSet",
+	"replicas":             "Replicas is the most recently observed number of replicas.",
+	"fullyLabeledReplicas": "The number of replicas that have labels matching the labels of the machine template of the MachineSet.",
+	"readyReplicas":        "The number of ready replicas for this MachineSet. A machine is considered ready when the node has been created and is \"Ready\".",
+	"availableReplicas":    "The number of available replicas (ready for at least minReadySeconds) for this MachineSet.",
+	"observedGeneration":   "ObservedGeneration reflects the generation of the most recently observed MachineSet.",
+	"errorReason":          "In the event that there is a terminal problem reconciling the replicas, both ErrorReason and ErrorMessage will be set. ErrorReason will be populated with a succinct value suitable for machine interpretation, while ErrorMessage will contain a more verbose string suitable for logging and human consumption.\n\nThese fields should not be set for transitive errors that a controller faces that are expected to be fixed automatically over time (like service outages), but instead indicate that something is fundamentally wrong with the MachineTemplate's spec or the configuration of the machine controller, and that manual intervention is required. Examples of terminal errors would be invalid combinations of settings in the spec, values that are unsupported by the machine controller, or the responsible machine controller itself being critically misconfigured.\n\nAny transient errors that occur during the reconciliation of Machines can be added as events to the MachineSet object and/or logged in the controller's output.",
+}
+
+func (MachineSetStatus) SwaggerDoc() map[string]string {
+	return map_MachineSetStatus
+}
+
+var map_MachineTemplateSpec = map[string]string{
+	"":         "MachineTemplateSpec describes the data needed to create a Machine from a template",
+	"metadata": "Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+	"spec":     "Specification of the desired behavior of the machine. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status",
+}
+
+func (MachineTemplateSpec) SwaggerDoc() map[string]string {
+	return map_MachineTemplateSpec
+}
+
 var map_Condition = map[string]string{
 	"":                   "Condition defines an observation of a Machine API resource operational state.",
 	"type":               "Type of condition in CamelCase or in foo.example.com/CamelCase. Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be useful (see .node.status.conditions), the ability to deconflict is important.",

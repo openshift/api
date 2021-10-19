@@ -774,15 +774,14 @@ type SyslogLoggingDestinationParameters struct {
 	// +optional
 	Facility string `json:"facility,omitempty"`
 
-	// Length refers to the maximum length of the syslog message
+	// maxlength refers to the maximum length of the syslog message
 	//
-	// If this field is empty, the length is set to "1024".
+	// If this field is empty, the maxlength is set to "1024".
 	//
 	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Minimum=1024
 	// +kubebuilder:validation:Maximum=4096
 	// +optional
-	Length uint32 `json:"length"`
+	MaxLength uint32 `json:"maxlength"`
 }
 
 // ContainerLoggingDestinationParameters describes parameters for the Container

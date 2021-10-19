@@ -784,10 +784,11 @@ func (RouteAdmissionPolicy) SwaggerDoc() map[string]string {
 }
 
 var map_SyslogLoggingDestinationParameters = map[string]string{
-	"":         "SyslogLoggingDestinationParameters describes parameters for the Syslog logging destination type.",
-	"address":  "address is the IP address of the syslog endpoint that receives log messages.",
-	"port":     "port is the UDP port number of the syslog endpoint that receives log messages.",
-	"facility": "facility specifies the syslog facility of log messages.\n\nIf this field is empty, the facility is \"local1\".",
+	"":          "SyslogLoggingDestinationParameters describes parameters for the Syslog logging destination type.",
+	"address":   "address is the IP address of the syslog endpoint that receives log messages.",
+	"port":      "port is the UDP port number of the syslog endpoint that receives log messages.",
+	"facility":  "facility specifies the syslog facility of log messages.\n\nIf this field is empty, the facility is \"local1\".",
+	"maxlength": "maxlength refers to the maximum length of the syslog message\n\nIf this field is empty, the maxlength is set to \"1024\".",
 }
 
 func (SyslogLoggingDestinationParameters) SwaggerDoc() map[string]string {

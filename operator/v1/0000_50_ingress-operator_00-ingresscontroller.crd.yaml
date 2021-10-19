@@ -511,10 +511,11 @@ spec:
                                 - local6
                                 - local7
                                 type: string
-                              maxlength:
-                                description: "maxlength refers to the maximum length
-                                  of the syslog message \n If this field is empty,
-                                  the maxlength is set to \"1024\"."
+                              maxLength:
+                                default: 1024
+                                description: "maxLength is the maximum length of the
+                                  syslog message \n If this field is empty, the maxLength
+                                  is set to \"1024\"."
                                 format: int32
                                 maximum: 4096
                                 type: integer

@@ -518,6 +518,7 @@ spec:
                                   is set to \"1024\"."
                                 format: int32
                                 maximum: 4096
+                                minimum: 480
                                 type: integer
                               port:
                                 description: port is the UDP port number of the syslog

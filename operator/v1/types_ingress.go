@@ -780,6 +780,7 @@ type SyslogLoggingDestinationParameters struct {
 	//
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Maximum=4096
+	// +kubebuilder:validation:Minimum=480
 	// +kubebuilder:default=1024
 	// +optional
 	MaxLength uint32 `json:"maxLength"`

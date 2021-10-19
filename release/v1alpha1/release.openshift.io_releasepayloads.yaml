@@ -1,5 +1,3 @@
-
----
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -17,386 +15,221 @@ spec:
     singular: releasepayload
   scope: Namespaced
   versions:
-  - name: v1alpha1
-    schema:
-      openAPIV3Schema:
-        description: "ReleasePayload encapsulates the information for the creation
-          of a ReleasePayload and aggregates the results of its respective verification
-          tests. \n The release-controller is configured to monitor imagestreams,
-          in a specific namespace, that are annotated with a ReleaseConfig.  The ReleaseConfig
-          is a definition of how releases are calculated.  When a ReleasePayload is
-          generated, it will be generated in the same namespace as the imagstream
-          that produced it. If/when an update occurs, to one of these imagestreams,
-          the release-controller will:   1) Create a point-in-time mirror of the updated
-          imagestream   2) Create a new Release from the mirror        - Any errors
-          before this point will cause the release to marked `Failed`   3) Launches
-          a set of release analysis jobs   4) Launches an aggregation job   5) Launches
-          a set of release verification jobs        - These can either be `Blocking
-          Jobs` which will prevent release acceptance or `Informing Jobs` which will
-          \         not prevent release acceptance.   6) Monitors for job completions
-          \       - If all `Blocking Jobs` complete successfully, then the release
-          is `Accepted`.  If any `Blocking Jobs` fail,          the release will be
-          marked `Rejected`   7) Publishes all results to the respective webpage \n
-          Example: ART:   1) Publishes an update to the `ocp/4.9-art-latest` imagestream
-          \n Release-controller:   1) Creates a mirror named: `ocp/4.9-art-latest-2021-09-27-105859`
-          \  2) Creates a ReleasePayload: `ocp/4.9.0-0.nightly-2021-09-27-105859-<random-string>`
-          \      -Labels:         release.openshift.io/imagestream=release         release.openshift.io/imagestreamtag-name=4.9.0-0.nightly-2021-09-27-105859
-          \  3) Creates an OpenShift Release: `ocp/release:4.9.0-0.nightly-2021-09-27-105859`
-          \  4) Update ReleasePayload conditions with results of release creation
-          job   If the release was created successfully, the release-controller:   5)
-          Launches: 4.9.0-0.nightly-2021-09-27-105859-aggregated-<name>-analysis-<count>
-          \  6) Launches: 4.9.0-0.nightly-2021-09-27-105859-aggregated-<name>-aggregator
-          \  7) Launches: 4.9.0-0.nightly-2021-09-27-105859-<name> \n Mapping from
-          a Release to ReleasePayload: A ReleasePayload will always be named after
-          the Release that it corresponds to, with the addition of a random string
-          suffix.  Both objects will reside in the same namespace.   For a release:
-          `ocp/release:4.9.0-0.nightly-2021-09-27-105859`   A corresponding ReleasePayload
-          will exist: `ocp/4.9.0-0.nightly-2021-09-27-105859-<random-string>` \n Mapping
-          from ReleasePayload to Release: A ReleasePayload is decorated with a couple
-          labels that will point back to the Release that it corresponds to:   - release.openshift.io/imagestream=release
-          \  - release.openshift.io/imagestreamtag-name=4.9.0-0.nightly-2021-09-27-105859
-          Because the ReleasePayload and the Release will both reside in the same
-          namespace, the release that created the ReleasePayload will be located here:
-          \  <namespace>/<release.openshift.io/imagestream>:<release.openshift.io/imagestreamtag-name>
-          Similarly, the ReleasePayload object itself also has the PayloadCoordinates
-          (.spec.payloadCoordinates) that point back to the Release as well:   spec:
-          \    payloadCoordinates:       imagestreamName: release       imagestreamTagName:
-          4.9.0-0.nightly-2021-09-27-105859       namespace: ocp The release that
-          created the ReleasePayload will be located here:   <namespace>/<imagestreamName>:<imagestreamTagName>
-          \n Compatibility level 4: No compatibility is provided, the API can change
-          at any point for any reason. These capabilities should not be used by applications
-          needing long term support."
-        properties:
-          apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
-            type: string
-          kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
-            type: string
-          metadata:
-            type: object
-          spec:
-            description: Spec the inputs used to create the ReleasePayload
-            properties:
-              payloadCoordinates:
-                description: "PayloadCoordinates houses the information pointing to
-                  the location of the imagesteamtag that this ReleasePayload is verifying.
-                  \n Example: For a ReleasePayload named: \"4.9.0-0.nightly-2021-09-27-105859-<random-string>\"
-                  in the \"ocp\" namespace, and configured to be written into the
-                  \"release\" imagestream, we expect:   1) Namespace to equal \"ocp
-                  \  2) ImagestreamName to equal \"release\"   3) ImagestreamTagName
-                  to equal \"4.9.0-0.nightly-2021-09-27-105859\", which will also
-                  serves as the prefix of the ReleasePayload \n These coordinates
-                  can then be used to get the release imagestreamtag itself:    #
-                  oc -n ocp get imagestreamtag release:4.9.0-0.nightly-2021-09-27-105859"
-                properties:
-                  imagestreamName:
-                    description: 'ImagestreamName is the location of the configured
-                      "release" imagestream   - This is a configurable parameter ("to")
-                      passed into the release-controller via the ReleaseConfig''s
-                      defined here:     https://github.com/openshift/release/blob/master/core-services/release-controller/_releases'
-                    type: string
-                  imagestreamTagName:
-                    description: ImagestreamTagName is the name of the actual release
-                    type: string
-                  namespace:
-                    description: Namespace must match that of the ReleasePayload
-                    type: string
-                type: object
-              payloadOverride:
-                description: 'ReleasePayloadOverride provides the ability to manually
-                  Accept/Reject a ReleasePayload ART, occasionally, needs the ability
-                  to manually accept/reject a Release that, for some reason or another:   -
-                  won''t pass one or more of it''s blocking jobs.   - shouldn''t proceed
-                  with the normal release verification processing This would be the
-                  one scenario where another party, besides the release-controller,
-                  would update a ReleasePayload instance.  Upon doing so, the release-controller
-                  should see that an update occurred and make all the necessary changes
-                  to formally accept/reject the respective release.'
-                properties:
-                  override:
-                    description: Override specifies the ReleasePayloadOverride to
-                      apply to the ReleasePayload
-                    type: string
-                  reason:
-                    description: Reason is a human-readable string that specifies
-                      the reason for manually overriding the Acceptance/Rejections
-                      of a ReleasePayload
-                    type: string
-                type: object
-            type: object
-          status:
-            description: Status is the current status of the ReleasePayload
-            properties:
-              analysisJobResults:
-                description: AnalysisJobResults stores the results of all analysis
-                  jobs
-                items:
-                  description: JobStatus encapsulates the name of the job, all the
-                    results of the jobs, and an aggregated result of all the jobs
-                  properties:
-                    maxRetries:
-                      description: MaxRetries maximum times to retry a job
-                      type: integer
-                    name:
-                      description: jobName is the name of the job
-                      type: string
-                    results:
-                      description: JobRunResults contains the links for individual
-                        jobs
-                      items:
-                        description: JobRunResult the results of a prowjob run The
-                          release-controller creates ProwJobs (prowv1.ProwJob) during
-                          the sync_ready control loop and relies on an informer to
-                          process jobs, that it created, as they are completed. The
-                          JobRunResults will be created, by the release-controller
-                          during the sync_ready loop and updated whenever any changes,
-                          to the respective job is received by the informer.
-                        properties:
-                          completionTime:
-                            description: CompletionTime timestamp for when the prow
-                              pipeline controller observes the final state of the
-                              ProwJob For instance, if a client Aborts a ProwJob,
-                              the Pipeline controller will receive notification of
-                              the change and update the PtowJob's Status accordingly.
-                            format: date-time
-                            type: string
-                          coordinates:
-                            description: Coordinates the location of the job
-                            properties:
-                              cluster:
-                                type: string
-                              name:
-                                type: string
-                              namespace:
-                                type: string
-                            type: object
-                          humanProwResultsURL:
-                            description: HumanProwResultsURL the html link to the
-                              prow results
-                            type: string
-                          startTime:
-                            description: StartTime timestamp for when the prowjob
-                              was created
-                            format: date-time
-                            type: string
-                          state:
-                            description: State the current state of the job run
-                            type: string
-                        type: object
-                      type: array
-                    state:
-                      description: AggregateState is the overall success/failure of
-                        all the executed jobs
-                      type: string
+    - name: v1alpha1
+      schema:
+        openAPIV3Schema:
+          description: "ReleasePayload encapsulates the information for the creation of a ReleasePayload and aggregates the results of its respective verification tests. \n The release-controller is configured to monitor imagestreams, in a specific namespace, that are annotated with a ReleaseConfig.  The ReleaseConfig is a definition of how releases are calculated.  When a ReleasePayload is generated, it will be generated in the same namespace as the imagstream that produced it. If/when an update occurs, to one of these imagestreams, the release-controller will:   1) Create a point-in-time mirror of the updated imagestream   2) Create a new Release from the mirror        - Any errors before this point will cause the release to marked `Failed`   3) Launches a set of release analysis jobs   4) Launches an aggregation job   5) Launches a set of release verification jobs        - These can either be `Blocking Jobs` which will prevent release acceptance or `Informing Jobs` which will          not prevent release acceptance.   6) Monitors for job completions        - If all `Blocking Jobs` complete successfully, then the release is `Accepted`.  If any `Blocking Jobs` fail,          the release will be marked `Rejected`   7) Publishes all results to the respective webpage \n Example: ART:   1) Publishes an update to the `ocp/4.9-art-latest` imagestream \n Release-controller:   1) Creates a mirror named: `ocp/4.9-art-latest-2021-09-27-105859`   2) Creates a ReleasePayload: `ocp/4.9.0-0.nightly-2021-09-27-105859-<random-string>`       -Labels:         release.openshift.io/imagestream=release         release.openshift.io/imagestreamtag-name=4.9.0-0.nightly-2021-09-27-105859   3) Creates an OpenShift Release: `ocp/release:4.9.0-0.nightly-2021-09-27-105859`   4) Update ReleasePayload conditions with results of release creation job   If the release was created successfully, the release-controller:   5) Launches: 4.9.0-0.nightly-2021-09-27-105859-aggregated-<name>-analysis-<count>   6) Launches: 4.9.0-0.nightly-2021-09-27-105859-aggregated-<name>-aggregator   7) Launches: 4.9.0-0.nightly-2021-09-27-105859-<name> \n Mapping from a Release to ReleasePayload: A ReleasePayload will always be named after the Release that it corresponds to, with the addition of a random string suffix.  Both objects will reside in the same namespace.   For a release: `ocp/release:4.9.0-0.nightly-2021-09-27-105859`   A corresponding ReleasePayload will exist: `ocp/4.9.0-0.nightly-2021-09-27-105859-<random-string>` \n Mapping from ReleasePayload to Release: A ReleasePayload is decorated with a couple labels that will point back to the Release that it corresponds to:   - release.openshift.io/imagestream=release   - release.openshift.io/imagestreamtag-name=4.9.0-0.nightly-2021-09-27-105859 Because the ReleasePayload and the Release will both reside in the same namespace, the release that created the ReleasePayload will be located here:   <namespace>/<release.openshift.io/imagestream>:<release.openshift.io/imagestreamtag-name> Similarly, the ReleasePayload object itself also has the PayloadCoordinates (.spec.payloadCoordinates) that point back to the Release as well:   spec:     payloadCoordinates:       imagestreamName: release       imagestreamTagName: 4.9.0-0.nightly-2021-09-27-105859       namespace: ocp The release that created the ReleasePayload will be located here:   <namespace>/<imagestreamName>:<imagestreamTagName> \n Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support."
+          type: object
+          properties:
+            apiVersion:
+              description: 'APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+              type: string
+            kind:
+              description: 'Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+              type: string
+            metadata:
+              type: object
+            spec:
+              description: Spec the inputs used to create the ReleasePayload
+              type: object
+              properties:
+                payloadCoordinates:
+                  description: "PayloadCoordinates houses the information pointing to the location of the imagesteamtag that this ReleasePayload is verifying. \n Example: For a ReleasePayload named: \"4.9.0-0.nightly-2021-09-27-105859-<random-string>\" in the \"ocp\" namespace, and configured to be written into the \"release\" imagestream, we expect:   1) Namespace to equal \"ocp   2) ImagestreamName to equal \"release\"   3) ImagestreamTagName to equal \"4.9.0-0.nightly-2021-09-27-105859\", which will also serves as the prefix of the ReleasePayload \n These coordinates can then be used to get the release imagestreamtag itself:    # oc -n ocp get imagestreamtag release:4.9.0-0.nightly-2021-09-27-105859"
                   type: object
-                type: array
-              blockingJobResults:
-                description: BlockingJobResults stores the results of all blocking
-                  jobs
-                items:
-                  description: JobStatus encapsulates the name of the job, all the
-                    results of the jobs, and an aggregated result of all the jobs
                   properties:
-                    maxRetries:
-                      description: MaxRetries maximum times to retry a job
-                      type: integer
-                    name:
-                      description: jobName is the name of the job
+                    imagestreamName:
+                      description: 'ImagestreamName is the location of the configured "release" imagestream   - This is a configurable parameter ("to") passed into the release-controller via the ReleaseConfig''s defined here:     https://github.com/openshift/release/blob/master/core-services/release-controller/_releases'
                       type: string
-                    results:
-                      description: JobRunResults contains the links for individual
-                        jobs
-                      items:
-                        description: JobRunResult the results of a prowjob run The
-                          release-controller creates ProwJobs (prowv1.ProwJob) during
-                          the sync_ready control loop and relies on an informer to
-                          process jobs, that it created, as they are completed. The
-                          JobRunResults will be created, by the release-controller
-                          during the sync_ready loop and updated whenever any changes,
-                          to the respective job is received by the informer.
-                        properties:
-                          completionTime:
-                            description: CompletionTime timestamp for when the prow
-                              pipeline controller observes the final state of the
-                              ProwJob For instance, if a client Aborts a ProwJob,
-                              the Pipeline controller will receive notification of
-                              the change and update the PtowJob's Status accordingly.
-                            format: date-time
-                            type: string
-                          coordinates:
-                            description: Coordinates the location of the job
-                            properties:
-                              cluster:
-                                type: string
-                              name:
-                                type: string
-                              namespace:
-                                type: string
-                            type: object
-                          humanProwResultsURL:
-                            description: HumanProwResultsURL the html link to the
-                              prow results
-                            type: string
-                          startTime:
-                            description: StartTime timestamp for when the prowjob
-                              was created
-                            format: date-time
-                            type: string
-                          state:
-                            description: State the current state of the job run
-                            type: string
-                        type: object
-                      type: array
-                    state:
-                      description: AggregateState is the overall success/failure of
-                        all the executed jobs
+                    imagestreamTagName:
+                      description: ImagestreamTagName is the name of the actual release
                       type: string
+                    namespace:
+                      description: Namespace must match that of the ReleasePayload
+                      type: string
+                payloadOverride:
+                  description: 'ReleasePayloadOverride provides the ability to manually Accept/Reject a ReleasePayload ART, occasionally, needs the ability to manually accept/reject a Release that, for some reason or another:   - won''t pass one or more of it''s blocking jobs.   - shouldn''t proceed with the normal release verification processing This would be the one scenario where another party, besides the release-controller, would update a ReleasePayload instance.  Upon doing so, the release-controller should see that an update occurred and make all the necessary changes to formally accept/reject the respective release.'
                   type: object
-                type: array
-              conditions:
-                description: Conditions communicates the state of the ReleasePayload.
-                  Supported conditions include PayloadCreated, PayloadFailed, PayloadAccepted,
-                  and PayloadRejected.
-                items:
-                  description: "Condition contains details for one aspect of the current
-                    state of this API Resource. --- This struct is intended for direct
-                    use as an array at the field path .status.conditions.  For example,
-                    type FooStatus struct{     // Represents the observations of a
-                    foo's current state.     // Known .status.conditions.type are:
-                    \"Available\", \"Progressing\", and \"Degraded\"     // +patchMergeKey=type
-                    \    // +patchStrategy=merge     // +listType=map     // +listMapKey=type
-                    \    Conditions []metav1.Condition `json:\"conditions,omitempty\"
-                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`
-                    \n     // other fields }"
                   properties:
-                    lastTransitionTime:
-                      description: lastTransitionTime is the last time the condition
-                        transitioned from one status to another. This should be when
-                        the underlying condition changed.  If that is not known, then
-                        using the time when the API field changed is acceptable.
-                      format: date-time
+                    override:
+                      description: Override specifies the ReleasePayloadOverride to apply to the ReleasePayload
                       type: string
-                    message:
-                      description: message is a human readable message indicating
-                        details about the transition. This may be an empty string.
-                      maxLength: 32768
-                      type: string
-                    observedGeneration:
-                      description: observedGeneration represents the .metadata.generation
-                        that the condition was set based upon. For instance, if .metadata.generation
-                        is currently 12, but the .status.conditions[x].observedGeneration
-                        is 9, the condition is out of date with respect to the current
-                        state of the instance.
-                      format: int64
-                      minimum: 0
-                      type: integer
                     reason:
-                      description: reason contains a programmatic identifier indicating
-                        the reason for the condition's last transition. Producers
-                        of specific condition types may define expected values and
-                        meanings for this field, and whether the values are considered
-                        a guaranteed API. The value should be a CamelCase string.
-                        This field may not be empty.
-                      maxLength: 1024
-                      minLength: 1
-                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      description: Reason is a human-readable string that specifies the reason for manually overriding the Acceptance/Rejections of a ReleasePayload
                       type: string
-                    status:
-                      description: status of the condition, one of True, False, Unknown.
-                      enum:
-                      - "True"
-                      - "False"
-                      - Unknown
-                      type: string
-                    type:
-                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
-                        --- Many .condition.type values are consistent across resources
-                        like Available, but because arbitrary conditions can be useful
-                        (see .node.status.conditions), the ability to deconflict is
-                        important. The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
-                      maxLength: 316
-                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
-                      type: string
-                  required:
-                  - lastTransitionTime
-                  - message
-                  - reason
-                  - status
-                  - type
-                  type: object
-                type: array
-              informingJobResults:
-                description: InformingJobResults stores the results of all informing
-                  jobs
-                items:
-                  description: JobStatus encapsulates the name of the job, all the
-                    results of the jobs, and an aggregated result of all the jobs
-                  properties:
-                    maxRetries:
-                      description: MaxRetries maximum times to retry a job
-                      type: integer
-                    name:
-                      description: jobName is the name of the job
-                      type: string
-                    results:
-                      description: JobRunResults contains the links for individual
-                        jobs
-                      items:
-                        description: JobRunResult the results of a prowjob run The
-                          release-controller creates ProwJobs (prowv1.ProwJob) during
-                          the sync_ready control loop and relies on an informer to
-                          process jobs, that it created, as they are completed. The
-                          JobRunResults will be created, by the release-controller
-                          during the sync_ready loop and updated whenever any changes,
-                          to the respective job is received by the informer.
-                        properties:
-                          completionTime:
-                            description: CompletionTime timestamp for when the prow
-                              pipeline controller observes the final state of the
-                              ProwJob For instance, if a client Aborts a ProwJob,
-                              the Pipeline controller will receive notification of
-                              the change and update the PtowJob's Status accordingly.
-                            format: date-time
-                            type: string
-                          coordinates:
-                            description: Coordinates the location of the job
-                            properties:
-                              cluster:
-                                type: string
-                              name:
-                                type: string
-                              namespace:
-                                type: string
-                            type: object
-                          humanProwResultsURL:
-                            description: HumanProwResultsURL the html link to the
-                              prow results
-                            type: string
-                          startTime:
-                            description: StartTime timestamp for when the prowjob
-                              was created
-                            format: date-time
-                            type: string
-                          state:
-                            description: State the current state of the job run
-                            type: string
-                        type: object
-                      type: array
-                    state:
-                      description: AggregateState is the overall success/failure of
-                        all the executed jobs
-                      type: string
-                  type: object
-                type: array
-            type: object
-        type: object
-    served: true
-    storage: true
+            status:
+              description: Status is the current status of the ReleasePayload
+              type: object
+              properties:
+                analysisJobResults:
+                  description: AnalysisJobResults stores the results of all analysis jobs
+                  type: array
+                  items:
+                    description: JobStatus encapsulates the name of the job, all the results of the jobs, and an aggregated result of all the jobs
+                    type: object
+                    properties:
+                      maxRetries:
+                        description: MaxRetries maximum times to retry a job
+                        type: integer
+                      name:
+                        description: jobName is the name of the job
+                        type: string
+                      results:
+                        description: JobRunResults contains the links for individual jobs
+                        type: array
+                        items:
+                          description: JobRunResult the results of a prowjob run The release-controller creates ProwJobs (prowv1.ProwJob) during the sync_ready control loop and relies on an informer to process jobs, that it created, as they are completed. The JobRunResults will be created, by the release-controller during the sync_ready loop and updated whenever any changes, to the respective job is received by the informer.
+                          type: object
+                          properties:
+                            completionTime:
+                              description: CompletionTime timestamp for when the prow pipeline controller observes the final state of the ProwJob For instance, if a client Aborts a ProwJob, the Pipeline controller will receive notification of the change and update the PtowJob's Status accordingly.
+                              type: string
+                              format: date-time
+                            coordinates:
+                              description: Coordinates the location of the job
+                              type: object
+                              properties:
+                                cluster:
+                                  type: string
+                                name:
+                                  type: string
+                                namespace:
+                                  type: string
+                            humanProwResultsURL:
+                              description: HumanProwResultsURL the html link to the prow results
+                              type: string
+                            startTime:
+                              description: StartTime timestamp for when the prowjob was created
+                              type: string
+                              format: date-time
+                            state:
+                              description: State the current state of the job run
+                              type: string
+                      state:
+                        description: AggregateState is the overall success/failure of all the executed jobs
+                        type: string
+                blockingJobResults:
+                  description: BlockingJobResults stores the results of all blocking jobs
+                  type: array
+                  items:
+                    description: JobStatus encapsulates the name of the job, all the results of the jobs, and an aggregated result of all the jobs
+                    type: object
+                    properties:
+                      maxRetries:
+                        description: MaxRetries maximum times to retry a job
+                        type: integer
+                      name:
+                        description: jobName is the name of the job
+                        type: string
+                      results:
+                        description: JobRunResults contains the links for individual jobs
+                        type: array
+                        items:
+                          description: JobRunResult the results of a prowjob run The release-controller creates ProwJobs (prowv1.ProwJob) during the sync_ready control loop and relies on an informer to process jobs, that it created, as they are completed. The JobRunResults will be created, by the release-controller during the sync_ready loop and updated whenever any changes, to the respective job is received by the informer.
+                          type: object
+                          properties:
+                            completionTime:
+                              description: CompletionTime timestamp for when the prow pipeline controller observes the final state of the ProwJob For instance, if a client Aborts a ProwJob, the Pipeline controller will receive notification of the change and update the PtowJob's Status accordingly.
+                              type: string
+                              format: date-time
+                            coordinates:
+                              description: Coordinates the location of the job
+                              type: object
+                              properties:
+                                cluster:
+                                  type: string
+                                name:
+                                  type: string
+                                namespace:
+                                  type: string
+                            humanProwResultsURL:
+                              description: HumanProwResultsURL the html link to the prow results
+                              type: string
+                            startTime:
+                              description: StartTime timestamp for when the prowjob was created
+                              type: string
+                              format: date-time
+                            state:
+                              description: State the current state of the job run
+                              type: string
+                      state:
+                        description: AggregateState is the overall success/failure of all the executed jobs
+                        type: string
+                conditions:
+                  description: Conditions communicates the state of the ReleasePayload. Supported conditions include PayloadCreated, PayloadFailed, PayloadAccepted, and PayloadRejected.
+                  type: array
+                  items:
+                    description: ReleasePayloadCondition contains condition information for a tag event.
+                    type: object
+                    properties:
+                      generation:
+                        description: Generation is the spec tag generation that this status corresponds to
+                        type: integer
+                        format: int64
+                      lastTransitionTime:
+                        description: LastTransitionTIme is the time the condition transitioned from one status to another.
+                        type: string
+                        format: date-time
+                      message:
+                        description: Message is a human readable description of the details about last transition, complementing reason.
+                        type: string
+                      reason:
+                        description: Reason is a brief machine readable explanation for the condition's last transition.
+                        type: string
+                      status:
+                        description: Status of the condition, one of True, False, Unknown.
+                        type: string
+                      type:
+                        description: Type of release payload status condition
+                        type: string
+                informingJobResults:
+                  description: InformingJobResults stores the results of all informing jobs
+                  type: array
+                  items:
+                    description: JobStatus encapsulates the name of the job, all the results of the jobs, and an aggregated result of all the jobs
+                    type: object
+                    properties:
+                      maxRetries:
+                        description: MaxRetries maximum times to retry a job
+                        type: integer
+                      name:
+                        description: jobName is the name of the job
+                        type: string
+                      results:
+                        description: JobRunResults contains the links for individual jobs
+                        type: array
+                        items:
+                          description: JobRunResult the results of a prowjob run The release-controller creates ProwJobs (prowv1.ProwJob) during the sync_ready control loop and relies on an informer to process jobs, that it created, as they are completed. The JobRunResults will be created, by the release-controller during the sync_ready loop and updated whenever any changes, to the respective job is received by the informer.
+                          type: object
+                          properties:
+                            completionTime:
+                              description: CompletionTime timestamp for when the prow pipeline controller observes the final state of the ProwJob For instance, if a client Aborts a ProwJob, the Pipeline controller will receive notification of the change and update the PtowJob's Status accordingly.
+                              type: string
+                              format: date-time
+                            coordinates:
+                              description: Coordinates the location of the job
+                              type: object
+                              properties:
+                                cluster:
+                                  type: string
+                                name:
+                                  type: string
+                                namespace:
+                                  type: string
+                            humanProwResultsURL:
+                              description: HumanProwResultsURL the html link to the prow results
+                              type: string
+                            startTime:
+                              description: StartTime timestamp for when the prowjob was created
+                              type: string
+                              format: date-time
+                            state:
+                              description: State the current state of the job run
+                              type: string
+                      state:
+                        description: AggregateState is the overall success/failure of all the executed jobs
+                        type: string
+      served: true
+      storage: true
 status:
   acceptedNames:
     kind: ""

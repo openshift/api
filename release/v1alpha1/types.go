@@ -1,7 +1,6 @@
 package v1alpha1
 
 import (
-	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -143,7 +142,7 @@ type ReleasePayloadOverride struct {
 type ReleasePayloadStatus struct {
 	// Conditions communicates the state of the ReleasePayload.
 	// Supported conditions include PayloadCreated, PayloadFailed, PayloadAccepted, and PayloadRejected.
-	Conditions []metav1.Condition `json:"conditions,omitempty"`
+	Conditions []ReleasePayloadCondition `json:"conditions,omitempty"`
 
 	// BlockingJobResults stores the results of all blocking jobs
 	BlockingJobResults []JobStatus `json:"blockingJobResults,omitempty"`
@@ -155,35 +154,35 @@ type ReleasePayloadStatus struct {
 	AnalysisJobResults []JobStatus `json:"analysisJobResults,omitempty"`
 }
 
-type ReleasePayloadStatusConditionType string
+type ReleasePayloadConditionType string
 
-// These are valid conditions of ReleasePayloadStatus.
+// These are valid condition types for ReleasePayloadStatus.
 const (
 	// PayloadCreated if false, the ReleasePayload is waiting for a release image to be created and pushed to the
 	// TargetImageStream.  If PayloadCreated is true, a release image has been created and pushed to the TargetImageStream.
 	// Verification jobs should begin and will update the status as they complete.
-	PayloadCreated ReleasePayloadStatusConditionType = "PayloadCreated"
+	PayloadCreated ReleasePayloadConditionType = "PayloadCreated"
 
 	// PayloadFailed is true if a ReleasePayload image cannot be created for the given set of image mirrors
 	// This condition is terminal
-	PayloadFailed ReleasePayloadStatusConditionType = "PayloadFailed"
+	PayloadFailed ReleasePayloadConditionType = "PayloadFailed"
 
 	// PayloadAccepted is true if the ReleasePayload has passed its verification criteria and can safely
 	// be promoted to an external location
 	// This condition is terminal
-	PayloadAccepted ReleasePayloadStatusConditionType = "PayloadAccepted"
+	PayloadAccepted ReleasePayloadConditionType = "PayloadAccepted"
 
 	// PayloadRejected is true if the ReleasePayload has failed one or more of its verification criteria
 	// The release-controller will take no more action in this phase.
-	PayloadRejected ReleasePayloadStatusConditionType = "PayloadRejected"
+	PayloadRejected ReleasePayloadConditionType = "PayloadRejected"
 )
 
-// ReleasePayloadStatusCondition contains condition information for a tag event.
-type ReleasePayloadStatusCondition struct {
+// ReleasePayloadCondition contains condition information for a tag event.
+type ReleasePayloadCondition struct {
 	// Type of release payload status condition
-	Type ReleasePayloadStatusConditionType `json:"type"`
+	Type ReleasePayloadConditionType `json:"type"`
 	// Status of the condition, one of True, False, Unknown.
-	Status corev1.ConditionStatus `json:"status"`
+	Status metav1.ConditionStatus `json:"status"`
 	// LastTransitionTIme is the time the condition transitioned from one status to another.
 	LastTransitionTime metav1.Time `json:"lastTransitionTime,omitempty"`
 	// Reason is a brief machine readable explanation for the condition's last transition.

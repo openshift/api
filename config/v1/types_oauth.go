@@ -40,7 +40,26 @@ type OAuthSpec struct {
 	// templates allow you to customize pages like the login page.
 	// +optional
 	Templates OAuthTemplates `json:"templates"`
+	// Audit specifies what needs to be audited.
+	// + optional
+	Audit OAuthAudit `json:"audit"`
 }
+
+type OAuthAudit struct {
+	// Simple drop in profile type.
+	Profile OAuthAuditProfileType `json:"profile,omitempty"`
+}
+
+type OAuthAuditProfileType string
+
+const (
+	// "None" disables audit logs.
+	OAuthNoneAuditProfileType AuditProfileType = "None"
+
+	// "WriteLoginEvents" logs login and login failure events.
+	// This is the default.
+	OAuthWriteLoginEventsProfileType AuditProfileType = "WriteLoginEvents"
+)
 
 // OAuthStatus shows current known state of OAuth server in the cluster
 type OAuthStatus struct {
@@ -584,34 +603,6 @@ type OAuthList struct {
 	Items []OAuth `json:"items"`
 }
 
-// OAuthSpec contains desired cluster auth configuration
-type OAuthSpec struct {
-	// identityProviders is an ordered list of ways for a user to identify themselves.
-	// When this list is empty, no identities are provisioned for users.
-	// +optional
-	IdentityProviders []IdentityProvider `json:"identityProviders,omitempty"`
 
-	// tokenConfig contains options for authorization and access tokens
-	TokenConfig TokenConfig `json:"tokenConfig"`
 
-	// templates allow you to customize pages like the login page.
-	// +optional
-	Templates OAuthTemplates `json:"templates"`
 
-	Audit OAuthAudit `json:"audit"`
-}
-
-type OAuthAudit struct {
-	Profile OAuthAuditProfileType `json:"profile,omitempty"`
-}
-
-type OAuthAuditProfileType string
-
-const (
-	// "None" disables audit logs.
-	OAuthNoneAuditProfileType AuditProfileType = "None"
-
-	// "WriteLoginEvents" logs login and login failure events.
-	// This is the default.
-	OAuthWriteLoginEventsProfileType AuditProfileType = "WriteLoginEvents"
-)

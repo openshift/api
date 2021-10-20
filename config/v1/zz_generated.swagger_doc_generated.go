@@ -1512,6 +1512,14 @@ func (OAuth) SwaggerDoc() map[string]string {
 	return map_OAuth
 }
 
+var map_OAuthAudit = map[string]string{
+	"profile": "Simple drop in profile type.",
+}
+
+func (OAuthAudit) SwaggerDoc() map[string]string {
+	return map_OAuthAudit
+}
+
 var map_OAuthList = map[string]string{
 	"": "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 }
@@ -1537,6 +1545,7 @@ var map_OAuthSpec = map[string]string{
 	"identityProviders": "identityProviders is an ordered list of ways for a user to identify themselves. When this list is empty, no identities are provisioned for users.",
 	"tokenConfig":       "tokenConfig contains options for authorization and access tokens",
 	"templates":         "templates allow you to customize pages like the login page.",
+	"audit":             "Audit specifies what needs to be audited.",
 }
 
 func (OAuthSpec) SwaggerDoc() map[string]string {

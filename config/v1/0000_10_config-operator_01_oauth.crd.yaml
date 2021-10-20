@@ -36,6 +36,13 @@ spec:
               description: spec holds user settable values for configuration
               type: object
               properties:
+                audit:
+                  description: Audit specifies what needs to be audited.
+                  type: object
+                  properties:
+                    profile:
+                      description: Simple drop in profile type.
+                      type: string
                 identityProviders:
                   description: identityProviders is an ordered list of ways for a user to identify themselves. When this list is empty, no identities are provisioned for users.
                   type: array

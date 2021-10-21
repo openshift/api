@@ -822,6 +822,17 @@ type SyslogLoggingDestinationParameters struct {
 	// +kubebuilder:validation:Enum=kern;user;mail;daemon;auth;syslog;lpr;news;uucp;cron;auth2;ftp;ntp;audit;alert;cron2;local0;local1;local2;local3;local4;local5;local6;local7
 	// +optional
 	Facility string `json:"facility,omitempty"`
+
+	// maxLength is the maximum length of the syslog message
+	//
+	// If this field is empty, the maxLength is set to "1024".
+	//
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Maximum=4096
+	// +kubebuilder:validation:Minimum=480
+	// +kubebuilder:default=1024
+	// +optional
+	MaxLength uint32 `json:"maxLength,omitempty"`
 }
 
 // ContainerLoggingDestinationParameters describes parameters for the Container

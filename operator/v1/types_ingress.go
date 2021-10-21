@@ -783,7 +783,7 @@ type SyslogLoggingDestinationParameters struct {
 	// +kubebuilder:validation:Minimum=480
 	// +kubebuilder:default=1024
 	// +optional
-	MaxLength uint32 `json:"maxLength"`
+	MaxLength uint32 `json:"maxLength,omitempty"`
 }
 
 // ContainerLoggingDestinationParameters describes parameters for the Container

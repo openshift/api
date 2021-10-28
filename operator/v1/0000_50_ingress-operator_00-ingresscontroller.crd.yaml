@@ -144,6 +144,55 @@ spec:
                     description: hostNetwork holds parameters for the HostNetwork
                       endpoint publishing strategy. Present only if type is HostNetwork.
                     properties:
+                      bindOptions:
+                        description: "bindOptions defines parameters for binding haproxy
+                          in ingress controller pods. All fields are optional and
+                          will use their respective defaults if not set. See specific
+                          bindOptions fields for more details. \n Setting fields within
+                          bindOptions is generally not recommended. The default values
+                          are suitable for most configurations."
+                        properties:
+                          ports:
+                            description: "Ports are used to set the ports on which
+                              the ingress controller will be bound. \n If unset, the
+                              default values are applied as follows: \n   HTTP: 80
+                              \  HTTPS: 443   STATS: 1936"
+                            properties:
+                              http:
+                                default: 80
+                                description: http defines the port number which HAProxy
+                                  process binds for http connections. Setting this
+                                  field is generally not recommended. However in HostNetwork
+                                  strategy, default http 80 port might be occupied
+                                  by other processess
+                                format: int32
+                                maximum: 30000
+                                minimum: 1
+                                type: integer
+                              https:
+                                default: 443
+                                description: https defines the port number which HAProxy
+                                  process binds for https connections. Setting this
+                                  field is generally not recommended. However in HostNetwork
+                                  strategy, default https 443 port might be occupied
+                                  by other processess
+                                format: int32
+                                maximum: 30000
+                                minimum: 1
+                                type: integer
+                              stats:
+                                default: 1936
+                                description: stats is the port number which HAProxy
+                                  process binds to expose statistics on it. Setting
+                                  this field is generally not recommended. However
+                                  in HostNetwork strategy, default stats port 1936
+                                  might be occupied by other processess
+                                format: int32
+                                maximum: 30000
+                                minimum: 1
+                                type: integer
+                            type: object
+                        type: object
                       protocol:
                         description: "protocol specifies whether the IngressController
                           expects incoming connections to use plain TCP or whether
@@ -1233,6 +1282,55 @@ spec:
                     description: hostNetwork holds parameters for the HostNetwork
                       endpoint publishing strategy. Present only if type is HostNetwork.
                     properties:
+                      bindOptions:
+                        description: "bindOptions defines parameters for binding haproxy
+                          in ingress controller pods. All fields are optional and
+                          will use their respective defaults if not set. See specific
+                          bindOptions fields for more details. \n Setting fields within
+                          bindOptions is generally not recommended. The default values
+                          are suitable for most configurations."
+                        properties:
+                          ports:
+                            description: "Ports are used to set the ports on which
+                              the ingress controller will be bound. \n If unset, the
+                              default values are applied as follows: \n   HTTP: 80
+                              \  HTTPS: 443   STATS: 1936"
+                            properties:
+                              http:
+                                default: 80
+                                description: http defines the port number which HAProxy
+                                  process binds for http connections. Setting this
+                                  field is generally not recommended. However in HostNetwork
+                                  strategy, default http 80 port might be occupied
+                                  by other processess
+                                format: int32
+                                maximum: 30000
+                                minimum: 1
+                                type: integer
+                              https:
+                                default: 443
+                                description: https defines the port number which HAProxy
+                                  process binds for https connections. Setting this
+                                  field is generally not recommended. However in HostNetwork
+                                  strategy, default https 443 port might be occupied
+                                  by other processess
+                                format: int32
+                                maximum: 30000
+                                minimum: 1
+                                type: integer
+                              stats:
+                                default: 1936
+                                description: stats is the port number which HAProxy
+                                  process binds to expose statistics on it. Setting
+                                  this field is generally not recommended. However
+                                  in HostNetwork strategy, default stats port 1936
+                                  might be occupied by other processess
+                                format: int32
+                                maximum: 30000
+                                minimum: 1
+                                type: integer
+                            type: object
+                        type: object
                       protocol:
                         description: "protocol specifies whether the IngressController
                           expects incoming connections to use plain TCP or whether

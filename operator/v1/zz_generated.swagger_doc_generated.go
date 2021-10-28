@@ -574,8 +574,9 @@ func (HTTPCompressionPolicy) SwaggerDoc() map[string]string {
 }
 
 var map_HostNetworkStrategy = map[string]string{
-	"":         "HostNetworkStrategy holds parameters for the HostNetwork endpoint publishing strategy.",
-	"protocol": "protocol specifies whether the IngressController expects incoming connections to use plain TCP or whether the IngressController expects PROXY protocol.\n\nPROXY protocol can be used with load balancers that support it to communicate the source addresses of client connections when forwarding those connections to the IngressController.  Using PROXY protocol enables the IngressController to report those source addresses instead of reporting the load balancer's address in HTTP headers and logs.  Note that enabling PROXY protocol on the IngressController will cause connections to fail if you are not using a load balancer that uses PROXY protocol to forward connections to the IngressController.  See http://www.haproxy.org/download/2.2/doc/proxy-protocol.txt for information about PROXY protocol.\n\nThe following values are valid for this field:\n\n* The empty string. * \"TCP\". * \"PROXY\".\n\nThe empty string specifies the default, which is TCP without PROXY protocol.  Note that the default is subject to change.",
+	"":            "HostNetworkStrategy holds parameters for the HostNetwork endpoint publishing strategy.",
+	"protocol":    "protocol specifies whether the IngressController expects incoming connections to use plain TCP or whether the IngressController expects PROXY protocol.\n\nPROXY protocol can be used with load balancers that support it to communicate the source addresses of client connections when forwarding those connections to the IngressController.  Using PROXY protocol enables the IngressController to report those source addresses instead of reporting the load balancer's address in HTTP headers and logs.  Note that enabling PROXY protocol on the IngressController will cause connections to fail if you are not using a load balancer that uses PROXY protocol to forward connections to the IngressController.  See http://www.haproxy.org/download/2.2/doc/proxy-protocol.txt for information about PROXY protocol.\n\nThe following values are valid for this field:\n\n* The empty string. * \"TCP\". * \"PROXY\".\n\nThe empty string specifies the default, which is TCP without PROXY protocol.  Note that the default is subject to change.",
+	"bindOptions": "bindOptions defines parameters for binding haproxy in ingress controller pods. All fields are optional and will use their respective defaults if not set. See specific bindOptions fields for more details.\n\nSetting fields within bindOptions is generally not recommended. The default values are suitable for most configurations.",
 }
 
 func (HostNetworkStrategy) SwaggerDoc() map[string]string {
@@ -590,6 +591,15 @@ var map_IngressController = map[string]string{
 
 func (IngressController) SwaggerDoc() map[string]string {
 	return map_IngressController
+}
+
+var map_IngressControllerBindOptions = map[string]string{
+	"":      "IngressControllerBindOptions specifies options for binding haproxy in ingress controller pods",
+	"ports": "Ports are used to set the ports on which the ingress controller will be bound.\n\nIf unset, the default values are applied as follows:\n\n  HTTP: 80\n  HTTPS: 443\n  STATS: 1936",
+}
+
+func (IngressControllerBindOptions) SwaggerDoc() map[string]string {
+	return map_IngressControllerBindOptions
 }
 
 var map_IngressControllerCaptureHTTPCookie = map[string]string{
@@ -668,6 +678,17 @@ var map_IngressControllerLogging = map[string]string{
 
 func (IngressControllerLogging) SwaggerDoc() map[string]string {
 	return map_IngressControllerLogging
+}
+
+var map_IngressControllerPorts = map[string]string{
+	"":      "IngressControllerPorts specifies ports on which ingress controller pods will be bound",
+	"http":  "http defines the port number which HAProxy process binds for http connections. Setting this field is generally not recommended. However in HostNetwork strategy, default http 80 port might be occupied by other processess",
+	"https": "https defines the port number which HAProxy process binds for https connections. Setting this field is generally not recommended. However in HostNetwork strategy, default https 443 port might be occupied by other processess",
+	"stats": "stats is the port number which HAProxy process binds to expose statistics on it. Setting this field is generally not recommended. However in HostNetwork strategy, default stats port 1936 might be occupied by other processess",
+}
+
+func (IngressControllerPorts) SwaggerDoc() map[string]string {
+	return map_IngressControllerPorts
 }
 
 var map_IngressControllerSpec = map[string]string{

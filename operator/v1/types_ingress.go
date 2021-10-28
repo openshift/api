@@ -536,6 +536,17 @@ type HostNetworkStrategy struct {
 	// +kubebuilder:validation:Optional
 	// +optional
 	Protocol IngressControllerProtocol `json:"protocol,omitempty"`
+
+	// bindOptions defines parameters for binding haproxy in ingress controller pods.
+	// All fields are optional and will use their respective defaults if not set.
+	// See specific bindOptions fields for more details.
+	//
+	//
+	// Setting fields within bindOptions is generally not recommended. The
+	// default values are suitable for most configurations.
+	//
+	// +optional
+	BindOptions *IngressControllerBindOptions `json:"bindOptions,omitempty"`
 }
 
 // PrivateStrategy holds parameters for the Private endpoint publishing
@@ -1306,6 +1317,58 @@ type IngressControllerTuningOptions struct {
 	// +kubebuilder:validation:Format=duration
 	// +optional
 	TLSInspectDelay *metav1.Duration `json:"tlsInspectDelay,omitempty"`
+}
+
+// IngressControllerBindOptions specifies options for binding haproxy in ingress controller pods
+type IngressControllerBindOptions struct {
+	// Ports are used to set the ports on which the ingress controller will be bound.
+	//
+	// If unset, the default values are applied as follows:
+	//
+	//   HTTP: 80
+	//   HTTPS: 443
+	//   STATS: 1936
+	//
+	// +kubebuilder:validation:Optional
+	// +optional
+	Ports *IngressControllerPorts `json:"ports,omitempty"`
+}
+
+// IngressControllerPorts specifies ports on which ingress controller pods will be bound
+type IngressControllerPorts struct {
+	// http defines the port number which HAProxy process binds for
+	// http connections. Setting this field is generally not recommended. However in
+	// HostNetwork strategy, default http 80 port might be occupied by other processess
+	//
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=30000
+	// +kubebuilder:default:=80
+	// +optional
+	HTTP int32 `json:"http,omitempty"`
+
+	// https defines the port number which HAProxy process binds for
+	// https connections. Setting this field is generally not recommended. However in
+	// HostNetwork strategy, default https 443 port might be occupied by other processess
+	//
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=30000
+	// +kubebuilder:default:=443
+	// +optional
+	HTTPS int32 `json:"https,omitempty"`
+
+	// stats is the port number which HAProxy process binds
+	// to expose statistics on it. Setting this field is generally not recommended.
+	// However in HostNetwork strategy, default stats port 1936 might
+	// be occupied by other processess
+	//
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=30000
+	// +kubebuilder:default:=1936
+	// +optional
+	Stats int32 `json:"stats,omitempty"`
 }
 
 // HTTPEmptyRequestsPolicy indicates how HTTP connections for which no request

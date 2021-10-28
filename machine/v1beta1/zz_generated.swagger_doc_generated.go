@@ -294,6 +294,16 @@ func (GCPEncryptionKeyReference) SwaggerDoc() map[string]string {
 	return map_GCPEncryptionKeyReference
 }
 
+var map_GCPGPUConfig = map[string]string{
+	"":      "GCPGPUConfig describes type and count of GPUs attached to the instance on GCP.",
+	"count": "Count is the number of GPUs to be attached to an instance.",
+	"type":  "Type is the type of GPU to be attached to an instance. Supported GPU types are: nvidia-tesla-k80, nvidia-tesla-p100, nvidia-tesla-v100, nvidia-tesla-p4, nvidia-tesla-t4",
+}
+
+func (GCPGPUConfig) SwaggerDoc() map[string]string {
+	return map_GCPGPUConfig
+}
+
 var map_GCPKMSKeyReference = map[string]string{
 	"":          "GCPKMSKeyReference gathers required fields for looking up a GCP KMS Key",
 	"name":      "Name is the name of the customer managed encryption key to be used for the disk encryption.",
@@ -337,7 +347,10 @@ var map_GCPMachineProviderSpec = map[string]string{
 	"region":             "Region is the region in which the GCP machine provider will create the VM.",
 	"zone":               "Zone is the zone in which the GCP machine provider will create the VM.",
 	"projectID":          "ProjectID is the project in which the GCP machine provider will create the VM.",
-	"preemptible":        "Preemptible indicates if created instance is preemptible",
+	"gpus":               "GPUs is a list of GPUs to be attached to the VM.",
+	"preemptible":        "Preemptible indicates if created instance is preemptible.",
+	"onHostMaintenance":  "OnHostMaintenance determines the behavior when a maintenance event occurs that might cause the instance to reboot. This is required to be set to \"Terminate\" if you want to provision machine with attached GPUs. Otherwise, allowed values are \"Migrate\" and \"Terminate\". If omitted, the platform chooses a default, which is subject to change over time, currently that default is \"Migrate\".",
+	"automaticRestart":   "AutomaticRestart determines the behavior when an instance crashes or the underlying infrastructure provider stops the instance as part of a maintenance event (default true). Cannot be true with preemptible instances. If omitted, the platform chooses a default, which is subject to change over time, currently that default is true.",
 }
 
 func (GCPMachineProviderSpec) SwaggerDoc() map[string]string {

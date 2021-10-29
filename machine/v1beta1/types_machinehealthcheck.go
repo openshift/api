@@ -6,6 +6,12 @@ import (
 	"k8s.io/apimachinery/pkg/util/intstr"
 )
 
+const (
+	// PausedAnnotation is an annotation that can be applied to MachineHealthCheck objects to prevent the MHC controller
+	// from processing it.
+	MHCPausedAnnotation = "cluster.x-k8s.io/paused"
+)
+
 // RemediationStrategyType contains remediation strategy type
 type RemediationStrategyType string
 

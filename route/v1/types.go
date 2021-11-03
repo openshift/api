@@ -224,7 +224,8 @@ type TLSConfig struct {
 	// * reencrypt - TLS termination is done by the router and https is used to communicate with the backend
 	Termination TLSTerminationType `json:"termination" protobuf:"bytes,1,opt,name=termination,casttype=TLSTerminationType"`
 
-	// certificate provides certificate contents
+	// certificate provides certificate contents. This should be a single serving certificate, not a certificate
+	// chain. Do not include a CA certificate.
 	Certificate string `json:"certificate,omitempty" protobuf:"bytes,2,opt,name=certificate"`
 
 	// key provides key file contents

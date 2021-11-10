@@ -927,6 +927,7 @@ func (in *DNSSpec) DeepCopyInto(out *DNSSpec) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	in.UpstreamConfiguration.DeepCopyInto(&out.UpstreamConfiguration)
 	in.NodePlacement.DeepCopyInto(&out.NodePlacement)
 	return
 }

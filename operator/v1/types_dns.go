@@ -48,6 +48,11 @@ type DNSSpec struct {
 	// +optional
 	Servers []Server `json:"servers,omitempty"`
 
+	// upstreamConfiguration defines a schema for configuring CoreDNS
+	// to proxy DNS messages to upstream resolvers for the case of the
+	// default (".") server
+	UpstreamConfiguration ForwardPlugin `json:"upstreamConfiguration"`
+
 	// nodePlacement provides explicit control over the scheduling of DNS
 	// pods.
 	//

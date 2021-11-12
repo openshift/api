@@ -189,7 +189,7 @@ type UpstreamResolvers struct {
 	//
 	// +optional
 	// +kubebuilder:validation:MaxItems=15
-	// +kubebuilder:default:{"/etc/resolv.conf"}
+	// +kubebuilder:default:={"/etc/resolv.conf"}
 	Upstreams []string `json:"upstreams"`
 
 	// policy is used to determine the order in which upstream servers are selected for querying.

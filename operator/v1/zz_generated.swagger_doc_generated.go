@@ -467,14 +467,14 @@ func (Server) SwaggerDoc() map[string]string {
 	return map_Server
 }
 
-var map_UpStreamResolvers = map[string]string{
-	"":          "UpStreamResolvers defines a schema for configuring the CoreDNS forward plugin in the specific case of the default (\".\") server. It defers from ForwardPlugin in the default values it accepts: * At least one upstream should be specified. * the default policy is Sequential",
+var map_UpstreamResolvers = map[string]string{
+	"":          "UpstreamResolvers defines a schema for configuring the CoreDNS forward plugin in the specific case of the default (\".\") server. It defers from ForwardPlugin in the default values it accepts: * At least one upstream should be specified. * the default policy is Sequential",
 	"upstreams": "upstreams is a list of resolvers to forward name queries for the . domain. Each instance of CoreDNS performs health checking of Upstreams. When a healthy upstream returns an error during the exchange, another resolver is tried from Upstreams. The Upstreams are selected in the order specified in Policy. Each upstream is represented by an IP address or IP:port if the upstream listens on a port other than 53.\n\nAt least 1 upstream should be specified A maximum of 15 upstreams is allowed per ForwardPlugin.",
 	"policy":    "policy is used to determine the order in which upstream servers are selected for querying. Any one of the following values may be specified:\n\n* \"Random\" picks a random upstream server for each query. * \"RoundRobin\" picks upstream servers in a round-robin order, moving to the next server for each new query. * \"Sequential\" tries querying upstream servers in a sequential order until one responds, starting with the first server for each new query.\n\nThe default value is \"Sequential\"",
 }
 
-func (UpStreamResolvers) SwaggerDoc() map[string]string {
-	return map_UpStreamResolvers
+func (UpstreamResolvers) SwaggerDoc() map[string]string {
+	return map_UpstreamResolvers
 }
 
 var map_Etcd = map[string]string{

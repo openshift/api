@@ -56,7 +56,7 @@ type DNSSpec struct {
 	// /etc/resolv.conf, with policy "sequential"
 	//
 	// +optional
-	UpstreamResolvers UpStreamResolvers `json:"upstreamResolvers"`
+	UpstreamResolvers UpstreamResolvers `json:"upstreamResolvers"`
 
 	// nodePlacement provides explicit control over the scheduling of DNS
 	// pods.
@@ -172,12 +172,12 @@ type ForwardPlugin struct {
 	Policy ForwardingPolicy `json:"policy,omitempty"`
 }
 
-// UpStreamResolvers defines a schema for configuring the CoreDNS forward plugin in the
+// UpstreamResolvers defines a schema for configuring the CoreDNS forward plugin in the
 // specific case of the default (".") server.
 // It defers from ForwardPlugin in the default values it accepts:
 // * At least one upstream should be specified.
 // * the default policy is Sequential
-type UpStreamResolvers struct {
+type UpstreamResolvers struct {
 	// upstreams is a list of resolvers to forward name queries for the . domain.
 	// Each instance of CoreDNS performs health checking of Upstreams. When a healthy upstream
 	// returns an error during the exchange, another resolver is tried from Upstreams. The
@@ -187,9 +187,9 @@ type UpStreamResolvers struct {
 	// At least 1 upstream should be specified
 	// A maximum of 15 upstreams is allowed per ForwardPlugin.
 	//
-	// +kubebuilder:+required
+	// +optional
 	// +kubebuilder:validation:MaxItems=15
-	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:default:{"/etc/resolv.conf"}
 	Upstreams []string `json:"upstreams"`
 
 	// policy is used to determine the order in which upstream servers are selected for querying.

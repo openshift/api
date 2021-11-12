@@ -139,7 +139,6 @@ spec:
                       description: "upstreams is a list of resolvers to forward name queries for the . domain. Each instance of CoreDNS performs health checking of Upstreams. When a healthy upstream returns an error during the exchange, another resolver is tried from Upstreams. The Upstreams are selected in the order specified in Policy. Each upstream is represented by an IP address or IP:port if the upstream listens on a port other than 53. \n At least 1 upstream should be specified A maximum of 15 upstreams is allowed per ForwardPlugin."
                       type: array
                       maxItems: 15
-                      minItems: 1
                       items:
                         type: string
             status:

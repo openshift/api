@@ -120,6 +120,7 @@ spec:
                         - EquinixMetal
                         - PowerVS
                         - AlibabaCloud
+                        - Nutanix
                     vsphere:
                       description: VSphere contains settings specific to the VSphere infrastructure provider.
                       type: object
@@ -173,6 +174,7 @@ spec:
                     - EquinixMetal
                     - PowerVS
                     - AlibabaCloud
+                    - Nutanix
                 platformStatus:
                   description: platformStatus holds status information specific to the underlying infrastructure provider.
                   type: object
@@ -433,6 +435,7 @@ spec:
                         - EquinixMetal
                         - PowerVS
                         - AlibabaCloud
+                        - Nutanix
                     vsphere:
                       description: VSphere contains settings specific to the VSphere infrastructure provider.
                       type: object

@@ -350,7 +350,7 @@ var map_GCPMachineProviderSpec = map[string]string{
 	"gpus":               "GPUs is a list of GPUs to be attached to the VM.",
 	"preemptible":        "Preemptible indicates if created instance is preemptible.",
 	"onHostMaintenance":  "OnHostMaintenance determines the behavior when a maintenance event occurs that might cause the instance to reboot. This is required to be set to \"Terminate\" if you want to provision machine with attached GPUs. Otherwise, allowed values are \"Migrate\" and \"Terminate\". If omitted, the platform chooses a default, which is subject to change over time, currently that default is \"Migrate\".",
-	"automaticRestart":   "AutomaticRestart determines the behavior when an instance crashes or the underlying infrastructure provider stops the instance as part of a maintenance event (default true). Cannot be true with preemptible instances. If omitted, the platform chooses a default, which is subject to change over time, currently that default is true.",
+	"restartPolicy":      "RestartPolicy determines the behavior when an instance crashes or the underlying infrastructure provider stops the instance as part of a maintenance event (default \"Always\"). Cannot be \"Always\" with preemptible instances. Otherwise, allowed values are \"Always\" and \"Never\". If omitted, the platform chooses a default, which is subject to change over time, currently that default is \"Always\". RestartPolicy represents AutomaticRestart in GCP compute api",
 }
 
 func (GCPMachineProviderSpec) SwaggerDoc() map[string]string {

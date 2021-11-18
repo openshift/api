@@ -15,6 +15,16 @@ const (
 	TerminateHostMaintenanceType GCPHostMaintenanceType = "Terminate"
 )
 
+// GCPHostMaintenanceType is a type representing acceptable values for RestartPolicy field in GCPMachineProviderSpec
+type GCPRestartPolicyType string
+
+const (
+	// Restart an instance if an instance crashes or the underlying infrastructure provider stops the instance as part of a maintenance event.
+	RestartPolicyAlways GCPRestartPolicyType = "Always"
+	// Do not restart an instance if an instance crashes or the underlying infrastructure provider stops the instance as part of a maintenance event.
+	RestartPolicyNever GCPRestartPolicyType = "Never"
+)
+
 // GCPMachineProviderSpec is the type that will be embedded in a Machine.Spec.ProviderSpec field
 // for an GCP virtual machine. It is used by the GCP machine actuator to create a single Machine.
 // Compatibility level 2: Stable within a major release for a minimum of 9 months or 3 minor releases (whichever is longer).
@@ -77,11 +87,14 @@ type GCPMachineProviderSpec struct {
 	// +kubebuilder:validation:Enum=Migrate;Terminate;
 	// +optional
 	OnHostMaintenance GCPHostMaintenanceType `json:"onHostMaintenance,omitempty"`
-	// AutomaticRestart determines the behavior when an instance crashes or the underlying infrastructure provider stops the instance as part of a maintenance event (default true).
-	// Cannot be true with preemptible instances.
-	// If omitted, the platform chooses a default, which is subject to change over time, currently that default is true.
+	// RestartPolicy determines the behavior when an instance crashes or the underlying infrastructure provider stops the instance as part of a maintenance event (default "Always").
+	// Cannot be "Always" with preemptible instances.
+	// Otherwise, allowed values are "Always" and "Never".
+	// If omitted, the platform chooses a default, which is subject to change over time, currently that default is "Always".
+	// RestartPolicy represents AutomaticRestart in GCP compute api
+	// +kubebuilder:validation:Enum=Always;Never;
 	// +optional
-	AutomaticRestart bool `json:"automaticRestart,omitempty"`
+	RestartPolicy GCPRestartPolicyType `json:"restartPolicy,omitempty"`
 }
 
 // GCPDisk describes disks for GCP.

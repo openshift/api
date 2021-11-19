@@ -225,6 +225,7 @@ var map_Image = map[string]string{
 	"sku":        "SKU specifies an instance of an offer, such as a major release of a distribution. For example, 18.04-LTS, 2019-Datacenter",
 	"version":    "Version specifies the version of an image sku. The allowed formats are Major.Minor.Build or 'latest'. Major, Minor, and Build are decimal numbers. Specify 'latest' to use the latest version of an image available at deploy time. Even if you use 'latest', the VM image will not automatically update after deploy time even if a new version becomes available.",
 	"resourceID": "ResourceID specifies an image to use by ID",
+	"type":       "Type identifies the source of the image and related information, such as purchase plans. Valid values are \"ID\", \"MarketplaceWithPlan\", \"MarketplaceNoPlan\", and omitted, which means no opinion and the platform chooses a good default which may change over time. Currently that default is \"MarketplaceNoPlan\" if publisher data is supplied, or \"ID\" if not. For more information about purchase plans, see: https://docs.microsoft.com/en-us/azure/virtual-machines/linux/cli-ps-findimage#check-the-purchase-plan-information",
 }
 
 func (Image) SwaggerDoc() map[string]string {

@@ -182,6 +182,20 @@ const (
 	IBMCloudProviderTypeVPC IBMCloudProviderType = "VPC"
 )
 
+// IBMCloudManagementType signifies the management system deploying the IBMCloud cluster.
+// +kubebuilder:validation:Enum=installer;roks
+type IBMCloudManagementType string
+
+const (
+	// IBMCloudManagementTypeInstaller signifies the IBMCloud clusters deployment is being orchestrated through
+	// the openshift installer
+	IBMCloudManagementTypeInstaller IBMCloudManagementType = "installer"
+
+	// IBMCloudManagementTypeROKS signifies the IBMCloud clusters deployment is being orchestrated through
+	// the Red Hat Openshift on IBM Cloud managed service
+	IBMCloudManagementTypeROKS IBMCloudManagementType = "roks"
+)
+
 // PlatformSpec holds the desired state specific to the underlying infrastructure provider
 // of the current cluster. Since these are used at spec-level for the underlying cluster, it
 // is supposed that only one of the spec structs is set.
@@ -559,6 +573,9 @@ type IBMCloudPlatformStatus struct {
 	// CISInstanceCRN is the CRN of the Cloud Internet Services instance managing
 	// the DNS zone for the cluster's base domain
 	CISInstanceCRN string `json:"cisInstanceCRN,omitempty"`
+
+	// ManagementType signifies the management system deploying the IBMCloud cluster.
+	ManagementType *IBMCloudManagementType `json:"managementType,omitempty"`
 }
 
 // KubevirtPlatformSpec holds the desired state of the kubevirt infrastructure provider.

@@ -324,6 +324,12 @@ spec:
                         location:
                           description: Location is where the cluster has been deployed
                           type: string
+                        managementType:
+                          description: ManagementType signifies the management system deploying the IBMCloud cluster.
+                          type: string
+                          enum:
+                            - installer
+                            - roks
                         providerType:
                           description: ProviderType indicates the type of cluster that was created
                           type: string

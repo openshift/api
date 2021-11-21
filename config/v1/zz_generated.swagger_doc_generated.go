@@ -1040,6 +1040,7 @@ var map_IBMCloudPlatformStatus = map[string]string{
 	"resourceGroupName": "ResourceGroupName is the Resource Group for new IBMCloud resources created for the cluster.",
 	"providerType":      "ProviderType indicates the type of cluster that was created",
 	"cisInstanceCRN":    "CISInstanceCRN is the CRN of the Cloud Internet Services instance managing the DNS zone for the cluster's base domain",
+	"managementType":    "ManagementType signifies the management system deploying the IBMCloud cluster.",
 }
 
 func (IBMCloudPlatformStatus) SwaggerDoc() map[string]string {

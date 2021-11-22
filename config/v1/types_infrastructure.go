@@ -180,6 +180,10 @@ const (
 
 	// VPC means that the IBM Cloud cluster is using VPC infrastructure
 	IBMCloudProviderTypeVPC IBMCloudProviderType = "VPC"
+
+	// IBMCloudProviderTypeUPI means that the IBM Cloud cluster is using user provided infrastructure.
+	// This is utilized in IBM Cloud Satellite environments.
+	IBMCloudProviderTypeUPI IBMCloudProviderType = "UPI"
 )
 
 // PlatformSpec holds the desired state specific to the underlying infrastructure provider

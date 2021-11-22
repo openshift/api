@@ -354,6 +354,40 @@ type AWSPlatformSpec struct {
 	// There must be only one ServiceEndpoint for a service.
 	// +optional
 	ServiceEndpoints []AWSServiceEndpoint `json:"serviceEndpoints,omitempty"`
+
+	// resourceTags is a list of additional tags to apply to AWS resources created for the cluster.
+	// See https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html for information on tagging AWS resources.
+	// AWS supports a minimum of 10 tags per resource. OpenShift reserves 5 tags for its use, leaving 5 tags
+	// available for the user.
+	// ResourceTags field is mutable and items can be removed.
+	// When a tag is removed from this list, management of the tag is stopped.
+	// The tag will remain in an unmanaged state on any existing resource.
+	// +kubebuilder:validation:MaxItems=5
+	// +optional
+	ResourceTags []AWSResourceTagSpec `json:"resourceTags,omitempty"`
+}
+
+// AWSResourceTagSpec is a tag to apply to AWS resources created for the cluster.
+type AWSResourceTagSpec struct {
+	// key is the key of the AWS tag. The value must consist only of alphanumeric and certain special characters ( _.:/=+-@).
+	// key should not start with "openshift.io" or "kubernetes.io". Both of these prefixes are reserved for use by the platform.
+	// key must be no more than 128 characters in length.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=128
+	// +kubebuilder:validation:Pattern=`^[0-9A-Za-z_ .:/=+-@]+$`
+	// +required
+	Key string `json:"key"`
+	// value is the value of the AWS tag. The value must consist only of alphanumeric and certain special characters ( _.:/=+-@).
+	// value must be no more than 256 characters in length.
+	// Some AWS services do not support empty values. Since tags are added to resources in many services, the
+	// length of the tag value must meet the requirements of all services.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=256
+	// +kubebuilder:validation:Pattern=`^[0-9A-Za-z_ .:/=+-@]+$`
+	// +required
+	Value string `json:"value"`
 }
 
 // AWSPlatformStatus holds the current status of the Amazon Web Services infrastructure provider.
@@ -369,9 +403,12 @@ type AWSPlatformStatus struct {
 
 	// resourceTags is a list of additional tags to apply to AWS resources created for the cluster.
 	// See https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html for information on tagging AWS resources.
-	// AWS supports a maximum of 50 tags per resource. OpenShift reserves 25 tags for its use, leaving 25 tags
+	// In previous versions, OpenShift reserved 25 tags for its use, leaving 25 tags
 	// available for the user.
+	// ResourceTags field is immutable.
+	// To update the list of tags, contact support.
 	// +kubebuilder:validation:MaxItems=25
+	// +kubebuilder:deprecatedversion:warning="ResourceTags in .Status is deprecated, use .Spec.PlatformSpec.AWS.ResourceTags"
 	// +optional
 	ResourceTags []AWSResourceTag `json:"resourceTags,omitempty"`
 }

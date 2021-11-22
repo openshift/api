@@ -981,6 +981,7 @@ func (ImageTagMirrors) SwaggerDoc() map[string]string {
 var map_AWSPlatformSpec = map[string]string{
 	"":                 "AWSPlatformSpec holds the desired state of the Amazon Web Services infrastructure provider. This only includes fields that can be modified in the cluster.",
 	"serviceEndpoints": "serviceEndpoints list contains custom endpoints which will override default service endpoint of AWS Services. There must be only one ServiceEndpoint for a service.",
+	"resourceTags":     "resourceTags is a list of additional tags to apply to AWS resources created for the cluster. See https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html for information on tagging AWS resources. AWS supports a minimum of 10 tags per resource. OpenShift reserves 5 tags for its use, leaving 5 tags available for the user. ResourceTags field is mutable and items can be removed. When a tag is removed from this list, management of the tag is stopped. The tag will remain in an unmanaged state on any existing resource.",
 }
 
 func (AWSPlatformSpec) SwaggerDoc() map[string]string {
@@ -991,7 +992,7 @@ var map_AWSPlatformStatus = map[string]string{
 	"":                 "AWSPlatformStatus holds the current status of the Amazon Web Services infrastructure provider.",
 	"region":           "region holds the default AWS region for new AWS resources created by the cluster.",
 	"serviceEndpoints": "ServiceEndpoints list contains custom endpoints which will override default service endpoint of AWS Services. There must be only one ServiceEndpoint for a service.",
-	"resourceTags":     "resourceTags is a list of additional tags to apply to AWS resources created for the cluster. See https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html for information on tagging AWS resources. AWS supports a maximum of 50 tags per resource. OpenShift reserves 25 tags for its use, leaving 25 tags available for the user.",
+	"resourceTags":     "resourceTags is a list of additional tags to apply to AWS resources created for the cluster. See https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html for information on tagging AWS resources. In previous versions, OpenShift reserved 25 tags for its use, leaving 25 tags available for the user. ResourceTags field is immutable. To update the list of tags, contact support.",
 }
 
 func (AWSPlatformStatus) SwaggerDoc() map[string]string {
@@ -1006,6 +1007,16 @@ var map_AWSResourceTag = map[string]string{
 
 func (AWSResourceTag) SwaggerDoc() map[string]string {
 	return map_AWSResourceTag
+}
+
+var map_AWSResourceTagSpec = map[string]string{
+	"":      "AWSResourceTagSpec is a tag to apply to AWS resources created for the cluster.",
+	"key":   "key is the key of the AWS tag. The value must consist only of alphanumeric and certain special characters ( _.:/=+-@). key should not start with \"openshift.io\" or \"kubernetes.io\". Both of these prefixes are reserved for use by the platform. key must be no more than 128 characters in length.",
+	"value": "value is the value of the AWS tag. The value must consist only of alphanumeric and certain special characters ( _.:/=+-@). value must be no more than 256 characters in length. Some AWS services do not support empty values. Since tags are added to resources in many services, the length of the tag value must meet the requirements of all services.",
+}
+
+func (AWSResourceTagSpec) SwaggerDoc() map[string]string {
+	return map_AWSResourceTagSpec
 }
 
 var map_AWSServiceEndpoint = map[string]string{

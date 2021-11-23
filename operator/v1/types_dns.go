@@ -241,6 +241,7 @@ type Upstream struct {
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=65535
 	// +kubebuilder:validation:Optional
+	// +kubebuilder:default:=53
 	Port uint32 `json:"port"`
 }
 

@@ -246,12 +246,12 @@ spec:
                         or IP:port if the upstream listens on a port other than 53."
                       properties:
                         address:
+                          anyOf:
+                          - format: ipv4
+                          - format: ipv6
                           description: Address must be defined when Type is set to
                             Network. It will be ignored otherwise. It must be a valid
                             ipv4 or ipv6 address.
-                          oneOf:
-                          - format: ipv4
-                          - format: ipv6
                           type: string
                         port:
                           description: Port may be defined when Type is set to Network.

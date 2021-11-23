@@ -188,7 +188,7 @@ type UpstreamResolvers struct {
 	//
 	// +optional
 	// +kubebuilder:validation:MaxItems=15
-	// +kubebuilder:default:={"type":"SystemResolvConf"}
+	// +kubebuilder:default={{"type":"SystemResolvConf"}}
 	Upstreams []Upstream `json:"upstreams"`
 
 	// Policy is used to determine the order in which upstream servers are selected for querying.
@@ -200,7 +200,7 @@ type UpstreamResolvers struct {
 	//
 	// The default value is "Sequential"
 	//
-	//+optional
+	// +optional
 	// +kubebuilder:default:="Sequential"
 	Policy ForwardingPolicy `json:"policy,omitempty"`
 }
@@ -211,8 +211,6 @@ type UpstreamResolvers struct {
 //   The upstream will be configured to use /etc/resolv.conf.
 // * For an Upstream of type Network, a NetworkResolver field needs to be defined
 //   with an IP address or IP:port if the upstream listens on a port other than 53.
-//
-// +union
 type Upstream struct {
 
 	// Type defines whether this upstream contains an IP/IP:port resolver or the local /etc/resolv.conf.
@@ -222,7 +220,6 @@ type Upstream struct {
 	//   /etc/resolv.conf will be used
 	// * When Network is used, the Upstream structure must contain at least an Address
 	//
-	// +unionDiscriminator
 	// +kubebuilder:validation:Required
 	// +required
 	Type UpstreamType `json:"type"`
@@ -245,7 +242,7 @@ type Upstream struct {
 	Port uint32 `json:"port"`
 }
 
-// +kubebuilder:validation:Enum=SystemResolvConf;Network
+// +kubebuilder:validation:Enum=SystemResolvConf;Network;""
 type UpstreamType string
 
 const (

@@ -229,7 +229,7 @@ spec:
                     type: string
                   upstreams:
                     default:
-                      type: SystemResolvConf
+                    - type: SystemResolvConf
                     description: "Upstreams is a list of resolvers to forward name
                       queries for the \".\" domain. Each instance of CoreDNS performs
                       health checking of Upstreams. When a healthy upstream returns
@@ -238,6 +238,23 @@ spec:
                       in Policy. \n A maximum of 15 upstreams is allowed per ForwardPlugin.
                       If no Upstreams are specified, /etc/resolv.conf is used by default"
                     items:
+                      "":
+                      - not:
+                          required:
+                          - address
+                          - port
+                        properties:
+                          type:
+                            enum:
+                            - ""
+                            - SystemResolvConf
+                      - properties:
+                          type:
+                            enum:
+                            - Network
+                        required:
+                        - address
+                        - port
                       description: "Upstream can either be of type SystemResolvConf,
                         or of type Network. \n * For an Upstream of type SystemResolvConf,
                         no further fields are necessary:   The upstream will be configured
@@ -254,6 +271,7 @@ spec:
                             ipv4 or ipv6 address.
                           type: string
                         port:
+                          default: 53
                           description: Port may be defined when Type is set to Network.
                             It will be ignored otherwise. Port must be between 65535
                           format: int32
@@ -271,6 +289,7 @@ spec:
                           enum:
                           - SystemResolvConf
                           - Network
+                          - ""
                           type: string
                       required:
                       - type

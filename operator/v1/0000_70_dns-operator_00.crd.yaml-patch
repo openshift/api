@@ -1,0 +1,5 @@
+- op: add
+  path: /spec/versions/name=v1/schema/openAPIV3Schema/properties/spec/properties/upstreamresolvers/properties/upstreams/items/properties/address/oneOf
+  value:
+    - format: ipv4
+    - format: ipv6

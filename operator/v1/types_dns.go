@@ -56,7 +56,7 @@ type DNSSpec struct {
 	// /etc/resolv.conf, with policy "sequential"
 	//
 	// +optional
-	UpstreamResolvers UpstreamResolvers `json:"upstreamResolvers"`
+	UpstreamResolvers UpstreamResolvers `json:"upstreamresolvers"`
 
 	// nodePlacement provides explicit control over the scheduling of DNS
 	// pods.
@@ -178,21 +178,20 @@ type ForwardPlugin struct {
 // * At least one upstream should be specified.
 // * the default policy is Sequential
 type UpstreamResolvers struct {
-	// upstreams is a list of resolvers to forward name queries for the . domain.
+	// Upstreams is a list of resolvers to forward name queries for the "." domain.
 	// Each instance of CoreDNS performs health checking of Upstreams. When a healthy upstream
 	// returns an error during the exchange, another resolver is tried from Upstreams. The
-	// Upstreams are selected in the order specified in Policy. Each upstream is represented
-	// by an IP address or IP:port if the upstream listens on a port other than 53.
+	// Upstreams are selected in the order specified in Policy.
 	//
-	// At least 1 upstream should be specified
 	// A maximum of 15 upstreams is allowed per ForwardPlugin.
+	// If no Upstreams are specified, /etc/resolv.conf is used by default
 	//
 	// +optional
 	// +kubebuilder:validation:MaxItems=15
-	// +kubebuilder:default:={"/etc/resolv.conf"}
-	Upstreams []string `json:"upstreams"`
+	// +kubebuilder:default:={"type":"SystemResolvConf"}
+	Upstreams []Upstream `json:"upstreams"`
 
-	// policy is used to determine the order in which upstream servers are selected for querying.
+	// Policy is used to determine the order in which upstream servers are selected for querying.
 	// Any one of the following values may be specified:
 	//
 	// * "Random" picks a random upstream server for each query.
@@ -205,6 +204,53 @@ type UpstreamResolvers struct {
 	// +kubebuilder:default:="Sequential"
 	Policy ForwardingPolicy `json:"policy,omitempty"`
 }
+
+// Upstream can either be of type SystemResolvConf, or of type Network.
+//
+// * For an Upstream of type SystemResolvConf, no further fields are necessary:
+//   The upstream will be configured to use /etc/resolv.conf.
+// * For an Upstream of type Network, a NetworkResolver field needs to be defined
+//   with an IP address or IP:port if the upstream listens on a port other than 53.
+//
+// +union
+type Upstream struct {
+
+	// Type defines whether this upstream contains an IP/IP:port resolver or the local /etc/resolv.conf.
+	// Type accepts 2 possible values: SystemResolvConf or Network.
+	//
+	// * When SystemResolvConf is used, the Upstream structure does not require any further fields to be defined:
+	//   /etc/resolv.conf will be used
+	// * When Network is used, the Upstream structure must contain at least an Address
+	//
+	// +unionDiscriminator
+	// +kubebuilder:validation:Required
+	// +required
+	Type UpstreamType `json:"type"`
+
+	// Address must be defined when Type is set to Network. It will be ignored otherwise.
+	// It must be a valid ipv4 or ipv6 address.
+	//
+	// +optional
+	// +kubebuilder:validation:Optional
+	Address string `json:"address"`
+
+	// Port may be defined when Type is set to Network. It will be ignored otherwise.
+	// Port must be between 65535
+	//
+	// +optional
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=65535
+	// +kubebuilder:validation:Optional
+	Port uint32 `json:"port"`
+}
+
+// +kubebuilder:validation:Enum=SystemResolvConf;Network
+type UpstreamType string
+
+const (
+	SystemResolveConfType UpstreamType = "SystemResolvConf"
+	NetworkResolverType   UpstreamType = "Network"
+)
 
 // DNSNodePlacement describes the node scheduling configuration for DNS pods.
 type DNSNodePlacement struct {

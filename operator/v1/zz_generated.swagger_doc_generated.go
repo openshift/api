@@ -39,6 +39,7 @@ var map_NodeStatus = map[string]string{
 	"currentRevision":          "currentRevision is the generation of the most recently successful deployment",
 	"targetRevision":           "targetRevision is the generation of the deployment we're trying to apply",
 	"lastFailedRevision":       "lastFailedRevision is the generation of the deployment we tried and failed to deploy.",
+	"lastFilteredRevision":     "lastFilteredRevision is the last revision which was filtered for this node.",
 	"lastFailedTime":           "lastFailedTime is the time the last failed revision failed the last time.",
 	"lastFailedReason":         "lastFailedReason is a machine readable failure reason string.",
 	"lastFailedCount":          "lastFailedCount is how often the installer pod of the last failed revision failed.",

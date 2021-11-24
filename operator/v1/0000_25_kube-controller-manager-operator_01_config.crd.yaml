@@ -221,6 +221,11 @@ spec:
                       description: lastFallbackCount is how often a fallback to a
                         previous revision happened.
                       type: integer
+                    lastFilteredRevision:
+                      description: lastFilteredRevision is the last revision which
+                        was filtered for this node.
+                      format: int32
+                      type: integer
                     nodeName:
                       description: nodeName is the name of the node
                       type: string

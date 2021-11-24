@@ -221,6 +221,8 @@ type NodeStatus struct {
 
 	// lastFailedRevision is the generation of the deployment we tried and failed to deploy.
 	LastFailedRevision int32 `json:"lastFailedRevision,omitempty"`
+	// lastFilteredRevision is the last revision which was filtered for this node.
+	LastFilteredRevision int32 `json:"lastFilteredRevision,omitempty"`
 	// lastFailedTime is the time the last failed revision failed the last time.
 	LastFailedTime *metav1.Time `json:"lastFailedTime,omitempty"`
 	// lastFailedReason is a machine readable failure reason string.

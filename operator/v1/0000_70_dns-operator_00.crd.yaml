@@ -238,7 +238,7 @@ spec:
                       in Policy. \n A maximum of 15 upstreams is allowed per ForwardPlugin.
                       If no Upstreams are specified, /etc/resolv.conf is used by default"
                     items:
-                      "":
+                      anyOf:
                       - not:
                           required:
                           - address

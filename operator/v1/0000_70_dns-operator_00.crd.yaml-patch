@@ -4,7 +4,7 @@
     - format: ipv4
     - format: ipv6
 - op: add
-  path: /spec/versions/name=v1/schema/openAPIV3Schema/properties/spec/properties/upstreamresolvers/properties/upstreams/items/
+  path: /spec/versions/name=v1/schema/openAPIV3Schema/properties/spec/properties/upstreamresolvers/properties/upstreams/items/anyOf
   value:
   - properties:
       type:

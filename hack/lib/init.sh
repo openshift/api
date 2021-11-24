@@ -21,6 +21,7 @@ image/v1 \
 imageregistry/v1 \
 kubecontrolplane/v1 \
 legacyconfig/v1 \
+machineconfiguration/v1 \
 cloudnetwork/v1 \
 network/v1 \
 networkoperator/v1 \
@@ -47,6 +48,7 @@ github.com/openshift/api/apps/v1,\
 github.com/openshift/api/authorization/v1,\
 github.com/openshift/api/build/v1,\
 github.com/openshift/api/image/v1,\
+github.com/openshift/api/machineconfiguration/v1,\
 github.com/openshift/api/cloudnetwork/v1,\
 github.com/openshift/api/network/v1,\
 github.com/openshift/api/networkoperator/v1,\

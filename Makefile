@@ -4,6 +4,8 @@ all: build
 # Ensure update-scripts are run before crd-gen so updates to Godoc are included in CRDs.
 update-codegen-crds: update-scripts
 
+CONTROLLER_GEN_VERSION :=v0.7.0
+
 # Include the library makefile
 include $(addprefix ./vendor/github.com/openshift/build-machinery-go/make/, \
 	golang.mk \
@@ -16,7 +18,6 @@ GO_BUILD_PACKAGES :=$(GO_PACKAGES)
 GO_BUILD_PACKAGES_EXPANDED :=$(GO_BUILD_PACKAGES)
 # LDFLAGS are not needed for dummy builds (saving time on calling git commands)
 GO_LD_FLAGS:=
-CONTROLLER_GEN_VERSION :=v0.7.0
 
 # $1 - target name
 # $2 - apis

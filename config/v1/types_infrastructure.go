@@ -603,6 +603,10 @@ type EquinixMetalPlatformStatus struct {
 // override existing defaults of PowerVS Services.
 type PowerVSServiceEndpoint struct {
 	// name is the name of the Power VS service.
+	// Few of the services are
+	// IAM - https://cloud.ibm.com/apidocs/iam-identity-token-api
+	// ResourceController - https://cloud.ibm.com/apidocs/resource-controller/resource-controller
+	// Power Cloud - https://cloud.ibm.com/apidocs/power-cloud
 	//
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`^[a-z0-9-]+$`
@@ -621,7 +625,14 @@ type PowerVSServiceEndpoint struct {
 
 // PowerVSPlatformSpec holds the desired state of the IBM Power Systems Virtual Servers infrastructure provider.
 // This only includes fields that can be modified in the cluster.
-type PowerVSPlatformSpec struct{}
+type PowerVSPlatformSpec struct {
+	// serviceEndpoints is a list of custom endpoints which will override the default
+	// service endpoints of a Power VS service.
+	// +listType=map
+	// +listMapKey=name
+	// +optional
+	ServiceEndpoints []PowerVSServiceEndpoint `json:"serviceEndpoints,omitempty"`
+}
 
 // PowerVSPlatformStatus holds the current status of the IBM Power Systems Virtual Servers infrastrucutre provider.
 type PowerVSPlatformStatus struct {

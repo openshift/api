@@ -248,13 +248,14 @@ spec:
                             enum:
                             - ""
                             - SystemResolvConf
-                      - properties:
+                      - optional:
+                        - port
+                        properties:
                           type:
                             enum:
                             - Network
                         required:
                         - address
-                        - port
                       description: "Upstream can either be of type SystemResolvConf,
                         or of type Network. \n * For an Upstream of type SystemResolvConf,
                         no further fields are necessary:   The upstream will be configured

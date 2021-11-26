@@ -201,7 +201,7 @@ type UpstreamResolvers struct {
 	// The default value is "Sequential"
 	//
 	// +optional
-	// +kubebuilder:default:="Sequential"
+	// +kubebuilder:default="Sequential"
 	Policy ForwardingPolicy `json:"policy,omitempty"`
 }
 
@@ -229,7 +229,7 @@ type Upstream struct {
 	//
 	// +optional
 	// +kubebuilder:validation:Optional
-	Address string `json:"address"`
+	Address string `json:"address,omitempty"`
 
 	// Port may be defined when Type is set to Network. It will be ignored otherwise.
 	// Port must be between 65535
@@ -238,8 +238,8 @@ type Upstream struct {
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=65535
 	// +kubebuilder:validation:Optional
-	// +kubebuilder:default:=53
-	Port uint32 `json:"port"`
+	// +kubebuilder:default=53
+	Port uint32 `json:"port,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=SystemResolvConf;Network;""

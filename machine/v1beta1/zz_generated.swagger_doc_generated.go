@@ -181,7 +181,7 @@ var map_AzureMachineProviderSpec = map[string]string{
 	"applicationSecurityGroups": "Application Security Groups that need to be attached to the machine's interface. No application security groups will be attached if zero-length.",
 	"subnet":                    "Subnet to use for this instance",
 	"publicLoadBalancer":        "PublicLoadBalancer to use for this instance",
-	"internalLoadBalancer":      "InternalLoadBalancerName to use for this instance",
+	"internalLoadBalancer":      "InternalLoadBalancer name to use for this instance",
 	"natRule":                   "NatRule to set inbound NAT rule of the load balancer",
 	"managedIdentity":           "ManagedIdentity to set managed identity name",
 	"vnet":                      "Vnet to set virtual network name",
@@ -287,7 +287,7 @@ func (GCPDisk) SwaggerDoc() map[string]string {
 
 var map_GCPEncryptionKeyReference = map[string]string{
 	"":                     "GCPEncryptionKeyReference describes the encryptionKey to use for a disk's encryption.",
-	"kmsKey":               "KMSKeyName is the reference KMS key, in the format",
+	"kmsKey":               "KMSKey is the reference KMS key, in the format",
 	"kmsKeyServiceAccount": "KMSKeyServiceAccount is the service account being used for the encryption request for the given KMS key. If absent, the Compute Engine default service account is used. See https://cloud.google.com/compute/docs/access/service-accounts#compute_engine_service_account for details on the default service account.",
 }
 
@@ -661,7 +661,7 @@ var map_VSphereMachineProviderSpec = map[string]string{
 	"workspace":         "Workspace describes the workspace to use for the machine.",
 	"network":           "Network is the network configuration for this machine's VM.",
 	"numCPUs":           "NumCPUs is the number of virtual processors in a virtual machine. Defaults to the analogue property value in the template from which this machine is cloned.",
-	"numCoresPerSocket": "NumCPUs is the number of cores among which to distribute CPUs in this virtual machine. Defaults to the analogue property value in the template from which this machine is cloned.",
+	"numCoresPerSocket": "NumCoresPerSocket is the number of cores among which to distribute CPUs in this virtual machine. Defaults to the analogue property value in the template from which this machine is cloned.",
 	"memoryMiB":         "MemoryMiB is the size of a virtual machine's memory, in MiB. Defaults to the analogue property value in the template from which this machine is cloned.",
 	"diskGiB":           "DiskGiB is the size of a virtual machine's disk, in GiB. Defaults to the analogue property value in the template from which this machine is cloned.",
 	"snapshot":          "Snapshot is the name of the snapshot from which the VM was cloned",

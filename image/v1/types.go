@@ -350,7 +350,7 @@ type TagEventCondition struct {
 	Type TagEventConditionType `json:"type" protobuf:"bytes,1,opt,name=type,casttype=TagEventConditionType"`
 	// Status of the condition, one of True, False, Unknown.
 	Status corev1.ConditionStatus `json:"status" protobuf:"bytes,2,opt,name=status,casttype=k8s.io/api/core/v1.ConditionStatus"`
-	// LastTransitionTIme is the time the condition transitioned from one status to another.
+	// LastTransitionTime is the time the condition transitioned from one status to another.
 	LastTransitionTime metav1.Time `json:"lastTransitionTime,omitempty" protobuf:"bytes,3,opt,name=lastTransitionTime"`
 	// Reason is a brief machine readable explanation for the condition's last transition.
 	Reason string `json:"reason,omitempty" protobuf:"bytes,4,opt,name=reason"`

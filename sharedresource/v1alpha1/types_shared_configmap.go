@@ -72,7 +72,7 @@ type SharedConfigMapReference struct {
 // SharedConfigMapSpec defines the desired state of a SharedConfigMap
 // +k8s:openapi-gen=true
 type SharedConfigMapSpec struct {
-	//configMapRef is a reference to the ConfigMap to share
+	// configMapRef is a reference to the ConfigMap to share
 	// +kubebuilder:validation:Required
 	ConfigMapRef SharedConfigMapReference `json:"configMapRef"`
 	// description is a user readable explanation of what the backing resource provides.

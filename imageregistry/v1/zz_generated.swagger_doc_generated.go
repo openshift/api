@@ -174,7 +174,7 @@ var map_ImageRegistryConfigStorageSwift = map[string]string{
 	"domain":      "domain specifies Openstack's domain name for Identity v3 API.",
 	"domainID":    "domainID specifies Openstack's domain id for Identity v3 API.",
 	"tenant":      "tenant defines Openstack tenant name to be used by registry.",
-	"tenantID":    "tenant defines Openstack tenant id to be used by registry.",
+	"tenantID":    "tenantID defines Openstack tenant id to be used by registry.",
 	"regionName":  "regionName defines Openstack's region in which container exists.",
 }
 

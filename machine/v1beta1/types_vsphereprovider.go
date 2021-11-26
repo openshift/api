@@ -34,8 +34,8 @@ type VSphereMachineProviderSpec struct {
 	// machine is cloned.
 	// +optional
 	NumCPUs int32 `json:"numCPUs,omitempty"`
-	// NumCPUs is the number of cores among which to distribute CPUs in this
-	// virtual machine.
+	// NumCoresPerSocket is the number of cores among which to distribute
+	// CPUs in this virtual machine.
 	// Defaults to the analogue property value in the template from which this
 	// machine is cloned.
 	// +optional

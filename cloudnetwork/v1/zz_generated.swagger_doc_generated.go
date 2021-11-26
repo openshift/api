@@ -42,7 +42,7 @@ func (CloudPrivateIPConfigSpec) SwaggerDoc() map[string]string {
 var map_CloudPrivateIPConfigStatus = map[string]string{
 	"":           "CloudPrivateIPConfigStatus specifies the node assignment together with its assignment condition.",
 	"node":       "node is the node name, as specified by the Kubernetes field: node.metadata.name",
-	"conditions": "condition is the assignment condition of the private IP and its status",
+	"conditions": "conditions is the assignment conditions of the private IP and its status.",
 }
 
 func (CloudPrivateIPConfigStatus) SwaggerDoc() map[string]string {

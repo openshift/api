@@ -440,13 +440,13 @@ type AWSLoadBalancerParameters struct {
 	// +required
 	Type AWSLoadBalancerType `json:"type"`
 
-	// classicLoadBalancerParameters holds configuration parameters for an AWS
+	// classicLoadBalancer holds configuration parameters for an AWS
 	// classic load balancer. Present only if type is Classic.
 	//
 	// +optional
 	ClassicLoadBalancerParameters *AWSClassicLoadBalancerParameters `json:"classicLoadBalancer,omitempty"`
 
-	// networkLoadBalancerParameters holds configuration parameters for an AWS
+	// networkLoadBalancer holds configuration parameters for an AWS
 	// network load balancer. Present only if type is NLB.
 	//
 	// +optional

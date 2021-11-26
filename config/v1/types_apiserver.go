@@ -27,7 +27,7 @@ type APIServer struct {
 }
 
 type APIServerSpec struct {
-	// servingCert is the TLS cert info for serving secure traffic. If not specified, operator managed certificates
+	// servingCerts is the TLS cert info for serving secure traffic. If not specified, operator managed certificates
 	// will be used for serving secure traffic.
 	// +optional
 	ServingCerts APIServerServingCerts `json:"servingCerts"`

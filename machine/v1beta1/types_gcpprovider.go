@@ -146,7 +146,7 @@ type GCPServiceAccount struct {
 
 // GCPEncryptionKeyReference describes the encryptionKey to use for a disk's encryption.
 type GCPEncryptionKeyReference struct {
-	// KMSKeyName is the reference KMS key, in the format
+	// KMSKey is the reference KMS key, in the format
 	// +optional
 	KMSKey *GCPKMSKeyReference `json:"kmsKey,omitempty"`
 	// KMSKeyServiceAccount is the service account being used for the

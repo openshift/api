@@ -137,7 +137,7 @@ message EgressRouterStatusCondition {
 
 // L4RedirectRule defines a DNAT redirection from a given port to a destination IP and port.
 message L4RedirectRule {
-  // IP specifies the remote destination's IP address. Can be IPv4 or IPv6.
+  // DestinationIP specifies the remote destination's IP address. Can be IPv4 or IPv6.
   // +kubebuilder:validation:Required
   optional string destinationIP = 1;
 

@@ -83,7 +83,7 @@ var map_AugmentedActiveDirectoryConfig = map[string]string{
 	"userNameAttributes":        "UserNameAttributes defines which attributes on an LDAP user entry will be interpreted as its OpenShift user name.",
 	"groupMembershipAttributes": "GroupMembershipAttributes defines which attributes on an LDAP user entry will be interpreted as the groups it is a member of",
 	"groupsQuery":               "AllGroupsQuery holds the template for an LDAP query that returns group entries.",
-	"groupUIDAttribute":         "GroupUIDAttributes defines which attribute on an LDAP group entry will be interpreted as its unique identifier. (ldapGroupUID)",
+	"groupUIDAttribute":         "GroupUIDAttribute defines which attribute on an LDAP group entry will be interpreted as its unique identifier. (ldapGroupUID)",
 	"groupNameAttributes":       "GroupNameAttributes defines which attributes on an LDAP group entry will be interpreted as its name to use for an OpenShift group",
 }
 
@@ -468,7 +468,7 @@ func (LDAPQuery) SwaggerDoc() map[string]string {
 
 var map_LDAPSyncConfig = map[string]string{
 	"":                         "LDAPSyncConfig holds the necessary configuration options to define an LDAP group sync\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
-	"url":                      "Host is the scheme, host and port of the LDAP server to connect to: scheme://host:port",
+	"url":                      "URL is the scheme, host and port of the LDAP server to connect to: scheme://host:port",
 	"bindDN":                   "BindDN is an optional DN to bind to the LDAP server with",
 	"bindPassword":             "BindPassword is an optional password to bind with during the search phase.",
 	"insecure":                 "Insecure, if true, indicates the connection should not use TLS. Cannot be set to true with a URL scheme of \"ldaps://\" If false, \"ldaps://\" URLs connect using TLS, and \"ldap://\" URLs are upgraded to a TLS connection using StartTLS as specified in https://tools.ietf.org/html/rfc2830",
@@ -495,7 +495,7 @@ func (LocalQuota) SwaggerDoc() map[string]string {
 var map_MasterAuthConfig = map[string]string{
 	"":                           "MasterAuthConfig configures authentication options in addition to the standard oauth token and client certificate authenticators",
 	"requestHeader":              "RequestHeader holds options for setting up a front proxy against the API.  It is optional.",
-	"webhookTokenAuthenticators": "WebhookTokenAuthnConfig, if present configures remote token reviewers",
+	"webhookTokenAuthenticators": "WebhookTokenAuthenticators, if present configures remote token reviewers",
 	"oauthMetadataFile":          "OAuthMetadataFile is a path to a file containing the discovery endpoint for OAuth 2.0 Authorization Server Metadata for an external OAuth server. See IETF Draft: // https://tools.ietf.org/html/draft-ietf-oauth-discovery-04#section-2 This option is mutually exclusive with OAuthConfig",
 }
 
@@ -539,7 +539,7 @@ var map_MasterConfig = map[string]string{
 	"projectConfig":          "ProjectConfig holds information about project creation and defaults",
 	"routingConfig":          "RoutingConfig holds information about routing and route generation",
 	"networkConfig":          "NetworkConfig to be passed to the compiled in network plugin",
-	"volumeConfig":           "MasterVolumeConfig contains options for configuring volume plugins in the master node.",
+	"volumeConfig":           "VolumeConfig contains options for configuring volume plugins in the master node.",
 	"jenkinsPipelineConfig":  "JenkinsPipelineConfig holds information about the default Jenkins template used for JenkinsPipeline build strategy.",
 	"auditConfig":            "AuditConfig holds information related to auditing capabilities.",
 }
@@ -554,7 +554,7 @@ var map_MasterNetworkConfig = map[string]string{
 	"clusterNetworkCIDR":     "ClusterNetworkCIDR is the CIDR string to specify the global overlay network's L3 space.  Deprecated, but maintained for backwards compatibility, use ClusterNetworks instead.",
 	"clusterNetworks":        "ClusterNetworks is a list of ClusterNetwork objects that defines the global overlay network's L3 space by specifying a set of CIDR and netmasks that the SDN can allocate addressed from.  If this is specified, then ClusterNetworkCIDR and HostSubnetLength may not be set.",
 	"hostSubnetLength":       "HostSubnetLength is the number of bits to allocate to each host's subnet e.g. 8 would mean a /24 network on the host.  Deprecated, but maintained for backwards compatibility, use ClusterNetworks instead.",
-	"serviceNetworkCIDR":     "ServiceNetwork is the CIDR string to specify the service networks",
+	"serviceNetworkCIDR":     "ServiceNetworkCIDR is the CIDR string to specify the service networks",
 	"externalIPNetworkCIDRs": "ExternalIPNetworkCIDRs controls what values are acceptable for the service external IP field. If empty, no externalIP may be set. It may contain a list of CIDRs which are checked for access. If a CIDR is prefixed with !, IPs in that CIDR will be rejected. Rejections will be applied first, then the IP checked against one of the allowed CIDRs. You should ensure this range does not overlap with your nodes, pods, or service CIDRs for security reasons.",
 	"ingressIPNetworkCIDR":   "IngressIPNetworkCIDR controls the range to assign ingress ips from for services of type LoadBalancer on bare metal. If empty, ingress ips will not be assigned. It may contain a single CIDR that will be allocated from. For security reasons, you should ensure that this range does not overlap with the CIDRs reserved for external ips, nodes, pods, or services.",
 	"vxlanPort":              "VXLANPort is the VXLAN port used by the cluster defaults. If it is not set, 4789 is the default value",
@@ -745,7 +745,7 @@ func (ProjectConfig) SwaggerDoc() map[string]string {
 var map_RFC2307Config = map[string]string{
 	"":                               "RFC2307Config holds the necessary configuration options to define how an LDAP group sync interacts with an LDAP server using the RFC2307 schema",
 	"groupsQuery":                    "AllGroupsQuery holds the template for an LDAP query that returns group entries.",
-	"groupUIDAttribute":              "GroupUIDAttributes defines which attribute on an LDAP group entry will be interpreted as its unique identifier. (ldapGroupUID)",
+	"groupUIDAttribute":              "GroupUIDAttribute defines which attribute on an LDAP group entry will be interpreted as its unique identifier. (ldapGroupUID)",
 	"groupNameAttributes":            "GroupNameAttributes defines which attributes on an LDAP group entry will be interpreted as its name to use for an OpenShift group",
 	"groupMembershipAttributes":      "GroupMembershipAttributes defines which attributes on an LDAP group entry will be interpreted  as its members. The values contained in those attributes must be queryable by your UserUIDAttribute",
 	"usersQuery":                     "AllUsersQuery holds the template for an LDAP query that returns user entries.",
@@ -784,7 +784,7 @@ var map_RequestHeaderAuthenticationOptions = map[string]string{
 	"clientCA":            "ClientCA is a file with the trusted signer certs.  It is required.",
 	"clientCommonNames":   "ClientCommonNames is a required list of common names to require a match from.",
 	"usernameHeaders":     "UsernameHeaders is the list of headers to check for user information.  First hit wins.",
-	"groupHeaders":        "GroupNameHeader is the set of headers to check for group information.  All are unioned.",
+	"groupHeaders":        "GroupHeaders is the set of headers to check for group information.  All are unioned.",
 	"extraHeaderPrefixes": "ExtraHeaderPrefixes is the set of request header prefixes to inspect for user extra. X-Remote-Extra- is suggested.",
 }
 
@@ -945,7 +945,7 @@ func (UserAgentDenyRule) SwaggerDoc() map[string]string {
 
 var map_UserAgentMatchRule = map[string]string{
 	"":          "UserAgentMatchRule describes how to match a given request based on User-Agent and HTTPVerb",
-	"regex":     "UserAgentRegex is a regex that is checked against the User-Agent. Known variants of oc clients 1. oc accessing kube resources: oc/v1.2.0 (linux/amd64) kubernetes/bc4550d 2. oc accessing openshift resources: oc/v1.1.3 (linux/amd64) openshift/b348c2f 3. openshift kubectl accessing kube resources:  openshift/v1.2.0 (linux/amd64) kubernetes/bc4550d 4. openshift kubectl accessing openshift resources: openshift/v1.1.3 (linux/amd64) openshift/b348c2f 5. oadm accessing kube resources: oadm/v1.2.0 (linux/amd64) kubernetes/bc4550d 6. oadm accessing openshift resources: oadm/v1.1.3 (linux/amd64) openshift/b348c2f 7. openshift cli accessing kube resources: openshift/v1.2.0 (linux/amd64) kubernetes/bc4550d 8. openshift cli accessing openshift resources: openshift/v1.1.3 (linux/amd64) openshift/b348c2f",
+	"regex":     "Regex is a regex that is checked against the User-Agent. Known variants of oc clients 1. oc accessing kube resources: oc/v1.2.0 (linux/amd64) kubernetes/bc4550d 2. oc accessing openshift resources: oc/v1.1.3 (linux/amd64) openshift/b348c2f 3. openshift kubectl accessing kube resources:  openshift/v1.2.0 (linux/amd64) kubernetes/bc4550d 4. openshift kubectl accessing openshift resources: openshift/v1.1.3 (linux/amd64) openshift/b348c2f 5. oadm accessing kube resources: oadm/v1.2.0 (linux/amd64) kubernetes/bc4550d 6. oadm accessing openshift resources: oadm/v1.1.3 (linux/amd64) openshift/b348c2f 7. openshift cli accessing kube resources: openshift/v1.2.0 (linux/amd64) kubernetes/bc4550d 8. openshift cli accessing openshift resources: openshift/v1.1.3 (linux/amd64) openshift/b348c2f",
 	"httpVerbs": "HTTPVerbs specifies which HTTP verbs should be matched.  An empty list means \"match all verbs\".",
 }
 

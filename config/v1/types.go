@@ -257,7 +257,7 @@ type GenericAPIServerConfig struct {
 	// storageConfig contains information about how to use
 	StorageConfig EtcdStorageConfig `json:"storageConfig"`
 
-	// admissionConfig holds information about how to configure admission.
+	// admission holds information about how to configure admission.
 	AdmissionConfig AdmissionConfig `json:"admission"`
 
 	KubeClientConfig KubeClientConfig `json:"kubeClientConfig"`

@@ -60,8 +60,8 @@ spec:
               Read-only.
             properties:
               conditions:
-                description: condition is the assignment condition of the private
-                  IP and its status
+                description: conditions is the assignment conditions of the private
+                  IP and its status.
                 items:
                   description: "Condition contains details for one aspect of the current
                     state of this API Resource. --- This struct is intended for direct

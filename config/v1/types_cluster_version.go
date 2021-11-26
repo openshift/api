@@ -399,7 +399,7 @@ type ClusterCondition struct {
 	// +required
 	Type string `json:"type"`
 
-	// promQL represents a cluster condition based on PromQL.
+	// promql represents a cluster condition based on PromQL.
 	// +optional
 	PromQL *PromQLClusterCondition `json:"promql,omitempty"`
 }

@@ -185,12 +185,12 @@ spec:
                               about their defaults."
                             properties:
                               classicLoadBalancer:
-                                description: classicLoadBalancerParameters holds configuration
+                                description: classicLoadBalancer holds configuration
                                   parameters for an AWS classic load balancer. Present
                                   only if type is Classic.
                                 type: object
                               networkLoadBalancer:
-                                description: networkLoadBalancerParameters holds configuration
+                                description: networkLoadBalancer holds configuration
                                   parameters for an AWS network load balancer. Present
                                   only if type is NLB.
                                 type: object
@@ -1274,12 +1274,12 @@ spec:
                               about their defaults."
                             properties:
                               classicLoadBalancer:
-                                description: classicLoadBalancerParameters holds configuration
+                                description: classicLoadBalancer holds configuration
                                   parameters for an AWS classic load balancer. Present
                                   only if type is Classic.
                                 type: object
                               networkLoadBalancer:
-                                description: networkLoadBalancerParameters holds configuration
+                                description: networkLoadBalancer holds configuration
                                   parameters for an AWS network load balancer. Present
                                   only if type is NLB.
                                 type: object

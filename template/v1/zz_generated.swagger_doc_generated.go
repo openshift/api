@@ -31,9 +31,9 @@ func (BrokerTemplateInstanceList) SwaggerDoc() map[string]string {
 
 var map_BrokerTemplateInstanceSpec = map[string]string{
 	"":                 "BrokerTemplateInstanceSpec describes the state of a BrokerTemplateInstance.",
-	"templateInstance": "templateinstance is a reference to a TemplateInstance object residing in a namespace.",
+	"templateInstance": "templateInstance is a reference to a TemplateInstance object residing in a namespace.",
 	"secret":           "secret is a reference to a Secret object residing in a namespace, containing the necessary template parameters.",
-	"bindingIDs":       "bindingids is a list of 'binding_id's provided during successive bind calls to the template service broker.",
+	"bindingIDs":       "bindingIDs is a list of 'binding_id's provided during successive bind calls to the template service broker.",
 }
 
 func (BrokerTemplateInstanceSpec) SwaggerDoc() map[string]string {

@@ -178,6 +178,6 @@ type NodeStatus struct {
 	// lastFailedDeploymentGeneration is the generation of the deployment we tried and failed to deploy.
 	LastFailedDeploymentGeneration int32 `json:"lastFailedDeploymentGeneration"`
 
-	// lastFailedDeploymentGenerationErrors is a list of the errors during the failed deployment referenced in lastFailedDeploymentGeneration
+	// lastFailedDeploymentErrors is a list of the errors during the failed deployment referenced in lastFailedDeploymentGeneration
 	LastFailedDeploymentErrors []string `json:"lastFailedDeploymentErrors"`
 }

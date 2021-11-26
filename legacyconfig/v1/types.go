@@ -272,7 +272,7 @@ type MasterConfig struct {
 	// NetworkConfig to be passed to the compiled in network plugin
 	NetworkConfig MasterNetworkConfig `json:"networkConfig"`
 
-	// MasterVolumeConfig contains options for configuring volume plugins in the master node.
+	// VolumeConfig contains options for configuring volume plugins in the master node.
 	VolumeConfig MasterVolumeConfig `json:"volumeConfig"`
 
 	// JenkinsPipelineConfig holds information about the default Jenkins template
@@ -292,7 +292,7 @@ type MasterConfig struct {
 type MasterAuthConfig struct {
 	// RequestHeader holds options for setting up a front proxy against the API.  It is optional.
 	RequestHeader *RequestHeaderAuthenticationOptions `json:"requestHeader"`
-	// WebhookTokenAuthnConfig, if present configures remote token reviewers
+	// WebhookTokenAuthenticators, if present configures remote token reviewers
 	WebhookTokenAuthenticators []WebhookTokenAuthenticator `json:"webhookTokenAuthenticators"`
 	// OAuthMetadataFile is a path to a file containing the discovery endpoint for OAuth 2.0 Authorization
 	// Server Metadata for an external OAuth server.
@@ -311,7 +311,7 @@ type RequestHeaderAuthenticationOptions struct {
 
 	// UsernameHeaders is the list of headers to check for user information.  First hit wins.
 	UsernameHeaders []string `json:"usernameHeaders"`
-	// GroupNameHeader is the set of headers to check for group information.  All are unioned.
+	// GroupHeaders is the set of headers to check for group information.  All are unioned.
 	GroupHeaders []string `json:"groupHeaders"`
 	// ExtraHeaderPrefixes is the set of request header prefixes to inspect for user extra. X-Remote-Extra- is suggested.
 	ExtraHeaderPrefixes []string `json:"extraHeaderPrefixes"`
@@ -502,7 +502,7 @@ type UserAgentMatchingConfig struct {
 
 // UserAgentMatchRule describes how to match a given request based on User-Agent and HTTPVerb
 type UserAgentMatchRule struct {
-	// UserAgentRegex is a regex that is checked against the User-Agent.
+	// Regex is a regex that is checked against the User-Agent.
 	// Known variants of oc clients
 	// 1. oc accessing kube resources: oc/v1.2.0 (linux/amd64) kubernetes/bc4550d
 	// 2. oc accessing openshift resources: oc/v1.1.3 (linux/amd64) openshift/b348c2f
@@ -544,7 +544,7 @@ type MasterNetworkConfig struct {
 	ClusterNetworks []ClusterNetworkEntry `json:"clusterNetworks"`
 	// HostSubnetLength is the number of bits to allocate to each host's subnet e.g. 8 would mean a /24 network on the host.  Deprecated, but maintained for backwards compatibility, use ClusterNetworks instead.
 	DeprecatedHostSubnetLength uint32 `json:"hostSubnetLength,omitempty"`
-	// ServiceNetwork is the CIDR string to specify the service networks
+	// ServiceNetworkCIDR is the CIDR string to specify the service networks
 	ServiceNetworkCIDR string `json:"serviceNetworkCIDR"`
 	// ExternalIPNetworkCIDRs controls what values are acceptable for the service external IP field. If empty, no externalIP
 	// may be set. It may contain a list of CIDRs which are checked for access. If a CIDR is prefixed with !, IPs in that
@@ -737,7 +737,7 @@ type OAuthConfig struct {
 	// AlwaysShowProviderSelection will force the provider selection page to render even when there is only a single provider.
 	AlwaysShowProviderSelection bool `json:"alwaysShowProviderSelection"`
 
-	//IdentityProviders is an ordered list of ways for a user to identify themselves
+	// IdentityProviders is an ordered list of ways for a user to identify themselves
 	IdentityProviders []IdentityProvider `json:"identityProviders"`
 
 	// GrantConfig describes how to handle grants
@@ -1285,7 +1285,7 @@ type StringSourceSpec struct {
 // +openshift:compatibility-gen:internal
 type LDAPSyncConfig struct {
 	metav1.TypeMeta `json:",inline"`
-	// Host is the scheme, host and port of the LDAP server to connect to:
+	// URL is the scheme, host and port of the LDAP server to connect to:
 	// scheme://host:port
 	URL string `json:"url"`
 	// BindDN is an optional DN to bind to the LDAP server with
@@ -1327,7 +1327,7 @@ type RFC2307Config struct {
 	// AllGroupsQuery holds the template for an LDAP query that returns group entries.
 	AllGroupsQuery LDAPQuery `json:"groupsQuery"`
 
-	// GroupUIDAttributes defines which attribute on an LDAP group entry will be interpreted as its unique identifier.
+	// GroupUIDAttribute defines which attribute on an LDAP group entry will be interpreted as its unique identifier.
 	// (ldapGroupUID)
 	GroupUIDAttribute string `json:"groupUIDAttribute"`
 
@@ -1396,7 +1396,7 @@ type AugmentedActiveDirectoryConfig struct {
 	// AllGroupsQuery holds the template for an LDAP query that returns group entries.
 	AllGroupsQuery LDAPQuery `json:"groupsQuery"`
 
-	// GroupUIDAttributes defines which attribute on an LDAP group entry will be interpreted as its unique identifier.
+	// GroupUIDAttribute defines which attribute on an LDAP group entry will be interpreted as its unique identifier.
 	// (ldapGroupUID)
 	GroupUIDAttribute string `json:"groupUIDAttribute"`
 

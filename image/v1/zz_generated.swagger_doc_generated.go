@@ -366,7 +366,7 @@ var map_TagEventCondition = map[string]string{
 	"":                   "TagEventCondition contains condition information for a tag event.",
 	"type":               "Type of tag event condition, currently only ImportSuccess",
 	"status":             "Status of the condition, one of True, False, Unknown.",
-	"lastTransitionTime": "LastTransitionTIme is the time the condition transitioned from one status to another.",
+	"lastTransitionTime": "LastTransitionTime is the time the condition transitioned from one status to another.",
 	"reason":             "Reason is a brief machine readable explanation for the condition's last transition.",
 	"message":            "Message is a human readable description of the details about last transition, complementing reason.",
 	"generation":         "Generation is the spec tag generation that this status corresponds to",

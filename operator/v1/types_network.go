@@ -135,16 +135,16 @@ type DefaultNetworkDefinition struct {
 	// All NetworkTypes are supported except for NetworkTypeRaw
 	Type NetworkType `json:"type"`
 
-	// openShiftSDNConfig configures the openshift-sdn plugin
+	// openshiftSDNConfig configures the openshift-sdn plugin
 	// +optional
 	OpenShiftSDNConfig *OpenShiftSDNConfig `json:"openshiftSDNConfig,omitempty"`
 
-	// oVNKubernetesConfig configures the ovn-kubernetes plugin. This is currently
+	// ovnKubernetesConfig configures the ovn-kubernetes plugin. This is currently
 	// not implemented.
 	// +optional
 	OVNKubernetesConfig *OVNKubernetesConfig `json:"ovnKubernetesConfig,omitempty"`
 
-	// KuryrConfig configures the kuryr plugin
+	// kuryrConfig configures the kuryr plugin
 	// +optional
 	KuryrConfig *KuryrConfig `json:"kuryrConfig,omitempty"`
 }
@@ -357,7 +357,7 @@ type OVNKubernetesConfig struct {
 	// +kubebuilder:validation:Minimum=0
 	// +optional
 	MTU *uint32 `json:"mtu,omitempty"`
-	// geneve port is the UDP port to be used by geneve encapulation.
+	// genevePort is the UDP port to be used by geneve encapulation.
 	// Default is 6081
 	// +kubebuilder:validation:Minimum=1
 	// +optional
@@ -401,7 +401,7 @@ type ExportNetworkFlows struct {
 }
 
 type NetFlowConfig struct {
-	// netFlow defines the NetFlow collectors that will consume the flow data exported from OVS.
+	// collectors defines the NetFlow collectors that will consume the flow data exported from OVS.
 	// It is a list of strings formatted as ip:port with a maximum of ten items
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=10
@@ -409,14 +409,14 @@ type NetFlowConfig struct {
 }
 
 type SFlowConfig struct {
-	// sFlowCollectors is list of strings formatted as ip:port with a maximum of ten items
+	// collectors is list of strings formatted as ip:port with a maximum of ten items
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=10
 	Collectors []IPPort `json:"collectors,omitempty"`
 }
 
 type IPFIXConfig struct {
-	// ipfixCollectors is list of strings formatted as ip:port with a maximum of ten items
+	// collectors is list of strings formatted as ip:port with a maximum of ten items
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=10
 	Collectors []IPPort `json:"collectors,omitempty"`
@@ -433,7 +433,7 @@ type PolicyAuditConfig struct {
 	// +optional
 	RateLimit *uint32 `json:"rateLimit,omitempty"`
 
-	// maxFilesSize is the max size an ACL_audit log file is allowed to reach before rotation occurs
+	// maxFileSize is the max size an ACL_audit log file is allowed to reach before rotation occurs
 	// Units are in MB and the Default is 50MB
 	// +kubebuilder:default=50
 	// +kubebuilder:validation:Minimum=1

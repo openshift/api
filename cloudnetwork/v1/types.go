@@ -53,7 +53,7 @@ type CloudPrivateIPConfigStatus struct {
 	// +kubebuilder:validation:Optional
 	// +optional
 	Node string `json:"node" protobuf:"bytes,1,opt,name=node"`
-	// condition is the assignment condition of the private IP and its status
+	// conditions is the assignment conditions of the private IP and its status.
 	// +kubebuilder:validation:Required
 	// +required
 	Conditions []metav1.Condition `json:"conditions" protobuf:"bytes,2,rep,name=conditions"`

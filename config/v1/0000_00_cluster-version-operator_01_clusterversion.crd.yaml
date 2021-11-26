@@ -232,7 +232,7 @@ spec:
                                   - type
                                 properties:
                                   promql:
-                                    description: promQL represents a cluster condition based on PromQL.
+                                    description: promql represents a cluster condition based on PromQL.
                                     type: object
                                     required:
                                       - promql

@@ -113,7 +113,7 @@ type BuildTriggerCause struct {
 	// genericWebHook holds data about a builds generic webhook trigger.
 	GenericWebHook *GenericWebHookCause `json:"genericWebHook,omitempty" protobuf:"bytes,2,opt,name=genericWebHook"`
 
-	// gitHubWebHook represents data for a GitHub webhook that fired a
+	// githubWebHook represents data for a GitHub webhook that fired a
 	//specific build.
 	GitHubWebHook *GitHubWebHookCause `json:"githubWebHook,omitempty" protobuf:"bytes,3,opt,name=githubWebHook"`
 
@@ -952,9 +952,9 @@ type BuildConfig struct {
 // BuildConfigSpec describes when and how builds are created
 type BuildConfigSpec struct {
 
-	//triggers determine how new Builds can be launched from a BuildConfig. If
-	//no triggers are defined, a new build can only occur as a result of an
-	//explicit client build creation.
+	// triggers determine how new Builds can be launched from a BuildConfig. If
+	// no triggers are defined, a new build can only occur as a result of an
+	// explicit client build creation.
 	// +optional
 	Triggers []BuildTriggerPolicy `json:"triggers,omitempty" protobuf:"bytes,1,rep,name=triggers"`
 
@@ -1224,7 +1224,7 @@ type BuildLog struct {
 
 // DockerStrategyOptions contains extra strategy options for container image builds
 type DockerStrategyOptions struct {
-	// Args contains any build arguments that are to be passed to Docker.  See
+	// buildArgs contains any build arguments that are to be passed to Docker.  See
 	// https://docs.docker.com/engine/reference/builder/#/arg for more details
 	BuildArgs []corev1.EnvVar `json:"buildArgs,omitempty" protobuf:"bytes,1,rep,name=buildArgs"`
 
@@ -1322,7 +1322,7 @@ type BinaryBuildRequestOptions struct {
 type BuildLogOptions struct {
 	metav1.TypeMeta `json:",inline"`
 
-	// cointainer for which to stream logs. Defaults to only container if there is one container in the pod.
+	// container for which to stream logs. Defaults to only container if there is one container in the pod.
 	Container string `json:"container,omitempty" protobuf:"bytes,1,opt,name=container"`
 	// follow if true indicates that the build log should be streamed until
 	// the build terminates.
@@ -1350,7 +1350,7 @@ type BuildLogOptions struct {
 	// slightly more or slightly less than the specified limit.
 	LimitBytes *int64 `json:"limitBytes,omitempty" protobuf:"varint,8,opt,name=limitBytes"`
 
-	// noWait if true causes the call to return immediately even if the build
+	// nowait if true causes the call to return immediately even if the build
 	// is not available yet. Otherwise the server will wait until the build has started.
 	// TODO: Fix the tag to 'noWait' in v2
 	NoWait bool `json:"nowait,omitempty" protobuf:"varint,9,opt,name=nowait"`

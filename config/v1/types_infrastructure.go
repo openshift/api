@@ -75,7 +75,7 @@ type InfrastructureStatus struct {
 	// to tell users where to find the Kubernetes API.
 	APIServerURL string `json:"apiServerURL"`
 
-	// apiServerInternalURL is a valid URI with scheme 'https',
+	// apiServerInternalURI is a valid URI with scheme 'https',
 	// address and optionally a port (defaulting to 443).  apiServerInternalURL can be used by components
 	// like kubelets, to contact the Kubernetes API server using the
 	// infrastructure provider rather than Kubernetes networking.
@@ -437,7 +437,7 @@ type GCPPlatformSpec struct{}
 
 // GCPPlatformStatus holds the current status of the Google Cloud Platform infrastructure provider.
 type GCPPlatformStatus struct {
-	// resourceGroupName is the Project ID for new GCP resources created for the cluster.
+	// projectID is the Project ID for new GCP resources created for the cluster.
 	ProjectID string `json:"projectID"`
 
 	// region holds the region for new GCP resources created for the cluster.

@@ -604,7 +604,7 @@ message TagEventCondition {
   // Status of the condition, one of True, False, Unknown.
   optional string status = 2;
 
-  // LastTransitionTIme is the time the condition transitioned from one status to another.
+  // LastTransitionTime is the time the condition transitioned from one status to another.
   optional k8s.io.apimachinery.pkg.apis.meta.v1.Time lastTransitionTime = 3;
 
   // Reason is a brief machine readable explanation for the condition's last transition.

@@ -116,7 +116,7 @@ type PerNodeAPIRequestLog struct {
 // PerUserAPIRequestCount contains logs of a user's requests.
 type PerUserAPIRequestCount struct {
 
-	// userName that made the request.
+	// username that made the request.
 	// +kubebuilder:validation:MaxLength=512
 	UserName string `json:"username"`
 

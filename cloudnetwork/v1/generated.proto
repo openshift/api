@@ -75,7 +75,7 @@ message CloudPrivateIPConfigStatus {
   // +optional
   optional string node = 1;
 
-  // condition is the assignment condition of the private IP and its status
+  // conditions is the assignment conditions of the private IP and its status.
   // +kubebuilder:validation:Required
   // +required
   repeated k8s.io.apimachinery.pkg.apis.meta.v1.Condition conditions = 2;

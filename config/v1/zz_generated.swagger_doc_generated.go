@@ -129,7 +129,7 @@ var map_GenericAPIServerConfig = map[string]string{
 	"corsAllowedOrigins": "corsAllowedOrigins",
 	"auditConfig":        "auditConfig describes how to configure audit information",
 	"storageConfig":      "storageConfig contains information about how to use",
-	"admission":          "admissionConfig holds information about how to configure admission.",
+	"admission":          "admission holds information about how to configure admission.",
 }
 
 func (GenericAPIServerConfig) SwaggerDoc() map[string]string {
@@ -310,7 +310,7 @@ func (APIServerServingCerts) SwaggerDoc() map[string]string {
 }
 
 var map_APIServerSpec = map[string]string{
-	"servingCerts":                 "servingCert is the TLS cert info for serving secure traffic. If not specified, operator managed certificates will be used for serving secure traffic.",
+	"servingCerts":                 "servingCerts is the TLS cert info for serving secure traffic. If not specified, operator managed certificates will be used for serving secure traffic.",
 	"clientCA":                     "clientCA references a ConfigMap containing a certificate bundle for the signers that will be recognized for incoming client certificates in addition to the operator managed signers. If this is empty, then only operator managed signers are valid. You usually only have to set this if you have your own PKI you wish to honor client certificates from. The ConfigMap must exist in the openshift-config namespace and contain the following required fields: - ConfigMap.Data[\"ca-bundle.crt\"] - CA bundle.",
 	"additionalCORSAllowedOrigins": "additionalCORSAllowedOrigins lists additional, user-defined regular expressions describing hosts for which the API server allows access using the CORS headers. This may be needed to access the API and the integrated OAuth server from JavaScript applications. The values are regular expressions that correspond to the Golang regular expression language.",
 	"encryption":                   "encryption allows the configuration of encryption of resources at the datastore layer.",
@@ -531,7 +531,7 @@ func (OperandVersion) SwaggerDoc() map[string]string {
 var map_ClusterCondition = map[string]string{
 	"":       "ClusterCondition is a union of typed cluster conditions.  The 'type' property determines which of the type-specific properties are relevant. When evaluated on a cluster, the condition may match, not match, or fail to evaluate.",
 	"type":   "type represents the cluster-condition type. This defines the members and semantics of any additional properties.",
-	"promql": "promQL represents a cluster condition based on PromQL.",
+	"promql": "promql represents a cluster condition based on PromQL.",
 }
 
 func (ClusterCondition) SwaggerDoc() map[string]string {
@@ -1018,7 +1018,7 @@ func (GCPPlatformSpec) SwaggerDoc() map[string]string {
 
 var map_GCPPlatformStatus = map[string]string{
 	"":          "GCPPlatformStatus holds the current status of the Google Cloud Platform infrastructure provider.",
-	"projectID": "resourceGroupName is the Project ID for new GCP resources created for the cluster.",
+	"projectID": "projectID is the Project ID for new GCP resources created for the cluster.",
 	"region":    "region holds the region for new GCP resources created for the cluster.",
 }
 
@@ -1081,7 +1081,7 @@ var map_InfrastructureStatus = map[string]string{
 	"platformStatus":         "platformStatus holds status information specific to the underlying infrastructure provider.",
 	"etcdDiscoveryDomain":    "etcdDiscoveryDomain is the domain used to fetch the SRV records for discovering etcd servers and clients. For more info: https://github.com/etcd-io/etcd/blob/329be66e8b3f9e2e6af83c123ff89297e49ebd15/Documentation/op-guide/clustering.md#dns-discovery deprecated: as of 4.7, this field is no longer set or honored.  It will be removed in a future release.",
 	"apiServerURL":           "apiServerURL is a valid URI with scheme 'https', address and optionally a port (defaulting to 443).  apiServerURL can be used by components like the web console to tell users where to find the Kubernetes API.",
-	"apiServerInternalURI":   "apiServerInternalURL is a valid URI with scheme 'https', address and optionally a port (defaulting to 443).  apiServerInternalURL can be used by components like kubelets, to contact the Kubernetes API server using the infrastructure provider rather than Kubernetes networking.",
+	"apiServerInternalURI":   "apiServerInternalURI is a valid URI with scheme 'https', address and optionally a port (defaulting to 443).  apiServerInternalURL can be used by components like kubelets, to contact the Kubernetes API server using the infrastructure provider rather than Kubernetes networking.",
 	"controlPlaneTopology":   "controlPlaneTopology expresses the expectations for operands that normally run on control nodes. The default is 'HighlyAvailable', which represents the behavior operators have in a \"normal\" cluster. The 'SingleReplica' mode will be used in single-node deployments and the operators should not configure the operand for highly-available operation The 'External' mode indicates that the control plane is hosted externally to the cluster and that its components are not visible within the cluster.",
 	"infrastructureTopology": "infrastructureTopology expresses the expectations for infrastructure services that do not run on control plane nodes, usually indicated by a node selector for a `role` value other than `master`. The default is 'HighlyAvailable', which represents the behavior operators have in a \"normal\" cluster. The 'SingleReplica' mode will be used in single-node deployments and the operators should not configure the operand for highly-available operation NOTE: External topology mode is not applicable for this field.",
 }

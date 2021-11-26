@@ -55,7 +55,7 @@ type AzureMachineProviderSpec struct {
 	// PublicLoadBalancer to use for this instance
 	// +optional
 	PublicLoadBalancer string `json:"publicLoadBalancer,omitempty"`
-	// InternalLoadBalancerName to use for this instance
+	// InternalLoadBalancer name to use for this instance
 	// +optional
 	InternalLoadBalancer string `json:"internalLoadBalancer,omitempty"`
 	// NatRule to set inbound NAT rule of the load balancer

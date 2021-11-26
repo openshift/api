@@ -248,7 +248,7 @@ type BrokerTemplateInstance struct {
 
 // BrokerTemplateInstanceSpec describes the state of a BrokerTemplateInstance.
 type BrokerTemplateInstanceSpec struct {
-	// templateinstance is a reference to a TemplateInstance object residing
+	// templateInstance is a reference to a TemplateInstance object residing
 	// in a namespace.
 	TemplateInstance corev1.ObjectReference `json:"templateInstance" protobuf:"bytes,1,opt,name=templateInstance"`
 
@@ -256,7 +256,7 @@ type BrokerTemplateInstanceSpec struct {
 	// containing the necessary template parameters.
 	Secret corev1.ObjectReference `json:"secret" protobuf:"bytes,2,opt,name=secret"`
 
-	// bindingids is a list of 'binding_id's provided during successive bind
+	// bindingIDs is a list of 'binding_id's provided during successive bind
 	// calls to the template service broker.
 	BindingIDs []string `json:"bindingIDs,omitempty" protobuf:"bytes,3,rep,name=bindingIDs"`
 }

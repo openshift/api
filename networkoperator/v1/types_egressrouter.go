@@ -88,7 +88,7 @@ type RedirectConfig struct {
 
 // L4RedirectRule defines a DNAT redirection from a given port to a destination IP and port.
 type L4RedirectRule struct {
-	// IP specifies the remote destination's IP address. Can be IPv4 or IPv6.
+	// DestinationIP specifies the remote destination's IP address. Can be IPv4 or IPv6.
 	// +kubebuilder:validation:Required
 	DestinationIP string `json:"destinationIP" protobuf:"bytes,1,opt,name=destinationIP"`
 

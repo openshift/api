@@ -127,7 +127,7 @@ func (BuildLog) SwaggerDoc() map[string]string {
 
 var map_BuildLogOptions = map[string]string{
 	"":                             "BuildLogOptions is the REST options for a build log\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
-	"container":                    "cointainer for which to stream logs. Defaults to only container if there is one container in the pod.",
+	"container":                    "container for which to stream logs. Defaults to only container if there is one container in the pod.",
 	"follow":                       "follow if true indicates that the build log should be streamed until the build terminates.",
 	"previous":                     "previous returns previous build logs. Defaults to false.",
 	"sinceSeconds":                 "sinceSeconds is a relative time in seconds before the current time from which to show logs. If this value precedes the time a pod was started, only logs since the pod start will be returned. If this value is in the future, no logs will be returned. Only one of sinceSeconds or sinceTime may be specified.",
@@ -135,7 +135,7 @@ var map_BuildLogOptions = map[string]string{
 	"timestamps":                   "timestamps, If true, add an RFC3339 or RFC3339Nano timestamp at the beginning of every line of log output. Defaults to false.",
 	"tailLines":                    "tailLines, If set, is the number of lines from the end of the logs to show. If not specified, logs are shown from the creation of the container or sinceSeconds or sinceTime",
 	"limitBytes":                   "limitBytes, If set, is the number of bytes to read from the server before terminating the log output. This may not display a complete final line of logging, and may return slightly more or slightly less than the specified limit.",
-	"nowait":                       "noWait if true causes the call to return immediately even if the build is not available yet. Otherwise the server will wait until the build has started.",
+	"nowait":                       "nowait if true causes the call to return immediately even if the build is not available yet. Otherwise the server will wait until the build has started.",
 	"version":                      "version of the build for which to view logs.",
 	"insecureSkipTLSVerifyBackend": "insecureSkipTLSVerifyBackend indicates that the apiserver should not confirm the validity of the serving certificate of the backend it is connecting to.  This will make the HTTPS connection between the apiserver and the backend insecure. This means the apiserver cannot verify the log data it is receiving came from the real kubelet.  If the kubelet is configured to verify the apiserver's TLS credentials, it does not mean the connection to the real kubelet is vulnerable to a man in the middle attack (e.g. an attacker could not intercept the actual log data coming from the real kubelet).",
 }
@@ -265,7 +265,7 @@ var map_BuildTriggerCause = map[string]string{
 	"":                 "BuildTriggerCause holds information about a triggered build. It is used for displaying build trigger data for each build and build configuration in oc describe. It is also used to describe which triggers led to the most recent update in the build configuration.",
 	"message":          "message is used to store a human readable message for why the build was triggered. E.g.: \"Manually triggered by user\", \"Configuration change\",etc.",
 	"genericWebHook":   "genericWebHook holds data about a builds generic webhook trigger.",
-	"githubWebHook":    "gitHubWebHook represents data for a GitHub webhook that fired a specific build.",
+	"githubWebHook":    "githubWebHook represents data for a GitHub webhook that fired a specific build.",
 	"imageChangeBuild": "imageChangeBuild stores information about an imagechange event that triggered a new build.",
 	"gitlabWebHook":    "GitLabWebHook represents data for a GitLab webhook that fired a specific build.",
 	"bitbucketWebHook": "BitbucketWebHook represents data for a Bitbucket webhook that fired a specific build.",
@@ -392,7 +392,7 @@ func (DockerBuildStrategy) SwaggerDoc() map[string]string {
 
 var map_DockerStrategyOptions = map[string]string{
 	"":          "DockerStrategyOptions contains extra strategy options for container image builds",
-	"buildArgs": "Args contains any build arguments that are to be passed to Docker.  See https://docs.docker.com/engine/reference/builder/#/arg for more details",
+	"buildArgs": "buildArgs contains any build arguments that are to be passed to Docker.  See https://docs.docker.com/engine/reference/builder/#/arg for more details",
 	"noCache":   "noCache overrides the docker-strategy noCache option in the build config",
 }
 

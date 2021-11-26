@@ -66,7 +66,7 @@ type OAuthConfig struct {
 	// alwaysShowProviderSelection will force the provider selection page to render even when there is only a single provider.
 	AlwaysShowProviderSelection bool `json:"alwaysShowProviderSelection"`
 
-	//identityProviders is an ordered list of ways for a user to identify themselves
+	// identityProviders is an ordered list of ways for a user to identify themselves.
 	IdentityProviders []IdentityProvider `json:"identityProviders"`
 
 	// grantConfig describes how to handle grants

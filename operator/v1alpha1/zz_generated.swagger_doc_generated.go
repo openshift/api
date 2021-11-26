@@ -70,7 +70,7 @@ var map_NodeStatus = map[string]string{
 	"currentDeploymentGeneration":    "currentDeploymentGeneration is the generation of the most recently successful deployment",
 	"targetDeploymentGeneration":     "targetDeploymentGeneration is the generation of the deployment we're trying to apply",
 	"lastFailedDeploymentGeneration": "lastFailedDeploymentGeneration is the generation of the deployment we tried and failed to deploy.",
-	"lastFailedDeploymentErrors":     "lastFailedDeploymentGenerationErrors is a list of the errors during the failed deployment referenced in lastFailedDeploymentGeneration",
+	"lastFailedDeploymentErrors":     "lastFailedDeploymentErrors is a list of the errors during the failed deployment referenced in lastFailedDeploymentGeneration",
 }
 
 func (NodeStatus) SwaggerDoc() map[string]string {

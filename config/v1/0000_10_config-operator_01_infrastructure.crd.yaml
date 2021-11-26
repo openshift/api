@@ -148,7 +148,7 @@ spec:
               type: object
               properties:
                 apiServerInternalURI:
-                  description: apiServerInternalURL is a valid URI with scheme 'https', address and optionally a port (defaulting to 443).  apiServerInternalURL can be used by components like kubelets, to contact the Kubernetes API server using the infrastructure provider rather than Kubernetes networking.
+                  description: apiServerInternalURI is a valid URI with scheme 'https', address and optionally a port (defaulting to 443).  apiServerInternalURL can be used by components like kubelets, to contact the Kubernetes API server using the infrastructure provider rather than Kubernetes networking.
                   type: string
                 apiServerURL:
                   description: apiServerURL is a valid URI with scheme 'https', address and optionally a port (defaulting to 443).  apiServerURL can be used by components like the web console to tell users where to find the Kubernetes API.
@@ -332,7 +332,7 @@ spec:
                       type: object
                       properties:
                         projectID:
-                          description: resourceGroupName is the Project ID for new GCP resources created for the cluster.
+                          description: projectID is the Project ID for new GCP resources created for the cluster.
                           type: string
                         region:
                           description: region holds the region for new GCP resources created for the cluster.

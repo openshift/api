@@ -16,7 +16,7 @@ type ServiceCA struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata"`
 
-	//spec holds user settable values for configuration
+	// spec holds user settable values for configuration
 	// +kubebuilder:validation:Required
 	// +required
 	Spec ServiceCASpec `json:"spec"`

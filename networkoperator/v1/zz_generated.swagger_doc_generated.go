@@ -84,7 +84,7 @@ func (EgressRouterStatusCondition) SwaggerDoc() map[string]string {
 
 var map_L4RedirectRule = map[string]string{
 	"":              "L4RedirectRule defines a DNAT redirection from a given port to a destination IP and port.",
-	"destinationIP": "IP specifies the remote destination's IP address. Can be IPv4 or IPv6.",
+	"destinationIP": "DestinationIP specifies the remote destination's IP address. Can be IPv4 or IPv6.",
 	"port":          "Port is the port number to which clients should send traffic to be redirected.",
 	"protocol":      "Protocol can be TCP, SCTP or UDP.",
 	"targetPort":    "TargetPort allows specifying the port number on the remote destination to which the traffic gets redirected to. If unspecified, the value from \"Port\" is used.",

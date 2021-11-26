@@ -796,7 +796,7 @@ spec:
                           description: tenant defines Openstack tenant name to be used by registry.
                           type: string
                         tenantID:
-                          description: tenant defines Openstack tenant id to be used by registry.
+                          description: tenantID defines Openstack tenant id to be used by registry.
                           type: string
                 tolerations:
                   description: tolerations defines the tolerations for the registry pod.
@@ -1037,7 +1037,7 @@ spec:
                           description: tenant defines Openstack tenant name to be used by registry.
                           type: string
                         tenantID:
-                          description: tenant defines Openstack tenant id to be used by registry.
+                          description: tenantID defines Openstack tenant id to be used by registry.
                           type: string
                 storageManaged:
                   description: storageManaged is deprecated, please refer to Storage.managementState

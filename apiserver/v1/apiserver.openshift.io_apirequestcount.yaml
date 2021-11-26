@@ -154,7 +154,7 @@ spec:
                                   type: string
                                   maxLength: 1024
                                 username:
-                                  description: userName that made the request.
+                                  description: username that made the request.
                                   type: string
                                   maxLength: 512
                           nodeName:
@@ -223,7 +223,7 @@ spec:
                                     type: string
                                     maxLength: 1024
                                   username:
-                                    description: userName that made the request.
+                                    description: username that made the request.
                                     type: string
                                     maxLength: 512
                             nodeName:

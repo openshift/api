@@ -494,8 +494,8 @@ func (AWSClassicLoadBalancerParameters) SwaggerDoc() map[string]string {
 var map_AWSLoadBalancerParameters = map[string]string{
 	"":                    "AWSLoadBalancerParameters provides configuration settings that are specific to AWS load balancers.",
 	"type":                "type is the type of AWS load balancer to instantiate for an ingresscontroller.\n\nValid values are:\n\n* \"Classic\": A Classic Load Balancer that makes routing decisions at either\n  the transport layer (TCP/SSL) or the application layer (HTTP/HTTPS). See\n  the following for additional details:\n\n    https://docs.aws.amazon.com/AmazonECS/latest/developerguide/load-balancer-types.html#clb\n\n* \"NLB\": A Network Load Balancer that makes routing decisions at the\n  transport layer (TCP/SSL). See the following for additional details:\n\n    https://docs.aws.amazon.com/AmazonECS/latest/developerguide/load-balancer-types.html#nlb",
-	"classicLoadBalancer": "classicLoadBalancerParameters holds configuration parameters for an AWS classic load balancer. Present only if type is Classic.",
-	"networkLoadBalancer": "networkLoadBalancerParameters holds configuration parameters for an AWS network load balancer. Present only if type is NLB.",
+	"classicLoadBalancer": "classicLoadBalancer holds configuration parameters for an AWS classic load balancer. Present only if type is Classic.",
+	"networkLoadBalancer": "networkLoadBalancer holds configuration parameters for an AWS network load balancer. Present only if type is NLB.",
 }
 
 func (AWSLoadBalancerParameters) SwaggerDoc() map[string]string {
@@ -895,9 +895,9 @@ func (ClusterNetworkEntry) SwaggerDoc() map[string]string {
 var map_DefaultNetworkDefinition = map[string]string{
 	"":                    "DefaultNetworkDefinition represents a single network plugin's configuration. type must be specified, along with exactly one \"Config\" that matches the type.",
 	"type":                "type is the type of network All NetworkTypes are supported except for NetworkTypeRaw",
-	"openshiftSDNConfig":  "openShiftSDNConfig configures the openshift-sdn plugin",
-	"ovnKubernetesConfig": "oVNKubernetesConfig configures the ovn-kubernetes plugin. This is currently not implemented.",
-	"kuryrConfig":         "KuryrConfig configures the kuryr plugin",
+	"openshiftSDNConfig":  "openshiftSDNConfig configures the openshift-sdn plugin",
+	"ovnKubernetesConfig": "ovnKubernetesConfig configures the ovn-kubernetes plugin. This is currently not implemented.",
+	"kuryrConfig":         "kuryrConfig configures the kuryr plugin",
 }
 
 func (DefaultNetworkDefinition) SwaggerDoc() map[string]string {
@@ -934,7 +934,7 @@ func (IPAMConfig) SwaggerDoc() map[string]string {
 }
 
 var map_IPFIXConfig = map[string]string{
-	"collectors": "ipfixCollectors is list of strings formatted as ip:port with a maximum of ten items",
+	"collectors": "collectors is list of strings formatted as ip:port with a maximum of ten items",
 }
 
 func (IPFIXConfig) SwaggerDoc() map[string]string {
@@ -958,7 +958,7 @@ func (KuryrConfig) SwaggerDoc() map[string]string {
 }
 
 var map_NetFlowConfig = map[string]string{
-	"collectors": "netFlow defines the NetFlow collectors that will consume the flow data exported from OVS. It is a list of strings formatted as ip:port with a maximum of ten items",
+	"collectors": "collectors defines the NetFlow collectors that will consume the flow data exported from OVS. It is a list of strings formatted as ip:port with a maximum of ten items",
 }
 
 func (NetFlowConfig) SwaggerDoc() map[string]string {
@@ -1020,7 +1020,7 @@ func (NetworkStatus) SwaggerDoc() map[string]string {
 var map_OVNKubernetesConfig = map[string]string{
 	"":                    "ovnKubernetesConfig contains the configuration parameters for networks using the ovn-kubernetes network project",
 	"mtu":                 "mtu is the MTU to use for the tunnel interface. This must be 100 bytes smaller than the uplink mtu. Default is 1400",
-	"genevePort":          "geneve port is the UDP port to be used by geneve encapulation. Default is 6081",
+	"genevePort":          "genevePort is the UDP port to be used by geneve encapulation. Default is 6081",
 	"hybridOverlayConfig": "HybridOverlayConfig configures an additional overlay network for peers that are not using OVN.",
 	"ipsecConfig":         "ipsecConfig enables and configures IPsec for pods on the pod network within the cluster.",
 	"policyAuditConfig":   "policyAuditConfig is the configuration for network policy audit events. If unset, reported defaults are used.",
@@ -1045,7 +1045,7 @@ func (OpenShiftSDNConfig) SwaggerDoc() map[string]string {
 
 var map_PolicyAuditConfig = map[string]string{
 	"rateLimit":      "rateLimit is the approximate maximum number of messages to generate per-second per-node. If unset the default of 20 msg/sec is used.",
-	"maxFileSize":    "maxFilesSize is the max size an ACL_audit log file is allowed to reach before rotation occurs Units are in MB and the Default is 50MB",
+	"maxFileSize":    "maxFileSize is the max size an ACL_audit log file is allowed to reach before rotation occurs Units are in MB and the Default is 50MB",
 	"destination":    "destination is the location for policy log messages. Regardless of this config, persistent logs will always be dumped to the host at /var/log/ovn/ however Additionally syslog output may be configured as follows. Valid values are: - \"libc\" -> to use the libc syslog() function of the host node's journdald process - \"udp:host:port\" -> for sending syslog over UDP - \"unix:file\" -> for using the UNIX domain socket directly - \"null\" -> to discard all messages logged to syslog The default is \"null\"",
 	"syslogFacility": "syslogFacility the RFC5424 facility for generated messages, e.g. \"kern\". Default is \"local0\"",
 }
@@ -1066,7 +1066,7 @@ func (ProxyConfig) SwaggerDoc() map[string]string {
 }
 
 var map_SFlowConfig = map[string]string{
-	"collectors": "sFlowCollectors is list of strings formatted as ip:port with a maximum of ten items",
+	"collectors": "collectors is list of strings formatted as ip:port with a maximum of ten items",
 }
 
 func (SFlowConfig) SwaggerDoc() map[string]string {

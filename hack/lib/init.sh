@@ -31,6 +31,7 @@ operatorcontrolplane/v1alpha1 \
 operatoringress/v1 \
 operator/v1alpha1 \
 project/v1 \
+sharedresource/v1alpha1 \
 quota/v1 \
 route/v1 \
 samples/v1 \
@@ -56,6 +57,5 @@ github.com/openshift/api/route/v1,\
 github.com/openshift/api/samples/v1,\
 github.com/openshift/api/security/v1,\
 github.com/openshift/api/template/v1,\
-github.com/openshift/api/user/v1,\
-github.com/openshift/api/machine/v1beta1\
+github.com/openshift/api/user/v1\
 "

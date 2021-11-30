@@ -5,6 +5,8 @@ metadata:
   name: controllerconfigs.machineconfiguration.openshift.io
   labels:
     "openshift.io/operator-managed": ""
+  annotations:
+    api-approved.openshift.io: https://github.com/openshift/api/pull/1060
 spec:
   # group name to use for REST API: /apis/<group>/<version>
   group: machineconfiguration.openshift.io

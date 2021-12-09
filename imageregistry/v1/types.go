@@ -306,10 +306,37 @@ type ImageRegistryConfigStorageIBMCOS struct {
 	ServiceInstanceCRN string `json:"serviceInstanceCRN,omitempty"`
 }
 
-// ImageRegistryConfigStorageOSS holds Alibaba Cloud OSS configuration.
+type EndpointAccessibility string
+
+var (
+	InternalEndpoint = EndpointAccessibility("Internal")
+	PublicEndpoint   = EndpointAccessibility("Public")
+)
+
+type Encryption string
+
+var (
+	ClearText = Encryption("ClearText")
+	AES256    = Encryption("AES256")
+	KMS       = Encryption("KMS")
+)
+
+// EncryptionAlibaba this a union type in kube parlance.  Depending on the value for the encryptionType,
+// different pointers may be used
+type EncryptionAlibaba struct {
+	EncryptionType Encryption `json:"encryptionType"`
+
+	KMSEncryptionAlibaba *KMSEncryptionAlibaba `json:"kms"`
+}
+
+type KMSEncryptionAlibaba struct {
+	KeyID string
+}
+
+// ImageRegistryConfigStorageAlibabaOSS holds Alibaba Cloud OSS configuration.
 // the registry to use Alibaba Cloud Object Storage Service for backend storage.
 // More about oss, you can look at the [official documentation](https://www.alibabacloud.com/help/product/31815.htm)
-type ImageRegistryConfigStorageOSS struct {
+type ImageRegistryConfigStorageAlibabaOSS struct {
 	// bucket is the bucket name in which you want to store the registry's
 	// data.
 	// Optional, will be generated if not provided.
@@ -321,21 +348,15 @@ type ImageRegistryConfigStorageOSS struct {
 	// +optional
 	// For a list of regions, you can look at the [official documentation](https://www.alibabacloud.com/help/doc-detail/31837.html).
 	Region string `json:"region,omitempty"`
-	// regionEndpoint is the endpoint for OSS compatible storage services.
-	// Optional, defaults based on the Region that is provided.
+	// EndpointAccessibility specifies whether the registry use the OSS VPC internal endpoint
+	// Optional, defaults to Public.
 	// +optional
-	// An endpoint which defaults to [bucket].[region].aliyuncs.com or [bucket].[region]-internal.aliyuncs.com (when internal=true).
-	// You can change the default endpoint by changing this value.
-	RegionEndpoint string `json:"regionEndpoint,omitempty"`
-	// internal specifies whether the registry use the OSS VPC internal endpoint
-	// Optional, defaults to false. if RegionEndpoint is specified, this config will be ignored
-	// +optional
-	Internal bool `json:"internal,omitempty"`
+	EndpointAccessibility EndpointAccessibility `json:"endpointAccessibility,omitempty"`
 	// encrypt specifies whether you would like your data encrypted on the server side. Defaults to false if not specified.
-	// Optional, defaults to false.
+	// Optional, defaults to AES256.
 	// +optional
 	// More details, you can look cat the [official documentation](https://www.alibabacloud.com/help/doc-detail/117914.htm)
-	Encrypt bool `json:"encrypt,omitempty"`
+	Encrypt EncryptionAlibaba `json:"encrypt,omitempty"`
 }
 
 // ImageRegistryConfigStorage describes how the storage should be configured
@@ -367,7 +388,7 @@ type ImageRegistryConfigStorage struct {
 	IBMCOS *ImageRegistryConfigStorageIBMCOS `json:"ibmcos,omitempty"`
 	// OSS represents configuration that uses Alibaba Cloud Object Storage Service.
 	// +optional
-	OSS *ImageRegistryConfigStorageOSS `json:"oss,omitempty"`
+	OSS *ImageRegistryConfigStorageAlibabaOSS `json:"oss,omitempty"`
 	// managementState indicates if the operator manages the underlying
 	// storage unit. If Managed the operator will remove the storage when
 	// this operator gets Removed.

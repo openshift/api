@@ -330,7 +330,7 @@ type EncryptionAlibaba struct {
 }
 
 type KMSEncryptionAlibaba struct {
-	KeyID string
+	KeyID string `json:"keyID"`
 }
 
 // ImageRegistryConfigStorageAlibabaOSS holds Alibaba Cloud OSS configuration.
@@ -349,7 +349,7 @@ type ImageRegistryConfigStorageAlibabaOSS struct {
 	// For a list of regions, you can look at the [official documentation](https://www.alibabacloud.com/help/doc-detail/31837.html).
 	Region string `json:"region,omitempty"`
 	// EndpointAccessibility specifies whether the registry use the OSS VPC internal endpoint
-	// Optional, defaults to Public.
+	// Optional, defaults to Internal.
 	// +optional
 	EndpointAccessibility EndpointAccessibility `json:"endpointAccessibility,omitempty"`
 	// encrypt specifies whether you would like your data encrypted on the server side. Defaults to false if not specified.

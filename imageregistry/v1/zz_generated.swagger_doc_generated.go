@@ -99,7 +99,7 @@ var map_ImageRegistryConfigStorageAlibabaOSS = map[string]string{
 	"":                      "ImageRegistryConfigStorageAlibabaOSS holds Alibaba Cloud OSS configuration. the registry to use Alibaba Cloud Object Storage Service for backend storage. More about oss, you can look at the [official documentation](https://www.alibabacloud.com/help/product/31815.htm)",
 	"bucket":                "bucket is the bucket name in which you want to store the registry's data. Optional, will be generated if not provided. About Bucket naming, more details you can look at the [official documentation](https://www.alibabacloud.com/help/doc-detail/257087.htm)",
 	"region":                "region is the Alibaba Cloud Region in which your bucket exists. Optional, will be set based on the installed Alibaba Cloud Region. For a list of regions, you can look at the [official documentation](https://www.alibabacloud.com/help/doc-detail/31837.html).",
-	"endpointAccessibility": "EndpointAccessibility specifies whether the registry use the OSS VPC internal endpoint Optional, defaults to Public.",
+	"endpointAccessibility": "EndpointAccessibility specifies whether the registry use the OSS VPC internal endpoint Optional, defaults to Internal.",
 	"encrypt":               "encrypt specifies whether you would like your data encrypted on the server side. Defaults to false if not specified. Optional, defaults to AES256. More details, you can look cat the [official documentation](https://www.alibabacloud.com/help/doc-detail/117914.htm)",
 }
 

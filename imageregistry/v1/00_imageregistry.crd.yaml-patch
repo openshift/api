@@ -1,0 +1,13 @@
+- op: add
+  path: /spec/versions/name=v1/schema/openAPIV3Schema/properties/spec/properties/storage/properties/oss/properties/encryption/anyOf
+  value:
+  - properties:
+      type:
+        not:
+          enum: ["KMS"]
+    not:
+      required: ["kms"]
+  - properties:
+      type:
+        enum: ["KMS"]
+    required: ["kms"]

@@ -1162,12 +1162,12 @@ spec:
                             required:
                             - kms
                           properties:
-                            type:
+                            method:
                               not:
                                 enum:
                                 - KMS
                         - properties:
-                            type:
+                            method:
                               enum:
                               - KMS
                           required:
@@ -1194,7 +1194,6 @@ spec:
                               chooses the a default, which is subject to change over
                               time. Currently the default is `AES256`.
                             enum:
-                            - PlainText
                             - KMS
                             - AES256
                             type: string
@@ -1591,7 +1590,6 @@ spec:
                               chooses the a default, which is subject to change over
                               time. Currently the default is `AES256`.
                             enum:
-                            - PlainText
                             - KMS
                             - AES256
                             type: string

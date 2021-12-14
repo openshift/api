@@ -318,8 +318,6 @@ const (
 	// PublicEndpoint sets the VPC endpoint to public
 	PublicEndpoint EndpointAccessibility = "Public"
 
-	// PlainText is an AlibabaEncryptionMethod. This is the default. This means no encryption
-	PlainText AlibabaEncryptionMethod = "PlainText"
 	// AES256 is an AlibabaEncryptionMethod. This means AES256 encryption
 	AES256 AlibabaEncryptionMethod = "AES256"
 	// KMS is an AlibabaEncryptionMethod. This means KMS encryption
@@ -332,7 +330,7 @@ type EncryptionAlibaba struct {
 	// Method defines the different encrytion modes available
 	// Empty value means no opinion and the platform chooses the a default, which is subject to change over time.
 	// Currently the default is `AES256`.
-	// +kubebuilder:validation:Enum="PlainText";"KMS";"AES256"
+	// +kubebuilder:validation:Enum="KMS";"AES256"
 	// +kubebuilder:default="AES256"
 	// +optional
 	Method AlibabaEncryptionMethod `json:"method"`

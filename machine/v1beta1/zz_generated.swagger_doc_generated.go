@@ -36,7 +36,7 @@ var map_AWSMachineProviderConfig = map[string]string{
 	"keyName":              "KeyName is the name of the KeyPair to use for SSH",
 	"deviceIndex":          "DeviceIndex is the index of the device on the instance for the network interface attachment. Defaults to 0.",
 	"publicIp":             "PublicIP specifies whether the instance should get a public IP. If not present, it should use the default of its subnet.",
-	"networkInterfaceType": "NetworkInterfaceType specifies the type of network interface to be used for the primary network interface. Valid values are \"interface\", \"efa\", and omitted, which means no opinion and the platform chooses a good default which may change over time. The current default value is \"interface\". Please visit https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/efa.html to learn more about the AWS Elastic Fabric Adapter interface option.",
+	"networkInterfaceType": "NetworkInterfaceType specifies the type of network interface to be used for the primary network interface. Valid values are \"ENA\", \"EFA\", and omitted, which means no opinion and the platform chooses a good default which may change over time. The current default value is \"ENA\". Please visit https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/efa.html to learn more about the AWS Elastic Fabric Adapter interface option.",
 	"securityGroups":       "SecurityGroups is an array of references to security groups that should be applied to the instance.",
 	"subnet":               "Subnet is a reference to the subnet to use for this instance",
 	"placement":            "Placement specifies where to create the instance in AWS",

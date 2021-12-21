@@ -46,12 +46,12 @@ type AWSMachineProviderConfig struct {
 	PublicIP *bool `json:"publicIp,omitempty"`
 	// NetworkInterfaceType specifies the type of network interface to be used for the primary
 	// network interface.
-	// Valid values are "interface", "efa", and omitted, which means no opinion and the platform
+	// Valid values are "ENA", "EFA", and omitted, which means no opinion and the platform
 	// chooses a good default which may change over time.
-	// The current default value is "interface".
+	// The current default value is "ENA".
 	// Please visit https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/efa.html to learn more
 	// about the AWS Elastic Fabric Adapter interface option.
-	// +kubebuilder:validation:Enum:="interface";"efa"
+	// +kubebuilder:validation:Enum:="ENA";"EFA"
 	// +optional
 	NetworkInterfaceType AWSNetworkInterfaceType `json:"networkInterfaceType,omitempty"`
 	// SecurityGroups is an array of references to security groups that should be applied to the
@@ -250,11 +250,12 @@ const (
 type AWSNetworkInterfaceType string
 
 const (
-	// AWSInterfaceNetworkInterfaceType is the default network interface type.
+	// AWSENANetworkInterfaceType is the default network interface type,
+	// the EC2 Elastic Network Adapter commonly used with EC2 instances.
 	// This should be used for standard network operations.
-	AWSInterfaceNetworkInterfaceType AWSNetworkInterfaceType = "interface"
+	AWSENANetworkInterfaceType AWSNetworkInterfaceType = "ENA"
 	// AWSEFANetworkInterfaceType is the Elastic Fabric Adapter network interface type.
-	AWSEFANetworkInterfaceType AWSNetworkInterfaceType = "efa"
+	AWSEFANetworkInterfaceType AWSNetworkInterfaceType = "EFA"
 )
 
 // AWSMachineProviderStatus is the type that will be embedded in a Machine.Status.ProviderStatus field.

@@ -105,10 +105,12 @@ type AlibabaCloudMachineProviderConfig struct {
 	// +optional
 	DataDisks []DataDiskProperties `json:"dataDisk,omitempty"`
 
-	// SecurityGroups is a list of security group references to assign to the instance. A reference holds either the security group ID
-	// or the required tags to search. The  limit of N values varies based on the maximum number of security groups to which an instance can belong.
+	// SecurityGroups is a list of security group references to assign to the instance.
+	// A reference holds either the security group ID, or the required tags to search.
+	// When more than one security group is return for a tag search, all the groups are associated with the instance up to the
+	// maximum number of security groups to which an instance can belong.
 	// For more information, see the "Security group limits" section in Limits.
-	// https://www.alibabacloud.com/help/doc-detail/101348.htm?spm=a2c63.p38356.879954.48.78f0199aX3dfIE
+	// https://www.alibabacloud.com/help/en/doc-detail/25412.htm
 	SecurityGroups []AlibabaResourceReference `json:"securityGroups,omitempty"`
 
 	// Bandwidth describes the internet bandwidth strategy for the instance
@@ -119,7 +121,9 @@ type AlibabaCloudMachineProviderConfig struct {
 	// +optional
 	SystemDisk SystemDiskProperties `json:"systemDisk,omitempty"`
 
-	// VSwitch is a reference to the vswitch to use for this instance
+	// VSwitch is a reference to the vswitch to use for this instance.
+	// A reference holds either the vSwitch ID, or the required tags to search.
+	// When more than one vSwitch is returned for a tag search, only the first vSwitch returned will be used.
 	// This parameter is required when you create an instance of the VPC type.
 	// You can call the DescribeVSwitches operation to query the created vSwitches.
 	VSwitch AlibabaResourceReference `json:"vSwitch,omitempty"`
@@ -129,6 +133,8 @@ type AlibabaCloudMachineProviderConfig struct {
 	RAMRoleName string `json:"ramRoleName,omitempty"`
 
 	// ResourceGroup references the resource group to which to assign the instance.
+	// A reference holds either the resource group ID, or the required tags to search.
+	// When more than one resource group are returned for a tag search, an error will be produced and the Machine will not be created.
 	// +optional
 	ResourceGroup AlibabaResourceReference `json:"resourceGroup,omitempty"`
 
@@ -168,7 +174,8 @@ type AlibabaResourceReference struct {
 	// +optional
 	ID *string `json:"id,omitempty"`
 
-	// Tags is a set of metadata based upon ECS object tags used to identify a resource
+	// Tags is a set of metadata based upon ECS object tags used to identify a resource.
+	// For details about usage when multiple resources are found, please see the owning parent field documentation.
 	// +optional
 	Tags *[]Tag `json:"tags,omitempty"`
 }

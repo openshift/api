@@ -34,6 +34,9 @@ type AzureMachineProviderSpec struct {
 	Image Image `json:"image"`
 	// OSDisk represents the parameters for creating the OS disk.
 	OSDisk OSDisk `json:"osDisk"`
+	// DataDisk specifies the parameters that are used to add one or more data disks to the machine
+	// +optional
+	DataDisks []DataDisk `json:"dataDisks,omitempty"`
 	// SSHPublicKey is the public key to use to SSH to the virtual machine.
 	// +optional
 	SSHPublicKey string `json:"sshPublicKey,omitempty"`
@@ -83,6 +86,11 @@ type AzureMachineProviderSpec struct {
 	// SecurityProfile specifies the Security profile settings for a virtual machine.
 	// +optional
 	SecurityProfile *SecurityProfile `json:"securityProfile,omitempty"`
+	// UltraSSDCapability enables or disables Azure UltraSSD capability for a virtual machine.
+	// When omitted, the platform may enable the capability based on the configuration of data disks.
+	// +kubebuilder:validation:Enum:="Enabled";"Disabled"
+	// +optional
+	UltraSSDCapability AzureUltraSSDCapabilityState `json:"ultraSSDCapability,omitempty"`
 	// AcceleratedNetworking enables or disables Azure accelerated networking feature.
 	// Set to false by default. If true, then this will depend on whether the requested
 	// VMSize is supported. If set to true with an unsupported VMSize, Azure will return an error.
@@ -215,6 +223,48 @@ type OSDisk struct {
 	CachingType string `json:"cachingType,omitempty"`
 }
 
+// DataDisk specifies the parameters that are used to add one or more data disks to the machine.
+type DataDisk struct {
+	// NameSuffix is the suffix to be appended to the machine name to generate the disk name.
+	// Each disk name will be in format <machineName>_<nameSuffix>.
+	// NameSuffix name must start and finish with an alphanumeric character and can only contain letters, numbers, underscores, periods or hyphens.
+	// The overall disk name must not exceed 80 chars in length.
+	// +kubebuilder:validation:Pattern:=`^[a-zA-Z0-9](?:[\w\.-]*[a-zA-Z0-9])?$`
+	// +kubebuilder:validation:MaxLength:=78
+	// +kubebuilder:validation:Required
+	NameSuffix string `json:"nameSuffix"`
+	// DiskSizeGB is the size in GB to assign to the data disk.
+	// +kubebuilder:validation:Minimum=4
+	// +kubebuilder:validation:Required
+	DiskSizeGB int32 `json:"diskSizeGB"`
+	// ManagedDisk specifies the Managed Disk parameters for the data disk.
+	// +optional
+	ManagedDisk ManagedDiskParameters `json:"managedDisk,omitempty"`
+	// Lun Specifies the logical unit number of the data disk. This value is used to identify data disks within the VM and therefore must be unique for each data disk attached to a VM.
+	// The value must be between 0 and 63.
+	// +optional
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=63
+	Lun *int32 `json:"lun,omitempty"`
+	// CachingType specifies the caching requirements.
+	// +optional
+	// +kubebuilder:validation:Enum=None;ReadOnly;ReadWrite
+	CachingType CachingTypeOption `json:"cachingType,omitempty"`
+}
+
+// CachingTypeOption defines the different values for a CachingType.
+type CachingTypeOption string
+
+// These are the valid CachingTypeOption values.
+const (
+	// CachingTypeReadOnly means the CachingType is "ReadOnly".
+	CachingTypeReadOnly CachingTypeOption = "ReadOnly"
+	// CachingTypeReadWrite means the CachingType is "ReadWrite".
+	CachingTypeReadWrite CachingTypeOption = "ReadWrite"
+	// CachingTypeNone means the CachingType is "None".
+	CachingTypeNone CachingTypeOption = "None"
+)
+
 // DiskSettings describe ephemeral disk settings for the os disk.
 type DiskSettings struct {
 	// EphemeralStorageLocation enables ephemeral OS when set to 'Local'.
@@ -229,7 +279,8 @@ type DiskSettings struct {
 
 // ManagedDiskParameters is the parameters of a managed disk.
 type ManagedDiskParameters struct {
-	// StorageAccountType is the storage account type to use. Possible values include "Standard_LRS" and "Premium_LRS".
+	// StorageAccountType is the storage account type to use.
+	// Possible values include "Standard_LRS", "Premium_LRS" and, only for Data Disks, "UltraSSD_LRS."
 	StorageAccountType string `json:"storageAccountType"`
 	// DiskEncryptionSet is the disk encryption set properties
 	// +optional
@@ -272,3 +323,14 @@ type AzureMachineProviderCondition struct {
 	// +optional
 	Message string `json:"message"`
 }
+
+// AzureUltraSSDCapabilityState defines the different states of an UltraSSDCapability
+type AzureUltraSSDCapabilityState string
+
+// These are the valid AzureUltraSSDCapabilityState states.
+const (
+	// "AzureUltraSSDCapabilityTrue" means the Azure UltraSSDCapability is Enabled
+	AzureUltraSSDCapabilityTrue AzureUltraSSDCapabilityState = "Enabled"
+	// "AzureUltraSSDCapabilityFalse" means the Azure UltraSSDCapability is Disabled
+	AzureUltraSSDCapabilityFalse AzureUltraSSDCapabilityState = "Disabled"
+)

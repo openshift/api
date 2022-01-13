@@ -175,6 +175,7 @@ var map_AzureMachineProviderSpec = map[string]string{
 	"vmSize":                    "VMSize is the size of the VM to create.",
 	"image":                     "Image is the OS image to use to create the instance.",
 	"osDisk":                    "OSDisk represents the parameters for creating the OS disk.",
+	"dataDisks":                 "DataDisk specifies the parameters that are used to add one or more data disks to the machine",
 	"sshPublicKey":              "SSHPublicKey is the public key to use to SSH to the virtual machine.",
 	"publicIP":                  "PublicIP if true a public IP will be used",
 	"tags":                      "Tags is a list of tags to apply to the machine.",
@@ -191,6 +192,7 @@ var map_AzureMachineProviderSpec = map[string]string{
 	"resourceGroup":             "ResourceGroup is the resource group for the virtual machine",
 	"spotVMOptions":             "SpotVMOptions allows the ability to specify the Machine should use a Spot VM",
 	"securityProfile":           "SecurityProfile specifies the Security profile settings for a virtual machine.",
+	"ultraSSDCapability":        "UltraSSDCapability enables or disables Azure UltraSSD capability for a virtual machine. When omitted, the platform may enable the capability based on the configuration of data disks.",
 	"acceleratedNetworking":     "AcceleratedNetworking enables or disables Azure accelerated networking feature. Set to false by default. If true, then this will depend on whether the requested VMSize is supported. If set to true with an unsupported VMSize, Azure will return an error.",
 	"availabilitySet":           "AvailabilitySet specifies the availability set to use for this instance. Availability set should be precreated, before using this field.",
 }
@@ -208,6 +210,19 @@ var map_AzureMachineProviderStatus = map[string]string{
 
 func (AzureMachineProviderStatus) SwaggerDoc() map[string]string {
 	return map_AzureMachineProviderStatus
+}
+
+var map_DataDisk = map[string]string{
+	"":            "DataDisk specifies the parameters that are used to add one or more data disks to the machine.",
+	"nameSuffix":  "NameSuffix is the suffix to be appended to the machine name to generate the disk name. Each disk name will be in format <machineName>_<nameSuffix>. NameSuffix name must start and finish with an alphanumeric character and can only contain letters, numbers, underscores, periods or hyphens. The overall disk name must not exceed 80 chars in length.",
+	"diskSizeGB":  "DiskSizeGB is the size in GB to assign to the data disk.",
+	"managedDisk": "ManagedDisk specifies the Managed Disk parameters for the data disk.",
+	"lun":         "Lun Specifies the logical unit number of the data disk. This value is used to identify data disks within the VM and therefore must be unique for each data disk attached to a VM. The value must be between 0 and 63.",
+	"cachingType": "CachingType specifies the caching requirements.",
+}
+
+func (DataDisk) SwaggerDoc() map[string]string {
+	return map_DataDisk
 }
 
 var map_DiskEncryptionSetParameters = map[string]string{
@@ -244,7 +259,7 @@ func (Image) SwaggerDoc() map[string]string {
 
 var map_ManagedDiskParameters = map[string]string{
 	"":                   "ManagedDiskParameters is the parameters of a managed disk.",
-	"storageAccountType": "StorageAccountType is the storage account type to use. Possible values include \"Standard_LRS\" and \"Premium_LRS\".",
+	"storageAccountType": "StorageAccountType is the storage account type to use. Possible values include \"Standard_LRS\", \"Premium_LRS\" and, only for Data Disks, \"UltraSSD_LRS.\"",
 	"diskEncryptionSet":  "DiskEncryptionSet is the disk encryption set properties",
 }
 

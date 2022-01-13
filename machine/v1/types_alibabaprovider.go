@@ -33,6 +33,9 @@ type AlibabaDiskEncryptionMode string
 // AlibabaDiskPreservationPolicy enum attribute to describe whether to preserve or delete a disk upon instance removal
 type AlibabaDiskPreservationPolicy string
 
+// AlibabaResourceReferenceType enum attribute to identify the type of resource reference
+type AlibabaResourceReferenceType string
+
 const (
 	// DeleteWithInstance enum property to delete disk with instance deletion
 	DeleteWithInstance AlibabaDiskPreservationPolicy = "DeleteWithInstance"
@@ -61,6 +64,11 @@ const (
 	AlibabaDiskCatagoryESSD AlibabaDiskCategory = "cloud_essd"
 	// AlibabaDiskCategoryBasic enum proprty to set the category of disk to basic
 	AlibabaDiskCatagoryBasic AlibabaDiskCategory = "cloud"
+
+	// AlibabaResourceReferenceTypeID enum property to identify an ID type resource reference
+	AlibabaResourceReferenceTypeID AlibabaResourceReferenceType = "ID"
+	// AlibabaResourceReferenceTypeTags enum property to identify a tags type resource reference
+	AlibabaResourceReferenceTypeTags AlibabaResourceReferenceType = "Tags"
 )
 
 // +genclient
@@ -153,13 +161,16 @@ type AlibabaCloudMachineProviderConfig struct {
 // Only one of ID or Tags may be specified. Specifying more than one will result in
 // a validation error.
 type AlibabaResourceReference struct {
+	// type identifies the resource reference type for this entry.
+	Type AlibabaResourceReferenceType `json:"type"`
+
 	// ID of resource
 	// +optional
-	ID string `json:"id,omitempty"`
+	ID *string `json:"id,omitempty"`
 
 	// Tags is a set of metadata based upon ECS object tags used to identify a resource
 	// +optional
-	Tags []Tag `json:"tags,omitempty"`
+	Tags *[]Tag `json:"tags,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

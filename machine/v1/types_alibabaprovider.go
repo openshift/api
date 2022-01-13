@@ -128,9 +128,9 @@ type AlibabaCloudMachineProviderConfig struct {
 	// +optional
 	RAMRoleName string `json:"ramRoleName,omitempty"`
 
-	// ResourceGroupID is the unique ID of the resource group to which to assign the instance.
+	// ResourceGroup references the resource group to which to assign the instance.
 	// +optional
-	ResourceGroupID string `json:"resourceGroupId,omitempty"`
+	ResourceGroup AlibabaResourceReference `json:"resourceGroup,omitempty"`
 
 	// Tenancy specifies whether to create the instance on a dedicated host.
 	// Valid values:

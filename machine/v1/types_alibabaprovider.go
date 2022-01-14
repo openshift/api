@@ -91,8 +91,7 @@ type AlibabaCloudMachineProviderConfig struct {
 	InstanceType string `json:"instanceType"`
 
 	// The ID of the vpc
-	// +optional
-	VpcID string `json:"vpcId,omitempty"`
+	VpcID string `json:"vpcId"`
 
 	// The ID of the region in which to create the instance. You can call the DescribeRegions operation to query the most recent region list.
 	RegionID string `json:"regionId"`
@@ -109,7 +108,7 @@ type AlibabaCloudMachineProviderConfig struct {
 
 	// SecurityGroups is a list of security group references to assign to the instance.
 	// A reference holds either the security group ID, the resource name, or the required tags to search.
-	// When more than one security group is return for a tag search, all the groups are associated with the instance up to the
+	// When more than one security group is returned for a tag search, all the groups are associated with the instance up to the
 	// maximum number of security groups to which an instance can belong.
 	// For more information, see the "Security group limits" section in Limits.
 	// https://www.alibabacloud.com/help/en/doc-detail/25412.htm
@@ -128,7 +127,7 @@ type AlibabaCloudMachineProviderConfig struct {
 	// When more than one vSwitch is returned for a tag search, only the first vSwitch returned will be used.
 	// This parameter is required when you create an instance of the VPC type.
 	// You can call the DescribeVSwitches operation to query the created vSwitches.
-	VSwitch AlibabaResourceReference `json:"vSwitch,omitempty"`
+	VSwitch AlibabaResourceReference `json:"vSwitch"`
 
 	// RAMRoleName is the name of the instance Resource Access Management (RAM) role. This allows the instance to perform API calls as this specified RAM role.
 	// +optional
@@ -138,8 +137,7 @@ type AlibabaCloudMachineProviderConfig struct {
 	// A reference holds either the resource group ID, the resource name, or the required tags to search.
 	// When more than one resource group are returned for a search, an error will be produced and the Machine will not be created.
 	// Resource Groups do not support searching by tags.
-	// +optional
-	ResourceGroup AlibabaResourceReference `json:"resourceGroup,omitempty"`
+	ResourceGroup AlibabaResourceReference `json:"resourceGroup"`
 
 	// Tenancy specifies whether to create the instance on a dedicated host.
 	// Valid values:

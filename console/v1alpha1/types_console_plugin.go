@@ -52,11 +52,11 @@ type ConsolePluginProxy struct {
 	// should be unique per plugin. The console backend exposes following
 	// proxy endpoint:
 	//
-	// /api/proxy/<plugin-name>/<proxy-alias>/<request-path>?<optional-query-parameters>
+	// /api/proxy/plugin/<plugin-name>/<proxy-alias>/<request-path>?<optional-query-parameters>
 	//
 	// Request example path:
 	//
-	// /api/proxy/acm/search/pods?namespace=openshift-apiserver
+	// /api/proxy/plugin/acm/search/pods?namespace=openshift-apiserver
 	//
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=1

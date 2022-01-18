@@ -56,7 +56,7 @@ spec:
                       - type
                     properties:
                       alias:
-                        description: "alias is a proxy name that identifies the plugin's proxy. An alias name should be unique per plugin. The console backend exposes following proxy endpoint: \n /api/proxy/<plugin-name>/<proxy-alias>/<request-path>?<optional-query-parameters> \n Request example path: \n /api/proxy/acm/search/pods?namespace=openshift-apiserver"
+                        description: "alias is a proxy name that identifies the plugin's proxy. An alias name should be unique per plugin. The console backend exposes following proxy endpoint: \n /api/proxy/plugin/<plugin-name>/<proxy-alias>/<request-path>?<optional-query-parameters> \n Request example path: \n /api/proxy/plugin/acm/search/pods?namespace=openshift-apiserver"
                         type: string
                         maxLength: 128
                         minLength: 1

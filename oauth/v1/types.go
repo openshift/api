@@ -9,7 +9,7 @@ import (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // OAuthAccessToken describes an OAuth access token.
-// The name of a token must be prefixed with a `sha256~` string, must not contain "/" or "%" characters and must be at
+// The name of a token must be prefixed with a `sha256~` string, must not contain either a slash or percent characters and must be at
 // least 32 characters long.
 //
 // The name of the token is constructed from the actual token by sha256-hashing it and using URL-safe unpadded

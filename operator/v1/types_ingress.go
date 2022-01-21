@@ -75,8 +75,10 @@ type IngressControllerSpec struct {
 	// If this field is empty, the ingress controller uses the default error pages.
 	HttpErrorCodePages configv1.ConfigMapNameReference `json:"httpErrorCodePages,omitempty"`
 
-	// replicas is the desired number of ingress controller replicas. If unset,
-	// defaults to 2.
+	// replicas is the desired number of ingress controller replicas. If
+	// unset, defaults to 2 on clusters where the infrastructure topology is
+	// "HighlyAvailable" and 1 on clusters where the infrastructure topology
+	// is "SingleNode".
 	//
 	// +optional
 	Replicas *int32 `json:"replicas,omitempty"`

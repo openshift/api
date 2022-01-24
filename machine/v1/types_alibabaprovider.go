@@ -33,6 +33,9 @@ type AlibabaDiskEncryptionMode string
 // AlibabaDiskPreservationPolicy enum attribute to describe whether to preserve or delete a disk upon instance removal
 type AlibabaDiskPreservationPolicy string
 
+// AlibabaResourceReferenceType enum attribute to identify the type of resource reference
+type AlibabaResourceReferenceType string
+
 const (
 	// DeleteWithInstance enum property to delete disk with instance deletion
 	DeleteWithInstance AlibabaDiskPreservationPolicy = "DeleteWithInstance"
@@ -61,6 +64,13 @@ const (
 	AlibabaDiskCatagoryESSD AlibabaDiskCategory = "cloud_essd"
 	// AlibabaDiskCategoryBasic enum proprty to set the category of disk to basic
 	AlibabaDiskCatagoryBasic AlibabaDiskCategory = "cloud"
+
+	// AlibabaResourceReferenceTypeID enum property to identify an ID type resource reference
+	AlibabaResourceReferenceTypeID AlibabaResourceReferenceType = "ID"
+	// AlibabaResourceReferenceTypeName enum property to identify an Name type resource reference
+	AlibabaResourceReferenceTypeName AlibabaResourceReferenceType = "Name"
+	// AlibabaResourceReferenceTypeTags enum property to identify a tags type resource reference
+	AlibabaResourceReferenceTypeTags AlibabaResourceReferenceType = "Tags"
 )
 
 // +genclient
@@ -81,8 +91,7 @@ type AlibabaCloudMachineProviderConfig struct {
 	InstanceType string `json:"instanceType"`
 
 	// The ID of the vpc
-	// +optional
-	VpcID string `json:"vpcId,omitempty"`
+	VpcID string `json:"vpcId"`
 
 	// The ID of the region in which to create the instance. You can call the DescribeRegions operation to query the most recent region list.
 	RegionID string `json:"regionId"`
@@ -97,10 +106,12 @@ type AlibabaCloudMachineProviderConfig struct {
 	// +optional
 	DataDisks []DataDiskProperties `json:"dataDisk,omitempty"`
 
-	// SecurityGroups is a list of security group references to assign to the instance. A reference holds either the security group ID
-	// or the required tags to search. The  limit of N values varies based on the maximum number of security groups to which an instance can belong.
+	// SecurityGroups is a list of security group references to assign to the instance.
+	// A reference holds either the security group ID, the resource name, or the required tags to search.
+	// When more than one security group is returned for a tag search, all the groups are associated with the instance up to the
+	// maximum number of security groups to which an instance can belong.
 	// For more information, see the "Security group limits" section in Limits.
-	// https://www.alibabacloud.com/help/doc-detail/101348.htm?spm=a2c63.p38356.879954.48.78f0199aX3dfIE
+	// https://www.alibabacloud.com/help/en/doc-detail/25412.htm
 	SecurityGroups []AlibabaResourceReference `json:"securityGroups,omitempty"`
 
 	// Bandwidth describes the internet bandwidth strategy for the instance
@@ -111,18 +122,22 @@ type AlibabaCloudMachineProviderConfig struct {
 	// +optional
 	SystemDisk SystemDiskProperties `json:"systemDisk,omitempty"`
 
-	// VSwitch is a reference to the vswitch to use for this instance
+	// VSwitch is a reference to the vswitch to use for this instance.
+	// A reference holds either the vSwitch ID, the resource name, or the required tags to search.
+	// When more than one vSwitch is returned for a tag search, only the first vSwitch returned will be used.
 	// This parameter is required when you create an instance of the VPC type.
 	// You can call the DescribeVSwitches operation to query the created vSwitches.
-	VSwitch AlibabaResourceReference `json:"vSwitch,omitempty"`
+	VSwitch AlibabaResourceReference `json:"vSwitch"`
 
 	// RAMRoleName is the name of the instance Resource Access Management (RAM) role. This allows the instance to perform API calls as this specified RAM role.
 	// +optional
 	RAMRoleName string `json:"ramRoleName,omitempty"`
 
-	// ResourceGroupID is the unique ID of the resource group to which to assign the instance.
-	// +optional
-	ResourceGroupID string `json:"resourceGroupId,omitempty"`
+	// ResourceGroup references the resource group to which to assign the instance.
+	// A reference holds either the resource group ID, the resource name, or the required tags to search.
+	// When more than one resource group are returned for a search, an error will be produced and the Machine will not be created.
+	// Resource Groups do not support searching by tags.
+	ResourceGroup AlibabaResourceReference `json:"resourceGroup"`
 
 	// Tenancy specifies whether to create the instance on a dedicated host.
 	// Valid values:
@@ -153,13 +168,21 @@ type AlibabaCloudMachineProviderConfig struct {
 // Only one of ID or Tags may be specified. Specifying more than one will result in
 // a validation error.
 type AlibabaResourceReference struct {
+	// type identifies the resource reference type for this entry.
+	Type AlibabaResourceReferenceType `json:"type"`
+
 	// ID of resource
 	// +optional
-	ID string `json:"id,omitempty"`
+	ID *string `json:"id,omitempty"`
 
-	// Tags is a set of metadata based upon ECS object tags used to identify a resource
+	// Name of the resource
 	// +optional
-	Tags []Tag `json:"tags,omitempty"`
+	Name *string `json:"name,omitempty"`
+
+	// Tags is a set of metadata based upon ECS object tags used to identify a resource.
+	// For details about usage when multiple resources are found, please see the owning parent field documentation.
+	// +optional
+	Tags *[]Tag `json:"tags,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

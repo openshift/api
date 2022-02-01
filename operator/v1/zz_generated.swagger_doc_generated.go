@@ -421,6 +421,16 @@ func (DNSNodePlacement) SwaggerDoc() map[string]string {
 	return map_DNSNodePlacement
 }
 
+var map_DNSOverTLSConfig = map[string]string{
+	"":           "DNSOverTLSConfig describes optional DNSTransportConfig fields that should be captured.",
+	"serverName": "serverName is the upstream server to connect to when forwarding DNS queries. This is required when Transport is set to \"TLS\". ServerName will be validated against the DNS naming conventions in RFC 1123 and should match the TLS certificate installed in the upstream resolver(s).",
+	"caBundle":   "caBundle references a ConfigMap that must contain either a single CA Certificate or a CA Bundle (in the case of multiple upstreams signed by different CAs). This allows cluster administrators to provide their own CA or CA bundle for validating the certificate of upstream resolvers.\n\n1. The configmap must contain a `ca-bundle.crt` key. 2. The value must be a PEM encoded CA certificate or CA bundle. 3. The administrator must create this configmap in the openshift-config namespace.",
+}
+
+func (DNSOverTLSConfig) SwaggerDoc() map[string]string {
+	return map_DNSOverTLSConfig
+}
+
 var map_DNSSpec = map[string]string{
 	"":                  "DNSSpec is the specification of the desired behavior of the DNS.",
 	"servers":           "servers is a list of DNS resolvers that provide name query delegation for one or more subdomains outside the scope of the cluster domain. If servers consists of more than one Server, longest suffix match will be used to determine the Server.\n\nFor example, if there are two Servers, one for \"foo.com\" and another for \"a.foo.com\", and the name query is for \"www.a.foo.com\", it will be routed to the Server with Zone \"a.foo.com\".\n\nIf this field is nil, no servers are created.",
@@ -446,10 +456,21 @@ func (DNSStatus) SwaggerDoc() map[string]string {
 	return map_DNSStatus
 }
 
+var map_DNSTransportConfig = map[string]string{
+	"":          "DNSTransportConfig groups related configuration parameters used for configuring forwarding to upstream resolvers that support DNS-over-TLS.",
+	"transport": "transport allows cluster administrators to opt-in to using a DNS-over-TLS connection between cluster DNS and an upstream resolver(s). Configuring TLS as the transport at this level without configuring a CABundle will result in the system certificates being used to verify the serving certificate of the upstream resolver(s).\n\nPossible values: \"\" (empty) - This means no explicit choice has been made and the platform chooses the default which is subject to change over time. The current default is \"Cleartext\". \"Cleartext\" - Cluster admin specified cleartext option. This results in the same functionality as an empty value but may be useful when a cluster admin wants to be more explicit about the transport, or wants to switch from \"TLS\" to \"Cleartext\" explicitly. \"TLS\" - This indicates that DNS queries should be sent over a TLS connection. If Transport is set to TLS, you MUST also set ServerName.",
+	"tls":       "tls contains the additional configuration options to use when Transport is set to \"TLS\".",
+}
+
+func (DNSTransportConfig) SwaggerDoc() map[string]string {
+	return map_DNSTransportConfig
+}
+
 var map_ForwardPlugin = map[string]string{
-	"":          "ForwardPlugin defines a schema for configuring the CoreDNS forward plugin.",
-	"upstreams": "upstreams is a list of resolvers to forward name queries for subdomains of Zones. Each instance of CoreDNS performs health checking of Upstreams. When a healthy upstream returns an error during the exchange, another resolver is tried from Upstreams. The Upstreams are selected in the order specified in Policy. Each upstream is represented by an IP address or IP:port if the upstream listens on a port other than 53.\n\nA maximum of 15 upstreams is allowed per ForwardPlugin.",
-	"policy":    "policy is used to determine the order in which upstream servers are selected for querying. Any one of the following values may be specified:\n\n* \"Random\" picks a random upstream server for each query. * \"RoundRobin\" picks upstream servers in a round-robin order, moving to the next server for each new query. * \"Sequential\" tries querying upstream servers in a sequential order until one responds, starting with the first server for each new query.\n\nThe default value is \"Random\"",
+	"":                "ForwardPlugin defines a schema for configuring the CoreDNS forward plugin.",
+	"upstreams":       "upstreams is a list of resolvers to forward name queries for subdomains of Zones. Each instance of CoreDNS performs health checking of Upstreams. When a healthy upstream returns an error during the exchange, another resolver is tried from Upstreams. The Upstreams are selected in the order specified in Policy. Each upstream is represented by an IP address or IP:port if the upstream listens on a port other than 53.\n\nA maximum of 15 upstreams is allowed per ForwardPlugin.",
+	"policy":          "policy is used to determine the order in which upstream servers are selected for querying. Any one of the following values may be specified:\n\n* \"Random\" picks a random upstream server for each query. * \"RoundRobin\" picks upstream servers in a round-robin order, moving to the next server for each new query. * \"Sequential\" tries querying upstream servers in a sequential order until one responds, starting with the first server for each new query.\n\nThe default value is \"Random\"",
+	"transportConfig": "transportConfig is used to configure the transport type, server name, and optional custom CA or CA bundle to use when forwarding DNS requests to an upstream resolver.\n\nThe default value is \"\" (empty) which results in a standard cleartext connection being used when forwarding DNS requests to an upstream resolver.",
 }
 
 func (ForwardPlugin) SwaggerDoc() map[string]string {
@@ -479,9 +500,10 @@ func (Upstream) SwaggerDoc() map[string]string {
 }
 
 var map_UpstreamResolvers = map[string]string{
-	"":          "UpstreamResolvers defines a schema for configuring the CoreDNS forward plugin in the specific case of the default (\".\") server. It defers from ForwardPlugin in the default values it accepts: * At least one upstream should be specified. * the default policy is Sequential",
-	"upstreams": "Upstreams is a list of resolvers to forward name queries for the \".\" domain. Each instance of CoreDNS performs health checking of Upstreams. When a healthy upstream returns an error during the exchange, another resolver is tried from Upstreams. The Upstreams are selected in the order specified in Policy.\n\nA maximum of 15 upstreams is allowed per ForwardPlugin. If no Upstreams are specified, /etc/resolv.conf is used by default",
-	"policy":    "Policy is used to determine the order in which upstream servers are selected for querying. Any one of the following values may be specified:\n\n* \"Random\" picks a random upstream server for each query. * \"RoundRobin\" picks upstream servers in a round-robin order, moving to the next server for each new query. * \"Sequential\" tries querying upstream servers in a sequential order until one responds, starting with the first server for each new query.\n\nThe default value is \"Sequential\"",
+	"":                "UpstreamResolvers defines a schema for configuring the CoreDNS forward plugin in the specific case of the default (\".\") server. It defers from ForwardPlugin in the default values it accepts: * At least one upstream should be specified. * the default policy is Sequential",
+	"upstreams":       "Upstreams is a list of resolvers to forward name queries for the \".\" domain. Each instance of CoreDNS performs health checking of Upstreams. When a healthy upstream returns an error during the exchange, another resolver is tried from Upstreams. The Upstreams are selected in the order specified in Policy.\n\nA maximum of 15 upstreams is allowed per ForwardPlugin. If no Upstreams are specified, /etc/resolv.conf is used by default",
+	"policy":          "Policy is used to determine the order in which upstream servers are selected for querying. Any one of the following values may be specified:\n\n* \"Random\" picks a random upstream server for each query. * \"RoundRobin\" picks upstream servers in a round-robin order, moving to the next server for each new query. * \"Sequential\" tries querying upstream servers in a sequential order until one responds, starting with the first server for each new query.\n\nThe default value is \"Sequential\"",
+	"transportConfig": "transportConfig is used to configure the transport type, server name, and optional custom CA or CA bundle to use when forwarding DNS requests to an upstream resolver.\n\nThe default value is \"\" (empty) which results in a standard cleartext connection being used when forwarding DNS requests to an upstream resolver.",
 }
 
 func (UpstreamResolvers) SwaggerDoc() map[string]string {

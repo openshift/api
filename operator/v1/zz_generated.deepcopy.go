@@ -1235,6 +1235,7 @@ func (in *ForwardPlugin) DeepCopyInto(out *ForwardPlugin) {
 		*out = make([]string, len(*in))
 		copy(*out, *in)
 	}
+	out.CABundle = in.CABundle
 	return
 }
 
@@ -3743,6 +3744,7 @@ func (in *UpstreamResolvers) DeepCopyInto(out *UpstreamResolvers) {
 		*out = make([]Upstream, len(*in))
 		copy(*out, *in)
 	}
+	out.CABundle = in.CABundle
 	return
 }
 

@@ -160,6 +160,26 @@ spec:
                       description: forwardPlugin defines a schema for configuring
                         CoreDNS to proxy DNS messages to upstream resolvers.
                       properties:
+                        caBundle:
+                          description: "caBundle references a ConfigMap that must
+                            contain either a single CA Certificate or a CA Bundle
+                            (in the case of multiple upstreams signed by different
+                            CAs). Populating a configmap name in this field effectively
+                            enables DNS-over-TLS. If this is empty or the configmap
+                            referenced does not exist, DNS-over-TLS will not be enabled.
+                            \n 1. The configmap must contain a `cabundle.crt` key
+                            2. The value must be a PEM encoded certificate or bundle.
+                            3. The administrator must create this configmap in the
+                            openshift-config namespace. 4. The ServerName value must
+                            be supplied."
+                          properties:
+                            name:
+                              description: name is the metadata.name of the referenced
+                                config map
+                              type: string
+                          required:
+                          - name
+                          type: object
                         policy:
                           default: Random
                           description: "policy is used to determine the order in which
@@ -175,6 +195,13 @@ spec:
                           - Random
                           - RoundRobin
                           - Sequential
+                          type: string
+                        serverName:
+                          description: serverName is the upstream server to connect
+                            to for DNS resolution. This is required when a CABundle
+                            is supplied. Populating the ServerName without a CABundle
+                            configured will have no effect.
+                          pattern: ^([a-zA-Z0-9\p{S}\p{L}]((-?[a-zA-Z0-9\p{S}\p{L}]{0,62})?)|([a-zA-Z0-9\p{S}\p{L}](([a-zA-Z0-9-\p{S}\p{L}]{0,61}[a-zA-Z0-9\p{S}\p{L}])?)(\.)){1,}([a-zA-Z0-9-\p{L}]){2,63})$
                           type: string
                         upstreams:
                           description: "upstreams is a list of resolvers to forward
@@ -213,6 +240,25 @@ spec:
                   default (\".\") server \n If this field is not specified, the upstream
                   used will default to /etc/resolv.conf, with policy \"sequential\""
                 properties:
+                  caBundle:
+                    description: "caBundle references a ConfigMap that must contain
+                      either a single CA Certificate or a CA Bundle (in the case of
+                      multiple upstreams signed by different CAs). Populating a configmap
+                      name in this field effectively enables DNS-over-TLS. If this
+                      is empty or the configmap referenced does not exist, DNS-over-TLS
+                      will not be enabled. \n 1. The configmap must contain a `cabundle.crt`
+                      key 2. The value must be a PEM encoded certificate or certificate
+                      bundle. 3. The administrator must create this configmap in the
+                      openshift-config namespace. 4. The ServerName value must be
+                      supplied when CABundle is configured."
+                    properties:
+                      name:
+                        description: name is the metadata.name of the referenced config
+                          map
+                        type: string
+                    required:
+                    - name
+                    type: object
                   policy:
                     default: Sequential
                     description: "Policy is used to determine the order in which upstream
@@ -227,6 +273,13 @@ spec:
                     - Random
                     - RoundRobin
                     - Sequential
+                    type: string
+                  serverName:
+                    description: serverName is the upstream server to connect to for
+                      DNS resolution. This is required when a CABundle is supplied.
+                      Populating the ServerName without a CABundle configured will
+                      have no effect.
+                    pattern: ^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9]))*$
                     type: string
                   upstreams:
                     default:
@@ -271,6 +324,14 @@ spec:
                           description: Address must be defined when Type is set to
                             Network. It will be ignored otherwise. It must be a valid
                             ipv4 or ipv6 address.
+                          type: string
+                        enableTls:
+                          description: enableTls allows cluster administrators to
+                            opt-in to using the TLS config in spec.upstreamResolvers
+                            for upstreams that support DNS-over-TLS.
+                          enum:
+                          - true
+                          - false
                           type: string
                         port:
                           default: 53

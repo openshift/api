@@ -52,6 +52,7 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&InfrastructureList{},
 		&Ingress{},
 		&IngressList{},
+		&Insights{},
 		&Node{},
 		&NodeList{},
 		&Network{},

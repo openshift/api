@@ -68,6 +68,7 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&ServiceCatalogControllerManagerList{},
 		&IngressController{},
 		&IngressControllerList{},
+		&Insights{},
 		&Storage{},
 		&StorageList{},
 	)

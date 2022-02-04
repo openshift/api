@@ -1444,6 +1444,42 @@ func (IngressStatus) SwaggerDoc() map[string]string {
 	return map_IngressStatus
 }
 
+var map_GatheringConfig = map[string]string{
+	"dataPolicy":        "DataPolicy allows user to enable additional global obfuscation of the IP addresses and base domain in the Insights archive data.",
+	"forceGatherReason": "ForceGatherReason enables user to force Insights data gathering by setting a new reason. When there is some gathering in the progress then it is interrupted. When all the gatherers are deactivated by the `DisabledGatherers`, nothing happens. When the forced gathering is finished then the value is cleared.",
+	"disabledGatherers": "List of gatherers to be excluded from the gathering. All the gatherers can be disabled by providing \"all\" value. If all the gatherers are disabled, the Insights operator does not gather any data. The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. An example of disabling gatherers looks like this: `disabledGatherers: [\"clusterconfig/machine_configs\", \"workloads/workload_info\"]`",
+}
+
+func (GatheringConfig) SwaggerDoc() map[string]string {
+	return map_GatheringConfig
+}
+
+var map_Insights = map[string]string{
+	"":       "\n\nInsights holds cluster-wide information about Insights.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"spec":   "spec holds user settable values for configuration",
+	"status": "status holds observed values from the cluster. They may not be overridden.",
+}
+
+func (Insights) SwaggerDoc() map[string]string {
+	return map_Insights
+}
+
+var map_InsightsList = map[string]string{
+	"": "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+}
+
+func (InsightsList) SwaggerDoc() map[string]string {
+	return map_InsightsList
+}
+
+var map_InsightsSpec = map[string]string{
+	"gatheringConfig": "GatheringConfig spec attribute includes all the configuration options related to gathering of the Insights archive and its uploading to the ingress.",
+}
+
+func (InsightsSpec) SwaggerDoc() map[string]string {
+	return map_InsightsSpec
+}
+
 var map_ClusterNetworkEntry = map[string]string{
 	"":           "ClusterNetworkEntry is a contiguous block of IP addresses from which pod IPs are allocated.",
 	"cidr":       "The complete block for pod IPs.",

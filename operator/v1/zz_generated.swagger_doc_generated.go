@@ -862,6 +862,78 @@ func (SyslogLoggingDestinationParameters) SwaggerDoc() map[string]string {
 	return map_SyslogLoggingDestinationParameters
 }
 
+var map_GathererCondition = map[string]string{
+	"type":               "Type of the gatherer condition",
+	"status":             "Status is last known status of the particular gatherer condition",
+	"messages":           "Messages is an optional attribute that provides error and warning messages from the gatherer",
+	"lastTransitionTime": "Last time the condition transit from one status to another.",
+	"reason":             "Reason for the condition's last transition.",
+}
+
+func (GathererCondition) SwaggerDoc() map[string]string {
+	return map_GathererCondition
+}
+
+var map_GathererStatus = map[string]string{
+	"name":                "Name is the name of the gatherer.",
+	"conditions":          "GathererConditions provide details on the status of each gatherer.",
+	"durationMillisecond": "DurationMillisecond represents the time spent gathering.",
+}
+
+func (GathererStatus) SwaggerDoc() map[string]string {
+	return map_GathererStatus
+}
+
+var map_GatheringStatus = map[string]string{
+	"lastGatherTime":   "LastGatherTime is the last time when Insights gathering finished.",
+	"lastGatherReason": "LastGatherReason provides last known reason of gathering. This is helpful especially when gathering was forced by user",
+	"startGatherTime":  "StartGatherTime is the time when gathering started. The value is 0 when there is no gathering in progress.",
+	"gathererStatuses": "List of active gatherers (and their statuses) in the last gathering.",
+}
+
+func (GatheringStatus) SwaggerDoc() map[string]string {
+	return map_GatheringStatus
+}
+
+var map_Insights = map[string]string{
+	"":       "\n\nInsights holds cluster-wide information about Insights.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"spec":   "spec is the specification of the desired behavior of the Insights",
+	"status": "status is the most recently observed status of the Insights operator",
+}
+
+func (Insights) SwaggerDoc() map[string]string {
+	return map_Insights
+}
+
+var map_InsightsList = map[string]string{
+	"": "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+}
+
+func (InsightsList) SwaggerDoc() map[string]string {
+	return map_InsightsList
+}
+
+var map_InsightsStatus = map[string]string{
+	"gatheringStatus": "GatheringStatus provides basic information about the last Insights gathering.",
+	"reportStatus":    "ReportStatus provides general Insights analysis results.",
+}
+
+func (InsightsStatus) SwaggerDoc() map[string]string {
+	return map_InsightsStatus
+}
+
+var map_ReportStatus = map[string]string{
+	"low":       "Number of active Insights healthchecks with low severity",
+	"moderate":  "Number of active Insights healthchecks with moderate severity",
+	"important": "Number of active Insights healthchecks with important severity",
+	"critical":  "Number of active Insights healthchecks with critical severity",
+	"total":     "TotalCount is the count of all active Insights healthchecks",
+}
+
+func (ReportStatus) SwaggerDoc() map[string]string {
+	return map_ReportStatus
+}
+
 var map_KubeAPIServer = map[string]string{
 	"":       "KubeAPIServer provides information to configure an operator to manage kube-apiserver.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 	"spec":   "spec is the specification of the desired behavior of the Kubernetes API Server",

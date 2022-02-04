@@ -863,6 +863,76 @@ func (SyslogLoggingDestinationParameters) SwaggerDoc() map[string]string {
 	return map_SyslogLoggingDestinationParameters
 }
 
+var map_GatherStatus = map[string]string{
+	"":                   "gatherStatus provides information about the last known gather event.",
+	"lastGatherTime":     "lastGatherTime is the last time when Insights data gathering finished. An empty value means that no data has been gathered yet.",
+	"lastGatherDuration": "lastGatherDuration is the total time taken to process all gatherers during the last gather event.",
+	"gatherers":          "gatherers is a list of active gatherers (and their statuses) in the last gathering.",
+}
+
+func (GatherStatus) SwaggerDoc() map[string]string {
+	return map_GatherStatus
+}
+
+var map_GathererStatus = map[string]string{
+	"":                   "gathererStatus represents information about a particular data gatherer.",
+	"conditions":         "conditions provide details on the status of each gatherer.",
+	"name":               "name is the name of the gatherer.",
+	"lastGatherDuration": "lastGatherDuration represents the time spent gathering.",
+}
+
+func (GathererStatus) SwaggerDoc() map[string]string {
+	return map_GathererStatus
+}
+
+var map_HealthCheck = map[string]string{
+	"":            "healthCheck represents an Insights health check attributes.",
+	"description": "description provides basic description of the healtcheck.",
+	"totalRisk":   "totalRisk of the healthcheck. Indicator of the total risk posed by the detected issue; combination of impact and likelihood. The values can be from 1 to 4, and the higher the number, the more important the issue.",
+	"advisorURI":  "advisorURI provides the URL link to the Insights Advisor.",
+	"state":       "state determines what the current state of the health check is. Health check is enabled by default and can be disabled by the user in the Insights advisor user interface.",
+}
+
+func (HealthCheck) SwaggerDoc() map[string]string {
+	return map_HealthCheck
+}
+
+var map_InsightsOperator = map[string]string{
+	"":       "\n\nInsightsOperator holds cluster-wide information about the Insights Operator.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"spec":   "spec is the specification of the desired behavior of the Insights.",
+	"status": "status is the most recently observed status of the Insights operator.",
+}
+
+func (InsightsOperator) SwaggerDoc() map[string]string {
+	return map_InsightsOperator
+}
+
+var map_InsightsOperatorList = map[string]string{
+	"": "InsightsOperatorList is a collection of items\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+}
+
+func (InsightsOperatorList) SwaggerDoc() map[string]string {
+	return map_InsightsOperatorList
+}
+
+var map_InsightsOperatorStatus = map[string]string{
+	"gatherStatus":   "gatherStatus provides basic information about the last Insights data gathering. When omitted, this means no data gathering has taken place yet.",
+	"insightsReport": "insightsReport provides general Insights analysis results. When omitted, this means no data gathering has taken place yet.",
+}
+
+func (InsightsOperatorStatus) SwaggerDoc() map[string]string {
+	return map_InsightsOperatorStatus
+}
+
+var map_InsightsReport = map[string]string{
+	"":             "insightsReport provides Insights health check report based on the most recently sent Insights data.",
+	"healthChecks": "healthChecks provides basic information about active Insights health checks in a cluster.",
+}
+
+func (InsightsReport) SwaggerDoc() map[string]string {
+	return map_InsightsReport
+}
+
 var map_KubeAPIServer = map[string]string{
 	"":       "KubeAPIServer provides information to configure an operator to manage kube-apiserver.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 	"spec":   "spec is the specification of the desired behavior of the Kubernetes API Server",

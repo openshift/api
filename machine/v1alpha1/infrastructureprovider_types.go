@@ -35,7 +35,8 @@ type InfrastructureProviderStatus struct {
 // +kubebuilder:printcolumn:name="InstalledVersion",type="string",JSONPath=".status.installedVersion"
 // +kubebuilder:printcolumn:name="Ready",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 
-// InfrastructureProvider is the Schema for the infrastructureproviders API.
+// InfrastructureProvider is the Schema is the Schema that represents a Cluster API Infrastructure provider.
+// It is responsible for provider(AWS,Azure,GCP,etc.) specific CRDs and controllers.
 type InfrastructureProvider struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -51,8 +52,4 @@ type InfrastructureProviderList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []InfrastructureProvider `json:"items"`
-}
-
-func init() {
-	SchemeBuilder.Register(&InfrastructureProvider{}, &InfrastructureProviderList{})
 }

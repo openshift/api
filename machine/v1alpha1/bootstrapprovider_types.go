@@ -35,7 +35,8 @@ type BootstrapProviderStatus struct {
 // +kubebuilder:printcolumn:name="InstalledVersion",type="string",JSONPath=".status.installedVersion"
 // +kubebuilder:printcolumn:name="Ready",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 
-// BootstrapProvider is the Schema for the bootstrapproviders API.
+// BootstrapProvider is the Schema that represents a Cluster API Bootstrap provider. It is a component responsible
+// for generating a cloud-init/ignition script to turn a Machine into a Kubernetes Node.
 type BootstrapProvider struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -51,8 +52,4 @@ type BootstrapProviderList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []BootstrapProvider `json:"items"`
-}
-
-func init() {
-	SchemeBuilder.Register(&BootstrapProvider{}, &BootstrapProviderList{})
 }

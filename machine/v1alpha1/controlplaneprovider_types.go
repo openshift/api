@@ -35,7 +35,10 @@ type ControlPlaneProviderStatus struct {
 // +kubebuilder:printcolumn:name="InstalledVersion",type="string",JSONPath=".status.installedVersion"
 // +kubebuilder:printcolumn:name="Ready",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 
-// ControlPlaneProvider is the Schema for the controlplaneproviders API.
+// ControlPlaneProvider is the Schema that represents a Cluster API Control Plane provider.
+// It is a component responsible for managing a set of machines that represent a Kubernetes control plane,
+// provide information about the state of the control plane to downstream consumers and
+// create/manage a secret with the kubeconfig file for accessing the workload cluster.
 type ControlPlaneProvider struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -51,8 +54,4 @@ type ControlPlaneProviderList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []ControlPlaneProvider `json:"items"`
-}
-
-func init() {
-	SchemeBuilder.Register(&ControlPlaneProvider{}, &ControlPlaneProviderList{})
 }

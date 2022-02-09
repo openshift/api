@@ -35,7 +35,8 @@ type CoreProviderStatus struct {
 // +kubebuilder:printcolumn:name="InstalledVersion",type="string",JSONPath=".status.installedVersion"
 // +kubebuilder:printcolumn:name="Ready",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 
-// CoreProvider is the Schema for the coreproviders API.
+// CoreProvider is the Schema is the Schema that represents a Cluster API core provider. It is a component responsible for
+// managing core object Cluster, Machine, MachineSet, MachineHealthCheck, etc.
 type CoreProvider struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -51,8 +52,4 @@ type CoreProviderList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []CoreProvider `json:"items"`
-}
-
-func init() {
-	SchemeBuilder.Register(&CoreProvider{}, &CoreProviderList{})
 }

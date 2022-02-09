@@ -27,9 +27,7 @@ func TestFeatureBuilder(t *testing.T) {
 				},
 				Disabled: []string{
 					"CSIMigrationAWS",
-					"CSIMigrationOpenStack",
 					"CSIMigrationGCE",
-					"CSIMigrationAzureDisk",
 					"CSIMigrationAzureFile",
 					"CSIMigrationvSphere",
 					"PodSecurity",
@@ -48,9 +46,7 @@ func TestFeatureBuilder(t *testing.T) {
 					"CSIMigrationAWS",
 				},
 				Disabled: []string{
-					"CSIMigrationOpenStack",
 					"CSIMigrationGCE",
-					"CSIMigrationAzureDisk",
 					"CSIMigrationAzureFile",
 					"CSIMigrationvSphere",
 				},
@@ -67,9 +63,7 @@ func TestFeatureBuilder(t *testing.T) {
 				},
 				Disabled: []string{
 					"CSIMigrationAWS",
-					"CSIMigrationOpenStack",
 					"CSIMigrationGCE",
-					"CSIMigrationAzureDisk",
 					"CSIMigrationAzureFile",
 					"CSIMigrationvSphere",
 					"PodSecurity",
@@ -90,9 +84,7 @@ func TestFeatureBuilder(t *testing.T) {
 					"other",
 				},
 				Disabled: []string{
-					"CSIMigrationOpenStack",
 					"CSIMigrationGCE",
-					"CSIMigrationAzureDisk",
 					"CSIMigrationAzureFile",
 					"CSIMigrationvSphere",
 				},

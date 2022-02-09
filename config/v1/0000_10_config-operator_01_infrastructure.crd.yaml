@@ -377,6 +377,12 @@ spec:
                         ingressIP:
                           description: ingressIP is an external IP which routes to the default ingress controller. The IP is a suitable target of a wildcard DNS record used to resolve default route host names.
                           type: string
+                        nutanixEndpoint:
+                          description: nutanixEndpoint is the IP address or domain name of the Nutanix Prism Central
+                          type: string
+                        nutanixPort:
+                          description: nutanixPort is the port of the Nutanix Prism Central
+                          type: string
                     openstack:
                       description: OpenStack contains settings specific to the OpenStack infrastructure provider.
                       type: object

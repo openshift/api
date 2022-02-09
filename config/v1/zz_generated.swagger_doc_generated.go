@@ -1142,6 +1142,8 @@ var map_NutanixPlatformStatus = map[string]string{
 	"":                    "NutanixPlatformStatus holds the current status of the Nutanix infrastructure provider.",
 	"apiServerInternalIP": "apiServerInternalIP is an IP address to contact the Kubernetes API server that can be used by components inside the cluster, like kubelets using the infrastructure rather than Kubernetes networking. It is the IP that the Infrastructure.status.apiServerInternalURI points to. It is the IP for a self-hosted load balancer in front of the API servers.",
 	"ingressIP":           "ingressIP is an external IP which routes to the default ingress controller. The IP is a suitable target of a wildcard DNS record used to resolve default route host names.",
+	"nutanixEndpoint":     "nutanixEndpoint is the IP address or domain name of the Nutanix Prism Central",
+	"nutanixPort":         "nutanixPort is the port of the Nutanix Prism Central",
 }
 
 func (NutanixPlatformStatus) SwaggerDoc() map[string]string {

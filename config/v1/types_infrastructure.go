@@ -718,6 +718,11 @@ type NutanixPlatformStatus struct {
 	// ingressIP is an external IP which routes to the default ingress controller.
 	// The IP is a suitable target of a wildcard DNS record used to resolve default route host names.
 	IngressIP string `json:"ingressIP,omitempty"`
+
+	// nutanixEndpoint is the IP address or domain name of the Nutanix Prism Central
+	Endpoint string `json:"nutanixEndpoint"`
+	// nutanixPort is the port of the Nutanix Prism Central
+	Port string `json:"nutanixPort"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

@@ -505,6 +505,44 @@ type PromQLClusterCondition struct {
 	PromQL string `json:"promql"`
 }
 
+// ClusterStatusConditionType is an aspect of operator state.
+type ClusterVersionStatusConditionType string
+
+const (
+	// Available indicates that the component (operator and all configured operands)
+	// is functional and available in the cluster. Available=False means at least
+	// part of the component is non-functional, and that the condition requires
+	// immediate administrator intervention.
+	ClusterVersionAvailable ClusterVersionStatusConditionType = "Available"
+
+	// Progressing indicates that the component (operator and all configured operands)
+	// is actively rolling out new code, propagating config changes, or otherwise
+	// moving from one steady state to another. Operators should not report
+	// progressing when they are reconciling (without action) a previously known
+	// state. If the observed cluster state has changed and the component is
+	// reacting to it (scaling up for instance), Progressing should become true
+	// since it is moving from one steady state to another.
+	ClusterVersionProgressing ClusterVersionStatusConditionType = "Progressing"
+
+	// Upgradeable indicates whether the component (operator and all configured
+	// operands) is safe to upgrade based on the current cluster state. When
+	// Upgradeable is False, the cluster-version operator will prevent the
+	// cluster from performing impacted updates unless forced.  When set on
+	// ClusterVersion, the message will explain which updates (minor or patch)
+	// are impacted. When set on ClusterOperator, False will block minor
+	// OpenShift updates. The message field should contain a human readable
+	// description of what the administrator should do to allow the cluster or
+	// component to successfully update. The cluster-version operator will
+	// allow updates when this condition is not False, including when it is
+	// missing, True, or Unknown.
+	ClusterVersionUpgradeable ClusterVersionStatusConditionType = "Upgradeable"
+
+	// Failing indicates that cluster version operator is failing while reconciling
+	// manifests of other operators. The failing condition can result in to upgrade being
+	// stuck or it may be a transient condition
+	ClusterVersionFailing ClusterVersionStatusConditionType = "Failing"
+)
+
 // ClusterVersionList is a list of ClusterVersion resources.
 //
 // Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).

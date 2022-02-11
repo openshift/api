@@ -234,6 +234,10 @@ type ManagedDiskParameters struct {
 	// DiskEncryptionSet is the disk encryption set properties
 	// +optional
 	DiskEncryptionSet *DiskEncryptionSetParameters `json:"diskEncryptionSet,omitempty"`
+	// EncryptionType is the type of diisk encryption used.
+	// Possible values include: 'EncryptionAtRestWithPlatformKey', 'EncryptionAtRestWithCustomerKey', and 'EncryptionAtRestWithPlatformAndCustomerKeys'.
+	// +optional
+	EncryptionType string `json:"encryptionType,omitempty"`
 }
 
 // DiskEncryptionSetParameters is the disk encryption set properties

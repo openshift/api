@@ -210,6 +210,32 @@ func (g *compatibilityLevelCommentGenerator) applyCompatibilityLevelComment() ds
 				// Documented special case, this api is level 2
 			case apiTypeName == "RangeAllocation" && level == 4:
 				// Documented special case, this api is level 4
+
+			case apiTypeName == "ConsoleCLIDownload" && level == 2:
+				// Documented special case, this api is level 2
+			case apiTypeName == "ConsoleCLIDownloadList" && level == 2:
+				// Documented special case, this api is level 2
+			case apiTypeName == "ConsoleExternalLogLink" && level == 2:
+				// Documented special case, this api is level 2
+			case apiTypeName == "ConsoleExternalLogLinkList" && level == 2:
+				// Documented special case, this api is level 2
+			case apiTypeName == "ConsoleLink" && level == 2:
+				// Documented special case, this api is level 2
+			case apiTypeName == "ConsoleLinkList" && level == 2:
+				// Documented special case, this api is level 2
+			case apiTypeName == "ConsoleNotification" && level == 2:
+				// Documented special case, this api is level 2
+			case apiTypeName == "ConsoleNotificationList" && level == 2:
+				// Documented special case, this api is level 2
+			case apiTypeName == "ConsoleQuickStart" && level == 2:
+				// Documented special case, this api is level 2
+			case apiTypeName == "ConsoleQuickStartList" && level == 2:
+				// Documented special case, this api is level 2
+			case apiTypeName == "ConsoleYAMLSample" && level == 2:
+				// Documented special case, this api is level 2
+			case apiTypeName == "ConsoleYAMLSampleList" && level == 2:
+				// Documented special case, this api is level 2
+
 			default:
 				g.err = fmt.Errorf("%s: generally available APIs must be supported for a minimum of 12 months", apiTypeName)
 				return false

@@ -708,11 +708,11 @@ type AlibabaCloudResourceTag struct {
 type NutanixPlatformSpec struct {
 	// pcEndpoint is the endpoint (DNS name or IP address) of the Nutanix Prism Central
 	// +required
-	PCEndpoint *string `json:"pcEndpoint"`
+	PCEndpoint string `json:"pcEndpoint"`
 
 	// pcPort is the port of the Nutanix Prism Central
 	// +required
-	PCPort *string `json:"pcPort"`
+	PCPort string `json:"pcPort"`
 }
 
 // NutanixPlatformStatus holds the current status of the Nutanix infrastructure provider.

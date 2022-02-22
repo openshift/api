@@ -1131,7 +1131,9 @@ func (KubevirtPlatformStatus) SwaggerDoc() map[string]string {
 }
 
 var map_NutanixPlatformSpec = map[string]string{
-	"": "NutanixPlatformSpec holds the desired state of the Nutanix infrastructure provider. This only includes fields that can be modified in the cluster.",
+	"":           "NutanixPlatformSpec holds the desired state of the Nutanix infrastructure provider. This only includes fields that can be modified in the cluster.",
+	"pcEndpoint": "pcEndpoint is the endpoint (DNS name or IP address) of the Nutanix Prism Central",
+	"pcPort":     "pcPort is the port of the Nutanix Prism Central",
 }
 
 func (NutanixPlatformSpec) SwaggerDoc() map[string]string {

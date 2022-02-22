@@ -92,6 +92,13 @@ spec:
                     nutanix:
                       description: Nutanix contains settings specific to the Nutanix infrastructure provider.
                       type: object
+                      properties:
+                        pcEndpoint:
+                          description: pcEndpoint is the endpoint (DNS name or IP address) of the Nutanix Prism Central
+                          type: string
+                        pcPort:
+                          description: pcPort is the port of the Nutanix Prism Central
+                          type: string
                     openstack:
                       description: OpenStack contains settings specific to the OpenStack infrastructure provider.
                       type: object

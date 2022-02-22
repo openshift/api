@@ -705,7 +705,15 @@ type AlibabaCloudResourceTag struct {
 
 // NutanixPlatformSpec holds the desired state of the Nutanix infrastructure provider.
 // This only includes fields that can be modified in the cluster.
-type NutanixPlatformSpec struct{}
+type NutanixPlatformSpec struct {
+	// pcEndpoint is the endpoint (DNS name or IP address) of the Nutanix Prism Central
+	// +required
+	PCEndpoint *string `json:"pcEndpoint"`
+
+	// pcPort is the port of the Nutanix Prism Central
+	// +required
+	PCPort *string `json:"pcPort"`
+}
 
 // NutanixPlatformStatus holds the current status of the Nutanix infrastructure provider.
 type NutanixPlatformStatus struct {

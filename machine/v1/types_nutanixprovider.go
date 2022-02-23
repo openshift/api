@@ -64,6 +64,17 @@ type NutanixMachineProviderConfig struct {
 	CredentialsSecret *corev1.LocalObjectReference `json:"credentialsSecret,omitempty"`
 }
 
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// NutanixMachineProviderConfigList contains a list of NutanixMachineProviderConfig
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+// +openshift:compatibility-gen:level=1
+type NutanixMachineProviderConfigList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []AlibabaCloudMachineProviderConfig `json:"items"`
+}
+
 // NutanixMachineProviderStatus is the type that will be embedded in a Machine.Status.ProviderStatus field.
 // It contains nutanix-specific status information.
 // Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
@@ -213,12 +224,13 @@ func NutanixMachineProviderStatusFromRawExtension(rawExtension *runtime.RawExten
 
 // The expected resource description and category (key/value) for the Nutanix resources (ex. vms, images)
 // created for the cluster
-const (
+/*const (
 	NutanixExpectedResourceDescription = "Created By OpenShift Installer"
 	NutanixExpectedCategoryKeyPrefix   = "openshift-" // format: "openshift-<cluster-id>"
 	NutanixExpectedCategoryValue       = "openshift-ipi-installations"
 )
 
+// NutanixExpectedCategory holds a category key/value for the Nutanix resources (ex. vms, images)
 type NutanixExpectedCategory struct {
 	Key   string
 	Value string
@@ -229,4 +241,4 @@ func CreateNutanixExpectedCategory(infraID string) *NutanixExpectedCategory {
 		Key:   fmt.Sprintf("%s%s", NutanixExpectedCategoryKeyPrefix, infraID),
 		Value: NutanixExpectedCategoryValue,
 	}
-}
+}*/

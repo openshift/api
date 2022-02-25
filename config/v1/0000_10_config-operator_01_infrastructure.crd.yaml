@@ -92,6 +92,9 @@ spec:
                     nutanix:
                       description: Nutanix contains settings specific to the Nutanix infrastructure provider.
                       type: object
+                      required:
+                        - pcEndpoint
+                        - pcPort
                       properties:
                         pcEndpoint:
                           description: pcEndpoint is the endpoint (DNS name or IP address) of the Nutanix Prism Central

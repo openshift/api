@@ -189,4 +189,42 @@ func (ManagedAWSPlacementGroup) SwaggerDoc() map[string]string {
 	return map_ManagedAWSPlacementGroup
 }
 
+var map_ImageReference = map[string]string{
+	"":          "ImageReference holds the identity of the rhcos image uploaded to the PC",
+	"imageUuid": "imageUuid is the UUID of the rhcos image uploaded to the PC. If the imageUUID is configured, it will be used to create the VM. Otherwise, the imageName will be used to obtain the imageUUID, before creating the VM.",
+	"imageName": "imageName is the name of the rhcos image uploaded to the PC",
+}
+
+func (ImageReference) SwaggerDoc() map[string]string {
+	return map_ImageReference
+}
+
+var map_NutanixMachineProviderConfig = map[string]string{
+	"":                     "NutanixMachineProviderConfig is the Schema for the nutanixmachineproviderconfigs API Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"clusterReferenceUuid": "clusterReferenceUuid is the UUID of the PE/cluster the Machine's VM will be created in",
+	"imageReference":       "imageReference is to identify the rhcos image uploaded to the Prism Central (PC)",
+	"subnetUuid":           "subnetUuid is the UUID of the cluster's network subnet to use for the Machine's VM",
+	"numVcpusPerSocket":    "numVcpusPerSocket is the number of vCPUs per socket of the VM to create",
+	"numSockets":           "numSockets is the number of sockets of the VM to create",
+	"memorySize":           "memorySize is the memory size (in Quantity format) of the VM to create",
+	"diskSize":             "diskSize is the disk size (in Quantity format) of the VM to create",
+	"userDataSecret":       "userDataSecret is a local reference to a secret that contains the UserData to apply to the VM",
+	"credentialsSecret":    "credentialsSecret is a local reference to a secret that contains the credentials data to access Nutanix PC client",
+}
+
+func (NutanixMachineProviderConfig) SwaggerDoc() map[string]string {
+	return map_NutanixMachineProviderConfig
+}
+
+var map_NutanixMachineProviderStatus = map[string]string{
+	"":           "NutanixMachineProviderStatus is the type that will be embedded in a Machine.Status.ProviderStatus field. It contains nutanix-specific status information. Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"conditions": "conditions is a set of conditions associated with the Machine to indicate errors or other status",
+	"vmState":    "vmState is the Machine associated VM's current state",
+	"vmUUID":     "vmUUID is the Machine associated VM's UUID",
+}
+
+func (NutanixMachineProviderStatus) SwaggerDoc() map[string]string {
+	return map_NutanixMachineProviderStatus
+}
+
 // AUTO-GENERATED FUNCTIONS END HERE

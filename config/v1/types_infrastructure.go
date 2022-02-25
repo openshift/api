@@ -707,11 +707,11 @@ type AlibabaCloudResourceTag struct {
 // This only includes fields that can be modified in the cluster.
 type NutanixPlatformSpec struct {
 	// pcEndpoint is the endpoint (DNS name or IP address) of the Nutanix Prism Central
-	// +required
+	// +kubebuilder:validation:Required
 	PCEndpoint string `json:"pcEndpoint"`
 
 	// pcPort is the port of the Nutanix Prism Central
-	// +required
+	// +kubebuilder:validation:Required
 	PCPort string `json:"pcPort"`
 }
 

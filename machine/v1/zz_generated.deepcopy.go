@@ -424,6 +424,7 @@ func (in *NutanixMachineProviderConfig) DeepCopyInto(out *NutanixMachineProvider
 	in.ObjectMeta.DeepCopyInto(&out.ObjectMeta)
 	out.ImageReference = in.ImageReference
 	out.MemorySize = in.MemorySize.DeepCopy()
+	out.DiskSize = in.DiskSize.DeepCopy()
 	if in.UserDataSecret != nil {
 		in, out := &in.UserDataSecret, &out.UserDataSecret
 		*out = new(corev1.LocalObjectReference)

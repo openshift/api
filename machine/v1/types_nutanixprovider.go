@@ -43,7 +43,7 @@ type NutanixMachineProviderConfig struct {
 
 	// diskSize is the disk size (in Quantity format) of the VM to create
 	// +kubebuilder:validation:Required
-	DiskSize int64 `json:"diskSize"`
+	DiskSize resource.Quantity `json:"diskSize"`
 
 	// userDataSecret is a local reference to a secret that contains the
 	// UserData to apply to the VM

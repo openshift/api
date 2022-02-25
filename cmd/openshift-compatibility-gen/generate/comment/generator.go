@@ -201,8 +201,45 @@ func (g *compatibilityLevelCommentGenerator) applyCompatibilityLevelComment() ds
 			g.err = fmt.Errorf("%s: APIs whose versions do not conform to kube apiVersion format cannot be exposed: the %s API must be tagged with +%s", apiTypeName, apiTypeName, internalTagName)
 			return false
 		case ga && level != 1:
-			g.err = fmt.Errorf("%s: generally available APIs must be supported for a minimum of 12 months", apiTypeName)
-			return false
+			switch {
+			case apiTypeName == "PodSecurityPolicySubjectReview" && level == 2:
+				// Documented special case, this api is level 2
+			case apiTypeName == "PodSecurityPolicySelfSubjectReview" && level == 2:
+				// Documented special case, this api is level 2
+			case apiTypeName == "PodSecurityPolicyReview" && level == 2:
+				// Documented special case, this api is level 2
+			case apiTypeName == "RangeAllocation" && level == 4:
+				// Documented special case, this api is level 4
+
+			case apiTypeName == "ConsoleCLIDownload" && level == 2:
+				// Documented special case, this api is level 2
+			case apiTypeName == "ConsoleCLIDownloadList" && level == 2:
+				// Documented special case, this api is level 2
+			case apiTypeName == "ConsoleExternalLogLink" && level == 2:
+				// Documented special case, this api is level 2
+			case apiTypeName == "ConsoleExternalLogLinkList" && level == 2:
+				// Documented special case, this api is level 2
+			case apiTypeName == "ConsoleLink" && level == 2:
+				// Documented special case, this api is level 2
+			case apiTypeName == "ConsoleLinkList" && level == 2:
+				// Documented special case, this api is level 2
+			case apiTypeName == "ConsoleNotification" && level == 2:
+				// Documented special case, this api is level 2
+			case apiTypeName == "ConsoleNotificationList" && level == 2:
+				// Documented special case, this api is level 2
+			case apiTypeName == "ConsoleQuickStart" && level == 2:
+				// Documented special case, this api is level 2
+			case apiTypeName == "ConsoleQuickStartList" && level == 2:
+				// Documented special case, this api is level 2
+			case apiTypeName == "ConsoleYAMLSample" && level == 2:
+				// Documented special case, this api is level 2
+			case apiTypeName == "ConsoleYAMLSampleList" && level == 2:
+				// Documented special case, this api is level 2
+
+			default:
+				g.err = fmt.Errorf("%s: generally available APIs must be supported for a minimum of 12 months", apiTypeName)
+				return false
+			}
 		case beta && level == 1:
 			g.err = fmt.Errorf("%s: pre-release (beta) APIs must offer level 2 compatibility: the %s API should be versioned as generally available if you with to offer level 1 compatibility", apiTypeName, apiTypeName)
 			return false

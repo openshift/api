@@ -17,17 +17,17 @@ type NutanixMachineProviderConfig struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	// clusterReferenceUuid is the UUID of the PE/cluster the Machine's VM will be created in
+	// clusterReference is to identify the PE/cluster in which the Machine's VM will be created
 	// +kubebuilder:validation:Required
-	ClusterReferenceUUID string `json:"clusterReferenceUuid"`
+	ClusterReference NutanixReference `json:"clusterReference"`
 
 	// imageReference is to identify the rhcos image uploaded to the Prism Central (PC)
 	// +kubebuilder:validation:Required
-	ImageReference ImageReference `json:"imageReference"`
+	ImageReference NutanixReference `json:"imageReference"`
 
-	// subnetUuid is the UUID of the cluster's network subnet to use for the Machine's VM
+	// subnetReference is to identify the cluster's network subnet to use for the Machine's VM
 	// +kubebuilder:validation:Required
-	SubnetUUID string `json:"subnetUuid"`
+	SubnetReference NutanixReference `json:"subnetReference"`
 
 	// numVcpusPerSocket is the number of vCPUs per socket of the VM to create
 	// +kubebuilder:validation:Required
@@ -41,7 +41,7 @@ type NutanixMachineProviderConfig struct {
 	// +kubebuilder:validation:Required
 	MemorySize resource.Quantity `json:"memorySize"`
 
-	// diskSize is the disk size (in Quantity format) of the VM to create
+	// diskSize is the system disk size (in Quantity format) of the VM to create
 	// +kubebuilder:validation:Required
 	DiskSize resource.Quantity `json:"diskSize"`
 
@@ -55,15 +55,20 @@ type NutanixMachineProviderConfig struct {
 	CredentialsSecret *corev1.LocalObjectReference `json:"credentialsSecret"`
 }
 
-// ImageReference holds the identity of the rhcos image uploaded to the PC
-type ImageReference struct {
-	// imageUuid is the UUID of the rhcos image uploaded to the PC.
-	// If the imageUUID is configured, it will be used to create the VM.
-	// Otherwise, the imageName will be used to obtain the imageUUID, before creating the VM.
-	ImageUUID string `json:"imageUuid,omitempty"`
+// NutanixReference holds the identity of a Nutanix PC resource (cluster, image, subnet, etc.)
+type NutanixReference struct {
+	// kind of the resource type ("cluster", "image", "subnet", etc.)
+	// +kubebuilder:validation:Enum="cluster"; "image"; "subnet"
+	// +kubebuilder:validation:Required
+	Kind string `json:"kind"`
 
-	// imageName is the name of the rhcos image uploaded to the PC
-	ImageName string `json:"imageName,omitempty"`
+	// uuid is the UUID of the resource in the PC.
+	// If this is configured, it will be used to create the VM.
+	// Otherwise, the resource name will be used to obtain the UUID, before creating the VM.
+	UUID string `json:"uuid,omitempty"`
+
+	// name is the resource name in the PC
+	Name string `json:"name,omitempty"`
 }
 
 // NutanixMachineProviderStatus is the type that will be embedded in a Machine.Status.ProviderStatus field.

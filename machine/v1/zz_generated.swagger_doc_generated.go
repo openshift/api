@@ -189,27 +189,17 @@ func (ManagedAWSPlacementGroup) SwaggerDoc() map[string]string {
 	return map_ManagedAWSPlacementGroup
 }
 
-var map_ImageReference = map[string]string{
-	"":          "ImageReference holds the identity of the rhcos image uploaded to the PC",
-	"imageUuid": "imageUuid is the UUID of the rhcos image uploaded to the PC. If the imageUUID is configured, it will be used to create the VM. Otherwise, the imageName will be used to obtain the imageUUID, before creating the VM.",
-	"imageName": "imageName is the name of the rhcos image uploaded to the PC",
-}
-
-func (ImageReference) SwaggerDoc() map[string]string {
-	return map_ImageReference
-}
-
 var map_NutanixMachineProviderConfig = map[string]string{
-	"":                     "NutanixMachineProviderConfig is the Schema for the nutanixmachineproviderconfigs API Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
-	"clusterReferenceUuid": "clusterReferenceUuid is the UUID of the PE/cluster the Machine's VM will be created in",
-	"imageReference":       "imageReference is to identify the rhcos image uploaded to the Prism Central (PC)",
-	"subnetUuid":           "subnetUuid is the UUID of the cluster's network subnet to use for the Machine's VM",
-	"numVcpusPerSocket":    "numVcpusPerSocket is the number of vCPUs per socket of the VM to create",
-	"numSockets":           "numSockets is the number of sockets of the VM to create",
-	"memorySize":           "memorySize is the memory size (in Quantity format) of the VM to create",
-	"diskSize":             "diskSize is the disk size (in Quantity format) of the VM to create",
-	"userDataSecret":       "userDataSecret is a local reference to a secret that contains the UserData to apply to the VM",
-	"credentialsSecret":    "credentialsSecret is a local reference to a secret that contains the credentials data to access Nutanix PC client",
+	"":                  "NutanixMachineProviderConfig is the Schema for the nutanixmachineproviderconfigs API Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"clusterReference":  "clusterReference is to identify the PE/cluster in which the Machine's VM will be created",
+	"imageReference":    "imageReference is to identify the rhcos image uploaded to the Prism Central (PC)",
+	"subnetReference":   "subnetReference is to identify the cluster's network subnet to use for the Machine's VM",
+	"numVcpusPerSocket": "numVcpusPerSocket is the number of vCPUs per socket of the VM to create",
+	"numSockets":        "numSockets is the number of sockets of the VM to create",
+	"memorySize":        "memorySize is the memory size (in Quantity format) of the VM to create",
+	"diskSize":          "diskSize is the system disk size (in Quantity format) of the VM to create",
+	"userDataSecret":    "userDataSecret is a local reference to a secret that contains the UserData to apply to the VM",
+	"credentialsSecret": "credentialsSecret is a local reference to a secret that contains the credentials data to access Nutanix PC client",
 }
 
 func (NutanixMachineProviderConfig) SwaggerDoc() map[string]string {
@@ -225,6 +215,17 @@ var map_NutanixMachineProviderStatus = map[string]string{
 
 func (NutanixMachineProviderStatus) SwaggerDoc() map[string]string {
 	return map_NutanixMachineProviderStatus
+}
+
+var map_NutanixReference = map[string]string{
+	"":     "NutanixReference holds the identity of a Nutanix PC resource (cluster, image, subnet, etc.)",
+	"kind": "kind of the resource type (\"cluster\", \"image\", \"subnet\", etc.)",
+	"uuid": "uuid is the UUID of the resource in the PC. If this is configured, it will be used to create the VM. Otherwise, the resource name will be used to obtain the UUID, before creating the VM.",
+	"name": "name is the resource name in the PC",
+}
+
+func (NutanixReference) SwaggerDoc() map[string]string {
+	return map_NutanixReference
 }
 
 // AUTO-GENERATED FUNCTIONS END HERE

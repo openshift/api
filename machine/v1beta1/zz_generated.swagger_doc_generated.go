@@ -164,6 +164,15 @@ func (TagSpecification) SwaggerDoc() map[string]string {
 	return map_TagSpecification
 }
 
+var map_AdditionalCapabilities = map[string]string{
+	"":                "AdditionalCapabilities specifies the additional capabilities for this instance.",
+	"ultraSSDEnabled": "ultraSSDEnabled specifices if the instance should use ultra SSD",
+}
+
+func (AdditionalCapabilities) SwaggerDoc() map[string]string {
+	return map_AdditionalCapabilities
+}
+
 var map_AzureMachineProviderCondition = map[string]string{
 	"":                   "AzureMachineProviderCondition is a condition in a AzureMachineProviderStatus",
 	"type":               "Type is the type of the condition.",
@@ -182,6 +191,7 @@ var map_AzureMachineProviderSpec = map[string]string{
 	"":                          "AzureMachineProviderSpec is the type that will be embedded in a Machine.Spec.ProviderSpec field for an Azure virtual machine. It is used by the Azure machine actuator to create a single Machine. Required parameters such as location that are not specified by this configuration, will be defaulted by the actuator. Compatibility level 2: Stable within a major release for a minimum of 9 months or 3 minor releases (whichever is longer).",
 	"userDataSecret":            "UserDataSecret contains a local reference to a secret that contains the UserData to apply to the instance",
 	"credentialsSecret":         "CredentialsSecret is a reference to the secret with Azure credentials.",
+	"additionalCapabilities":    "AdditionalCapabilities specifies the additional capabilities for this instance.",
 	"location":                  "Location is the region to use to create the instance",
 	"vmSize":                    "VMSize is the size of the VM to create.",
 	"image":                     "Image is the OS image to use to create the instance.",

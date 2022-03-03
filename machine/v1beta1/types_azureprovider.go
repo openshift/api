@@ -24,6 +24,9 @@ type AzureMachineProviderSpec struct {
 	// CredentialsSecret is a reference to the secret with Azure credentials.
 	// +optional
 	CredentialsSecret *corev1.SecretReference `json:"credentialsSecret,omitempty"`
+	// AdditionalCapabilities specifies the additional capabilities for this instance.
+	// +optional
+	AdditionalCapabilities AdditionalCapabilities `json:"additionalCapabilities,omitempty"`
 	// Location is the region to use to create the instance
 	// +optional
 	Location string `json:"location,omitempty"`
@@ -155,6 +158,13 @@ const (
 	// VMStateUnknown ...
 	VMStateUnknown = AzureVMState("Unknown")
 )
+
+// AdditionalCapabilities specifies the additional capabilities for this instance.
+type AdditionalCapabilities struct {
+	// ultraSSDEnabled specifices if the instance should use ultra SSD
+	// +optional
+	UltraSSDEnabled bool `json:"ultraSSDEnabled,omitempty"`
+}
 
 // Image is a mirror of azure sdk compute.ImageReference
 type Image struct {

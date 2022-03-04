@@ -208,7 +208,7 @@ type OSDisk struct {
 	// OSType is the operating system type of the OS disk. Possible values include "Linux" and "Windows".
 	OSType string `json:"osType"`
 	// ManagedDisk specifies the Managed Disk parameters for the OS disk.
-	ManagedDisk ManagedDiskParameters `json:"managedDisk"`
+	ManagedDisk OSDiskManagedDiskParameters `json:"managedDisk"`
 	// DiskSizeGB is the size in GB to assign to the data disk.
 	DiskSizeGB int32 `json:"diskSizeGB"`
 	// DiskSettings describe ephemeral disk settings for the os disk.
@@ -239,7 +239,7 @@ type DataDisk struct {
 	DiskSizeGB int32 `json:"diskSizeGB"`
 	// ManagedDisk specifies the Managed Disk parameters for the data disk.
 	// +optional
-	ManagedDisk ManagedDiskParameters `json:"managedDisk,omitempty"`
+	ManagedDisk DataDiskManagedDiskParameters `json:"managedDisk,omitempty"`
 	// Lun Specifies the logical unit number of the data disk. This value is used to identify data disks within the VM and therefore must be unique for each data disk attached to a VM.
 	// The value must be between 0 and 63.
 	// +optional
@@ -277,10 +277,20 @@ type DiskSettings struct {
 	EphemeralStorageLocation string `json:"ephemeralStorageLocation,omitempty"`
 }
 
-// ManagedDiskParameters is the parameters of a managed disk.
-type ManagedDiskParameters struct {
+// OSDiskManagedDiskParameters is the parameters of a OSDisk managed disk.
+type OSDiskManagedDiskParameters struct {
 	// StorageAccountType is the storage account type to use.
-	// Possible values include "Standard_LRS", "Premium_LRS" and, only for Data Disks, "UltraSSD_LRS."
+	// Possible values include "Standard_LRS", "Premium_LRS".
+	StorageAccountType string `json:"storageAccountType"`
+	// DiskEncryptionSet is the disk encryption set properties
+	// +optional
+	DiskEncryptionSet *DiskEncryptionSetParameters `json:"diskEncryptionSet,omitempty"`
+}
+
+// DataDiskManagedDiskParameters is the parameters of a DataDisk managed disk.
+type DataDiskManagedDiskParameters struct {
+	// StorageAccountType is the storage account type to use.
+	// Possible values include "Standard_LRS", "Premium_LRS" and "UltraSSD_LRS".
 	StorageAccountType string `json:"storageAccountType"`
 	// DiskEncryptionSet is the disk encryption set properties
 	// +optional

@@ -19,15 +19,15 @@ type NutanixMachineProviderConfig struct {
 
 	// clusterReference is to identify the PE/cluster in which the Machine's VM will be created
 	// +kubebuilder:validation:Required
-	ClusterReference NutanixReference `json:"clusterReference"`
+	ClusterReference *NutanixReference `json:"clusterReference"`
 
 	// imageReference is to identify the rhcos image uploaded to the Prism Central (PC)
 	// +kubebuilder:validation:Required
-	ImageReference NutanixReference `json:"imageReference"`
+	ImageReference *NutanixReference `json:"imageReference"`
 
 	// subnetReference is to identify the cluster's network subnet to use for the Machine's VM
 	// +kubebuilder:validation:Required
-	SubnetReference NutanixReference `json:"subnetReference"`
+	SubnetReference *NutanixReference `json:"subnetReference"`
 
 	// numVcpusPerSocket is the number of vCPUs per socket of the VM to create
 	// +kubebuilder:validation:Required
@@ -57,11 +57,6 @@ type NutanixMachineProviderConfig struct {
 
 // NutanixReference holds the identity of a Nutanix PC resource (cluster, image, subnet, etc.)
 type NutanixReference struct {
-	// kind of the resource type ("cluster", "image", "subnet", etc.)
-	// +kubebuilder:validation:Enum="cluster"; "image"; "subnet"
-	// +kubebuilder:validation:Required
-	Kind string `json:"kind"`
-
 	// uuid is the UUID of the resource in the PC.
 	// If this is configured, it will be used to create the VM.
 	// Otherwise, the resource name will be used to obtain the UUID, before creating the VM.

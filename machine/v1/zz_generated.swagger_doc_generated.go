@@ -219,7 +219,6 @@ func (NutanixMachineProviderStatus) SwaggerDoc() map[string]string {
 
 var map_NutanixReference = map[string]string{
 	"":     "NutanixReference holds the identity of a Nutanix PC resource (cluster, image, subnet, etc.)",
-	"kind": "kind of the resource type (\"cluster\", \"image\", \"subnet\", etc.)",
 	"uuid": "uuid is the UUID of the resource in the PC. If this is configured, it will be used to create the VM. Otherwise, the resource name will be used to obtain the UUID, before creating the VM.",
 	"name": "name is the resource name in the PC",
 }

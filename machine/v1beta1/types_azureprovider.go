@@ -87,7 +87,24 @@ type AzureMachineProviderSpec struct {
 	// +optional
 	SecurityProfile *SecurityProfile `json:"securityProfile,omitempty"`
 	// UltraSSDCapability enables or disables Azure UltraSSD capability for a virtual machine.
-	// When omitted, the platform may enable the capability based on the configuration of data disks.
+	// This can be used to allow/disallow binding of Azure UltraSSD to the Machine both as Data Disks or via Persistent Volumes.
+	// This Azure feature is subject to a specific scope and certain limitations.
+	// More informations on this can be found in the official Azure documentation for Ultra Disks:
+	// (https://docs.microsoft.com/en-us/azure/virtual-machines/disks-enable-ultra-ssd?tabs=azure-portal#ga-scope-and-limitations).
+	//
+	// When omitted, if at least one Data Disk of type UltraSSD is specified, the platform will automatically enable the capability.
+	// If a Perisistent Volume backed by an UltraSSD is bound to a Pod on the Machine, when this field is ommitted, the platform will *not* automatically enable the capability (unless already enabled by the presence of an UltraSSD as Data Disk).
+	// This may manifest in the Pod being stuck in `ContainerCreating` phase.
+	// This defaulting behaviour may be subject to change in future.
+	//
+	// When set to "Enabled", if the capability is available for the Machine based on the scope and limitations described above, the capability will be set on the Machine.
+	// This will thus allow UltraSSD both as Data Disks and Persistent Volumes.
+	// If set to "Enabled" when the capability can't be available due to scope and limitations, the Machine will go into "Failed" state.
+	//
+	// When set to "Disabled", UltraSSDs will not be allowed either as Data Disks nor as Persistent Volumes.
+	// In this case if any UltraSSDs are specified as Data Disks on a Machine, the Machine will go into a "Failed" state.
+	// If instead any UltraSSDs are backing the volumes (via Persistent Volumes) of any Pods scheduled on a Node which is backed by the Machine, the Pod may get stuck in `ContainerCreating` phase.
+	//
 	// +kubebuilder:validation:Enum:="Enabled";"Disabled"
 	// +optional
 	UltraSSDCapability AzureUltraSSDCapabilityState `json:"ultraSSDCapability,omitempty"`

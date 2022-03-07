@@ -225,6 +225,16 @@ func (DataDisk) SwaggerDoc() map[string]string {
 	return map_DataDisk
 }
 
+var map_DataDiskManagedDiskParameters = map[string]string{
+	"":                   "DataDiskManagedDiskParameters is the parameters of a DataDisk managed disk.",
+	"storageAccountType": "StorageAccountType is the storage account type to use. Possible values include \"Standard_LRS\", \"Premium_LRS\" and \"UltraSSD_LRS\".",
+	"diskEncryptionSet":  "DiskEncryptionSet is the disk encryption set properties",
+}
+
+func (DataDiskManagedDiskParameters) SwaggerDoc() map[string]string {
+	return map_DataDiskManagedDiskParameters
+}
+
 var map_DiskEncryptionSetParameters = map[string]string{
 	"":   "DiskEncryptionSetParameters is the disk encryption set properties",
 	"id": "ID is the disk encryption set ID",
@@ -258,8 +268,8 @@ func (Image) SwaggerDoc() map[string]string {
 }
 
 var map_ManagedDiskParameters = map[string]string{
-	"":                   "ManagedDiskParameters is the parameters of a managed disk.",
-	"storageAccountType": "StorageAccountType is the storage account type to use. Possible values include \"Standard_LRS\", \"Premium_LRS\" and, only for Data Disks, \"UltraSSD_LRS.\"",
+	"":                   "ManagedDiskParameters is the parameters of a OSDisk managed disk.",
+	"storageAccountType": "StorageAccountType is the storage account type to use. Possible values include \"Standard_LRS\", \"Premium_LRS\".",
 	"diskEncryptionSet":  "DiskEncryptionSet is the disk encryption set properties",
 }
 

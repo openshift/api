@@ -208,7 +208,7 @@ type OSDisk struct {
 	// OSType is the operating system type of the OS disk. Possible values include "Linux" and "Windows".
 	OSType string `json:"osType"`
 	// ManagedDisk specifies the Managed Disk parameters for the OS disk.
-	ManagedDisk OSDiskManagedDiskParameters `json:"managedDisk"`
+	ManagedDisk ManagedDiskParameters `json:"managedDisk"`
 	// DiskSizeGB is the size in GB to assign to the data disk.
 	DiskSizeGB int32 `json:"diskSizeGB"`
 	// DiskSettings describe ephemeral disk settings for the os disk.
@@ -277,8 +277,8 @@ type DiskSettings struct {
 	EphemeralStorageLocation string `json:"ephemeralStorageLocation,omitempty"`
 }
 
-// OSDiskManagedDiskParameters is the parameters of a OSDisk managed disk.
-type OSDiskManagedDiskParameters struct {
+// ManagedDiskParameters is the parameters of a OSDisk managed disk.
+type ManagedDiskParameters struct {
 	// StorageAccountType is the storage account type to use.
 	// Possible values include "Standard_LRS", "Premium_LRS".
 	StorageAccountType string `json:"storageAccountType"`

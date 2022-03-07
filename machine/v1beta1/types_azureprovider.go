@@ -238,15 +238,21 @@ type DataDisk struct {
 	// +kubebuilder:validation:Required
 	DiskSizeGB int32 `json:"diskSizeGB"`
 	// ManagedDisk specifies the Managed Disk parameters for the data disk.
+	// Empty value means no opinion and the platform chooses a default, which is subject to change over time.
+	// Currently the default is a ManagedDisk with with storageAccountType: "Premium_LRS" and diskEncryptionSet.id: "Default".
 	// +optional
 	ManagedDisk DataDiskManagedDiskParameters `json:"managedDisk,omitempty"`
 	// Lun Specifies the logical unit number of the data disk. This value is used to identify data disks within the VM and therefore must be unique for each data disk attached to a VM.
 	// The value must be between 0 and 63.
+	// Empty value means no opinion and the platform chooses a default, which is subject to change over time.
+	// Currently the default is to set it to the next available slot number.
 	// +optional
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=63
 	Lun *int32 `json:"lun,omitempty"`
 	// CachingType specifies the caching requirements.
+	// Empty value means no opinion and the platform chooses a default, which is subject to change over time.
+	// Currently the default is CachingTypeNone.
 	// +optional
 	// +kubebuilder:validation:Enum=None;ReadOnly;ReadWrite
 	CachingType CachingTypeOption `json:"cachingType,omitempty"`
@@ -292,7 +298,9 @@ type DataDiskManagedDiskParameters struct {
 	// StorageAccountType is the storage account type to use.
 	// Possible values include "Standard_LRS", "Premium_LRS" and "UltraSSD_LRS".
 	StorageAccountType string `json:"storageAccountType"`
-	// DiskEncryptionSet is the disk encryption set properties
+	// DiskEncryptionSet is the disk encryption set properties.
+	// Empty value means no opinion and the platform chooses a default, which is subject to change over time.
+	// Currently the default is a DiskEncryptionSet with id: "Default".
 	// +optional
 	DiskEncryptionSet *DiskEncryptionSetParameters `json:"diskEncryptionSet,omitempty"`
 }
@@ -300,6 +308,8 @@ type DataDiskManagedDiskParameters struct {
 // DiskEncryptionSetParameters is the disk encryption set properties
 type DiskEncryptionSetParameters struct {
 	// ID is the disk encryption set ID
+	// Empty value means no opinion and the platform chooses a default, which is subject to change over time.
+	// Currently the default is: "Default".
 	// +optional
 	ID string `json:"id,omitempty"`
 }

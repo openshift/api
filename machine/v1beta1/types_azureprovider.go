@@ -225,7 +225,7 @@ type OSDisk struct {
 	// OSType is the operating system type of the OS disk. Possible values include "Linux" and "Windows".
 	OSType string `json:"osType"`
 	// ManagedDisk specifies the Managed Disk parameters for the OS disk.
-	ManagedDisk ManagedDiskParameters `json:"managedDisk"`
+	ManagedDisk OSDiskManagedDiskParameters `json:"managedDisk"`
 	// DiskSizeGB is the size in GB to assign to the data disk.
 	DiskSizeGB int32 `json:"diskSizeGB"`
 	// DiskSettings describe ephemeral disk settings for the os disk.
@@ -241,6 +241,8 @@ type OSDisk struct {
 }
 
 // DataDisk specifies the parameters that are used to add one or more data disks to the machine.
+// A Data Disk is a managed disk that's attached to a virtual machine to store application data.
+// It differs from an OS Disk as it doesn't come with a pre-installed OS, and it cannot contain the boot volume.
 type DataDisk struct {
 	// NameSuffix is the suffix to be appended to the machine name to generate the disk name.
 	// Each disk name will be in format <machineName>_<nameSuffix>.
@@ -292,8 +294,8 @@ type DiskSettings struct {
 	EphemeralStorageLocation string `json:"ephemeralStorageLocation,omitempty"`
 }
 
-// ManagedDiskParameters is the parameters of a OSDisk managed disk.
-type ManagedDiskParameters struct {
+// OSDiskManagedDiskParameters is the parameters of a OSDisk managed disk.
+type OSDiskManagedDiskParameters struct {
 	// StorageAccountType is the storage account type to use.
 	// Possible values include "Standard_LRS", "Premium_LRS".
 	StorageAccountType string `json:"storageAccountType"`

@@ -214,7 +214,7 @@ type FailureDomains struct {
 type AWSFailureDomain struct {
 	// Subnet is a reference to the subnet to use for this instance
 	// +optional
-	Subnet AWSResourceReference `json:"subnet,omitempty"`
+	Subnet *AWSResourceReference `json:"subnet,omitempty"`
 
 	// Placement configures the placement information for this instance
 	// +optional

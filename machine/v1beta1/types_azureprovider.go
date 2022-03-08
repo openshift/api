@@ -308,13 +308,27 @@ type OSDiskManagedDiskParameters struct {
 type DataDiskManagedDiskParameters struct {
 	// StorageAccountType is the storage account type to use.
 	// Possible values include "Standard_LRS", "Premium_LRS" and "UltraSSD_LRS".
-	StorageAccountType string `json:"storageAccountType"`
+	// +kubebuilder:validation:Enum=Standard_LRS;Premium_LRS;UltraSSD_LRS
+	StorageAccountType StorageAccountType `json:"storageAccountType"`
 	// DiskEncryptionSet is the disk encryption set properties.
 	// Empty value means no opinion and the platform chooses a default, which is subject to change over time.
 	// Currently the default is a DiskEncryptionSet with id: "Default".
 	// +optional
 	DiskEncryptionSet *DiskEncryptionSetParameters `json:"diskEncryptionSet,omitempty"`
 }
+
+// StorageAccountType defines the different storage types to use for a ManagedDisk.
+type StorageAccountType string
+
+// These are the valid StorageAccountType types.
+const (
+	// "StorageAccountStandardLRS" means the Standard_LRS storage type.
+	StorageAccountStandardLRS StorageAccountType = "Standard_LRS"
+	// "StorageAccountPremiumLRS" means the Premium_LRS storage type.
+	StorageAccountPremiumLRS StorageAccountType = "Premium_LRS"
+	// "StorageAccountUltraSSDLRS" means the UltraSSD_LRS storage type.
+	StorageAccountUltraSSDLRS StorageAccountType = "UltraSSD_LRS"
+)
 
 // DiskEncryptionSetParameters is the disk encryption set properties
 type DiskEncryptionSetParameters struct {

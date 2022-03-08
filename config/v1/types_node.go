@@ -73,27 +73,27 @@ const (
 	// DefaultNodeMonitorGracePeriod refers to the "--node-monitor-grace-period" of the Kube Controller Manager in case of DefaultUpdateDefaultReaction WorkerLatencyProfile type
 	DefaultNodeMonitorGracePeriod = 40 * time.Second
 	// DefaultNotReadyTolerationSeconds refers to the "--default-not-ready-toleration-seconds" of the Kube API Server in case of DefaultUpdateDefaultReaction WorkerLatencyProfile type
-	DefaultNotReadyTolerationSeconds = 300 * time.Second
+	DefaultNotReadyTolerationSeconds = 300
 	// DefaultUnreachableTolerationSeconds refers to the "--default-unreachable-toleration-seconds" of the Kube API Server in case of DefaultUpdateDefaultReaction WorkerLatencyProfile type
-	DefaultUnreachableTolerationSeconds = 300 * time.Second
+	DefaultUnreachableTolerationSeconds = 300
 
 	// MediumNodeStatusUpdateFrequency refers to the "--node-status-update-frequency" of the kubelet in case of MediumUpdateAverageReaction WorkerLatencyProfile type
 	MediumNodeStatusUpdateFrequency = 20 * time.Second
 	// MediumNodeMonitorGracePeriod refers to the "--node-monitor-grace-period" of the Kube Controller Manager in case of MediumUpdateAverageReaction WorkerLatencyProfile type
 	MediumNodeMonitorGracePeriod = 2 * time.Minute
 	// MediumNotReadyTolerationSeconds refers to the "--default-not-ready-toleration-seconds" of the Kube API Server in case of MediumUpdateAverageReaction WorkerLatencyProfile type
-	MediumNotReadyTolerationSeconds = 60 * time.Second
+	MediumNotReadyTolerationSeconds = 60
 	// MediumUnreachableTolerationSeconds refers to the "--default-unreachable-toleration-seconds" of the Kube API Server in case of MediumUpdateAverageReaction WorkerLatencyProfile type
-	MediumUnreachableTolerationSeconds = 60 * time.Second
+	MediumUnreachableTolerationSeconds = 60
 
 	// LowNodeStatusUpdateFrequency refers to the "--node-status-update-frequency" of the kubelet in case of LowUpdateSlowReaction WorkerLatencyProfile type
 	LowNodeStatusUpdateFrequency = 1 * time.Minute
 	// LowNodeMonitorGracePeriod refers to the "--node-monitor-grace-period" of the Kube Controller Manager in case of LowUpdateSlowReaction WorkerLatencyProfile type
 	LowNodeMonitorGracePeriod = 5 * time.Minute
 	// LowNotReadyTolerationSeconds refers to the "--default-not-ready-toleration-seconds" of the Kube API Server in case of LowUpdateSlowReaction WorkerLatencyProfile type
-	LowNotReadyTolerationSeconds = 60 * time.Second
+	LowNotReadyTolerationSeconds = 60
 	// LowUnreachableTolerationSeconds refers to the "--default-unreachable-toleration-seconds" of the Kube API Server in case of LowUpdateSlowReaction WorkerLatencyProfile type
-	LowUnreachableTolerationSeconds = 60 * time.Second
+	LowUnreachableTolerationSeconds = 60
 )
 
 // WorkerLatencyProfileStatus provides status information about the WorkerLatencyProfile rollout

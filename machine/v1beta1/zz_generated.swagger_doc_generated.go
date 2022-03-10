@@ -217,6 +217,7 @@ var map_DataDisk = map[string]string{
 	"nameSuffix":  "NameSuffix is the suffix to be appended to the machine name to generate the disk name. Each disk name will be in format <machineName>_<nameSuffix>. NameSuffix name must start and finish with an alphanumeric character and can only contain letters, numbers, underscores, periods or hyphens. The overall disk name must not exceed 80 chars in length.",
 	"diskSizeGB":  "DiskSizeGB is the size in GB to assign to the data disk.",
 	"managedDisk": "ManagedDisk specifies the Managed Disk parameters for the data disk. Empty value means no opinion and the platform chooses a default, which is subject to change over time. Currently the default is a ManagedDisk with with storageAccountType: \"Premium_LRS\" and diskEncryptionSet.id: \"Default\".",
+	"lun":         "Lun Specifies the logical unit number of the data disk. This value is used to identify data disks within the VM and therefore must be unique for each data disk attached to a VM. This value is also needed for referencing the data disks devices within userdata to perform disk initialization through Ignition (e.g. partition/format/mount). The value must be between 0 and 63.",
 	"cachingType": "CachingType specifies the caching requirements. Empty value means no opinion and the platform chooses a default, which is subject to change over time. Currently the default is CachingTypeNone.",
 }
 

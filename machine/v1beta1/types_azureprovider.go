@@ -261,14 +261,14 @@ type DataDisk struct {
 	// Currently the default is a ManagedDisk with with storageAccountType: "Premium_LRS" and diskEncryptionSet.id: "Default".
 	// +optional
 	ManagedDisk DataDiskManagedDiskParameters `json:"managedDisk,omitempty"`
-	// Lun Specifies the logical unit number of the data disk. This value is used to identify data disks within the VM and therefore must be unique for each data disk attached to a VM.
+	// Lun Specifies the logical unit number of the data disk.
+	// This value is used to identify data disks within the VM and therefore must be unique for each data disk attached to a VM.
+	// This value is also needed for referencing the data disks devices within userdata to perform disk initialization through Ignition (e.g. partition/format/mount).
 	// The value must be between 0 and 63.
-	// Empty value means no opinion and the platform chooses a default, which is subject to change over time.
-	// Currently the default is to set it to the next available slot number.
-	// +optional
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=63
-	Lun *int32 `json:"lun,omitempty"`
+	// +kubebuilder:validation:Required
+	Lun int32 `json:"lun,omitempty"`
 	// CachingType specifies the caching requirements.
 	// Empty value means no opinion and the platform chooses a default, which is subject to change over time.
 	// Currently the default is CachingTypeNone.

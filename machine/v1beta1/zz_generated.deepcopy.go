@@ -414,11 +414,6 @@ func (in Conditions) DeepCopy() Conditions {
 func (in *DataDisk) DeepCopyInto(out *DataDisk) {
 	*out = *in
 	in.ManagedDisk.DeepCopyInto(&out.ManagedDisk)
-	if in.Lun != nil {
-		in, out := &in.Lun, &out.Lun
-		*out = new(int32)
-		**out = **in
-	}
 	return
 }
 

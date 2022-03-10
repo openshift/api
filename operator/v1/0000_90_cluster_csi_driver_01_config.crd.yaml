@@ -51,6 +51,7 @@ spec:
                 - csi.sharedresource.openshift.io
                 - diskplugin.csi.alibabacloud.com
                 - vpc.block.csi.ibm.io
+                - csi.nutanix.com
                 type: string
             type: object
           spec:

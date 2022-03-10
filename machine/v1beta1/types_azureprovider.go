@@ -34,7 +34,7 @@ type AzureMachineProviderSpec struct {
 	Image Image `json:"image"`
 	// OSDisk represents the parameters for creating the OS disk.
 	OSDisk OSDisk `json:"osDisk"`
-	// DataDisk specifies the parameters that are used to add one or more data disks to the machine
+	// DataDisk specifies the parameters that are used to add one or more data disks to the machine.
 	// +optional
 	DataDisks []DataDisk `json:"dataDisks,omitempty"`
 	// SSHPublicKey is the public key to use to SSH to the virtual machine.
@@ -243,6 +243,13 @@ type OSDisk struct {
 // DataDisk specifies the parameters that are used to add one or more data disks to the machine.
 // A Data Disk is a managed disk that's attached to a virtual machine to store application data.
 // It differs from an OS Disk as it doesn't come with a pre-installed OS, and it cannot contain the boot volume.
+// It is registered as SCSI drive and labeled with the chosen `lun`. e.g. for `lun: 0` the raw disk device will be available at `/dev/disk/azure/scsi1/lun0`.
+//
+// As the Data Disk disk device is attached raw to the virtual machine, it will need to be partitioned, formatted with a filesystem and mounted, in order for it to be usable.
+// This can be done by creating a custom userdata Secret with custom Ignition configuration to achieve the desired initialization.
+// At this stage the previously defined `lun` is to be used as the "device" key for referencing the raw disk device to be initialized.
+// Once the custom userdata Secret has been created, it can be referenced in the Machine's `.providerSpec.userDataSecret`.
+// For further guidance and examples, please refer to the official OpenShift docs.
 type DataDisk struct {
 	// NameSuffix is the suffix to be appended to the machine name to generate the disk name.
 	// Each disk name will be in format <machineName>_<nameSuffix>.

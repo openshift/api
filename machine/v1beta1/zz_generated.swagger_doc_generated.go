@@ -175,7 +175,7 @@ var map_AzureMachineProviderSpec = map[string]string{
 	"vmSize":                    "VMSize is the size of the VM to create.",
 	"image":                     "Image is the OS image to use to create the instance.",
 	"osDisk":                    "OSDisk represents the parameters for creating the OS disk.",
-	"dataDisks":                 "DataDisk specifies the parameters that are used to add one or more data disks to the machine",
+	"dataDisks":                 "DataDisk specifies the parameters that are used to add one or more data disks to the machine.",
 	"sshPublicKey":              "SSHPublicKey is the public key to use to SSH to the virtual machine.",
 	"publicIP":                  "PublicIP if true a public IP will be used",
 	"tags":                      "Tags is a list of tags to apply to the machine.",
@@ -213,7 +213,7 @@ func (AzureMachineProviderStatus) SwaggerDoc() map[string]string {
 }
 
 var map_DataDisk = map[string]string{
-	"":            "DataDisk specifies the parameters that are used to add one or more data disks to the machine. A Data Disk is a managed disk that's attached to a virtual machine to store application data. It differs from an OS Disk as it doesn't come with a pre-installed OS, and it cannot contain the boot volume.",
+	"":            "DataDisk specifies the parameters that are used to add one or more data disks to the machine. A Data Disk is a managed disk that's attached to a virtual machine to store application data. It differs from an OS Disk as it doesn't come with a pre-installed OS, and it cannot contain the boot volume. It is registered as SCSI drive and labeled with the chosen `lun`. e.g. for `lun: 0` the raw disk device will be available at `/dev/disk/azure/scsi1/lun0`.\n\nAs the Data Disk disk device is attached raw to the virtual machine, it will need to be partitioned, formatted with a filesystem and mounted, in order for it to be usable. This can be done by creating a custom userdata Secret with custom Ignition configuration to achieve the desired initialization. At this stage the previously defined `lun` is to be used as the \"device\" key for referencing the raw disk device to be initialized. Once the custom userdata Secret has been created, it can be referenced in the Machine's `.providerSpec.userDataSecret`. For further guidance and examples, please refer to the official OpenShift docs.",
 	"nameSuffix":  "NameSuffix is the suffix to be appended to the machine name to generate the disk name. Each disk name will be in format <machineName>_<nameSuffix>. NameSuffix name must start and finish with an alphanumeric character and can only contain letters, numbers, underscores, periods or hyphens. The overall disk name must not exceed 80 chars in length.",
 	"diskSizeGB":  "DiskSizeGB is the size in GB to assign to the data disk.",
 	"managedDisk": "ManagedDisk specifies the Managed Disk parameters for the data disk. Empty value means no opinion and the platform chooses a default, which is subject to change over time. Currently the default is a ManagedDisk with with storageAccountType: \"Premium_LRS\" and diskEncryptionSet.id: \"Default\".",

@@ -93,15 +93,19 @@ spec:
                       description: Nutanix contains settings specific to the Nutanix infrastructure provider.
                       type: object
                       required:
-                        - pcEndpoint
-                        - pcPort
+                        - prismCentralEndpoint
+                        - prismCentralPort
                       properties:
-                        pcEndpoint:
-                          description: pcEndpoint is the endpoint (DNS name or IP address) of the Nutanix Prism Central
+                        prismCentralEndpoint:
+                          description: prismCentralEndpoint is the endpoint (DNS name or IP address) of the Nutanix Prism Central
                           type: string
-                        pcPort:
-                          description: pcPort is the port of the Nutanix Prism Central
-                          type: string
+                          maxLength: 256
+                        prismCentralPort:
+                          description: prismCentralPort is the port of the Nutanix Prism Central
+                          type: integer
+                          format: int32
+                          maximum: 65535
+                          minimum: 1
                     openstack:
                       description: OpenStack contains settings specific to the OpenStack infrastructure provider.
                       type: object

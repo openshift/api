@@ -313,7 +313,8 @@ type DiskSettings struct {
 type OSDiskManagedDiskParameters struct {
 	// StorageAccountType is the storage account type to use.
 	// Possible values include "Standard_LRS", "Premium_LRS".
-	StorageAccountType string `json:"storageAccountType"`
+	// +kubebuilder:validation:Enum=Standard_LRS;Premium_LRS
+	StorageAccountType StorageAccountType `json:"storageAccountType"`
 	// DiskEncryptionSet is the disk encryption set properties
 	// +optional
 	DiskEncryptionSet *DiskEncryptionSetParameters `json:"diskEncryptionSet,omitempty"`

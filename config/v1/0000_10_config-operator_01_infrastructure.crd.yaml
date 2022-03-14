@@ -97,7 +97,7 @@ spec:
                         - prismElements
                       properties:
                         prismCentral:
-                          description: prismCentralEndpoint holds the endpoint and port to access the Nutanix Prism Central
+                          description: prismCentral holds the endpoint and port to access the Nutanix Prism Central
                           type: object
                           required:
                             - address

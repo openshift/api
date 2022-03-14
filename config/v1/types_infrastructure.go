@@ -706,16 +706,13 @@ type AlibabaCloudResourceTag struct {
 // NutanixPlatformSpec holds the desired state of the Nutanix infrastructure provider.
 // This only includes fields that can be modified in the cluster.
 type NutanixPlatformSpec struct {
-	// prismCentralEndpoint holds the endpoint and port to access the Nutanix Prism Central
+	// prismCentral holds the endpoint and port to access the Nutanix Prism Central
 	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:MaxLength=256
 	PrismCentral NutanixPrismEndpoint `json:"prismCentral"`
 
 	// prismElements holds an array of endpoint and port data to access the Nutanix
 	// Prism Elements (clusters) of the Nutanix Prism Central
 	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=65535
 	PrismElements []NutanixPrismEndpoint `json:"prismElements"`
 }
 

@@ -372,7 +372,7 @@ func (NutanixMachineProviderConfig) SwaggerDoc() map[string]string {
 var map_NutanixMachineProviderStatus = map[string]string{
 	"":           "NutanixMachineProviderStatus is the type that will be embedded in a Machine.Status.ProviderStatus field. It contains nutanix-specific status information. Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 	"conditions": "conditions is a set of conditions associated with the Machine to indicate errors or other status",
-	"vmUUID":     "vmUUID is the Machine associated VM's UUID The field is missing either before the VM is created, or after the VM is deleted Once the VM is created, the field is filled with the VM's UUID and it will not change until the VM is deleted. The vmUUID is used to find the VM when updating the Machine status, and to delete the VM when the Machine is deleted.",
+	"vmUUID":     "vmUUID is the Machine associated VM's UUID The field is missing before the VM is created. Once the VM is created, the field is filled with the VM's UUID and it will not change. The vmUUID is used to find the VM when updating the Machine status, and to delete the VM when the Machine is deleted.",
 }
 
 func (NutanixMachineProviderStatus) SwaggerDoc() map[string]string {

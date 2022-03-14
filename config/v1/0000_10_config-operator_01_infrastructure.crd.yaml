@@ -93,19 +93,46 @@ spec:
                       description: Nutanix contains settings specific to the Nutanix infrastructure provider.
                       type: object
                       required:
-                        - prismCentralEndpoint
-                        - prismCentralPort
+                        - prismCentral
+                        - prismElements
                       properties:
-                        prismCentralEndpoint:
-                          description: prismCentralEndpoint is the endpoint (DNS name or IP address) of the Nutanix Prism Central
-                          type: string
-                          maxLength: 256
-                        prismCentralPort:
-                          description: prismCentralPort is the port of the Nutanix Prism Central
-                          type: integer
-                          format: int32
-                          maximum: 65535
-                          minimum: 1
+                        prismCentral:
+                          description: prismCentralEndpoint holds the endpoint and port to access the Nutanix Prism Central
+                          type: object
+                          required:
+                            - address
+                            - port
+                          properties:
+                            address:
+                              description: address is the endpoint address (DNS name or IP address) of the Nutanix Prism Central or Element (cluster)
+                              type: string
+                              maxLength: 256
+                            port:
+                              description: port is the port number to access the Nutanix Prism Central or Element (cluster)
+                              type: integer
+                              format: int32
+                              maximum: 65535
+                              minimum: 1
+                        prismElements:
+                          description: prismElements holds an array of endpoint and port data to access the Nutanix Prism Elements (clusters) of the Nutanix Prism Central
+                          type: array
+                          items:
+                            description: NutanixPrismEndpoint holds the endpoint and port to access the Nutanix Prism Central or Element (cluster)
+                            type: object
+                            required:
+                              - address
+                              - port
+                            properties:
+                              address:
+                                description: address is the endpoint address (DNS name or IP address) of the Nutanix Prism Central or Element (cluster)
+                                type: string
+                                maxLength: 256
+                              port:
+                                description: port is the port number to access the Nutanix Prism Central or Element (cluster)
+                                type: integer
+                                format: int32
+                                maximum: 65535
+                                minimum: 1
                     openstack:
                       description: OpenStack contains settings specific to the OpenStack infrastructure provider.
                       type: object

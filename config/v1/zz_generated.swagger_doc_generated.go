@@ -1131,9 +1131,9 @@ func (KubevirtPlatformStatus) SwaggerDoc() map[string]string {
 }
 
 var map_NutanixPlatformSpec = map[string]string{
-	"":                     "NutanixPlatformSpec holds the desired state of the Nutanix infrastructure provider. This only includes fields that can be modified in the cluster.",
-	"prismCentralEndpoint": "prismCentralEndpoint is the endpoint (DNS name or IP address) of the Nutanix Prism Central",
-	"prismCentralPort":     "prismCentralPort is the port of the Nutanix Prism Central",
+	"":              "NutanixPlatformSpec holds the desired state of the Nutanix infrastructure provider. This only includes fields that can be modified in the cluster.",
+	"prismCentral":  "prismCentralEndpoint holds the endpoint and port to access the Nutanix Prism Central",
+	"prismElements": "prismElements holds an array of endpoint and port data to access the Nutanix Prism Elements (clusters) of the Nutanix Prism Central",
 }
 
 func (NutanixPlatformSpec) SwaggerDoc() map[string]string {
@@ -1148,6 +1148,16 @@ var map_NutanixPlatformStatus = map[string]string{
 
 func (NutanixPlatformStatus) SwaggerDoc() map[string]string {
 	return map_NutanixPlatformStatus
+}
+
+var map_NutanixPrismEndpoint = map[string]string{
+	"":        "NutanixPrismEndpoint holds the endpoint and port to access the Nutanix Prism Central or Element (cluster)",
+	"address": "address is the endpoint address (DNS name or IP address) of the Nutanix Prism Central or Element (cluster)",
+	"port":    "port is the port number to access the Nutanix Prism Central or Element (cluster)",
+}
+
+func (NutanixPrismEndpoint) SwaggerDoc() map[string]string {
+	return map_NutanixPrismEndpoint
 }
 
 var map_OpenStackPlatformSpec = map[string]string{

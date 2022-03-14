@@ -17,34 +17,34 @@ type NutanixMachineProviderConfig struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	// clusterIdentifier is to identify the cluster (the Prism Element under management
+	// cluster is to identify the cluster (the Prism Element under management
 	// of the Prism Central), in which the Machine's VM will be created.
 	// The cluster identifier (uuid or name) can be obtained from the Prism Central console
 	// or using the prism_central API.
 	// +kubebuilder:validation:Required
-	ClusterIdentifier NutanixResourceIdentifier `json:"clusterIdentifier"`
+	Cluster NutanixResourceIdentifier `json:"cluster"`
 
-	// imageIdentifier is to identify the rhcos image uploaded to the Prism Central (PC)
+	// image is to identify the rhcos image uploaded to the Prism Central (PC)
 	// The image identifier (uuid or name) can be obtained from the Prism Central console
 	// or using the prism_central API.
 	// +kubebuilder:validation:Required
-	ImageIdentifier NutanixResourceIdentifier `json:"imageIdentifier"`
+	Image NutanixResourceIdentifier `json:"image"`
 
-	// subnetIdentifier is to identify the cluster's network subnet to use for the Machine's VM
+	// subnet is to identify the cluster's network subnet to use for the Machine's VM
 	// The cluster identifier (uuid or name) can be obtained from the Prism Central console
 	// or using the prism_central API.
 	// +kubebuilder:validation:Required
-	SubnetIdentifier NutanixResourceIdentifier `json:"subnetIdentifier"`
+	Subnet NutanixResourceIdentifier `json:"subnet"`
 
-	// numVcpusPerSocket is the number of vCPUs per socket of the VM
+	// vcpusPerSocket is the number of vCPUs per socket of the VM
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Minimum=1
-	NumVcpusPerSocket int32 `json:"numVcpusPerSocket"`
+	VcpusPerSocket int32 `json:"vcpusPerSocket"`
 
-	// numSockets is the number of sockets of the VM
+	// vcpuSockets is the number of vCPU sockets of the VM
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Minimum=1
-	NumSockets int32 `json:"numSockets"`
+	VcpuSockets int32 `json:"vcpuSockets"`
 
 	// memorySize is the memory size (in Quantity format) of the VM
 	// The minimum memorySize is 2Gi bytes

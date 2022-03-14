@@ -763,9 +763,9 @@ func (in *NutanixMachineProviderConfig) DeepCopyInto(out *NutanixMachineProvider
 	*out = *in
 	out.TypeMeta = in.TypeMeta
 	in.ObjectMeta.DeepCopyInto(&out.ObjectMeta)
-	in.ClusterIdentifier.DeepCopyInto(&out.ClusterIdentifier)
-	in.ImageIdentifier.DeepCopyInto(&out.ImageIdentifier)
-	in.SubnetIdentifier.DeepCopyInto(&out.SubnetIdentifier)
+	in.Cluster.DeepCopyInto(&out.Cluster)
+	in.Image.DeepCopyInto(&out.Image)
+	in.Subnet.DeepCopyInto(&out.Subnet)
 	out.MemorySize = in.MemorySize.DeepCopy()
 	out.SystemDiskSize = in.SystemDiskSize.DeepCopy()
 	if in.UserDataSecret != nil {

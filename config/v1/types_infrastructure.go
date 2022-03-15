@@ -740,7 +740,9 @@ type NutanixPrismElementEndpoint struct {
 	// +kubebuilder:validation:MaxLength=256
 	Name string `json:"name"`
 
-	NutanixPrismEndpoint
+	// endpoint holds the endpoint address and port data of the Prism Element (cluster)
+	// +kubebuilder:validation:Required
+	Endpoint NutanixPrismEndpoint `json:"endpoint"`
 }
 
 // NutanixPlatformStatus holds the current status of the Nutanix infrastructure provider.

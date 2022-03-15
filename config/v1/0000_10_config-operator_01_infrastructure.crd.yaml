@@ -120,8 +120,26 @@ spec:
                             description: NutanixPrismElementEndpoint holds the name and endpoint data for a Prism Element (cluster)
                             type: object
                             required:
+                              - endpoint
                               - name
                             properties:
+                              endpoint:
+                                description: endpoint holds the endpoint address and port data of the Prism Element (cluster)
+                                type: object
+                                required:
+                                  - address
+                                  - port
+                                properties:
+                                  address:
+                                    description: address is the endpoint address (DNS name or IP address) of the Nutanix Prism Central or Element (cluster)
+                                    type: string
+                                    maxLength: 256
+                                  port:
+                                    description: port is the port number to access the Nutanix Prism Central or Element (cluster)
+                                    type: integer
+                                    format: int32
+                                    maximum: 65535
+                                    minimum: 1
                               name:
                                 description: name is the name of the Prism Element (cluster)
                                 type: string

@@ -1151,8 +1151,9 @@ func (NutanixPlatformStatus) SwaggerDoc() map[string]string {
 }
 
 var map_NutanixPrismElementEndpoint = map[string]string{
-	"":     "NutanixPrismElementEndpoint holds the name and endpoint data for a Prism Element (cluster)",
-	"name": "name is the name of the Prism Element (cluster)",
+	"":         "NutanixPrismElementEndpoint holds the name and endpoint data for a Prism Element (cluster)",
+	"name":     "name is the name of the Prism Element (cluster)",
+	"endpoint": "endpoint holds the endpoint address and port data of the Prism Element (cluster)",
 }
 
 func (NutanixPrismElementEndpoint) SwaggerDoc() map[string]string {

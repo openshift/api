@@ -53,7 +53,6 @@ spec:
                       hostname:
                         description: hostname is the hostname that should be used by the route.
                         type: string
-                        format: hostname
                       name:
                         description: "name is the logical name of the route to customize. \n The namespace and name of this componentRoute must match a corresponding entry in the list of status.componentRoutes if the route is to be customized."
                         type: string
@@ -228,11 +227,9 @@ spec:
                         items:
                           description: Hostname is an alias for hostname string validation.
                           type: string
-                          format: hostname
                       defaultHostname:
                         description: defaultHostname is the hostname of this route prior to customization.
                         type: string
-                        format: hostname
                       name:
                         description: "name is the logical name of the route to customize. It does not have to be the actual name of a route resource but it cannot be renamed. \n The namespace and name of this componentRoute must match a corresponding entry in the list of spec.componentRoutes if the route is to be customized."
                         type: string

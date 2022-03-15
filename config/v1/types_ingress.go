@@ -91,7 +91,6 @@ type IngressSpec struct {
 type ConsumingUser string
 
 // Hostname is an alias for hostname string validation.
-// +kubebuilder:validation:Format=hostname
 type Hostname string
 
 type IngressStatus struct {

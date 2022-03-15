@@ -97,7 +97,7 @@ spec:
                         - prismElements
                       properties:
                         prismCentral:
-                          description: prismCentral holds the endpoint and port to access the Nutanix Prism Central
+                          description: prismCentral holds the endpoint address and port to access the Nutanix Prism Central
                           type: object
                           required:
                             - address
@@ -114,25 +114,18 @@ spec:
                               maximum: 65535
                               minimum: 1
                         prismElements:
-                          description: prismElements holds an array of endpoint and port data to access the Nutanix Prism Elements (clusters) of the Nutanix Prism Central
+                          description: prismElements holds one or more endpoint address and port data to access the Nutanix Prism Elements (clusters) of the Nutanix Prism Central. Currently we only support one Prism Element (cluster) for an openshift cluster, where all the Nutanix resources (VMs, subnet, etc.) used in the Openshift cluster locate. In the future, we may support the Nutanix resources (VMs, etc.) used in the Openshift cluster can come from multiple Prism Elements (clusters) of the Prism Cental.
                           type: array
                           items:
-                            description: NutanixPrismEndpoint holds the endpoint and port to access the Nutanix Prism Central or Element (cluster)
+                            description: NutanixPrismElementEndpoint holds the name and endpoint data for a Prism Element (cluster)
                             type: object
                             required:
-                              - address
-                              - port
+                              - name
                             properties:
-                              address:
-                                description: address is the endpoint address (DNS name or IP address) of the Nutanix Prism Central or Element (cluster)
+                              name:
+                                description: name is the name of the Prism Element (cluster)
                                 type: string
                                 maxLength: 256
-                              port:
-                                description: port is the port number to access the Nutanix Prism Central or Element (cluster)
-                                type: integer
-                                format: int32
-                                maximum: 65535
-                                minimum: 1
                     openstack:
                       description: OpenStack contains settings specific to the OpenStack infrastructure provider.
                       type: object

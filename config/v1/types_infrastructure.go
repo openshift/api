@@ -706,17 +706,20 @@ type AlibabaCloudResourceTag struct {
 // NutanixPlatformSpec holds the desired state of the Nutanix infrastructure provider.
 // This only includes fields that can be modified in the cluster.
 type NutanixPlatformSpec struct {
-	// prismCentral holds the endpoint and port to access the Nutanix Prism Central
+	// prismCentral holds the endpoint address and port to access the Nutanix Prism Central
 	// +kubebuilder:validation:Required
 	PrismCentral NutanixPrismEndpoint `json:"prismCentral"`
 
-	// prismElements holds an array of endpoint and port data to access the Nutanix
-	// Prism Elements (clusters) of the Nutanix Prism Central
+	// prismElements holds one or more endpoint address and port data to access the Nutanix
+	// Prism Elements (clusters) of the Nutanix Prism Central. Currently we only support one
+	// Prism Element (cluster) for an openshift cluster, where all the Nutanix resources (VMs, subnet, etc.)
+	// used in the Openshift cluster locate. In the future, we may support the Nutanix resources (VMs, etc.)
+	// used in the Openshift cluster can come from multiple Prism Elements (clusters) of the Prism Cental.
 	// +kubebuilder:validation:Required
-	PrismElements []NutanixPrismEndpoint `json:"prismElements"`
+	PrismElements []NutanixPrismElementEndpoint `json:"prismElements"`
 }
 
-// NutanixPrismEndpoint holds the endpoint and port to access the Nutanix Prism Central or Element (cluster)
+// NutanixPrismEndpoint holds the endpoint address and port to access the Nutanix Prism Central or Element (cluster)
 type NutanixPrismEndpoint struct {
 	// address is the endpoint address (DNS name or IP address) of the Nutanix Prism Central or Element (cluster)
 	// +kubebuilder:validation:Required
@@ -728,6 +731,16 @@ type NutanixPrismEndpoint struct {
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=65535
 	Port int32 `json:"port"`
+}
+
+// NutanixPrismElementEndpoint holds the name and endpoint data for a Prism Element (cluster)
+type NutanixPrismElementEndpoint struct {
+	// name is the name of the Prism Element (cluster)
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MaxLength=256
+	Name string `json:"name"`
+
+	NutanixPrismEndpoint
 }
 
 // NutanixPlatformStatus holds the current status of the Nutanix infrastructure provider.

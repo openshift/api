@@ -1132,8 +1132,8 @@ func (KubevirtPlatformStatus) SwaggerDoc() map[string]string {
 
 var map_NutanixPlatformSpec = map[string]string{
 	"":              "NutanixPlatformSpec holds the desired state of the Nutanix infrastructure provider. This only includes fields that can be modified in the cluster.",
-	"prismCentral":  "prismCentral holds the endpoint and port to access the Nutanix Prism Central",
-	"prismElements": "prismElements holds an array of endpoint and port data to access the Nutanix Prism Elements (clusters) of the Nutanix Prism Central",
+	"prismCentral":  "prismCentral holds the endpoint address and port to access the Nutanix Prism Central",
+	"prismElements": "prismElements holds one or more endpoint address and port data to access the Nutanix Prism Elements (clusters) of the Nutanix Prism Central. Currently we only support one Prism Element (cluster) for an openshift cluster, where all the Nutanix resources (VMs, subnet, etc.) used in the Openshift cluster locate. In the future, we may support the Nutanix resources (VMs, etc.) used in the Openshift cluster can come from multiple Prism Elements (clusters) of the Prism Cental.",
 }
 
 func (NutanixPlatformSpec) SwaggerDoc() map[string]string {
@@ -1150,8 +1150,17 @@ func (NutanixPlatformStatus) SwaggerDoc() map[string]string {
 	return map_NutanixPlatformStatus
 }
 
+var map_NutanixPrismElementEndpoint = map[string]string{
+	"":     "NutanixPrismElementEndpoint holds the name and endpoint data for a Prism Element (cluster)",
+	"name": "name is the name of the Prism Element (cluster)",
+}
+
+func (NutanixPrismElementEndpoint) SwaggerDoc() map[string]string {
+	return map_NutanixPrismElementEndpoint
+}
+
 var map_NutanixPrismEndpoint = map[string]string{
-	"":        "NutanixPrismEndpoint holds the endpoint and port to access the Nutanix Prism Central or Element (cluster)",
+	"":        "NutanixPrismEndpoint holds the endpoint address and port to access the Nutanix Prism Central or Element (cluster)",
 	"address": "address is the endpoint address (DNS name or IP address) of the Nutanix Prism Central or Element (cluster)",
 	"port":    "port is the port number to access the Nutanix Prism Central or Element (cluster)",
 }

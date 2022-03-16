@@ -144,6 +144,9 @@ spec:
                                 description: name is the name of the Prism Element (cluster)
                                 type: string
                                 maxLength: 256
+                          x-kubernetes-list-map-keys:
+                            - name
+                          x-kubernetes-list-type: map
                     openstack:
                       description: OpenStack contains settings specific to the OpenStack infrastructure provider.
                       type: object

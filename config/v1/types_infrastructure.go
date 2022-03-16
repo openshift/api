@@ -716,6 +716,8 @@ type NutanixPlatformSpec struct {
 	// used in the OpenShift cluster are located. In the future, we may support Nutanix resources (VMs, etc.)
 	// spread over multiple Prism Elements (clusters) of the Prism Central.
 	// +kubebuilder:validation:Required
+	// +listType=map
+	// +listMapKey=name
 	PrismElements []NutanixPrismElementEndpoint `json:"prismElements"`
 }
 

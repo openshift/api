@@ -292,7 +292,7 @@ func (ControlPlaneMachineSetStrategy) SwaggerDoc() map[string]string {
 
 var map_ControlPlaneMachineSetTemplate = map[string]string{
 	"":                                      "ControlPlaneMachineSetTemplate is a template used by the ControlPlaneMachineSet to create the Machines that it will manage in the future. ",
-	"machineType":                           "MachineType determines the type of Machines that should be managed by the ControlPlaneMachineSet. Currently, the only valid value is machine.v1beta1.machine.openshift.io.",
+	"machineType":                           "MachineType determines the type of Machines that should be managed by the ControlPlaneMachineSet. Currently, the only valid value is machines_v1beta1_machine_openshift_io.",
 	"machines_v1beta1_machine_openshift_io": "OpenShiftMachineV1Beta1Machine defines the template for creating Machines from the v1beta1.machine.openshift.io API group.",
 }
 

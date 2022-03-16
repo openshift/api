@@ -1133,7 +1133,7 @@ func (KubevirtPlatformStatus) SwaggerDoc() map[string]string {
 var map_NutanixPlatformSpec = map[string]string{
 	"":              "NutanixPlatformSpec holds the desired state of the Nutanix infrastructure provider. This only includes fields that can be modified in the cluster.",
 	"prismCentral":  "prismCentral holds the endpoint address and port to access the Nutanix Prism Central",
-	"prismElements": "prismElements holds one or more endpoint address and port data to access the Nutanix Prism Elements (clusters) of the Nutanix Prism Central. Currently we only support one Prism Element (cluster) for an openshift cluster, where all the Nutanix resources (VMs, subnet, etc.) used in the Openshift cluster locate. In the future, we may support the Nutanix resources (VMs, etc.) used in the Openshift cluster can come from multiple Prism Elements (clusters) of the Prism Cental.",
+	"prismElements": "prismElements holds one or more endpoint address and port data to access the Nutanix Prism Elements (clusters) of the Nutanix Prism Central. Currently we only support one Prism Element (cluster) for an OpenShift cluster, where all the Nutanix resources (VMs, subnets, volumes, etc.) used in the OpenShift cluster are located. In the future, we may support Nutanix resources (VMs, etc.) spread over multiple Prism Elements (clusters) of the Prism Central.",
 }
 
 func (NutanixPlatformSpec) SwaggerDoc() map[string]string {

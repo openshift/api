@@ -712,9 +712,9 @@ type NutanixPlatformSpec struct {
 
 	// prismElements holds one or more endpoint address and port data to access the Nutanix
 	// Prism Elements (clusters) of the Nutanix Prism Central. Currently we only support one
-	// Prism Element (cluster) for an openshift cluster, where all the Nutanix resources (VMs, subnet, etc.)
-	// used in the Openshift cluster locate. In the future, we may support the Nutanix resources (VMs, etc.)
-	// used in the Openshift cluster can come from multiple Prism Elements (clusters) of the Prism Cental.
+	// Prism Element (cluster) for an OpenShift cluster, where all the Nutanix resources (VMs, subnets, volumes, etc.)
+	// used in the OpenShift cluster are located. In the future, we may support Nutanix resources (VMs, etc.)
+	// spread over multiple Prism Elements (clusters) of the Prism Central.
 	// +kubebuilder:validation:Required
 	PrismElements []NutanixPrismElementEndpoint `json:"prismElements"`
 }

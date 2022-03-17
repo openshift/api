@@ -141,7 +141,7 @@ spec:
                                     maximum: 65535
                                     minimum: 1
                               name:
-                                description: name is the name of the Prism Element (cluster)
+                                description: name is the name of the Prism Element (cluster). This value will correspond with the cluster field configured on other resources (eg Machines, PVCs, etc).
                                 type: string
                                 maxLength: 256
                           x-kubernetes-list-map-keys:

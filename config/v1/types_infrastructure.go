@@ -737,7 +737,8 @@ type NutanixPrismEndpoint struct {
 
 // NutanixPrismElementEndpoint holds the name and endpoint data for a Prism Element (cluster)
 type NutanixPrismElementEndpoint struct {
-	// name is the name of the Prism Element (cluster)
+	// name is the name of the Prism Element (cluster). This value will correspond with
+	// the cluster field configured on other resources (eg Machines, PVCs, etc).
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MaxLength=256
 	Name string `json:"name"`

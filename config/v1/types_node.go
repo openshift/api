@@ -47,6 +47,7 @@ type NodeStatus struct {
 	WorkerLatencyProfileStatus WorkerLatencyProfileStatus `json:"workerLatencyProfileStatus,omitempty"`
 }
 
+// +kubebuilder:validation:Enum=v1;v2;""
 type CgroupMode string
 
 const (
@@ -56,6 +57,7 @@ const (
 	CgroupModeDefault CgroupMode = CgroupModeV1
 )
 
+// +kubebuilder:validation:Enum=Default;MediumUpdateAverageReaction;LowUpdateSlowReaction
 type WorkerLatencyProfileType string
 
 const (

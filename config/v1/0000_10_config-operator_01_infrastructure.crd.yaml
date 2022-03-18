@@ -97,7 +97,7 @@ spec:
                         - prismElements
                       properties:
                         prismCentral:
-                          description: prismCentral holds the endpoint address and port to access the Nutanix Prism Central
+                          description: prismCentral holds the endpoint address and port to access the Nutanix Prism Central. When a cluster-wide proxy is installed, this endpoint will not be accessed via the proxy.
                           type: object
                           required:
                             - address
@@ -124,7 +124,7 @@ spec:
                               - name
                             properties:
                               endpoint:
-                                description: endpoint holds the endpoint address and port data of the Prism Element (cluster)
+                                description: endpoint holds the endpoint address and port data of the Prism Element (cluster). When a cluster-wide proxy is installed, this endpoint will not be accessed via the proxy.
                                 type: object
                                 required:
                                   - address

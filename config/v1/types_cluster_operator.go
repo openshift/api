@@ -95,6 +95,9 @@ type ObjectReference struct {
 	// +kubebuilder:validation:Required
 	// +required
 	Name string `json:"name"`
+	// cluster name of the cluster containing the referent
+	// +optional
+	ClusterName string `json:"clusterName"`
 }
 
 type ConditionStatus string

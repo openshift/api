@@ -256,6 +256,9 @@ spec:
                             - name
                             - resource
                           properties:
+                            clusterName:
+                              description: cluster name of the cluster containing the referent
+                              type: string
                             group:
                               description: group of the referent.
                               type: string

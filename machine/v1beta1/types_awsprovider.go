@@ -64,6 +64,9 @@ type AWSMachineProviderConfig struct {
 	// SpotMarketOptions allows users to configure instances to be run using AWS Spot instances.
 	// +optional
 	SpotMarketOptions *SpotMarketOptions `json:"spotMarketOptions,omitempty"`
+	// MetadataServiceOptions allows users to configure instance metadata service interaction options.
+	// +optional
+	MetadataServiceOptions *MetadataServiceOptions `json:"metadataServiceOptions,omitempty"`
 }
 
 // BlockDeviceMappingSpec describes a block device mapping
@@ -138,6 +141,34 @@ type EBSBlockDeviceSpec struct {
 	// Default: standard
 	// +optional
 	VolumeType *string `json:"volumeType,omitempty"`
+}
+
+type InstanceMetadataHttpTokens string
+
+const (
+	// InstanceMetadataHttpTokensRequired enforces sending of a signed token header with any instance metadata retrieval requests
+	InstanceMetadataHttpTokensRequired = "required"
+	// InstanceMetadataHttpTokensOptional allows IMDSv1 usage along with IMDSv2
+	InstanceMetadataHttpTokensOptional = "optional"
+)
+
+// MetadataServiceOptions defines the options available to a user when configuring
+// Instance Metadata Service (IMDS) Options.
+type MetadataServiceOptions struct {
+	// HttpTokens is the state of token usage for instance metadata requests from this host.
+	// Effectively enforces IMDSv2 if set to required
+	// Default: optional
+	// +kubebuilder:validation:Enum=required;optional
+	// +optional
+	HttpTokens InstanceMetadataHttpTokens `json:"httpTokens,omitempty"`
+	// HttpPutResponseHopLimit is the desired HTTP PUT response hop limit for instance metadata requests.
+	// The larger the number, the further instance metadata requests can travel.
+	// Constraints: 1-64
+	// Default: 1
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=64
+	// +optional
+	HttpPutResponseHopLimit *uint8 `json:"httpPutResponseHopLimit,omitempty"`
 }
 
 // SpotMarketOptions defines the options available to a user when configuring

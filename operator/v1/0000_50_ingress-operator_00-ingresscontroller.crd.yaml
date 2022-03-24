@@ -806,9 +806,14 @@ spec:
                 properties:
                   nodeSelector:
                     description: "nodeSelector is the node selector applied to ingress
-                      controller deployments. \n If unset, the default is: \n   kubernetes.io/os:
-                      linux   node-role.kubernetes.io/worker: '' \n If set, the specified
-                      selector is used and replaces the default."
+                      controller deployments. \n If set, the specified selector is
+                      used and replaces the default. \n If unset, the default depends
+                      on the value of the defaultPlacement field in the cluster config.openshift.io/v1/ingresses
+                      status. \n When defaultPlacement is Workers, the default is:
+                      \n   kubernetes.io/os: linux   node-role.kubernetes.io/worker:
+                      '' \n When defaultPlacement is ControlPlane, the default is:
+                      \n   kubernetes.io/os: linux   node-role.kubernetes.io/master:
+                      '' \n These defaults are subject to change."
                     properties:
                       matchExpressions:
                         description: matchExpressions is a list of label selector
@@ -896,8 +901,16 @@ spec:
                     type: array
                 type: object
               replicas:
-                description: replicas is the desired number of ingress controller
-                  replicas. If unset, defaults to 2.
+                description: "replicas is the desired number of ingress controller
+                  replicas. If unset, the default depends on the value of the defaultPlacement
+                  field in the cluster config.openshift.io/v1/ingresses status. \n
+                  The value of replicas is set based on the value of a chosen field
+                  in the Infrastructure CR. If defaultPlacement is set to ControlPlane,
+                  the chosen field will be controlPlaneTopology. If it is set to Workers
+                  the chosen field will be infrastructureTopology. Replicas will then
+                  be set to 1 or 2 based whether the chosen field's value is SingleReplica
+                  or HighlyAvailable, respectively. \n These defaults are subject
+                  to change."
                 format: int32
                 type: integer
               routeAdmission:

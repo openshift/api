@@ -76,7 +76,17 @@ type IngressControllerSpec struct {
 	HttpErrorCodePages configv1.ConfigMapNameReference `json:"httpErrorCodePages,omitempty"`
 
 	// replicas is the desired number of ingress controller replicas. If unset,
-	// defaults to 2.
+	// the default depends on the value of the defaultPlacement field in the
+	// cluster config.openshift.io/v1/ingresses status.
+	//
+	// The value of replicas is set based on the value of a chosen field in the
+	// Infrastructure CR. If defaultPlacement is set to ControlPlane, the
+	// chosen field will be controlPlaneTopology. If it is set to Workers the
+	// chosen field will be infrastructureTopology. Replicas will then be set to 1
+	// or 2 based whether the chosen field's value is SingleReplica or
+	// HighlyAvailable, respectively.
+	//
+	// These defaults are subject to change.
 	//
 	// +optional
 	Replicas *int32 `json:"replicas,omitempty"`
@@ -292,12 +302,22 @@ type NodePlacement struct {
 	// nodeSelector is the node selector applied to ingress controller
 	// deployments.
 	//
-	// If unset, the default is:
+	// If set, the specified selector is used and replaces the default.
+	//
+	// If unset, the default depends on the value of the defaultPlacement
+	// field in the cluster config.openshift.io/v1/ingresses status.
+	//
+	// When defaultPlacement is Workers, the default is:
 	//
 	//   kubernetes.io/os: linux
 	//   node-role.kubernetes.io/worker: ''
 	//
-	// If set, the specified selector is used and replaces the default.
+	// When defaultPlacement is ControlPlane, the default is:
+	//
+	//   kubernetes.io/os: linux
+	//   node-role.kubernetes.io/master: ''
+	//
+	// These defaults are subject to change.
 	//
 	// +optional
 	NodeSelector *metav1.LabelSelector `json:"nodeSelector,omitempty"`

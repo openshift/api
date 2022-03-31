@@ -707,7 +707,6 @@ type AlibabaCloudResourceTag struct {
 // This only includes fields that can be modified in the cluster.
 type NutanixPlatformSpec struct {
 	// prismCentral holds the endpoint address and port to access the Nutanix Prism Central.
-	// When a cluster-wide proxy is installed, this endpoint will not be accessed via the proxy.
 	// +kubebuilder:validation:Required
 	PrismCentral NutanixPrismEndpoint `json:"prismCentral"`
 
@@ -745,7 +744,6 @@ type NutanixPrismElementEndpoint struct {
 	Name string `json:"name"`
 
 	// endpoint holds the endpoint address and port data of the Prism Element (cluster).
-	// When a cluster-wide proxy is installed, this endpoint will not be accessed via the proxy.
 	// +kubebuilder:validation:Required
 	Endpoint NutanixPrismEndpoint `json:"endpoint"`
 }

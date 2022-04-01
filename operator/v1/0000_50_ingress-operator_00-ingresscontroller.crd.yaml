@@ -237,12 +237,13 @@ spec:
                           type:
                             description: type is the underlying infrastructure provider
                               for the load balancer. Allowed values are "AWS", "Azure",
-                              "BareMetal", "GCP", "OpenStack", and "VSphere".
+                              "BareMetal", "GCP", "Nutanix", "OpenStack", and "VSphere".
                             enum:
                             - AWS
                             - Azure
                             - BareMetal
                             - GCP
+                            - Nutanix
                             - OpenStack
                             - VSphere
                             - IBM
@@ -1344,12 +1345,13 @@ spec:
                           type:
                             description: type is the underlying infrastructure provider
                               for the load balancer. Allowed values are "AWS", "Azure",
-                              "BareMetal", "GCP", "OpenStack", and "VSphere".
+                              "BareMetal", "GCP", "Nutanix", "OpenStack", and "VSphere".
                             enum:
                             - AWS
                             - Azure
                             - BareMetal
                             - GCP
+                            - Nutanix
                             - OpenStack
                             - VSphere
                             - IBM

@@ -74,6 +74,11 @@ type AWSMachineProviderConfig struct {
 	// SpotMarketOptions allows users to configure instances to be run using AWS Spot instances.
 	// +optional
 	SpotMarketOptions *SpotMarketOptions `json:"spotMarketOptions,omitempty"`
+	// MetadataServiceOptions allows users to configure instance metadata service interaction options.
+	// If nothing specified, default AWS IMDS settings will be applied.
+	// https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_InstanceMetadataOptionsRequest.html
+	// +optional
+	MetadataServiceOptions MetadataServiceOptions `json:"metadataServiceOptions,omitempty"`
 }
 
 // BlockDeviceMappingSpec describes a block device mapping
@@ -158,6 +163,28 @@ type SpotMarketOptions struct {
 	// Default: On-Demand price
 	// +optional
 	MaxPrice *string `json:"maxPrice,omitempty"`
+}
+
+type InstanceMetadataHTTPTokens string
+
+const (
+	// InstanceMetadataHTTPTokensRequired enforces sending of a signed token header with any instance metadata retrieval (GET) requests.
+	// Enforces IMDSv2 usage.
+	InstanceMetadataHTTPTokensRequired = "required"
+	// InstanceMetadataHTTPTokensOptional allows IMDSv1 usage along with IMDSv2
+	InstanceMetadataHTTPTokensOptional = "optional"
+)
+
+// MetadataServiceOptions defines the options available to a user when configuring
+// Instance Metadata Service (IMDS) Options.
+type MetadataServiceOptions struct {
+	// HTTPTokens determines whether or not the host requires the use of authentication when interacting with the metadata service.
+	// When using authentication, this enforces v2 interaction method (IMDSv2) with the metadata service.
+	// When omitted, this means the user has no opinion and the value is left to the platform to choose a good
+	// default, which is subject to change over time. The current default is optional.
+	// +kubebuilder:validation:Enum=required;optional
+	// +optional
+	HTTPTokens InstanceMetadataHTTPTokens `json:"httpTokens,omitempty"`
 }
 
 // AWSResourceReference is a reference to a specific AWS resource by ID, ARN, or filters.

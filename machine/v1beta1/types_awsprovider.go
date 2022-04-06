@@ -170,9 +170,9 @@ type InstanceMetadataHTTPTokens string
 const (
 	// InstanceMetadataHTTPTokensRequired enforces sending of a signed token header with any instance metadata retrieval (GET) requests.
 	// Enforces IMDSv2 usage.
-	InstanceMetadataHTTPTokensRequired = "required"
+	InstanceMetadataHTTPTokensRequired = "Required"
 	// InstanceMetadataHTTPTokensOptional allows IMDSv1 usage along with IMDSv2
-	InstanceMetadataHTTPTokensOptional = "optional"
+	InstanceMetadataHTTPTokensOptional = "Optional"
 )
 
 // MetadataServiceOptions defines the options available to a user when configuring
@@ -182,7 +182,7 @@ type MetadataServiceOptions struct {
 	// When using authentication, this enforces v2 interaction method (IMDSv2) with the metadata service.
 	// When omitted, this means the user has no opinion and the value is left to the platform to choose a good
 	// default, which is subject to change over time. The current default is optional.
-	// +kubebuilder:validation:Enum=required;optional
+	// +kubebuilder:validation:Enum=Required;Optional
 	// +optional
 	HTTPTokens InstanceMetadataHTTPTokens `json:"httpTokens,omitempty"`
 }

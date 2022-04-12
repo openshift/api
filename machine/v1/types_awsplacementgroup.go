@@ -44,6 +44,7 @@ type AWSPlacementGroupManagementSpec struct {
 	// A managed placement group may be moved to unmanaged, however an unmanaged
 	// group may not be moved back to managed.
 	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Enum:=Managed;Unmanaged
 	// +unionDiscriminator
 	ManagementState ManagementState `json:"managementState"`
 

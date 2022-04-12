@@ -91,6 +91,9 @@ spec:
                     managementState:
                       description: ManagementState determines whether the placement group is expected to be managed by this CRD or whether it is user managed. A managed placement group may be moved to unmanaged, however an unmanaged group may not be moved back to managed.
                       type: string
+                      enum:
+                        - Managed
+                        - Unmanaged
             status:
               type: object
               properties:

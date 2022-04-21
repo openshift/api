@@ -227,4 +227,55 @@ func (NutanixResourceIdentifier) SwaggerDoc() map[string]string {
 	return map_NutanixResourceIdentifier
 }
 
+var map_PowerVSMachineProviderConfig = map[string]string{
+	"":                  "PowerVSMachineProviderConfig is the type that will be embedded in a Machine.Spec.ProviderSpec field for a PowerVS virtual machine. It is used by the PowerVS machine actuator to create a single Machine.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"userDataSecret":    "userDataSecret contains a local reference to a secret that contains the UserData to apply to the instance.",
+	"credentialsSecret": "credentialsSecret is a reference to the secret with IBM Cloud credentials.",
+	"serviceInstance":   "serviceInstance is the reference to the Power VS service on which the server instance(VM) will be created. Power VS service is a container for all Power VS instances at a specific geographic region. serviceInstance can be created via IBM Cloud catalog or CLI. supported serviceInstance identifier in PowerVSResource are Name and ID and that can be obtained from IBM Cloud UI or IBM Cloud cli. More detail about Power VS service instance. https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-creating-power-virtual-server",
+	"image":             "image is to identify the rhcos image uploaded to IBM COS bucket which is used to create the instance. supported image identifier in PowerVSResource are Name and ID and that can be obtained from IBM Cloud UI or IBM Cloud cli.",
+	"network":           "network is the reference to the Network to use for this instance. supported network identifier in PowerVSResource are Name, ID and RegEx and that can be obtained from IBM Cloud UI or IBM Cloud cli.",
+	"keyPairName":       "keyPairName is the name of the KeyPair to use for SSH. The key pair will be exposed to the instance via the instance metadata service. On boot, the OS will copy the public keypair into the authorized keys for the core user.",
+	"systemType":        "systemType is the System type used to host the instance. systemType determines the number of cores and memory that is available. Few of the supported SystemTypes are s922,e880,e980. e880 systemType available only in Dallas Datacenters. e980 systemType available in Datacenters except Dallas and Washington. When omitted, this means that the user has no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is s922 which is generally available.",
+	"processorType":     "processorType is the VM instance processor type. It must be set to one of the following values: Dedicated, Capped or Shared. Dedicated: resources are allocated for a specific client, The hypervisor makes a 1:1 binding of a partition’s processor to a physical processor core. Shared: Shared among other clients. Capped: Shared, but resources do not expand beyond those that are requested, the amount of CPU time is Capped to the value specified for the entitlement. if the processorType is selected as Dedicated, then processors value cannot be fractional. When omitted, this means that the user has no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is Shared.",
+	"processors":        "processors is the number of virtual processors in a virtual machine. when the processorType is selected as Dedicated the processors value cannot be fractional. maximum value for the Processors depends on the selected SystemType. when SystemType is set to e880 or e980 maximum Processors value is 143. when SystemType is set to s922 maximum Processors value is 15. minimum value for Processors depends on the selected ProcessorType. when ProcessorType is set as Shared or Capped, The minimum processors is 0.5. when ProcessorType is set as Dedicated, The minimum processors is 1. When omitted, this means that the user has no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default is set based on the selected ProcessorType. when ProcessorType selected as Dedicated, the default is set to 1. when ProcessorType selected as Shared or Capped, the default is set to 0.5.",
+	"memoryGiB":         "memoryGiB is the size of a virtual machine's memory, in GiB. maximum value for the MemoryGiB depends on the selected SystemType. when SystemType is set to e880 maximum MemoryGiB value is 7463 GiB. when SystemType is set to e980 maximum MemoryGiB value is 15307 GiB. when SystemType is set to s922 maximum MemoryGiB value is 942 GiB. The minimum memory is 32 GiB. When omitted, this means the user has no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is 32.",
+}
+
+func (PowerVSMachineProviderConfig) SwaggerDoc() map[string]string {
+	return map_PowerVSMachineProviderConfig
+}
+
+var map_PowerVSMachineProviderStatus = map[string]string{
+	"":                  "PowerVSMachineProviderStatus is the type that will be embedded in a Machine.Status.ProviderStatus field. It contains PowerVS-specific status information.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"conditions":        "conditions is a set of conditions associated with the Machine to indicate errors or other status",
+	"instanceId":        "instanceId is the instance ID of the machine created in PowerVS instanceId uniquely identifies a Power VS server instance(VM) under a Power VS service. This will help in updating or deleting a VM in Power VS Cloud",
+	"serviceInstanceID": "serviceInstanceID is the reference to the Power VS ServiceInstance on which the machine instance will be created. serviceInstanceID uniquely identifies the Power VS service By setting serviceInstanceID it will become easy and efficient to fetch a server instance(VM) within Power VS Cloud.",
+	"instanceState":     "instanceState is the state of the PowerVS instance for this machine Possible instance states are Active, Build, ShutOff, Reboot This is used to display additional information to user regarding instance current state",
+}
+
+func (PowerVSMachineProviderStatus) SwaggerDoc() map[string]string {
+	return map_PowerVSMachineProviderStatus
+}
+
+var map_PowerVSResource = map[string]string{
+	"":      "PowerVSResource is a reference to a specific PowerVS resource by ID, Name or RegEx Only one of ID, Name or RegEx may be specified. Specifying more than one will result in a validation error.",
+	"type":  "Type identifies the resource type for this entry. Valid values are ID, Name and RegEx",
+	"id":    "ID of resource",
+	"name":  "Name of resource",
+	"regex": "Regex to find resource Regex contains the pattern to match to find a resource",
+}
+
+func (PowerVSResource) SwaggerDoc() map[string]string {
+	return map_PowerVSResource
+}
+
+var map_PowerVSSecretReference = map[string]string{
+	"":     "PowerVSSecretReference contains enough information to locate the referenced secret inside the same namespace.",
+	"name": "Name of the secret.",
+}
+
+func (PowerVSSecretReference) SwaggerDoc() map[string]string {
+	return map_PowerVSSecretReference
+}
+
 // AUTO-GENERATED FUNCTIONS END HERE

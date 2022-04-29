@@ -24,6 +24,7 @@ import (
 )
 
 // AvailabilityType ...
+// +openshift:compatibility-gen:level=1
 type AvailabilityType string
 
 const (
@@ -34,6 +35,7 @@ const (
 )
 
 // MultiClusterEngineSpec defines the desired state of MultiClusterEngine
+// +openshift:compatibility-gen:level=1
 type MultiClusterEngineSpec struct {
 
 	// Specifies deployment replication for improved availability. Options are: Basic and High (default)
@@ -60,12 +62,14 @@ type MultiClusterEngineSpec struct {
 }
 
 // ComponentConfig provides optional configuration items for individual components
+// +openshift:compatibility-gen:level=1
 type ComponentConfig struct {
 	Name    string `json:"name"`
 	Enabled bool   `json:"enabled"`
 }
 
 // Overrides provides developer overrides for MCE installation
+// +openshift:compatibility-gen:level=1
 type Overrides struct {
 	// Pull policy for the MCE images
 	ImagePullPolicy corev1.PullPolicy `json:"imagePullPolicy,omitempty"`
@@ -82,6 +86,7 @@ type Overrides struct {
 }
 
 // MultiClusterEngineStatus defines the observed state of MultiClusterEngine
+// +openshift:compatibility-gen:level=1
 type MultiClusterEngineStatus struct {
 	// Latest observed overall state
 	Phase PhaseType `json:"phase,omitempty"`
@@ -92,6 +97,7 @@ type MultiClusterEngineStatus struct {
 }
 
 // ComponentCondition contains condition information for tracked components
+// +openshift:compatibility-gen:level=1
 type ComponentCondition struct {
 	// The component name
 	Name string `json:"name,omitempty"`
@@ -126,6 +132,7 @@ type ComponentCondition struct {
 }
 
 // PhaseType is a summary of the current state of the MultiClusterEngine in its lifecycle
+// +openshift:compatibility-gen:level=1
 type PhaseType string
 
 const (
@@ -135,6 +142,7 @@ const (
 	MultiClusterEnginePhaseError        PhaseType = "Error"
 )
 
+// +openshift:compatibility-gen:level=1
 type MultiClusterEngineConditionType string
 
 // These are valid conditions of the multiclusterengine.
@@ -152,6 +160,7 @@ const (
 	MultiClusterEngineFailure MultiClusterEngineConditionType = "MultiClusterEngineFailure"
 )
 
+// +openshift:compatibility-gen:level=1
 type MultiClusterEngineCondition struct {
 	// Type is the type of the cluster condition.
 	// +required
@@ -184,6 +193,9 @@ type MultiClusterEngineCondition struct {
 //+kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase",description="The overall state of the MultiClusterEngine"
 //+kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 //+operator-sdk:csv:customresourcedefinitions:displayName="MultiCluster Engine"
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+// +openshift:compatibility-gen:level=1
 type MultiClusterEngine struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -195,6 +207,9 @@ type MultiClusterEngine struct {
 //+kubebuilder:object:root=true
 
 // MultiClusterEngineList contains a list of MultiClusterEngine
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+// +openshift:compatibility-gen:level=1
 type MultiClusterEngineList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`

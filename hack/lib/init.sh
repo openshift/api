@@ -42,6 +42,7 @@ template/v1 \
 user/v1 \
 machine/v1beta1 \
 machine/v1 \
+multicluster/v1 \
 "
 API_PACKAGES="\
 github.com/openshift/api/apps/v1,\

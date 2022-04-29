@@ -1392,6 +1392,51 @@ type IngressControllerTuningOptions struct {
 	// +kubebuilder:validation:Format=duration
 	// +optional
 	HealthCheckInterval *metav1.Duration `json:"healthCheckInterval,omitempty"`
+
+	// maxConnections defines the maximum number of simultaneous
+	// connections that can be established per HAProxy process.
+	// Increasing this value allows each ingress controller pod to
+	// handle more connections but at the cost of additional
+	// system resources being consumed.
+	//
+	// Permitted values are: empty, 0, -1, and the range
+	// 2000-2000000.
+	//
+	// If this field is empty or 0, the IngressController will use
+	// the default value of 20000, but the default is subject to
+	// change in future releases.
+	//
+	// If the value is -1 then HAProxy will dynamically compute a
+	// maximum value based on the available ulimits in the running
+	// container. Selecting -1 (i.e., auto) will result in a large
+	// value being computed (~520000 on OpenShift >=4.10 clusters)
+	// and therefore each HAProxy process will incur significant
+	// memory usage compared to the current default of 20000.
+	//
+	// Setting a value that is greater than the current operating
+	// system limit will prevent the HAProxy process from
+	// starting.
+	//
+	// If you choose a discrete value (e.g., 750000) and the
+	// router pod is migrated to a new node, there's no guarantee
+	// that that new node has identical ulimits configured. In
+	// such a scenario the pod would fail to start. If you have
+	// nodes with different ulimits configured (e.g., different
+	// tuned profiles) and you choose a discrete value then the
+	// guidance is to use -1 and let the value be computed
+	// dynamically at runtime.
+	//
+	// You can monitor memory usage for router containers with the
+	// following metric:
+	// 'container_memory_working_set_bytes{container="router",namespace="openshift-ingress"}'.
+	//
+	// You can monitor memory usage of individual HAProxy
+	// processes in router containers with the following metric:
+	// 'container_memory_working_set_bytes{container="router",namespace="openshift-ingress"}/container_processes{container="router",namespace="openshift-ingress"}'.
+	//
+	// +kubebuilder:validation:Optional
+	// +optional
+	MaxConnections int32 `json:"maxConnections,omitempty"`
 }
 
 // HTTPEmptyRequestsPolicy indicates how HTTP connections for which no request

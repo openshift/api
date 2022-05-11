@@ -1,4 +1,4 @@
-module github.com/openshift/api
+module github.com/TrilokGeer/api
 
 go 1.16
 

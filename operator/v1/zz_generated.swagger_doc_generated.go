@@ -781,9 +781,10 @@ func (IngressControllerTuningOptions) SwaggerDoc() map[string]string {
 }
 
 var map_LoadBalancerStrategy = map[string]string{
-	"":                   "LoadBalancerStrategy holds parameters for a load balancer.",
-	"scope":              "scope indicates the scope at which the load balancer is exposed. Possible values are \"External\" and \"Internal\".",
-	"providerParameters": "providerParameters holds desired load balancer information specific to the underlying infrastructure provider.\n\nIf empty, defaults will be applied. See specific providerParameters fields for details about their defaults.",
+	"":                    "LoadBalancerStrategy holds parameters for a load balancer.",
+	"scope":               "scope indicates the scope at which the load balancer is exposed. Possible values are \"External\" and \"Internal\".",
+	"providerParameters":  "providerParameters holds desired load balancer information specific to the underlying infrastructure provider.\n\nIf empty, defaults will be applied. See specific providerParameters fields for details about their defaults.",
+	"dnsManagementPolicy": "dnsManagementPolicy indicates if the lifecyle of the wildcard DNS record associated with the load balancer service will be managed by the ingress operator. It defaults to Managed. Valid values are: Managed and Unmanaged.",
 }
 
 func (LoadBalancerStrategy) SwaggerDoc() map[string]string {

@@ -384,7 +384,32 @@ type LoadBalancerStrategy struct {
 	//
 	// +optional
 	ProviderParameters *ProviderLoadBalancerParameters `json:"providerParameters,omitempty"`
+
+	// dnsManagementPolicy indicates if the lifecyle of the wildcard DNS record
+	// associated with the load balancer service will be managed by
+	// the ingress operator. It defaults to Managed.
+	// Valid values are: Managed and Unmanaged.
+	//
+	// +kubebuilder:default:="Managed"
+	// +kubebuilder:validation:Optional
+	// +optional
+	DNSManagementPolicy LoadBalancerDNSManagementPolicy `json:"dnsManagementPolicy"`
 }
+
+// LoadBalancerDNSManagementPolicy is a policy for configuring how
+// ingresscontrollers manage DNS.
+//
+// +kubebuilder:validation:Enum=Managed;Unmanaged
+type LoadBalancerDNSManagementPolicy string
+
+const (
+	// ManagedLoadBalancerDNS specifies that the operator manages
+	// a wildcard DNS record for the ingresscontroller.
+	ManagedLoadBalancerDNS LoadBalancerDNSManagementPolicy = "Managed"
+	// UnmanagedLoadBalancerDNS specifies that the operator does not manage
+	// any wildcard DNS record for the ingresscontroller.
+	UnmanagedLoadBalancerDNS LoadBalancerDNSManagementPolicy = "Unmanaged"
+)
 
 // ProviderLoadBalancerParameters holds desired load balancer information
 // specific to the underlying infrastructure provider.

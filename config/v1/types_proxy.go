@@ -79,6 +79,11 @@ type ProxySpec struct {
 
 // ProxyStatus shows current known state of the cluster proxy.
 type ProxyStatus struct {
+	// proxyType identifies the configuration is explicitly mentioned in this spec or
+	// transparent proxy configured so that other parameters are ignored.
+	// This enables add additionalCABundle. If the proxyType is nil, default explicit type is considered.
+	ProxyType int32 `json:"proxyType,omitempty"`
+
 	// httpProxy is the URL of the proxy for HTTP requests.
 	// +optional
 	HTTPProxy string `json:"httpProxy,omitempty"`

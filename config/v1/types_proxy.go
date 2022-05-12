@@ -9,8 +9,8 @@ import (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 const (
-	ExplicitProxy = iota
-	TransparentProxy
+	ExplicitProxy string = "explicit"
+	TransparentProxy = "transparent"
 )
 // Proxy holds cluster-wide information on how to configure default proxies for the cluster. The canonical name is `cluster`
 //

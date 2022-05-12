@@ -34,7 +34,7 @@ type ProxySpec struct {
 	// proxyType identifies the configuration is explicitly mentioned in this spec or
 	// transparent proxy configured so that other parameters are ignored.
 	// This enables add additionalCABundle. If the proxyType is nil, default explicit type is considered.
-	ConfigType int32 `json:"configType,omitempty"`
+	ConfigType string `json:"configType,omitempty"`
 
 	// httpProxy is the URL of the proxy for HTTP requests.  Empty means unset and will not result in an env var.
 	// +optional
@@ -86,7 +86,7 @@ type ProxyStatus struct {
 	// proxyType identifies the configuration is explicitly mentioned in this spec or
 	// transparent proxy configured so that other parameters are ignored.
 	// This enables add additionalCABundle. If the proxyType is nil, default explicit type is considered.
-	ConfigType int32 `json:"configType,omitempty"`
+	ConfigType string `json:"configType,omitempty"`
 
 	// httpProxy is the URL of the proxy for HTTP requests.
 	// +optional

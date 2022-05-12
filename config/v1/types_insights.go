@@ -26,16 +26,16 @@ type Insights struct {
 }
 
 type InsightsSpec struct {
-	// GatheringConfig spec attribute includes all the configuration options related to
+	// GatherConfig spec attribute includes all the configuration options related to
 	// gathering of the Insights archive and its uploading to the ingress.
 	// +optional
-	GatheringConfig *GatheringConfig `json:"gatheringConfig,omitempty"`
+	GatherConfig *GatherConfig `json:"gatherConfig,omitempty"`
 }
 
 type InsightsStatus struct {
 }
 
-type GatheringConfig struct {
+type GatherConfig struct {
 	// DataPolicy allows user to enable additional global obfuscation of the IP addresses and base domain
 	// in the Insights archive data.
 	// +kubebuilder:default=NoPolicy

@@ -9245,9 +9245,118 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.VSpherePlatformFailureDomainSpec": {
+      "description": "VSpherePlatformFailureDomainSpec holds the region and zone failure domain and the vCenter topology of that failure domain.",
+      "type": "object",
+      "required": [
+        "name",
+        "region",
+        "zone",
+        "server",
+        "topology",
+        "controlPlane"
+      ],
+      "properties": {
+        "controlPlane": {
+          "description": "ControlPlane determines if this failure domain is suitable for use by control plane machines. There is three valid options: Allowed and Disallowed.",
+          "type": "string",
+          "default": ""
+        },
+        "name": {
+          "description": "name defines the name of the VSpherePlatformFailureDomainSpec This name is arbitrary but will be used in VSpherePlatformDeploymentZone for association.",
+          "type": "string",
+          "default": ""
+        },
+        "region": {
+          "description": "region defines the name of a region tag that will be attached to a vCenter datacenter. The tag category in vCenter must be named openshift-region.",
+          "type": "string",
+          "default": ""
+        },
+        "server": {
+          "description": "server is the fully-qualified domain name or the IP address of the vCenter server.",
+          "type": "string",
+          "default": ""
+        },
+        "topology": {
+          "description": "Topology describes a given failure domain using vSphere constructs",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.VSpherePlatformTopology"
+        },
+        "zone": {
+          "description": "zone defines the name of a zone tag that will be attached to a vCenter cluster. The tag category in vCenter must be named openshift-zone.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.VSpherePlatformNodeNetworking": {
+      "description": "VSpherePlatformNodeNetworking holds the external and internal node networking spec.",
+      "type": "object",
+      "properties": {
+        "external": {
+          "description": "external represents the VSpherePlatformNodeNetworkingSpec of the node that is externally routable.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.VSpherePlatformNodeNetworkingSpec"
+        },
+        "internal": {
+          "description": "internal represents the VSpherePlatformNodeNetworkingSpec of the node that is routable only within the cluster.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.VSpherePlatformNodeNetworkingSpec"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.VSpherePlatformNodeNetworkingSpec": {
+      "description": "VSpherePlatformNodeNetworkingSpec holds the network CIDR(s) and port group name for including and excluding IP ranges in the cloud provider. This would be used for example when multiple network adapters are attached to a guest to help determine which IP address the cloud config manager should use for the external and internal node networking.",
+      "type": "object",
+      "properties": {
+        "excludeNetworkSubnetCidr": {
+          "description": "excludeNetworkSubnetCidr IP addresses in subnet ranges will be excluded when selecting the IP address from the VirtualMachine's VM for use in the status.addresses fields.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "network": {
+          "description": "network VirtualMachine's VM Network names that will be used to when searching for status.addresses fields. Note that if internal.networkSubnetCIDR and external.networkSubnetCIDR are not set, then the vNIC associated to this network must only have a single IP address assigned to it. The available networks (port groups) can be listed using govc ls 'network/*'",
+          "type": "string"
+        },
+        "networkSubnetCidr": {
+          "description": "networkSubnetCidr IP address on VirtualMachine's network interfaces included in the fields' CIDRs that will be used in respective status.addresses fields.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.VSpherePlatformSpec": {
-      "description": "VSpherePlatformSpec holds the desired state of the vSphere infrastructure provider. This only includes fields that can be modified in the cluster.",
-      "type": "object"
+      "description": "VSpherePlatformSpec holds the desired state of the vSphere infrastructure provider. In the future the cloud provider operator, storage operator and machine operator will use these fields for configuration.",
+      "type": "object",
+      "properties": {
+        "failureDomains": {
+          "description": "failureDomains holds the VSpherePlatformFailureDomainSpec which contains the definition of region, zone and the vCenter topology. If this is omitted failure domains (regions and zones) will not be used.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.VSpherePlatformFailureDomainSpec"
+          }
+        },
+        "nodeNetworking": {
+          "description": "nodeNetworking holds the VSpherePlatformNodeNetworking which contains the definition of internal and external network constraints for assigning the node's networking. If this field is omitted, networking defaults to the legacy address selection behavior which is to only support a single address and return the first one found.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.VSpherePlatformNodeNetworking"
+        },
+        "vcenters": {
+          "description": "vcenters holds the connection details for services to communicate with vCenter. Currently, only a single vCenter is supported.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.VSpherePlatformVCenterSpec"
+          }
+        }
+      }
     },
     "com.github.openshift.api.config.v1.VSpherePlatformStatus": {
       "description": "VSpherePlatformStatus holds the current status of the vSphere infrastructure provider.",
@@ -9284,6 +9393,72 @@
         "nodeDNSIP": {
           "description": "nodeDNSIP is the IP address for the internal DNS used by the nodes. Unlike the one managed by the DNS operator, `NodeDNSIP` provides name resolution for the nodes themselves. There is no DNS-as-a-service for vSphere deployments. In order to minimize necessary changes to the datacenter DNS, a DNS service is hosted as a static pod to serve those hostnames to the nodes in the cluster.",
           "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.VSpherePlatformTopology": {
+      "description": "VSpherePlatformTopology holds the required and optional vCenter objects - datacenter, computeCluster, networks, datastore and resourcePool - to provision virtual machines.",
+      "type": "object",
+      "required": [
+        "datacenter"
+      ],
+      "properties": {
+        "computeCluster": {
+          "description": "computeCluster is the vCenter cluster in which virtual machine will be located. This value is required to be a path.",
+          "type": "string"
+        },
+        "datacenter": {
+          "description": "datacenter is the vCenter datacenter in which virtual machines will be located.",
+          "type": "string",
+          "default": ""
+        },
+        "datastore": {
+          "description": "datastore is the name or inventory path of the datastore in which the virtual machine is created/located.",
+          "type": "string"
+        },
+        "folder": {
+          "description": "folder is the name or inventory path of the folder in which the virtual machine is created/located.",
+          "type": "string"
+        },
+        "networks": {
+          "description": "networks is the list of port group network names within this failure domain. Currently, we only support a single interface per RHCOS virtual machine. The available networks (port groups) can be listed using govc ls 'network/*'",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "resourcePool": {
+          "description": "resourcePool is the absolute path of the resource pool where virtual machines will be created. The absolute path is of the form /<datacenter>/host/<cluster>/Resources/<resourcepool>.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.VSpherePlatformVCenterSpec": {
+      "description": "VSpherePlatformVCenterSpec stores the vCenter connection fields. This is used by the vSphere CCM.",
+      "type": "object",
+      "required": [
+        "server",
+        "datacenters"
+      ],
+      "properties": {
+        "datacenters": {
+          "description": "The vCenter Datacenters in which the RHCOS vm guests are located. This field will be used by the Cloud Controller Manager. Each datacenter listed here should be used within a topology.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "port": {
+          "description": "port is the TCP port that will be used to communicate to the vCenter endpoint. When omitted, this means the user has no opinion and it is up to the platform to choose a sensible default, which is subject to change over time.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "server": {
+          "description": "server is the fully-qualified domain name or the IP address of the vCenter server.",
+          "type": "string",
+          "default": ""
         }
       }
     },

@@ -600,9 +600,300 @@ type OvirtPlatformStatus struct {
 	NodeDNSIP string `json:"nodeDNSIP,omitempty"`
 }
 
+// VSpherePlatformFailureDomainType is the name of the failure domain type.
+// There are two defined failure domains currently, Datacenter and ComputeCluster.
+// Each represents a vCenter object type within a vSphere environment.
+// +kubebuilder:validation:Enum=HostGroup;Datacenter;ComputeCluster
+// + ---
+// + HostGroup is included for future support, consumers should output an error
+// + if this value is set.
+type VSpherePlatformFailureDomainType string
+
+const (
+	// HostGroupFailureDomain as a type allows the use of a group of ESXi hosts
+	// to be represented as a failure domain zone. When using this
+	// case it is expected that region would be a cluster.
+	// HostGroups within vCenter must be preconfigured and
+	// assigned in the topology.
+	HostGroupFailureDomain VSpherePlatformFailureDomainType = "HostGroup"
+
+	// ComputeClusterFailureDomain failure domain can either be a zone or region.
+	// The vCenter cluster is required to preconfigured and
+	// assigned in the topology.
+	ComputeClusterFailureDomain VSpherePlatformFailureDomainType = "ComputeCluster"
+
+	// DatacenterFailureDomain failure domain can be only be a region. The vcenter
+	// datacenter is required to be preconfigred and assigned
+	// in the topology. If used the zone would be of type ComputeCluster.
+	DatacenterFailureDomain VSpherePlatformFailureDomainType = "Datacenter"
+)
+
+// VSpherePlatformFailureDomainSpec holds the region and zone failure domain and
+// the vCenter topology of that failure domain.
+type VSpherePlatformFailureDomainSpec struct {
+	// name defines the name of the VSpherePlatformFailureDomainSpec
+	// This name is arbitrary but will be used
+	// in VSpherePlatformDeploymentZone for association.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=256
+	Name string `json:"name"`
+
+	// region defines a VSpherePlatformFailureDomain which
+	// includes the name of the vCenter tag, the failure domain type
+	// and the name of the vCenter tag category.
+	// +kubebuilder:validation:Required
+	Region VSpherePlatformFailureDomain `json:"region"`
+
+	// zone defines a VSpherePlatformFailureDomain which
+	// includes the name of the vCenter tag, the failure domain type
+	// and the name of the vCenter tag category.
+	// +kubebuilder:validation:Required
+	Zone VSpherePlatformFailureDomain `json:"zone"`
+
+	// Topology describes a given failure domain using vSphere constructs
+	// +kubebuilder:validation:Required
+	Topology VSpherePlatformTopology `json:"topology"`
+}
+
+// VSpherePlatformFailureDomain holds the name of the associated tag, the type
+// of the failure domain, and the vCenter tag category associated with this
+// failure domain.
+type VSpherePlatformFailureDomain struct {
+	// name is the name of the vCenter tag that represents this failure domain
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=80
+	Name string `json:"name"`
+
+	// type is the name of the failure domain type, which includes
+	// Datacenter, ComputeCluster and HostGroup
+	// +kubebuilder:validation:Required
+	Type VSpherePlatformFailureDomainType `json:"type"`
+
+	// tagCategory is the category used for the tag
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=80
+	TagCategory string `json:"tagCategory"`
+}
+
+// VSpherePlatformTopology holds the required and optional vCenter objects - datacenter,
+// computeCluster, networks, datastore and resourcePool - to provision virtual machines.
+type VSpherePlatformTopology struct {
+	// datacenter is the vCenter datacenter in which virtual machines will be located
+	// and defined as the failure domain.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=80
+	Datacenter string `json:"datacenter"`
+
+	// computeCluster as the failure domain
+	// This is required to be a path
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=2048
+	ComputeCluster string `json:"computeCluster,omitempty"`
+
+	// Hosts has information required for placement of machines on VSphere hosts.
+	// +optional
+	Hosts VSpherePlatformFailureDomainHosts `json:"hosts,omitempty"`
+
+	// networks is the list of port group network names within this failure domain.
+	// Currently, we only support a single interface per RHCOS virtual machine.
+	// The available networks (port groups) can be listed using
+	// govc ls 'network/*'
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MaxItems=1
+	// +kubebuilder:validation:MinItems=1
+	Networks []string `json:"networks,omitempty"`
+
+	// datastore is the name or inventory path of the datastore in which the
+	// virtual machine is created/located.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=2048
+	Datastore string `json:"datastore,omitempty"`
+}
+
+type VSpherePlatformFailureDomainHosts struct {
+	// vmGroupName is the Virtual Machine Group name configured
+	// within a vCenter cluster that is associated with
+	// the corresponding Host Group.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=80
+	VMGroupName string `json:"vmGroupName"`
+
+	// hostGroupName is the Host Group name configured
+	// within a vCenter cluster defining a group
+	// of ESXi hosts.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=80
+	HostGroupName string `json:"hostGroupName"`
+}
+
+// VSpherePlatformVCenterSpec stores the vCenter connection fields.
+// This is used by the vSphere CCM.
+type VSpherePlatformVCenterSpec struct {
+
+	// server is the fully-qualified domain name or the IP address of the vCenter server.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MaxLength=255
+	Server string `json:"server"`
+
+	// port is the TCP port that will be used to communicate to
+	// the vCenter endpoint.
+	// When omitted, this means the user has no opinion and
+	// it is up to the platform to choose a sensible default,
+	// which is subject to change over time.
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=32767
+	// +optional
+	Port int `json:"port,omitempty"`
+
+	// The vCenter Datacenters in which the RHCOS
+	// vm guests are located. This field will
+	// be used by the Cloud Controller Manager.
+	// Each datacenter listed here should be used within
+	// a topology.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinItems=1
+	Datacenters []string `json:"datacenters"`
+}
+
+// VSpherePlatformPlacementConstraint is the context information for VM placements within a failure domain
+type VSpherePlatformPlacementConstraint struct {
+	// resourcePool is the absolute path of the resource pool where virtual machines will be
+	// created. The absolute path is of the form /<datacenter>/host/<cluster>/Resources/<resourcepool>.
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=2048
+	// +kubebuilder:validation:Pattern=`^/.*?/host/.*?/Resources.*`
+	// +optional
+	ResourcePool string `json:"resourcePool,omitempty"`
+
+	// folder is the name or inventory path of the folder in which the
+	// virtual machine is created/located.
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=2048
+	// +optional
+	Folder string `json:"folder,omitempty"`
+}
+
+// VSpherePlatformDeploymentSuitable
+// +kubebuilder:validation:Enum=Allowed;NotAllowed
+type VSpherePlatformDeploymentSuitable string
+
+const (
+	// Allowed indicates that the Deployment Zone is suitable for
+	// control plane nodes.
+	Allowed VSpherePlatformDeploymentSuitable = "Allowed"
+
+	// NotAllowed indicates that the Deployment Zone is not suitable for
+	// control plane nodes.
+	NotAllowed VSpherePlatformDeploymentSuitable = "NotAllowed"
+)
+
+// VSpherePlatformDeploymentZone holds the association between a
+// vCenter, failure domain and the virtual machine placementConstraints
+type VSpherePlatformDeploymentZone struct {
+	// name defines the VSpherePlatformDeploymentZoneSpec name.
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=256
+	// +kubebuilder:validation:Required
+	Name string `json:"name"`
+
+	// server is the fully-qualified domain name or the IP address of the vCenter server.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=255
+	Server string `json:"server"`
+
+	// failureDomain is the name of the VSphereFailureDomain used for this VSphereDeploymentZone
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=256
+	FailureDomain string `json:"failureDomain"`
+
+	// ControlPlane determines if this failure domain is suitable for use by control plane machines.
+	// There is three valid options: unset, Allowed and NotAllowed.
+	// +optional
+	ControlPlane VSpherePlatformDeploymentSuitable `json:"controlPlane,omitempty"`
+
+	// PlacementConstraint encapsulates the placement constraints
+	// used within this deployment zone.
+	// +optional
+	PlacementConstraint VSpherePlatformPlacementConstraint `json:"placementConstraint"`
+}
+
+// VSpherePlatformNodeNetworkingSpec holds the network CIDR(s) and port group name for
+// including and excluding IP ranges in the cloud provider.
+// This would be used for example when multiple network adapters are attached to
+// a guest to help determine which IP address the cloud config manager should use
+// for the external and internal node networking.
+type VSpherePlatformNodeNetworkingSpec struct {
+	// networkSubnetCidr IP address on VirtualMachine's network interfaces included in the fields' CIDRs
+	// that will be used in respective status.addresses fields.
+	// +optional
+	NetworkSubnetCIDR []string `json:"networkSubnetCidr,omitempty"`
+
+	// network VirtualMachine's VM Network names that will be used to when searching
+	// for status.addresses fields. Note that if internal.networkSubnetCIDR and
+	// external.networkSubnetCIDR are not set, then the vNIC associated to this network must
+	// only have a single IP address assigned to it.
+	// The available networks (port groups) can be listed using
+	// govc ls 'network/*'
+	// +optional
+	Network string `json:"network,omitempty"`
+
+	// excludeNetworkSubnetCidr IP addresses in subnet ranges will be excluded when selecting
+	// the IP address from the VirtualMachine's VM for use in the status.addresses fields.
+	// +optional
+	ExcludeNetworkSubnetCIDR []string `json:"excludeNetworkSubnetCidr,omitempty"`
+}
+
+// VSpherePlatformNodeNetworking holds the external and internal node networking spec.
+type VSpherePlatformNodeNetworking struct {
+	// external represents the VSpherePlatformNodeNetworkingSpec of the node that is externally routable.
+	// +optional
+	External VSpherePlatformNodeNetworkingSpec `json:"external"`
+	// internal represents the VSpherePlatformNodeNetworkingSpec of the node that is routable only within the cluster.
+	// +optional
+	Internal VSpherePlatformNodeNetworkingSpec `json:"internal"`
+}
+
 // VSpherePlatformSpec holds the desired state of the vSphere infrastructure provider.
-// This only includes fields that can be modified in the cluster.
-type VSpherePlatformSpec struct{}
+// In the future the cloud provider operator, storage operator and machine operator will
+// use these fields for configuration.
+type VSpherePlatformSpec struct {
+	// vcenters holds the connection details for services to communicate with vCenter.
+	// Currently, only a single vCenter is supported.
+	// +kubebuilder:validation:MaxItems=1
+	// +kubebuilder:validation:MinItems=0
+	// +optional
+	VCenters []VSpherePlatformVCenterSpec `json:"vcenters,omitempty"`
+
+	// deploymentZones holds the association between vcenter, failure domains
+	// and vcenter placement for virtual machines.
+	// +optional
+	DeploymentZones []VSpherePlatformDeploymentZone `json:"deploymentZones,omitempty"`
+
+	// failureDomains holds the VSpherePlatformFailureDomainSpec which contains
+	// the definition of region, zone and the vCenter topology.
+	// If this is omitted failure domains (regions and zones) will not be used.
+	// +optional
+	FailureDomains []VSpherePlatformFailureDomainSpec `json:"failureDomains,omitempty"`
+
+	// nodeNetworking holds the VSpherePlatformNodeNetworking which contains
+	// the definition of internal and external network constraints for
+	// assigning the node's networking.
+	// If this field is omitted, networking defaults to the legacy
+	// address selection behavior which is to only support a single address and
+	// return the first one found.
+	// +optional
+	NodeNetworking VSpherePlatformNodeNetworking `json:"nodeNetworking,omitempty"`
+}
 
 // VSpherePlatformStatus holds the current status of the vSphere infrastructure provider.
 type VSpherePlatformStatus struct {

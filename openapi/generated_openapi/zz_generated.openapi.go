@@ -345,8 +345,17 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.TokenConfig":                                              schema_openshift_api_config_v1_TokenConfig(ref),
 		"github.com/openshift/api/config/v1.Update":                                                   schema_openshift_api_config_v1_Update(ref),
 		"github.com/openshift/api/config/v1.UpdateHistory":                                            schema_openshift_api_config_v1_UpdateHistory(ref),
+		"github.com/openshift/api/config/v1.VSpherePlatformDeploymentZone":                            schema_openshift_api_config_v1_VSpherePlatformDeploymentZone(ref),
+		"github.com/openshift/api/config/v1.VSpherePlatformFailureDomain":                             schema_openshift_api_config_v1_VSpherePlatformFailureDomain(ref),
+		"github.com/openshift/api/config/v1.VSpherePlatformFailureDomainHosts":                        schema_openshift_api_config_v1_VSpherePlatformFailureDomainHosts(ref),
+		"github.com/openshift/api/config/v1.VSpherePlatformFailureDomainSpec":                         schema_openshift_api_config_v1_VSpherePlatformFailureDomainSpec(ref),
+		"github.com/openshift/api/config/v1.VSpherePlatformNodeNetworking":                            schema_openshift_api_config_v1_VSpherePlatformNodeNetworking(ref),
+		"github.com/openshift/api/config/v1.VSpherePlatformNodeNetworkingSpec":                        schema_openshift_api_config_v1_VSpherePlatformNodeNetworkingSpec(ref),
+		"github.com/openshift/api/config/v1.VSpherePlatformPlacementConstraint":                       schema_openshift_api_config_v1_VSpherePlatformPlacementConstraint(ref),
 		"github.com/openshift/api/config/v1.VSpherePlatformSpec":                                      schema_openshift_api_config_v1_VSpherePlatformSpec(ref),
 		"github.com/openshift/api/config/v1.VSpherePlatformStatus":                                    schema_openshift_api_config_v1_VSpherePlatformStatus(ref),
+		"github.com/openshift/api/config/v1.VSpherePlatformTopology":                                  schema_openshift_api_config_v1_VSpherePlatformTopology(ref),
+		"github.com/openshift/api/config/v1.VSpherePlatformVCenterSpec":                               schema_openshift_api_config_v1_VSpherePlatformVCenterSpec(ref),
 		"github.com/openshift/api/config/v1.WebhookTokenAuthenticator":                                schema_openshift_api_config_v1_WebhookTokenAuthenticator(ref),
 		"github.com/openshift/api/config/v1.featureSetBuilder":                                        schema_openshift_api_config_v1_featureSetBuilder(ref),
 		"github.com/openshift/api/console/v1.ApplicationMenuSpec":                                     schema_openshift_api_console_v1_ApplicationMenuSpec(ref),
@@ -16747,14 +16756,339 @@ func schema_openshift_api_config_v1_UpdateHistory(ref common.ReferenceCallback) 
 	}
 }
 
+func schema_openshift_api_config_v1_VSpherePlatformDeploymentZone(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VSpherePlatformDeploymentZone holds the association between a vCenter, failure domain and the virtual machine placementConstraints",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name defines the VSpherePlatformDeploymentZoneSpec name.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"server": {
+						SchemaProps: spec.SchemaProps{
+							Description: "server is the fully-qualified domain name or the IP address of the vCenter server.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"failureDomain": {
+						SchemaProps: spec.SchemaProps{
+							Description: "failureDomain is the name of the VSphereFailureDomain used for this VSphereDeploymentZone",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"controlPlane": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ControlPlane determines if this failure domain is suitable for use by control plane machines. There is three valid options: unset, Allowed and NotAllowed.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"placementConstraint": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PlacementConstraint encapsulates the placement constraints used within this deployment zone.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.VSpherePlatformPlacementConstraint"),
+						},
+					},
+				},
+				Required: []string{"name", "server", "failureDomain"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.VSpherePlatformPlacementConstraint"},
+	}
+}
+
+func schema_openshift_api_config_v1_VSpherePlatformFailureDomain(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VSpherePlatformFailureDomain holds the name of the associated tag, the type of the failure domain, and the vCenter tag category associated with this failure domain.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the name of the vCenter tag that represents this failure domain",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type is the name of the failure domain type, which includes Datacenter, ComputeCluster and HostGroup",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"tagCategory": {
+						SchemaProps: spec.SchemaProps{
+							Description: "tagCategory is the category used for the tag",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name", "type", "tagCategory"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1_VSpherePlatformFailureDomainHosts(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"vmGroupName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "vmGroupName is the Virtual Machine Group name configured within a vCenter cluster that is associated with the corresponding Host Group.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"hostGroupName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "hostGroupName is the Host Group name configured within a vCenter cluster defining a group of ESXi hosts.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"vmGroupName", "hostGroupName"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1_VSpherePlatformFailureDomainSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VSpherePlatformFailureDomainSpec holds the region and zone failure domain and the vCenter topology of that failure domain.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name defines the name of the VSpherePlatformFailureDomainSpec This name is arbitrary but will be used in VSpherePlatformDeploymentZone for association.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"region": {
+						SchemaProps: spec.SchemaProps{
+							Description: "region defines a VSpherePlatformFailureDomain which includes the name of the vCenter tag, the failure domain type and the name of the vCenter tag category.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.VSpherePlatformFailureDomain"),
+						},
+					},
+					"zone": {
+						SchemaProps: spec.SchemaProps{
+							Description: "zone defines a VSpherePlatformFailureDomain which includes the name of the vCenter tag, the failure domain type and the name of the vCenter tag category.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.VSpherePlatformFailureDomain"),
+						},
+					},
+					"topology": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Topology describes a given failure domain using vSphere constructs",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.VSpherePlatformTopology"),
+						},
+					},
+				},
+				Required: []string{"name", "region", "zone", "topology"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.VSpherePlatformFailureDomain", "github.com/openshift/api/config/v1.VSpherePlatformTopology"},
+	}
+}
+
+func schema_openshift_api_config_v1_VSpherePlatformNodeNetworking(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VSpherePlatformNodeNetworking holds the external and internal node networking spec.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"external": {
+						SchemaProps: spec.SchemaProps{
+							Description: "external represents the VSpherePlatformNodeNetworkingSpec of the node that is externally routable.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.VSpherePlatformNodeNetworkingSpec"),
+						},
+					},
+					"internal": {
+						SchemaProps: spec.SchemaProps{
+							Description: "internal represents the VSpherePlatformNodeNetworkingSpec of the node that is routable only within the cluster.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.VSpherePlatformNodeNetworkingSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.VSpherePlatformNodeNetworkingSpec"},
+	}
+}
+
+func schema_openshift_api_config_v1_VSpherePlatformNodeNetworkingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VSpherePlatformNodeNetworkingSpec holds the network CIDR(s) and port group name for including and excluding IP ranges in the cloud provider. This would be used for example when multiple network adapters are attached to a guest to help determine which IP address the cloud config manager should use for the external and internal node networking.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"networkSubnetCidr": {
+						SchemaProps: spec.SchemaProps{
+							Description: "networkSubnetCidr IP address on VirtualMachine's network interfaces included in the fields' CIDRs that will be used in respective status.addresses fields.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"network": {
+						SchemaProps: spec.SchemaProps{
+							Description: "network VirtualMachine's VM Network names that will be used to when searching for status.addresses fields. Note that if internal.networkSubnetCIDR and external.networkSubnetCIDR are not set, then the vNIC associated to this network must only have a single IP address assigned to it. The available networks (port groups) can be listed using govc ls 'network/*'",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"excludeNetworkSubnetCidr": {
+						SchemaProps: spec.SchemaProps{
+							Description: "excludeNetworkSubnetCidr IP addresses in subnet ranges will be excluded when selecting the IP address from the VirtualMachine's VM for use in the status.addresses fields.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1_VSpherePlatformPlacementConstraint(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VSpherePlatformPlacementConstraint is the context information for VM placements within a failure domain",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"resourcePool": {
+						SchemaProps: spec.SchemaProps{
+							Description: "resourcePool is the absolute path of the resource pool where virtual machines will be created. The absolute path is of the form /<datacenter>/host/<cluster>/Resources/<resourcepool>.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"folder": {
+						SchemaProps: spec.SchemaProps{
+							Description: "folder is the name or inventory path of the folder in which the virtual machine is created/located.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_config_v1_VSpherePlatformSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "VSpherePlatformSpec holds the desired state of the vSphere infrastructure provider. This only includes fields that can be modified in the cluster.",
+				Description: "VSpherePlatformSpec holds the desired state of the vSphere infrastructure provider. In the future the cloud provider operator, storage operator and machine operator will use these fields for configuration.",
 				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"vcenters": {
+						SchemaProps: spec.SchemaProps{
+							Description: "vcenters holds the connection details for services to communicate with vCenter. Currently, only a single vCenter is supported.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.VSpherePlatformVCenterSpec"),
+									},
+								},
+							},
+						},
+					},
+					"deploymentZones": {
+						SchemaProps: spec.SchemaProps{
+							Description: "deploymentZones holds the association between vcenter, failure domains and vcenter placement for virtual machines.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.VSpherePlatformDeploymentZone"),
+									},
+								},
+							},
+						},
+					},
+					"failureDomains": {
+						SchemaProps: spec.SchemaProps{
+							Description: "failureDomains holds the VSpherePlatformFailureDomainSpec which contains the definition of region, zone and the vCenter topology. If this is omitted failure domains (regions and zones) will not be used.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.VSpherePlatformFailureDomainSpec"),
+									},
+								},
+							},
+						},
+					},
+					"nodeNetworking": {
+						SchemaProps: spec.SchemaProps{
+							Description: "nodeNetworking holds the VSpherePlatformNodeNetworking which contains the definition of internal and external network constraints for assigning the node's networking. If this field is omitted, networking defaults to the legacy address selection behavior which is to only support a single address and return the first one found.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.VSpherePlatformNodeNetworking"),
+						},
+					},
+				},
 			},
 		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.VSpherePlatformDeploymentZone", "github.com/openshift/api/config/v1.VSpherePlatformFailureDomainSpec", "github.com/openshift/api/config/v1.VSpherePlatformNodeNetworking", "github.com/openshift/api/config/v1.VSpherePlatformVCenterSpec"},
 	}
 }
 
@@ -16818,6 +17152,110 @@ func schema_openshift_api_config_v1_VSpherePlatformStatus(ref common.ReferenceCa
 					},
 				},
 				Required: []string{"apiServerInternalIPs", "ingressIPs"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1_VSpherePlatformTopology(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VSpherePlatformTopology holds the required and optional vCenter objects - datacenter, computeCluster, networks, datastore and resourcePool - to provision virtual machines.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"datacenter": {
+						SchemaProps: spec.SchemaProps{
+							Description: "datacenter is the vCenter datacenter in which virtual machines will be located and defined as the failure domain.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"computeCluster": {
+						SchemaProps: spec.SchemaProps{
+							Description: "computeCluster as the failure domain This is required to be a path",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"hosts": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Hosts has information required for placement of machines on VSphere hosts.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.VSpherePlatformFailureDomainHosts"),
+						},
+					},
+					"networks": {
+						SchemaProps: spec.SchemaProps{
+							Description: "networks is the list of port group network names within this failure domain. Currently, we only support a single interface per RHCOS virtual machine. The available networks (port groups) can be listed using govc ls 'network/*'",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"datastore": {
+						SchemaProps: spec.SchemaProps{
+							Description: "datastore is the name or inventory path of the datastore in which the virtual machine is created/located.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"datacenter"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.VSpherePlatformFailureDomainHosts"},
+	}
+}
+
+func schema_openshift_api_config_v1_VSpherePlatformVCenterSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VSpherePlatformVCenterSpec stores the vCenter connection fields. This is used by the vSphere CCM.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"server": {
+						SchemaProps: spec.SchemaProps{
+							Description: "server is the fully-qualified domain name or the IP address of the vCenter server.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"port": {
+						SchemaProps: spec.SchemaProps{
+							Description: "port is the TCP port that will be used to communicate to the vCenter endpoint. When omitted, this means the user has no opinion and it is up to the platform to choose a sensible default, which is subject to change over time.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"datacenters": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The vCenter Datacenters in which the RHCOS vm guests are located. This field will be used by the Cloud Controller Manager. Each datacenter listed here should be used within a topology.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"server", "datacenters"},
 			},
 		},
 	}

@@ -8,7 +8,7 @@ import (
 	"sigs.k8s.io/yaml"
 )
 
-const infraCRDFilePath = "0000_10_config-operator_01_infrastructure.crd.yaml"
+const infraCRDFilePath = "0000_10_config-operator_01_infrastructure-Default.crd.yaml"
 
 // TestInfrastructureStatusDefault verifies that the infrastructure CR status does not have default value
 // The admission code under https://github.com/openshift/kubernetes/pull/877 is expecting that the infrastructure status

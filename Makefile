@@ -17,7 +17,7 @@ GO_BUILD_PACKAGES :=$(GO_PACKAGES)
 GO_BUILD_PACKAGES_EXPANDED :=$(GO_BUILD_PACKAGES)
 # LDFLAGS are not needed for dummy builds (saving time on calling git commands)
 GO_LD_FLAGS:=
-CONTROLLER_GEN_VERSION :=v0.7.0
+CONTROLLER_GEN_VERSION :=v0.9.2
 
 # $1 - target name
 # $2 - apis

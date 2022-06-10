@@ -57,6 +57,14 @@ spec:
           spec:
             description: spec holds user settable values for configuration
             properties:
+              disableStorageClass:
+                default: false
+                description: DisableStorageClass determines if creation of storageclass
+                  for this driver should be skipped. By default Openshift creates
+                  storageclass for every CSI driver it installs via CSI operator.
+                  Setting this value to true will skip automatic creation of storageclass
+                  for driver being installed. Defaults to false.
+                type: boolean
               logLevel:
                 default: Normal
                 description: "logLevel is an intent based logging for an overall component.

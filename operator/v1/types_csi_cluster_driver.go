@@ -61,6 +61,13 @@ const (
 // ClusterCSIDriverSpec is the desired behavior of CSI driver operator
 type ClusterCSIDriverSpec struct {
 	OperatorSpec `json:",inline"`
+	// DisableStorageClass determines if creation of storageclass for this driver
+	// should be skipped. By default Openshift creates storageclass for every CSI
+	// driver it installs via CSI operator. Setting this value to true will skip
+	// automatic creation of storageclass for driver being installed.
+	// Defaults to false.
+	// +kubebuilder:default=false
+	DisableStorageClass bool `json:"disableStorageClass,omitempty"`
 }
 
 // ClusterCSIDriverStatus is the observed status of CSI driver operator

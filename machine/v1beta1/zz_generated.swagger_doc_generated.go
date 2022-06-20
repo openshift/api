@@ -160,8 +160,8 @@ func (AzureBootDiagnostics) SwaggerDoc() map[string]string {
 }
 
 var map_AzureCustomerManagedBootDiagnostics = map[string]string{
-	"":                   "AzureCustomerManagedBootDiagnostics provides reference to a customer managed storage account.",
-	"storageAccountName": "StorageAccountName is the name of the customer managed storage account. Storage account names must be between 3 and 24 characters in length and are formed of numbers and lower-case letters only.",
+	"":                  "AzureCustomerManagedBootDiagnostics provides reference to a customer managed storage account.",
+	"storageAccountURI": "StorageAccountURI is the URI of the customer managed storage account. The URI typically will be `https://<mystorageaccountname>.blob.core.windows.net/` but may differ if you are using Azure DNS zone endpoints. You can find the correct endpoint by looking for the Blob Primary Endpoint in the endpoints tab in the Azure console.",
 }
 
 func (AzureCustomerManagedBootDiagnostics) SwaggerDoc() map[string]string {

@@ -162,14 +162,15 @@ type AzureBootDiagnostics struct {
 // AzureCustomerManagedBootDiagnostics provides reference to a customer managed
 // storage account.
 type AzureCustomerManagedBootDiagnostics struct {
-	// StorageAccountName is the name of the customer managed storage account.
-	// Storage account names must be between 3 and 24 characters in length and
-	// are formed of numbers and lower-case letters only.
+	// StorageAccountURI is the URI of the customer managed storage account.
+	// The URI typically will be `https://<mystorageaccountname>.blob.core.windows.net/`
+	// but may differ if you are using Azure DNS zone endpoints.
+	// You can find the correct endpoint by looking for the Blob Primary Endpoint in the
+	// endpoints tab in the Azure console.
 	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:MinLength:=3
-	// +kubebuilder:validation:MaxLength:=24
-	// +kubebuilder:validation:Pattern:=[a-z0-9]*
-	StorageAccountName string `json:"storageAccountName"`
+	// +kubebuilder:validation:Pattern=`^https://`
+	// +kubebuilder:validation:MaxLength=1024
+	StorageAccountURI string `json:"storageAccountURI"`
 }
 
 // AzureBootDiagnosticsStorageAccountType defines the list of valid storage account types

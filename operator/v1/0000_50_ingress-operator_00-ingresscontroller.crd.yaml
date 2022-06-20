@@ -292,10 +292,27 @@ spec:
                                 - Local
                                 type: string
                             type: object
+                          ibm:
+                            description: "ibm provides configuration settings that
+                              are specific to IBM Cloud load balancers. \n If empty,
+                              defaults will be applied. See specific ibm fields for
+                              details about their defaults."
+                            properties:
+                              subnets:
+                                description: "subnets is the comma-separated list
+                                  of subnets that the load balancer is attached to.
+                                  \n It is used to specify one or more subnets in
+                                  one zone that the VPC load balancer deploys to.
+                                  Values can be specified as VPC subnet IDs, VPC subnet
+                                  names, or VPC subnet CIDRs. \n See \"service.kubernetes.io/ibm-load-balancer-cloud-provider-vpc-subnets\"
+                                  at https://cloud.ibm.com/docs/containers?topic=containers-vpc-lbaas"
+                                type: string
+                            type: object
                           type:
                             description: type is the underlying infrastructure provider
                               for the load balancer. Allowed values are "AWS", "Azure",
-                              "BareMetal", "GCP", "Nutanix", "OpenStack", and "VSphere".
+                              "BareMetal", "GCP", "IBM", "Nutanix", "OpenStack", and
+                              "VSphere".
                             enum:
                             - AWS
                             - Azure
@@ -1515,10 +1532,27 @@ spec:
                                 - Local
                                 type: string
                             type: object
+                          ibm:
+                            description: "ibm provides configuration settings that
+                              are specific to IBM Cloud load balancers. \n If empty,
+                              defaults will be applied. See specific ibm fields for
+                              details about their defaults."
+                            properties:
+                              subnets:
+                                description: "subnets is the comma-separated list
+                                  of subnets that the load balancer is attached to.
+                                  \n It is used to specify one or more subnets in
+                                  one zone that the VPC load balancer deploys to.
+                                  Values can be specified as VPC subnet IDs, VPC subnet
+                                  names, or VPC subnet CIDRs. \n See \"service.kubernetes.io/ibm-load-balancer-cloud-provider-vpc-subnets\"
+                                  at https://cloud.ibm.com/docs/containers?topic=containers-vpc-lbaas"
+                                type: string
+                            type: object
                           type:
                             description: type is the underlying infrastructure provider
                               for the load balancer. Allowed values are "AWS", "Azure",
-                              "BareMetal", "GCP", "Nutanix", "OpenStack", and "VSphere".
+                              "BareMetal", "GCP", "IBM", "Nutanix", "OpenStack", and
+                              "VSphere".
                             enum:
                             - AWS
                             - Azure

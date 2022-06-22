@@ -57,14 +57,6 @@ spec:
           spec:
             description: spec holds user settable values for configuration
             properties:
-              disableStorageClass:
-                default: false
-                description: DisableStorageClass determines if creation of storageclass
-                  for this driver should be skipped. By default Openshift creates
-                  storageclass for every CSI driver it installs via CSI operator.
-                  Setting this value to true will skip automatic creation of storageclass
-                  for driver being installed. Defaults to false.
-                type: boolean
               logLevel:
                 default: Normal
                 description: "logLevel is an intent based logging for an overall component.
@@ -104,6 +96,17 @@ spec:
                 - Debug
                 - Trace
                 - TraceAll
+                type: string
+              storageClassState:
+                default: nil
+                description: StorageClassState determines if CSI operator should create
+                  and sync storage classes. If this field value is nil or managed
+                  - CSI operator will continously reconcile storage class and create
+                  if necessary. If this field value is unmanaged - CSI operator will
+                  not reconcile any previously created storage class. If this field
+                  value is removed - CSI operator will delete the storage class it
+                  created previously. Defaults to nil
+                pattern: ^(Managed|Unmanaged|Force|Removed)$
                 type: string
               unsupportedConfigOverrides:
                 description: 'unsupportedConfigOverrides holds a sparse config that

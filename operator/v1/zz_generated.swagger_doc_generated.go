@@ -344,8 +344,8 @@ func (ClusterCSIDriverList) SwaggerDoc() map[string]string {
 }
 
 var map_ClusterCSIDriverSpec = map[string]string{
-	"":                    "ClusterCSIDriverSpec is the desired behavior of CSI driver operator",
-	"disableStorageClass": "DisableStorageClass determines if creation of storageclass for this driver should be skipped. By default Openshift creates storageclass for every CSI driver it installs via CSI operator. Setting this value to true will skip automatic creation of storageclass for driver being installed. Defaults to false.",
+	"":                  "ClusterCSIDriverSpec is the desired behavior of CSI driver operator",
+	"storageClassState": "StorageClassState determines if CSI operator should create and sync storage classes. If this field value is nil or managed - CSI operator will continously reconcile storage class and create if necessary. If this field value is unmanaged - CSI operator will not reconcile any previously created storage class. If this field value is removed - CSI operator will delete the storage class it created previously. Defaults to nil",
 }
 
 func (ClusterCSIDriverSpec) SwaggerDoc() map[string]string {

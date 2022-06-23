@@ -10569,20 +10569,17 @@
     "com.github.openshift.api.image.v1.Image": {
       "description": "Image is an immutable representation of a container image and metadata at a point in time. Images are named by taking a hash of their contents (metadata and content) and any change in format, content, or metadata results in a new name. The images resource is primarily for use by cluster administrators and integrations like the cluster image registry - end users instead access images via the imagestreamtags or imagestreamimages resources. While image metadata is stored in the API, any integration that implements the container image registry API must provide its own storage for the raw manifest data, image config, and layer contents.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
-      "required": [
-        "dockerImageLayers"
-      ],
       "properties": {
         "apiVersion": {
           "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
           "type": "string"
         },
         "dockerImageConfig": {
-          "description": "DockerImageConfig is a JSON blob that the runtime uses to set up the container. This is a part of manifest schema v2.",
+          "description": "DockerImageConfig is a JSON blob that the runtime uses to set up the container. This is a part of manifest schema v2. Will not be set when the image represents a manifest list.",
           "type": "string"
         },
         "dockerImageLayers": {
-          "description": "DockerImageLayers represents the layers in the image. May not be set if the image does not define that data.",
+          "description": "DockerImageLayers represents the layers in the image. May not be set if the image does not define that data or if the image represents a manifest list.",
           "type": "array",
           "items": {
             "default": {},
@@ -10596,6 +10593,14 @@
         "dockerImageManifestMediaType": {
           "description": "DockerImageManifestMediaType specifies the mediaType of manifest. This is a part of manifest schema v2.",
           "type": "string"
+        },
+        "dockerImageManifests": {
+          "description": "DockerImageManifests holds information about sub-manifests when the image represents a manifest list. When this field is present, no DockerImageLayers should be specified.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.image.v1.ImageManifest"
+          }
         },
         "dockerImageMetadata": {
           "description": "DockerImageMetadata contains metadata about this image",
@@ -10705,6 +10710,14 @@
           "description": "Image is the metadata of that image, if the image was located",
           "$ref": "#/definitions/com.github.openshift.api.image.v1.Image"
         },
+        "manifests": {
+          "description": "Manifests holds sub-manifests metadata when importing a manifest list",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.image.v1.Image"
+          }
+        },
         "status": {
           "description": "Status is the status of the image import, including errors encountered while retrieving the image",
           "default": {},
@@ -10803,6 +10816,49 @@
           "description": "local will change the docker short image references (like \"mysql\" or \"php:latest\") on objects in this namespace to the image ID whenever they match this image stream, instead of reaching out to a remote registry. The name will be fully qualified to an image ID if found. The tag's referencePolicy is taken into account on the replaced value. Only works within the current namespace.",
           "type": "boolean",
           "default": false
+        }
+      }
+    },
+    "com.github.openshift.api.image.v1.ImageManifest": {
+      "description": "ImageManifest represents sub-manifests of a manifest list. The Digest field points to a regular Image object.",
+      "type": "object",
+      "required": [
+        "digest",
+        "mediaType",
+        "manifestSize",
+        "architecture",
+        "os"
+      ],
+      "properties": {
+        "architecture": {
+          "description": "Architecture specifies the supported CPU architecture, for example `amd64` or `ppc64le`.",
+          "type": "string",
+          "default": ""
+        },
+        "digest": {
+          "description": "Digest is the unique identifier for the manifest. It refers to an Image object.",
+          "type": "string",
+          "default": ""
+        },
+        "manifestSize": {
+          "description": "ManifestSize represents the size of the raw object contents, in bytes.",
+          "type": "integer",
+          "format": "int64",
+          "default": 0
+        },
+        "mediaType": {
+          "description": "MediaType defines the type of the manifest, possible values are application/vnd.oci.image.manifest.v1+json, application/vnd.docker.distribution.manifest.v2+json or application/vnd.docker.distribution.manifest.v1+json.",
+          "type": "string",
+          "default": ""
+        },
+        "os": {
+          "description": "OS specifies the operating system, for example `linux`.",
+          "type": "string",
+          "default": ""
+        },
+        "variant": {
+          "description": "Variant is an optional field repreenting a variant of the CPU, for example v6 to specify a particular CPU variant of the ARM CPU.",
+          "type": "string"
         }
       }
     },
@@ -11584,6 +11640,10 @@
       "description": "TagImportPolicy controls how images related to this tag will be imported.",
       "type": "object",
       "properties": {
+        "importMode": {
+          "description": "ImportMode describes how to import an image manifest.",
+          "type": "string"
+        },
         "insecure": {
           "description": "Insecure is true if the server may bypass certificate verification or connect directly over HTTP during image import.",
           "type": "boolean"

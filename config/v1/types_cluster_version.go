@@ -225,7 +225,7 @@ type UpdateHistory struct {
 type ClusterID string
 
 // ClusterVersionCapability enumerates optional, core cluster components.
-// +kubebuilder:validation:Enum=openshift-samples;baremetal;marketplace;Console
+// +kubebuilder:validation:Enum=openshift-samples;baremetal;marketplace;Console;Insights
 type ClusterVersionCapability string
 
 const (
@@ -249,12 +249,18 @@ const (
 	// ClusterVersionCapabilityConsole manages the Console operator which
 	// installs and maintains the web console.
 	ClusterVersionCapabilityConsole ClusterVersionCapability = "Console"
+
+	// ClusterVersionCapabilityInsights manages the Insights operator which
+	// collects anonymized information about the cluster to generate
+	// recommendations for possible cluster issues.
+	ClusterVersionCapabilityInsights ClusterVersionCapability = "Insights"
 )
 
 // KnownClusterVersionCapabilities includes all known optional, core cluster components.
 var KnownClusterVersionCapabilities = []ClusterVersionCapability{
 	ClusterVersionCapabilityBaremetal,
 	ClusterVersionCapabilityConsole,
+	ClusterVersionCapabilityInsights,
 	ClusterVersionCapabilityMarketplace,
 	ClusterVersionCapabilityOpenShiftSamples,
 }
@@ -297,12 +303,14 @@ var ClusterVersionCapabilitySets = map[ClusterVersionCapabilitySet][]ClusterVers
 	ClusterVersionCapabilitySet4_12: {
 		ClusterVersionCapabilityBaremetal,
 		ClusterVersionCapabilityConsole,
+		ClusterVersionCapabilityInsights,
 		ClusterVersionCapabilityMarketplace,
 		ClusterVersionCapabilityOpenShiftSamples,
 	},
 	ClusterVersionCapabilitySetCurrent: {
 		ClusterVersionCapabilityBaremetal,
 		ClusterVersionCapabilityConsole,
+		ClusterVersionCapabilityInsights,
 		ClusterVersionCapabilityMarketplace,
 		ClusterVersionCapabilityOpenShiftSamples,
 	},

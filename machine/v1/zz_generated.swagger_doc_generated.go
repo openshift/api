@@ -237,7 +237,7 @@ func (ControlPlaneMachineSetTemplateObjectMeta) SwaggerDoc() map[string]string {
 
 var map_FailureDomains = map[string]string{
 	"":          "FailureDomain represents the different configurations required to spread Machines across failure domains on different platforms.",
-	"platform":  "Platform identifies the platform for which the FailureDomain represents",
+	"platform":  "Platform identifies the platform for which the FailureDomain represents. Currently supported values are AWS, Azure, GCP and OpenStack.",
 	"aws":       "AWS configures failure domain information for the AWS platform",
 	"azure":     "Azure configures failure domain information for the Azure platform",
 	"gcp":       "GCP configures failure domain information for the GCP platform",

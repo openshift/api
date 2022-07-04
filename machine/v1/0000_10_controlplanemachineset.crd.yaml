@@ -136,6 +136,8 @@ spec:
                         failureDomains:
                           description: FailureDomains is the list of failure domains (sometimes called availability zones) in which the ControlPlaneMachineSet should balance the Control Plane Machines. This will be merged into the ProviderSpec given in the template. This field is optional on platforms that do not require placement information, eg OpenStack.
                           type: object
+                          required:
+                            - platform
                           properties:
                             aws:
                               description: AWS configures failure domain information for the AWS platform
@@ -227,7 +229,7 @@ spec:
                                     description: The availability zone from which to launch the server.
                                     type: string
                             platform:
-                              description: Platform identifies the platform for which the FailureDomain represents
+                              description: Platform identifies the platform for which the FailureDomain represents. Currently supported values are AWS, Azure, GCP and OpenStack.
                               type: string
                               enum:
                                 - ""

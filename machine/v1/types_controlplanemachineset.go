@@ -188,10 +188,11 @@ const (
 // across failure domains on different platforms.
 // +union
 type FailureDomains struct {
-	// Platform identifies the platform for which the FailureDomain represents
+	// Platform identifies the platform for which the FailureDomain represents.
+	// Currently supported values are AWS, Azure, GCP and OpenStack.
 	// +unionDiscriminator
-	// +optional
-	Platform configv1.PlatformType `json:"platform,omitempty"`
+	// +kubebuilder:validation:Required
+	Platform configv1.PlatformType `json:"platform"`
 
 	// AWS configures failure domain information for the AWS platform
 	// +optional

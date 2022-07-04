@@ -7,32 +7,32 @@ package v1
 type AWSResourceReference struct {
 	// Type determines how the reference will fetch the AWS resource.
 	// +unionDiscriminator
-	// +kubebuilder:validation:Enum:="id";"arn";"filters"
 	// +kubebuilder:validation:Required
 	Type AWSResourceReferenceType `json:"type"`
-	// ID of resource
+	// ID of resource.
 	// +optional
 	ID *string `json:"id,omitempty"`
-	// ARN of resource
+	// ARN of resource.
 	// +optional
 	ARN *string `json:"arn,omitempty"`
-	// Filters is a set of filters used to identify a resource
+	// Filters is a set of filters used to identify a resource.
 	// +optional
 	Filters *[]AWSResourceFilter `json:"filters,omitempty"`
 }
 
 // AWSResourceReferenceType is an enumeration of different resource reference types.
+// +kubebuilder:validation:Enum:="ID";"ARN";"Filters"
 type AWSResourceReferenceType string
 
 const (
 	// AWSIDReferenceType is a resource reference based on the object ID.
-	AWSIDReferenceType AWSResourceReferenceType = "id"
+	AWSIDReferenceType AWSResourceReferenceType = "ID"
 
 	// AWSARNReferenceType is a resource reference based on the object ARN.
-	AWSARNReferenceType AWSResourceReferenceType = "arn"
+	AWSARNReferenceType AWSResourceReferenceType = "ARN"
 
 	// AWSFiltersReferenceType is a resource reference based on filters.
-	AWSFiltersReferenceType AWSResourceReferenceType = "filters"
+	AWSFiltersReferenceType AWSResourceReferenceType = "Filters"
 )
 
 // AWSResourceFilter is a filter used to identify an AWS resource

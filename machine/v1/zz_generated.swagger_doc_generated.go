@@ -127,9 +127,9 @@ func (AWSResourceFilter) SwaggerDoc() map[string]string {
 var map_AWSResourceReference = map[string]string{
 	"":        "AWSResourceReference is a reference to a specific AWS resource by ID, ARN, or filters. Only one of ID, ARN or Filters may be specified. Specifying more than one will result in a validation error.",
 	"type":    "Type determines how the reference will fetch the AWS resource.",
-	"id":      "ID of resource",
-	"arn":     "ARN of resource",
-	"filters": "Filters is a set of filters used to identify a resource",
+	"id":      "ID of resource.",
+	"arn":     "ARN of resource.",
+	"filters": "Filters is a set of filters used to identify a resource.",
 }
 
 func (AWSResourceReference) SwaggerDoc() map[string]string {
@@ -137,9 +137,9 @@ func (AWSResourceReference) SwaggerDoc() map[string]string {
 }
 
 var map_AWSFailureDomain = map[string]string{
-	"":          "AWSFailureDomain configures failure domain information for the AWS platform",
-	"subnet":    "Subnet is a reference to the subnet to use for this instance",
-	"placement": "Placement configures the placement information for this instance",
+	"":          "AWSFailureDomain configures failure domain information for the AWS platform.",
+	"subnet":    "Subnet is a reference to the subnet to use for this instance.",
+	"placement": "Placement configures the placement information for this instance.",
 }
 
 func (AWSFailureDomain) SwaggerDoc() map[string]string {

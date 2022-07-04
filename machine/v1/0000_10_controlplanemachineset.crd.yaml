@@ -157,16 +157,16 @@ spec:
                                         description: AvailabilityZone is the availability zone of the instance.
                                         type: string
                                   subnet:
-                                    description: Subnet is a reference to the subnet to use for this instance
+                                    description: Subnet is a reference to the subnet to use for this instance.
                                     type: object
                                     required:
                                       - type
                                     properties:
                                       arn:
-                                        description: ARN of resource
+                                        description: ARN of resource.
                                         type: string
                                       filters:
-                                        description: Filters is a set of filters used to identify a resource
+                                        description: Filters is a set of filters used to identify a resource.
                                         type: array
                                         items:
                                           description: AWSResourceFilter is a filter used to identify an AWS resource
@@ -183,15 +183,15 @@ spec:
                                               items:
                                                 type: string
                                       id:
-                                        description: ID of resource
+                                        description: ID of resource.
                                         type: string
                                       type:
                                         description: Type determines how the reference will fetch the AWS resource.
                                         type: string
                                         enum:
-                                          - id
-                                          - arn
-                                          - filters
+                                          - ID
+                                          - ARN
+                                          - Filters
                             azure:
                               description: Azure configures failure domain information for the Azure platform.
                               type: array

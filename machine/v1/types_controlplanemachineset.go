@@ -101,8 +101,7 @@ type OpenShiftMachineV1Beta1MachineTemplate struct {
 	// availability zones) in which the ControlPlaneMachineSet should balance
 	// the Control Plane Machines.
 	// This will be merged into the ProviderSpec given in the template.
-	// This field is optional on platforms that do not require placement
-	// information, eg OpenStack.
+	// This field is optional on platforms that do not require placement information.
 	// +optional
 	FailureDomains FailureDomains `json:"failureDomains,omitempty"`
 
@@ -194,46 +193,46 @@ type FailureDomains struct {
 	// +kubebuilder:validation:Required
 	Platform configv1.PlatformType `json:"platform"`
 
-	// AWS configures failure domain information for the AWS platform
+	// AWS configures failure domain information for the AWS platform.
 	// +optional
 	AWS *[]AWSFailureDomain `json:"aws,omitempty"`
 
-	// Azure configures failure domain information for the Azure platform
+	// Azure configures failure domain information for the Azure platform.
 	// +optional
 	Azure *[]AzureFailureDomain `json:"azure,omitempty"`
 
-	// GCP configures failure domain information for the GCP platform
+	// GCP configures failure domain information for the GCP platform.
 	// +optional
 	GCP *[]GCPFailureDomain `json:"gcp,omitempty"`
 
-	// OpenStack configures failure domain information for the OpenStack platform
+	// OpenStack configures failure domain information for the OpenStack platform.
 	// +optional
 	OpenStack *[]OpenStackFailureDomain `json:"openstack,omitempty"`
 }
 
-// AWSFailureDomain configures failure domain information for the AWS platform
+// AWSFailureDomain configures failure domain information for the AWS platform.
 // +kubebuilder:validation:MinProperties:=1
 type AWSFailureDomain struct {
-	// Subnet is a reference to the subnet to use for this instance
+	// Subnet is a reference to the subnet to use for this instance.
 	// +optional
 	Subnet *AWSResourceReference `json:"subnet,omitempty"`
 
-	// Placement configures the placement information for this instance
+	// Placement configures the placement information for this instance.
 	// +optional
 	Placement AWSFailureDomainPlacement `json:"placement,omitempty"`
 }
 
-// AWSFailureDomainPlacement configures the placement information for the AWSFailureDomain
+// AWSFailureDomainPlacement configures the placement information for the AWSFailureDomain.
 type AWSFailureDomainPlacement struct {
-	// AvailabilityZone is the availability zone of the instance
+	// AvailabilityZone is the availability zone of the instance.
 	// +kubebuilder:validation:Required
 	AvailabilityZone string `json:"availabilityZone"`
 }
 
-// AzureFailureDomain configures failure domain information for the Azure platform
+// AzureFailureDomain configures failure domain information for the Azure platform.
 type AzureFailureDomain struct {
 	// Availability Zone for the virtual machine.
-	// If nil, the virtual machine should be deployed to no zone
+	// If nil, the virtual machine should be deployed to no zone.
 	// +kubebuilder:validation:Required
 	Zone string `json:"zone"`
 }
@@ -255,8 +254,7 @@ type OpenStackFailureDomain struct {
 // ControlPlaneMachineSetStatus represents the status of the ControlPlaneMachineSet CRD.
 type ControlPlaneMachineSetStatus struct {
 	// Conditions represents the observations of the ControlPlaneMachineSet's current state.
-	// Known .status.conditions.type are: (TODO)
-	// TODO: Identify different condition types/reasons that will be needed.
+	// Known .status.conditions.type are: Available, Degraded and Progressing.
 	// +patchMergeKey=type
 	// +patchStrategy=merge
 	// +listType=map

@@ -147,8 +147,8 @@ func (AWSFailureDomain) SwaggerDoc() map[string]string {
 }
 
 var map_AWSFailureDomainPlacement = map[string]string{
-	"":                 "AWSFailureDomainPlacement configures the placement information for the AWSFailureDomain",
-	"availabilityZone": "AvailabilityZone is the availability zone of the instance",
+	"":                 "AWSFailureDomainPlacement configures the placement information for the AWSFailureDomain.",
+	"availabilityZone": "AvailabilityZone is the availability zone of the instance.",
 }
 
 func (AWSFailureDomainPlacement) SwaggerDoc() map[string]string {
@@ -156,8 +156,8 @@ func (AWSFailureDomainPlacement) SwaggerDoc() map[string]string {
 }
 
 var map_AzureFailureDomain = map[string]string{
-	"":     "AzureFailureDomain configures failure domain information for the Azure platform",
-	"zone": "Availability Zone for the virtual machine. If nil, the virtual machine should be deployed to no zone",
+	"":     "AzureFailureDomain configures failure domain information for the Azure platform.",
+	"zone": "Availability Zone for the virtual machine. If nil, the virtual machine should be deployed to no zone.",
 }
 
 func (AzureFailureDomain) SwaggerDoc() map[string]string {
@@ -194,7 +194,7 @@ func (ControlPlaneMachineSetSpec) SwaggerDoc() map[string]string {
 
 var map_ControlPlaneMachineSetStatus = map[string]string{
 	"":                    "ControlPlaneMachineSetStatus represents the status of the ControlPlaneMachineSet CRD.",
-	"conditions":          "Conditions represents the observations of the ControlPlaneMachineSet's current state. Known .status.conditions.type are: (TODO)",
+	"conditions":          "Conditions represents the observations of the ControlPlaneMachineSet's current state. Known .status.conditions.type are: Available, Degraded and Progressing.",
 	"observedGeneration":  "ObservedGeneration is the most recent generation observed for this ControlPlaneMachineSet. It corresponds to the ControlPlaneMachineSets's generation, which is updated on mutation by the API Server.",
 	"replicas":            "Replicas is the number of Control Plane Machines created by the ControlPlaneMachineSet controller. Note that during update operations this value may differ from the desired replica count.",
 	"readyReplicas":       "ReadyReplicas is the number of Control Plane Machines created by the ControlPlaneMachineSet controller which are ready.",
@@ -238,10 +238,10 @@ func (ControlPlaneMachineSetTemplateObjectMeta) SwaggerDoc() map[string]string {
 var map_FailureDomains = map[string]string{
 	"":          "FailureDomain represents the different configurations required to spread Machines across failure domains on different platforms.",
 	"platform":  "Platform identifies the platform for which the FailureDomain represents. Currently supported values are AWS, Azure, GCP and OpenStack.",
-	"aws":       "AWS configures failure domain information for the AWS platform",
-	"azure":     "Azure configures failure domain information for the Azure platform",
-	"gcp":       "GCP configures failure domain information for the GCP platform",
-	"openstack": "OpenStack configures failure domain information for the OpenStack platform",
+	"aws":       "AWS configures failure domain information for the AWS platform.",
+	"azure":     "Azure configures failure domain information for the Azure platform.",
+	"gcp":       "GCP configures failure domain information for the GCP platform.",
+	"openstack": "OpenStack configures failure domain information for the OpenStack platform.",
 }
 
 func (FailureDomains) SwaggerDoc() map[string]string {
@@ -259,7 +259,7 @@ func (GCPFailureDomain) SwaggerDoc() map[string]string {
 
 var map_OpenShiftMachineV1Beta1MachineTemplate = map[string]string{
 	"":               "OpenShiftMachineV1Beta1MachineTemplate is a template for the ControlPlaneMachineSet to create Machines from the v1beta1.machine.openshift.io API group.",
-	"failureDomains": "FailureDomains is the list of failure domains (sometimes called availability zones) in which the ControlPlaneMachineSet should balance the Control Plane Machines. This will be merged into the ProviderSpec given in the template. This field is optional on platforms that do not require placement information, eg OpenStack.",
+	"failureDomains": "FailureDomains is the list of failure domains (sometimes called availability zones) in which the ControlPlaneMachineSet should balance the Control Plane Machines. This will be merged into the ProviderSpec given in the template. This field is optional on platforms that do not require placement information.",
 	"metadata":       "ObjectMeta is the standard object metadata More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata Labels are required to match the ControlPlaneMachineSet selector.",
 	"spec":           "Spec contains the desired configuration of the Control Plane Machines. The ProviderSpec within contains platform specific details for creating the Control Plane Machines. The ProviderSe should be complete apart from the platform specific failure domain field. This will be overriden when the Machines are created based on the FailureDomains field.",
 }

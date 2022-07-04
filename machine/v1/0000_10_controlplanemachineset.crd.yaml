@@ -134,27 +134,27 @@ spec:
                         - spec
                       properties:
                         failureDomains:
-                          description: FailureDomains is the list of failure domains (sometimes called availability zones) in which the ControlPlaneMachineSet should balance the Control Plane Machines. This will be merged into the ProviderSpec given in the template. This field is optional on platforms that do not require placement information, eg OpenStack.
+                          description: FailureDomains is the list of failure domains (sometimes called availability zones) in which the ControlPlaneMachineSet should balance the Control Plane Machines. This will be merged into the ProviderSpec given in the template. This field is optional on platforms that do not require placement information.
                           type: object
                           required:
                             - platform
                           properties:
                             aws:
-                              description: AWS configures failure domain information for the AWS platform
+                              description: AWS configures failure domain information for the AWS platform.
                               type: array
                               items:
-                                description: AWSFailureDomain configures failure domain information for the AWS platform
+                                description: AWSFailureDomain configures failure domain information for the AWS platform.
                                 type: object
                                 minProperties: 1
                                 properties:
                                   placement:
-                                    description: Placement configures the placement information for this instance
+                                    description: Placement configures the placement information for this instance.
                                     type: object
                                     required:
                                       - availabilityZone
                                     properties:
                                       availabilityZone:
-                                        description: AvailabilityZone is the availability zone of the instance
+                                        description: AvailabilityZone is the availability zone of the instance.
                                         type: string
                                   subnet:
                                     description: Subnet is a reference to the subnet to use for this instance
@@ -193,19 +193,19 @@ spec:
                                           - arn
                                           - filters
                             azure:
-                              description: Azure configures failure domain information for the Azure platform
+                              description: Azure configures failure domain information for the Azure platform.
                               type: array
                               items:
-                                description: AzureFailureDomain configures failure domain information for the Azure platform
+                                description: AzureFailureDomain configures failure domain information for the Azure platform.
                                 type: object
                                 required:
                                   - zone
                                 properties:
                                   zone:
-                                    description: Availability Zone for the virtual machine. If nil, the virtual machine should be deployed to no zone
+                                    description: Availability Zone for the virtual machine. If nil, the virtual machine should be deployed to no zone.
                                     type: string
                             gcp:
-                              description: GCP configures failure domain information for the GCP platform
+                              description: GCP configures failure domain information for the GCP platform.
                               type: array
                               items:
                                 description: GCPFailureDomain configures failure domain information for the GCP platform
@@ -217,7 +217,7 @@ spec:
                                     description: Zone is the zone in which the GCP machine provider will create the VM.
                                     type: string
                             openstack:
-                              description: OpenStack configures failure domain information for the OpenStack platform
+                              description: OpenStack configures failure domain information for the OpenStack platform.
                               type: array
                               items:
                                 description: OpenStackFailureDomain configures failure domain information for the OpenStack platform
@@ -410,7 +410,7 @@ spec:
               type: object
               properties:
                 conditions:
-                  description: 'Conditions represents the observations of the ControlPlaneMachineSet''s current state. Known .status.conditions.type are: (TODO) TODO: Identify different condition types/reasons that will be needed.'
+                  description: 'Conditions represents the observations of the ControlPlaneMachineSet''s current state. Known .status.conditions.type are: Available, Degraded and Progressing.'
                   type: array
                   items:
                     description: "Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, type FooStatus struct{     // Represents the observations of a foo's current state.     // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\"     // +patchMergeKey=type     // +patchStrategy=merge     // +listType=map     // +listMapKey=type     Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"` \n     // other fields }"

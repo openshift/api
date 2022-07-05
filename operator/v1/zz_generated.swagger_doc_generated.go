@@ -344,7 +344,8 @@ func (ClusterCSIDriverList) SwaggerDoc() map[string]string {
 }
 
 var map_ClusterCSIDriverSpec = map[string]string{
-	"": "ClusterCSIDriverSpec is the desired behavior of CSI driver operator",
+	"":                  "ClusterCSIDriverSpec is the desired behavior of CSI driver operator",
+	"storageClassState": "StorageClassState determines if CSI operator should create and manage storage classes. If this field value is empty or Managed - CSI operator will continuously reconcile storage class and create if necessary. If this field value is Unmanaged - CSI operator will not reconcile any previously created storage class. If this field value is Removed - CSI operator will delete the storage class it created previously. When omitted, this means the user has no opinion and the platform chooses a reasonable default, which is subject to change over time. The current default behaviour is Managed.",
 }
 
 func (ClusterCSIDriverSpec) SwaggerDoc() map[string]string {

@@ -56,6 +56,13 @@ type ClusterVersionSpec struct {
 	// +optional
 	DesiredUpdate *Update `json:"desiredUpdate,omitempty"`
 
+	// desiredArchitecture is an optional field that indicates the desired
+	// value of the cluster architecture. Setting this value will trigger
+	// an upgrade if the value does not match the current cluster
+	// architecture.
+	// +optional
+	DesiredArchitecture ClusterVersionArchitecture `json:"desiredArchitecture,omitempty"`
+
 	// upstream may be used to specify the preferred update server. By default
 	// it will use the appropriate update server for the cluster and region.
 	//
@@ -81,11 +88,11 @@ type ClusterVersionSpec struct {
 	Overrides []ComponentOverride `json:"overrides,omitempty"`
 }
 
-// ClusterVersionStatus reports the status of the cluster versioning,
-// including any upgrades that are in progress. The current field will
-// be set to whichever version the cluster is reconciling to, and the
-// conditions array will report whether the update succeeded, is in
-// progress, or is failing.
+// ClusterVersionStatus reports the cluster architecture and the status
+// of the cluster versioning, including any upgrades that are in progress.
+// The current field will be set to whichever version the cluster is
+// reconciling to, and the conditions array will report whether the update
+// succeeded, is in progress, or is failing.
 // +k8s:deepcopy-gen=true
 type ClusterVersionStatus struct {
 	// desired is the version that the cluster is reconciling towards.
@@ -94,6 +101,12 @@ type ClusterVersionStatus struct {
 	// +kubebuilder:validation:Required
 	// +required
 	Desired Release `json:"desired"`
+
+	// architecture identifies the architecture of the cluster nodes. If
+	// the cluster architecture is heterogeneous, whereby the cluster
+	// has nodes running on different architectures, "multi" is used.
+	// +optional
+	Architecture ClusterVersionArchitecture `json:"architecture,omitempty"`
 
 	// history contains a list of the most recent versions applied to the cluster.
 	// This value may be empty during cluster startup, and then will be updated
@@ -223,6 +236,33 @@ type UpdateHistory struct {
 
 // ClusterID is string RFC4122 uuid.
 type ClusterID string
+
+// ClusterVersionArchitecture enumerates valid cluster architectures.
+// +kubebuilder:validation:Enum=multi;amd64;arm64;ppc64le;s390x
+type ClusterVersionArchitecture string
+
+const (
+	// ClusterVersionArchitectureMulti identifies a heterogeneous architecture.
+	// A heterogeneous cluster is a cluster with nodes running on different
+	// architectures.
+	ClusterVersionArchitectureMulti ClusterVersionArchitecture = "multi"
+
+	// ClusterVersionArchitectureAmd64 identifies a cluster with nodes
+	// running on the amd64 architecture.
+	ClusterVersionArchitectureAmd64 ClusterVersionArchitecture = "amd64"
+
+	// ClusterVersionArchitectureArm64 identifies a cluster with nodes
+	// running on the arm64 architecture.
+	ClusterVersionArchitectureArm64 ClusterVersionArchitecture = "arm64"
+
+	// ClusterVersionArchitecturePpc64le identifies a cluster with nodes
+	// running on the ppc64le architecture.
+	ClusterVersionArchitecturePpc64le ClusterVersionArchitecture = "ppc64le"
+
+	// ClusterVersionArchitectureS390x identifies a cluster with nodes
+	// running on the s390x architecture.
+	ClusterVersionArchitectureS390x ClusterVersionArchitecture = "s390x"
+)
 
 // ClusterVersionCapability enumerates optional, core cluster components.
 // +kubebuilder:validation:Enum=openshift-samples;baremetal;marketplace

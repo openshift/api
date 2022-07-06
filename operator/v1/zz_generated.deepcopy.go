@@ -2526,6 +2526,11 @@ func (in *NetworkSpec) DeepCopyInto(out *NetworkSpec) {
 		*out = new(bool)
 		**out = **in
 	}
+	if in.DisableNetworkDiagnostics != nil {
+		in, out := &in.DisableNetworkDiagnostics, &out.DisableNetworkDiagnostics
+		*out = new(bool)
+		**out = **in
+	}
 	if in.KubeProxyConfig != nil {
 		in, out := &in.KubeProxyConfig, &out.KubeProxyConfig
 		*out = new(ProxyConfig)

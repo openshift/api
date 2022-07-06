@@ -89,8 +89,7 @@ type NetworkSpec struct {
 	// If unset, this property defaults to 'false' and network diagnostics is enabled.
 	// Setting this to 'true' would reduce the additional load of the pods performing the checks.
 	// +optional
-	// +kubebuilder:default:=false
-	DisableNetworkDiagnostics bool `json:"disableNetworkDiagnostics"`
+	DisableNetworkDiagnostics *bool `json:"disableNetworkDiagnostics,omitempty"`
 
 	// kubeProxyConfig lets us configure desired proxy configuration.
 	// If not specified, sensible defaults will be chosen by OpenShift directly.

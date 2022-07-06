@@ -415,7 +415,6 @@ spec:
                   defaults to 'false' and multiple network support is enabled.
                 type: boolean
               disableNetworkDiagnostics:
-                default: false
                 description: disableNetworkDiagnostics specifies whether or not PodNetworkConnectivityCheck
                   CRs from a test pod to every node, apiserver and LB should be disabled
                   or not. If unset, this property defaults to 'false' and network

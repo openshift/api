@@ -24412,6 +24412,14 @@
         "scope"
       ],
       "properties": {
+        "allowedSourceRanges": {
+          "description": "allowedSourceRanges specifies an allowlist of IP address ranges to which access to the load balancer should be restricted.  Each range must be specified using CIDR notation (e.g. \"10.0.0.0/8\" or \"fd00::/8\"). If no range is specified, \"0.0.0.0/0\" for IPv4 and \"::/0\" for IPv6 are used by default, which allows all source addresses.\n\nTo facilitate migration from earlier versions of OpenShift that did not have the allowedSourceRanges field, you may set the service.beta.kubernetes.io/load-balancer-source-ranges annotation on the \"router-<ingresscontroller name>\" service in the \"openshift-ingress\" namespace, and this annotation will take effect if allowedSourceRanges is empty on OpenShift 4.12.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
         "dnsManagementPolicy": {
           "description": "dnsManagementPolicy indicates if the lifecycle of the wildcard DNS record associated with the load balancer service will be managed by the ingress operator. It defaults to Managed. Valid values are: Managed and Unmanaged.",
           "type": "string",

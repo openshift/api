@@ -41731,6 +41731,21 @@ func schema_openshift_api_operator_v1_LoadBalancerStrategy(ref common.ReferenceC
 							Format:      "",
 						},
 					},
+					"allowedSourceRanges": {
+						SchemaProps: spec.SchemaProps{
+							Description: "allowedSourceRanges specifies an allowlist of IP address ranges to which access to the load balancer should be restricted.  Each range must be specified using CIDR notation (e.g. \"10.0.0.0/8\" or \"fd00::/8\"). If no range is specified, \"0.0.0.0/0\" for IPv4 and \"::/0\" for IPv6 are used by default, which allows all source addresses.\n\nTo facilitate migration from earlier versions of OpenShift that did not have the allowedSourceRanges field, you may set the service.beta.kubernetes.io/load-balancer-source-ranges annotation on the \"router-<ingresscontroller name>\" service in the \"openshift-ingress\" namespace, and this annotation will take effect if allowedSourceRanges is empty on OpenShift 4.12.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
 					"providerParameters": {
 						SchemaProps: spec.SchemaProps{
 							Description: "providerParameters holds desired load balancer information specific to the underlying infrastructure provider.\n\nIf empty, defaults will be applied. See specific providerParameters fields for details about their defaults.",

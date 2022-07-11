@@ -862,37 +862,25 @@ func (SyslogLoggingDestinationParameters) SwaggerDoc() map[string]string {
 	return map_SyslogLoggingDestinationParameters
 }
 
-var map_GathererCondition = map[string]string{
-	"type":               "Type of the gatherer condition",
-	"status":             "Status is last known status of the particular gatherer condition",
-	"messages":           "Messages is an optional attribute that provides error and warning messages from the gatherer",
-	"lastTransitionTime": "Last time the condition transit from one status to another.",
-	"reason":             "Reason for the condition's last transition.",
+var map_GatherStatus = map[string]string{
+	"lastGatherTime":   "LastGatherTime is the last time when Insights data gathering finished.",
+	"lastGatherReason": "LastGatherReason provides last known reason of data gathering. This is helpful especially when data gathering was forced by user",
+	"startGatherTime":  "StartGatherTime is the time when data gathering started. The value is 0 when there is no data gathering in progress.",
+	"gatherers":        "List of active gatherers (and their statuses) in the last gathering.",
 }
 
-func (GathererCondition) SwaggerDoc() map[string]string {
-	return map_GathererCondition
+func (GatherStatus) SwaggerDoc() map[string]string {
+	return map_GatherStatus
 }
 
 var map_GathererStatus = map[string]string{
-	"name":                "Name is the name of the gatherer.",
-	"conditions":          "GathererConditions provide details on the status of each gatherer.",
-	"durationMillisecond": "DurationMillisecond represents the time spent gathering.",
+	"name":       "Name is the name of the gatherer.",
+	"conditions": "GathererConditions provide details on the status of each gatherer.",
+	"duration":   "Duration represents the time spent gathering.",
 }
 
 func (GathererStatus) SwaggerDoc() map[string]string {
 	return map_GathererStatus
-}
-
-var map_GatheringStatus = map[string]string{
-	"lastGatherTime":   "LastGatherTime is the last time when Insights gathering finished.",
-	"lastGatherReason": "LastGatherReason provides last known reason of gathering. This is helpful especially when gathering was forced by user",
-	"startGatherTime":  "StartGatherTime is the time when gathering started. The value is 0 when there is no gathering in progress.",
-	"gathererStatuses": "List of active gatherers (and their statuses) in the last gathering.",
-}
-
-func (GatheringStatus) SwaggerDoc() map[string]string {
-	return map_GatheringStatus
 }
 
 var map_Insights = map[string]string{
@@ -914,8 +902,8 @@ func (InsightsList) SwaggerDoc() map[string]string {
 }
 
 var map_InsightsStatus = map[string]string{
-	"gatheringStatus": "GatheringStatus provides basic information about the last Insights gathering.",
-	"reportStatus":    "ReportStatus provides general Insights analysis results.",
+	"gatherStatus": "GatherStatus provides basic information about the last Insights data gathering.",
+	"reportStatus": "ReportStatus provides general Insights analysis results.",
 }
 
 func (InsightsStatus) SwaggerDoc() map[string]string {

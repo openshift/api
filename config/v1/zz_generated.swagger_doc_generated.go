@@ -1445,8 +1445,8 @@ func (IngressStatus) SwaggerDoc() map[string]string {
 }
 
 var map_GatherConfig = map[string]string{
-	"dataPolicy":        "DataPolicy allows user to enable additional global obfuscation of the IP addresses and base domain in the Insights archive data.",
-	"forceGatherReason": "ForceGatherReason enables user to force Insights data gathering by setting a new reason. When there is some gathering in the progress then it is interrupted. When all the gatherers are deactivated by the `DisabledGatherers`, nothing happens. When the forced gathering is finished then the value is cleared.",
+	"dataPolicy":        "DataPolicy allows user to enable additional global obfuscation of the IP addresses and base domain in the Insights archive data. No value equals the \"None\" policy.",
+	"forceGatherReason": "ForceGatherReason enables user to force Insights data gathering by setting a new reason. When there is some data gathering in the progress then it is interrupted. When all the gatherers are deactivated by the `DisabledGatherers`, nothing happens. The gather status is updated with new values when a new data gathering starts.",
 	"disabledGatherers": "List of gatherers to be excluded from the gathering. All the gatherers can be disabled by providing \"all\" value. If all the gatherers are disabled, the Insights operator does not gather any data. The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. An example of disabling gatherers looks like this: `disabledGatherers: [\"clusterconfig/machine_configs\", \"workloads/workload_info\"]`",
 }
 

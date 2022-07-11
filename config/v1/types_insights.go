@@ -37,13 +37,13 @@ type InsightsStatus struct {
 
 type GatherConfig struct {
 	// DataPolicy allows user to enable additional global obfuscation of the IP addresses and base domain
-	// in the Insights archive data.
-	// +kubebuilder:default=NoPolicy
+	// in the Insights archive data. No value equals the "None" policy.
+	// +optional
 	DataPolicy DataPolicy `json:"dataPolicy"`
 	// ForceGatherReason enables user to force Insights data gathering by setting a new reason.
-	// When there is some gathering in the progress then it is interrupted.
+	// When there is some data gathering in the progress then it is interrupted.
 	// When all the gatherers are deactivated by the `DisabledGatherers`, nothing happens.
-	// When the forced gathering is finished then the value is cleared.
+	// The gather status is updated with new values when a new data gathering starts.
 	ForceGatherReason string `json:"forceGatherReason"`
 	// List of gatherers to be excluded from the gathering. All the gatherers can be disabled by providing "all" value.
 	// If all the gatherers are disabled, the Insights operator does not gather any data.
@@ -54,12 +54,12 @@ type GatherConfig struct {
 
 const (
 	// No data obfuscation
-	NoPolicy DataPolicy = "NoPolicy"
+	NoPolicy DataPolicy = "None"
 	// IP addresses and cluster domain name is obfuscated
-	IPsAndClusterDomainPolicy DataPolicy = "IPsAndClusterDomainPolicy"
+	IPsAndClusterDomainPolicy DataPolicy = "IPsAndClusterDomain"
 )
 
-// +kubebuilder:validation:Enum="";NoPolicy;IPsAndClusterDomainPolicy
+// +kubebuilder:validation:Enum="";None;IPsAndClusterDomain
 type DataPolicy string
 
 // Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).

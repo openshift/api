@@ -202,6 +202,16 @@ spec:
                       description: ovnKubernetesConfig configures the ovn-kubernetes plugin.
                       type: object
                       properties:
+                        egressIPConfig:
+                          description: egressIPConfig holds the configuration for EgressIP options.
+                          type: object
+                          properties:
+                            reachabilityTotalTimeoutSeconds:
+                              description: reachabilityTotalTimeout configures the EgressIP node reachability check total timeout in seconds. If the EgressIP node cannot be reached within this timeout, the node is declared down. Setting a large value may cause the EgressIP feature to react slowly to node changes. In particular, it may react slowly for EgressIP nodes that really have a genuine problem and are unreachable. When omitted, this means the user has no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is 1 second. A value of 0 disables the EgressIP node's reachability check.
+                              type: integer
+                              format: int32
+                              maximum: 60
+                              minimum: 0
                         gatewayConfig:
                           description: gatewayConfig holds the configuration for node gateway options.
                           type: object

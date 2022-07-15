@@ -44,6 +44,7 @@ $(call add-crd-gen,operatorcontrolplane,./operatorcontrolplane/v1alpha1,./operat
 $(call add-crd-gen,machine-beta,./machine/v1beta1,./machine/v1beta1,./machine/v1beta1)
 $(call add-crd-gen,machine,./machine/v1,./machine/v1,./machine/v1)
 $(call add-crd-gen,monitoring-alpha,./monitoring/v1alpha1,./monitoring/v1alpha1,./monitoring/v1alpha1)
+$(call add-crd-gen,route,./route/v1,./route/v1,./route/v1)
 
 RUNTIME ?= podman
 RUNTIME_IMAGE_NAME ?= openshift-api-generator

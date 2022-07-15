@@ -958,6 +958,15 @@ func (DefaultNetworkDefinition) SwaggerDoc() map[string]string {
 	return map_DefaultNetworkDefinition
 }
 
+var map_EgressIPConfig = map[string]string{
+	"":                                "EgressIPConfig defines the configuration knobs for egressip",
+	"reachabilityTotalTimeoutSeconds": "reachabilityTotalTimeout configures the EgressIP node reachability check total timeout in seconds. If the EgressIP node cannot be reached within this timeout, the node is declared down. Setting a large value may cause the EgressIP feature to react slowly to node changes. In particular, it may react slowly for EgressIP nodes that really have a genuine problem and are unreachable. When omitted, this means the user has no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is 1 second. A value of 0 disables the EgressIP node's reachability check.",
+}
+
+func (EgressIPConfig) SwaggerDoc() map[string]string {
+	return map_EgressIPConfig
+}
+
 var map_ExportNetworkFlows = map[string]string{
 	"netFlow": "netFlow defines the NetFlow configuration.",
 	"sFlow":   "sFlow defines the SFlow configuration.",
@@ -1111,6 +1120,7 @@ var map_OVNKubernetesConfig = map[string]string{
 	"gatewayConfig":       "gatewayConfig holds the configuration for node gateway options.",
 	"v4InternalSubnet":    "v4InternalSubnet is a v4 subnet used internally by ovn-kubernetes in case the default one is being already used by something else. It must not overlap with any other subnet being used by OpenShift or by the node network. The size of the subnet must be larger than the number of nodes. The value cannot be changed after installation. Default is 100.64.0.0/16",
 	"v6InternalSubnet":    "v6InternalSubnet is a v6 subnet used internally by ovn-kubernetes in case the default one is being already used by something else. It must not overlap with any other subnet being used by OpenShift or by the node network. The size of the subnet must be larger than the number of nodes. The value cannot be changed after installation. Default is fd98::/48",
+	"egressIPConfig":      "egressIPConfig holds the configuration for EgressIP options.",
 }
 
 func (OVNKubernetesConfig) SwaggerDoc() map[string]string {

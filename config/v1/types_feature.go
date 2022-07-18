@@ -117,6 +117,7 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		with("BuildCSIVolumes").             // sig-build, adkaplan, OCP specific
 		with("NodeSwap").                    // sig-node, ehashman, Kubernetes feature gate
 		with("MachineAPIProviderOpenStack"). // openstack, egarcia (#forum-openstack), OCP specific
+		with("PlatformOperators").           // OLM, dsover & cchantse, OCP specific
 		toFeatures(),
 	LatencySensitive: newDefaultFeatures().
 		with(

@@ -1,6 +1,6 @@
 module github.com/openshift/api
 
-go 1.16
+go 1.18
 
 require (
 	github.com/dave/dst v0.26.2

@@ -46,6 +46,7 @@ $(call add-crd-gen,machine-beta,./machine/v1beta1,./machine/v1beta1,./machine/v1
 $(call add-crd-gen,machine,./machine/v1,./machine/v1,./machine/v1)
 $(call add-crd-gen,monitoring-alpha,./monitoring/v1alpha1,./monitoring/v1alpha1,./monitoring/v1alpha1)
 $(call add-crd-gen,route,./route/v1,./route/v1,./route/v1)
+$(call add-crd-gen,platform,./platform/v1alpha1,./platform/v1alpha1,./platform/v1alpha1)
 
 RUNTIME ?= podman
 RUNTIME_IMAGE_NAME ?= registry.ci.openshift.org/openshift/release:rhel-8-release-golang-1.18-openshift-4.12

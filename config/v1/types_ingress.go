@@ -128,7 +128,7 @@ type IngressStatus struct {
 	//
 	// +kubebuilder:validation:Enum:="ControlPlane";"Workers";""
 	// +optional
-	DefaultPlacement DefaultPlacement `json:"defaultPlacement"`
+	DefaultPlacement DefaultPlacement `json:"defaultPlacement,omitempty"`
 }
 
 // ComponentRouteSpec allows for configuration of a route's hostname and serving certificate.

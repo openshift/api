@@ -21570,6 +21570,23 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1.FeaturesMigration": {
+      "type": "object",
+      "properties": {
+        "egressFirewall": {
+          "description": "egressFirewall specifies whether or not the Egress Firewall configuration is migrated automatically when changing the cluster default network provider. If unset, this property defaults to 'true' and Egress Firewall configure is migrated.",
+          "type": "boolean"
+        },
+        "egressIP": {
+          "description": "egressIP specifies whether or not the Egress IP configuration is migrated automatically when changing the cluster default network provider. If unset, this property defaults to 'true' and Egress IP configure is migrated.",
+          "type": "boolean"
+        },
+        "multicast": {
+          "description": "multicast specifies whether or not the multicast configuration is migrated automatically when changing the cluster default network provider. If unset, this property defaults to 'true' and multicast configure is migrated.",
+          "type": "boolean"
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1.ForwardPlugin": {
       "description": "ForwardPlugin defines a schema for configuring the CoreDNS forward plugin.",
       "type": "object",
@@ -23346,6 +23363,10 @@
       "description": "NetworkMigration represents the cluster network configuration.",
       "type": "object",
       "properties": {
+        "features": {
+          "description": "features contains the features migration configuration. Set this to migrate feature configuration when changing the cluster default network provider. if unset, the default operation is to migrate all the configuration of supported features.",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.FeaturesMigration"
+        },
         "mtu": {
           "description": "mtu contains the MTU migration configuration. Set this to allow changing the MTU values for the default network. If unset, the operation of changing the MTU for the default network will be rejected.",
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.MTUMigration"

@@ -1284,6 +1284,34 @@ spec:
                       in router containers with the following metric: 'container_memory_working_set_bytes{container=\"router\",namespace=\"openshift-ingress\"}/container_processes{container=\"router\",namespace=\"openshift-ingress\"}'."
                     format: int32
                     type: integer
+                  reloadInterval:
+                    description: "reloadInterval defines the minimum interval at which
+                      the router is allowed to reload to accept new changes. Increasing
+                      this value can prevent the accumulation of HAProxy processes,
+                      depending on the scenario. Increasing this interval can also
+                      lessen load imbalance on a backend's servers when using the
+                      roundrobin balancing algorithm. Alternatively, decreasing this
+                      value may decrease latency since updates to HAProxy's configuration
+                      can take effect more quickly. \n The value must be a time duration
+                      value; see <https://pkg.go.dev/time#ParseDuration>. Currently,
+                      the minimum value allowed is 1s, and the maximum allowed value
+                      is 120s. Minimum and maximum allowed values may change in future
+                      versions of OpenShift. Note that if a duration outside of these
+                      bounds is provided, the value of reloadInterval will be capped/floored
+                      and not rejected (e.g. a duration of over 120s will be capped
+                      to 120s; the IngressController will not reject and replace this
+                      disallowed value with the default). \n A zero value for reloadInterval
+                      tells the IngressController to choose the default, which is
+                      currently 5s and subject to change without notice. \n This field
+                      expects an unsigned duration string of decimal numbers, each
+                      with optional fraction and a unit suffix, e.g. \"100s\", \"1m30s\".
+                      Valid time units are \"s\" and \"m\". \n Note: Setting a value
+                      significantly larger than the default of 5s can cause latency
+                      in observing updates to routes and their endpoints. HAProxy's
+                      configuration will be reloaded less frequently, and newly created
+                      routes will not be served until the subsequent reload."
+                    pattern: ^(0|([0-9]+(\.[0-9]+)?(s|m))+)$
+                    type: string
                   serverFinTimeout:
                     description: "serverFinTimeout defines how long a connection will
                       be held open while waiting for the server/backend response to

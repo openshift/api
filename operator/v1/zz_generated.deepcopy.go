@@ -1825,6 +1825,7 @@ func (in *IngressControllerTuningOptions) DeepCopyInto(out *IngressControllerTun
 		*out = new(metav1.Duration)
 		**out = **in
 	}
+	out.ReloadInterval = in.ReloadInterval
 	return
 }
 

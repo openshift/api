@@ -225,7 +225,7 @@ type UpdateHistory struct {
 type ClusterID string
 
 // ClusterVersionCapability enumerates optional, core cluster components.
-// +kubebuilder:validation:Enum=openshift-samples;baremetal;marketplace;Console;Insights
+// +kubebuilder:validation:Enum=openshift-samples;baremetal;marketplace;Console;Insights;Storage
 type ClusterVersionCapability string
 
 const (
@@ -254,6 +254,14 @@ const (
 	// collects anonymized information about the cluster to generate
 	// recommendations for possible cluster issues.
 	ClusterVersionCapabilityInsights ClusterVersionCapability = "Insights"
+
+	// ClusterVersionCapabilityStorage manages the storage operator which
+	// is responsible for providing cluster-wide storage defaults
+	// WARNING: Do not disable this capability when deployed to
+	// RHEV and OpenStack without reading the docs.
+	// These clusters heavily rely on that capability and may cause
+	// damage to the cluster.
+	ClusterVersionCapabilityStorage ClusterVersionCapability = "Storage"
 )
 
 // KnownClusterVersionCapabilities includes all known optional, core cluster components.
@@ -262,6 +270,7 @@ var KnownClusterVersionCapabilities = []ClusterVersionCapability{
 	ClusterVersionCapabilityConsole,
 	ClusterVersionCapabilityInsights,
 	ClusterVersionCapabilityMarketplace,
+	ClusterVersionCapabilityStorage,
 	ClusterVersionCapabilityOpenShiftSamples,
 }
 
@@ -305,6 +314,7 @@ var ClusterVersionCapabilitySets = map[ClusterVersionCapabilitySet][]ClusterVers
 		ClusterVersionCapabilityConsole,
 		ClusterVersionCapabilityInsights,
 		ClusterVersionCapabilityMarketplace,
+		ClusterVersionCapabilityStorage,
 		ClusterVersionCapabilityOpenShiftSamples,
 	},
 	ClusterVersionCapabilitySetCurrent: {
@@ -312,6 +322,7 @@ var ClusterVersionCapabilitySets = map[ClusterVersionCapabilitySet][]ClusterVers
 		ClusterVersionCapabilityConsole,
 		ClusterVersionCapabilityInsights,
 		ClusterVersionCapabilityMarketplace,
+		ClusterVersionCapabilityStorage,
 		ClusterVersionCapabilityOpenShiftSamples,
 	},
 }

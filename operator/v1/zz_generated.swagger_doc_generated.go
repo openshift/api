@@ -1007,7 +1007,8 @@ func (IPAMConfig) SwaggerDoc() map[string]string {
 }
 
 var map_IPFIXConfig = map[string]string{
-	"collectors": "ipfixCollectors is list of strings formatted as ip:port with a maximum of ten items",
+	"collectors":     "ipfixCollectors is list of strings formatted as ip:port with a maximum of ten items",
+	"flowCollectors": "flowCollectors defines the NetFlow collectors that will consume the flow data exported from OVS. It is a list of objects featuring a valid IP address and a port with a maximum of ten items",
 }
 
 func (IPFIXConfig) SwaggerDoc() map[string]string {
@@ -1051,7 +1052,8 @@ func (MTUMigrationValues) SwaggerDoc() map[string]string {
 }
 
 var map_NetFlowConfig = map[string]string{
-	"collectors": "netFlow defines the NetFlow collectors that will consume the flow data exported from OVS. It is a list of strings formatted as ip:port with a maximum of ten items",
+	"collectors":     "netFlow defines the NetFlow collectors that will consume the flow data exported from OVS. It is a list of strings formatted as ip:port with a maximum of ten items",
+	"flowCollectors": "flowCollectors defines the NetFlow collectors that will consume the flow data exported from OVS. It is a list of objects featuring a valid IP address and a port with a maximum of ten items",
 }
 
 func (NetFlowConfig) SwaggerDoc() map[string]string {
@@ -1064,6 +1066,15 @@ var map_Network = map[string]string{
 
 func (Network) SwaggerDoc() map[string]string {
 	return map_Network
+}
+
+var map_NetworkFlowTarget = map[string]string{
+	"ip":   "ip address of the flow collector",
+	"port": "port number of the flow collector. If not specified, then the default port for each protocol will be used\n  - 2055 for NetFlow\n  - 6343 for sFlow\n  - 4739 for IPFIX",
+}
+
+func (NetworkFlowTarget) SwaggerDoc() map[string]string {
+	return map_NetworkFlowTarget
 }
 
 var map_NetworkList = map[string]string{
@@ -1164,7 +1175,8 @@ func (ProxyConfig) SwaggerDoc() map[string]string {
 }
 
 var map_SFlowConfig = map[string]string{
-	"collectors": "sFlowCollectors is list of strings formatted as ip:port with a maximum of ten items",
+	"collectors":     "sFlowCollectors is list of strings formatted as ip:port with a maximum of ten items",
+	"flowCollectors": "flowCollectors defines the NetFlow collectors that will consume the flow data exported from OVS. It is a list of objects featuring a valid IP address and a port with a maximum of ten items",
 }
 
 func (SFlowConfig) SwaggerDoc() map[string]string {

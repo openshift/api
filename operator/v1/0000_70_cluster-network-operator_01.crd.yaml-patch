@@ -1,0 +1,15 @@
+- op: add
+  path: /spec/versions/name=v1/schema/openAPIV3Schema/properties/spec/properties/exportNetworkFlows/properties/ipfix/properties/flowCollectors/items/properties/ip/anyOf
+  value:
+    - format: ipv4
+    - format: ipv6
+- op: add
+  path: /spec/versions/name=v1/schema/openAPIV3Schema/properties/spec/properties/exportNetworkFlows/properties/netFlow/properties/flowCollectors/items/properties/ip/anyOf
+  value:
+    - format: ipv4
+    - format: ipv6
+- op: add
+  path: /spec/versions/name=v1/schema/openAPIV3Schema/properties/spec/properties/exportNetworkFlows/properties/sFlow/properties/flowCollectors/items/properties/ip/anyOf
+  value:
+    - format: ipv4
+    - format: ipv6

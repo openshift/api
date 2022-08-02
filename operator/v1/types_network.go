@@ -473,6 +473,12 @@ type NetFlowConfig struct {
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=10
 	Collectors []IPPort `json:"collectors,omitempty"`
+
+	// flowCollectors defines the NetFlow collectors that will consume the flow data exported from OVS.
+	// It is a list of objects featuring a valid IP address and a port with a maximum of ten items
+	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:MaxItems=10
+	FlowCollectors []NetworkFlowTarget `json:"flowCollectors,omitempty"`
 }
 
 type SFlowConfig struct {
@@ -480,6 +486,12 @@ type SFlowConfig struct {
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=10
 	Collectors []IPPort `json:"collectors,omitempty"`
+
+	// flowCollectors defines the NetFlow collectors that will consume the flow data exported from OVS.
+	// It is a list of objects featuring a valid IP address and a port with a maximum of ten items
+	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:MaxItems=10
+	FlowCollectors []NetworkFlowTarget `json:"flowCollectors,omitempty"`
 }
 
 type IPFIXConfig struct {
@@ -487,10 +499,34 @@ type IPFIXConfig struct {
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=10
 	Collectors []IPPort `json:"collectors,omitempty"`
+
+	// flowCollectors defines the NetFlow collectors that will consume the flow data exported from OVS.
+	// It is a list of objects featuring a valid IP address and a port with a maximum of ten items
+	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:MaxItems=10
+	FlowCollectors []NetworkFlowTarget `json:"flowCollectors,omitempty"`
 }
 
 // +kubebuilder:validation:Pattern=`^(([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]):([1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$`
 type IPPort string
+
+type NetworkFlowTarget struct {
+	// ip address of the flow collector
+	//
+	// +required
+	// +kubebuilder:validation:Required
+	IP string `json:"ip"`
+
+	// port number of the flow collector.
+	// If not specified, then the default port for each protocol will be used
+	//   - 2055 for NetFlow
+	//   - 6343 for sFlow
+	//   - 4739 for IPFIX
+	//
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=65535
+	Port int32 `json:"port,omitempty"`
+}
 
 type PolicyAuditConfig struct {
 	// rateLimit is the approximate maximum number of messages to generate per-second per-node. If

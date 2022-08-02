@@ -225,7 +225,7 @@ type UpdateHistory struct {
 type ClusterID string
 
 // ClusterVersionCapability enumerates optional, core cluster components.
-// +kubebuilder:validation:Enum=openshift-samples;baremetal;marketplace;console
+// +kubebuilder:validation:Enum=openshift-samples;baremetal;marketplace;Console
 type ClusterVersionCapability string
 
 const (
@@ -248,7 +248,7 @@ const (
 
 	// ClusterVersionCapabilityConsole manages the Console operator which
 	// installs and maintains the web console.
-	ClusterVersionCapabilityConsole ClusterVersionCapability = "console"
+	ClusterVersionCapabilityConsole ClusterVersionCapability = "Console"
 )
 
 // KnownClusterVersionCapabilities includes all known optional, core cluster components.

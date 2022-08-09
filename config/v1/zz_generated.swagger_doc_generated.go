@@ -1070,6 +1070,28 @@ func (AzurePlatformStatus) SwaggerDoc() map[string]string {
 	return map_AzurePlatformStatus
 }
 
+var map_BGPPeer = map[string]string{
+	"":         "BGPPeer describes the configuration of a BGP peering neighbor.",
+	"asn":      "asn specifies the remote autonomous system number to peer with the remote router.",
+	"ip":       "ip is the IP address of the BGP neighbor and has to be reachable from the node. It may be either IPv4 or IPv6.",
+	"password": "password to be used with the tcp socket that is being used to connect to the remote peer",
+}
+
+func (BGPPeer) SwaggerDoc() map[string]string {
+	return map_BGPPeer
+}
+
+var map_BGPSpeaker = map[string]string{
+	"":           "BGPSpeaker defines how a BGP speaker will be configured. Each speaker will result into a BGP protocol process with the specified ASN, for a unique subnet. Each speaker has a list of peers, which will be configured as BGP neighbors.",
+	"subnetCIDR": "subnetCIDR is the CIDR which this BGP configuration applies to.",
+	"asn":        "asn specifies the local autonomous system number that will be used to peer with remote routers.",
+	"peers":      "peers is a list of the BGP peers that need to be configured for a the speaker for a specific subnet.",
+}
+
+func (BGPSpeaker) SwaggerDoc() map[string]string {
+	return map_BGPSpeaker
+}
+
 var map_BareMetalPlatformSpec = map[string]string{
 	"": "BareMetalPlatformSpec holds the desired state of the BareMetal infrastructure provider. This only includes fields that can be modified in the cluster.",
 }
@@ -1089,6 +1111,25 @@ var map_BareMetalPlatformStatus = map[string]string{
 
 func (BareMetalPlatformStatus) SwaggerDoc() map[string]string {
 	return map_BareMetalPlatformStatus
+}
+
+var map_ControlPlaneBGPConfiguration = map[string]string{
+	"":         "ControlPlaneBGPConfiguration defines the general BGP configuration for the control plane. It contains the list of BGP speakers that will be configured on the control plane nodes.",
+	"speakers": "speakers is a list of BGP speaker configurations. We require a speaker configuration for every control plane subnet. The list must contain at least one item.",
+}
+
+func (ControlPlaneBGPConfiguration) SwaggerDoc() map[string]string {
+	return map_ControlPlaneBGPConfiguration
+}
+
+var map_ControlPlaneLoadBalancer = map[string]string{
+	"":     "ControlPlaneLoadBalancer defines the configuration for the control plane load balancers.",
+	"type": "type defines the type of load balancer which will be configured for the control plane VIPs. Permitted values are `VRRP` and `BGP`. When omitted, this means no opinion and the platform is left to choose a reasonable default.",
+	"bgp":  "BGP refers to the list of BGP speaker configurations. We require a speaker configuration for every subnet where we want to peer. The list must contain at least one item.",
+}
+
+func (ControlPlaneLoadBalancer) SwaggerDoc() map[string]string {
+	return map_ControlPlaneLoadBalancer
 }
 
 var map_EquinixMetalPlatformSpec = map[string]string{
@@ -1253,7 +1294,8 @@ func (NutanixPrismEndpoint) SwaggerDoc() map[string]string {
 }
 
 var map_OpenStackPlatformSpec = map[string]string{
-	"": "OpenStackPlatformSpec holds the desired state of the OpenStack infrastructure provider. This only includes fields that can be modified in the cluster.",
+	"":                         "OpenStackPlatformSpec holds the desired state of the OpenStack infrastructure provider. This only includes fields that can be modified in the cluster.",
+	"controlPlaneLoadBalancer": "controlPlaneLoadBalancer defines how traffic destined to the OpenShift API and Ingress is routed to the servers. When omitted, this means no opinion and the platform is left to choose a reasonable default. This default is subject to change over time. The current default configuration uses VRRP.",
 }
 
 func (OpenStackPlatformSpec) SwaggerDoc() map[string]string {

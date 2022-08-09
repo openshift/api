@@ -168,6 +168,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.AuthenticationStatus":                                     schema_openshift_api_config_v1_AuthenticationStatus(ref),
 		"github.com/openshift/api/config/v1.AzurePlatformSpec":                                        schema_openshift_api_config_v1_AzurePlatformSpec(ref),
 		"github.com/openshift/api/config/v1.AzurePlatformStatus":                                      schema_openshift_api_config_v1_AzurePlatformStatus(ref),
+		"github.com/openshift/api/config/v1.BGPPeer":                                                  schema_openshift_api_config_v1_BGPPeer(ref),
+		"github.com/openshift/api/config/v1.BGPSpeaker":                                               schema_openshift_api_config_v1_BGPSpeaker(ref),
 		"github.com/openshift/api/config/v1.BareMetalPlatformSpec":                                    schema_openshift_api_config_v1_BareMetalPlatformSpec(ref),
 		"github.com/openshift/api/config/v1.BareMetalPlatformStatus":                                  schema_openshift_api_config_v1_BareMetalPlatformStatus(ref),
 		"github.com/openshift/api/config/v1.BasicAuthIdentityProvider":                                schema_openshift_api_config_v1_BasicAuthIdentityProvider(ref),
@@ -203,6 +205,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.ConsoleList":                                              schema_openshift_api_config_v1_ConsoleList(ref),
 		"github.com/openshift/api/config/v1.ConsoleSpec":                                              schema_openshift_api_config_v1_ConsoleSpec(ref),
 		"github.com/openshift/api/config/v1.ConsoleStatus":                                            schema_openshift_api_config_v1_ConsoleStatus(ref),
+		"github.com/openshift/api/config/v1.ControlPlaneBGPConfiguration":                             schema_openshift_api_config_v1_ControlPlaneBGPConfiguration(ref),
+		"github.com/openshift/api/config/v1.ControlPlaneLoadBalancer":                                 schema_openshift_api_config_v1_ControlPlaneLoadBalancer(ref),
 		"github.com/openshift/api/config/v1.CustomFeatureGates":                                       schema_openshift_api_config_v1_CustomFeatureGates(ref),
 		"github.com/openshift/api/config/v1.CustomTLSProfile":                                         schema_openshift_api_config_v1_CustomTLSProfile(ref),
 		"github.com/openshift/api/config/v1.DNS":                                                      schema_openshift_api_config_v1_DNS(ref),
@@ -8946,6 +8950,89 @@ func schema_openshift_api_config_v1_AzurePlatformStatus(ref common.ReferenceCall
 	}
 }
 
+func schema_openshift_api_config_v1_BGPPeer(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "BGPPeer describes the configuration of a BGP peering neighbor.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"asn": {
+						SchemaProps: spec.SchemaProps{
+							Description: "asn specifies the remote autonomous system number to peer with the remote router.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"ip": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ip is the IP address of the BGP neighbor and has to be reachable from the node. It may be either IPv4 or IPv6.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"password": {
+						SchemaProps: spec.SchemaProps{
+							Description: "password to be used with the tcp socket that is being used to connect to the remote peer",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"asn", "ip"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1_BGPSpeaker(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "BGPSpeaker defines how a BGP speaker will be configured. Each speaker will result into a BGP protocol process with the specified ASN, for a unique subnet. Each speaker has a list of peers, which will be configured as BGP neighbors.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"subnetCIDR": {
+						SchemaProps: spec.SchemaProps{
+							Description: "subnetCIDR is the CIDR which this BGP configuration applies to.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"asn": {
+						SchemaProps: spec.SchemaProps{
+							Description: "asn specifies the local autonomous system number that will be used to peer with remote routers.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"peers": {
+						SchemaProps: spec.SchemaProps{
+							Description: "peers is a list of the BGP peers that need to be configured for a the speaker for a specific subnet.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.BGPPeer"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"subnetCIDR", "asn", "peers"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.BGPPeer"},
+	}
+}
+
 func schema_openshift_api_config_v1_BareMetalPlatformSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -10596,6 +10683,72 @@ func schema_openshift_api_config_v1_ConsoleStatus(ref common.ReferenceCallback) 
 				Required: []string{"consoleURL"},
 			},
 		},
+	}
+}
+
+func schema_openshift_api_config_v1_ControlPlaneBGPConfiguration(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ControlPlaneBGPConfiguration defines the general BGP configuration for the control plane. It contains the list of BGP speakers that will be configured on the control plane nodes.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"speakers": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"subnetCIDR",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "speakers is a list of BGP speaker configurations. We require a speaker configuration for every control plane subnet. The list must contain at least one item.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.BGPSpeaker"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"speakers"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.BGPSpeaker"},
+	}
+}
+
+func schema_openshift_api_config_v1_ControlPlaneLoadBalancer(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ControlPlaneLoadBalancer defines the configuration for the control plane load balancers.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type defines the type of load balancer which will be configured for the control plane VIPs. Permitted values are `VRRP` and `BGP`. When omitted, this means no opinion and the platform is left to choose a reasonable default.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"bgp": {
+						SchemaProps: spec.SchemaProps{
+							Description: "BGP refers to the list of BGP speaker configurations. We require a speaker configuration for every subnet where we want to peer. The list must contain at least one item.",
+							Ref:         ref("github.com/openshift/api/config/v1.ControlPlaneBGPConfiguration"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.ControlPlaneBGPConfiguration"},
 	}
 }
 
@@ -14822,8 +14975,19 @@ func schema_openshift_api_config_v1_OpenStackPlatformSpec(ref common.ReferenceCa
 			SchemaProps: spec.SchemaProps{
 				Description: "OpenStackPlatformSpec holds the desired state of the OpenStack infrastructure provider. This only includes fields that can be modified in the cluster.",
 				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"controlPlaneLoadBalancer": {
+						SchemaProps: spec.SchemaProps{
+							Description: "controlPlaneLoadBalancer defines how traffic destined to the OpenShift API and Ingress is routed to the servers. When omitted, this means no opinion and the platform is left to choose a reasonable default. This default is subject to change over time. The current default configuration uses VRRP.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.ControlPlaneLoadBalancer"),
+						},
+					},
+				},
 			},
 		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.ControlPlaneLoadBalancer"},
 	}
 }
 

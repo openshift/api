@@ -505,9 +505,108 @@ type BareMetalPlatformStatus struct {
 	NodeDNSIP string `json:"nodeDNSIP,omitempty"`
 }
 
+// BGPPeer describes the configuration of a BGP peering neighbor.
+type BGPPeer struct {
+	// asn specifies the remote autonomous system number to peer with the remote router.
+	//
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=4294967295
+	// +kubebuilder:validation:Required
+	// +required
+	ASN uint32 `json:"asn"`
+
+	// ip is the IP address of the BGP neighbor and has to be reachable from the node.
+	// It may be either IPv4 or IPv6.
+	//
+	// +kubebuilder:validation:Format=ip
+	// +kubebuilder:validation:Required
+	// +required
+	IP string `json:"ip"`
+
+	// password to be used with the tcp socket that is being used to connect to the remote peer
+	//
+	// +optional
+	Password string `json:"password,omitempty"`
+}
+
+// BGPSpeaker defines how a BGP speaker will be configured. Each speaker will result into a
+// BGP protocol process with the specified ASN, for a unique subnet.
+// Each speaker has a list of peers, which will be configured as BGP neighbors.
+type BGPSpeaker struct {
+	// subnetCIDR is the CIDR which this BGP configuration applies to.
+	//
+	// + Validation is applied via a patch, we validate the format as cidr
+	// +kubebuilder:validation:Required
+	// +required
+	SubnetCIDR string `json:"subnetCIDR"`
+
+	// asn specifies the local autonomous system number that will be used to peer
+	// with remote routers.
+	//
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=4294967295
+	// +kubebuilder:validation:Required
+	// +required
+	ASN uint32 `json:"asn"`
+
+	// peers is a list of the BGP peers that need to be configured for a the speaker
+	// for a specific subnet.
+	//
+	// +kubebuilder:validation:MinItems:=1
+	// +kubebuilder:validation:Required
+	// +required
+	Peers []BGPPeer `json:"peers"`
+}
+
+// ControlPlaneBGPConfiguration defines the general BGP configuration for the control plane.
+// It contains the list of BGP speakers that will be configured on the control plane nodes.
+type ControlPlaneBGPConfiguration struct {
+	// speakers is a list of BGP speaker configurations. We require a
+	// speaker configuration for every control plane subnet.
+	// The list must contain at least one item.
+	//
+	// +kubebuilder:validation:MinItems:=1
+	// +listType=map
+	// +listMapKey=subnetCIDR
+	// +required
+	Speakers []BGPSpeaker `json:"speakers"`
+}
+
+// ControlPlaneLoadBalancer defines the configuration for the control plane load balancers.
+type ControlPlaneLoadBalancer struct {
+	// type defines the type of load balancer which will be
+	// configured for the control plane VIPs. Permitted values are `VRRP` and
+	// `BGP`.
+	// When omitted, this means no opinion and the platform is left to
+	// choose a reasonable default.
+	//
+	// +unionDiscriminator
+	// +kubebuilder:validation:Enum:="VRRP";"BGP"
+	// +kubebuilder:validation:Required
+	// +optional
+	ControlPlaneLoadBalancerType string `json:"type,omitempty"`
+
+	// BGP refers to the list of BGP speaker configurations. We require a
+	// speaker configuration for every subnet where we want to peer.
+	// The list must contain at least one item.
+	//
+	// +optional
+	BGP *ControlPlaneBGPConfiguration `json:"bgp,omitempty"`
+}
+
 // OpenStackPlatformSpec holds the desired state of the OpenStack infrastructure provider.
 // This only includes fields that can be modified in the cluster.
-type OpenStackPlatformSpec struct{}
+type OpenStackPlatformSpec struct {
+	// controlPlaneLoadBalancer defines how traffic destined to the OpenShift API and Ingress
+	// is routed to the servers.
+	// When omitted, this means no opinion and the platform is left to
+	// choose a reasonable default. This default is subject to change over
+	// time.
+	// The current default configuration uses VRRP.
+	//
+	// +optional
+	ControlPlaneLoadBalancer ControlPlaneLoadBalancer `json:"controlPlaneLoadBalancer,omitempty"`
+}
 
 // OpenStackPlatformStatus holds the current status of the OpenStack infrastructure provider.
 type OpenStackPlatformStatus struct {

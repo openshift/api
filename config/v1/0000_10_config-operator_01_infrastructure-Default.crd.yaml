@@ -151,6 +151,71 @@ spec:
                     openstack:
                       description: OpenStack contains settings specific to the OpenStack infrastructure provider.
                       type: object
+                      properties:
+                        controlPlaneLoadBalancer:
+                          description: controlPlaneLoadBalancer defines how traffic destined to the OpenShift API and Ingress is routed to the servers. When omitted, this means no opinion and the platform is left to choose a reasonable default. This default is subject to change over time. The current default configuration uses VRRP.
+                          type: object
+                          required:
+                            - type
+                          properties:
+                            bgp:
+                              description: BGP refers to the list of BGP speaker configurations. We require a speaker configuration for every subnet where we want to peer. The list must contain at least one item.
+                              type: object
+                              properties:
+                                speakers:
+                                  description: speakers is a list of BGP speaker configurations. We require a speaker configuration for every control plane subnet. The list must contain at least one item.
+                                  type: array
+                                  minItems: 1
+                                  items:
+                                    description: BGPSpeaker defines how a BGP speaker will be configured. Each speaker will result into a BGP protocol process with the specified ASN, for a unique subnet. Each speaker has a list of peers, which will be configured as BGP neighbors.
+                                    type: object
+                                    required:
+                                      - asn
+                                      - peers
+                                      - subnetCIDR
+                                    properties:
+                                      asn:
+                                        description: asn specifies the local autonomous system number that will be used to peer with remote routers.
+                                        type: integer
+                                        format: int32
+                                        maximum: 4294967295
+                                        minimum: 0
+                                      peers:
+                                        description: peers is a list of the BGP peers that need to be configured for a the speaker for a specific subnet.
+                                        type: array
+                                        minItems: 1
+                                        items:
+                                          description: BGPPeer describes the configuration of a BGP peering neighbor.
+                                          type: object
+                                          required:
+                                            - asn
+                                            - ip
+                                          properties:
+                                            asn:
+                                              description: asn specifies the remote autonomous system number to peer with the remote router.
+                                              type: integer
+                                              format: int32
+                                              maximum: 4294967295
+                                              minimum: 0
+                                            ip:
+                                              description: ip is the IP address of the BGP neighbor and has to be reachable from the node. It may be either IPv4 or IPv6.
+                                              type: string
+                                              format: ip
+                                            password:
+                                              description: password to be used with the tcp socket that is being used to connect to the remote peer
+                                              type: string
+                                      subnetCIDR:
+                                        description: subnetCIDR is the CIDR which this BGP configuration applies to.
+                                        type: string
+                                  x-kubernetes-list-map-keys:
+                                    - subnetCIDR
+                                  x-kubernetes-list-type: map
+                            type:
+                              description: type defines the type of load balancer which will be configured for the control plane VIPs. Permitted values are `VRRP` and `BGP`. When omitted, this means no opinion and the platform is left to choose a reasonable default.
+                              type: string
+                              enum:
+                                - VRRP
+                                - BGP
                     ovirt:
                       description: Ovirt contains settings specific to the oVirt infrastructure provider.
                       type: object

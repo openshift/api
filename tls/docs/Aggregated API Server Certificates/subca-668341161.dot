@@ -1,6 +1,6 @@
 digraph "Local Certificate" {
   // Node definitions.
-  0 [
+  1 [
     label="certkeypair/aggregator-front-proxy-signer\n\nsecret/aggregator-client-signer -nopenshift-kube-apiserver-operator\n"
     style=filled
     fillcolor="#c7bfff"
@@ -12,5 +12,5 @@ digraph "Local Certificate" {
   ];
 
   // Edge definitions.
-  0 -> 2;
+  1 -> 2;
 }

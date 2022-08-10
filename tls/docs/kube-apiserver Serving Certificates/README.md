@@ -5,13 +5,13 @@ Used by kube-apiserver clients to recognize the kube-apiserver.
 ![PKI Graph](cert-flow.png)
 
 - [Signing Certificate/Key Pairs](#signing-certificatekey-pairs)
-    - [ingress-operator@1622133677](#ingress-operator1622133677)
+    - [ingress-operator@1660235267](#ingress-operator1660235267)
     - [kube-apiserver-load-balancer-signer](#kube-apiserver-load-balancer-signer)
     - [kube-apiserver-localhost-signer](#kube-apiserver-localhost-signer)
     - [kube-apiserver-service-network-signer](#kube-apiserver-service-network-signer)
     - [kube-apiserver-recovery-signer](#kube-apiserver-recovery-signer)
 - [Serving Certificate/Key Pairs](#serving-certificatekey-pairs)
-    - [*.apps.ci-ln-z2l4snt-f76d1.origin-ci-int-gce.dev.openshift.com](#*.apps.ci-ln-z2l4snt-f76d1.origin-ci-int-gce.dev.openshift.com)
+    - [*.apps.kostrows-202208111815.group-b.devcluster.openshift.com](#*.apps.kostrows-202208111815.group-b.devcluster.openshift.com)
     - [kube-apiserver-internal-load-balancer-serving](#kube-apiserver-internal-load-balancer-serving)
     - [kube-apiserver-external-load-balancer-serving](#kube-apiserver-external-load-balancer-serving)
     - [kube-apiserver-localhost-serving](#kube-apiserver-localhost-serving)
@@ -31,17 +31,17 @@ Used by kube-apiserver clients to recognize the kube-apiserver.
 ## Signing Certificate/Key Pairs
 
 
-### ingress-operator@1622133677
-![PKI Graph](subcert-ingress-operator16221336771.png)
+### ingress-operator@1660235267
+![PKI Graph](subcert-ingress-operator16602352671.png)
 
 
 
 | Property | Value |
 | ----------- | ----------- |
 | Type | Signer |
-| CommonName | ingress-operator@1622133677 |
+| CommonName | ingress-operator@1660235267 |
 | SerialNumber | 1 |
-| Issuer CommonName | [ingress-operator@1622133677](#ingress-operator1622133677) |
+| Issuer CommonName | [ingress-operator@1660235267](#ingress-operator1660235267) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
 | PublicKey Algorithm | RSA 2048 bit |
@@ -49,7 +49,7 @@ Used by kube-apiserver clients to recognize the kube-apiserver.
 | ExtendedUsages |  |
 
 
-#### ingress-operator@1622133677 Locations
+#### ingress-operator@1660235267 Locations
 | Namespace | Secret Name |
 | ----------- | ----------- |
 | openshift-ingress-operator | router-ca |
@@ -61,7 +61,7 @@ Used by kube-apiserver clients to recognize the kube-apiserver.
 
 
 ### kube-apiserver-load-balancer-signer
-![PKI Graph](subcert-kube-apiserver-lb-signer4492084692676310985.png)
+![PKI Graph](subcert-kube-apiserver-lb-signer6171694028347201775.png)
 
 Signer used by the kube-apiserver operator to create serving certificates for the kube-apiserver via internal and external load balancers.
 
@@ -69,7 +69,7 @@ Signer used by the kube-apiserver operator to create serving certificates for th
 | ----------- | ----------- |
 | Type | Signer |
 | CommonName | kube-apiserver-lb-signer |
-| SerialNumber | 4492084692676310985 |
+| SerialNumber | 6171694028347201775 |
 | Issuer CommonName | [kube-apiserver-load-balancer-signer](#kube-apiserver-load-balancer-signer) |
 | Validity | 10y |
 | Signature Algorithm | SHA256-RSA |
@@ -85,31 +85,27 @@ Signer used by the kube-apiserver operator to create serving certificates for th
 
 | File | Permissions | User | Group | SE Linux |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
-| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-3/secrets/localhost-recovery-client-token/ca.crt/ca.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-7/secrets/localhost-recovery-client-token/ca.crt/ca.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 |  |  |  |  |  |
-| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-3/secrets/localhost-recovery-client-token/service-ca.crt/service-ca.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-7/secrets/localhost-recovery-client-token/service-ca.crt/service-ca.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 |  |  |  |  |  |
-| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-4/secrets/localhost-recovery-client-token/ca.crt/ca.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/kube-controller-manager-pod-5/secrets/localhost-recovery-client-token/ca.crt/ca.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 |  |  |  |  |  |
-| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-4/secrets/localhost-recovery-client-token/service-ca.crt/service-ca.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/kube-controller-manager-pod-5/secrets/localhost-recovery-client-token/service-ca.crt/service-ca.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 |  |  |  |  |  |
 | /etc/kubernetes/static-pod-resources/kube-controller-manager-pod-6/secrets/localhost-recovery-client-token/ca.crt/ca.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 |  |  |  |  |  |
 | /etc/kubernetes/static-pod-resources/kube-controller-manager-pod-6/secrets/localhost-recovery-client-token/service-ca.crt/service-ca.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 |  |  |  |  |  |
-| /etc/kubernetes/static-pod-resources/kube-controller-manager-pod-7/secrets/localhost-recovery-client-token/ca.crt/ca.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/kube-scheduler-pod-7/secrets/localhost-recovery-client-token/ca.crt/ca.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 |  |  |  |  |  |
-| /etc/kubernetes/static-pod-resources/kube-controller-manager-pod-7/secrets/localhost-recovery-client-token/service-ca.crt/service-ca.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-|  |  |  |  |  |
-| /etc/kubernetes/static-pod-resources/kube-scheduler-pod-6/secrets/localhost-recovery-client-token/ca.crt/ca.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-|  |  |  |  |  |
-| /etc/kubernetes/static-pod-resources/kube-scheduler-pod-6/secrets/localhost-recovery-client-token/service-ca.crt/service-ca.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/kube-scheduler-pod-7/secrets/localhost-recovery-client-token/service-ca.crt/service-ca.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 |  |  |  |  |  |
 
 
 
 ### kube-apiserver-localhost-signer
-![PKI Graph](subcert-kube-apiserver-localhost-signer4588627092136557607.png)
+![PKI Graph](subcert-kube-apiserver-localhost-signer1876596048599151361.png)
 
 Signer used by the kube-apiserver to create serving certificates for the kube-apiserver via localhost.
 
@@ -117,7 +113,7 @@ Signer used by the kube-apiserver to create serving certificates for the kube-ap
 | ----------- | ----------- |
 | Type | Signer |
 | CommonName | kube-apiserver-localhost-signer |
-| SerialNumber | 4588627092136557607 |
+| SerialNumber | 1876596048599151361 |
 | Issuer CommonName | [kube-apiserver-localhost-signer](#kube-apiserver-localhost-signer) |
 | Validity | 10y |
 | Signature Algorithm | SHA256-RSA |
@@ -133,27 +129,17 @@ Signer used by the kube-apiserver to create serving certificates for the kube-ap
 
 | File | Permissions | User | Group | SE Linux |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
-| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-2/secrets/localhost-recovery-client-token/ca.crt/ca.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-|  |  |  |  |  |
-| /etc/kubernetes/static-pod-resources/kube-controller-manager-pod-3/secrets/localhost-recovery-client-token/ca.crt/ca.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-3/secrets/localhost-recovery-client-token/ca.crt/ca.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 |  |  |  |  |  |
 | /etc/kubernetes/static-pod-resources/kube-controller-manager-pod-4/secrets/localhost-recovery-client-token/ca.crt/ca.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 |  |  |  |  |  |
-| /etc/kubernetes/static-pod-resources/kube-controller-manager-pod-5/secrets/localhost-recovery-client-token/ca.crt/ca.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-|  |  |  |  |  |
-| /etc/kubernetes/static-pod-resources/kube-scheduler-pod-3/secrets/localhost-recovery-client-token/ca.crt/ca.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-|  |  |  |  |  |
-| /etc/kubernetes/static-pod-resources/kube-scheduler-pod-5/secrets/localhost-recovery-client-token/ca.crt/ca.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-|  |  |  |  |  |
-| /etc/kubernetes/static-pod-resources/kube-scheduler-pod-2/secrets/localhost-recovery-client-token/ca.crt/ca.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-|  |  |  |  |  |
-| /etc/kubernetes/static-pod-resources/kube-scheduler-pod-4/secrets/localhost-recovery-client-token/ca.crt/ca.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/kube-scheduler-pod-6/secrets/localhost-recovery-client-token/ca.crt/ca.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 |  |  |  |  |  |
 
 
 
 ### kube-apiserver-service-network-signer
-![PKI Graph](subcert-kube-apiserver-service-network-signer3747369882534640639.png)
+![PKI Graph](subcert-kube-apiserver-service-network-signer480353073183355588.png)
 
 Signer used by the kube-apiserver to create serving certificates for the kube-apiserver via the service network.
 
@@ -161,7 +147,7 @@ Signer used by the kube-apiserver to create serving certificates for the kube-ap
 | ----------- | ----------- |
 | Type | Signer |
 | CommonName | kube-apiserver-service-network-signer |
-| SerialNumber | 3747369882534640639 |
+| SerialNumber | 480353073183355588 |
 | Issuer CommonName | [kube-apiserver-service-network-signer](#kube-apiserver-service-network-signer) |
 | Validity | 10y |
 | Signature Algorithm | SHA256-RSA |
@@ -182,15 +168,15 @@ Signer used by the kube-apiserver to create serving certificates for the kube-ap
 
 
 ### kube-apiserver-recovery-signer
-![PKI Graph](subcert-openshift-kube-apiserver-operator_localhost-recovery-serving-signer16221335672777012960471375622.png)
+![PKI Graph](subcert-openshift-kube-apiserver-operator_localhost-recovery-serving-signer16602351952728344745878608558.png)
 
 Signer used by the kube-apiserver to create serving certificates for the kube-apiserver via the localhost recovery SNI ServerName
 
 | Property | Value |
 | ----------- | ----------- |
 | Type | Signer |
-| CommonName | openshift-kube-apiserver-operator_localhost-recovery-serving-signer@1622133567 |
-| SerialNumber | 2777012960471375622 |
+| CommonName | openshift-kube-apiserver-operator_localhost-recovery-serving-signer@1660235195 |
+| SerialNumber | 2728344745878608558 |
 | Issuer CommonName | [kube-apiserver-recovery-signer](#kube-apiserver-recovery-signer) |
 | Validity | 10y |
 | Signature Algorithm | SHA256-RSA |
@@ -212,27 +198,27 @@ Signer used by the kube-apiserver to create serving certificates for the kube-ap
 ## Serving Certificate/Key Pairs
 
 
-### *.apps.ci-ln-z2l4snt-f76d1.origin-ci-int-gce.dev.openshift.com
-![PKI Graph](subcert-*.apps.ci-ln-z2l4snt-f76d1.origin-ci-int-gce.dev.openshift.com7824971200188423790.png)
+### *.apps.kostrows-202208111815.group-b.devcluster.openshift.com
+![PKI Graph](subcert-*.apps.kostrows-202208111815.group-b.devcluster.openshift.com4440283096781675073.png)
 
 
 
 | Property | Value |
 | ----------- | ----------- |
 | Type | Serving |
-| CommonName | *.apps.ci-ln-z2l4snt-f76d1.origin-ci-int-gce.dev.openshift.com |
-| SerialNumber | 7824971200188423790 |
-| Issuer CommonName | [ingress-operator@1622133677](#ingress-operator1622133677) |
+| CommonName | *.apps.kostrows-202208111815.group-b.devcluster.openshift.com |
+| SerialNumber | 4440283096781675073 |
+| Issuer CommonName | [ingress-operator@1660235267](#ingress-operator1660235267) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
 | PublicKey Algorithm | RSA 2048 bit |
 | Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
 | ExtendedUsages | - ExtKeyUsageServerAuth |
-| DNS Names | - *.apps.ci-ln-z2l4snt-f76d1.origin-ci-int-gce.dev.openshift.com |
+| DNS Names | - *.apps.kostrows-202208111815.group-b.devcluster.openshift.com |
 | IP Addresses |  |
 
 
-#### *.apps.ci-ln-z2l4snt-f76d1.origin-ci-int-gce.dev.openshift.com Locations
+#### *.apps.kostrows-202208111815.group-b.devcluster.openshift.com Locations
 | Namespace | Secret Name |
 | ----------- | ----------- |
 | openshift-ingress | router-certs-default |
@@ -244,22 +230,22 @@ Signer used by the kube-apiserver to create serving certificates for the kube-ap
 
 
 ### kube-apiserver-internal-load-balancer-serving
-![PKI Graph](subcert-api-int.ci-ln-z2l4snt-f76d1.origin-ci-int-gce.dev.openshift.com5317735504881762602.png)
+![PKI Graph](subcert-api-int.kostrows-202208111815.group-b.devcluster.openshift.com1067236104619056716.png)
 
 Serving certificate used by the kube-apiserver to terminate requests via the internal load balancer.
 
 | Property | Value |
 | ----------- | ----------- |
 | Type | Serving |
-| CommonName | api-int.ci-ln-z2l4snt-f76d1.origin-ci-int-gce.dev.openshift.com |
-| SerialNumber | 5317735504881762602 |
+| CommonName | api-int.kostrows-202208111815.group-b.devcluster.openshift.com |
+| SerialNumber | 1067236104619056716 |
 | Issuer CommonName | [kube-apiserver-load-balancer-signer](#kube-apiserver-load-balancer-signer) |
 | Validity | 30d |
 | Signature Algorithm | SHA256-RSA |
 | PublicKey Algorithm | RSA 2048 bit |
 | Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
 | ExtendedUsages | - ExtKeyUsageServerAuth |
-| DNS Names | - api-int.ci-ln-z2l4snt-f76d1.origin-ci-int-gce.dev.openshift.com |
+| DNS Names | - api-int.kostrows-202208111815.group-b.devcluster.openshift.com |
 | IP Addresses |  |
 
 
@@ -276,22 +262,22 @@ Serving certificate used by the kube-apiserver to terminate requests via the int
 
 
 ### kube-apiserver-external-load-balancer-serving
-![PKI Graph](subcert-api.ci-ln-z2l4snt-f76d1.origin-ci-int-gce.dev.openshift.com1836448651609096605.png)
+![PKI Graph](subcert-api.kostrows-202208111815.group-b.devcluster.openshift.com8851106556591191291.png)
 
 Serving certificate used by the kube-apiserver to terminate requests via the external load balancer.
 
 | Property | Value |
 | ----------- | ----------- |
 | Type | Serving |
-| CommonName | api.ci-ln-z2l4snt-f76d1.origin-ci-int-gce.dev.openshift.com |
-| SerialNumber | 1836448651609096605 |
+| CommonName | api.kostrows-202208111815.group-b.devcluster.openshift.com |
+| SerialNumber | 8851106556591191291 |
 | Issuer CommonName | [kube-apiserver-load-balancer-signer](#kube-apiserver-load-balancer-signer) |
 | Validity | 30d |
 | Signature Algorithm | SHA256-RSA |
 | PublicKey Algorithm | RSA 2048 bit |
 | Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
 | ExtendedUsages | - ExtKeyUsageServerAuth |
-| DNS Names | - api.ci-ln-z2l4snt-f76d1.origin-ci-int-gce.dev.openshift.com |
+| DNS Names | - api.kostrows-202208111815.group-b.devcluster.openshift.com |
 | IP Addresses |  |
 
 
@@ -308,7 +294,7 @@ Serving certificate used by the kube-apiserver to terminate requests via the ext
 
 
 ### kube-apiserver-localhost-serving
-![PKI Graph](subcert-127.0.0.17478571315403133213.png)
+![PKI Graph](subcert-127.0.0.17197656083604430185.png)
 
 Serving certificate used by the kube-apiserver to terminate requests via localhost.
 
@@ -316,7 +302,7 @@ Serving certificate used by the kube-apiserver to terminate requests via localho
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | 127.0.0.1 |
-| SerialNumber | 7478571315403133213 |
+| SerialNumber | 7197656083604430185 |
 | Issuer CommonName | [kube-apiserver-localhost-signer](#kube-apiserver-localhost-signer) |
 | Validity | 30d |
 | Signature Algorithm | SHA256-RSA |
@@ -340,7 +326,7 @@ Serving certificate used by the kube-apiserver to terminate requests via localho
 
 
 ### kube-apiserver-service-network-serving
-![PKI Graph](subcert-172.30.0.165266313224506339.png)
+![PKI Graph](subcert-172.30.0.18973928229619791769.png)
 
 Serving certificate used by the kube-apiserver to terminate requests via the service network.
 
@@ -348,7 +334,7 @@ Serving certificate used by the kube-apiserver to terminate requests via the ser
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | 172.30.0.1 |
-| SerialNumber | 65266313224506339 |
+| SerialNumber | 8973928229619791769 |
 | Issuer CommonName | [kube-apiserver-service-network-signer](#kube-apiserver-service-network-signer) |
 | Validity | 30d |
 | Signature Algorithm | SHA256-RSA |
@@ -372,7 +358,7 @@ Serving certificate used by the kube-apiserver to terminate requests via the ser
 
 
 ### kube-apiserver-recovery-serving
-![PKI Graph](subcert-localhost-recovery2333380766494227473.png)
+![PKI Graph](subcert-localhost-recovery6063375306131859146.png)
 
 Serving certificate used by the kube-apiserver to terminate requests via the localhost recovery SNI ServerName.
 
@@ -380,7 +366,7 @@ Serving certificate used by the kube-apiserver to terminate requests via the loc
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | localhost-recovery |
-| SerialNumber | 2333380766494227473 |
+| SerialNumber | 6063375306131859146 |
 | Issuer CommonName | [kube-apiserver-recovery-signer](#kube-apiserver-recovery-signer) |
 | Validity | 9y |
 | Signature Algorithm | SHA256-RSA |
@@ -395,18 +381,18 @@ Serving certificate used by the kube-apiserver to terminate requests via the loc
 | Namespace | Secret Name |
 | ----------- | ----------- |
 | openshift-kube-apiserver | localhost-recovery-serving-certkey |
-| openshift-kube-apiserver | localhost-recovery-serving-certkey-2 |
 | openshift-kube-apiserver | localhost-recovery-serving-certkey-3 |
 | openshift-kube-apiserver | localhost-recovery-serving-certkey-4 |
+| openshift-kube-apiserver | localhost-recovery-serving-certkey-5 |
+| openshift-kube-apiserver | localhost-recovery-serving-certkey-6 |
+| openshift-kube-apiserver | localhost-recovery-serving-certkey-7 |
 
 | File | Permissions | User | Group | SE Linux |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
-| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-2/secrets/localhost-recovery-serving-certkey/tls.crt/tls.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-2/secrets/localhost-recovery-serving-certkey/tls.crt/tls.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 | /etc/kubernetes/static-pod-resources/kube-apiserver-pod-3/secrets/localhost-recovery-serving-certkey/tls.crt/tls.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 | /etc/kubernetes/static-pod-resources/kube-apiserver-pod-3/secrets/localhost-recovery-serving-certkey/tls.crt/tls.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-4/secrets/localhost-recovery-serving-certkey/tls.crt/tls.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-4/secrets/localhost-recovery-serving-certkey/tls.crt/tls.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-7/secrets/localhost-recovery-serving-certkey/tls.crt/tls.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-7/secrets/localhost-recovery-serving-certkey/tls.crt/tls.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 
 
 ## Client Certificate/Key Pairs
@@ -421,7 +407,7 @@ installation process.
 
 
 ### router-wildcard-serving-ca
-![PKI Graph](subca-3383913060.png)
+![PKI Graph](subca-3158520695.png)
 
 REVIEW: CA for recognizing the default router wildcard serving certificate.
 
@@ -429,14 +415,18 @@ REVIEW: CA for recognizing the default router wildcard serving certificate.
 
 | CommonName | Issuer CommonName | Validity | PublicKey Algorithm |
 | ----------- | ----------- | ----------- | ----------- |
-| [*.apps.ci-ln-z2l4snt-f76d1.origin-ci-int-gce.dev.openshift.com](#*.apps.ci-ln-z2l4snt-f76d1.origin-ci-int-gce.dev.openshift.com) | [ingress-operator@1622133677](#ingress-operator1622133677) | 2y | RSA 2048 bit |
-| [ingress-operator@1622133677](#ingress-operator1622133677) | [ingress-operator@1622133677](#ingress-operator1622133677) | 2y | RSA 2048 bit |
+| [*.apps.kostrows-202208111815.group-b.devcluster.openshift.com](#*.apps.kostrows-202208111815.group-b.devcluster.openshift.com) | [ingress-operator@1660235267](#ingress-operator1660235267) | 2y | RSA 2048 bit |
+| [ingress-operator@1660235267](#ingress-operator1660235267) | [ingress-operator@1660235267](#ingress-operator1660235267) | 2y | RSA 2048 bit |
 
 #### router-wildcard-serving-ca Locations
 | Namespace | ConfigMap Name |
 | ----------- | ----------- |
 | openshift-config-managed | default-ingress-cert |
+| openshift-config-managed | oauth-serving-cert |
 | openshift-console | default-ingress-cert |
+| openshift-console | oauth-serving-cert |
+| openshift-kube-controller-manager | serviceaccount-ca-3 |
+| openshift-kube-scheduler | serviceaccount-ca-5 |
 
 | File | Permissions | User | Group | SE Linux |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
@@ -467,7 +457,7 @@ CA for recognizing the kube-apiserver when connecting via the internal or extern
 
 
 ### kube-apiserver-total-serving-ca
-![PKI Graph](subca-2297880728.png)
+![PKI Graph](subca-3564511142.png)
 
 CA for recognizing the kube-apiserver when connecting via any means.
 
@@ -485,24 +475,21 @@ CA for recognizing the kube-apiserver when connecting via any means.
 | ----------- | ----------- |
 | openshift-config-managed | kube-apiserver-server-ca |
 | openshift-kube-apiserver | kube-apiserver-server-ca |
-| openshift-kube-apiserver | kube-apiserver-server-ca-2 |
 | openshift-kube-apiserver | kube-apiserver-server-ca-3 |
 | openshift-kube-apiserver | kube-apiserver-server-ca-4 |
-| openshift-kube-controller-manager | serviceaccount-ca-4 |
-| openshift-kube-scheduler | serviceaccount-ca-4 |
+| openshift-kube-apiserver | kube-apiserver-server-ca-5 |
+| openshift-kube-apiserver | kube-apiserver-server-ca-6 |
+| openshift-kube-apiserver | kube-apiserver-server-ca-7 |
 
 | File | Permissions | User | Group | SE Linux |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
-| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-2/configmaps/kube-apiserver-server-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 | /etc/kubernetes/static-pod-resources/kube-apiserver-pod-3/configmaps/kube-apiserver-server-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-4/configmaps/kube-apiserver-server-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/kube-controller-manager-pod-4/configmaps/serviceaccount-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/kube-scheduler-pod-4/configmaps/serviceaccount-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-7/configmaps/kube-apiserver-server-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 
 
 
 ### service-account-token-ca.crt
-![PKI Graph](subca-2257163645.png)
+![PKI Graph](subca-2686963102.png)
 
 CA for recognizing kube-apiserver.  This is injected into each service account token secret at ca.crt.
 
@@ -514,27 +501,27 @@ CA for recognizing kube-apiserver.  This is injected into each service account t
 | [kube-apiserver-localhost-signer](#kube-apiserver-localhost-signer) | [kube-apiserver-localhost-signer](#kube-apiserver-localhost-signer) | 10y | RSA 2048 bit |
 | [kube-apiserver-service-network-signer](#kube-apiserver-service-network-signer) | [kube-apiserver-service-network-signer](#kube-apiserver-service-network-signer) | 10y | RSA 2048 bit |
 | [kube-apiserver-recovery-signer](#kube-apiserver-recovery-signer) | [kube-apiserver-recovery-signer](#kube-apiserver-recovery-signer) | 10y | RSA 2048 bit |
-| [*.apps.ci-ln-z2l4snt-f76d1.origin-ci-int-gce.dev.openshift.com](#*.apps.ci-ln-z2l4snt-f76d1.origin-ci-int-gce.dev.openshift.com) | [ingress-operator@1622133677](#ingress-operator1622133677) | 2y | RSA 2048 bit |
-| [ingress-operator@1622133677](#ingress-operator1622133677) | [ingress-operator@1622133677](#ingress-operator1622133677) | 2y | RSA 2048 bit |
+| [*.apps.kostrows-202208111815.group-b.devcluster.openshift.com](#*.apps.kostrows-202208111815.group-b.devcluster.openshift.com) | [ingress-operator@1660235267](#ingress-operator1660235267) | 2y | RSA 2048 bit |
+| [ingress-operator@1660235267](#ingress-operator1660235267) | [ingress-operator@1660235267](#ingress-operator1660235267) | 2y | RSA 2048 bit |
 
 #### service-account-token-ca.crt Locations
 | Namespace | ConfigMap Name |
 | ----------- | ----------- |
 | openshift-kube-controller-manager | serviceaccount-ca |
+| openshift-kube-controller-manager | serviceaccount-ca-4 |
 | openshift-kube-controller-manager | serviceaccount-ca-5 |
 | openshift-kube-controller-manager | serviceaccount-ca-6 |
-| openshift-kube-controller-manager | serviceaccount-ca-7 |
 | openshift-kube-scheduler | serviceaccount-ca |
-| openshift-kube-scheduler | serviceaccount-ca-5 |
 | openshift-kube-scheduler | serviceaccount-ca-6 |
+| openshift-kube-scheduler | serviceaccount-ca-7 |
 
 | File | Permissions | User | Group | SE Linux |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
+| /etc/kubernetes/static-pod-resources/kube-controller-manager-pod-4/configmaps/serviceaccount-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 | /etc/kubernetes/static-pod-resources/kube-controller-manager-pod-5/configmaps/serviceaccount-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 | /etc/kubernetes/static-pod-resources/kube-controller-manager-pod-6/configmaps/serviceaccount-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/kube-controller-manager-pod-7/configmaps/serviceaccount-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/kube-scheduler-pod-5/configmaps/serviceaccount-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 | /etc/kubernetes/static-pod-resources/kube-scheduler-pod-6/configmaps/serviceaccount-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/kube-scheduler-pod-7/configmaps/serviceaccount-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 
 
 
@@ -583,7 +570,7 @@ CA for recognizing the kube-apiserver when connecting via the service network (k
 
 
 ### kube-apiserver-recovery-serving-ca
-![PKI Graph](subca-2318653544.png)
+![PKI Graph](subca-1670817398.png)
 
 CA for recognizing the kube-apiserver when connecting via the localhost recovery SNI ServerName.
 

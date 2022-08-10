@@ -19,6 +19,8 @@ Used by the kube-apiserver to recognize clients using mTLS.
     - [kube-controller-manager-client](#kube-controller-manager-client)
     - [kube-scheduler-client](#kube-scheduler-client)
     - [kube-apiserver-check-endpoints](#kube-apiserver-check-endpoints)
+    - [system:serviceaccount:openshift-monitoring:prometheus-k8s](#systemserviceaccountopenshift-monitoringprometheus-k8s)
+    - [system:serviceaccount:openshift-oauth-apiserver:openshift-authenticator](#systemserviceaccountopenshift-oauth-apiserveropenshift-authenticator)
 - [Certificates Without Keys](#certificates-without-keys)
     - [kubelet-bootstrap-kubeconfig-signer](#kubelet-bootstrap-kubeconfig-signer)
 - [Certificate Authority Bundles](#certificate-authority-bundles)
@@ -36,7 +38,7 @@ Used by the kube-apiserver to recognize clients using mTLS.
 
 
 ### admin-kubeconfig-signer
-![PKI Graph](subcert-admin-kubeconfig-signer7222735057655048698.png)
+![PKI Graph](subcert-admin-kubeconfig-signer7981521128360560540.png)
 
 
 
@@ -44,7 +46,7 @@ Used by the kube-apiserver to recognize clients using mTLS.
 | ----------- | ----------- |
 | Type | Signer |
 | CommonName | admin-kubeconfig-signer |
-| SerialNumber | 7222735057655048698 |
+| SerialNumber | 7981521128360560540 |
 | Issuer CommonName | [admin-kubeconfig-signer](#admin-kubeconfig-signer) |
 | Validity | 10y |
 | Signature Algorithm | SHA256-RSA |
@@ -66,7 +68,7 @@ Used by the kube-apiserver to recognize clients using mTLS.
 
 
 ### kube-apiserver-to-kubelet-signer
-![PKI Graph](subcert-kube-apiserver-to-kubelet-signer4625455856882909939.png)
+![PKI Graph](subcert-kube-apiserver-to-kubelet-signer7276872763019438194.png)
 
 Signer for the kube-apiserver-to-kubelet-client so kubelets can recognize the kube-apiserver.
 
@@ -74,7 +76,7 @@ Signer for the kube-apiserver-to-kubelet-client so kubelets can recognize the ku
 | ----------- | ----------- |
 | Type | Signer |
 | CommonName | kube-apiserver-to-kubelet-signer |
-| SerialNumber | 4625455856882909939 |
+| SerialNumber | 7276872763019438194 |
 | Issuer CommonName | [kube-apiserver-to-kubelet-signer](#kube-apiserver-to-kubelet-signer) |
 | Validity | 365d |
 | Signature Algorithm | SHA256-RSA |
@@ -95,7 +97,7 @@ Signer for the kube-apiserver-to-kubelet-client so kubelets can recognize the ku
 
 
 ### kube-control-plane-signer
-![PKI Graph](subcert-kube-control-plane-signer166872611610237721.png)
+![PKI Graph](subcert-kube-control-plane-signer2299837154933931711.png)
 
 Signer for kube-controller-manager and kube-scheduler client certificates.
 
@@ -103,7 +105,7 @@ Signer for kube-controller-manager and kube-scheduler client certificates.
 | ----------- | ----------- |
 | Type | Signer |
 | CommonName | kube-control-plane-signer |
-| SerialNumber | 166872611610237721 |
+| SerialNumber | 2299837154933931711 |
 | Issuer CommonName | [kube-control-plane-signer](#kube-control-plane-signer) |
 | Validity | 365d |
 | Signature Algorithm | SHA256-RSA |
@@ -124,7 +126,7 @@ Signer for kube-controller-manager and kube-scheduler client certificates.
 
 
 ### kube-controller-manager-csr-signer-signer
-![PKI Graph](subcert-kubelet-signer188140830361177612.png)
+![PKI Graph](subcert-kubelet-signer3878101957816363012.png)
 
 Signer used by the kube-controller-manager-operator to sign signing certificates for the CSR API.
 
@@ -132,7 +134,7 @@ Signer used by the kube-controller-manager-operator to sign signing certificates
 | ----------- | ----------- |
 | Type | Signer |
 | CommonName | kubelet-signer |
-| SerialNumber | 188140830361177612 |
+| SerialNumber | 3878101957816363012 |
 | Issuer CommonName | [kube-controller-manager-csr-signer-signer](#kube-controller-manager-csr-signer-signer) |
 | Validity | 24h |
 | Signature Algorithm | SHA256-RSA |
@@ -153,15 +155,15 @@ Signer used by the kube-controller-manager-operator to sign signing certificates
 
 
 ### kube-controller-manager-csr-signer
-![PKI Graph](subcert-kube-csr-signer_1622133566597605536139228657.png)
+![PKI Graph](subcert-kube-csr-signer_16602351968324787516021803173.png)
 
 Signer used by the kube-controller-manager to sign CSR API requests.
 
 | Property | Value |
 | ----------- | ----------- |
 | Type | Signer |
-| CommonName | kube-csr-signer_@1622133566 |
-| SerialNumber | 597605536139228657 |
+| CommonName | kube-csr-signer_@1660235196 |
+| SerialNumber | 8324787516021803173 |
 | Issuer CommonName | [kube-controller-manager-csr-signer-signer](#kube-controller-manager-csr-signer-signer) |
 | Validity | 23h |
 | Signature Algorithm | SHA256-RSA |
@@ -184,15 +186,15 @@ Signer used by the kube-controller-manager to sign CSR API requests.
 
 
 ### per-master-debugging-signer
-![PKI Graph](subcert-openshift-kube-apiserver-operator_node-system-admin-signer16221335676813199752010173373.png)
+![PKI Graph](subcert-openshift-kube-apiserver-operator_node-system-admin-signer1660235195421724022685706893.png)
 
 Signer for the per-master-debugging-client.
 
 | Property | Value |
 | ----------- | ----------- |
 | Type | Signer |
-| CommonName | openshift-kube-apiserver-operator_node-system-admin-signer@1622133567 |
-| SerialNumber | 6813199752010173373 |
+| CommonName | openshift-kube-apiserver-operator_node-system-admin-signer@1660235195 |
+| SerialNumber | 421724022685706893 |
 | Issuer CommonName | [per-master-debugging-signer](#per-master-debugging-signer) |
 | Validity | 365d |
 | Signature Algorithm | SHA256-RSA |
@@ -217,7 +219,7 @@ Signer for the per-master-debugging-client.
 
 
 ### per-master-debugging-client
-![PKI Graph](subcert-systemadmin8705727548059760835.png)
+![PKI Graph](subcert-systemadmin1599467758014425840.png)
 
 Client certificate (system:masters) placed on each master to allow communication to kube-apiserver for debugging.
 
@@ -225,7 +227,7 @@ Client certificate (system:masters) placed on each master to allow communication
 | ----------- | ----------- |
 | Type | Client |
 | CommonName | system:admin |
-| SerialNumber | 8705727548059760835 |
+| SerialNumber | 1599467758014425840 |
 | Issuer CommonName | [per-master-debugging-signer](#per-master-debugging-signer) |
 | Validity | 120d |
 | Signature Algorithm | SHA256-RSA |
@@ -247,7 +249,7 @@ Client certificate (system:masters) placed on each master to allow communication
 
 
 ### system:control-plane-node-admin
-![PKI Graph](subcert-systemcontrol-plane-node-admin6179025970239051547.png)
+![PKI Graph](subcert-systemcontrol-plane-node-admin182205478911801730.png)
 
 
 
@@ -255,7 +257,7 @@ Client certificate (system:masters) placed on each master to allow communication
 | ----------- | ----------- |
 | Type | Client |
 | CommonName | system:control-plane-node-admin |
-| SerialNumber | 6179025970239051547 |
+| SerialNumber | 182205478911801730 |
 | Issuer CommonName | [kube-control-plane-signer](#kube-control-plane-signer) |
 | Validity | 30d |
 | Signature Algorithm | SHA256-RSA |
@@ -278,7 +280,7 @@ Client certificate (system:masters) placed on each master to allow communication
 
 
 ### kube-apiserver-to-kubelet-client
-![PKI Graph](subcert-systemkube-apiserver5314078629756554094.png)
+![PKI Graph](subcert-systemkube-apiserver5543487363903822171.png)
 
 Client certificate used by the kube-apiserver to authenticate to the kubelet for requests like exec and logs.
 
@@ -286,7 +288,7 @@ Client certificate used by the kube-apiserver to authenticate to the kubelet for
 | ----------- | ----------- |
 | Type | Client |
 | CommonName | system:kube-apiserver |
-| SerialNumber | 5314078629756554094 |
+| SerialNumber | 5543487363903822171 |
 | Issuer CommonName | [kube-apiserver-to-kubelet-signer](#kube-apiserver-to-kubelet-signer) |
 | Validity | 30d |
 | Signature Algorithm | SHA256-RSA |
@@ -300,23 +302,16 @@ Client certificate used by the kube-apiserver to authenticate to the kubelet for
 | Namespace | Secret Name |
 | ----------- | ----------- |
 | openshift-kube-apiserver | kubelet-client |
-| openshift-kube-apiserver | kubelet-client-2 |
-| openshift-kube-apiserver | kubelet-client-3 |
-| openshift-kube-apiserver | kubelet-client-4 |
 
 | File | Permissions | User | Group | SE Linux |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
-| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-2/secrets/kubelet-client/tls.crt/tls.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-2/secrets/kubelet-client/tls.crt/tls.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-3/secrets/kubelet-client/tls.crt/tls.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-3/secrets/kubelet-client/tls.crt/tls.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-4/secrets/kubelet-client/tls.crt/tls.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-4/secrets/kubelet-client/tls.crt/tls.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/kube-apiserver-certs/secrets/kubelet-client/tls.crt/tls.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/kube-apiserver-certs/secrets/kubelet-client/tls.crt/tls.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 
 
 
 ### kube-controller-manager-client
-![PKI Graph](subcert-systemkube-controller-manager6600108110361186331.png)
+![PKI Graph](subcert-systemkube-controller-manager4866562086355396430.png)
 
 Client certificate used by the kube-controller-manager to authenticate to the kube-apiserver.
 
@@ -324,7 +319,7 @@ Client certificate used by the kube-controller-manager to authenticate to the ku
 | ----------- | ----------- |
 | Type | Client |
 | CommonName | system:kube-controller-manager |
-| SerialNumber | 6600108110361186331 |
+| SerialNumber | 4866562086355396430 |
 | Issuer CommonName | [kube-control-plane-signer](#kube-control-plane-signer) |
 | Validity | 30d |
 | Signature Algorithm | SHA256-RSA |
@@ -348,7 +343,7 @@ Client certificate used by the kube-controller-manager to authenticate to the ku
 
 
 ### kube-scheduler-client
-![PKI Graph](subcert-systemkube-scheduler210021322621676919.png)
+![PKI Graph](subcert-systemkube-scheduler2450389282673102528.png)
 
 Client certificate used by the kube-scheduler to authenticate to the kube-apiserver.
 
@@ -356,7 +351,7 @@ Client certificate used by the kube-scheduler to authenticate to the kube-apiser
 | ----------- | ----------- |
 | Type | Client |
 | CommonName | system:kube-scheduler |
-| SerialNumber | 210021322621676919 |
+| SerialNumber | 2450389282673102528 |
 | Issuer CommonName | [kube-control-plane-signer](#kube-control-plane-signer) |
 | Validity | 30d |
 | Signature Algorithm | SHA256-RSA |
@@ -380,7 +375,7 @@ Client certificate used by the kube-scheduler to authenticate to the kube-apiser
 
 
 ### kube-apiserver-check-endpoints
-![PKI Graph](subcert-systemserviceaccountopenshift-kube-apiservercheck-endpoints7616933575479319771.png)
+![PKI Graph](subcert-systemserviceaccountopenshift-kube-apiservercheck-endpoints3827061532001540747.png)
 
 Client certificate used by the network connectivity checker of the kube-apiserver.
 
@@ -388,7 +383,7 @@ Client certificate used by the network connectivity checker of the kube-apiserve
 | ----------- | ----------- |
 | Type | Client |
 | CommonName | system:serviceaccount:openshift-kube-apiserver:check-endpoints |
-| SerialNumber | 7616933575479319771 |
+| SerialNumber | 3827061532001540747 |
 | Issuer CommonName | [kube-control-plane-signer](#kube-control-plane-signer) |
 | Validity | 30d |
 | Signature Algorithm | SHA256-RSA |
@@ -407,6 +402,66 @@ Client certificate used by the network connectivity checker of the kube-apiserve
 | ----------- | ----------- | ----------- | ----------- | ----------- |
 | /etc/kubernetes/static-pod-resources/kube-apiserver-certs/secrets/check-endpoints-client-cert-key/tls.crt/tls.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 | /etc/kubernetes/static-pod-resources/kube-apiserver-certs/secrets/check-endpoints-client-cert-key/tls.crt/tls.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+
+
+
+### system:serviceaccount:openshift-monitoring:prometheus-k8s
+![PKI Graph](subcert-systemserviceaccountopenshift-monitoringprometheus-k8s221866075839644692910412558908513329039.png)
+
+
+
+| Property | Value |
+| ----------- | ----------- |
+| Type | Client |
+| CommonName | system:serviceaccount:openshift-monitoring:prometheus-k8s |
+| SerialNumber | 221866075839644692910412558908513329039 |
+| Issuer CommonName | [kube-controller-manager-csr-signer-signer](#kube-controller-manager-csr-signer-signer) |
+| Validity | 23h |
+| Signature Algorithm | SHA256-RSA |
+| PublicKey Algorithm | ECDSA 256 bit, P-256 curve |
+| Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
+| ExtendedUsages | - ExtKeyUsageClientAuth |
+| Organizations (User Groups) |  |
+
+
+#### system:serviceaccount:openshift-monitoring:prometheus-k8s Locations
+| Namespace | Secret Name |
+| ----------- | ----------- |
+| openshift-monitoring | metrics-client-certs |
+
+| File | Permissions | User | Group | SE Linux |
+| ----------- | ----------- | ----------- | ----------- | ----------- |
+
+
+
+
+### system:serviceaccount:openshift-oauth-apiserver:openshift-authenticator
+![PKI Graph](subcert-systemserviceaccountopenshift-oauth-apiserveropenshift-authenticator130808046015838906557527779576925463776.png)
+
+
+
+| Property | Value |
+| ----------- | ----------- |
+| Type | Client |
+| CommonName | system:serviceaccount:openshift-oauth-apiserver:openshift-authenticator |
+| SerialNumber | 130808046015838906557527779576925463776 |
+| Issuer CommonName | [kube-controller-manager-csr-signer-signer](#kube-controller-manager-csr-signer-signer) |
+| Validity | 23h |
+| Signature Algorithm | SHA256-RSA |
+| PublicKey Algorithm | ECDSA 256 bit, P-256 curve |
+| Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
+| ExtendedUsages | - ExtKeyUsageClientAuth |
+| Organizations (User Groups) |  |
+
+
+#### system:serviceaccount:openshift-oauth-apiserver:openshift-authenticator Locations
+| Namespace | Secret Name |
+| ----------- | ----------- |
+| openshift-oauth-apiserver | openshift-authenticator-certs |
+
+| File | Permissions | User | Group | SE Linux |
+| ----------- | ----------- | ----------- | ----------- | ----------- |
+
 
 
 ## Certificates Without Keys
@@ -470,7 +525,7 @@ CA for kube-apiserver to recognize the system:master created by the installer.
 
 
 ### kube-apiserver-total-client-ca
-![PKI Graph](subca-3029819952.png)
+![PKI Graph](subca-3725725530.png)
 
 CA for kube-apiserver to recognize all known certificate based clients.
 
@@ -572,7 +627,7 @@ CA for kube-apiserver to recognize the kube-controller-manager and kube-schedule
 
 
 ### kube-controller-manager-csr-ca
-![PKI Graph](subca-1200332453.png)
+![PKI Graph](subca-1277021745.png)
 
 CA to recognize the CSRs (both serving and client) signed by the kube-controller-manager.
 
@@ -589,18 +644,19 @@ CA to recognize the CSRs (both serving and client) signed by the kube-controller
 | openshift-config-managed | csr-controller-ca |
 | openshift-config-managed | kubelet-serving-ca |
 | openshift-kube-apiserver | kubelet-serving-ca |
-| openshift-kube-apiserver | kubelet-serving-ca-2 |
 | openshift-kube-apiserver | kubelet-serving-ca-3 |
 | openshift-kube-apiserver | kubelet-serving-ca-4 |
+| openshift-kube-apiserver | kubelet-serving-ca-5 |
+| openshift-kube-apiserver | kubelet-serving-ca-6 |
+| openshift-kube-apiserver | kubelet-serving-ca-7 |
 | openshift-kube-controller-manager-operator | csr-controller-ca |
 | openshift-kube-controller-manager-operator | csr-signer-ca |
 | openshift-monitoring | kubelet-serving-ca-bundle |
 
 | File | Permissions | User | Group | SE Linux |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
-| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-2/configmaps/kubelet-serving-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 | /etc/kubernetes/static-pod-resources/kube-apiserver-pod-3/configmaps/kubelet-serving-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-4/configmaps/kubelet-serving-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-7/configmaps/kubelet-serving-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 
 
 
@@ -649,7 +705,7 @@ CA to recognize the kube-controller-manager's signer for signing new CSR signing
 
 
 ### kube-apiserver-per-master-debugging-client-ca
-![PKI Graph](subca-243537112.png)
+![PKI Graph](subca-1510167526.png)
 
 CA for kube-apiserver to recognize local system:masters rendered to each master.
 

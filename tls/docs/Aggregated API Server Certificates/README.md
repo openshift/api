@@ -17,7 +17,7 @@ Used to secure connections between the kube-apiserver and aggregated API Servers
 
 
 ### aggregator-front-proxy-signer
-![PKI Graph](subcert-aggregator-signer8209157924322867463.png)
+![PKI Graph](subcert-aggregator-signer3783714127421522860.png)
 
 Signer for the kube-apiserver to create client certificates for aggregated apiservers to recognize as a front-proxy.
 
@@ -25,7 +25,7 @@ Signer for the kube-apiserver to create client certificates for aggregated apise
 | ----------- | ----------- |
 | Type | Signer |
 | CommonName | aggregator-signer |
-| SerialNumber | 8209157924322867463 |
+| SerialNumber | 3783714127421522860 |
 | Issuer CommonName | [aggregator-front-proxy-signer](#aggregator-front-proxy-signer) |
 | Validity | 24h |
 | Signature Algorithm | SHA256-RSA |
@@ -50,7 +50,7 @@ Signer for the kube-apiserver to create client certificates for aggregated apise
 
 
 ### aggregator-front-proxy-client
-![PKI Graph](subcert-systemopenshift-aggregator8112884492387709090.png)
+![PKI Graph](subcert-systemopenshift-aggregator2634640073442595002.png)
 
 Client certificate used by the kube-apiserver to communicate to aggregated apiservers.
 
@@ -58,7 +58,7 @@ Client certificate used by the kube-apiserver to communicate to aggregated apise
 | ----------- | ----------- |
 | Type | Client |
 | CommonName | system:openshift-aggregator |
-| SerialNumber | 8112884492387709090 |
+| SerialNumber | 2634640073442595002 |
 | Issuer CommonName | [aggregator-front-proxy-signer](#aggregator-front-proxy-signer) |
 | Validity | 23h |
 | Signature Algorithm | SHA256-RSA |

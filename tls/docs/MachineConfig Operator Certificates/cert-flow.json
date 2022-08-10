@@ -9,7 +9,7 @@
       {
         "LogicalName": "",
         "Description": "",
-        "Name": "root-ca::8389990467108443888",
+        "Name": "root-ca::8681071573803367953",
         "Spec": {
           "SecretLocations": null,
           "OnDiskLocations": [
@@ -33,7 +33,7 @@
           "CertMetadata": {
             "CertIdentifier": {
               "CommonName": "root-ca",
-              "SerialNumber": "8389990467108443888",
+              "SerialNumber": "8681071573803367953",
               "Issuer": {
                 "CommonName": "root-ca",
                 "SerialNumber": "",
@@ -65,7 +65,7 @@
       {
         "LogicalName": "mco-mystery-cert",
         "Description": "TODO: team needs to make description",
-        "Name": "system:machine-config-server::6740508919873829930",
+        "Name": "system:machine-config-server::3862173860818707761",
         "Spec": {
           "SecretLocations": [
             {
@@ -77,7 +77,7 @@
           "CertMetadata": {
             "CertIdentifier": {
               "CommonName": "system:machine-config-server",
-              "SerialNumber": "6740508919873829930",
+              "SerialNumber": "3862173860818707761",
               "Issuer": {
                 "CommonName": "root-ca",
                 "SerialNumber": "",
@@ -98,7 +98,7 @@
             "SignerDetails": null,
             "ServingCertDetails": {
               "DNSNames": [
-                "api-int.ci-ln-z2l4snt-f76d1.origin-ci-int-gce.dev.openshift.com"
+                "api-int.kostrows-202208111815.group-b.devcluster.openshift.com"
               ],
               "IPAddresses": null
             },

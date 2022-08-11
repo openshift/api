@@ -191,6 +191,7 @@ type ImageRegistryConfigStorageS3 struct {
 	Region string `json:"region,omitempty"`
 	// regionEndpoint is the endpoint for S3 compatible storage services.
 	// Optional, defaults based on the Region that is provided.
+	// +kubebuilder:validation:Pattern=`^$|^https?:\/\/`
 	// +optional
 	RegionEndpoint string `json:"regionEndpoint,omitempty"`
 	// encrypt specifies whether the registry stores the image in encrypted

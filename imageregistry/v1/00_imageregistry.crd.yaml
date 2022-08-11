@@ -1287,6 +1287,7 @@ spec:
                         description: regionEndpoint is the endpoint for S3 compatible
                           storage services. Optional, defaults based on the Region
                           that is provided.
+                        pattern: ^$|^https?:\/\/
                         type: string
                       trustedCA:
                         description: "trustedCA is a reference to a config map containing
@@ -1837,6 +1838,7 @@ spec:
                         description: regionEndpoint is the endpoint for S3 compatible
                           storage services. Optional, defaults based on the Region
                           that is provided.
+                        pattern: ^$|^https?:\/\/
                         type: string
                       trustedCA:
                         description: "trustedCA is a reference to a config map containing

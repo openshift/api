@@ -17,6 +17,9 @@ import (
 // Cluster admin manipulation of this resource is not supported. This resource
 // is only for internal communication of OpenShift operators.
 //
+// If DNSManagementPolicy is "Unmanaged", the operator will not be responsible
+// for managing the DNS records on the cloud provider.
+//
 // Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=1
 type DNSRecord struct {
@@ -55,6 +58,21 @@ type DNSRecordSpec struct {
 	// +kubebuilder:validation:Minimum=0
 	// +required
 	RecordTTL int64 `json:"recordTTL"`
+	// dnsManagementPolicy denotes the current policy applied on the DNS
+	// record. Records that have policy set as "Unmanaged" are ignored by
+	// the ingress operator.  This means that the DNS record on the cloud
+	// provider is not managed by the operator, and the "Published" status
+	// condition will be updated to "Unknown" status, since it is externally
+	// managed. Any existing record on the cloud provider can be deleted at
+	// the discretion of the cluster admin.
+	//
+	// This field defaults to Managed. Valid values are "Managed" and
+	// "Unmanaged".
+	//
+	// +kubebuilder:default:="Managed"
+	// +kubebuilder:validation:Optional
+	// +optional
+	DNSManagementPolicy DNSManagementPolicy `json:"dnsManagementPolicy"`
 }
 
 // DNSRecordStatus is the most recently observed status of each record.
@@ -78,14 +96,19 @@ type DNSZoneStatus struct {
 	DNSZone configv1.DNSZone `json:"dnsZone"`
 	// conditions are any conditions associated with the record in the zone.
 	//
-	// If publishing the record fails, the "Failed" condition will be set with a
-	// reason and message describing the cause of the failure.
+	// If publishing the record succeeds, the "Published" condition will be
+	// set with status "True" and upon failure it will be set to "False" along
+	// with the reason and message describing the cause of the failure.
 	Conditions []DNSZoneCondition `json:"conditions,omitempty"`
 }
 
 var (
 	// Failed means the record is not available within a zone.
+	// DEPRECATED: will be removed soon, use DNSRecordPublishedConditionType.
 	DNSRecordFailedConditionType = "Failed"
+
+	// Published means the record is published to a zone.
+	DNSRecordPublishedConditionType = "Published"
 )
 
 // DNSZoneCondition is just the standard condition fields.
@@ -113,6 +136,22 @@ const (
 
 	// ARecordType is an RFC 1035 A record.
 	ARecordType DNSRecordType = "A"
+)
+
+// DNSManagementPolicy is a policy for configuring how the dns controller
+// manages DNSRecords.
+//
+// +kubebuilder:validation:Enum=Managed;Unmanaged
+type DNSManagementPolicy string
+
+const (
+	// ManagedDNS configures the dns controller to manage the lifecycle of the
+	// DNS record on the cloud platform.
+	ManagedDNS DNSManagementPolicy = "Managed"
+	// UnmanagedDNS configures the dns controller not to create a DNS record or
+	// manage any existing DNS record and allows the DNS record on the cloud
+	// provider to be managed by the cluster admin.
+	UnmanagedDNS DNSManagementPolicy = "Unmanaged"
 )
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

@@ -23,7 +23,7 @@ spec:
         status: {}
       schema:
         openAPIV3Schema:
-          description: "DNSRecord is a DNS record managed in the zones defined by dns.config.openshift.io/cluster .spec.publicZone and .spec.privateZone. \n Cluster admin manipulation of this resource is not supported. This resource is only for internal communication of OpenShift operators. \n Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer)."
+          description: "DNSRecord is a DNS record managed in the zones defined by dns.config.openshift.io/cluster .spec.publicZone and .spec.privateZone. \n Cluster admin manipulation of this resource is not supported. This resource is only for internal communication of OpenShift operators. \n If DNSManagementPolicy is \"Unmanaged\", the operator will not be responsible for managing the DNS records on the cloud provider. \n Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer)."
           type: object
           properties:
             apiVersion:
@@ -43,6 +43,13 @@ spec:
                 - recordType
                 - targets
               properties:
+                dnsManagementPolicy:
+                  description: "dnsManagementPolicy denotes the current policy applied on the DNS record. Records that have policy set as \"Unmanaged\" are ignored by the ingress operator.  This means that the DNS record on the cloud provider is not managed by the operator, and the \"Published\" status condition will be updated to \"Unknown\" status, since it is externally managed. Any existing record on the cloud provider can be deleted at the discretion of the cluster admin. \n This field defaults to Managed. Valid values are \"Managed\" and \"Unmanaged\"."
+                  type: string
+                  default: Managed
+                  enum:
+                    - Managed
+                    - Unmanaged
                 dnsName:
                   description: dnsName is the hostname of the DNS record
                   type: string
@@ -80,7 +87,7 @@ spec:
                     type: object
                     properties:
                       conditions:
-                        description: "conditions are any conditions associated with the record in the zone. \n If publishing the record fails, the \"Failed\" condition will be set with a reason and message describing the cause of the failure."
+                        description: "conditions are any conditions associated with the record in the zone. \n If publishing the record succeeds, the \"Published\" condition will be set with status \"True\" and upon failure it will be set to \"False\" along with the reason and message describing the cause of the failure."
                         type: array
                         items:
                           description: DNSZoneCondition is just the standard condition fields.

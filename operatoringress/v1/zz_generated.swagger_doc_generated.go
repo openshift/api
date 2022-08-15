@@ -12,7 +12,7 @@ package v1
 
 // AUTO-GENERATED FUNCTIONS START HERE
 var map_DNSRecord = map[string]string{
-	"":       "DNSRecord is a DNS record managed in the zones defined by dns.config.openshift.io/cluster .spec.publicZone and .spec.privateZone.\n\nCluster admin manipulation of this resource is not supported. This resource is only for internal communication of OpenShift operators.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"":       "DNSRecord is a DNS record managed in the zones defined by dns.config.openshift.io/cluster .spec.publicZone and .spec.privateZone.\n\nCluster admin manipulation of this resource is not supported. This resource is only for internal communication of OpenShift operators.\n\nIf DNSManagementPolicy is \"Unmanaged\", the operator will not be responsible for managing the DNS records on the cloud provider.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 	"spec":   "spec is the specification of the desired behavior of the dnsRecord.",
 	"status": "status is the most recently observed status of the dnsRecord.",
 }
@@ -30,11 +30,12 @@ func (DNSRecordList) SwaggerDoc() map[string]string {
 }
 
 var map_DNSRecordSpec = map[string]string{
-	"":           "DNSRecordSpec contains the details of a DNS record.",
-	"dnsName":    "dnsName is the hostname of the DNS record",
-	"targets":    "targets are record targets.",
-	"recordType": "recordType is the DNS record type. For example, \"A\" or \"CNAME\".",
-	"recordTTL":  "recordTTL is the record TTL in seconds. If zero, the default is 30. RecordTTL will not be used in AWS regions Alias targets, but will be used in CNAME targets, per AWS API contract.",
+	"":                    "DNSRecordSpec contains the details of a DNS record.",
+	"dnsName":             "dnsName is the hostname of the DNS record",
+	"targets":             "targets are record targets.",
+	"recordType":          "recordType is the DNS record type. For example, \"A\" or \"CNAME\".",
+	"recordTTL":           "recordTTL is the record TTL in seconds. If zero, the default is 30. RecordTTL will not be used in AWS regions Alias targets, but will be used in CNAME targets, per AWS API contract.",
+	"dnsManagementPolicy": "dnsManagementPolicy denotes the current policy applied on the DNS record. Records that have policy set as \"Unmanaged\" are ignored by the ingress operator.  This means that the DNS record on the cloud provider is not managed by the operator, and the \"Published\" status condition will be updated to \"Unknown\" status, since it is externally managed. Any existing record on the cloud provider can be deleted at the discretion of the cluster admin.\n\nThis field defaults to Managed. Valid values are \"Managed\" and \"Unmanaged\".",
 }
 
 func (DNSRecordSpec) SwaggerDoc() map[string]string {
@@ -62,7 +63,7 @@ func (DNSZoneCondition) SwaggerDoc() map[string]string {
 var map_DNSZoneStatus = map[string]string{
 	"":           "DNSZoneStatus is the status of a record within a specific zone.",
 	"dnsZone":    "dnsZone is the zone where the record is published.",
-	"conditions": "conditions are any conditions associated with the record in the zone.\n\nIf publishing the record fails, the \"Failed\" condition will be set with a reason and message describing the cause of the failure.",
+	"conditions": "conditions are any conditions associated with the record in the zone.\n\nIf publishing the record succeeds, the \"Published\" condition will be set with status \"True\" and upon failure it will be set to \"False\" along with the reason and message describing the cause of the failure.",
 }
 
 func (DNSZoneStatus) SwaggerDoc() map[string]string {

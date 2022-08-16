@@ -7,7 +7,8 @@
 # 3. apply all the v1 crds from the current head, and dump the spec of each crd to #crdName-after file.
 # 4. compare #crdName-before and #crdName-after for v1beta1 crd if it is switched to v1 in dev branch.
 
-SCRIPT_ROOT=$(dirname ${BASH_SOURCE})/..
+source "$(dirname "${BASH_SOURCE}")/lib/init.sh"
+
 TMP_ROOT="${SCRIPT_ROOT}/_tmp"
 KUBECTL="./_output/tools/kubebuilder/kubectl --server=http://127.0.0.1:8080"
 mkdir -p "${TMP_ROOT}"

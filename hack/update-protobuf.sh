@@ -2,8 +2,6 @@
 
 source "$(dirname "${BASH_SOURCE}")/lib/init.sh"
 
-SCRIPT_ROOT=$(dirname ${BASH_SOURCE})/..
-
 [[ -n "${PROTO_OPTIONAL:-}" ]] && exit 0
 
 if [[ "$(protoc --version)" != "libprotoc 3."* ]]; then

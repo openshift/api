@@ -1,8 +1,7 @@
 #!/bin/bash
 #shellcheck source=lib/init.sh
-source "$(dirname "${BASH_SOURCE[0]}")/lib/init.sh"
+source "$(dirname "${BASH_SOURCE}")/lib/init.sh"
 
-SCRIPT_ROOT=$(readlink -f "$(dirname "$(dirname "${BASH_SOURCE[0]}")")")
 TMP_ROOT=$(mktemp --directory)
 
 cleanup() {

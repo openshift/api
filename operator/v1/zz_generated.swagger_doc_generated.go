@@ -222,7 +222,7 @@ var map_ConsoleCustomization = map[string]string{
 	"documentationBaseURL": "documentationBaseURL links to external documentation are shown in various sections of the web console.  Providing documentationBaseURL will override the default documentation URL. Invalid value will prevent a console rollout.",
 	"customProductName":    "customProductName is the name that will be displayed in page titles, logo alt text, and the about dialog instead of the normal OpenShift product name.",
 	"customLogoFile":       "customLogoFile replaces the default OpenShift logo in the masthead and about dialog. It is a reference to a ConfigMap in the openshift-config namespace. This can be created with a command like 'oc create configmap custom-logo --from-file=/path/to/file -n openshift-config'. Image size must be less than 1 MB due to constraints on the ConfigMap size. The ConfigMap key should include a file extension so that the console serves the file with the correct MIME type. Recommended logo specifications: Dimensions: Max height of 68px and max width of 200px SVG format preferred",
-	"developerCatalog":     "developerCatalog allows to configure the shown developer catalog categories.",
+	"developerCatalog":     "developerCatalog allows to configure the shown developer catalog categories (filters) and types (sub-catalogs).",
 	"projectAccess":        "projectAccess allows customizing the available list of ClusterRoles in the Developer perspective Project access page which can be used by a project admin to specify roles to other users and restrict access within the project. If set, the list will replace the default ClusterRole options.",
 	"quickStarts":          "quickStarts allows customization of available ConsoleQuickStart resources in console.",
 	"addPage":              "addPage allows customizing actions on the Add page in developer perspective.",
@@ -293,10 +293,22 @@ func (DeveloperConsoleCatalogCategoryMeta) SwaggerDoc() map[string]string {
 var map_DeveloperConsoleCatalogCustomization = map[string]string{
 	"":           "DeveloperConsoleCatalogCustomization allow cluster admin to configure developer catalog.",
 	"categories": "categories which are shown in the developer catalog.",
+	"types":      "types allows enabling or disabling of sub-catalog types that user can see in the Developer catalog. When omitted, all the sub-catalog types will be shown.",
 }
 
 func (DeveloperConsoleCatalogCustomization) SwaggerDoc() map[string]string {
 	return map_DeveloperConsoleCatalogCustomization
+}
+
+var map_DeveloperConsoleCatalogTypesState = map[string]string{
+	"":         "DeveloperConsoleCatalogTypesState defines the state of the sub-catalog types.",
+	"state":    "state defines if a list of catalog types should be enabled or disabled.",
+	"enabled":  "enabled is a list of developer catalog types (sub-catalogs IDs) that will be shown to users. Types (sub-catalogs) are added via console plugins, the available types (sub-catalog IDs) are available in the console on the cluster configuration page, or when editing the YAML in the console. Example: \"Devfile\", \"HelmChart\", \"BuilderImage\" If the list is non-empty, a new type will not be shown to the user until it is added to list. If the list is empty the complete developer catalog will be shown.",
+	"disabled": "disabled is a list of developer catalog types (sub-catalogs IDs) that are not shown to users. Types (sub-catalogs) are added via console plugins, the available types (sub-catalog IDs) are available in the console on the cluster configuration page, or when editing the YAML in the console. Example: \"Devfile\", \"HelmChart\", \"BuilderImage\" If the list is empty or all the available sub-catalog types are added, then the complete developer catalog should be hidden.",
+}
+
+func (DeveloperConsoleCatalogTypesState) SwaggerDoc() map[string]string {
+	return map_DeveloperConsoleCatalogTypesState
 }
 
 var map_Perspective = map[string]string{
@@ -306,16 +318,6 @@ var map_Perspective = map[string]string{
 
 func (Perspective) SwaggerDoc() map[string]string {
 	return map_Perspective
-}
-
-var map_PerspectiveAccessReview = map[string]string{
-	"":         "PerspectiveAccessReview defines the visibility of the perspective depending on the access review checks. `required` and  `missing` can work together esp. in the case where the cluster admin wants to show another perspective to users without specific permissions. Out of `required` and `missing` atleast one property should be non-empty.",
-	"required": "required defines a list of permission checks. The perspective will only be shown when all checks are successful. When omitted, the access review is skipped and the perspective will not be shown unless it is required to do so based on the configuration of the missing access review list.",
-	"missing":  "missing defines a list of permission checks. The perspective will only be shown when at least one check fails. When omitted, the access review is skipped and the perspective will not be shown unless it is required to do so based on the configuration of the required access review list.",
-}
-
-func (PerspectiveAccessReview) SwaggerDoc() map[string]string {
-	return map_PerspectiveAccessReview
 }
 
 var map_PerspectiveVisibility = map[string]string{
@@ -344,6 +346,16 @@ var map_QuickStarts = map[string]string{
 
 func (QuickStarts) SwaggerDoc() map[string]string {
 	return map_QuickStarts
+}
+
+var map_ResourceAttributesAccessReview = map[string]string{
+	"":         "ResourceAttributesAccessReview defines the visibility of the perspective depending on the access review checks. `required` and  `missing` can work together esp. in the case where the cluster admin wants to show another perspective to users without specific permissions. Out of `required` and `missing` atleast one property should be non-empty.",
+	"required": "required defines a list of permission checks. The perspective will only be shown when all checks are successful. When omitted, the access review is skipped and the perspective will not be shown unless it is required to do so based on the configuration of the missing access review list.",
+	"missing":  "missing defines a list of permission checks. The perspective will only be shown when at least one check fails. When omitted, the access review is skipped and the perspective will not be shown unless it is required to do so based on the configuration of the required access review list.",
+}
+
+func (ResourceAttributesAccessReview) SwaggerDoc() map[string]string {
+	return map_ResourceAttributesAccessReview
 }
 
 var map_StatuspageProvider = map[string]string{

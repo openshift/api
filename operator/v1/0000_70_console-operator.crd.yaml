@@ -90,7 +90,7 @@ spec:
                     type: string
                   developerCatalog:
                     description: developerCatalog allows to configure the shown developer
-                      catalog categories.
+                      catalog categories (filters) and types (sub-catalogs).
                     properties:
                       categories:
                         description: categories which are shown in the developer catalog.
@@ -159,6 +159,55 @@ spec:
                           - label
                           type: object
                         type: array
+                      types:
+                        description: types allows enabling or disabling of sub-catalog
+                          types that user can see in the Developer catalog. When omitted,
+                          all the sub-catalog types will be shown.
+                        properties:
+                          disabled:
+                            description: 'disabled is a list of developer catalog
+                              types (sub-catalogs IDs) that are not shown to users.
+                              Types (sub-catalogs) are added via console plugins,
+                              the available types (sub-catalog IDs) are available
+                              in the console on the cluster configuration page, or
+                              when editing the YAML in the console. Example: "Devfile",
+                              "HelmChart", "BuilderImage" If the list is empty or
+                              all the available sub-catalog types are added, then
+                              the complete developer catalog should be hidden.'
+                            items:
+                              type: string
+                            type: array
+                            x-kubernetes-list-type: set
+                          enabled:
+                            description: 'enabled is a list of developer catalog types
+                              (sub-catalogs IDs) that will be shown to users. Types
+                              (sub-catalogs) are added via console plugins, the available
+                              types (sub-catalog IDs) are available in the console
+                              on the cluster configuration page, or when editing the
+                              YAML in the console. Example: "Devfile", "HelmChart",
+                              "BuilderImage" If the list is non-empty, a new type
+                              will not be shown to the user until it is added to list.
+                              If the list is empty the complete developer catalog
+                              will be shown.'
+                            items:
+                              type: string
+                            type: array
+                            x-kubernetes-list-type: set
+                          state:
+                            description: state defines if a list of catalog types
+                              should be enabled or disabled.
+                            enum:
+                            - Enabled
+                            - Disabled
+                            type: string
+                        required:
+                        - state
+                        type: object
+                        x-kubernetes-validations:
+                        - message: disabled is forbidden when state is Enabled.
+                          rule: has(self.state) && self.state == 'Enabled' && has(self.disabled)
+                        - message: enabled is forbidden when state is Disabled.
+                          rule: has(self.state) && self.state == 'Disabled' && has(self.enabled)
                     type: object
                   documentationBaseURL:
                     description: documentationBaseURL links to external documentation

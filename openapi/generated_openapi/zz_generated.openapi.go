@@ -760,6 +760,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.DeveloperConsoleCatalogCategory":                        schema_openshift_api_operator_v1_DeveloperConsoleCatalogCategory(ref),
 		"github.com/openshift/api/operator/v1.DeveloperConsoleCatalogCategoryMeta":                    schema_openshift_api_operator_v1_DeveloperConsoleCatalogCategoryMeta(ref),
 		"github.com/openshift/api/operator/v1.DeveloperConsoleCatalogCustomization":                   schema_openshift_api_operator_v1_DeveloperConsoleCatalogCustomization(ref),
+		"github.com/openshift/api/operator/v1.DeveloperConsoleCatalogTypesState":                      schema_openshift_api_operator_v1_DeveloperConsoleCatalogTypesState(ref),
 		"github.com/openshift/api/operator/v1.EgressIPConfig":                                         schema_openshift_api_operator_v1_EgressIPConfig(ref),
 		"github.com/openshift/api/operator/v1.EndpointPublishingStrategy":                             schema_openshift_api_operator_v1_EndpointPublishingStrategy(ref),
 		"github.com/openshift/api/operator/v1.Etcd":                                                   schema_openshift_api_operator_v1_Etcd(ref),
@@ -846,7 +847,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.OperatorSpec":                                           schema_openshift_api_operator_v1_OperatorSpec(ref),
 		"github.com/openshift/api/operator/v1.OperatorStatus":                                         schema_openshift_api_operator_v1_OperatorStatus(ref),
 		"github.com/openshift/api/operator/v1.Perspective":                                            schema_openshift_api_operator_v1_Perspective(ref),
-		"github.com/openshift/api/operator/v1.PerspectiveAccessReview":                                schema_openshift_api_operator_v1_PerspectiveAccessReview(ref),
 		"github.com/openshift/api/operator/v1.PerspectiveVisibility":                                  schema_openshift_api_operator_v1_PerspectiveVisibility(ref),
 		"github.com/openshift/api/operator/v1.PolicyAuditConfig":                                      schema_openshift_api_operator_v1_PolicyAuditConfig(ref),
 		"github.com/openshift/api/operator/v1.PrivateStrategy":                                        schema_openshift_api_operator_v1_PrivateStrategy(ref),
@@ -854,6 +854,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.ProviderLoadBalancerParameters":                         schema_openshift_api_operator_v1_ProviderLoadBalancerParameters(ref),
 		"github.com/openshift/api/operator/v1.ProxyConfig":                                            schema_openshift_api_operator_v1_ProxyConfig(ref),
 		"github.com/openshift/api/operator/v1.QuickStarts":                                            schema_openshift_api_operator_v1_QuickStarts(ref),
+		"github.com/openshift/api/operator/v1.ResourceAttributesAccessReview":                         schema_openshift_api_operator_v1_ResourceAttributesAccessReview(ref),
 		"github.com/openshift/api/operator/v1.RouteAdmissionPolicy":                                   schema_openshift_api_operator_v1_RouteAdmissionPolicy(ref),
 		"github.com/openshift/api/operator/v1.SFlowConfig":                                            schema_openshift_api_operator_v1_SFlowConfig(ref),
 		"github.com/openshift/api/operator/v1.Server":                                                 schema_openshift_api_operator_v1_Server(ref),
@@ -37893,7 +37894,7 @@ func schema_openshift_api_operator_v1_ConsoleCustomization(ref common.ReferenceC
 					},
 					"developerCatalog": {
 						SchemaProps: spec.SchemaProps{
-							Description: "developerCatalog allows to configure the shown developer catalog categories.",
+							Description: "developerCatalog allows to configure the shown developer catalog categories (filters) and types (sub-catalogs).",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/operator/v1.DeveloperConsoleCatalogCustomization"),
 						},
@@ -38717,11 +38718,91 @@ func schema_openshift_api_operator_v1_DeveloperConsoleCatalogCustomization(ref c
 							},
 						},
 					},
+					"types": {
+						SchemaProps: spec.SchemaProps{
+							Description: "types allows enabling or disabling of sub-catalog types that user can see in the Developer catalog. When omitted, all the sub-catalog types will be shown.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1.DeveloperConsoleCatalogTypesState"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.DeveloperConsoleCatalogCategory"},
+			"github.com/openshift/api/operator/v1.DeveloperConsoleCatalogCategory", "github.com/openshift/api/operator/v1.DeveloperConsoleCatalogTypesState"},
+	}
+}
+
+func schema_openshift_api_operator_v1_DeveloperConsoleCatalogTypesState(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DeveloperConsoleCatalogTypesState defines the state of the sub-catalog types.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"state": {
+						SchemaProps: spec.SchemaProps{
+							Description: "state defines if a list of catalog types should be enabled or disabled.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"enabled": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "enabled is a list of developer catalog types (sub-catalogs IDs) that will be shown to users. Types (sub-catalogs) are added via console plugins, the available types (sub-catalog IDs) are available in the console on the cluster configuration page, or when editing the YAML in the console. Example: \"Devfile\", \"HelmChart\", \"BuilderImage\" If the list is non-empty, a new type will not be shown to the user until it is added to list. If the list is empty the complete developer catalog will be shown.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"disabled": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "disabled is a list of developer catalog types (sub-catalogs IDs) that are not shown to users. Types (sub-catalogs) are added via console plugins, the available types (sub-catalog IDs) are available in the console on the cluster configuration page, or when editing the YAML in the console. Example: \"Devfile\", \"HelmChart\", \"BuilderImage\" If the list is empty or all the available sub-catalog types are added, then the complete developer catalog should be hidden.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "state",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"disabled": "Disabled",
+								"enabled":  "Enabled",
+							},
+						},
+					},
+				},
+			},
+		},
 	}
 }
 
@@ -43231,49 +43312,6 @@ func schema_openshift_api_operator_v1_Perspective(ref common.ReferenceCallback) 
 	}
 }
 
-func schema_openshift_api_operator_v1_PerspectiveAccessReview(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PerspectiveAccessReview defines the visibility of the perspective depending on the access review checks. `required` and  `missing` can work together esp. in the case where the cluster admin wants to show another perspective to users without specific permissions. Out of `required` and `missing` atleast one property should be non-empty.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"required": {
-						SchemaProps: spec.SchemaProps{
-							Description: "required defines a list of permission checks. The perspective will only be shown when all checks are successful. When omitted, the access review is skipped and the perspective will not be shown unless it is required to do so based on the configuration of the missing access review list.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("k8s.io/api/authorization/v1.ResourceAttributes"),
-									},
-								},
-							},
-						},
-					},
-					"missing": {
-						SchemaProps: spec.SchemaProps{
-							Description: "missing defines a list of permission checks. The perspective will only be shown when at least one check fails. When omitted, the access review is skipped and the perspective will not be shown unless it is required to do so based on the configuration of the required access review list.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("k8s.io/api/authorization/v1.ResourceAttributes"),
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/api/authorization/v1.ResourceAttributes"},
-	}
-}
-
 func schema_openshift_api_operator_v1_PerspectiveVisibility(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -43292,7 +43330,7 @@ func schema_openshift_api_operator_v1_PerspectiveVisibility(ref common.Reference
 					"accessReview": {
 						SchemaProps: spec.SchemaProps{
 							Description: "accessReview defines required and missing access review checks.",
-							Ref:         ref("github.com/openshift/api/operator/v1.PerspectiveAccessReview"),
+							Ref:         ref("github.com/openshift/api/operator/v1.ResourceAttributesAccessReview"),
 						},
 					},
 				},
@@ -43312,7 +43350,7 @@ func schema_openshift_api_operator_v1_PerspectiveVisibility(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.PerspectiveAccessReview"},
+			"github.com/openshift/api/operator/v1.ResourceAttributesAccessReview"},
 	}
 }
 
@@ -43528,6 +43566,49 @@ func schema_openshift_api_operator_v1_QuickStarts(ref common.ReferenceCallback) 
 				},
 			},
 		},
+	}
+}
+
+func schema_openshift_api_operator_v1_ResourceAttributesAccessReview(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ResourceAttributesAccessReview defines the visibility of the perspective depending on the access review checks. `required` and  `missing` can work together esp. in the case where the cluster admin wants to show another perspective to users without specific permissions. Out of `required` and `missing` atleast one property should be non-empty.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"required": {
+						SchemaProps: spec.SchemaProps{
+							Description: "required defines a list of permission checks. The perspective will only be shown when all checks are successful. When omitted, the access review is skipped and the perspective will not be shown unless it is required to do so based on the configuration of the missing access review list.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/authorization/v1.ResourceAttributes"),
+									},
+								},
+							},
+						},
+					},
+					"missing": {
+						SchemaProps: spec.SchemaProps{
+							Description: "missing defines a list of permission checks. The perspective will only be shown when at least one check fails. When omitted, the access review is skipped and the perspective will not be shown unless it is required to do so based on the configuration of the required access review list.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/authorization/v1.ResourceAttributes"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/authorization/v1.ResourceAttributes"},
 	}
 }
 

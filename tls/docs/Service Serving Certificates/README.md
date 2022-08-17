@@ -7,13 +7,30 @@ Used to secure inter-service communication on the local cluster.
 - [Signing Certificate/Key Pairs](#signing-certificatekey-pairs)
     - [service-serving-signer](#service-serving-signer)
 - [Serving Certificate/Key Pairs](#serving-certificatekey-pairs)
+    - [*.cluster-monitoring-operator.openshift-monitoring.svc](#*.cluster-monitoring-operator.openshift-monitoring.svc)
+    - [*.image-registry-operator.openshift-image-registry.svc](#*.image-registry-operator.openshift-image-registry.svc)
+    - [*.kube-state-metrics.openshift-monitoring.svc](#*.kube-state-metrics.openshift-monitoring.svc)
+    - [*.machine-approver.openshift-cluster-machine-approver.svc](#*.machine-approver.openshift-cluster-machine-approver.svc)
+    - [*.metrics.openshift-cluster-samples-operator.svc](#*.metrics.openshift-cluster-samples-operator.svc)
+    - [*.metrics.openshift-network-operator.svc](#*.metrics.openshift-network-operator.svc)
+    - [*.network-metrics-service.openshift-multus.svc](#*.network-metrics-service.openshift-multus.svc)
+    - [*.node-exporter.openshift-monitoring.svc](#*.node-exporter.openshift-monitoring.svc)
+    - [*.node-tuning-operator.openshift-cluster-node-tuning-operator.svc](#*.node-tuning-operator.openshift-cluster-node-tuning-operator.svc)
+    - [*.openshift-state-metrics.openshift-monitoring.svc](#*.openshift-state-metrics.openshift-monitoring.svc)
+    - [*.prometheus-k8s-thanos-sidecar.openshift-monitoring.svc](#*.prometheus-k8s-thanos-sidecar.openshift-monitoring.svc)
+    - [*.prometheus-operator.openshift-monitoring.svc](#*.prometheus-operator.openshift-monitoring.svc)
+    - [*.sdn-controller.openshift-sdn.svc](#*.sdn-controller.openshift-sdn.svc)
+    - [*.sdn.openshift-sdn.svc](#*.sdn.openshift-sdn.svc)
+    - [*.telemeter-client.openshift-monitoring.svc](#*.telemeter-client.openshift-monitoring.svc)
     - [alertmanager-main.openshift-monitoring.svc](#alertmanager-main.openshift-monitoring.svc)
     - [api.openshift-apiserver.svc](#api.openshift-apiserver.svc)
     - [api.openshift-oauth-apiserver.svc](#api.openshift-oauth-apiserver.svc)
+    - [aws-ebs-csi-driver-controller-metrics.openshift-cluster-csi-drivers.svc](#aws-ebs-csi-driver-controller-metrics.openshift-cluster-csi-drivers.svc)
     - [catalog-operator-metrics.openshift-operator-lifecycle-manager.svc](#catalog-operator-metrics.openshift-operator-lifecycle-manager.svc)
     - [cco-metrics.openshift-cloud-credential-operator.svc](#cco-metrics.openshift-cloud-credential-operator.svc)
     - [cluster-autoscaler-operator.openshift-machine-api.svc](#cluster-autoscaler-operator.openshift-machine-api.svc)
-    - [cluster-monitoring-operator.openshift-monitoring.svc](#cluster-monitoring-operator.openshift-monitoring.svc)
+    - [cluster-baremetal-operator-service.openshift-machine-api.svc](#cluster-baremetal-operator-service.openshift-machine-api.svc)
+    - [cluster-baremetal-webhook-service.openshift-machine-api.svc](#cluster-baremetal-webhook-service.openshift-machine-api.svc)
     - [cluster-storage-operator-metrics.openshift-cluster-storage-operator.svc](#cluster-storage-operator-metrics.openshift-cluster-storage-operator.svc)
     - [console.openshift-console.svc](#console.openshift-console.svc)
     - [controller-manager.openshift-controller-manager.svc](#controller-manager.openshift-controller-manager.svc)
@@ -21,20 +38,16 @@ Used to secure inter-service communication on the local cluster.
     - [csi-snapshot-webhook.openshift-cluster-storage-operator.svc](#csi-snapshot-webhook.openshift-cluster-storage-operator.svc)
     - [dns-default.openshift-dns.svc](#dns-default.openshift-dns.svc)
     - [etcd.openshift-etcd.svc](#etcd.openshift-etcd.svc)
-    - [grafana.openshift-monitoring.svc](#grafana.openshift-monitoring.svc)
-    - [image-registry-operator.openshift-image-registry.svc](#image-registry-operator.openshift-image-registry.svc)
     - [image-registry.openshift-image-registry.svc](#image-registry.openshift-image-registry.svc)
     - [kube-controller-manager.openshift-kube-controller-manager.svc](#kube-controller-manager.openshift-kube-controller-manager.svc)
-    - [kube-state-metrics.openshift-monitoring.svc](#kube-state-metrics.openshift-monitoring.svc)
     - [machine-api-controllers.openshift-machine-api.svc](#machine-api-controllers.openshift-machine-api.svc)
     - [machine-api-operator-webhook.openshift-machine-api.svc](#machine-api-operator-webhook.openshift-machine-api.svc)
     - [machine-api-operator.openshift-machine-api.svc](#machine-api-operator.openshift-machine-api.svc)
-    - [machine-approver.openshift-cluster-machine-approver.svc](#machine-approver.openshift-cluster-machine-approver.svc)
+    - [machine-config-controller.openshift-machine-config-operator.svc](#machine-config-controller.openshift-machine-config-operator.svc)
     - [machine-config-daemon.openshift-machine-config-operator.svc](#machine-config-daemon.openshift-machine-config-operator.svc)
     - [marketplace-operator-metrics.openshift-marketplace.svc](#marketplace-operator-metrics.openshift-marketplace.svc)
     - [metrics.openshift-apiserver-operator.svc](#metrics.openshift-apiserver-operator.svc)
     - [metrics.openshift-authentication-operator.svc](#metrics.openshift-authentication-operator.svc)
-    - [metrics.openshift-cluster-samples-operator.svc](#metrics.openshift-cluster-samples-operator.svc)
     - [metrics.openshift-config-operator.svc](#metrics.openshift-config-operator.svc)
     - [metrics.openshift-console-operator.svc](#metrics.openshift-console-operator.svc)
     - [metrics.openshift-controller-manager-operator.svc](#metrics.openshift-controller-manager-operator.svc)
@@ -48,20 +61,15 @@ Used to secure inter-service communication on the local cluster.
     - [metrics.openshift-kube-storage-version-migrator-operator.svc](#metrics.openshift-kube-storage-version-migrator-operator.svc)
     - [metrics.openshift-service-ca-operator.svc](#metrics.openshift-service-ca-operator.svc)
     - [multus-admission-controller.openshift-multus.svc](#multus-admission-controller.openshift-multus.svc)
-    - [network-metrics-service.openshift-multus.svc](#network-metrics-service.openshift-multus.svc)
-    - [node-exporter.openshift-monitoring.svc](#node-exporter.openshift-monitoring.svc)
-    - [node-tuning-operator.openshift-cluster-node-tuning-operator.svc](#node-tuning-operator.openshift-cluster-node-tuning-operator.svc)
     - [oauth-openshift.openshift-authentication.svc](#oauth-openshift.openshift-authentication.svc)
     - [olm-operator-metrics.openshift-operator-lifecycle-manager.svc](#olm-operator-metrics.openshift-operator-lifecycle-manager.svc)
-    - [openshift-state-metrics.openshift-monitoring.svc](#openshift-state-metrics.openshift-monitoring.svc)
+    - [performance-addon-operator-service.openshift-cluster-node-tuning-operator.svc](#performance-addon-operator-service.openshift-cluster-node-tuning-operator.svc)
+    - [pod-identity-webhook.openshift-cloud-credential-operator.svc](#pod-identity-webhook.openshift-cloud-credential-operator.svc)
     - [prometheus-adapter.openshift-monitoring.svc](#prometheus-adapter.openshift-monitoring.svc)
-    - [prometheus-k8s-thanos-sidecar.openshift-monitoring.svc](#prometheus-k8s-thanos-sidecar.openshift-monitoring.svc)
     - [prometheus-k8s.openshift-monitoring.svc](#prometheus-k8s.openshift-monitoring.svc)
-    - [prometheus-operator.openshift-monitoring.svc](#prometheus-operator.openshift-monitoring.svc)
+    - [prometheus-operator-admission-webhook.openshift-monitoring.svc](#prometheus-operator-admission-webhook.openshift-monitoring.svc)
     - [router-internal-default.openshift-ingress.svc](#router-internal-default.openshift-ingress.svc)
     - [scheduler.openshift-kube-scheduler.svc](#scheduler.openshift-kube-scheduler.svc)
-    - [sdn.openshift-sdn.svc](#sdn.openshift-sdn.svc)
-    - [telemeter-client.openshift-monitoring.svc](#telemeter-client.openshift-monitoring.svc)
     - [thanos-querier.openshift-monitoring.svc](#thanos-querier.openshift-monitoring.svc)
 - [Client Certificate/Key Pairs](#client-certificatekey-pairs)
 - [Certificates Without Keys](#certificates-without-keys)
@@ -72,15 +80,15 @@ Used to secure inter-service communication on the local cluster.
 
 
 ### service-serving-signer
-![PKI Graph](subcert-openshift-service-serving-signer16221335705446463666206287945.png)
+![PKI Graph](subcert-openshift-service-serving-signer1660235194316321027491433813.png)
 
 Signer used by service-ca to sign serving certificates for internal service DNS names.
 
 | Property | Value |
 | ----------- | ----------- |
 | Type | Signer |
-| CommonName | openshift-service-serving-signer@1622133570 |
-| SerialNumber | 5446463666206287945 |
+| CommonName | openshift-service-serving-signer@1660235194 |
+| SerialNumber | 316321027491433813 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y60d |
 | Signature Algorithm | SHA256-RSA |
@@ -102,8 +110,473 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 ## Serving Certificate/Key Pairs
 
 
+### *.cluster-monitoring-operator.openshift-monitoring.svc
+![PKI Graph](subcert-*.cluster-monitoring-operator.openshift-monitoring.svc5408701497193776530.png)
+
+
+
+| Property | Value |
+| ----------- | ----------- |
+| Type | Serving |
+| CommonName | *.cluster-monitoring-operator.openshift-monitoring.svc |
+| SerialNumber | 5408701497193776530 |
+| Issuer CommonName | [service-serving-signer](#service-serving-signer) |
+| Validity | 2y |
+| Signature Algorithm | SHA256-RSA |
+| PublicKey Algorithm | RSA 2048 bit |
+| Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
+| ExtendedUsages | - ExtKeyUsageServerAuth |
+| DNS Names | - *.cluster-monitoring-operator.openshift-monitoring.svc<br/>- *.cluster-monitoring-operator.openshift-monitoring.svc.cluster.local<br/>- cluster-monitoring-operator.openshift-monitoring.svc<br/>- cluster-monitoring-operator.openshift-monitoring.svc.cluster.local |
+| IP Addresses |  |
+
+
+#### *.cluster-monitoring-operator.openshift-monitoring.svc Locations
+| Namespace | Secret Name |
+| ----------- | ----------- |
+| openshift-monitoring | cluster-monitoring-operator-tls |
+
+| File | Permissions | User | Group | SE Linux |
+| ----------- | ----------- | ----------- | ----------- | ----------- |
+
+
+
+
+### *.image-registry-operator.openshift-image-registry.svc
+![PKI Graph](subcert-*.image-registry-operator.openshift-image-registry.svc4675784410318447775.png)
+
+
+
+| Property | Value |
+| ----------- | ----------- |
+| Type | Serving |
+| CommonName | *.image-registry-operator.openshift-image-registry.svc |
+| SerialNumber | 4675784410318447775 |
+| Issuer CommonName | [service-serving-signer](#service-serving-signer) |
+| Validity | 2y |
+| Signature Algorithm | SHA256-RSA |
+| PublicKey Algorithm | RSA 2048 bit |
+| Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
+| ExtendedUsages | - ExtKeyUsageServerAuth |
+| DNS Names | - *.image-registry-operator.openshift-image-registry.svc<br/>- *.image-registry-operator.openshift-image-registry.svc.cluster.local<br/>- image-registry-operator.openshift-image-registry.svc<br/>- image-registry-operator.openshift-image-registry.svc.cluster.local |
+| IP Addresses |  |
+
+
+#### *.image-registry-operator.openshift-image-registry.svc Locations
+| Namespace | Secret Name |
+| ----------- | ----------- |
+| openshift-image-registry | image-registry-operator-tls |
+
+| File | Permissions | User | Group | SE Linux |
+| ----------- | ----------- | ----------- | ----------- | ----------- |
+
+
+
+
+### *.kube-state-metrics.openshift-monitoring.svc
+![PKI Graph](subcert-*.kube-state-metrics.openshift-monitoring.svc149350220636519763.png)
+
+
+
+| Property | Value |
+| ----------- | ----------- |
+| Type | Serving |
+| CommonName | *.kube-state-metrics.openshift-monitoring.svc |
+| SerialNumber | 149350220636519763 |
+| Issuer CommonName | [service-serving-signer](#service-serving-signer) |
+| Validity | 2y |
+| Signature Algorithm | SHA256-RSA |
+| PublicKey Algorithm | RSA 2048 bit |
+| Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
+| ExtendedUsages | - ExtKeyUsageServerAuth |
+| DNS Names | - *.kube-state-metrics.openshift-monitoring.svc<br/>- *.kube-state-metrics.openshift-monitoring.svc.cluster.local<br/>- kube-state-metrics.openshift-monitoring.svc<br/>- kube-state-metrics.openshift-monitoring.svc.cluster.local |
+| IP Addresses |  |
+
+
+#### *.kube-state-metrics.openshift-monitoring.svc Locations
+| Namespace | Secret Name |
+| ----------- | ----------- |
+| openshift-monitoring | kube-state-metrics-tls |
+
+| File | Permissions | User | Group | SE Linux |
+| ----------- | ----------- | ----------- | ----------- | ----------- |
+
+
+
+
+### *.machine-approver.openshift-cluster-machine-approver.svc
+![PKI Graph](subcert-*.machine-approver.openshift-cluster-machine-approver.svc6308567208770339707.png)
+
+
+
+| Property | Value |
+| ----------- | ----------- |
+| Type | Serving |
+| CommonName | *.machine-approver.openshift-cluster-machine-approver.svc |
+| SerialNumber | 6308567208770339707 |
+| Issuer CommonName | [service-serving-signer](#service-serving-signer) |
+| Validity | 2y |
+| Signature Algorithm | SHA256-RSA |
+| PublicKey Algorithm | RSA 2048 bit |
+| Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
+| ExtendedUsages | - ExtKeyUsageServerAuth |
+| DNS Names | - *.machine-approver.openshift-cluster-machine-approver.svc<br/>- *.machine-approver.openshift-cluster-machine-approver.svc.cluster.local<br/>- machine-approver.openshift-cluster-machine-approver.svc<br/>- machine-approver.openshift-cluster-machine-approver.svc.cluster.local |
+| IP Addresses |  |
+
+
+#### *.machine-approver.openshift-cluster-machine-approver.svc Locations
+| Namespace | Secret Name |
+| ----------- | ----------- |
+| openshift-cluster-machine-approver | machine-approver-tls |
+
+| File | Permissions | User | Group | SE Linux |
+| ----------- | ----------- | ----------- | ----------- | ----------- |
+
+
+
+
+### *.metrics.openshift-cluster-samples-operator.svc
+![PKI Graph](subcert-*.metrics.openshift-cluster-samples-operator.svc376205288372847070.png)
+
+
+
+| Property | Value |
+| ----------- | ----------- |
+| Type | Serving |
+| CommonName | *.metrics.openshift-cluster-samples-operator.svc |
+| SerialNumber | 376205288372847070 |
+| Issuer CommonName | [service-serving-signer](#service-serving-signer) |
+| Validity | 2y |
+| Signature Algorithm | SHA256-RSA |
+| PublicKey Algorithm | RSA 2048 bit |
+| Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
+| ExtendedUsages | - ExtKeyUsageServerAuth |
+| DNS Names | - *.metrics.openshift-cluster-samples-operator.svc<br/>- *.metrics.openshift-cluster-samples-operator.svc.cluster.local<br/>- metrics.openshift-cluster-samples-operator.svc<br/>- metrics.openshift-cluster-samples-operator.svc.cluster.local |
+| IP Addresses |  |
+
+
+#### *.metrics.openshift-cluster-samples-operator.svc Locations
+| Namespace | Secret Name |
+| ----------- | ----------- |
+| openshift-cluster-samples-operator | samples-operator-tls |
+
+| File | Permissions | User | Group | SE Linux |
+| ----------- | ----------- | ----------- | ----------- | ----------- |
+
+
+
+
+### *.metrics.openshift-network-operator.svc
+![PKI Graph](subcert-*.metrics.openshift-network-operator.svc6421516406206552641.png)
+
+
+
+| Property | Value |
+| ----------- | ----------- |
+| Type | Serving |
+| CommonName | *.metrics.openshift-network-operator.svc |
+| SerialNumber | 6421516406206552641 |
+| Issuer CommonName | [service-serving-signer](#service-serving-signer) |
+| Validity | 2y |
+| Signature Algorithm | SHA256-RSA |
+| PublicKey Algorithm | RSA 2048 bit |
+| Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
+| ExtendedUsages | - ExtKeyUsageServerAuth |
+| DNS Names | - *.metrics.openshift-network-operator.svc<br/>- *.metrics.openshift-network-operator.svc.cluster.local<br/>- metrics.openshift-network-operator.svc<br/>- metrics.openshift-network-operator.svc.cluster.local |
+| IP Addresses |  |
+
+
+#### *.metrics.openshift-network-operator.svc Locations
+| Namespace | Secret Name |
+| ----------- | ----------- |
+| openshift-network-operator | metrics-tls |
+
+| File | Permissions | User | Group | SE Linux |
+| ----------- | ----------- | ----------- | ----------- | ----------- |
+
+
+
+
+### *.network-metrics-service.openshift-multus.svc
+![PKI Graph](subcert-*.network-metrics-service.openshift-multus.svc1150444052307414109.png)
+
+
+
+| Property | Value |
+| ----------- | ----------- |
+| Type | Serving |
+| CommonName | *.network-metrics-service.openshift-multus.svc |
+| SerialNumber | 1150444052307414109 |
+| Issuer CommonName | [service-serving-signer](#service-serving-signer) |
+| Validity | 2y |
+| Signature Algorithm | SHA256-RSA |
+| PublicKey Algorithm | RSA 2048 bit |
+| Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
+| ExtendedUsages | - ExtKeyUsageServerAuth |
+| DNS Names | - *.network-metrics-service.openshift-multus.svc<br/>- *.network-metrics-service.openshift-multus.svc.cluster.local<br/>- network-metrics-service.openshift-multus.svc<br/>- network-metrics-service.openshift-multus.svc.cluster.local |
+| IP Addresses |  |
+
+
+#### *.network-metrics-service.openshift-multus.svc Locations
+| Namespace | Secret Name |
+| ----------- | ----------- |
+| openshift-multus | metrics-daemon-secret |
+
+| File | Permissions | User | Group | SE Linux |
+| ----------- | ----------- | ----------- | ----------- | ----------- |
+
+
+
+
+### *.node-exporter.openshift-monitoring.svc
+![PKI Graph](subcert-*.node-exporter.openshift-monitoring.svc5820670729257377840.png)
+
+
+
+| Property | Value |
+| ----------- | ----------- |
+| Type | Serving |
+| CommonName | *.node-exporter.openshift-monitoring.svc |
+| SerialNumber | 5820670729257377840 |
+| Issuer CommonName | [service-serving-signer](#service-serving-signer) |
+| Validity | 2y |
+| Signature Algorithm | SHA256-RSA |
+| PublicKey Algorithm | RSA 2048 bit |
+| Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
+| ExtendedUsages | - ExtKeyUsageServerAuth |
+| DNS Names | - *.node-exporter.openshift-monitoring.svc<br/>- *.node-exporter.openshift-monitoring.svc.cluster.local<br/>- node-exporter.openshift-monitoring.svc<br/>- node-exporter.openshift-monitoring.svc.cluster.local |
+| IP Addresses |  |
+
+
+#### *.node-exporter.openshift-monitoring.svc Locations
+| Namespace | Secret Name |
+| ----------- | ----------- |
+| openshift-monitoring | node-exporter-tls |
+
+| File | Permissions | User | Group | SE Linux |
+| ----------- | ----------- | ----------- | ----------- | ----------- |
+
+
+
+
+### *.node-tuning-operator.openshift-cluster-node-tuning-operator.svc
+![PKI Graph](subcert-*.node-tuning-operator.openshift-cluster-node-tuning-operator.svc1966650171226976553.png)
+
+
+
+| Property | Value |
+| ----------- | ----------- |
+| Type | Serving |
+| CommonName | *.node-tuning-operator.openshift-cluster-node-tuning-operator.svc |
+| SerialNumber | 1966650171226976553 |
+| Issuer CommonName | [service-serving-signer](#service-serving-signer) |
+| Validity | 2y |
+| Signature Algorithm | SHA256-RSA |
+| PublicKey Algorithm | RSA 2048 bit |
+| Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
+| ExtendedUsages | - ExtKeyUsageServerAuth |
+| DNS Names | - *.node-tuning-operator.openshift-cluster-node-tuning-operator.svc<br/>- *.node-tuning-operator.openshift-cluster-node-tuning-operator.svc.cluster.local<br/>- node-tuning-operator.openshift-cluster-node-tuning-operator.svc<br/>- node-tuning-operator.openshift-cluster-node-tuning-operator.svc.cluster.local |
+| IP Addresses |  |
+
+
+#### *.node-tuning-operator.openshift-cluster-node-tuning-operator.svc Locations
+| Namespace | Secret Name |
+| ----------- | ----------- |
+| openshift-cluster-node-tuning-operator | node-tuning-operator-tls |
+
+| File | Permissions | User | Group | SE Linux |
+| ----------- | ----------- | ----------- | ----------- | ----------- |
+
+
+
+
+### *.openshift-state-metrics.openshift-monitoring.svc
+![PKI Graph](subcert-*.openshift-state-metrics.openshift-monitoring.svc4684927540193099053.png)
+
+
+
+| Property | Value |
+| ----------- | ----------- |
+| Type | Serving |
+| CommonName | *.openshift-state-metrics.openshift-monitoring.svc |
+| SerialNumber | 4684927540193099053 |
+| Issuer CommonName | [service-serving-signer](#service-serving-signer) |
+| Validity | 2y |
+| Signature Algorithm | SHA256-RSA |
+| PublicKey Algorithm | RSA 2048 bit |
+| Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
+| ExtendedUsages | - ExtKeyUsageServerAuth |
+| DNS Names | - *.openshift-state-metrics.openshift-monitoring.svc<br/>- *.openshift-state-metrics.openshift-monitoring.svc.cluster.local<br/>- openshift-state-metrics.openshift-monitoring.svc<br/>- openshift-state-metrics.openshift-monitoring.svc.cluster.local |
+| IP Addresses |  |
+
+
+#### *.openshift-state-metrics.openshift-monitoring.svc Locations
+| Namespace | Secret Name |
+| ----------- | ----------- |
+| openshift-monitoring | openshift-state-metrics-tls |
+
+| File | Permissions | User | Group | SE Linux |
+| ----------- | ----------- | ----------- | ----------- | ----------- |
+
+
+
+
+### *.prometheus-k8s-thanos-sidecar.openshift-monitoring.svc
+![PKI Graph](subcert-*.prometheus-k8s-thanos-sidecar.openshift-monitoring.svc9043370268645417073.png)
+
+
+
+| Property | Value |
+| ----------- | ----------- |
+| Type | Serving |
+| CommonName | *.prometheus-k8s-thanos-sidecar.openshift-monitoring.svc |
+| SerialNumber | 9043370268645417073 |
+| Issuer CommonName | [service-serving-signer](#service-serving-signer) |
+| Validity | 2y |
+| Signature Algorithm | SHA256-RSA |
+| PublicKey Algorithm | RSA 2048 bit |
+| Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
+| ExtendedUsages | - ExtKeyUsageServerAuth |
+| DNS Names | - *.prometheus-k8s-thanos-sidecar.openshift-monitoring.svc<br/>- *.prometheus-k8s-thanos-sidecar.openshift-monitoring.svc.cluster.local<br/>- prometheus-k8s-thanos-sidecar.openshift-monitoring.svc<br/>- prometheus-k8s-thanos-sidecar.openshift-monitoring.svc.cluster.local |
+| IP Addresses |  |
+
+
+#### *.prometheus-k8s-thanos-sidecar.openshift-monitoring.svc Locations
+| Namespace | Secret Name |
+| ----------- | ----------- |
+| openshift-monitoring | prometheus-k8s-thanos-sidecar-tls |
+
+| File | Permissions | User | Group | SE Linux |
+| ----------- | ----------- | ----------- | ----------- | ----------- |
+
+
+
+
+### *.prometheus-operator.openshift-monitoring.svc
+![PKI Graph](subcert-*.prometheus-operator.openshift-monitoring.svc8610502219646032799.png)
+
+
+
+| Property | Value |
+| ----------- | ----------- |
+| Type | Serving |
+| CommonName | *.prometheus-operator.openshift-monitoring.svc |
+| SerialNumber | 8610502219646032799 |
+| Issuer CommonName | [service-serving-signer](#service-serving-signer) |
+| Validity | 2y |
+| Signature Algorithm | SHA256-RSA |
+| PublicKey Algorithm | RSA 2048 bit |
+| Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
+| ExtendedUsages | - ExtKeyUsageServerAuth |
+| DNS Names | - *.prometheus-operator.openshift-monitoring.svc<br/>- *.prometheus-operator.openshift-monitoring.svc.cluster.local<br/>- prometheus-operator.openshift-monitoring.svc<br/>- prometheus-operator.openshift-monitoring.svc.cluster.local |
+| IP Addresses |  |
+
+
+#### *.prometheus-operator.openshift-monitoring.svc Locations
+| Namespace | Secret Name |
+| ----------- | ----------- |
+| openshift-monitoring | prometheus-operator-tls |
+
+| File | Permissions | User | Group | SE Linux |
+| ----------- | ----------- | ----------- | ----------- | ----------- |
+
+
+
+
+### *.sdn-controller.openshift-sdn.svc
+![PKI Graph](subcert-*.sdn-controller.openshift-sdn.svc7537155398406497139.png)
+
+
+
+| Property | Value |
+| ----------- | ----------- |
+| Type | Serving |
+| CommonName | *.sdn-controller.openshift-sdn.svc |
+| SerialNumber | 7537155398406497139 |
+| Issuer CommonName | [service-serving-signer](#service-serving-signer) |
+| Validity | 2y |
+| Signature Algorithm | SHA256-RSA |
+| PublicKey Algorithm | RSA 2048 bit |
+| Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
+| ExtendedUsages | - ExtKeyUsageServerAuth |
+| DNS Names | - *.sdn-controller.openshift-sdn.svc<br/>- *.sdn-controller.openshift-sdn.svc.cluster.local<br/>- sdn-controller.openshift-sdn.svc<br/>- sdn-controller.openshift-sdn.svc.cluster.local |
+| IP Addresses |  |
+
+
+#### *.sdn-controller.openshift-sdn.svc Locations
+| Namespace | Secret Name |
+| ----------- | ----------- |
+| openshift-sdn | sdn-controller-metrics-certs |
+
+| File | Permissions | User | Group | SE Linux |
+| ----------- | ----------- | ----------- | ----------- | ----------- |
+
+
+
+
+### *.sdn.openshift-sdn.svc
+![PKI Graph](subcert-*.sdn.openshift-sdn.svc2028218742012863699.png)
+
+
+
+| Property | Value |
+| ----------- | ----------- |
+| Type | Serving |
+| CommonName | *.sdn.openshift-sdn.svc |
+| SerialNumber | 2028218742012863699 |
+| Issuer CommonName | [service-serving-signer](#service-serving-signer) |
+| Validity | 2y |
+| Signature Algorithm | SHA256-RSA |
+| PublicKey Algorithm | RSA 2048 bit |
+| Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
+| ExtendedUsages | - ExtKeyUsageServerAuth |
+| DNS Names | - *.sdn.openshift-sdn.svc<br/>- *.sdn.openshift-sdn.svc.cluster.local<br/>- sdn.openshift-sdn.svc<br/>- sdn.openshift-sdn.svc.cluster.local |
+| IP Addresses |  |
+
+
+#### *.sdn.openshift-sdn.svc Locations
+| Namespace | Secret Name |
+| ----------- | ----------- |
+| openshift-sdn | sdn-metrics-certs |
+
+| File | Permissions | User | Group | SE Linux |
+| ----------- | ----------- | ----------- | ----------- | ----------- |
+
+
+
+
+### *.telemeter-client.openshift-monitoring.svc
+![PKI Graph](subcert-*.telemeter-client.openshift-monitoring.svc6316470005412686670.png)
+
+
+
+| Property | Value |
+| ----------- | ----------- |
+| Type | Serving |
+| CommonName | *.telemeter-client.openshift-monitoring.svc |
+| SerialNumber | 6316470005412686670 |
+| Issuer CommonName | [service-serving-signer](#service-serving-signer) |
+| Validity | 2y |
+| Signature Algorithm | SHA256-RSA |
+| PublicKey Algorithm | RSA 2048 bit |
+| Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
+| ExtendedUsages | - ExtKeyUsageServerAuth |
+| DNS Names | - *.telemeter-client.openshift-monitoring.svc<br/>- *.telemeter-client.openshift-monitoring.svc.cluster.local<br/>- telemeter-client.openshift-monitoring.svc<br/>- telemeter-client.openshift-monitoring.svc.cluster.local |
+| IP Addresses |  |
+
+
+#### *.telemeter-client.openshift-monitoring.svc Locations
+| Namespace | Secret Name |
+| ----------- | ----------- |
+| openshift-monitoring | telemeter-client-tls |
+
+| File | Permissions | User | Group | SE Linux |
+| ----------- | ----------- | ----------- | ----------- | ----------- |
+
+
+
+
 ### alertmanager-main.openshift-monitoring.svc
-![PKI Graph](subcert-alertmanager-main.openshift-monitoring.svc7889519590428116393.png)
+![PKI Graph](subcert-alertmanager-main.openshift-monitoring.svc6223384734159182299.png)
 
 
 
@@ -111,7 +584,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | alertmanager-main.openshift-monitoring.svc |
-| SerialNumber | 7889519590428116393 |
+| SerialNumber | 6223384734159182299 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -134,7 +607,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 ### api.openshift-apiserver.svc
-![PKI Graph](subcert-api.openshift-apiserver.svc2115297822024425807.png)
+![PKI Graph](subcert-api.openshift-apiserver.svc2457272755999329987.png)
 
 
 
@@ -142,7 +615,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | api.openshift-apiserver.svc |
-| SerialNumber | 2115297822024425807 |
+| SerialNumber | 2457272755999329987 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -165,7 +638,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 ### api.openshift-oauth-apiserver.svc
-![PKI Graph](subcert-api.openshift-oauth-apiserver.svc485864516996010702.png)
+![PKI Graph](subcert-api.openshift-oauth-apiserver.svc2801162004244502483.png)
 
 
 
@@ -173,7 +646,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | api.openshift-oauth-apiserver.svc |
-| SerialNumber | 485864516996010702 |
+| SerialNumber | 2801162004244502483 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -195,8 +668,39 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 
+### aws-ebs-csi-driver-controller-metrics.openshift-cluster-csi-drivers.svc
+![PKI Graph](subcert-aws-ebs-csi-driver-controller-metrics.openshift-cluster-csi-drivers.svc3785796387182627089.png)
+
+
+
+| Property | Value |
+| ----------- | ----------- |
+| Type | Serving |
+| CommonName | aws-ebs-csi-driver-controller-metrics.openshift-cluster-csi-drivers.svc |
+| SerialNumber | 3785796387182627089 |
+| Issuer CommonName | [service-serving-signer](#service-serving-signer) |
+| Validity | 2y |
+| Signature Algorithm | SHA256-RSA |
+| PublicKey Algorithm | RSA 2048 bit |
+| Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
+| ExtendedUsages | - ExtKeyUsageServerAuth |
+| DNS Names | - aws-ebs-csi-driver-controller-metrics.openshift-cluster-csi-drivers.svc<br/>- aws-ebs-csi-driver-controller-metrics.openshift-cluster-csi-drivers.svc.cluster.local |
+| IP Addresses |  |
+
+
+#### aws-ebs-csi-driver-controller-metrics.openshift-cluster-csi-drivers.svc Locations
+| Namespace | Secret Name |
+| ----------- | ----------- |
+| openshift-cluster-csi-drivers | aws-ebs-csi-driver-controller-metrics-serving-cert |
+
+| File | Permissions | User | Group | SE Linux |
+| ----------- | ----------- | ----------- | ----------- | ----------- |
+
+
+
+
 ### catalog-operator-metrics.openshift-operator-lifecycle-manager.svc
-![PKI Graph](subcert-catalog-operator-metrics.openshift-operator-lifecycle-manager.svc5069841447494153423.png)
+![PKI Graph](subcert-catalog-operator-metrics.openshift-operator-lifecycle-manager.svc8354235402282530330.png)
 
 
 
@@ -204,7 +708,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | catalog-operator-metrics.openshift-operator-lifecycle-manager.svc |
-| SerialNumber | 5069841447494153423 |
+| SerialNumber | 8354235402282530330 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -227,7 +731,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 ### cco-metrics.openshift-cloud-credential-operator.svc
-![PKI Graph](subcert-cco-metrics.openshift-cloud-credential-operator.svc6893942648061066111.png)
+![PKI Graph](subcert-cco-metrics.openshift-cloud-credential-operator.svc761473066828534832.png)
 
 
 
@@ -235,7 +739,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | cco-metrics.openshift-cloud-credential-operator.svc |
-| SerialNumber | 6893942648061066111 |
+| SerialNumber | 761473066828534832 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -258,7 +762,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 ### cluster-autoscaler-operator.openshift-machine-api.svc
-![PKI Graph](subcert-cluster-autoscaler-operator.openshift-machine-api.svc8305498258745803921.png)
+![PKI Graph](subcert-cluster-autoscaler-operator.openshift-machine-api.svc4413431980141135024.png)
 
 
 
@@ -266,7 +770,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | cluster-autoscaler-operator.openshift-machine-api.svc |
-| SerialNumber | 8305498258745803921 |
+| SerialNumber | 4413431980141135024 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -288,30 +792,61 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 
-### cluster-monitoring-operator.openshift-monitoring.svc
-![PKI Graph](subcert-cluster-monitoring-operator.openshift-monitoring.svc8944425219050445342.png)
+### cluster-baremetal-operator-service.openshift-machine-api.svc
+![PKI Graph](subcert-cluster-baremetal-operator-service.openshift-machine-api.svc6219679491641346115.png)
 
 
 
 | Property | Value |
 | ----------- | ----------- |
 | Type | Serving |
-| CommonName | cluster-monitoring-operator.openshift-monitoring.svc |
-| SerialNumber | 8944425219050445342 |
+| CommonName | cluster-baremetal-operator-service.openshift-machine-api.svc |
+| SerialNumber | 6219679491641346115 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
 | PublicKey Algorithm | RSA 2048 bit |
 | Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
 | ExtendedUsages | - ExtKeyUsageServerAuth |
-| DNS Names | - cluster-monitoring-operator.openshift-monitoring.svc<br/>- cluster-monitoring-operator.openshift-monitoring.svc.cluster.local |
+| DNS Names | - cluster-baremetal-operator-service.openshift-machine-api.svc<br/>- cluster-baremetal-operator-service.openshift-machine-api.svc.cluster.local |
 | IP Addresses |  |
 
 
-#### cluster-monitoring-operator.openshift-monitoring.svc Locations
+#### cluster-baremetal-operator-service.openshift-machine-api.svc Locations
 | Namespace | Secret Name |
 | ----------- | ----------- |
-| openshift-monitoring | cluster-monitoring-operator-tls |
+| openshift-machine-api | cluster-baremetal-operator-tls |
+
+| File | Permissions | User | Group | SE Linux |
+| ----------- | ----------- | ----------- | ----------- | ----------- |
+
+
+
+
+### cluster-baremetal-webhook-service.openshift-machine-api.svc
+![PKI Graph](subcert-cluster-baremetal-webhook-service.openshift-machine-api.svc7893619671345938179.png)
+
+
+
+| Property | Value |
+| ----------- | ----------- |
+| Type | Serving |
+| CommonName | cluster-baremetal-webhook-service.openshift-machine-api.svc |
+| SerialNumber | 7893619671345938179 |
+| Issuer CommonName | [service-serving-signer](#service-serving-signer) |
+| Validity | 2y |
+| Signature Algorithm | SHA256-RSA |
+| PublicKey Algorithm | RSA 2048 bit |
+| Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
+| ExtendedUsages | - ExtKeyUsageServerAuth |
+| DNS Names | - cluster-baremetal-webhook-service.openshift-machine-api.svc<br/>- cluster-baremetal-webhook-service.openshift-machine-api.svc.cluster.local |
+| IP Addresses |  |
+
+
+#### cluster-baremetal-webhook-service.openshift-machine-api.svc Locations
+| Namespace | Secret Name |
+| ----------- | ----------- |
+| openshift-machine-api | cluster-baremetal-webhook-server-cert |
 
 | File | Permissions | User | Group | SE Linux |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
@@ -320,7 +855,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 ### cluster-storage-operator-metrics.openshift-cluster-storage-operator.svc
-![PKI Graph](subcert-cluster-storage-operator-metrics.openshift-cluster-storage-operator.svc5294915743012167366.png)
+![PKI Graph](subcert-cluster-storage-operator-metrics.openshift-cluster-storage-operator.svc2369046118565646928.png)
 
 
 
@@ -328,7 +863,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | cluster-storage-operator-metrics.openshift-cluster-storage-operator.svc |
-| SerialNumber | 5294915743012167366 |
+| SerialNumber | 2369046118565646928 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -351,7 +886,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 ### console.openshift-console.svc
-![PKI Graph](subcert-console.openshift-console.svc2317112508926355245.png)
+![PKI Graph](subcert-console.openshift-console.svc8197011233209597696.png)
 
 
 
@@ -359,7 +894,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | console.openshift-console.svc |
-| SerialNumber | 2317112508926355245 |
+| SerialNumber | 8197011233209597696 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -382,7 +917,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 ### controller-manager.openshift-controller-manager.svc
-![PKI Graph](subcert-controller-manager.openshift-controller-manager.svc8478506552664981432.png)
+![PKI Graph](subcert-controller-manager.openshift-controller-manager.svc7579546110906496244.png)
 
 
 
@@ -390,7 +925,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | controller-manager.openshift-controller-manager.svc |
-| SerialNumber | 8478506552664981432 |
+| SerialNumber | 7579546110906496244 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -413,7 +948,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 ### csi-snapshot-controller-operator-metrics.openshift-cluster-storage-operator.svc
-![PKI Graph](subcert-csi-snapshot-controller-operator-metrics.openshift-cluster-storage-operator.svc5025200834724127258.png)
+![PKI Graph](subcert-csi-snapshot-controller-operator-metrics.openshift-cluster-storage-operator.svc5515853684854288522.png)
 
 
 
@@ -421,7 +956,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | csi-snapshot-controller-operator-metrics.openshift-cluster-storage-operator.svc |
-| SerialNumber | 5025200834724127258 |
+| SerialNumber | 5515853684854288522 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -444,7 +979,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 ### csi-snapshot-webhook.openshift-cluster-storage-operator.svc
-![PKI Graph](subcert-csi-snapshot-webhook.openshift-cluster-storage-operator.svc1282769300244468729.png)
+![PKI Graph](subcert-csi-snapshot-webhook.openshift-cluster-storage-operator.svc4841878348055970704.png)
 
 
 
@@ -452,7 +987,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | csi-snapshot-webhook.openshift-cluster-storage-operator.svc |
-| SerialNumber | 1282769300244468729 |
+| SerialNumber | 4841878348055970704 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -475,7 +1010,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 ### dns-default.openshift-dns.svc
-![PKI Graph](subcert-dns-default.openshift-dns.svc495137039081958925.png)
+![PKI Graph](subcert-dns-default.openshift-dns.svc1698320698676275660.png)
 
 
 
@@ -483,7 +1018,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | dns-default.openshift-dns.svc |
-| SerialNumber | 495137039081958925 |
+| SerialNumber | 1698320698676275660 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -506,7 +1041,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 ### etcd.openshift-etcd.svc
-![PKI Graph](subcert-etcd.openshift-etcd.svc1695572914480243966.png)
+![PKI Graph](subcert-etcd.openshift-etcd.svc3848846062663214511.png)
 
 
 
@@ -514,7 +1049,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | etcd.openshift-etcd.svc |
-| SerialNumber | 1695572914480243966 |
+| SerialNumber | 3848846062663214511 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -536,70 +1071,8 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 
-### grafana.openshift-monitoring.svc
-![PKI Graph](subcert-grafana.openshift-monitoring.svc5127637701693466147.png)
-
-
-
-| Property | Value |
-| ----------- | ----------- |
-| Type | Serving |
-| CommonName | grafana.openshift-monitoring.svc |
-| SerialNumber | 5127637701693466147 |
-| Issuer CommonName | [service-serving-signer](#service-serving-signer) |
-| Validity | 2y |
-| Signature Algorithm | SHA256-RSA |
-| PublicKey Algorithm | RSA 2048 bit |
-| Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
-| ExtendedUsages | - ExtKeyUsageServerAuth |
-| DNS Names | - grafana.openshift-monitoring.svc<br/>- grafana.openshift-monitoring.svc.cluster.local |
-| IP Addresses |  |
-
-
-#### grafana.openshift-monitoring.svc Locations
-| Namespace | Secret Name |
-| ----------- | ----------- |
-| openshift-monitoring | grafana-tls |
-
-| File | Permissions | User | Group | SE Linux |
-| ----------- | ----------- | ----------- | ----------- | ----------- |
-
-
-
-
-### image-registry-operator.openshift-image-registry.svc
-![PKI Graph](subcert-image-registry-operator.openshift-image-registry.svc4967320171357519668.png)
-
-
-
-| Property | Value |
-| ----------- | ----------- |
-| Type | Serving |
-| CommonName | image-registry-operator.openshift-image-registry.svc |
-| SerialNumber | 4967320171357519668 |
-| Issuer CommonName | [service-serving-signer](#service-serving-signer) |
-| Validity | 2y |
-| Signature Algorithm | SHA256-RSA |
-| PublicKey Algorithm | RSA 2048 bit |
-| Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
-| ExtendedUsages | - ExtKeyUsageServerAuth |
-| DNS Names | - image-registry-operator.openshift-image-registry.svc<br/>- image-registry-operator.openshift-image-registry.svc.cluster.local |
-| IP Addresses |  |
-
-
-#### image-registry-operator.openshift-image-registry.svc Locations
-| Namespace | Secret Name |
-| ----------- | ----------- |
-| openshift-image-registry | image-registry-operator-tls |
-
-| File | Permissions | User | Group | SE Linux |
-| ----------- | ----------- | ----------- | ----------- | ----------- |
-
-
-
-
 ### image-registry.openshift-image-registry.svc
-![PKI Graph](subcert-image-registry.openshift-image-registry.svc7911780555769594156.png)
+![PKI Graph](subcert-image-registry.openshift-image-registry.svc2533061878705206203.png)
 
 
 
@@ -607,7 +1080,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | image-registry.openshift-image-registry.svc |
-| SerialNumber | 7911780555769594156 |
+| SerialNumber | 2533061878705206203 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -630,7 +1103,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 ### kube-controller-manager.openshift-kube-controller-manager.svc
-![PKI Graph](subcert-kube-controller-manager.openshift-kube-controller-manager.svc4706016511474554482.png)
+![PKI Graph](subcert-kube-controller-manager.openshift-kube-controller-manager.svc1896250909081897532.png)
 
 
 
@@ -638,7 +1111,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | kube-controller-manager.openshift-kube-controller-manager.svc |
-| SerialNumber | 4706016511474554482 |
+| SerialNumber | 1896250909081897532 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -658,56 +1131,20 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | openshift-kube-controller-manager | serving-cert-4 |
 | openshift-kube-controller-manager | serving-cert-5 |
 | openshift-kube-controller-manager | serving-cert-6 |
-| openshift-kube-controller-manager | serving-cert-7 |
 
 | File | Permissions | User | Group | SE Linux |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
-| /etc/kubernetes/static-pod-resources/kube-controller-manager-pod-3/secrets/serving-cert/tls.crt/tls.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/kube-controller-manager-pod-3/secrets/serving-cert/tls.crt/tls.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 | /etc/kubernetes/static-pod-resources/kube-controller-manager-pod-4/secrets/serving-cert/tls.crt/tls.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 | /etc/kubernetes/static-pod-resources/kube-controller-manager-pod-4/secrets/serving-cert/tls.crt/tls.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 | /etc/kubernetes/static-pod-resources/kube-controller-manager-pod-5/secrets/serving-cert/tls.crt/tls.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 | /etc/kubernetes/static-pod-resources/kube-controller-manager-pod-5/secrets/serving-cert/tls.crt/tls.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 | /etc/kubernetes/static-pod-resources/kube-controller-manager-pod-6/secrets/serving-cert/tls.crt/tls.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 | /etc/kubernetes/static-pod-resources/kube-controller-manager-pod-6/secrets/serving-cert/tls.crt/tls.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/kube-controller-manager-pod-7/secrets/serving-cert/tls.crt/tls.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/kube-controller-manager-pod-7/secrets/serving-cert/tls.crt/tls.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-
-
-
-### kube-state-metrics.openshift-monitoring.svc
-![PKI Graph](subcert-kube-state-metrics.openshift-monitoring.svc2719079659670312610.png)
-
-
-
-| Property | Value |
-| ----------- | ----------- |
-| Type | Serving |
-| CommonName | kube-state-metrics.openshift-monitoring.svc |
-| SerialNumber | 2719079659670312610 |
-| Issuer CommonName | [service-serving-signer](#service-serving-signer) |
-| Validity | 2y |
-| Signature Algorithm | SHA256-RSA |
-| PublicKey Algorithm | RSA 2048 bit |
-| Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
-| ExtendedUsages | - ExtKeyUsageServerAuth |
-| DNS Names | - kube-state-metrics.openshift-monitoring.svc<br/>- kube-state-metrics.openshift-monitoring.svc.cluster.local |
-| IP Addresses |  |
-
-
-#### kube-state-metrics.openshift-monitoring.svc Locations
-| Namespace | Secret Name |
-| ----------- | ----------- |
-| openshift-monitoring | kube-state-metrics-tls |
-
-| File | Permissions | User | Group | SE Linux |
-| ----------- | ----------- | ----------- | ----------- | ----------- |
-
 
 
 
 ### machine-api-controllers.openshift-machine-api.svc
-![PKI Graph](subcert-machine-api-controllers.openshift-machine-api.svc7828335248087138693.png)
+![PKI Graph](subcert-machine-api-controllers.openshift-machine-api.svc4805346021808337200.png)
 
 
 
@@ -715,7 +1152,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | machine-api-controllers.openshift-machine-api.svc |
-| SerialNumber | 7828335248087138693 |
+| SerialNumber | 4805346021808337200 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -738,7 +1175,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 ### machine-api-operator-webhook.openshift-machine-api.svc
-![PKI Graph](subcert-machine-api-operator-webhook.openshift-machine-api.svc2625486651396182955.png)
+![PKI Graph](subcert-machine-api-operator-webhook.openshift-machine-api.svc821173380931708658.png)
 
 
 
@@ -746,7 +1183,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | machine-api-operator-webhook.openshift-machine-api.svc |
-| SerialNumber | 2625486651396182955 |
+| SerialNumber | 821173380931708658 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -769,7 +1206,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 ### machine-api-operator.openshift-machine-api.svc
-![PKI Graph](subcert-machine-api-operator.openshift-machine-api.svc5923902699021639505.png)
+![PKI Graph](subcert-machine-api-operator.openshift-machine-api.svc7061257560361596120.png)
 
 
 
@@ -777,7 +1214,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | machine-api-operator.openshift-machine-api.svc |
-| SerialNumber | 5923902699021639505 |
+| SerialNumber | 7061257560361596120 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -799,30 +1236,30 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 
-### machine-approver.openshift-cluster-machine-approver.svc
-![PKI Graph](subcert-machine-approver.openshift-cluster-machine-approver.svc1831298527724831562.png)
+### machine-config-controller.openshift-machine-config-operator.svc
+![PKI Graph](subcert-machine-config-controller.openshift-machine-config-operator.svc1669568144903591080.png)
 
 
 
 | Property | Value |
 | ----------- | ----------- |
 | Type | Serving |
-| CommonName | machine-approver.openshift-cluster-machine-approver.svc |
-| SerialNumber | 1831298527724831562 |
+| CommonName | machine-config-controller.openshift-machine-config-operator.svc |
+| SerialNumber | 1669568144903591080 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
 | PublicKey Algorithm | RSA 2048 bit |
 | Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
 | ExtendedUsages | - ExtKeyUsageServerAuth |
-| DNS Names | - machine-approver.openshift-cluster-machine-approver.svc<br/>- machine-approver.openshift-cluster-machine-approver.svc.cluster.local |
+| DNS Names | - machine-config-controller.openshift-machine-config-operator.svc<br/>- machine-config-controller.openshift-machine-config-operator.svc.cluster.local |
 | IP Addresses |  |
 
 
-#### machine-approver.openshift-cluster-machine-approver.svc Locations
+#### machine-config-controller.openshift-machine-config-operator.svc Locations
 | Namespace | Secret Name |
 | ----------- | ----------- |
-| openshift-cluster-machine-approver | machine-approver-tls |
+| openshift-machine-config-operator | mcc-proxy-tls |
 
 | File | Permissions | User | Group | SE Linux |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
@@ -831,7 +1268,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 ### machine-config-daemon.openshift-machine-config-operator.svc
-![PKI Graph](subcert-machine-config-daemon.openshift-machine-config-operator.svc894043062816778974.png)
+![PKI Graph](subcert-machine-config-daemon.openshift-machine-config-operator.svc6197080748599099553.png)
 
 
 
@@ -839,7 +1276,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | machine-config-daemon.openshift-machine-config-operator.svc |
-| SerialNumber | 894043062816778974 |
+| SerialNumber | 6197080748599099553 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -862,7 +1299,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 ### marketplace-operator-metrics.openshift-marketplace.svc
-![PKI Graph](subcert-marketplace-operator-metrics.openshift-marketplace.svc9089605778427485628.png)
+![PKI Graph](subcert-marketplace-operator-metrics.openshift-marketplace.svc3229932011111333191.png)
 
 
 
@@ -870,7 +1307,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | marketplace-operator-metrics.openshift-marketplace.svc |
-| SerialNumber | 9089605778427485628 |
+| SerialNumber | 3229932011111333191 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -893,7 +1330,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 ### metrics.openshift-apiserver-operator.svc
-![PKI Graph](subcert-metrics.openshift-apiserver-operator.svc7400757488192498955.png)
+![PKI Graph](subcert-metrics.openshift-apiserver-operator.svc3364654077885766892.png)
 
 
 
@@ -901,7 +1338,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | metrics.openshift-apiserver-operator.svc |
-| SerialNumber | 7400757488192498955 |
+| SerialNumber | 3364654077885766892 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -924,7 +1361,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 ### metrics.openshift-authentication-operator.svc
-![PKI Graph](subcert-metrics.openshift-authentication-operator.svc6301067254016768819.png)
+![PKI Graph](subcert-metrics.openshift-authentication-operator.svc1159011675408915412.png)
 
 
 
@@ -932,7 +1369,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | metrics.openshift-authentication-operator.svc |
-| SerialNumber | 6301067254016768819 |
+| SerialNumber | 1159011675408915412 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -954,39 +1391,8 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 
-### metrics.openshift-cluster-samples-operator.svc
-![PKI Graph](subcert-metrics.openshift-cluster-samples-operator.svc2686164050326297964.png)
-
-
-
-| Property | Value |
-| ----------- | ----------- |
-| Type | Serving |
-| CommonName | metrics.openshift-cluster-samples-operator.svc |
-| SerialNumber | 2686164050326297964 |
-| Issuer CommonName | [service-serving-signer](#service-serving-signer) |
-| Validity | 2y |
-| Signature Algorithm | SHA256-RSA |
-| PublicKey Algorithm | RSA 2048 bit |
-| Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
-| ExtendedUsages | - ExtKeyUsageServerAuth |
-| DNS Names | - metrics.openshift-cluster-samples-operator.svc<br/>- metrics.openshift-cluster-samples-operator.svc.cluster.local |
-| IP Addresses |  |
-
-
-#### metrics.openshift-cluster-samples-operator.svc Locations
-| Namespace | Secret Name |
-| ----------- | ----------- |
-| openshift-cluster-samples-operator | samples-operator-tls |
-
-| File | Permissions | User | Group | SE Linux |
-| ----------- | ----------- | ----------- | ----------- | ----------- |
-
-
-
-
 ### metrics.openshift-config-operator.svc
-![PKI Graph](subcert-metrics.openshift-config-operator.svc1282522901324235330.png)
+![PKI Graph](subcert-metrics.openshift-config-operator.svc2875861632403042198.png)
 
 
 
@@ -994,7 +1400,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | metrics.openshift-config-operator.svc |
-| SerialNumber | 1282522901324235330 |
+| SerialNumber | 2875861632403042198 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -1017,7 +1423,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 ### metrics.openshift-console-operator.svc
-![PKI Graph](subcert-metrics.openshift-console-operator.svc4841722672729242428.png)
+![PKI Graph](subcert-metrics.openshift-console-operator.svc2594480697393708491.png)
 
 
 
@@ -1025,7 +1431,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | metrics.openshift-console-operator.svc |
-| SerialNumber | 4841722672729242428 |
+| SerialNumber | 2594480697393708491 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -1048,7 +1454,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 ### metrics.openshift-controller-manager-operator.svc
-![PKI Graph](subcert-metrics.openshift-controller-manager-operator.svc7895726074443218984.png)
+![PKI Graph](subcert-metrics.openshift-controller-manager-operator.svc6876654977757942073.png)
 
 
 
@@ -1056,7 +1462,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | metrics.openshift-controller-manager-operator.svc |
-| SerialNumber | 7895726074443218984 |
+| SerialNumber | 6876654977757942073 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -1079,7 +1485,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 ### metrics.openshift-dns-operator.svc
-![PKI Graph](subcert-metrics.openshift-dns-operator.svc7601847597278589785.png)
+![PKI Graph](subcert-metrics.openshift-dns-operator.svc3456920330567479390.png)
 
 
 
@@ -1087,7 +1493,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | metrics.openshift-dns-operator.svc |
-| SerialNumber | 7601847597278589785 |
+| SerialNumber | 3456920330567479390 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -1110,7 +1516,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 ### metrics.openshift-etcd-operator.svc
-![PKI Graph](subcert-metrics.openshift-etcd-operator.svc3978805962409959490.png)
+![PKI Graph](subcert-metrics.openshift-etcd-operator.svc6677616133175219939.png)
 
 
 
@@ -1118,7 +1524,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | metrics.openshift-etcd-operator.svc |
-| SerialNumber | 3978805962409959490 |
+| SerialNumber | 6677616133175219939 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -1141,7 +1547,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 ### metrics.openshift-ingress-operator.svc
-![PKI Graph](subcert-metrics.openshift-ingress-operator.svc8279326142192924063.png)
+![PKI Graph](subcert-metrics.openshift-ingress-operator.svc848448456271825148.png)
 
 
 
@@ -1149,7 +1555,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | metrics.openshift-ingress-operator.svc |
-| SerialNumber | 8279326142192924063 |
+| SerialNumber | 848448456271825148 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -1172,7 +1578,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 ### metrics.openshift-insights.svc
-![PKI Graph](subcert-metrics.openshift-insights.svc6511383752257504790.png)
+![PKI Graph](subcert-metrics.openshift-insights.svc7854905682415005669.png)
 
 
 
@@ -1180,7 +1586,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | metrics.openshift-insights.svc |
-| SerialNumber | 6511383752257504790 |
+| SerialNumber | 7854905682415005669 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -1203,7 +1609,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 ### metrics.openshift-kube-apiserver-operator.svc
-![PKI Graph](subcert-metrics.openshift-kube-apiserver-operator.svc29949893468932305.png)
+![PKI Graph](subcert-metrics.openshift-kube-apiserver-operator.svc6235465719572846931.png)
 
 
 
@@ -1211,7 +1617,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | metrics.openshift-kube-apiserver-operator.svc |
-| SerialNumber | 29949893468932305 |
+| SerialNumber | 6235465719572846931 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -1234,7 +1640,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 ### metrics.openshift-kube-controller-manager-operator.svc
-![PKI Graph](subcert-metrics.openshift-kube-controller-manager-operator.svc1704350015219690809.png)
+![PKI Graph](subcert-metrics.openshift-kube-controller-manager-operator.svc5438971602805831466.png)
 
 
 
@@ -1242,7 +1648,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | metrics.openshift-kube-controller-manager-operator.svc |
-| SerialNumber | 1704350015219690809 |
+| SerialNumber | 5438971602805831466 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -1265,7 +1671,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 ### metrics.openshift-kube-scheduler-operator.svc
-![PKI Graph](subcert-metrics.openshift-kube-scheduler-operator.svc5130875085637374527.png)
+![PKI Graph](subcert-metrics.openshift-kube-scheduler-operator.svc4366531022562557239.png)
 
 
 
@@ -1273,7 +1679,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | metrics.openshift-kube-scheduler-operator.svc |
-| SerialNumber | 5130875085637374527 |
+| SerialNumber | 4366531022562557239 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -1296,7 +1702,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 ### metrics.openshift-kube-storage-version-migrator-operator.svc
-![PKI Graph](subcert-metrics.openshift-kube-storage-version-migrator-operator.svc5764379107559423336.png)
+![PKI Graph](subcert-metrics.openshift-kube-storage-version-migrator-operator.svc1904991570617038281.png)
 
 
 
@@ -1304,7 +1710,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | metrics.openshift-kube-storage-version-migrator-operator.svc |
-| SerialNumber | 5764379107559423336 |
+| SerialNumber | 1904991570617038281 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -1327,7 +1733,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 ### metrics.openshift-service-ca-operator.svc
-![PKI Graph](subcert-metrics.openshift-service-ca-operator.svc8465006101141555491.png)
+![PKI Graph](subcert-metrics.openshift-service-ca-operator.svc7400587186269430937.png)
 
 
 
@@ -1335,7 +1741,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | metrics.openshift-service-ca-operator.svc |
-| SerialNumber | 8465006101141555491 |
+| SerialNumber | 7400587186269430937 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -1358,7 +1764,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 ### multus-admission-controller.openshift-multus.svc
-![PKI Graph](subcert-multus-admission-controller.openshift-multus.svc4660313081021989101.png)
+![PKI Graph](subcert-multus-admission-controller.openshift-multus.svc1734585295770866263.png)
 
 
 
@@ -1366,7 +1772,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | multus-admission-controller.openshift-multus.svc |
-| SerialNumber | 4660313081021989101 |
+| SerialNumber | 1734585295770866263 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -1388,101 +1794,8 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 
-### network-metrics-service.openshift-multus.svc
-![PKI Graph](subcert-network-metrics-service.openshift-multus.svc1889672894063829328.png)
-
-
-
-| Property | Value |
-| ----------- | ----------- |
-| Type | Serving |
-| CommonName | network-metrics-service.openshift-multus.svc |
-| SerialNumber | 1889672894063829328 |
-| Issuer CommonName | [service-serving-signer](#service-serving-signer) |
-| Validity | 2y |
-| Signature Algorithm | SHA256-RSA |
-| PublicKey Algorithm | RSA 2048 bit |
-| Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
-| ExtendedUsages | - ExtKeyUsageServerAuth |
-| DNS Names | - network-metrics-service.openshift-multus.svc<br/>- network-metrics-service.openshift-multus.svc.cluster.local |
-| IP Addresses |  |
-
-
-#### network-metrics-service.openshift-multus.svc Locations
-| Namespace | Secret Name |
-| ----------- | ----------- |
-| openshift-multus | metrics-daemon-secret |
-
-| File | Permissions | User | Group | SE Linux |
-| ----------- | ----------- | ----------- | ----------- | ----------- |
-
-
-
-
-### node-exporter.openshift-monitoring.svc
-![PKI Graph](subcert-node-exporter.openshift-monitoring.svc6997256025626337803.png)
-
-
-
-| Property | Value |
-| ----------- | ----------- |
-| Type | Serving |
-| CommonName | node-exporter.openshift-monitoring.svc |
-| SerialNumber | 6997256025626337803 |
-| Issuer CommonName | [service-serving-signer](#service-serving-signer) |
-| Validity | 2y |
-| Signature Algorithm | SHA256-RSA |
-| PublicKey Algorithm | RSA 2048 bit |
-| Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
-| ExtendedUsages | - ExtKeyUsageServerAuth |
-| DNS Names | - node-exporter.openshift-monitoring.svc<br/>- node-exporter.openshift-monitoring.svc.cluster.local |
-| IP Addresses |  |
-
-
-#### node-exporter.openshift-monitoring.svc Locations
-| Namespace | Secret Name |
-| ----------- | ----------- |
-| openshift-monitoring | node-exporter-tls |
-
-| File | Permissions | User | Group | SE Linux |
-| ----------- | ----------- | ----------- | ----------- | ----------- |
-
-
-
-
-### node-tuning-operator.openshift-cluster-node-tuning-operator.svc
-![PKI Graph](subcert-node-tuning-operator.openshift-cluster-node-tuning-operator.svc7832843275082956404.png)
-
-
-
-| Property | Value |
-| ----------- | ----------- |
-| Type | Serving |
-| CommonName | node-tuning-operator.openshift-cluster-node-tuning-operator.svc |
-| SerialNumber | 7832843275082956404 |
-| Issuer CommonName | [service-serving-signer](#service-serving-signer) |
-| Validity | 2y |
-| Signature Algorithm | SHA256-RSA |
-| PublicKey Algorithm | RSA 2048 bit |
-| Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
-| ExtendedUsages | - ExtKeyUsageServerAuth |
-| DNS Names | - node-tuning-operator.openshift-cluster-node-tuning-operator.svc<br/>- node-tuning-operator.openshift-cluster-node-tuning-operator.svc.cluster.local |
-| IP Addresses |  |
-
-
-#### node-tuning-operator.openshift-cluster-node-tuning-operator.svc Locations
-| Namespace | Secret Name |
-| ----------- | ----------- |
-| openshift-cluster-node-tuning-operator | node-tuning-operator-tls |
-
-| File | Permissions | User | Group | SE Linux |
-| ----------- | ----------- | ----------- | ----------- | ----------- |
-
-
-
-
 ### oauth-openshift.openshift-authentication.svc
-![PKI Graph](subcert-oauth-openshift.openshift-authentication.svc455687257200358236.png)
+![PKI Graph](subcert-oauth-openshift.openshift-authentication.svc4046784375362903289.png)
 
 
 
@@ -1490,7 +1803,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | oauth-openshift.openshift-authentication.svc |
-| SerialNumber | 455687257200358236 |
+| SerialNumber | 4046784375362903289 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -1513,7 +1826,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 ### olm-operator-metrics.openshift-operator-lifecycle-manager.svc
-![PKI Graph](subcert-olm-operator-metrics.openshift-operator-lifecycle-manager.svc8800549647405875654.png)
+![PKI Graph](subcert-olm-operator-metrics.openshift-operator-lifecycle-manager.svc5116318574914027760.png)
 
 
 
@@ -1521,7 +1834,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | olm-operator-metrics.openshift-operator-lifecycle-manager.svc |
-| SerialNumber | 8800549647405875654 |
+| SerialNumber | 5116318574914027760 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -1543,30 +1856,61 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 
-### openshift-state-metrics.openshift-monitoring.svc
-![PKI Graph](subcert-openshift-state-metrics.openshift-monitoring.svc7882046295044958152.png)
+### performance-addon-operator-service.openshift-cluster-node-tuning-operator.svc
+![PKI Graph](subcert-performance-addon-operator-service.openshift-cluster-node-tuning-operator.svc4586704378265138575.png)
 
 
 
 | Property | Value |
 | ----------- | ----------- |
 | Type | Serving |
-| CommonName | openshift-state-metrics.openshift-monitoring.svc |
-| SerialNumber | 7882046295044958152 |
+| CommonName | performance-addon-operator-service.openshift-cluster-node-tuning-operator.svc |
+| SerialNumber | 4586704378265138575 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
 | PublicKey Algorithm | RSA 2048 bit |
 | Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
 | ExtendedUsages | - ExtKeyUsageServerAuth |
-| DNS Names | - openshift-state-metrics.openshift-monitoring.svc<br/>- openshift-state-metrics.openshift-monitoring.svc.cluster.local |
+| DNS Names | - performance-addon-operator-service.openshift-cluster-node-tuning-operator.svc<br/>- performance-addon-operator-service.openshift-cluster-node-tuning-operator.svc.cluster.local |
 | IP Addresses |  |
 
 
-#### openshift-state-metrics.openshift-monitoring.svc Locations
+#### performance-addon-operator-service.openshift-cluster-node-tuning-operator.svc Locations
 | Namespace | Secret Name |
 | ----------- | ----------- |
-| openshift-monitoring | openshift-state-metrics-tls |
+| openshift-cluster-node-tuning-operator | performance-addon-operator-webhook-cert |
+
+| File | Permissions | User | Group | SE Linux |
+| ----------- | ----------- | ----------- | ----------- | ----------- |
+
+
+
+
+### pod-identity-webhook.openshift-cloud-credential-operator.svc
+![PKI Graph](subcert-pod-identity-webhook.openshift-cloud-credential-operator.svc2242223452909203393.png)
+
+
+
+| Property | Value |
+| ----------- | ----------- |
+| Type | Serving |
+| CommonName | pod-identity-webhook.openshift-cloud-credential-operator.svc |
+| SerialNumber | 2242223452909203393 |
+| Issuer CommonName | [service-serving-signer](#service-serving-signer) |
+| Validity | 2y |
+| Signature Algorithm | SHA256-RSA |
+| PublicKey Algorithm | RSA 2048 bit |
+| Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
+| ExtendedUsages | - ExtKeyUsageServerAuth |
+| DNS Names | - pod-identity-webhook.openshift-cloud-credential-operator.svc<br/>- pod-identity-webhook.openshift-cloud-credential-operator.svc.cluster.local |
+| IP Addresses |  |
+
+
+#### pod-identity-webhook.openshift-cloud-credential-operator.svc Locations
+| Namespace | Secret Name |
+| ----------- | ----------- |
+| openshift-cloud-credential-operator | pod-identity-webhook |
 
 | File | Permissions | User | Group | SE Linux |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
@@ -1575,7 +1919,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 ### prometheus-adapter.openshift-monitoring.svc
-![PKI Graph](subcert-prometheus-adapter.openshift-monitoring.svc2945501834265381842.png)
+![PKI Graph](subcert-prometheus-adapter.openshift-monitoring.svc1732525563472031104.png)
 
 
 
@@ -1583,7 +1927,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | prometheus-adapter.openshift-monitoring.svc |
-| SerialNumber | 2945501834265381842 |
+| SerialNumber | 1732525563472031104 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -1597,7 +1941,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 #### prometheus-adapter.openshift-monitoring.svc Locations
 | Namespace | Secret Name |
 | ----------- | ----------- |
-| openshift-monitoring | prometheus-adapter-8tkqrsmu9afpe |
+| openshift-monitoring | prometheus-adapter-5f9puh20l637u |
 | openshift-monitoring | prometheus-adapter-tls |
 
 | File | Permissions | User | Group | SE Linux |
@@ -1606,39 +1950,8 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 
-### prometheus-k8s-thanos-sidecar.openshift-monitoring.svc
-![PKI Graph](subcert-prometheus-k8s-thanos-sidecar.openshift-monitoring.svc8595435866243050124.png)
-
-
-
-| Property | Value |
-| ----------- | ----------- |
-| Type | Serving |
-| CommonName | prometheus-k8s-thanos-sidecar.openshift-monitoring.svc |
-| SerialNumber | 8595435866243050124 |
-| Issuer CommonName | [service-serving-signer](#service-serving-signer) |
-| Validity | 2y |
-| Signature Algorithm | SHA256-RSA |
-| PublicKey Algorithm | RSA 2048 bit |
-| Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
-| ExtendedUsages | - ExtKeyUsageServerAuth |
-| DNS Names | - prometheus-k8s-thanos-sidecar.openshift-monitoring.svc<br/>- prometheus-k8s-thanos-sidecar.openshift-monitoring.svc.cluster.local |
-| IP Addresses |  |
-
-
-#### prometheus-k8s-thanos-sidecar.openshift-monitoring.svc Locations
-| Namespace | Secret Name |
-| ----------- | ----------- |
-| openshift-monitoring | prometheus-k8s-thanos-sidecar-tls |
-
-| File | Permissions | User | Group | SE Linux |
-| ----------- | ----------- | ----------- | ----------- | ----------- |
-
-
-
-
 ### prometheus-k8s.openshift-monitoring.svc
-![PKI Graph](subcert-prometheus-k8s.openshift-monitoring.svc8353222847585982884.png)
+![PKI Graph](subcert-prometheus-k8s.openshift-monitoring.svc7607235645352172219.png)
 
 
 
@@ -1646,7 +1959,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | prometheus-k8s.openshift-monitoring.svc |
-| SerialNumber | 8353222847585982884 |
+| SerialNumber | 7607235645352172219 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -1668,30 +1981,30 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 
-### prometheus-operator.openshift-monitoring.svc
-![PKI Graph](subcert-prometheus-operator.openshift-monitoring.svc4178324176483245369.png)
+### prometheus-operator-admission-webhook.openshift-monitoring.svc
+![PKI Graph](subcert-prometheus-operator-admission-webhook.openshift-monitoring.svc8444555083473456618.png)
 
 
 
 | Property | Value |
 | ----------- | ----------- |
 | Type | Serving |
-| CommonName | prometheus-operator.openshift-monitoring.svc |
-| SerialNumber | 4178324176483245369 |
+| CommonName | prometheus-operator-admission-webhook.openshift-monitoring.svc |
+| SerialNumber | 8444555083473456618 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
 | PublicKey Algorithm | RSA 2048 bit |
 | Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
 | ExtendedUsages | - ExtKeyUsageServerAuth |
-| DNS Names | - prometheus-operator.openshift-monitoring.svc<br/>- prometheus-operator.openshift-monitoring.svc.cluster.local |
+| DNS Names | - prometheus-operator-admission-webhook.openshift-monitoring.svc<br/>- prometheus-operator-admission-webhook.openshift-monitoring.svc.cluster.local |
 | IP Addresses |  |
 
 
-#### prometheus-operator.openshift-monitoring.svc Locations
+#### prometheus-operator-admission-webhook.openshift-monitoring.svc Locations
 | Namespace | Secret Name |
 | ----------- | ----------- |
-| openshift-monitoring | prometheus-operator-tls |
+| openshift-monitoring | prometheus-operator-admission-webhook-tls |
 
 | File | Permissions | User | Group | SE Linux |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
@@ -1700,7 +2013,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 ### router-internal-default.openshift-ingress.svc
-![PKI Graph](subcert-router-internal-default.openshift-ingress.svc5035056584329763135.png)
+![PKI Graph](subcert-router-internal-default.openshift-ingress.svc5196656952303372444.png)
 
 
 
@@ -1708,7 +2021,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | router-internal-default.openshift-ingress.svc |
-| SerialNumber | 5035056584329763135 |
+| SerialNumber | 5196656952303372444 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -1731,7 +2044,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 
 
 ### scheduler.openshift-kube-scheduler.svc
-![PKI Graph](subcert-scheduler.openshift-kube-scheduler.svc6657891906279326247.png)
+![PKI Graph](subcert-scheduler.openshift-kube-scheduler.svc449821371379777563.png)
 
 
 
@@ -1739,7 +2052,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | scheduler.openshift-kube-scheduler.svc |
-| SerialNumber | 6657891906279326247 |
+| SerialNumber | 449821371379777563 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -1754,91 +2067,23 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | Namespace | Secret Name |
 | ----------- | ----------- |
 | openshift-kube-scheduler | serving-cert |
-| openshift-kube-scheduler | serving-cert-2 |
 | openshift-kube-scheduler | serving-cert-3 |
 | openshift-kube-scheduler | serving-cert-4 |
 | openshift-kube-scheduler | serving-cert-5 |
 | openshift-kube-scheduler | serving-cert-6 |
+| openshift-kube-scheduler | serving-cert-7 |
 
 | File | Permissions | User | Group | SE Linux |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
-| /etc/kubernetes/static-pod-resources/kube-scheduler-pod-3/secrets/serving-cert/tls.crt/tls.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/kube-scheduler-pod-3/secrets/serving-cert/tls.crt/tls.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/kube-scheduler-pod-5/secrets/serving-cert/tls.crt/tls.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/kube-scheduler-pod-5/secrets/serving-cert/tls.crt/tls.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 | /etc/kubernetes/static-pod-resources/kube-scheduler-pod-6/secrets/serving-cert/tls.crt/tls.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 | /etc/kubernetes/static-pod-resources/kube-scheduler-pod-6/secrets/serving-cert/tls.crt/tls.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/kube-scheduler-pod-2/secrets/serving-cert/tls.crt/tls.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/kube-scheduler-pod-2/secrets/serving-cert/tls.crt/tls.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/kube-scheduler-pod-4/secrets/serving-cert/tls.crt/tls.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/kube-scheduler-pod-4/secrets/serving-cert/tls.crt/tls.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-
-
-
-### sdn.openshift-sdn.svc
-![PKI Graph](subcert-sdn.openshift-sdn.svc2625658655664643767.png)
-
-
-
-| Property | Value |
-| ----------- | ----------- |
-| Type | Serving |
-| CommonName | sdn.openshift-sdn.svc |
-| SerialNumber | 2625658655664643767 |
-| Issuer CommonName | [service-serving-signer](#service-serving-signer) |
-| Validity | 2y |
-| Signature Algorithm | SHA256-RSA |
-| PublicKey Algorithm | RSA 2048 bit |
-| Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
-| ExtendedUsages | - ExtKeyUsageServerAuth |
-| DNS Names | - sdn.openshift-sdn.svc<br/>- sdn.openshift-sdn.svc.cluster.local |
-| IP Addresses |  |
-
-
-#### sdn.openshift-sdn.svc Locations
-| Namespace | Secret Name |
-| ----------- | ----------- |
-| openshift-sdn | sdn-metrics-certs |
-
-| File | Permissions | User | Group | SE Linux |
-| ----------- | ----------- | ----------- | ----------- | ----------- |
-
-
-
-
-### telemeter-client.openshift-monitoring.svc
-![PKI Graph](subcert-telemeter-client.openshift-monitoring.svc1112524969442289252.png)
-
-
-
-| Property | Value |
-| ----------- | ----------- |
-| Type | Serving |
-| CommonName | telemeter-client.openshift-monitoring.svc |
-| SerialNumber | 1112524969442289252 |
-| Issuer CommonName | [service-serving-signer](#service-serving-signer) |
-| Validity | 2y |
-| Signature Algorithm | SHA256-RSA |
-| PublicKey Algorithm | RSA 2048 bit |
-| Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
-| ExtendedUsages | - ExtKeyUsageServerAuth |
-| DNS Names | - telemeter-client.openshift-monitoring.svc<br/>- telemeter-client.openshift-monitoring.svc.cluster.local |
-| IP Addresses |  |
-
-
-#### telemeter-client.openshift-monitoring.svc Locations
-| Namespace | Secret Name |
-| ----------- | ----------- |
-| openshift-monitoring | telemeter-client-tls |
-
-| File | Permissions | User | Group | SE Linux |
-| ----------- | ----------- | ----------- | ----------- | ----------- |
-
+| /etc/kubernetes/static-pod-resources/kube-scheduler-pod-7/secrets/serving-cert/tls.crt/tls.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/kube-scheduler-pod-7/secrets/serving-cert/tls.crt/tls.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 
 
 
 ### thanos-querier.openshift-monitoring.svc
-![PKI Graph](subcert-thanos-querier.openshift-monitoring.svc2348697830836353775.png)
+![PKI Graph](subcert-thanos-querier.openshift-monitoring.svc2215041012551543033.png)
 
 
 
@@ -1846,7 +2091,7 @@ Signer used by service-ca to sign serving certificates for internal service DNS 
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | thanos-querier.openshift-monitoring.svc |
-| SerialNumber | 2348697830836353775 |
+| SerialNumber | 2215041012551543033 |
 | Issuer CommonName | [service-serving-signer](#service-serving-signer) |
 | Validity | 2y |
 | Signature Algorithm | SHA256-RSA |
@@ -1879,7 +2124,7 @@ installation process.
 
 
 ### service-ca
-![PKI Graph](subca-3983882995.png)
+![PKI Graph](subca-2412928394.png)
 
 CA for recognizing serving certificates for services that were signed by our service-ca controller.
 
@@ -1899,15 +2144,12 @@ CA for recognizing serving certificates for services that were signed by our ser
 | openshift-kube-controller-manager | service-ca-4 |
 | openshift-kube-controller-manager | service-ca-5 |
 | openshift-kube-controller-manager | service-ca-6 |
-| openshift-kube-controller-manager | service-ca-7 |
 | openshift-service-ca | signing-cabundle |
 
 | File | Permissions | User | Group | SE Linux |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
-| /etc/kubernetes/static-pod-resources/kube-controller-manager-pod-3/configmaps/service-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 | /etc/kubernetes/static-pod-resources/kube-controller-manager-pod-4/configmaps/service-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 | /etc/kubernetes/static-pod-resources/kube-controller-manager-pod-5/configmaps/service-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 | /etc/kubernetes/static-pod-resources/kube-controller-manager-pod-6/configmaps/service-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/kube-controller-manager-pod-7/configmaps/service-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 
 

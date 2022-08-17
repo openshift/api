@@ -61,3 +61,5 @@ github.com/openshift/api/security/v1,\
 github.com/openshift/api/template/v1,\
 github.com/openshift/api/user/v1\
 "
+
+TYPE_PACKAGE_VERSIONS="apiserver:v1 apps:v1 authorization:v1 build:v1 config:v1 helm:v1beta1 console:v1 console:v1alpha1 image:v1,docker10,dockerpre012 imageregistry:v1 kubecontrolplane:v1 legacyconfig:v1 cloudnetwork:v1 network:v1 networkoperator:v1 oauth:v1 openshiftcontrolplane:v1 operator:v1 operator:v1alpha1 operatorcontrolplane:v1alpha1 operatoringress:v1 osin:v1 project:v1 quota:v1 route:v1 samples:v1 security:v1 securityinternal:v1 servicecertsigner:v1alpha1 sharedresource:v1alpha1 template:v1 user:v1 machine:v1beta1 machine:v1 monitoring:v1alpha1"

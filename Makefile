@@ -52,6 +52,7 @@ RUNTIME_IMAGE_NAME ?= registry.ci.openshift.org/openshift/release:rhel-8-release
 
 verify-scripts:
 	bash -x hack/verify-deepcopy.sh
+	bash -x hack/verify-openapi.sh
 	bash -x hack/verify-protobuf.sh
 	bash -x hack/verify-swagger-docs.sh
 	hack/verify-crds.sh
@@ -65,6 +66,7 @@ verify: verify-scripts verify-codegen-crds
 update-scripts:
 	hack/update-deepcopy.sh
 	hack/update-compatibility.sh
+	hack/update-openapi.sh
 	hack/update-protobuf.sh
 	hack/update-swagger-docs.sh
 .PHONY: update-scripts

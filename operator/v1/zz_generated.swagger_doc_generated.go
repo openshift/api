@@ -404,6 +404,16 @@ func (DNS) SwaggerDoc() map[string]string {
 	return map_DNS
 }
 
+var map_DNSCache = map[string]string{
+	"":            "DNSCache defines the fields for configuring DNS caching.",
+	"positiveTTL": "positiveTTL is optional and specifies the amount of time that a positive response should be cached.\n\nIf configured, it must be a value of 1s (1 second) or greater up to a theoretical maximum of several years. If not configured, the value will be 0 (zero) and OpenShift will use a default value of 900 seconds unless noted otherwise in the respective Corefile for your version of OpenShift. The default value of 900 seconds is subject to change. This field expects an unsigned duration string of decimal numbers, each with optional fraction and a unit suffix, e.g. \"100s\", \"1m30s\". Valid time units are \"s\", \"m\", and \"h\".",
+	"negativeTTL": "negativeTTL is optional and specifies the amount of time that a negative response should be cached.\n\nIf configured, it must be a value of 1s (1 second) or greater up to a theoretical maximum of several years. If not configured, the value will be 0 (zero) and OpenShift will use a default value of 30 seconds unless noted otherwise in the respective Corefile for your version of OpenShift. The default value of 30 seconds is subject to change. This field expects an unsigned duration string of decimal numbers, each with optional fraction and a unit suffix, e.g. \"100s\", \"1m30s\". Valid time units are \"s\", \"m\", and \"h\".",
+}
+
+func (DNSCache) SwaggerDoc() map[string]string {
+	return map_DNSCache
+}
+
 var map_DNSList = map[string]string{
 	"": "DNSList contains a list of DNS\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 }
@@ -440,6 +450,7 @@ var map_DNSSpec = map[string]string{
 	"managementState":   "managementState indicates whether the DNS operator should manage cluster DNS",
 	"operatorLogLevel":  "operatorLogLevel controls the logging level of the DNS Operator. Valid values are: \"Normal\", \"Debug\", \"Trace\". Defaults to \"Normal\". setting operatorLogLevel: Trace will produce extremely verbose logs.",
 	"logLevel":          "logLevel describes the desired logging verbosity for CoreDNS. Any one of the following values may be specified: * Normal logs errors from upstream resolvers. * Debug logs errors, NXDOMAIN responses, and NODATA responses. * Trace logs errors and all responses.\n Setting logLevel: Trace will produce extremely verbose logs.\nValid values are: \"Normal\", \"Debug\", \"Trace\". Defaults to \"Normal\".",
+	"cache":             "cache describes the caching configuration that applies to all server blocks listed in the Corefile. This field allows a cluster admin to optionally configure: * positiveTTL which is a duration for which positive responses should be cached. * negativeTTL which is a duration for which negative responses should be cached. If this is not configured, OpenShift will configure positive and negative caching with a default value that is subject to change. At the time of writing, the default positiveTTL is 900 seconds and the default negativeTTL is 30 seconds or as noted in the respective Corefile for your version of OpenShift.",
 }
 
 func (DNSSpec) SwaggerDoc() map[string]string {

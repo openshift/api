@@ -244,6 +244,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.ImageDigestMirrorSet":                                     schema_openshift_api_config_v1_ImageDigestMirrorSet(ref),
 		"github.com/openshift/api/config/v1.ImageDigestMirrorSetList":                                 schema_openshift_api_config_v1_ImageDigestMirrorSetList(ref),
 		"github.com/openshift/api/config/v1.ImageDigestMirrorSetSpec":                                 schema_openshift_api_config_v1_ImageDigestMirrorSetSpec(ref),
+		"github.com/openshift/api/config/v1.ImageDigestMirrorSetStatus":                               schema_openshift_api_config_v1_ImageDigestMirrorSetStatus(ref),
 		"github.com/openshift/api/config/v1.ImageDigestMirrors":                                       schema_openshift_api_config_v1_ImageDigestMirrors(ref),
 		"github.com/openshift/api/config/v1.ImageLabel":                                               schema_openshift_api_config_v1_ImageLabel(ref),
 		"github.com/openshift/api/config/v1.ImageList":                                                schema_openshift_api_config_v1_ImageList(ref),
@@ -252,6 +253,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.ImageTagMirrorSet":                                        schema_openshift_api_config_v1_ImageTagMirrorSet(ref),
 		"github.com/openshift/api/config/v1.ImageTagMirrorSetList":                                    schema_openshift_api_config_v1_ImageTagMirrorSetList(ref),
 		"github.com/openshift/api/config/v1.ImageTagMirrorSetSpec":                                    schema_openshift_api_config_v1_ImageTagMirrorSetSpec(ref),
+		"github.com/openshift/api/config/v1.ImageTagMirrorSetStatus":                                  schema_openshift_api_config_v1_ImageTagMirrorSetStatus(ref),
 		"github.com/openshift/api/config/v1.ImageTagMirrors":                                          schema_openshift_api_config_v1_ImageTagMirrors(ref),
 		"github.com/openshift/api/config/v1.Infrastructure":                                           schema_openshift_api_config_v1_Infrastructure(ref),
 		"github.com/openshift/api/config/v1.InfrastructureList":                                       schema_openshift_api_config_v1_InfrastructureList(ref),
@@ -5275,7 +5277,7 @@ func schema_openshift_api_build_v1_BuildPostCommitSpec(ref common.ReferenceCallb
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "A BuildPostCommitSpec holds a build post commit hook specification. The hook executes a command in a temporary container running the build output image, immediately after the last layer of the image is committed and before the image is pushed to a registry. The command is executed with the current working directory ($PWD) set to the image's WORKDIR.\n\nThe build will be marked as failed if the hook execution fails. It will fail if the script or command return a non-zero exit code, or if there is any other error related to starting the temporary container.\n\nThere are five different ways to configure the hook. As an example, all forms below are equivalent and will execute `rake test --verbose`.\n\n1. Shell script:\n\n       \"postCommit\": {\n         \"script\": \"rake test --verbose\",\n       }\n\n    The above is a convenient form which is equivalent to:\n\n       \"postCommit\": {\n         \"command\": [\"/bin/sh\", \"-ic\"],\n         \"args\":    [\"rake test --verbose\"]\n       }\n\n2. A command as the image entrypoint:\n\n       \"postCommit\": {\n         \"commit\": [\"rake\", \"test\", \"--verbose\"]\n       }\n\n    Command overrides the image entrypoint in the exec form, as documented in\n    Docker: https://docs.docker.com/engine/reference/builder/#entrypoint.\n\n3. Pass arguments to the default entrypoint:\n\n       \"postCommit\": {\n\t\t      \"args\": [\"rake\", \"test\", \"--verbose\"]\n\t      }\n\n    This form is only useful if the image entrypoint can handle arguments.\n\n4. Shell script with arguments:\n\n       \"postCommit\": {\n         \"script\": \"rake test $1\",\n         \"args\":   [\"--verbose\"]\n       }\n\n    This form is useful if you need to pass arguments that would otherwise be\n    hard to quote properly in the shell script. In the script, $0 will be\n    \"/bin/sh\" and $1, $2, etc, are the positional arguments from Args.\n\n5. Command with arguments:\n\n       \"postCommit\": {\n         \"command\": [\"rake\", \"test\"],\n         \"args\":    [\"--verbose\"]\n       }\n\n    This form is equivalent to appending the arguments to the Command slice.\n\nIt is invalid to provide both Script and Command simultaneously. If none of the fields are specified, the hook is not executed.",
+				Description: "A BuildPostCommitSpec holds a build post commit hook specification. The hook executes a command in a temporary container running the build output image, immediately after the last layer of the image is committed and before the image is pushed to a registry. The command is executed with the current working directory ($PWD) set to the image's WORKDIR.\n\nThe build will be marked as failed if the hook execution fails. It will fail if the script or command return a non-zero exit code, or if there is any other error related to starting the temporary container.\n\nThere are five different ways to configure the hook. As an example, all forms below are equivalent and will execute `rake test --verbose`.\n\n1. Shell script:\n\n\t   \"postCommit\": {\n\t     \"script\": \"rake test --verbose\",\n\t   }\n\n\tThe above is a convenient form which is equivalent to:\n\n\t   \"postCommit\": {\n\t     \"command\": [\"/bin/sh\", \"-ic\"],\n\t     \"args\":    [\"rake test --verbose\"]\n\t   }\n\n2. A command as the image entrypoint:\n\n\t   \"postCommit\": {\n\t     \"commit\": [\"rake\", \"test\", \"--verbose\"]\n\t   }\n\n\tCommand overrides the image entrypoint in the exec form, as documented in\n\tDocker: https://docs.docker.com/engine/reference/builder/#entrypoint.\n\n3. Pass arguments to the default entrypoint:\n\n\t       \"postCommit\": {\n\t\t\t      \"args\": [\"rake\", \"test\", \"--verbose\"]\n\t\t      }\n\n\t    This form is only useful if the image entrypoint can handle arguments.\n\n4. Shell script with arguments:\n\n\t   \"postCommit\": {\n\t     \"script\": \"rake test $1\",\n\t     \"args\":   [\"--verbose\"]\n\t   }\n\n\tThis form is useful if you need to pass arguments that would otherwise be\n\thard to quote properly in the shell script. In the script, $0 will be\n\t\"/bin/sh\" and $1, $2, etc, are the positional arguments from Args.\n\n5. Command with arguments:\n\n\t   \"postCommit\": {\n\t     \"command\": [\"rake\", \"test\"],\n\t     \"args\":    [\"--verbose\"]\n\t   }\n\n\tThis form is equivalent to appending the arguments to the Command slice.\n\nIt is invalid to provide both Script and Command simultaneously. If none of the fields are specified, the hook is not executed.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"command": {
@@ -11984,12 +11986,19 @@ func schema_openshift_api_config_v1_ImageDigestMirrorSet(ref common.ReferenceCal
 							Ref:         ref("github.com/openshift/api/config/v1.ImageDigestMirrorSetSpec"),
 						},
 					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status contains the observed state of the resource.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.ImageDigestMirrorSetStatus"),
+						},
+					},
 				},
 				Required: []string{"spec"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ImageDigestMirrorSetSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"github.com/openshift/api/config/v1.ImageDigestMirrorSetSpec", "github.com/openshift/api/config/v1.ImageDigestMirrorSetStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -12073,6 +12082,16 @@ func schema_openshift_api_config_v1_ImageDigestMirrorSetSpec(ref common.Referenc
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/config/v1.ImageDigestMirrors"},
+	}
+}
+
+func schema_openshift_api_config_v1_ImageDigestMirrorSetStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+			},
+		},
 	}
 }
 
@@ -12327,12 +12346,19 @@ func schema_openshift_api_config_v1_ImageTagMirrorSet(ref common.ReferenceCallba
 							Ref:         ref("github.com/openshift/api/config/v1.ImageTagMirrorSetSpec"),
 						},
 					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status contains the observed state of the resource.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.ImageTagMirrorSetStatus"),
+						},
+					},
 				},
 				Required: []string{"spec"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ImageTagMirrorSetSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"github.com/openshift/api/config/v1.ImageTagMirrorSetSpec", "github.com/openshift/api/config/v1.ImageTagMirrorSetStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -12416,6 +12442,16 @@ func schema_openshift_api_config_v1_ImageTagMirrorSetSpec(ref common.ReferenceCa
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/config/v1.ImageTagMirrors"},
+	}
+}
+
+func schema_openshift_api_config_v1_ImageTagMirrorSetStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+			},
+		},
 	}
 }
 
@@ -46062,7 +46098,7 @@ func schema_openshift_api_route_v1_RouterShard(ref common.ReferenceCallback) com
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "RouterShard has information of a routing shard and is used to generate host names and routing table entries when a routing shard is allocated for a specific route. Caveat: This is WIP and will likely undergo modifications when sharding\n        support is added.",
+				Description: "RouterShard has information of a routing shard and is used to generate host names and routing table entries when a routing shard is allocated for a specific route. Caveat: This is WIP and will likely undergo modifications when sharding\n\n\tsupport is added.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"shardName": {

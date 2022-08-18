@@ -6,9 +6,9 @@ import (
 	"os"
 	"strings"
 
+	"github.com/openshift/api/openapi/generated_openapi"
 	"k8s.io/kube-openapi/pkg/common"
 	"k8s.io/kube-openapi/pkg/validation/spec"
-	"github.com/openshift/api/openapi/generated_openapi"
 )
 
 // Outputs openAPI schema JSON containing the schema definitions in zz_generated.openapi.go.

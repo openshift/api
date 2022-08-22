@@ -1535,7 +1535,6 @@ spec:
                 type: object
                 x-kubernetes-preserve-unknown-fields: true
             required:
-            - managementState
             - replicas
             type: object
           status:

@@ -14,7 +14,7 @@ EXT_APIS_PKG="github.com/openshift/api"
 # enumerate group versions
 ALL_FQ_APIS=() # e.g. k8s.io/kubernetes/pkg/apis/apps k8s.io/api/apps/v1
 INT_FQ_APIS=() # e.g. k8s.io/kubernetes/pkg/apis/apps
-EXT_FQ_APIS=() # e.g. k8s.io/api/apps/v1
+EXT_FQ_APIS=("k8s.io/apimachinery/pkg/apis/meta/v1") # e.g. k8s.io/api/apps/v1
 for GVs in ${TYPE_PACKAGE_VERSIONS}; do
   IFS=: read -r G Vs <<<"${GVs}"
 
@@ -32,7 +32,7 @@ go install ./${CODEGEN_PKG}/cmd/openapi-gen
 declare -a OPENAPI_EXTRA_PACKAGES
 ${GOPATH}/bin/openapi-gen \
          --input-dirs "$(codegen::join , "${EXT_FQ_APIS[@]}" "${OPENAPI_EXTRA_PACKAGES[@]+"${OPENAPI_EXTRA_PACKAGES[@]}"}")" \
-         --input-dirs "k8s.io/apimachinery/pkg/apis/meta/v1,k8s.io/apimachinery/pkg/runtime,k8s.io/apimachinery/pkg/version" \
+         --input-dirs "k8s.io/apimachinery/pkg/apis/meta/v1,k8s.io/apimachinery/pkg/runtime,k8s.io/apimachinery/pkg/util/intstr,k8s.io/apimachinery/pkg/api/resource,k8s.io/apimachinery/pkg/version,k8s.io/api/core/v1,k8s.io/api/rbac/v1,k8s.io/api/authorization/v1" \
          --output-package "${output_package}/generated_openapi" \
          -O zz_generated.openapi \
          --go-header-file ${SCRIPT_ROOT}/hack/empty.txt \

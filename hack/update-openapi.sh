@@ -2,12 +2,15 @@
 
 source "$(dirname "${BASH_SOURCE}")/lib/init.sh"
 
-SCRIPT_ROOT=$(dirname ${BASH_SOURCE})/..
-CODEGEN_PKG=${CODEGEN_PKG:-$(cd ${SCRIPT_ROOT}; ls -d -1 ./vendor/k8s.io/code-generator 2>/dev/null || echo ../../../k8s.io/code-generator)}
+# Build openapi-gen when it's not present and not overriden for a specific file.
+OPENAPI_GEN=${OPENAPI_GEN:-""}
+if [ -z ${OPENAPI_GEN} ];then
+  ${TOOLS_MAKE} openapi-gen
+fi
+OPENAPI_GEN=${OPENAPI_GEN:-"${TOOLS_OUTPUT}/openapi-gen"}
 
 verify="${VERIFY:-}"
 output_package="${OUTPUT_PKG:-github.com/openshift/api/openapi}"
-
 
 EXT_APIS_PKG="github.com/openshift/api"
 
@@ -28,9 +31,9 @@ done
 function codegen::join() { local IFS="$1"; shift; echo "$*"; }
 
 echo "Generating OpenAPI definitions for ${TYPE_PACKAGE_VERSIONS} at ${output_package}"
-go install ./${CODEGEN_PKG}/cmd/openapi-gen
+
 declare -a OPENAPI_EXTRA_PACKAGES
-${GOPATH}/bin/openapi-gen \
+${OPENAPI_GEN} \
          --input-dirs "$(codegen::join , "${EXT_FQ_APIS[@]}" "${OPENAPI_EXTRA_PACKAGES[@]+"${OPENAPI_EXTRA_PACKAGES[@]}"}")" \
          --input-dirs "k8s.io/apimachinery/pkg/apis/meta/v1,k8s.io/apimachinery/pkg/runtime,k8s.io/apimachinery/pkg/util/intstr,k8s.io/apimachinery/pkg/api/resource,k8s.io/apimachinery/pkg/version,k8s.io/api/core/v1,k8s.io/api/rbac/v1,k8s.io/api/authorization/v1" \
          --output-package "${output_package}/generated_openapi" \

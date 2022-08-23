@@ -7,12 +7,41 @@ OUTPUT_DIR=$(TOOLS_DIR)/_output/bin/$(GOOS)/$(GOARCH)
 
 
 # Tools builds all tools.
-tools: openapi-gen
+tools: deepcopy-gen openapi-gen
 
-# This acts as a shortcut target for the expanded target.
+
+#############################################
+#
+# BEGIN: Shortcuts to fully qualified targets
+#
+#############################################
+
+.PHONY:deepcopy-gen
+deepcopy-gen: $(OUTPUT_DIR)/deepcopy-gen
+
 .PHONY:openapi-gen
 openapi-gen: $(OUTPUT_DIR)/openapi-gen
 
+###########################################
+#
+# End: Shortcuts to fully qualified targets
+#
+###########################################
+
+#####################################
+#
+# BEGIN: Fully qualified tool targets
+#
+#####################################
+
+$(OUTPUT_DIR)/deepcopy-gen:
+	go build -mod=vendor -o $(OUTPUT_DIR)/deepcopy-gen ./vendor/k8s.io/code-generator/cmd/deepcopy-gen
 
 $(OUTPUT_DIR)/openapi-gen:
 	go build -mod=vendor -o $(OUTPUT_DIR)/openapi-gen ./vendor/k8s.io/code-generator/cmd/openapi-gen
+
+###################################
+#
+# END: Fully qualified tool targets
+#
+###################################

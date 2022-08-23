@@ -27198,9 +27198,9 @@ func schema_openshift_api_machine_v1_NutanixResourceIdentifier(ref common.Refere
 				Extensions: spec.Extensions{
 					"x-kubernetes-unions": []interface{}{
 						map[string]interface{}{
+							"discriminator": "type",
 							"fields-to-discriminateBy": map[string]interface{}{
 								"name": "Name",
-								"type": "Type",
 								"uuid": "UUID",
 							},
 						},

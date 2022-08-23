@@ -15798,9 +15798,9 @@
       },
       "x-kubernetes-unions": [
         {
+          "discriminator": "type",
           "fields-to-discriminateBy": {
             "name": "Name",
-            "type": "Type",
             "uuid": "UUID"
           }
         }

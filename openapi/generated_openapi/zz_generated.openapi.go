@@ -729,6 +729,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.EtcdSpec":                                               schema_openshift_api_operator_v1_EtcdSpec(ref),
 		"github.com/openshift/api/operator/v1.EtcdStatus":                                             schema_openshift_api_operator_v1_EtcdStatus(ref),
 		"github.com/openshift/api/operator/v1.ExportNetworkFlows":                                     schema_openshift_api_operator_v1_ExportNetworkFlows(ref),
+		"github.com/openshift/api/operator/v1.FeaturesMigration":                                      schema_openshift_api_operator_v1_FeaturesMigration(ref),
 		"github.com/openshift/api/operator/v1.ForwardPlugin":                                          schema_openshift_api_operator_v1_ForwardPlugin(ref),
 		"github.com/openshift/api/operator/v1.GCPLoadBalancerParameters":                              schema_openshift_api_operator_v1_GCPLoadBalancerParameters(ref),
 		"github.com/openshift/api/operator/v1.GatewayConfig":                                          schema_openshift_api_operator_v1_GatewayConfig(ref),
@@ -36871,6 +36872,39 @@ func schema_openshift_api_operator_v1_ExportNetworkFlows(ref common.ReferenceCal
 	}
 }
 
+func schema_openshift_api_operator_v1_FeaturesMigration(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"egressIP": {
+						SchemaProps: spec.SchemaProps{
+							Description: "egressIP specifies whether or not the Egress IP configuration is migrated automatically when changing the cluster default network provider. If unset, this property defaults to 'true' and Egress IP configure is migrated.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"egressFirewall": {
+						SchemaProps: spec.SchemaProps{
+							Description: "egressFirewall specifies whether or not the Egress Firewall configuration is migrated automatically when changing the cluster default network provider. If unset, this property defaults to 'true' and Egress Firewall configure is migrated.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"multicast": {
+						SchemaProps: spec.SchemaProps{
+							Description: "multicast specifies whether or not the multicast configuration is migrated automatically when changing the cluster default network provider. If unset, this property defaults to 'true' and multicast configure is migrated.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_operator_v1_ForwardPlugin(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -39816,11 +39850,17 @@ func schema_openshift_api_operator_v1_NetworkMigration(ref common.ReferenceCallb
 							Ref:         ref("github.com/openshift/api/operator/v1.MTUMigration"),
 						},
 					},
+					"features": {
+						SchemaProps: spec.SchemaProps{
+							Description: "features contains the features migration configuration. Set this to migrate feature configuration when changing the cluster default network provider. if unset, the default operation is to migrate all the configuration of supported features.",
+							Ref:         ref("github.com/openshift/api/operator/v1.FeaturesMigration"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.MTUMigration"},
+			"github.com/openshift/api/operator/v1.FeaturesMigration", "github.com/openshift/api/operator/v1.MTUMigration"},
 	}
 }
 

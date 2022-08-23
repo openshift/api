@@ -1060,6 +1060,16 @@ func (ExportNetworkFlows) SwaggerDoc() map[string]string {
 	return map_ExportNetworkFlows
 }
 
+var map_FeaturesMigration = map[string]string{
+	"egressIP":       "egressIP specifies whether or not the Egress IP configuration is migrated automatically when changing the cluster default network provider. If unset, this property defaults to 'true' and Egress IP configure is migrated.",
+	"egressFirewall": "egressFirewall specifies whether or not the Egress Firewall configuration is migrated automatically when changing the cluster default network provider. If unset, this property defaults to 'true' and Egress Firewall configure is migrated.",
+	"multicast":      "multicast specifies whether or not the multicast configuration is migrated automatically when changing the cluster default network provider. If unset, this property defaults to 'true' and multicast configure is migrated.",
+}
+
+func (FeaturesMigration) SwaggerDoc() map[string]string {
+	return map_FeaturesMigration
+}
+
 var map_GatewayConfig = map[string]string{
 	"":               "GatewayConfig holds node gateway-related parsed config file parameters and command-line overrides",
 	"routingViaHost": "RoutingViaHost allows pod egress traffic to exit via the ovn-k8s-mp0 management port into the host before sending it out. If this is not set, traffic will always egress directly from OVN to outside without touching the host stack. Setting this to true means hardware offload will not be supported. Default is false if GatewayConfig is specified.",
@@ -1160,6 +1170,7 @@ var map_NetworkMigration = map[string]string{
 	"":            "NetworkMigration represents the cluster network configuration.",
 	"networkType": "networkType is the target type of network migration. Set this to the target network type to allow changing the default network. If unset, the operation of changing cluster default network plugin will be rejected. The supported values are OpenShiftSDN, OVNKubernetes",
 	"mtu":         "mtu contains the MTU migration configuration. Set this to allow changing the MTU values for the default network. If unset, the operation of changing the MTU for the default network will be rejected.",
+	"features":    "features contains the features migration configuration. Set this to migrate feature configuration when changing the cluster default network provider. if unset, the default operation is to migrate all the configuration of supported features.",
 }
 
 func (NetworkMigration) SwaggerDoc() map[string]string {

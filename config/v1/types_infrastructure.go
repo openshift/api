@@ -562,11 +562,21 @@ type OpenStackFailureDomain struct {
 	// +kubebuilder:validation:Required
 	Name string `json:"name"`
 
-	// availabilityZone specifies the OpenStack availability zone for all
-	// servers in this failure domain.
+	// computeZone specifies the OpenStack Compute availability zone for
+	// all servers in this failure domain.
 	//
+	// If not specified, the servers are provisioned in the default Compute
+	// availabity zone.
 	// +kubebuilder:validation:Optional
-	AvailabilityZone string `json:"availabilityZone,omitempty"`
+	ComputeZone string `json:"computeZone,omitempty"`
+
+	// storageZone specifies the OpenStack storage availability zone for
+	// all volumes in this failure domain.
+	//
+	// If not specified, the volumes are provisioned in the default storage
+	// availabity zone.
+	// +kubebuilder:validation:Optional
+	StorageZone string `json:"storageZone,omitempty"`
 
 	// subnetID specifies an OpenStack subnet ID which will be attached as
 	// the first NIC of every server in this failure domain.

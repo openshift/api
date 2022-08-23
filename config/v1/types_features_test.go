@@ -18,74 +18,62 @@ func TestFeatureBuilder(t *testing.T) {
 		},
 		{
 			name:   "disable-existing",
-			actual: newDefaultFeatures().without("PodSecurity").toFeatures(),
+			actual: newDefaultFeatures().without("APIPriorityAndFairness").toFeatures(),
 			expected: &FeatureGateEnabledDisabled{
 				Enabled: []string{
-					"APIPriorityAndFairness",
 					"RotateKubeletServerCertificate",
 					"DownwardAPIHugePages",
 				},
 				Disabled: []string{
-					"CSIMigrationAWS",
-					"CSIMigrationGCE",
 					"CSIMigrationAzureFile",
 					"CSIMigrationvSphere",
-					"PodSecurity",
+					"APIPriorityAndFairness",
 				},
 			},
 		},
 		{
 			name:   "enable-existing",
-			actual: newDefaultFeatures().with("CSIMigrationAWS").toFeatures(),
+			actual: newDefaultFeatures().with("CSIMigrationAzureFile").toFeatures(),
 			expected: &FeatureGateEnabledDisabled{
 				Enabled: []string{
 					"APIPriorityAndFairness",
 					"RotateKubeletServerCertificate",
 					"DownwardAPIHugePages",
-					"PodSecurity",
-					"CSIMigrationAWS",
+					"CSIMigrationAzureFile",
 				},
 				Disabled: []string{
-					"CSIMigrationGCE",
-					"CSIMigrationAzureFile",
 					"CSIMigrationvSphere",
 				},
 			},
 		},
 		{
 			name:   "disable-more",
-			actual: newDefaultFeatures().without("PodSecurity", "other").toFeatures(),
+			actual: newDefaultFeatures().without("APIPriorityAndFairness", "other").toFeatures(),
 			expected: &FeatureGateEnabledDisabled{
 				Enabled: []string{
-					"APIPriorityAndFairness",
 					"RotateKubeletServerCertificate",
 					"DownwardAPIHugePages",
 				},
 				Disabled: []string{
-					"CSIMigrationAWS",
-					"CSIMigrationGCE",
 					"CSIMigrationAzureFile",
 					"CSIMigrationvSphere",
-					"PodSecurity",
+					"APIPriorityAndFairness",
 					"other",
 				},
 			},
 		},
 		{
 			name:   "enable-more",
-			actual: newDefaultFeatures().with("CSIMigrationAWS", "other").toFeatures(),
+			actual: newDefaultFeatures().with("CSIMigrationAzureFile", "other").toFeatures(),
 			expected: &FeatureGateEnabledDisabled{
 				Enabled: []string{
 					"APIPriorityAndFairness",
 					"RotateKubeletServerCertificate",
 					"DownwardAPIHugePages",
-					"PodSecurity",
-					"CSIMigrationAWS",
+					"CSIMigrationAzureFile",
 					"other",
 				},
 				Disabled: []string{
-					"CSIMigrationGCE",
-					"CSIMigrationAzureFile",
 					"CSIMigrationvSphere",
 				},
 			},

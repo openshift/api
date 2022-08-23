@@ -2,8 +2,7 @@
 
 source "$(dirname "${BASH_SOURCE}")/lib/init.sh"
 
-SCRIPT_ROOT=$(dirname ${BASH_SOURCE})/..
-OUTPUT_PKG=github.com/openshift/api/verify_openapi ${SCRIPT_ROOT}/hack/update-openapi.sh
+OUTPUT_PATH=verify_openapi ${SCRIPT_ROOT}/hack/update-openapi.sh
 
 diff verify_openapi/openapi.json openapi/openapi.json
 diff verify_openapi/generated_openapi/zz_generated.openapi.go openapi/generated_openapi/zz_generated.openapi.go

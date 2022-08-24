@@ -46,6 +46,7 @@ securityinternal/v1 \
 servicecertsigner/v1alpha1 \
 template/v1 \
 user/v1 \
+machine/v1alpha1 \
 machine/v1beta1 \
 machine/v1 \
 monitoring/v1alpha1 \

@@ -3,6 +3,7 @@ module github.com/openshift/api/tools
 go 1.18
 
 require (
+	github.com/gogo/protobuf v1.3.2
 	github.com/spf13/pflag v1.0.5
 	k8s.io/apimachinery v0.24.4
 	k8s.io/code-generator v0.24.4
@@ -17,7 +18,6 @@ require (
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
 	github.com/go-openapi/jsonreference v0.19.5 // indirect
 	github.com/go-openapi/swag v0.19.14 // indirect
-	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/gnostic v0.5.7-v3refs // indirect
 	github.com/josharian/intern v1.0.0 // indirect

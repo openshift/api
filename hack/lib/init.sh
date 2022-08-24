@@ -9,6 +9,12 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
+SCRIPT_ROOT=$(cd $(dirname "${BASH_SOURCE[0]}")/../.. && pwd)
+PACKAGE_NAME="github.com/openshift/api"
+
+TOOLS_MAKE="make -C ${SCRIPT_ROOT}/tools"
+TOOLS_OUTPUT="${SCRIPT_ROOT}/tools/_output/bin/$(go env GOOS)/$(go env GOARCH)"
+
 API_GROUP_VERSIONS="\
 apiserver/v1 \
 apps/v1 \

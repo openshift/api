@@ -5262,7 +5262,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "consumingUsers": {
           "description": "consumingUsers is a slice of ServiceAccounts that need to have read permission on the servingCertKeyPairSecret secret.",
@@ -7022,7 +7026,12 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.config.v1.ComponentRouteSpec"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "namespace",
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "domain": {
           "description": "domain is used to generate a default host name for a route when the route's host name is empty. The generated host name will follow this pattern: \"<route-name>.<route-namespace>.<domain>\".\n\nIt is also used as the default wildcard domain suffix for ingress. The default ingresscontroller domain will follow this pattern: \"*.<domain>\".\n\nOnce set, changing domain is not currently supported.",
@@ -7048,7 +7057,12 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.config.v1.ComponentRouteStatus"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "namespace",
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "defaultPlacement": {
           "description": "defaultPlacement is set at installation time to control which nodes will host the ingress router pods by default. The options are control-plane nodes or worker nodes.\n\nThis field works by dictating how the Cluster Ingress Operator will consider unset replicas and nodePlacement fields in IngressController resources when creating the corresponding Deployments.\n\nSee the documentation for the IngressController replicas and nodePlacement fields for more information.\n\nWhen omitted, the default value is Workers",

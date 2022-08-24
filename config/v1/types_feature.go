@@ -98,7 +98,8 @@ type FeatureGateEnabledDisabled struct {
 // version of this file. In this upgrade scenario the map could return nil.
 //
 // example:
-//   if featureSet, ok := FeatureSets["SomeNewFeature"]; ok { }
+//
+//	if featureSet, ok := FeatureSets["SomeNewFeature"]; ok { }
 //
 // If you put an item in either of these lists, put your area and name on it so we can find owners.
 var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
@@ -117,6 +118,7 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		with("BuildCSIVolumes").             // sig-build, adkaplan, OCP specific
 		with("NodeSwap").                    // sig-node, ehashman, Kubernetes feature gate
 		with("MachineAPIProviderOpenStack"). // openstack, egarcia (#forum-openstack), OCP specific
+		with("CGroupsV2").                   // sig-node, harche, OCP specific
 		toFeatures(),
 	LatencySensitive: newDefaultFeatures().
 		with(

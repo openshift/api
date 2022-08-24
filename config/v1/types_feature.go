@@ -130,11 +130,8 @@ var defaultFeatures = &FeatureGateEnabledDisabled{
 		"APIPriorityAndFairness",         // sig-apimachinery, deads2k
 		"RotateKubeletServerCertificate", // sig-pod, sjenning
 		"DownwardAPIHugePages",           // sig-node, rphillips
-		"PodSecurity",                    // sig-auth, s-urbaniak
 	},
 	Disabled: []string{
-		"CSIMigrationAWS",       // sig-storage, jsafrane
-		"CSIMigrationGCE",       // sig-storage, jsafrane
 		"CSIMigrationAzureFile", // sig-storage, jsafrane
 		"CSIMigrationvSphere",   // sig-storage, jsafrane
 	},

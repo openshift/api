@@ -19,8 +19,14 @@ tools: deepcopy-gen openapi-gen
 .PHONY:deepcopy-gen
 deepcopy-gen: $(OUTPUT_DIR)/deepcopy-gen
 
+.PHONY:go-to-protobuf
+go-to-protobuf: $(OUTPUT_DIR)/go-to-protobuf
+
 .PHONY:openapi-gen
 openapi-gen: $(OUTPUT_DIR)/openapi-gen
+
+.PHONY:protoc-gen-gogo
+protoc-gen-gogo: $(OUTPUT_DIR)/protoc-gen-gogo
 
 ###########################################
 #
@@ -37,8 +43,14 @@ openapi-gen: $(OUTPUT_DIR)/openapi-gen
 $(OUTPUT_DIR)/deepcopy-gen:
 	go build -mod=vendor -o $(OUTPUT_DIR)/deepcopy-gen ./vendor/k8s.io/code-generator/cmd/deepcopy-gen
 
+$(OUTPUT_DIR)/go-to-protobuf:
+	go build -mod=vendor -o $(OUTPUT_DIR)/go-to-protobuf ./vendor/k8s.io/code-generator/cmd/go-to-protobuf
+
 $(OUTPUT_DIR)/openapi-gen:
 	go build -mod=vendor -o $(OUTPUT_DIR)/openapi-gen ./vendor/k8s.io/code-generator/cmd/openapi-gen
+
+$(OUTPUT_DIR)/protoc-gen-gogo:
+	go build -mod=vendor -o $(OUTPUT_DIR)/protoc-gen-gogo ./vendor/k8s.io/code-generator/cmd/go-to-protobuf/protoc-gen-gogo
 
 ###################################
 #

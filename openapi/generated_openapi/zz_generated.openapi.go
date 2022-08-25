@@ -39450,7 +39450,7 @@ func schema_openshift_api_operator_v1_LoadBalancerStrategy(ref common.ReferenceC
 					},
 					"dnsManagementPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "dnsManagementPolicy indicates if the lifecyle of the wildcard DNS record associated with the load balancer service will be managed by the ingress operator. It defaults to Managed. Valid values are: Managed and Unmanaged.",
+							Description: "dnsManagementPolicy indicates if the lifecycle of the wildcard DNS record associated with the load balancer service will be managed by the ingress operator. It defaults to Managed. Valid values are: Managed and Unmanaged.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",

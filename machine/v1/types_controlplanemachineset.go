@@ -11,7 +11,7 @@ import (
 
 // ControlPlaneMachineSet ensures that a specified number of control plane machine replicas are running at any given time.
 // +k8s:openapi-gen=true
-// +kubebuilder:resource:scope=Namespaced
+// +kubebuilder:resource:scope=Namespaced,shortName=cpms
 // +kubebuilder:subresource:status
 // +kubebuilder:subresource:scale:specpath=.spec.replicas,statuspath=.status.replicas
 // +kubebuilder:printcolumn:name="Desired",type="integer",JSONPath=".spec.replicas",description="Desired Replicas"

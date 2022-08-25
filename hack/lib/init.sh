@@ -15,42 +15,25 @@ PACKAGE_NAME="github.com/openshift/api"
 TOOLS_MAKE="make -C ${SCRIPT_ROOT}/tools"
 TOOLS_OUTPUT="${SCRIPT_ROOT}/tools/_output/bin/$(go env GOOS)/$(go env GOARCH)"
 
-API_GROUP_VERSIONS="\
-apiserver/v1 \
-apps/v1 \
-authorization/v1 \
-build/v1 \
-console/v1 \
-console/v1alpha1 \
-config/v1 \
-image/v1 \
-imageregistry/v1 \
-kubecontrolplane/v1 \
-legacyconfig/v1 \
-cloudnetwork/v1 \
-network/v1 \
-networkoperator/v1 \
-oauth/v1 \
-openshiftcontrolplane/v1 \
-operator/v1 \
-operatorcontrolplane/v1alpha1 \
-operatoringress/v1 \
-operator/v1alpha1 \
-project/v1 \
-sharedresource/v1alpha1 \
-quota/v1 \
-route/v1 \
-samples/v1 \
-security/v1 \
-securityinternal/v1 \
-servicecertsigner/v1alpha1 \
-template/v1 \
-user/v1 \
-machine/v1alpha1 \
-machine/v1beta1 \
-machine/v1 \
-monitoring/v1alpha1 \
-"
+# find_api_group_versions uses regex to look for any folder that looks like it would be an API group version.
+# eg. foo/v1, bar/v1beta1 or baz/v1alpha1. It then outputs a list of <api>/<version> for those API group versions.
+# API group versions are required for the following generators:
+# - compatibility
+# - deepcopy
+# - openapi
+# - swagger
+find_api_group_versions() {
+  # Use separate regexes because the `|` operator doesn't work consistently on different versions of find.
+  # Use sed to trim the SCRIPT_ROOT from the output to create the <api>/<version> strings.
+  find "${SCRIPT_ROOT}" -type d \( -regex "${SCRIPT_ROOT}/[a-z]*/v[0-9]" -o -regex "${SCRIPT_ROOT}/[a-z]*/v[0-9]alpha[0-9]" -o -regex "${SCRIPT_ROOT}/[a-z]*/v[0-9]beta[0-9]" \) | sed "s|^${SCRIPT_ROOT}/||" | sort
+}
+
+# Find the API group versions when not already set.
+# Include non-standard groupversions from the image API as well.
+API_GROUP_VERSIONS=${API_GROUP_VERSIONS:-"$(find_api_group_versions) image/docker10 image/dockerpre012"}
+
+# API Packages is used by the protobuf generator.
+# Protobuf generation is explicitly opt-in for packages so these must be listed here.
 API_PACKAGES="\
 github.com/openshift/api/apps/v1,\
 github.com/openshift/api/authorization/v1,\
@@ -68,5 +51,3 @@ github.com/openshift/api/security/v1,\
 github.com/openshift/api/template/v1,\
 github.com/openshift/api/user/v1\
 "
-
-TYPE_PACKAGE_VERSIONS="apiserver:v1 apps:v1 authorization:v1 build:v1 config:v1 helm:v1beta1 console:v1 console:v1alpha1 image:v1,docker10,dockerpre012 imageregistry:v1 kubecontrolplane:v1 legacyconfig:v1 cloudnetwork:v1 network:v1 networkoperator:v1 oauth:v1 openshiftcontrolplane:v1 operator:v1 operator:v1alpha1 operatorcontrolplane:v1alpha1 operatoringress:v1 osin:v1 project:v1 quota:v1 route:v1 samples:v1 security:v1 securityinternal:v1 servicecertsigner:v1alpha1 sharedresource:v1alpha1 template:v1 user:v1 machine:v1beta1 machine:v1 monitoring:v1alpha1"

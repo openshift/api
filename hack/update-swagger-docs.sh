@@ -2,8 +2,6 @@
 
 source "$(dirname "${BASH_SOURCE}")/lib/init.sh"
 
-SCRIPT_ROOT=$(dirname ${BASH_SOURCE})/..
-
 # Generates types_swagger_doc_generated file for the given group version.
 # $1: Name of the group version
 # $2: Path to the directory where types.go for that group version exists. This

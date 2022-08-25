@@ -551,6 +551,17 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/machine/v1.PowerVSSecretReference":                                  schema_openshift_api_machine_v1_PowerVSSecretReference(ref),
 		"github.com/openshift/api/machine/v1.SystemDiskProperties":                                    schema_openshift_api_machine_v1_SystemDiskProperties(ref),
 		"github.com/openshift/api/machine/v1.Tag":                                                     schema_openshift_api_machine_v1_Tag(ref),
+		"github.com/openshift/api/machine/v1alpha1.AddressPair":                                       schema_openshift_api_machine_v1alpha1_AddressPair(ref),
+		"github.com/openshift/api/machine/v1alpha1.Filter":                                            schema_openshift_api_machine_v1alpha1_Filter(ref),
+		"github.com/openshift/api/machine/v1alpha1.FixedIPs":                                          schema_openshift_api_machine_v1alpha1_FixedIPs(ref),
+		"github.com/openshift/api/machine/v1alpha1.NetworkParam":                                      schema_openshift_api_machine_v1alpha1_NetworkParam(ref),
+		"github.com/openshift/api/machine/v1alpha1.OpenstackProviderSpec":                             schema_openshift_api_machine_v1alpha1_OpenstackProviderSpec(ref),
+		"github.com/openshift/api/machine/v1alpha1.PortOpts":                                          schema_openshift_api_machine_v1alpha1_PortOpts(ref),
+		"github.com/openshift/api/machine/v1alpha1.RootVolume":                                        schema_openshift_api_machine_v1alpha1_RootVolume(ref),
+		"github.com/openshift/api/machine/v1alpha1.SecurityGroupFilter":                               schema_openshift_api_machine_v1alpha1_SecurityGroupFilter(ref),
+		"github.com/openshift/api/machine/v1alpha1.SecurityGroupParam":                                schema_openshift_api_machine_v1alpha1_SecurityGroupParam(ref),
+		"github.com/openshift/api/machine/v1alpha1.SubnetFilter":                                      schema_openshift_api_machine_v1alpha1_SubnetFilter(ref),
+		"github.com/openshift/api/machine/v1alpha1.SubnetParam":                                       schema_openshift_api_machine_v1alpha1_SubnetParam(ref),
 		"github.com/openshift/api/machine/v1beta1.AWSMachineProviderConfig":                           schema_openshift_api_machine_v1beta1_AWSMachineProviderConfig(ref),
 		"github.com/openshift/api/machine/v1beta1.AWSMachineProviderConfigList":                       schema_openshift_api_machine_v1beta1_AWSMachineProviderConfigList(ref),
 		"github.com/openshift/api/machine/v1beta1.AWSMachineProviderStatus":                           schema_openshift_api_machine_v1beta1_AWSMachineProviderStatus(ref),
@@ -27627,6 +27638,1065 @@ func schema_openshift_api_machine_v1_Tag(ref common.ReferenceCallback) common.Op
 	}
 }
 
+func schema_openshift_api_machine_v1alpha1_AddressPair(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"ipAddress": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"macAddress": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_machine_v1alpha1_Filter(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"id": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Deprecated: use NetworkParam.uuid instead. Ignored if NetworkParam.uuid is set.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name filters networks by name.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"description": {
+						SchemaProps: spec.SchemaProps{
+							Description: "description filters networks by description.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"tenantId": {
+						SchemaProps: spec.SchemaProps{
+							Description: "tenantId filters networks by tenant ID. Deprecated: use projectId instead. tenantId will be ignored if projectId is set.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"projectId": {
+						SchemaProps: spec.SchemaProps{
+							Description: "projectId filters networks by project ID.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"tags": {
+						SchemaProps: spec.SchemaProps{
+							Description: "tags filters by networks containing all specified tags. Multiple tags are comma separated.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"tagsAny": {
+						SchemaProps: spec.SchemaProps{
+							Description: "tagsAny filters by networks containing any specified tags. Multiple tags are comma separated.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"notTags": {
+						SchemaProps: spec.SchemaProps{
+							Description: "notTags filters by networks which don't match all specified tags. NOT (t1 AND t2...) Multiple tags are comma separated.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"notTagsAny": {
+						SchemaProps: spec.SchemaProps{
+							Description: "notTagsAny filters by networks which don't match any specified tags. NOT (t1 OR t2...) Multiple tags are comma separated.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Deprecated: status is silently ignored. It has no replacement.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"adminStateUp": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Deprecated: adminStateUp is silently ignored. It has no replacement.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"shared": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Deprecated: shared is silently ignored. It has no replacement.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"marker": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Deprecated: marker is silently ignored. It has no replacement.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"limit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Deprecated: limit is silently ignored. It has no replacement.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"sortKey": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Deprecated: sortKey is silently ignored. It has no replacement.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"sortDir": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Deprecated: sortDir is silently ignored. It has no replacement.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_machine_v1alpha1_FixedIPs(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"subnetID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "subnetID specifies the ID of the subnet where the fixed IP will be allocated.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"ipAddress": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ipAddress is a specific IP address to use in the given subnet. Port creation will fail if the address is not available. If not specified, an available IP from the given subnet will be selected automatically.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"subnetID"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_machine_v1alpha1_NetworkParam(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"uuid": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The UUID of the network. Required if you omit the port attribute.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"fixedIp": {
+						SchemaProps: spec.SchemaProps{
+							Description: "A fixed IPv4 address for the NIC.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"filter": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Filters for optional network query",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/machine/v1alpha1.Filter"),
+						},
+					},
+					"subnets": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Subnet within a network to use",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machine/v1alpha1.SubnetParam"),
+									},
+								},
+							},
+						},
+					},
+					"noAllowedAddressPairs": {
+						SchemaProps: spec.SchemaProps{
+							Description: "NoAllowedAddressPairs disables creation of allowed address pairs for the network ports",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"portTags": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PortTags allows users to specify a list of tags to add to ports created in a given network",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"vnicType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The virtual network interface card (vNIC) type that is bound to the neutron port.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"profile": {
+						SchemaProps: spec.SchemaProps{
+							Description: "A dictionary that enables the application running on the specified host to pass and receive virtual network interface (VIF) port-specific information to the plug-in.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"portSecurity": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PortSecurity optionally enables or disables security on ports managed by OpenStack",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machine/v1alpha1.Filter", "github.com/openshift/api/machine/v1alpha1.SubnetParam"},
+	}
+}
+
+func schema_openshift_api_machine_v1alpha1_OpenstackProviderSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "OpenstackProviderSpec is the type that will be embedded in a Machine.Spec.ProviderSpec field for an OpenStack Instance. It is used by the Openstack machine actuator to create a single machine instance. Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"cloudsSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The name of the secret containing the openstack credentials",
+							Ref:         ref("k8s.io/api/core/v1.SecretReference"),
+						},
+					},
+					"cloudName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The name of the cloud to use from the clouds secret",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"flavor": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The flavor reference for the flavor for your server instance.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The name of the image to use for your server instance. If the RootVolume is specified, this will be ignored and use rootVolume directly.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"keyName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The ssh key to inject in the instance",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"sshUserName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The machine ssh username",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"networks": {
+						SchemaProps: spec.SchemaProps{
+							Description: "A networks object. Required parameter when there are multiple networks defined for the tenant. When you do not specify the networks parameter, the server attaches to the only network created for the current tenant.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machine/v1alpha1.NetworkParam"),
+									},
+								},
+							},
+						},
+					},
+					"ports": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Create and assign additional ports to instances",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machine/v1alpha1.PortOpts"),
+									},
+								},
+							},
+						},
+					},
+					"floatingIP": {
+						SchemaProps: spec.SchemaProps{
+							Description: "floatingIP specifies a floating IP to be associated with the machine. Note that it is not safe to use this parameter in a MachineSet, as only one Machine may be assigned the same floating IP.\n\nDeprecated: floatingIP will be removed in a future release as it cannot be implemented correctly.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"availabilityZone": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The availability zone from which to launch the server.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"securityGroups": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The names of the security groups to assign to the instance",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machine/v1alpha1.SecurityGroupParam"),
+									},
+								},
+							},
+						},
+					},
+					"userDataSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The name of the secret containing the user data (startup script in most cases)",
+							Ref:         ref("k8s.io/api/core/v1.SecretReference"),
+						},
+					},
+					"trunk": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Whether the server instance is created on a trunk port or not.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"tags": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Machine tags Requires Nova api 2.52 minimum!",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"serverMetadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Metadata mapping. Allows you to create a map of key value pairs to add to the server instance.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"configDrive": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Config Drive support",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"rootVolume": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The volume metadata to boot from",
+							Ref:         ref("github.com/openshift/api/machine/v1alpha1.RootVolume"),
+						},
+					},
+					"serverGroupID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The server group to assign the machine to.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"serverGroupName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The server group to assign the machine to. A server group with that name will be created if it does not exist. If both ServerGroupID and ServerGroupName are non-empty, they must refer to the same OpenStack resource.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"primarySubnet": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The subnet that a set of machines will get ingress/egress traffic from",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"cloudsSecret", "cloudName", "flavor", "image"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machine/v1alpha1.NetworkParam", "github.com/openshift/api/machine/v1alpha1.PortOpts", "github.com/openshift/api/machine/v1alpha1.RootVolume", "github.com/openshift/api/machine/v1alpha1.SecurityGroupParam", "k8s.io/api/core/v1.SecretReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_openshift_api_machine_v1alpha1_PortOpts(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"networkID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "networkID is the ID of the network the port will be created in. It is required.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"nameSuffix": {
+						SchemaProps: spec.SchemaProps{
+							Description: "If nameSuffix is specified the created port will be named <machine name>-<nameSuffix>. If not specified the port will be named <machine-name>-<index of this port>.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"description": {
+						SchemaProps: spec.SchemaProps{
+							Description: "description specifies the description of the created port.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"adminStateUp": {
+						SchemaProps: spec.SchemaProps{
+							Description: "adminStateUp sets the administrative state of the created port to up (true), or down (false).",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"macAddress": {
+						SchemaProps: spec.SchemaProps{
+							Description: "macAddress specifies the MAC address of the created port.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"fixedIPs": {
+						SchemaProps: spec.SchemaProps{
+							Description: "fixedIPs specifies a set of fixed IPs to assign to the port. They must all be valid for the port's network.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machine/v1alpha1.FixedIPs"),
+									},
+								},
+							},
+						},
+					},
+					"tenantID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "tenantID specifies the tenant ID of the created port. Note that this requires OpenShift to have administrative permissions, which is typically not the case. Use of this field is not recommended. Deprecated: use projectID instead. It will be ignored if projectID is set.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"projectID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "projectID specifies the project ID of the created port. Note that this requires OpenShift to have administrative permissions, which is typically not the case. Use of this field is not recommended.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"securityGroups": {
+						SchemaProps: spec.SchemaProps{
+							Description: "securityGroups specifies a set of security group UUIDs to use instead of the machine's default security groups. The default security groups will be used if this is left empty or not specified.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"allowedAddressPairs": {
+						SchemaProps: spec.SchemaProps{
+							Description: "allowedAddressPairs specifies a set of allowed address pairs to add to the port.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machine/v1alpha1.AddressPair"),
+									},
+								},
+							},
+						},
+					},
+					"tags": {
+						SchemaProps: spec.SchemaProps{
+							Description: "tags species a set of tags to add to the port.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"vnicType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The virtual network interface card (vNIC) type that is bound to the neutron port.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"profile": {
+						SchemaProps: spec.SchemaProps{
+							Description: "A dictionary that enables the application running on the specified host to pass and receive virtual network interface (VIF) port-specific information to the plug-in.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"portSecurity": {
+						SchemaProps: spec.SchemaProps{
+							Description: "enable or disable security on a given port incompatible with securityGroups and allowedAddressPairs",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"trunk": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Enables and disables trunk at port level. If not provided, openStackMachine.Spec.Trunk is inherited.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"hostID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The ID of the host where the port is allocated. Do not use this field: it cannot be used correctly. Deprecated: hostID is silently ignored. It will be removed with no replacement.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"networkID"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machine/v1alpha1.AddressPair", "github.com/openshift/api/machine/v1alpha1.FixedIPs"},
+	}
+}
+
+func schema_openshift_api_machine_v1alpha1_RootVolume(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"sourceUUID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "sourceUUID specifies the UUID of a glance image used to populate the root volume. Deprecated: set image in the platform spec instead. This will be ignored if image is set in the platform spec.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"volumeType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "volumeType specifies a volume type to use when creating the root volume. If not specified the default volume type will be used.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"diskSize": {
+						SchemaProps: spec.SchemaProps{
+							Description: "diskSize specifies the size, in GB, of the created root volume.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"availabilityZone": {
+						SchemaProps: spec.SchemaProps{
+							Description: "availabilityZone specifies the Cinder availability where the root volume will be created.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"sourceType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Deprecated: sourceType will be silently ignored. There is no replacement.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"deviceType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Deprecated: deviceType will be silently ignored. There is no replacement.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_machine_v1alpha1_SecurityGroupFilter(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"id": {
+						SchemaProps: spec.SchemaProps{
+							Description: "id specifies the ID of a security group to use. If set, id will not be validated before use. An invalid id will result in failure to create a server with an appropriate error message.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name filters security groups by name.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"description": {
+						SchemaProps: spec.SchemaProps{
+							Description: "description filters security groups by description.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"tenantId": {
+						SchemaProps: spec.SchemaProps{
+							Description: "tenantId filters security groups by tenant ID. Deprecated: use projectId instead. tenantId will be ignored if projectId is set.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"projectId": {
+						SchemaProps: spec.SchemaProps{
+							Description: "projectId filters security groups by project ID.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"tags": {
+						SchemaProps: spec.SchemaProps{
+							Description: "tags filters by security groups containing all specified tags. Multiple tags are comma separated.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"tagsAny": {
+						SchemaProps: spec.SchemaProps{
+							Description: "tagsAny filters by security groups containing any specified tags. Multiple tags are comma separated.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"notTags": {
+						SchemaProps: spec.SchemaProps{
+							Description: "notTags filters by security groups which don't match all specified tags. NOT (t1 AND t2...) Multiple tags are comma separated.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"notTagsAny": {
+						SchemaProps: spec.SchemaProps{
+							Description: "notTagsAny filters by security groups which don't match any specified tags. NOT (t1 OR t2...) Multiple tags are comma separated.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"limit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Deprecated: limit is silently ignored. It has no replacement.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"marker": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Deprecated: marker is silently ignored. It has no replacement.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"sortKey": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Deprecated: sortKey is silently ignored. It has no replacement.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"sortDir": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Deprecated: sortDir is silently ignored. It has no replacement.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_machine_v1alpha1_SecurityGroupParam(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"uuid": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Security Group UUID",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Security Group name",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"filter": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Filters used to query security groups in openstack",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/machine/v1alpha1.SecurityGroupFilter"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machine/v1alpha1.SecurityGroupFilter"},
+	}
+}
+
+func schema_openshift_api_machine_v1alpha1_SubnetFilter(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"id": {
+						SchemaProps: spec.SchemaProps{
+							Description: "id is the uuid of a specific subnet to use. If specified, id will not be validated. Instead server creation will fail with an appropriate error.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name filters subnets by name.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"description": {
+						SchemaProps: spec.SchemaProps{
+							Description: "description filters subnets by description.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"networkId": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Deprecated: networkId is silently ignored. Set uuid on the containing network definition instead.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"tenantId": {
+						SchemaProps: spec.SchemaProps{
+							Description: "tenantId filters subnets by tenant ID. Deprecated: use projectId instead. tenantId will be ignored if projectId is set.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"projectId": {
+						SchemaProps: spec.SchemaProps{
+							Description: "projectId filters subnets by project ID.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"ipVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ipVersion filters subnets by IP version.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"gateway_ip": {
+						SchemaProps: spec.SchemaProps{
+							Description: "gateway_ip filters subnets by gateway IP.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"cidr": {
+						SchemaProps: spec.SchemaProps{
+							Description: "cidr filters subnets by CIDR.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"ipv6AddressMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ipv6AddressMode filters subnets by IPv6 address mode.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"ipv6RaMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ipv6RaMode filters subnets by IPv6 router adversiement mode.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"subnetpoolId": {
+						SchemaProps: spec.SchemaProps{
+							Description: "subnetpoolId filters subnets by subnet pool ID.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"tags": {
+						SchemaProps: spec.SchemaProps{
+							Description: "tags filters by subnets containing all specified tags. Multiple tags are comma separated.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"tagsAny": {
+						SchemaProps: spec.SchemaProps{
+							Description: "tagsAny filters by subnets containing any specified tags. Multiple tags are comma separated.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"notTags": {
+						SchemaProps: spec.SchemaProps{
+							Description: "notTags filters by subnets which don't match all specified tags. NOT (t1 AND t2...) Multiple tags are comma separated.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"notTagsAny": {
+						SchemaProps: spec.SchemaProps{
+							Description: "notTagsAny filters by subnets which don't match any specified tags. NOT (t1 OR t2...) Multiple tags are comma separated.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"enableDhcp": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Deprecated: enableDhcp is silently ignored. It has no replacement.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"limit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Deprecated: limit is silently ignored. It has no replacement.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"marker": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Deprecated: marker is silently ignored. It has no replacement.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"sortKey": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Deprecated: sortKey is silently ignored. It has no replacement.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"sortDir": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Deprecated: sortDir is silently ignored. It has no replacement.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_machine_v1alpha1_SubnetParam(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"uuid": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The UUID of the network. Required if you omit the port attribute.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"filter": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Filters for optional network query",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/machine/v1alpha1.SubnetFilter"),
+						},
+					},
+					"portTags": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PortTags are tags that are added to ports created on this subnet",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"portSecurity": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PortSecurity optionally enables or disables security on ports managed by OpenStack",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machine/v1alpha1.SubnetFilter"},
+	}
+}
+
 func schema_openshift_api_machine_v1beta1_AWSMachineProviderConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -46403,7 +47473,7 @@ func schema_openshift_api_route_v1_RouterShard(ref common.ReferenceCallback) com
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "RouterShard has information of a routing shard and is used to generate host names and routing table entries when a routing shard is allocated for a specific route. Caveat: This is WIP and will likely undergo modifications when sharding\n\n\tsupport is added.",
+				Description: "RouterShard has information of a routing shard and is used to generate host names and routing table entries when a routing shard is allocated for a specific route. Caveat: This is WIP and will likely undergo modifications when sharding support is added.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"shardName": {

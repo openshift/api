@@ -119,6 +119,7 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		with("NodeSwap").                    // sig-node, ehashman, Kubernetes feature gate
 		with("MachineAPIProviderOpenStack"). // openstack, egarcia (#forum-openstack), OCP specific
 		with("CGroupsV2").                   // sig-node, harche, OCP specific
+		with("Crun").                        // sig-node, haircommander, OCP specific
 		toFeatures(),
 	LatencySensitive: newDefaultFeatures().
 		with(

@@ -567,7 +567,7 @@ type OpenStackFailureDomain struct {
 	//
 	// If not specified, the servers are provisioned in the default Compute
 	// availabity zone.
-	// +kubebuilder:validation:Optional
+	// +optional
 	ComputeZone string `json:"computeZone,omitempty"`
 
 	// storageZone specifies the OpenStack storage availability zone for
@@ -575,13 +575,13 @@ type OpenStackFailureDomain struct {
 	//
 	// If not specified, the volumes are provisioned in the default storage
 	// availabity zone.
-	// +kubebuilder:validation:Optional
+	// +optional
 	StorageZone string `json:"storageZone,omitempty"`
 
 	// subnetID specifies an OpenStack subnet ID which will be attached as
 	// the first NIC of every server in this failure domain.
 	//
-	// +kubebuilder:validation:Optional
+	// +optional
 	SubnetID string `json:"subnetID,omitempty"`
 }
 
@@ -600,7 +600,7 @@ type OpenStackPlatformSpec struct {
 	// configured for the API server. Permitted values are `vrrp`, `bgp`,
 	// and no value. If no value is set, `vrrp` will be assumed.
 	//
-	// +kubebuilder:validation:Optional
+	// +optional
 	// +kubebuilder:validation:Enum:=vrrp;bgp
 	// +kubebuilder:validation:default:=vrrp
 	APILoadBalancerType string `json:"apiLoadBalancerType,omitempty"`
@@ -609,7 +609,7 @@ type OpenStackPlatformSpec struct {
 	// for the API server. It is only used if apiLoadBalancer is set to
 	// `bgp`.
 	//
-	// +kubebuilder:validation:Optional
+	// +optional
 	BGPConfiguration *OpenStackAPIBGPConfiguration `json:"bgpConfiguration,omitempty"`
 }
 

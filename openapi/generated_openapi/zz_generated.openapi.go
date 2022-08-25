@@ -35380,7 +35380,7 @@ func schema_openshift_api_operator_v1_Config(ref common.ReferenceCallback) commo
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "Config provides information to configure the config operator. It handles installation, migration or synchronization of cloud based cluster configurations like AWS or Azure.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Description: "Config specifies the behavior of the config operator which is responsible for creating the initial configuration of other components on the cluster.  The operator also handles installation, migration or synchronization of cloud configurations for AWS and Azure cloud based clusters\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {

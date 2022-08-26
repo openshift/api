@@ -1394,15 +1394,6 @@ func (VSpherePlatformFailureDomain) SwaggerDoc() map[string]string {
 	return map_VSpherePlatformFailureDomain
 }
 
-var map_VSpherePlatformFailureDomainHosts = map[string]string{
-	"vmGroupName":   "vmGroupName is the Virtual Machine Group name configured within a vCenter cluster that is associated with the corresponding Host Group.",
-	"hostGroupName": "hostGroupName is the Host Group name configured within a vCenter cluster defining a group of ESXi hosts.",
-}
-
-func (VSpherePlatformFailureDomainHosts) SwaggerDoc() map[string]string {
-	return map_VSpherePlatformFailureDomainHosts
-}
-
 var map_VSpherePlatformFailureDomainSpec = map[string]string{
 	"":         "VSpherePlatformFailureDomainSpec holds the region and zone failure domain and the vCenter topology of that failure domain.",
 	"name":     "name defines the name of the VSpherePlatformFailureDomainSpec This name is arbitrary but will be used in VSpherePlatformDeploymentZone for association.",
@@ -1475,7 +1466,6 @@ var map_VSpherePlatformTopology = map[string]string{
 	"":               "VSpherePlatformTopology holds the required and optional vCenter objects - datacenter, computeCluster, networks, datastore and resourcePool - to provision virtual machines.",
 	"datacenter":     "datacenter is the vCenter datacenter in which virtual machines will be located and defined as the failure domain.",
 	"computeCluster": "computeCluster as the failure domain This is required to be a path",
-	"hosts":          "Hosts has information required for placement of machines on VSphere hosts.",
 	"networks":       "networks is the list of port group network names within this failure domain. Currently, we only support a single interface per RHCOS virtual machine. The available networks (port groups) can be listed using govc ls 'network/*'",
 	"datastore":      "datastore is the name or inventory path of the datastore in which the virtual machine is created/located.",
 }

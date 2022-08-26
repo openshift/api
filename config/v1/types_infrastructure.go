@@ -603,20 +603,10 @@ type OvirtPlatformStatus struct {
 // VSpherePlatformFailureDomainType is the name of the failure domain type.
 // There are two defined failure domains currently, Datacenter and ComputeCluster.
 // Each represents a vCenter object type within a vSphere environment.
-// +kubebuilder:validation:Enum=HostGroup;Datacenter;ComputeCluster
-// + ---
-// + HostGroup is included for future support, consumers should output an error
-// + if this value is set.
+// +kubebuilder:validation:Enum=Datacenter;ComputeCluster
 type VSpherePlatformFailureDomainType string
 
 const (
-	// HostGroupFailureDomain as a type allows the use of a group of ESXi hosts
-	// to be represented as a failure domain zone. When using this
-	// case it is expected that region would be a cluster.
-	// HostGroups within vCenter must be preconfigured and
-	// assigned in the topology.
-	HostGroupFailureDomain VSpherePlatformFailureDomainType = "HostGroup"
-
 	// ComputeClusterFailureDomain failure domain can either be a zone or region.
 	// The vCenter cluster is required to preconfigured and
 	// assigned in the topology.
@@ -695,10 +685,6 @@ type VSpherePlatformTopology struct {
 	// +kubebuilder:validation:MaxLength=2048
 	ComputeCluster string `json:"computeCluster,omitempty"`
 
-	// Hosts has information required for placement of machines on VSphere hosts.
-	// +optional
-	Hosts VSpherePlatformFailureDomainHosts `json:"hosts,omitempty"`
-
 	// networks is the list of port group network names within this failure domain.
 	// Currently, we only support a single interface per RHCOS virtual machine.
 	// The available networks (port groups) can be listed using
@@ -714,24 +700,6 @@ type VSpherePlatformTopology struct {
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=2048
 	Datastore string `json:"datastore,omitempty"`
-}
-
-type VSpherePlatformFailureDomainHosts struct {
-	// vmGroupName is the Virtual Machine Group name configured
-	// within a vCenter cluster that is associated with
-	// the corresponding Host Group.
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=80
-	VMGroupName string `json:"vmGroupName"`
-
-	// hostGroupName is the Host Group name configured
-	// within a vCenter cluster defining a group
-	// of ESXi hosts.
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=80
-	HostGroupName string `json:"hostGroupName"`
 }
 
 // VSpherePlatformVCenterSpec stores the vCenter connection fields.
@@ -751,7 +719,7 @@ type VSpherePlatformVCenterSpec struct {
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=32767
 	// +optional
-	Port int `json:"port,omitempty"`
+	Port int32 `json:"port,omitempty"`
 
 	// The vCenter Datacenters in which the RHCOS
 	// vm guests are located. This field will

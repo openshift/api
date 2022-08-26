@@ -347,7 +347,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.UpdateHistory":                                            schema_openshift_api_config_v1_UpdateHistory(ref),
 		"github.com/openshift/api/config/v1.VSpherePlatformDeploymentZone":                            schema_openshift_api_config_v1_VSpherePlatformDeploymentZone(ref),
 		"github.com/openshift/api/config/v1.VSpherePlatformFailureDomain":                             schema_openshift_api_config_v1_VSpherePlatformFailureDomain(ref),
-		"github.com/openshift/api/config/v1.VSpherePlatformFailureDomainHosts":                        schema_openshift_api_config_v1_VSpherePlatformFailureDomainHosts(ref),
 		"github.com/openshift/api/config/v1.VSpherePlatformFailureDomainSpec":                         schema_openshift_api_config_v1_VSpherePlatformFailureDomainSpec(ref),
 		"github.com/openshift/api/config/v1.VSpherePlatformNodeNetworking":                            schema_openshift_api_config_v1_VSpherePlatformNodeNetworking(ref),
 		"github.com/openshift/api/config/v1.VSpherePlatformNodeNetworkingSpec":                        schema_openshift_api_config_v1_VSpherePlatformNodeNetworkingSpec(ref),
@@ -16848,35 +16847,6 @@ func schema_openshift_api_config_v1_VSpherePlatformFailureDomain(ref common.Refe
 	}
 }
 
-func schema_openshift_api_config_v1_VSpherePlatformFailureDomainHosts(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"vmGroupName": {
-						SchemaProps: spec.SchemaProps{
-							Description: "vmGroupName is the Virtual Machine Group name configured within a vCenter cluster that is associated with the corresponding Host Group.",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"hostGroupName": {
-						SchemaProps: spec.SchemaProps{
-							Description: "hostGroupName is the Host Group name configured within a vCenter cluster defining a group of ESXi hosts.",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-				},
-				Required: []string{"vmGroupName", "hostGroupName"},
-			},
-		},
-	}
-}
-
 func schema_openshift_api_config_v1_VSpherePlatformFailureDomainSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -17179,13 +17149,6 @@ func schema_openshift_api_config_v1_VSpherePlatformTopology(ref common.Reference
 							Format:      "",
 						},
 					},
-					"hosts": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Hosts has information required for placement of machines on VSphere hosts.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/openshift/api/config/v1.VSpherePlatformFailureDomainHosts"),
-						},
-					},
 					"networks": {
 						SchemaProps: spec.SchemaProps{
 							Description: "networks is the list of port group network names within this failure domain. Currently, we only support a single interface per RHCOS virtual machine. The available networks (port groups) can be listed using govc ls 'network/*'",
@@ -17212,8 +17175,6 @@ func schema_openshift_api_config_v1_VSpherePlatformTopology(ref common.Reference
 				Required: []string{"datacenter"},
 			},
 		},
-		Dependencies: []string{
-			"github.com/openshift/api/config/v1.VSpherePlatformFailureDomainHosts"},
 	}
 }
 

@@ -9249,25 +9249,6 @@
         }
       }
     },
-    "com.github.openshift.api.config.v1.VSpherePlatformFailureDomainHosts": {
-      "type": "object",
-      "required": [
-        "vmGroupName",
-        "hostGroupName"
-      ],
-      "properties": {
-        "hostGroupName": {
-          "description": "hostGroupName is the Host Group name configured within a vCenter cluster defining a group of ESXi hosts.",
-          "type": "string",
-          "default": ""
-        },
-        "vmGroupName": {
-          "description": "vmGroupName is the Virtual Machine Group name configured within a vCenter cluster that is associated with the corresponding Host Group.",
-          "type": "string",
-          "default": ""
-        }
-      }
-    },
     "com.github.openshift.api.config.v1.VSpherePlatformFailureDomainSpec": {
       "description": "VSpherePlatformFailureDomainSpec holds the region and zone failure domain and the vCenter topology of that failure domain.",
       "type": "object",
@@ -9448,11 +9429,6 @@
         "datastore": {
           "description": "datastore is the name or inventory path of the datastore in which the virtual machine is created/located.",
           "type": "string"
-        },
-        "hosts": {
-          "description": "Hosts has information required for placement of machines on VSphere hosts.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1.VSpherePlatformFailureDomainHosts"
         },
         "networks": {
           "description": "networks is the list of port group network names within this failure domain. Currently, we only support a single interface per RHCOS virtual machine. The available networks (port groups) can be listed using govc ls 'network/*'",

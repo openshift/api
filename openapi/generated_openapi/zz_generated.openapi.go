@@ -40521,7 +40521,7 @@ func schema_openshift_api_operator_v1_LoadBalancerStrategy(ref common.ReferenceC
 					"dnsManagementPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Description: "dnsManagementPolicy indicates if the lifecycle of the wildcard DNS record associated with the load balancer service will be managed by the ingress operator. It defaults to Managed. Valid values are: Managed and Unmanaged.",
-							Default:     "",
+							Default:     "Managed",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -45002,7 +45002,7 @@ func schema_openshift_api_operatoringress_v1_DNSRecordSpec(ref common.ReferenceC
 					"dnsManagementPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Description: "dnsManagementPolicy denotes the current policy applied on the DNS record. Records that have policy set as \"Unmanaged\" are ignored by the ingress operator.  This means that the DNS record on the cloud provider is not managed by the operator, and the \"Published\" status condition will be updated to \"Unknown\" status, since it is externally managed. Any existing record on the cloud provider can be deleted at the discretion of the cluster admin.\n\nThis field defaults to Managed. Valid values are \"Managed\" and \"Unmanaged\".",
-							Default:     "",
+							Default:     "Managed",
 							Type:        []string{"string"},
 							Format:      "",
 						},

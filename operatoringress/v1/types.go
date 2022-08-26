@@ -70,9 +70,9 @@ type DNSRecordSpec struct {
 	// "Unmanaged".
 	//
 	// +kubebuilder:default:="Managed"
-	// +kubebuilder:validation:Optional
-	// +optional
-	DNSManagementPolicy DNSManagementPolicy `json:"dnsManagementPolicy"`
+	// +kubebuilder:validation:Required
+	// +default="Managed"
+	DNSManagementPolicy DNSManagementPolicy `json:"dnsManagementPolicy,omitempty"`
 }
 
 // DNSRecordStatus is the most recently observed status of each record.

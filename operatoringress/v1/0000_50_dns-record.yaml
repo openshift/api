@@ -38,6 +38,7 @@ spec:
               description: spec is the specification of the desired behavior of the dnsRecord.
               type: object
               required:
+                - dnsManagementPolicy
                 - dnsName
                 - recordTTL
                 - recordType

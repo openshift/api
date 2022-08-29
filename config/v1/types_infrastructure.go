@@ -633,15 +633,14 @@ type VSpherePlatformFailureDomainSpec struct {
 // VSpherePlatformTopology holds the required and optional vCenter objects - datacenter,
 // computeCluster, networks, datastore and resourcePool - to provision virtual machines.
 type VSpherePlatformTopology struct {
-	// datacenter is the vCenter datacenter in which virtual machines will be located
-	// and defined as the failure domain.
+	// datacenter is the vCenter datacenter in which virtual machines will be located.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=80
 	Datacenter string `json:"datacenter"`
 
-	// computeCluster as the failure domain
-	// This is required to be a path
+	// computeCluster is the vCenter cluster in which virtual machine will be located.
+	// This value is required to be a path.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=2048

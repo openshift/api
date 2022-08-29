@@ -17100,7 +17100,7 @@ func schema_openshift_api_config_v1_VSpherePlatformTopology(ref common.Reference
 				Properties: map[string]spec.Schema{
 					"datacenter": {
 						SchemaProps: spec.SchemaProps{
-							Description: "datacenter is the vCenter datacenter in which virtual machines will be located and defined as the failure domain.",
+							Description: "datacenter is the vCenter datacenter in which virtual machines will be located.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -17108,7 +17108,7 @@ func schema_openshift_api_config_v1_VSpherePlatformTopology(ref common.Reference
 					},
 					"computeCluster": {
 						SchemaProps: spec.SchemaProps{
-							Description: "computeCluster as the failure domain This is required to be a path",
+							Description: "computeCluster is the vCenter cluster in which virtual machine will be located. This value is required to be a path.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

@@ -9394,11 +9394,11 @@
       ],
       "properties": {
         "computeCluster": {
-          "description": "computeCluster as the failure domain This is required to be a path",
+          "description": "computeCluster is the vCenter cluster in which virtual machine will be located. This value is required to be a path.",
           "type": "string"
         },
         "datacenter": {
-          "description": "datacenter is the vCenter datacenter in which virtual machines will be located and defined as the failure domain.",
+          "description": "datacenter is the vCenter datacenter in which virtual machines will be located.",
           "type": "string",
           "default": ""
         },

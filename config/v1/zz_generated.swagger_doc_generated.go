@@ -1453,8 +1453,8 @@ func (VSpherePlatformStatus) SwaggerDoc() map[string]string {
 
 var map_VSpherePlatformTopology = map[string]string{
 	"":               "VSpherePlatformTopology holds the required and optional vCenter objects - datacenter, computeCluster, networks, datastore and resourcePool - to provision virtual machines.",
-	"datacenter":     "datacenter is the vCenter datacenter in which virtual machines will be located and defined as the failure domain.",
-	"computeCluster": "computeCluster as the failure domain This is required to be a path",
+	"datacenter":     "datacenter is the vCenter datacenter in which virtual machines will be located.",
+	"computeCluster": "computeCluster is the vCenter cluster in which virtual machine will be located. This value is required to be a path.",
 	"networks":       "networks is the list of port group network names within this failure domain. Currently, we only support a single interface per RHCOS virtual machine. The available networks (port groups) can be listed using govc ls 'network/*'",
 	"datastore":      "datastore is the name or inventory path of the datastore in which the virtual machine is created/located.",
 }

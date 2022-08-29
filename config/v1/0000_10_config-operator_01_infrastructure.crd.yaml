@@ -297,10 +297,10 @@ spec:
                             controlPlane:
                               description: 'ControlPlane determines if this failure
                                 domain is suitable for use by control plane machines.
-                                There is three valid options: unset, Allowed and NotAllowed.'
+                                There is three valid options: Allowed and Disallowed.'
                               enum:
                               - Allowed
-                              - NotAllowed
+                              - Disallowed
                               type: string
                             failureDomain:
                               description: failureDomain is the name of the VSphereFailureDomain
@@ -345,6 +345,7 @@ spec:
                               minLength: 1
                               type: string
                           required:
+                          - controlPlane
                           - failureDomain
                           - name
                           - server

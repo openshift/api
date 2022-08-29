@@ -16787,7 +16787,8 @@ func schema_openshift_api_config_v1_VSpherePlatformDeploymentZone(ref common.Ref
 					},
 					"controlPlane": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ControlPlane determines if this failure domain is suitable for use by control plane machines. There is three valid options: unset, Allowed and NotAllowed.",
+							Description: "ControlPlane determines if this failure domain is suitable for use by control plane machines. There is three valid options: Allowed and Disallowed.",
+							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -16800,7 +16801,7 @@ func schema_openshift_api_config_v1_VSpherePlatformDeploymentZone(ref common.Ref
 						},
 					},
 				},
-				Required: []string{"name", "server", "failureDomain"},
+				Required: []string{"name", "server", "failureDomain", "controlPlane"},
 			},
 		},
 		Dependencies: []string{

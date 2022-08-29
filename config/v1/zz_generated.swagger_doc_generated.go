@@ -1375,7 +1375,7 @@ var map_VSpherePlatformDeploymentZone = map[string]string{
 	"name":                "name defines the VSpherePlatformDeploymentZoneSpec name.",
 	"server":              "server is the fully-qualified domain name or the IP address of the vCenter server.",
 	"failureDomain":       "failureDomain is the name of the VSphereFailureDomain used for this VSphereDeploymentZone",
-	"controlPlane":        "ControlPlane determines if this failure domain is suitable for use by control plane machines. There is three valid options: unset, Allowed and NotAllowed.",
+	"controlPlane":        "ControlPlane determines if this failure domain is suitable for use by control plane machines. There is three valid options: Allowed and Disallowed.",
 	"placementConstraint": "PlacementConstraint encapsulates the placement constraints used within this deployment zone.",
 }
 

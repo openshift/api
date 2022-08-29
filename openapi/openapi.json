@@ -9194,12 +9194,14 @@
       "required": [
         "name",
         "server",
-        "failureDomain"
+        "failureDomain",
+        "controlPlane"
       ],
       "properties": {
         "controlPlane": {
-          "description": "ControlPlane determines if this failure domain is suitable for use by control plane machines. There is three valid options: unset, Allowed and NotAllowed.",
-          "type": "string"
+          "description": "ControlPlane determines if this failure domain is suitable for use by control plane machines. There is three valid options: Allowed and Disallowed.",
+          "type": "string",
+          "default": ""
         },
         "failureDomain": {
           "description": "failureDomain is the name of the VSphereFailureDomain used for this VSphereDeploymentZone",

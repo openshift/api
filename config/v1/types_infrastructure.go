@@ -712,7 +712,7 @@ type VSpherePlatformPlacementConstraint struct {
 }
 
 // VSpherePlatformDeploymentSuitable
-// +kubebuilder:validation:Enum=Allowed;NotAllowed
+// +kubebuilder:validation:Enum=Allowed;Disallowed
 type VSpherePlatformDeploymentSuitable string
 
 const (
@@ -720,9 +720,9 @@ const (
 	// control plane nodes.
 	Allowed VSpherePlatformDeploymentSuitable = "Allowed"
 
-	// NotAllowed indicates that the Deployment Zone is not suitable for
+	// Disallowed indicates that the Deployment Zone is not suitable for
 	// control plane nodes.
-	NotAllowed VSpherePlatformDeploymentSuitable = "NotAllowed"
+	Disallowed VSpherePlatformDeploymentSuitable = "Disallowed"
 )
 
 // VSpherePlatformDeploymentZone holds the association between a
@@ -747,9 +747,9 @@ type VSpherePlatformDeploymentZone struct {
 	FailureDomain string `json:"failureDomain"`
 
 	// ControlPlane determines if this failure domain is suitable for use by control plane machines.
-	// There is three valid options: unset, Allowed and NotAllowed.
-	// +optional
-	ControlPlane VSpherePlatformDeploymentSuitable `json:"controlPlane,omitempty"`
+	// There is three valid options: Allowed and Disallowed.
+	// +kubebuilder:validation:Required
+	ControlPlane VSpherePlatformDeploymentSuitable `json:"controlPlane"`
 
 	// PlacementConstraint encapsulates the placement constraints
 	// used within this deployment zone.

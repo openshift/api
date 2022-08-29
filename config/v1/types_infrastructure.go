@@ -600,24 +600,6 @@ type OvirtPlatformStatus struct {
 	NodeDNSIP string `json:"nodeDNSIP,omitempty"`
 }
 
-// VSpherePlatformFailureDomainType is the name of the failure domain type.
-// There are two defined failure domains currently, Datacenter and ComputeCluster.
-// Each represents a vCenter object type within a vSphere environment.
-// +kubebuilder:validation:Enum=Datacenter;ComputeCluster
-type VSpherePlatformFailureDomainType string
-
-const (
-	// ComputeClusterFailureDomain failure domain can either be a zone or region.
-	// The vCenter cluster is required to preconfigured and
-	// assigned in the topology.
-	ComputeClusterFailureDomain VSpherePlatformFailureDomainType = "ComputeCluster"
-
-	// DatacenterFailureDomain failure domain can be only be a region. The vcenter
-	// datacenter is required to be preconfigred and assigned
-	// in the topology. If used the zone would be of type ComputeCluster.
-	DatacenterFailureDomain VSpherePlatformFailureDomainType = "Datacenter"
-)
-
 // VSpherePlatformFailureDomainSpec holds the region and zone failure domain and
 // the vCenter topology of that failure domain.
 type VSpherePlatformFailureDomainSpec struct {
@@ -629,43 +611,23 @@ type VSpherePlatformFailureDomainSpec struct {
 	// +kubebuilder:validation:MaxLength=256
 	Name string `json:"name"`
 
-	// region defines a VSpherePlatformFailureDomain which
-	// includes the name of the vCenter tag, the failure domain type
-	// and the name of the vCenter tag category.
+	// region defines the name of a region tag that will
+	// be attached to a vCenter datacenter
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=80
 	// +kubebuilder:validation:Required
-	Region VSpherePlatformFailureDomain `json:"region"`
+	Region string `json:"region"`
 
-	// zone defines a VSpherePlatformFailureDomain which
-	// includes the name of the vCenter tag, the failure domain type
-	// and the name of the vCenter tag category.
+	// zone defines the name of a zone tag that will
+	// be attached to a vCenter cluster
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=80
 	// +kubebuilder:validation:Required
-	Zone VSpherePlatformFailureDomain `json:"zone"`
+	Zone string `json:"zone"`
 
 	// Topology describes a given failure domain using vSphere constructs
 	// +kubebuilder:validation:Required
 	Topology VSpherePlatformTopology `json:"topology"`
-}
-
-// VSpherePlatformFailureDomain holds the name of the associated tag, the type
-// of the failure domain, and the vCenter tag category associated with this
-// failure domain.
-type VSpherePlatformFailureDomain struct {
-	// name is the name of the vCenter tag that represents this failure domain
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=80
-	Name string `json:"name"`
-
-	// type is the name of the failure domain type, which includes
-	// Datacenter, ComputeCluster and HostGroup
-	// +kubebuilder:validation:Required
-	Type VSpherePlatformFailureDomainType `json:"type"`
-
-	// tagCategory is the category used for the tag
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=80
-	TagCategory string `json:"tagCategory"`
 }
 
 // VSpherePlatformTopology holds the required and optional vCenter objects - datacenter,

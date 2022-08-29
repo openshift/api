@@ -368,35 +368,11 @@ spec:
                               minLength: 1
                               type: string
                             region:
-                              description: region defines a VSpherePlatformFailureDomain
-                                which includes the name of the vCenter tag, the failure
-                                domain type and the name of the vCenter tag category.
-                              properties:
-                                name:
-                                  description: name is the name of the vCenter tag
-                                    that represents this failure domain
-                                  maxLength: 80
-                                  minLength: 1
-                                  type: string
-                                tagCategory:
-                                  description: tagCategory is the category used for
-                                    the tag
-                                  maxLength: 80
-                                  minLength: 1
-                                  type: string
-                                type:
-                                  description: type is the name of the failure domain
-                                    type, which includes Datacenter, ComputeCluster
-                                    and HostGroup
-                                  enum:
-                                  - Datacenter
-                                  - ComputeCluster
-                                  type: string
-                              required:
-                              - name
-                              - tagCategory
-                              - type
-                              type: object
+                              description: region defines the name of a region tag
+                                that will be attached to a vCenter datacenter
+                              maxLength: 80
+                              minLength: 1
+                              type: string
                             topology:
                               description: Topology describes a given failure domain
                                 using vSphere constructs
@@ -439,35 +415,11 @@ spec:
                               - networks
                               type: object
                             zone:
-                              description: zone defines a VSpherePlatformFailureDomain
-                                which includes the name of the vCenter tag, the failure
-                                domain type and the name of the vCenter tag category.
-                              properties:
-                                name:
-                                  description: name is the name of the vCenter tag
-                                    that represents this failure domain
-                                  maxLength: 80
-                                  minLength: 1
-                                  type: string
-                                tagCategory:
-                                  description: tagCategory is the category used for
-                                    the tag
-                                  maxLength: 80
-                                  minLength: 1
-                                  type: string
-                                type:
-                                  description: type is the name of the failure domain
-                                    type, which includes Datacenter, ComputeCluster
-                                    and HostGroup
-                                  enum:
-                                  - Datacenter
-                                  - ComputeCluster
-                                  type: string
-                              required:
-                              - name
-                              - tagCategory
-                              - type
-                              type: object
+                              description: zone defines the name of a zone tag that
+                                will be attached to a vCenter cluster
+                              maxLength: 80
+                              minLength: 1
+                              type: string
                           required:
                           - name
                           - region

@@ -1383,22 +1383,11 @@ func (VSpherePlatformDeploymentZone) SwaggerDoc() map[string]string {
 	return map_VSpherePlatformDeploymentZone
 }
 
-var map_VSpherePlatformFailureDomain = map[string]string{
-	"":            "VSpherePlatformFailureDomain holds the name of the associated tag, the type of the failure domain, and the vCenter tag category associated with this failure domain.",
-	"name":        "name is the name of the vCenter tag that represents this failure domain",
-	"type":        "type is the name of the failure domain type, which includes Datacenter, ComputeCluster and HostGroup",
-	"tagCategory": "tagCategory is the category used for the tag",
-}
-
-func (VSpherePlatformFailureDomain) SwaggerDoc() map[string]string {
-	return map_VSpherePlatformFailureDomain
-}
-
 var map_VSpherePlatformFailureDomainSpec = map[string]string{
 	"":         "VSpherePlatformFailureDomainSpec holds the region and zone failure domain and the vCenter topology of that failure domain.",
 	"name":     "name defines the name of the VSpherePlatformFailureDomainSpec This name is arbitrary but will be used in VSpherePlatformDeploymentZone for association.",
-	"region":   "region defines a VSpherePlatformFailureDomain which includes the name of the vCenter tag, the failure domain type and the name of the vCenter tag category.",
-	"zone":     "zone defines a VSpherePlatformFailureDomain which includes the name of the vCenter tag, the failure domain type and the name of the vCenter tag category.",
+	"region":   "region defines the name of a region tag that will be attached to a vCenter datacenter",
+	"zone":     "zone defines the name of a zone tag that will be attached to a vCenter cluster",
 	"topology": "Topology describes a given failure domain using vSphere constructs",
 }
 

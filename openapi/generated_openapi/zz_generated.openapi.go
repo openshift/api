@@ -346,7 +346,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.Update":                                                   schema_openshift_api_config_v1_Update(ref),
 		"github.com/openshift/api/config/v1.UpdateHistory":                                            schema_openshift_api_config_v1_UpdateHistory(ref),
 		"github.com/openshift/api/config/v1.VSpherePlatformDeploymentZone":                            schema_openshift_api_config_v1_VSpherePlatformDeploymentZone(ref),
-		"github.com/openshift/api/config/v1.VSpherePlatformFailureDomain":                             schema_openshift_api_config_v1_VSpherePlatformFailureDomain(ref),
 		"github.com/openshift/api/config/v1.VSpherePlatformFailureDomainSpec":                         schema_openshift_api_config_v1_VSpherePlatformFailureDomainSpec(ref),
 		"github.com/openshift/api/config/v1.VSpherePlatformNodeNetworking":                            schema_openshift_api_config_v1_VSpherePlatformNodeNetworking(ref),
 		"github.com/openshift/api/config/v1.VSpherePlatformNodeNetworkingSpec":                        schema_openshift_api_config_v1_VSpherePlatformNodeNetworkingSpec(ref),
@@ -16809,44 +16808,6 @@ func schema_openshift_api_config_v1_VSpherePlatformDeploymentZone(ref common.Ref
 	}
 }
 
-func schema_openshift_api_config_v1_VSpherePlatformFailureDomain(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "VSpherePlatformFailureDomain holds the name of the associated tag, the type of the failure domain, and the vCenter tag category associated with this failure domain.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Description: "name is the name of the vCenter tag that represents this failure domain",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"type": {
-						SchemaProps: spec.SchemaProps{
-							Description: "type is the name of the failure domain type, which includes Datacenter, ComputeCluster and HostGroup",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"tagCategory": {
-						SchemaProps: spec.SchemaProps{
-							Description: "tagCategory is the category used for the tag",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-				},
-				Required: []string{"name", "type", "tagCategory"},
-			},
-		},
-	}
-}
-
 func schema_openshift_api_config_v1_VSpherePlatformFailureDomainSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -16864,16 +16825,18 @@ func schema_openshift_api_config_v1_VSpherePlatformFailureDomainSpec(ref common.
 					},
 					"region": {
 						SchemaProps: spec.SchemaProps{
-							Description: "region defines a VSpherePlatformFailureDomain which includes the name of the vCenter tag, the failure domain type and the name of the vCenter tag category.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/openshift/api/config/v1.VSpherePlatformFailureDomain"),
+							Description: "region defines the name of a region tag that will be attached to a vCenter datacenter",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"zone": {
 						SchemaProps: spec.SchemaProps{
-							Description: "zone defines a VSpherePlatformFailureDomain which includes the name of the vCenter tag, the failure domain type and the name of the vCenter tag category.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/openshift/api/config/v1.VSpherePlatformFailureDomain"),
+							Description: "zone defines the name of a zone tag that will be attached to a vCenter cluster",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"topology": {
@@ -16888,7 +16851,7 @@ func schema_openshift_api_config_v1_VSpherePlatformFailureDomainSpec(ref common.
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.VSpherePlatformFailureDomain", "github.com/openshift/api/config/v1.VSpherePlatformTopology"},
+			"github.com/openshift/api/config/v1.VSpherePlatformTopology"},
 	}
 }
 

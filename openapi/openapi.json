@@ -9223,32 +9223,6 @@
         }
       }
     },
-    "com.github.openshift.api.config.v1.VSpherePlatformFailureDomain": {
-      "description": "VSpherePlatformFailureDomain holds the name of the associated tag, the type of the failure domain, and the vCenter tag category associated with this failure domain.",
-      "type": "object",
-      "required": [
-        "name",
-        "type",
-        "tagCategory"
-      ],
-      "properties": {
-        "name": {
-          "description": "name is the name of the vCenter tag that represents this failure domain",
-          "type": "string",
-          "default": ""
-        },
-        "tagCategory": {
-          "description": "tagCategory is the category used for the tag",
-          "type": "string",
-          "default": ""
-        },
-        "type": {
-          "description": "type is the name of the failure domain type, which includes Datacenter, ComputeCluster and HostGroup",
-          "type": "string",
-          "default": ""
-        }
-      }
-    },
     "com.github.openshift.api.config.v1.VSpherePlatformFailureDomainSpec": {
       "description": "VSpherePlatformFailureDomainSpec holds the region and zone failure domain and the vCenter topology of that failure domain.",
       "type": "object",
@@ -9265,9 +9239,9 @@
           "default": ""
         },
         "region": {
-          "description": "region defines a VSpherePlatformFailureDomain which includes the name of the vCenter tag, the failure domain type and the name of the vCenter tag category.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1.VSpherePlatformFailureDomain"
+          "description": "region defines the name of a region tag that will be attached to a vCenter datacenter",
+          "type": "string",
+          "default": ""
         },
         "topology": {
           "description": "Topology describes a given failure domain using vSphere constructs",
@@ -9275,9 +9249,9 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1.VSpherePlatformTopology"
         },
         "zone": {
-          "description": "zone defines a VSpherePlatformFailureDomain which includes the name of the vCenter tag, the failure domain type and the name of the vCenter tag category.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1.VSpherePlatformFailureDomain"
+          "description": "zone defines the name of a zone tag that will be attached to a vCenter cluster",
+          "type": "string",
+          "default": ""
         }
       }
     },

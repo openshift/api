@@ -506,13 +506,14 @@ type BareMetalPlatformStatus struct {
 }
 
 type OpenStackAPIBGPPeer struct {
-	// asn is the ASN of the peer.
+	// asn is the Autonomous System number of the peer.
 	//
 	// +kubebuilder:validation:Required
 	ASN string `json:"asn"`
 
 	// ip is the IP address of the peer. It may be either IPv4 or IPv6.
 	//
+	// +kubebuilder:validation:Format=ip
 	// +kubebuilder:validation:Required
 	IP string `json:"ip"`
 }
@@ -520,32 +521,37 @@ type OpenStackAPIBGPPeer struct {
 // OpenStackAPIBGPSpeaker species
 type OpenStackAPIBGPSpeaker struct {
 	// failureDomain is the name of a failure domain which this BGP
-	// configuration applies to.
+	// configuration applies to. A failure domain with that name must be
+	// defined in the OpenStack platform spec.
 	//
 	// +kubebuilder:validation:Required
 	FailureDomain string `json:"failureDomain"`
 
-	// asn specifies the ASN to be used by the BGP speaker.
+	// asn specifies the Autonomous System number to be used by the BGP
+	// speaker.
 	//
 	// +kubebuilder:validation:Required
 	ASN string `json:"asn"`
 
-	// peers is a list of all BGP peers of this speaker.
+	// peers is a list of all BGP peers of this speaker. The list must
+	// contain at least one item.
 	//
 	// +kubebuilder:validation:MinItems:=1
 	Peers []OpenStackAPIBGPPeer `json:"peers"`
 }
 
 type OpenStackAPIBGPConfiguration struct {
-	// apiVIPs is a list of IP addresses which will be published via BGP for
-	// use by the API server. It may contain both IPv4 and IPv6 addresses.
+	// apiVIPs is a list IP addresses which will be used to reach the API
+	// server. The list must contain at least one address. It may contain
+	// both IPv4 and IPv6 addresses.
 	//
+	// +kubebuilder:validation:Format=ip
 	// +kubebuilder:validation:MinItems:=1
 	APIVIPs []string `json:"apiVIPs"`
 
 	// speakers is a list of BGP speaker configurations. We require a
 	// speaker configuration for every failure domain hosting a control
-	// plane node.
+	// plane node. The list must contain at least one item.
 	//
 	// +kubebuilder:validation:MinItems:=1
 	// +listType=map
@@ -557,7 +563,9 @@ type OpenStackAPIBGPConfiguration struct {
 // Specifically, it specifies a set of values which will be set on all machines
 // using the failure domain.
 type OpenStackFailureDomain struct {
-	// name is the unique name of this failure domain.
+	// name is an arbitrary, unique name for this failure domain. This name
+	// can be used to refer to this failure domain when building a BGP
+	// speaker configuration.
 	//
 	// +kubebuilder:validation:Required
 	Name string `json:"name"`
@@ -565,17 +573,25 @@ type OpenStackFailureDomain struct {
 	// computeZone specifies the OpenStack Compute availability zone for
 	// all servers in this failure domain.
 	//
-	// If not specified, the servers are provisioned in the default Compute
-	// availabity zone.
+	// If not specified the servers are provisioned without reference to
+	// availability zones. Server placement is delegated to the OpenStack
+	// defaults.
 	// +optional
+	// + ---
+	// + TODO: define behaviour in case only one of computeZone and
+	// + storageZone is set.
 	ComputeZone string `json:"computeZone,omitempty"`
 
 	// storageZone specifies the OpenStack storage availability zone for
 	// all volumes in this failure domain.
 	//
-	// If not specified, the volumes are provisioned in the default storage
-	// availabity zone.
+	// If not specified the volumes are provisioned without reference to
+	// availability zones. Volume placement is delegated to the OpenStack
+	// defaults.
 	// +optional
+	// + ---
+	// + TODO: define behaviour in case only one of computeZone and
+	// + storageZone is set.
 	StorageZone string `json:"storageZone,omitempty"`
 
 	// subnetID specifies an OpenStack subnet ID which will be attached as
@@ -616,6 +632,7 @@ type OpenStackPlatformSpec struct {
 	//
 	// +listType=map
 	// +listMapKey=name
+	// +optional
 	FailureDomains []OpenStackFailureDomain `json:"failureDomains,omitempty"`
 
 	// apiLoadBalancerType specifies the type of loadbalancer which will be

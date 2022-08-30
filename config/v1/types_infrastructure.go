@@ -585,6 +585,28 @@ type OpenStackFailureDomain struct {
 	SubnetID string `json:"subnetID,omitempty"`
 }
 
+// APILoadBalancerType defines how inbound traffic is routed to the API
+// servers.
+type APILoadBalancerType string
+
+const (
+	// APILoadBalancerTypeDefault lets the controller define a default
+	APILoadBalancerTypeDefault APILoadBalancerType = ""
+
+	// APILoadBalancerTypeVRRP uses VRRP to route inbound API traffic to
+	// the Control plane servers
+	APILoadBalancerTypeVRRP APILoadBalancerType = "VRRP"
+
+	// APILoadBalancerTypeBGP uses BGP to route inbound API traffic to the
+	// Control plane servers
+	APILoadBalancerTypeBGP APILoadBalancerType = "BGP"
+)
+
+// IsSet returns true if the field was filled in in configuration.
+func (lbT APILoadBalancerType) IsSet() bool {
+	return lbT != APILoadBalancerTypeDefault
+}
+
 // OpenStackPlatformSpec holds the desired state of the OpenStack infrastructure provider.
 // This only includes fields that can be modified in the cluster.
 type OpenStackPlatformSpec struct {
@@ -597,13 +619,12 @@ type OpenStackPlatformSpec struct {
 	FailureDomains []OpenStackFailureDomain `json:"failureDomains,omitempty"`
 
 	// apiLoadBalancerType specifies the type of loadbalancer which will be
-	// configured for the API server. Permitted values are `vrrp`, `bgp`,
-	// and no value. If no value is set, `vrrp` will be assumed.
+	// configured for the API server. Permitted values are `VRRP`, `BGP`,
+	// and no value. If no value is set, `VRRP` will be assumed.
 	//
 	// +optional
-	// +kubebuilder:validation:Enum:=vrrp;bgp
-	// +kubebuilder:validation:default:=vrrp
-	APILoadBalancerType string `json:"apiLoadBalancerType,omitempty"`
+	// +kubebuilder:validation:Enum:="";VRRP;BGP
+	APILoadBalancerType APILoadBalancerType `json:"apiLoadBalancerType,omitempty"`
 
 	// bgpConfiguration describes the configuration of a BGP load balancer
 	// for the API server. It is only used if apiLoadBalancer is set to

@@ -637,7 +637,9 @@ type OpenStackPlatformSpec struct {
 
 	// apiLoadBalancerType specifies the type of loadbalancer which will be
 	// configured for the API server. Permitted values are `VRRP`, `BGP`,
-	// and no value. If no value is set, `VRRP` will be assumed.
+	// and omitted.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default. This default is subject to change over time.
+	// The current default value is `VRRP`.
 	//
 	// +optional
 	// +kubebuilder:validation:Enum:="";VRRP;BGP

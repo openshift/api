@@ -791,6 +791,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.IPAMConfig":                                             schema_openshift_api_operator_v1_IPAMConfig(ref),
 		"github.com/openshift/api/operator/v1.IPFIXConfig":                                            schema_openshift_api_operator_v1_IPFIXConfig(ref),
 		"github.com/openshift/api/operator/v1.IPsecConfig":                                            schema_openshift_api_operator_v1_IPsecConfig(ref),
+		"github.com/openshift/api/operator/v1.Ingress":                                                schema_openshift_api_operator_v1_Ingress(ref),
 		"github.com/openshift/api/operator/v1.IngressController":                                      schema_openshift_api_operator_v1_IngressController(ref),
 		"github.com/openshift/api/operator/v1.IngressControllerCaptureHTTPCookie":                     schema_openshift_api_operator_v1_IngressControllerCaptureHTTPCookie(ref),
 		"github.com/openshift/api/operator/v1.IngressControllerCaptureHTTPCookieUnion":                schema_openshift_api_operator_v1_IngressControllerCaptureHTTPCookieUnion(ref),
@@ -803,6 +804,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.IngressControllerSpec":                                  schema_openshift_api_operator_v1_IngressControllerSpec(ref),
 		"github.com/openshift/api/operator/v1.IngressControllerStatus":                                schema_openshift_api_operator_v1_IngressControllerStatus(ref),
 		"github.com/openshift/api/operator/v1.IngressControllerTuningOptions":                         schema_openshift_api_operator_v1_IngressControllerTuningOptions(ref),
+		"github.com/openshift/api/operator/v1.IngressList":                                            schema_openshift_api_operator_v1_IngressList(ref),
+		"github.com/openshift/api/operator/v1.IngressSpec":                                            schema_openshift_api_operator_v1_IngressSpec(ref),
+		"github.com/openshift/api/operator/v1.IngressStatus":                                          schema_openshift_api_operator_v1_IngressStatus(ref),
 		"github.com/openshift/api/operator/v1.InsightsOperator":                                       schema_openshift_api_operator_v1_InsightsOperator(ref),
 		"github.com/openshift/api/operator/v1.InsightsOperatorList":                                   schema_openshift_api_operator_v1_InsightsOperatorList(ref),
 		"github.com/openshift/api/operator/v1.InsightsOperatorSpec":                                   schema_openshift_api_operator_v1_InsightsOperatorSpec(ref),
@@ -40190,6 +40194,55 @@ func schema_openshift_api_operator_v1_IPsecConfig(ref common.ReferenceCallback) 
 	}
 }
 
+func schema_openshift_api_operator_v1_Ingress(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Ingress contains configuration options specific to the Ingress Operator itself.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec is the specification of the desired behavior of the Ingress Operator.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1.IngressSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status is the most recently observed status of the Ingress Operator.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1.IngressStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1.IngressSpec", "github.com/openshift/api/operator/v1.IngressStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
 func schema_openshift_api_operator_v1_IngressController(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -40552,6 +40605,13 @@ func schema_openshift_api_operator_v1_IngressControllerLogging(ref common.Refere
 							Ref:         ref("github.com/openshift/api/operator/v1.AccessLogging"),
 						},
 					},
+					"logLevel": {
+						SchemaProps: spec.SchemaProps{
+							Description: "logLevel describes the desired logging verbosity for the router's access logs. Any one of the following values may be specified: * Normal: The default log level. Errors and significant events will be logged. * Debug: Compared to the \"Normal\" log level, less significant events\n  will be logged, and in more detail.\n* Trace: Compared to the \"Debug\" log level, even more detail will be\n  given, and more esoteric events will be logged, possibly including\n  specific function calls. \"Trace\" log level may be very verbose.\n* TraceAll: All log messages the operator can generate will be logged.\n  Extremely verbose.\n\nWhen unset, logging will be performed at the \"Normal\" level.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 			},
 		},
@@ -40858,6 +40918,84 @@ func schema_openshift_api_operator_v1_IngressControllerTuningOptions(ref common.
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+	}
+}
+
+func schema_openshift_api_operator_v1_IngressList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "IngressList contains a list of Ingresses.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/operator/v1.Ingress"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1.Ingress", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_openshift_api_operator_v1_IngressSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"operatorLogLevel": {
+						SchemaProps: spec.SchemaProps{
+							Description: "operatorLogLevel is the log level of the ingress operator. Options are: * Normal * Debug * Trace * TraceAll When unspecified, the default level is \"Normal\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_operator_v1_IngressStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+			},
+		},
 	}
 }
 

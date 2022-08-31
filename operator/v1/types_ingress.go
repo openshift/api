@@ -1232,6 +1232,21 @@ type IngressControllerLogging struct {
 	//
 	// +optional
 	Access *AccessLogging `json:"access,omitempty"`
+
+	// logLevel describes the desired logging verbosity for the router's access logs.
+	// Any one of the following values may be specified:
+	// * Normal: The default log level. Errors and significant events will be logged.
+	// * Debug: Compared to the "Normal" log level, less significant events
+	//   will be logged, and in more detail.
+	// * Trace: Compared to the "Debug" log level, even more detail will be
+	//   given, and more esoteric events will be logged, possibly including
+	//   specific function calls. "Trace" log level may be very verbose.
+	// * TraceAll: All log messages the operator can generate will be logged.
+	//   Extremely verbose.
+	//
+	// When unset, logging will be performed at the "Normal" level.
+	// +optional
+	LogLevel LogLevel `json:"logLevel,omitempty"`
 }
 
 // IngressControllerHTTPHeaderPolicy is a policy for setting HTTP headers.
@@ -1683,4 +1698,51 @@ type IngressControllerList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []IngressController `json:"items"`
+}
+
+// +genclient
+// +genclient:nonNamespaced
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:subresource:status
+// +kubebuilder:object:root=true
+//
+// Ingress contains configuration options specific to the Ingress Operator itself.
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+// +openshift:compatibility-gen:level=1
+type Ingress struct {
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+
+	// spec is the specification of the desired behavior of the Ingress Operator.
+	Spec IngressSpec `json:"spec,omitempty"`
+	// status is the most recently observed status of the Ingress Operator.
+	Status IngressStatus `json:"status,omitempty"`
+}
+
+type IngressSpec struct {
+	// operatorLogLevel is the log level of the ingress operator. Options are:
+	// * Normal
+	// * Debug
+	// * Trace
+	// * TraceAll
+	// When unspecified, the default level is "Normal".
+	//
+	// +optional
+	OperatorLogLevel LogLevel `json:"operatorLogLevel,omitempty"`
+}
+
+type IngressStatus struct{}
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:object:root=true
+
+// IngressList contains a list of Ingresses.
+//
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+// +openshift:compatibility-gen:level=1
+type IngressList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []Ingress `json:"items"`
 }

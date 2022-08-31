@@ -454,6 +454,15 @@ spec:
                       required:
                         - destination
                       type: object
+                    logLevel:
+                      description: "logLevel describes the desired logging verbosity for the router's access logs. Any one of the following values may be specified: * Normal: The default log level. Errors and significant events will be logged. * Debug: Compared to the \"Normal\" log level, less significant events will be logged, and in more detail. * Trace: Compared to the \"Debug\" log level, even more detail will be given, and more esoteric events will be logged, possibly including specific function calls. \"Trace\" log level may be very verbose. * TraceAll: All log messages the operator can generate will be logged. Extremely verbose. \n When unset, logging will be performed at the \"Normal\" level."
+                      enum:
+                        - ""
+                        - Normal
+                        - Debug
+                        - Trace
+                        - TraceAll
+                      type: string
                   type: object
                 namespaceSelector:
                   description: "namespaceSelector is used to filter the set of namespaces serviced by the ingress controller. This is useful for implementing shards. \n If unset, the default is no filtering."

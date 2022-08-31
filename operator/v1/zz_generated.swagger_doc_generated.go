@@ -717,6 +717,16 @@ func (HostNetworkStrategy) SwaggerDoc() map[string]string {
 	return map_HostNetworkStrategy
 }
 
+var map_Ingress = map[string]string{
+	"":       "\n\nIngress contains configuration options specific to the Ingress Operator itself.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"spec":   "spec is the specification of the desired behavior of the Ingress Operator.",
+	"status": "status is the most recently observed status of the Ingress Operator.",
+}
+
+func (Ingress) SwaggerDoc() map[string]string {
+	return map_Ingress
+}
+
 var map_IngressController = map[string]string{
 	"":       "IngressController describes a managed ingress controller for the cluster. The controller can service OpenShift Route and Kubernetes Ingress resources.\n\nWhen an IngressController is created, a new ingress controller deployment is created to allow external traffic to reach the services that expose Ingress or Route resources. Updating this resource may lead to disruption for public facing network connections as a new ingress controller revision may be rolled out.\n\nhttps://kubernetes.io/docs/concepts/services-networking/ingress-controllers\n\nWhenever possible, sensible defaults for the platform are used. See each field for more details.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 	"spec":   "spec is the specification of the desired behavior of the IngressController.",
@@ -797,8 +807,9 @@ func (IngressControllerList) SwaggerDoc() map[string]string {
 }
 
 var map_IngressControllerLogging = map[string]string{
-	"":       "IngressControllerLogging describes what should be logged where.",
-	"access": "access describes how the client requests should be logged.\n\nIf this field is empty, access logging is disabled.",
+	"":         "IngressControllerLogging describes what should be logged where.",
+	"access":   "access describes how the client requests should be logged.\n\nIf this field is empty, access logging is disabled.",
+	"logLevel": "logLevel describes the desired logging verbosity for the router's access logs. Any one of the following values may be specified: * Normal: The default log level. Errors and significant events will be logged. * Debug: Compared to the \"Normal\" log level, less significant events\n  will be logged, and in more detail.\n* Trace: Compared to the \"Debug\" log level, even more detail will be\n  given, and more esoteric events will be logged, possibly including\n  specific function calls. \"Trace\" log level may be very verbose.\n* TraceAll: All log messages the operator can generate will be logged.\n  Extremely verbose.\n\nWhen unset, logging will be performed at the \"Normal\" level.",
 }
 
 func (IngressControllerLogging) SwaggerDoc() map[string]string {
@@ -865,6 +876,22 @@ var map_IngressControllerTuningOptions = map[string]string{
 
 func (IngressControllerTuningOptions) SwaggerDoc() map[string]string {
 	return map_IngressControllerTuningOptions
+}
+
+var map_IngressList = map[string]string{
+	"": "IngressList contains a list of Ingresses.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+}
+
+func (IngressList) SwaggerDoc() map[string]string {
+	return map_IngressList
+}
+
+var map_IngressSpec = map[string]string{
+	"operatorLogLevel": "operatorLogLevel is the log level of the ingress operator. Options are: * Normal * Debug * Trace * TraceAll When unspecified, the default level is \"Normal\".",
+}
+
+func (IngressSpec) SwaggerDoc() map[string]string {
+	return map_IngressSpec
 }
 
 var map_LoadBalancerStrategy = map[string]string{

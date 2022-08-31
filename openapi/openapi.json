@@ -23457,6 +23457,34 @@
     "com.github.openshift.api.operator.v1.IPsecConfig": {
       "type": "object"
     },
+    "com.github.openshift.api.operator.v1.Ingress": {
+      "description": "Ingress contains configuration options specific to the Ingress Operator itself.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec is the specification of the desired behavior of the Ingress Operator.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.IngressSpec"
+        },
+        "status": {
+          "description": "status is the most recently observed status of the Ingress Operator.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.IngressStatus"
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1.IngressController": {
       "description": "IngressController describes a managed ingress controller for the cluster. The controller can service OpenShift Route and Kubernetes Ingress resources.\n\nWhen an IngressController is created, a new ingress controller deployment is created to allow external traffic to reach the services that expose Ingress or Route resources. Updating this resource may lead to disruption for public facing network connections as a new ingress controller revision may be rolled out.\n\nhttps://kubernetes.io/docs/concepts/services-networking/ingress-controllers\n\nWhenever possible, sensible defaults for the platform are used. See each field for more details.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
@@ -23667,6 +23695,10 @@
         "access": {
           "description": "access describes how the client requests should be logged.\n\nIf this field is empty, access logging is disabled.",
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.AccessLogging"
+        },
+        "logLevel": {
+          "description": "logLevel describes the desired logging verbosity for the router's access logs. Any one of the following values may be specified: * Normal: The default log level. Errors and significant events will be logged. * Debug: Compared to the \"Normal\" log level, less significant events\n  will be logged, and in more detail.\n* Trace: Compared to the \"Debug\" log level, even more detail will be\n  given, and more esoteric events will be logged, possibly including\n  specific function calls. \"Trace\" log level may be very verbose.\n* TraceAll: All log messages the operator can generate will be logged.\n  Extremely verbose.\n\nWhen unset, logging will be performed at the \"Normal\" level.",
+          "type": "string"
         }
       }
     },
@@ -23863,6 +23895,46 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
         }
       }
+    },
+    "com.github.openshift.api.operator.v1.IngressList": {
+      "description": "IngressList contains a list of Ingresses.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+      "type": "object",
+      "required": [
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.Ingress"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.IngressSpec": {
+      "type": "object",
+      "properties": {
+        "operatorLogLevel": {
+          "description": "operatorLogLevel is the log level of the ingress operator. Options are: * Normal * Debug * Trace * TraceAll When unspecified, the default level is \"Normal\".",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.IngressStatus": {
+      "type": "object"
     },
     "com.github.openshift.api.operator.v1.InsightsOperator": {
       "description": "InsightsOperator holds cluster-wide information about the Insights Operator.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",

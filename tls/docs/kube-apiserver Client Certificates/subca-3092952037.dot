@@ -1,0 +1,34 @@
+digraph "Local Certificate" {
+  // Node definitions.
+  7 [
+    label="certkeypair/kube-controller-manager-csr-signer-signer\n\nsecret/csr-signer-signer -nopenshift-kube-controller-manager-operator\n"
+    style=filled
+    fillcolor="#c7bfff"
+  ];
+  8 [
+    label="certkeypair/kubelet-signer\n\n\n"
+    style=filled
+    fillcolor=white
+  ];
+  9 [
+    label="certkeypair/kube-csr-signer_@1661779985\n\n\n"
+    style=filled
+    fillcolor=white
+  ];
+  10 [
+    label="certkeypair/kube-controller-manager-csr-signer\n\nsecret/csr-signer -nopenshift-kube-controller-manager\n    secret/csr-signer -nopenshift-kube-controller-manager-operator\n    file:///etc/kubernetes/static-pod-resources/kube-controller-manager-certs/secrets/csr-signer/tls.crt/tls.crt,file:///etc/kubernetes/static-pod-resources/kube-controller-manager-certs/secrets/csr-signer/tls.crt/tls.key\n"
+    style=filled
+    fillcolor="#c7bfff"
+  ];
+  22 [
+    label="cabundle/kube-csr-signer_@1661779985|kubelet-signer|kube-csr-signer_@1661848562|openshift-kube-controller-manager-operator_csr-signer-signer@1661848428\n\nconfigmaps/kubelet-serving-ca-12 -nopenshift-kube-apiserver\n    configmaps/kubelet-serving-ca-13 -nopenshift-kube-apiserver\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-12/configmaps/kubelet-serving-ca/ca-bundle.crt/ca-bundle.crt\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-13/configmaps/kubelet-serving-ca/ca-bundle.crt/ca-bundle.crt\n"
+    style=filled
+    fillcolor="#fda172"
+  ];
+
+  // Edge definitions.
+  7 -> 22;
+  8 -> 22;
+  9 -> 22;
+  10 -> 22;
+}

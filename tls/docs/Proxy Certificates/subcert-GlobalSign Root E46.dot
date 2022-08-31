@@ -1,6 +1,6 @@
 digraph "Local Certificate" {
   // Node definitions.
-  14 [
+  3 [
     label="certkeypair/GlobalSign Root E46\n\n\n"
     style=filled
     fillcolor=white
@@ -12,5 +12,5 @@ digraph "Local Certificate" {
   ];
 
   // Edge definitions.
-  14 -> 16;
+  3 -> 16;
 }

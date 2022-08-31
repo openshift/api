@@ -1,6 +1,6 @@
 digraph "Local Certificate" {
   // Node definitions.
-  1 [
+  7 [
     label="certkeypair/Trustwave Global ECC P256 Certification Authority\n\n\n"
     style=filled
     fillcolor=white
@@ -12,5 +12,5 @@ digraph "Local Certificate" {
   ];
 
   // Edge definitions.
-  1 -> 16;
+  7 -> 16;
 }

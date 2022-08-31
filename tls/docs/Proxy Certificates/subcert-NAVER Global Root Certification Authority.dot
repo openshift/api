@@ -1,6 +1,6 @@
 digraph "Local Certificate" {
   // Node definitions.
-  3 [
+  1 [
     label="certkeypair/NAVER Global Root Certification Authority\n\n\n"
     style=filled
     fillcolor=white
@@ -12,5 +12,5 @@ digraph "Local Certificate" {
   ];
 
   // Edge definitions.
-  3 -> 16;
+  1 -> 16;
 }

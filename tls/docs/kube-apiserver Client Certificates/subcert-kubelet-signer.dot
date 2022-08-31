@@ -1,0 +1,34 @@
+digraph "Local Certificate" {
+  // Node definitions.
+  8 [
+    label="certkeypair/kubelet-signer\n\n\n"
+    style=filled
+    fillcolor=white
+  ];
+  22 [
+    label="cabundle/kube-csr-signer_@1661779985|kubelet-signer|kube-csr-signer_@1661848562|openshift-kube-controller-manager-operator_csr-signer-signer@1661848428\n\nconfigmaps/kubelet-serving-ca-12 -nopenshift-kube-apiserver\n    configmaps/kubelet-serving-ca-13 -nopenshift-kube-apiserver\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-12/configmaps/kubelet-serving-ca/ca-bundle.crt/ca-bundle.crt\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-13/configmaps/kubelet-serving-ca/ca-bundle.crt/ca-bundle.crt\n"
+    style=filled
+    fillcolor="#fda172"
+  ];
+  23 [
+    label="cabundle/kube-csr-signer_@1661779985|kubelet-signer\n\nconfigmaps/kubelet-serving-ca-10 -nopenshift-kube-apiserver\n    configmaps/kubelet-serving-ca-5 -nopenshift-kube-apiserver\n    configmaps/kubelet-serving-ca-6 -nopenshift-kube-apiserver\n    configmaps/kubelet-serving-ca-7 -nopenshift-kube-apiserver\n    configmaps/kubelet-serving-ca-8 -nopenshift-kube-apiserver\n    configmaps/kubelet-serving-ca-9 -nopenshift-kube-apiserver\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-10/configmaps/kubelet-serving-ca/ca-bundle.crt/ca-bundle.crt\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-9/configmaps/kubelet-serving-ca/ca-bundle.crt/ca-bundle.crt\n"
+    style=filled
+    fillcolor="#fda172"
+  ];
+  24 [
+    label="cabundle/kube-csr-signer_@1661779985|kubelet-signer|openshift-kube-controller-manager-operator_csr-signer-signer@1661848428\n\nconfigmaps/kubelet-serving-ca-11 -nopenshift-kube-apiserver\n"
+    style=filled
+    fillcolor="#fda172"
+  ];
+  28 [
+    label="cabundle/kube-apiserver-from-installer-client-ca\n\nconfigmaps/initial-kube-apiserver-server-ca -nopenshift-config\n"
+    style=filled
+    fillcolor="#fda172"
+  ];
+
+  // Edge definitions.
+  8 -> 22;
+  8 -> 23;
+  8 -> 24;
+  8 -> 28;
+}

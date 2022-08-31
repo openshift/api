@@ -7,14 +7,14 @@ Used to access etcd metrics using mTLS.
 - [Signing Certificate/Key Pairs](#signing-certificatekey-pairs)
     - [etcd-metric-signer](#etcd-metric-signer)
 - [Serving Certificate/Key Pairs](#serving-certificatekey-pairs)
-    - [etcd-metrics-for-master-ip-10-0-183-229.eu-central-1.compute.internal](#etcd-metrics-for-master-ip-10-0-183-229.eu-central-1.compute.internal)
-    - [etcd-metrics-for-master-ip-10-0-132-68.eu-central-1.compute.internal](#etcd-metrics-for-master-ip-10-0-132-68.eu-central-1.compute.internal)
-    - [etcd-metrics-for-master-ip-10-0-210-78.eu-central-1.compute.internal](#etcd-metrics-for-master-ip-10-0-210-78.eu-central-1.compute.internal)
+    - [etcd-metrics-for-master-ip-10-0-196-134.eu-west-3.compute.internal](#etcd-metrics-for-master-ip-10-0-196-134.eu-west-3.compute.internal)
+    - [etcd-metrics-for-master-ip-10-0-168-125.eu-west-3.compute.internal](#etcd-metrics-for-master-ip-10-0-168-125.eu-west-3.compute.internal)
+    - [etcd-metrics-for-master-ip-10-0-147-125.eu-west-3.compute.internal](#etcd-metrics-for-master-ip-10-0-147-125.eu-west-3.compute.internal)
 - [Client Certificate/Key Pairs](#client-certificatekey-pairs)
     - [etcd-metric](#etcd-metric)
-    - [etcd-metrics-for-master-ip-10-0-183-229.eu-central-1.compute.internal](#etcd-metrics-for-master-ip-10-0-183-229.eu-central-1.compute.internal)
-    - [etcd-metrics-for-master-ip-10-0-132-68.eu-central-1.compute.internal](#etcd-metrics-for-master-ip-10-0-132-68.eu-central-1.compute.internal)
-    - [etcd-metrics-for-master-ip-10-0-210-78.eu-central-1.compute.internal](#etcd-metrics-for-master-ip-10-0-210-78.eu-central-1.compute.internal)
+    - [etcd-metrics-for-master-ip-10-0-196-134.eu-west-3.compute.internal](#etcd-metrics-for-master-ip-10-0-196-134.eu-west-3.compute.internal)
+    - [etcd-metrics-for-master-ip-10-0-168-125.eu-west-3.compute.internal](#etcd-metrics-for-master-ip-10-0-168-125.eu-west-3.compute.internal)
+    - [etcd-metrics-for-master-ip-10-0-147-125.eu-west-3.compute.internal](#etcd-metrics-for-master-ip-10-0-147-125.eu-west-3.compute.internal)
 - [Certificates Without Keys](#certificates-without-keys)
 - [Certificate Authority Bundles](#certificate-authority-bundles)
     - [etcd-metrics-ca](#etcd-metrics-ca)
@@ -23,7 +23,7 @@ Used to access etcd metrics using mTLS.
 
 
 ### etcd-metric-signer
-![PKI Graph](subcert-etcd-metric-signer4218002264880163000.png)
+![PKI Graph](subcert-etcd-metric-signer576816345683489723.png)
 
 
 
@@ -31,7 +31,7 @@ Used to access etcd metrics using mTLS.
 | ----------- | ----------- |
 | Type | Signer |
 | CommonName | etcd-metric-signer |
-| SerialNumber | 4218002264880163000 |
+| SerialNumber | 576816345683489723 |
 | Issuer CommonName | [etcd-metric-signer](#etcd-metric-signer) |
 | Validity | 10y |
 | Signature Algorithm | SHA256-RSA |
@@ -53,8 +53,8 @@ Used to access etcd metrics using mTLS.
 ## Serving Certificate/Key Pairs
 
 
-### etcd-metrics-for-master-ip-10-0-183-229.eu-central-1.compute.internal
-![PKI Graph](subcert-systemetcd-metricetcd-client1768016573087407501.png)
+### etcd-metrics-for-master-ip-10-0-196-134.eu-west-3.compute.internal
+![PKI Graph](subcert-systemetcd-metricetcd-client3020126488297072024.png)
 
 
 
@@ -62,7 +62,7 @@ Used to access etcd metrics using mTLS.
 | ----------- | ----------- |
 | Type | Serving,Client |
 | CommonName | system:etcd-metric:etcd-client |
-| SerialNumber | 1768016573087407501 |
+| SerialNumber | 3020126488297072024 |
 | Issuer CommonName | [etcd-metric-signer](#etcd-metric-signer) |
 | Validity | 3y |
 | Signature Algorithm | SHA256-RSA |
@@ -70,30 +70,30 @@ Used to access etcd metrics using mTLS.
 | Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
 | ExtendedUsages | - ExtKeyUsageClientAuth<br/>- ExtKeyUsageServerAuth |
 | Organizations (User Groups) | - system:etcd-metrics |
-| DNS Names | - etcd.kube-system.svc<br/>- etcd.kube-system.svc.cluster.local<br/>- etcd.openshift-etcd.svc<br/>- etcd.openshift-etcd.svc.cluster.local<br/>- localhost<br/>- ::1<br/>- 10.0.183.229<br/>- 127.0.0.1<br/>- ::1 |
-| IP Addresses | - ::1<br/>- 10.0.183.229<br/>- 127.0.0.1<br/>- ::1 |
+| DNS Names | - etcd.kube-system.svc<br/>- etcd.kube-system.svc.cluster.local<br/>- etcd.openshift-etcd.svc<br/>- etcd.openshift-etcd.svc.cluster.local<br/>- localhost<br/>- ::1<br/>- 10.0.196.134<br/>- 127.0.0.1<br/>- ::1 |
+| IP Addresses | - ::1<br/>- 10.0.196.134<br/>- 127.0.0.1<br/>- ::1 |
 
 
-#### etcd-metrics-for-master-ip-10-0-183-229.eu-central-1.compute.internal Locations
+#### etcd-metrics-for-master-ip-10-0-196-134.eu-west-3.compute.internal Locations
 | Namespace | Secret Name |
 | ----------- | ----------- |
-| openshift-etcd | etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal |
+| openshift-etcd | etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal |
 
 | File | Permissions | User | Group | SE Linux |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
-| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 
 
 
-### etcd-metrics-for-master-ip-10-0-132-68.eu-central-1.compute.internal
-![PKI Graph](subcert-systemetcd-metricetcd-client45102667796783726.png)
+### etcd-metrics-for-master-ip-10-0-168-125.eu-west-3.compute.internal
+![PKI Graph](subcert-systemetcd-metricetcd-client8665290177121124217.png)
 
 
 
@@ -101,7 +101,7 @@ Used to access etcd metrics using mTLS.
 | ----------- | ----------- |
 | Type | Serving,Client |
 | CommonName | system:etcd-metric:etcd-client |
-| SerialNumber | 45102667796783726 |
+| SerialNumber | 8665290177121124217 |
 | Issuer CommonName | [etcd-metric-signer](#etcd-metric-signer) |
 | Validity | 3y |
 | Signature Algorithm | SHA256-RSA |
@@ -109,30 +109,30 @@ Used to access etcd metrics using mTLS.
 | Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
 | ExtendedUsages | - ExtKeyUsageClientAuth<br/>- ExtKeyUsageServerAuth |
 | Organizations (User Groups) | - system:etcd-metrics |
-| DNS Names | - etcd.kube-system.svc<br/>- etcd.kube-system.svc.cluster.local<br/>- etcd.openshift-etcd.svc<br/>- etcd.openshift-etcd.svc.cluster.local<br/>- localhost<br/>- ::1<br/>- 10.0.132.68<br/>- 127.0.0.1<br/>- ::1 |
-| IP Addresses | - ::1<br/>- 10.0.132.68<br/>- 127.0.0.1<br/>- ::1 |
+| DNS Names | - etcd.kube-system.svc<br/>- etcd.kube-system.svc.cluster.local<br/>- etcd.openshift-etcd.svc<br/>- etcd.openshift-etcd.svc.cluster.local<br/>- localhost<br/>- ::1<br/>- 10.0.168.125<br/>- 127.0.0.1<br/>- ::1 |
+| IP Addresses | - ::1<br/>- 10.0.168.125<br/>- 127.0.0.1<br/>- ::1 |
 
 
-#### etcd-metrics-for-master-ip-10-0-132-68.eu-central-1.compute.internal Locations
+#### etcd-metrics-for-master-ip-10-0-168-125.eu-west-3.compute.internal Locations
 | Namespace | Secret Name |
 | ----------- | ----------- |
-| openshift-etcd | etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal |
+| openshift-etcd | etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal |
 
 | File | Permissions | User | Group | SE Linux |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
-| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 
 
 
-### etcd-metrics-for-master-ip-10-0-210-78.eu-central-1.compute.internal
-![PKI Graph](subcert-systemetcd-metricetcd-client564640857130170731.png)
+### etcd-metrics-for-master-ip-10-0-147-125.eu-west-3.compute.internal
+![PKI Graph](subcert-systemetcd-metricetcd-client7212707676006106143.png)
 
 
 
@@ -140,7 +140,7 @@ Used to access etcd metrics using mTLS.
 | ----------- | ----------- |
 | Type | Serving,Client |
 | CommonName | system:etcd-metric:etcd-client |
-| SerialNumber | 564640857130170731 |
+| SerialNumber | 7212707676006106143 |
 | Issuer CommonName | [etcd-metric-signer](#etcd-metric-signer) |
 | Validity | 3y |
 | Signature Algorithm | SHA256-RSA |
@@ -148,32 +148,32 @@ Used to access etcd metrics using mTLS.
 | Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
 | ExtendedUsages | - ExtKeyUsageClientAuth<br/>- ExtKeyUsageServerAuth |
 | Organizations (User Groups) | - system:etcd-metrics |
-| DNS Names | - etcd.kube-system.svc<br/>- etcd.kube-system.svc.cluster.local<br/>- etcd.openshift-etcd.svc<br/>- etcd.openshift-etcd.svc.cluster.local<br/>- localhost<br/>- ::1<br/>- 10.0.210.78<br/>- 127.0.0.1<br/>- ::1 |
-| IP Addresses | - ::1<br/>- 10.0.210.78<br/>- 127.0.0.1<br/>- ::1 |
+| DNS Names | - etcd.kube-system.svc<br/>- etcd.kube-system.svc.cluster.local<br/>- etcd.openshift-etcd.svc<br/>- etcd.openshift-etcd.svc.cluster.local<br/>- localhost<br/>- ::1<br/>- 10.0.147.125<br/>- 127.0.0.1<br/>- ::1 |
+| IP Addresses | - ::1<br/>- 10.0.147.125<br/>- 127.0.0.1<br/>- ::1 |
 
 
-#### etcd-metrics-for-master-ip-10-0-210-78.eu-central-1.compute.internal Locations
+#### etcd-metrics-for-master-ip-10-0-147-125.eu-west-3.compute.internal Locations
 | Namespace | Secret Name |
 | ----------- | ----------- |
-| openshift-etcd | etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal |
+| openshift-etcd | etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal |
 
 | File | Permissions | User | Group | SE Linux |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
-| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 
 
 ## Client Certificate/Key Pairs
 
 
 ### etcd-metric
-![PKI Graph](subcert-etcd-metric2163297920510713389.png)
+![PKI Graph](subcert-etcd-metric8939281642952943770.png)
 
 
 
@@ -181,7 +181,7 @@ Used to access etcd metrics using mTLS.
 | ----------- | ----------- |
 | Type | Client |
 | CommonName | etcd-metric |
-| SerialNumber | 2163297920510713389 |
+| SerialNumber | 8939281642952943770 |
 | Issuer CommonName | [etcd-metric-signer](#etcd-metric-signer) |
 | Validity | 10y |
 | Signature Algorithm | SHA256-RSA |
@@ -202,8 +202,8 @@ Used to access etcd metrics using mTLS.
 
 
 
-### etcd-metrics-for-master-ip-10-0-183-229.eu-central-1.compute.internal
-![PKI Graph](subcert-systemetcd-metricetcd-client1768016573087407501.png)
+### etcd-metrics-for-master-ip-10-0-196-134.eu-west-3.compute.internal
+![PKI Graph](subcert-systemetcd-metricetcd-client3020126488297072024.png)
 
 
 
@@ -211,7 +211,7 @@ Used to access etcd metrics using mTLS.
 | ----------- | ----------- |
 | Type | Serving,Client |
 | CommonName | system:etcd-metric:etcd-client |
-| SerialNumber | 1768016573087407501 |
+| SerialNumber | 3020126488297072024 |
 | Issuer CommonName | [etcd-metric-signer](#etcd-metric-signer) |
 | Validity | 3y |
 | Signature Algorithm | SHA256-RSA |
@@ -219,30 +219,30 @@ Used to access etcd metrics using mTLS.
 | Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
 | ExtendedUsages | - ExtKeyUsageClientAuth<br/>- ExtKeyUsageServerAuth |
 | Organizations (User Groups) | - system:etcd-metrics |
-| DNS Names | - etcd.kube-system.svc<br/>- etcd.kube-system.svc.cluster.local<br/>- etcd.openshift-etcd.svc<br/>- etcd.openshift-etcd.svc.cluster.local<br/>- localhost<br/>- ::1<br/>- 10.0.183.229<br/>- 127.0.0.1<br/>- ::1 |
-| IP Addresses | - ::1<br/>- 10.0.183.229<br/>- 127.0.0.1<br/>- ::1 |
+| DNS Names | - etcd.kube-system.svc<br/>- etcd.kube-system.svc.cluster.local<br/>- etcd.openshift-etcd.svc<br/>- etcd.openshift-etcd.svc.cluster.local<br/>- localhost<br/>- ::1<br/>- 10.0.196.134<br/>- 127.0.0.1<br/>- ::1 |
+| IP Addresses | - ::1<br/>- 10.0.196.134<br/>- 127.0.0.1<br/>- ::1 |
 
 
-#### etcd-metrics-for-master-ip-10-0-183-229.eu-central-1.compute.internal Locations
+#### etcd-metrics-for-master-ip-10-0-196-134.eu-west-3.compute.internal Locations
 | Namespace | Secret Name |
 | ----------- | ----------- |
-| openshift-etcd | etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal |
+| openshift-etcd | etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal |
 
 | File | Permissions | User | Group | SE Linux |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
-| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 
 
 
-### etcd-metrics-for-master-ip-10-0-132-68.eu-central-1.compute.internal
-![PKI Graph](subcert-systemetcd-metricetcd-client45102667796783726.png)
+### etcd-metrics-for-master-ip-10-0-168-125.eu-west-3.compute.internal
+![PKI Graph](subcert-systemetcd-metricetcd-client8665290177121124217.png)
 
 
 
@@ -250,7 +250,7 @@ Used to access etcd metrics using mTLS.
 | ----------- | ----------- |
 | Type | Serving,Client |
 | CommonName | system:etcd-metric:etcd-client |
-| SerialNumber | 45102667796783726 |
+| SerialNumber | 8665290177121124217 |
 | Issuer CommonName | [etcd-metric-signer](#etcd-metric-signer) |
 | Validity | 3y |
 | Signature Algorithm | SHA256-RSA |
@@ -258,30 +258,30 @@ Used to access etcd metrics using mTLS.
 | Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
 | ExtendedUsages | - ExtKeyUsageClientAuth<br/>- ExtKeyUsageServerAuth |
 | Organizations (User Groups) | - system:etcd-metrics |
-| DNS Names | - etcd.kube-system.svc<br/>- etcd.kube-system.svc.cluster.local<br/>- etcd.openshift-etcd.svc<br/>- etcd.openshift-etcd.svc.cluster.local<br/>- localhost<br/>- ::1<br/>- 10.0.132.68<br/>- 127.0.0.1<br/>- ::1 |
-| IP Addresses | - ::1<br/>- 10.0.132.68<br/>- 127.0.0.1<br/>- ::1 |
+| DNS Names | - etcd.kube-system.svc<br/>- etcd.kube-system.svc.cluster.local<br/>- etcd.openshift-etcd.svc<br/>- etcd.openshift-etcd.svc.cluster.local<br/>- localhost<br/>- ::1<br/>- 10.0.168.125<br/>- 127.0.0.1<br/>- ::1 |
+| IP Addresses | - ::1<br/>- 10.0.168.125<br/>- 127.0.0.1<br/>- ::1 |
 
 
-#### etcd-metrics-for-master-ip-10-0-132-68.eu-central-1.compute.internal Locations
+#### etcd-metrics-for-master-ip-10-0-168-125.eu-west-3.compute.internal Locations
 | Namespace | Secret Name |
 | ----------- | ----------- |
-| openshift-etcd | etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal |
+| openshift-etcd | etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal |
 
 | File | Permissions | User | Group | SE Linux |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
-| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 
 
 
-### etcd-metrics-for-master-ip-10-0-210-78.eu-central-1.compute.internal
-![PKI Graph](subcert-systemetcd-metricetcd-client564640857130170731.png)
+### etcd-metrics-for-master-ip-10-0-147-125.eu-west-3.compute.internal
+![PKI Graph](subcert-systemetcd-metricetcd-client7212707676006106143.png)
 
 
 
@@ -289,7 +289,7 @@ Used to access etcd metrics using mTLS.
 | ----------- | ----------- |
 | Type | Serving,Client |
 | CommonName | system:etcd-metric:etcd-client |
-| SerialNumber | 564640857130170731 |
+| SerialNumber | 7212707676006106143 |
 | Issuer CommonName | [etcd-metric-signer](#etcd-metric-signer) |
 | Validity | 3y |
 | Signature Algorithm | SHA256-RSA |
@@ -297,25 +297,25 @@ Used to access etcd metrics using mTLS.
 | Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
 | ExtendedUsages | - ExtKeyUsageClientAuth<br/>- ExtKeyUsageServerAuth |
 | Organizations (User Groups) | - system:etcd-metrics |
-| DNS Names | - etcd.kube-system.svc<br/>- etcd.kube-system.svc.cluster.local<br/>- etcd.openshift-etcd.svc<br/>- etcd.openshift-etcd.svc.cluster.local<br/>- localhost<br/>- ::1<br/>- 10.0.210.78<br/>- 127.0.0.1<br/>- ::1 |
-| IP Addresses | - ::1<br/>- 10.0.210.78<br/>- 127.0.0.1<br/>- ::1 |
+| DNS Names | - etcd.kube-system.svc<br/>- etcd.kube-system.svc.cluster.local<br/>- etcd.openshift-etcd.svc<br/>- etcd.openshift-etcd.svc.cluster.local<br/>- localhost<br/>- ::1<br/>- 10.0.147.125<br/>- 127.0.0.1<br/>- ::1 |
+| IP Addresses | - ::1<br/>- 10.0.147.125<br/>- 127.0.0.1<br/>- ::1 |
 
 
-#### etcd-metrics-for-master-ip-10-0-210-78.eu-central-1.compute.internal Locations
+#### etcd-metrics-for-master-ip-10-0-147-125.eu-west-3.compute.internal Locations
 | Namespace | Secret Name |
 | ----------- | ----------- |
-| openshift-etcd | etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal |
+| openshift-etcd | etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal |
 
 | File | Permissions | User | Group | SE Linux |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
-| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 
 
 ## Certificates Without Keys
@@ -343,17 +343,17 @@ CA used to recognize etcd metrics serving and client certificates.
 | ----------- | ----------- |
 | openshift-config | etcd-metric-serving-ca |
 | openshift-etcd | etcd-metrics-proxy-client-ca |
+| openshift-etcd | etcd-metrics-proxy-client-ca-2 |
+| openshift-etcd | etcd-metrics-proxy-client-ca-3 |
 | openshift-etcd | etcd-metrics-proxy-client-ca-4 |
 | openshift-etcd | etcd-metrics-proxy-client-ca-5 |
 | openshift-etcd | etcd-metrics-proxy-client-ca-6 |
-| openshift-etcd | etcd-metrics-proxy-client-ca-7 |
-| openshift-etcd | etcd-metrics-proxy-client-ca-8 |
 | openshift-etcd | etcd-metrics-proxy-serving-ca |
+| openshift-etcd | etcd-metrics-proxy-serving-ca-2 |
+| openshift-etcd | etcd-metrics-proxy-serving-ca-3 |
 | openshift-etcd | etcd-metrics-proxy-serving-ca-4 |
 | openshift-etcd | etcd-metrics-proxy-serving-ca-5 |
 | openshift-etcd | etcd-metrics-proxy-serving-ca-6 |
-| openshift-etcd | etcd-metrics-proxy-serving-ca-7 |
-| openshift-etcd | etcd-metrics-proxy-serving-ca-8 |
 
 | File | Permissions | User | Group | SE Linux |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
@@ -361,9 +361,9 @@ CA used to recognize etcd metrics serving and client certificates.
 | /etc/kubernetes/static-pod-resources/etcd-certs/configmaps/etcd-metrics-proxy-serving-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 | /etc/kubernetes/static-pod-resources/etcd-pod-4/configmaps/etcd-metrics-proxy-client-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 | /etc/kubernetes/static-pod-resources/etcd-pod-4/configmaps/etcd-metrics-proxy-serving-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/configmaps/etcd-metrics-proxy-client-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/configmaps/etcd-metrics-proxy-serving-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/configmaps/etcd-metrics-proxy-client-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/configmaps/etcd-metrics-proxy-serving-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/configmaps/etcd-metrics-proxy-client-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/configmaps/etcd-metrics-proxy-serving-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/configmaps/etcd-metrics-proxy-client-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/configmaps/etcd-metrics-proxy-serving-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 
 

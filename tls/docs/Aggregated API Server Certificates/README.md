@@ -17,17 +17,17 @@ Used to secure connections between the kube-apiserver and aggregated API Servers
 
 
 ### aggregator-front-proxy-signer
-![PKI Graph](subcert-aggregator-signer3783714127421522860.png)
+![PKI Graph](subcert-openshift-kube-apiserver-operator_aggregator-client-signer16618484346352648843567097288.png)
 
 Signer for the kube-apiserver to create client certificates for aggregated apiservers to recognize as a front-proxy.
 
 | Property | Value |
 | ----------- | ----------- |
 | Type | Signer |
-| CommonName | aggregator-signer |
-| SerialNumber | 3783714127421522860 |
+| CommonName | openshift-kube-apiserver-operator_aggregator-client-signer@1661848434 |
+| SerialNumber | 6352648843567097288 |
 | Issuer CommonName | [aggregator-front-proxy-signer](#aggregator-front-proxy-signer) |
-| Validity | 24h |
+| Validity | 30d |
 | Signature Algorithm | SHA256-RSA |
 | PublicKey Algorithm | RSA 2048 bit |
 | Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment<br/>- KeyUsageCertSign |
@@ -50,7 +50,7 @@ Signer for the kube-apiserver to create client certificates for aggregated apise
 
 
 ### aggregator-front-proxy-client
-![PKI Graph](subcert-systemopenshift-aggregator2634640073442595002.png)
+![PKI Graph](subcert-systemopenshift-aggregator603682057183175535.png)
 
 Client certificate used by the kube-apiserver to communicate to aggregated apiservers.
 
@@ -58,9 +58,9 @@ Client certificate used by the kube-apiserver to communicate to aggregated apise
 | ----------- | ----------- |
 | Type | Client |
 | CommonName | system:openshift-aggregator |
-| SerialNumber | 2634640073442595002 |
+| SerialNumber | 603682057183175535 |
 | Issuer CommonName | [aggregator-front-proxy-signer](#aggregator-front-proxy-signer) |
-| Validity | 23h |
+| Validity | 29d |
 | Signature Algorithm | SHA256-RSA |
 | PublicKey Algorithm | RSA 2048 bit |
 | Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
@@ -89,7 +89,7 @@ installation process.
 
 
 ### aggregator-front-proxy-ca
-![PKI Graph](subca-668341161.png)
+![PKI Graph](subca-3638511582.png)
 
 CA for aggregated apiservers to recognize kube-apiserver as front-proxy.
 
@@ -97,7 +97,7 @@ CA for aggregated apiservers to recognize kube-apiserver as front-proxy.
 
 | CommonName | Issuer CommonName | Validity | PublicKey Algorithm |
 | ----------- | ----------- | ----------- | ----------- |
-| [aggregator-front-proxy-signer](#aggregator-front-proxy-signer) | [aggregator-front-proxy-signer](#aggregator-front-proxy-signer) | 24h | RSA 2048 bit |
+| [aggregator-front-proxy-signer](#aggregator-front-proxy-signer) | [aggregator-front-proxy-signer](#aggregator-front-proxy-signer) | 30d | RSA 2048 bit |
 
 #### aggregator-front-proxy-ca Locations
 | Namespace | ConfigMap Name |

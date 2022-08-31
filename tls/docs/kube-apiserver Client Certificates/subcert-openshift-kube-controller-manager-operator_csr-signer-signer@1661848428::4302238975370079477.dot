@@ -1,0 +1,46 @@
+digraph "Local Certificate" {
+  // Node definitions.
+  7 [
+    label="certkeypair/kube-controller-manager-csr-signer-signer\n\nsecret/csr-signer-signer -nopenshift-kube-controller-manager-operator\n"
+    style=filled
+    fillcolor="#c7bfff"
+  ];
+  10 [
+    label="certkeypair/kube-controller-manager-csr-signer\n\nsecret/csr-signer -nopenshift-kube-controller-manager\n    secret/csr-signer -nopenshift-kube-controller-manager-operator\n    file:///etc/kubernetes/static-pod-resources/kube-controller-manager-certs/secrets/csr-signer/tls.crt/tls.crt,file:///etc/kubernetes/static-pod-resources/kube-controller-manager-certs/secrets/csr-signer/tls.crt/tls.key\n"
+    style=filled
+    fillcolor="#c7bfff"
+  ];
+  18 [
+    label="cabundle/kube-apiserver-total-client-ca\n\nconfigmaps/kube-apiserver-client-ca -nopenshift-config-managed\n    configmaps/client-ca -nopenshift-controller-manager\n    configmaps/client-ca -nopenshift-kube-apiserver\n    configmaps/client-ca -nopenshift-kube-controller-manager\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-certs/configmaps/client-ca/ca-bundle.crt/ca-bundle.crt\n    file:///etc/kubernetes/static-pod-resources/kube-controller-manager-certs/configmaps/client-ca/ca-bundle.crt/ca-bundle.crt\n"
+    style=filled
+    fillcolor="#fda172"
+  ];
+  22 [
+    label="cabundle/kube-csr-signer_@1661779985|kubelet-signer|kube-csr-signer_@1661848562|openshift-kube-controller-manager-operator_csr-signer-signer@1661848428\n\nconfigmaps/kubelet-serving-ca-12 -nopenshift-kube-apiserver\n    configmaps/kubelet-serving-ca-13 -nopenshift-kube-apiserver\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-12/configmaps/kubelet-serving-ca/ca-bundle.crt/ca-bundle.crt\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-13/configmaps/kubelet-serving-ca/ca-bundle.crt/ca-bundle.crt\n"
+    style=filled
+    fillcolor="#fda172"
+  ];
+  24 [
+    label="cabundle/kube-csr-signer_@1661779985|kubelet-signer|openshift-kube-controller-manager-operator_csr-signer-signer@1661848428\n\nconfigmaps/kubelet-serving-ca-11 -nopenshift-kube-apiserver\n"
+    style=filled
+    fillcolor="#fda172"
+  ];
+  25 [
+    label="cabundle/kube-controller-manager-csr-ca\n\nconfigmaps/csr-controller-ca -nopenshift-config-managed\n    configmaps/kubelet-serving-ca -nopenshift-config-managed\n    configmaps/kubelet-serving-ca -nopenshift-kube-apiserver\n    configmaps/kubelet-serving-ca-14 -nopenshift-kube-apiserver\n    configmaps/csr-controller-ca -nopenshift-kube-controller-manager-operator\n    configmaps/csr-signer-ca -nopenshift-kube-controller-manager-operator\n    configmaps/kubelet-serving-ca-bundle -nopenshift-monitoring\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-14/configmaps/kubelet-serving-ca/ca-bundle.crt/ca-bundle.crt\n"
+    style=filled
+    fillcolor="#fda172"
+  ];
+  26 [
+    label="cabundle/kube-controller-manager-csr-signer-signer-ca\n\nconfigmaps/csr-controller-signer-ca -nopenshift-kube-controller-manager-operator\n"
+    style=filled
+    fillcolor="#fda172"
+  ];
+
+  // Edge definitions.
+  7 -> 10;
+  7 -> 18;
+  7 -> 22;
+  7 -> 24;
+  7 -> 25;
+  7 -> 26;
+}

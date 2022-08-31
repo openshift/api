@@ -1,0 +1,22 @@
+digraph "Local Certificate" {
+  // Node definitions.
+  8 [
+    label="certkeypair/kubelet-signer\n\n\n"
+    style=filled
+    fillcolor=white
+  ];
+  9 [
+    label="certkeypair/kube-csr-signer_@1661779985\n\n\n"
+    style=filled
+    fillcolor=white
+  ];
+  23 [
+    label="cabundle/kube-csr-signer_@1661779985|kubelet-signer\n\nconfigmaps/kubelet-serving-ca-10 -nopenshift-kube-apiserver\n    configmaps/kubelet-serving-ca-5 -nopenshift-kube-apiserver\n    configmaps/kubelet-serving-ca-6 -nopenshift-kube-apiserver\n    configmaps/kubelet-serving-ca-7 -nopenshift-kube-apiserver\n    configmaps/kubelet-serving-ca-8 -nopenshift-kube-apiserver\n    configmaps/kubelet-serving-ca-9 -nopenshift-kube-apiserver\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-10/configmaps/kubelet-serving-ca/ca-bundle.crt/ca-bundle.crt\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-9/configmaps/kubelet-serving-ca/ca-bundle.crt/ca-bundle.crt\n"
+    style=filled
+    fillcolor="#fda172"
+  ];
+
+  // Edge definitions.
+  8 -> 23;
+  9 -> 23;
+}

@@ -19,6 +19,14 @@
             },
             {
               "Namespace": "openshift-etcd",
+              "Name": "etcd-metrics-proxy-client-ca-2"
+            },
+            {
+              "Namespace": "openshift-etcd",
+              "Name": "etcd-metrics-proxy-client-ca-3"
+            },
+            {
+              "Namespace": "openshift-etcd",
               "Name": "etcd-metrics-proxy-client-ca-4"
             },
             {
@@ -31,15 +39,15 @@
             },
             {
               "Namespace": "openshift-etcd",
-              "Name": "etcd-metrics-proxy-client-ca-7"
-            },
-            {
-              "Namespace": "openshift-etcd",
-              "Name": "etcd-metrics-proxy-client-ca-8"
-            },
-            {
-              "Namespace": "openshift-etcd",
               "Name": "etcd-metrics-proxy-serving-ca"
+            },
+            {
+              "Namespace": "openshift-etcd",
+              "Name": "etcd-metrics-proxy-serving-ca-2"
+            },
+            {
+              "Namespace": "openshift-etcd",
+              "Name": "etcd-metrics-proxy-serving-ca-3"
             },
             {
               "Namespace": "openshift-etcd",
@@ -52,14 +60,6 @@
             {
               "Namespace": "openshift-etcd",
               "Name": "etcd-metrics-proxy-serving-ca-6"
-            },
-            {
-              "Namespace": "openshift-etcd",
-              "Name": "etcd-metrics-proxy-serving-ca-7"
-            },
-            {
-              "Namespace": "openshift-etcd",
-              "Name": "etcd-metrics-proxy-serving-ca-8"
             }
           ],
           "OnDiskLocations": [
@@ -92,28 +92,28 @@
               "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
             },
             {
-              "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-7/configmaps/etcd-metrics-proxy-client-ca/ca-bundle.crt/ca-bundle.crt",
+              "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-5/configmaps/etcd-metrics-proxy-client-ca/ca-bundle.crt/ca-bundle.crt",
               "User": "root",
               "Group": "root",
               "Permissions": "-rw-r--r--.",
               "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
             },
             {
-              "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-7/configmaps/etcd-metrics-proxy-serving-ca/ca-bundle.crt/ca-bundle.crt",
+              "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-5/configmaps/etcd-metrics-proxy-serving-ca/ca-bundle.crt/ca-bundle.crt",
               "User": "root",
               "Group": "root",
               "Permissions": "-rw-r--r--.",
               "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
             },
             {
-              "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-8/configmaps/etcd-metrics-proxy-client-ca/ca-bundle.crt/ca-bundle.crt",
+              "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-6/configmaps/etcd-metrics-proxy-client-ca/ca-bundle.crt/ca-bundle.crt",
               "User": "root",
               "Group": "root",
               "Permissions": "-rw-r--r--.",
               "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
             },
             {
-              "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-8/configmaps/etcd-metrics-proxy-serving-ca/ca-bundle.crt/ca-bundle.crt",
+              "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-6/configmaps/etcd-metrics-proxy-serving-ca/ca-bundle.crt/ca-bundle.crt",
               "User": "root",
               "Group": "root",
               "Permissions": "-rw-r--r--.",
@@ -124,7 +124,7 @@
             {
               "CertIdentifier": {
                 "CommonName": "etcd-metric-signer",
-                "SerialNumber": "4218002264880163000",
+                "SerialNumber": "576816345683489723",
                 "Issuer": {
                   "CommonName": "etcd-metric-signer",
                   "SerialNumber": "",
@@ -153,71 +153,27 @@
   "CertKeyPairs": {
     "Items": [
       {
-        "LogicalName": "",
+        "LogicalName": "etcd-metrics-for-master-ip-10-0-196-134.eu-west-3.compute.internal",
         "Description": "",
-        "Name": "etcd-metric-signer::4218002264880163000",
-        "Spec": {
-          "SecretLocations": [
-            {
-              "Namespace": "openshift-config",
-              "Name": "etcd-metric-signer"
-            }
-          ],
-          "OnDiskLocations": null,
-          "CertMetadata": {
-            "CertIdentifier": {
-              "CommonName": "etcd-metric-signer",
-              "SerialNumber": "4218002264880163000",
-              "Issuer": {
-                "CommonName": "etcd-metric-signer",
-                "SerialNumber": "",
-                "Issuer": null
-              }
-            },
-            "SignatureAlgorithm": "SHA256-RSA",
-            "PublicKeyAlgorithm": "RSA",
-            "PublicKeyBitSize": "2048 bit",
-            "ValidityDuration": "10y",
-            "Usages": [
-              "KeyUsageDigitalSignature",
-              "KeyUsageKeyEncipherment",
-              "KeyUsageCertSign"
-            ],
-            "ExtendedUsages": []
-          },
-          "Details": {
-            "CertType": "SignerCertDetails",
-            "SignerDetails": {},
-            "ServingCertDetails": null,
-            "ClientCertDetails": null
-          }
-        },
-        "Status": {
-          "Errors": null
-        }
-      },
-      {
-        "LogicalName": "etcd-metrics-for-master-ip-10-0-132-68.eu-central-1.compute.internal",
-        "Description": "",
-        "Name": "system:etcd-metric:etcd-client::45102667796783726",
+        "Name": "system:etcd-metric:etcd-client::3020126488297072024",
         "Spec": {
           "SecretLocations": [
             {
               "Namespace": "openshift-etcd",
-              "Name": "etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal"
+              "Name": "etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal"
             }
           ],
           "OnDiskLocations": [
             {
               "Cert": {
-                "Path": "/etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.crt",
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.crt",
                 "User": "root",
                 "Group": "root",
                 "Permissions": "-rw-------.",
                 "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
               },
               "Key": {
-                "Path": "/etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.key",
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.key",
                 "User": "root",
                 "Group": "root",
                 "Permissions": "-rw-------.",
@@ -226,14 +182,14 @@
             },
             {
               "Cert": {
-                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.crt",
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.crt",
                 "User": "root",
                 "Group": "root",
                 "Permissions": "-rw-------.",
                 "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
               },
               "Key": {
-                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.key",
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.key",
                 "User": "root",
                 "Group": "root",
                 "Permissions": "-rw-------.",
@@ -242,14 +198,14 @@
             },
             {
               "Cert": {
-                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.crt",
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.crt",
                 "User": "root",
                 "Group": "root",
                 "Permissions": "-rw-------.",
                 "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
               },
               "Key": {
-                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.key",
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.key",
                 "User": "root",
                 "Group": "root",
                 "Permissions": "-rw-------.",
@@ -258,14 +214,14 @@
             },
             {
               "Cert": {
-                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.crt",
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.crt",
                 "User": "root",
                 "Group": "root",
                 "Permissions": "-rw-------.",
                 "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
               },
               "Key": {
-                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-132-68.eu-central-1.compute.internal.key",
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-196-134.eu-west-3.compute.internal.key",
                 "User": "root",
                 "Group": "root",
                 "Permissions": "-rw-------.",
@@ -276,7 +232,7 @@
           "CertMetadata": {
             "CertIdentifier": {
               "CommonName": "system:etcd-metric:etcd-client",
-              "SerialNumber": "45102667796783726",
+              "SerialNumber": "3020126488297072024",
               "Issuer": {
                 "CommonName": "etcd-metric-signer",
                 "SerialNumber": "",
@@ -307,13 +263,13 @@
                 "etcd.openshift-etcd.svc.cluster.local",
                 "localhost",
                 "::1",
-                "10.0.132.68",
+                "10.0.196.134",
                 "127.0.0.1",
                 "::1"
               ],
               "IPAddresses": [
                 "::1",
-                "10.0.132.68",
+                "10.0.196.134",
                 "127.0.0.1",
                 "::1"
               ]
@@ -334,7 +290,321 @@
       {
         "LogicalName": "",
         "Description": "",
-        "Name": "etcd-metric::2163297920510713389",
+        "Name": "etcd-metric-signer::576816345683489723",
+        "Spec": {
+          "SecretLocations": [
+            {
+              "Namespace": "openshift-config",
+              "Name": "etcd-metric-signer"
+            }
+          ],
+          "OnDiskLocations": null,
+          "CertMetadata": {
+            "CertIdentifier": {
+              "CommonName": "etcd-metric-signer",
+              "SerialNumber": "576816345683489723",
+              "Issuer": {
+                "CommonName": "etcd-metric-signer",
+                "SerialNumber": "",
+                "Issuer": null
+              }
+            },
+            "SignatureAlgorithm": "SHA256-RSA",
+            "PublicKeyAlgorithm": "RSA",
+            "PublicKeyBitSize": "2048 bit",
+            "ValidityDuration": "10y",
+            "Usages": [
+              "KeyUsageDigitalSignature",
+              "KeyUsageKeyEncipherment",
+              "KeyUsageCertSign"
+            ],
+            "ExtendedUsages": []
+          },
+          "Details": {
+            "CertType": "SignerCertDetails",
+            "SignerDetails": {},
+            "ServingCertDetails": null,
+            "ClientCertDetails": null
+          }
+        },
+        "Status": {
+          "Errors": null
+        }
+      },
+      {
+        "LogicalName": "etcd-metrics-for-master-ip-10-0-168-125.eu-west-3.compute.internal",
+        "Description": "",
+        "Name": "system:etcd-metric:etcd-client::8665290177121124217",
+        "Spec": {
+          "SecretLocations": [
+            {
+              "Namespace": "openshift-etcd",
+              "Name": "etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal"
+            }
+          ],
+          "OnDiskLocations": [
+            {
+              "Cert": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.crt",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              },
+              "Key": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.key",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              }
+            },
+            {
+              "Cert": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.crt",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              },
+              "Key": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.key",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              }
+            },
+            {
+              "Cert": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.crt",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              },
+              "Key": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.key",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              }
+            },
+            {
+              "Cert": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.crt",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              },
+              "Key": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-168-125.eu-west-3.compute.internal.key",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              }
+            }
+          ],
+          "CertMetadata": {
+            "CertIdentifier": {
+              "CommonName": "system:etcd-metric:etcd-client",
+              "SerialNumber": "8665290177121124217",
+              "Issuer": {
+                "CommonName": "etcd-metric-signer",
+                "SerialNumber": "",
+                "Issuer": null
+              }
+            },
+            "SignatureAlgorithm": "SHA256-RSA",
+            "PublicKeyAlgorithm": "RSA",
+            "PublicKeyBitSize": "2048 bit",
+            "ValidityDuration": "3y",
+            "Usages": [
+              "KeyUsageDigitalSignature",
+              "KeyUsageKeyEncipherment"
+            ],
+            "ExtendedUsages": [
+              "ExtKeyUsageClientAuth",
+              "ExtKeyUsageServerAuth"
+            ]
+          },
+          "Details": {
+            "CertType": "Multiple",
+            "SignerDetails": null,
+            "ServingCertDetails": {
+              "DNSNames": [
+                "etcd.kube-system.svc",
+                "etcd.kube-system.svc.cluster.local",
+                "etcd.openshift-etcd.svc",
+                "etcd.openshift-etcd.svc.cluster.local",
+                "localhost",
+                "::1",
+                "10.0.168.125",
+                "127.0.0.1",
+                "::1"
+              ],
+              "IPAddresses": [
+                "::1",
+                "10.0.168.125",
+                "127.0.0.1",
+                "::1"
+              ]
+            },
+            "ClientCertDetails": {
+              "Organizations": [
+                "system:etcd-metrics"
+              ]
+            }
+          }
+        },
+        "Status": {
+          "Errors": [
+            "you have a cert for more than one?  We don't do that. :("
+          ]
+        }
+      },
+      {
+        "LogicalName": "etcd-metrics-for-master-ip-10-0-147-125.eu-west-3.compute.internal",
+        "Description": "",
+        "Name": "system:etcd-metric:etcd-client::7212707676006106143",
+        "Spec": {
+          "SecretLocations": [
+            {
+              "Namespace": "openshift-etcd",
+              "Name": "etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal"
+            }
+          ],
+          "OnDiskLocations": [
+            {
+              "Cert": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.crt",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              },
+              "Key": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.key",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              }
+            },
+            {
+              "Cert": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.crt",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              },
+              "Key": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.key",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              }
+            },
+            {
+              "Cert": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.crt",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              },
+              "Key": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.key",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              }
+            },
+            {
+              "Cert": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.crt",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              },
+              "Key": {
+                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-metrics-ip-10-0-147-125.eu-west-3.compute.internal.key",
+                "User": "root",
+                "Group": "root",
+                "Permissions": "-rw-------.",
+                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
+              }
+            }
+          ],
+          "CertMetadata": {
+            "CertIdentifier": {
+              "CommonName": "system:etcd-metric:etcd-client",
+              "SerialNumber": "7212707676006106143",
+              "Issuer": {
+                "CommonName": "etcd-metric-signer",
+                "SerialNumber": "",
+                "Issuer": null
+              }
+            },
+            "SignatureAlgorithm": "SHA256-RSA",
+            "PublicKeyAlgorithm": "RSA",
+            "PublicKeyBitSize": "2048 bit",
+            "ValidityDuration": "3y",
+            "Usages": [
+              "KeyUsageDigitalSignature",
+              "KeyUsageKeyEncipherment"
+            ],
+            "ExtendedUsages": [
+              "ExtKeyUsageClientAuth",
+              "ExtKeyUsageServerAuth"
+            ]
+          },
+          "Details": {
+            "CertType": "Multiple",
+            "SignerDetails": null,
+            "ServingCertDetails": {
+              "DNSNames": [
+                "etcd.kube-system.svc",
+                "etcd.kube-system.svc.cluster.local",
+                "etcd.openshift-etcd.svc",
+                "etcd.openshift-etcd.svc.cluster.local",
+                "localhost",
+                "::1",
+                "10.0.147.125",
+                "127.0.0.1",
+                "::1"
+              ],
+              "IPAddresses": [
+                "::1",
+                "10.0.147.125",
+                "127.0.0.1",
+                "::1"
+              ]
+            },
+            "ClientCertDetails": {
+              "Organizations": [
+                "system:etcd-metrics"
+              ]
+            }
+          }
+        },
+        "Status": {
+          "Errors": [
+            "you have a cert for more than one?  We don't do that. :("
+          ]
+        }
+      },
+      {
+        "LogicalName": "",
+        "Description": "",
+        "Name": "etcd-metric::8939281642952943770",
         "Spec": {
           "SecretLocations": [
             {
@@ -346,7 +616,7 @@
           "CertMetadata": {
             "CertIdentifier": {
               "CommonName": "etcd-metric",
-              "SerialNumber": "2163297920510713389",
+              "SerialNumber": "8939281642952943770",
               "Issuer": {
                 "CommonName": "etcd-metric-signer",
                 "SerialNumber": "",
@@ -378,276 +648,6 @@
         },
         "Status": {
           "Errors": null
-        }
-      },
-      {
-        "LogicalName": "etcd-metrics-for-master-ip-10-0-210-78.eu-central-1.compute.internal",
-        "Description": "",
-        "Name": "system:etcd-metric:etcd-client::564640857130170731",
-        "Spec": {
-          "SecretLocations": [
-            {
-              "Namespace": "openshift-etcd",
-              "Name": "etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal"
-            }
-          ],
-          "OnDiskLocations": [
-            {
-              "Cert": {
-                "Path": "/etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.crt",
-                "User": "root",
-                "Group": "root",
-                "Permissions": "-rw-------.",
-                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
-              },
-              "Key": {
-                "Path": "/etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.key",
-                "User": "root",
-                "Group": "root",
-                "Permissions": "-rw-------.",
-                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
-              }
-            },
-            {
-              "Cert": {
-                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.crt",
-                "User": "root",
-                "Group": "root",
-                "Permissions": "-rw-------.",
-                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
-              },
-              "Key": {
-                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.key",
-                "User": "root",
-                "Group": "root",
-                "Permissions": "-rw-------.",
-                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
-              }
-            },
-            {
-              "Cert": {
-                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.crt",
-                "User": "root",
-                "Group": "root",
-                "Permissions": "-rw-------.",
-                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
-              },
-              "Key": {
-                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.key",
-                "User": "root",
-                "Group": "root",
-                "Permissions": "-rw-------.",
-                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
-              }
-            },
-            {
-              "Cert": {
-                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.crt",
-                "User": "root",
-                "Group": "root",
-                "Permissions": "-rw-------.",
-                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
-              },
-              "Key": {
-                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-210-78.eu-central-1.compute.internal.key",
-                "User": "root",
-                "Group": "root",
-                "Permissions": "-rw-------.",
-                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
-              }
-            }
-          ],
-          "CertMetadata": {
-            "CertIdentifier": {
-              "CommonName": "system:etcd-metric:etcd-client",
-              "SerialNumber": "564640857130170731",
-              "Issuer": {
-                "CommonName": "etcd-metric-signer",
-                "SerialNumber": "",
-                "Issuer": null
-              }
-            },
-            "SignatureAlgorithm": "SHA256-RSA",
-            "PublicKeyAlgorithm": "RSA",
-            "PublicKeyBitSize": "2048 bit",
-            "ValidityDuration": "3y",
-            "Usages": [
-              "KeyUsageDigitalSignature",
-              "KeyUsageKeyEncipherment"
-            ],
-            "ExtendedUsages": [
-              "ExtKeyUsageClientAuth",
-              "ExtKeyUsageServerAuth"
-            ]
-          },
-          "Details": {
-            "CertType": "Multiple",
-            "SignerDetails": null,
-            "ServingCertDetails": {
-              "DNSNames": [
-                "etcd.kube-system.svc",
-                "etcd.kube-system.svc.cluster.local",
-                "etcd.openshift-etcd.svc",
-                "etcd.openshift-etcd.svc.cluster.local",
-                "localhost",
-                "::1",
-                "10.0.210.78",
-                "127.0.0.1",
-                "::1"
-              ],
-              "IPAddresses": [
-                "::1",
-                "10.0.210.78",
-                "127.0.0.1",
-                "::1"
-              ]
-            },
-            "ClientCertDetails": {
-              "Organizations": [
-                "system:etcd-metrics"
-              ]
-            }
-          }
-        },
-        "Status": {
-          "Errors": [
-            "you have a cert for more than one?  We don't do that. :("
-          ]
-        }
-      },
-      {
-        "LogicalName": "etcd-metrics-for-master-ip-10-0-183-229.eu-central-1.compute.internal",
-        "Description": "",
-        "Name": "system:etcd-metric:etcd-client::1768016573087407501",
-        "Spec": {
-          "SecretLocations": [
-            {
-              "Namespace": "openshift-etcd",
-              "Name": "etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal"
-            }
-          ],
-          "OnDiskLocations": [
-            {
-              "Cert": {
-                "Path": "/etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.crt",
-                "User": "root",
-                "Group": "root",
-                "Permissions": "-rw-------.",
-                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
-              },
-              "Key": {
-                "Path": "/etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.key",
-                "User": "root",
-                "Group": "root",
-                "Permissions": "-rw-------.",
-                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
-              }
-            },
-            {
-              "Cert": {
-                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.crt",
-                "User": "root",
-                "Group": "root",
-                "Permissions": "-rw-------.",
-                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
-              },
-              "Key": {
-                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.key",
-                "User": "root",
-                "Group": "root",
-                "Permissions": "-rw-------.",
-                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
-              }
-            },
-            {
-              "Cert": {
-                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.crt",
-                "User": "root",
-                "Group": "root",
-                "Permissions": "-rw-------.",
-                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
-              },
-              "Key": {
-                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.key",
-                "User": "root",
-                "Group": "root",
-                "Permissions": "-rw-------.",
-                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
-              }
-            },
-            {
-              "Cert": {
-                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.crt",
-                "User": "root",
-                "Group": "root",
-                "Permissions": "-rw-------.",
-                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
-              },
-              "Key": {
-                "Path": "/etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-metrics-ip-10-0-183-229.eu-central-1.compute.internal.key",
-                "User": "root",
-                "Group": "root",
-                "Permissions": "-rw-------.",
-                "SELinuxOptions": "system_u:object_r:kubernetes_file_t:s0"
-              }
-            }
-          ],
-          "CertMetadata": {
-            "CertIdentifier": {
-              "CommonName": "system:etcd-metric:etcd-client",
-              "SerialNumber": "1768016573087407501",
-              "Issuer": {
-                "CommonName": "etcd-metric-signer",
-                "SerialNumber": "",
-                "Issuer": null
-              }
-            },
-            "SignatureAlgorithm": "SHA256-RSA",
-            "PublicKeyAlgorithm": "RSA",
-            "PublicKeyBitSize": "2048 bit",
-            "ValidityDuration": "3y",
-            "Usages": [
-              "KeyUsageDigitalSignature",
-              "KeyUsageKeyEncipherment"
-            ],
-            "ExtendedUsages": [
-              "ExtKeyUsageClientAuth",
-              "ExtKeyUsageServerAuth"
-            ]
-          },
-          "Details": {
-            "CertType": "Multiple",
-            "SignerDetails": null,
-            "ServingCertDetails": {
-              "DNSNames": [
-                "etcd.kube-system.svc",
-                "etcd.kube-system.svc.cluster.local",
-                "etcd.openshift-etcd.svc",
-                "etcd.openshift-etcd.svc.cluster.local",
-                "localhost",
-                "::1",
-                "10.0.183.229",
-                "127.0.0.1",
-                "::1"
-              ],
-              "IPAddresses": [
-                "::1",
-                "10.0.183.229",
-                "127.0.0.1",
-                "::1"
-              ]
-            },
-            "ClientCertDetails": {
-              "Organizations": [
-                "system:etcd-metrics"
-              ]
-            }
-          }
-        },
-        "Status": {
-          "Errors": [
-            "you have a cert for more than one?  We don't do that. :("
-          ]
         }
       }
     ]

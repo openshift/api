@@ -1,6 +1,6 @@
 digraph "Local Certificate" {
   // Node definitions.
-  0 [
+  13 [
     label="certkeypair/Microsoft ECC Root Certificate Authority 2017\n\n\n"
     style=filled
     fillcolor=white
@@ -12,5 +12,5 @@ digraph "Local Certificate" {
   ];
 
   // Edge definitions.
-  0 -> 16;
+  13 -> 16;
 }

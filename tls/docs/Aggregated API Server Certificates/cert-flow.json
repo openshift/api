@@ -6,7 +6,7 @@
       {
         "LogicalName": "aggregator-front-proxy-ca",
         "Description": "CA for aggregated apiservers to recognize kube-apiserver as front-proxy.",
-        "Name": "aggregator-signer",
+        "Name": "openshift-kube-apiserver-operator_aggregator-client-signer@1661848434",
         "Spec": {
           "ConfigMapLocations": [
             {
@@ -41,10 +41,10 @@
           "CertificateMetadata": [
             {
               "CertIdentifier": {
-                "CommonName": "aggregator-signer",
-                "SerialNumber": "3783714127421522860",
+                "CommonName": "openshift-kube-apiserver-operator_aggregator-client-signer@1661848434",
+                "SerialNumber": "6352648843567097288",
                 "Issuer": {
-                  "CommonName": "aggregator-signer",
+                  "CommonName": "openshift-kube-apiserver-operator_aggregator-client-signer@1661848434",
                   "SerialNumber": "",
                   "Issuer": null
                 }
@@ -52,7 +52,7 @@
               "SignatureAlgorithm": "SHA256-RSA",
               "PublicKeyAlgorithm": "RSA",
               "PublicKeyBitSize": "2048 bit",
-              "ValidityDuration": "24h",
+              "ValidityDuration": "30d",
               "Usages": [
                 "KeyUsageDigitalSignature",
                 "KeyUsageKeyEncipherment",
@@ -71,9 +71,53 @@
   "CertKeyPairs": {
     "Items": [
       {
+        "LogicalName": "aggregator-front-proxy-signer",
+        "Description": "Signer for the kube-apiserver to create client certificates for aggregated apiservers to recognize as a front-proxy.",
+        "Name": "openshift-kube-apiserver-operator_aggregator-client-signer@1661848434::6352648843567097288",
+        "Spec": {
+          "SecretLocations": [
+            {
+              "Namespace": "openshift-kube-apiserver-operator",
+              "Name": "aggregator-client-signer"
+            }
+          ],
+          "OnDiskLocations": null,
+          "CertMetadata": {
+            "CertIdentifier": {
+              "CommonName": "openshift-kube-apiserver-operator_aggregator-client-signer@1661848434",
+              "SerialNumber": "6352648843567097288",
+              "Issuer": {
+                "CommonName": "openshift-kube-apiserver-operator_aggregator-client-signer@1661848434",
+                "SerialNumber": "",
+                "Issuer": null
+              }
+            },
+            "SignatureAlgorithm": "SHA256-RSA",
+            "PublicKeyAlgorithm": "RSA",
+            "PublicKeyBitSize": "2048 bit",
+            "ValidityDuration": "30d",
+            "Usages": [
+              "KeyUsageDigitalSignature",
+              "KeyUsageKeyEncipherment",
+              "KeyUsageCertSign"
+            ],
+            "ExtendedUsages": []
+          },
+          "Details": {
+            "CertType": "SignerCertDetails",
+            "SignerDetails": {},
+            "ServingCertDetails": null,
+            "ClientCertDetails": null
+          }
+        },
+        "Status": {
+          "Errors": null
+        }
+      },
+      {
         "LogicalName": "aggregator-front-proxy-client",
         "Description": "Client certificate used by the kube-apiserver to communicate to aggregated apiservers.",
-        "Name": "system:openshift-aggregator::2634640073442595002",
+        "Name": "system:openshift-aggregator::603682057183175535",
         "Spec": {
           "SecretLocations": [
             {
@@ -102,9 +146,9 @@
           "CertMetadata": {
             "CertIdentifier": {
               "CommonName": "system:openshift-aggregator",
-              "SerialNumber": "2634640073442595002",
+              "SerialNumber": "603682057183175535",
               "Issuer": {
-                "CommonName": "aggregator-signer",
+                "CommonName": "openshift-kube-apiserver-operator_aggregator-client-signer@1661848434",
                 "SerialNumber": "",
                 "Issuer": null
               }
@@ -112,7 +156,7 @@
             "SignatureAlgorithm": "SHA256-RSA",
             "PublicKeyAlgorithm": "RSA",
             "PublicKeyBitSize": "2048 bit",
-            "ValidityDuration": "23h",
+            "ValidityDuration": "29d",
             "Usages": [
               "KeyUsageDigitalSignature",
               "KeyUsageKeyEncipherment"
@@ -128,50 +172,6 @@
             "ClientCertDetails": {
               "Organizations": null
             }
-          }
-        },
-        "Status": {
-          "Errors": null
-        }
-      },
-      {
-        "LogicalName": "aggregator-front-proxy-signer",
-        "Description": "Signer for the kube-apiserver to create client certificates for aggregated apiservers to recognize as a front-proxy.",
-        "Name": "aggregator-signer::3783714127421522860",
-        "Spec": {
-          "SecretLocations": [
-            {
-              "Namespace": "openshift-kube-apiserver-operator",
-              "Name": "aggregator-client-signer"
-            }
-          ],
-          "OnDiskLocations": null,
-          "CertMetadata": {
-            "CertIdentifier": {
-              "CommonName": "aggregator-signer",
-              "SerialNumber": "3783714127421522860",
-              "Issuer": {
-                "CommonName": "aggregator-signer",
-                "SerialNumber": "",
-                "Issuer": null
-              }
-            },
-            "SignatureAlgorithm": "SHA256-RSA",
-            "PublicKeyAlgorithm": "RSA",
-            "PublicKeyBitSize": "2048 bit",
-            "ValidityDuration": "24h",
-            "Usages": [
-              "KeyUsageDigitalSignature",
-              "KeyUsageKeyEncipherment",
-              "KeyUsageCertSign"
-            ],
-            "ExtendedUsages": []
-          },
-          "Details": {
-            "CertType": "SignerCertDetails",
-            "SignerDetails": {},
-            "ServingCertDetails": null,
-            "ClientCertDetails": null
           }
         },
         "Status": {

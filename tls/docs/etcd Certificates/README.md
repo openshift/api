@@ -29,7 +29,7 @@ Used to secure etcd internal communication and by apiservers to access etcd.
 
 
 ### etcd-signer
-![PKI Graph](subcert-etcd-signer212144919726774987.png)
+![PKI Graph](subcert-etcd-signer3095213136292102545.png)
 
 Signer for etcd to create client and serving certificates.
 
@@ -37,7 +37,7 @@ Signer for etcd to create client and serving certificates.
 | ----------- | ----------- |
 | Type | Signer |
 | CommonName | etcd-signer |
-| SerialNumber | 212144919726774987 |
+| SerialNumber | 3095213136292102545 |
 | Issuer CommonName | [etcd-signer](#etcd-signer) |
 | Validity | 10y |
 | Signature Algorithm | SHA256-RSA |
@@ -60,7 +60,7 @@ Signer for etcd to create client and serving certificates.
 
 
 ### system:etcd-peer:etcd-client
-![PKI Graph](subcert-systemetcd-peeretcd-client2823097255278461792.png)
+![PKI Graph](subcert-systemetcd-peeretcd-client285525283827702177.png)
 
 
 
@@ -68,7 +68,7 @@ Signer for etcd to create client and serving certificates.
 | ----------- | ----------- |
 | Type | Serving,Client |
 | CommonName | system:etcd-peer:etcd-client |
-| SerialNumber | 2823097255278461792 |
+| SerialNumber | 285525283827702177 |
 | Issuer CommonName | [etcd-signer](#etcd-signer) |
 | Validity | 3y |
 | Signature Algorithm | SHA256-RSA |
@@ -76,30 +76,30 @@ Signer for etcd to create client and serving certificates.
 | Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
 | ExtendedUsages | - ExtKeyUsageClientAuth<br/>- ExtKeyUsageServerAuth |
 | Organizations (User Groups) | - system:etcd-peers |
-| DNS Names | - localhost<br/>- 10.0.132.68 |
-| IP Addresses | - 10.0.132.68 |
+| DNS Names | - localhost<br/>- 10.0.196.134 |
+| IP Addresses | - 10.0.196.134 |
 
 
 #### system:etcd-peer:etcd-client Locations
 | Namespace | Secret Name |
 | ----------- | ----------- |
-| openshift-etcd | etcd-peer-ip-10-0-132-68.eu-central-1.compute.internal |
+| openshift-etcd | etcd-peer-ip-10-0-196-134.eu-west-3.compute.internal |
 
 | File | Permissions | User | Group | SE Linux |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
-| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-peer-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-132-68.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-peer-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-132-68.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-peer-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-132-68.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-peer-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-132-68.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-peer-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-132-68.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-peer-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-132-68.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-peer-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-132-68.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-peer-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-132-68.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-peer-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-196-134.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-peer-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-196-134.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-peer-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-196-134.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-peer-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-196-134.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-peer-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-196-134.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-peer-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-196-134.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-peer-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-196-134.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-peer-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-196-134.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 
 
 
 ### system:etcd-peer:etcd-client
-![PKI Graph](subcert-systemetcd-peeretcd-client7040919179394354897.png)
+![PKI Graph](subcert-systemetcd-peeretcd-client261706756071794302.png)
 
 
 
@@ -107,7 +107,7 @@ Signer for etcd to create client and serving certificates.
 | ----------- | ----------- |
 | Type | Serving,Client |
 | CommonName | system:etcd-peer:etcd-client |
-| SerialNumber | 7040919179394354897 |
+| SerialNumber | 261706756071794302 |
 | Issuer CommonName | [etcd-signer](#etcd-signer) |
 | Validity | 3y |
 | Signature Algorithm | SHA256-RSA |
@@ -115,30 +115,30 @@ Signer for etcd to create client and serving certificates.
 | Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
 | ExtendedUsages | - ExtKeyUsageClientAuth<br/>- ExtKeyUsageServerAuth |
 | Organizations (User Groups) | - system:etcd-peers |
-| DNS Names | - localhost<br/>- 10.0.210.78 |
-| IP Addresses | - 10.0.210.78 |
+| DNS Names | - localhost<br/>- 10.0.147.125 |
+| IP Addresses | - 10.0.147.125 |
 
 
 #### system:etcd-peer:etcd-client Locations
 | Namespace | Secret Name |
 | ----------- | ----------- |
-| openshift-etcd | etcd-peer-ip-10-0-210-78.eu-central-1.compute.internal |
+| openshift-etcd | etcd-peer-ip-10-0-147-125.eu-west-3.compute.internal |
 
 | File | Permissions | User | Group | SE Linux |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
-| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-peer-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-210-78.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-peer-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-210-78.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-peer-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-210-78.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-peer-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-210-78.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-peer-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-210-78.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-peer-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-210-78.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-peer-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-210-78.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-peer-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-210-78.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-peer-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-147-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-peer-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-147-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-peer-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-147-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-peer-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-147-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-peer-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-147-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-peer-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-147-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-peer-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-147-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-peer-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-147-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 
 
 
 ### system:etcd-peer:etcd-client
-![PKI Graph](subcert-systemetcd-peeretcd-client5219082436276490592.png)
+![PKI Graph](subcert-systemetcd-peeretcd-client8866373266776728098.png)
 
 
 
@@ -146,7 +146,7 @@ Signer for etcd to create client and serving certificates.
 | ----------- | ----------- |
 | Type | Serving,Client |
 | CommonName | system:etcd-peer:etcd-client |
-| SerialNumber | 5219082436276490592 |
+| SerialNumber | 8866373266776728098 |
 | Issuer CommonName | [etcd-signer](#etcd-signer) |
 | Validity | 3y |
 | Signature Algorithm | SHA256-RSA |
@@ -154,30 +154,30 @@ Signer for etcd to create client and serving certificates.
 | Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
 | ExtendedUsages | - ExtKeyUsageClientAuth<br/>- ExtKeyUsageServerAuth |
 | Organizations (User Groups) | - system:etcd-peers |
-| DNS Names | - localhost<br/>- 10.0.183.229 |
-| IP Addresses | - 10.0.183.229 |
+| DNS Names | - localhost<br/>- 10.0.168.125 |
+| IP Addresses | - 10.0.168.125 |
 
 
 #### system:etcd-peer:etcd-client Locations
 | Namespace | Secret Name |
 | ----------- | ----------- |
-| openshift-etcd | etcd-peer-ip-10-0-183-229.eu-central-1.compute.internal |
+| openshift-etcd | etcd-peer-ip-10-0-168-125.eu-west-3.compute.internal |
 
 | File | Permissions | User | Group | SE Linux |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
-| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-peer-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-183-229.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-peer-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-183-229.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-peer-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-183-229.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-peer-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-183-229.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-peer-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-183-229.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-peer-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-183-229.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-peer-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-183-229.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-peer-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-183-229.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-peer-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-168-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-peer-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-168-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-peer-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-168-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-peer-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-168-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-peer-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-168-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-peer-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-168-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-peer-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-168-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-peer-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-168-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 
 
 
 ### system:etcd-server:etcd-client
-![PKI Graph](subcert-systemetcd-serveretcd-client1595077546154242228.png)
+![PKI Graph](subcert-systemetcd-serveretcd-client309882045333632324.png)
 
 
 
@@ -185,7 +185,7 @@ Signer for etcd to create client and serving certificates.
 | ----------- | ----------- |
 | Type | Serving,Client |
 | CommonName | system:etcd-server:etcd-client |
-| SerialNumber | 1595077546154242228 |
+| SerialNumber | 309882045333632324 |
 | Issuer CommonName | [etcd-signer](#etcd-signer) |
 | Validity | 3y |
 | Signature Algorithm | SHA256-RSA |
@@ -193,30 +193,30 @@ Signer for etcd to create client and serving certificates.
 | Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
 | ExtendedUsages | - ExtKeyUsageClientAuth<br/>- ExtKeyUsageServerAuth |
 | Organizations (User Groups) | - system:etcd-servers |
-| DNS Names | - etcd.kube-system.svc<br/>- etcd.kube-system.svc.cluster.local<br/>- etcd.openshift-etcd.svc<br/>- etcd.openshift-etcd.svc.cluster.local<br/>- localhost<br/>- ::1<br/>- 10.0.132.68<br/>- 127.0.0.1<br/>- ::1 |
-| IP Addresses | - ::1<br/>- 10.0.132.68<br/>- 127.0.0.1<br/>- ::1 |
+| DNS Names | - etcd.kube-system.svc<br/>- etcd.kube-system.svc.cluster.local<br/>- etcd.openshift-etcd.svc<br/>- etcd.openshift-etcd.svc.cluster.local<br/>- localhost<br/>- ::1<br/>- 10.0.196.134<br/>- 127.0.0.1<br/>- ::1 |
+| IP Addresses | - ::1<br/>- 10.0.196.134<br/>- 127.0.0.1<br/>- ::1 |
 
 
 #### system:etcd-server:etcd-client Locations
 | Namespace | Secret Name |
 | ----------- | ----------- |
-| openshift-etcd | etcd-serving-ip-10-0-132-68.eu-central-1.compute.internal |
+| openshift-etcd | etcd-serving-ip-10-0-196-134.eu-west-3.compute.internal |
 
 | File | Permissions | User | Group | SE Linux |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
-| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-132-68.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-132-68.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-132-68.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-132-68.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-serving-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-132-68.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-serving-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-132-68.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-serving-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-132-68.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-serving-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-132-68.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-196-134.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-196-134.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-196-134.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-196-134.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-serving-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-196-134.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-serving-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-196-134.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-serving-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-196-134.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-serving-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-196-134.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 
 
 
 ### system:etcd-server:etcd-client
-![PKI Graph](subcert-systemetcd-serveretcd-client1716985330756150295.png)
+![PKI Graph](subcert-systemetcd-serveretcd-client6907393098780758135.png)
 
 
 
@@ -224,7 +224,7 @@ Signer for etcd to create client and serving certificates.
 | ----------- | ----------- |
 | Type | Serving,Client |
 | CommonName | system:etcd-server:etcd-client |
-| SerialNumber | 1716985330756150295 |
+| SerialNumber | 6907393098780758135 |
 | Issuer CommonName | [etcd-signer](#etcd-signer) |
 | Validity | 3y |
 | Signature Algorithm | SHA256-RSA |
@@ -232,30 +232,30 @@ Signer for etcd to create client and serving certificates.
 | Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
 | ExtendedUsages | - ExtKeyUsageClientAuth<br/>- ExtKeyUsageServerAuth |
 | Organizations (User Groups) | - system:etcd-servers |
-| DNS Names | - etcd.kube-system.svc<br/>- etcd.kube-system.svc.cluster.local<br/>- etcd.openshift-etcd.svc<br/>- etcd.openshift-etcd.svc.cluster.local<br/>- localhost<br/>- ::1<br/>- 10.0.183.229<br/>- 127.0.0.1<br/>- ::1 |
-| IP Addresses | - ::1<br/>- 10.0.183.229<br/>- 127.0.0.1<br/>- ::1 |
+| DNS Names | - etcd.kube-system.svc<br/>- etcd.kube-system.svc.cluster.local<br/>- etcd.openshift-etcd.svc<br/>- etcd.openshift-etcd.svc.cluster.local<br/>- localhost<br/>- ::1<br/>- 10.0.168.125<br/>- 127.0.0.1<br/>- ::1 |
+| IP Addresses | - ::1<br/>- 10.0.168.125<br/>- 127.0.0.1<br/>- ::1 |
 
 
 #### system:etcd-server:etcd-client Locations
 | Namespace | Secret Name |
 | ----------- | ----------- |
-| openshift-etcd | etcd-serving-ip-10-0-183-229.eu-central-1.compute.internal |
+| openshift-etcd | etcd-serving-ip-10-0-168-125.eu-west-3.compute.internal |
 
 | File | Permissions | User | Group | SE Linux |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
-| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-183-229.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-183-229.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-183-229.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-183-229.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-serving-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-183-229.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-serving-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-183-229.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-serving-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-183-229.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-serving-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-183-229.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-168-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-168-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-168-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-168-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-serving-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-168-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-serving-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-168-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-serving-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-168-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-serving-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-168-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 
 
 
 ### system:etcd-server:etcd-client
-![PKI Graph](subcert-systemetcd-serveretcd-client979537366043088443.png)
+![PKI Graph](subcert-systemetcd-serveretcd-client828659554442651911.png)
 
 
 
@@ -263,7 +263,7 @@ Signer for etcd to create client and serving certificates.
 | ----------- | ----------- |
 | Type | Serving,Client |
 | CommonName | system:etcd-server:etcd-client |
-| SerialNumber | 979537366043088443 |
+| SerialNumber | 828659554442651911 |
 | Issuer CommonName | [etcd-signer](#etcd-signer) |
 | Validity | 3y |
 | Signature Algorithm | SHA256-RSA |
@@ -271,32 +271,32 @@ Signer for etcd to create client and serving certificates.
 | Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
 | ExtendedUsages | - ExtKeyUsageClientAuth<br/>- ExtKeyUsageServerAuth |
 | Organizations (User Groups) | - system:etcd-servers |
-| DNS Names | - etcd.kube-system.svc<br/>- etcd.kube-system.svc.cluster.local<br/>- etcd.openshift-etcd.svc<br/>- etcd.openshift-etcd.svc.cluster.local<br/>- localhost<br/>- ::1<br/>- 10.0.210.78<br/>- 127.0.0.1<br/>- ::1 |
-| IP Addresses | - ::1<br/>- 10.0.210.78<br/>- 127.0.0.1<br/>- ::1 |
+| DNS Names | - etcd.kube-system.svc<br/>- etcd.kube-system.svc.cluster.local<br/>- etcd.openshift-etcd.svc<br/>- etcd.openshift-etcd.svc.cluster.local<br/>- localhost<br/>- ::1<br/>- 10.0.147.125<br/>- 127.0.0.1<br/>- ::1 |
+| IP Addresses | - ::1<br/>- 10.0.147.125<br/>- 127.0.0.1<br/>- ::1 |
 
 
 #### system:etcd-server:etcd-client Locations
 | Namespace | Secret Name |
 | ----------- | ----------- |
-| openshift-etcd | etcd-serving-ip-10-0-210-78.eu-central-1.compute.internal |
+| openshift-etcd | etcd-serving-ip-10-0-147-125.eu-west-3.compute.internal |
 
 | File | Permissions | User | Group | SE Linux |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
-| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-210-78.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-210-78.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-210-78.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-210-78.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-serving-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-210-78.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-serving-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-210-78.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-serving-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-210-78.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-serving-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-210-78.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-147-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-147-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-147-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-147-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-serving-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-147-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-serving-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-147-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-serving-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-147-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-serving-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-147-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 
 
 ## Client Certificate/Key Pairs
 
 
 ### etcd
-![PKI Graph](subcert-etcd3514645170127567154.png)
+![PKI Graph](subcert-etcd3901993940213506243.png)
 
 
 
@@ -304,7 +304,7 @@ Signer for etcd to create client and serving certificates.
 | ----------- | ----------- |
 | Type | Client |
 | CommonName | etcd |
-| SerialNumber | 3514645170127567154 |
+| SerialNumber | 3901993940213506243 |
 | Issuer CommonName | [etcd-signer](#etcd-signer) |
 | Validity | 10y |
 | Signature Algorithm | SHA256-RSA |
@@ -322,24 +322,35 @@ Signer for etcd to create client and serving certificates.
 | openshift-etcd | etcd-client |
 | openshift-etcd-operator | etcd-client |
 | openshift-kube-apiserver | etcd-client |
-| openshift-kube-apiserver | etcd-client-3 |
-| openshift-kube-apiserver | etcd-client-4 |
+| openshift-kube-apiserver | etcd-client-10 |
+| openshift-kube-apiserver | etcd-client-11 |
+| openshift-kube-apiserver | etcd-client-12 |
+| openshift-kube-apiserver | etcd-client-13 |
+| openshift-kube-apiserver | etcd-client-14 |
 | openshift-kube-apiserver | etcd-client-5 |
 | openshift-kube-apiserver | etcd-client-6 |
 | openshift-kube-apiserver | etcd-client-7 |
+| openshift-kube-apiserver | etcd-client-8 |
+| openshift-kube-apiserver | etcd-client-9 |
 | openshift-oauth-apiserver | etcd-client |
 
 | File | Permissions | User | Group | SE Linux |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
-| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-3/secrets/etcd-client/tls.crt/tls.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-3/secrets/etcd-client/tls.crt/tls.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-7/secrets/etcd-client/tls.crt/tls.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-7/secrets/etcd-client/tls.crt/tls.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-10/secrets/etcd-client/tls.crt/tls.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-10/secrets/etcd-client/tls.crt/tls.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-12/secrets/etcd-client/tls.crt/tls.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-12/secrets/etcd-client/tls.crt/tls.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-13/secrets/etcd-client/tls.crt/tls.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-13/secrets/etcd-client/tls.crt/tls.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-14/secrets/etcd-client/tls.crt/tls.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-14/secrets/etcd-client/tls.crt/tls.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-9/secrets/etcd-client/tls.crt/tls.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-9/secrets/etcd-client/tls.crt/tls.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 
 
 
 ### system:etcd-peer:etcd-client
-![PKI Graph](subcert-systemetcd-peeretcd-client2823097255278461792.png)
+![PKI Graph](subcert-systemetcd-peeretcd-client285525283827702177.png)
 
 
 
@@ -347,7 +358,7 @@ Signer for etcd to create client and serving certificates.
 | ----------- | ----------- |
 | Type | Serving,Client |
 | CommonName | system:etcd-peer:etcd-client |
-| SerialNumber | 2823097255278461792 |
+| SerialNumber | 285525283827702177 |
 | Issuer CommonName | [etcd-signer](#etcd-signer) |
 | Validity | 3y |
 | Signature Algorithm | SHA256-RSA |
@@ -355,30 +366,30 @@ Signer for etcd to create client and serving certificates.
 | Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
 | ExtendedUsages | - ExtKeyUsageClientAuth<br/>- ExtKeyUsageServerAuth |
 | Organizations (User Groups) | - system:etcd-peers |
-| DNS Names | - localhost<br/>- 10.0.132.68 |
-| IP Addresses | - 10.0.132.68 |
+| DNS Names | - localhost<br/>- 10.0.196.134 |
+| IP Addresses | - 10.0.196.134 |
 
 
 #### system:etcd-peer:etcd-client Locations
 | Namespace | Secret Name |
 | ----------- | ----------- |
-| openshift-etcd | etcd-peer-ip-10-0-132-68.eu-central-1.compute.internal |
+| openshift-etcd | etcd-peer-ip-10-0-196-134.eu-west-3.compute.internal |
 
 | File | Permissions | User | Group | SE Linux |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
-| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-peer-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-132-68.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-peer-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-132-68.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-peer-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-132-68.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-peer-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-132-68.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-peer-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-132-68.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-peer-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-132-68.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-peer-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-132-68.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-peer-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-132-68.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-peer-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-196-134.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-peer-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-196-134.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-peer-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-196-134.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-peer-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-196-134.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-peer-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-196-134.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-peer-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-196-134.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-peer-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-196-134.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-peer-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-196-134.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 
 
 
 ### system:etcd-peer:etcd-client
-![PKI Graph](subcert-systemetcd-peeretcd-client7040919179394354897.png)
+![PKI Graph](subcert-systemetcd-peeretcd-client261706756071794302.png)
 
 
 
@@ -386,7 +397,7 @@ Signer for etcd to create client and serving certificates.
 | ----------- | ----------- |
 | Type | Serving,Client |
 | CommonName | system:etcd-peer:etcd-client |
-| SerialNumber | 7040919179394354897 |
+| SerialNumber | 261706756071794302 |
 | Issuer CommonName | [etcd-signer](#etcd-signer) |
 | Validity | 3y |
 | Signature Algorithm | SHA256-RSA |
@@ -394,30 +405,30 @@ Signer for etcd to create client and serving certificates.
 | Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
 | ExtendedUsages | - ExtKeyUsageClientAuth<br/>- ExtKeyUsageServerAuth |
 | Organizations (User Groups) | - system:etcd-peers |
-| DNS Names | - localhost<br/>- 10.0.210.78 |
-| IP Addresses | - 10.0.210.78 |
+| DNS Names | - localhost<br/>- 10.0.147.125 |
+| IP Addresses | - 10.0.147.125 |
 
 
 #### system:etcd-peer:etcd-client Locations
 | Namespace | Secret Name |
 | ----------- | ----------- |
-| openshift-etcd | etcd-peer-ip-10-0-210-78.eu-central-1.compute.internal |
+| openshift-etcd | etcd-peer-ip-10-0-147-125.eu-west-3.compute.internal |
 
 | File | Permissions | User | Group | SE Linux |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
-| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-peer-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-210-78.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-peer-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-210-78.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-peer-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-210-78.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-peer-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-210-78.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-peer-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-210-78.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-peer-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-210-78.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-peer-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-210-78.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-peer-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-210-78.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-peer-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-147-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-peer-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-147-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-peer-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-147-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-peer-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-147-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-peer-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-147-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-peer-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-147-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-peer-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-147-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-peer-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-147-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 
 
 
 ### system:etcd-peer:etcd-client
-![PKI Graph](subcert-systemetcd-peeretcd-client5219082436276490592.png)
+![PKI Graph](subcert-systemetcd-peeretcd-client8866373266776728098.png)
 
 
 
@@ -425,7 +436,7 @@ Signer for etcd to create client and serving certificates.
 | ----------- | ----------- |
 | Type | Serving,Client |
 | CommonName | system:etcd-peer:etcd-client |
-| SerialNumber | 5219082436276490592 |
+| SerialNumber | 8866373266776728098 |
 | Issuer CommonName | [etcd-signer](#etcd-signer) |
 | Validity | 3y |
 | Signature Algorithm | SHA256-RSA |
@@ -433,30 +444,30 @@ Signer for etcd to create client and serving certificates.
 | Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
 | ExtendedUsages | - ExtKeyUsageClientAuth<br/>- ExtKeyUsageServerAuth |
 | Organizations (User Groups) | - system:etcd-peers |
-| DNS Names | - localhost<br/>- 10.0.183.229 |
-| IP Addresses | - 10.0.183.229 |
+| DNS Names | - localhost<br/>- 10.0.168.125 |
+| IP Addresses | - 10.0.168.125 |
 
 
 #### system:etcd-peer:etcd-client Locations
 | Namespace | Secret Name |
 | ----------- | ----------- |
-| openshift-etcd | etcd-peer-ip-10-0-183-229.eu-central-1.compute.internal |
+| openshift-etcd | etcd-peer-ip-10-0-168-125.eu-west-3.compute.internal |
 
 | File | Permissions | User | Group | SE Linux |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
-| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-peer-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-183-229.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-peer-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-183-229.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-peer-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-183-229.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-peer-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-183-229.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-peer-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-183-229.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-peer-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-183-229.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-peer-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-183-229.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-peer-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-peer-ip-10-0-183-229.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-peer-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-168-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-peer-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-168-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-peer-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-168-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-peer-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-168-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-peer-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-168-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-peer-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-168-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-peer-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-168-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-peer-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-peer-ip-10-0-168-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 
 
 
 ### system:etcd-server:etcd-client
-![PKI Graph](subcert-systemetcd-serveretcd-client1595077546154242228.png)
+![PKI Graph](subcert-systemetcd-serveretcd-client309882045333632324.png)
 
 
 
@@ -464,7 +475,7 @@ Signer for etcd to create client and serving certificates.
 | ----------- | ----------- |
 | Type | Serving,Client |
 | CommonName | system:etcd-server:etcd-client |
-| SerialNumber | 1595077546154242228 |
+| SerialNumber | 309882045333632324 |
 | Issuer CommonName | [etcd-signer](#etcd-signer) |
 | Validity | 3y |
 | Signature Algorithm | SHA256-RSA |
@@ -472,30 +483,30 @@ Signer for etcd to create client and serving certificates.
 | Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
 | ExtendedUsages | - ExtKeyUsageClientAuth<br/>- ExtKeyUsageServerAuth |
 | Organizations (User Groups) | - system:etcd-servers |
-| DNS Names | - etcd.kube-system.svc<br/>- etcd.kube-system.svc.cluster.local<br/>- etcd.openshift-etcd.svc<br/>- etcd.openshift-etcd.svc.cluster.local<br/>- localhost<br/>- ::1<br/>- 10.0.132.68<br/>- 127.0.0.1<br/>- ::1 |
-| IP Addresses | - ::1<br/>- 10.0.132.68<br/>- 127.0.0.1<br/>- ::1 |
+| DNS Names | - etcd.kube-system.svc<br/>- etcd.kube-system.svc.cluster.local<br/>- etcd.openshift-etcd.svc<br/>- etcd.openshift-etcd.svc.cluster.local<br/>- localhost<br/>- ::1<br/>- 10.0.196.134<br/>- 127.0.0.1<br/>- ::1 |
+| IP Addresses | - ::1<br/>- 10.0.196.134<br/>- 127.0.0.1<br/>- ::1 |
 
 
 #### system:etcd-server:etcd-client Locations
 | Namespace | Secret Name |
 | ----------- | ----------- |
-| openshift-etcd | etcd-serving-ip-10-0-132-68.eu-central-1.compute.internal |
+| openshift-etcd | etcd-serving-ip-10-0-196-134.eu-west-3.compute.internal |
 
 | File | Permissions | User | Group | SE Linux |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
-| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-132-68.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-132-68.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-132-68.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-132-68.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-serving-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-132-68.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-serving-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-132-68.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-serving-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-132-68.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-serving-ip-10-0-132-68.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-132-68.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-196-134.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-196-134.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-196-134.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-196-134.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-serving-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-196-134.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-serving-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-196-134.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-serving-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-196-134.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-serving-ip-10-0-196-134.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-196-134.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 
 
 
 ### system:etcd-server:etcd-client
-![PKI Graph](subcert-systemetcd-serveretcd-client1716985330756150295.png)
+![PKI Graph](subcert-systemetcd-serveretcd-client6907393098780758135.png)
 
 
 
@@ -503,7 +514,7 @@ Signer for etcd to create client and serving certificates.
 | ----------- | ----------- |
 | Type | Serving,Client |
 | CommonName | system:etcd-server:etcd-client |
-| SerialNumber | 1716985330756150295 |
+| SerialNumber | 6907393098780758135 |
 | Issuer CommonName | [etcd-signer](#etcd-signer) |
 | Validity | 3y |
 | Signature Algorithm | SHA256-RSA |
@@ -511,30 +522,30 @@ Signer for etcd to create client and serving certificates.
 | Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
 | ExtendedUsages | - ExtKeyUsageClientAuth<br/>- ExtKeyUsageServerAuth |
 | Organizations (User Groups) | - system:etcd-servers |
-| DNS Names | - etcd.kube-system.svc<br/>- etcd.kube-system.svc.cluster.local<br/>- etcd.openshift-etcd.svc<br/>- etcd.openshift-etcd.svc.cluster.local<br/>- localhost<br/>- ::1<br/>- 10.0.183.229<br/>- 127.0.0.1<br/>- ::1 |
-| IP Addresses | - ::1<br/>- 10.0.183.229<br/>- 127.0.0.1<br/>- ::1 |
+| DNS Names | - etcd.kube-system.svc<br/>- etcd.kube-system.svc.cluster.local<br/>- etcd.openshift-etcd.svc<br/>- etcd.openshift-etcd.svc.cluster.local<br/>- localhost<br/>- ::1<br/>- 10.0.168.125<br/>- 127.0.0.1<br/>- ::1 |
+| IP Addresses | - ::1<br/>- 10.0.168.125<br/>- 127.0.0.1<br/>- ::1 |
 
 
 #### system:etcd-server:etcd-client Locations
 | Namespace | Secret Name |
 | ----------- | ----------- |
-| openshift-etcd | etcd-serving-ip-10-0-183-229.eu-central-1.compute.internal |
+| openshift-etcd | etcd-serving-ip-10-0-168-125.eu-west-3.compute.internal |
 
 | File | Permissions | User | Group | SE Linux |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
-| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-183-229.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-183-229.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-183-229.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-183-229.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-serving-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-183-229.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-serving-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-183-229.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-serving-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-183-229.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-serving-ip-10-0-183-229.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-183-229.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-168-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-168-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-168-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-168-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-serving-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-168-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-serving-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-168-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-serving-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-168-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-serving-ip-10-0-168-125.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-168-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 
 
 
 ### system:etcd-server:etcd-client
-![PKI Graph](subcert-systemetcd-serveretcd-client979537366043088443.png)
+![PKI Graph](subcert-systemetcd-serveretcd-client828659554442651911.png)
 
 
 
@@ -542,7 +553,7 @@ Signer for etcd to create client and serving certificates.
 | ----------- | ----------- |
 | Type | Serving,Client |
 | CommonName | system:etcd-server:etcd-client |
-| SerialNumber | 979537366043088443 |
+| SerialNumber | 828659554442651911 |
 | Issuer CommonName | [etcd-signer](#etcd-signer) |
 | Validity | 3y |
 | Signature Algorithm | SHA256-RSA |
@@ -550,25 +561,25 @@ Signer for etcd to create client and serving certificates.
 | Usages | - KeyUsageDigitalSignature<br/>- KeyUsageKeyEncipherment |
 | ExtendedUsages | - ExtKeyUsageClientAuth<br/>- ExtKeyUsageServerAuth |
 | Organizations (User Groups) | - system:etcd-servers |
-| DNS Names | - etcd.kube-system.svc<br/>- etcd.kube-system.svc.cluster.local<br/>- etcd.openshift-etcd.svc<br/>- etcd.openshift-etcd.svc.cluster.local<br/>- localhost<br/>- ::1<br/>- 10.0.210.78<br/>- 127.0.0.1<br/>- ::1 |
-| IP Addresses | - ::1<br/>- 10.0.210.78<br/>- 127.0.0.1<br/>- ::1 |
+| DNS Names | - etcd.kube-system.svc<br/>- etcd.kube-system.svc.cluster.local<br/>- etcd.openshift-etcd.svc<br/>- etcd.openshift-etcd.svc.cluster.local<br/>- localhost<br/>- ::1<br/>- 10.0.147.125<br/>- 127.0.0.1<br/>- ::1 |
+| IP Addresses | - ::1<br/>- 10.0.147.125<br/>- 127.0.0.1<br/>- ::1 |
 
 
 #### system:etcd-server:etcd-client Locations
 | Namespace | Secret Name |
 | ----------- | ----------- |
-| openshift-etcd | etcd-serving-ip-10-0-210-78.eu-central-1.compute.internal |
+| openshift-etcd | etcd-serving-ip-10-0-147-125.eu-west-3.compute.internal |
 
 | File | Permissions | User | Group | SE Linux |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
-| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-210-78.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-210-78.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-210-78.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-210-78.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-serving-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-210-78.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/secrets/etcd-all-certs/etcd-serving-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-210-78.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-serving-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-210-78.eu-central-1.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/secrets/etcd-all-certs/etcd-serving-ip-10-0-210-78.eu-central-1.compute.internal.crt/etcd-serving-ip-10-0-210-78.eu-central-1.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-147-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-serving-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-147-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-147-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-4/secrets/etcd-all-certs/etcd-serving-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-147-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-serving-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-147-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/secrets/etcd-all-certs/etcd-serving-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-147-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-serving-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-147-125.eu-west-3.compute.internal.crt | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/secrets/etcd-all-certs/etcd-serving-ip-10-0-147-125.eu-west-3.compute.internal.crt/etcd-serving-ip-10-0-147-125.eu-west-3.compute.internal.key | -rw-------. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 
 
 ## Certificates Without Keys
@@ -599,24 +610,29 @@ CA for recognizing etcd serving, peer, and client certificates.
 | openshift-config | etcd-serving-ca |
 | openshift-etcd | etcd-ca-bundle |
 | openshift-etcd | etcd-peer-client-ca |
+| openshift-etcd | etcd-peer-client-ca-2 |
+| openshift-etcd | etcd-peer-client-ca-3 |
 | openshift-etcd | etcd-peer-client-ca-4 |
 | openshift-etcd | etcd-peer-client-ca-5 |
 | openshift-etcd | etcd-peer-client-ca-6 |
-| openshift-etcd | etcd-peer-client-ca-7 |
-| openshift-etcd | etcd-peer-client-ca-8 |
 | openshift-etcd | etcd-serving-ca |
+| openshift-etcd | etcd-serving-ca-2 |
+| openshift-etcd | etcd-serving-ca-3 |
 | openshift-etcd | etcd-serving-ca-4 |
 | openshift-etcd | etcd-serving-ca-5 |
 | openshift-etcd | etcd-serving-ca-6 |
-| openshift-etcd | etcd-serving-ca-7 |
-| openshift-etcd | etcd-serving-ca-8 |
 | openshift-etcd-operator | etcd-ca-bundle |
 | openshift-kube-apiserver | etcd-serving-ca |
-| openshift-kube-apiserver | etcd-serving-ca-3 |
-| openshift-kube-apiserver | etcd-serving-ca-4 |
+| openshift-kube-apiserver | etcd-serving-ca-10 |
+| openshift-kube-apiserver | etcd-serving-ca-11 |
+| openshift-kube-apiserver | etcd-serving-ca-12 |
+| openshift-kube-apiserver | etcd-serving-ca-13 |
+| openshift-kube-apiserver | etcd-serving-ca-14 |
 | openshift-kube-apiserver | etcd-serving-ca-5 |
 | openshift-kube-apiserver | etcd-serving-ca-6 |
 | openshift-kube-apiserver | etcd-serving-ca-7 |
+| openshift-kube-apiserver | etcd-serving-ca-8 |
+| openshift-kube-apiserver | etcd-serving-ca-9 |
 | openshift-oauth-apiserver | etcd-serving-ca |
 
 | File | Permissions | User | Group | SE Linux |
@@ -625,11 +641,14 @@ CA for recognizing etcd serving, peer, and client certificates.
 | /etc/kubernetes/static-pod-resources/etcd-certs/configmaps/etcd-serving-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 | /etc/kubernetes/static-pod-resources/etcd-pod-4/configmaps/etcd-peer-client-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 | /etc/kubernetes/static-pod-resources/etcd-pod-4/configmaps/etcd-serving-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/configmaps/etcd-peer-client-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-7/configmaps/etcd-serving-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/configmaps/etcd-peer-client-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/etcd-pod-8/configmaps/etcd-serving-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-3/configmaps/etcd-serving-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-7/configmaps/etcd-serving-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/configmaps/etcd-peer-client-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-5/configmaps/etcd-serving-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/configmaps/etcd-peer-client-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/etcd-pod-6/configmaps/etcd-serving-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-10/configmaps/etcd-serving-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-12/configmaps/etcd-serving-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-13/configmaps/etcd-serving-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-14/configmaps/etcd-serving-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
+| /etc/kubernetes/static-pod-resources/kube-apiserver-pod-9/configmaps/etcd-serving-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 
 

@@ -1,0 +1,34 @@
+digraph "Local Certificate" {
+  // Node definitions.
+  7 [
+    label="certkeypair/kube-apiserver-recovery-signer\n\nsecret/localhost-recovery-serving-signer -nopenshift-kube-apiserver-operator\n"
+    style=filled
+    fillcolor="#c7bfff"
+  ];
+  8 [
+    label="certkeypair/kube-apiserver-recovery-serving\n\nsecret/localhost-recovery-serving-certkey -nopenshift-kube-apiserver\n    secret/localhost-recovery-serving-certkey-10 -nopenshift-kube-apiserver\n    secret/localhost-recovery-serving-certkey-11 -nopenshift-kube-apiserver\n    secret/localhost-recovery-serving-certkey-12 -nopenshift-kube-apiserver\n    secret/localhost-recovery-serving-certkey-13 -nopenshift-kube-apiserver\n    secret/localhost-recovery-serving-certkey-14 -nopenshift-kube-apiserver\n    secret/localhost-recovery-serving-certkey-5 -nopenshift-kube-apiserver\n    secret/localhost-recovery-serving-certkey-6 -nopenshift-kube-apiserver\n    secret/localhost-recovery-serving-certkey-7 -nopenshift-kube-apiserver\n    secret/localhost-recovery-serving-certkey-8 -nopenshift-kube-apiserver\n    secret/localhost-recovery-serving-certkey-9 -nopenshift-kube-apiserver\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-10/secrets/localhost-recovery-serving-certkey/tls.crt/tls.crt,file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-10/secrets/localhost-recovery-serving-certkey/tls.crt/tls.key\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-12/secrets/localhost-recovery-serving-certkey/tls.crt/tls.crt,file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-12/secrets/localhost-recovery-serving-certkey/tls.crt/tls.key\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-13/secrets/localhost-recovery-serving-certkey/tls.crt/tls.crt,file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-13/secrets/localhost-recovery-serving-certkey/tls.crt/tls.key\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-14/secrets/localhost-recovery-serving-certkey/tls.crt/tls.crt,file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-14/secrets/localhost-recovery-serving-certkey/tls.crt/tls.key\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-9/secrets/localhost-recovery-serving-certkey/tls.crt/tls.crt,file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-9/secrets/localhost-recovery-serving-certkey/tls.crt/tls.key\n"
+    style=filled
+    fillcolor="#bdebfd"
+  ];
+  11 [
+    label="cabundle/service-account-token-ca.crt\n\nconfigmaps/serviceaccount-ca -nopenshift-kube-controller-manager\n    configmaps/serviceaccount-ca-4 -nopenshift-kube-controller-manager\n    configmaps/serviceaccount-ca-5 -nopenshift-kube-controller-manager\n    configmaps/serviceaccount-ca-6 -nopenshift-kube-controller-manager\n    configmaps/serviceaccount-ca-7 -nopenshift-kube-controller-manager\n    configmaps/serviceaccount-ca-8 -nopenshift-kube-controller-manager\n    configmaps/serviceaccount-ca -nopenshift-kube-scheduler\n    configmaps/serviceaccount-ca-4 -nopenshift-kube-scheduler\n    configmaps/serviceaccount-ca-5 -nopenshift-kube-scheduler\n    configmaps/serviceaccount-ca-6 -nopenshift-kube-scheduler\n    configmaps/serviceaccount-ca-7 -nopenshift-kube-scheduler\n    file:///etc/kubernetes/static-pod-resources/kube-controller-manager-pod-4/configmaps/serviceaccount-ca/ca-bundle.crt/ca-bundle.crt\n    file:///etc/kubernetes/static-pod-resources/kube-controller-manager-pod-5/configmaps/serviceaccount-ca/ca-bundle.crt/ca-bundle.crt\n    file:///etc/kubernetes/static-pod-resources/kube-controller-manager-pod-7/configmaps/serviceaccount-ca/ca-bundle.crt/ca-bundle.crt\n    file:///etc/kubernetes/static-pod-resources/kube-controller-manager-pod-8/configmaps/serviceaccount-ca/ca-bundle.crt/ca-bundle.crt\n    file:///etc/kubernetes/static-pod-resources/kube-scheduler-pod-5/configmaps/serviceaccount-ca/ca-bundle.crt/ca-bundle.crt\n    file:///etc/kubernetes/static-pod-resources/kube-scheduler-pod-7/configmaps/serviceaccount-ca/ca-bundle.crt/ca-bundle.crt\n"
+    style=filled
+    fillcolor="#fda172"
+  ];
+  15 [
+    label="cabundle/kube-apiserver-recovery-serving-ca\n\nconfigmaps/localhost-recovery-serving-ca -nopenshift-kube-apiserver-operator\n"
+    style=filled
+    fillcolor="#fda172"
+  ];
+  17 [
+    label="cabundle/kube-apiserver-total-serving-ca\n\nconfigmaps/kube-apiserver-server-ca -nopenshift-config-managed\n    configmaps/kube-apiserver-server-ca -nopenshift-kube-apiserver\n    configmaps/kube-apiserver-server-ca-10 -nopenshift-kube-apiserver\n    configmaps/kube-apiserver-server-ca-11 -nopenshift-kube-apiserver\n    configmaps/kube-apiserver-server-ca-12 -nopenshift-kube-apiserver\n    configmaps/kube-apiserver-server-ca-13 -nopenshift-kube-apiserver\n    configmaps/kube-apiserver-server-ca-14 -nopenshift-kube-apiserver\n    configmaps/kube-apiserver-server-ca-5 -nopenshift-kube-apiserver\n    configmaps/kube-apiserver-server-ca-6 -nopenshift-kube-apiserver\n    configmaps/kube-apiserver-server-ca-7 -nopenshift-kube-apiserver\n    configmaps/kube-apiserver-server-ca-8 -nopenshift-kube-apiserver\n    configmaps/kube-apiserver-server-ca-9 -nopenshift-kube-apiserver\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-10/configmaps/kube-apiserver-server-ca/ca-bundle.crt/ca-bundle.crt\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-12/configmaps/kube-apiserver-server-ca/ca-bundle.crt/ca-bundle.crt\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-13/configmaps/kube-apiserver-server-ca/ca-bundle.crt/ca-bundle.crt\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-14/configmaps/kube-apiserver-server-ca/ca-bundle.crt/ca-bundle.crt\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-9/configmaps/kube-apiserver-server-ca/ca-bundle.crt/ca-bundle.crt\n"
+    style=filled
+    fillcolor="#fda172"
+  ];
+
+  // Edge definitions.
+  7 -> 8;
+  7 -> 11;
+  7 -> 15;
+  7 -> 17;
+}

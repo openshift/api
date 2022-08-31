@@ -1,6 +1,6 @@
 digraph "Local Certificate" {
   // Node definitions.
-  9 [
+  5 [
     label="certkeypair/ANF Secure Server Root CA\n\n\n"
     style=filled
     fillcolor=white
@@ -12,5 +12,5 @@ digraph "Local Certificate" {
   ];
 
   // Edge definitions.
-  9 -> 16;
+  5 -> 16;
 }

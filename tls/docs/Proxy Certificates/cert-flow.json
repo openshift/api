@@ -2738,347 +2738,6 @@
       {
         "LogicalName": "",
         "Description": "",
-        "Name": "Microsoft ECC Root Certificate Authority 2017",
-        "Spec": {
-          "SecretLocations": null,
-          "OnDiskLocations": null,
-          "CertMetadata": {
-            "CertIdentifier": {
-              "CommonName": "Microsoft ECC Root Certificate Authority 2017",
-              "SerialNumber": "",
-              "Issuer": null
-            },
-            "SignatureAlgorithm": "",
-            "PublicKeyAlgorithm": "",
-            "PublicKeyBitSize": "",
-            "ValidityDuration": "",
-            "Usages": null,
-            "ExtendedUsages": null
-          },
-          "Details": {
-            "CertType": "",
-            "SignerDetails": null,
-            "ServingCertDetails": null,
-            "ClientCertDetails": null
-          }
-        },
-        "Status": {
-          "Errors": null
-        }
-      },
-      {
-        "LogicalName": "",
-        "Description": "",
-        "Name": "Trustwave Global ECC P256 Certification Authority",
-        "Spec": {
-          "SecretLocations": null,
-          "OnDiskLocations": null,
-          "CertMetadata": {
-            "CertIdentifier": {
-              "CommonName": "Trustwave Global ECC P256 Certification Authority",
-              "SerialNumber": "",
-              "Issuer": null
-            },
-            "SignatureAlgorithm": "",
-            "PublicKeyAlgorithm": "",
-            "PublicKeyBitSize": "",
-            "ValidityDuration": "",
-            "Usages": null,
-            "ExtendedUsages": null
-          },
-          "Details": {
-            "CertType": "",
-            "SignerDetails": null,
-            "ServingCertDetails": null,
-            "ClientCertDetails": null
-          }
-        },
-        "Status": {
-          "Errors": null
-        }
-      },
-      {
-        "LogicalName": "",
-        "Description": "",
-        "Name": "Trustwave Global Certification Authority",
-        "Spec": {
-          "SecretLocations": null,
-          "OnDiskLocations": null,
-          "CertMetadata": {
-            "CertIdentifier": {
-              "CommonName": "Trustwave Global Certification Authority",
-              "SerialNumber": "",
-              "Issuer": null
-            },
-            "SignatureAlgorithm": "",
-            "PublicKeyAlgorithm": "",
-            "PublicKeyBitSize": "",
-            "ValidityDuration": "",
-            "Usages": null,
-            "ExtendedUsages": null
-          },
-          "Details": {
-            "CertType": "",
-            "SignerDetails": null,
-            "ServingCertDetails": null,
-            "ClientCertDetails": null
-          }
-        },
-        "Status": {
-          "Errors": null
-        }
-      },
-      {
-        "LogicalName": "",
-        "Description": "",
-        "Name": "NAVER Global Root Certification Authority",
-        "Spec": {
-          "SecretLocations": null,
-          "OnDiskLocations": null,
-          "CertMetadata": {
-            "CertIdentifier": {
-              "CommonName": "NAVER Global Root Certification Authority",
-              "SerialNumber": "",
-              "Issuer": null
-            },
-            "SignatureAlgorithm": "",
-            "PublicKeyAlgorithm": "",
-            "PublicKeyBitSize": "",
-            "ValidityDuration": "",
-            "Usages": null,
-            "ExtendedUsages": null
-          },
-          "Details": {
-            "CertType": "",
-            "SignerDetails": null,
-            "ServingCertDetails": null,
-            "ClientCertDetails": null
-          }
-        },
-        "Status": {
-          "Errors": null
-        }
-      },
-      {
-        "LogicalName": "",
-        "Description": "",
-        "Name": "e-Szigno Root CA 2017",
-        "Spec": {
-          "SecretLocations": null,
-          "OnDiskLocations": null,
-          "CertMetadata": {
-            "CertIdentifier": {
-              "CommonName": "e-Szigno Root CA 2017",
-              "SerialNumber": "",
-              "Issuer": null
-            },
-            "SignatureAlgorithm": "",
-            "PublicKeyAlgorithm": "",
-            "PublicKeyBitSize": "",
-            "ValidityDuration": "",
-            "Usages": null,
-            "ExtendedUsages": null
-          },
-          "Details": {
-            "CertType": "",
-            "SignerDetails": null,
-            "ServingCertDetails": null,
-            "ClientCertDetails": null
-          }
-        },
-        "Status": {
-          "Errors": null
-        }
-      },
-      {
-        "LogicalName": "",
-        "Description": "",
-        "Name": "Certum EC-384 CA",
-        "Spec": {
-          "SecretLocations": null,
-          "OnDiskLocations": null,
-          "CertMetadata": {
-            "CertIdentifier": {
-              "CommonName": "Certum EC-384 CA",
-              "SerialNumber": "",
-              "Issuer": null
-            },
-            "SignatureAlgorithm": "",
-            "PublicKeyAlgorithm": "",
-            "PublicKeyBitSize": "",
-            "ValidityDuration": "",
-            "Usages": null,
-            "ExtendedUsages": null
-          },
-          "Details": {
-            "CertType": "",
-            "SignerDetails": null,
-            "ServingCertDetails": null,
-            "ClientCertDetails": null
-          }
-        },
-        "Status": {
-          "Errors": null
-        }
-      },
-      {
-        "LogicalName": "",
-        "Description": "",
-        "Name": "Microsoft RSA Root Certificate Authority 2017",
-        "Spec": {
-          "SecretLocations": null,
-          "OnDiskLocations": null,
-          "CertMetadata": {
-            "CertIdentifier": {
-              "CommonName": "Microsoft RSA Root Certificate Authority 2017",
-              "SerialNumber": "",
-              "Issuer": null
-            },
-            "SignatureAlgorithm": "",
-            "PublicKeyAlgorithm": "",
-            "PublicKeyBitSize": "",
-            "ValidityDuration": "",
-            "Usages": null,
-            "ExtendedUsages": null
-          },
-          "Details": {
-            "CertType": "",
-            "SignerDetails": null,
-            "ServingCertDetails": null,
-            "ClientCertDetails": null
-          }
-        },
-        "Status": {
-          "Errors": null
-        }
-      },
-      {
-        "LogicalName": "",
-        "Description": "",
-        "Name": "GlobalSign Root R46",
-        "Spec": {
-          "SecretLocations": null,
-          "OnDiskLocations": null,
-          "CertMetadata": {
-            "CertIdentifier": {
-              "CommonName": "GlobalSign Root R46",
-              "SerialNumber": "",
-              "Issuer": null
-            },
-            "SignatureAlgorithm": "",
-            "PublicKeyAlgorithm": "",
-            "PublicKeyBitSize": "",
-            "ValidityDuration": "",
-            "Usages": null,
-            "ExtendedUsages": null
-          },
-          "Details": {
-            "CertType": "",
-            "SignerDetails": null,
-            "ServingCertDetails": null,
-            "ClientCertDetails": null
-          }
-        },
-        "Status": {
-          "Errors": null
-        }
-      },
-      {
-        "LogicalName": "",
-        "Description": "",
-        "Name": "Certum Trusted Root CA",
-        "Spec": {
-          "SecretLocations": null,
-          "OnDiskLocations": null,
-          "CertMetadata": {
-            "CertIdentifier": {
-              "CommonName": "Certum Trusted Root CA",
-              "SerialNumber": "",
-              "Issuer": null
-            },
-            "SignatureAlgorithm": "",
-            "PublicKeyAlgorithm": "",
-            "PublicKeyBitSize": "",
-            "ValidityDuration": "",
-            "Usages": null,
-            "ExtendedUsages": null
-          },
-          "Details": {
-            "CertType": "",
-            "SignerDetails": null,
-            "ServingCertDetails": null,
-            "ClientCertDetails": null
-          }
-        },
-        "Status": {
-          "Errors": null
-        }
-      },
-      {
-        "LogicalName": "",
-        "Description": "",
-        "Name": "ANF Secure Server Root CA",
-        "Spec": {
-          "SecretLocations": null,
-          "OnDiskLocations": null,
-          "CertMetadata": {
-            "CertIdentifier": {
-              "CommonName": "ANF Secure Server Root CA",
-              "SerialNumber": "",
-              "Issuer": null
-            },
-            "SignatureAlgorithm": "",
-            "PublicKeyAlgorithm": "",
-            "PublicKeyBitSize": "",
-            "ValidityDuration": "",
-            "Usages": null,
-            "ExtendedUsages": null
-          },
-          "Details": {
-            "CertType": "",
-            "SignerDetails": null,
-            "ServingCertDetails": null,
-            "ClientCertDetails": null
-          }
-        },
-        "Status": {
-          "Errors": null
-        }
-      },
-      {
-        "LogicalName": "",
-        "Description": "",
-        "Name": "AC RAIZ FNMT-RCM SERVIDORES SEGUROS",
-        "Spec": {
-          "SecretLocations": null,
-          "OnDiskLocations": null,
-          "CertMetadata": {
-            "CertIdentifier": {
-              "CommonName": "AC RAIZ FNMT-RCM SERVIDORES SEGUROS",
-              "SerialNumber": "",
-              "Issuer": null
-            },
-            "SignatureAlgorithm": "",
-            "PublicKeyAlgorithm": "",
-            "PublicKeyBitSize": "",
-            "ValidityDuration": "",
-            "Usages": null,
-            "ExtendedUsages": null
-          },
-          "Details": {
-            "CertType": "",
-            "SignerDetails": null,
-            "ServingCertDetails": null,
-            "ClientCertDetails": null
-          }
-        },
-        "Status": {
-          "Errors": null
-        }
-      },
-      {
-        "LogicalName": "",
-        "Description": "",
         "Name": "::1658",
         "Spec": {
           "SecretLocations": [
@@ -3127,71 +2786,44 @@
       {
         "LogicalName": "",
         "Description": "",
-        "Name": "::7981676500072753307",
-        "Spec": {
-          "SecretLocations": [
-            {
-              "Namespace": "openshift-operator-lifecycle-manager",
-              "Name": "packageserver-service-cert"
-            }
-          ],
-          "OnDiskLocations": null,
-          "CertMetadata": {
-            "CertIdentifier": {
-              "CommonName": "",
-              "SerialNumber": "7981676500072753307",
-              "Issuer": {
-                "CommonName": "",
-                "SerialNumber": "",
-                "Issuer": null
-              }
-            },
-            "SignatureAlgorithm": "ECDSA-SHA256",
-            "PublicKeyAlgorithm": "ECDSA",
-            "PublicKeyBitSize": "256 bit, P-256 curve",
-            "ValidityDuration": "2y",
-            "Usages": [
-              "KeyUsageDigitalSignature",
-              "KeyUsageCertSign"
-            ],
-            "ExtendedUsages": [
-              "ExtKeyUsageClientAuth",
-              "ExtKeyUsageServerAuth"
-            ]
-          },
-          "Details": {
-            "CertType": "Multiple",
-            "SignerDetails": {},
-            "ServingCertDetails": {
-              "DNSNames": [
-                "packageserver-service.openshift-operator-lifecycle-manager",
-                "packageserver-service.openshift-operator-lifecycle-manager.svc"
-              ],
-              "IPAddresses": null
-            },
-            "ClientCertDetails": {
-              "Organizations": [
-                "Red Hat, Inc."
-              ]
-            }
-          }
-        },
-        "Status": {
-          "Errors": [
-            "you have a cert for more than one?  We don't do that. :("
-          ]
-        }
-      },
-      {
-        "LogicalName": "",
-        "Description": "",
-        "Name": "Trustwave Global ECC P384 Certification Authority",
+        "Name": "NAVER Global Root Certification Authority",
         "Spec": {
           "SecretLocations": null,
           "OnDiskLocations": null,
           "CertMetadata": {
             "CertIdentifier": {
-              "CommonName": "Trustwave Global ECC P384 Certification Authority",
+              "CommonName": "NAVER Global Root Certification Authority",
+              "SerialNumber": "",
+              "Issuer": null
+            },
+            "SignatureAlgorithm": "",
+            "PublicKeyAlgorithm": "",
+            "PublicKeyBitSize": "",
+            "ValidityDuration": "",
+            "Usages": null,
+            "ExtendedUsages": null
+          },
+          "Details": {
+            "CertType": "",
+            "SignerDetails": null,
+            "ServingCertDetails": null,
+            "ClientCertDetails": null
+          }
+        },
+        "Status": {
+          "Errors": null
+        }
+      },
+      {
+        "LogicalName": "",
+        "Description": "",
+        "Name": "GlobalSign Root R46",
+        "Spec": {
+          "SecretLocations": null,
+          "OnDiskLocations": null,
+          "CertMetadata": {
+            "CertIdentifier": {
+              "CommonName": "GlobalSign Root R46",
               "SerialNumber": "",
               "Issuer": null
             },
@@ -3273,6 +2905,374 @@
         },
         "Status": {
           "Errors": null
+        }
+      },
+      {
+        "LogicalName": "",
+        "Description": "",
+        "Name": "ANF Secure Server Root CA",
+        "Spec": {
+          "SecretLocations": null,
+          "OnDiskLocations": null,
+          "CertMetadata": {
+            "CertIdentifier": {
+              "CommonName": "ANF Secure Server Root CA",
+              "SerialNumber": "",
+              "Issuer": null
+            },
+            "SignatureAlgorithm": "",
+            "PublicKeyAlgorithm": "",
+            "PublicKeyBitSize": "",
+            "ValidityDuration": "",
+            "Usages": null,
+            "ExtendedUsages": null
+          },
+          "Details": {
+            "CertType": "",
+            "SignerDetails": null,
+            "ServingCertDetails": null,
+            "ClientCertDetails": null
+          }
+        },
+        "Status": {
+          "Errors": null
+        }
+      },
+      {
+        "LogicalName": "",
+        "Description": "",
+        "Name": "Trustwave Global ECC P384 Certification Authority",
+        "Spec": {
+          "SecretLocations": null,
+          "OnDiskLocations": null,
+          "CertMetadata": {
+            "CertIdentifier": {
+              "CommonName": "Trustwave Global ECC P384 Certification Authority",
+              "SerialNumber": "",
+              "Issuer": null
+            },
+            "SignatureAlgorithm": "",
+            "PublicKeyAlgorithm": "",
+            "PublicKeyBitSize": "",
+            "ValidityDuration": "",
+            "Usages": null,
+            "ExtendedUsages": null
+          },
+          "Details": {
+            "CertType": "",
+            "SignerDetails": null,
+            "ServingCertDetails": null,
+            "ClientCertDetails": null
+          }
+        },
+        "Status": {
+          "Errors": null
+        }
+      },
+      {
+        "LogicalName": "",
+        "Description": "",
+        "Name": "Trustwave Global ECC P256 Certification Authority",
+        "Spec": {
+          "SecretLocations": null,
+          "OnDiskLocations": null,
+          "CertMetadata": {
+            "CertIdentifier": {
+              "CommonName": "Trustwave Global ECC P256 Certification Authority",
+              "SerialNumber": "",
+              "Issuer": null
+            },
+            "SignatureAlgorithm": "",
+            "PublicKeyAlgorithm": "",
+            "PublicKeyBitSize": "",
+            "ValidityDuration": "",
+            "Usages": null,
+            "ExtendedUsages": null
+          },
+          "Details": {
+            "CertType": "",
+            "SignerDetails": null,
+            "ServingCertDetails": null,
+            "ClientCertDetails": null
+          }
+        },
+        "Status": {
+          "Errors": null
+        }
+      },
+      {
+        "LogicalName": "",
+        "Description": "",
+        "Name": "Certum Trusted Root CA",
+        "Spec": {
+          "SecretLocations": null,
+          "OnDiskLocations": null,
+          "CertMetadata": {
+            "CertIdentifier": {
+              "CommonName": "Certum Trusted Root CA",
+              "SerialNumber": "",
+              "Issuer": null
+            },
+            "SignatureAlgorithm": "",
+            "PublicKeyAlgorithm": "",
+            "PublicKeyBitSize": "",
+            "ValidityDuration": "",
+            "Usages": null,
+            "ExtendedUsages": null
+          },
+          "Details": {
+            "CertType": "",
+            "SignerDetails": null,
+            "ServingCertDetails": null,
+            "ClientCertDetails": null
+          }
+        },
+        "Status": {
+          "Errors": null
+        }
+      },
+      {
+        "LogicalName": "",
+        "Description": "",
+        "Name": "Certum EC-384 CA",
+        "Spec": {
+          "SecretLocations": null,
+          "OnDiskLocations": null,
+          "CertMetadata": {
+            "CertIdentifier": {
+              "CommonName": "Certum EC-384 CA",
+              "SerialNumber": "",
+              "Issuer": null
+            },
+            "SignatureAlgorithm": "",
+            "PublicKeyAlgorithm": "",
+            "PublicKeyBitSize": "",
+            "ValidityDuration": "",
+            "Usages": null,
+            "ExtendedUsages": null
+          },
+          "Details": {
+            "CertType": "",
+            "SignerDetails": null,
+            "ServingCertDetails": null,
+            "ClientCertDetails": null
+          }
+        },
+        "Status": {
+          "Errors": null
+        }
+      },
+      {
+        "LogicalName": "",
+        "Description": "",
+        "Name": "AC RAIZ FNMT-RCM SERVIDORES SEGUROS",
+        "Spec": {
+          "SecretLocations": null,
+          "OnDiskLocations": null,
+          "CertMetadata": {
+            "CertIdentifier": {
+              "CommonName": "AC RAIZ FNMT-RCM SERVIDORES SEGUROS",
+              "SerialNumber": "",
+              "Issuer": null
+            },
+            "SignatureAlgorithm": "",
+            "PublicKeyAlgorithm": "",
+            "PublicKeyBitSize": "",
+            "ValidityDuration": "",
+            "Usages": null,
+            "ExtendedUsages": null
+          },
+          "Details": {
+            "CertType": "",
+            "SignerDetails": null,
+            "ServingCertDetails": null,
+            "ClientCertDetails": null
+          }
+        },
+        "Status": {
+          "Errors": null
+        }
+      },
+      {
+        "LogicalName": "",
+        "Description": "",
+        "Name": "Trustwave Global Certification Authority",
+        "Spec": {
+          "SecretLocations": null,
+          "OnDiskLocations": null,
+          "CertMetadata": {
+            "CertIdentifier": {
+              "CommonName": "Trustwave Global Certification Authority",
+              "SerialNumber": "",
+              "Issuer": null
+            },
+            "SignatureAlgorithm": "",
+            "PublicKeyAlgorithm": "",
+            "PublicKeyBitSize": "",
+            "ValidityDuration": "",
+            "Usages": null,
+            "ExtendedUsages": null
+          },
+          "Details": {
+            "CertType": "",
+            "SignerDetails": null,
+            "ServingCertDetails": null,
+            "ClientCertDetails": null
+          }
+        },
+        "Status": {
+          "Errors": null
+        }
+      },
+      {
+        "LogicalName": "",
+        "Description": "",
+        "Name": "Microsoft RSA Root Certificate Authority 2017",
+        "Spec": {
+          "SecretLocations": null,
+          "OnDiskLocations": null,
+          "CertMetadata": {
+            "CertIdentifier": {
+              "CommonName": "Microsoft RSA Root Certificate Authority 2017",
+              "SerialNumber": "",
+              "Issuer": null
+            },
+            "SignatureAlgorithm": "",
+            "PublicKeyAlgorithm": "",
+            "PublicKeyBitSize": "",
+            "ValidityDuration": "",
+            "Usages": null,
+            "ExtendedUsages": null
+          },
+          "Details": {
+            "CertType": "",
+            "SignerDetails": null,
+            "ServingCertDetails": null,
+            "ClientCertDetails": null
+          }
+        },
+        "Status": {
+          "Errors": null
+        }
+      },
+      {
+        "LogicalName": "",
+        "Description": "",
+        "Name": "Microsoft ECC Root Certificate Authority 2017",
+        "Spec": {
+          "SecretLocations": null,
+          "OnDiskLocations": null,
+          "CertMetadata": {
+            "CertIdentifier": {
+              "CommonName": "Microsoft ECC Root Certificate Authority 2017",
+              "SerialNumber": "",
+              "Issuer": null
+            },
+            "SignatureAlgorithm": "",
+            "PublicKeyAlgorithm": "",
+            "PublicKeyBitSize": "",
+            "ValidityDuration": "",
+            "Usages": null,
+            "ExtendedUsages": null
+          },
+          "Details": {
+            "CertType": "",
+            "SignerDetails": null,
+            "ServingCertDetails": null,
+            "ClientCertDetails": null
+          }
+        },
+        "Status": {
+          "Errors": null
+        }
+      },
+      {
+        "LogicalName": "",
+        "Description": "",
+        "Name": "e-Szigno Root CA 2017",
+        "Spec": {
+          "SecretLocations": null,
+          "OnDiskLocations": null,
+          "CertMetadata": {
+            "CertIdentifier": {
+              "CommonName": "e-Szigno Root CA 2017",
+              "SerialNumber": "",
+              "Issuer": null
+            },
+            "SignatureAlgorithm": "",
+            "PublicKeyAlgorithm": "",
+            "PublicKeyBitSize": "",
+            "ValidityDuration": "",
+            "Usages": null,
+            "ExtendedUsages": null
+          },
+          "Details": {
+            "CertType": "",
+            "SignerDetails": null,
+            "ServingCertDetails": null,
+            "ClientCertDetails": null
+          }
+        },
+        "Status": {
+          "Errors": null
+        }
+      },
+      {
+        "LogicalName": "",
+        "Description": "",
+        "Name": "::6293028270596117347",
+        "Spec": {
+          "SecretLocations": [
+            {
+              "Namespace": "openshift-operator-lifecycle-manager",
+              "Name": "packageserver-service-cert"
+            }
+          ],
+          "OnDiskLocations": null,
+          "CertMetadata": {
+            "CertIdentifier": {
+              "CommonName": "",
+              "SerialNumber": "6293028270596117347",
+              "Issuer": {
+                "CommonName": "",
+                "SerialNumber": "",
+                "Issuer": null
+              }
+            },
+            "SignatureAlgorithm": "ECDSA-SHA256",
+            "PublicKeyAlgorithm": "ECDSA",
+            "PublicKeyBitSize": "256 bit, P-256 curve",
+            "ValidityDuration": "2y",
+            "Usages": [
+              "KeyUsageDigitalSignature",
+              "KeyUsageCertSign"
+            ],
+            "ExtendedUsages": [
+              "ExtKeyUsageClientAuth",
+              "ExtKeyUsageServerAuth"
+            ]
+          },
+          "Details": {
+            "CertType": "Multiple",
+            "SignerDetails": {},
+            "ServingCertDetails": {
+              "DNSNames": [
+                "packageserver-service.openshift-operator-lifecycle-manager",
+                "packageserver-service.openshift-operator-lifecycle-manager.svc"
+              ],
+              "IPAddresses": null
+            },
+            "ClientCertDetails": {
+              "Organizations": [
+                "Red Hat, Inc."
+              ]
+            }
+          }
+        },
+        "Status": {
+          "Errors": [
+            "you have a cert for more than one?  We don't do that. :("
+          ]
         }
       }
     ]

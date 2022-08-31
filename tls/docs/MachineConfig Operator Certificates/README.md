@@ -16,7 +16,7 @@ TODO need to work out who and what.
 
 
 ### root-ca
-![PKI Graph](subcert-root-ca8681071573803367953.png)
+![PKI Graph](subcert-root-ca417351704505727355.png)
 
 
 
@@ -24,7 +24,7 @@ TODO need to work out who and what.
 | ----------- | ----------- |
 | Type | Signer |
 | CommonName | root-ca |
-| SerialNumber | 8681071573803367953 |
+| SerialNumber | 417351704505727355 |
 | Issuer CommonName | [root-ca](#root-ca) |
 | Validity | 10y |
 | Signature Algorithm | SHA256-RSA |
@@ -48,7 +48,7 @@ TODO need to work out who and what.
 
 
 ### mco-mystery-cert
-![PKI Graph](subcert-systemmachine-config-server3862173860818707761.png)
+![PKI Graph](subcert-systemmachine-config-server7599561438574246040.png)
 
 TODO: team needs to make description
 
@@ -56,14 +56,14 @@ TODO: team needs to make description
 | ----------- | ----------- |
 | Type | Serving |
 | CommonName | system:machine-config-server |
-| SerialNumber | 3862173860818707761 |
+| SerialNumber | 7599561438574246040 |
 | Issuer CommonName | [root-ca](#root-ca) |
 | Validity | 10y |
 | Signature Algorithm | SHA256-RSA |
 | PublicKey Algorithm | RSA 2048 bit |
 | Usages |  |
 | ExtendedUsages | - ExtKeyUsageServerAuth |
-| DNS Names | - api-int.kostrows-202208111815.group-b.devcluster.openshift.com |
+| DNS Names | - api-int.kostrows-202208291521.group-b.devcluster.openshift.com |
 | IP Addresses |  |
 
 

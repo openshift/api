@@ -1,0 +1,46 @@
+digraph "Local Certificate" {
+  // Node definitions.
+  0 [
+    label="certkeypair/kube-apiserver-load-balancer-signer\n\nsecret/loadbalancer-serving-signer -nopenshift-kube-apiserver-operator\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-10/secrets/localhost-recovery-client-token/ca.crt/ca.crt,file://\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-10/secrets/localhost-recovery-client-token/service-ca.crt/service-ca.crt,file://\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-12/secrets/localhost-recovery-client-token/ca.crt/ca.crt,file://\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-12/secrets/localhost-recovery-client-token/service-ca.crt/service-ca.crt,file://\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-13/secrets/localhost-recovery-client-token/ca.crt/ca.crt,file://\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-13/secrets/localhost-recovery-client-token/service-ca.crt/service-ca.crt,file://\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-14/secrets/localhost-recovery-client-token/ca.crt/ca.crt,file://\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-14/secrets/localhost-recovery-client-token/service-ca.crt/service-ca.crt,file://\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-9/secrets/localhost-recovery-client-token/ca.crt/ca.crt,file://\n    file:///etc/kubernetes/static-pod-resources/kube-apiserver-pod-9/secrets/localhost-recovery-client-token/service-ca.crt/service-ca.crt,file://\n    file:///etc/kubernetes/static-pod-resources/kube-controller-manager-pod-5/secrets/localhost-recovery-client-token/ca.crt/ca.crt,file://\n    file:///etc/kubernetes/static-pod-resources/kube-controller-manager-pod-5/secrets/localhost-recovery-client-token/service-ca.crt/service-ca.crt,file://\n    file:///etc/kubernetes/static-pod-resources/kube-controller-manager-pod-7/secrets/localhost-recovery-client-token/ca.crt/ca.crt,file://\n    file:///etc/kubernetes/static-pod-resources/kube-controller-manager-pod-7/secrets/localhost-recovery-client-token/service-ca.crt/service-ca.crt,file://\n    file:///etc/kubernetes/static-pod-resources/kube-controller-manager-pod-8/secrets/localhost-recovery-client-token/ca.crt/ca.crt,file://\n    file:///etc/kubernetes/static-pod-resources/kube-controller-manager-pod-8/secrets/localhost-recovery-client-token/service-ca.crt/service-ca.crt,file://\n    file:///etc/kubernetes/static-pod-resources/kube-scheduler-pod-5/secrets/localhost-recovery-client-token/ca.crt/ca.crt,file://\n    file:///etc/kubernetes/static-pod-resources/kube-scheduler-pod-5/secrets/localhost-recovery-client-token/service-ca.crt/service-ca.crt,file://\n    file:///etc/kubernetes/static-pod-resources/kube-scheduler-pod-7/secrets/localhost-recovery-client-token/ca.crt/ca.crt,file://\n    file:///etc/kubernetes/static-pod-resources/kube-scheduler-pod-7/secrets/localhost-recovery-client-token/service-ca.crt/service-ca.crt,file://\n"
+    style=filled
+    fillcolor="#c7bfff"
+  ];
+  1 [
+    label="certkeypair/kube-apiserver-service-network-signer\n\nsecret/service-network-serving-signer -nopenshift-kube-apiserver-operator\n"
+    style=filled
+    fillcolor="#c7bfff"
+  ];
+  3 [
+    label="certkeypair/kube-apiserver-localhost-signer\n\nsecret/localhost-serving-signer -nopenshift-kube-apiserver-operator\n    file:///etc/kubernetes/static-pod-resources/kube-controller-manager-pod-4/secrets/localhost-recovery-client-token/ca.crt/ca.crt,file://\n"
+    style=filled
+    fillcolor="#c7bfff"
+  ];
+  5 [
+    label="certkeypair/ingress-operator@1661780067::1\n\nsecret/router-ca -nopenshift-ingress-operator\n"
+    style=filled
+    fillcolor="#c7bfff"
+  ];
+  6 [
+    label="certkeypair/*.apps.kostrows-202208291521.group-b.devcluster.openshift.com::5596896335820314549\n\nsecret/router-certs-default -nopenshift-ingress\n"
+    style=filled
+    fillcolor="#bdebfd"
+  ];
+  7 [
+    label="certkeypair/kube-apiserver-recovery-signer\n\nsecret/localhost-recovery-serving-signer -nopenshift-kube-apiserver-operator\n"
+    style=filled
+    fillcolor="#c7bfff"
+  ];
+  11 [
+    label="cabundle/service-account-token-ca.crt\n\nconfigmaps/serviceaccount-ca -nopenshift-kube-controller-manager\n    configmaps/serviceaccount-ca-4 -nopenshift-kube-controller-manager\n    configmaps/serviceaccount-ca-5 -nopenshift-kube-controller-manager\n    configmaps/serviceaccount-ca-6 -nopenshift-kube-controller-manager\n    configmaps/serviceaccount-ca-7 -nopenshift-kube-controller-manager\n    configmaps/serviceaccount-ca-8 -nopenshift-kube-controller-manager\n    configmaps/serviceaccount-ca -nopenshift-kube-scheduler\n    configmaps/serviceaccount-ca-4 -nopenshift-kube-scheduler\n    configmaps/serviceaccount-ca-5 -nopenshift-kube-scheduler\n    configmaps/serviceaccount-ca-6 -nopenshift-kube-scheduler\n    configmaps/serviceaccount-ca-7 -nopenshift-kube-scheduler\n    file:///etc/kubernetes/static-pod-resources/kube-controller-manager-pod-4/configmaps/serviceaccount-ca/ca-bundle.crt/ca-bundle.crt\n    file:///etc/kubernetes/static-pod-resources/kube-controller-manager-pod-5/configmaps/serviceaccount-ca/ca-bundle.crt/ca-bundle.crt\n    file:///etc/kubernetes/static-pod-resources/kube-controller-manager-pod-7/configmaps/serviceaccount-ca/ca-bundle.crt/ca-bundle.crt\n    file:///etc/kubernetes/static-pod-resources/kube-controller-manager-pod-8/configmaps/serviceaccount-ca/ca-bundle.crt/ca-bundle.crt\n    file:///etc/kubernetes/static-pod-resources/kube-scheduler-pod-5/configmaps/serviceaccount-ca/ca-bundle.crt/ca-bundle.crt\n    file:///etc/kubernetes/static-pod-resources/kube-scheduler-pod-7/configmaps/serviceaccount-ca/ca-bundle.crt/ca-bundle.crt\n"
+    style=filled
+    fillcolor="#fda172"
+  ];
+
+  // Edge definitions.
+  0 -> 11;
+  1 -> 11;
+  3 -> 11;
+  5 -> 11;
+  6 -> 11;
+  7 -> 11;
+}

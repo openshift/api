@@ -1,6 +1,6 @@
 digraph "Local Certificate" {
   // Node definitions.
-  5 [
+  9 [
     label="certkeypair/Certum EC-384 CA\n\n\n"
     style=filled
     fillcolor=white
@@ -12,5 +12,5 @@ digraph "Local Certificate" {
   ];
 
   // Edge definitions.
-  5 -> 16;
+  9 -> 16;
 }

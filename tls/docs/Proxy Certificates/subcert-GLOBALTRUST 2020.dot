@@ -1,6 +1,6 @@
 digraph "Local Certificate" {
   // Node definitions.
-  15 [
+  4 [
     label="certkeypair/GLOBALTRUST 2020\n\n\n"
     style=filled
     fillcolor=white
@@ -12,5 +12,5 @@ digraph "Local Certificate" {
   ];
 
   // Edge definitions.
-  15 -> 16;
+  4 -> 16;
 }

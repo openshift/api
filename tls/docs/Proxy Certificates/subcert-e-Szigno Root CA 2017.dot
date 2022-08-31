@@ -1,6 +1,6 @@
 digraph "Local Certificate" {
   // Node definitions.
-  4 [
+  14 [
     label="certkeypair/e-Szigno Root CA 2017\n\n\n"
     style=filled
     fillcolor=white
@@ -12,5 +12,5 @@ digraph "Local Certificate" {
   ];
 
   // Edge definitions.
-  4 -> 16;
+  14 -> 16;
 }

@@ -1,6 +1,6 @@
 digraph "Local Certificate" {
   // Node definitions.
-  6 [
+  12 [
     label="certkeypair/Microsoft RSA Root Certificate Authority 2017\n\n\n"
     style=filled
     fillcolor=white
@@ -12,5 +12,5 @@ digraph "Local Certificate" {
   ];
 
   // Edge definitions.
-  6 -> 16;
+  12 -> 16;
 }

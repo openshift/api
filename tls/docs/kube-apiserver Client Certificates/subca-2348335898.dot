@@ -1,0 +1,28 @@
+digraph "Local Certificate" {
+  // Node definitions.
+  7 [
+    label="certkeypair/kube-controller-manager-csr-signer-signer\n\nsecret/csr-signer-signer -nopenshift-kube-controller-manager-operator\n"
+    style=filled
+    fillcolor="#c7bfff"
+  ];
+  8 [
+    label="certkeypair/kubelet-signer\n\n\n"
+    style=filled
+    fillcolor=white
+  ];
+  9 [
+    label="certkeypair/kube-csr-signer_@1661779985\n\n\n"
+    style=filled
+    fillcolor=white
+  ];
+  24 [
+    label="cabundle/kube-csr-signer_@1661779985|kubelet-signer|openshift-kube-controller-manager-operator_csr-signer-signer@1661848428\n\nconfigmaps/kubelet-serving-ca-11 -nopenshift-kube-apiserver\n"
+    style=filled
+    fillcolor="#fda172"
+  ];
+
+  // Edge definitions.
+  7 -> 24;
+  8 -> 24;
+  9 -> 24;
+}

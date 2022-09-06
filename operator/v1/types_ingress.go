@@ -391,9 +391,9 @@ type LoadBalancerStrategy struct {
 	// Valid values are: Managed and Unmanaged.
 	//
 	// +kubebuilder:default:="Managed"
-	// +kubebuilder:validation:Optional
-	// +optional
-	DNSManagementPolicy LoadBalancerDNSManagementPolicy `json:"dnsManagementPolicy"`
+	// +kubebuilder:validation:Required
+	// +default="Managed"
+	DNSManagementPolicy LoadBalancerDNSManagementPolicy `json:"dnsManagementPolicy,omitempty"`
 }
 
 // LoadBalancerDNSManagementPolicy is a policy for configuring how

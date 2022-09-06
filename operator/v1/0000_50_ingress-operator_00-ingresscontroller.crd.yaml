@@ -327,6 +327,7 @@ spec:
                         - External
                         type: string
                     required:
+                    - dnsManagementPolicy
                     - scope
                     type: object
                   nodePort:
@@ -1612,6 +1613,7 @@ spec:
                         - External
                         type: string
                     required:
+                    - dnsManagementPolicy
                     - scope
                     type: object
                   nodePort:

@@ -225,7 +225,7 @@ type UpdateHistory struct {
 type ClusterID string
 
 // ClusterVersionCapability enumerates optional, core cluster components.
-// +kubebuilder:validation:Enum=openshift-samples;baremetal;marketplace;Console;Insights;Storage;CSISnapshot
+// +kubebuilder:validation:Enum=openshift-samples;baremetal;marketplace;Console;Insights;Storage;CSISnapshot;ImageRegistry
 type ClusterVersionCapability string
 
 const (
@@ -268,6 +268,10 @@ const (
 	// VolumeSnapshot CRD objects and manages the creation and deletion
 	// lifecycle of volume snapshots
 	ClusterVersionCapabilityCSISnapshot ClusterVersionCapability = "CSISnapshot"
+
+	// ClusterVersionCapabilityImageRegistry manages the image registry which
+	// allows to distribute Docker images
+	ClusterVersionCapabilityImageRegistry ClusterVersionCapability = "ImageRegistry"
 )
 
 // KnownClusterVersionCapabilities includes all known optional, core cluster components.
@@ -279,6 +283,7 @@ var KnownClusterVersionCapabilities = []ClusterVersionCapability{
 	ClusterVersionCapabilityStorage,
 	ClusterVersionCapabilityOpenShiftSamples,
 	ClusterVersionCapabilityCSISnapshot,
+	ClusterVersionCapabilityImageRegistry,
 }
 
 // ClusterVersionCapabilitySet defines sets of cluster version capabilities.
@@ -333,6 +338,7 @@ var ClusterVersionCapabilitySets = map[ClusterVersionCapabilitySet][]ClusterVers
 		ClusterVersionCapabilityStorage,
 		ClusterVersionCapabilityOpenShiftSamples,
 		ClusterVersionCapabilityCSISnapshot,
+		ClusterVersionCapabilityImageRegistry,
 	},
 }
 

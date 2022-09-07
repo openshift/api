@@ -9253,17 +9253,11 @@
         "region",
         "zone",
         "server",
-        "topology",
-        "controlPlane"
+        "topology"
       ],
       "properties": {
-        "controlPlane": {
-          "description": "ControlPlane determines if this failure domain is suitable for use by control plane machines. There is three valid options: Allowed and Disallowed.",
-          "type": "string",
-          "default": ""
-        },
         "name": {
-          "description": "name defines the name of the VSpherePlatformFailureDomainSpec This name is arbitrary but will be used in VSpherePlatformDeploymentZone for association.",
+          "description": "name defines the arbitrary but unique name of a failure domain.",
           "type": "string",
           "default": ""
         },
@@ -9294,12 +9288,12 @@
       "type": "object",
       "properties": {
         "external": {
-          "description": "external represents the VSpherePlatformNodeNetworkingSpec of the node that is externally routable.",
+          "description": "external represents the network configuration of the node that is externally routable.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.VSpherePlatformNodeNetworkingSpec"
         },
         "internal": {
-          "description": "internal represents the VSpherePlatformNodeNetworkingSpec of the node that is routable only within the cluster.",
+          "description": "internal represents the network configuration of the node that is routable only within the cluster.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.VSpherePlatformNodeNetworkingSpec"
         }
@@ -9318,7 +9312,7 @@
           }
         },
         "network": {
-          "description": "network VirtualMachine's VM Network names that will be used to when searching for status.addresses fields. Note that if internal.networkSubnetCIDR and external.networkSubnetCIDR are not set, then the vNIC associated to this network must only have a single IP address assigned to it. The available networks (port groups) can be listed using govc ls 'network/*'",
+          "description": "network VirtualMachine's VM Network names that will be used to when searching for status.addresses fields. Note that if internal.networkSubnetCIDR and external.networkSubnetCIDR are not set, then the vNIC associated to this network must only have a single IP address assigned to it. The available networks (port groups) can be listed using `govc ls 'network/*'`",
           "type": "string"
         },
         "networkSubnetCidr": {
@@ -9336,7 +9330,7 @@
       "type": "object",
       "properties": {
         "failureDomains": {
-          "description": "failureDomains holds the VSpherePlatformFailureDomainSpec which contains the definition of region, zone and the vCenter topology. If this is omitted failure domains (regions and zones) will not be used.",
+          "description": "failureDomains contains the definition of region, zone and the vCenter topology. If this is omitted failure domains (regions and zones) will not be used.",
           "type": "array",
           "items": {
             "default": {},
@@ -9344,7 +9338,7 @@
           }
         },
         "nodeNetworking": {
-          "description": "nodeNetworking holds the VSpherePlatformNodeNetworking which contains the definition of internal and external network constraints for assigning the node's networking. If this field is omitted, networking defaults to the legacy address selection behavior which is to only support a single address and return the first one found.",
+          "description": "nodeNetworking contains the definition of internal and external network constraints for assigning the node's networking. If this field is omitted, networking defaults to the legacy address selection behavior which is to only support a single address and return the first one found.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.VSpherePlatformNodeNetworking"
         },
@@ -9400,12 +9394,16 @@
       "description": "VSpherePlatformTopology holds the required and optional vCenter objects - datacenter, computeCluster, networks, datastore and resourcePool - to provision virtual machines.",
       "type": "object",
       "required": [
-        "datacenter"
+        "datacenter",
+        "computeCluster",
+        "networks",
+        "datastore"
       ],
       "properties": {
         "computeCluster": {
           "description": "computeCluster is the vCenter cluster in which virtual machine will be located. This value is required to be a path.",
-          "type": "string"
+          "type": "string",
+          "default": ""
         },
         "datacenter": {
           "description": "datacenter is the vCenter datacenter in which virtual machines will be located.",
@@ -9414,14 +9412,15 @@
         },
         "datastore": {
           "description": "datastore is the name or inventory path of the datastore in which the virtual machine is created/located.",
-          "type": "string"
+          "type": "string",
+          "default": ""
         },
         "folder": {
           "description": "folder is the name or inventory path of the folder in which the virtual machine is created/located.",
           "type": "string"
         },
         "networks": {
-          "description": "networks is the list of port group network names within this failure domain. Currently, we only support a single interface per RHCOS virtual machine. The available networks (port groups) can be listed using govc ls 'network/*'",
+          "description": "networks is the list of port group network names within this failure domain. Currently, we only support a single interface per RHCOS virtual machine. The available networks (port groups) can be listed using `govc ls 'network/*'`",
           "type": "array",
           "items": {
             "type": "string",

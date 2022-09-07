@@ -603,9 +603,8 @@ type OvirtPlatformStatus struct {
 // VSpherePlatformFailureDomainSpec holds the region and zone failure domain and
 // the vCenter topology of that failure domain.
 type VSpherePlatformFailureDomainSpec struct {
-	// name defines the name of the VSpherePlatformFailureDomainSpec
-	// This name is arbitrary but will be used
-	// in VSpherePlatformDeploymentZone for association.
+	// name defines the arbitrary but unique name
+	// of a failure domain.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=256
@@ -631,16 +630,13 @@ type VSpherePlatformFailureDomainSpec struct {
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
+	// ---
+	// + Validation is applied via a patch, we validate the format as either ipv4, ipv6 or hostname
 	Server string `json:"server"`
 
 	// Topology describes a given failure domain using vSphere constructs
 	// +kubebuilder:validation:Required
 	Topology VSpherePlatformTopology `json:"topology"`
-
-	// ControlPlane determines if this failure domain is suitable for use by control plane machines.
-	// There is three valid options: Allowed and Disallowed.
-	// +kubebuilder:validation:Required
-	ControlPlane VSpherePlatformDeploymentSuitable `json:"controlPlane"`
 }
 
 // VSpherePlatformTopology holds the required and optional vCenter objects - datacenter,
@@ -650,6 +646,7 @@ type VSpherePlatformTopology struct {
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=80
+	// +kubebuilder:validation:Pattern=`^.*?`
 	Datacenter string `json:"datacenter"`
 
 	// computeCluster is the vCenter cluster in which virtual machine will be located.
@@ -657,23 +654,25 @@ type VSpherePlatformTopology struct {
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=2048
-	ComputeCluster string `json:"computeCluster,omitempty"`
+	// +kubebuilder:validation:Pattern=`^/.*?/host/.*?`
+	ComputeCluster string `json:"computeCluster"`
 
 	// networks is the list of port group network names within this failure domain.
 	// Currently, we only support a single interface per RHCOS virtual machine.
 	// The available networks (port groups) can be listed using
-	// govc ls 'network/*'
+	// `govc ls 'network/*'`
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MaxItems=1
 	// +kubebuilder:validation:MinItems=1
-	Networks []string `json:"networks,omitempty"`
+	Networks []string `json:"networks"`
 
 	// datastore is the name or inventory path of the datastore in which the
 	// virtual machine is created/located.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=2048
-	Datastore string `json:"datastore,omitempty"`
+	// +kubebuilder:validation:Pattern=`^/.*?/datastore/.*?`
+	Datastore string `json:"datastore"`
 
 	// resourcePool is the absolute path of the resource pool where virtual machines will be
 	// created. The absolute path is of the form /<datacenter>/host/<cluster>/Resources/<resourcepool>.
@@ -687,6 +686,7 @@ type VSpherePlatformTopology struct {
 	// virtual machine is created/located.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=2048
+	// +kubebuilder:validation:Pattern=`^/.*?/vm/.*?`
 	// +optional
 	Folder string `json:"folder,omitempty"`
 }
@@ -698,6 +698,8 @@ type VSpherePlatformVCenterSpec struct {
 	// server is the fully-qualified domain name or the IP address of the vCenter server.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MaxLength=255
+	// ---
+	// + Validation is applied via a patch, we validate the format as either ipv4, ipv6 or hostname
 	Server string `json:"server"`
 
 	// port is the TCP port that will be used to communicate to
@@ -720,20 +722,6 @@ type VSpherePlatformVCenterSpec struct {
 	Datacenters []string `json:"datacenters"`
 }
 
-// VSpherePlatformDeploymentSuitable
-// +kubebuilder:validation:Enum=Allowed;Disallowed
-type VSpherePlatformDeploymentSuitable string
-
-const (
-	// Allowed indicates that the Deployment Zone is suitable for
-	// control plane nodes.
-	Allowed VSpherePlatformDeploymentSuitable = "Allowed"
-
-	// Disallowed indicates that the Deployment Zone is not suitable for
-	// control plane nodes.
-	Disallowed VSpherePlatformDeploymentSuitable = "Disallowed"
-)
-
 // VSpherePlatformNodeNetworkingSpec holds the network CIDR(s) and port group name for
 // including and excluding IP ranges in the cloud provider.
 // This would be used for example when multiple network adapters are attached to
@@ -742,6 +730,8 @@ const (
 type VSpherePlatformNodeNetworkingSpec struct {
 	// networkSubnetCidr IP address on VirtualMachine's network interfaces included in the fields' CIDRs
 	// that will be used in respective status.addresses fields.
+	// ---
+	// + Validation is applied via a patch, we validate the format as cidr
 	// +optional
 	NetworkSubnetCIDR []string `json:"networkSubnetCidr,omitempty"`
 
@@ -750,22 +740,24 @@ type VSpherePlatformNodeNetworkingSpec struct {
 	// external.networkSubnetCIDR are not set, then the vNIC associated to this network must
 	// only have a single IP address assigned to it.
 	// The available networks (port groups) can be listed using
-	// govc ls 'network/*'
+	// `govc ls 'network/*'`
 	// +optional
 	Network string `json:"network,omitempty"`
 
 	// excludeNetworkSubnetCidr IP addresses in subnet ranges will be excluded when selecting
 	// the IP address from the VirtualMachine's VM for use in the status.addresses fields.
+	// ---
+	// + Validation is applied via a patch, we validate the format as cidr
 	// +optional
 	ExcludeNetworkSubnetCIDR []string `json:"excludeNetworkSubnetCidr,omitempty"`
 }
 
 // VSpherePlatformNodeNetworking holds the external and internal node networking spec.
 type VSpherePlatformNodeNetworking struct {
-	// external represents the VSpherePlatformNodeNetworkingSpec of the node that is externally routable.
+	// external represents the network configuration of the node that is externally routable.
 	// +optional
 	External VSpherePlatformNodeNetworkingSpec `json:"external"`
-	// internal represents the VSpherePlatformNodeNetworkingSpec of the node that is routable only within the cluster.
+	// internal represents the network configuration of the node that is routable only within the cluster.
 	// +optional
 	Internal VSpherePlatformNodeNetworkingSpec `json:"internal"`
 }
@@ -776,19 +768,20 @@ type VSpherePlatformNodeNetworking struct {
 type VSpherePlatformSpec struct {
 	// vcenters holds the connection details for services to communicate with vCenter.
 	// Currently, only a single vCenter is supported.
+	// ---
+	// + If VCenters is not defined use the existing cloud-config configmap defined
+	// in openshift-config.
 	// +kubebuilder:validation:MaxItems=1
 	// +kubebuilder:validation:MinItems=0
 	// +optional
 	VCenters []VSpherePlatformVCenterSpec `json:"vcenters,omitempty"`
 
-	// failureDomains holds the VSpherePlatformFailureDomainSpec which contains
-	// the definition of region, zone and the vCenter topology.
+	// failureDomains contains the definition of region, zone and the vCenter topology.
 	// If this is omitted failure domains (regions and zones) will not be used.
 	// +optional
 	FailureDomains []VSpherePlatformFailureDomainSpec `json:"failureDomains,omitempty"`
 
-	// nodeNetworking holds the VSpherePlatformNodeNetworking which contains
-	// the definition of internal and external network constraints for
+	// nodeNetworking contains the definition of internal and external network constraints for
 	// assigning the node's networking.
 	// If this field is omitted, networking defaults to the legacy
 	// address selection behavior which is to only support a single address and

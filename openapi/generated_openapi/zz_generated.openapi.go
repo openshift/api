@@ -16886,7 +16886,7 @@ func schema_openshift_api_config_v1_VSpherePlatformFailureDomainSpec(ref common.
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name defines the name of the VSpherePlatformFailureDomainSpec This name is arbitrary but will be used in VSpherePlatformDeploymentZone for association.",
+							Description: "name defines the arbitrary but unique name of a failure domain.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -16923,16 +16923,8 @@ func schema_openshift_api_config_v1_VSpherePlatformFailureDomainSpec(ref common.
 							Ref:         ref("github.com/openshift/api/config/v1.VSpherePlatformTopology"),
 						},
 					},
-					"controlPlane": {
-						SchemaProps: spec.SchemaProps{
-							Description: "ControlPlane determines if this failure domain is suitable for use by control plane machines. There is three valid options: Allowed and Disallowed.",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 				},
-				Required: []string{"name", "region", "zone", "server", "topology", "controlPlane"},
+				Required: []string{"name", "region", "zone", "server", "topology"},
 			},
 		},
 		Dependencies: []string{
@@ -16949,14 +16941,14 @@ func schema_openshift_api_config_v1_VSpherePlatformNodeNetworking(ref common.Ref
 				Properties: map[string]spec.Schema{
 					"external": {
 						SchemaProps: spec.SchemaProps{
-							Description: "external represents the VSpherePlatformNodeNetworkingSpec of the node that is externally routable.",
+							Description: "external represents the network configuration of the node that is externally routable.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.VSpherePlatformNodeNetworkingSpec"),
 						},
 					},
 					"internal": {
 						SchemaProps: spec.SchemaProps{
-							Description: "internal represents the VSpherePlatformNodeNetworkingSpec of the node that is routable only within the cluster.",
+							Description: "internal represents the network configuration of the node that is routable only within the cluster.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.VSpherePlatformNodeNetworkingSpec"),
 						},
@@ -16993,7 +16985,7 @@ func schema_openshift_api_config_v1_VSpherePlatformNodeNetworkingSpec(ref common
 					},
 					"network": {
 						SchemaProps: spec.SchemaProps{
-							Description: "network VirtualMachine's VM Network names that will be used to when searching for status.addresses fields. Note that if internal.networkSubnetCIDR and external.networkSubnetCIDR are not set, then the vNIC associated to this network must only have a single IP address assigned to it. The available networks (port groups) can be listed using govc ls 'network/*'",
+							Description: "network VirtualMachine's VM Network names that will be used to when searching for status.addresses fields. Note that if internal.networkSubnetCIDR and external.networkSubnetCIDR are not set, then the vNIC associated to this network must only have a single IP address assigned to it. The available networks (port groups) can be listed using `govc ls 'network/*'`",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -17042,7 +17034,7 @@ func schema_openshift_api_config_v1_VSpherePlatformSpec(ref common.ReferenceCall
 					},
 					"failureDomains": {
 						SchemaProps: spec.SchemaProps{
-							Description: "failureDomains holds the VSpherePlatformFailureDomainSpec which contains the definition of region, zone and the vCenter topology. If this is omitted failure domains (regions and zones) will not be used.",
+							Description: "failureDomains contains the definition of region, zone and the vCenter topology. If this is omitted failure domains (regions and zones) will not be used.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -17056,7 +17048,7 @@ func schema_openshift_api_config_v1_VSpherePlatformSpec(ref common.ReferenceCall
 					},
 					"nodeNetworking": {
 						SchemaProps: spec.SchemaProps{
-							Description: "nodeNetworking holds the VSpherePlatformNodeNetworking which contains the definition of internal and external network constraints for assigning the node's networking. If this field is omitted, networking defaults to the legacy address selection behavior which is to only support a single address and return the first one found.",
+							Description: "nodeNetworking contains the definition of internal and external network constraints for assigning the node's networking. If this field is omitted, networking defaults to the legacy address selection behavior which is to only support a single address and return the first one found.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.VSpherePlatformNodeNetworking"),
 						},
@@ -17152,13 +17144,14 @@ func schema_openshift_api_config_v1_VSpherePlatformTopology(ref common.Reference
 					"computeCluster": {
 						SchemaProps: spec.SchemaProps{
 							Description: "computeCluster is the vCenter cluster in which virtual machine will be located. This value is required to be a path.",
+							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"networks": {
 						SchemaProps: spec.SchemaProps{
-							Description: "networks is the list of port group network names within this failure domain. Currently, we only support a single interface per RHCOS virtual machine. The available networks (port groups) can be listed using govc ls 'network/*'",
+							Description: "networks is the list of port group network names within this failure domain. Currently, we only support a single interface per RHCOS virtual machine. The available networks (port groups) can be listed using `govc ls 'network/*'`",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -17174,6 +17167,7 @@ func schema_openshift_api_config_v1_VSpherePlatformTopology(ref common.Reference
 					"datastore": {
 						SchemaProps: spec.SchemaProps{
 							Description: "datastore is the name or inventory path of the datastore in which the virtual machine is created/located.",
+							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -17193,7 +17187,7 @@ func schema_openshift_api_config_v1_VSpherePlatformTopology(ref common.Reference
 						},
 					},
 				},
-				Required: []string{"datacenter"},
+				Required: []string{"datacenter", "computeCluster", "networks", "datastore"},
 			},
 		},
 	}

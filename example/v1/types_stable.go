@@ -40,7 +40,28 @@ type StableConfigTypeSpec struct {
 	//
 	// +optional
 	StableField string `json:"stableField"`
+
+	// evolvingUnion demonstrates how to phase in new values into discriminated union
+	EvolvingUnion EvolvingUnion `json:"evolvingUnion"`
 }
+
+type EvolvingUnion struct {
+	// type is the discriminator. It has different values for Default and for TechPreviewNoUpgrade
+	Type EvolvingDiscriminator `json:"type"`
+}
+
+// EvolvingDiscriminator defines the audit policy profile type.
+// +openshift:validation:FeatureSetAwareEnum:featureSet=Default,enum="";StableValue
+// +openshift:validation:FeatureSetAwareEnum:featureSet=TechPreviewNoUpgrade,enum="";StableValue;TechPreviewOnlyValue
+type EvolvingDiscriminator string
+
+const (
+	// "StableValue" is always present.
+	StableValue EvolvingDiscriminator = "StableValue"
+
+	// "TechPreviewOnlyValue" should only be allowed when TechPreviewNoUpgrade is set in the cluster
+	TechPreviewOnlyValue EvolvingDiscriminator = "TechPreviewOnlyValue"
+)
 
 // StableConfigTypeStatus defines the observed status of the StableConfigType.
 type StableConfigTypeStatus struct {

@@ -110,6 +110,7 @@ spec:
                           type: object
                           additionalProperties:
                             type: string
+                      x-kubernetes-map-type: atomic
                     namespaces:
                       description: namespaces is an array of namespace names in which the dashboard link should appear.
                       type: array

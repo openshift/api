@@ -31,15 +31,6 @@ spec:
               type: string
             metadata:
               type: object
-            spec:
-              description: spec is the specification of the desired behavior of the NotStableConfigType.
-              type: object
-              required:
-                - newField
-              properties:
-                newField:
-                  description: newField is a field that is tech preview, but because the entire type is gated, there is no marker on the field.
-                  type: string
             status:
               description: status is the most recently observed status of the NotStableConfigType.
               type: object

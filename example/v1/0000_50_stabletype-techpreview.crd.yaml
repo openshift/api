@@ -32,8 +32,6 @@ spec:
             metadata:
               type: object
             spec:
-              description: spec is the specification of the desired behavior of the StableConfigType.
-              type: object
               properties:
                 coolNewField:
                   description: coolNewField is a field that is for tech preview only.  On normal clusters this shouldn't be present

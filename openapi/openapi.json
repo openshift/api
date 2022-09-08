@@ -10292,6 +10292,188 @@
         }
       }
     },
+    "com.github.openshift.api.example.v1.StableConfigType": {
+      "description": "StableConfigType is a stable config type that may include TechPreviewNoUpgrade fields.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec is the specification of the desired behavior of the StableConfigType.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.example.v1.StableConfigTypeSpec"
+        },
+        "status": {
+          "description": "status is the most recently observed status of the StableConfigType.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.example.v1.StableConfigTypeStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.example.v1.StableConfigTypeList": {
+      "description": "StableConfigTypeList contains a list of StableConfigTypes.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+      "type": "object",
+      "required": [
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.example.v1.StableConfigType"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.example.v1.StableConfigTypeSpec": {
+      "description": "StableConfigTypeSpec is the desired state",
+      "type": "object",
+      "properties": {
+        "coolNewField": {
+          "description": "coolNewField is a field that is for tech preview only.  On normal clusters this shouldn't be present",
+          "type": "string",
+          "default": ""
+        },
+        "stableField": {
+          "description": "stableField is a field that is present on default clusters and on tech preview clusters\n\nIf empty, the platform will choose a good default, which may change over time without notice.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.example.v1.StableConfigTypeStatus": {
+      "description": "StableConfigTypeStatus defines the observed status of the StableConfigType.",
+      "type": "object",
+      "properties": {
+        "conditions": {
+          "description": "Represents the observations of a foo's current state. Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\"",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "type",
+          "x-kubernetes-patch-strategy": "merge"
+        }
+      }
+    },
+    "com.github.openshift.api.example.v1alpha1.NotStableConfigType": {
+      "description": "NotStableConfigType is a stable config type that is TechPreviewNoUpgrade only.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec is the specification of the desired behavior of the NotStableConfigType.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.example.v1alpha1.NotStableConfigTypeSpec"
+        },
+        "status": {
+          "description": "status is the most recently observed status of the NotStableConfigType.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.example.v1alpha1.NotStableConfigTypeStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.example.v1alpha1.NotStableConfigTypeList": {
+      "description": "NotStableConfigTypeList contains a list of NotStableConfigTypes.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.example.v1alpha1.NotStableConfigType"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.example.v1alpha1.NotStableConfigTypeSpec": {
+      "description": "NotStableConfigTypeSpec is the desired state",
+      "type": "object",
+      "required": [
+        "newField"
+      ],
+      "properties": {
+        "newField": {
+          "description": "newField is a field that is tech preview, but because the entire type is gated, there is no marker on the field.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.example.v1alpha1.NotStableConfigTypeStatus": {
+      "description": "NotStableConfigTypeStatus defines the observed status of the NotStableConfigType.",
+      "type": "object",
+      "properties": {
+        "conditions": {
+          "description": "Represents the observations of a foo's current state. Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\"",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "type",
+          "x-kubernetes-patch-strategy": "merge"
+        }
+      }
+    },
     "com.github.openshift.api.helm.v1beta1.ConnectionConfig": {
       "type": "object",
       "required": [

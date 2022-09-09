@@ -115,6 +115,11 @@ update-swagger-docs:
 #
 #####################
 
+deps:
+	go mod tidy
+	go mod vendor
+	go mod verify
+
 verify-with-container:
 	$(RUNTIME) run -ti --rm -v $(PWD):/go/src/github.com/openshift/api:z -w /go/src/github.com/openshift/api $(RUNTIME_IMAGE_NAME) make verify
 

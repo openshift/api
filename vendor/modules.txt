@@ -75,16 +75,6 @@ github.com/modern-go/concurrent
 # github.com/modern-go/reflect2 v1.0.2
 ## explicit; go 1.12
 github.com/modern-go/reflect2
-# github.com/openshift/build-machinery-go v0.0.0-20220913142420-e25cf57ea46d
-## explicit; go 1.13
-github.com/openshift/build-machinery-go
-github.com/openshift/build-machinery-go/make
-github.com/openshift/build-machinery-go/make/lib
-github.com/openshift/build-machinery-go/make/targets
-github.com/openshift/build-machinery-go/make/targets/golang
-github.com/openshift/build-machinery-go/make/targets/openshift
-github.com/openshift/build-machinery-go/make/targets/openshift/operator
-github.com/openshift/build-machinery-go/scripts
 # github.com/spf13/pflag v1.0.5
 ## explicit; go 1.12
 github.com/spf13/pflag

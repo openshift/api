@@ -773,11 +773,13 @@ type VSpherePlatformSpec struct {
 	// in openshift-config.
 	// +kubebuilder:validation:MaxItems=1
 	// +kubebuilder:validation:MinItems=0
+	// +openshift:enable:FeatureSets=TechPreviewNoUpgrade
 	// +optional
 	VCenters []VSpherePlatformVCenterSpec `json:"vcenters,omitempty"`
 
 	// failureDomains contains the definition of region, zone and the vCenter topology.
 	// If this is omitted failure domains (regions and zones) will not be used.
+	// +openshift:enable:FeatureSets=TechPreviewNoUpgrade
 	// +optional
 	FailureDomains []VSpherePlatformFailureDomainSpec `json:"failureDomains,omitempty"`
 
@@ -786,6 +788,7 @@ type VSpherePlatformSpec struct {
 	// If this field is omitted, networking defaults to the legacy
 	// address selection behavior which is to only support a single address and
 	// return the first one found.
+	// +openshift:enable:FeatureSets=TechPreviewNoUpgrade
 	// +optional
 	NodeNetworking VSpherePlatformNodeNetworking `json:"nodeNetworking,omitempty"`
 }

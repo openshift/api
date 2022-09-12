@@ -17,7 +17,7 @@ GO_BUILD_PACKAGES :=$(GO_PACKAGES)
 GO_BUILD_PACKAGES_EXPANDED :=$(GO_BUILD_PACKAGES)
 # LDFLAGS are not needed for dummy builds (saving time on calling git commands)
 GO_LD_FLAGS:=
-CONTROLLER_GEN_VERSION :=v0.9.2
+CONTROLLER_GEN_VERSION :=v0.9.2+openshift-0.1
 
 # $1 - target name
 # $2 - apis
@@ -29,6 +29,11 @@ $(call add-crd-gen,config,./config/v1,./config/v1,./config/v1)
 $(call add-crd-gen,helm,./helm/v1beta1,./helm/v1beta1,./helm/v1beta1)
 $(call add-crd-gen,console,./console/v1,./console/v1,./console/v1)
 $(call add-crd-gen,console-alpha,./console/v1alpha1,./console/v1alpha1,./console/v1alpha1)
+$(call add-crd-gen,example,./example/v1,./example/v1,./example/v1)
+$(call add-crd-gen-for-featureset,example,./example/v1,./example/v1,./example/v1,TechPreviewNoUpgrade)
+$(call add-crd-gen-for-featureset,example,./example/v1,./example/v1,./example/v1,Default)
+$(call add-crd-gen,example-alpha,./example/v1alpha1,./example/v1alpha1,./example/v1alpha1)
+$(call add-crd-gen-for-featureset,example-alpha,./example/v1alpha1,./example/v1alpha1,./example/v1alpha1,TechPreviewNoUpgrade)
 $(call add-crd-gen,imageregistry,./imageregistry/v1,./imageregistry/v1,./imageregistry/v1)
 $(call add-crd-gen,operator,./operator/v1,./operator/v1,./operator/v1)
 $(call add-crd-gen,operator-alpha,./operator/v1alpha1,./operator/v1alpha1,./operator/v1alpha1)
@@ -61,7 +66,7 @@ verify-scripts:
 	bash -x hack/verify-compatibility.sh
 
 .PHONY: verify-scripts
-verify: verify-scripts verify-codegen-crds
+verify: verify-scripts verify-codegen-crds verify-codegen-TechPreviewNoUpgrade-crds verify-codegen-Default-crds
 
 ################################################################################################
 #
@@ -73,7 +78,7 @@ verify: verify-scripts verify-codegen-crds
 ################################################################################################
 
 .PHONY: update-scripts
-update-scripts: update-compatibility update-openapi update-deepcopy update-protobuf update-swagger-docs
+update-scripts: update-compatibility update-openapi update-deepcopy update-protobuf update-swagger-docs update-codegen-TechPreviewNoUpgrade-crds update-codegen-Default-crds
 
 .PHONY: update-compatibility
 update-compatibility:

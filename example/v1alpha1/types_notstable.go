@@ -1,0 +1,57 @@
+package v1alpha1
+
+import (
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+)
+
+// +genclient
+// +genclient:nonNamespaced
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +openshift:compatibility-gen:level=4
+
+// NotStableConfigType is a stable config type that is TechPreviewNoUpgrade only.
+//
+// Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+type NotStableConfigType struct {
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+
+	// spec is the specification of the desired behavior of the NotStableConfigType.
+	Spec NotStableConfigTypeSpec `json:"spec,omitempty"`
+	// status is the most recently observed status of the NotStableConfigType.
+	Status NotStableConfigTypeStatus `json:"status,omitempty"`
+}
+
+// NotStableConfigTypeSpec is the desired state
+type NotStableConfigTypeSpec struct {
+	// newField is a field that is tech preview, but because the entire type is gated, there is no marker on the field.
+	//
+	// +kubebuilder:validation:Required
+	NewField string `json:"newField"`
+}
+
+// NotStableConfigTypeStatus defines the observed status of the NotStableConfigType.
+type NotStableConfigTypeStatus struct {
+	// Represents the observations of a foo's current state.
+	// Known .status.conditions.type are: "Available", "Progressing", and "Degraded"
+	// +patchMergeKey=type
+	// +patchStrategy=merge
+	// +listType=map
+	// +listMapKey=type
+	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,1,rep,name=conditions"`
+}
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:object:root=true
+// +openshift:compatibility-gen:level=4
+
+// NotStableConfigTypeList contains a list of NotStableConfigTypes.
+//
+// Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+type NotStableConfigTypeList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []NotStableConfigType `json:"items"`
+}

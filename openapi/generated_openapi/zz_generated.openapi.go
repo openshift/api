@@ -388,6 +388,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/console/v1alpha1.ConsolePluginProxyServiceConfig":                   schema_openshift_api_console_v1alpha1_ConsolePluginProxyServiceConfig(ref),
 		"github.com/openshift/api/console/v1alpha1.ConsolePluginService":                              schema_openshift_api_console_v1alpha1_ConsolePluginService(ref),
 		"github.com/openshift/api/console/v1alpha1.ConsolePluginSpec":                                 schema_openshift_api_console_v1alpha1_ConsolePluginSpec(ref),
+		"github.com/openshift/api/example/v1.EvolvingUnion":                                           schema_openshift_api_example_v1_EvolvingUnion(ref),
 		"github.com/openshift/api/example/v1.StableConfigType":                                        schema_openshift_api_example_v1_StableConfigType(ref),
 		"github.com/openshift/api/example/v1.StableConfigTypeList":                                    schema_openshift_api_example_v1_StableConfigTypeList(ref),
 		"github.com/openshift/api/example/v1.StableConfigTypeSpec":                                    schema_openshift_api_example_v1_StableConfigTypeSpec(ref),
@@ -18598,6 +18599,27 @@ func schema_openshift_api_console_v1alpha1_ConsolePluginSpec(ref common.Referenc
 	}
 }
 
+func schema_openshift_api_example_v1_EvolvingUnion(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type is the discriminator. It has different values for Default and for TechPreviewNoUpgrade",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"type"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_example_v1_StableConfigType(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -18719,9 +18741,19 @@ func schema_openshift_api_example_v1_StableConfigTypeSpec(ref common.ReferenceCa
 							Format:      "",
 						},
 					},
+					"evolvingUnion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "evolvingUnion demonstrates how to phase in new values into discriminated union",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/example/v1.EvolvingUnion"),
+						},
+					},
 				},
+				Required: []string{"evolvingUnion"},
 			},
 		},
+		Dependencies: []string{
+			"github.com/openshift/api/example/v1.EvolvingUnion"},
 	}
 }
 

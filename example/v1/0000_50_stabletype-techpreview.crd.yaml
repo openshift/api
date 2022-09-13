@@ -44,11 +44,28 @@ spec:
                 description: coolNewField is a field that is for tech preview only.  On
                   normal clusters this shouldn't be present
                 type: string
+              evolvingUnion:
+                description: evolvingUnion demonstrates how to phase in new values
+                  into discriminated union
+                properties:
+                  type:
+                    description: type is the discriminator. It has different values
+                      for Default and for TechPreviewNoUpgrade
+                    enum:
+                    - ""
+                    - StableValue
+                    - TechPreviewOnlyValue
+                    type: string
+                required:
+                - type
+                type: object
               stableField:
                 description: "stableField is a field that is present on default clusters
                   and on tech preview clusters \n If empty, the platform will choose
                   a good default, which may change over time without notice."
                 type: string
+            required:
+            - evolvingUnion
             type: object
           status:
             description: status is the most recently observed status of the StableConfigType.

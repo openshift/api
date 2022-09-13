@@ -10292,6 +10292,19 @@
         }
       }
     },
+    "com.github.openshift.api.example.v1.EvolvingUnion": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "description": "type is the discriminator. It has different values for Default and for TechPreviewNoUpgrade",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.example.v1.StableConfigType": {
       "description": "StableConfigType is a stable config type that may include TechPreviewNoUpgrade fields.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
@@ -10351,11 +10364,19 @@
     "com.github.openshift.api.example.v1.StableConfigTypeSpec": {
       "description": "StableConfigTypeSpec is the desired state",
       "type": "object",
+      "required": [
+        "evolvingUnion"
+      ],
       "properties": {
         "coolNewField": {
           "description": "coolNewField is a field that is for tech preview only.  On normal clusters this shouldn't be present",
           "type": "string",
           "default": ""
+        },
+        "evolvingUnion": {
+          "description": "evolvingUnion demonstrates how to phase in new values into discriminated union",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.example.v1.EvolvingUnion"
         },
         "stableField": {
           "description": "stableField is a field that is present on default clusters and on tech preview clusters\n\nIf empty, the platform will choose a good default, which may change over time without notice.",

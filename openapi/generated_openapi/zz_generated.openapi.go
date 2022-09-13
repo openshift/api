@@ -711,6 +711,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.AuthenticationList":                                     schema_openshift_api_operator_v1_AuthenticationList(ref),
 		"github.com/openshift/api/operator/v1.AuthenticationSpec":                                     schema_openshift_api_operator_v1_AuthenticationSpec(ref),
 		"github.com/openshift/api/operator/v1.AuthenticationStatus":                                   schema_openshift_api_operator_v1_AuthenticationStatus(ref),
+		"github.com/openshift/api/operator/v1.CSIDriverConfigSpec":                                    schema_openshift_api_operator_v1_CSIDriverConfigSpec(ref),
 		"github.com/openshift/api/operator/v1.CSISnapshotController":                                  schema_openshift_api_operator_v1_CSISnapshotController(ref),
 		"github.com/openshift/api/operator/v1.CSISnapshotControllerList":                              schema_openshift_api_operator_v1_CSISnapshotControllerList(ref),
 		"github.com/openshift/api/operator/v1.CSISnapshotControllerSpec":                              schema_openshift_api_operator_v1_CSISnapshotControllerSpec(ref),
@@ -870,6 +871,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.SyslogLoggingDestinationParameters":                     schema_openshift_api_operator_v1_SyslogLoggingDestinationParameters(ref),
 		"github.com/openshift/api/operator/v1.Upstream":                                               schema_openshift_api_operator_v1_Upstream(ref),
 		"github.com/openshift/api/operator/v1.UpstreamResolvers":                                      schema_openshift_api_operator_v1_UpstreamResolvers(ref),
+		"github.com/openshift/api/operator/v1.VSphereCSIDriverConfigSpec":                             schema_openshift_api_operator_v1_VSphereCSIDriverConfigSpec(ref),
 		"github.com/openshift/api/operator/v1alpha1.DelegatedAuthentication":                          schema_openshift_api_operator_v1alpha1_DelegatedAuthentication(ref),
 		"github.com/openshift/api/operator/v1alpha1.DelegatedAuthorization":                           schema_openshift_api_operator_v1alpha1_DelegatedAuthorization(ref),
 		"github.com/openshift/api/operator/v1alpha1.GenerationHistory":                                schema_openshift_api_operator_v1alpha1_GenerationHistory(ref),
@@ -36317,6 +36319,48 @@ func schema_openshift_api_operator_v1_AuthenticationStatus(ref common.ReferenceC
 	}
 }
 
+func schema_openshift_api_operator_v1_CSIDriverConfigSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CSIDriverConfigSpec defines configuration spec that can be used to optionally configure a specific CSI Driver.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"driverType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "driverType indicates type of CSI driver for which the driverConfig is being applied to.\n\nValid values are:\n\n* vSphere\n\nAllows configuration of vsphere CSI driver topology.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"vSphere": {
+						SchemaProps: spec.SchemaProps{
+							Description: "vsphere is used to configure the vsphere CSI driver.",
+							Ref:         ref("github.com/openshift/api/operator/v1.VSphereCSIDriverConfigSpec"),
+						},
+					},
+				},
+				Required: []string{"driverType"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "driverType",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"vSphere": "VSphere",
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1.VSphereCSIDriverConfigSpec"},
+	}
+}
+
 func schema_openshift_api_operator_v1_CSISnapshotController(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -36956,12 +37000,19 @@ func schema_openshift_api_operator_v1_ClusterCSIDriverSpec(ref common.ReferenceC
 							Format:      "",
 						},
 					},
+					"driverConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "driverConfig can be used to specify platform specific driver configuration. When omitted, this means no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1.CSIDriverConfigSpec"),
+						},
+					},
 				},
 				Required: []string{"managementState"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
+			"github.com/openshift/api/operator/v1.CSIDriverConfigSpec", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -44361,6 +44412,34 @@ func schema_openshift_api_operator_v1_UpstreamResolvers(ref common.ReferenceCall
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/operator/v1.DNSTransportConfig", "github.com/openshift/api/operator/v1.Upstream"},
+	}
+}
+
+func schema_openshift_api_operator_v1_VSphereCSIDriverConfigSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VSphereCSIDriverConfigSpec defines properties that can be configured for vsphere CSI driver.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"topologyCategories": {
+						SchemaProps: spec.SchemaProps{
+							Description: "topologyCategories indicates tag categories with which vcenter resources such as hostcluster or datacenter were tagged with. If cluster Infrastructure object has a topology, values specified in Infrastructure object will be used and modifications to topologyCategories will be rejected.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
 	}
 }
 

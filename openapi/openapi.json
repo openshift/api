@@ -21162,6 +21162,32 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1.CSIDriverConfigSpec": {
+      "description": "CSIDriverConfigSpec defines configuration spec that can be used to optionally configure a specific CSI Driver.",
+      "type": "object",
+      "required": [
+        "driverType"
+      ],
+      "properties": {
+        "driverType": {
+          "description": "driverType indicates type of CSI driver for which the driverConfig is being applied to.\n\nValid values are:\n\n* vSphere\n\nAllows configuration of vsphere CSI driver topology.",
+          "type": "string",
+          "default": ""
+        },
+        "vSphere": {
+          "description": "vsphere is used to configure the vsphere CSI driver.",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.VSphereCSIDriverConfigSpec"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "driverType",
+          "fields-to-discriminateBy": {
+            "vSphere": "VSphere"
+          }
+        }
+      ]
+    },
     "com.github.openshift.api.operator.v1.CSISnapshotController": {
       "description": "CSISnapshotController provides a means to configure an operator to manage the CSI snapshots. `cluster` is the canonical name.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
@@ -21522,6 +21548,11 @@
         "managementState"
       ],
       "properties": {
+        "driverConfig": {
+          "description": "driverConfig can be used to specify platform specific driver configuration. When omitted, this means no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.CSIDriverConfigSpec"
+        },
         "logLevel": {
           "description": "logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for their operands.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
           "type": "string"
@@ -25983,6 +26014,20 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.Upstream"
+          }
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.VSphereCSIDriverConfigSpec": {
+      "description": "VSphereCSIDriverConfigSpec defines properties that can be configured for vsphere CSI driver.",
+      "type": "object",
+      "properties": {
+        "topologyCategories": {
+          "description": "topologyCategories indicates tag categories with which vcenter resources such as hostcluster or datacenter were tagged with. If cluster Infrastructure object has a topology, values specified in Infrastructure object will be used and modifications to topologyCategories will be rejected.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
           }
         }
       }

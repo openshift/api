@@ -14,6 +14,12 @@ define patch-crd-yq
 endef
 
 # $1 - crd file
+define format-yaml
+	cat '$(1)' | $(YQ) read - > t.yaml
+	mv t.yaml '$(1)'
+endef
+
+# $1 - crd file
 # $2 - patch file
 define patch-crd-yaml-patch
 	$(YAML_PATCH) -o '$(2)' < '$(1)' > '$(1).patched'
@@ -32,6 +38,7 @@ define run-crd-gen
 		'output:dir="$(2)"'
 	$$(foreach p,$$(wildcard $(2)/*.crd.yaml-merge-patch),$$(call patch-crd-yq,$$(basename $$(p)).yaml,$$(p)))
 	$$(foreach p,$$(wildcard $(2)/*.crd.yaml-patch),$$(call patch-crd-yaml-patch,$$(basename $$(p)).yaml,$$(p)))
+	$$(foreach p,$$(wildcard $(2)/*.crd.yaml),$$(call patch-crd-yq,$$(basename $$(p)).yaml,$$(p)))
 endef
 
 

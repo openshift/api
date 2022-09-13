@@ -425,8 +425,8 @@ spec:
                         description: resourceTags is a list of additional tags to
                           apply to AWS resources created for the cluster. See https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html
                           for information on tagging AWS resources. AWS supports a
-                          maximum of 50 tags per resource. OpenShift reserves 25 tags
-                          for its use, leaving 25 tags available for the user.
+                          maximum of 50 tags per resource. OpenShift reserves 10 tags
+                          for its use, leaving 40 tags available for the user.
                         items:
                           description: AWSResourceTag is a tag to apply to AWS resources
                             created for the cluster.
@@ -450,7 +450,7 @@ spec:
                           - key
                           - value
                           type: object
-                        maxItems: 25
+                        maxItems: 40
                         type: array
                       serviceEndpoints:
                         description: ServiceEndpoints list contains custom endpoints

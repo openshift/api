@@ -369,9 +369,9 @@ type AWSPlatformStatus struct {
 
 	// resourceTags is a list of additional tags to apply to AWS resources created for the cluster.
 	// See https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html for information on tagging AWS resources.
-	// AWS supports a maximum of 50 tags per resource. OpenShift reserves 25 tags for its use, leaving 25 tags
+	// AWS supports a maximum of 50 tags per resource. OpenShift reserves 10 tags for its use, leaving 40 tags
 	// available for the user.
-	// +kubebuilder:validation:MaxItems=25
+	// +kubebuilder:validation:MaxItems=40
 	// +optional
 	ResourceTags []AWSResourceTag `json:"resourceTags,omitempty"`
 }
@@ -652,7 +652,7 @@ type VSpherePlatformStatus struct {
 // This only includes fields that can be modified in the cluster.
 type IBMCloudPlatformSpec struct{}
 
-//IBMCloudPlatformStatus holds the current status of the IBMCloud infrastructure provider.
+// IBMCloudPlatformStatus holds the current status of the IBMCloud infrastructure provider.
 type IBMCloudPlatformStatus struct {
 	// Location is where the cluster has been deployed
 	Location string `json:"location,omitempty"`

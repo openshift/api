@@ -244,7 +244,7 @@ const (
 )
 
 // ClusterVersionCapability enumerates optional, core cluster components.
-// +kubebuilder:validation:Enum=openshift-samples;baremetal;marketplace;Console;Insights;Storage;CSISnapshot;NodeTuning
+// +kubebuilder:validation:Enum=openshift-samples;baremetal;marketplace;Console;Insights;Storage;CSISnapshot;MachineAPI;NodeTuning
 type ClusterVersionCapability string
 
 const (
@@ -293,6 +293,15 @@ const (
 	// objects and manages the containerized TuneD daemon which controls
 	// system level tuning of Nodes
 	ClusterVersionCapabilityNodeTuning ClusterVersionCapability = "NodeTuning"
+	// ClusterVersionCapabilityMachineAPI manages the
+	// machine-api (manages lifecycle of CRDs,controllers,RBACs)
+	// machine-approver (manages CSR requests and statuses)
+	// cluster autoscaler (manages scaling resources in kubernetes)
+	//
+	// WARNING: Do not disable that capability without reading
+	// documentation. This is important part of openshift system
+	// and may cause cluster damage
+	ClusterVersionCapabilityMachineAPI ClusterVersionCapability = "MachineAPI"
 )
 
 // KnownClusterVersionCapabilities includes all known optional, core cluster components.
@@ -305,6 +314,7 @@ var KnownClusterVersionCapabilities = []ClusterVersionCapability{
 	ClusterVersionCapabilityOpenShiftSamples,
 	ClusterVersionCapabilityCSISnapshot,
 	ClusterVersionCapabilityNodeTuning,
+	ClusterVersionCapabilityMachineAPI,
 }
 
 // ClusterVersionCapabilitySet defines sets of cluster version capabilities.
@@ -356,6 +366,7 @@ var ClusterVersionCapabilitySets = map[ClusterVersionCapabilitySet][]ClusterVers
 		ClusterVersionCapabilityStorage,
 		ClusterVersionCapabilityOpenShiftSamples,
 		ClusterVersionCapabilityCSISnapshot,
+		ClusterVersionCapabilityMachineAPI,
 	},
 	ClusterVersionCapabilitySet4_13: {
 		ClusterVersionCapabilityBaremetal,
@@ -376,6 +387,7 @@ var ClusterVersionCapabilitySets = map[ClusterVersionCapabilitySet][]ClusterVers
 		ClusterVersionCapabilityOpenShiftSamples,
 		ClusterVersionCapabilityCSISnapshot,
 		ClusterVersionCapabilityNodeTuning,
+		ClusterVersionCapabilityMachineAPI,
 	},
 }
 

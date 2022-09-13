@@ -70,6 +70,7 @@ spec:
                           - Insights
                           - Storage
                           - CSISnapshot
+                          - MachineAPI
                           - NodeTuning
                       x-kubernetes-list-type: atomic
                     baselineCapabilitySet:
@@ -191,6 +192,7 @@ spec:
                           - Insights
                           - Storage
                           - CSISnapshot
+                          - MachineAPI
                           - NodeTuning
                       x-kubernetes-list-type: atomic
                     knownCapabilities:
@@ -207,6 +209,7 @@ spec:
                           - Insights
                           - Storage
                           - CSISnapshot
+                          - MachineAPI
                           - NodeTuning
                       x-kubernetes-list-type: atomic
                 conditionalUpdates:

@@ -77,6 +77,9 @@ spec:
                 - 5
                 format: int32
                 type: integer
+                x-kubernetes-validations:
+                - message: replicas is immutable
+                  rule: self == oldSelf
               selector:
                 description: Label selector for Machines. Existing Machines selected
                   by this selector will be the ones affected by this ControlPlaneMachineSet.
@@ -125,6 +128,9 @@ spec:
                     type: object
                 type: object
                 x-kubernetes-map-type: atomic
+                x-kubernetes-validations:
+                - message: selector is immutable
+                  rule: self == oldSelf
               strategy:
                 default:
                   type: RollingUpdate
@@ -227,6 +233,19 @@ spec:
                                   required:
                                   - type
                                   type: object
+                                  x-kubernetes-validations:
+                                  - message: id is required when type is ID, and forbidden
+                                      otherwise
+                                    rule: 'has(self.type) && self.type == ''ID'' ?  has(self.id)
+                                      : !has(self.id)'
+                                  - message: arn is required when type is ARN, and
+                                      forbidden otherwise
+                                    rule: 'has(self.type) && self.type == ''ARN''
+                                      ?  has(self.arn) : !has(self.arn)'
+                                  - message: filters is required when type is Filters,
+                                      and forbidden otherwise
+                                    rule: 'has(self.type) && self.type == ''Filters''
+                                      ?  has(self.filters) : !has(self.filters)'
                               type: object
                             type: array
                           azure:
@@ -285,6 +304,19 @@ spec:
                         required:
                         - platform
                         type: object
+                        x-kubernetes-validations:
+                        - message: aws configuration is required when platform is
+                            AWS, and forbidden otherwise
+                          rule: 'has(self.platform) && self.platform == ''AWS'' ?  has(self.aws)
+                            : !has(self.aws)'
+                        - message: azure configuration is required when platform is
+                            Azure, and forbidden otherwise
+                          rule: 'has(self.platform) && self.platform == ''Azure''
+                            ?  has(self.azure) : !has(self.azure)'
+                        - message: gcp configuration is required when platform is
+                            GCP, and forbidden otherwise
+                          rule: 'has(self.platform) && self.platform == ''GCP'' ?  has(self.gcp)
+                            : !has(self.gcp)'
                       metadata:
                         description: 'ObjectMeta is the standard object metadata More
                           info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
@@ -590,8 +622,13 @@ spec:
                     type: object
                 required:
                 - machineType
-                - machines_v1beta1_machine_openshift_io
                 type: object
+                x-kubernetes-validations:
+                - message: machines_v1beta1_machine_openshift_io configuration is
+                    required when machineType is machines_v1beta1_machine_openshift_io,
+                    and forbidden otherwise
+                  rule: 'has(self.machineType) && self.machineType == ''machines_v1beta1_machine_openshift_io''
+                    ?  has(self.machines_v1beta1_machine_openshift_io) : !has(self.machines_v1beta1_machine_openshift_io)'
             required:
             - replicas
             - selector

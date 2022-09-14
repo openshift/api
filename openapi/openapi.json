@@ -16147,21 +16147,18 @@
       "properties": {
         "type": {
           "description": "Type defines the type of update strategy that should be used when updating Machines owned by the ControlPlaneMachineSet. Valid values are \"RollingUpdate\" and \"OnDelete\". The current default value is \"RollingUpdate\".",
-          "type": "string"
+          "type": "string",
+          "default": "RollingUpdate"
         }
       }
     },
     "com.github.openshift.api.machine.v1.ControlPlaneMachineSetTemplate": {
       "description": "ControlPlaneMachineSetTemplate is a template used by the ControlPlaneMachineSet to create the Machines that it will manage in the future.",
       "type": "object",
-      "required": [
-        "machineType"
-      ],
       "properties": {
         "machineType": {
           "description": "MachineType determines the type of Machines that should be managed by the ControlPlaneMachineSet. Currently, the only valid value is machines_v1beta1_machine_openshift_io.",
-          "type": "string",
-          "default": ""
+          "type": "string"
         },
         "machines_v1beta1_machine_openshift_io": {
           "description": "OpenShiftMachineV1Beta1Machine defines the template for creating Machines from the v1beta1.machine.openshift.io API group.",

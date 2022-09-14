@@ -27857,6 +27857,7 @@ func schema_openshift_api_machine_v1_ControlPlaneMachineSetStrategy(ref common.R
 					"type": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Type defines the type of update strategy that should be used when updating Machines owned by the ControlPlaneMachineSet. Valid values are \"RollingUpdate\" and \"OnDelete\". The current default value is \"RollingUpdate\".",
+							Default:     "RollingUpdate",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -27877,7 +27878,6 @@ func schema_openshift_api_machine_v1_ControlPlaneMachineSetTemplate(ref common.R
 					"machineType": {
 						SchemaProps: spec.SchemaProps{
 							Description: "MachineType determines the type of Machines that should be managed by the ControlPlaneMachineSet. Currently, the only valid value is machines_v1beta1_machine_openshift_io.",
-							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -27889,7 +27889,6 @@ func schema_openshift_api_machine_v1_ControlPlaneMachineSetTemplate(ref common.R
 						},
 					},
 				},
-				Required: []string{"machineType"},
 			},
 			VendorExtensible: spec.VendorExtensible{
 				Extensions: spec.Extensions{

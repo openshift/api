@@ -141,3 +141,5 @@ spec:
                 x-kubernetes-list-type: map
             type: object
         type: object
+    storage: true
+    served: true

@@ -9784,6 +9784,247 @@
         }
       }
     },
+    "com.github.openshift.api.console.v1.ConsolePlugin": {
+      "description": "ConsolePlugin is an extension for customizing OpenShift web console by dynamically loading code from another service running on the cluster.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+      "type": "object",
+      "required": [
+        "metadata",
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.console.v1.ConsolePluginSpec"
+        }
+      }
+    },
+    "com.github.openshift.api.console.v1.ConsolePluginBackend": {
+      "description": "ConsolePluginBackend holds information about the endpoint which serves the console's plugin",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "service": {
+          "description": "service is a Kubernetes Service that exposes the plugin using a deployment with an HTTP server. The Service must use HTTPS and Service serving certificate. The console backend will proxy the plugins assets from the Service using the service CA bundle.",
+          "$ref": "#/definitions/com.github.openshift.api.console.v1.ConsolePluginService"
+        },
+        "type": {
+          "description": "type is the backend type which servers the console's plugin. Currently only \"Service\" is supported.",
+          "type": "string",
+          "default": ""
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {
+            "service": "Service"
+          }
+        }
+      ]
+    },
+    "com.github.openshift.api.console.v1.ConsolePluginI18n": {
+      "description": "ConsolePluginI18n holds information on localization resources that are served by the dynamic plugin.",
+      "type": "object",
+      "required": [
+        "loadType"
+      ],
+      "properties": {
+        "loadType": {
+          "description": "loadType indicates how the plugin's localization resource should be loaded.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.console.v1.ConsolePluginList": {
+      "description": "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+      "type": "object",
+      "required": [
+        "metadata",
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.console.v1.ConsolePlugin"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.console.v1.ConsolePluginProxy": {
+      "description": "ConsolePluginProxy holds information on various service types to which console's backend will proxy the plugin's requests.",
+      "type": "object",
+      "required": [
+        "endpoint",
+        "alias"
+      ],
+      "properties": {
+        "alias": {
+          "description": "alias is a proxy name that identifies the plugin's proxy. An alias name should be unique per plugin. The console backend exposes following proxy endpoint:\n\n/api/proxy/plugin/<plugin-name>/<proxy-alias>/<request-path>?<optional-query-parameters>\n\nRequest example path:\n\n/api/proxy/plugin/acm/search/pods?namespace=openshift-apiserver",
+          "type": "string",
+          "default": ""
+        },
+        "authorization": {
+          "description": "authorization provides information about authorization type, which the proxied request should contain",
+          "type": "string"
+        },
+        "caCertificate": {
+          "description": "caCertificate provides the cert authority certificate contents, in case the proxied Service is using custom service CA. By default, the service CA bundle provided by the service-ca operator is used.",
+          "type": "string"
+        },
+        "endpoint": {
+          "description": "endpoint provides information about endpoint to which the request is proxied to.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.console.v1.ConsolePluginProxyEndpoint"
+        }
+      }
+    },
+    "com.github.openshift.api.console.v1.ConsolePluginProxyEndpoint": {
+      "description": "ConsolePluginProxyEndpoint holds information about the endpoint to which request will be proxied to.",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "service": {
+          "description": "service is an in-cluster Service that the plugin will connect to. The Service must use HTTPS. The console backend exposes an endpoint in order to proxy communication between the plugin and the Service. Note: service field is required for now, since currently only \"Service\" type is supported.",
+          "$ref": "#/definitions/com.github.openshift.api.console.v1.ConsolePluginProxyServiceConfig"
+        },
+        "type": {
+          "description": "type is the type of the console plugin's proxy. Currently only \"Service\" is supported.",
+          "type": "string",
+          "default": ""
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {
+            "service": "Service"
+          }
+        }
+      ]
+    },
+    "com.github.openshift.api.console.v1.ConsolePluginProxyServiceConfig": {
+      "description": "ProxyTypeServiceConfig holds information on Service to which console's backend will proxy the plugin's requests.",
+      "type": "object",
+      "required": [
+        "name",
+        "namespace",
+        "port"
+      ],
+      "properties": {
+        "name": {
+          "description": "name of Service that the plugin needs to connect to.",
+          "type": "string",
+          "default": ""
+        },
+        "namespace": {
+          "description": "namespace of Service that the plugin needs to connect to",
+          "type": "string",
+          "default": ""
+        },
+        "port": {
+          "description": "port on which the Service that the plugin needs to connect to is listening on.",
+          "type": "integer",
+          "format": "int32",
+          "default": 0
+        }
+      }
+    },
+    "com.github.openshift.api.console.v1.ConsolePluginService": {
+      "description": "ConsolePluginService holds information on Service that is serving console dynamic plugin assets.",
+      "type": "object",
+      "required": [
+        "name",
+        "namespace",
+        "port"
+      ],
+      "properties": {
+        "basePath": {
+          "description": "basePath is the path to the plugin's assets. The primary asset it the manifest file called `plugin-manifest.json`, which is a JSON document that contains metadata about the plugin and the extensions.",
+          "type": "string",
+          "default": ""
+        },
+        "name": {
+          "description": "name of Service that is serving the plugin assets.",
+          "type": "string",
+          "default": ""
+        },
+        "namespace": {
+          "description": "namespace of Service that is serving the plugin assets.",
+          "type": "string",
+          "default": ""
+        },
+        "port": {
+          "description": "port on which the Service that is serving the plugin is listening to.",
+          "type": "integer",
+          "format": "int32",
+          "default": 0
+        }
+      }
+    },
+    "com.github.openshift.api.console.v1.ConsolePluginSpec": {
+      "description": "ConsolePluginSpec is the desired plugin configuration.",
+      "type": "object",
+      "required": [
+        "displayName",
+        "backend"
+      ],
+      "properties": {
+        "backend": {
+          "description": "backend holds the configuration of backend which is serving console's plugin .",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.console.v1.ConsolePluginBackend"
+        },
+        "displayName": {
+          "description": "displayName is the display name of the plugin. The dispalyName should be between 1 and 128 characters.",
+          "type": "string",
+          "default": ""
+        },
+        "i18n": {
+          "description": "i18n is the configuration of plugin's localization resources.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.console.v1.ConsolePluginI18n"
+        },
+        "proxy": {
+          "description": "proxy is a list of proxies that describe various service type to which the plugin needs to connect to.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.console.v1.ConsolePluginProxy"
+          }
+        }
+      }
+    },
     "com.github.openshift.api.console.v1.ConsoleQuickStart": {
       "description": "ConsoleQuickStart is an extension for guiding user through various workflows in the OpenShift web console.\n\nCompatibility level 2: Stable within a major release for a minimum of 9 months or 3 minor releases (whichever is longer).",
       "type": "object",

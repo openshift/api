@@ -40,6 +40,33 @@ spec:
             description: spec is the specification of the desired behavior of the
               StableConfigType.
             properties:
+              celUnion:
+                description: celUnion demonstrates how to validate a discrminated
+                  union using CEL
+                properties:
+                  optionalMember:
+                    description: optionalMember is a union member that is optional.
+                    type: string
+                  requiredMember:
+                    description: requiredMember is a union member that is required.
+                    type: string
+                  type:
+                    description: type determines which of the union members should
+                      be populated.
+                    enum:
+                    - RequiredMember
+                    - OptionalMember
+                    - EmptyMember
+                    type: string
+                type: object
+                x-kubernetes-validations:
+                - message: requiredMember is required when type is RequiredMember,
+                    and forbidden otherwise
+                  rule: 'has(self.type) && self.type == ''RequiredMember'' ?  has(self.requiredMember)
+                    : !has(self.requiredMember)'
+                - message: optionalMember is forbidden when type is not OptionalMember
+                  rule: 'has(self.type) && self.type == ''OptionalMember'' ?  true
+                    : !has(self.optionalMember)'
               evolvingUnion:
                 description: evolvingUnion demonstrates how to phase in new values
                   into discriminated union

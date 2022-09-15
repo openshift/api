@@ -10533,6 +10533,33 @@
         }
       }
     },
+    "com.github.openshift.api.example.v1.CELUnion": {
+      "description": "CELUnion demonstrates how to use a discriminated union and how to validate it using CEL.",
+      "type": "object",
+      "properties": {
+        "optionalMember": {
+          "description": "optionalMember is a union member that is optional.",
+          "type": "string"
+        },
+        "requiredMember": {
+          "description": "requiredMember is a union member that is required.",
+          "type": "string"
+        },
+        "type": {
+          "description": "type determines which of the union members should be populated.",
+          "type": "string"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {
+            "optionalMember": "OptionalMember",
+            "requiredMember": "RequiredMember"
+          }
+        }
+      ]
+    },
     "com.github.openshift.api.example.v1.EvolvingUnion": {
       "type": "object",
       "properties": {
@@ -10602,6 +10629,11 @@
       "description": "StableConfigTypeSpec is the desired state",
       "type": "object",
       "properties": {
+        "celUnion": {
+          "description": "celUnion demonstrates how to validate a discrminated union using CEL",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.example.v1.CELUnion"
+        },
         "coolNewField": {
           "description": "coolNewField is a field that is for tech preview only.  On normal clusters this shouldn't be present",
           "type": "string",

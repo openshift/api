@@ -43,7 +43,11 @@ type StableConfigTypeSpec struct {
 
 	// evolvingUnion demonstrates how to phase in new values into discriminated union
 	// +optional
-	EvolvingUnion EvolvingUnion `json:"evolvingUnion,omitempty"`
+	EvolvingUnion EvolvingUnion `json:"evolvingUnion"`
+
+	// celUnion demonstrates how to validate a discrminated union using CEL
+	// +optional
+	CELUnion CELUnion `json:"celUnion,omitempty"`
 }
 
 type EvolvingUnion struct {
@@ -63,6 +67,40 @@ const (
 
 	// "TechPreviewOnlyValue" should only be allowed when TechPreviewNoUpgrade is set in the cluster
 	TechPreviewOnlyValue EvolvingDiscriminator = "TechPreviewOnlyValue"
+)
+
+// CELUnion demonstrates how to use a discriminated union and how to validate it using CEL.
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'RequiredMember' ?  has(self.requiredMember) : !has(self.requiredMember)",message="requiredMember is required when type is RequiredMember, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'OptionalMember' ?  true : !has(self.optionalMember)",message="optionalMember is forbidden when type is not OptionalMember"
+// +union
+type CELUnion struct {
+	// type determines which of the union members should be populated.
+	// +kubebuilder:validation:Required
+	// +unionDiscriminator
+	Type CELUnionDiscriminator `json:"type,omitempty"`
+
+	// requiredMember is a union member that is required.
+	// +unionMember
+	RequiredMember *string `json:"requiredMember,omitempty"`
+
+	// optionalMember is a union member that is optional.
+	// +unionMember,optional
+	OptionalMember *string `json:"optionalMember,omitempty"`
+}
+
+// CELUnionDiscriminator is a union discriminator for the CEL union.
+// +kubebuilder:validation:Enum:="RequiredMember";"OptionalMember";"EmptyMember"
+type CELUnionDiscriminator string
+
+const (
+	// RequiredMember represents a required union member.
+	RequiredMember CELUnionDiscriminator = "RequiredMember"
+
+	// OptionalMember represents an optional union member.
+	OptionalMember CELUnionDiscriminator = "OptionalMember"
+
+	// EmptyMember represents an empty union member.
+	EmptyMember CELUnionDiscriminator = "EmptyMember"
 )
 
 // StableConfigTypeStatus defines the observed status of the StableConfigType.

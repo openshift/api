@@ -2,12 +2,15 @@ package tests
 
 import (
 	"context"
+	"fmt"
+	"strconv"
 	"testing"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/client-go/discovery"
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -47,6 +50,19 @@ var _ = BeforeSuite(func() {
 	k8sClient, err = client.New(cfg, client.Options{Scheme: testScheme})
 	Expect(err).NotTo(HaveOccurred())
 	Expect(k8sClient).NotTo(BeNil())
+
+	// CEL requires Kube 1.25 and above, so check for the minimum server version.
+	discoveryClient, err := discovery.NewDiscoveryClientForConfig(cfg)
+	Expect(err).ToNot(HaveOccurred())
+
+	serverVersion, err := discoveryClient.ServerVersion()
+	Expect(err).ToNot(HaveOccurred())
+
+	Expect(serverVersion.Major).To(Equal("1"))
+
+	minorInt, err := strconv.Atoi(serverVersion.Minor)
+	Expect(err).ToNot(HaveOccurred())
+	Expect(minorInt).To(BeNumerically(">=", 25), fmt.Sprintf("This test suite requires a Kube API server of at least version 1.25, current version is 1.%s", serverVersion.Minor))
 })
 
 var _ = AfterSuite(func() {

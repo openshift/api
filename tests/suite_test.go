@@ -3,6 +3,7 @@ package tests
 import (
 	"context"
 	"fmt"
+	"path/filepath"
 	"strconv"
 	"testing"
 
@@ -15,6 +16,7 @@ import (
 	"k8s.io/client-go/rest"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/envtest"
+	"sigs.k8s.io/controller-runtime/pkg/envtest/komega"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 	//+kubebuilder:scaffold:imports
@@ -25,9 +27,16 @@ var k8sClient client.Client
 var testEnv *envtest.Environment
 var testScheme *runtime.Scheme
 var ctx = context.Background()
+var suites []SuiteSpec
 
 func TestAPIs(t *testing.T) {
 	RegisterFailHandler(Fail)
+
+	g := NewGomegaWithT(t)
+
+	var err error
+	suites, err = LoadTestSuiteSpecs(filepath.Join(".."))
+	g.Expect(err).ToNot(HaveOccurred())
 
 	RunSpecs(t, "API Integration Suite")
 }
@@ -63,10 +72,19 @@ var _ = BeforeSuite(func() {
 	minorInt, err := strconv.Atoi(serverVersion.Minor)
 	Expect(err).ToNot(HaveOccurred())
 	Expect(minorInt).To(BeNumerically(">=", 25), fmt.Sprintf("This test suite requires a Kube API server of at least version 1.25, current version is 1.%s", serverVersion.Minor))
+
+	komega.SetClient(k8sClient)
+	komega.SetContext(ctx)
 })
 
 var _ = AfterSuite(func() {
 	By("tearing down the test environment")
 	err := testEnv.Stop()
 	Expect(err).NotTo(HaveOccurred())
+})
+
+var _ = Describe("", func() {
+	for _, suite := range suites {
+		GenerateTestSuite(suite)
+	}
 })

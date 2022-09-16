@@ -51,16 +51,12 @@ spec:
                     - ""
                     - StableValue
                     type: string
-                required:
-                - type
                 type: object
               stableField:
                 description: "stableField is a field that is present on default clusters
                   and on tech preview clusters \n If empty, the platform will choose
                   a good default, which may change over time without notice."
                 type: string
-            required:
-            - evolvingUnion
             type: object
           status:
             description: status is the most recently observed status of the StableConfigType.
@@ -141,5 +137,5 @@ spec:
                 x-kubernetes-list-type: map
             type: object
         type: object
-    storage: true
     served: true
+    storage: true

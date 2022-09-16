@@ -10535,14 +10535,10 @@
     },
     "com.github.openshift.api.example.v1.EvolvingUnion": {
       "type": "object",
-      "required": [
-        "type"
-      ],
       "properties": {
         "type": {
           "description": "type is the discriminator. It has different values for Default and for TechPreviewNoUpgrade",
-          "type": "string",
-          "default": ""
+          "type": "string"
         }
       }
     },
@@ -10605,9 +10601,6 @@
     "com.github.openshift.api.example.v1.StableConfigTypeSpec": {
       "description": "StableConfigTypeSpec is the desired state",
       "type": "object",
-      "required": [
-        "evolvingUnion"
-      ],
       "properties": {
         "coolNewField": {
           "description": "coolNewField is a field that is for tech preview only.  On normal clusters this shouldn't be present",

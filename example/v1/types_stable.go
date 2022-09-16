@@ -42,12 +42,14 @@ type StableConfigTypeSpec struct {
 	StableField string `json:"stableField"`
 
 	// evolvingUnion demonstrates how to phase in new values into discriminated union
-	EvolvingUnion EvolvingUnion `json:"evolvingUnion"`
+	// +optional
+	EvolvingUnion EvolvingUnion `json:"evolvingUnion,omitempty"`
 }
 
 type EvolvingUnion struct {
 	// type is the discriminator. It has different values for Default and for TechPreviewNoUpgrade
-	Type EvolvingDiscriminator `json:"type"`
+	// +kubebuilder:validation:Required
+	Type EvolvingDiscriminator `json:"type,omitempty"`
 }
 
 // EvolvingDiscriminator defines the audit policy profile type.

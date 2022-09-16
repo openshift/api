@@ -18998,13 +18998,11 @@ func schema_openshift_api_example_v1_EvolvingUnion(ref common.ReferenceCallback)
 					"type": {
 						SchemaProps: spec.SchemaProps{
 							Description: "type is the discriminator. It has different values for Default and for TechPreviewNoUpgrade",
-							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 				},
-				Required: []string{"type"},
 			},
 		},
 	}
@@ -19139,7 +19137,6 @@ func schema_openshift_api_example_v1_StableConfigTypeSpec(ref common.ReferenceCa
 						},
 					},
 				},
-				Required: []string{"evolvingUnion"},
 			},
 		},
 		Dependencies: []string{

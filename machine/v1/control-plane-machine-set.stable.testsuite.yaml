@@ -1,0 +1,73 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "[Stable] ControlPlaneMachineSet"
+crd: 0000_10_controlplanemachineset.crd.yaml
+tests:
+  onCreate:
+  - name: Should be able to create a minimal ControlPlaneMachineSet
+    initial: |
+      apiVersion: machine.openshift.io/v1
+      kind: ControlPlaneMachineSet
+      spec:
+        selector:
+          matchLabels:
+            machine.openshift.io/cluster-api-machine-role: master
+            machine.openshift.io/cluster-api-machine-type: master
+        template:
+          machineType: machines_v1beta1_machine_openshift_io
+          machines_v1beta1_machine_openshift_io:
+            metadata:
+              labels:
+                machine.openshift.io/cluster-api-machine-role: master
+                machine.openshift.io/cluster-api-machine-type: master
+            spec:
+              providerSpec: {}
+    expected: |
+      apiVersion: machine.openshift.io/v1
+      kind: ControlPlaneMachineSet
+      spec:
+        replicas: 3
+        strategy:
+          type: RollingUpdate
+        selector:
+          matchLabels:
+            machine.openshift.io/cluster-api-machine-role: master
+            machine.openshift.io/cluster-api-machine-type: master
+        template:
+          machineType: machines_v1beta1_machine_openshift_io
+          machines_v1beta1_machine_openshift_io:
+            metadata:
+              labels:
+                machine.openshift.io/cluster-api-machine-role: master
+                machine.openshift.io/cluster-api-machine-type: master
+            spec:
+              providerSpec: {}
+  - name: Should reject a missing machineType
+    initial: |
+      apiVersion: machine.openshift.io/v1
+      kind: ControlPlaneMachineSet
+      spec:
+        selector:
+          matchLabels:
+            machine.openshift.io/cluster-api-machine-role: master
+            machine.openshift.io/cluster-api-machine-type: master
+        template:
+          machines_v1beta1_machine_openshift_io:
+            metadata:
+              labels:
+                machine.openshift.io/cluster-api-machine-role: master
+                machine.openshift.io/cluster-api-machine-type: master
+            spec:
+              providerSpec: {}
+    expectedError: "spec.template.machineType: Required value"
+  - name: Should reject a missing machines_v1beta1_machine_openshift_io
+    initial: |
+      apiVersion: machine.openshift.io/v1
+      kind: ControlPlaneMachineSet
+      spec:
+        selector:
+          matchLabels:
+            machine.openshift.io/cluster-api-machine-role: master
+            machine.openshift.io/cluster-api-machine-type: master
+        template:
+          machineType: machines_v1beta1_machine_openshift_io
+    expectedError: "spec.template: Invalid value: \"object\": machines_v1beta1_machine_openshift_io configuration is required when machineType is machines_v1beta1_machine_openshift_io, and forbidden otherwise"

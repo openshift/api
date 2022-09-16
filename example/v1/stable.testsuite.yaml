@@ -58,3 +58,115 @@ tests:
         evolvingUnion:
           type: TechPreviewOnlyValue
     expectedError: "spec.evolvingUnion.type: Unsupported value: \"TechPreviewOnlyValue\": supported values: \"\", \"StableValue\""
+  - name: With an CEL validated Discrminated union, should allow an empty member with the empty type value
+    initial: |
+      apiVersion: example.openshift.io/v1
+      kind: StableConfigType
+      spec:
+        celUnion:
+          type: EmptyMember
+    expected: |
+      apiVersion: example.openshift.io/v1
+      kind: StableConfigType
+      spec:
+        celUnion:
+          type: EmptyMember
+  - name: With an CEL validated Discrminated union, should allow an empty member with the empty type value
+    initial: |
+      apiVersion: example.openshift.io/v1
+      kind: StableConfigType
+      spec:
+        celUnion:
+          type: EmptyMember
+    expected: |
+      apiVersion: example.openshift.io/v1
+      kind: StableConfigType
+      spec:
+        celUnion:
+          type: EmptyMember
+  - name: With an CEL validated Discrminated union, should allow a required member with the required type value
+    initial: |
+      apiVersion: example.openshift.io/v1
+      kind: StableConfigType
+      spec:
+        celUnion:
+          type: RequiredMember
+          requiredMember: foo
+    expected: |
+      apiVersion: example.openshift.io/v1
+      kind: StableConfigType
+      spec:
+        celUnion:
+          type: RequiredMember
+          requiredMember: foo
+  - name: With an CEL validated Discrminated union, should not allow omitting required member with the required type value
+    initial: |
+      apiVersion: example.openshift.io/v1
+      kind: StableConfigType
+      spec:
+        celUnion:
+          type: RequiredMember
+    expectedError: "Invalid value: \"object\": requiredMember is required when type is RequiredMember, and forbidden otherwise"
+  - name: With an CEL validated Discrminated union, should not allow the required member without the required type value
+    initial: |
+      apiVersion: example.openshift.io/v1
+      kind: StableConfigType
+      spec:
+        celUnion:
+          requiredMember: foo
+    expectedError: "Invalid value: \"object\": requiredMember is required when type is RequiredMember, and forbidden otherwise"
+  - name: With an CEL validated Discrminated union, should not allow the optional member with the required type value
+    initial: |
+      apiVersion: example.openshift.io/v1
+      kind: StableConfigType
+      spec:
+        celUnion:
+          type: RequiredMember
+          requiredMember: foo
+          optionalMember: foo
+    expectedError: "Invalid value: \"object\": optionalMember is forbidden when type is not OptionalMember"
+  - name: With an CEL validated Discrminated union, should allow an optional member with the optional type value
+    initial: |
+      apiVersion: example.openshift.io/v1
+      kind: StableConfigType
+      spec:
+        celUnion:
+          type: OptionalMember
+          optionalMember: foo
+    expected: |
+      apiVersion: example.openshift.io/v1
+      kind: StableConfigType
+      spec:
+        celUnion:
+          type: OptionalMember
+          optionalMember: foo
+  - name: With an CEL validated Discrminated union, should allow omitting the optional member with the optional type value
+    initial: |
+      apiVersion: example.openshift.io/v1
+      kind: StableConfigType
+      spec:
+        celUnion:
+          type: OptionalMember
+    expected: |
+      apiVersion: example.openshift.io/v1
+      kind: StableConfigType
+      spec:
+        celUnion:
+          type: OptionalMember
+  - name: With an CEL validated Discrminated union, should not allow the optional member without the optional type value
+    initial: |
+      apiVersion: example.openshift.io/v1
+      kind: StableConfigType
+      spec:
+        celUnion:
+          optionalMember: foo
+    expectedError: "Invalid value: \"object\": optionalMember is forbidden when type is not OptionalMember"
+  - name: With an CEL validated Discrminated union, should not allow the required member with the optional type value
+    initial: |
+      apiVersion: example.openshift.io/v1
+      kind: StableConfigType
+      spec:
+        celUnion:
+          type: OptionalMember
+          requiredMember: foo
+    expectedError: "Invalid value: \"object\": requiredMember is required when type is RequiredMember, and forbidden otherwise"

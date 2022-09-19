@@ -541,9 +541,9 @@ type OpenStackAPIBGPSpeaker struct {
 }
 
 type OpenStackAPIBGPConfiguration struct {
-	// apiVIPs is a list IP addresses which will be used to reach the API
-	// server. The list must contain at least one address. It may contain
-	// both IPv4 and IPv6 addresses.
+	// apiVIPs is a list of IP addresses which will be used to reach the
+	// API server from within the cluster. The list must contain at least
+	// one address. It may contain both IPv4 and IPv6 addresses.
 	//
 	// +kubebuilder:validation:Format=ip
 	// +kubebuilder:validation:MinItems:=1

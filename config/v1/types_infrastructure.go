@@ -605,8 +605,12 @@ type OpenStackFailureDomain struct {
 // This only includes fields that can be modified in the cluster.
 type OpenStackPlatformSpec struct {
 	// failureDomains is a list of failure domains available to Machines.
-	// Values specified in a failure domain will be set on Machines in that
-	// failure domain.
+	// Each failure domain has a name that can be referenced in Machines;
+	// Machines referencing a failure domain will be set the corresponding
+	// failure domain values.
+	// If no failure domain is defined, Machines can't reference any. If a
+	// Machine doesn't reference a failure domain, it is spun in the
+	// cluster subnet, using the OpenStack default availability zones.
 	//
 	// +listType=map
 	// +listMapKey=name

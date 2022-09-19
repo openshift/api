@@ -226,6 +226,7 @@ var map_ConsoleCustomization = map[string]string{
 	"projectAccess":        "projectAccess allows customizing the available list of ClusterRoles in the Developer perspective Project access page which can be used by a project admin to specify roles to other users and restrict access within the project. If set, the list will replace the default ClusterRole options.",
 	"quickStarts":          "quickStarts allows customization of available ConsoleQuickStart resources in console.",
 	"addPage":              "addPage allows customizing actions on the Add page in developer perspective.",
+	"perspectives":         "perspectives allows enabling/disabling of perspective(s) that user can see in the Perspective switcher dropdown.",
 }
 
 func (ConsoleCustomization) SwaggerDoc() map[string]string {
@@ -296,6 +297,35 @@ var map_DeveloperConsoleCatalogCustomization = map[string]string{
 
 func (DeveloperConsoleCatalogCustomization) SwaggerDoc() map[string]string {
 	return map_DeveloperConsoleCatalogCustomization
+}
+
+var map_Perspective = map[string]string{
+	"id":         "id defines the id of the perspective. Example: \"dev\", \"admin\". The available perspective ids can be found in the code snippet section next to the yaml editor. Incorrect or unknown ids will be ignored.",
+	"visibility": "visibility defines the state of perspective along with access review checks if needed for that perspective.",
+}
+
+func (Perspective) SwaggerDoc() map[string]string {
+	return map_Perspective
+}
+
+var map_PerspectiveAccessReview = map[string]string{
+	"":         "PerspectiveAccessReview defines the visibility of the perspective depending on the access review checks. `required` and  `missing` can work together esp. in the case where the cluster admin wants to show another perspective to users without specific permissions. Out of `required` and `missing` atleast one property should be non-empty.",
+	"required": "required defines a list of permission checks. The perspective will only be shown when all checks are successful. When omitted, the access review is skipped and the perspective will not be shown unless it is required to do so based on the configuration of the missing access review list.",
+	"missing":  "missing defines a list of permission checks. The perspective will only be shown when at least one check fails. When omitted, the access review is skipped and the perspective will not be shown unless it is required to do so based on the configuration of the required access review list.",
+}
+
+func (PerspectiveAccessReview) SwaggerDoc() map[string]string {
+	return map_PerspectiveAccessReview
+}
+
+var map_PerspectiveVisibility = map[string]string{
+	"":             "PerspectiveVisibility defines the criteria to show/hide a perspective",
+	"state":        "state defines the perspective is enabled or disabled or access review check is required.",
+	"accessReview": "accessReview defines required and missing access review checks.",
+}
+
+func (PerspectiveVisibility) SwaggerDoc() map[string]string {
+	return map_PerspectiveVisibility
 }
 
 var map_ProjectAccess = map[string]string{

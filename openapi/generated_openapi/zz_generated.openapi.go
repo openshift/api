@@ -845,6 +845,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.OperatorCondition":                                      schema_openshift_api_operator_v1_OperatorCondition(ref),
 		"github.com/openshift/api/operator/v1.OperatorSpec":                                           schema_openshift_api_operator_v1_OperatorSpec(ref),
 		"github.com/openshift/api/operator/v1.OperatorStatus":                                         schema_openshift_api_operator_v1_OperatorStatus(ref),
+		"github.com/openshift/api/operator/v1.Perspective":                                            schema_openshift_api_operator_v1_Perspective(ref),
+		"github.com/openshift/api/operator/v1.PerspectiveAccessReview":                                schema_openshift_api_operator_v1_PerspectiveAccessReview(ref),
+		"github.com/openshift/api/operator/v1.PerspectiveVisibility":                                  schema_openshift_api_operator_v1_PerspectiveVisibility(ref),
 		"github.com/openshift/api/operator/v1.PolicyAuditConfig":                                      schema_openshift_api_operator_v1_PolicyAuditConfig(ref),
 		"github.com/openshift/api/operator/v1.PrivateStrategy":                                        schema_openshift_api_operator_v1_PrivateStrategy(ref),
 		"github.com/openshift/api/operator/v1.ProjectAccess":                                          schema_openshift_api_operator_v1_ProjectAccess(ref),
@@ -37885,11 +37888,33 @@ func schema_openshift_api_operator_v1_ConsoleCustomization(ref common.ReferenceC
 							Ref:         ref("github.com/openshift/api/operator/v1.AddPage"),
 						},
 					},
+					"perspectives": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"id",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "perspectives allows enabling/disabling of perspective(s) that user can see in the Perspective switcher dropdown.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/operator/v1.Perspective"),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ConfigMapFileReference", "github.com/openshift/api/operator/v1.AddPage", "github.com/openshift/api/operator/v1.DeveloperConsoleCatalogCustomization", "github.com/openshift/api/operator/v1.ProjectAccess", "github.com/openshift/api/operator/v1.QuickStarts"},
+			"github.com/openshift/api/config/v1.ConfigMapFileReference", "github.com/openshift/api/operator/v1.AddPage", "github.com/openshift/api/operator/v1.DeveloperConsoleCatalogCustomization", "github.com/openshift/api/operator/v1.Perspective", "github.com/openshift/api/operator/v1.ProjectAccess", "github.com/openshift/api/operator/v1.QuickStarts"},
 	}
 }
 
@@ -43142,6 +43167,121 @@ func schema_openshift_api_operator_v1_OperatorStatus(ref common.ReferenceCallbac
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
+	}
+}
+
+func schema_openshift_api_operator_v1_Perspective(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"id": {
+						SchemaProps: spec.SchemaProps{
+							Description: "id defines the id of the perspective. Example: \"dev\", \"admin\". The available perspective ids can be found in the code snippet section next to the yaml editor. Incorrect or unknown ids will be ignored.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"visibility": {
+						SchemaProps: spec.SchemaProps{
+							Description: "visibility defines the state of perspective along with access review checks if needed for that perspective.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1.PerspectiveVisibility"),
+						},
+					},
+				},
+				Required: []string{"id", "visibility"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1.PerspectiveVisibility"},
+	}
+}
+
+func schema_openshift_api_operator_v1_PerspectiveAccessReview(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PerspectiveAccessReview defines the visibility of the perspective depending on the access review checks. `required` and  `missing` can work together esp. in the case where the cluster admin wants to show another perspective to users without specific permissions. Out of `required` and `missing` atleast one property should be non-empty.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"required": {
+						SchemaProps: spec.SchemaProps{
+							Description: "required defines a list of permission checks. The perspective will only be shown when all checks are successful. When omitted, the access review is skipped and the perspective will not be shown unless it is required to do so based on the configuration of the missing access review list.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/authorization/v1.ResourceAttributes"),
+									},
+								},
+							},
+						},
+					},
+					"missing": {
+						SchemaProps: spec.SchemaProps{
+							Description: "missing defines a list of permission checks. The perspective will only be shown when at least one check fails. When omitted, the access review is skipped and the perspective will not be shown unless it is required to do so based on the configuration of the required access review list.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/authorization/v1.ResourceAttributes"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/authorization/v1.ResourceAttributes"},
+	}
+}
+
+func schema_openshift_api_operator_v1_PerspectiveVisibility(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PerspectiveVisibility defines the criteria to show/hide a perspective",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"state": {
+						SchemaProps: spec.SchemaProps{
+							Description: "state defines the perspective is enabled or disabled or access review check is required.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"accessReview": {
+						SchemaProps: spec.SchemaProps{
+							Description: "accessReview defines required and missing access review checks.",
+							Ref:         ref("github.com/openshift/api/operator/v1.PerspectiveAccessReview"),
+						},
+					},
+				},
+				Required: []string{"state"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "state",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"accessReview": "AccessReview",
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1.PerspectiveAccessReview"},
 	}
 }
 

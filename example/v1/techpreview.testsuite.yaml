@@ -9,22 +9,26 @@ tests:
       kind: StableConfigType
       spec:
         stableField: "Allowed"
+        immutableField: foo
     expected: |
       apiVersion: example.openshift.io/v1
       kind: StableConfigType
       spec:
         stableField: "Allowed"
+        immutableField: foo
   - name: Should persist a tech preview field
     initial: |
       apiVersion: example.openshift.io/v1
       kind: StableConfigType
       spec:
         coolNewField: "Invalid"
+        immutableField: foo
     expected: |
       apiVersion: example.openshift.io/v1
       kind: StableConfigType
       spec:
         coolNewField: "Invalid"
+        immutableField: foo
   - name: With an EvolvingUnion, Should allow an empty enum value
     initial: |
       apiVersion: example.openshift.io/v1
@@ -32,12 +36,14 @@ tests:
       spec:
         evolvingUnion:
           type: ""
+        immutableField: foo
     expected: |
       apiVersion: example.openshift.io/v1
       kind: StableConfigType
       spec:
         evolvingUnion:
           type: ""
+        immutableField: foo
   - name: With an EvolvingUnion, Should allow a Stable enum value
     initial: |
       apiVersion: example.openshift.io/v1
@@ -45,12 +51,14 @@ tests:
       spec:
         evolvingUnion:
           type: StableValue
+        immutableField: foo
     expected: |
       apiVersion: example.openshift.io/v1
       kind: StableConfigType
       spec:
         evolvingUnion:
           type: StableValue
+        immutableField: foo
   - name: With an EvolvingUnion, Should allow a TechPreview enum value
     initial: |
       apiVersion: example.openshift.io/v1
@@ -58,9 +66,11 @@ tests:
       spec:
         evolvingUnion:
           type: TechPreviewOnlyValue
+        immutableField: foo
     expected: |
       apiVersion: example.openshift.io/v1
       kind: StableConfigType
       spec:
         evolvingUnion:
           type: TechPreviewOnlyValue
+        immutableField: foo

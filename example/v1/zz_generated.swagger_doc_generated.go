@@ -49,11 +49,13 @@ func (StableConfigTypeList) SwaggerDoc() map[string]string {
 }
 
 var map_StableConfigTypeSpec = map[string]string{
-	"":              "StableConfigTypeSpec is the desired state",
-	"coolNewField":  "coolNewField is a field that is for tech preview only.  On normal clusters this shouldn't be present",
-	"stableField":   "stableField is a field that is present on default clusters and on tech preview clusters\n\nIf empty, the platform will choose a good default, which may change over time without notice.",
-	"evolvingUnion": "evolvingUnion demonstrates how to phase in new values into discriminated union",
-	"celUnion":      "celUnion demonstrates how to validate a discrminated union using CEL",
+	"":                       "StableConfigTypeSpec is the desired state",
+	"coolNewField":           "coolNewField is a field that is for tech preview only.  On normal clusters this shouldn't be present",
+	"stableField":            "stableField is a field that is present on default clusters and on tech preview clusters\n\nIf empty, the platform will choose a good default, which may change over time without notice.",
+	"immutableField":         "immutableField is a field that is immutable once the object has been created. It is required at all times.",
+	"optionalImmutableField": "optionalImmutableField is a field that is immutable once set. It is optional but may not be changed once set.",
+	"evolvingUnion":          "evolvingUnion demonstrates how to phase in new values into discriminated union",
+	"celUnion":               "celUnion demonstrates how to validate a discrminated union using CEL",
 }
 
 func (StableConfigTypeSpec) SwaggerDoc() map[string]string {

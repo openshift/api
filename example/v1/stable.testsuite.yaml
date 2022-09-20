@@ -9,21 +9,25 @@ tests:
       kind: StableConfigType
       spec:
         stableField: "Allowed"
+        immutableField: foo
     expected: |
       apiVersion: example.openshift.io/v1
       kind: StableConfigType
       spec:
         stableField: "Allowed"
+        immutableField: foo
   - name: Should not persist a tech preview field
     initial: |
       apiVersion: example.openshift.io/v1
       kind: StableConfigType
       spec:
         coolNewField: "Invalid"
+        immutableField: foo
     expected: |
       apiVersion: example.openshift.io/v1
       kind: StableConfigType
-      spec: {}
+      spec:
+        immutableField: foo
   - name: With an EvolvingUnion, Should allow an empty enum value
     initial: |
       apiVersion: example.openshift.io/v1
@@ -31,12 +35,14 @@ tests:
       spec:
         evolvingUnion:
           type: ""
+        immutableField: foo
     expected: |
       apiVersion: example.openshift.io/v1
       kind: StableConfigType
       spec:
         evolvingUnion:
           type: ""
+        immutableField: foo
   - name: With an EvolvingUnion, Should allow a Stable enum value
     initial: |
       apiVersion: example.openshift.io/v1
@@ -44,12 +50,14 @@ tests:
       spec:
         evolvingUnion:
           type: StableValue
+        immutableField: foo
     expected: |
       apiVersion: example.openshift.io/v1
       kind: StableConfigType
       spec:
         evolvingUnion:
           type: StableValue
+        immutableField: foo
   - name: With an EvolvingUnion, Should not allow a TechPreview enum value
     initial: |
       apiVersion: example.openshift.io/v1
@@ -57,6 +65,7 @@ tests:
       spec:
         evolvingUnion:
           type: TechPreviewOnlyValue
+        immutableField: foo
     expectedError: "spec.evolvingUnion.type: Unsupported value: \"TechPreviewOnlyValue\": supported values: \"\", \"StableValue\""
   - name: With an CEL validated Discrminated union, should allow an empty member with the empty type value
     initial: |
@@ -65,12 +74,14 @@ tests:
       spec:
         celUnion:
           type: EmptyMember
+        immutableField: foo
     expected: |
       apiVersion: example.openshift.io/v1
       kind: StableConfigType
       spec:
         celUnion:
           type: EmptyMember
+        immutableField: foo
   - name: With an CEL validated Discrminated union, should allow an empty member with the empty type value
     initial: |
       apiVersion: example.openshift.io/v1
@@ -78,12 +89,14 @@ tests:
       spec:
         celUnion:
           type: EmptyMember
+        immutableField: foo
     expected: |
       apiVersion: example.openshift.io/v1
       kind: StableConfigType
       spec:
         celUnion:
           type: EmptyMember
+        immutableField: foo
   - name: With an CEL validated Discrminated union, should allow a required member with the required type value
     initial: |
       apiVersion: example.openshift.io/v1
@@ -92,6 +105,7 @@ tests:
         celUnion:
           type: RequiredMember
           requiredMember: foo
+        immutableField: foo
     expected: |
       apiVersion: example.openshift.io/v1
       kind: StableConfigType
@@ -99,6 +113,7 @@ tests:
         celUnion:
           type: RequiredMember
           requiredMember: foo
+        immutableField: foo
   - name: With an CEL validated Discrminated union, should not allow omitting required member with the required type value
     initial: |
       apiVersion: example.openshift.io/v1
@@ -106,6 +121,7 @@ tests:
       spec:
         celUnion:
           type: RequiredMember
+        immutableField: foo
     expectedError: "Invalid value: \"object\": requiredMember is required when type is RequiredMember, and forbidden otherwise"
   - name: With an CEL validated Discrminated union, should not allow the required member without the required type value
     initial: |
@@ -114,6 +130,7 @@ tests:
       spec:
         celUnion:
           requiredMember: foo
+        immutableField: foo
     expectedError: "Invalid value: \"object\": requiredMember is required when type is RequiredMember, and forbidden otherwise"
   - name: With an CEL validated Discrminated union, should not allow the optional member with the required type value
     initial: |
@@ -124,6 +141,7 @@ tests:
           type: RequiredMember
           requiredMember: foo
           optionalMember: foo
+        immutableField: foo
     expectedError: "Invalid value: \"object\": optionalMember is forbidden when type is not OptionalMember"
   - name: With an CEL validated Discrminated union, should allow an optional member with the optional type value
     initial: |
@@ -133,6 +151,7 @@ tests:
         celUnion:
           type: OptionalMember
           optionalMember: foo
+        immutableField: foo
     expected: |
       apiVersion: example.openshift.io/v1
       kind: StableConfigType
@@ -140,6 +159,7 @@ tests:
         celUnion:
           type: OptionalMember
           optionalMember: foo
+        immutableField: foo
   - name: With an CEL validated Discrminated union, should allow omitting the optional member with the optional type value
     initial: |
       apiVersion: example.openshift.io/v1
@@ -147,12 +167,14 @@ tests:
       spec:
         celUnion:
           type: OptionalMember
+        immutableField: foo
     expected: |
       apiVersion: example.openshift.io/v1
       kind: StableConfigType
       spec:
         celUnion:
           type: OptionalMember
+        immutableField: foo
   - name: With an CEL validated Discrminated union, should not allow the optional member without the optional type value
     initial: |
       apiVersion: example.openshift.io/v1
@@ -160,6 +182,7 @@ tests:
       spec:
         celUnion:
           optionalMember: foo
+        immutableField: foo
     expectedError: "Invalid value: \"object\": optionalMember is forbidden when type is not OptionalMember"
   - name: With an CEL validated Discrminated union, should not allow the required member with the optional type value
     initial: |
@@ -169,4 +192,50 @@ tests:
         celUnion:
           type: OptionalMember
           requiredMember: foo
+        immutableField: foo
     expectedError: "Invalid value: \"object\": requiredMember is required when type is RequiredMember, and forbidden otherwise"
+  onUpdate:
+  - name: Should not allow changing an immutable field
+    initial: |
+      apiVersion: example.openshift.io/v1
+      kind: StableConfigType
+      spec:
+        immutableField: foo
+    updated: |
+      apiVersion: example.openshift.io/v1
+      kind: StableConfigType
+      spec:
+        immutableField: bar
+    expectedError: "spec.immutableField: Invalid value: \"string\": immutableField is immutable"
+  - name: Should allow setting the optional immutable field
+    initial: |
+      apiVersion: example.openshift.io/v1
+      kind: StableConfigType
+      spec:
+        immutableField: foo
+    updated: |
+      apiVersion: example.openshift.io/v1
+      kind: StableConfigType
+      spec:
+        immutableField: foo
+        optionalImmutableField: foo
+    expected: |
+      apiVersion: example.openshift.io/v1
+      kind: StableConfigType
+      spec:
+        immutableField: foo
+        optionalImmutableField: foo
+  - name: Should not allow changing the optional immutable field
+    initial: |
+      apiVersion: example.openshift.io/v1
+      kind: StableConfigType
+      spec:
+        immutableField: foo
+        optionalImmutableField: foo
+    updated: |
+      apiVersion: example.openshift.io/v1
+      kind: StableConfigType
+      spec:
+        immutableField: foo
+        optionalImmutableField: bar
+    expectedError: "spec.optionalImmutableField: Invalid value: \"string\": optionalImmutableField is immutable once set"

@@ -19177,6 +19177,22 @@ func schema_openshift_api_example_v1_StableConfigTypeSpec(ref common.ReferenceCa
 							Format:      "",
 						},
 					},
+					"immutableField": {
+						SchemaProps: spec.SchemaProps{
+							Description: "immutableField is a field that is immutable once the object has been created. It is required at all times.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"optionalImmutableField": {
+						SchemaProps: spec.SchemaProps{
+							Description: "optionalImmutableField is a field that is immutable once set. It is optional but may not be changed once set.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"evolvingUnion": {
 						SchemaProps: spec.SchemaProps{
 							Description: "evolvingUnion demonstrates how to phase in new values into discriminated union",
@@ -19192,6 +19208,7 @@ func schema_openshift_api_example_v1_StableConfigTypeSpec(ref common.ReferenceCa
 						},
 					},
 				},
+				Required: []string{"immutableField"},
 			},
 		},
 		Dependencies: []string{

@@ -41,6 +41,18 @@ type StableConfigTypeSpec struct {
 	// +optional
 	StableField string `json:"stableField"`
 
+	// immutableField is a field that is immutable once the object has been created.
+	// It is required at all times.
+	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="immutableField is immutable"
+	// +kubebuilder:validation:Required
+	ImmutableField string `json:"immutableField"`
+
+	// optionalImmutableField is a field that is immutable once set.
+	// It is optional but may not be changed once set.
+	// +kubebuilder:validation:XValidation:rule="oldSelf == '' || self == oldSelf",message="optionalImmutableField is immutable once set"
+	// +optional
+	OptionalImmutableField string `json:"optionalImmutableField"`
+
 	// evolvingUnion demonstrates how to phase in new values into discriminated union
 	// +optional
 	EvolvingUnion EvolvingUnion `json:"evolvingUnion"`

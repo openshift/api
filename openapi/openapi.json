@@ -10628,6 +10628,9 @@
     "com.github.openshift.api.example.v1.StableConfigTypeSpec": {
       "description": "StableConfigTypeSpec is the desired state",
       "type": "object",
+      "required": [
+        "immutableField"
+      ],
       "properties": {
         "celUnion": {
           "description": "celUnion demonstrates how to validate a discrminated union using CEL",
@@ -10643,6 +10646,16 @@
           "description": "evolvingUnion demonstrates how to phase in new values into discriminated union",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.example.v1.EvolvingUnion"
+        },
+        "immutableField": {
+          "description": "immutableField is a field that is immutable once the object has been created. It is required at all times.",
+          "type": "string",
+          "default": ""
+        },
+        "optionalImmutableField": {
+          "description": "optionalImmutableField is a field that is immutable once set. It is optional but may not be changed once set.",
+          "type": "string",
+          "default": ""
         },
         "stableField": {
           "description": "stableField is a field that is present on default clusters and on tech preview clusters\n\nIf empty, the platform will choose a good default, which may change over time without notice.",

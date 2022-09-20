@@ -84,11 +84,27 @@ spec:
                     - TechPreviewOnlyValue
                     type: string
                 type: object
+              immutableField:
+                description: immutableField is a field that is immutable once the
+                  object has been created. It is required at all times.
+                type: string
+                x-kubernetes-validations:
+                - message: immutableField is immutable
+                  rule: self == oldSelf
+              optionalImmutableField:
+                description: optionalImmutableField is a field that is immutable once
+                  set. It is optional but may not be changed once set.
+                type: string
+                x-kubernetes-validations:
+                - message: optionalImmutableField is immutable once set
+                  rule: oldSelf == '' || self == oldSelf
               stableField:
                 description: "stableField is a field that is present on default clusters
                   and on tech preview clusters \n If empty, the platform will choose
                   a good default, which may change over time without notice."
                 type: string
+            required:
+            - immutableField
             type: object
           status:
             description: status is the most recently observed status of the StableConfigType.

@@ -14,6 +14,7 @@ import (
 
 	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 	k8syaml "k8s.io/apimachinery/pkg/util/yaml"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/envtest"
@@ -66,10 +67,6 @@ func loadSuiteFile(path string) (SuiteSpec, error) {
 		return SuiteSpec{}, fmt.Errorf("could not unmarshal YAML file %q: %w", path, err)
 	}
 
-	if s.Name == "" {
-		s.Name = path
-	}
-
 	if s.CRD == "" {
 		return SuiteSpec{}, fmt.Errorf("test suite spec %q is invalid: missing required field `crd`", path)
 	}
@@ -108,7 +105,10 @@ func setAbsolutePath(suitePath string, path *string) error {
 
 // GenerateTestSuite generates a Ginkgo test suite from the provided SuiteSpec.
 func GenerateTestSuite(suiteSpec SuiteSpec) {
-	Describe(suiteSpec.Name, func() {
+	suiteName, err := generateSuiteName(suiteSpec)
+	Expect(err).ToNot(HaveOccurred())
+
+	Describe(suiteName, func() {
 		var crdOptions envtest.CRDInstallOptions
 		var crd *apiextensionsv1.CustomResourceDefinition
 
@@ -252,4 +252,44 @@ func newEmptyUnstructuredFrom(initial *unstructured.Unstructured) *unstructured.
 // objectKey extracts a client.ObjectKey from the given object.
 func objectKey(obj client.Object) client.ObjectKey {
 	return client.ObjectKey{Namespace: obj.GetNamespace(), Name: obj.GetName()}
+}
+
+// loadCRD loads the CustomResourceDefinition defined in the suite spec.
+func loadCRD(suiteSpec SuiteSpec) (*apiextensionsv1.CustomResourceDefinition, error) {
+	raw, err := ioutil.ReadFile(suiteSpec.CRD)
+	if err != nil {
+		return nil, fmt.Errorf("could not load CRD: %w", err)
+	}
+
+	crd := &apiextensionsv1.CustomResourceDefinition{}
+	if err := yaml.Unmarshal(raw, crd); err != nil {
+		return nil, fmt.Errorf("could not unmarshal CRD: %w", err)
+	}
+
+	return crd, nil
+}
+
+// generateSuiteName prepends the specified suite name with the GVR string
+// for the CRD under test.
+func generateSuiteName(suiteSpec SuiteSpec) (string, error) {
+	crd, err := loadCRD(suiteSpec)
+	if err != nil {
+		return "", fmt.Errorf("could not load CRD: %w", err)
+	}
+
+	gvr := schema.GroupVersionResource{
+		Group: crd.Spec.Group,
+		Resource: crd.Spec.Names.Plural,
+	}
+
+	if len(crd.Spec.Versions) == 1 {
+		// When there's only one version it's easy to know which we are testing.
+		gvr.Version = crd.Spec.Versions[0].Name
+	} else {
+		// Otherwise we need to guess the version we are testing, it's probably the package/folder name.
+		packageDir := filepath.Dir(suiteSpec.CRD)
+		gvr.Version = filepath.Base(packageDir)
+	}
+
+	return fmt.Sprintf("[%s] %s", gvr.String(), suiteSpec.Name), nil
 }

@@ -508,17 +508,23 @@ type BareMetalPlatformStatus struct {
 type OpenStackAPIBGPPeer struct {
 	// asn is the Autonomous System number of the peer.
 	//
-	// +kubebuilder:validation:Required
-	ASN string `json:"asn"`
+	// +optional
+	ASN string `json:"asn,omitempty"`
 
 	// ip is the IP address of the peer. It may be either IPv4 or IPv6.
 	//
 	// +kubebuilder:validation:Format=ip
 	// +kubebuilder:validation:Required
 	IP string `json:"ip"`
+
+	// password for BGP authentication against the peer
+	//
+	// +optional
+	Password string `json:"password,omitempty"`
 }
 
-// OpenStackAPIBGPSpeaker species
+// OpenStackAPIBGPSpeaker describes the BGP autonomous system that will contain
+// the API VIP for a specific failure domain.
 type OpenStackAPIBGPSpeaker struct {
 	// failureDomain is the name of a failure domain which this BGP
 	// configuration applies to. A failure domain with that name must be
@@ -533,8 +539,8 @@ type OpenStackAPIBGPSpeaker struct {
 	// +kubebuilder:validation:Required
 	ASN string `json:"asn"`
 
-	// peers is a list of all BGP peers of this speaker. The list must
-	// contain at least one item.
+	// peers is a list of all BGP peers of the speaker for the VIPs of this
+	// failure domain. The list must contain at least one item.
 	//
 	// +kubebuilder:validation:MinItems:=1
 	Peers []OpenStackAPIBGPPeer `json:"peers"`

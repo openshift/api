@@ -570,7 +570,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/machine/v1.NutanixMachineProviderStatus":                            schema_openshift_api_machine_v1_NutanixMachineProviderStatus(ref),
 		"github.com/openshift/api/machine/v1.NutanixResourceIdentifier":                               schema_openshift_api_machine_v1_NutanixResourceIdentifier(ref),
 		"github.com/openshift/api/machine/v1.OpenShiftMachineV1Beta1MachineTemplate":                  schema_openshift_api_machine_v1_OpenShiftMachineV1Beta1MachineTemplate(ref),
-		"github.com/openshift/api/machine/v1.OpenStackFailureDomain":                                  schema_openshift_api_machine_v1_OpenStackFailureDomain(ref),
 		"github.com/openshift/api/machine/v1.PowerVSMachineProviderConfig":                            schema_openshift_api_machine_v1_PowerVSMachineProviderConfig(ref),
 		"github.com/openshift/api/machine/v1.PowerVSMachineProviderStatus":                            schema_openshift_api_machine_v1_PowerVSMachineProviderStatus(ref),
 		"github.com/openshift/api/machine/v1.PowerVSResource":                                         schema_openshift_api_machine_v1_PowerVSResource(ref),
@@ -27972,7 +27971,7 @@ func schema_openshift_api_machine_v1_FailureDomains(ref common.ReferenceCallback
 				Properties: map[string]spec.Schema{
 					"platform": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Platform identifies the platform for which the FailureDomain represents. Currently supported values are AWS, Azure, GCP and OpenStack.",
+							Description: "Platform identifies the platform for which the FailureDomain represents. Currently supported values are AWS, Azure, and GCP.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28020,20 +28019,6 @@ func schema_openshift_api_machine_v1_FailureDomains(ref common.ReferenceCallback
 							},
 						},
 					},
-					"openstack": {
-						SchemaProps: spec.SchemaProps{
-							Description: "OpenStack configures failure domain information for the OpenStack platform.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("github.com/openshift/api/machine/v1.OpenStackFailureDomain"),
-									},
-								},
-							},
-						},
-					},
 				},
 				Required: []string{"platform"},
 			},
@@ -28043,10 +28028,9 @@ func schema_openshift_api_machine_v1_FailureDomains(ref common.ReferenceCallback
 						map[string]interface{}{
 							"discriminator": "platform",
 							"fields-to-discriminateBy": map[string]interface{}{
-								"aws":       "AWS",
-								"azure":     "Azure",
-								"gcp":       "GCP",
-								"openstack": "OpenStack",
+								"aws":   "AWS",
+								"azure": "Azure",
+								"gcp":   "GCP",
 							},
 						},
 					},
@@ -28054,7 +28038,7 @@ func schema_openshift_api_machine_v1_FailureDomains(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1.AWSFailureDomain", "github.com/openshift/api/machine/v1.AzureFailureDomain", "github.com/openshift/api/machine/v1.GCPFailureDomain", "github.com/openshift/api/machine/v1.OpenStackFailureDomain"},
+			"github.com/openshift/api/machine/v1.AWSFailureDomain", "github.com/openshift/api/machine/v1.AzureFailureDomain", "github.com/openshift/api/machine/v1.GCPFailureDomain"},
 	}
 }
 
@@ -28319,28 +28303,6 @@ func schema_openshift_api_machine_v1_OpenShiftMachineV1Beta1MachineTemplate(ref 
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/machine/v1.ControlPlaneMachineSetTemplateObjectMeta", "github.com/openshift/api/machine/v1.FailureDomains", "github.com/openshift/api/machine/v1beta1.MachineSpec"},
-	}
-}
-
-func schema_openshift_api_machine_v1_OpenStackFailureDomain(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "OpenStackFailureDomain configures failure domain information for the OpenStack platform",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"availabilityZone": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The availability zone from which to launch the server.",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-				},
-				Required: []string{"availabilityZone"},
-			},
-		},
 	}
 }
 

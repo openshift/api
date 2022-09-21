@@ -188,7 +188,7 @@ const (
 // +union
 type FailureDomains struct {
 	// Platform identifies the platform for which the FailureDomain represents.
-	// Currently supported values are AWS, Azure, GCP and OpenStack.
+	// Currently supported values are AWS, Azure, and GCP.
 	// +unionDiscriminator
 	// +kubebuilder:validation:Required
 	Platform configv1.PlatformType `json:"platform"`
@@ -204,10 +204,6 @@ type FailureDomains struct {
 	// GCP configures failure domain information for the GCP platform.
 	// +optional
 	GCP *[]GCPFailureDomain `json:"gcp,omitempty"`
-
-	// OpenStack configures failure domain information for the OpenStack platform.
-	// +optional
-	OpenStack *[]OpenStackFailureDomain `json:"openstack,omitempty"`
 }
 
 // AWSFailureDomain configures failure domain information for the AWS platform.
@@ -242,13 +238,6 @@ type GCPFailureDomain struct {
 	// Zone is the zone in which the GCP machine provider will create the VM.
 	// +kubebuilder:validation:Required
 	Zone string `json:"zone"`
-}
-
-// OpenStackFailureDomain configures failure domain information for the OpenStack platform
-type OpenStackFailureDomain struct {
-	// The availability zone from which to launch the server.
-	// +kubebuilder:validation:Required
-	AvailabilityZone string `json:"availabilityZone"`
 }
 
 // ControlPlaneMachineSetStatus represents the status of the ControlPlaneMachineSet CRD.

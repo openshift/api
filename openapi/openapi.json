@@ -16239,16 +16239,8 @@
             "$ref": "#/definitions/com.github.openshift.api.machine.v1.GCPFailureDomain"
           }
         },
-        "openstack": {
-          "description": "OpenStack configures failure domain information for the OpenStack platform.",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/com.github.openshift.api.machine.v1.OpenStackFailureDomain"
-          }
-        },
         "platform": {
-          "description": "Platform identifies the platform for which the FailureDomain represents. Currently supported values are AWS, Azure, GCP and OpenStack.",
+          "description": "Platform identifies the platform for which the FailureDomain represents. Currently supported values are AWS, Azure, and GCP.",
           "type": "string",
           "default": ""
         }
@@ -16259,8 +16251,7 @@
           "fields-to-discriminateBy": {
             "aws": "AWS",
             "azure": "Azure",
-            "gcp": "GCP",
-            "openstack": "OpenStack"
+            "gcp": "GCP"
           }
         }
       ]
@@ -16434,20 +16425,6 @@
           "description": "Spec contains the desired configuration of the Control Plane Machines. The ProviderSpec within contains platform specific details for creating the Control Plane Machines. The ProviderSe should be complete apart from the platform specific failure domain field. This will be overriden when the Machines are created based on the FailureDomains field.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.MachineSpec"
-        }
-      }
-    },
-    "com.github.openshift.api.machine.v1.OpenStackFailureDomain": {
-      "description": "OpenStackFailureDomain configures failure domain information for the OpenStack platform",
-      "type": "object",
-      "required": [
-        "availabilityZone"
-      ],
-      "properties": {
-        "availabilityZone": {
-          "description": "The availability zone from which to launch the server.",
-          "type": "string",
-          "default": ""
         }
       }
     },

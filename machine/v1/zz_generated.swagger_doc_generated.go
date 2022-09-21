@@ -236,12 +236,11 @@ func (ControlPlaneMachineSetTemplateObjectMeta) SwaggerDoc() map[string]string {
 }
 
 var map_FailureDomains = map[string]string{
-	"":          "FailureDomain represents the different configurations required to spread Machines across failure domains on different platforms.",
-	"platform":  "Platform identifies the platform for which the FailureDomain represents. Currently supported values are AWS, Azure, GCP and OpenStack.",
-	"aws":       "AWS configures failure domain information for the AWS platform.",
-	"azure":     "Azure configures failure domain information for the Azure platform.",
-	"gcp":       "GCP configures failure domain information for the GCP platform.",
-	"openstack": "OpenStack configures failure domain information for the OpenStack platform.",
+	"":         "FailureDomain represents the different configurations required to spread Machines across failure domains on different platforms.",
+	"platform": "Platform identifies the platform for which the FailureDomain represents. Currently supported values are AWS, Azure, and GCP.",
+	"aws":      "AWS configures failure domain information for the AWS platform.",
+	"azure":    "Azure configures failure domain information for the Azure platform.",
+	"gcp":      "GCP configures failure domain information for the GCP platform.",
 }
 
 func (FailureDomains) SwaggerDoc() map[string]string {
@@ -266,15 +265,6 @@ var map_OpenShiftMachineV1Beta1MachineTemplate = map[string]string{
 
 func (OpenShiftMachineV1Beta1MachineTemplate) SwaggerDoc() map[string]string {
 	return map_OpenShiftMachineV1Beta1MachineTemplate
-}
-
-var map_OpenStackFailureDomain = map[string]string{
-	"":                 "OpenStackFailureDomain configures failure domain information for the OpenStack platform",
-	"availabilityZone": "The availability zone from which to launch the server.",
-}
-
-func (OpenStackFailureDomain) SwaggerDoc() map[string]string {
-	return map_OpenStackFailureDomain
 }
 
 var map_NutanixMachineProviderConfig = map[string]string{

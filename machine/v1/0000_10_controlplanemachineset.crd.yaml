@@ -260,25 +260,10 @@ spec:
                               - zone
                               type: object
                             type: array
-                          openstack:
-                            description: OpenStack configures failure domain information
-                              for the OpenStack platform.
-                            items:
-                              description: OpenStackFailureDomain configures failure
-                                domain information for the OpenStack platform
-                              properties:
-                                availabilityZone:
-                                  description: The availability zone from which to
-                                    launch the server.
-                                  type: string
-                              required:
-                              - availabilityZone
-                              type: object
-                            type: array
                           platform:
                             description: Platform identifies the platform for which
                               the FailureDomain represents. Currently supported values
-                              are AWS, Azure, GCP and OpenStack.
+                              are AWS, Azure, and GCP.
                             enum:
                             - ""
                             - AWS

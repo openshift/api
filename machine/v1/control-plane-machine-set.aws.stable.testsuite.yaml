@@ -19,6 +19,7 @@ tests:
               labels:
                 machine.openshift.io/cluster-api-machine-role: master
                 machine.openshift.io/cluster-api-machine-type: master
+                machine.openshift.io/cluster-api-cluster: cluster
             spec:
               providerSpec: {}
             failureDomains:
@@ -40,6 +41,7 @@ tests:
               labels:
                 machine.openshift.io/cluster-api-machine-role: master
                 machine.openshift.io/cluster-api-machine-type: master
+                machine.openshift.io/cluster-api-cluster: cluster
             spec:
               providerSpec: {}
             failureDomains:
@@ -63,6 +65,7 @@ tests:
               labels:
                 machine.openshift.io/cluster-api-machine-role: master
                 machine.openshift.io/cluster-api-machine-type: master
+                machine.openshift.io/cluster-api-cluster: cluster
             spec:
               providerSpec: {}
             failureDomains:
@@ -87,6 +90,7 @@ tests:
               labels:
                 machine.openshift.io/cluster-api-machine-role: master
                 machine.openshift.io/cluster-api-machine-type: master
+                machine.openshift.io/cluster-api-cluster: cluster
             spec:
               providerSpec: {}
             failureDomains:
@@ -110,6 +114,7 @@ tests:
               labels:
                 machine.openshift.io/cluster-api-machine-role: master
                 machine.openshift.io/cluster-api-machine-type: master
+                machine.openshift.io/cluster-api-cluster: cluster
             spec:
               providerSpec: {}
             failureDomains:
@@ -134,6 +139,7 @@ tests:
               labels:
                 machine.openshift.io/cluster-api-machine-role: master
                 machine.openshift.io/cluster-api-machine-type: master
+                machine.openshift.io/cluster-api-cluster: cluster
             spec:
               providerSpec: {}
             failureDomains:
@@ -160,6 +166,7 @@ tests:
               labels:
                 machine.openshift.io/cluster-api-machine-role: master
                 machine.openshift.io/cluster-api-machine-type: master
+                machine.openshift.io/cluster-api-cluster: cluster
             spec:
               providerSpec: {}
             failureDomains:
@@ -184,6 +191,7 @@ tests:
               labels:
                 machine.openshift.io/cluster-api-machine-role: master
                 machine.openshift.io/cluster-api-machine-type: master
+                machine.openshift.io/cluster-api-cluster: cluster
             spec:
               providerSpec: {}
             failureDomains:
@@ -210,6 +218,7 @@ tests:
               labels:
                 machine.openshift.io/cluster-api-machine-role: master
                 machine.openshift.io/cluster-api-machine-type: master
+                machine.openshift.io/cluster-api-cluster: cluster
             spec:
               providerSpec: {}
             failureDomains:
@@ -237,6 +246,7 @@ tests:
               labels:
                 machine.openshift.io/cluster-api-machine-role: master
                 machine.openshift.io/cluster-api-machine-type: master
+                machine.openshift.io/cluster-api-cluster: cluster
             spec:
               providerSpec: {}
             failureDomains:
@@ -263,6 +273,7 @@ tests:
               labels:
                 machine.openshift.io/cluster-api-machine-role: master
                 machine.openshift.io/cluster-api-machine-type: master
+                machine.openshift.io/cluster-api-cluster: cluster
             spec:
               providerSpec: {}
             failureDomains:
@@ -287,6 +298,7 @@ tests:
               labels:
                 machine.openshift.io/cluster-api-machine-role: master
                 machine.openshift.io/cluster-api-machine-type: master
+                machine.openshift.io/cluster-api-cluster: cluster
             spec:
               providerSpec: {}
             failureDomains:
@@ -314,6 +326,7 @@ tests:
               labels:
                 machine.openshift.io/cluster-api-machine-role: master
                 machine.openshift.io/cluster-api-machine-type: master
+                machine.openshift.io/cluster-api-cluster: cluster
             spec:
               providerSpec: {}
             failureDomains:
@@ -339,6 +352,7 @@ tests:
               labels:
                 machine.openshift.io/cluster-api-machine-role: master
                 machine.openshift.io/cluster-api-machine-type: master
+                machine.openshift.io/cluster-api-cluster: cluster
             spec:
               providerSpec: {}
             failureDomains:

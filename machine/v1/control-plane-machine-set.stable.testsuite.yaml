@@ -19,6 +19,7 @@ tests:
               labels:
                 machine.openshift.io/cluster-api-machine-role: master
                 machine.openshift.io/cluster-api-machine-type: master
+                machine.openshift.io/cluster-api-cluster: cluster
             spec:
               providerSpec: {}
     expected: |
@@ -39,6 +40,7 @@ tests:
               labels:
                 machine.openshift.io/cluster-api-machine-role: master
                 machine.openshift.io/cluster-api-machine-type: master
+                machine.openshift.io/cluster-api-cluster: cluster
             spec:
               providerSpec: {}
   - name: Should reject a missing machineType
@@ -56,6 +58,7 @@ tests:
               labels:
                 machine.openshift.io/cluster-api-machine-role: master
                 machine.openshift.io/cluster-api-machine-type: master
+                machine.openshift.io/cluster-api-cluster: cluster
             spec:
               providerSpec: {}
     expectedError: "spec.template.machineType: Required value"
@@ -71,6 +74,103 @@ tests:
         template:
           machineType: machines_v1beta1_machine_openshift_io
     expectedError: "spec.template: Invalid value: \"object\": machines_v1beta1_machine_openshift_io configuration is required when machineType is machines_v1beta1_machine_openshift_io, and forbidden otherwise"
+  - name: Should reject a worker role label
+    initial: |
+      apiVersion: machine.openshift.io/v1
+      kind: ControlPlaneMachineSet
+      spec:
+        selector:
+          matchLabels:
+            machine.openshift.io/cluster-api-machine-role: master
+            machine.openshift.io/cluster-api-machine-type: master
+        template:
+          machineType: machines_v1beta1_machine_openshift_io
+          machines_v1beta1_machine_openshift_io:
+            metadata:
+              labels:
+                machine.openshift.io/cluster-api-machine-role: worker
+                machine.openshift.io/cluster-api-machine-type: master
+                machine.openshift.io/cluster-api-cluster: cluster
+            spec:
+              providerSpec: {}
+    expectedError: "spec.template.machines_v1beta1_machine_openshift_io.metadata.labels: Invalid value: \"object\": label 'machine.openshift.io/cluster-api-machine-role' is required, and must have value 'master'"
+  - name: Should reject a missing role label
+    initial: |
+      apiVersion: machine.openshift.io/v1
+      kind: ControlPlaneMachineSet
+      spec:
+        selector:
+          matchLabels:
+            machine.openshift.io/cluster-api-machine-role: master
+            machine.openshift.io/cluster-api-machine-type: master
+        template:
+          machineType: machines_v1beta1_machine_openshift_io
+          machines_v1beta1_machine_openshift_io:
+            metadata:
+              labels:
+                machine.openshift.io/cluster-api-machine-type: master
+                machine.openshift.io/cluster-api-cluster: cluster
+            spec:
+              providerSpec: {}
+    expectedError: "spec.template.machines_v1beta1_machine_openshift_io.metadata.labels: Invalid value: \"object\": label 'machine.openshift.io/cluster-api-machine-role' is required, and must have value 'master'"
+  - name: Should reject a worker type label
+    initial: |
+      apiVersion: machine.openshift.io/v1
+      kind: ControlPlaneMachineSet
+      spec:
+        selector:
+          matchLabels:
+            machine.openshift.io/cluster-api-machine-role: master
+            machine.openshift.io/cluster-api-machine-type: master
+        template:
+          machineType: machines_v1beta1_machine_openshift_io
+          machines_v1beta1_machine_openshift_io:
+            metadata:
+              labels:
+                machine.openshift.io/cluster-api-machine-role: master
+                machine.openshift.io/cluster-api-machine-type: worker
+                machine.openshift.io/cluster-api-cluster: cluster
+            spec:
+              providerSpec: {}
+    expectedError: "spec.template.machines_v1beta1_machine_openshift_io.metadata.labels: Invalid value: \"object\": label 'machine.openshift.io/cluster-api-machine-type' is required, and must have value 'master'"
+  - name: Should reject a missing type label
+    initial: |
+      apiVersion: machine.openshift.io/v1
+      kind: ControlPlaneMachineSet
+      spec:
+        selector:
+          matchLabels:
+            machine.openshift.io/cluster-api-machine-role: master
+            machine.openshift.io/cluster-api-machine-type: master
+        template:
+          machineType: machines_v1beta1_machine_openshift_io
+          machines_v1beta1_machine_openshift_io:
+            metadata:
+              labels:
+                machine.openshift.io/cluster-api-machine-role: master
+                machine.openshift.io/cluster-api-cluster: cluster
+            spec:
+              providerSpec: {}
+    expectedError: "spec.template.machines_v1beta1_machine_openshift_io.metadata.labels: Invalid value: \"object\": label 'machine.openshift.io/cluster-api-machine-type' is required, and must have value 'master'"
+  - name: Should reject a missing cluster ID label
+    initial: |
+      apiVersion: machine.openshift.io/v1
+      kind: ControlPlaneMachineSet
+      spec:
+        selector:
+          matchLabels:
+            machine.openshift.io/cluster-api-machine-role: master
+            machine.openshift.io/cluster-api-machine-type: master
+        template:
+          machineType: machines_v1beta1_machine_openshift_io
+          machines_v1beta1_machine_openshift_io:
+            metadata:
+              labels:
+                machine.openshift.io/cluster-api-machine-role: master
+                machine.openshift.io/cluster-api-machine-type: master
+            spec:
+              providerSpec: {}
+    expectedError: "spec.template.machines_v1beta1_machine_openshift_io.metadata.labels: Invalid value: \"object\": label 'machine.openshift.io/cluster-api-cluster' is required"
   onUpdate:
   - name: Replicas should be immutable
     initial: |
@@ -91,6 +191,7 @@ tests:
               labels:
                 machine.openshift.io/cluster-api-machine-role: master
                 machine.openshift.io/cluster-api-machine-type: master
+                machine.openshift.io/cluster-api-cluster: cluster
             spec:
               providerSpec: {}
     updated: |
@@ -111,6 +212,7 @@ tests:
               labels:
                 machine.openshift.io/cluster-api-machine-role: master
                 machine.openshift.io/cluster-api-machine-type: master
+                machine.openshift.io/cluster-api-cluster: cluster
             spec:
               providerSpec: {}
     expectedError: "spec.replicas: Invalid value: \"integer\": replicas is immutable"
@@ -133,6 +235,7 @@ tests:
               labels:
                 machine.openshift.io/cluster-api-machine-role: master
                 machine.openshift.io/cluster-api-machine-type: master
+                machine.openshift.io/cluster-api-cluster: cluster
             spec:
               providerSpec: {}
     updated: |
@@ -154,6 +257,7 @@ tests:
               labels:
                 machine.openshift.io/cluster-api-machine-role: master
                 machine.openshift.io/cluster-api-machine-type: master
+                machine.openshift.io/cluster-api-cluster: cluster
             spec:
               providerSpec: {}
     expectedError: "spec.selector: Invalid value: \"object\": selector is immutable"
@@ -176,6 +280,7 @@ tests:
               labels:
                 machine.openshift.io/cluster-api-machine-role: master
                 machine.openshift.io/cluster-api-machine-type: master
+                machine.openshift.io/cluster-api-cluster: cluster
             spec:
               providerSpec: {}
     updated: |
@@ -194,6 +299,7 @@ tests:
               labels:
                 machine.openshift.io/cluster-api-machine-role: master
                 machine.openshift.io/cluster-api-machine-type: master
+                machine.openshift.io/cluster-api-cluster: cluster
             spec:
               providerSpec: {}
     expected: |
@@ -214,5 +320,6 @@ tests:
               labels:
                 machine.openshift.io/cluster-api-machine-role: master
                 machine.openshift.io/cluster-api-machine-type: master
+                machine.openshift.io/cluster-api-cluster: cluster
             spec:
               providerSpec: {}

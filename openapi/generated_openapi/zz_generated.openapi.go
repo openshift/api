@@ -27917,7 +27917,7 @@ func schema_openshift_api_machine_v1_ControlPlaneMachineSetTemplateObjectMeta(re
 				Properties: map[string]spec.Schema{
 					"labels": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Map of string keys and values that can be used to organize and categorize (scope and select) objects. May match selectors of replication controllers and services. More info: http://kubernetes.io/docs/user-guide/labels",
+							Description: "Map of string keys and values that can be used to organize and categorize (scope and select) objects. May match selectors of replication controllers and services. More info: http://kubernetes.io/docs/user-guide/labels. This field must contain both the 'machine.openshift.io/cluster-api-machine-role' and 'machine.openshift.io/cluster-api-machine-type' labels, both with a value of 'master'. It must also contain a label with the key 'machine.openshift.io/cluster-api-cluster'.",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,
@@ -27948,6 +27948,7 @@ func schema_openshift_api_machine_v1_ControlPlaneMachineSetTemplateObjectMeta(re
 						},
 					},
 				},
+				Required: []string{"labels"},
 			},
 		},
 	}

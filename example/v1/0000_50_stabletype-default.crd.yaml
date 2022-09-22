@@ -40,6 +40,33 @@ spec:
             description: spec is the specification of the desired behavior of the
               StableConfigType.
             properties:
+              celUnion:
+                description: celUnion demonstrates how to validate a discrminated
+                  union using CEL
+                properties:
+                  optionalMember:
+                    description: optionalMember is a union member that is optional.
+                    type: string
+                  requiredMember:
+                    description: requiredMember is a union member that is required.
+                    type: string
+                  type:
+                    description: type determines which of the union members should
+                      be populated.
+                    enum:
+                    - RequiredMember
+                    - OptionalMember
+                    - EmptyMember
+                    type: string
+                type: object
+                x-kubernetes-validations:
+                - message: requiredMember is required when type is RequiredMember,
+                    and forbidden otherwise
+                  rule: 'has(self.type) && self.type == ''RequiredMember'' ?  has(self.requiredMember)
+                    : !has(self.requiredMember)'
+                - message: optionalMember is forbidden when type is not OptionalMember
+                  rule: 'has(self.type) && self.type == ''OptionalMember'' ?  true
+                    : !has(self.optionalMember)'
               evolvingUnion:
                 description: evolvingUnion demonstrates how to phase in new values
                   into discriminated union
@@ -51,16 +78,28 @@ spec:
                     - ""
                     - StableValue
                     type: string
-                required:
-                - type
                 type: object
+              immutableField:
+                description: immutableField is a field that is immutable once the
+                  object has been created. It is required at all times.
+                type: string
+                x-kubernetes-validations:
+                - message: immutableField is immutable
+                  rule: self == oldSelf
+              optionalImmutableField:
+                description: optionalImmutableField is a field that is immutable once
+                  set. It is optional but may not be changed once set.
+                type: string
+                x-kubernetes-validations:
+                - message: optionalImmutableField is immutable once set
+                  rule: oldSelf == '' || self == oldSelf
               stableField:
                 description: "stableField is a field that is present on default clusters
                   and on tech preview clusters \n If empty, the platform will choose
                   a good default, which may change over time without notice."
                 type: string
             required:
-            - evolvingUnion
+            - immutableField
             type: object
           status:
             description: status is the most recently observed status of the StableConfigType.
@@ -141,3 +180,5 @@ spec:
                 x-kubernetes-list-type: map
             type: object
         type: object
+    served: true
+    storage: true

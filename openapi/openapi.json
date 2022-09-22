@@ -10533,16 +10533,39 @@
         }
       }
     },
+    "com.github.openshift.api.example.v1.CELUnion": {
+      "description": "CELUnion demonstrates how to use a discriminated union and how to validate it using CEL.",
+      "type": "object",
+      "properties": {
+        "optionalMember": {
+          "description": "optionalMember is a union member that is optional.",
+          "type": "string"
+        },
+        "requiredMember": {
+          "description": "requiredMember is a union member that is required.",
+          "type": "string"
+        },
+        "type": {
+          "description": "type determines which of the union members should be populated.",
+          "type": "string"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {
+            "optionalMember": "OptionalMember",
+            "requiredMember": "RequiredMember"
+          }
+        }
+      ]
+    },
     "com.github.openshift.api.example.v1.EvolvingUnion": {
       "type": "object",
-      "required": [
-        "type"
-      ],
       "properties": {
         "type": {
           "description": "type is the discriminator. It has different values for Default and for TechPreviewNoUpgrade",
-          "type": "string",
-          "default": ""
+          "type": "string"
         }
       }
     },
@@ -10606,9 +10629,14 @@
       "description": "StableConfigTypeSpec is the desired state",
       "type": "object",
       "required": [
-        "evolvingUnion"
+        "immutableField"
       ],
       "properties": {
+        "celUnion": {
+          "description": "celUnion demonstrates how to validate a discrminated union using CEL",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.example.v1.CELUnion"
+        },
         "coolNewField": {
           "description": "coolNewField is a field that is for tech preview only.  On normal clusters this shouldn't be present",
           "type": "string",
@@ -10618,6 +10646,16 @@
           "description": "evolvingUnion demonstrates how to phase in new values into discriminated union",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.example.v1.EvolvingUnion"
+        },
+        "immutableField": {
+          "description": "immutableField is a field that is immutable once the object has been created. It is required at all times.",
+          "type": "string",
+          "default": ""
+        },
+        "optionalImmutableField": {
+          "description": "optionalImmutableField is a field that is immutable once set. It is optional but may not be changed once set.",
+          "type": "string",
+          "default": ""
         },
         "stableField": {
           "description": "stableField is a field that is present on default clusters and on tech preview clusters\n\nIf empty, the platform will choose a good default, which may change over time without notice.",

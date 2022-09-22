@@ -397,6 +397,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/console/v1alpha1.ConsolePluginProxyServiceConfig":                   schema_openshift_api_console_v1alpha1_ConsolePluginProxyServiceConfig(ref),
 		"github.com/openshift/api/console/v1alpha1.ConsolePluginService":                              schema_openshift_api_console_v1alpha1_ConsolePluginService(ref),
 		"github.com/openshift/api/console/v1alpha1.ConsolePluginSpec":                                 schema_openshift_api_console_v1alpha1_ConsolePluginSpec(ref),
+		"github.com/openshift/api/example/v1.CELUnion":                                                schema_openshift_api_example_v1_CELUnion(ref),
 		"github.com/openshift/api/example/v1.EvolvingUnion":                                           schema_openshift_api_example_v1_EvolvingUnion(ref),
 		"github.com/openshift/api/example/v1.StableConfigType":                                        schema_openshift_api_example_v1_StableConfigType(ref),
 		"github.com/openshift/api/example/v1.StableConfigTypeList":                                    schema_openshift_api_example_v1_StableConfigTypeList(ref),
@@ -18988,6 +18989,53 @@ func schema_openshift_api_console_v1alpha1_ConsolePluginSpec(ref common.Referenc
 	}
 }
 
+func schema_openshift_api_example_v1_CELUnion(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CELUnion demonstrates how to use a discriminated union and how to validate it using CEL.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type determines which of the union members should be populated.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"requiredMember": {
+						SchemaProps: spec.SchemaProps{
+							Description: "requiredMember is a union member that is required.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"optionalMember": {
+						SchemaProps: spec.SchemaProps{
+							Description: "optionalMember is a union member that is optional.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "type",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"optionalMember": "OptionalMember",
+								"requiredMember": "RequiredMember",
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_example_v1_EvolvingUnion(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -18997,13 +19045,11 @@ func schema_openshift_api_example_v1_EvolvingUnion(ref common.ReferenceCallback)
 					"type": {
 						SchemaProps: spec.SchemaProps{
 							Description: "type is the discriminator. It has different values for Default and for TechPreviewNoUpgrade",
-							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 				},
-				Required: []string{"type"},
 			},
 		},
 	}
@@ -19130,6 +19176,22 @@ func schema_openshift_api_example_v1_StableConfigTypeSpec(ref common.ReferenceCa
 							Format:      "",
 						},
 					},
+					"immutableField": {
+						SchemaProps: spec.SchemaProps{
+							Description: "immutableField is a field that is immutable once the object has been created. It is required at all times.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"optionalImmutableField": {
+						SchemaProps: spec.SchemaProps{
+							Description: "optionalImmutableField is a field that is immutable once set. It is optional but may not be changed once set.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"evolvingUnion": {
 						SchemaProps: spec.SchemaProps{
 							Description: "evolvingUnion demonstrates how to phase in new values into discriminated union",
@@ -19137,12 +19199,19 @@ func schema_openshift_api_example_v1_StableConfigTypeSpec(ref common.ReferenceCa
 							Ref:         ref("github.com/openshift/api/example/v1.EvolvingUnion"),
 						},
 					},
+					"celUnion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "celUnion demonstrates how to validate a discrminated union using CEL",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/example/v1.CELUnion"),
+						},
+					},
 				},
-				Required: []string{"evolvingUnion"},
+				Required: []string{"immutableField"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/example/v1.EvolvingUnion"},
+			"github.com/openshift/api/example/v1.CELUnion", "github.com/openshift/api/example/v1.EvolvingUnion"},
 	}
 }
 

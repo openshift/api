@@ -11,7 +11,7 @@ include $(addprefix ./vendor/github.com/openshift/build-machinery-go/make/, \
 	targets/openshift/crd-schema-gen.mk \
 )
 
-EXCLUDE_DIRS := _output/ dependencymagnet/ hack/ third_party/ tls/ tools/ vendor/
+EXCLUDE_DIRS := _output/ dependencymagnet/ hack/ third_party/ tls/ tools/ vendor/ tests/
 GO_PACKAGES :=$(addsuffix ...,$(addprefix ./,$(filter-out $(EXCLUDE_DIRS), $(wildcard */))))
 GO_BUILD_PACKAGES :=$(GO_PACKAGES)
 GO_BUILD_PACKAGES_EXPANDED :=$(GO_BUILD_PACKAGES)
@@ -79,7 +79,7 @@ verify: verify-scripts verify-codegen-crds verify-codegen-TechPreviewNoUpgrade-c
 ################################################################################################
 
 .PHONY: update-scripts
-update-scripts: update-compatibility update-openapi update-deepcopy update-protobuf update-swagger-docs update-codegen-TechPreviewNoUpgrade-crds update-codegen-Default-crds
+update-scripts: update-compatibility update-openapi update-deepcopy update-protobuf update-swagger-docs update-codegen-TechPreviewNoUpgrade-crds update-codegen-Default-crds tests-vendor
 
 .PHONY: update-compatibility
 update-compatibility:
@@ -112,3 +112,10 @@ verify-with-container:
 
 generate-with-container:
 	$(RUNTIME) run -ti --rm -v $(PWD):/go/src/github.com/openshift/api:z -w /go/src/github.com/openshift/api $(RUNTIME_IMAGE_NAME) make update
+
+.PHONY: integration
+integration:
+	make -C tests integration
+
+tests-vendor:
+	make -C tests vendor

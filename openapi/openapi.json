@@ -22116,7 +22116,7 @@
           "type": "string"
         },
         "developerCatalog": {
-          "description": "developerCatalog allows to configure the shown developer catalog categories.",
+          "description": "developerCatalog allows to configure the shown developer catalog categories (filters) and types (sub-catalogs).",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.DeveloperConsoleCatalogCustomization"
         },
@@ -22592,8 +22592,50 @@
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.DeveloperConsoleCatalogCategory"
           }
+        },
+        "types": {
+          "description": "types allows enabling or disabling of sub-catalog types that user can see in the Developer catalog. When omitted, all the sub-catalog types will be shown.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.DeveloperConsoleCatalogTypesState"
         }
       }
+    },
+    "com.github.openshift.api.operator.v1.DeveloperConsoleCatalogTypesState": {
+      "description": "DeveloperConsoleCatalogTypesState defines the state of the sub-catalog types.",
+      "type": "object",
+      "properties": {
+        "disabled": {
+          "description": "disabled is a list of developer catalog types (sub-catalogs IDs) that are not shown to users. Types (sub-catalogs) are added via console plugins, the available types (sub-catalog IDs) are available in the console on the cluster configuration page, or when editing the YAML in the console. Example: \"Devfile\", \"HelmChart\", \"BuilderImage\" If the list is empty or all the available sub-catalog types are added, then the complete developer catalog should be hidden.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        },
+        "enabled": {
+          "description": "enabled is a list of developer catalog types (sub-catalogs IDs) that will be shown to users. Types (sub-catalogs) are added via console plugins, the available types (sub-catalog IDs) are available in the console on the cluster configuration page, or when editing the YAML in the console. Example: \"Devfile\", \"HelmChart\", \"BuilderImage\" If the list is non-empty, a new type will not be shown to the user until it is added to list. If the list is empty the complete developer catalog will be shown.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        },
+        "state": {
+          "description": "state defines if a list of catalog types should be enabled or disabled.",
+          "type": "string"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "state",
+          "fields-to-discriminateBy": {
+            "disabled": "Disabled",
+            "enabled": "Enabled"
+          }
+        }
+      ]
     },
     "com.github.openshift.api.operator.v1.EgressIPConfig": {
       "description": "EgressIPConfig defines the configuration knobs for egressip",
@@ -25326,28 +25368,6 @@
         }
       }
     },
-    "com.github.openshift.api.operator.v1.PerspectiveAccessReview": {
-      "description": "PerspectiveAccessReview defines the visibility of the perspective depending on the access review checks. `required` and  `missing` can work together esp. in the case where the cluster admin wants to show another perspective to users without specific permissions. Out of `required` and `missing` atleast one property should be non-empty.",
-      "type": "object",
-      "properties": {
-        "missing": {
-          "description": "missing defines a list of permission checks. The perspective will only be shown when at least one check fails. When omitted, the access review is skipped and the perspective will not be shown unless it is required to do so based on the configuration of the required access review list.",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/io.k8s.api.authorization.v1.ResourceAttributes"
-          }
-        },
-        "required": {
-          "description": "required defines a list of permission checks. The perspective will only be shown when all checks are successful. When omitted, the access review is skipped and the perspective will not be shown unless it is required to do so based on the configuration of the missing access review list.",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/io.k8s.api.authorization.v1.ResourceAttributes"
-          }
-        }
-      }
-    },
     "com.github.openshift.api.operator.v1.PerspectiveVisibility": {
       "description": "PerspectiveVisibility defines the criteria to show/hide a perspective",
       "type": "object",
@@ -25357,7 +25377,7 @@
       "properties": {
         "accessReview": {
           "description": "accessReview defines required and missing access review checks.",
-          "$ref": "#/definitions/com.github.openshift.api.operator.v1.PerspectiveAccessReview"
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.ResourceAttributesAccessReview"
         },
         "state": {
           "description": "state defines the perspective is enabled or disabled or access review check is required.",
@@ -25487,6 +25507,28 @@
           "items": {
             "type": "string",
             "default": ""
+          }
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.ResourceAttributesAccessReview": {
+      "description": "ResourceAttributesAccessReview defines the visibility of the perspective depending on the access review checks. `required` and  `missing` can work together esp. in the case where the cluster admin wants to show another perspective to users without specific permissions. Out of `required` and `missing` atleast one property should be non-empty.",
+      "type": "object",
+      "properties": {
+        "missing": {
+          "description": "missing defines a list of permission checks. The perspective will only be shown when at least one check fails. When omitted, the access review is skipped and the perspective will not be shown unless it is required to do so based on the configuration of the required access review list.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.authorization.v1.ResourceAttributes"
+          }
+        },
+        "required": {
+          "description": "required defines a list of permission checks. The perspective will only be shown when all checks are successful. When omitted, the access review is skipped and the perspective will not be shown unless it is required to do so based on the configuration of the missing access review list.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.authorization.v1.ResourceAttributes"
           }
         }
       }

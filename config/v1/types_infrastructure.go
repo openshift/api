@@ -511,7 +511,8 @@ type OpenStackAPIBGPPeer struct {
 	// +optional
 	ASN string `json:"asn,omitempty"`
 
-	// ip is the IP address of the peer. It may be either IPv4 or IPv6.
+	// ip is the IP address of the peer, as reachable from the Control
+	// plane machine. It may be either IPv4 or IPv6
 	//
 	// +kubebuilder:validation:Format=ip
 	// +kubebuilder:validation:Required

@@ -631,12 +631,12 @@ type OpenStackPlatformSpec struct {
 	// The current default configuration uses VRRP.
 	//
 	// +optional
-	APILoadBalancer APILoadBalancer `json:"apiLoadBalancer"`
+	APILoadBalancer OpenStackAPILoadBalancer `json:"apiLoadBalancer"`
 }
 
-// APILoadBalancerType defines how inbound traffic is routed to the API
+// OpenStackAPILoadBalancer defines how inbound traffic is routed to the API
 // servers.
-type APILoadBalancer struct {
+type OpenStackAPILoadBalancer struct {
 	// apiLoadBalancerType defines the type of loadbalancer which will be
 	// configured for the API server. Permitted values are `VRRP` and
 	// `BGP`.

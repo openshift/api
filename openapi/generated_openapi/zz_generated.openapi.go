@@ -13235,7 +13235,7 @@ func schema_openshift_api_config_v1_IngressSpec(ref common.ReferenceCallback) co
 							},
 						},
 					},
-					"loadbalancer": {
+					"loadBalancer": {
 						SchemaProps: spec.SchemaProps{
 							Description: "loadBalancer contains the load balancer details in general which are not only specific to the underlying infrastructure provider of the current cluster and are required for Ingress Controller to work on OpenShift.",
 							Default:     map[string]interface{}{},

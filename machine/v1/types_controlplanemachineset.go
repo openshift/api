@@ -40,6 +40,7 @@ type ControlPlaneMachineSetSpec struct {
 	// 3 and 5 are the only valid values for this field.
 	// +kubebuilder:validation:Enum:=3;5
 	// +kubebuilder:default:=3
+	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="replicas is immutable"
 	// +kubebuilder:validation:Required
 	Replicas *int32 `json:"replicas"`
 
@@ -53,6 +54,7 @@ type ControlPlaneMachineSetSpec struct {
 	// selector will be the ones affected by this ControlPlaneMachineSet.
 	// It must match the template's labels.
 	// This field is considered immutable after creation of the resource.
+	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="selector is immutable"
 	// +kubebuilder:validation:Required
 	Selector metav1.LabelSelector `json:"selector"`
 
@@ -71,16 +73,17 @@ type ControlPlaneMachineSetSpec struct {
 // + For now, the only supported type is the OpenShift Machine API Machine, but in the future
 // + we plan to expand this to allow other Machine types such as Cluster API Machines or a
 // + future version of the Machine API Machine.
+// +kubebuilder:validation:XValidation:rule="has(self.machineType) && self.machineType == 'machines_v1beta1_machine_openshift_io' ?  has(self.machines_v1beta1_machine_openshift_io) : !has(self.machines_v1beta1_machine_openshift_io)",message="machines_v1beta1_machine_openshift_io configuration is required when machineType is machines_v1beta1_machine_openshift_io, and forbidden otherwise"
 type ControlPlaneMachineSetTemplate struct {
 	// MachineType determines the type of Machines that should be managed by the ControlPlaneMachineSet.
 	// Currently, the only valid value is machines_v1beta1_machine_openshift_io.
 	// +unionDiscriminator
 	// +kubebuilder:validation:Required
-	MachineType ControlPlaneMachineSetMachineType `json:"machineType"`
+	MachineType ControlPlaneMachineSetMachineType `json:"machineType,omitempty"`
 
 	// OpenShiftMachineV1Beta1Machine defines the template for creating Machines
 	// from the v1beta1.machine.openshift.io API group.
-	// +kubebuilder:validation:Required
+	// +optional
 	OpenShiftMachineV1Beta1Machine *OpenShiftMachineV1Beta1MachineTemplate `json:"machines_v1beta1_machine_openshift_io,omitempty"`
 }
 
@@ -128,9 +131,14 @@ type ControlPlaneMachineSetTemplateObjectMeta struct {
 	// Map of string keys and values that can be used to organize and categorize
 	// (scope and select) objects. May match selectors of replication controllers
 	// and services.
-	// More info: http://kubernetes.io/docs/user-guide/labels
-	// +optional
-	Labels map[string]string `json:"labels,omitempty"`
+	// More info: http://kubernetes.io/docs/user-guide/labels.
+	// This field must contain both the 'machine.openshift.io/cluster-api-machine-role' and 'machine.openshift.io/cluster-api-machine-type' labels, both with a value of 'master'.
+	// It must also contain a label with the key 'machine.openshift.io/cluster-api-cluster'.
+	// +kubebuilder:validation:XValidation:rule="'machine.openshift.io/cluster-api-machine-role' in self && self['machine.openshift.io/cluster-api-machine-role'] == 'master'",message="label 'machine.openshift.io/cluster-api-machine-role' is required, and must have value 'master'"
+	// +kubebuilder:validation:XValidation:rule="'machine.openshift.io/cluster-api-machine-type' in self && self['machine.openshift.io/cluster-api-machine-type'] == 'master'",message="label 'machine.openshift.io/cluster-api-machine-type' is required, and must have value 'master'"
+	// +kubebuilder:validation:XValidation:rule="'machine.openshift.io/cluster-api-cluster' in self",message="label 'machine.openshift.io/cluster-api-cluster' is required"
+	// +kubebuilder:validation:Required
+	Labels map[string]string `json:"labels"`
 
 	// Annotations is an unstructured key value map stored with a resource that may be
 	// set by external tools to store and retrieve arbitrary metadata. They are not
@@ -148,6 +156,7 @@ type ControlPlaneMachineSetStrategy struct {
 	// Valid values are "RollingUpdate" and "OnDelete".
 	// The current default value is "RollingUpdate".
 	// +kubebuilder:default:="RollingUpdate"
+	// +default="RollingUpdate"
 	// +kubebuilder:validation:Enum:="RollingUpdate";"OnDelete"
 	// +optional
 	Type ControlPlaneMachineSetStrategyType `json:"type,omitempty"`
@@ -186,6 +195,9 @@ const (
 // FailureDomain represents the different configurations required to spread Machines
 // across failure domains on different platforms.
 // +union
+// +kubebuilder:validation:XValidation:rule="has(self.platform) && self.platform == 'AWS' ?  has(self.aws) : !has(self.aws)",message="aws configuration is required when platform is AWS, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.platform) && self.platform == 'Azure' ?  has(self.azure) : !has(self.azure)",message="azure configuration is required when platform is Azure, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.platform) && self.platform == 'GCP' ?  has(self.gcp) : !has(self.gcp)",message="gcp configuration is required when platform is GCP, and forbidden otherwise"
 type FailureDomains struct {
 	// Platform identifies the platform for which the FailureDomain represents.
 	// Currently supported values are AWS, Azure, and GCP.

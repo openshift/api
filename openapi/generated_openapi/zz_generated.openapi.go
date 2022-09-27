@@ -27858,6 +27858,7 @@ func schema_openshift_api_machine_v1_ControlPlaneMachineSetStrategy(ref common.R
 					"type": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Type defines the type of update strategy that should be used when updating Machines owned by the ControlPlaneMachineSet. Valid values are \"RollingUpdate\" and \"OnDelete\". The current default value is \"RollingUpdate\".",
+							Default:     "RollingUpdate",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -27878,7 +27879,6 @@ func schema_openshift_api_machine_v1_ControlPlaneMachineSetTemplate(ref common.R
 					"machineType": {
 						SchemaProps: spec.SchemaProps{
 							Description: "MachineType determines the type of Machines that should be managed by the ControlPlaneMachineSet. Currently, the only valid value is machines_v1beta1_machine_openshift_io.",
-							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -27890,7 +27890,6 @@ func schema_openshift_api_machine_v1_ControlPlaneMachineSetTemplate(ref common.R
 						},
 					},
 				},
-				Required: []string{"machineType"},
 			},
 			VendorExtensible: spec.VendorExtensible{
 				Extensions: spec.Extensions{
@@ -27919,7 +27918,7 @@ func schema_openshift_api_machine_v1_ControlPlaneMachineSetTemplateObjectMeta(re
 				Properties: map[string]spec.Schema{
 					"labels": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Map of string keys and values that can be used to organize and categorize (scope and select) objects. May match selectors of replication controllers and services. More info: http://kubernetes.io/docs/user-guide/labels",
+							Description: "Map of string keys and values that can be used to organize and categorize (scope and select) objects. May match selectors of replication controllers and services. More info: http://kubernetes.io/docs/user-guide/labels. This field must contain both the 'machine.openshift.io/cluster-api-machine-role' and 'machine.openshift.io/cluster-api-machine-type' labels, both with a value of 'master'. It must also contain a label with the key 'machine.openshift.io/cluster-api-cluster'.",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,
@@ -27950,6 +27949,7 @@ func schema_openshift_api_machine_v1_ControlPlaneMachineSetTemplateObjectMeta(re
 						},
 					},
 				},
+				Required: []string{"labels"},
 			},
 		},
 	}

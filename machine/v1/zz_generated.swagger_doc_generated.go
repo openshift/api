@@ -227,7 +227,7 @@ func (ControlPlaneMachineSetTemplate) SwaggerDoc() map[string]string {
 
 var map_ControlPlaneMachineSetTemplateObjectMeta = map[string]string{
 	"":            "ControlPlaneMachineSetTemplateObjectMeta is a subset of the metav1.ObjectMeta struct. It allows users to specify labels and annotations that will be copied onto Machines created from this template.",
-	"labels":      "Map of string keys and values that can be used to organize and categorize (scope and select) objects. May match selectors of replication controllers and services. More info: http://kubernetes.io/docs/user-guide/labels",
+	"labels":      "Map of string keys and values that can be used to organize and categorize (scope and select) objects. May match selectors of replication controllers and services. More info: http://kubernetes.io/docs/user-guide/labels. This field must contain both the 'machine.openshift.io/cluster-api-machine-role' and 'machine.openshift.io/cluster-api-machine-type' labels, both with a value of 'master'. It must also contain a label with the key 'machine.openshift.io/cluster-api-cluster'.",
 	"annotations": "Annotations is an unstructured key value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: http://kubernetes.io/docs/user-guide/annotations",
 }
 

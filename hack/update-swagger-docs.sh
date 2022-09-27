@@ -30,7 +30,7 @@ kube::swagger::gen_types_swagger_doc() {
 // AUTO-GENERATED FUNCTIONS START HERE
 EOF
 
-  go run tools/genswaggertypedocs/swagger_type_docs.go -s \
+  ${GO:-go} run tools/genswaggertypedocs/swagger_type_docs.go -s \
     "${gv_dir}/types*.go" \
     -f - \
     >>  "$TMPFILE"

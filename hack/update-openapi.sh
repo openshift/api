@@ -35,6 +35,6 @@ GOPATH= ${OPENAPI_GEN} \
          --go-header-file ${SCRIPT_ROOT}/hack/empty.txt \
          ${verify}
 
-go build github.com/openshift/api/openapi/cmd/models-schema
+${GO:-go} build github.com/openshift/api/openapi/cmd/models-schema
 
 ./models-schema  | jq '.' > ${output_package}/openapi.json

@@ -67,6 +67,15 @@ type AuthenticationSpec struct {
 	// duration.
 	// +optional
 	ServiceAccountIssuer string `json:"serviceAccountIssuer"`
+
+	// trustedServiceAccountIssuer is an additional Service Account Issuer that the kube-apiserver will tolerate besides
+	// the issuer from the ServiceAccountIssuer.
+	// https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#service-account-token-volume-projection
+	// According to the Kubernetes documentation, starting from Kubernetes 1.22, the service-account-issuer flag can be
+	// specified multiple times. The first value is then used to generate new tokens and other values are accepted.
+	// Using this field can prevent cluster disruptions and allows for smoother reconfiguration of this field.
+	// +optional
+	TrustedServiceAccountIssuer string `json:"trustedServiceAccountIssuer,omitempty"`
 }
 
 type AuthenticationStatus struct {

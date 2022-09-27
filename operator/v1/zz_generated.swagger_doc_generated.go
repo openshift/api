@@ -300,15 +300,15 @@ func (DeveloperConsoleCatalogCustomization) SwaggerDoc() map[string]string {
 	return map_DeveloperConsoleCatalogCustomization
 }
 
-var map_DeveloperConsoleCatalogTypesState = map[string]string{
-	"":         "DeveloperConsoleCatalogTypesState defines the state of the sub-catalog types.",
+var map_DeveloperConsoleCatalogTypes = map[string]string{
+	"":         "DeveloperConsoleCatalogTypes defines the state of the sub-catalog types.",
 	"state":    "state defines if a list of catalog types should be enabled or disabled.",
 	"enabled":  "enabled is a list of developer catalog types (sub-catalogs IDs) that will be shown to users. Types (sub-catalogs) are added via console plugins, the available types (sub-catalog IDs) are available in the console on the cluster configuration page, or when editing the YAML in the console. Example: \"Devfile\", \"HelmChart\", \"BuilderImage\" If the list is non-empty, a new type will not be shown to the user until it is added to list. If the list is empty the complete developer catalog will be shown.",
 	"disabled": "disabled is a list of developer catalog types (sub-catalogs IDs) that are not shown to users. Types (sub-catalogs) are added via console plugins, the available types (sub-catalog IDs) are available in the console on the cluster configuration page, or when editing the YAML in the console. Example: \"Devfile\", \"HelmChart\", \"BuilderImage\" If the list is empty or all the available sub-catalog types are added, then the complete developer catalog should be hidden.",
 }
 
-func (DeveloperConsoleCatalogTypesState) SwaggerDoc() map[string]string {
-	return map_DeveloperConsoleCatalogTypesState
+func (DeveloperConsoleCatalogTypes) SwaggerDoc() map[string]string {
+	return map_DeveloperConsoleCatalogTypes
 }
 
 var map_Perspective = map[string]string{

@@ -760,7 +760,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.DeveloperConsoleCatalogCategory":                        schema_openshift_api_operator_v1_DeveloperConsoleCatalogCategory(ref),
 		"github.com/openshift/api/operator/v1.DeveloperConsoleCatalogCategoryMeta":                    schema_openshift_api_operator_v1_DeveloperConsoleCatalogCategoryMeta(ref),
 		"github.com/openshift/api/operator/v1.DeveloperConsoleCatalogCustomization":                   schema_openshift_api_operator_v1_DeveloperConsoleCatalogCustomization(ref),
-		"github.com/openshift/api/operator/v1.DeveloperConsoleCatalogTypesState":                      schema_openshift_api_operator_v1_DeveloperConsoleCatalogTypesState(ref),
+		"github.com/openshift/api/operator/v1.DeveloperConsoleCatalogTypes":                           schema_openshift_api_operator_v1_DeveloperConsoleCatalogTypes(ref),
 		"github.com/openshift/api/operator/v1.EgressIPConfig":                                         schema_openshift_api_operator_v1_EgressIPConfig(ref),
 		"github.com/openshift/api/operator/v1.EndpointPublishingStrategy":                             schema_openshift_api_operator_v1_EndpointPublishingStrategy(ref),
 		"github.com/openshift/api/operator/v1.Etcd":                                                   schema_openshift_api_operator_v1_Etcd(ref),
@@ -38722,27 +38722,28 @@ func schema_openshift_api_operator_v1_DeveloperConsoleCatalogCustomization(ref c
 						SchemaProps: spec.SchemaProps{
 							Description: "types allows enabling or disabling of sub-catalog types that user can see in the Developer catalog. When omitted, all the sub-catalog types will be shown.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/openshift/api/operator/v1.DeveloperConsoleCatalogTypesState"),
+							Ref:         ref("github.com/openshift/api/operator/v1.DeveloperConsoleCatalogTypes"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.DeveloperConsoleCatalogCategory", "github.com/openshift/api/operator/v1.DeveloperConsoleCatalogTypesState"},
+			"github.com/openshift/api/operator/v1.DeveloperConsoleCatalogCategory", "github.com/openshift/api/operator/v1.DeveloperConsoleCatalogTypes"},
 	}
 }
 
-func schema_openshift_api_operator_v1_DeveloperConsoleCatalogTypesState(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_openshift_api_operator_v1_DeveloperConsoleCatalogTypes(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "DeveloperConsoleCatalogTypesState defines the state of the sub-catalog types.",
+				Description: "DeveloperConsoleCatalogTypes defines the state of the sub-catalog types.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"state": {
 						SchemaProps: spec.SchemaProps{
 							Description: "state defines if a list of catalog types should be enabled or disabled.",
+							Default:     "Enabled",
 							Type:        []string{"string"},
 							Format:      "",
 						},

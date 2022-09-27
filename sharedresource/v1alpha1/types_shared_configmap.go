@@ -11,19 +11,20 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // "csi.sharedresource.openshift.io" CSI driver and a reference to the SharedConfigMap in the volume attributes:
 //
 // spec:
-//  volumes:
-//  - name: shared-configmap
-//    csi:
-//      driver: csi.sharedresource.openshift.io
-//      volumeAttributes:
-//        sharedConfigMap: my-share
+//
+//	volumes:
+//	- name: shared-configmap
+//	  csi:
+//	    driver: csi.sharedresource.openshift.io
+//	    volumeAttributes:
+//	      sharedConfigMap: my-share
 //
 // For the mount to be successful, the pod's service account must be granted permission to 'use' the named SharedConfigMap object
 // within its namespace with an appropriate Role and RoleBinding. For compactness, here are example `oc` invocations for creating
 // such Role and RoleBinding objects.
 //
-//  `oc create role shared-resource-my-share --verb=use --resource=sharedconfigmaps.sharedresource.openshift.io --resource-name=my-share`
-//  `oc create rolebinding shared-resource-my-share --role=shared-resource-my-share --serviceaccount=my-namespace:default`
+//	`oc create role shared-resource-my-share --verb=use --resource=sharedconfigmaps.sharedresource.openshift.io --resource-name=my-share`
+//	`oc create rolebinding shared-resource-my-share --role=shared-resource-my-share --serviceaccount=my-namespace:default`
 //
 // Shared resource objects, in this case ConfigMaps, have default permissions of list, get, and watch for system authenticated users.
 //
@@ -32,7 +33,6 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // +k8s:openapi-gen=true
 // +openshift:compatibility-gen:level=4
 // +kubebuilder:subresource:status
-//
 type SharedConfigMap struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -48,7 +48,6 @@ type SharedConfigMap struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // SharedConfigMapList contains a list of SharedConfigMap objects.
-//
 //
 // Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
 // These capabilities should not be used by applications needing long term support.

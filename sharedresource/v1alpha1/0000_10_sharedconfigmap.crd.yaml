@@ -21,8 +21,8 @@ spec:
         description: "SharedConfigMap allows a ConfigMap to be shared across namespaces.
           Pods can mount the shared ConfigMap by adding a CSI volume to the pod specification
           using the \"csi.sharedresource.openshift.io\" CSI driver and a reference
-          to the SharedConfigMap in the volume attributes: \n spec: volumes: - name:
-          shared-configmap csi: driver: csi.sharedresource.openshift.io volumeAttributes:
+          to the SharedConfigMap in the volume attributes: \n spec: \n volumes: -
+          name: shared-configmap csi: driver: csi.sharedresource.openshift.io volumeAttributes:
           sharedConfigMap: my-share \n For the mount to be successful, the pod's service
           account must be granted permission to 'use' the named SharedConfigMap object
           within its namespace with an appropriate Role and RoleBinding. For compactness,

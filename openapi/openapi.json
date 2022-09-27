@@ -11320,6 +11320,14 @@
             "type": "string",
             "default": ""
           }
+        },
+        "manifests": {
+          "description": "manifests is the list of other image names that this image points to. For a single architecture image, it is empty. For a multi-arch image, it consists of the digests of single architecture images, such images shouldn't have layers nor config.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
         }
       }
     },

@@ -182,6 +182,7 @@ func (ControlPlaneMachineSetList) SwaggerDoc() map[string]string {
 
 var map_ControlPlaneMachineSetSpec = map[string]string{
 	"":         "ControlPlaneMachineSet represents the configuration of the ControlPlaneMachineSet.",
+	"state":    "State defines whether the ControlPlaneMachineSet is Active or Inactive. When Inactive, the ControlPlaneMachineSet will not take any action on the state of the Machines within the cluster. When Active, the ControlPlaneMachineSet will reconcile the Machines and will update the Machines as necessary. Once Active, a ControlPlaneMachineSet cannot be made Inactive. To prevent further action please remove the ControlPlaneMachineSet.",
 	"replicas": "Replicas defines how many Control Plane Machines should be created by this ControlPlaneMachineSet. This field is immutable and cannot be changed after cluster installation. The ControlPlaneMachineSet only operates with 3 or 5 node control planes, 3 and 5 are the only valid values for this field.",
 	"strategy": "Strategy defines how the ControlPlaneMachineSet will update Machines when it detects a change to the ProviderSpec.",
 	"selector": "Label selector for Machines. Existing Machines selected by this selector will be the ones affected by this ControlPlaneMachineSet. It must match the template's labels. This field is considered immutable after creation of the resource.",

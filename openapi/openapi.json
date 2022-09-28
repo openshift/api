@@ -16084,6 +16084,11 @@
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector"
         },
+        "state": {
+          "description": "State defines whether the ControlPlaneMachineSet is Active or Inactive. When Inactive, the ControlPlaneMachineSet will not take any action on the state of the Machines within the cluster. When Active, the ControlPlaneMachineSet will reconcile the Machines and will update the Machines as necessary. Once Active, a ControlPlaneMachineSet cannot be made Inactive. To prevent further action please remove the ControlPlaneMachineSet.",
+          "type": "string",
+          "default": "Inactive"
+        },
         "strategy": {
           "description": "Strategy defines how the ControlPlaneMachineSet will update Machines when it detects a change to the ProviderSpec.",
           "default": {},

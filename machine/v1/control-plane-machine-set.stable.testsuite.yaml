@@ -27,6 +27,7 @@ tests:
       kind: ControlPlaneMachineSet
       spec:
         replicas: 3
+        state: Inactive
         strategy:
           type: RollingUpdate
         selector:
@@ -171,6 +172,48 @@ tests:
             spec:
               providerSpec: {}
     expectedError: "spec.template.machines_v1beta1_machine_openshift_io.metadata.labels: Invalid value: \"object\": label 'machine.openshift.io/cluster-api-cluster' is required"
+  - name: Should be able to create an Active ControlPlaneMachineSet
+    initial: |
+      apiVersion: machine.openshift.io/v1
+      kind: ControlPlaneMachineSet
+      spec:
+        state: Active
+        selector:
+          matchLabels:
+            machine.openshift.io/cluster-api-machine-role: master
+            machine.openshift.io/cluster-api-machine-type: master
+        template:
+          machineType: machines_v1beta1_machine_openshift_io
+          machines_v1beta1_machine_openshift_io:
+            metadata:
+              labels:
+                machine.openshift.io/cluster-api-machine-role: master
+                machine.openshift.io/cluster-api-machine-type: master
+                machine.openshift.io/cluster-api-cluster: cluster
+            spec:
+              providerSpec: {}
+    expected: |
+      apiVersion: machine.openshift.io/v1
+      kind: ControlPlaneMachineSet
+      spec:
+        replicas: 3
+        state: Active
+        strategy:
+          type: RollingUpdate
+        selector:
+          matchLabels:
+            machine.openshift.io/cluster-api-machine-role: master
+            machine.openshift.io/cluster-api-machine-type: master
+        template:
+          machineType: machines_v1beta1_machine_openshift_io
+          machines_v1beta1_machine_openshift_io:
+            metadata:
+              labels:
+                machine.openshift.io/cluster-api-machine-role: master
+                machine.openshift.io/cluster-api-machine-type: master
+                machine.openshift.io/cluster-api-cluster: cluster
+            spec:
+              providerSpec: {}
   onUpdate:
   - name: Replicas should be immutable
     initial: |
@@ -178,6 +221,7 @@ tests:
       kind: ControlPlaneMachineSet
       spec:
         replicas: 3
+        state: Inactive
         strategy:
           type: RollingUpdate
         selector:
@@ -199,6 +243,7 @@ tests:
       kind: ControlPlaneMachineSet
       spec:
         replicas: 5
+        state: Inactive
         strategy:
           type: RollingUpdate
         selector:
@@ -222,6 +267,7 @@ tests:
       kind: ControlPlaneMachineSet
       spec:
         replicas: 3
+        state: Inactive
         strategy:
           type: RollingUpdate
         selector:
@@ -243,6 +289,7 @@ tests:
       kind: ControlPlaneMachineSet
       spec:
         replicas: 3
+        state: Inactive
         strategy:
           type: RollingUpdate
         selector:
@@ -267,6 +314,7 @@ tests:
       kind: ControlPlaneMachineSet
       spec:
         replicas: 3
+        state: Inactive
         strategy:
           type: OnDelete
         selector:
@@ -288,6 +336,7 @@ tests:
       kind: ControlPlaneMachineSet
       spec:
         replicas: 3
+        state: Inactive
         selector:
           matchLabels:
             machine.openshift.io/cluster-api-machine-role: master
@@ -307,6 +356,7 @@ tests:
       kind: ControlPlaneMachineSet
       spec:
         replicas: 3
+        state: Inactive
         strategy:
           type: RollingUpdate
         selector:
@@ -323,3 +373,116 @@ tests:
                 machine.openshift.io/cluster-api-cluster: cluster
             spec:
               providerSpec: {}
+  - name: Should allow the state to change to Active
+    initial: |
+      apiVersion: machine.openshift.io/v1
+      kind: ControlPlaneMachineSet
+      spec:
+        replicas: 3
+        state: Inactive
+        strategy:
+          type: RollingUpdate
+        selector:
+          matchLabels:
+            machine.openshift.io/cluster-api-machine-role: master
+            machine.openshift.io/cluster-api-machine-type: master
+        template:
+          machineType: machines_v1beta1_machine_openshift_io
+          machines_v1beta1_machine_openshift_io:
+            metadata:
+              labels:
+                machine.openshift.io/cluster-api-machine-role: master
+                machine.openshift.io/cluster-api-machine-type: master
+                machine.openshift.io/cluster-api-cluster: cluster
+            spec:
+              providerSpec: {}
+    updated: |
+      apiVersion: machine.openshift.io/v1
+      kind: ControlPlaneMachineSet
+      spec:
+        replicas: 3
+        state: Active
+        strategy:
+          type: RollingUpdate
+        selector:
+          matchLabels:
+            machine.openshift.io/cluster-api-machine-role: master
+            machine.openshift.io/cluster-api-machine-type: master
+        template:
+          machineType: machines_v1beta1_machine_openshift_io
+          machines_v1beta1_machine_openshift_io:
+            metadata:
+              labels:
+                machine.openshift.io/cluster-api-machine-role: master
+                machine.openshift.io/cluster-api-machine-type: master
+                machine.openshift.io/cluster-api-cluster: cluster
+            spec:
+              providerSpec: {}
+    expected: |
+      apiVersion: machine.openshift.io/v1
+      kind: ControlPlaneMachineSet
+      spec:
+        replicas: 3
+        state: Active
+        strategy:
+          type: RollingUpdate
+        selector:
+          matchLabels:
+            machine.openshift.io/cluster-api-machine-role: master
+            machine.openshift.io/cluster-api-machine-type: master
+        template:
+          machineType: machines_v1beta1_machine_openshift_io
+          machines_v1beta1_machine_openshift_io:
+            metadata:
+              labels:
+                machine.openshift.io/cluster-api-machine-role: master
+                machine.openshift.io/cluster-api-machine-type: master
+                machine.openshift.io/cluster-api-cluster: cluster
+            spec:
+              providerSpec: {}
+  - name: Should not allow the state to change from Active
+    initial: |
+      apiVersion: machine.openshift.io/v1
+      kind: ControlPlaneMachineSet
+      spec:
+        replicas: 3
+        state: Active
+        strategy:
+          type: RollingUpdate
+        selector:
+          matchLabels:
+            machine.openshift.io/cluster-api-machine-role: master
+            machine.openshift.io/cluster-api-machine-type: master
+        template:
+          machineType: machines_v1beta1_machine_openshift_io
+          machines_v1beta1_machine_openshift_io:
+            metadata:
+              labels:
+                machine.openshift.io/cluster-api-machine-role: master
+                machine.openshift.io/cluster-api-machine-type: master
+                machine.openshift.io/cluster-api-cluster: cluster
+            spec:
+              providerSpec: {}
+    updated: |
+      apiVersion: machine.openshift.io/v1
+      kind: ControlPlaneMachineSet
+      spec:
+        replicas: 3
+        state: Inactive
+        strategy:
+          type: RollingUpdate
+        selector:
+          matchLabels:
+            machine.openshift.io/cluster-api-machine-role: master
+            machine.openshift.io/cluster-api-machine-type: master
+        template:
+          machineType: machines_v1beta1_machine_openshift_io
+          machines_v1beta1_machine_openshift_io:
+            metadata:
+              labels:
+                machine.openshift.io/cluster-api-machine-role: master
+                machine.openshift.io/cluster-api-machine-type: master
+                machine.openshift.io/cluster-api-cluster: cluster
+            spec:
+              providerSpec: {}
+    expectedError: "spec.state: Invalid value: \"string\": state cannot be changed once Active"

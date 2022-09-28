@@ -37,6 +37,10 @@ spec:
       jsonPath: .status.unavailableReplicas
       name: Unavailable
       type: integer
+    - description: ControlPlaneMachineSet state
+      jsonPath: .spec.state
+      name: State
+      type: string
     - description: ControlPlaneMachineSet age
       jsonPath: .metadata.creationTimestamp
       name: Age
@@ -131,6 +135,22 @@ spec:
                 x-kubernetes-validations:
                 - message: selector is immutable
                   rule: self == oldSelf
+              state:
+                default: Inactive
+                description: State defines whether the ControlPlaneMachineSet is Active
+                  or Inactive. When Inactive, the ControlPlaneMachineSet will not
+                  take any action on the state of the Machines within the cluster.
+                  When Active, the ControlPlaneMachineSet will reconcile the Machines
+                  and will update the Machines as necessary. Once Active, a ControlPlaneMachineSet
+                  cannot be made Inactive. To prevent further action please remove
+                  the ControlPlaneMachineSet.
+                enum:
+                - Active
+                - Inactive
+                type: string
+                x-kubernetes-validations:
+                - message: state cannot be changed once Active
+                  rule: oldSelf != 'Active' || self == oldSelf
               strategy:
                 default:
                   type: RollingUpdate

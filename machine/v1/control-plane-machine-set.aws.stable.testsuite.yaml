@@ -153,6 +153,7 @@ tests:
       kind: ControlPlaneMachineSet
       spec:
         replicas: 3
+        state: Inactive
         strategy:
           type: RollingUpdate
         selector:
@@ -260,6 +261,7 @@ tests:
       kind: ControlPlaneMachineSet
       spec:
         replicas: 3
+        state: Inactive
         strategy:
           type: RollingUpdate
         selector:
@@ -313,6 +315,7 @@ tests:
       kind: ControlPlaneMachineSet
       spec:
         replicas: 3
+        state: Inactive
         strategy:
           type: RollingUpdate
         selector:

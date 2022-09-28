@@ -19,6 +19,7 @@ import (
 // +kubebuilder:printcolumn:name="Ready",type="integer",JSONPath=".status.readyReplicas",description="Ready Replicas"
 // +kubebuilder:printcolumn:name="Updated",type="integer",JSONPath=".status.updatedReplicas",description="Updated Replicas"
 // +kubebuilder:printcolumn:name="Unavailable",type="integer",JSONPath=".status.unavailableReplicas",description="Observed number of unavailable replicas"
+// +kubebuilder:printcolumn:name="State",type="string",JSONPath=".spec.state",description="ControlPlaneMachineSet state"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp",description="ControlPlaneMachineSet age"
 // Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=1
@@ -32,6 +33,19 @@ type ControlPlaneMachineSet struct {
 
 // ControlPlaneMachineSet represents the configuration of the ControlPlaneMachineSet.
 type ControlPlaneMachineSetSpec struct {
+	// State defines whether the ControlPlaneMachineSet is Active or Inactive.
+	// When Inactive, the ControlPlaneMachineSet will not take any action on the
+	// state of the Machines within the cluster.
+	// When Active, the ControlPlaneMachineSet will reconcile the Machines and
+	// will update the Machines as necessary.
+	// Once Active, a ControlPlaneMachineSet cannot be made Inactive. To prevent
+	// further action please remove the ControlPlaneMachineSet.
+	// +kubebuilder:default:="Inactive"
+	// +default="Inactive"
+	// +kubebuilder:validation:XValidation:rule="oldSelf != 'Active' || self == oldSelf",message="state cannot be changed once Active"
+	// +optional
+	State ControlPlaneMachineSetState `json:"state,omitempty"`
+
 	// Replicas defines how many Control Plane Machines should be
 	// created by this ControlPlaneMachineSet.
 	// This field is immutable and cannot be changed after cluster
@@ -63,6 +77,21 @@ type ControlPlaneMachineSetSpec struct {
 	// +kubebuilder:validation:Required
 	Template ControlPlaneMachineSetTemplate `json:"template"`
 }
+
+// ControlPlaneMachineSetState is an enumeration of the possible states of the
+// ControlPlaneMachineSet resource. It allows it to be either Active or Inactive.
+// +kubebuilder:validation:Enum:="Active";"Inactive"
+type ControlPlaneMachineSetState string
+
+const (
+	// ControlPlaneMachineSetStateActive is the value used to denote the ControlPlaneMachineSet
+	// should be active and should perform updates as required.
+	ControlPlaneMachineSetStateActive ControlPlaneMachineSetState = "Active"
+
+	// ControlPlaneMachineSetStateInactive is the value used to denote the ControlPlaneMachineSet
+	// should be not active and should no perform any updates.
+	ControlPlaneMachineSetStateInactive ControlPlaneMachineSetState = "Inactive"
+)
 
 // ControlPlaneMachineSetTemplate is a template used by the ControlPlaneMachineSet
 // to create the Machines that it will manage in the future.

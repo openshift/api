@@ -7080,7 +7080,7 @@
           "type": "string",
           "default": ""
         },
-        "loadbalancer": {
+        "loadBalancer": {
           "description": "loadBalancer contains the load balancer details in general which are not only specific to the underlying infrastructure provider of the current cluster and are required for Ingress Controller to work on OpenShift.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.LoadBalancer"

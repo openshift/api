@@ -67,6 +67,7 @@ verify-scripts:
 	hack/verify-crds.sh
 	bash -x hack/verify-types.sh
 	bash -x hack/verify-compatibility.sh
+	bash -x hack/verify-integration-tests.sh
 
 .PHONY: verify-scripts
 verify: verify-scripts verify-codegen-crds verify-codegen-TechPreviewNoUpgrade-crds verify-codegen-Default-crds

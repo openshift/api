@@ -76,6 +76,15 @@ func loadSuiteFile(path string) (SuiteSpec, error) {
 		return SuiteSpec{}, fmt.Errorf("could not set absolute path for CRD: %w", err)
 	}
 
+	if s.Version == "" {
+		version, err := getSuiteSpecTestVersion(s)
+		if err != nil {
+			return SuiteSpec{}, fmt.Errorf("could not determine test suite CRD version: %w", err)
+		}
+
+		s.Version = version
+	}
+
 	return s, nil
 }
 
@@ -105,6 +114,9 @@ func setAbsolutePath(suitePath string, path *string) error {
 
 // GenerateTestSuite generates a Ginkgo test suite from the provided SuiteSpec.
 func GenerateTestSuite(suiteSpec SuiteSpec) {
+	baseCRD, err := loadVersionedCRD(suiteSpec)
+	Expect(err).ToNot(HaveOccurred())
+
 	suiteName, err := generateSuiteName(suiteSpec)
 	Expect(err).ToNot(HaveOccurred())
 
@@ -116,10 +128,9 @@ func GenerateTestSuite(suiteSpec SuiteSpec) {
 			Expect(k8sClient).ToNot(BeNil(), "Kuberentes client is not initialised")
 
 			crdOptions = envtest.CRDInstallOptions{
-				Paths: []string{
-					suiteSpec.CRD,
+				CRDs: []*apiextensionsv1.CustomResourceDefinition{
+					baseCRD.DeepCopy(),
 				},
-				ErrorIfPathMissing: true,
 			}
 
 			crds, err := envtest.InstallCRDs(cfg, crdOptions)
@@ -334,6 +345,40 @@ func loadCRD(suiteSpec SuiteSpec) (*apiextensionsv1.CustomResourceDefinition, er
 	return crd, nil
 }
 
+// loadVersionedCRD loads the CRD and removes any version schema that is not the current suite
+// version. This allows testing of CRDs for versions that are not currently the storage version.
+func loadVersionedCRD(suiteSpec SuiteSpec) (*apiextensionsv1.CustomResourceDefinition, error) {
+	crd, err := loadCRD(suiteSpec)
+	if err != nil {
+		return nil, fmt.Errorf("could not load CRD: %w", err)
+	}
+
+	if suiteSpec.Version == "" {
+		return crd, nil
+	}
+
+	crdVersions := []apiextensionsv1.CustomResourceDefinitionVersion{}
+
+	for _, version := range crd.Spec.Versions {
+		if version.Name != suiteSpec.Version {
+			continue
+		}
+
+		version.Storage = true
+		version.Served = true
+
+		crdVersions = append(crdVersions, version)
+	}
+
+	if len(crdVersions) == 0 {
+		return nil, fmt.Errorf("could not find CRD version matching version %s", suiteSpec.Version)
+	}
+
+	crd.Spec.Versions = crdVersions
+
+	return crd, nil
+}
+
 // generateSuiteName prepends the specified suite name with the GVR string
 // for the CRD under test.
 func generateSuiteName(suiteSpec SuiteSpec) (string, error) {
@@ -345,16 +390,29 @@ func generateSuiteName(suiteSpec SuiteSpec) (string, error) {
 	gvr := schema.GroupVersionResource{
 		Group:    crd.Spec.Group,
 		Resource: crd.Spec.Names.Plural,
+		Version:  suiteSpec.Version,
+	}
+
+	return fmt.Sprintf("[%s] %s", gvr.String(), suiteSpec.Name), nil
+}
+
+// getSuiteSpecTestVersion is used to populate the test suites version
+// field when not set.
+// This is then used to set storage and served versions as well as
+// to generate the test suite name.
+func getSuiteSpecTestVersion(suiteSpec SuiteSpec) (string, error) {
+	crd, err := loadCRD(suiteSpec)
+	if err != nil {
+		return "", fmt.Errorf("could not load CRD: %w", err)
 	}
 
 	if len(crd.Spec.Versions) == 1 {
 		// When there's only one version it's easy to know which we are testing.
-		gvr.Version = crd.Spec.Versions[0].Name
-	} else {
-		// Otherwise we need to guess the version we are testing, it's probably the package/folder name.
-		packageDir := filepath.Dir(suiteSpec.CRD)
-		gvr.Version = filepath.Base(packageDir)
+		return crd.Spec.Versions[0].Name, nil
 	}
 
-	return fmt.Sprintf("[%s] %s", gvr.String(), suiteSpec.Name), nil
+	// When there's multiple versions we fall back to an educated guess based
+	// on the directory structure. Normally the folder name is the version.
+	packageDir := filepath.Dir(suiteSpec.CRD)
+	return filepath.Base(packageDir), nil
 }

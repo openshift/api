@@ -11909,6 +11909,13 @@ func schema_openshift_api_config_v1_IBMCloudPlatformStatus(ref common.ReferenceC
 							Format:      "",
 						},
 					},
+					"networkResourceGroupName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "networkResourceGroupName is the Resource Group for network resources like the VPC and Subnets used by the cluster. If empty, the value is same as ResourceGroupName. This field is immutable and cannot be changed after cluster installation.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"providerType": {
 						SchemaProps: spec.SchemaProps{
 							Description: "ProviderType indicates the type of cluster that was created",

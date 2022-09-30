@@ -1135,12 +1135,13 @@ func (IBMCloudPlatformSpec) SwaggerDoc() map[string]string {
 }
 
 var map_IBMCloudPlatformStatus = map[string]string{
-	"":                  "IBMCloudPlatformStatus holds the current status of the IBMCloud infrastructure provider.",
-	"location":          "Location is where the cluster has been deployed",
-	"resourceGroupName": "ResourceGroupName is the Resource Group for new IBMCloud resources created for the cluster.",
-	"providerType":      "ProviderType indicates the type of cluster that was created",
-	"cisInstanceCRN":    "CISInstanceCRN is the CRN of the Cloud Internet Services instance managing the DNS zone for the cluster's base domain",
-	"dnsInstanceCRN":    "DNSInstanceCRN is the CRN of the DNS Services instance managing the DNS zone for the cluster's base domain",
+	"":                         "IBMCloudPlatformStatus holds the current status of the IBMCloud infrastructure provider.",
+	"location":                 "Location is where the cluster has been deployed",
+	"resourceGroupName":        "ResourceGroupName is the Resource Group for new IBMCloud resources created for the cluster.",
+	"networkResourceGroupName": "networkResourceGroupName is the Resource Group for network resources like the VPC and Subnets used by the cluster. If empty, the value is same as ResourceGroupName. This field is immutable and cannot be changed after cluster installation.",
+	"providerType":             "ProviderType indicates the type of cluster that was created",
+	"cisInstanceCRN":           "CISInstanceCRN is the CRN of the Cloud Internet Services instance managing the DNS zone for the cluster's base domain",
+	"dnsInstanceCRN":           "DNSInstanceCRN is the CRN of the DNS Services instance managing the DNS zone for the cluster's base domain",
 }
 
 func (IBMCloudPlatformStatus) SwaggerDoc() map[string]string {

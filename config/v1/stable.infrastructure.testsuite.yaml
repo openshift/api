@@ -12,3 +12,48 @@ tests:
       apiVersion: config.openshift.io/v1
       kind: Infrastructure
       spec: {}
+  onUpdate:
+  - name: Should allow setting IBM Cloud NetworkResourceGroupName immutable status field
+    initial: |
+      apiVersion: config.openshift.io/v1
+      kind: Infrastructure
+      spec: {}
+      status:
+        controlPlaneTopology: "HighlyAvailable"
+        infrastructureTopology: "HighlyAvailable"
+    updated: |
+      apiVersion: config.openshift.io/v1
+      kind: Infrastructure
+      spec: {}
+      status:
+        platformStatus:
+          ibmcloud:
+            networkResourceGroupName: bar
+    expected: |
+      apiVersion: config.openshift.io/v1
+      kind: Infrastructure
+      spec: {}
+      status:
+        controlPlaneTopology: "HighlyAvailable"
+        infrastructureTopology: "HighlyAvailable"
+        platformStatus:
+          ibmcloud:
+            networkResourceGroupName: bar
+  - name: Should not allow changing IBM Cloud NetworkResourceGroupName immutable status field
+    initial: |
+      apiVersion: config.openshift.io/v1
+      kind: Infrastructure
+      spec: {}
+      status:
+        platformStatus:
+          ibmcloud:
+            networkResourceGroupName: foo
+    updated: |
+      apiVersion: config.openshift.io/v1
+      kind: Infrastructure
+      spec: {}
+      status:
+        platformStatus:
+          ibmcloud:
+            networkResourceGroupName: bar
+    expectedStatusError: "status.platformStatus.ibmcloud.networkResourceGroupName: Invalid value: \"string\": NetworkResourceGroupName is immutable"

@@ -13106,6 +13106,14 @@ func schema_openshift_api_config_v1_InfrastructureStatus(ref common.ReferenceCal
 							Format:      "",
 						},
 					},
+					"cpuPartitioning": {
+						SchemaProps: spec.SchemaProps{
+							Description: "cpuPartitioning expresses that CPU partitioning is a currently enabled feature in the cluster. CPU Partitioning means that this cluster can support partitioning workloads to specific CPU Sets. Valid values are None and AllNodes. When omitted, the default value is None.",
+							Default:     "None",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 				Required: []string{"infrastructureName", "etcdDiscoveryDomain", "apiServerURL", "apiServerInternalURI", "controlPlaneTopology", "infrastructureTopology"},
 			},

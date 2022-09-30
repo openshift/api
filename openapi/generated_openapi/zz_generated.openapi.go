@@ -304,6 +304,11 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.OldTLSProfile":                                            schema_openshift_api_config_v1_OldTLSProfile(ref),
 		"github.com/openshift/api/config/v1.OpenIDClaims":                                             schema_openshift_api_config_v1_OpenIDClaims(ref),
 		"github.com/openshift/api/config/v1.OpenIDIdentityProvider":                                   schema_openshift_api_config_v1_OpenIDIdentityProvider(ref),
+		"github.com/openshift/api/config/v1.OpenStackAPIBGPConfiguration":                             schema_openshift_api_config_v1_OpenStackAPIBGPConfiguration(ref),
+		"github.com/openshift/api/config/v1.OpenStackAPIBGPPeer":                                      schema_openshift_api_config_v1_OpenStackAPIBGPPeer(ref),
+		"github.com/openshift/api/config/v1.OpenStackAPIBGPSpeaker":                                   schema_openshift_api_config_v1_OpenStackAPIBGPSpeaker(ref),
+		"github.com/openshift/api/config/v1.OpenStackAPILoadBalancer":                                 schema_openshift_api_config_v1_OpenStackAPILoadBalancer(ref),
+		"github.com/openshift/api/config/v1.OpenStackFailureDomain":                                   schema_openshift_api_config_v1_OpenStackFailureDomain(ref),
 		"github.com/openshift/api/config/v1.OpenStackPlatformSpec":                                    schema_openshift_api_config_v1_OpenStackPlatformSpec(ref),
 		"github.com/openshift/api/config/v1.OpenStackPlatformStatus":                                  schema_openshift_api_config_v1_OpenStackPlatformStatus(ref),
 		"github.com/openshift/api/config/v1.OperandVersion":                                           schema_openshift_api_config_v1_OperandVersion(ref),
@@ -14816,14 +14821,236 @@ func schema_openshift_api_config_v1_OpenIDIdentityProvider(ref common.ReferenceC
 	}
 }
 
+func schema_openshift_api_config_v1_OpenStackAPIBGPConfiguration(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"speakers": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"failureDomain",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "speakers is a list of BGP speaker configurations. We require a speaker configuration for every failure domain hosting a control plane node. The list must contain at least one item.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.OpenStackAPIBGPSpeaker"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"speakers"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.OpenStackAPIBGPSpeaker"},
+	}
+}
+
+func schema_openshift_api_config_v1_OpenStackAPIBGPPeer(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"asn": {
+						SchemaProps: spec.SchemaProps{
+							Description: "asn is the Autonomous System number of the peer.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"ip": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ip is the IP address of the peer, as reachable from the Control plane machine. It may be either IPv4 or IPv6",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"password": {
+						SchemaProps: spec.SchemaProps{
+							Description: "password for BGP authentication against the peer",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"ip"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1_OpenStackAPIBGPSpeaker(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "OpenStackAPIBGPSpeaker describes the BGP autonomous system that will contain the API VIP for a specific failure domain.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"failureDomain": {
+						SchemaProps: spec.SchemaProps{
+							Description: "failureDomain is the name of a failure domain which this BGP configuration applies to. A failure domain with that name must be defined in the OpenStack platform spec.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"asn": {
+						SchemaProps: spec.SchemaProps{
+							Description: "asn specifies the Autonomous System number to be used by the BGP speaker of the Control plane node. Control plane nodes in a failure domain where this field is not set are each assigned a distinct number: master-0 4273211230, master-1 4273211231, and master-2 4273211232. If multiple Control plane nodes are assigned the same failure domain, this field cannot be set.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"peers": {
+						SchemaProps: spec.SchemaProps{
+							Description: "peers is a list of all BGP peers of the speaker for the VIPs of this failure domain. The list must contain at least one item.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.OpenStackAPIBGPPeer"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"failureDomain", "peers"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.OpenStackAPIBGPPeer"},
+	}
+}
+
+func schema_openshift_api_config_v1_OpenStackAPILoadBalancer(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "OpenStackAPILoadBalancer defines how inbound traffic is routed to the API servers.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "apiLoadBalancerType defines the type of loadbalancer which will be configured for the API server. Permitted values are `VRRP` and `BGP`. When omitted, this means no opinion and the platform is left to choose a reasonable default. This default is subject to change over time. The current default value is `VRRP`.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"bgp": {
+						SchemaProps: spec.SchemaProps{
+							Description: "bgpConfiguration describes the configuration of a BGP load balancer for the API server. It is only used if apiLoadBalancer is set to `BGP`.",
+							Ref:         ref("github.com/openshift/api/config/v1.OpenStackAPIBGPConfiguration"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.OpenStackAPIBGPConfiguration"},
+	}
+}
+
+func schema_openshift_api_config_v1_OpenStackFailureDomain(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "OpenStackFailureDomain specifies a failure domain for an OpenStack server. Specifically, it specifies a set of values which will be set on all machines using the failure domain.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is an arbitrary, unique name for this failure domain. This name can be used to refer to this failure domain when building a BGP speaker configuration.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"computeZone": {
+						SchemaProps: spec.SchemaProps{
+							Description: "computeZone specifies the OpenStack Compute availability zone for all servers in this failure domain.\n\nIf not specified the servers are provisioned without reference to availability zones. Server placement is delegated to the OpenStack defaults.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"storageZone": {
+						SchemaProps: spec.SchemaProps{
+							Description: "storageZone specifies the OpenStack storage availability zone for all volumes in this failure domain.\n\nIf not specified the volumes are provisioned without reference to availability zones. Volume placement is delegated to the OpenStack defaults.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"subnetID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "subnetID specifies an OpenStack subnet ID which will be attached as the first NIC of every server in this failure domain.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_config_v1_OpenStackPlatformSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Description: "OpenStackPlatformSpec holds the desired state of the OpenStack infrastructure provider. This only includes fields that can be modified in the cluster.",
 				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"failureDomains": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "failureDomains is a list of failure domains available to Machines. Each failure domain has a name that can be referenced in Machines; Machines referencing a failure domain will be set the corresponding failure domain values. If no failure domain is defined, Machines can't reference any. If a Machine doesn't reference a failure domain, it is spun in the cluster subnet, using the OpenStack default availability zones.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.OpenStackFailureDomain"),
+									},
+								},
+							},
+						},
+					},
+					"apiLoadBalancer": {
+						SchemaProps: spec.SchemaProps{
+							Description: "apiLoadBalancer defines how traffic destined to the OpenShift API is routed to the API servers. When omitted, this means no opinion and the platform is left to choose a reasonable default. This default is subject to change over time. The current default configuration uses VRRP.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.OpenStackAPILoadBalancer"),
+						},
+					},
+				},
 			},
 		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.OpenStackAPILoadBalancer", "github.com/openshift/api/config/v1.OpenStackFailureDomain"},
 	}
 }
 

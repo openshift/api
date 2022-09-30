@@ -22601,12 +22601,12 @@
         "types": {
           "description": "types allows enabling or disabling of sub-catalog types that user can see in the Developer catalog. When omitted, all the sub-catalog types will be shown.",
           "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.operator.v1.DeveloperConsoleCatalogTypesState"
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.DeveloperConsoleCatalogTypes"
         }
       }
     },
-    "com.github.openshift.api.operator.v1.DeveloperConsoleCatalogTypesState": {
-      "description": "DeveloperConsoleCatalogTypesState defines the state of the sub-catalog types.",
+    "com.github.openshift.api.operator.v1.DeveloperConsoleCatalogTypes": {
+      "description": "DeveloperConsoleCatalogTypes defines the state of the sub-catalog types.",
       "type": "object",
       "properties": {
         "disabled": {
@@ -22629,7 +22629,8 @@
         },
         "state": {
           "description": "state defines if a list of catalog types should be enabled or disabled.",
-          "type": "string"
+          "type": "string",
+          "default": "Enabled"
         }
       },
       "x-kubernetes-unions": [

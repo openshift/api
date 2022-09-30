@@ -535,9 +535,13 @@ type OpenStackAPIBGPSpeaker struct {
 	FailureDomain string `json:"failureDomain"`
 
 	// asn specifies the Autonomous System number to be used by the BGP
-	// speaker.
+	// speaker of the Control plane node. Control plane nodes in a failure
+	// domain where this field is not set are each assigned a distinct
+	// number: master-0 4273211230, master-1 4273211231, and master-2
+	// 4273211232. If multiple Control plane nodes are assigned the same
+	// failure domain, this field cannot be set.
 	//
-	// +kubebuilder:validation:Required
+	// +optional
 	ASN string `json:"asn"`
 
 	// peers is a list of all BGP peers of the speaker for the VIPs of this

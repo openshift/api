@@ -430,6 +430,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/image/v1.ImageLayerData":                                            schema_openshift_api_image_v1_ImageLayerData(ref),
 		"github.com/openshift/api/image/v1.ImageList":                                                 schema_openshift_api_image_v1_ImageList(ref),
 		"github.com/openshift/api/image/v1.ImageLookupPolicy":                                         schema_openshift_api_image_v1_ImageLookupPolicy(ref),
+		"github.com/openshift/api/image/v1.ImageManifest":                                             schema_openshift_api_image_v1_ImageManifest(ref),
 		"github.com/openshift/api/image/v1.ImageSignature":                                            schema_openshift_api_image_v1_ImageSignature(ref),
 		"github.com/openshift/api/image/v1.ImageStream":                                               schema_openshift_api_image_v1_ImageStream(ref),
 		"github.com/openshift/api/image/v1.ImageStreamImage":                                          schema_openshift_api_image_v1_ImageStreamImage(ref),
@@ -20214,7 +20215,7 @@ func schema_openshift_api_image_v1_Image(ref common.ReferenceCallback) common.Op
 					},
 					"dockerImageLayers": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DockerImageLayers represents the layers in the image. May not be set if the image does not define that data.",
+							Description: "DockerImageLayers represents the layers in the image. May not be set if the image does not define that data or if the image represents a manifest list.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -20269,17 +20270,30 @@ func schema_openshift_api_image_v1_Image(ref common.ReferenceCallback) common.Op
 					},
 					"dockerImageConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DockerImageConfig is a JSON blob that the runtime uses to set up the container. This is a part of manifest schema v2.",
+							Description: "DockerImageConfig is a JSON blob that the runtime uses to set up the container. This is a part of manifest schema v2. Will not be set when the image represents a manifest list.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
+					"dockerImageManifests": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DockerImageManifests holds information about sub-manifests when the image represents a manifest list. When this field is present, no DockerImageLayers should be specified.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/image/v1.ImageManifest"),
+									},
+								},
+							},
+						},
+					},
 				},
-				Required: []string{"dockerImageLayers"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/image/v1.ImageLayer", "github.com/openshift/api/image/v1.ImageSignature", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
+			"github.com/openshift/api/image/v1.ImageLayer", "github.com/openshift/api/image/v1.ImageManifest", "github.com/openshift/api/image/v1.ImageSignature", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -20401,6 +20415,20 @@ func schema_openshift_api_image_v1_ImageImportStatus(ref common.ReferenceCallbac
 							Description: "Tag is the tag this image was located under, if any",
 							Type:        []string{"string"},
 							Format:      "",
+						},
+					},
+					"manifests": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Manifests holds sub-manifests metadata when importing a manifest list",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/image/v1.Image"),
+									},
+								},
+							},
 						},
 					},
 				},
@@ -20546,6 +20574,67 @@ func schema_openshift_api_image_v1_ImageLookupPolicy(ref common.ReferenceCallbac
 					},
 				},
 				Required: []string{"local"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_image_v1_ImageManifest(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ImageManifest represents sub-manifests of a manifest list. The Digest field points to a regular Image object.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"digest": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Digest is the unique identifier for the manifest. It refers to an Image object.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"mediaType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MediaType defines the type of the manifest, possible values are application/vnd.oci.image.manifest.v1+json, application/vnd.docker.distribution.manifest.v2+json or application/vnd.docker.distribution.manifest.v1+json.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"manifestSize": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ManifestSize represents the size of the raw object contents, in bytes.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"architecture": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Architecture specifies the supported CPU architecture, for example `amd64` or `ppc64le`.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"os": {
+						SchemaProps: spec.SchemaProps{
+							Description: "OS specifies the operating system, for example `linux`.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"variant": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Variant is an optional field repreenting a variant of the CPU, for example v6 to specify a particular CPU variant of the ARM CPU.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"digest", "mediaType", "manifestSize", "architecture", "os"},
 			},
 		},
 	}
@@ -21863,6 +21952,13 @@ func schema_openshift_api_image_v1_TagImportPolicy(ref common.ReferenceCallback)
 						SchemaProps: spec.SchemaProps{
 							Description: "Scheduled indicates to the server that this tag should be periodically checked to ensure it is up to date, and imported",
 							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"importMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ImportMode describes how to import an image manifest.",
+							Type:        []string{"string"},
 							Format:      "",
 						},
 					},

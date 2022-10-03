@@ -8,6 +8,11 @@ type SuiteSpec struct {
 	// CRD is a CRD file path that should be installed as a part of this test.
 	CRD string `json:"crd"`
 
+	// Version is the version of the CRD under test in this file.
+	// When omitted, if there is a single version in the CRD, this is assumed to be the correct version.
+	// If there are multiple versions within the CRD, an educated guess is made based on the directory structure.
+	Version string `json:"version,omitempty"`
+
 	// Tests defines the test cases to run for this test suite.
 	Tests TestSpec `json:tests`
 }

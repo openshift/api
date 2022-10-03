@@ -102,13 +102,17 @@ type InfrastructureStatus struct {
 	// +kubebuilder:validation:Enum=HighlyAvailable;SingleReplica
 	InfrastructureTopology TopologyMode `json:"infrastructureTopology"`
 
-	// cpuPartitioning expresses that CPU partitioning is a currently enabled feature in the cluster.
+	// cpuPartitioning expresses if CPU partitioning is a currently enabled feature in the cluster.
 	// CPU Partitioning means that this cluster can support partitioning workloads to specific CPU Sets.
-	// Valid values are None and AllNodes. When omitted, the default value is None.
+	// Valid values are "None" and "AllNodes". When omitted, the default value is "None".
+	// The default value of "None" indicates that no nodes will be setup with CPU partitioning.
+	// The "AllNodes" value indicates that all nodes have been setup with CPU partitioning,
+	// and can then be further configured via the PerformanceProfile API.
 	// +kubebuilder:default=None
 	// +default="None"
 	// +kubebuilder:validation:Enum=None;AllNodes
 	// +openshift:enable:FeatureSets=TechPreviewNoUpgrade
+	// +optional
 	CPUPartitioning CPUPartitioningMode `json:"cpuPartitioning,omitempty"`
 }
 

@@ -28,6 +28,9 @@ openapi-gen: $(OUTPUT_DIR)/openapi-gen
 .PHONY:protoc-gen-gogo
 protoc-gen-gogo: $(OUTPUT_DIR)/protoc-gen-gogo
 
+.PHONY:yq
+yq: $(OUTPUT_DIR)/yq
+
 ###########################################
 #
 # End: Shortcuts to fully qualified targets
@@ -51,6 +54,9 @@ $(OUTPUT_DIR)/openapi-gen:
 
 $(OUTPUT_DIR)/protoc-gen-gogo:
 	go build -mod=vendor -o $(OUTPUT_DIR)/protoc-gen-gogo ./vendor/k8s.io/code-generator/cmd/go-to-protobuf/protoc-gen-gogo
+
+$(OUTPUT_DIR)/yq:
+	go build -mod=vendor -o $(OUTPUT_DIR)/yq ./vendor/github.com/mikefarah/yq/v4
 
 ###################################
 #

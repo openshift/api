@@ -119,6 +119,7 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		with("CGroupsV2").                   // sig-node, harche, OCP specific
 		with("Crun").                        // sig-node, haircommander, OCP specific
 		with("InsightsConfigAPI").           // insights, tremes (#ccx), OCP specific
+		with("CSIInlineVolumeAdmission").    // sig-storage, jdobson, OCP specific
 		toFeatures(),
 	LatencySensitive: newDefaultFeatures().
 		with(

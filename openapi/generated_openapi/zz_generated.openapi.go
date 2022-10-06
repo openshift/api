@@ -14902,7 +14902,7 @@ func schema_openshift_api_config_v1_OpenStackAPIBGPSpeaker(ref common.ReferenceC
 				Properties: map[string]spec.Schema{
 					"failureDomain": {
 						SchemaProps: spec.SchemaProps{
-							Description: "failureDomain is the name of a failure domain which this BGP configuration applies to. A failure domain with that name must be defined in the OpenStack platform spec.",
+							Description: "failureDomain is the name of a failure domain which this BGP configuration applies to. A failure domain with that name must be defined in the OpenStack platform spec. If there are no failure domains defined, use \"default\".",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",

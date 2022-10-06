@@ -1271,7 +1271,7 @@ func (OpenStackAPIBGPPeer) SwaggerDoc() map[string]string {
 
 var map_OpenStackAPIBGPSpeaker = map[string]string{
 	"":              "OpenStackAPIBGPSpeaker describes the BGP autonomous system that will contain the API VIP for a specific failure domain.",
-	"failureDomain": "failureDomain is the name of a failure domain which this BGP configuration applies to. A failure domain with that name must be defined in the OpenStack platform spec.",
+	"failureDomain": "failureDomain is the name of a failure domain which this BGP configuration applies to. A failure domain with that name must be defined in the OpenStack platform spec. If there are no failure domains defined, use \"default\".",
 	"asn":           "asn specifies the Autonomous System number to be used by the BGP speaker of the Control plane node. Control plane nodes in a failure domain where this field is not set are each assigned a distinct number: master-0 4273211230, master-1 4273211231, and master-2 4273211232. If multiple Control plane nodes are assigned the same failure domain, this field cannot be set.",
 	"peers":         "peers is a list of all BGP peers of the speaker for the VIPs of this failure domain. The list must contain at least one item.",
 }

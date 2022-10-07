@@ -1,9 +1,12 @@
 package schemapatch
 
 import (
+	"fmt"
+
 	"github.com/openshift/api/tools/codegen/pkg/generation"
 
 	"k8s.io/apimachinery/pkg/util/sets"
+	"sigs.k8s.io/controller-tools/pkg/genall"
 )
 
 // Options contains the configuration required for the schemapatch generator.
@@ -40,5 +43,68 @@ func (g *generator) Name() string {
 
 // GenGroup runs the schemapatch generator against the given group context.
 func (g *generator) GenGroup(groupCtx generation.APIGroupContext) error {
+	var groupRuntime *genall.Runtime
+	versionPaths := allVersionPaths(groupCtx.Versions)
+
+	for _, version := range groupCtx.Versions {
+		versionRequired, err := shouldProcessGroupVersion(version, g.requiredFeatureSets)
+		if err != nil {
+			return fmt.Errorf("could not determine if version %s is required: %w", version.Name, err)
+		}
+
+		if !versionRequired {
+			continue
+		}
+
+		// Lazy load the roots for the group once we know at least one
+		// version needs to be generated.
+		// Only load the roots if we are using internal generation.
+		if groupRuntime == nil && g.controllerGen == "" {
+			rt, err := loadGroupRuntime(versionPaths)
+			if err != nil {
+				return fmt.Errorf("error loading group runtime: %w", err)
+			}
+
+			groupRuntime = rt
+		}
+
+		if err := g.genGroupVersion(groupCtx.Name, version, groupRuntime, versionPaths); err != nil {
+			return fmt.Errorf("could not run schemapatch generator for group/version %s/%s: %w", groupCtx.Name, version.Name, err)
+		}
+	}
+
 	return nil
+}
+
+// genGroupVersion runs the schemapatch generator against a particular version of the API group.
+func (g *generator) genGroupVersion(group string, version generation.APIVersionContext, rt *genall.Runtime, versionPaths []string) error {
+	if g.controllerGen != "" {
+		if err := executeSchemaPatchForGroupVersionWithBinary(g.controllerGen, group, version, versionPaths, g.requiredFeatureSets); err != nil {
+			return fmt.Errorf("error executing controller-gen binary: %w", err)
+		}
+	} else {
+		if err := executeSchemaPatchForGroupVersion(rt, group, version, g.requiredFeatureSets); err != nil {
+			return fmt.Errorf("error executing schemapatch: %w", err)
+		}
+	}
+
+	return nil
+}
+
+// loadGroupRuntime builds a genall.Runtime based on the package paths for all version that are passed.
+// This allows the runtime to be shared between each version when it's generated.
+func loadGroupRuntime(paths []string) (*genall.Runtime, error) {
+	generators := &genall.Generators{}
+	return generators.ForRoots(paths...)
+}
+
+// allVersionPaths creates a list of all version paths for the group.
+func allVersionPaths(versions []generation.APIVersionContext) []string {
+	out := []string{}
+
+	for _, version := range versions {
+		out = append(out, version.Path)
+	}
+
+	return out
 }

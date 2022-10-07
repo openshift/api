@@ -88,6 +88,14 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 		}
 	}
 
+	if err := executeYAMLPatchForGroupVersion(version, g.requiredFeatureSets); err != nil {
+		return fmt.Errorf("error executing yaml patches: %w", err)
+	}
+
+	if err := formatManifestsForGroupVersion(version, g.requiredFeatureSets); err != nil {
+		return fmt.Errorf("error formatting manifests: %w", err)
+	}
+
 	return nil
 }
 

@@ -2,7 +2,9 @@ package main
 
 import (
 	"flag"
+	"fmt"
 
+	"github.com/openshift/api/tools/codegen/pkg/generation"
 	"github.com/spf13/cobra"
 
 	"k8s.io/klog/v2"
@@ -19,6 +21,14 @@ var rootCmd = &cobra.Command{
 	Use:   "codegen",
 	Short: "Codegen runs code generators for the OpenShift API definitions",
 	RunE: func(cmd *cobra.Command, args []string) error {
+		_, err := generation.NewContext(generation.Options{
+			BaseDir:          baseDir,
+			APIGroupVersions: apiGroupVersions,
+		})
+		if err != nil {
+			return fmt.Errorf("could not build generation context: %w", err)
+		}
+
 		return nil
 	},
 }

@@ -7,6 +7,7 @@ import (
 	"github.com/openshift/api/tools/codegen/pkg/generation"
 	"github.com/spf13/cobra"
 
+	kerrors "k8s.io/apimachinery/pkg/util/errors"
 	"k8s.io/klog/v2"
 )
 
@@ -21,7 +22,7 @@ var rootCmd = &cobra.Command{
 	Use:   "codegen",
 	Short: "Codegen runs code generators for the OpenShift API definitions",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		_, err := generation.NewContext(generation.Options{
+		genCtx, err := generation.NewContext(generation.Options{
 			BaseDir:          baseDir,
 			APIGroupVersions: apiGroupVersions,
 		})
@@ -29,7 +30,7 @@ var rootCmd = &cobra.Command{
 			return fmt.Errorf("could not build generation context: %w", err)
 		}
 
-		return nil
+		return executeGenerators(genCtx, allGenerators()...)
 	},
 }
 
@@ -46,4 +47,38 @@ func init() {
 
 	klog.InitFlags(flag.CommandLine)
 	rootCmd.PersistentFlags().AddGoFlagSet(flag.CommandLine)
+}
+
+// executeGenerators runs each generator for each group in the generation context.
+// If an error occurs for a generator within a group, the rest of the generators are ignored for that group.
+// Subsequent groups will continue to generate.
+func executeGenerators(genCtx generation.Context, generators ...generation.Generator) error {
+	errs := []error{}
+
+	for _, group := range genCtx.APIGroups {
+		klog.Infof("Running generators for %s", group.Name)
+
+		for _, gen := range generators {
+			if err := gen.GenGroup(group); err != nil {
+				errs = append(errs, fmt.Errorf("error running generator %s on group %s: %w", gen.Name(), group.Name, err))
+
+				// Don't run any later generators for this group.
+				break
+			}
+		}
+	}
+
+	if len(errs) > 0 {
+		return kerrors.NewAggregate(errs)
+	}
+
+	return nil
+}
+
+// allGenerators returns an ordered list of generators to run when
+// the root command is executed.
+func allGenerators() []generation.Generator {
+	return []generation.Generator{
+		newSchemaPatchGenerator(),
+	}
 }

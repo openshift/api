@@ -7,14 +7,22 @@ OUTPUT_DIR=$(TOOLS_DIR)/_output/bin/$(GOOS)/$(GOARCH)
 
 
 # Tools builds all tools.
-tools: deepcopy-gen openapi-gen
+tools: codegen controller-gen deepcopy-gen go-to-protobuf openapi-gen protoc-gen-gogo yq
 
+clean:
+	rm $(OUTPUT_DIR)/*
 
 #############################################
 #
 # BEGIN: Shortcuts to fully qualified targets
 #
 #############################################
+
+.PHONY:codegen
+codegen: $(OUTPUT_DIR)/codegen
+
+.PHONY:controller-gen
+controller-gen: $(OUTPUT_DIR)/controller-gen
 
 .PHONY:deepcopy-gen
 deepcopy-gen: $(OUTPUT_DIR)/deepcopy-gen
@@ -42,6 +50,12 @@ yq: $(OUTPUT_DIR)/yq
 # BEGIN: Fully qualified tool targets
 #
 #####################################
+
+$(OUTPUT_DIR)/codegen:
+	go build -mod=vendor -o $(OUTPUT_DIR)/codegen ./codegen/cmd
+
+$(OUTPUT_DIR)/controller-gen:
+	go build -mod=vendor -o $(OUTPUT_DIR)/controller-gen ./vendor/sigs.k8s.io/controller-tools/cmd/controller-gen
 
 $(OUTPUT_DIR)/deepcopy-gen:
 	go build -mod=vendor -o $(OUTPUT_DIR)/deepcopy-gen ./vendor/k8s.io/code-generator/cmd/deepcopy-gen

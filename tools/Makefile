@@ -12,6 +12,10 @@ tools: codegen controller-gen deepcopy-gen go-to-protobuf openapi-gen protoc-gen
 clean:
 	rm $(OUTPUT_DIR)/*
 
+.PHONY: run-codegen
+run-codegen: codegen
+	$(OUTPUT_DIR)/codegen --base-dir $(BASE_DIR) --api-group-versions $(API_GROUP_VERSIONS) --required-feature-sets $(OPENSHIFT_REQUIRED_FEATURESETS)
+
 #############################################
 #
 # BEGIN: Shortcuts to fully qualified targets

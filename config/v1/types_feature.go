@@ -101,7 +101,8 @@ type FeatureGateEnabledDisabled struct {
 // version of this file. In this upgrade scenario the map could return nil.
 //
 // example:
-//   if featureSet, ok := FeatureSets["SomeNewFeature"]; ok { }
+//
+//	if featureSet, ok := FeatureSets["SomeNewFeature"]; ok { }
 //
 // If you put an item in either of these lists, put your area and name on it so we can find owners.
 var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{

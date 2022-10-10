@@ -533,11 +533,12 @@ type OpenIDIdentityProvider struct {
 
 // UserIDClaim is the claim used to provide a stable identifier for OIDC identities.
 // Per http://openid.net/specs/openid-connect-core-1_0.html#ClaimStability
-//  "The sub (subject) and iss (issuer) Claims, used together, are the only Claims that an RP can
-//   rely upon as a stable identifier for the End-User, since the sub Claim MUST be locally unique
-//   and never reassigned within the Issuer for a particular End-User, as described in Section 2.
-//   Therefore, the only guaranteed unique identifier for a given End-User is the combination of the
-//   iss Claim and the sub Claim."
+//
+//	"The sub (subject) and iss (issuer) Claims, used together, are the only Claims that an RP can
+//	 rely upon as a stable identifier for the End-User, since the sub Claim MUST be locally unique
+//	 and never reassigned within the Issuer for a particular End-User, as described in Section 2.
+//	 Therefore, the only guaranteed unique identifier for a given End-User is the combination of the
+//	 iss Claim and the sub Claim."
 const UserIDClaim = "sub"
 
 // OpenIDClaim represents a claim retrieved from an OpenID provider's tokens or userInfo

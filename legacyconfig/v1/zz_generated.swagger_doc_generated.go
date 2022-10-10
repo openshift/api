@@ -722,7 +722,7 @@ func (PodManifestConfig) SwaggerDoc() map[string]string {
 }
 
 var map_PolicyConfig = map[string]string{
-	"":                        "\n holds the necessary configuration options for",
+	"":                        "holds the necessary configuration options for",
 	"userAgentMatchingConfig": "UserAgentMatchingConfig controls how API calls from *voluntarily* identifying clients will be handled.  THIS DOES NOT DEFEND AGAINST MALICIOUS CLIENTS!",
 }
 
@@ -731,7 +731,7 @@ func (PolicyConfig) SwaggerDoc() map[string]string {
 }
 
 var map_ProjectConfig = map[string]string{
-	"":                       "\n holds the necessary configuration options for",
+	"":                       "holds the necessary configuration options for",
 	"defaultNodeSelector":    "DefaultNodeSelector holds default project node label selector",
 	"projectRequestMessage":  "ProjectRequestMessage is the string presented to a user if they are unable to request a project via the projectrequest api endpoint",
 	"projectRequestTemplate": "ProjectRequestTemplate is the template to use for creating projects in response to projectrequest. It is in the format namespace/template and it is optional. If it is not specified, a default template is used.",

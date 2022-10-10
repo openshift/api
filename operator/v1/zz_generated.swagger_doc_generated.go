@@ -813,6 +813,23 @@ func (KubeAPIServerList) SwaggerDoc() map[string]string {
 	return map_KubeAPIServerList
 }
 
+var map_KubeAPIServerStatus = map[string]string{
+	"serviceAccountIssuers": "serviceAccountIssuers tracks history of used service account issuers. The item without expiration time represents the currently used service account issuer. The other items represents service account issuers that were used previously and are still being trusted. The default expiration for the items is set by the platform and it defaults to 24h. see: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#service-account-token-volume-projection",
+}
+
+func (KubeAPIServerStatus) SwaggerDoc() map[string]string {
+	return map_KubeAPIServerStatus
+}
+
+var map_ServiceAccountIssuerStatus = map[string]string{
+	"name":           "name is the name of the service account issuer",
+	"expirationTime": "expirationTime is the time after which this service account issuer will be pruned and removed from the trusted list of service account issuers.",
+}
+
+func (ServiceAccountIssuerStatus) SwaggerDoc() map[string]string {
+	return map_ServiceAccountIssuerStatus
+}
+
 var map_KubeControllerManager = map[string]string{
 	"":       "KubeControllerManager provides information to configure an operator to manage kube-controller-manager.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 	"spec":   "spec is the specification of the desired behavior of the Kubernetes Controller Manager",

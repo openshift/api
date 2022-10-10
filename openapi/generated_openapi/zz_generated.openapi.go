@@ -864,6 +864,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.RouteAdmissionPolicy":                                   schema_openshift_api_operator_v1_RouteAdmissionPolicy(ref),
 		"github.com/openshift/api/operator/v1.SFlowConfig":                                            schema_openshift_api_operator_v1_SFlowConfig(ref),
 		"github.com/openshift/api/operator/v1.Server":                                                 schema_openshift_api_operator_v1_Server(ref),
+		"github.com/openshift/api/operator/v1.ServiceAccountIssuerStatus":                             schema_openshift_api_operator_v1_ServiceAccountIssuerStatus(ref),
 		"github.com/openshift/api/operator/v1.ServiceCA":                                              schema_openshift_api_operator_v1_ServiceCA(ref),
 		"github.com/openshift/api/operator/v1.ServiceCAList":                                          schema_openshift_api_operator_v1_ServiceCAList(ref),
 		"github.com/openshift/api/operator/v1.ServiceCASpec":                                          schema_openshift_api_operator_v1_ServiceCASpec(ref),
@@ -8855,7 +8856,7 @@ func schema_openshift_api_config_v1_AuthenticationSpec(ref common.ReferenceCallb
 					},
 					"serviceAccountIssuer": {
 						SchemaProps: spec.SchemaProps{
-							Description: "serviceAccountIssuer is the identifier of the bound service account token issuer. The default is https://kubernetes.default.svc WARNING: Updating this field will result in the invalidation of all bound tokens with the previous issuer value. Unless the holder of a bound token has explicit support for a change in issuer, they will not request a new bound token until pod restart or until their existing token exceeds 80% of its duration.",
+							Description: "serviceAccountIssuer is the identifier of the bound service account token issuer. The default is https://kubernetes.default.svc WARNING: Updating this field will not result in immediate invalidation of all bound tokens with the previous issuer value. Instead, the tokens issued by previous service account issuer will continue to be trusted for a time period chosen by the platform (currently set to 24h). This time period is subject to change over time. This allows internal components to transition to use new service account issuer without service distruption.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -41274,12 +41275,26 @@ func schema_openshift_api_operator_v1_KubeAPIServerStatus(ref common.ReferenceCa
 							},
 						},
 					},
+					"serviceAccountIssuers": {
+						SchemaProps: spec.SchemaProps{
+							Description: "serviceAccountIssuers tracks history of used service account issuers. The item without expiration time represents the currently used service account issuer. The other items represents service account issuers that were used previously and are still being trusted. The default expiration for the items is set by the platform and it defaults to 24h. see: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#service-account-token-volume-projection",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/operator/v1.ServiceAccountIssuerStatus"),
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.NodeStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
+			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.NodeStatus", "github.com/openshift/api/operator/v1.OperatorCondition", "github.com/openshift/api/operator/v1.ServiceAccountIssuerStatus"},
 	}
 }
 
@@ -44118,6 +44133,34 @@ func schema_openshift_api_operator_v1_Server(ref common.ReferenceCallback) commo
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/operator/v1.ForwardPlugin"},
+	}
+}
+
+func schema_openshift_api_operator_v1_ServiceAccountIssuerStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the name of the service account issuer",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"expirationTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "expirationTime is the time after which this service account issuer will be pruned and removed from the trusted list of service account issuers.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 

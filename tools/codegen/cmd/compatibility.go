@@ -41,5 +41,7 @@ func init() {
 
 // newCompatibilityhGenerator builds a new compatibility generator.
 func newCompatibilityGenerator() generation.Generator {
-	return compatibility.NewGenerator(compatibility.Options{})
+	return compatibility.NewGenerator(compatibility.Options{
+		Verify: verify,
+	})
 }

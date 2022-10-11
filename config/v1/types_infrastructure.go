@@ -549,7 +549,7 @@ type VSpherePlatformStatus struct {
 // This only includes fields that can be modified in the cluster.
 type IBMCloudPlatformSpec struct{}
 
-//IBMCloudPlatformStatus holds the current status of the IBMCloud infrastructure provider.
+// IBMCloudPlatformStatus holds the current status of the IBMCloud infrastructure provider.
 type IBMCloudPlatformStatus struct {
 	// Location is where the cluster has been deployed
 	Location string `json:"location,omitempty"`

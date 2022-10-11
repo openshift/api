@@ -79,6 +79,7 @@ func executeGenerators(genCtx generation.Context, generators ...generation.Gener
 // the root command is executed.
 func allGenerators() []generation.Generator {
 	return []generation.Generator{
+		newCompatibilityGenerator(),
 		newSchemaPatchGenerator(),
 	}
 }

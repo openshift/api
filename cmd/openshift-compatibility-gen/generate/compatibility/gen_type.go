@@ -170,7 +170,8 @@ func versionedMethodOrDie(methodName string, t *types.Type) *types.Signature {
 // versionMethod returns the signature of an <methodName>() method, nil or an error
 // if the type is wrong. Introduced() allows more efficient deep copy
 // implementations to be defined by the type's author.  The correct signature
-//    func (t *T) <methodName>() string
+//
+//	func (t *T) <methodName>() string
 func versionMethod(methodName string, t *types.Type) (*types.Signature, error) {
 	f, found := t.Methods[methodName]
 	if !found {

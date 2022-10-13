@@ -25857,7 +25857,8 @@
         },
         "name": {
           "description": "name is the name of the service account issuer",
-          "type": "string"
+          "type": "string",
+          "default": ""
         }
       }
     },

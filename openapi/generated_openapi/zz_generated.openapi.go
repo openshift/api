@@ -44145,6 +44145,7 @@ func schema_openshift_api_operator_v1_ServiceAccountIssuerStatus(ref common.Refe
 					"name": {
 						SchemaProps: spec.SchemaProps{
 							Description: "name is the name of the service account issuer",
+							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},

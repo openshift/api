@@ -49,7 +49,7 @@ type ServiceAccountIssuerStatus struct {
 	// + This value comes from the serviceAccountIssuer field on the authentication.config.openshift.io/v1 resource.
 	// + As the authentication field is not validated, we cannot apply validation here else this may cause the controller
 	// + to error when trying to update this status field.
-	Name string `json:"name,string"`
+	Name string `json:"name"`
 
 	// expirationTime is the time after which this service account issuer will be pruned and removed from the trusted list
 	// of service account issuers.

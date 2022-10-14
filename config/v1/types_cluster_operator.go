@@ -177,12 +177,10 @@ const (
 	OperatorDegraded ClusterStatusConditionType = "Degraded"
 
 	// Upgradeable indicates whether the component (operator and all configured
-	// operands) is safe to upgrade based on the current cluster state. When
-	// Upgradeable is False, the cluster-version operator will prevent the
-	// cluster from performing impacted updates unless forced.  When set on
-	// ClusterVersion, the message will explain which updates (minor or patch)
-	// are impacted. When set on ClusterOperator, False will block minor
-	// OpenShift updates. The message field should contain a human readable
+	// operands) is safe to upgrade to minor version based on the current cluster state.
+	// When Upgradeable is False, the cluster-version operator will prevent the
+	// cluster from performing impacted updates unless forced. When set on ClusterOperator,
+	// False will block minor OpenShift updates. The message field should contain a human readable
 	// description of what the administrator should do to allow the cluster or
 	// component to successfully update. The cluster-version operator will
 	// allow updates when this condition is not False, including when it is

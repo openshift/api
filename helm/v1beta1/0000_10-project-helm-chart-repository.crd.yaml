@@ -42,6 +42,27 @@ spec:
               connectionConfig:
                 description: Required configuration for connecting to the chart repo
                 properties:
+                  PGPKeys:
+                    description: PGPKeys is an optional reference to a list of config
+                      maps by name containing the public pgp keys of signed charts.
+                      It is used as a trust anchor to validate the chart has been
+                      signed by an issuer. Each config map should hold the key "pgp.key",
+                      which is used for signature verification. The namespace for
+                      all the config maps declared must be same as the namespace where
+                      the project helm chart repository is getting instantiated.
+                    items:
+                      description: ConfigMapNameReference references a config map
+                        in a specific namespace. The namespace must be specified at
+                        the point of use.
+                      properties:
+                        name:
+                          description: name is the metadata.name of the referenced
+                            config map
+                          type: string
+                      required:
+                      - name
+                      type: object
+                    type: array
                   basicAuthConfig:
                     description: basicAuthConfig is an optional reference to a secret
                       by name that contains the basic authentication credentials to

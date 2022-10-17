@@ -80,6 +80,13 @@ type ConnectionConfigNamespaceScoped struct {
 	// The namespace for this secret must be same as the namespace where the project helm chart repository is getting instantiated.
 	// +optional
 	BasicAuthConfig configv1.SecretNameReference `json:"basicAuthConfig,omitempty"`
+
+	// PGPKeys is an optional reference to a list of config maps by name containing the public pgp keys of signed charts.
+	// It is used as a trust anchor to validate the chart has been signed by an issuer.
+	// Each config map should hold the key "pgp.key", which is used for signature verification.
+	// The namespace for all the config maps declared must be same as the namespace where the project helm chart repository is getting instantiated.
+	// +optional
+	PGPKeys []configv1.ConfigMapNameReference `json:"PGPKeys,omitempty"`
 }
 
 // Compatibility level 2: Stable within a major release for a minimum of 9 months or 3 minor releases (whichever is longer).

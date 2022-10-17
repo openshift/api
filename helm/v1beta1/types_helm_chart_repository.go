@@ -83,6 +83,13 @@ type ConnectionConfig struct {
 	// The namespace for this secret is openshift-config.
 	// +optional
 	TLSClientConfig configv1.SecretNameReference `json:"tlsClientConfig,omitempty"`
+
+	// PGPKeys is an optional reference to a list of config maps by name containing the public pgp keys of signed charts.
+	// It is used as a trust anchor to validate the chart has been signed by an issuer.
+	// Each config map should hold the key "pgp.key", which is used for signature verification.
+	// The namespace for all the  config maps declared here is openshift-config.
+	// +optional
+	PGPKeys []configv1.ConfigMapNameReference `json:"PGPKeys,omitempty"`
 }
 
 type HelmChartRepositoryStatus struct {

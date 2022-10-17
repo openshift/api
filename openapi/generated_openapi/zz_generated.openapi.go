@@ -19733,6 +19733,20 @@ func schema_openshift_api_helm_v1beta1_ConnectionConfig(ref common.ReferenceCall
 							Ref:         ref("github.com/openshift/api/config/v1.SecretNameReference"),
 						},
 					},
+					"PGPKeys": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PGPKeys is an optional reference to a list of config maps by name containing the public pgp keys of signed charts. It is used as a trust anchor to validate the chart has been signed by an issuer. Each config map should hold the key \"pgp.key\", which is used for signature verification. The namespace for all the  config maps declared here is openshift-config.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.ConfigMapNameReference"),
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"url"},
 			},
@@ -19775,6 +19789,20 @@ func schema_openshift_api_helm_v1beta1_ConnectionConfigNamespaceScoped(ref commo
 							Description: "basicAuthConfig is an optional reference to a secret by name that contains the basic authentication credentials to present when connecting to the server. The key \"username\" is used locate the username. The key \"password\" is used to locate the password. The namespace for this secret must be same as the namespace where the project helm chart repository is getting instantiated.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.SecretNameReference"),
+						},
+					},
+					"PGPKeys": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PGPKeys is an optional reference to a list of config maps by name containing the public pgp keys of signed charts. It is used as a trust anchor to validate the chart has been signed by an issuer. Each config map should hold the key \"pgp.key\", which is used for signature verification. The namespace for all the config maps declared must be same as the namespace where the project helm chart repository is getting instantiated.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.ConfigMapNameReference"),
+									},
+								},
+							},
 						},
 					},
 				},

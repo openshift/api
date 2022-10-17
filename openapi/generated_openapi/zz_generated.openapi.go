@@ -18182,7 +18182,7 @@ func schema_openshift_api_console_v1_ConsolePluginI18n(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"loadType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "loadType indicates how the plugin's localization resource should be loaded.",
+							Description: "loadType indicates how the plugin's localization resource should be loaded. Valid values are Preload, Lazy and the empty string. When set to Preload, all localization resources are fetched when the plugin is loaded. When set to Lazy, localization resources are lazily loaded as and when they are required by the console. When omitted or set to the empty string, the behaviour is equivalent to Lazy type.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",

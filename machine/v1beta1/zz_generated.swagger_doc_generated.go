@@ -460,6 +460,7 @@ func (LifecycleHook) SwaggerDoc() map[string]string {
 
 var map_LifecycleHooks = map[string]string{
 	"":             "LifecycleHooks allow users to pause operations on the machine at certain prefedined points within the machine lifecycle.",
+	"preProvision": "PreProvision hooks prevent the machine from being provisioned in the backing infrastructure.",
 	"preDrain":     "PreDrain hooks prevent the machine from being drained. This also blocks further lifecycle events, such as termination.",
 	"preTerminate": "PreTerminate hooks prevent the machine from being terminated. PreTerminate hooks be actioned after the Machine has been drained.",
 }

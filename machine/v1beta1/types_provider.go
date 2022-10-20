@@ -144,6 +144,9 @@ const (
 	// ExternalRemediationRequestAvailable is set on machinehealthchecks when MachineHealthCheck controller uses external remediation.
 	// ExternalRemediationRequestAvailable is set to false if creating external remediation request fails.
 	ExternalRemediationRequestAvailable ConditionType = "ExternalRemediationRequestAvailable"
+	// MachineProvisionable is set on a machine to indicate that the machine can be provisioned in the backing infrastructure.
+	// When an error occurs during the pre-provision process, the condition will be added with a false status and details of the error.
+	MachineProvisionable ConditionType = "Provisionable"
 	// MachineDrained is set on a machine to indicate that the machine has been drained. When an error occurs during
 	// the drain process, the condition will be added with a false status and details of the error.
 	MachineDrained ConditionType = "Drained"

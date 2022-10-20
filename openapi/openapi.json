@@ -18570,6 +18570,18 @@
           ],
           "x-kubernetes-list-type": "map"
         },
+        "preProvision": {
+          "description": "PreProvision hooks prevent the machine from being provisioned in the backing infrastructure.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.LifecycleHook"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
         "preTerminate": {
           "description": "PreTerminate hooks prevent the machine from being terminated. PreTerminate hooks be actioned after the Machine has been drained.",
           "type": "array",

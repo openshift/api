@@ -31931,6 +31931,28 @@ func schema_openshift_api_machine_v1beta1_LifecycleHooks(ref common.ReferenceCal
 				Description: "LifecycleHooks allow users to pause operations on the machine at certain prefedined points within the machine lifecycle.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"preProvision": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "PreProvision hooks prevent the machine from being provisioned in the backing infrastructure.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machine/v1beta1.LifecycleHook"),
+									},
+								},
+							},
+						},
+					},
 					"preDrain": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{

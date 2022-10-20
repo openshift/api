@@ -202,6 +202,12 @@ type MachineSpec struct {
 // LifecycleHooks allow users to pause operations on the machine at
 // certain prefedined points within the machine lifecycle.
 type LifecycleHooks struct {
+	// PreProvision hooks prevent the machine from being provisioned in the backing infrastructure.
+	// +listType=map
+	// +listMapKey=name
+	// +optional
+	PreProvision []LifecycleHook `json:"preProvision,omitempty"`
+
 	// PreDrain hooks prevent the machine from being drained.
 	// This also blocks further lifecycle events, such as termination.
 	// +listType=map

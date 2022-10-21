@@ -6,7 +6,6 @@ require (
 	github.com/dave/dst v0.26.2
 	github.com/gogo/protobuf v1.3.2
 	github.com/google/go-cmp v0.5.6
-	github.com/openshift/build-machinery-go v0.0.0-20220913142420-e25cf57ea46d
 	github.com/spf13/pflag v1.0.5
 	golang.org/x/tools v0.1.12
 	k8s.io/api v0.25.0

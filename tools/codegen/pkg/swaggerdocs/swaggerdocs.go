@@ -9,6 +9,7 @@ import (
 	"reflect"
 
 	kruntime "k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/klog/v2"
 )
 
 const (
@@ -46,7 +47,10 @@ func verifySwaggerDocs(packageName, filePath string, docsForTypes []kruntime.Kub
 		return fmt.Errorf("could not verify existing docs: %w", err)
 	}
 	if rc > 0 {
-		return fmt.Errorf("existing swagger docs are missing %d entries:\n%s", rc, buf.String())
+		// TODO(@JoelSpeed): When we introduce a way to configure generators per API group,
+		// make this check configurable as a warning (current behaviour), or an error.
+		// This will allow us to start enforcing this check per API group rather than globally.
+		klog.Warningf("Existing swagger docs are missing %d entries:\n%s", rc, buf.String())
 	}
 
 	// Verify that the existing data matches the generated data.

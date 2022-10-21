@@ -15,6 +15,12 @@ var (
 	apiGroupVersions []string
 	baseDir          string
 	verify           bool
+
+	// version will be set by the makefile when the binary is built.
+	// It should be the git commit hash of the last commit that
+	// affected the code used to build this tool.
+	version      = "Unknown"
+	printVersion bool
 )
 
 // rootCmd represents the base command when called without any subcommands.
@@ -23,6 +29,11 @@ var rootCmd = &cobra.Command{
 	Use:   "codegen",
 	Short: "Codegen runs code generators for the OpenShift API definitions",
 	RunE: func(cmd *cobra.Command, args []string) error {
+		if printVersion {
+			fmt.Printf("%s\n", version)
+			return nil
+		}
+
 		genCtx, err := generation.NewContext(generation.Options{
 			BaseDir:          baseDir,
 			APIGroupVersions: apiGroupVersions,
@@ -46,6 +57,7 @@ func init() {
 	rootCmd.PersistentFlags().StringSliceVar(&apiGroupVersions, "api-group-versions", []string{}, "A list of API group versions in the form <group>/<version>. The group should be fully qualified, e.g. machine.openshift.io/v1. The generator will generate against all group versions found within the base directory when no specific group versions are provided.")
 	rootCmd.PersistentFlags().StringVar(&baseDir, "base-dir", ".", "Base directory to search for API group versions")
 	rootCmd.PersistentFlags().BoolVar(&verify, "verify", false, "Verifies the content of generated files are up to date.")
+	rootCmd.PersistentFlags().BoolVar(&printVersion, "version", false, "Print the version of the codegen tool and exit")
 
 	klog.InitFlags(flag.CommandLine)
 	rootCmd.PersistentFlags().AddGoFlagSet(flag.CommandLine)

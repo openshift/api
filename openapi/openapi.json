@@ -5109,7 +5109,7 @@
           "default": ""
         },
         "desiredUpdate": {
-          "description": "desiredUpdate is an optional field that indicates the desired value of the cluster version. Setting this value will trigger an upgrade (if the current version does not match the desired version). The set of recommended update values is listed as part of available updates in status, and setting values outside that range may cause the upgrade to fail. You may specify the version field without setting image if an update exists with that version in the availableUpdates or history.\n\nIf an upgrade fails the operator will halt and report status about the failing component. Setting the desired update value back to the previous version will cause a rollback to be attempted. Not all rollbacks will succeed.",
+          "description": "desiredUpdate is an optional field that indicates the desired value of the cluster version. Setting this value will trigger an upgrade (if the current version does not match the desired version). The set of recommended update values is listed as part of available updates in status, and setting values outside that range may cause the upgrade to fail.\n\nSome of the fields are inter-related with restrictions and meanings described here. 1. image is specified, version is specified, architecture is specified. API validation error. 2. image is specified, version is specified, architecture is not specified. You should not do this. version is silently ignored and image is used. 3. image is specified, version is not specified, architecture is specified. API validation error. 4. image is specified, version is not specified, architecture is not specified. image is used. 5. image is not specified, version is specified, architecture is specified. version and desired architecture are used to select an image. 6. image is not specified, version is specified, architecture is not specified. version and current architecture are used to select an image. 7. image is not specified, version is not specified, architecture is specified. API validation error. 8. image is not specified, version is not specified, architecture is not specified. API validation error.\n\nIf an upgrade fails the operator will halt and report status about the failing component. Setting the desired update value back to the previous version will cause a rollback to be attempted. Not all rollbacks will succeed.",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.Update"
         },
         "overrides": {
@@ -8694,7 +8694,7 @@
           "type": "string"
         },
         "version": {
-          "description": "version is a semantic versioning identifying the update version. When this field is part of spec, version is optional if image is specified.",
+          "description": "version is a semantic version identifying the update version. When this field is part of spec, version is optional if image is specified.",
           "type": "string",
           "default": ""
         }
@@ -9182,18 +9182,23 @@
       "description": "Update represents an administrator update request.",
       "type": "object",
       "properties": {
+        "architecture": {
+          "description": "architecture is an optional field that indicates the desired value of the cluster architecture. In this context cluster architecture means either a single architecture or a multi architecture. architecture can only be set to Multi thereby only allowing updates from single to multi architecture. If architecture is set, image cannot be set and version must be set. Valid values are 'Multi' and empty.",
+          "type": "string",
+          "default": ""
+        },
         "force": {
           "description": "force allows an administrator to update to an image that has failed verification or upgradeable checks. This option should only be used when the authenticity of the provided image has been verified out of band because the provided image will run with full administrative access to the cluster. Do not use this flag with images that comes from unknown or potentially malicious sources.",
           "type": "boolean",
           "default": false
         },
         "image": {
-          "description": "image is a container image location that contains the update. When this field is part of spec, image is optional if version is specified and the availableUpdates field contains a matching version.",
+          "description": "image is a container image location that contains the update. image should be used when the desired version does not exist in availableUpdates or history. When image is set, version is ignored. When image is set, version should be empty. When image is set, architecture cannot be specified.",
           "type": "string",
           "default": ""
         },
         "version": {
-          "description": "version is a semantic versioning identifying the update version. When this field is part of spec, version is optional if image is specified.",
+          "description": "version is a semantic version identifying the update version. version is ignored if image is specified and required if architecture is specified.",
           "type": "string",
           "default": ""
         }
@@ -9239,7 +9244,7 @@
           "default": false
         },
         "version": {
-          "description": "version is a semantic versioning identifying the update version. If the requested image does not define a version, or if a failure occurs retrieving the image, this value may be empty.",
+          "description": "version is a semantic version identifying the update version. If the requested image does not define a version, or if a failure occurs retrieving the image, this value may be empty.",
           "type": "string",
           "default": ""
         }

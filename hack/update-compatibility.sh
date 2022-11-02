@@ -2,10 +2,10 @@
 
 source "$(dirname "${BASH_SOURCE}")/lib/init.sh"
 
-# API_GROUP_VERSIONS is a string of <group>/<version>.
-# The compatibility gen needs a comma separated list of Go packages, so prefix each entry with a comma and the
-# PACKAGE_NAME, then trim the leading comma.
-inputArg="$(printf ",${PACKAGE_NAME}/%s" ${API_GROUP_VERSIONS})"
-inputArg="${inputArg:1}"
+# Build codegen-crds when it's not present and not overriden for a specific file.
+if [ -z "${CODEGEN:-}" ];then
+  ${TOOLS_MAKE} codegen
+  CODEGEN="${TOOLS_OUTPUT}/codegen"
+fi
 
-go run github.com/openshift/api/cmd/openshift-compatibility-gen --input-dirs "$inputArg"
+"${CODEGEN}" compatibility --base-dir "${SCRIPT_ROOT}" -v 2

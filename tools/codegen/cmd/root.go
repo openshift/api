@@ -14,6 +14,7 @@ import (
 var (
 	apiGroupVersions []string
 	baseDir          string
+	verify           bool
 )
 
 // rootCmd represents the base command when called without any subcommands.
@@ -44,6 +45,7 @@ func main() {
 func init() {
 	rootCmd.PersistentFlags().StringSliceVar(&apiGroupVersions, "api-group-versions", []string{}, "A list of API group versions in the form <group>/<version>. The group should be fully qualified, e.g. machine.openshift.io/v1. The generator will generate against all group versions found within the base directory when no specific group versions are provided.")
 	rootCmd.PersistentFlags().StringVar(&baseDir, "base-dir", ".", "Base directory to search for API group versions")
+	rootCmd.PersistentFlags().BoolVar(&verify, "verify", false, "Verifies the content of generated files are up to date.")
 
 	klog.InitFlags(flag.CommandLine)
 	rootCmd.PersistentFlags().AddGoFlagSet(flag.CommandLine)
@@ -79,6 +81,7 @@ func executeGenerators(genCtx generation.Context, generators ...generation.Gener
 // the root command is executed.
 func allGenerators() []generation.Generator {
 	return []generation.Generator{
+		newCompatibilityGenerator(),
 		newSchemaPatchGenerator(),
 	}
 }

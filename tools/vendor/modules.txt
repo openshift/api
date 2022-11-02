@@ -10,6 +10,14 @@ github.com/a8m/envsubst/parse
 # github.com/alecthomas/participle/v2 v2.0.0-beta.5
 ## explicit; go 1.18
 github.com/alecthomas/participle/v2/lexer
+# github.com/dave/dst v0.27.1
+## explicit; go 1.18
+github.com/dave/dst
+github.com/dave/dst/decorator
+github.com/dave/dst/decorator/resolver
+github.com/dave/dst/decorator/resolver/gopackages
+github.com/dave/dst/decorator/resolver/gotypes
+github.com/dave/dst/dstutil
 # github.com/elliotchance/orderedmap v1.5.0
 ## explicit; go 1.12
 github.com/elliotchance/orderedmap
@@ -94,6 +102,13 @@ github.com/google/gnostic/compiler
 github.com/google/gnostic/extensions
 github.com/google/gnostic/jsonschema
 github.com/google/gnostic/openapiv2
+# github.com/google/go-cmp v0.5.8
+## explicit; go 1.13
+github.com/google/go-cmp/cmp
+github.com/google/go-cmp/cmp/internal/diff
+github.com/google/go-cmp/cmp/internal/flags
+github.com/google/go-cmp/cmp/internal/function
+github.com/google/go-cmp/cmp/internal/value
 # github.com/google/gofuzz v1.1.0
 ## explicit; go 1.12
 github.com/google/gofuzz

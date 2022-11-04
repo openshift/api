@@ -12567,6 +12567,287 @@
         }
       }
     },
+    "com.github.openshift.api.insights.v1alpha1.DataGather": {
+      "description": "DataGather provides data gather configuration options and status for the particular Insights data gathering.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec holds user settable values for configuration",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.insights.v1alpha1.DataGatherSpec"
+        },
+        "status": {
+          "description": "status holds observed values from the cluster. They may not be overridden.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.insights.v1alpha1.DataGatherStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.insights.v1alpha1.DataGatherList": {
+      "description": "DataGatherList is a collection of items\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "metadata",
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.insights.v1alpha1.DataGather"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.insights.v1alpha1.DataGatherSpec": {
+      "type": "object",
+      "properties": {
+        "dataPolicy": {
+          "description": "dataPolicy allows user to enable additional global obfuscation of the IP addresses and base domain in the Insights archive data. Valid values are \"ClearText\" and \"ObfuscateNetworking\". When set to ClearText the data is not obfuscated. When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is ClearText.",
+          "type": "string",
+          "default": ""
+        },
+        "gatherers": {
+          "description": "gatherers is a list of gatherers configurations. The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.insights.v1alpha1.GathererConfig"
+          }
+        }
+      }
+    },
+    "com.github.openshift.api.insights.v1alpha1.DataGatherStatus": {
+      "type": "object",
+      "properties": {
+        "conditions": {
+          "description": "conditions provide details on the status of the gatherer job.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "type",
+          "x-kubernetes-patch-strategy": "merge"
+        },
+        "dataGatherState": {
+          "description": "dataGatherState reflects the current state of the data gathering process.",
+          "type": "string"
+        },
+        "finishTime": {
+          "description": "finishTime is the time when Insights data gathering finished.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "gatherers": {
+          "description": "gatherers is a list of active gatherers (and their statuses) in the last gathering.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.insights.v1alpha1.GathererStatus"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "insightsReport": {
+          "description": "insightsReport provides general Insights analysis results. When omitted, this means no data gathering has taken place yet or the corresponding Insights analysis (identified by \"insightsRequestID\") is not available.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.insights.v1alpha1.InsightsReport"
+        },
+        "insightsRequestID": {
+          "description": "insightsRequestID is an Insights request ID to track the status of the Insights analysis (in console.redhat.com processing pipeline) for the corresponding Insights data archive.",
+          "type": "string"
+        },
+        "relatedObjects": {
+          "description": "relatedObjects is a list of resources which are useful when debugging or inspecting the data gathering Pod",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.insights.v1alpha1.ObjectReference"
+          }
+        },
+        "startTime": {
+          "description": "startTime is the time when Insights data gathering started.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        }
+      }
+    },
+    "com.github.openshift.api.insights.v1alpha1.GathererConfig": {
+      "description": "gathererConfig allows to configure specific gatherers",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the name of specific gatherer",
+          "type": "string",
+          "default": ""
+        },
+        "state": {
+          "description": "state allows you to configure specific gatherer. Valid values are \"Enabled\", \"Disabled\" and omitted. When omitted, this means no opinion and the platform is left to choose a reasonable default. The current default is Enabled.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.insights.v1alpha1.GathererStatus": {
+      "description": "gathererStatus represents information about a particular data gatherer.",
+      "type": "object",
+      "required": [
+        "conditions",
+        "name",
+        "lastGatherDuration"
+      ],
+      "properties": {
+        "conditions": {
+          "description": "conditions provide details on the status of each gatherer.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "type",
+          "x-kubernetes-patch-strategy": "merge"
+        },
+        "lastGatherDuration": {
+          "description": "lastGatherDuration represents the time spent gathering.",
+          "default": 0,
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        },
+        "name": {
+          "description": "name is the name of the gatherer.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.insights.v1alpha1.HealthCheck": {
+      "description": "healthCheck represents an Insights health check attributes.",
+      "type": "object",
+      "required": [
+        "description",
+        "totalRisk",
+        "advisorURI",
+        "state"
+      ],
+      "properties": {
+        "advisorURI": {
+          "description": "advisorURI provides the URL link to the Insights Advisor.",
+          "type": "string",
+          "default": ""
+        },
+        "description": {
+          "description": "description provides basic description of the healtcheck.",
+          "type": "string",
+          "default": ""
+        },
+        "state": {
+          "description": "state determines what the current state of the health check is. Health check is enabled by default and can be disabled by the user in the Insights advisor user interface.",
+          "type": "string",
+          "default": ""
+        },
+        "totalRisk": {
+          "description": "totalRisk of the healthcheck. Indicator of the total risk posed by the detected issue; combination of impact and likelihood. The values can be from 1 to 4, and the higher the number, the more important the issue.",
+          "type": "integer",
+          "format": "int32",
+          "default": 0
+        }
+      }
+    },
+    "com.github.openshift.api.insights.v1alpha1.InsightsReport": {
+      "description": "insightsReport provides Insights health check report based on the most recently sent Insights data.",
+      "type": "object",
+      "properties": {
+        "downloadedAt": {
+          "description": "downloadedAt is the time when the last Insights report was downloaded. An empty value means that there has not been any Insights report downloaded yet and it usually appears in disconnected clusters (or clusters when the Insights data gathering is disabled).",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "healthChecks": {
+          "description": "healthChecks provides basic information about active Insights health checks in a cluster.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.insights.v1alpha1.HealthCheck"
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "uri": {
+          "description": "uri provides the URL link from which the report was downloaded.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.insights.v1alpha1.ObjectReference": {
+      "description": "ObjectReference contains enough information to let you inspect or modify the referred object.",
+      "type": "object",
+      "required": [
+        "group",
+        "resource",
+        "name"
+      ],
+      "properties": {
+        "group": {
+          "description": "group is the API Group of the Resource. Enter empty string for the core group. This value should consist of only lowercase alphanumeric characters, hyphens and periods. Example: \"\", \"apps\", \"build.openshift.io\", etc.",
+          "type": "string",
+          "default": ""
+        },
+        "name": {
+          "description": "name of the referent.",
+          "type": "string",
+          "default": ""
+        },
+        "namespace": {
+          "description": "namespace of the referent.",
+          "type": "string"
+        },
+        "resource": {
+          "description": "resource is the type that is being referenced. It is normally the plural form of the resource kind in lowercase. This value should consist of only lowercase alphanumeric characters and hyphens. Example: \"deployments\", \"deploymentconfigs\", \"pods\", etc.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.kubecontrolplane.v1.AggregatorConfig": {
       "description": "AggregatorConfig holds information required to make the aggregator function.",
       "type": "object",

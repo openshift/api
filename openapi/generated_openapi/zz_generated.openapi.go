@@ -467,6 +467,15 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/image/v1.TagImportPolicy":                                           schema_openshift_api_image_v1_TagImportPolicy(ref),
 		"github.com/openshift/api/image/v1.TagReference":                                              schema_openshift_api_image_v1_TagReference(ref),
 		"github.com/openshift/api/image/v1.TagReferencePolicy":                                        schema_openshift_api_image_v1_TagReferencePolicy(ref),
+		"github.com/openshift/api/insights/v1alpha1.DataGather":                                       schema_openshift_api_insights_v1alpha1_DataGather(ref),
+		"github.com/openshift/api/insights/v1alpha1.DataGatherList":                                   schema_openshift_api_insights_v1alpha1_DataGatherList(ref),
+		"github.com/openshift/api/insights/v1alpha1.DataGatherSpec":                                   schema_openshift_api_insights_v1alpha1_DataGatherSpec(ref),
+		"github.com/openshift/api/insights/v1alpha1.DataGatherStatus":                                 schema_openshift_api_insights_v1alpha1_DataGatherStatus(ref),
+		"github.com/openshift/api/insights/v1alpha1.GathererConfig":                                   schema_openshift_api_insights_v1alpha1_GathererConfig(ref),
+		"github.com/openshift/api/insights/v1alpha1.GathererStatus":                                   schema_openshift_api_insights_v1alpha1_GathererStatus(ref),
+		"github.com/openshift/api/insights/v1alpha1.HealthCheck":                                      schema_openshift_api_insights_v1alpha1_HealthCheck(ref),
+		"github.com/openshift/api/insights/v1alpha1.InsightsReport":                                   schema_openshift_api_insights_v1alpha1_InsightsReport(ref),
+		"github.com/openshift/api/insights/v1alpha1.ObjectReference":                                  schema_openshift_api_insights_v1alpha1_ObjectReference(ref),
 		"github.com/openshift/api/kubecontrolplane/v1.AggregatorConfig":                               schema_openshift_api_kubecontrolplane_v1_AggregatorConfig(ref),
 		"github.com/openshift/api/kubecontrolplane/v1.KubeAPIServerConfig":                            schema_openshift_api_kubecontrolplane_v1_KubeAPIServerConfig(ref),
 		"github.com/openshift/api/kubecontrolplane/v1.KubeAPIServerImagePolicyConfig":                 schema_openshift_api_kubecontrolplane_v1_KubeAPIServerImagePolicyConfig(ref),
@@ -22418,6 +22427,474 @@ func schema_openshift_api_image_v1_TagReferencePolicy(ref common.ReferenceCallba
 					},
 				},
 				Required: []string{"type"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_insights_v1alpha1_DataGather(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DataGather provides data gather configuration options and status for the particular Insights data gathering.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec holds user settable values for configuration",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/insights/v1alpha1.DataGatherSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status holds observed values from the cluster. They may not be overridden.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/insights/v1alpha1.DataGatherStatus"),
+						},
+					},
+				},
+				Required: []string{"spec"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/insights/v1alpha1.DataGatherSpec", "github.com/openshift/api/insights/v1alpha1.DataGatherStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_openshift_api_insights_v1alpha1_DataGatherList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DataGatherList is a collection of items\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/insights/v1alpha1.DataGather"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/insights/v1alpha1.DataGather", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_openshift_api_insights_v1alpha1_DataGatherSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"dataPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "dataPolicy allows user to enable additional global obfuscation of the IP addresses and base domain in the Insights archive data. Valid values are \"ClearText\" and \"ObfuscateNetworking\". When set to ClearText the data is not obfuscated. When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is ClearText.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"gatherers": {
+						SchemaProps: spec.SchemaProps{
+							Description: "gatherers is a list of gatherers configurations. The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/insights/v1alpha1.GathererConfig"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/insights/v1alpha1.GathererConfig"},
+	}
+}
+
+func schema_openshift_api_insights_v1alpha1_DataGatherStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type":       "map",
+								"x-kubernetes-patch-merge-key": "type",
+								"x-kubernetes-patch-strategy":  "merge",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions provide details on the status of the gatherer job.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+					"dataGatherState": {
+						SchemaProps: spec.SchemaProps{
+							Description: "dataGatherState reflects the current state of the data gathering process.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"gatherers": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "gatherers is a list of active gatherers (and their statuses) in the last gathering.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/insights/v1alpha1.GathererStatus"),
+									},
+								},
+							},
+						},
+					},
+					"startTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "startTime is the time when Insights data gathering started.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"finishTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "finishTime is the time when Insights data gathering finished.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"relatedObjects": {
+						SchemaProps: spec.SchemaProps{
+							Description: "relatedObjects is a list of resources which are useful when debugging or inspecting the data gathering Pod",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/insights/v1alpha1.ObjectReference"),
+									},
+								},
+							},
+						},
+					},
+					"insightsRequestID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "insightsRequestID is an Insights request ID to track the status of the Insights analysis (in console.redhat.com processing pipeline) for the corresponding Insights data archive.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"insightsReport": {
+						SchemaProps: spec.SchemaProps{
+							Description: "insightsReport provides general Insights analysis results. When omitted, this means no data gathering has taken place yet or the corresponding Insights analysis (identified by \"insightsRequestID\") is not available.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/insights/v1alpha1.InsightsReport"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/insights/v1alpha1.GathererStatus", "github.com/openshift/api/insights/v1alpha1.InsightsReport", "github.com/openshift/api/insights/v1alpha1.ObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
+func schema_openshift_api_insights_v1alpha1_GathererConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "gathererConfig allows to configure specific gatherers",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the name of specific gatherer",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"state": {
+						SchemaProps: spec.SchemaProps{
+							Description: "state allows you to configure specific gatherer. Valid values are \"Enabled\", \"Disabled\" and omitted. When omitted, this means no opinion and the platform is left to choose a reasonable default. The current default is Enabled.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_insights_v1alpha1_GathererStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "gathererStatus represents information about a particular data gatherer.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type":       "map",
+								"x-kubernetes-patch-merge-key": "type",
+								"x-kubernetes-patch-strategy":  "merge",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions provide details on the status of each gatherer.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the name of the gatherer.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"lastGatherDuration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "lastGatherDuration represents the time spent gathering.",
+							Default:     0,
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+				},
+				Required: []string{"conditions", "name", "lastGatherDuration"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+	}
+}
+
+func schema_openshift_api_insights_v1alpha1_HealthCheck(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "healthCheck represents an Insights health check attributes.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"description": {
+						SchemaProps: spec.SchemaProps{
+							Description: "description provides basic description of the healtcheck.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"totalRisk": {
+						SchemaProps: spec.SchemaProps{
+							Description: "totalRisk of the healthcheck. Indicator of the total risk posed by the detected issue; combination of impact and likelihood. The values can be from 1 to 4, and the higher the number, the more important the issue.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"advisorURI": {
+						SchemaProps: spec.SchemaProps{
+							Description: "advisorURI provides the URL link to the Insights Advisor.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"state": {
+						SchemaProps: spec.SchemaProps{
+							Description: "state determines what the current state of the health check is. Health check is enabled by default and can be disabled by the user in the Insights advisor user interface.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"description", "totalRisk", "advisorURI", "state"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_insights_v1alpha1_InsightsReport(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "insightsReport provides Insights health check report based on the most recently sent Insights data.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"downloadedAt": {
+						SchemaProps: spec.SchemaProps{
+							Description: "downloadedAt is the time when the last Insights report was downloaded. An empty value means that there has not been any Insights report downloaded yet and it usually appears in disconnected clusters (or clusters when the Insights data gathering is disabled).",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"healthChecks": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "healthChecks provides basic information about active Insights health checks in a cluster.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/insights/v1alpha1.HealthCheck"),
+									},
+								},
+							},
+						},
+					},
+					"uri": {
+						SchemaProps: spec.SchemaProps{
+							Description: "uri provides the URL link from which the report was downloaded.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/insights/v1alpha1.HealthCheck", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
+func schema_openshift_api_insights_v1alpha1_ObjectReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ObjectReference contains enough information to let you inspect or modify the referred object.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"group": {
+						SchemaProps: spec.SchemaProps{
+							Description: "group is the API Group of the Resource. Enter empty string for the core group. This value should consist of only lowercase alphanumeric characters, hyphens and periods. Example: \"\", \"apps\", \"build.openshift.io\", etc.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"resource": {
+						SchemaProps: spec.SchemaProps{
+							Description: "resource is the type that is being referenced. It is normally the plural form of the resource kind in lowercase. This value should consist of only lowercase alphanumeric characters and hyphens. Example: \"deployments\", \"deploymentconfigs\", \"pods\", etc.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name of the referent.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"namespace": {
+						SchemaProps: spec.SchemaProps{
+							Description: "namespace of the referent.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"group", "resource", "name"},
 			},
 		},
 	}

@@ -2,7 +2,6 @@ package tests
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -57,7 +56,7 @@ func LoadTestSuiteSpecs(paths ...string) ([]SuiteSpec, error) {
 
 // loadSuiteFile loads an individual SuiteSpec from the given file name.
 func loadSuiteFile(path string) (SuiteSpec, error) {
-	raw, err := ioutil.ReadFile(path)
+	raw, err := os.ReadFile(path)
 	if err != nil {
 		return SuiteSpec{}, fmt.Errorf("could not read file %q: %w", path, err)
 	}
@@ -332,7 +331,7 @@ func objectKey(obj client.Object) client.ObjectKey {
 
 // loadCRD loads the CustomResourceDefinition defined in the suite spec.
 func loadCRD(suiteSpec SuiteSpec) (*apiextensionsv1.CustomResourceDefinition, error) {
-	raw, err := ioutil.ReadFile(suiteSpec.CRD)
+	raw, err := os.ReadFile(suiteSpec.CRD)
 	if err != nil {
 		return nil, fmt.Errorf("could not load CRD: %w", err)
 	}

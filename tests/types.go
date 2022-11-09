@@ -14,7 +14,7 @@ type SuiteSpec struct {
 	Version string `json:"version,omitempty"`
 
 	// Tests defines the test cases to run for this test suite.
-	Tests TestSpec `json:tests`
+	Tests TestSpec `json:"tests"`
 }
 
 // TestSpec defines the test specs for individual tests in this suite.

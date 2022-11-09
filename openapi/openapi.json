@@ -10855,6 +10855,10 @@
           "x-kubernetes-list-type": "map",
           "x-kubernetes-patch-merge-key": "type",
           "x-kubernetes-patch-strategy": "merge"
+        },
+        "immutableField": {
+          "description": "immutableField is a field that is immutable once the object has been created. It is required at all times.",
+          "type": "string"
         }
       }
     },

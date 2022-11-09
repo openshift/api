@@ -135,5 +135,11 @@ spec:
                   x-kubernetes-list-map-keys:
                     - type
                   x-kubernetes-list-type: map
+                immutableField:
+                  description: immutableField is a field that is immutable once the object has been created. It is required at all times.
+                  type: string
+                  x-kubernetes-validations:
+                    - rule: self == oldSelf
+                      message: immutableField is immutable
       served: true
       storage: true

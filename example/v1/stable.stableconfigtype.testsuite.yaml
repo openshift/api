@@ -239,3 +239,29 @@ tests:
         immutableField: foo
         optionalImmutableField: bar
     expectedError: "spec.optionalImmutableField: Invalid value: \"string\": optionalImmutableField is immutable once set"
+  - name: Should allow setting an immutable status field
+    initial: |
+      apiVersion: example.openshift.io/v1
+      kind: StableConfigType
+    updated: |
+      apiVersion: example.openshift.io/v1
+      kind: StableConfigType
+      status:
+        immutableField: bar
+    expected: |
+      apiVersion: example.openshift.io/v1
+      kind: StableConfigType
+      status:
+        immutableField: bar
+  - name: Should not allow changing an immutable status field
+    initial: |
+      apiVersion: example.openshift.io/v1
+      kind: StableConfigType
+      status:
+        immutableField: foo
+    updated: |
+      apiVersion: example.openshift.io/v1
+      kind: StableConfigType
+      status:
+        immutableField: bar
+    expectedStatusError: "status.immutableField: Invalid value: \"string\": immutableField is immutable"

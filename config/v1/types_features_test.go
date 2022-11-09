@@ -23,7 +23,6 @@ func TestFeatureBuilder(t *testing.T) {
 				Enabled: []string{
 					"RotateKubeletServerCertificate",
 					"DownwardAPIHugePages",
-					"OpenShiftPodSecurityAdmission",
 				},
 				Disabled: []string{
 					"RetroactiveDefaultStorageClass",
@@ -39,7 +38,6 @@ func TestFeatureBuilder(t *testing.T) {
 					"APIPriorityAndFairness",
 					"RotateKubeletServerCertificate",
 					"DownwardAPIHugePages",
-					"OpenShiftPodSecurityAdmission",
 					"CSIMigrationAzureFile",
 				},
 				Disabled: []string{
@@ -54,7 +52,6 @@ func TestFeatureBuilder(t *testing.T) {
 				Enabled: []string{
 					"RotateKubeletServerCertificate",
 					"DownwardAPIHugePages",
-					"OpenShiftPodSecurityAdmission",
 				},
 				Disabled: []string{
 					"RetroactiveDefaultStorageClass",
@@ -71,7 +68,6 @@ func TestFeatureBuilder(t *testing.T) {
 					"APIPriorityAndFairness",
 					"RotateKubeletServerCertificate",
 					"DownwardAPIHugePages",
-					"OpenShiftPodSecurityAdmission",
 					"CSIMigrationAzureFile",
 					"other",
 				},

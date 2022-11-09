@@ -213,17 +213,29 @@ func generateOnCreateTable(onCreateTests []OnCreateTestSpec) {
 // within the test suite test spec.
 func generateOnUpdateTable(onUpdateTests []OnUpdateTestSpec) {
 	type onUpdateTableInput struct {
-		initial       []byte
-		updated       []byte
-		expected      []byte
-		expectedError string
+		initial             []byte
+		updated             []byte
+		expected            []byte
+		expectedError       string
+		expectedStatusError string
 	}
 
 	var assertOnUpdate interface{} = func(in onUpdateTableInput) {
 		initialObj, err := newUnstructuredFrom(in.initial)
 		Expect(err).ToNot(HaveOccurred(), "initial data should be a valid Kubernetes YAML resource")
 
+		initialStatus, ok, err := unstructured.NestedFieldNoCopy(initialObj.Object, "status")
+		Expect(err).ToNot(HaveOccurred())
+		if ok {
+			Expect(initialStatus).ToNot(BeNil())
+		}
+
 		Expect(k8sClient.Create(ctx, initialObj)).ToNot(HaveOccurred(), "initial object should create successfully")
+
+		if initialStatus != nil {
+			Expect(unstructured.SetNestedField(initialObj.Object, initialStatus, "status")).To(Succeed(), "should be able to restore initial status")
+			Expect(k8sClient.Status().Update(ctx, initialObj)).ToNot(HaveOccurred(), "initial object status should update successfully")
+		}
 
 		// Fetch the object we just created from the API.
 		gotObj := newEmptyUnstructuredFrom(initialObj)
@@ -231,6 +243,12 @@ func generateOnUpdateTable(onUpdateTests []OnUpdateTestSpec) {
 
 		updatedObj, err := newUnstructuredFrom(in.updated)
 		Expect(err).ToNot(HaveOccurred(), "updated data should be a valid Kubernetes YAML resource")
+
+		updatedObjStatus, ok, err := unstructured.NestedFieldNoCopy(updatedObj.Object, "status")
+		Expect(err).ToNot(HaveOccurred())
+		if ok {
+			Expect(updatedObjStatus).ToNot(BeNil())
+		}
 
 		// The updated object needs the following fields copied over.
 		updatedObj.SetName(gotObj.GetName())
@@ -243,6 +261,17 @@ func generateOnUpdateTable(onUpdateTests []OnUpdateTestSpec) {
 			return
 		}
 		Expect(err).ToNot(HaveOccurred())
+
+		if updatedObjStatus != nil {
+			Expect(unstructured.SetNestedField(updatedObj.Object, updatedObjStatus, "status")).To(Succeed(), "should be able to restore updated status")
+
+			err := k8sClient.Status().Update(ctx, updatedObj)
+			if in.expectedStatusError != "" {
+				Expect(err).To(MatchError(ContainSubstring(in.expectedStatusError)))
+				return
+			}
+			Expect(err).ToNot(HaveOccurred())
+		}
 
 		Expect(k8sClient.Get(ctx, objectKey(initialObj), gotObj))
 
@@ -263,10 +292,11 @@ func generateOnUpdateTable(onUpdateTests []OnUpdateTestSpec) {
 	// Convert the test specs into table entries
 	for _, testEntry := range onUpdateTests {
 		tableEntries = append(tableEntries, Entry(testEntry.Name, onUpdateTableInput{
-			initial:       []byte(testEntry.Initial),
-			updated:       []byte(testEntry.Updated),
-			expected:      []byte(testEntry.Expected),
-			expectedError: testEntry.ExpectedError,
+			initial:             []byte(testEntry.Initial),
+			updated:             []byte(testEntry.Updated),
+			expected:            []byte(testEntry.Expected),
+			expectedError:       testEntry.ExpectedError,
+			expectedStatusError: testEntry.ExpectedStatusError,
 		}))
 	}
 

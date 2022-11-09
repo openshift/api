@@ -143,3 +143,5 @@ spec:
                       message: immutableField is immutable
       served: true
       storage: true
+      subresources:
+        status: {}

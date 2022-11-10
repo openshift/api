@@ -19538,6 +19538,13 @@ func schema_openshift_api_example_v1_StableConfigTypeStatus(ref common.Reference
 							},
 						},
 					},
+					"immutableField": {
+						SchemaProps: spec.SchemaProps{
+							Description: "immutableField is a field that is immutable once the object has been created. It is required at all times.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 			},
 		},

@@ -63,8 +63,9 @@ func (StableConfigTypeSpec) SwaggerDoc() map[string]string {
 }
 
 var map_StableConfigTypeStatus = map[string]string{
-	"":           "StableConfigTypeStatus defines the observed status of the StableConfigType.",
-	"conditions": "Represents the observations of a foo's current state. Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\"",
+	"":               "StableConfigTypeStatus defines the observed status of the StableConfigType.",
+	"conditions":     "Represents the observations of a foo's current state. Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\"",
+	"immutableField": "immutableField is a field that is immutable once the object has been created. It is required at all times.",
 }
 
 func (StableConfigTypeStatus) SwaggerDoc() map[string]string {

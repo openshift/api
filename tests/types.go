@@ -14,7 +14,7 @@ type SuiteSpec struct {
 	Version string `json:"version,omitempty"`
 
 	// Tests defines the test cases to run for this test suite.
-	Tests TestSpec `json:tests`
+	Tests TestSpec `json:"tests"`
 }
 
 // TestSpec defines the test specs for individual tests in this suite.
@@ -65,9 +65,13 @@ type OnUpdateTestSpec struct {
 	// Typically this will vary in `spec` only test to test.
 	Updated string `json:"updated"`
 
-	// ExpectedError defines the error string that should be returned when the initial resourec is invalid.
+	// ExpectedError defines the error string that should be returned when the updated resource is invalid.
 	// This will be matched as a substring of the actual error when non-empty.
 	ExpectedError string `json:"expectedError"`
+
+	// ExpectedStatusError defines the error string that should be returned when the updated resource status is invalid.
+	// This will be matched as a substring of the actual error when non-empty.
+	ExpectedStatusError string `json:"expectedStatusError"`
 
 	// Expected is a literal string containing the expected YAML content that should be
 	// persisted when the resource is updated.

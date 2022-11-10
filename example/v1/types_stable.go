@@ -124,6 +124,12 @@ type StableConfigTypeStatus struct {
 	// +listType=map
 	// +listMapKey=type
 	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,1,rep,name=conditions"`
+
+	// immutableField is a field that is immutable once the object has been created.
+	// It is required at all times.
+	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="immutableField is immutable"
+	// +optional
+	ImmutableField string `json:"immutableField,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

@@ -2,6 +2,7 @@ package schemapatch
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/openshift/api/tools/codegen/pkg/generation"
 
@@ -15,6 +16,10 @@ type Options struct {
 	// When omitted, we will use the generator directly from the code.
 	ControllerGen string
 
+	// Disabled indicates whether the schemapatch generator is disabled or not.
+	// This default to false as the schemapatch generator is enabled by default.
+	Disabled bool
+
 	// RequiredFeatureSets is used to filter the feature set manifests that
 	// should be generated.
 	// When omitted, any manifest with a feature set annotation will be ignored.
@@ -25,6 +30,7 @@ type Options struct {
 // It is designed to generate schemapatch updates for a particular API group.
 type generator struct {
 	controllerGen       string
+	disabled            bool
 	requiredFeatureSets []sets.String
 }
 
@@ -32,8 +38,28 @@ type generator struct {
 func NewGenerator(opts Options) generation.Generator {
 	return &generator{
 		controllerGen:       opts.ControllerGen,
+		disabled:            opts.Disabled,
 		requiredFeatureSets: opts.RequiredFeatureSets,
 	}
+}
+
+// ApplyConfig creates returns a new generator based on the configuration passed.
+// If the schemapatch configuration is empty, the existing generation is returned.
+func (g *generator) ApplyConfig(config *generation.Config) generation.Generator {
+	if config == nil || config.SchemaPatch == nil {
+		return g
+	}
+
+	featureSets := []sets.String{}
+	for _, featureSet := range config.SchemaPatch.RequiredFeatureSets {
+		featureSets = append(featureSets, sets.NewString(strings.Split(featureSet, ",")...))
+	}
+
+	return NewGenerator(Options{
+		ControllerGen:       g.controllerGen,
+		Disabled:            config.SchemaPatch.Disabled,
+		RequiredFeatureSets: featureSets,
+	})
 }
 
 // Name returns the name of the generator.
@@ -43,6 +69,11 @@ func (g *generator) Name() string {
 
 // GenGroup runs the schemapatch generator against the given group context.
 func (g *generator) GenGroup(groupCtx generation.APIGroupContext) error {
+	if g.disabled {
+		klog.V(3).Infof("Skipping API schema generation for %s", groupCtx.Name)
+		return nil
+	}
+
 	versionPaths := allVersionPaths(groupCtx.Versions)
 
 	for _, version := range groupCtx.Versions {

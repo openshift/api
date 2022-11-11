@@ -39,7 +39,7 @@ const (
 
 // verifySwaggerDocs reads the existing swagger documentation and verifies that the content
 // is up to date.
-func verifySwaggerDocs(packageName, filePath string, docsForTypes []kruntime.KubeTypes) error {
+func verifySwaggerDocs(packageName, filePath string, docsForTypes []kruntime.KubeTypes, enforceComments bool) error {
 	// Verify that every field has a doc string.
 	buf := bytes.NewBuffer(nil)
 	rc, err := kruntime.VerifySwaggerDocsExist(docsForTypes, buf)
@@ -47,10 +47,11 @@ func verifySwaggerDocs(packageName, filePath string, docsForTypes []kruntime.Kub
 		return fmt.Errorf("could not verify existing docs: %w", err)
 	}
 	if rc > 0 {
-		// TODO(@JoelSpeed): When we introduce a way to configure generators per API group,
-		// make this check configurable as a warning (current behaviour), or an error.
-		// This will allow us to start enforcing this check per API group rather than globally.
-		klog.Warningf("Existing swagger docs are missing %d entries:\n%s", rc, buf.String())
+		if enforceComments {
+			return fmt.Errorf("missing swagger docs for the following %d fields:\n%s", rc, buf.String())
+		} else {
+			klog.Warningf("Existing swagger docs are missing %d entries:\n%s", rc, buf.String())
+		}
 	}
 
 	// Verify that the existing data matches the generated data.

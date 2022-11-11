@@ -9,7 +9,8 @@ import (
 )
 
 var (
-	swaggerOutputFileName string
+	swaggerOutputFileName  string
+	swaggerEnforceComments bool
 )
 
 // swaggerDocsCmd represents the swaggerdocs command
@@ -42,12 +43,14 @@ func init() {
 	rootCmd.AddCommand(swaggerDocsCmd)
 
 	rootCmd.PersistentFlags().StringVar(&swaggerOutputFileName, "swagger:output-file-name", swaggerdocs.DefaultOutputFileName, "Defines the file name to use for the swagger generated docs for each group version.")
+	rootCmd.PersistentFlags().BoolVar(&swaggerEnforceComments, "swagger:enforce-comments", false, "Defines whether the generator should enforce that all fields have a comment or not. Only effective when combined with --verify.")
 }
 
 // newSwaggerDocsGenerator builds a new swaggerdocs generator.
 func newSwaggerDocsGenerator() generation.Generator {
 	return swaggerdocs.NewGenerator(swaggerdocs.Options{
-		OutputFileName: swaggerOutputFileName,
-		Verify:         verify,
+		EnforceComments: swaggerEnforceComments,
+		OutputFileName:  swaggerOutputFileName,
+		Verify:          verify,
 	})
 }

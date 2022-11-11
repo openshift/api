@@ -11,6 +11,11 @@ type Config struct {
 	// When omitted, the default configuration will be used.
 	// When provided, any equivalent flag provided values are ignored.
 	SchemaPatch *SchemaPatchConfig `json:"schemapatch,omitempty"`
+
+	// SwaggerDocs represents the configuration for the swaggerdocs generator.
+	// When omitted, the default configuration will be used.
+	// When provided, any equivalent flag provided values are ignored.
+	SwaggerDocs *SwaggerDocsConfig `json:"swaggerdocs,omitempty"`
 }
 
 // CompatibilityConfig is the configuration for the compatibility generator.
@@ -34,4 +39,22 @@ type SchemaPatchConfig struct {
 	// When omitted, any manifest with a feature set annotation will be ignored.
 	// Example entries are `""` (empty string), `"TechPreviewNoUpgrade"` or `"TechPreviewNoUpgrade,CustomNoUpgrade"`.
 	RequiredFeatureSets []string `json:"requiredFeatureSets,omitempty"`
+}
+
+// SwaggerDocsConfig is the configuration for the swaggerdocs generator.
+type SwaggerDocsConfig struct {
+	// Disabled determines whether the swaggerdocs generator should be run or not.
+	// This generator is enabled by default so this field defaults to false.
+	Disabled bool `json:"disabled,omitempty"`
+
+	// OutputFileName is the file name to use for writing the generated swagger
+	// docs to. This file will be created for each group version.
+	// Whem omitted, this will default to `zz_generated.swagger_doc_generated.go`.
+	OutputFileName string `json:"outputFileName,omitempty"`
+
+	// EnforceComments determines whether the generator should enforce that all
+	// fields have a comment or not.
+	// When set to true, verification will fail if any field in the API group is
+	// missing a comment.
+	EnforceComments bool `json:"enforceComments,omitempty"`
 }

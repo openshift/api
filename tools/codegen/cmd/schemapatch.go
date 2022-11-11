@@ -6,6 +6,7 @@ import (
 	"github.com/openshift/api/tools/codegen/pkg/generation"
 	"github.com/openshift/api/tools/codegen/pkg/schemapatch"
 	"github.com/spf13/cobra"
+	"k8s.io/apimachinery/pkg/util/sets"
 )
 
 var (
@@ -48,8 +49,13 @@ func init() {
 
 // newSchemaPatchGenerator builds a new schemapatch generator.
 func newSchemaPatchGenerator() generation.Generator {
+	requiredFeatureSetsList := []sets.String{}
+	if len(requiredFeatureSets) > 0 {
+		requiredFeatureSetsList = append(requiredFeatureSetsList, sets.NewString(requiredFeatureSets...))
+	}
+
 	return schemapatch.NewGenerator(schemapatch.Options{
 		ControllerGen:       controllerGen,
-		RequiredFeatureSets: requiredFeatureSets,
+		RequiredFeatureSets: requiredFeatureSetsList,
 	})
 }

@@ -9,7 +9,6 @@ import (
 	"github.com/openshift/api/tools/codegen/pkg/generation"
 
 	"k8s.io/apimachinery/pkg/util/sets"
-	"k8s.io/klog/v2"
 	"sigs.k8s.io/controller-tools/pkg/crd/markers"
 	"sigs.k8s.io/controller-tools/pkg/genall"
 	"sigs.k8s.io/controller-tools/pkg/schemapatcher"
@@ -36,7 +35,6 @@ func executeSchemaPatchForGroupVersionWithBinary(controllerGen string, group str
 	args = append(args, pathsArgs(versionPaths)...)
 	args = append(args, outputArg(version.Path))
 
-	klog.V(2).Infof("Generating API schema for %s/%s", group, version.Name)
 	cmd := exec.Command(controllerGen, args...)
 
 	// Ensure we get the output from the command.
@@ -94,7 +92,6 @@ func executeSchemaPatchForGroupVersion(group string, version generation.APIVersi
 		return fmt.Errorf("could not register markers: %w", err)
 	}
 
-	klog.V(2).Infof("Generating API schema for %s/%s", group, version.Name)
 	if err := gen.Generate(&ctx); err != nil {
 		return fmt.Errorf("could not run schemapatch generator: %w", err)
 	}

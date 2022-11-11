@@ -16,7 +16,7 @@ import (
 
 // shouldProcessGroupVersion determines, based on the required feature sets, whether this group version should be
 // generated or not.
-func shouldProcessGroupVersion(version generation.APIVersionContext, requiredFeatureSets sets.String) (bool, error) {
+func shouldProcessGroupVersion(version generation.APIVersionContext, requiredFeatureSets []sets.String) (bool, error) {
 	dirEntries, err := ioutil.ReadDir(version.Path)
 	if err != nil {
 		return false, fmt.Errorf("could not read file info for directory %s: %v", version.Path, err)
@@ -45,13 +45,23 @@ func shouldProcessGroupVersion(version generation.APIVersionContext, requiredFea
 
 // mayHandleFile determines, from the feature sets, whether this patch should be handled.
 // Currently, the only check is the feature-set annotation.
-func mayHandleFile(rawContent []byte, requiredFeatureSets sets.String) bool {
+func mayHandleFile(rawContent []byte, requiredFeatureSets []sets.String) bool {
 	manifest := &unstructured.Unstructured{}
 	if err := kyaml.Unmarshal(rawContent, &manifest); err != nil {
 		return true
 	}
 
-	return mayHandleObject(manifest, requiredFeatureSets)
+	if len(requiredFeatureSets) == 0 {
+		return mayHandleObject(manifest, sets.NewString())
+	}
+
+	for _, requiredFeatureSet := range requiredFeatureSets {
+		if mayHandleObject(manifest, requiredFeatureSet) {
+			return true
+		}
+	}
+
+	return false
 }
 
 // mayHandleObject determines, from the feature sets, whether a kube like object should be handled.

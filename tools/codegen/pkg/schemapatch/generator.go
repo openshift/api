@@ -6,6 +6,7 @@ import (
 	"github.com/openshift/api/tools/codegen/pkg/generation"
 
 	"k8s.io/apimachinery/pkg/util/sets"
+	"k8s.io/klog/v2"
 )
 
 // Options contains the configuration required for the schemapatch generator.
@@ -17,21 +18,21 @@ type Options struct {
 	// RequiredFeatureSets is used to filter the feature set manifests that
 	// should be generated.
 	// When omitted, any manifest with a feature set annotation will be ignored.
-	RequiredFeatureSets []string
+	RequiredFeatureSets []sets.String
 }
 
 // generator implements the generation.Generator interface.
 // It is designed to generate schemapatch updates for a particular API group.
 type generator struct {
 	controllerGen       string
-	requiredFeatureSets sets.String
+	requiredFeatureSets []sets.String
 }
 
 // NewGenerator builds a new schemapatch generator.
 func NewGenerator(opts Options) generation.Generator {
 	return &generator{
 		controllerGen:       opts.ControllerGen,
-		requiredFeatureSets: sets.NewString(opts.RequiredFeatureSets...),
+		requiredFeatureSets: opts.RequiredFeatureSets,
 	}
 }
 
@@ -64,13 +65,17 @@ func (g *generator) GenGroup(groupCtx generation.APIGroupContext) error {
 
 // genGroupVersion runs the schemapatch generator against a particular version of the API group.
 func (g *generator) genGroupVersion(group string, version generation.APIVersionContext, versionPaths []string) error {
-	if g.controllerGen != "" {
-		if err := executeSchemaPatchForGroupVersionWithBinary(g.controllerGen, group, version, versionPaths, g.requiredFeatureSets); err != nil {
-			return fmt.Errorf("error executing controller-gen binary: %w", err)
+	if len(g.requiredFeatureSets) == 0 {
+		klog.V(2).Infof("Generating API schema for %s/%s", group, version.Name)
+		if err := g.executeSchemaPatch(group, version, versionPaths, sets.NewString()); err != nil {
+			return fmt.Errorf("could not generate schema patch for %s/%s: %w", group, version.Name, err)
 		}
 	} else {
-		if err := executeSchemaPatchForGroupVersion(group, version, g.requiredFeatureSets, versionPaths); err != nil {
-			return fmt.Errorf("error executing schemapatch: %w", err)
+		for _, requiredFeatureSet := range g.requiredFeatureSets {
+			klog.V(2).Infof("Generating API schema for %s/%s with FeatureSets %v", group, version.Name, requiredFeatureSet.List())
+			if err := g.executeSchemaPatch(group, version, versionPaths, requiredFeatureSet); err != nil {
+				return fmt.Errorf("could not generate schema patch for %s/%s with feature set %v: %w", group, version.Name, requiredFeatureSet, err)
+			}
 		}
 	}
 
@@ -80,6 +85,20 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 
 	if err := formatManifestsForGroupVersion(version, g.requiredFeatureSets); err != nil {
 		return fmt.Errorf("error formatting manifests: %w", err)
+	}
+
+	return nil
+}
+
+func (g *generator) executeSchemaPatch(group string, version generation.APIVersionContext, versionPaths []string, requiredFeatureSet sets.String) error {
+	if g.controllerGen != "" {
+		if err := executeSchemaPatchForGroupVersionWithBinary(g.controllerGen, group, version, versionPaths, requiredFeatureSet); err != nil {
+			return fmt.Errorf("error executing controller-gen binary: %w", err)
+		}
+	} else {
+		if err := executeSchemaPatchForGroupVersion(group, version, requiredFeatureSet, versionPaths); err != nil {
+			return fmt.Errorf("error executing schemapatch: %w", err)
+		}
 	}
 
 	return nil

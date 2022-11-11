@@ -15,7 +15,7 @@ import (
 )
 
 // executeYAMLPatchForGroupVersion runs the yaml patch against a particular version.
-func executeYAMLPatchForGroupVersion(version generation.APIVersionContext, requiredFeatureSets sets.String) error {
+func executeYAMLPatchForGroupVersion(version generation.APIVersionContext, requiredFeatureSets []sets.String) error {
 	patchPairs, err := loadPatchFilesForGroupVersion(version.Path)
 	if err != nil {
 		return fmt.Errorf("could not load patch files: %v", err)
@@ -78,7 +78,7 @@ func findFile(dirEntries []fs.FileInfo, name string) (fs.FileInfo, error) {
 }
 
 // patchFile applies a patch file to a CRD file.
-func patchFile(groupVersionDir string, baseInfo, patchInfo fs.FileInfo, requiredFeatureSets sets.String) error {
+func patchFile(groupVersionDir string, baseInfo, patchInfo fs.FileInfo, requiredFeatureSets []sets.String) error {
 	klog.V(2).Infof("Patching CRD %s with patch file %s", baseInfo.Name(), patchInfo.Name())
 
 	placeholderWrapper := yamlpatch.NewPlaceholderWrapper("{{", "}}")

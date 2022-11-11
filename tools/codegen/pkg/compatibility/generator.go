@@ -9,6 +9,10 @@ import (
 
 // Options contains the configuration required for the compatibility generator.
 type Options struct {
+	// Disabled indicates whether the compatibility generator is enabled or not.
+	// This default to false as the compatibility generator is enabled by default.
+	Disabled bool
+
 	// Verify determines whether the generator should verify the content instead
 	// of updating the generated file.
 	Verify bool
@@ -17,14 +21,29 @@ type Options struct {
 // generator implements the generation.Generator interface.
 // It is designed to generate compatibility level comments for a particular API group.
 type generator struct {
-	verify bool
+	disabled bool
+	verify   bool
 }
 
 // NewGenerator builds a new compatibility generator.
 func NewGenerator(opts Options) generation.Generator {
 	return &generator{
-		verify: opts.Verify,
+		disabled: opts.Disabled,
+		verify:   opts.Verify,
 	}
+}
+
+// ApplyConfig creates returns a new generator based on the configuration passed.
+// If the compatibility configuration is empty, the existing generation is returned.
+func (g *generator) ApplyConfig(config *generation.Config) generation.Generator {
+	if config == nil || config.Compatibility == nil {
+		return g
+	}
+
+	return NewGenerator(Options{
+		Disabled: config.Compatibility.Disabled,
+		Verify:   g.verify,
+	})
 }
 
 // Name returns the name of the generator.
@@ -34,6 +53,11 @@ func (g *generator) Name() string {
 
 // GenGroup runs the compatibility generator against the given group context.
 func (g *generator) GenGroup(groupCtx generation.APIGroupContext) error {
+	if g.disabled {
+		klog.V(3).Infof("Skipping compatibility generation for %s", groupCtx.Name)
+		return nil
+	}
+
 	for _, version := range groupCtx.Versions {
 		action := "Generating"
 		if g.verify {

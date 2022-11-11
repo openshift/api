@@ -3,10 +3,21 @@ package generation
 // Config represents the configuration of a API group version
 // and the configuration for each generator within it.
 type Config struct {
+	// Compatibility represents the configuration of the compatiblity generator.
+	// When omitted, the default configuration will be used.
+	Compatibility *CompatibilityConfig `json:"compatibility,omitempty"`
+
 	// SchemaPatch represents the configuration for the schemapatch generator.
 	// When omitted, the default configuration will be used.
 	// When provided, any equivalent flag provided values are ignored.
 	SchemaPatch *SchemaPatchConfig `json:"schemapatch,omitempty"`
+}
+
+// CompatibilityConfig is the configuration for the compatibility generator.
+type CompatibilityConfig struct {
+	// Disabled determines whether the compatibility generator should be run or not.
+	// This generator is enabled by default so this field defaults to false.
+	Disabled bool `json:"disabled,omitempty"`
 }
 
 // SchemaPatchConfig is the configuration for the schemapatch generator.

@@ -40,6 +40,10 @@ type APIGroupContext struct {
 
 	// Versions is a list of API versions found within the group.
 	Versions []APIVersionContext
+
+	// Config is the group's generation configuration.
+	// This is populated from the `.codegen.yaml` configuration for the API group.
+	Config *Config
 }
 
 // APIVersionContext is the context gathered for a particular API version.
@@ -74,6 +78,10 @@ func NewContext(opts Options) (Context, error) {
 	apiGroups, err := newAPIGroupsContext(baseDir, opts.APIGroupVersions)
 	if err != nil {
 		return Context{}, fmt.Errorf("could not build API Groups context: %w", err)
+	}
+
+	if err := getAPIGroupConfigs(apiGroups); err != nil {
+		return Context{}, fmt.Errorf("could not get API Group configs: %w", err)
 	}
 
 	return Context{

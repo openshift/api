@@ -2,29 +2,10 @@
 
 source "$(dirname "${BASH_SOURCE}")/lib/init.sh"
 
-TMP_ROOT="${SCRIPT_ROOT}/_tmp"
+# Build codegen-crds when it's not present and not overriden for a specific file.
+if [ -z "${CODEGEN:-}" ];then
+  ${TOOLS_MAKE} codegen
+  CODEGEN="${TOOLS_OUTPUT}/codegen"
+fi
 
-cleanup() {
-  rm -rf "${TMP_ROOT}"
-}
-trap "cleanup" EXIT SIGINT
-
-cleanup
-
-for gv in ${API_GROUP_VERSIONS}; do
-  mkdir -p "${TMP_ROOT}/${gv}"
-  cp -a --no-preserve=timestamp "${SCRIPT_ROOT}/${gv}"/* "${TMP_ROOT}/${gv}"
-done
-
-"${SCRIPT_ROOT}/hack/update-swagger-docs.sh"
-echo "Checking against freshly generated swagger..."
-for gv in ${API_GROUP_VERSIONS}; do
-  ret=0
-  diff -Naupr "${SCRIPT_ROOT}/${gv}"/zz_generated.swagger_doc_generated.go "${TMP_ROOT}/${gv}"/zz_generated.swagger_doc_generated.go || ret=$?
-  if [[ $ret -ne 0 ]]; then
-    cp -a --no-preserve=timestamp "${TMP_ROOT}"/* "${SCRIPT_ROOT}/"
-    echo "Swagger is out of date. Please run hack/update-swagger-docs.sh"
-    exit 1
-  fi
-done
-echo "Swagger up to date."
+"${CODEGEN}" swaggerdocs --base-dir "${SCRIPT_ROOT}" -v 2 --verify

@@ -94,6 +94,7 @@ func executeGenerators(genCtx generation.Context, generators ...generation.Gener
 func allGenerators() []generation.Generator {
 	return []generation.Generator{
 		newCompatibilityGenerator(),
+		newSwaggerDocsGenerator(),
 		newSchemaPatchGenerator(),
 	}
 }

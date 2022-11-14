@@ -188,6 +188,8 @@ func findAPIGroups(goPackages []string, desiredGroupVersions []string) (map[stri
 					Name: version,
 					Path: pkgPath,
 				})
+			} else {
+				klog.V(3).Infof("No GroupVersion found in path %s", pkgPath)
 			}
 		}
 	}

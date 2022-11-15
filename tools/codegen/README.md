@@ -139,3 +139,35 @@ These additional arguments may be provided when using the `swaggerdocs` generato
   When omitted, defaults to `zz_generated.swagger_doc_generated.go`.
 - `--swagger:enforce-comments` - Defines whether the generator should enforce that all fields have a comment or not.
   Only effective when combined with `--verify`. When not specified, a warning will be emitted for each missing comment.
+
+## Using configuration files
+
+The `codegen` utility will search for a file called `.codegen.yaml` at the API group level.
+These files allow individual API groups to configure the generation of their paritcular API files.
+
+It also enables the enablement and disablement of generators with a goal that the usage of the generator
+should require only the `--base-dir` argument.
+
+The schema of the configuration file is outlined below, all fields are optional and default values will apply
+when they are omitted.
+
+Each generator option relates to a flag attached to the generator, review the [generators](#generators) section
+for more details on each option within the config file structure.
+
+```yaml
+# Configuration for the compatibility generator.
+compatibility:
+  disabled: false # Defaults to false, set to true to disable.
+# Configuration for the schemapatch generator.
+schemapatch:
+  disabled: false # Defaults to true, set to false to disable.
+  requiredFeatureSets: # Each entry will be matched against the value of the required feature set annotation.
+  - "" # This matches any manifest that does not have the required feature set annotation.
+  - "Default"
+  - "TechPreviewNoUpgrade"
+# Configuration for the swaggerdocs generator.
+swaggerdocs:
+  disabled: false # Defaults to false, set to true to disable.
+  enforceComments: false # Defaults to false, set to true to enforce comments when verifying.
+  outputFileName: zz_generated.swagger_doc_generated.go # Change this if you want to rename the output file.
+```

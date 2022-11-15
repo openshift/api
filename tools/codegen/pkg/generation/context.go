@@ -54,6 +54,10 @@ type APIVersionContext struct {
 	// Path is the path to the folder containing the API version.
 	Path string
 
+	// PackagePath is the path to the package containing the API version.
+	// This is the import path for the package.
+	PackagePath string
+
 	// PackageName is the golang packagh name for the API version.
 	PackageName string
 }
@@ -122,8 +126,8 @@ func newAPIGroupsContext(baseDir string, requiredGroupVersions []string) ([]APIG
 
 // loadPackagesFromDir walks through a list of directories and looks for those
 // that look like Go packages.
-func loadPackagesFromDir(baseDir string) ([]string, error) {
-	outPkgs := []string{}
+func loadPackagesFromDir(baseDir string) (map[string]*packages.Package, error) {
+	outPkgs := make(map[string]*packages.Package)
 
 	if err := filepath.WalkDir(baseDir, func(path string, dirEntry fs.DirEntry, _ error) error {
 		if !dirEntry.IsDir() {
@@ -155,7 +159,7 @@ func loadPackagesFromDir(baseDir string) ([]string, error) {
 			return nil
 		}
 
-		outPkgs = append(outPkgs, path)
+		outPkgs[path] = pkgs[0]
 
 		klog.V(3).Infof("Found directory: %s and package: %+v", path, pkgs[0])
 
@@ -172,11 +176,11 @@ func loadPackagesFromDir(baseDir string) ([]string, error) {
 // And then builds a map of groups to their versions and the folders that contain
 // each version.
 // This is used to identify the group and version information for a package.
-func findAPIGroups(goPackages []string, desiredGroupVersions []string) (map[string][]APIVersionContext, error) {
+func findAPIGroups(goPackages map[string]*packages.Package, desiredGroupVersions []string) (map[string][]APIVersionContext, error) {
 	apiGroups := make(map[string][]APIVersionContext)
 	desired := sets.NewString(desiredGroupVersions...)
 
-	for _, pkgPath := range goPackages {
+	for pkgPath, pkg := range goPackages {
 		fileSet := token.NewFileSet()
 
 		pkgs, err := parser.ParseDir(fileSet, pkgPath, nil, parser.ParseComments)
@@ -198,6 +202,7 @@ func findAPIGroups(goPackages []string, desiredGroupVersions []string) (map[stri
 				apiGroups[group] = append(apiGroups[group], APIVersionContext{
 					Name:        version,
 					Path:        pkgPath,
+					PackagePath: pkg.PkgPath,
 					PackageName: p.Name,
 				})
 			} else {

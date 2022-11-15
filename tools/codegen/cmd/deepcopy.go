@@ -8,6 +8,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var (
+	deepcopyHeaderFilePath     string
+	deepcopyOutputFileBaseName string
+)
+
 // deepcopyCmd represents the deepcopy command
 var deepcopyCmd = &cobra.Command{
 	Use:   "deepcopy",
@@ -29,11 +34,16 @@ var deepcopyCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(deepcopyCmd)
+
+	rootCmd.PersistentFlags().StringVar(&deepcopyHeaderFilePath, "deepcopy:header-file-path", "", "Path to file containing boilerplate header text. The string YEAR will be replaced with the current 4-digit year. When omitted, no header is added to the generated files.")
+	rootCmd.PersistentFlags().StringVar(&deepcopyOutputFileBaseName, "deepcopy:output-file-base-name", deepcopy.DefaultOutputFileBaseName, "Base name of the output file. When omitted, zz_generated.deepcopy is used.")
 }
 
 // newDeepcopyhGenerator builds a new deepcopy generator.
 func newDeepcopyGenerator() generation.Generator {
 	return deepcopy.NewGenerator(deepcopy.Options{
-		Verify: verify,
+		HeaderFilePath:     deepcopyHeaderFilePath,
+		OutputFileBaseName: deepcopyOutputFileBaseName,
+		Verify:             verify,
 	})
 }

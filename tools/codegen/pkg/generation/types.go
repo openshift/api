@@ -34,6 +34,15 @@ type DeepcopyConfig struct {
 	// Disabled determines whether the deepcopy generator should be run or not.
 	// This generator is enabled by default so this field defaults to false.
 	Disabled bool `json:"enabled,omitempty"`
+
+	// HeaderFilePath is the path to the file containing the boilerplate header text.
+	// When omitted, no header is added to the generated files.
+	HeaderFilePath string `json:"headerFilePath,omitempty"`
+
+	// OutputFileBaseName is the base name of the output file.
+	// When omitted, DefaultOutputFileBaseName is used.
+	// The current value of DefaultOutputFileBaseName is "zz_generated.deepcopy".
+	OutputFileBaseName string `json:"outputFileBaseName,omitempty"`
 }
 
 // SchemaPatchConfig is the configuration for the schemapatch generator.

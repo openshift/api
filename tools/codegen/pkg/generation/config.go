@@ -71,6 +71,10 @@ func readAPIGroupConfig(path string) (*Config, error) {
 		return nil, fmt.Errorf("could not read API group config: %w", err)
 	}
 
+	if err := resolveLinks(path, config); err != nil {
+		return nil, fmt.Errorf("could not resolve links: %w", err)
+	}
+
 	return config, nil
 }
 
@@ -85,5 +89,42 @@ func readYAML(path string, out interface{}) error {
 		return fmt.Errorf("could not unmarshal YAML: %w", err)
 	}
 
+	return nil
+}
+
+// resolveLinks resolves any relative links from configuration files
+// into absolute paths.
+// This allows users to set links relative to the configuration file
+// independent of the working directory of the generator.
+func resolveLinks(filePath string, config *Config) error {
+	if config == nil {
+		return nil
+	}
+
+	if config.Deepcopy != nil {
+		if err := resolveLink(filePath, &config.Deepcopy.HeaderFilePath); err != nil {
+			return fmt.Errorf("could not resolve deepcopy header link: %w", err)
+		}
+	}
+
+	return nil
+}
+
+// resolveLink resolves a relative link into an absolute path.
+func resolveLink(filePath string, link *string) error {
+	if link == nil || *link == "" {
+		return nil
+	}
+
+	if filepath.IsAbs(*link) {
+		return nil
+	}
+
+	absPath, err := filepath.Abs(filepath.Join(filepath.Dir(filePath), *link))
+	if err != nil {
+		return fmt.Errorf("could not get absolute path for link: %w", err)
+	}
+
+	*link = absPath
 	return nil
 }

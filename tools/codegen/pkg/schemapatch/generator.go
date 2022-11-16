@@ -70,7 +70,7 @@ func (g *generator) Name() string {
 // GenGroup runs the schemapatch generator against the given group context.
 func (g *generator) GenGroup(groupCtx generation.APIGroupContext) error {
 	if g.disabled {
-		klog.V(3).Infof("Skipping API schema generation for %s", groupCtx.Name)
+		klog.V(2).Infof("Skipping API schema generation for %s", groupCtx.Name)
 		return nil
 	}
 
@@ -97,13 +97,13 @@ func (g *generator) GenGroup(groupCtx generation.APIGroupContext) error {
 // genGroupVersion runs the schemapatch generator against a particular version of the API group.
 func (g *generator) genGroupVersion(group string, version generation.APIVersionContext, versionPaths []string) error {
 	if len(g.requiredFeatureSets) == 0 {
-		klog.V(2).Infof("Generating API schema for %s/%s", group, version.Name)
+		klog.V(1).Infof("Generating API schema for %s/%s", group, version.Name)
 		if err := g.executeSchemaPatch(group, version, versionPaths, sets.NewString()); err != nil {
 			return fmt.Errorf("could not generate schema patch for %s/%s: %w", group, version.Name, err)
 		}
 	} else {
 		for _, requiredFeatureSet := range g.requiredFeatureSets {
-			klog.V(2).Infof("Generating API schema for %s/%s with FeatureSets %v", group, version.Name, requiredFeatureSet.List())
+			klog.V(1).Infof("Generating API schema for %s/%s with FeatureSets %v", group, version.Name, requiredFeatureSet.List())
 			if err := g.executeSchemaPatch(group, version, versionPaths, requiredFeatureSet); err != nil {
 				return fmt.Errorf("could not generate schema patch for %s/%s with feature set %v: %w", group, version.Name, requiredFeatureSet, err)
 			}

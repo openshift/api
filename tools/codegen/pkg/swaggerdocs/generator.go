@@ -81,7 +81,7 @@ func (g *generator) Name() string {
 // GenGroup runs the schemapatch generator against the given group context.
 func (g *generator) GenGroup(groupCtx generation.APIGroupContext) error {
 	if g.disabled {
-		klog.V(3).Infof("Skipping swaggerdocs generation for %s", groupCtx.Name)
+		klog.V(2).Infof("Skipping swaggerdocs generation for %s", groupCtx.Name)
 		return nil
 	}
 
@@ -114,12 +114,12 @@ func (g *generator) generateGroupVersion(groupName string, version generation.AP
 	}
 
 	if g.verify {
-		klog.V(2).Infof("Verifiying swagger docs for %s/%s", groupName, version.Name)
+		klog.V(1).Infof("Verifiying swagger docs for %s/%s", groupName, version.Name)
 
 		return verifySwaggerDocs(version.PackageName, outFilePath, docsForTypes, g.commentPolicy)
 	}
 
-	klog.V(2).Infof("Generating swagger docs for %s/%s", groupName, version.Name)
+	klog.V(1).Infof("Generating swagger docs for %s/%s", groupName, version.Name)
 
 	generatedDocs, err := generateSwaggerDocs(version.PackageName, docsForTypes)
 	if err != nil {

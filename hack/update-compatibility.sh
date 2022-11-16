@@ -8,4 +8,4 @@ if [ -z "${CODEGEN:-}" ];then
   CODEGEN="${TOOLS_OUTPUT}/codegen"
 fi
 
-"${CODEGEN}" compatibility --base-dir "${SCRIPT_ROOT}" -v 2
+"${CODEGEN}" compatibility --base-dir "${SCRIPT_ROOT}" -v 1

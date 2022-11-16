@@ -81,6 +81,7 @@ The following section describes the individual generators included within the `c
 
 The generators enabled by default are:
 - [Compatibility](#compatibility)
+- [Deepcopy](#deepcopy)
 - [Schemapatch](#schemapatch)
 - [Swaggerdocs](#swaggerdocs)
 
@@ -94,6 +95,20 @@ For example, this annotation would be `+openshift:compatibility-gen:level=1` for
 	
 Valid API levels are 1, 2, 3 and 4. Version 1 is required for all stable APIs.
 Version 2 should be used for beta level APIs. Levels 3 and 4 may be used for alpha APIs.
+
+### Deepcopy
+
+To generate Deepcopy functions, use the `deepcopy` subcommand.
+
+The deepcopy subcommand uses the Kubernetes [deepcopy generator](https://github.com/kubernetes/code-generator/tree/master/cmd/deepcopy-gen)
+to generate `DeepCopy()` functions for API types.
+These are then used in projects to create completely independent copies of resourcres that share
+no memory with the original object.
+
+These additoinal arguments may be provider when using the `deepcopy` generator:
+- `--deepcopy:header-file-path` - Path to file containing boilerplate header text. The string YEAR will be replaced with the current 4-digit year.
+  When omitted, no header is added to the generated files.
+- `--deepcopy:output-file-base-name` - Base name of the output file. When omitted, `zz_generated.deepcopy` is used as the default.
 
 ### Schemapatch
 
@@ -159,6 +174,11 @@ for more details on each option within the config file structure.
 # Configuration for the compatibility generator.
 compatibility:
   disabled: false # Defaults to false, set to true to disable.
+# Configuration for the deepcopy generator.
+deepcopy:
+  disabled: false # Defaults to false, set to true to disable.
+  headerFilePath: "" # Defaults to empty, no header will be appended.
+  outputFileBaseName: zz_generated.deepcopy # Change this if you want to rename the output file. Do not include a file type suffix.
 # Configuration for the schemapatch generator.
 schemapatch:
   disabled: false # Defaults to true, set to false to disable.

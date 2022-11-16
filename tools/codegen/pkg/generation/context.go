@@ -49,6 +49,9 @@ type APIVersionContext struct {
 
 	// Path is the path to the folder containing the API version.
 	Path string
+
+	// PackageName is the golang packagh name for the API version.
+	PackageName string
 }
 
 // Options represents the base configuration used to generate a context.
@@ -185,9 +188,12 @@ func findAPIGroups(goPackages []string, desiredGroupVersions []string) (map[stri
 				version := gvv.groupVersion.Version
 
 				apiGroups[group] = append(apiGroups[group], APIVersionContext{
-					Name: version,
-					Path: pkgPath,
+					Name:        version,
+					Path:        pkgPath,
+					PackageName: p.Name,
 				})
+			} else {
+				klog.V(3).Infof("No GroupVersion found in path %s", pkgPath)
 			}
 		}
 	}

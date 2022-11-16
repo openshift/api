@@ -74,12 +74,12 @@ func (g *generator) generateGroupVersion(groupName string, version generation.AP
 	if g.verify {
 		klog.V(2).Infof("Verifiying swagger docs for %s/%s", groupName, version.Name)
 
-		return verifySwaggerDocs(version.Name, outFilePath, docsForTypes)
+		return verifySwaggerDocs(version.PackageName, outFilePath, docsForTypes)
 	}
 
 	klog.V(2).Infof("Generating swagger docs for %s/%s", groupName, version.Name)
 
-	generatedDocs, err := generateSwaggerDocs(version.Name, docsForTypes)
+	generatedDocs, err := generateSwaggerDocs(version.PackageName, docsForTypes)
 	if err != nil {
 		return fmt.Errorf("error generating swagger docs: %w", err)
 	}

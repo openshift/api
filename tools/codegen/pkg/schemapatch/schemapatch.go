@@ -72,7 +72,12 @@ func outputArg(versionPath string) string {
 }
 
 // executeSchemaPatchForGroupVersion runs the schemapatch code directly for the given group and version.
-func executeSchemaPatchForGroupVersion(rt *genall.Runtime, group string, version generation.APIVersionContext, requiredFeatureSets sets.String) error {
+func executeSchemaPatchForGroupVersion(group string, version generation.APIVersionContext, requiredFeatureSets sets.String, versionPaths []string) error {
+	rt, err := loadGroupRuntime(versionPaths)
+	if err != nil {
+		return fmt.Errorf("error loading group runtime: %w", err)
+	}
+
 	markers.RequiredFeatureSets.Insert(requiredFeatureSets.List()...)
 	defer func() {
 		markers.RequiredFeatureSets = sets.NewString()
@@ -95,4 +100,11 @@ func executeSchemaPatchForGroupVersion(rt *genall.Runtime, group string, version
 	}
 
 	return nil
+}
+
+// loadGroupRuntime builds a genall.Runtime based on the package paths for all version that are passed.
+// This allows the runtime to be shared between each version when it's generated.
+func loadGroupRuntime(paths []string) (*genall.Runtime, error) {
+	generators := &genall.Generators{}
+	return generators.ForRoots(paths...)
 }

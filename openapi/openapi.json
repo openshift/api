@@ -25620,6 +25620,7 @@
       }
     },
     "com.github.openshift.api.operator.v1.Perspective": {
+      "description": "Perspective defines a perspective that cluster admins want to show/hide in the perspective switcher dropdown",
       "type": "object",
       "required": [
         "id",
@@ -25630,6 +25631,14 @@
           "description": "id defines the id of the perspective. Example: \"dev\", \"admin\". The available perspective ids can be found in the code snippet section next to the yaml editor. Incorrect or unknown ids will be ignored.",
           "type": "string",
           "default": ""
+        },
+        "pinnedResources": {
+          "description": "pinnedResources defines the list of default pinned resources that users will see on the perspective navigation if they have not customized these pinned resources themselves. The list of available Kubernetes resources could be read via `kubectl api-resources`. The console will also provide a configuration UI and a YAML snippet that will list the available resources that can be pinned to the navigation. Incorrect or unknown resources will be ignored.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.PinnedResourceReference"
+          }
         },
         "visibility": {
           "description": "visibility defines the state of perspective along with access review checks if needed for that perspective.",
@@ -25663,6 +25672,32 @@
           }
         }
       ]
+    },
+    "com.github.openshift.api.operator.v1.PinnedResourceReference": {
+      "description": "PinnedResourceReference includes the group, version and type of resource",
+      "type": "object",
+      "required": [
+        "group",
+        "version",
+        "resource"
+      ],
+      "properties": {
+        "group": {
+          "description": "group is the API Group of the Resource. Enter empty string for the core group. This value should consist of only lowercase alphanumeric characters, hyphens and periods. Example: \"\", \"apps\", \"build.openshift.io\", etc.",
+          "type": "string",
+          "default": ""
+        },
+        "resource": {
+          "description": "resource is the type that is being referenced. It is normally the plural form of the resource kind in lowercase. This value should consist of only lowercase alphanumeric characters and hyphens. Example: \"deployments\", \"deploymentconfigs\", \"pods\", etc.",
+          "type": "string",
+          "default": ""
+        },
+        "version": {
+          "description": "version is the API Version of the Resource. This value should consist of only lowercase alphanumeric characters. Example: \"v1\", \"v1beta1\", etc.",
+          "type": "string",
+          "default": ""
+        }
+      }
     },
     "com.github.openshift.api.operator.v1.PolicyAuditConfig": {
       "type": "object",

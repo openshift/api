@@ -137,8 +137,9 @@ documentation, using the `--swagger:enforce-comments` and `--verify` flags in co
 These additional arguments may be provided when using the `swaggerdocs` generator:
 - `--swagger:output-file-name` -  Defines the file name to use for the swagger generated docs for each group version.
   When omitted, defaults to `zz_generated.swagger_doc_generated.go`.
-- `--swagger:enforce-comments` - Defines whether the generator should enforce that all fields have a comment or not.
-  Only effective when combined with `--verify`. When not specified, a warning will be emitted for each missing comment.
+- `--swagger:comment-policy` - Defines the policy to use when a field is missing documentation. Valid values are 'Ignore', 'Warn' and 'Enforce'.
+  The default policy is 'Warn'. Missing comments will be ignored when the policy is set to 'Ignore', a warning will be produced when the policy is set to 'Warn',
+  and the generator will fail when the policy is set to 'Enforce'. Only effective when combined with `--verify`. 
 
 ## Using configuration files
 
@@ -168,6 +169,6 @@ schemapatch:
 # Configuration for the swaggerdocs generator.
 swaggerdocs:
   disabled: false # Defaults to false, set to true to disable.
-  enforceComments: false # Defaults to false, set to true to enforce comments when verifying.
+  commentPolicy: Warn # Valid values are `Ignore`, `Warn` and `Enforce`.
   outputFileName: zz_generated.swagger_doc_generated.go # Change this if you want to rename the output file.
 ```

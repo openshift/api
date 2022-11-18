@@ -35,11 +35,23 @@ const (
 
 	// typesGlob is a glob used to find all types files within a group version package.
 	typesGlob = "types*.go"
+
+	// CommentPolicyIgnore is a comment policy that ignores all missing comments.
+	// No action is taken for missing comments under this policy.
+	CommentPolicyIgnore = "Ignore"
+
+	// CommentPolicyWarn is a comment policy that warns about missing comments.
+	// A warning is logged for missing comments under this policy.
+	CommentPolicyWarn = "Warn"
+
+	// CommentPolicyEnforce is a comment policy that enforces missing comments.
+	// An error is returned for missing comments under this policy.
+	CommentPolicyEnforce = "Enforce"
 )
 
 // verifySwaggerDocs reads the existing swagger documentation and verifies that the content
 // is up to date.
-func verifySwaggerDocs(packageName, filePath string, docsForTypes []kruntime.KubeTypes, enforceComments bool) error {
+func verifySwaggerDocs(packageName, filePath string, docsForTypes []kruntime.KubeTypes, commentPolicy string) error {
 	// Verify that every field has a doc string.
 	buf := bytes.NewBuffer(nil)
 	rc, err := kruntime.VerifySwaggerDocsExist(docsForTypes, buf)
@@ -47,10 +59,8 @@ func verifySwaggerDocs(packageName, filePath string, docsForTypes []kruntime.Kub
 		return fmt.Errorf("could not verify existing docs: %w", err)
 	}
 	if rc > 0 {
-		if enforceComments {
-			return fmt.Errorf("missing swagger docs for the following %d fields:\n%s", rc, buf.String())
-		} else {
-			klog.Warningf("Existing swagger docs are missing %d entries:\n%s", rc, buf.String())
+		if err := handleMissingComments(commentPolicy, rc, buf.String()); err != nil {
+			return err
 		}
 	}
 
@@ -94,4 +104,19 @@ func generateSwaggerDocs(packageName string, docsForTypes []kruntime.KubeTypes) 
 	}
 
 	return formattedOut, nil
+}
+
+func handleMissingComments(commentPolicy string, rc int, missingComments string) error {
+	switch commentPolicy {
+	case CommentPolicyIgnore:
+		klog.V(3).Infof("Ignoring %d missing comments", rc)
+		return nil
+	case CommentPolicyWarn, "": // The empty string indicates this is the default policy.
+		klog.Warningf("Found %d missing comments:\n%s", rc, missingComments)
+		return nil
+	case CommentPolicyEnforce:
+		return fmt.Errorf("found %d missing comments:\n%s", rc, missingComments)
+	default:
+		return fmt.Errorf("unknown comment policy: %s", commentPolicy)
+	}
 }

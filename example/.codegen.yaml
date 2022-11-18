@@ -6,7 +6,7 @@ schemapatch:
   - "TechPreviewNoUpgrade"
 swaggerdocs:
   disabled: false
-  enforceComments: false
+  commentPolicy: Warn
   outputFileName: zz_generated.swagger_doc_generated.go
 compatibility:
   disabled: false

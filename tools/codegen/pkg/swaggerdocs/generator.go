@@ -16,11 +16,14 @@ type Options struct {
 	// This default to false as the swaggerdocs generator is enabled by default.
 	Disabled bool
 
-	// enforceComments determines whether the generator should enforce that all
-	// fields have a comment or not.
-	// When set to true, verification will fail if any field in the API group is
-	// missing a comment.
-	EnforceComments bool `json:"enforceComments,omitempty"`
+	// CommentPolicy determines how, when verifying swaggerdocs, the generator
+	// should handle missing comments.
+	// Valid values are `Ignore`, `Warn` and `Enforce`.
+	// This defaults to `Warn`.
+	// When set to `Ignore`, the generator will ignore any missing comments.
+	// When set to `Warn`, the generator will emit a warning for any missing comments.
+	// When set to `Enforce`, the generator will return an error for any missing comments.
+	CommentPolicy string
 
 	// OutputFileName is the file name to use for writing the generated swagger
 	// docs to. This file will be created for each group version.
@@ -34,19 +37,19 @@ type Options struct {
 // generator implements the generation.Generator interface.
 // It is designed to generate swaggerdocs documentation for a particular API group.
 type generator struct {
-	disabled        bool
-	enforceComments bool
-	outputFileName  string
-	verify          bool
+	disabled       bool
+	commentPolicy  string
+	outputFileName string
+	verify         bool
 }
 
 // NewGenerator builds a new schemapatch generator.
 func NewGenerator(opts Options) generation.Generator {
 	return &generator{
-		disabled:        opts.Disabled,
-		enforceComments: opts.EnforceComments,
-		outputFileName:  opts.OutputFileName,
-		verify:          opts.Verify,
+		disabled:       opts.Disabled,
+		commentPolicy:  opts.CommentPolicy,
+		outputFileName: opts.OutputFileName,
+		verify:         opts.Verify,
 	}
 }
 
@@ -63,10 +66,10 @@ func (g *generator) ApplyConfig(config *generation.Config) generation.Generator 
 	}
 
 	return NewGenerator(Options{
-		Disabled:        config.SwaggerDocs.Disabled,
-		EnforceComments: config.SwaggerDocs.EnforceComments,
-		OutputFileName:  outputFileName,
-		Verify:          g.verify,
+		Disabled:       config.SwaggerDocs.Disabled,
+		CommentPolicy:  config.SwaggerDocs.CommentPolicy,
+		OutputFileName: outputFileName,
+		Verify:         g.verify,
 	})
 }
 
@@ -113,7 +116,7 @@ func (g *generator) generateGroupVersion(groupName string, version generation.AP
 	if g.verify {
 		klog.V(2).Infof("Verifiying swagger docs for %s/%s", groupName, version.Name)
 
-		return verifySwaggerDocs(version.PackageName, outFilePath, docsForTypes, g.enforceComments)
+		return verifySwaggerDocs(version.PackageName, outFilePath, docsForTypes, g.commentPolicy)
 	}
 
 	klog.V(2).Infof("Generating swagger docs for %s/%s", groupName, version.Name)

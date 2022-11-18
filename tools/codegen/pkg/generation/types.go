@@ -47,14 +47,17 @@ type SwaggerDocsConfig struct {
 	// This generator is enabled by default so this field defaults to false.
 	Disabled bool `json:"disabled,omitempty"`
 
+	// CommentPolicy determines how, when verifying swaggerdocs, the generator
+	// should handle missing comments.
+	// Valid values are `Ignore`, `Warn` and `Enforce`.
+	// This defaults to `Warn`.
+	// When set to `Ignore`, the generator will ignore any missing comments.
+	// When set to `Warn`, the generator will emit a warning for any missing comments.
+	// When set to `Enforce`, the generator will return an error for any missing comments.
+	CommentPolicy string `json:"commentPolicy,omitempty"`
+
 	// OutputFileName is the file name to use for writing the generated swagger
 	// docs to. This file will be created for each group version.
 	// Whem omitted, this will default to `zz_generated.swagger_doc_generated.go`.
 	OutputFileName string `json:"outputFileName,omitempty"`
-
-	// EnforceComments determines whether the generator should enforce that all
-	// fields have a comment or not.
-	// When set to true, verification will fail if any field in the API group is
-	// missing a comment.
-	EnforceComments bool `json:"enforceComments,omitempty"`
 }

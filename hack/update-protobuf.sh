@@ -4,6 +4,12 @@ source "$(dirname "${BASH_SOURCE}")/lib/init.sh"
 
 [[ -n "${PROTO_OPTIONAL:-}" ]] && exit 0
 
+if [ -z "${GOPATH:-}" ]; then
+  echo "Generating protobuf requires GOPATH to be set. Please set GOPATH.
+To skip protobuf generation, set \$PROTO_OPTIONAL."
+  exit 1
+fi
+
 if [[ "$(protoc --version)" != "libprotoc 3."* ]]; then
   echo "Generating protobuf requires protoc 3.0.x. Please download and
 install the platform appropriate Protobuf package for your OS:

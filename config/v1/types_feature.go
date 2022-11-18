@@ -108,7 +108,14 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		Enabled:  []string{},
 		Disabled: []string{},
 	},
-	TechPreviewNoUpgrade: newDefaultFeatures().
+	TechPreviewNoUpgrade: newDefaultFeatures(defaultFeatures).
+		// All beta features are on in TechPreview unless explicitly opted out by the team and approved by staff-eng.
+		// This choice is ONLY valid in cases where intractable bugs are present or in the case where the feature
+		// is promised to be disable-able forever by the upstream project.
+		// Remember that upstream's standard objective is that every featuregate becomes non-optional, locked, and removed
+		// over time.
+		with("AllBeta"). // staff-eng, deads2k
+
 		with("CSIMigrationAzureFile").             // sig-storage, fbertina, Kubernetes feature gate
 		with("CSIMigrationvSphere").               // sig-storage, fbertina, Kubernetes feature gate
 		with("ExternalCloudProvider").             // sig-cloud-provider, jspeed, OCP specific
@@ -122,7 +129,7 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		with("CSIInlineVolumeAdmission").          // sig-storage, jdobson, OCP specific
 		with("MatchLabelKeysInPodTopologySpread"). // sig-scheduling, ingvagabund (#forum-workloads), Kubernetes feature gate
 		toFeatures(),
-	LatencySensitive: newDefaultFeatures().
+	LatencySensitive: newDefaultFeatures(defaultFeatures).
 		with(
 			"TopologyManager", // sig-pod, sjenning
 		).
@@ -130,24 +137,38 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 }
 
 var defaultFeatures = &FeatureGateEnabledDisabled{
-	Enabled: []string{
-		"APIPriorityAndFairness",         // sig-apimachinery, deads2k
-		"RotateKubeletServerCertificate", // sig-pod, sjenning
-		"DownwardAPIHugePages",           // sig-node, rphillips
-	},
+	Enabled: append(
+		[]string{
+			// your item goes here with a bz component and your name.
+			// In your PR description, include
+			// - [ ] bz-foo component is default component for this feature if it fails.
+			// - [ ] bz-foo component volunteers to ensure this feature is backwards compatible even though kube does not provide this guarantee
+			// - [ ] bz-foo component volunteers to ensure this feature is upgradeable forever even though kube does not provide this guarantee
+			// You can definitely add to this list, but you must be aware of what you're volunteering for.
+		},
+		allEnabledBetaFeaturesIn1_25...),
 	Disabled: []string{
+		// All beta features are off by default unless explicitly opted in by the team and approved by staff-eng
+		// Remember that every feature must be backwards compatible and upgradable forever and that kubernetes
+		// does NOT guarantee this.
+		"AllBeta", // staff-eng, deads2k
+
 		"CSIMigrationAzureFile", // sig-storage, jsafrane
 		"CSIMigrationvSphere",   // sig-storage, jsafrane
 	},
 }
 
 type featureSetBuilder struct {
+	startingFeatures *FeatureGateEnabledDisabled
+
 	forceOn  []string
 	forceOff []string
 }
 
-func newDefaultFeatures() *featureSetBuilder {
-	return &featureSetBuilder{}
+func newDefaultFeatures(startingFeatures *FeatureGateEnabledDisabled) *featureSetBuilder {
+	return &featureSetBuilder{
+		startingFeatures: startingFeatures,
+	}
 }
 
 func (f *featureSetBuilder) with(forceOn ...string) *featureSetBuilder {
@@ -183,7 +204,7 @@ func (f *featureSetBuilder) toFeatures() *FeatureGateEnabledDisabled {
 	finalOff := []string{}
 
 	// only add the default enabled features if they haven't been explicitly set off
-	for _, defaultOn := range defaultFeatures.Enabled {
+	for _, defaultOn := range f.startingFeatures.Enabled {
 		if !f.isForcedOff(defaultOn) {
 			finalOn = append(finalOn, defaultOn)
 		}
@@ -196,7 +217,7 @@ func (f *featureSetBuilder) toFeatures() *FeatureGateEnabledDisabled {
 	}
 
 	// only add the default disabled features if they haven't been explicitly set on
-	for _, defaultOff := range defaultFeatures.Disabled {
+	for _, defaultOff := range f.startingFeatures.Disabled {
 		if !f.isForcedOn(defaultOff) {
 			finalOff = append(finalOff, defaultOff)
 		}
@@ -209,4 +230,56 @@ func (f *featureSetBuilder) toFeatures() *FeatureGateEnabledDisabled {
 		Enabled:  finalOn,
 		Disabled: finalOff,
 	}
+}
+
+var allEnabledBetaFeaturesIn1_25 = []string{
+	"APIListChunking",
+	"APIPriorityAndFairness",
+	"APIResponseCompression",
+	"AnyVolumeDataSource",
+	"AppArmor",
+	"CPUManager",
+	"CPUManagerPolicyBetaOptions",
+	"CPUManagerPolicyOptions",
+	"CSIMigrationAzureFile",
+	"CSIMigrationPortworx",
+	"CSIMigrationvSphere",
+	"CronJobTimeZone",
+	"CustomResourceValidationExpressions",
+	"DelegateFSGroupToCSIDriver",
+	"DevicePlugins",
+	"DownwardAPIHugePages",
+	"EndpointSliceTerminatingCondition",
+	"ExperimentalHostUserNamespaceDefaulting",
+	"GRPCContainerProbe",
+	"GracefulNodeShutdown",
+	"GracefulNodeShutdownBasedOnPodPriority",
+	"JobMutableNodeSchedulingDirectives",
+	"JobReadyPods",
+	"JobTrackingWithFinalizers",
+	"KubeletCredentialProviders",
+	"KubeletPodResources",
+	"KubeletPodResourcesGetAllocatable",
+	"LegacyServiceAccountTokenNoAutoGeneration",
+	"LogarithmicScaleDown",
+	"LoggingBetaOptions",
+	"MemoryManager",
+	"MinDomainsInPodTopologySpread",
+	"MixedProtocolLBService",
+	"OpenAPIEnums",
+	"OpenAPIV3",
+	"PodDeletionCost",
+	"ProbeTerminationGracePeriod",
+	"RemainingItemCount",
+	"RotateKubeletServerCertificate",
+	"SeccompDefault",
+	"ServerSideFieldValidation",
+	"ServiceIPStaticSubrange",
+	"ServiceInternalTrafficPolicy",
+	"SizeMemoryBackedVolumes",
+	"StorageVersionHash",
+	"TopologyAwareHints",
+	"TopologyManager",
+	"WinOverlay",
+	"WindowsHostProcessContainers",
 }

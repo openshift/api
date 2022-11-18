@@ -6,6 +6,12 @@ import (
 )
 
 func TestFeatureBuilder(t *testing.T) {
+
+	var testStart = &FeatureGateEnabledDisabled{
+		Enabled:  []string{"alpha", "bravo"},
+		Disabled: []string{"charlie", "delta"},
+	}
+
 	tests := []struct {
 		name     string
 		actual   *FeatureGateEnabledDisabled
@@ -13,68 +19,60 @@ func TestFeatureBuilder(t *testing.T) {
 	}{
 		{
 			name:     "nothing",
-			actual:   newDefaultFeatures().toFeatures(),
+			actual:   newDefaultFeatures(defaultFeatures).toFeatures(),
 			expected: defaultFeatures,
 		},
 		{
 			name:   "disable-existing",
-			actual: newDefaultFeatures().without("APIPriorityAndFairness").toFeatures(),
+			actual: newDefaultFeatures(testStart).without("alpha").toFeatures(),
 			expected: &FeatureGateEnabledDisabled{
-				Enabled: []string{
-					"RotateKubeletServerCertificate",
-					"DownwardAPIHugePages",
-				},
+				Enabled: []string{"bravo"},
 				Disabled: []string{
-					"CSIMigrationAzureFile",
-					"CSIMigrationvSphere",
-					"APIPriorityAndFairness",
+					"charlie",
+					"delta",
+					"alpha",
 				},
 			},
 		},
 		{
 			name:   "enable-existing",
-			actual: newDefaultFeatures().with("CSIMigrationAzureFile").toFeatures(),
+			actual: newDefaultFeatures(testStart).with("charlie").toFeatures(),
 			expected: &FeatureGateEnabledDisabled{
 				Enabled: []string{
-					"APIPriorityAndFairness",
-					"RotateKubeletServerCertificate",
-					"DownwardAPIHugePages",
-					"CSIMigrationAzureFile",
+					"alpha",
+					"bravo",
+					"charlie",
 				},
 				Disabled: []string{
-					"CSIMigrationvSphere",
+					"delta",
 				},
 			},
 		},
 		{
 			name:   "disable-more",
-			actual: newDefaultFeatures().without("APIPriorityAndFairness", "other").toFeatures(),
+			actual: newDefaultFeatures(testStart).without("alpha", "other").toFeatures(),
 			expected: &FeatureGateEnabledDisabled{
-				Enabled: []string{
-					"RotateKubeletServerCertificate",
-					"DownwardAPIHugePages",
-				},
+				Enabled: []string{"bravo"},
 				Disabled: []string{
-					"CSIMigrationAzureFile",
-					"CSIMigrationvSphere",
-					"APIPriorityAndFairness",
+					"charlie",
+					"delta",
+					"alpha",
 					"other",
 				},
 			},
 		},
 		{
 			name:   "enable-more",
-			actual: newDefaultFeatures().with("CSIMigrationAzureFile", "other").toFeatures(),
+			actual: newDefaultFeatures(testStart).with("charlie", "other").toFeatures(),
 			expected: &FeatureGateEnabledDisabled{
 				Enabled: []string{
-					"APIPriorityAndFairness",
-					"RotateKubeletServerCertificate",
-					"DownwardAPIHugePages",
-					"CSIMigrationAzureFile",
+					"alpha",
+					"bravo",
+					"charlie",
 					"other",
 				},
 				Disabled: []string{
-					"CSIMigrationvSphere",
+					"delta",
 				},
 			},
 		},

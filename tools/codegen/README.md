@@ -9,26 +9,22 @@ easier.
 The tool can be compiled in the normal way using either `go build` or `make codegen` from the root of the tools module.
 When using make the tool will output to `$(TOOLS_MODULE)/_output/bin/$(GOOS)/$(GOARCH)/bin/codegen`.
 
-The function has the following arguments:
+The root command has the following arguments:
 - `--api-group-versions` - A comma separated list of group versions to generate, all groups must be fully qualified.
   e.g. apps.openshift.io/v1,machine.openshift.io/v1,machine.openshift.io/v1beta1.
 - `--base-dir` - The path to the root of the API folders, this directory will be recursively searched to find the group
   versions specified in `--api-group-versions`. When no group versions are specified, all discovered group versions
   will be generated.
-- `--controller-gen` - optionally use a particular controller-gen binary. When not specified, the tool will use the
-  built in generator.
-  Note, you must use a `controller-gen` built from the [OpenShift fork](https://github.com/openshift/kubernetes-sigs-controller-tools) of controller-tools.
-- `--required-feature-sets` - optionally generate based on the OpenShift feature sets annotations.
-  This will update only CRDs with a matching value for the `release.openshift.io/feature-set` annotation.
+- `--verify` - Rather than updating existing files, the generators will verify that the existing files are up to date.
+  The generator will exit with a non-zero exit code if any file needs to be regenerated.
+- `--versions` - Prints the version of the utility and exits.
+
+When using the root command nakedly, all default generators will be executed on the API groups unless a configuration file
+is found which disables a particular generator.
 
 As a full example, from the root of the OpenShift API repository, you may run:
 ```
 codegen --base-dir /go/src/github.com/openshift/api --api-group-versions apps.openshift.io/v1,config.openshift.io/v1,operator.openshift.io/v1
-```
-
-And to generate only TechPreviewNoUpgrade versions of CRDs:
-```
-codegen-crds --base-dir /go/src/github.com/openshift/api --api-group-versions apps.openshift.io/v1,config.openshift.io/v1,operator.openshift.io/v1 --require-feature-sets TechPreviewNoUpgrade
 ```
 
 ## Inclusion in other repositories
@@ -78,3 +74,101 @@ update-codegen-crds:
 
 You may also want to add the `_output` directory to your `.gitignore` to avoid checking in compiled binaries created
 by this make target.
+
+## Generators
+
+The following section describes the individual generators included within the `codegen` utility.
+
+The generators enabled by default are:
+- [Compatibility](#compatibility)
+- [Schemapatch](#schemapatch)
+- [Swaggerdocs](#swaggerdocs)
+
+### Compatibility
+
+To generate API compatibility comments, use the `compatibility` subcommand.
+
+The `compatibility` subcommand generates a compatibility level comment for each API defintion.
+The generation is controlled by a marker applied to the CRD struct defintiion.
+For example, this annotation would be `+openshift:compatibility-gen:level=1` for a level 1 API.
+	
+Valid API levels are 1, 2, 3 and 4. Version 1 is required for all stable APIs.
+Version 2 should be used for beta level APIs. Levels 3 and 4 may be used for alpha APIs.
+
+### Schemapatch
+
+To generate CRD schemas, use the `schemapatch` subcommand.
+
+The schemapatch subcommand uses the [controller-tools][controller-tools] project to generate CRD schemas.
+It requires a stub CRD to exist before the schema will be generated. Copying an existing OpenShift CRD
+and updating the metadata is the easiest way to generate a stub.
+
+In addition to generating schemas, it also allows patches to be applied to the schema post generation.
+The [yaml-patch][yaml-patch] library accepts RFC-6092-ish patches in a YAML format and applies them to
+the CRD.
+YAML patch files must be named identically to the CRD they apply to, but with a `yaml-patch` extension
+instead of the standard `yaml` extension.
+
+These additional arguments may be provided when using the `schemapatch` generator:
+- `--controller-gen` - optionally use a particular controller-gen binary. When not specified, the tool will use the
+  built in generator.
+  Note, you must use a `controller-gen` built from the [OpenShift fork](https://github.com/openshift/kubernetes-sigs-controller-tools) of controller-tools.
+- `--required-feature-sets` - optionally generate based on the OpenShift feature sets annotations.
+  This will update only CRDs with a matching value for the `release.openshift.io/feature-set` annotation.
+
+For example, to generate only TechPreviewNoUpgrade versions of CRDs:
+```
+codegen schemapatch --base-dir /go/src/github.com/openshift/api --api-group-versions apps.openshift.io/v1,config.openshift.io/v1,operator.openshift.io/v1 --require-feature-sets TechPreviewNoUpgrade
+```
+
+[controller-tools]: https://github.com/kubernetes-sigs/controller-tools
+[yaml-patch]: https://github.com/vmware-archive/yaml-patch
+
+### Swaggerdocs
+
+To generate SwaggerDoc functions for types within an API, use the `swaggerdocs` subcommand.
+
+This generator inspects the documentation within the API defintions and generates functions
+that return the Go documenation for each struct and field within an API.
+
+The generator can also be used to verify that each API field and struct has appropriate
+documentation, using the `--swagger:enforce-comments` and `--verify` flags in conjunction.
+
+These additional arguments may be provided when using the `swaggerdocs` generator:
+- `--swagger:output-file-name` -  Defines the file name to use for the swagger generated docs for each group version.
+  When omitted, defaults to `zz_generated.swagger_doc_generated.go`.
+- `--swagger:comment-policy` - Defines the policy to use when a field is missing documentation. Valid values are 'Ignore', 'Warn' and 'Enforce'.
+  The default policy is 'Warn'. Missing comments will be ignored when the policy is set to 'Ignore', a warning will be produced when the policy is set to 'Warn',
+  and the generator will fail when the policy is set to 'Enforce'. Only effective when combined with `--verify`. 
+
+## Using configuration files
+
+The `codegen` utility will search for a file called `.codegen.yaml` at the API group level.
+These files allow individual API groups to configure the generation of their paritcular API files.
+
+It also enables the enablement and disablement of generators with a goal that the usage of the generator
+should require only the `--base-dir` argument.
+
+The schema of the configuration file is outlined below, all fields are optional and default values will apply
+when they are omitted.
+
+Each generator option relates to a flag attached to the generator, review the [generators](#generators) section
+for more details on each option within the config file structure.
+
+```yaml
+# Configuration for the compatibility generator.
+compatibility:
+  disabled: false # Defaults to false, set to true to disable.
+# Configuration for the schemapatch generator.
+schemapatch:
+  disabled: false # Defaults to true, set to false to disable.
+  requiredFeatureSets: # Each entry will be matched against the value of the required feature set annotation.
+  - "" # This matches any manifest that does not have the required feature set annotation.
+  - "Default"
+  - "TechPreviewNoUpgrade"
+# Configuration for the swaggerdocs generator.
+swaggerdocs:
+  disabled: false # Defaults to false, set to true to disable.
+  commentPolicy: Warn # Valid values are `Ignore`, `Warn` and `Enforce`.
+  outputFileName: zz_generated.swagger_doc_generated.go # Change this if you want to rename the output file.
+```

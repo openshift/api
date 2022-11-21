@@ -19,7 +19,7 @@ import (
 
 // formatManifestsForGroup looks for CRD manifests within the group version and formats them
 // with a yaml formatter.
-func formatManifestsForGroupVersion(version generation.APIVersionContext, requiredFeatureSets sets.String) error {
+func formatManifestsForGroupVersion(version generation.APIVersionContext, requiredFeatureSets []sets.String) error {
 	errs := []error{}
 
 	dirEntries, err := ioutil.ReadDir(version.Path)
@@ -49,7 +49,7 @@ func formatManifestsForGroupVersion(version generation.APIVersionContext, requir
 // formatManifest formats a particular file. It checks that the file is a CRD before
 // formatting it.
 // Indentation is pinned to 2 as this is what other kube like tooling uses.
-func formatManifest(path string, mode fs.FileMode, requiredFeatureSets sets.String) error {
+func formatManifest(path string, mode fs.FileMode, requiredFeatureSets []sets.String) error {
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
 		return fmt.Errorf("could not read file %s: %v", path, err)
@@ -60,7 +60,19 @@ func formatManifest(path string, mode fs.FileMode, requiredFeatureSets sets.Stri
 		return fmt.Errorf("could not unmarshal YAML for type meta inspection: %v", err)
 	}
 
-	if partialObject.APIVersion != apiextensionsv1.SchemeGroupVersion.String() || partialObject.Kind != "CustomResourceDefinition" || !mayHandleObject(partialObject, requiredFeatureSets) {
+	// Try an empty set in case no features were configured.
+	// If this returns true then the object should be handled even if no
+	// other requiredFeatureSets match.
+	shouldHandle := mayHandleObject(partialObject, sets.NewString())
+
+	for _, requiredFeatureSet := range requiredFeatureSets {
+		if mayHandleObject(partialObject, requiredFeatureSet) {
+			shouldHandle = true
+			break
+		}
+	}
+
+	if partialObject.APIVersion != apiextensionsv1.SchemeGroupVersion.String() || partialObject.Kind != "CustomResourceDefinition" || !shouldHandle {
 		return nil
 	}
 

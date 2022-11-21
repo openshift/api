@@ -12,6 +12,19 @@ import (
 
 // Options contains the configuration required for the swaggerdocs generator.
 type Options struct {
+	// Disabled indicates whether the swaggerdocs generator is enabled or not.
+	// This default to false as the swaggerdocs generator is enabled by default.
+	Disabled bool
+
+	// CommentPolicy determines how, when verifying swaggerdocs, the generator
+	// should handle missing comments.
+	// Valid values are `Ignore`, `Warn` and `Enforce`.
+	// This defaults to `Warn`.
+	// When set to `Ignore`, the generator will ignore any missing comments.
+	// When set to `Warn`, the generator will emit a warning for any missing comments.
+	// When set to `Enforce`, the generator will return an error for any missing comments.
+	CommentPolicy string
+
 	// OutputFileName is the file name to use for writing the generated swagger
 	// docs to. This file will be created for each group version.
 	OutputFileName string
@@ -24,6 +37,8 @@ type Options struct {
 // generator implements the generation.Generator interface.
 // It is designed to generate swaggerdocs documentation for a particular API group.
 type generator struct {
+	disabled       bool
+	commentPolicy  string
 	outputFileName string
 	verify         bool
 }
@@ -31,9 +46,31 @@ type generator struct {
 // NewGenerator builds a new schemapatch generator.
 func NewGenerator(opts Options) generation.Generator {
 	return &generator{
+		disabled:       opts.Disabled,
+		commentPolicy:  opts.CommentPolicy,
 		outputFileName: opts.OutputFileName,
 		verify:         opts.Verify,
 	}
+}
+
+// ApplyConfig creates returns a new generator based on the configuration passed.
+// If the schemapatch configuration is empty, the existing generation is returned.
+func (g *generator) ApplyConfig(config *generation.Config) generation.Generator {
+	if config == nil || config.SwaggerDocs == nil {
+		return g
+	}
+
+	outputFileName := DefaultOutputFileName
+	if config.SwaggerDocs.OutputFileName != "" {
+		outputFileName = config.SwaggerDocs.OutputFileName
+	}
+
+	return NewGenerator(Options{
+		Disabled:       config.SwaggerDocs.Disabled,
+		CommentPolicy:  config.SwaggerDocs.CommentPolicy,
+		OutputFileName: outputFileName,
+		Verify:         g.verify,
+	})
 }
 
 // Name returns the name of the generator.
@@ -43,6 +80,11 @@ func (g *generator) Name() string {
 
 // GenGroup runs the schemapatch generator against the given group context.
 func (g *generator) GenGroup(groupCtx generation.APIGroupContext) error {
+	if g.disabled {
+		klog.V(3).Infof("Skipping swaggerdocs generation for %s", groupCtx.Name)
+		return nil
+	}
+
 	for _, version := range groupCtx.Versions {
 		if err := g.generateGroupVersion(groupCtx.Name, version); err != nil {
 			return fmt.Errorf("error generating swagger docs for %s/%s: %w", groupCtx.Name, version.Name, err)
@@ -74,7 +116,7 @@ func (g *generator) generateGroupVersion(groupName string, version generation.AP
 	if g.verify {
 		klog.V(2).Infof("Verifiying swagger docs for %s/%s", groupName, version.Name)
 
-		return verifySwaggerDocs(version.PackageName, outFilePath, docsForTypes)
+		return verifySwaggerDocs(version.PackageName, outFilePath, docsForTypes, g.commentPolicy)
 	}
 
 	klog.V(2).Infof("Generating swagger docs for %s/%s", groupName, version.Name)

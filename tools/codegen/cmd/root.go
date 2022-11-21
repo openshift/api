@@ -73,7 +73,12 @@ func executeGenerators(genCtx generation.Context, generators ...generation.Gener
 		klog.Infof("Running generators for %s", group.Name)
 
 		for _, gen := range generators {
-			if err := gen.GenGroup(group); err != nil {
+			g := gen
+			if group.Config != nil {
+				g = g.ApplyConfig(group.Config)
+			}
+
+			if err := g.GenGroup(group); err != nil {
 				errs = append(errs, fmt.Errorf("error running generator %s on group %s: %w", gen.Name(), group.Name, err))
 
 				// Don't run any later generators for this group.

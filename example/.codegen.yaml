@@ -1,3 +1,9 @@
+compatibility:
+  disabled: false
+deepcopy:
+  disabled: false
+  headerFilePath: ../hack/empty.txt
+  outputFileBaseName: zz_generated.deepcopy
 schemapatch:
   disabled: false
   requiredFeatureSets:
@@ -8,5 +14,3 @@ swaggerdocs:
   disabled: false
   commentPolicy: Warn
   outputFileName: zz_generated.swagger_doc_generated.go
-compatibility:
-  disabled: false

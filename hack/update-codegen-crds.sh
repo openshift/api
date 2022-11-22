@@ -10,8 +10,8 @@ fi
 
 if [ -z "${OPENSHIFT_REQUIRED_FEATURESETS:-}" ];then
   echo "Generating CRDs..."
-  "${CODEGEN}" schemapatch --base-dir "${SCRIPT_ROOT}" -v 2
+  "${CODEGEN}" schemapatch --base-dir "${SCRIPT_ROOT}" -v 1
 else
   echo "Generating CRDs for ${OPENSHIFT_REQUIRED_FEATURESETS} FeatureSet..."
-  "${CODEGEN}" schemapatch --base-dir "${SCRIPT_ROOT}" -v 2 --required-feature-sets ${OPENSHIFT_REQUIRED_FEATURESETS}
+  "${CODEGEN}" schemapatch --base-dir "${SCRIPT_ROOT}" -v 1 --required-feature-sets ${OPENSHIFT_REQUIRED_FEATURESETS}
 fi

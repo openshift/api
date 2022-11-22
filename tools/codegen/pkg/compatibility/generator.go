@@ -54,7 +54,7 @@ func (g *generator) Name() string {
 // GenGroup runs the compatibility generator against the given group context.
 func (g *generator) GenGroup(groupCtx generation.APIGroupContext) error {
 	if g.disabled {
-		klog.V(3).Infof("Skipping compatibility generation for %s", groupCtx.Name)
+		klog.V(2).Infof("Skipping compatibility generation for %s", groupCtx.Name)
 		return nil
 	}
 
@@ -64,7 +64,7 @@ func (g *generator) GenGroup(groupCtx generation.APIGroupContext) error {
 			action = "Verifying"
 		}
 
-		klog.V(2).Infof("%s compatibility level comments for %s/%s", action, groupCtx.Name, version.Name)
+		klog.V(1).Infof("%s compatibility level comments for %s/%s", action, groupCtx.Name, version.Name)
 
 		if err := insertCompatibilityLevelComments(version.Path, g.verify); err != nil {
 			return fmt.Errorf("could not insert compatibility level comments for %s/%s: %w", groupCtx.Name, version.Name, err)

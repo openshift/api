@@ -7,6 +7,10 @@ type Config struct {
 	// When omitted, the default configuration will be used.
 	Compatibility *CompatibilityConfig `json:"compatibility,omitempty"`
 
+	// Deepcopy represents the configuration of the deepcopy generator.
+	// When omitted, the default configuration will be used.
+	Deepcopy *DeepcopyConfig `json:"deepcopy,omitempty"`
+
 	// SchemaPatch represents the configuration for the schemapatch generator.
 	// When omitted, the default configuration will be used.
 	// When provided, any equivalent flag provided values are ignored.
@@ -23,6 +27,22 @@ type CompatibilityConfig struct {
 	// Disabled determines whether the compatibility generator should be run or not.
 	// This generator is enabled by default so this field defaults to false.
 	Disabled bool `json:"disabled,omitempty"`
+}
+
+// DeepcopyConfig is the configuration for the deepcopy generator.
+type DeepcopyConfig struct {
+	// Disabled determines whether the deepcopy generator should be run or not.
+	// This generator is enabled by default so this field defaults to false.
+	Disabled bool `json:"enabled,omitempty"`
+
+	// HeaderFilePath is the path to the file containing the boilerplate header text.
+	// When omitted, no header is added to the generated files.
+	HeaderFilePath string `json:"headerFilePath,omitempty"`
+
+	// OutputFileBaseName is the base name of the output file.
+	// When omitted, DefaultOutputFileBaseName is used.
+	// The current value of DefaultOutputFileBaseName is "zz_generated.deepcopy".
+	OutputFileBaseName string `json:"outputFileBaseName,omitempty"`
 }
 
 // SchemaPatchConfig is the configuration for the schemapatch generator.

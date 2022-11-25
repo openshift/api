@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/openshift/api/tools/codegen/pkg/generation"
+	"github.com/openshift/api/tools/codegen/pkg/utils"
 	kyaml "sigs.k8s.io/yaml"
 
 	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
@@ -141,7 +142,9 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 
 		if g.verify {
 			if !bytes.Equal(manifestData, gc.manifestData) {
-				return fmt.Errorf("API schema for %s is out of date, please regenerate the API schema", gc.manifestPath)
+				diff := utils.Diff(manifestData, gc.manifestData)
+
+				return fmt.Errorf("API schema for %s is out of date, please regenerate the API schema:\n%s", gc.manifestPath, diff)
 			}
 
 			return nil

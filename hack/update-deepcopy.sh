@@ -2,10 +2,4 @@
 
 source "$(dirname "${BASH_SOURCE}")/lib/init.sh"
 
-# Build codegen-crds when it's not present and not overriden for a specific file.
-if [ -z "${CODEGEN:-}" ];then
-  ${TOOLS_MAKE} codegen
-  CODEGEN="${TOOLS_OUTPUT}/codegen"
-fi
-
-"${CODEGEN}" deepcopy --base-dir "${SCRIPT_ROOT}" -v 1
+GENERATOR=deepcopy ${SCRIPT_ROOT}/hack/update-codegen.sh

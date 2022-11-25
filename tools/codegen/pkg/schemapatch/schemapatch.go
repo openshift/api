@@ -1,25 +1,25 @@
 package schemapatch
 
 import (
+	"bytes"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
-
-	"github.com/openshift/api/tools/codegen/pkg/generation"
 
 	"k8s.io/apimachinery/pkg/util/sets"
 	"sigs.k8s.io/controller-tools/pkg/crd/markers"
 	"sigs.k8s.io/controller-tools/pkg/genall"
+	"sigs.k8s.io/controller-tools/pkg/loader"
 	"sigs.k8s.io/controller-tools/pkg/schemapatcher"
 )
 
 const openshiftFeatureSetEnv = "OPENSHIFT_REQUIRED_FEATURESET"
 
-// executeSchemaPatchForGroupVersionWithBinary runs a schemapatch on the controller-gen binary against the group version
-// provided. If any requiredFeatureSets are present it will set the appropriate environment variable to ensure the
-// generator only executes the generator on the correct features sets.
-func executeSchemaPatchForGroupVersionWithBinary(controllerGen string, group string, version generation.APIVersionContext, versionPaths []string, requiredFeatureSets sets.String) error {
+// executeSchemaPatchForManifestWithBinary executes the controller-gen binary with the schemapatch:manifests arg.
+func executeSchemaPatchForManifestWithBinary(controllerGen string, dir string, versionPaths []string, buf *bytes.Buffer, requiredFeatureSets sets.String) error {
 	if requiredFeatureSets.Len() > 0 {
 		// The controller generator picks up feature sets from an env var.
 		if err := os.Setenv(openshiftFeatureSetEnv, strings.Join(requiredFeatureSets.List(), ",")); err != nil {
@@ -31,14 +31,14 @@ func executeSchemaPatchForGroupVersionWithBinary(controllerGen string, group str
 
 	args := []string{}
 
-	args = append(args, manifestsArg(version.Path))
+	args = append(args, manifestsArg(dir))
 	args = append(args, pathsArgs(versionPaths)...)
-	args = append(args, outputArg(version.Path))
+	args = append(args, "output:stdout")
 
 	cmd := exec.Command(controllerGen, args...)
 
 	// Ensure we get the output from the command.
-	cmd.Stdout = os.Stdout
+	cmd.Stdout = buf
 	cmd.Stderr = os.Stderr
 
 	if err := cmd.Run(); err != nil {
@@ -64,29 +64,44 @@ func pathsArgs(versionPaths []string) []string {
 	return paths
 }
 
-// outputArg generates the output:dir arg for the controller-gen binary.
-func outputArg(versionPath string) string {
-	return fmt.Sprintf("output:dir=\"%s\"", versionPath)
-}
+// executeSchemaPatchForManifest executes the schemapatch generator against the generation context passed.
+// When the controller-gen binary is available, it will be used to generate the patch, else the code integration
+// will be used.
+// The output of the patch is written to the buffer passed.
+func executeSchemaPatchForManifest(gc schemaPatchGenerationContext, buf *bytes.Buffer, versionPaths []string, controllerGen string) error {
+	// To generate a single schema we must put the manifest in a directory of its own.
+	// Use a temp directory and remove it once the function exits.
+	dir, err := os.MkdirTemp("", "schemapatch")
+	if err != nil {
+		return fmt.Errorf("could not create temp dir: %w", err)
+	}
+	defer os.RemoveAll(dir)
 
-// executeSchemaPatchForGroupVersion runs the schemapatch code directly for the given group and version.
-func executeSchemaPatchForGroupVersion(group string, version generation.APIVersionContext, requiredFeatureSets sets.String, versionPaths []string) error {
+	if err := os.WriteFile(filepath.Join(dir, "manifest.yaml"), gc.manifestData, 0644); err != nil {
+		return fmt.Errorf("could not write manifest to temp dir: %w", err)
+	}
+
+	// If controllerGen is not empty, use the binary instead of the code integration.
+	if controllerGen != "" {
+		return executeSchemaPatchForManifestWithBinary(controllerGen, dir, versionPaths, buf, gc.requiredFeatureSets)
+	}
+
 	rt, err := loadGroupRuntime(versionPaths)
 	if err != nil {
 		return fmt.Errorf("error loading group runtime: %w", err)
 	}
 
-	markers.RequiredFeatureSets.Insert(requiredFeatureSets.List()...)
+	markers.RequiredFeatureSets.Insert(gc.requiredFeatureSets.List()...)
 	defer func() {
 		markers.RequiredFeatureSets = sets.NewString()
 	}()
 
 	gen := schemapatcher.Generator{
-		ManifestsPath: version.Path,
+		ManifestsPath: dir,
 	}
 
 	ctx := rt.GenerationContext
-	ctx.OutputRule = genall.OutputToDirectory(version.Path)
+	ctx.OutputRule = &outputToBuffer{buf}
 
 	if err := gen.RegisterMarkers(ctx.Collector.Registry); err != nil {
 		return fmt.Errorf("could not register markers: %w", err)
@@ -104,4 +119,20 @@ func executeSchemaPatchForGroupVersion(group string, version generation.APIVersi
 func loadGroupRuntime(paths []string) (*genall.Runtime, error) {
 	generators := &genall.Generators{}
 	return generators.ForRoots(paths...)
+}
+
+// outputToBuffer is a WriteCloser that writes to a buffer.
+// This is used as the output for the controller-gen generator integration.
+type outputToBuffer struct {
+	*bytes.Buffer
+}
+
+// Open implements the Open method of the io.WriteCloser interface.
+func (o *outputToBuffer) Open(_ *loader.Package, _ string) (io.WriteCloser, error) {
+	return o, nil
+}
+
+// Close implements the Close method of the io.WriteCloser interface.
+func (o *outputToBuffer) Close() error {
+	return nil
 }

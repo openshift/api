@@ -5,9 +5,11 @@ go 1.18
 require (
 	github.com/dave/dst v0.27.1
 	github.com/ghodss/yaml v1.0.0
+	github.com/go-git/go-git/v5 v5.4.2
 	github.com/gogo/protobuf v1.3.2
 	github.com/google/go-cmp v0.5.8
 	github.com/mikefarah/yq/v4 v4.27.5
+	github.com/sergi/go-diff v1.1.0
 	github.com/spf13/cobra v1.5.0
 	github.com/spf13/pflag v1.0.5
 	github.com/vmware-archive/yaml-patch v0.0.11
@@ -72,3 +74,6 @@ require (
 	sigs.k8s.io/json v0.0.0-20220713155537-f223a00ba0e2 // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.3 // indirect
 )
+
+// This version produces an incorrect diff, see https://github.com/sergi/go-diff/issues/123
+exclude github.com/sergi/go-diff v1.2.0

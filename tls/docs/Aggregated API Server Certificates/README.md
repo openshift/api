@@ -1,4 +1,4 @@
-# Aggregated API Server Certificates
+# Aggregated API Client Certificates
 
 Used to secure connections between the kube-apiserver and aggregated API Servers.
 
@@ -110,5 +110,3 @@ CA for aggregated apiservers to recognize kube-apiserver as front-proxy.
 | ----------- | ----------- | ----------- | ----------- | ----------- |
 | /etc/kubernetes/static-pod-resources/kube-apiserver-certs/configmaps/aggregator-client-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
 | /etc/kubernetes/static-pod-resources/kube-controller-manager-certs/configmaps/aggregator-client-ca/ca-bundle.crt/ca-bundle.crt | -rw-r--r--. | root | root | system_u:object_r:kubernetes_file_t:s0 |
-
-

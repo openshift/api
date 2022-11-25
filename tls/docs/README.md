@@ -1,6 +1,6 @@
 # Certificates in this OpenShift Cluster
 
-## [Aggregated API Server Certificates](Aggregated%20API%20Server%20Certificates/README.md)
+## [Aggregated API Client Certificates](Aggregated%20API%20Server%20Certificates/README.md)
 Used to secure connections between the kube-apiserver and aggregated API Servers.
 
 
@@ -37,6 +37,3 @@ Used by the kube-apiserver to recognize clients using mTLS.
 
 ## [kube-apiserver Serving Certificates](kube-apiserver%20Serving%20Certificates/README.md)
 Used by kube-apiserver clients to recognize the kube-apiserver.
-
-
-

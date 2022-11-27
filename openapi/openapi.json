@@ -18277,6 +18277,10 @@
             "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.GCPDisk"
           }
         },
+        "enableConfidentialCompute": {
+          "description": "EnableConfidentialCompute Defines whether the instance should have confidential compute enabled. If enabled OnHostMaintenance is required to be set to \"Terminate\". If omitted, the platform chooses a default, which is subject to change over time, currently that default is false.",
+          "type": "boolean"
+        },
         "gcpMetadata": {
           "description": "Metadata key/value pairs to apply to the VM.",
           "type": "array",

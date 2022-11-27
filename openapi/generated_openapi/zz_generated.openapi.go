@@ -31619,6 +31619,13 @@ func schema_openshift_api_machine_v1beta1_GCPMachineProviderSpec(ref common.Refe
 							Format:      "",
 						},
 					},
+					"enableConfidentialCompute": {
+						SchemaProps: spec.SchemaProps{
+							Description: "EnableConfidentialCompute Defines whether the instance should have confidential compute enabled. If enabled OnHostMaintenance is required to be set to \"Terminate\". If omitted, the platform chooses a default, which is subject to change over time, currently that default is false.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 				},
 				Required: []string{"canIPForward", "deletionProtection", "serviceAccounts", "machineType", "region", "zone"},
 			},

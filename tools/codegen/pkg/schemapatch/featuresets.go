@@ -2,7 +2,7 @@ package schemapatch
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -17,7 +17,7 @@ import (
 // shouldProcessGroupVersion determines, based on the required feature sets, whether this group version should be
 // generated or not.
 func shouldProcessGroupVersion(version generation.APIVersionContext, requiredFeatureSets []sets.String) (bool, error) {
-	dirEntries, err := ioutil.ReadDir(version.Path)
+	dirEntries, err := os.ReadDir(version.Path)
 	if err != nil {
 		return false, fmt.Errorf("could not read file info for directory %s: %v", version.Path, err)
 	}
@@ -29,7 +29,7 @@ func shouldProcessGroupVersion(version generation.APIVersionContext, requiredFea
 		}
 
 		fileName := filepath.Join(version.Path, fileInfo.Name())
-		data, err := ioutil.ReadFile(fileName)
+		data, err := os.ReadFile(fileName)
 		if err != nil {
 			return false, fmt.Errorf("could not read CRD file %s: %v", fileInfo.Name(), err)
 		}
@@ -67,6 +67,13 @@ func mayHandleFile(rawContent []byte, requiredFeatureSets []sets.String) bool {
 // mayHandleObject determines, from the feature sets, whether a kube like object should be handled.
 // Currently, the only check is the feature-set annotation.
 func mayHandleObject(manifest metav1.Object, requiredFeatureSets sets.String) bool {
+	manifestFeatureSets := getObjectFeatureSets(manifest)
+
+	return manifestFeatureSets.Equal(requiredFeatureSets)
+}
+
+// getObjectFeatureSets returns the feature sets for a kube like object.
+func getObjectFeatureSets(manifest metav1.Object) sets.String {
 	manifestFeatureSets := sets.NewString()
 	if manifestFeatureSetString := manifest.GetAnnotations()["release.openshift.io/feature-set"]; len(manifestFeatureSetString) > 0 {
 		for _, curr := range strings.Split(manifestFeatureSetString, ",") {
@@ -74,5 +81,5 @@ func mayHandleObject(manifest metav1.Object, requiredFeatureSets sets.String) bo
 		}
 	}
 
-	return manifestFeatureSets.Equal(requiredFeatureSets)
+	return manifestFeatureSets
 }

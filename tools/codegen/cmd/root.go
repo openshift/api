@@ -26,8 +26,10 @@ var (
 // rootCmd represents the base command when called without any subcommands.
 // This will run all generators in the preferred order for OpenShift APIs.
 var rootCmd = &cobra.Command{
-	Use:   "codegen",
-	Short: "Codegen runs code generators for the OpenShift API definitions",
+	Use:           "codegen",
+	Short:         "Codegen runs code generators for the OpenShift API definitions",
+	SilenceErrors: true,
+	SilenceUsage:  true,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if printVersion {
 			fmt.Printf("%s\n", version)

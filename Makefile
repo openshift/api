@@ -53,11 +53,8 @@ verify-scripts:
 verify: verify-scripts verify-codegen-crds
 
 .PHONY: verify-codegen-crds
-verify-codegen-crds: verify-update-codegen-crds
-
-.PHONY: verify-codegen-%
-verify-codegen-%:
-	make verify-update-codegen-$*
+verify-codegen-crds:
+	bash -x hack/verify-codegen-crds.sh
 
 .PHONY: verify-%
 verify-%:

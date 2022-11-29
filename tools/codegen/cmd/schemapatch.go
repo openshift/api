@@ -57,5 +57,6 @@ func newSchemaPatchGenerator() generation.Generator {
 	return schemapatch.NewGenerator(schemapatch.Options{
 		ControllerGen:       controllerGen,
 		RequiredFeatureSets: requiredFeatureSetsList,
+		Verify:              verify,
 	})
 }

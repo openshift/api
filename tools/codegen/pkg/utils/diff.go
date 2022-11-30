@@ -2,144 +2,206 @@ package utils
 
 import (
 	"bytes"
+	"fmt"
 	"strings"
 
 	"github.com/go-git/go-git/v5/utils/diff"
 	"github.com/sergi/go-diff/diffmatchpatch"
+	"k8s.io/apimachinery/pkg/util/sets"
 )
 
 const (
 	colourReset = "\x1b[0m"
 	colourRed   = "\x1b[31m"
 	colourGreen = "\x1b[32m"
+	colourCyan  = "\x1b[36m"
 )
 
 // Diff returns a string containing the diff between the two strings.
 // This is equivalent to running `git diff` on the two strings.
-func Diff(a, b []byte) string {
+func Diff(a, b []byte, fileName string) string {
 	diffs := diff.Do(string(a), string(b))
 
 	if len(diffs) > 1 {
-		return prettyPrintDiff(diffs)
+		return prettyPrintDiff(diffs, fileName)
 	}
 
 	return ""
 }
 
-// prettyPrintDiff prints the diff for the file out as if it were a git diff.
-func prettyPrintDiff(diffs []diffmatchpatch.Diff) string {
-	diffsByLine := splitDiffsByLine(diffs)
-	buff := bytes.NewBuffer(nil)
+// prettyPrintDiff prints the diff for the file out in a style similar to git diff.
+// It prints up to 3 lines before and after a change and divides the diff into blocks
+// each with it's own header identifying the line numbers and number of changes.
+func prettyPrintDiff(diffs []diffmatchpatch.Diff, fileName string) string {
+	diffLines := splitDiffsToLines(diffs)
+	changedLines := getChangedLines(diffLines)
+	filteredLines := filterLines(diffLines, changedLines)
+	diffBlocks := splitLinesIntoBlocks(filteredLines)
 
-	for i, diff := range diffsByLine {
-		switch diff.diffType {
-		case diffmatchpatch.DiffInsert, diffmatchpatch.DiffDelete:
-			// Print any Insert or Delete diffs with the previous 3 and next 3 lines
-			// for context around the diff.
-			printDiffWithSurroundingLines(diffsByLine, i, buff, diff)
-		case diffmatchpatch.DiffEqual:
-			if i == 0 || i == len(diffsByLine)-1 {
-				// If this is the first or last diff, ignore it.
-				continue
-			}
+	buf := bytes.NewBuffer(nil)
 
-			// Write a break to indicate there are more lines.
-			// that have been omitted between the diffs.
-			buff.WriteString("...\n")
-		}
+	for _, block := range diffBlocks {
+		printDiffBlock(buf, block, fileName)
 	}
 
-	return buff.String()
+	return buf.String()
 }
 
-// printDiffWithSurroundingLines prints the diff with the previous and next 3 lines.
-// This provides some context around the diff.
-func printDiffWithSurroundingLines(diffs []diffLines, diffIndex int, buff *bytes.Buffer, diff diffLines) {
-	// If this isn't the first diff, print the previous diff.
-	if diffIndex > 0 {
-		prevDiff := diffs[diffIndex-1]
-
-		// Only print the previous diff if it an equal diff.
-		// Other diff types will be printed by themselves.
-		if prevDiff.diffType == diffmatchpatch.DiffEqual {
-			printPreviousDiff(buff, prevDiff)
-		}
-	}
-
-	switch diff.diffType {
-	case diffmatchpatch.DiffInsert:
-		_, _ = buff.WriteString(colourGreen)
-		printDiffLines(buff, "+ ", diff.lines)
-		_, _ = buff.WriteString(colourReset)
-	case diffmatchpatch.DiffDelete:
-		_, _ = buff.WriteString(colourRed)
-		printDiffLines(buff, "- ", diff.lines)
-		_, _ = buff.WriteString(colourReset)
-	}
-
-	// If this isn't the last diff, print the next diff.
-	if diffIndex < len(diffs)-1 {
-		nextDiff := diffs[diffIndex+1]
-
-		// Only print the next diff if it an equal diff.
-		// Other diff types will be printed by themselves.
-		if nextDiff.diffType == diffmatchpatch.DiffEqual {
-			printNextDiff(buff, nextDiff)
-		}
-	}
-}
-
-// printPreviousDiff prints the previous diff with the last 3 lines.
-func printPreviousDiff(buff *bytes.Buffer, diff diffLines) {
-	var lines []string
-
-	// Only print up to the last 3 lines of the previous diff.
-	for j := 0; j < len(diff.lines) && j < 3; j++ {
-		ln := len(diff.lines) - j - 1
-		lines = append(lines, diff.lines[ln])
-	}
-
-	printDiffLines(buff, "  ", lines)
-}
-
-// printNextDiff prints the next diff with the first 3 lines.
-func printNextDiff(buff *bytes.Buffer, diff diffLines) {
-	var lines []string
-
-	// Only print up to the first 3 lines of the next diff.
-	for j := 0; j < len(diff.lines) && j < 3; j++ {
-		lines = append(lines, diff.lines[j])
-	}
-
-	printDiffLines(buff, " ", lines)
-}
-
-// printDiffLines prints each line in the diff as a separate line with the given prefix.
-func printDiffLines(buff *bytes.Buffer, prefix string, lines []string) {
-	for _, line := range lines {
-		_, _ = buff.WriteString(prefix + line + "\n")
-	}
-}
-
-// diffLines is a diff with the lines split by newline.
-type diffLines struct {
+// diffLine holds the line number and text for a line in a diff.
+type diffLine struct {
+	number   int
+	text     string
 	diffType diffmatchpatch.Operation
-	lines    []string
 }
 
-// splitDiffsByLine splits the diffs by line.
-func splitDiffsByLine(in []diffmatchpatch.Diff) []diffLines {
-	var out []diffLines
+// splitDiffsToLines splits the diffs into lines and adds the line number.
+// Deleted lines do not increase the line number as they are then replaced
+// by the next line.
+// Line numbers should be accurate for the new file.
+func splitDiffsToLines(in []diffmatchpatch.Diff) []diffLine {
+	var out []diffLine
 
+	lineNumber := 1
 	for _, d := range in {
 		data := strings.TrimSuffix(d.Text, "\n")
 		lines := strings.Split(data, "\n")
 
-		out = append(out, diffLines{
-			diffType: d.Type,
-			lines:    lines,
-		})
+		for _, line := range lines {
+			out = append(out, diffLine{
+				number:   lineNumber,
+				text:     line,
+				diffType: d.Type,
+			})
+
+			// Once we've used a line number, increment it unless it's a delete line.
+			if d.Type != diffmatchpatch.DiffDelete {
+				lineNumber++
+			}
+		}
 	}
 
 	return out
+}
+
+// getChangedLines returns a set of line numbers that have changed.
+func getChangedLines(lines []diffLine) sets.Int {
+	changeSet := sets.NewInt()
+
+	for _, line := range lines {
+		if line.diffType != diffmatchpatch.DiffEqual {
+			changeSet.Insert(line.number)
+		}
+	}
+
+	return changeSet
+}
+
+// filterLines removes lines that are not changed and are not within 3 lines of a changed line.
+func filterLines(lines []diffLine, changedLines sets.Int) []diffLine {
+	var out []diffLine
+
+	linesAhead := 0
+	for i, line := range lines {
+		if changedLines.Has(line.number) {
+			// This line changed, pick it.
+			out = append(out, line)
+			// We need to pick at least the next 3 lines.
+			linesAhead = 3
+			continue
+		}
+
+		if linesAhead > 0 {
+			// We need to pick this line.
+			out = append(out, line)
+			linesAhead--
+			continue
+		}
+
+		// This line didn't change so we don't need to pick it unless there is a change ahead.
+		for j := 1; j <= 3; j++ {
+			if i+j >= len(lines) {
+				break
+			}
+
+			if changedLines.Has(lines[i+j].number) {
+				// There is a change ahead, pick this line.
+				out = append(out, line)
+				// Pick at least the lines up to the next change.
+				linesAhead = j
+			}
+		}
+	}
+
+	return out
+}
+
+// splitLinesIntoBlocks splits the lines into contiguous blocks of lines that have changed.
+func splitLinesIntoBlocks(lines []diffLine) [][]diffLine {
+	var out [][]diffLine
+
+	var block []diffLine
+	for i, line := range lines {
+		// Every time the line number jumps, switch to a new block.
+		if i == 0 || (line.number != lines[i-1].number && line.number != lines[i-1].number+1) {
+			if len(block) > 0 {
+				out = append(out, block)
+			}
+			block = []diffLine{}
+		}
+
+		block = append(block, line)
+	}
+
+	// Make sure to append the final block.
+	out = append(out, block)
+
+	return out
+}
+
+// printDiffBlock prints a block of lines with a header identifying the line numbers and number of changes.
+func printDiffBlock(buf *bytes.Buffer, block []diffLine, fileName string) {
+	first, last := block[0], block[len(block)-1]
+	inserts, deletes := countChangesIn(block)
+
+	blockHeaderFmt := "%s ----- %s [%d - %d] +%d -%d -----%s\n"
+	blockHeader := fmt.Sprintf(blockHeaderFmt, colourCyan, fileName, first.number, last.number, inserts, deletes, colourReset)
+	buf.WriteString(blockHeader)
+
+	for _, line := range block {
+		printDiffLine(buf, line)
+	}
+}
+
+// printDiffLine prints a line with the appropriate colour for the diff type.
+func printDiffLine(buf *bytes.Buffer, line diffLine) {
+	var prefix, suffix string
+
+	switch line.diffType {
+	case diffmatchpatch.DiffInsert:
+		prefix = fmt.Sprintf("%s+%d ", colourGreen, line.number)
+		suffix = colourReset
+	case diffmatchpatch.DiffDelete:
+		prefix = fmt.Sprintf("%s-%d ", colourRed, line.number)
+		suffix = colourReset
+	default:
+		prefix = fmt.Sprintf(" %d ", line.number)
+	}
+
+	_, _ = buf.WriteString(prefix + line.text + suffix + "\n")
+}
+
+// countChangesIn counts the number of insertions and deletions in a block of lines.
+func countChangesIn(block []diffLine) (int, int) {
+	var inserts, deletes int
+
+	for _, line := range block {
+		switch line.diffType {
+		case diffmatchpatch.DiffInsert:
+			inserts++
+		case diffmatchpatch.DiffDelete:
+			deletes++
+		}
+	}
+
+	return inserts, deletes
 }

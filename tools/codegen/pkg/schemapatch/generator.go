@@ -142,7 +142,7 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 
 		if g.verify {
 			if !bytes.Equal(manifestData, gc.manifestData) {
-				diff := utils.Diff(manifestData, gc.manifestData, gc.manifestPath)
+				diff := utils.Diff(gc.manifestData, manifestData, gc.manifestPath)
 
 				return fmt.Errorf("API schema for %s is out of date, please regenerate the API schema:\n%s", gc.manifestPath, diff)
 			}

@@ -33,7 +33,7 @@ type CompatibilityConfig struct {
 type DeepcopyConfig struct {
 	// Disabled determines whether the deepcopy generator should be run or not.
 	// This generator is enabled by default so this field defaults to false.
-	Disabled bool `json:"enabled,omitempty"`
+	Disabled bool `json:"disabled,omitempty"`
 
 	// HeaderFilePath is the path to the file containing the boilerplate header text.
 	// When omitted, no header is added to the generated files.

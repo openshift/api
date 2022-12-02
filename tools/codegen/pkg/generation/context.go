@@ -194,7 +194,7 @@ func findAPIGroups(goPackages map[string]*packages.Package, desiredGroupVersions
 
 			// If a group was found and either the desired list is empty or contains this group version,
 			// add it to the output.
-			if gvv.groupVersion.Group != "" && (desired.Len() == 0 || desired.Has(gvv.groupVersion.String())) {
+			if gvv.groupVersion.String() != "" && (desired.Len() == 0 || desired.Has(gvv.groupVersion.String())) {
 				klog.V(3).Infof("Found GroupVersion in path %s: %+v", pkgPath, gvv.groupVersion)
 				group := gvv.groupVersion.Group
 				version := gvv.groupVersion.Version

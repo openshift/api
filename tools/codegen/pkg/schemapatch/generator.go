@@ -92,6 +92,8 @@ func (g *generator) GenGroup(groupCtx generation.APIGroupContext) error {
 
 	versionPaths := allVersionPaths(groupCtx.Versions)
 
+	errs := []error{}
+
 	for _, version := range groupCtx.Versions {
 		versionRequired, err := shouldProcessGroupVersion(version, g.requiredFeatureSets)
 		if err != nil {
@@ -110,8 +112,12 @@ func (g *generator) GenGroup(groupCtx generation.APIGroupContext) error {
 		klog.V(1).Infof("%s API schema for for %s/%s", action, groupCtx.Name, version.Name)
 
 		if err := g.genGroupVersion(groupCtx.Name, version, versionPaths); err != nil {
-			return fmt.Errorf("could not run schemapatch generator for group/version %s/%s: %w", groupCtx.Name, version.Name, err)
+			errs = append(errs, fmt.Errorf("could not run schemapatch generator for group/version %s/%s: %w", groupCtx.Name, version.Name, err))
 		}
+	}
+
+	if len(errs) > 0 {
+		return kerrors.NewAggregate(errs)
 	}
 
 	return nil

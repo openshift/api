@@ -62,6 +62,10 @@ type GatherStatus struct {
 // insightsReport provides Insights health check report based on the most
 // recently sent Insights data.
 type InsightsReport struct {
+	// downloadedAt is the time when the last Insights report was downloaded.
+	// An empty value means that there has not been any Insights report downloaded yet.
+	// +optional
+	DownloadedAt metav1.Time `json:"downloadedAt,omitempty"`
 	// healthChecks provides basic information about active Insights health checks
 	// in a cluster.
 	// +listType=atomic

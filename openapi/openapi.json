@@ -23957,6 +23957,11 @@
       "description": "insightsReport provides Insights health check report based on the most recently sent Insights data.",
       "type": "object",
       "properties": {
+        "downloadedAt": {
+          "description": "downloadedAt is the time when the last Insights report was downloaded. An empty value means that there has not been any Insights report downloaded yet.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
         "healthChecks": {
           "description": "healthChecks provides basic information about active Insights health checks in a cluster.",
           "type": "array",

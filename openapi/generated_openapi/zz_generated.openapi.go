@@ -40996,6 +40996,13 @@ func schema_openshift_api_operator_v1_InsightsReport(ref common.ReferenceCallbac
 				Description: "insightsReport provides Insights health check report based on the most recently sent Insights data.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"downloadedAt": {
+						SchemaProps: spec.SchemaProps{
+							Description: "downloadedAt is the time when the last Insights report was downloaded. An empty value means that there has not been any Insights report downloaded yet.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
 					"healthChecks": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
@@ -41019,7 +41026,7 @@ func schema_openshift_api_operator_v1_InsightsReport(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.HealthCheck"},
+			"github.com/openshift/api/operator/v1.HealthCheck", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 

@@ -63,7 +63,8 @@ type GatherStatus struct {
 // recently sent Insights data.
 type InsightsReport struct {
 	// downloadedAt is the time when the last Insights report was downloaded.
-	// An empty value means that there has not been any Insights report downloaded yet.
+	// An empty value means that there has not been any Insights report downloaded yet and
+	// it usually appears in disconnected clusters (or clusters when the Insights data gathering is disabled).
 	// +optional
 	DownloadedAt metav1.Time `json:"downloadedAt,omitempty"`
 	// healthChecks provides basic information about active Insights health checks

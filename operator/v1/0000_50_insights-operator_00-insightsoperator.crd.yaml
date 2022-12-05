@@ -202,7 +202,7 @@ spec:
                   type: object
                   properties:
                     downloadedAt:
-                      description: downloadedAt is the time when the last Insights report was downloaded. An empty value means that there has not been any Insights report downloaded yet.
+                      description: downloadedAt is the time when the last Insights report was downloaded. An empty value means that there has not been any Insights report downloaded yet and it usually appears in disconnected clusters (or clusters when the Insights data gathering is disabled).
                       type: string
                       format: date-time
                     healthChecks:

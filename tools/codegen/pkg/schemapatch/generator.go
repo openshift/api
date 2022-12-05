@@ -153,7 +153,7 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 				return fmt.Errorf("API schema for %s is out of date, please regenerate the API schema:\n%s", gc.manifestPath, diff)
 			}
 
-			return nil
+			continue
 		}
 
 		if err := os.WriteFile(gc.manifestPath, manifestData, gc.manifestFileMode); err != nil {

@@ -9,6 +9,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"golang.org/x/tools/go/packages"
+	kerrors "k8s.io/apimachinery/pkg/util/errors"
 	"k8s.io/apimachinery/pkg/util/sets"
 	"sigs.k8s.io/controller-tools/pkg/crd/markers"
 	"sigs.k8s.io/controller-tools/pkg/genall"
@@ -111,6 +113,10 @@ func executeSchemaPatchForManifest(gc schemaPatchGenerationContext, buf *bytes.B
 		return fmt.Errorf("could not run schemapatch generator: %w", err)
 	}
 
+	if errs := collectErrors(&ctx); len(errs) > 0 {
+		return kerrors.NewAggregate(errs)
+	}
+
 	return nil
 }
 
@@ -135,4 +141,53 @@ func (o *outputToBuffer) Open(_ *loader.Package, _ string) (io.WriteCloser, erro
 // Close implements the Close method of the io.WriteCloser interface.
 func (o *outputToBuffer) Close() error {
 	return nil
+}
+
+// collectErrors iterates through the packages generated and their imports
+// looking for errors to collate.
+// It ignores type errors as we only provide partial types through to the
+// generator for transitively imported packages.
+// This should help identify issues with dependent packages.
+func collectErrors(ctx *genall.GenerationContext) []error {
+	var errs []error
+	uniqueErrors := sets.NewString()
+
+	for _, root := range ctx.Roots {
+		if len(root.Errors) == 0 {
+			// This package generated correctly.
+			// Don't worry about inspecting the imports for errors.
+			continue
+		}
+
+		for _, err := range root.Errors {
+			if err.Kind == packages.TypeError {
+				// Ignore type errors as these are common
+				// and don't typically cause bad generation output.
+				continue
+			}
+
+			if !uniqueErrors.Has(err.Error()) {
+				errs = append(errs, err)
+				uniqueErrors.Insert(err.Error())
+			}
+
+		}
+
+		for _, imp := range root.Imports() {
+			for _, err := range imp.Errors {
+				if err.Kind == packages.TypeError {
+					// Ignore type errors as these are common
+					// and don't typically cause bad generation output.
+					continue
+				}
+
+				if !uniqueErrors.Has(err.Error()) {
+					errs = append(errs, err)
+					uniqueErrors.Insert(err.Error())
+				}
+			}
+		}
+	}
+
+	return errs
 }

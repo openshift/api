@@ -1416,6 +1416,15 @@ type IngressControllerTuningOptions struct {
 	// +optional
 	ClientTimeout *metav1.Duration `json:"clientTimeout,omitempty"`
 
+	// httpRequestTimeout defines how long the IngressController will wait
+	// for a complete HTTP request to be sent.
+	//
+	// If unset, the default timeout is 10s
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Format=duration
+	// +optional
+	HTTPRequestTimeout *metav1.Duration `json:"httpRequestTimeout,omitempty"`
+
 	// clientFinTimeout defines how long a connection will be held open while
 	// waiting for the client response to the server/backend closing the
 	// connection.

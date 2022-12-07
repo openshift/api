@@ -1960,6 +1960,11 @@ func (in *IngressControllerTuningOptions) DeepCopyInto(out *IngressControllerTun
 		*out = new(metav1.Duration)
 		**out = **in
 	}
+	if in.HTTPRequestTimeout != nil {
+		in, out := &in.HTTPRequestTimeout, &out.HTTPRequestTimeout
+		*out = new(metav1.Duration)
+		**out = **in
+	}
 	if in.ClientFinTimeout != nil {
 		in, out := &in.ClientFinTimeout, &out.ClientFinTimeout
 		*out = new(metav1.Duration)

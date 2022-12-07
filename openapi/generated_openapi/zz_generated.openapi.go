@@ -40703,6 +40703,12 @@ func schema_openshift_api_operator_v1_IngressControllerTuningOptions(ref common.
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
+					"httpRequestTimeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "httpRequestTimeout defines how long the IngressController will wait for a complete HTTP request to be sent.\n\nIf unset, the default timeout is 10s",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
 					"clientFinTimeout": {
 						SchemaProps: spec.SchemaProps{
 							Description: "clientFinTimeout defines how long a connection will be held open while waiting for the client response to the server/backend closing the connection.\n\nIf unset, the default timeout is 1s",

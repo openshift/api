@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/openshift/api/tools/codegen/pkg/generation"
+	"github.com/openshift/api/tools/codegen/pkg/utils"
 	"github.com/spf13/cobra"
 
 	kerrors "k8s.io/apimachinery/pkg/util/errors"
@@ -90,7 +91,7 @@ func executeGenerators(genCtx generation.Context, generators ...generation.Gener
 	}
 
 	if len(errs) > 0 {
-		return kerrors.NewAggregate(errs)
+		return utils.NewAggregatePrinter(kerrors.NewAggregate(errs))
 	}
 
 	return nil

@@ -4812,6 +4812,17 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.CloudControllerManagerSpec": {
+      "description": "CloudControllerManagerSpec holds Cloud Controller Manager (a.k.a. CCM or CPI) related settings",
+      "type": "object",
+      "properties": {
+        "state": {
+          "description": "state determines whether or not an external Cloud Controller Manager is expected to be installed within the cluster. https://kubernetes.io/docs/tasks/administer-cluster/running-cloud-controller/#running-cloud-controller-manager\n\nWhen set to \"External\", new nodes will be tainted as uninitialized when created, preventing them from running workloads until they are initialized by the cloud controller manager. When omitted or set to \"None\", new nodes will be not tainted and no extra initialization from the cloud controller manager is expected.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.ClusterCondition": {
       "description": "ClusterCondition is a union of typed cluster conditions.  The 'type' property determines which of the type-specific properties are relevant. When evaluated on a cluster, the condition may match, not match, or fail to evaluate.",
       "type": "object",
@@ -5839,6 +5850,26 @@
           }
         }
       }
+    },
+    "com.github.openshift.api.config.v1.ExternalPlatformSpec": {
+      "description": "ExternalPlatformSpec holds the desired state for the generic External infrastructure provider.",
+      "type": "object",
+      "properties": {
+        "cloudControllerManager": {
+          "description": "CloudControllerManager contains settings specific to the external Cloud Controller Manager (a.k.a. CCM or CPI)",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.CloudControllerManagerSpec"
+        },
+        "platformName": {
+          "description": "PlatformName holds the arbitrary string representing the infrastructure provider name, expected to be set at the installation time. This field is solely for informational and reporting purposes and is not expected to be used for decision-making.",
+          "type": "string",
+          "default": "Unknown"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.ExternalPlatformStatus": {
+      "description": "ExternalPlatformStatus holds the current status of the generic External infrastructure provider.",
+      "type": "object"
     },
     "com.github.openshift.api.config.v1.FeatureGate": {
       "description": "Feature holds cluster-wide information about feature gates.  The canonical name is `cluster`\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
@@ -8230,6 +8261,10 @@
           "description": "EquinixMetal contains settings specific to the Equinix Metal infrastructure provider.",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.EquinixMetalPlatformSpec"
         },
+        "external": {
+          "description": "ExternalPlatformType represents generic infrastructure provider. Platform-specific components should be supplemented separately.",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.ExternalPlatformSpec"
+        },
         "gcp": {
           "description": "GCP contains settings specific to the Google Cloud Platform infrastructure provider.",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.GCPPlatformSpec"
@@ -8295,6 +8330,10 @@
         "equinixMetal": {
           "description": "EquinixMetal contains settings specific to the Equinix Metal infrastructure provider.",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.EquinixMetalPlatformStatus"
+        },
+        "external": {
+          "description": "External contains settings specific to the generic External infrastructure provider.",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.ExternalPlatformStatus"
         },
         "gcp": {
           "description": "GCP contains settings specific to the Google Cloud Platform infrastructure provider.",

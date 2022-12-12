@@ -3,4 +3,4 @@
 // in most vendoring cases.
 module github.com/openshift/api/tls
 
-go 1.18
+go 1.19

@@ -7,27 +7,6 @@ a lightweight and portable command-line YAML, JSON and XML processor. `yq` uses 
 
 yq is written in go - so you can download a dependency free binary for your platform and you are good to go! If you prefer there are a variety of package managers that can be used as well as Docker and Podman, all listed below.
 
-## Notice for v4.x versions prior to 4.18.1
-Since 4.18.1, yq's 'eval/e' command is the _default_ command and no longer needs to be specified.
-
-Older versions will still need to specify 'eval/e'.
-
-Similarly, '-' is no longer required as a filename to read from STDIN (unless reading from one or more files).
-
-TLDR:
-
-Prior to 4.18.1 
-```bash
-yq e '.cool' - < file.yaml
-```
-
-4.18+ 
-```bash
-yq '.cool' < file.yaml
-```
-
-When merging multiple files together, `eval-all/ea` is still required to tell `yq` to run the expression against all the document at once.
-
 ## Quick Usage Guide
 
 Read a value:
@@ -80,7 +59,10 @@ Take a look at the discussions for [common questions](https://github.com/mikefar
 ### [Download the latest binary](https://github.com/mikefarah/yq/releases/latest)
 
 ### wget
-Use wget to download the pre-compiled binaries:
+Use wget to download, gzipped pre-compiled binaries:
+
+
+For instance, VERSION=v4.2.0 and BINARY=yq_linux_amd64
 
 #### Compressed via tar.gz
 ```bash
@@ -95,7 +77,12 @@ wget https://github.com/mikefarah/yq/releases/download/${VERSION}/${BINARY} -O /
     chmod +x /usr/bin/yq
 ```
 
-For instance, VERSION=v4.2.0 and BINARY=yq_linux_amd64
+#### Latest version
+
+```bash
+wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq &&\
+    chmod +x /usr/bin/yq
+```
 
 ### MacOS / Linux via Homebrew:
 Using [Homebrew](https://brew.sh/)
@@ -242,7 +229,17 @@ go install github.com/mikefarah/yq/v4@latest
 ## Community Supported Installation methods
 As these are supported by the community :heart: - however, they may be out of date with the officially supported releases.
 
-# Webi
+
+### Nix
+
+```
+nix profile install nixpkgs#yq-go
+```
+
+See [here](https://search.nixos.org/packages?channel=unstable&show=yq-go&from=0&size=50&sort=relevance&type=packages&query=yq-go)
+
+
+### Webi
 
 ```
 webi yq
@@ -264,6 +261,13 @@ pacman -S go-yq
 choco install yq
 ```
 Supported by @chillum (https://chocolatey.org/packages/yq)
+
+and
+
+### Winget
+winget install yq
+
+https://winget.run/pkg/MikeFarah/yq
 
 ### Mac:
 Using [MacPorts](https://www.macports.org/)

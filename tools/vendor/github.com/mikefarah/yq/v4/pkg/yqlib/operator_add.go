@@ -62,6 +62,9 @@ func add(d *dataTreeNavigator, context Context, lhs *CandidateNode, rhs *Candida
 
 	switch lhsNode.Kind {
 	case yaml.MappingNode:
+		if rhs.Node.Kind != yaml.MappingNode {
+			return nil, fmt.Errorf("%v (%v) cannot be added to a %v (%v)", rhs.Node.Tag, rhs.GetNicePath(), lhsNode.Tag, lhs.GetNicePath())
+		}
 		addMaps(target, lhs, rhs)
 	case yaml.SequenceNode:
 		if err := addSequences(target, lhs, rhs); err != nil {
@@ -70,7 +73,7 @@ func add(d *dataTreeNavigator, context Context, lhs *CandidateNode, rhs *Candida
 
 	case yaml.ScalarNode:
 		if rhs.Node.Kind != yaml.ScalarNode {
-			return nil, fmt.Errorf("%v (%v) cannot be added to a %v", rhs.Node.Tag, rhs.Path, lhsNode.Tag)
+			return nil, fmt.Errorf("%v (%v) cannot be added to a %v (%v)", rhs.Node.Tag, rhs.GetNicePath(), lhsNode.Tag, lhs.GetNicePath())
 		}
 		target.Node.Kind = yaml.ScalarNode
 		target.Node.Style = lhsNode.Style
@@ -95,7 +98,7 @@ func addScalars(context Context, target *CandidateNode, lhs *yaml.Node, rhs *yam
 
 	// if the lhs is a string, it might be a timestamp in a custom format.
 	if lhsTag == "!!str" && context.GetDateTimeLayout() != time.RFC3339 {
-		_, err := time.Parse(context.GetDateTimeLayout(), lhs.Value)
+		_, err := parseDateTime(context.GetDateTimeLayout(), lhs.Value)
 		isDateTime = err == nil
 	}
 
@@ -149,7 +152,7 @@ func addDateTimes(layout string, target *CandidateNode, lhs *yaml.Node, rhs *yam
 		return fmt.Errorf("unable to parse duration [%v]: %w", rhs.Value, err)
 	}
 
-	currentTime, err := time.Parse(layout, lhs.Value)
+	currentTime, err := parseDateTime(layout, lhs.Value)
 	if err != nil {
 		return err
 	}

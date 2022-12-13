@@ -56,14 +56,14 @@ func initCommand(cmd *cobra.Command, args []string) (string, []string, error) {
 	return expression, args, nil
 }
 
-func configureDecoder() (yqlib.Decoder, error) {
+func configureDecoder(evaluateTogether bool) (yqlib.Decoder, error) {
 	yqlibInputFormat, err := yqlib.InputFormatFromString(inputFormat)
 	if err != nil {
 		return nil, err
 	}
 	switch yqlibInputFormat {
 	case yqlib.XMLInputFormat:
-		return yqlib.NewXMLDecoder(xmlAttributePrefix, xmlContentName, xmlStrictMode, xmlKeepNamespace, xmlUseRawToken), nil
+		return yqlib.NewXMLDecoder(yqlib.ConfiguredXMLPreferences), nil
 	case yqlib.PropertiesInputFormat:
 		return yqlib.NewPropertiesDecoder(), nil
 	case yqlib.JsonInputFormat:
@@ -73,8 +73,9 @@ func configureDecoder() (yqlib.Decoder, error) {
 	case yqlib.TSVObjectInputFormat:
 		return yqlib.NewCSVObjectDecoder('\t'), nil
 	}
-
-	return yqlib.NewYamlDecoder(), nil
+	prefs := yqlib.ConfiguredYamlPreferences
+	prefs.EvaluateTogether = evaluateTogether
+	return yqlib.NewYamlDecoder(prefs), nil
 }
 
 func configurePrinterWriter(format yqlib.PrinterOutputFormat, out io.Writer) (yqlib.PrinterWriter, error) {
@@ -97,7 +98,7 @@ func configurePrinterWriter(format yqlib.PrinterOutputFormat, out io.Writer) (yq
 func configureEncoder(format yqlib.PrinterOutputFormat) yqlib.Encoder {
 	switch format {
 	case yqlib.JSONOutputFormat:
-		return yqlib.NewJSONEncoder(indent, colorsEnabled)
+		return yqlib.NewJSONEncoder(indent, colorsEnabled, unwrapScalar)
 	case yqlib.PropsOutputFormat:
 		return yqlib.NewPropertiesEncoder(unwrapScalar)
 	case yqlib.CSVOutputFormat:
@@ -105,9 +106,9 @@ func configureEncoder(format yqlib.PrinterOutputFormat) yqlib.Encoder {
 	case yqlib.TSVOutputFormat:
 		return yqlib.NewCsvEncoder('\t')
 	case yqlib.YamlOutputFormat:
-		return yqlib.NewYamlEncoder(indent, colorsEnabled, !noDocSeparators, unwrapScalar)
+		return yqlib.NewYamlEncoder(indent, colorsEnabled, yqlib.ConfiguredYamlPreferences)
 	case yqlib.XMLOutputFormat:
-		return yqlib.NewXMLEncoder(indent, xmlAttributePrefix, xmlContentName)
+		return yqlib.NewXMLEncoder(indent, yqlib.ConfiguredXMLPreferences)
 	}
 	panic("invalid encoder")
 }

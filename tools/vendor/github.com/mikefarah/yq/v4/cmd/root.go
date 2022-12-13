@@ -35,7 +35,7 @@ yq -P sample.json
 			return evaluateSequence(cmd, args)
 
 		},
-		PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			cmd.SetOut(cmd.OutOrStdout())
 
 			var format = logging.MustStringFormatter(
@@ -47,14 +47,32 @@ yq -P sample.json
 			if verbose {
 				backend.SetLevel(logging.DEBUG, "")
 			} else {
-				backend.SetLevel(logging.ERROR, "")
+				backend.SetLevel(logging.WARNING, "")
 			}
 
 			logging.SetBackend(backend)
 			yqlib.InitExpressionParser()
-			yqlib.XMLPreferences.AttributePrefix = xmlAttributePrefix
-			yqlib.XMLPreferences.ContentName = xmlContentName
-			yqlib.XMLPreferences.StrictMode = xmlStrictMode
+
+			outputFormatType, err := yqlib.OutputFormatFromString(outputFormat)
+
+			if err != nil {
+				return err
+			}
+
+			if outputFormatType == yqlib.YamlOutputFormat ||
+				outputFormatType == yqlib.PropsOutputFormat {
+				unwrapScalar = true
+			}
+			if unwrapScalarFlag.IsExplicitySet() {
+				unwrapScalar = unwrapScalarFlag.IsSet()
+			}
+
+			//copy preference form global setting
+			yqlib.ConfiguredYamlPreferences.UnwrapScalar = unwrapScalar
+
+			yqlib.ConfiguredYamlPreferences.PrintDocSeparators = !noDocSeparators
+
+			return nil
 		},
 	}
 
@@ -69,11 +87,15 @@ yq -P sample.json
 	rootCmd.PersistentFlags().StringVarP(&outputFormat, "output-format", "o", "yaml", "[yaml|y|json|j|props|p|xml|x] output format type.")
 	rootCmd.PersistentFlags().StringVarP(&inputFormat, "input-format", "p", "yaml", "[yaml|y|props|p|xml|x] parse format for input. Note that json is a subset of yaml.")
 
-	rootCmd.PersistentFlags().StringVar(&xmlAttributePrefix, "xml-attribute-prefix", "+", "prefix for xml attributes")
-	rootCmd.PersistentFlags().StringVar(&xmlContentName, "xml-content-name", "+content", "name for xml content (if no attribute name is present).")
-	rootCmd.PersistentFlags().BoolVar(&xmlStrictMode, "xml-strict-mode", false, "enables strict parsing of XML. See https://pkg.go.dev/encoding/xml for more details.")
-	rootCmd.PersistentFlags().BoolVar(&xmlKeepNamespace, "xml-keep-namespace", true, "enables keeping namespace after parsing attributes")
-	rootCmd.PersistentFlags().BoolVar(&xmlUseRawToken, "xml-raw-token", true, "enables using RawToken method instead Token. Commonly disables namespace translations. See https://pkg.go.dev/encoding/xml#Decoder.RawToken for details.")
+	rootCmd.PersistentFlags().StringVar(&yqlib.ConfiguredXMLPreferences.AttributePrefix, "xml-attribute-prefix", yqlib.ConfiguredXMLPreferences.AttributePrefix, "prefix for xml attributes")
+	rootCmd.PersistentFlags().StringVar(&yqlib.ConfiguredXMLPreferences.ContentName, "xml-content-name", yqlib.ConfiguredXMLPreferences.ContentName, "name for xml content (if no attribute name is present).")
+	rootCmd.PersistentFlags().BoolVar(&yqlib.ConfiguredXMLPreferences.StrictMode, "xml-strict-mode", yqlib.ConfiguredXMLPreferences.StrictMode, "enables strict parsing of XML. See https://pkg.go.dev/encoding/xml for more details.")
+	rootCmd.PersistentFlags().BoolVar(&yqlib.ConfiguredXMLPreferences.KeepNamespace, "xml-keep-namespace", yqlib.ConfiguredXMLPreferences.KeepNamespace, "enables keeping namespace after parsing attributes")
+	rootCmd.PersistentFlags().BoolVar(&yqlib.ConfiguredXMLPreferences.UseRawToken, "xml-raw-token", yqlib.ConfiguredXMLPreferences.UseRawToken, "enables using RawToken method instead Token. Commonly disables namespace translations. See https://pkg.go.dev/encoding/xml#Decoder.RawToken for details.")
+	rootCmd.PersistentFlags().StringVar(&yqlib.ConfiguredXMLPreferences.ProcInstPrefix, "xml-proc-inst-prefix", yqlib.ConfiguredXMLPreferences.ProcInstPrefix, "prefix for xml processing instructions (e.g. <?xml version=\"1\"?>)")
+	rootCmd.PersistentFlags().StringVar(&yqlib.ConfiguredXMLPreferences.DirectiveName, "xml-directive-name", yqlib.ConfiguredXMLPreferences.DirectiveName, "name for xml directives (e.g. <!DOCTYPE thing cat>)")
+	rootCmd.PersistentFlags().BoolVar(&yqlib.ConfiguredXMLPreferences.SkipProcInst, "xml-skip-proc-inst", yqlib.ConfiguredXMLPreferences.SkipProcInst, "skip over process instructions (e.g. <?xml version=\"1\"?>)")
+	rootCmd.PersistentFlags().BoolVar(&yqlib.ConfiguredXMLPreferences.SkipDirectives, "xml-skip-directives", yqlib.ConfiguredXMLPreferences.SkipDirectives, "skip over directives (e.g. <!DOCTYPE thing cat>)")
 
 	rootCmd.PersistentFlags().BoolVarP(&nullInput, "null-input", "n", false, "Don't read input, simply evaluate the expression given. Useful for creating docs from scratch.")
 	rootCmd.PersistentFlags().BoolVarP(&noDocSeparators, "no-doc", "N", false, "Don't print document separators (---)")
@@ -81,7 +103,9 @@ yq -P sample.json
 	rootCmd.PersistentFlags().IntVarP(&indent, "indent", "I", 2, "sets indent level for output")
 	rootCmd.Flags().BoolVarP(&version, "version", "V", false, "Print version information and quit")
 	rootCmd.PersistentFlags().BoolVarP(&writeInplace, "inplace", "i", false, "update the file inplace of first file given.")
-	rootCmd.PersistentFlags().BoolVarP(&unwrapScalar, "unwrapScalar", "r", true, "unwrap scalar, print the value with no quotes, colors or comments")
+	rootCmd.PersistentFlags().VarP(unwrapScalarFlag, "unwrapScalar", "r", "unwrap scalar, print the value with no quotes, colors or comments. Defaults to true for yaml")
+	rootCmd.PersistentFlags().Lookup("unwrapScalar").NoOptDefVal = "true"
+
 	rootCmd.PersistentFlags().BoolVarP(&prettyPrint, "prettyPrint", "P", false, "pretty print, shorthand for '... style = \"\"'")
 	rootCmd.PersistentFlags().BoolVarP(&exitStatus, "exit-status", "e", false, "set exit status if there are no matches or null or false is returned")
 
@@ -89,7 +113,7 @@ yq -P sample.json
 	rootCmd.PersistentFlags().BoolVarP(&forceNoColor, "no-colors", "M", false, "force print with no colors")
 	rootCmd.PersistentFlags().StringVarP(&frontMatter, "front-matter", "f", "", "(extract|process) first input as yaml front-matter. Extract will pull out the yaml content, process will run the expression against the yaml content, leaving the remaining data intact")
 	rootCmd.PersistentFlags().StringVarP(&forceExpression, "expression", "", "", "forcibly set the expression argument. Useful when yq argument detection thinks your expression is a file.")
-	rootCmd.PersistentFlags().BoolVarP(&leadingContentPreProcessing, "header-preprocess", "", true, "Slurp any header comments and separators before processing expression.")
+	rootCmd.PersistentFlags().BoolVarP(&yqlib.ConfiguredYamlPreferences.LeadingContentPreProcessing, "header-preprocess", "", true, "Slurp any header comments and separators before processing expression.")
 
 	rootCmd.PersistentFlags().StringVarP(&splitFileExp, "split-exp", "s", "", "print each result (or doc) into a file named (exp). [exp] argument must return a string. You can use $index in the expression as the result counter.")
 	rootCmd.PersistentFlags().StringVarP(&splitFileExpFile, "split-exp-file", "", "", "Use a file to specify the split-exp expression.")

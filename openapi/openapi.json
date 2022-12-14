@@ -18313,6 +18313,10 @@
           "type": "boolean",
           "default": false
         },
+        "confidentialCompute": {
+          "description": "confidentialCompute Defines whether the instance should have confidential compute enabled. If enabled OnHostMaintenance is required to be set to \"Terminate\". If omitted, the platform chooses a default, which is subject to change over time, currently that default is false.",
+          "type": "string"
+        },
         "credentialsSecret": {
           "description": "CredentialsSecret is a reference to the secret with GCP credentials.",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"

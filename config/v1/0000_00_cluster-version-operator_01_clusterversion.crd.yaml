@@ -78,6 +78,7 @@ spec:
                         - None
                         - v4.11
                         - v4.12
+                        - v4.13
                         - vCurrent
                 channel:
                   description: channel is an identifier for explicitly requesting that a non-default set of updates be applied to this cluster. The default channel will be contain stable updates that are appropriate for production clusters.

@@ -301,7 +301,7 @@ var KnownClusterVersionCapabilities = []ClusterVersionCapability{
 }
 
 // ClusterVersionCapabilitySet defines sets of cluster version capabilities.
-// +kubebuilder:validation:Enum=None;v4.11;v4.12;vCurrent
+// +kubebuilder:validation:Enum=None;v4.11;v4.12;v4.13;vCurrent
 type ClusterVersionCapabilitySet string
 
 const (
@@ -321,6 +321,12 @@ const (
 	// version of OpenShift is installed.
 	ClusterVersionCapabilitySet4_12 ClusterVersionCapabilitySet = "v4.12"
 
+	// ClusterVersionCapabilitySet4_13 is the recommended set of
+	// optional capabilities to enable for the 4.13 version of
+	// OpenShift.  This list will remain the same no matter which
+	// version of OpenShift is installed.
+	ClusterVersionCapabilitySet4_13 ClusterVersionCapabilitySet = "v4.13"
+
 	// ClusterVersionCapabilitySetCurrent is the recommended set
 	// of optional capabilities to enable for the cluster's
 	// current version of OpenShift.
@@ -336,6 +342,15 @@ var ClusterVersionCapabilitySets = map[ClusterVersionCapabilitySet][]ClusterVers
 		ClusterVersionCapabilityOpenShiftSamples,
 	},
 	ClusterVersionCapabilitySet4_12: {
+		ClusterVersionCapabilityBaremetal,
+		ClusterVersionCapabilityConsole,
+		ClusterVersionCapabilityInsights,
+		ClusterVersionCapabilityMarketplace,
+		ClusterVersionCapabilityStorage,
+		ClusterVersionCapabilityOpenShiftSamples,
+		ClusterVersionCapabilityCSISnapshot,
+	},
+	ClusterVersionCapabilitySet4_13: {
 		ClusterVersionCapabilityBaremetal,
 		ClusterVersionCapabilityConsole,
 		ClusterVersionCapabilityInsights,

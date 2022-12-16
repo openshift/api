@@ -854,6 +854,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.OperatorStatus":                                         schema_openshift_api_operator_v1_OperatorStatus(ref),
 		"github.com/openshift/api/operator/v1.Perspective":                                            schema_openshift_api_operator_v1_Perspective(ref),
 		"github.com/openshift/api/operator/v1.PerspectiveVisibility":                                  schema_openshift_api_operator_v1_PerspectiveVisibility(ref),
+		"github.com/openshift/api/operator/v1.PinnedResourceReference":                                schema_openshift_api_operator_v1_PinnedResourceReference(ref),
 		"github.com/openshift/api/operator/v1.PolicyAuditConfig":                                      schema_openshift_api_operator_v1_PolicyAuditConfig(ref),
 		"github.com/openshift/api/operator/v1.PrivateStrategy":                                        schema_openshift_api_operator_v1_PrivateStrategy(ref),
 		"github.com/openshift/api/operator/v1.ProjectAccess":                                          schema_openshift_api_operator_v1_ProjectAccess(ref),
@@ -43732,7 +43733,8 @@ func schema_openshift_api_operator_v1_Perspective(ref common.ReferenceCallback) 
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "Perspective defines a perspective that cluster admins want to show/hide in the perspective switcher dropdown",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"id": {
 						SchemaProps: spec.SchemaProps{
@@ -43749,12 +43751,26 @@ func schema_openshift_api_operator_v1_Perspective(ref common.ReferenceCallback) 
 							Ref:         ref("github.com/openshift/api/operator/v1.PerspectiveVisibility"),
 						},
 					},
+					"pinnedResources": {
+						SchemaProps: spec.SchemaProps{
+							Description: "pinnedResources defines the list of default pinned resources that users will see on the perspective navigation if they have not customized these pinned resources themselves. The list of available Kubernetes resources could be read via `kubectl api-resources`. The console will also provide a configuration UI and a YAML snippet that will list the available resources that can be pinned to the navigation. Incorrect or unknown resources will be ignored.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/operator/v1.PinnedResourceReference"),
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"id", "visibility"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.PerspectiveVisibility"},
+			"github.com/openshift/api/operator/v1.PerspectiveVisibility", "github.com/openshift/api/operator/v1.PinnedResourceReference"},
 	}
 }
 
@@ -43797,6 +43813,44 @@ func schema_openshift_api_operator_v1_PerspectiveVisibility(ref common.Reference
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/operator/v1.ResourceAttributesAccessReview"},
+	}
+}
+
+func schema_openshift_api_operator_v1_PinnedResourceReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PinnedResourceReference includes the group, version and type of resource",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"group": {
+						SchemaProps: spec.SchemaProps{
+							Description: "group is the API Group of the Resource. Enter empty string for the core group. This value should consist of only lowercase alphanumeric characters, hyphens and periods. Example: \"\", \"apps\", \"build.openshift.io\", etc.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Description: "version is the API Version of the Resource. This value should consist of only lowercase alphanumeric characters. Example: \"v1\", \"v1beta1\", etc.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"resource": {
+						SchemaProps: spec.SchemaProps{
+							Description: "resource is the type that is being referenced. It is normally the plural form of the resource kind in lowercase. This value should consist of only lowercase alphanumeric characters and hyphens. Example: \"deployments\", \"deploymentconfigs\", \"pods\", etc.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"group", "version", "resource"},
+			},
+		},
 	}
 }
 

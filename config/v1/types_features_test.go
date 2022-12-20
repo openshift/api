@@ -25,8 +25,6 @@ func TestFeatureBuilder(t *testing.T) {
 					"DownwardAPIHugePages",
 				},
 				Disabled: []string{
-					"CSIMigrationAzureFile",
-					"CSIMigrationvSphere",
 					"APIPriorityAndFairness",
 				},
 			},
@@ -41,9 +39,7 @@ func TestFeatureBuilder(t *testing.T) {
 					"DownwardAPIHugePages",
 					"CSIMigrationAzureFile",
 				},
-				Disabled: []string{
-					"CSIMigrationvSphere",
-				},
+				Disabled: []string{},
 			},
 		},
 		{
@@ -55,8 +51,6 @@ func TestFeatureBuilder(t *testing.T) {
 					"DownwardAPIHugePages",
 				},
 				Disabled: []string{
-					"CSIMigrationAzureFile",
-					"CSIMigrationvSphere",
 					"APIPriorityAndFairness",
 					"other",
 				},
@@ -73,9 +67,7 @@ func TestFeatureBuilder(t *testing.T) {
 					"CSIMigrationAzureFile",
 					"other",
 				},
-				Disabled: []string{
-					"CSIMigrationvSphere",
-				},
+				Disabled: []string{},
 			},
 		},
 	}

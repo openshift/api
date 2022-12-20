@@ -110,7 +110,6 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 	},
 	TechPreviewNoUpgrade: newDefaultFeatures().
 		with("CSIMigrationAzureFile").             // sig-storage, fbertina, Kubernetes feature gate
-		with("CSIMigrationvSphere").               // sig-storage, fbertina, Kubernetes feature gate
 		with("ExternalCloudProvider").             // sig-cloud-provider, jspeed, OCP specific
 		with("CSIDriverSharedResource").           // sig-build, adkaplan, OCP specific
 		with("BuildCSIVolumes").                   // sig-build, adkaplan, OCP specific
@@ -138,7 +137,6 @@ var defaultFeatures = &FeatureGateEnabledDisabled{
 	},
 	Disabled: []string{
 		"CSIMigrationAzureFile", // sig-storage, jsafrane
-		"CSIMigrationvSphere",   // sig-storage, jsafrane
 	},
 }
 

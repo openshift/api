@@ -251,6 +251,97 @@ type IngressControllerSpec struct {
 	//
 	// +optional
 	HTTPCompression HTTPCompressionPolicy `json:"httpCompression,omitempty"`
+
+	// httpSetHeaders defines HTTP headers that should be set(replace)/append.
+	// If this field is empty, no headers are added.
+	//
+	// Note that this option only applies to cleartext HTTP connections
+	// and to secure HTTP connections for which the ingress controller
+	// terminates encryption (that is, edge-terminated or reencrypt
+	// connections).  Headers cannot be set(replace)/append for TLS passthrough
+	// connections.
+	//
+	// +kubebuilder:validation:Optional
+	// +optional
+	HTTPSetHeaders IngressControllerSetHTTPHeaders `json:"httpSetHeaders,omitempty"`
+
+	// httpDeleteHeaders defines HTTP headers that should be deleted.
+	// If this field is empty, no headers are deleted.
+	//
+	// Note that this option only applies to cleartext HTTP connections
+	// and to secure HTTP connections for which the ingress controller
+	// terminates encryption (that is, edge-terminated or reencrypt
+	// connections).  Headers cannot be set(replace)/append for TLS passthrough
+	// connections.
+	//
+	// +kubebuilder:validation:Optional
+	// +optional
+	HTTPDeleteHeaders IngressControllerDeleteHTTPHeaders `json:"httpDeleteHeaders,omitempty"`
+}
+
+// The IngressControllerSetHTTPHeaders type has a Response field,
+// type []IngressControllerSetHTTPHeader, for specifying headers to set(replace) or append:
+type IngressControllerSetHTTPHeaders struct {
+	// response specifies which HTTP response headers to set(replace) or append.
+	// If this field is empty, no response headers are set(replace) or append.
+	// +nullable
+	// +optional
+	Response []IngressControllerSetHTTPHeader `json:"response,omitempty"`
+}
+
+type IngressControllerSetHTTPHeader struct {
+	// name specifies a header name.  Its value must be a valid HTTP header
+	// name as defined in RFC 2616 section 4.2.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=256
+	// +kubebuilder:validation:Pattern="^[-!#$%&'*+.0-9A-Z^_`a-z|~]+$"
+	// +required
+	Name string `json:"name"`
+
+	// Value specifies a header value.
+	// +kubebuilder:validation:Required
+	// +required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=4096
+	Value string `json:"value"`
+
+	// Action specifies a header value.
+	// +kubebuilder:validation:Required
+	// +required
+	Action IngressControllerHTTPHeaderAction `json:"action"`
+}
+
+// IngressControllerHTTPHeaderAction is a policy for setting HTTP headers.
+// +kubebuilder:validation:Enum=Append;Replace
+type IngressControllerHTTPHeaderAction string
+
+const (
+	// AppendHTTPHeader appends the header, preserving any existing header.
+	AppendHTTPHeader IngressControllerHTTPHeaderAction = "Append"
+	// ReplaceHTTPHeader sets the header, removing any existing header.
+	ReplaceHTTPHeader IngressControllerHTTPHeaderAction = "Replace"
+)
+
+// The IngressControllerDeleteHTTPHeaders has a type Response field,
+// of type []IngressControllerDeleteHTTPHeader, for specifying headers to be deleted.
+type IngressControllerDeleteHTTPHeaders struct {
+	// response specifies which HTTP response headers to be deleted.
+	// If this field is empty, no response headers are to be deleted.
+	// +nullable
+	// +optional
+	Response []IngressControllerDeleteHTTPHeader `json:"response,omitempty"`
+}
+
+type IngressControllerDeleteHTTPHeader struct {
+	// name specifies a header name.  Its value must be a valid HTTP header
+	// name as defined in RFC 2616 section 4.2.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=256
+	// +kubebuilder:validation:Pattern="^[-!#$%&'*+.0-9A-Z^_`a-z|~]+$"
+	// +required
+	Name string `json:"name"`
 }
 
 // httpCompressionPolicy turns on compression for the specified MIME types.

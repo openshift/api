@@ -101,6 +101,57 @@ spec:
                   maxLength: 253
                   pattern: ^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9]))*$
                   type: string
+                httpDeleteHeaders:
+                  description: "httpDeleteHeaders defines HTTP headers that should be deleted. If this field is empty, no headers are deleted. \n Note that this option only applies to cleartext HTTP connections and to secure HTTP connections for which the ingress controller terminates encryption (that is, edge-terminated or reencrypt connections).  Headers cannot be set(replace)/append for TLS passthrough connections."
+                  properties:
+                    response:
+                      description: response specifies which HTTP response headers to be deleted. If this field is empty, no response headers are to be deleted.
+                      items:
+                        properties:
+                          name:
+                            description: name specifies a header name to be deleted.  Its value must be a valid HTTP header name as defined in RFC 2616 section 4.2.
+                            maxLength: 256
+                            minLength: 1
+                            pattern: ^[-!#$%&'*+.0-9A-Z^_`a-z|~]+$
+                            type: string
+                        required:
+                          - name
+                        type: object
+                      nullable: true
+                      type: array
+                  type: object
+                httpSetHeaders:
+                  description: "httpSetHeaders defines HTTP headers that should be set/append. If this field is empty, no headers are added. \n Note that this option only applies to cleartext HTTP connections and to secure HTTP connections for which the ingress controller terminates encryption (that is, edge-terminated or reencrypt connections).  Headers cannot be set/append for TLS passthrough connections."
+                  properties:
+                    response:
+                      description: response specifies which HTTP response headers to set(replace) or append. If this field is empty, no response headers are set(replace) or append.
+                      items:
+                        properties:
+                          action:
+                            description: Action specifies a header value.
+                            enum:
+                              - Append
+                              - Replace
+                            type: string
+                          name:
+                            description: name specifies a header name.  Its value must be a valid HTTP header name as defined in RFC 2616 section 4.2.
+                            maxLength: 256
+                            minLength: 1
+                            pattern: ^[-!#$%&'*+.0-9A-Z^_`a-z|~]+$
+                            type: string
+                          value:
+                            description: Value specifies a header value.
+                            maxLength: 4096
+                            minLength: 1
+                            type: string
+                        required:
+                          - action
+                          - name
+                          - value
+                        type: object
+                      nullable: true
+                      type: array
+                  type: object
                 path:
                   description: path that the router watches for, to route traffic for to the service. Optional
                   pattern: ^/

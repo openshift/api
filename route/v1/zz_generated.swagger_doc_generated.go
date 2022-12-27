@@ -21,6 +21,22 @@ func (Route) SwaggerDoc() map[string]string {
 	return map_Route
 }
 
+var map_RouteDeleteHTTPHeader = map[string]string{
+	"name": "name specifies a header name to be deleted.  Its value must be a valid HTTP header name as defined in RFC 2616 section 4.2.",
+}
+
+func (RouteDeleteHTTPHeader) SwaggerDoc() map[string]string {
+	return map_RouteDeleteHTTPHeader
+}
+
+var map_RouteDeleteHTTPHeaders = map[string]string{
+	"response": "response specifies which HTTP response headers to be deleted. If this field is empty, no response headers are to be deleted.",
+}
+
+func (RouteDeleteHTTPHeaders) SwaggerDoc() map[string]string {
+	return map_RouteDeleteHTTPHeaders
+}
+
 var map_RouteIngress = map[string]string{
 	"":                        "RouteIngress holds information about the places where a route is exposed.",
 	"host":                    "Host is the host string under which the route is exposed; this value is required",
@@ -65,6 +81,25 @@ func (RoutePort) SwaggerDoc() map[string]string {
 	return map_RoutePort
 }
 
+var map_RouteSetHTTPHeader = map[string]string{
+	"name":   "name specifies a header name.  Its value must be a valid HTTP header name as defined in RFC 2616 section 4.2.",
+	"value":  "Value specifies a header value.",
+	"action": "Action specifies a header value.",
+}
+
+func (RouteSetHTTPHeader) SwaggerDoc() map[string]string {
+	return map_RouteSetHTTPHeader
+}
+
+var map_RouteSetHTTPHeaders = map[string]string{
+	"":         "RouteSetHTTPHeaders describes an HTTP header that should be set(replace) or append..",
+	"response": "response specifies which HTTP response headers to set(replace) or append. If this field is empty, no response headers are set(replace) or append.",
+}
+
+func (RouteSetHTTPHeaders) SwaggerDoc() map[string]string {
+	return map_RouteSetHTTPHeaders
+}
+
 var map_RouteSpec = map[string]string{
 	"":                  "RouteSpec describes the hostname or path the route exposes, any security information, and one to four backends (services) the route points to. Requests are distributed among the backends depending on the weights assigned to each backend. When using roundrobin scheduling the portion of requests that go to each backend is the backend weight divided by the sum of all of the backend weights. When the backend has more than one endpoint the requests that end up on the backend are roundrobin distributed among the endpoints. Weights are between 0 and 256 with default 100. Weight 0 causes no requests to the backend. If all weights are zero the route will be considered to have no backends and return a standard 503 response.\n\nThe `tls` field is optional and allows specific certificates or behavior for the route. Routers typically configure a default certificate on a wildcard domain to terminate routes without explicit certificates, but custom hostnames usually must choose passthrough (send traffic directly to the backend via the TLS Server-Name- Indication field) or provide a certificate.",
 	"host":              "host is an alias/DNS that points to the service. Optional. If not specified a route name will typically be automatically chosen. Must follow DNS952 subdomain conventions.",
@@ -75,6 +110,8 @@ var map_RouteSpec = map[string]string{
 	"port":              "If specified, the port to be used by the router. Most routers will use all endpoints exposed by the service by default - set this value to instruct routers which port to use.",
 	"tls":               "The tls field provides the ability to configure certificates and termination for the route.",
 	"wildcardPolicy":    "Wildcard policy if any for the route. Currently only 'Subdomain' or 'None' is allowed.",
+	"httpSetHeaders":    "httpSetHeaders defines HTTP headers that should be set/append. If this field is empty, no headers are added.\n\nNote that this option only applies to cleartext HTTP connections and to secure HTTP connections for which the ingress controller terminates encryption (that is, edge-terminated or reencrypt connections).  Headers cannot be set/append for TLS passthrough connections.",
+	"httpDeleteHeaders": "httpDeleteHeaders defines HTTP headers that should be deleted. If this field is empty, no headers are deleted.\n\nNote that this option only applies to cleartext HTTP connections and to secure HTTP connections for which the ingress controller terminates encryption (that is, edge-terminated or reencrypt connections).  Headers cannot be set(replace)/append for TLS passthrough connections.",
 }
 
 func (RouteSpec) SwaggerDoc() map[string]string {

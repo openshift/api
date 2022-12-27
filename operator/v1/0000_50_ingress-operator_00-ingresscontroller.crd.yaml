@@ -231,6 +231,25 @@ spec:
                       type: array
                       x-kubernetes-list-type: set
                   type: object
+                httpDeleteHeaders:
+                  description: "httpDeleteHeaders defines HTTP headers that should be deleted. If this field is empty, no headers are deleted. \n Note that this option only applies to cleartext HTTP connections and to secure HTTP connections for which the ingress controller terminates encryption (that is, edge-terminated or reencrypt connections).  Headers cannot be set(replace)/append for TLS passthrough connections."
+                  properties:
+                    response:
+                      description: response specifies which HTTP response headers to be deleted. If this field is empty, no response headers are to be deleted.
+                      items:
+                        properties:
+                          name:
+                            description: name specifies a header name.  Its value must be a valid HTTP header name as defined in RFC 2616 section 4.2.
+                            maxLength: 256
+                            minLength: 1
+                            pattern: ^[-!#$%&'*+.0-9A-Z^_`a-z|~]+$
+                            type: string
+                        required:
+                          - name
+                        type: object
+                      nullable: true
+                      type: array
+                  type: object
                 httpEmptyRequestsPolicy:
                   default: Respond
                   description: "httpEmptyRequestsPolicy describes how HTTP connections should be handled if the connection times out before a request is received. Allowed values for this field are \"Respond\" and \"Ignore\".  If the field is set to \"Respond\", the ingress controller sends an HTTP 400 or 408 response, logs the connection (if access logging is enabled), and counts the connection in the appropriate metrics.  If the field is set to \"Ignore\", the ingress controller closes the connection without sending a response, logging the connection, or incrementing metrics.  The default value is \"Respond\". \n Typically, these connections come from load balancers' health probes or Web browsers' speculative connections (\"preconnect\") and can be safely ignored.  However, these requests may also be caused by network errors, and so setting this field to \"Ignore\" may impede detection and diagnosis of problems.  In addition, these requests may be caused by port scans, in which case logging empty requests may aid in detecting intrusion attempts."
@@ -284,6 +303,38 @@ spec:
                           pattern: ^$|^[-!#$%&'*+.0-9A-Z^_`a-z|~]+$
                           type: string
                       type: object
+                  type: object
+                httpSetHeaders:
+                  description: "httpSetHeaders defines HTTP headers that should be set(replace)/append. If this field is empty, no headers are added. \n Note that this option only applies to cleartext HTTP connections and to secure HTTP connections for which the ingress controller terminates encryption (that is, edge-terminated or reencrypt connections).  Headers cannot be set(replace)/append for TLS passthrough connections."
+                  properties:
+                    response:
+                      description: response specifies which HTTP response headers to set(replace) or append. If this field is empty, no response headers are set(replace) or append.
+                      items:
+                        properties:
+                          action:
+                            description: Action specifies a header value.
+                            enum:
+                              - Append
+                              - Replace
+                            type: string
+                          name:
+                            description: name specifies a header name.  Its value must be a valid HTTP header name as defined in RFC 2616 section 4.2.
+                            maxLength: 256
+                            minLength: 1
+                            pattern: ^[-!#$%&'*+.0-9A-Z^_`a-z|~]+$
+                            type: string
+                          value:
+                            description: Value specifies a header value.
+                            maxLength: 4096
+                            minLength: 1
+                            type: string
+                        required:
+                          - action
+                          - name
+                          - value
+                        type: object
+                      nullable: true
+                      type: array
                   type: object
                 logging:
                   description: logging defines parameters for what should be logged where.  If this field is empty, operational logs are enabled but access logs are disabled.

@@ -139,6 +139,98 @@ type RouteSpec struct {
 	// +kubebuilder:validation:Enum=None;Subdomain;""
 	// +kubebuilder:default=None
 	WildcardPolicy WildcardPolicyType `json:"wildcardPolicy,omitempty" protobuf:"bytes,7,opt,name=wildcardPolicy"`
+
+	// httpSetHeaders defines HTTP headers that should be set/append.
+	// If this field is empty, no headers are added.
+	//
+	// Note that this option only applies to cleartext HTTP connections
+	// and to secure HTTP connections for which the ingress controller
+	// terminates encryption (that is, edge-terminated or reencrypt
+	// connections).  Headers cannot be set/append for TLS passthrough
+	// connections.
+	//
+	// +kubebuilder:validation:Optional
+	// +optional
+	HTTPSetHeaders RouteSetHTTPHeaders `json:"httpSetHeaders,omitempty"`
+
+	// httpDeleteHeaders defines HTTP headers that should be deleted.
+	// If this field is empty, no headers are deleted.
+	//
+	// Note that this option only applies to cleartext HTTP connections
+	// and to secure HTTP connections for which the ingress controller
+	// terminates encryption (that is, edge-terminated or reencrypt
+	// connections).  Headers cannot be set(replace)/append for TLS passthrough
+	// connections.
+	//
+	// +kubebuilder:validation:Optional
+	// +optional
+	HTTPDeleteHeaders RouteDeleteHTTPHeaders `json:"httpDeleteHeaders,omitempty"`
+}
+
+// RouteSetHTTPHeaders describes an HTTP header that should be
+// set(replace) or append..
+type RouteSetHTTPHeaders struct {
+	// response specifies which HTTP response headers to set(replace) or append.
+	// If this field is empty, no response headers are set(replace) or append.
+	// +nullable
+	// +optional
+	Response []RouteSetHTTPHeader `json:"response,omitempty"`
+}
+
+type RouteSetHTTPHeader struct {
+	// name specifies a header name.  Its value must be a valid HTTP header
+	// name as defined in RFC 2616 section 4.2.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=256
+	// +kubebuilder:validation:Pattern="^[-!#$%&'*+.0-9A-Z^_`a-z|~]+$"
+	// +required
+	Name string `json:"name"`
+
+	// Value specifies a header value.
+	// +kubebuilder:validation:Required
+	// +required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=4096
+	Value string `json:"value"`
+
+	// Action specifies a header value.
+	// +kubebuilder:validation:Required
+	// +required
+	Action RouteHTTPHeaderAction `json:"action"`
+}
+
+// RouteHTTPHeaderAction is a policy for setting/replacing or appending HTTP headers.
+// +kubebuilder:validation:Enum=Append;Replace
+type RouteHTTPHeaderAction string
+
+const (
+	// AppendHTTPHeaderAction appends the header, preserving any existing header.
+	AppendHTTPHeader RouteHTTPHeaderAction = "Append"
+	// ReplaceHTTPHeaderAction sets the header, removing any existing header.
+	ReplaceHTTPHeader RouteHTTPHeaderAction = "Replace"
+)
+
+// The RouteDeleteHTTPHeaders has a type Response field,
+// of type []RouteDeleteHTTPHeader, for specifying headers to be deleted:
+
+type RouteDeleteHTTPHeaders struct {
+	// response specifies which HTTP response headers to be deleted.
+	// If this field is empty, no response headers are to be deleted.
+	// +nullable
+	// +optional
+	Response []RouteDeleteHTTPHeader `json:"response,omitempty"`
+}
+
+type RouteDeleteHTTPHeader struct {
+	// name specifies a header name to be deleted.  Its value must be a valid HTTP header
+	// name as defined in RFC 2616 section 4.2.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=256
+	// +kubebuilder:validation:Pattern="^[-!#$%&'*+.0-9A-Z^_`a-z|~]+$"
+	// +required
+	Name string `json:"name"`
 }
 
 // RouteTargetReference specifies the target that resolve into endpoints. Only the 'Service'

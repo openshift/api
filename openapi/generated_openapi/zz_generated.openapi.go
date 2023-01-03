@@ -20428,6 +20428,21 @@ func schema_openshift_api_image_v1_ImageBlobReferences(ref common.ReferenceCallb
 							Format:      "",
 						},
 					},
+					"manifests": {
+						SchemaProps: spec.SchemaProps{
+							Description: "manifests is the list of other image names that this image points to. For a single architecture image, it is empty. For a multi-arch image, it consists of the digests of single architecture images, such images shouldn't have layers nor config.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},

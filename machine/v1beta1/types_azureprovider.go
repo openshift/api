@@ -44,7 +44,7 @@ type AzureMachineProviderSpec struct {
 	PublicIP bool `json:"publicIP"`
 	// Tags is a list of tags to apply to the machine.
 	// +optional
-	Tags map[string]string `json:"tags,omitempty"`
+	Tags map[string]*string `json:"tags,omitempty"`
 	// Network Security Group that needs to be attached to the machine's interface.
 	// No security group will be attached if empty.
 	// +optional

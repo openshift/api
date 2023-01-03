@@ -17914,8 +17914,7 @@
           "description": "Tags is a list of tags to apply to the machine.",
           "type": "object",
           "additionalProperties": {
-            "type": "string",
-            "default": ""
+            "type": "string"
           }
         },
         "ultraSSDCapability": {

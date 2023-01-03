@@ -30771,9 +30771,8 @@ func schema_openshift_api_machine_v1beta1_AzureMachineProviderSpec(ref common.Re
 								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
+										Type:   []string{"string"},
+										Format: "",
 									},
 								},
 							},

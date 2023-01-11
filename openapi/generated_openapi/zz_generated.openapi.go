@@ -623,6 +623,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/machine/v1beta1.GCPMetadata":                                        schema_openshift_api_machine_v1beta1_GCPMetadata(ref),
 		"github.com/openshift/api/machine/v1beta1.GCPNetworkInterface":                                schema_openshift_api_machine_v1beta1_GCPNetworkInterface(ref),
 		"github.com/openshift/api/machine/v1beta1.GCPServiceAccount":                                  schema_openshift_api_machine_v1beta1_GCPServiceAccount(ref),
+		"github.com/openshift/api/machine/v1beta1.GCPShieldedInstanceConfig":                          schema_openshift_api_machine_v1beta1_GCPShieldedInstanceConfig(ref),
 		"github.com/openshift/api/machine/v1beta1.Image":                                              schema_openshift_api_machine_v1beta1_Image(ref),
 		"github.com/openshift/api/machine/v1beta1.LastOperation":                                      schema_openshift_api_machine_v1beta1_LastOperation(ref),
 		"github.com/openshift/api/machine/v1beta1.LifecycleHook":                                      schema_openshift_api_machine_v1beta1_LifecycleHook(ref),
@@ -20428,6 +20429,21 @@ func schema_openshift_api_image_v1_ImageBlobReferences(ref common.ReferenceCallb
 							Format:      "",
 						},
 					},
+					"manifests": {
+						SchemaProps: spec.SchemaProps{
+							Description: "manifests is the list of other image names that this image points to. For a single architecture image, it is empty. For a multi-arch image, it consists of the digests of single architecture images, such images shouldn't have layers nor config.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
@@ -31704,12 +31720,19 @@ func schema_openshift_api_machine_v1beta1_GCPMachineProviderSpec(ref common.Refe
 							Format:      "",
 						},
 					},
+					"shieldedInstanceConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ShieldedInstanceConfig is the Shielded VM configuration for the VM",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/machine/v1beta1.GCPShieldedInstanceConfig"),
+						},
+					},
 				},
 				Required: []string{"canIPForward", "deletionProtection", "serviceAccounts", "machineType", "region", "zone"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.GCPDisk", "github.com/openshift/api/machine/v1beta1.GCPGPUConfig", "github.com/openshift/api/machine/v1beta1.GCPMetadata", "github.com/openshift/api/machine/v1beta1.GCPNetworkInterface", "github.com/openshift/api/machine/v1beta1.GCPServiceAccount", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"github.com/openshift/api/machine/v1beta1.GCPDisk", "github.com/openshift/api/machine/v1beta1.GCPGPUConfig", "github.com/openshift/api/machine/v1beta1.GCPMetadata", "github.com/openshift/api/machine/v1beta1.GCPNetworkInterface", "github.com/openshift/api/machine/v1beta1.GCPServiceAccount", "github.com/openshift/api/machine/v1beta1.GCPShieldedInstanceConfig", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -31878,6 +31901,40 @@ func schema_openshift_api_machine_v1beta1_GCPServiceAccount(ref common.Reference
 					},
 				},
 				Required: []string{"email", "scopes"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_machine_v1beta1_GCPShieldedInstanceConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "GCPShieldedInstanceConfig describes the shielded VM configuration of the instance on GCP. Shielded VM configuration allow users to enable and disable Secure Boot, vTPM, and Integrity Monitoring.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"secureBoot": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SecureBoot Defines whether the instance should have secure boot enabled. Secure Boot verify the digital signature of all boot components, and halting the boot process if signature verification fails. If omitted, the platform chooses a default, which is subject to change over time, currently that default is Disabled.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"virtualizedTrustedPlatformModule": {
+						SchemaProps: spec.SchemaProps{
+							Description: "VirtualizedTrustedPlatformModule enable virtualized trusted platform module measurements to create a known good boot integrity policy baseline. The integrity policy baseline is used for comparison with measurements from subsequent VM boots to determine if anything has changed. This is required to be set to \"Enabled\" if IntegrityMonitoring is enabled. If omitted, the platform chooses a default, which is subject to change over time, currently that default is Enabled.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"integrityMonitoring": {
+						SchemaProps: spec.SchemaProps{
+							Description: "IntegrityMonitoring determines whether the instance should have integrity monitoring that verify the runtime boot integrity. Compares the most recent boot measurements to the integrity policy baseline and return a pair of pass/fail results depending on whether they match or not. If omitted, the platform chooses a default, which is subject to change over time, currently that default is Enabled.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
 			},
 		},
 	}

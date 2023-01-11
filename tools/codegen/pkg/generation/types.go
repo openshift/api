@@ -11,6 +11,10 @@ type Config struct {
 	// When omitted, the default configuration will be used.
 	Deepcopy *DeepcopyConfig `json:"deepcopy,omitempty"`
 
+	// OpenAPI represents the configuration of the openapi generator.
+	// When omitted, the default configuration will be used.
+	OpenAPI *OpenAPIConfig `json:"openapi,omitempty"`
+
 	// SchemaPatch represents the configuration for the schemapatch generator.
 	// When omitted, the default configuration will be used.
 	// When provided, any equivalent flag provided values are ignored.
@@ -43,6 +47,14 @@ type DeepcopyConfig struct {
 	// When omitted, DefaultOutputFileBaseName is used.
 	// The current value of DefaultOutputFileBaseName is "zz_generated.deepcopy".
 	OutputFileBaseName string `json:"outputFileBaseName,omitempty"`
+}
+
+// OpenAPIConfig is the configuration for the openapi generator.
+type OpenAPIConfig struct {
+	// Disabled determines whether the openapi generator should include this
+	// group or not.
+	// This generator is enabled by default so this field defaults to false.
+	Disabled bool `json:"disabled,omitempty"`
 }
 
 // SchemaPatchConfig is the configuration for the schemapatch generator.

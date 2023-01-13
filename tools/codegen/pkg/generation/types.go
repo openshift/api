@@ -82,6 +82,12 @@ type ProtobufConfig struct {
 	// This generator is disabled by default so this field defaults to true.
 	Disabled *bool `json:"disabled,omitempty"`
 
+	// DisabledVersions allows you to explicitly disable the generation of protobuf for
+	// specific versions of an API.
+	// This is a list of version names.
+	// When omitted, no versions are disabled.
+	DisabledVersions []string `json:"disabledVersions,omitempty"`
+
 	// HeaderFilePath is the path to the file containing the boilerplate header text.
 	// When omitted, no header is added to the generated files.
 	HeaderFilePath string `json:"headerFilePath,omitempty"`

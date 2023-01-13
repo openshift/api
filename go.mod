@@ -2,6 +2,8 @@ module github.com/openshift/api
 
 go 1.25.0
 
+tool github.com/gogo/protobuf/gogoproto
+
 require (
 	github.com/blang/semver/v4 v4.0.0
 	golang.org/x/tools v0.42.0
@@ -31,6 +33,7 @@ require (
 	github.com/go-openapi/swag/stringutils v0.25.4 // indirect
 	github.com/go-openapi/swag/typeutils v0.25.4 // indirect
 	github.com/go-openapi/swag/yamlutils v0.25.4 // indirect
+	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/google/gnostic-models v0.7.0 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect

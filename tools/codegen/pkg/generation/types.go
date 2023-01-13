@@ -81,6 +81,10 @@ type ProtobufConfig struct {
 	// Disabled determines whether the go-to-protobuf generator should be run or not.
 	// This generator is disabled by default so this field defaults to true.
 	Disabled *bool `json:"disabled,omitempty"`
+
+	// HeaderFilePath is the path to the file containing the boilerplate header text.
+	// When omitted, no header is added to the generated files.
+	HeaderFilePath string `json:"headerFilePath,omitempty"`
 }
 
 // SchemaCheckConfig is the configuration for the schemacheck generator.

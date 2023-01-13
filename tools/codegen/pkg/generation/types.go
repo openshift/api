@@ -15,6 +15,10 @@ type Config struct {
 	// When omitted, the default configuration will be used.
 	OpenAPI *OpenAPIConfig `json:"openapi,omitempty"`
 
+	// Prootbuf represents the configuration of the go-to-protobuf generator.
+	// When omitted, the default configuration will be used.
+	Protobuf *ProtobufConfig `json:"protobuf,omitempty"`
+
 	// SchemaCheck represents the configuration for the schemacheck generator.
 	// When omitted, the default configuration will be used.
 	// When provided, any equivalent flag provided values are ignored.
@@ -70,6 +74,13 @@ type OpenAPIConfig struct {
 	// group or not.
 	// This generator is enabled by default so this field defaults to false.
 	Disabled bool `json:"disabled,omitempty"`
+}
+
+// ProtobufConfig is the configuration for the go-to-protobuf generator.
+type ProtobufConfig struct {
+	// Disabled determines whether the go-to-protobuf generator should be run or not.
+	// This generator is disabled by default so this field defaults to true.
+	Disabled *bool `json:"disabled,omitempty"`
 }
 
 // SchemaCheckConfig is the configuration for the schemacheck generator.

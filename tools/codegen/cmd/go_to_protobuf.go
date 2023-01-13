@@ -8,6 +8,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var (
+	goToProtobufHeaderFilePath string
+)
+
 // goToProtobufCmd represents the go-to-protobuf command
 var goToProtobufCmd = &cobra.Command{
 	Use:   "go-to-protobuf",
@@ -30,11 +34,13 @@ var goToProtobufCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(goToProtobufCmd)
 
+	rootCmd.PersistentFlags().StringVar(&goToProtobufHeaderFilePath, "go-to-protobuf:header-file-path", "", "Path to file containing boilerplate header text. The string YEAR will be replaced with the current 4-digit year. When omitted, no header is added to the generated files.")
 }
 
 // newGoToProtobufGenerator builds a new go-to-protobuf generator.
 func newGoToProtobufGenerator() generation.Generator {
 	return protobuf.NewGenerator(protobuf.Options{
-		Verify:             verify,
+		HeaderFilePath: goToProtobufHeaderFilePath,
+		Verify:         verify,
 	})
 }

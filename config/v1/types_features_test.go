@@ -26,6 +26,7 @@ func TestFeatureBuilder(t *testing.T) {
 					"OpenShiftPodSecurityAdmission",
 				},
 				Disabled: []string{
+					"RetroactiveDefaultStorageClass",
 					"APIPriorityAndFairness",
 				},
 			},
@@ -41,7 +42,9 @@ func TestFeatureBuilder(t *testing.T) {
 					"OpenShiftPodSecurityAdmission",
 					"CSIMigrationAzureFile",
 				},
-				Disabled: []string{},
+				Disabled: []string{
+					"RetroactiveDefaultStorageClass",
+				},
 			},
 		},
 		{
@@ -54,6 +57,7 @@ func TestFeatureBuilder(t *testing.T) {
 					"OpenShiftPodSecurityAdmission",
 				},
 				Disabled: []string{
+					"RetroactiveDefaultStorageClass",
 					"APIPriorityAndFairness",
 					"other",
 				},
@@ -71,7 +75,9 @@ func TestFeatureBuilder(t *testing.T) {
 					"CSIMigrationAzureFile",
 					"other",
 				},
-				Disabled: []string{},
+				Disabled: []string{
+					"RetroactiveDefaultStorageClass",
+				},
 			},
 		},
 	}

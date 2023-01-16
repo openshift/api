@@ -79,7 +79,7 @@ func TestFeatureBuilder(t *testing.T) {
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
 			if !reflect.DeepEqual(tc.expected, tc.actual) {
-				t.Error(tc.actual)
+				t.Errorf("\nExpected feature gates: \n Enabled: %s \n Disabled: %s \nBut got:\n Enabled: %v \n Disabled: %s\n", tc.expected.Enabled, tc.expected.Disabled, tc.actual.Enabled, tc.actual.Disabled)
 			}
 		})
 	}

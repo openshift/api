@@ -1011,6 +1011,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/quota/v1.ClusterResourceQuotaSpec":                                  schema_openshift_api_quota_v1_ClusterResourceQuotaSpec(ref),
 		"github.com/openshift/api/quota/v1.ClusterResourceQuotaStatus":                                schema_openshift_api_quota_v1_ClusterResourceQuotaStatus(ref),
 		"github.com/openshift/api/quota/v1.ResourceQuotaStatusByNamespace":                            schema_openshift_api_quota_v1_ResourceQuotaStatusByNamespace(ref),
+		"github.com/openshift/api/route/v1.LocalObjectReference":                                      schema_openshift_api_route_v1_LocalObjectReference(ref),
 		"github.com/openshift/api/route/v1.Route":                                                     schema_openshift_api_route_v1_Route(ref),
 		"github.com/openshift/api/route/v1.RouteIngress":                                              schema_openshift_api_route_v1_RouteIngress(ref),
 		"github.com/openshift/api/route/v1.RouteIngressCondition":                                     schema_openshift_api_route_v1_RouteIngressCondition(ref),
@@ -51599,6 +51600,31 @@ func schema_openshift_api_quota_v1_ResourceQuotaStatusByNamespace(ref common.Ref
 	}
 }
 
+func schema_openshift_api_route_v1_LocalObjectReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "LocalObjectReference contains enough information to let you locate the referenced object inside the same namespace.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-map-type": "atomic",
+				},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_route_v1_Route(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -52023,7 +52049,7 @@ func schema_openshift_api_route_v1_TLSConfig(ref common.ReferenceCallback) commo
 					},
 					"certificate": {
 						SchemaProps: spec.SchemaProps{
-							Description: "certificate provides certificate contents. This should be a single serving certificate, not a certificate chain. Do not include a CA certificate.",
+							Description: "certificate provides certificate contents. This should be a single serving certificate, not a certificate chain. Do not include a CA certificate. If certificate is provided, do not set certificateRef.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -52056,10 +52082,19 @@ func schema_openshift_api_route_v1_TLSConfig(ref common.ReferenceCallback) commo
 							Format:      "",
 						},
 					},
+					"externalCertificate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "externalCertificate provides certificate contents as a secret reference. This should be a single serving certificate, not a certificate chain. Do not include a CA certificate. The secret referenced should be present in the same namespace as that of the Route. If externalCertificate is provided, do not set certificate.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/route/v1.LocalObjectReference"),
+						},
+					},
 				},
 				Required: []string{"termination"},
 			},
 		},
+		Dependencies: []string{
+			"github.com/openshift/api/route/v1.LocalObjectReference"},
 	}
 }
 

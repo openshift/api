@@ -45,7 +45,11 @@ var rootCmd = &cobra.Command{
 			return fmt.Errorf("could not build generation context: %w", err)
 		}
 
-		return executeGenerators(genCtx, allGenerators()...)
+		if err := executeGenerators(genCtx, allGenerators()...); err != nil {
+			return fmt.Errorf("could not run generators: %w", err)
+		}
+
+		return executeMultiGroupGenerators(genCtx, allMultiGroupGenerators()...)
 	},
 }
 
@@ -97,6 +101,24 @@ func executeGenerators(genCtx generation.Context, generators ...generation.Gener
 	return nil
 }
 
+// executeMultiGroupGenerators runs each multi-group generator for the generation context.
+// Each generator error is aggregated and returned.
+func executeMultiGroupGenerators(genCtx generation.Context, generators ...generation.MultiGroupGenerator) error {
+	errs := []error{}
+
+	for _, gen := range generators {
+		if err := gen.GenGroups(genCtx.APIGroups); err != nil {
+			errs = append(errs, fmt.Errorf("error running generator %s: %w", gen.Name(), err))
+		}
+	}
+
+	if len(errs) > 0 {
+		return kerrors.NewAggregate(errs)
+	}
+
+	return nil
+}
+
 // allGenerators returns an ordered list of generators to run when
 // the root command is executed.
 func allGenerators() []generation.Generator {
@@ -105,5 +127,13 @@ func allGenerators() []generation.Generator {
 		newDeepcopyGenerator(),
 		newSwaggerDocsGenerator(),
 		newSchemaPatchGenerator(),
+	}
+}
+
+// allMultiGroupGenerators returns an ordered list of multi-group
+// generators to run when the root command is executed.
+func allMultiGroupGenerators() []generation.MultiGroupGenerator {
+	return []generation.MultiGroupGenerator{
+		newOpenAPIGenerator(),
 	}
 }

@@ -93,10 +93,7 @@ func (g *generator) GenGroups(groupCtxs []generation.APIGroupContext) error {
 
 	klog.V(1).Infof("%s openapi definitions", action)
 
-	inputPaths, err := getInputPaths(groupCtxs)
-	if err != nil {
-		return fmt.Errorf("failed to get input paths: %w", err)
-	}
+	inputPaths := getInputPaths(groupCtxs)
 
 	// If there is no header file, create an empty file and pass that through.
 	headerFilePath := g.headerFilePath
@@ -122,12 +119,7 @@ func (g *generator) GenGroups(groupCtxs []generation.APIGroupContext) error {
 // getInputPaths collates the input paths from all of the API groups and versions
 // within the given group contexts.
 // It also includes a standard list of additional packages.
-func getInputPaths(groupCtxs []generation.APIGroupContext) ([]string, error) {
-	wd, err := os.Getwd()
-	if err != nil {
-		return nil, fmt.Errorf("failed to get working directory: %w", err)
-	}
-
+func getInputPaths(groupCtxs []generation.APIGroupContext) []string {
 	inputPaths := append([]string{}, defaultInputPaths...)
 
 	for _, groupCtx := range groupCtxs {
@@ -137,19 +129,9 @@ func getInputPaths(groupCtxs []generation.APIGroupContext) ([]string, error) {
 		}
 
 		for _, version := range groupCtx.Versions {
-			// The openapi generator cannot import from an absolute path.
-			inputPath, err := filepath.Rel(wd, version.Path)
-			if err != nil {
-				return nil, fmt.Errorf("failed to get relative path for %s: %w", version.Path, err)
-			}
-
-			// The path must start with `./` to be considered a relative path
-			// by the generator.
-			inputPath = fmt.Sprintf(".%s%s", string(os.PathSeparator), inputPath)
-
-			inputPaths = append(inputPaths, inputPath)
+			inputPaths = append(inputPaths, version.PackagePath)
 		}
 	}
 
-	return inputPaths, nil
+	return inputPaths
 }

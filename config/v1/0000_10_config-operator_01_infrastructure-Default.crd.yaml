@@ -226,6 +226,146 @@ spec:
                     vsphere:
                       description: VSphere contains settings specific to the VSphere infrastructure provider.
                       type: object
+                      properties:
+                        failureDomains:
+                          description: failureDomains contains the definition of region, zone and the vCenter topology. If this is omitted failure domains (regions and zones) will not be used.
+                          type: array
+                          items:
+                            description: VSpherePlatformFailureDomainSpec holds the region and zone failure domain and the vCenter topology of that failure domain.
+                            type: object
+                            required:
+                              - name
+                              - region
+                              - server
+                              - topology
+                              - zone
+                            properties:
+                              name:
+                                description: name defines the arbitrary but unique name of a failure domain.
+                                type: string
+                                maxLength: 256
+                                minLength: 1
+                              region:
+                                description: region defines the name of a region tag that will be attached to a vCenter datacenter. The tag category in vCenter must be named openshift-region.
+                                type: string
+                                maxLength: 80
+                                minLength: 1
+                              server:
+                                description: server is the fully-qualified domain name or the IP address of the vCenter server. ---
+                                type: string
+                                maxLength: 255
+                                minLength: 1
+                              topology:
+                                description: Topology describes a given failure domain using vSphere constructs
+                                type: object
+                                required:
+                                  - computeCluster
+                                  - datacenter
+                                  - datastore
+                                  - networks
+                                properties:
+                                  computeCluster:
+                                    description: computeCluster the absolute path of the vCenter cluster in which virtual machine will be located. The absolute path is of the form /<datacenter>/host/<cluster>. The maximum length of the path is 2048 characters.
+                                    type: string
+                                    maxLength: 2048
+                                    pattern: ^/.*?/host/.*?
+                                  datacenter:
+                                    description: datacenter is the name of vCenter datacenter in which virtual machines will be located. The maximum length of the datacenter name is 80 characters.
+                                    type: string
+                                    maxLength: 80
+                                  datastore:
+                                    description: datastore is the absolute path of the datastore in which the virtual machine is located. The absolute path is of the form /<datacenter>/datastore/<datastore> The maximum length of the path is 2048 characters.
+                                    type: string
+                                    maxLength: 2048
+                                    pattern: ^/.*?/datastore/.*?
+                                  folder:
+                                    description: folder is the absolute path of the folder where virtual machines are located. The absolute path is of the form /<datacenter>/vm/<folder>. The maximum length of the path is 2048 characters.
+                                    type: string
+                                    maxLength: 2048
+                                    pattern: ^/.*?/vm/.*?
+                                  networks:
+                                    description: networks is the list of port group network names within this failure domain. Currently, we only support a single interface per RHCOS virtual machine. The available networks (port groups) can be listed using `govc ls 'network/*'` The single interface should be the absolute path of the form /<datacenter>/network/<portgroup>.
+                                    type: array
+                                    maxItems: 1
+                                    minItems: 1
+                                    items:
+                                      type: string
+                                  resourcePool:
+                                    description: resourcePool is the absolute path of the resource pool where virtual machines will be created. The absolute path is of the form /<datacenter>/host/<cluster>/Resources/<resourcepool>. The maximum length of the path is 2048 characters.
+                                    type: string
+                                    maxLength: 2048
+                                    pattern: ^/.*?/host/.*?/Resources.*
+                              zone:
+                                description: zone defines the name of a zone tag that will be attached to a vCenter cluster. The tag category in vCenter must be named openshift-zone.
+                                type: string
+                                maxLength: 80
+                                minLength: 1
+                        nodeNetworking:
+                          description: nodeNetworking contains the definition of internal and external network constraints for assigning the node's networking. If this field is omitted, networking defaults to the legacy address selection behavior which is to only support a single address and return the first one found.
+                          type: object
+                          properties:
+                            external:
+                              description: external represents the network configuration of the node that is externally routable.
+                              type: object
+                              properties:
+                                excludeNetworkSubnetCidr:
+                                  description: excludeNetworkSubnetCidr IP addresses in subnet ranges will be excluded when selecting the IP address from the VirtualMachine's VM for use in the status.addresses fields. ---
+                                  type: array
+                                  items:
+                                    type: string
+                                network:
+                                  description: network VirtualMachine's VM Network names that will be used to when searching for status.addresses fields. Note that if internal.networkSubnetCIDR and external.networkSubnetCIDR are not set, then the vNIC associated to this network must only have a single IP address assigned to it. The available networks (port groups) can be listed using `govc ls 'network/*'`
+                                  type: string
+                                networkSubnetCidr:
+                                  description: networkSubnetCidr IP address on VirtualMachine's network interfaces included in the fields' CIDRs that will be used in respective status.addresses fields. ---
+                                  type: array
+                                  items:
+                                    type: string
+                            internal:
+                              description: internal represents the network configuration of the node that is routable only within the cluster.
+                              type: object
+                              properties:
+                                excludeNetworkSubnetCidr:
+                                  description: excludeNetworkSubnetCidr IP addresses in subnet ranges will be excluded when selecting the IP address from the VirtualMachine's VM for use in the status.addresses fields. ---
+                                  type: array
+                                  items:
+                                    type: string
+                                network:
+                                  description: network VirtualMachine's VM Network names that will be used to when searching for status.addresses fields. Note that if internal.networkSubnetCIDR and external.networkSubnetCIDR are not set, then the vNIC associated to this network must only have a single IP address assigned to it. The available networks (port groups) can be listed using `govc ls 'network/*'`
+                                  type: string
+                                networkSubnetCidr:
+                                  description: networkSubnetCidr IP address on VirtualMachine's network interfaces included in the fields' CIDRs that will be used in respective status.addresses fields. ---
+                                  type: array
+                                  items:
+                                    type: string
+                        vcenters:
+                          description: vcenters holds the connection details for services to communicate with vCenter. Currently, only a single vCenter is supported. ---
+                          type: array
+                          maxItems: 1
+                          minItems: 0
+                          items:
+                            description: VSpherePlatformVCenterSpec stores the vCenter connection fields. This is used by the vSphere CCM.
+                            type: object
+                            required:
+                              - datacenters
+                              - server
+                            properties:
+                              datacenters:
+                                description: The vCenter Datacenters in which the RHCOS vm guests are located. This field will be used by the Cloud Controller Manager. Each datacenter listed here should be used within a topology.
+                                type: array
+                                minItems: 1
+                                items:
+                                  type: string
+                              port:
+                                description: port is the TCP port that will be used to communicate to the vCenter endpoint. When omitted, this means the user has no opinion and it is up to the platform to choose a sensible default, which is subject to change over time.
+                                type: integer
+                                format: int32
+                                maximum: 32767
+                                minimum: 1
+                              server:
+                                description: server is the fully-qualified domain name or the IP address of the vCenter server. ---
+                                type: string
+                                maxLength: 255
             status:
               description: status holds observed values from the cluster. They may not be overridden.
               type: object

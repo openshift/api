@@ -105,10 +105,11 @@ type ClusterCSIDriverSpec struct {
 }
 
 // CSIDriverType indicates type of CSI driver being configured.
-// +kubebuilder:validation:Enum="";vSphere
+// +kubebuilder:validation:Enum="";Azure;vSphere
 type CSIDriverType string
 
 const (
+	AzureDriverType   CSIDriverType = "Azure"
 	VSphereDriverType CSIDriverType = "vSphere"
 )
 
@@ -118,23 +119,50 @@ const (
 type CSIDriverConfigSpec struct {
 	// driverType indicates type of CSI driver for which the
 	// driverConfig is being applied to.
-	//
-	// Valid values are:
-	//
-	// * vSphere
-	//
-	// Allows configuration of vsphere CSI driver topology.
-	//
-	// ---
+	// Valid values are: Azure, vSphere
 	// Consumers should treat unknown values as a NO-OP.
-	//
 	// +kubebuilder:validation:Required
 	// +unionDiscriminator
 	DriverType CSIDriverType `json:"driverType"`
 
+	// Azure is used to configure the Azure CSI driver.
+	// +optional
+	Azure *AzureCSIDriverConfigSpec `json:"azure,omitempty"`
+
 	// vsphere is used to configure the vsphere CSI driver.
 	// +optional
 	VSphere *VSphereCSIDriverConfigSpec `json:"vSphere,omitempty"`
+}
+
+// AzureDiskEncryptionSet defines the configuration for a disk encryption set.
+type AzureDiskEncryptionSet struct {
+	// subscriptionID defines the Azure subscription that contains the disk encryption set.
+	// When omitted, the subscription from the authenticating credentials of the CSI driver
+	// will be used.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern:=^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$
+	SubscriptionID string `json:"subscriptionID"`
+
+	// resourceGroup defines the Azure resource group that contains the disk encryption set.
+	// When omitted, the cluster resource group from the cluster infrastructure object
+	// will be used.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern=^[-\w\._\(\)]+$
+	ResourceGroup string `json:"resourceGroup"`
+
+	//name is the name of the disk encryption set that will be set on the default storage class.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MaxLength:=80
+	// +kubebuilder:validation:Pattern:=[a-zA-Z0-9_-]
+	Name string `json:"name"`
+}
+
+// AzureCSIDriverConfigSpec defines properties that can be configured for the Azure CSI driver.
+type AzureCSIDriverConfigSpec struct {
+	// diskEncryptionSet sets the cluster default storage class to encrypt volumes with a
+	// customer-managed encryption set, rather than the default platform-managed keys.
+	// +optional
+	DiskEncryptionSet *AzureDiskEncryptionSet `json:"diskEncryptionSet,omitempty"`
 }
 
 // VSphereCSIDriverConfigSpec defines properties that

@@ -105,10 +105,11 @@ type ClusterCSIDriverSpec struct {
 }
 
 // CSIDriverType indicates type of CSI driver being configured.
-// +kubebuilder:validation:Enum="";Azure;vSphere
+// +kubebuilder:validation:Enum="";AWS;Azure;vSphere
 type CSIDriverType string
 
 const (
+	AWSDriverType     CSIDriverType = "AWS"
 	AzureDriverType   CSIDriverType = "Azure"
 	VSphereDriverType CSIDriverType = "vSphere"
 )
@@ -119,11 +120,15 @@ const (
 type CSIDriverConfigSpec struct {
 	// driverType indicates type of CSI driver for which the
 	// driverConfig is being applied to.
-	// Valid values are: Azure, vSphere
+	// Valid values are: AWS, Azure, vSphere
 	// Consumers should treat unknown values as a NO-OP.
 	// +kubebuilder:validation:Required
 	// +unionDiscriminator
 	DriverType CSIDriverType `json:"driverType"`
+
+	// AWS is used to configure the AWS CSI driver.
+	// +optional
+	AWS *AWSCSIDriverConfigSpec `json:"aws,omitempty"`
 
 	// Azure is used to configure the Azure CSI driver.
 	// +optional
@@ -132,6 +137,16 @@ type CSIDriverConfigSpec struct {
 	// vsphere is used to configure the vsphere CSI driver.
 	// +optional
 	VSphere *VSphereCSIDriverConfigSpec `json:"vSphere,omitempty"`
+}
+
+// AWSCSIDriverConfigSpec defines properties that can be configured for the AWS CSI driver.
+type AWSCSIDriverConfigSpec struct {
+	// kmsKeyARN sets the cluster default storage class to encrypt volumes with a user-defined KMS key,
+	// rather than the default KMS key used by AWS.
+	// The value may be either the ARN or Alias ARN of a KMS key.
+	// +kubebuilder:validation:Pattern:=arn:(aws|aws-cn|aws-us-gov):kms:[a-z0-9]+(-[a-z0-9]+)*:[0-9]{12}:(key|alias)/.*
+	// +optional
+	KMSKeyARN string `json:"kmsKeyARN,omitempty"`
 }
 
 // AzureDiskEncryptionSet defines the configuration for a disk encryption set.

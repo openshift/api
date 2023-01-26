@@ -169,6 +169,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.AzurePlatformSpec":                                        schema_openshift_api_config_v1_AzurePlatformSpec(ref),
 		"github.com/openshift/api/config/v1.AzurePlatformStatus":                                      schema_openshift_api_config_v1_AzurePlatformStatus(ref),
 		"github.com/openshift/api/config/v1.AzureResourceTag":                                         schema_openshift_api_config_v1_AzureResourceTag(ref),
+		"github.com/openshift/api/config/v1.BareMetalPlatformLoadBalancer":                            schema_openshift_api_config_v1_BareMetalPlatformLoadBalancer(ref),
 		"github.com/openshift/api/config/v1.BareMetalPlatformSpec":                                    schema_openshift_api_config_v1_BareMetalPlatformSpec(ref),
 		"github.com/openshift/api/config/v1.BareMetalPlatformStatus":                                  schema_openshift_api_config_v1_BareMetalPlatformStatus(ref),
 		"github.com/openshift/api/config/v1.BasicAuthIdentityProvider":                                schema_openshift_api_config_v1_BasicAuthIdentityProvider(ref),
@@ -294,6 +295,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.NodeList":                                                 schema_openshift_api_config_v1_NodeList(ref),
 		"github.com/openshift/api/config/v1.NodeSpec":                                                 schema_openshift_api_config_v1_NodeSpec(ref),
 		"github.com/openshift/api/config/v1.NodeStatus":                                               schema_openshift_api_config_v1_NodeStatus(ref),
+		"github.com/openshift/api/config/v1.NutanixPlatformLoadBalancer":                              schema_openshift_api_config_v1_NutanixPlatformLoadBalancer(ref),
 		"github.com/openshift/api/config/v1.NutanixPlatformSpec":                                      schema_openshift_api_config_v1_NutanixPlatformSpec(ref),
 		"github.com/openshift/api/config/v1.NutanixPlatformStatus":                                    schema_openshift_api_config_v1_NutanixPlatformStatus(ref),
 		"github.com/openshift/api/config/v1.NutanixPrismElementEndpoint":                              schema_openshift_api_config_v1_NutanixPrismElementEndpoint(ref),
@@ -308,6 +310,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.OldTLSProfile":                                            schema_openshift_api_config_v1_OldTLSProfile(ref),
 		"github.com/openshift/api/config/v1.OpenIDClaims":                                             schema_openshift_api_config_v1_OpenIDClaims(ref),
 		"github.com/openshift/api/config/v1.OpenIDIdentityProvider":                                   schema_openshift_api_config_v1_OpenIDIdentityProvider(ref),
+		"github.com/openshift/api/config/v1.OpenStackPlatformLoadBalancer":                            schema_openshift_api_config_v1_OpenStackPlatformLoadBalancer(ref),
 		"github.com/openshift/api/config/v1.OpenStackPlatformSpec":                                    schema_openshift_api_config_v1_OpenStackPlatformSpec(ref),
 		"github.com/openshift/api/config/v1.OpenStackPlatformStatus":                                  schema_openshift_api_config_v1_OpenStackPlatformStatus(ref),
 		"github.com/openshift/api/config/v1.OperandVersion":                                           schema_openshift_api_config_v1_OperandVersion(ref),
@@ -315,6 +318,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.OperatorHubList":                                          schema_openshift_api_config_v1_OperatorHubList(ref),
 		"github.com/openshift/api/config/v1.OperatorHubSpec":                                          schema_openshift_api_config_v1_OperatorHubSpec(ref),
 		"github.com/openshift/api/config/v1.OperatorHubStatus":                                        schema_openshift_api_config_v1_OperatorHubStatus(ref),
+		"github.com/openshift/api/config/v1.OvirtPlatformLoadBalancer":                                schema_openshift_api_config_v1_OvirtPlatformLoadBalancer(ref),
 		"github.com/openshift/api/config/v1.OvirtPlatformSpec":                                        schema_openshift_api_config_v1_OvirtPlatformSpec(ref),
 		"github.com/openshift/api/config/v1.OvirtPlatformStatus":                                      schema_openshift_api_config_v1_OvirtPlatformStatus(ref),
 		"github.com/openshift/api/config/v1.PlatformSpec":                                             schema_openshift_api_config_v1_PlatformSpec(ref),
@@ -353,6 +357,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.Update":                                                   schema_openshift_api_config_v1_Update(ref),
 		"github.com/openshift/api/config/v1.UpdateHistory":                                            schema_openshift_api_config_v1_UpdateHistory(ref),
 		"github.com/openshift/api/config/v1.VSpherePlatformFailureDomainSpec":                         schema_openshift_api_config_v1_VSpherePlatformFailureDomainSpec(ref),
+		"github.com/openshift/api/config/v1.VSpherePlatformLoadBalancer":                              schema_openshift_api_config_v1_VSpherePlatformLoadBalancer(ref),
 		"github.com/openshift/api/config/v1.VSpherePlatformNodeNetworking":                            schema_openshift_api_config_v1_VSpherePlatformNodeNetworking(ref),
 		"github.com/openshift/api/config/v1.VSpherePlatformNodeNetworkingSpec":                        schema_openshift_api_config_v1_VSpherePlatformNodeNetworkingSpec(ref),
 		"github.com/openshift/api/config/v1.VSpherePlatformSpec":                                      schema_openshift_api_config_v1_VSpherePlatformSpec(ref),
@@ -9004,6 +9009,37 @@ func schema_openshift_api_config_v1_AzureResourceTag(ref common.ReferenceCallbac
 	}
 }
 
+func schema_openshift_api_config_v1_BareMetalPlatformLoadBalancer(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "BareMetalPlatformLoadBalancer defines the load balancer used by the cluster on BareMetal platform.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type defines the type of load balancer used by the cluster on BareMetal platform which can be a user-managed or openshift-managed load balancer that is to be used for the OpenShift API and Ingress endpoints. When set to OpenShiftManagedDefault the static pods in charge of API and Ingress traffic load-balancing defined in the machine config operator will be deployed. When set to UserManaged these static pods will not be deployed and it is expected that the load balancer is configured out of band by the deployer. When omitted, this means no opinion and the platform is left to choose a reasonable default. The default value is OpenShiftManagedDefault.",
+							Default:     "OpenShiftManagedDefault",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator":            "type",
+							"fields-to-discriminateBy": map[string]interface{}{},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_config_v1_BareMetalPlatformSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -9073,10 +9109,19 @@ func schema_openshift_api_config_v1_BareMetalPlatformStatus(ref common.Reference
 							Format:      "",
 						},
 					},
+					"loadBalancer": {
+						SchemaProps: spec.SchemaProps{
+							Description: "loadBalancer defines how the load balancer used by the cluster is configured.",
+							Default:     map[string]interface{}{"type": "OpenShiftManagedDefault"},
+							Ref:         ref("github.com/openshift/api/config/v1.BareMetalPlatformLoadBalancer"),
+						},
+					},
 				},
 				Required: []string{"apiServerInternalIPs", "ingressIPs"},
 			},
 		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.BareMetalPlatformLoadBalancer"},
 	}
 }
 
@@ -14307,6 +14352,37 @@ func schema_openshift_api_config_v1_NodeStatus(ref common.ReferenceCallback) com
 	}
 }
 
+func schema_openshift_api_config_v1_NutanixPlatformLoadBalancer(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NutanixPlatformLoadBalancer defines the load balancer used by the cluster on Nutanix platform.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type defines the type of load balancer used by the cluster on Nutanix platform which can be a user-managed or openshift-managed load balancer that is to be used for the OpenShift API and Ingress endpoints. When set to OpenShiftManagedDefault the static pods in charge of API and Ingress traffic load-balancing defined in the machine config operator will be deployed. When set to UserManaged these static pods will not be deployed and it is expected that the load balancer is configured out of band by the deployer. When omitted, this means no opinion and the platform is left to choose a reasonable default. The default value is OpenShiftManagedDefault.",
+							Default:     "OpenShiftManagedDefault",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator":            "type",
+							"fields-to-discriminateBy": map[string]interface{}{},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_config_v1_NutanixPlatformSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -14403,10 +14479,19 @@ func schema_openshift_api_config_v1_NutanixPlatformStatus(ref common.ReferenceCa
 							},
 						},
 					},
+					"loadBalancer": {
+						SchemaProps: spec.SchemaProps{
+							Description: "loadBalancer defines how the load balancer used by the cluster is configured.",
+							Default:     map[string]interface{}{"type": "OpenShiftManagedDefault"},
+							Ref:         ref("github.com/openshift/api/config/v1.NutanixPlatformLoadBalancer"),
+						},
+					},
 				},
 				Required: []string{"apiServerInternalIPs", "ingressIPs"},
 			},
 		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.NutanixPlatformLoadBalancer"},
 	}
 }
 
@@ -14944,6 +15029,37 @@ func schema_openshift_api_config_v1_OpenIDIdentityProvider(ref common.ReferenceC
 	}
 }
 
+func schema_openshift_api_config_v1_OpenStackPlatformLoadBalancer(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "OpenStackPlatformLoadBalancer defines the load balancer used by the cluster on OpenStack platform.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type defines the type of load balancer used by the cluster on OpenStack platform which can be a user-managed or openshift-managed load balancer that is to be used for the OpenShift API and Ingress endpoints. When set to OpenShiftManagedDefault the static pods in charge of API and Ingress traffic load-balancing defined in the machine config operator will be deployed. When set to UserManaged these static pods will not be deployed and it is expected that the load balancer is configured out of band by the deployer. When omitted, this means no opinion and the platform is left to choose a reasonable default. The default value is OpenShiftManagedDefault.",
+							Default:     "OpenShiftManagedDefault",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator":            "type",
+							"fields-to-discriminateBy": map[string]interface{}{},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_config_v1_OpenStackPlatformSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -15020,10 +15136,19 @@ func schema_openshift_api_config_v1_OpenStackPlatformStatus(ref common.Reference
 							Format:      "",
 						},
 					},
+					"loadBalancer": {
+						SchemaProps: spec.SchemaProps{
+							Description: "loadBalancer defines how the load balancer used by the cluster is configured.",
+							Default:     map[string]interface{}{"type": "OpenShiftManagedDefault"},
+							Ref:         ref("github.com/openshift/api/config/v1.OpenStackPlatformLoadBalancer"),
+						},
+					},
 				},
 				Required: []string{"apiServerInternalIPs", "ingressIPs"},
 			},
 		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.OpenStackPlatformLoadBalancer"},
 	}
 }
 
@@ -15218,6 +15343,37 @@ func schema_openshift_api_config_v1_OperatorHubStatus(ref common.ReferenceCallba
 	}
 }
 
+func schema_openshift_api_config_v1_OvirtPlatformLoadBalancer(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "OvirtPlatformLoadBalancer defines the load balancer used by the cluster on Ovirt platform.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type defines the type of load balancer used by the cluster on Ovirt platform which can be a user-managed or openshift-managed load balancer that is to be used for the OpenShift API and Ingress endpoints. When set to OpenShiftManagedDefault the static pods in charge of API and Ingress traffic load-balancing defined in the machine config operator will be deployed. When set to UserManaged these static pods will not be deployed and it is expected that the load balancer is configured out of band by the deployer. When omitted, this means no opinion and the platform is left to choose a reasonable default. The default value is OpenShiftManagedDefault.",
+							Default:     "OpenShiftManagedDefault",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator":            "type",
+							"fields-to-discriminateBy": map[string]interface{}{},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_config_v1_OvirtPlatformSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -15287,10 +15443,19 @@ func schema_openshift_api_config_v1_OvirtPlatformStatus(ref common.ReferenceCall
 							Format:      "",
 						},
 					},
+					"loadBalancer": {
+						SchemaProps: spec.SchemaProps{
+							Description: "loadBalancer defines how the load balancer used by the cluster is configured.",
+							Default:     map[string]interface{}{"type": "OpenShiftManagedDefault"},
+							Ref:         ref("github.com/openshift/api/config/v1.OvirtPlatformLoadBalancer"),
+						},
+					},
 				},
 				Required: []string{"apiServerInternalIPs", "ingressIPs"},
 			},
 		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.OvirtPlatformLoadBalancer"},
 	}
 }
 
@@ -17095,6 +17260,37 @@ func schema_openshift_api_config_v1_VSpherePlatformFailureDomainSpec(ref common.
 	}
 }
 
+func schema_openshift_api_config_v1_VSpherePlatformLoadBalancer(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VSpherePlatformLoadBalancer defines the load balancer used by the cluster on VSphere platform.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type defines the type of load balancer used by the cluster on VSphere platform which can be a user-managed or openshift-managed load balancer that is to be used for the OpenShift API and Ingress endpoints. When set to OpenShiftManagedDefault the static pods in charge of API and Ingress traffic load-balancing defined in the machine config operator will be deployed. When set to UserManaged these static pods will not be deployed and it is expected that the load balancer is configured out of band by the deployer. When omitted, this means no opinion and the platform is left to choose a reasonable default. The default value is OpenShiftManagedDefault.",
+							Default:     "OpenShiftManagedDefault",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator":            "type",
+							"fields-to-discriminateBy": map[string]interface{}{},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_config_v1_VSpherePlatformNodeNetworking(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -17282,10 +17478,19 @@ func schema_openshift_api_config_v1_VSpherePlatformStatus(ref common.ReferenceCa
 							Format:      "",
 						},
 					},
+					"loadBalancer": {
+						SchemaProps: spec.SchemaProps{
+							Description: "loadBalancer defines how the load balancer used by the cluster is configured.",
+							Default:     map[string]interface{}{"type": "OpenShiftManagedDefault"},
+							Ref:         ref("github.com/openshift/api/config/v1.VSpherePlatformLoadBalancer"),
+						},
+					},
 				},
 				Required: []string{"apiServerInternalIPs", "ingressIPs"},
 			},
 		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.VSpherePlatformLoadBalancer"},
 	}
 }
 

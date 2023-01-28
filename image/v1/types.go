@@ -374,6 +374,8 @@ type TagEvent struct {
 	Image string `json:"image" protobuf:"bytes,3,opt,name=image"`
 	// Generation is the spec tag generation that resulted in this tag being updated
 	Generation int64 `json:"generation" protobuf:"varint,4,opt,name=generation"`
+	// Platforms is all platforms supported by the image in this tag as a list of "os/architecture" strings
+	Platforms []string `json:"platforms,omitempty" protobuf:"bytes,5,rep,name=platforms"`
 }
 
 type TagEventConditionType string

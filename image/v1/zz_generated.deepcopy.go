@@ -947,6 +947,11 @@ func (in *SignatureSubject) DeepCopy() *SignatureSubject {
 func (in *TagEvent) DeepCopyInto(out *TagEvent) {
 	*out = *in
 	in.Created.DeepCopyInto(&out.Created)
+	if in.Platforms != nil {
+		in, out := &in.Platforms, &out.Platforms
+		*out = make([]string, len(*in))
+		copy(*out, *in)
+	}
 	return
 }
 

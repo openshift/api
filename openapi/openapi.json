@@ -12305,6 +12305,14 @@
           "description": "Image is the image",
           "type": "string",
           "default": ""
+        },
+        "platforms": {
+          "description": "Platforms is all platforms supported by the image in this tag as a list of \"os/architecture\" strings",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
         }
       }
     },

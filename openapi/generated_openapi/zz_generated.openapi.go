@@ -21979,6 +21979,21 @@ func schema_openshift_api_image_v1_TagEvent(ref common.ReferenceCallback) common
 							Format:      "int64",
 						},
 					},
+					"platforms": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Platforms is all platforms supported by the image in this tag as a list of \"os/architecture\" strings",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"created", "dockerImageReference", "image", "generation"},
 			},

@@ -633,6 +633,9 @@ message TagEvent {
 
   // Generation is the spec tag generation that resulted in this tag being updated
   optional int64 generation = 4;
+
+  // Platforms is all platforms supported by the image in this tag as a list of "os/architecture" strings
+  repeated string platforms = 5;
 }
 
 // TagEventCondition contains condition information for a tag event.

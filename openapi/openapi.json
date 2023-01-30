@@ -5144,8 +5144,7 @@
         "desired",
         "observedGeneration",
         "versionHash",
-        "capabilities",
-        "availableUpdates"
+        "capabilities"
       ],
       "properties": {
         "availableUpdates": {

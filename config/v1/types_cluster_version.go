@@ -146,10 +146,8 @@ type ClusterVersionStatus struct {
 	// availableUpdates may expose this cluster to known issues. This list
 	// may be empty if no updates are recommended, if the update service
 	// is unavailable, or if an invalid channel has been specified.
-	// +nullable
-	// +kubebuilder:validation:Required
-	// +required
-	AvailableUpdates []Release `json:"availableUpdates"`
+	// +optional
+	AvailableUpdates []Release `json:"availableUpdates,omitempty"`
 
 	// conditionalUpdates contains the list of updates that may be
 	// recommended for this cluster if it meets specific required

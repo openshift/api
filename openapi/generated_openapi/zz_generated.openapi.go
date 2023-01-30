@@ -10073,7 +10073,7 @@ func schema_openshift_api_config_v1_ClusterVersionStatus(ref common.ReferenceCal
 						},
 					},
 				},
-				Required: []string{"desired", "observedGeneration", "versionHash", "capabilities", "availableUpdates"},
+				Required: []string{"desired", "observedGeneration", "versionHash", "capabilities"},
 			},
 		},
 		Dependencies: []string{

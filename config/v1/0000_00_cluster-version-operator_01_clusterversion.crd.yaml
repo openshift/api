@@ -146,7 +146,6 @@ spec:
               description: status contains information about the available updates and any in-progress updates.
               type: object
               required:
-                - availableUpdates
                 - desired
                 - observedGeneration
                 - versionHash
@@ -172,7 +171,6 @@ spec:
                       version:
                         description: version is a semantic version identifying the update version. When this field is part of spec, version is optional if image is specified.
                         type: string
-                  nullable: true
                 capabilities:
                   description: capabilities describes the state of optional, core cluster components.
                   type: object

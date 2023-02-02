@@ -8953,7 +8953,6 @@ func schema_openshift_api_config_v1_AzurePlatformStatus(ref common.ReferenceCall
 					"resourceTags": {
 						SchemaProps: spec.SchemaProps{
 							Description: "resourceTags is a list of additional tags to apply to Azure resources created for the cluster. See https://docs.microsoft.com/en-us/rest/api/resources/tags for information on tagging Azure resources. Due to limitations on Automation, Content Delivery Network, DNS Azure resources, a maximum of 15 tags may be applied. OpenShift reserves 5 tags for internal use, allowing 10 tags for user configuration.",
-							Default:     "Unknown",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{

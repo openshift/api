@@ -535,7 +535,6 @@ spec:
                           description: resourceGroupName is the Resource Group for new Azure resources created for the cluster.
                           type: string
                         resourceTags:
-                          default: Unknown
                           description: resourceTags is a list of additional tags to apply to Azure resources created for the cluster. See https://docs.microsoft.com/en-us/rest/api/resources/tags for information on tagging Azure resources. Due to limitations on Automation, Content Delivery Network, DNS Azure resources, a maximum of 15 tags may be applied. OpenShift reserves 5 tags for internal use, allowing 10 tags for user configuration.
                           items:
                             description: AzureResourceTag is a tag to apply to Azure resources created for the cluster.
@@ -560,7 +559,7 @@ spec:
                           type: array
                           x-kubernetes-validations:
                             - message: resourceTags once configured cannot be modified
-                              rule: oldSelf == 'Unknown' || self == oldSelf
+                              rule: self == oldSelf
                       type: object
                     baremetal:
                       description: BareMetal contains settings specific to the BareMetal platform.

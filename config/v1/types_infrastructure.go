@@ -484,9 +484,7 @@ type AzurePlatformStatus struct {
 	// Due to limitations on Automation, Content Delivery Network, DNS Azure resources, a maximum of 15 tags
 	// may be applied. OpenShift reserves 5 tags for internal use, allowing 10 tags for user configuration.
 	// +kubebuilder:validation:MaxItems=10
-	// +kubebuilder:default:="Unknown"
-	// +default="Unknown"
-	// +kubebuilder:validation:XValidation:rule="oldSelf == 'Unknown' || self == oldSelf",message="resourceTags once configured cannot be modified"
+	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="resourceTags once configured cannot be modified"
 	// +optional
 	ResourceTags []AzureResourceTag `json:"resourceTags,omitempty"`
 }

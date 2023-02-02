@@ -500,7 +500,6 @@ type AzureResourceTag struct {
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=128
 	// +kubebuilder:validation:Pattern=`^[a-zA-Z]([0-9A-Za-z_.-]*[0-9A-Za-z_])?$`
-	// +required
 	Key string `json:"key"`
 	// value is the value part of the tag. A tag value can have a maximum of 256 characters and cannot be empty. Value
 	// must contain only alphanumeric characters and the following special characters `_ + , - . / : ; < = > ? @`.
@@ -508,7 +507,6 @@ type AzureResourceTag struct {
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=256
 	// +kubebuilder:validation:Pattern=`^[0-9A-Za-z_.=+-@]+$`
-	// +required
 	Value string `json:"value"`
 }
 

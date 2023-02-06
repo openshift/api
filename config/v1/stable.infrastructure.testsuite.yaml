@@ -56,3 +56,23 @@ tests:
             external:
               platformName: SomeOtherCoolplatformName
       expectedError: " spec.platformSpec.external.platformName: Invalid value: \"string\": platform name cannot be changed once set"
+    - name: Should not be able to update Azure ResourceTags
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: "HighlyAvailable"
+          infrastructureTopology: "HighlyAvailable"
+          platform: Azure
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          platform: Azure
+          platformStatus:
+            azure:
+              resourceTags:
+                - {key: "key", value: "value"}
+      expectedStatusError: "status.platformStatus.azure.resourceTags: resourceTags once configured cannot be modified"

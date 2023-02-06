@@ -460,6 +460,7 @@ type AWSResourceTag struct {
 type AzurePlatformSpec struct{}
 
 // AzurePlatformStatus holds the current status of the Azure infrastructure provider.
+// +kubebuilder:validation:XValidation:rule="!has(oldSelf.resourceTags) && !has(self.resourceTags) || has(oldSelf.resourceTags) && has(self.resourceTags)",message="resourceTags may only be configured during installation"
 type AzurePlatformStatus struct {
 	// resourceGroupName is the Resource Group for new Azure resources created for the cluster.
 	ResourceGroupName string `json:"resourceGroupName"`
@@ -484,7 +485,7 @@ type AzurePlatformStatus struct {
 	// Due to limitations on Automation, Content Delivery Network, DNS Azure resources, a maximum of 15 tags
 	// may be applied. OpenShift reserves 5 tags for internal use, allowing 10 tags for user configuration.
 	// +kubebuilder:validation:MaxItems=10
-	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="resourceTags once configured cannot be modified"
+	// +kubebuilder:validation:XValidation:rule="self.all(x, x in oldSelf) && oldSelf.all(x, x in self)",message="resourceTags are immutable and may only be configured during installation"
 	// +optional
 	ResourceTags []AzureResourceTag `json:"resourceTags,omitempty"`
 }

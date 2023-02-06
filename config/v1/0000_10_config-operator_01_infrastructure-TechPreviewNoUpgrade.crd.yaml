@@ -558,9 +558,12 @@ spec:
                           maxItems: 10
                           type: array
                           x-kubernetes-validations:
-                            - message: resourceTags once configured cannot be modified
-                              rule: self == oldSelf
+                            - message: resourceTags are immutable and may only be configured during installation
+                              rule: self.all(x, x in oldSelf) && oldSelf.all(x, x in self)
                       type: object
+                      x-kubernetes-validations:
+                        - message: resourceTags may only be configured during installation
+                          rule: '!has(oldSelf.resourceTags) && !has(self.resourceTags) || has(oldSelf.resourceTags) && has(self.resourceTags)'
                     baremetal:
                       description: BareMetal contains settings specific to the BareMetal platform.
                       properties:

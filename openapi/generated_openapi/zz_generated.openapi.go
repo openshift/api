@@ -582,6 +582,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/machine/v1.DataDiskProperties":                                      schema_openshift_api_machine_v1_DataDiskProperties(ref),
 		"github.com/openshift/api/machine/v1.FailureDomains":                                          schema_openshift_api_machine_v1_FailureDomains(ref),
 		"github.com/openshift/api/machine/v1.GCPFailureDomain":                                        schema_openshift_api_machine_v1_GCPFailureDomain(ref),
+		"github.com/openshift/api/machine/v1.NutanixCategory":                                         schema_openshift_api_machine_v1_NutanixCategory(ref),
 		"github.com/openshift/api/machine/v1.NutanixMachineProviderConfig":                            schema_openshift_api_machine_v1_NutanixMachineProviderConfig(ref),
 		"github.com/openshift/api/machine/v1.NutanixMachineProviderStatus":                            schema_openshift_api_machine_v1_NutanixMachineProviderStatus(ref),
 		"github.com/openshift/api/machine/v1.NutanixResourceIdentifier":                               schema_openshift_api_machine_v1_NutanixResourceIdentifier(ref),
@@ -28903,6 +28904,36 @@ func schema_openshift_api_machine_v1_GCPFailureDomain(ref common.ReferenceCallba
 	}
 }
 
+func schema_openshift_api_machine_v1_NutanixCategory(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NutanixCategory identifies a pair of prism category key and value",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"key": {
+						SchemaProps: spec.SchemaProps{
+							Description: "key is the prism category key name",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"value": {
+						SchemaProps: spec.SchemaProps{
+							Description: "value is the prism category value associated with the key",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"key", "value"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_machine_v1_NutanixMachineProviderConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -28988,6 +29019,43 @@ func schema_openshift_api_machine_v1_NutanixMachineProviderConfig(ref common.Ref
 							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
 						},
 					},
+					"bootType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "bootType indicates the boot type (Legacy, UEFI or SecureBoot) the Machine's VM uses to boot. If this field is empty or omitted, the VM will use the default boot type \"Legacy\" to boot. \"SecureBoot\" depends on \"UEFI\" boot, i.e., enabling \"SecureBoot\" means that \"UEFI\" boot is also enabled.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"project": {
+						SchemaProps: spec.SchemaProps{
+							Description: "project optionally identifies a Prism project for the Machine's VM to associate with.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/machine/v1.NutanixResourceIdentifier"),
+						},
+					},
+					"categories": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"key",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "categories optionally adds one or more prism categories (each with key and value) for the Machine's VM to associate with. All the category key and value pairs specified must already exist in the prism central.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machine/v1.NutanixCategory"),
+									},
+								},
+							},
+						},
+					},
 					"userDataSecret": {
 						SchemaProps: spec.SchemaProps{
 							Description: "userDataSecret is a local reference to a secret that contains the UserData to apply to the VM",
@@ -29005,7 +29073,7 @@ func schema_openshift_api_machine_v1_NutanixMachineProviderConfig(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1.NutanixResourceIdentifier", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/api/resource.Quantity", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"github.com/openshift/api/machine/v1.NutanixCategory", "github.com/openshift/api/machine/v1.NutanixResourceIdentifier", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/api/resource.Quantity", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 

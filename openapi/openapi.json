@@ -16756,6 +16756,26 @@
         }
       }
     },
+    "com.github.openshift.api.machine.v1.NutanixCategory": {
+      "description": "NutanixCategory identifies a pair of prism category key and value",
+      "type": "object",
+      "required": [
+        "key",
+        "value"
+      ],
+      "properties": {
+        "key": {
+          "description": "key is the prism category key name",
+          "type": "string",
+          "default": ""
+        },
+        "value": {
+          "description": "value is the prism category value associated with the key",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.machine.v1.NutanixMachineProviderConfig": {
       "description": "NutanixMachineProviderConfig is the Schema for the nutanixmachineproviderconfigs API Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
@@ -16773,6 +16793,23 @@
         "apiVersion": {
           "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
           "type": "string"
+        },
+        "bootType": {
+          "description": "bootType indicates the boot type (Legacy, UEFI or SecureBoot) the Machine's VM uses to boot. If this field is empty or omitted, the VM will use the default boot type \"Legacy\" to boot. \"SecureBoot\" depends on \"UEFI\" boot, i.e., enabling \"SecureBoot\" means that \"UEFI\" boot is also enabled.",
+          "type": "string",
+          "default": ""
+        },
+        "categories": {
+          "description": "categories optionally adds one or more prism categories (each with key and value) for the Machine's VM to associate with. All the category key and value pairs specified must already exist in the prism central.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machine.v1.NutanixCategory"
+          },
+          "x-kubernetes-list-map-keys": [
+            "key"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "cluster": {
           "description": "cluster is to identify the cluster (the Prism Element under management of the Prism Central), in which the Machine's VM will be created. The cluster identifier (uuid or name) can be obtained from the Prism Central console or using the prism_central API.",
@@ -16800,6 +16837,11 @@
         "metadata": {
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "project": {
+          "description": "project optionally identifies a Prism project for the Machine's VM to associate with.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machine.v1.NutanixResourceIdentifier"
         },
         "subnets": {
           "description": "subnets holds a list of identifiers (one or more) of the cluster's network subnets for the Machine's VM to connect to. The subnet identifiers (uuid or name) can be obtained from the Prism Central console or using the prism_central API.",

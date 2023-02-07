@@ -789,6 +789,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.HealthCheck":                                            schema_openshift_api_operator_v1_HealthCheck(ref),
 		"github.com/openshift/api/operator/v1.HostNetworkStrategy":                                    schema_openshift_api_operator_v1_HostNetworkStrategy(ref),
 		"github.com/openshift/api/operator/v1.HybridOverlayConfig":                                    schema_openshift_api_operator_v1_HybridOverlayConfig(ref),
+		"github.com/openshift/api/operator/v1.IBMLoadBalancerParameters":                              schema_openshift_api_operator_v1_IBMLoadBalancerParameters(ref),
 		"github.com/openshift/api/operator/v1.IPAMConfig":                                             schema_openshift_api_operator_v1_IPAMConfig(ref),
 		"github.com/openshift/api/operator/v1.IPFIXConfig":                                            schema_openshift_api_operator_v1_IPFIXConfig(ref),
 		"github.com/openshift/api/operator/v1.IPsecConfig":                                            schema_openshift_api_operator_v1_IPsecConfig(ref),
@@ -40177,6 +40178,26 @@ func schema_openshift_api_operator_v1_HybridOverlayConfig(ref common.ReferenceCa
 	}
 }
 
+func schema_openshift_api_operator_v1_IBMLoadBalancerParameters(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "IBMLoadBalancerParameters provides configuration settings that are specific to IBM Cloud load balancers.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"protocol": {
+						SchemaProps: spec.SchemaProps{
+							Description: "protocol specifies whether the load balancer uses PROXY protocol to forward connections to the IngressController. See \"service.kubernetes.io/ibm-load-balancer-cloud-provider-enable-features: \"proxy-protocol\"\" at https://cloud.ibm.com/docs/containers?topic=containers-vpc-lbaas\"\n\nPROXY protocol can be used with load balancers that support it to communicate the source addresses of client connections when forwarding those connections to the IngressController.  Using PROXY protocol enables the IngressController to report those source addresses instead of reporting the load balancer's address in HTTP headers and logs.  Note that enabling PROXY protocol on the IngressController will cause connections to fail if you are not using a load balancer that uses PROXY protocol to forward connections to the IngressController.  See http://www.haproxy.org/download/2.2/doc/proxy-protocol.txt for information about PROXY protocol.\n\nValid values for protocol are TCP, PROXY and omitted. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is TCP, without the proxy protocol enabled.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_operator_v1_IPAMConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -44097,7 +44118,7 @@ func schema_openshift_api_operator_v1_ProviderLoadBalancerParameters(ref common.
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "type is the underlying infrastructure provider for the load balancer. Allowed values are \"AWS\", \"Azure\", \"BareMetal\", \"GCP\", \"Nutanix\", \"OpenStack\", and \"VSphere\".",
+							Description: "type is the underlying infrastructure provider for the load balancer. Allowed values are \"AWS\", \"Azure\", \"BareMetal\", \"GCP\", \"IBM\", \"Nutanix\", \"OpenStack\", and \"VSphere\".",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -44115,6 +44136,12 @@ func schema_openshift_api_operator_v1_ProviderLoadBalancerParameters(ref common.
 							Ref:         ref("github.com/openshift/api/operator/v1.GCPLoadBalancerParameters"),
 						},
 					},
+					"ibm": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ibm provides configuration settings that are specific to IBM Cloud load balancers.\n\nIf empty, defaults will be applied. See specific ibm fields for details about their defaults.",
+							Ref:         ref("github.com/openshift/api/operator/v1.IBMLoadBalancerParameters"),
+						},
+					},
 				},
 				Required: []string{"type"},
 			},
@@ -44126,6 +44153,7 @@ func schema_openshift_api_operator_v1_ProviderLoadBalancerParameters(ref common.
 							"fields-to-discriminateBy": map[string]interface{}{
 								"aws": "AWS",
 								"gcp": "GCP",
+								"ibm": "IBM",
 							},
 						},
 					},
@@ -44133,7 +44161,7 @@ func schema_openshift_api_operator_v1_ProviderLoadBalancerParameters(ref common.
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.AWSLoadBalancerParameters", "github.com/openshift/api/operator/v1.GCPLoadBalancerParameters"},
+			"github.com/openshift/api/operator/v1.AWSLoadBalancerParameters", "github.com/openshift/api/operator/v1.GCPLoadBalancerParameters", "github.com/openshift/api/operator/v1.IBMLoadBalancerParameters"},
 	}
 }
 

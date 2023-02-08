@@ -168,6 +168,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.AuthenticationStatus":                                     schema_openshift_api_config_v1_AuthenticationStatus(ref),
 		"github.com/openshift/api/config/v1.AzurePlatformSpec":                                        schema_openshift_api_config_v1_AzurePlatformSpec(ref),
 		"github.com/openshift/api/config/v1.AzurePlatformStatus":                                      schema_openshift_api_config_v1_AzurePlatformStatus(ref),
+		"github.com/openshift/api/config/v1.AzureResourceTag":                                         schema_openshift_api_config_v1_AzureResourceTag(ref),
 		"github.com/openshift/api/config/v1.BareMetalPlatformSpec":                                    schema_openshift_api_config_v1_BareMetalPlatformSpec(ref),
 		"github.com/openshift/api/config/v1.BareMetalPlatformStatus":                                  schema_openshift_api_config_v1_BareMetalPlatformStatus(ref),
 		"github.com/openshift/api/config/v1.BasicAuthIdentityProvider":                                schema_openshift_api_config_v1_BasicAuthIdentityProvider(ref),
@@ -8950,8 +8951,54 @@ func schema_openshift_api_config_v1_AzurePlatformStatus(ref common.ReferenceCall
 							Format:      "",
 						},
 					},
+					"resourceTags": {
+						SchemaProps: spec.SchemaProps{
+							Description: "resourceTags is a list of additional tags to apply to Azure resources created for the cluster. See https://docs.microsoft.com/en-us/rest/api/resources/tags for information on tagging Azure resources. Due to limitations on Automation, Content Delivery Network, DNS Azure resources, a maximum of 15 tags may be applied. OpenShift reserves 5 tags for internal use, allowing 10 tags for user configuration.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.AzureResourceTag"),
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"resourceGroupName"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.AzureResourceTag"},
+	}
+}
+
+func schema_openshift_api_config_v1_AzureResourceTag(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "AzureResourceTag is a tag to apply to Azure resources created for the cluster.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"key": {
+						SchemaProps: spec.SchemaProps{
+							Description: "key is the key part of the tag. A tag key can have a maximum of 128 characters and cannot be empty. Key must begin with a letter, end with a letter, number or underscore, and must contain only alphanumeric characters and the following special characters `_ . -`.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"value": {
+						SchemaProps: spec.SchemaProps{
+							Description: "value is the value part of the tag. A tag value can have a maximum of 256 characters and cannot be empty. Value must contain only alphanumeric characters and the following special characters `_ + , - . / : ; < = > ? @`.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"key", "value"},
 			},
 		},
 	}

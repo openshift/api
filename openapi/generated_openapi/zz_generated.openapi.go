@@ -632,6 +632,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/machine/v1beta1.AzureMachineProviderStatus":                         schema_openshift_api_machine_v1beta1_AzureMachineProviderStatus(ref),
 		"github.com/openshift/api/machine/v1beta1.BlockDeviceMappingSpec":                             schema_openshift_api_machine_v1beta1_BlockDeviceMappingSpec(ref),
 		"github.com/openshift/api/machine/v1beta1.Condition":                                          schema_openshift_api_machine_v1beta1_Condition(ref),
+		"github.com/openshift/api/machine/v1beta1.ConfidentialVM":                                     schema_openshift_api_machine_v1beta1_ConfidentialVM(ref),
 		"github.com/openshift/api/machine/v1beta1.DataDisk":                                           schema_openshift_api_machine_v1beta1_DataDisk(ref),
 		"github.com/openshift/api/machine/v1beta1.DataDiskManagedDiskParameters":                      schema_openshift_api_machine_v1beta1_DataDiskManagedDiskParameters(ref),
 		"github.com/openshift/api/machine/v1beta1.DiskEncryptionSetParameters":                        schema_openshift_api_machine_v1beta1_DiskEncryptionSetParameters(ref),
@@ -675,10 +676,14 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/machine/v1beta1.Placement":                                          schema_openshift_api_machine_v1beta1_Placement(ref),
 		"github.com/openshift/api/machine/v1beta1.ProviderSpec":                                       schema_openshift_api_machine_v1beta1_ProviderSpec(ref),
 		"github.com/openshift/api/machine/v1beta1.SecurityProfile":                                    schema_openshift_api_machine_v1beta1_SecurityProfile(ref),
+		"github.com/openshift/api/machine/v1beta1.SecuritySettings":                                   schema_openshift_api_machine_v1beta1_SecuritySettings(ref),
 		"github.com/openshift/api/machine/v1beta1.SpotMarketOptions":                                  schema_openshift_api_machine_v1beta1_SpotMarketOptions(ref),
 		"github.com/openshift/api/machine/v1beta1.SpotVMOptions":                                      schema_openshift_api_machine_v1beta1_SpotVMOptions(ref),
 		"github.com/openshift/api/machine/v1beta1.TagSpecification":                                   schema_openshift_api_machine_v1beta1_TagSpecification(ref),
+		"github.com/openshift/api/machine/v1beta1.TrustedLaunch":                                      schema_openshift_api_machine_v1beta1_TrustedLaunch(ref),
+		"github.com/openshift/api/machine/v1beta1.UEFISettings":                                       schema_openshift_api_machine_v1beta1_UEFISettings(ref),
 		"github.com/openshift/api/machine/v1beta1.UnhealthyCondition":                                 schema_openshift_api_machine_v1beta1_UnhealthyCondition(ref),
+		"github.com/openshift/api/machine/v1beta1.VMDiskSecurityProfile":                              schema_openshift_api_machine_v1beta1_VMDiskSecurityProfile(ref),
 		"github.com/openshift/api/machine/v1beta1.VSphereMachineProviderSpec":                         schema_openshift_api_machine_v1beta1_VSphereMachineProviderSpec(ref),
 		"github.com/openshift/api/machine/v1beta1.VSphereMachineProviderStatus":                       schema_openshift_api_machine_v1beta1_VSphereMachineProviderStatus(ref),
 		"github.com/openshift/api/machine/v1beta1.Workspace":                                          schema_openshift_api_machine_v1beta1_Workspace(ref),
@@ -32396,6 +32401,28 @@ func schema_openshift_api_machine_v1beta1_Condition(ref common.ReferenceCallback
 	}
 }
 
+func schema_openshift_api_machine_v1beta1_ConfidentialVM(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ConfidentialVM defines the UEFI settings for the virtual machine.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"uefiSettings": {
+						SchemaProps: spec.SchemaProps{
+							Description: "uefiSettings specifies the security settings like secure boot and vTPM used while creating the virtual machine.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/machine/v1beta1.UEFISettings"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machine/v1beta1.UEFISettings"},
+	}
+}
+
 func schema_openshift_api_machine_v1beta1_DataDisk(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -34306,12 +34333,19 @@ func schema_openshift_api_machine_v1beta1_OSDiskManagedDiskParameters(ref common
 							Ref:         ref("github.com/openshift/api/machine/v1beta1.DiskEncryptionSetParameters"),
 						},
 					},
+					"securityProfile": {
+						SchemaProps: spec.SchemaProps{
+							Description: "securityProfile specifies the security profile for the managed disk.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/machine/v1beta1.VMDiskSecurityProfile"),
+						},
+					},
 				},
 				Required: []string{"storageAccountType"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.DiskEncryptionSetParameters"},
+			"github.com/openshift/api/machine/v1beta1.DiskEncryptionSetParameters", "github.com/openshift/api/machine/v1beta1.VMDiskSecurityProfile"},
 	}
 }
 
@@ -34467,14 +34501,70 @@ func schema_openshift_api_machine_v1beta1_SecurityProfile(ref common.ReferenceCa
 				Properties: map[string]spec.Schema{
 					"encryptionAtHost": {
 						SchemaProps: spec.SchemaProps{
-							Description: "This field indicates whether Host Encryption should be enabled or disabled for a virtual machine or virtual machine scale set. Default is disabled.",
+							Description: "encryptionAtHost indicates whether Host Encryption should be enabled or disabled for a virtual machine or virtual machine scale set. This should be disabled when SecurityEncryptionType is set to DiskWithVMGuestState. Default is disabled.",
 							Type:        []string{"boolean"},
 							Format:      "",
+						},
+					},
+					"settings": {
+						SchemaProps: spec.SchemaProps{
+							Description: "settings specify the security type and the UEFI settings of the virtual machine. This field can be set for Confidential VMs and Trusted Launch for VMs.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/machine/v1beta1.SecuritySettings"),
 						},
 					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"github.com/openshift/api/machine/v1beta1.SecuritySettings"},
+	}
+}
+
+func schema_openshift_api_machine_v1beta1_SecuritySettings(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "SecuritySettings define the security type and the UEFI settings of the virtual machine.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"securityType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "securityType specifies the SecurityType of the virtual machine. It has to be set to any specified value to enable UEFISettings. The default behavior is: UEFISettings will not be enabled unless this property is set.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"confidentialVM": {
+						SchemaProps: spec.SchemaProps{
+							Description: "confidentialVM specifies the security configuration of the virtual machine. For more information regarding Confidential VMs, please refer to: https://learn.microsoft.com/azure/confidential-computing/confidential-vm-overview",
+							Ref:         ref("github.com/openshift/api/machine/v1beta1.ConfidentialVM"),
+						},
+					},
+					"trustedLaunch": {
+						SchemaProps: spec.SchemaProps{
+							Description: "trustedLaunch specifies the security configuration of the virtual machine. For more information regarding TrustedLaunch for VMs, please refer to: https://learn.microsoft.com/azure/virtual-machines/trusted-launch",
+							Ref:         ref("github.com/openshift/api/machine/v1beta1.TrustedLaunch"),
+						},
+					},
+				},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "securityType",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"confidentialVM": "ConfidentialVM",
+								"trustedLaunch":  "TrustedLaunch",
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machine/v1beta1.ConfidentialVM", "github.com/openshift/api/machine/v1beta1.TrustedLaunch"},
 	}
 }
 
@@ -34549,6 +34639,55 @@ func schema_openshift_api_machine_v1beta1_TagSpecification(ref common.ReferenceC
 	}
 }
 
+func schema_openshift_api_machine_v1beta1_TrustedLaunch(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "TrustedLaunch defines the UEFI settings for the virtual machine.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"uefiSettings": {
+						SchemaProps: spec.SchemaProps{
+							Description: "uefiSettings specifies the security settings like secure boot and vTPM used while creating the virtual machine.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/machine/v1beta1.UEFISettings"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machine/v1beta1.UEFISettings"},
+	}
+}
+
+func schema_openshift_api_machine_v1beta1_UEFISettings(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "UEFISettings specifies the security settings like secure boot and vTPM used while creating the virtual machine.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"secureBoot": {
+						SchemaProps: spec.SchemaProps{
+							Description: "secureBoot specifies whether secure boot should be enabled on the virtual machine. Secure Boot verifies the digital signature of all boot components and halts the boot process if signature verification fails. If omitted, the platform chooses a default, which is subject to change over time, currently that default is disabled.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"virtualizedTrustedPlatformModule": {
+						SchemaProps: spec.SchemaProps{
+							Description: "virtualizedTrustedPlatformModule specifies whether vTPM should be enabled on the virtual machine. When enabled the virtualized trusted platform module measurements are used to create a known good boot integrity policy baseline. The integrity policy baseline is used for comparison with measurements from subsequent VM boots to determine if anything has changed. This is required to be enabled if SecurityEncryptionType is defined. If omitted, the platform chooses a default, which is subject to change over time, currently that default is disabled.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_machine_v1beta1_UnhealthyCondition(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -34583,6 +34722,35 @@ func schema_openshift_api_machine_v1beta1_UnhealthyCondition(ref common.Referenc
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+	}
+}
+
+func schema_openshift_api_machine_v1beta1_VMDiskSecurityProfile(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VMDiskSecurityProfile specifies the security profile settings for the managed disk. It can be set only for Confidential VMs.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"diskEncryptionSet": {
+						SchemaProps: spec.SchemaProps{
+							Description: "diskEncryptionSet specifies the customer managed disk encryption set resource id for the managed disk that is used for Customer Managed Key encrypted ConfidentialVM OS Disk and VMGuest blob.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/machine/v1beta1.DiskEncryptionSetParameters"),
+						},
+					},
+					"securityEncryptionType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "securityEncryptionType specifies the encryption type of the managed disk. It is set to DiskWithVMGuestState to encrypt the managed disk along with the VMGuestState blob, and to VMGuestStateOnly to encrypt the VMGuestState blob only. When set to VMGuestStateOnly, the vTPM should be enabled. When set to DiskWithVMGuestState, both SecureBoot and vTPM should be enabled. If the above conditions are not fulfilled, the VM will not be created and the respective error will be returned. It can be set only for Confidential VMs. Confidential VMs are defined by their SecurityProfile.SecurityType being set to ConfidentialVM, the SecurityEncryptionType of their OS disk being set to one of the allowed values and by enabling the respective SecurityProfile.UEFISettings of the VM (i.e. vTPM and SecureBoot), depending on the selected SecurityEncryptionType. For further details on Azure Confidential VMs, please refer to the respective documentation: https://learn.microsoft.com/azure/confidential-computing/confidential-vm-overview",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machine/v1beta1.DiskEncryptionSetParameters"},
 	}
 }
 

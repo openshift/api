@@ -17569,6 +17569,28 @@
         }
       }
     },
+    "com.github.openshift.api.machine.v1alpha1.FailureDomain": {
+      "description": "FailureDomain defines a set of correlated fault domains across different OpenStack services: compute, storage, and network.",
+      "type": "object",
+      "properties": {
+        "computeAvailabilityZone": {
+          "description": "ComputeAvailabilityZone is the name of a valid nova availability zone. The server will be created in this availability zone.",
+          "type": "string"
+        },
+        "ports": {
+          "description": "Ports defines a set of ports and their attached networks. These will be prepended to any another ports attached to the server.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machine.v1alpha1.PortOpts"
+          }
+        },
+        "storageAvailabilityZone": {
+          "description": "StorageAvailabilityZone is the name of a valid cinder availability zone. This will be the availability zone of the root volume if one is specified.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.machine.v1alpha1.Filter": {
       "type": "object",
       "properties": {
@@ -17725,7 +17747,7 @@
           "type": "string"
         },
         "availabilityZone": {
-          "description": "The availability zone from which to launch the server.",
+          "description": "The availability zone from which to launch the server. It is an error to set both this and `ComputeAvailabilityZone` in `FailureDomain`.",
           "type": "string"
         },
         "cloudName": {
@@ -17740,6 +17762,11 @@
         "configDrive": {
           "description": "Config Drive support",
           "type": "boolean"
+        },
+        "failureDomain": {
+          "description": "failureDomain defines the failure domain this machine will be created in.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machine.v1alpha1.FailureDomain"
         },
         "flavor": {
           "description": "The flavor reference for the flavor for your server instance.",
@@ -17935,7 +17962,7 @@
       "type": "object",
       "properties": {
         "availabilityZone": {
-          "description": "availabilityZone specifies the Cinder availability where the root volume will be created.",
+          "description": "availabilityZone specifies the Cinder availability where the root volume will be created. It is an error to set both this and `StorageAvailabilityZone` in `FailureDomain`.",
           "type": "string"
         },
         "deviceType": {

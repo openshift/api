@@ -603,6 +603,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/machine/v1.SystemDiskProperties":                                    schema_openshift_api_machine_v1_SystemDiskProperties(ref),
 		"github.com/openshift/api/machine/v1.Tag":                                                     schema_openshift_api_machine_v1_Tag(ref),
 		"github.com/openshift/api/machine/v1alpha1.AddressPair":                                       schema_openshift_api_machine_v1alpha1_AddressPair(ref),
+		"github.com/openshift/api/machine/v1alpha1.FailureDomain":                                     schema_openshift_api_machine_v1alpha1_FailureDomain(ref),
 		"github.com/openshift/api/machine/v1alpha1.Filter":                                            schema_openshift_api_machine_v1alpha1_Filter(ref),
 		"github.com/openshift/api/machine/v1alpha1.FixedIPs":                                          schema_openshift_api_machine_v1alpha1_FixedIPs(ref),
 		"github.com/openshift/api/machine/v1alpha1.NetworkParam":                                      schema_openshift_api_machine_v1alpha1_NetworkParam(ref),
@@ -30179,6 +30180,49 @@ func schema_openshift_api_machine_v1alpha1_AddressPair(ref common.ReferenceCallb
 	}
 }
 
+func schema_openshift_api_machine_v1alpha1_FailureDomain(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "FailureDomain defines a set of correlated fault domains across different OpenStack services: compute, storage, and network.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"computeAvailabilityZone": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ComputeAvailabilityZone is the name of a valid nova availability zone. The server will be created in this availability zone.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"storageAvailabilityZone": {
+						SchemaProps: spec.SchemaProps{
+							Description: "StorageAvailabilityZone is the name of a valid cinder availability zone. This will be the availability zone of the root volume if one is specified.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"ports": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Ports defines a set of ports and their attached networks. These will be prepended to any another ports attached to the server.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machine/v1alpha1.PortOpts"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machine/v1alpha1.PortOpts"},
+	}
+}
+
 func schema_openshift_api_machine_v1alpha1_Filter(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -30541,7 +30585,7 @@ func schema_openshift_api_machine_v1alpha1_OpenstackProviderSpec(ref common.Refe
 					},
 					"availabilityZone": {
 						SchemaProps: spec.SchemaProps{
-							Description: "The availability zone from which to launch the server.",
+							Description: "The availability zone from which to launch the server. It is an error to set both this and `ComputeAvailabilityZone` in `FailureDomain`.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -30638,12 +30682,19 @@ func schema_openshift_api_machine_v1alpha1_OpenstackProviderSpec(ref common.Refe
 							Format:      "",
 						},
 					},
+					"failureDomain": {
+						SchemaProps: spec.SchemaProps{
+							Description: "failureDomain defines the failure domain this machine will be created in.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/machine/v1alpha1.FailureDomain"),
+						},
+					},
 				},
 				Required: []string{"cloudsSecret", "cloudName", "flavor", "image"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1alpha1.NetworkParam", "github.com/openshift/api/machine/v1alpha1.PortOpts", "github.com/openshift/api/machine/v1alpha1.RootVolume", "github.com/openshift/api/machine/v1alpha1.SecurityGroupParam", "k8s.io/api/core/v1.SecretReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"github.com/openshift/api/machine/v1alpha1.FailureDomain", "github.com/openshift/api/machine/v1alpha1.NetworkParam", "github.com/openshift/api/machine/v1alpha1.PortOpts", "github.com/openshift/api/machine/v1alpha1.RootVolume", "github.com/openshift/api/machine/v1alpha1.SecurityGroupParam", "k8s.io/api/core/v1.SecretReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -30843,7 +30894,7 @@ func schema_openshift_api_machine_v1alpha1_RootVolume(ref common.ReferenceCallba
 					},
 					"availabilityZone": {
 						SchemaProps: spec.SchemaProps{
-							Description: "availabilityZone specifies the Cinder availability where the root volume will be created.",
+							Description: "availabilityZone specifies the Cinder availability where the root volume will be created. It is an error to set both this and `StorageAvailabilityZone` in `FailureDomain`.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

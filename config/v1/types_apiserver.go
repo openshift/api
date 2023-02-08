@@ -184,7 +184,7 @@ type APIServerEncryption struct {
 	Type EncryptionType `json:"type,omitempty"`
 }
 
-// +kubebuilder:validation:Enum="";identity;aescbc
+// +kubebuilder:validation:Enum="";identity;aescbc;secretbox
 type EncryptionType string
 
 const (
@@ -195,6 +195,10 @@ const (
 	// aescbc refers to a type where AES-CBC with PKCS#7 padding and a 32-byte key
 	// is used to perform encryption at the datastore layer.
 	EncryptionTypeAESCBC EncryptionType = "aescbc"
+
+	// secretbox refers to a type where XSalsa20 with Poly1305 and a 32-byte key
+	// is used to perform encryption at the datastore layer.
+	EncryptionTypeSecretBox EncryptionType = "secretbox"
 )
 
 type APIServerStatus struct {

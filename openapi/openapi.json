@@ -4574,6 +4574,23 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.BareMetalPlatformLoadBalancer": {
+      "description": "BareMetalPlatformLoadBalancer defines the load balancer used by the cluster on BareMetal platform.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "description": "type defines the type of load balancer used by the cluster on BareMetal platform which can be a user-managed or openshift-managed load balancer that is to be used for the OpenShift API and Ingress endpoints. When set to OpenShiftManagedDefault the static pods in charge of API and Ingress traffic load-balancing defined in the machine config operator will be deployed. When set to UserManaged these static pods will not be deployed and it is expected that the load balancer is configured out of band by the deployer. When omitted, this means no opinion and the platform is left to choose a reasonable default. The default value is OpenShiftManagedDefault.",
+          "type": "string",
+          "default": "OpenShiftManagedDefault"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {}
+        }
+      ]
+    },
     "com.github.openshift.api.config.v1.BareMetalPlatformSpec": {
       "description": "BareMetalPlatformSpec holds the desired state of the BareMetal infrastructure provider. This only includes fields that can be modified in the cluster.",
       "type": "object"
@@ -4609,6 +4626,13 @@
             "type": "string",
             "default": ""
           }
+        },
+        "loadBalancer": {
+          "description": "loadBalancer defines how the load balancer used by the cluster is configured.",
+          "default": {
+            "type": "OpenShiftManagedDefault"
+          },
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.BareMetalPlatformLoadBalancer"
         },
         "nodeDNSIP": {
           "description": "nodeDNSIP is the IP address for the internal DNS used by the nodes. Unlike the one managed by the DNS operator, `NodeDNSIP` provides name resolution for the nodes themselves. There is no DNS-as-a-service for BareMetal deployments. In order to minimize necessary changes to the datacenter DNS, a DNS service is hosted as a static pod to serve those hostnames to the nodes in the cluster.",
@@ -7694,6 +7718,23 @@
     "com.github.openshift.api.config.v1.NodeStatus": {
       "type": "object"
     },
+    "com.github.openshift.api.config.v1.NutanixPlatformLoadBalancer": {
+      "description": "NutanixPlatformLoadBalancer defines the load balancer used by the cluster on Nutanix platform.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "description": "type defines the type of load balancer used by the cluster on Nutanix platform which can be a user-managed or openshift-managed load balancer that is to be used for the OpenShift API and Ingress endpoints. When set to OpenShiftManagedDefault the static pods in charge of API and Ingress traffic load-balancing defined in the machine config operator will be deployed. When set to UserManaged these static pods will not be deployed and it is expected that the load balancer is configured out of band by the deployer. When omitted, this means no opinion and the platform is left to choose a reasonable default. The default value is OpenShiftManagedDefault.",
+          "type": "string",
+          "default": "OpenShiftManagedDefault"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {}
+        }
+      ]
+    },
     "com.github.openshift.api.config.v1.NutanixPlatformSpec": {
       "description": "NutanixPlatformSpec holds the desired state of the Nutanix infrastructure provider. This only includes fields that can be modified in the cluster.",
       "type": "object",
@@ -7752,6 +7793,13 @@
             "type": "string",
             "default": ""
           }
+        },
+        "loadBalancer": {
+          "description": "loadBalancer defines how the load balancer used by the cluster is configured.",
+          "default": {
+            "type": "OpenShiftManagedDefault"
+          },
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.NutanixPlatformLoadBalancer"
         }
       }
     },
@@ -8068,6 +8116,23 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.OpenStackPlatformLoadBalancer": {
+      "description": "OpenStackPlatformLoadBalancer defines the load balancer used by the cluster on OpenStack platform.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "description": "type defines the type of load balancer used by the cluster on OpenStack platform which can be a user-managed or openshift-managed load balancer that is to be used for the OpenShift API and Ingress endpoints. When set to OpenShiftManagedDefault the static pods in charge of API and Ingress traffic load-balancing defined in the machine config operator will be deployed. When set to UserManaged these static pods will not be deployed and it is expected that the load balancer is configured out of band by the deployer. When omitted, this means no opinion and the platform is left to choose a reasonable default. The default value is OpenShiftManagedDefault.",
+          "type": "string",
+          "default": "OpenShiftManagedDefault"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {}
+        }
+      ]
+    },
     "com.github.openshift.api.config.v1.OpenStackPlatformSpec": {
       "description": "OpenStackPlatformSpec holds the desired state of the OpenStack infrastructure provider. This only includes fields that can be modified in the cluster.",
       "type": "object"
@@ -8107,6 +8172,13 @@
             "type": "string",
             "default": ""
           }
+        },
+        "loadBalancer": {
+          "description": "loadBalancer defines how the load balancer used by the cluster is configured.",
+          "default": {
+            "type": "OpenShiftManagedDefault"
+          },
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.OpenStackPlatformLoadBalancer"
         },
         "nodeDNSIP": {
           "description": "nodeDNSIP is the IP address for the internal DNS used by the nodes. Unlike the one managed by the DNS operator, `NodeDNSIP` provides name resolution for the nodes themselves. There is no DNS-as-a-service for OpenStack deployments. In order to minimize necessary changes to the datacenter DNS, a DNS service is hosted as a static pod to serve those hostnames to the nodes in the cluster.",
@@ -8225,6 +8297,23 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.OvirtPlatformLoadBalancer": {
+      "description": "OvirtPlatformLoadBalancer defines the load balancer used by the cluster on Ovirt platform.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "description": "type defines the type of load balancer used by the cluster on Ovirt platform which can be a user-managed or openshift-managed load balancer that is to be used for the OpenShift API and Ingress endpoints. When set to OpenShiftManagedDefault the static pods in charge of API and Ingress traffic load-balancing defined in the machine config operator will be deployed. When set to UserManaged these static pods will not be deployed and it is expected that the load balancer is configured out of band by the deployer. When omitted, this means no opinion and the platform is left to choose a reasonable default. The default value is OpenShiftManagedDefault.",
+          "type": "string",
+          "default": "OpenShiftManagedDefault"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {}
+        }
+      ]
+    },
     "com.github.openshift.api.config.v1.OvirtPlatformSpec": {
       "description": "OvirtPlatformSpec holds the desired state of the oVirt infrastructure provider. This only includes fields that can be modified in the cluster.",
       "type": "object"
@@ -8260,6 +8349,13 @@
             "type": "string",
             "default": ""
           }
+        },
+        "loadBalancer": {
+          "description": "loadBalancer defines how the load balancer used by the cluster is configured.",
+          "default": {
+            "type": "OpenShiftManagedDefault"
+          },
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.OvirtPlatformLoadBalancer"
         },
         "nodeDNSIP": {
           "description": "deprecated: as of 4.6, this field is no longer set or honored.  It will be removed in a future release.",
@@ -9360,6 +9456,23 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.VSpherePlatformLoadBalancer": {
+      "description": "VSpherePlatformLoadBalancer defines the load balancer used by the cluster on VSphere platform.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "description": "type defines the type of load balancer used by the cluster on VSphere platform which can be a user-managed or openshift-managed load balancer that is to be used for the OpenShift API and Ingress endpoints. When set to OpenShiftManagedDefault the static pods in charge of API and Ingress traffic load-balancing defined in the machine config operator will be deployed. When set to UserManaged these static pods will not be deployed and it is expected that the load balancer is configured out of band by the deployer. When omitted, this means no opinion and the platform is left to choose a reasonable default. The default value is OpenShiftManagedDefault.",
+          "type": "string",
+          "default": "OpenShiftManagedDefault"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {}
+        }
+      ]
+    },
     "com.github.openshift.api.config.v1.VSpherePlatformNodeNetworking": {
       "description": "VSpherePlatformNodeNetworking holds the external and internal node networking spec.",
       "type": "object",
@@ -9460,6 +9573,13 @@
             "type": "string",
             "default": ""
           }
+        },
+        "loadBalancer": {
+          "description": "loadBalancer defines how the load balancer used by the cluster is configured.",
+          "default": {
+            "type": "OpenShiftManagedDefault"
+          },
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.VSpherePlatformLoadBalancer"
         },
         "nodeDNSIP": {
           "description": "nodeDNSIP is the IP address for the internal DNS used by the nodes. Unlike the one managed by the DNS operator, `NodeDNSIP` provides name resolution for the nodes themselves. There is no DNS-as-a-service for vSphere deployments. In order to minimize necessary changes to the datacenter DNS, a DNS service is hosted as a static pod to serve those hostnames to the nodes in the cluster.",

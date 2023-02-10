@@ -121,21 +121,21 @@ const (
 type CSIDriverConfigSpec struct {
 	// driverType indicates type of CSI driver for which the
 	// driverConfig is being applied to.
-	// Valid values are: AWS, Azure, GCP, vSphere
+	// Valid values are: AWS, Azure, GCP, vSphere and omitted.
 	// Consumers should treat unknown values as a NO-OP.
 	// +kubebuilder:validation:Required
 	// +unionDiscriminator
 	DriverType CSIDriverType `json:"driverType"`
 
-	// AWS is used to configure the AWS CSI driver.
+	// aws is used to configure the AWS CSI driver.
 	// +optional
 	AWS *AWSCSIDriverConfigSpec `json:"aws,omitempty"`
 
-	// Azure is used to configure the Azure CSI driver.
+	// azure is used to configure the Azure CSI driver.
 	// +optional
 	Azure *AzureCSIDriverConfigSpec `json:"azure,omitempty"`
 
-	// GCP is used to configure the GCP CSI driver.
+	// gcp is used to configure the GCP CSI driver.
 	// +optional
 	GCP *GCPCSIDriverConfigSpec `json:"gcp,omitempty"`
 
@@ -159,21 +159,37 @@ type AzureDiskEncryptionSet struct {
 	// subscriptionID defines the Azure subscription that contains the disk encryption set.
 	// When omitted, the subscription from the authenticating credentials of the CSI driver
 	// will be used.
+	// The value should meet the following conditions:
+	// 1. It should be a 128-bit number.
+	// 2. It should be 36 characters (32 hexadecimal characters and 4 hyphens) long.
+	// 3. It should be displayed in five groups separated by hyphens (-).
+	// 4. The first group should be 8 characters long.
+	// 5. The second, third, and fourth groups should be 4 characters long.
+	// 6. The fifth group should be 12 characters long.
+	// An Example SubscrionID: f2007bbf-f802-4a47-9336-cf7c6b89b378
 	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern:=^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$
+	// +kubebuilder:validation:MaxLength:=36
+	// +kubebuilder:validation:Pattern:=^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
 	SubscriptionID string `json:"subscriptionID"`
 
 	// resourceGroup defines the Azure resource group that contains the disk encryption set.
 	// When omitted, the cluster resource group from the cluster infrastructure object
 	// will be used.
+	// The value should consist of only alphanumberic characters,
+	// underscores (_), parentheses, hyphens and periods.
+	// The value should not end in a period and be at most 90 characters in
+	// length.
 	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern=^[-\w\._\(\)]+$
+	// +kubebuilder:validation:MaxLength:=90
+	// +kubebuilder:validation:Pattern=^[-\w\._\(\)]{89}[-\w_\(\)]$
 	ResourceGroup string `json:"resourceGroup"`
 
-	//name is the name of the disk encryption set that will be set on the default storage class.
+	// name is the name of the disk encryption set that will be set on the default storage class.
+	// The value should consist of only alphanumberic characters,
+	// underscores (_), hyphens, and be at most 80 characters in length.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MaxLength:=80
-	// +kubebuilder:validation:Pattern:=[a-zA-Z0-9_-]
+	// +kubebuilder:validation:Pattern:=[a-zA-Z0-9_-]{80}
 	Name string `json:"name"`
 }
 
@@ -188,8 +204,9 @@ type AzureCSIDriverConfigSpec struct {
 // GCPKMSKeyReference gathers required fields for looking up a GCP KMS Key
 type GCPKMSKeyReference struct {
 	// name is the name of the customer-managed encryption key to be used for disk encryption.
-	// The value should correspond to an existing KMS key
-	// and input should match the regular expression: [a-zA-Z0-9_-]{1,63}.
+	// The value should correspond to an existing KMS key and should
+	// consist of only alphanumeric characters, hyphens (-) and underscores (_),
+	// and be at most 63 characters in length.
 	// +kubebuilder:validation:Pattern:=^[a-zA-Z0-9_-]$
 	// +kubebuilder:validation:MinLength:=1
 	// +kubebuilder:validation:MaxLength:=63
@@ -197,8 +214,9 @@ type GCPKMSKeyReference struct {
 	Name string `json:"name"`
 
 	// keyRing is the name of the KMS Key Ring which the KMS Key belongs to.
-	// The value should correspond to an existing KMS key ring
-	// and input should match the regular expression: [a-zA-Z0-9_-]{1,63}.
+	// The value should correspond to an existing KMS key ring and should
+	// consist of only alphanumeric characters, hyphens (-) and underscores (_),
+	// and be at most 63 characters in length.
 	// +kubebuilder:validation:Pattern:=^[a-zA-Z0-9_-]$
 	// +kubebuilder:validation:MinLength:=1
 	// +kubebuilder:validation:MaxLength:=63
@@ -215,7 +233,7 @@ type GCPKMSKeyReference struct {
 	ProjectID string `json:"projectID"`
 
 	// location is the GCP location in which the Key Ring exists.
-	// The input must match an existing GCP location, or "global".
+	// The value must match an existing GCP location, or "global".
 	// Defaults to global, if not set.
 	// +kubebuilder:validation:Pattern:=[a-zA-Z0-9_-]
 	// +optional

@@ -70,7 +70,7 @@ spec:
                             name:
                               description: name is the name of the disk encryption set that will be set on the default storage class. The value should consist of only alphanumberic characters, underscores (_), hyphens, and be at most 80 characters in length.
                               maxLength: 80
-                              pattern: ^[a-zA-Z0-9\_-]$
+                              pattern: ^[a-zA-Z0-9\_-]+$
                               type: string
                             resourceGroup:
                               description: resourceGroup defines the Azure resource group that contains the disk encryption set. The value should consist of only alphanumberic characters, underscores (_), parentheses, hyphens and periods. The value should not end in a period and be at most 90 characters in length.
@@ -107,17 +107,17 @@ spec:
                               description: keyRing is the name of the KMS Key Ring which the KMS Key belongs to. The value should correspond to an existing KMS key ring and should consist of only alphanumeric characters, hyphens (-) and underscores (_), and be at most 63 characters in length.
                               maxLength: 63
                               minLength: 1
-                              pattern: ^[a-zA-Z0-9\_-]$
+                              pattern: ^[a-zA-Z0-9\_-]+$
                               type: string
                             location:
                               description: location is the GCP location in which the Key Ring exists. The value must match an existing GCP location, or "global". Defaults to global, if not set.
-                              pattern: ^[a-zA-Z0-9\_-]$
+                              pattern: ^[a-zA-Z0-9\_-]+$
                               type: string
                             name:
                               description: name is the name of the customer-managed encryption key to be used for disk encryption. The value should correspond to an existing KMS key and should consist of only alphanumeric characters, hyphens (-) and underscores (_), and be at most 63 characters in length.
                               maxLength: 63
                               minLength: 1
-                              pattern: ^[a-zA-Z0-9\_-]$
+                              pattern: ^[a-zA-Z0-9\_-]+$
                               type: string
                             projectID:
                               description: projectID is the ID of the Project in which the KMS Key Ring exists. It must be 6 to 30 lowercase letters, digits, or hyphens. It must start with a letter. Trailing hyphens are prohibited.

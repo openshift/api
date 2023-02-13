@@ -185,7 +185,7 @@ type AzureDiskEncryptionSet struct {
 	// underscores (_), hyphens, and be at most 80 characters in length.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MaxLength:=80
-	// +kubebuilder:validation:Pattern:=`^[a-zA-Z0-9\_-]$`
+	// +kubebuilder:validation:Pattern:=`^[a-zA-Z0-9\_-]+$`
 	Name string `json:"name"`
 }
 
@@ -203,7 +203,7 @@ type GCPKMSKeyReference struct {
 	// The value should correspond to an existing KMS key and should
 	// consist of only alphanumeric characters, hyphens (-) and underscores (_),
 	// and be at most 63 characters in length.
-	// +kubebuilder:validation:Pattern:=`^[a-zA-Z0-9\_-]$`
+	// +kubebuilder:validation:Pattern:=`^[a-zA-Z0-9\_-]+$`
 	// +kubebuilder:validation:MinLength:=1
 	// +kubebuilder:validation:MaxLength:=63
 	// +kubebuilder:validation:Required
@@ -213,7 +213,7 @@ type GCPKMSKeyReference struct {
 	// The value should correspond to an existing KMS key ring and should
 	// consist of only alphanumeric characters, hyphens (-) and underscores (_),
 	// and be at most 63 characters in length.
-	// +kubebuilder:validation:Pattern:=`^[a-zA-Z0-9\_-]$`
+	// +kubebuilder:validation:Pattern:=`^[a-zA-Z0-9\_-]+$`
 	// +kubebuilder:validation:MinLength:=1
 	// +kubebuilder:validation:MaxLength:=63
 	// +kubebuilder:validation:Required
@@ -231,7 +231,7 @@ type GCPKMSKeyReference struct {
 	// location is the GCP location in which the Key Ring exists.
 	// The value must match an existing GCP location, or "global".
 	// Defaults to global, if not set.
-	// +kubebuilder:validation:Pattern:=`^[a-zA-Z0-9\_-]$`
+	// +kubebuilder:validation:Pattern:=`^[a-zA-Z0-9\_-]+$`
 	// +optional
 	Location string `json:"location,omitempty"`
 }

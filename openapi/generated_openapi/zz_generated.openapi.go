@@ -42632,7 +42632,7 @@ func schema_openshift_api_operator_v1_KuryrConfig(ref common.ReferenceCallback) 
 					},
 					"mtu": {
 						SchemaProps: spec.SchemaProps{
-							Description: "mtu is the MTU that Kuryr should use when creating pod networks in Neutron. The value has to be lower or equal to the MTU of the nodes network and Neutron has to allow creation of tenant networks with such MTU. If unset Pod networks will be created with the same MTU as the nodes network has.",
+							Description: "mtu is the MTU that Kuryr should use when creating pod networks in Neutron. The value has to be lower or equal to the MTU of the nodes network and Neutron has to allow creation of tenant networks with such MTU. If unset Pod networks will be created with the same MTU as the nodes network has. This also affects the services network created by cluster-network-operator.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},

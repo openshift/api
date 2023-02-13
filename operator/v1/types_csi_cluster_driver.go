@@ -149,7 +149,7 @@ type AWSCSIDriverConfigSpec struct {
 	// kmsKeyARN sets the cluster default storage class to encrypt volumes with a user-defined KMS key,
 	// rather than the default KMS key used by AWS.
 	// The value may be either the ARN or Alias ARN of a KMS key.
-	// +kubebuilder:validation:Pattern:=arn:(aws|aws-cn|aws-us-gov):kms:[a-z0-9]+(-[a-z0-9]+)*:[0-9]{12}:(key|alias)/.*
+	// +kubebuilder:validation:Pattern:=`^arn:(aws|aws-cn|aws-us-gov):kms:[a-z0-9-]+:[0-9]{12}:(key|alias)\/.*$`
 	// +optional
 	KMSKeyARN string `json:"kmsKeyARN,omitempty"`
 }
@@ -157,8 +157,6 @@ type AWSCSIDriverConfigSpec struct {
 // AzureDiskEncryptionSet defines the configuration for a disk encryption set.
 type AzureDiskEncryptionSet struct {
 	// subscriptionID defines the Azure subscription that contains the disk encryption set.
-	// When omitted, the subscription from the authenticating credentials of the CSI driver
-	// will be used.
 	// The value should meet the following conditions:
 	// 1. It should be a 128-bit number.
 	// 2. It should be 36 characters (32 hexadecimal characters and 4 hyphens) long.
@@ -169,19 +167,17 @@ type AzureDiskEncryptionSet struct {
 	// An Example SubscrionID: f2007bbf-f802-4a47-9336-cf7c6b89b378
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MaxLength:=36
-	// +kubebuilder:validation:Pattern:=^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+	// +kubebuilder:validation:Pattern:=`^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$`
 	SubscriptionID string `json:"subscriptionID"`
 
 	// resourceGroup defines the Azure resource group that contains the disk encryption set.
-	// When omitted, the cluster resource group from the cluster infrastructure object
-	// will be used.
 	// The value should consist of only alphanumberic characters,
 	// underscores (_), parentheses, hyphens and periods.
 	// The value should not end in a period and be at most 90 characters in
 	// length.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MaxLength:=90
-	// +kubebuilder:validation:Pattern=^[-\w\._\(\)]{89}[-\w_\(\)]$
+	// +kubebuilder:validation:Pattern:=`^[\w\.\-\(\)]*[\w\-\(\)]$`
 	ResourceGroup string `json:"resourceGroup"`
 
 	// name is the name of the disk encryption set that will be set on the default storage class.
@@ -189,7 +185,7 @@ type AzureDiskEncryptionSet struct {
 	// underscores (_), hyphens, and be at most 80 characters in length.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MaxLength:=80
-	// +kubebuilder:validation:Pattern:=[a-zA-Z0-9_-]{80}
+	// +kubebuilder:validation:Pattern:=`^[a-zA-Z0-9\_-]$`
 	Name string `json:"name"`
 }
 
@@ -207,7 +203,7 @@ type GCPKMSKeyReference struct {
 	// The value should correspond to an existing KMS key and should
 	// consist of only alphanumeric characters, hyphens (-) and underscores (_),
 	// and be at most 63 characters in length.
-	// +kubebuilder:validation:Pattern:=^[a-zA-Z0-9_-]$
+	// +kubebuilder:validation:Pattern:=`^[a-zA-Z0-9\_-]$`
 	// +kubebuilder:validation:MinLength:=1
 	// +kubebuilder:validation:MaxLength:=63
 	// +kubebuilder:validation:Required
@@ -217,7 +213,7 @@ type GCPKMSKeyReference struct {
 	// The value should correspond to an existing KMS key ring and should
 	// consist of only alphanumeric characters, hyphens (-) and underscores (_),
 	// and be at most 63 characters in length.
-	// +kubebuilder:validation:Pattern:=^[a-zA-Z0-9_-]$
+	// +kubebuilder:validation:Pattern:=`^[a-zA-Z0-9\_-]$`
 	// +kubebuilder:validation:MinLength:=1
 	// +kubebuilder:validation:MaxLength:=63
 	// +kubebuilder:validation:Required
@@ -226,7 +222,7 @@ type GCPKMSKeyReference struct {
 	// projectID is the ID of the Project in which the KMS Key Ring exists.
 	// It must be 6 to 30 lowercase letters, digits, or hyphens.
 	// It must start with a letter. Trailing hyphens are prohibited.
-	// +kubebuilder:validation:Pattern:=^[a-z][a-z0-9-]+[a-z0-9]$
+	// +kubebuilder:validation:Pattern:=`^[a-z][a-z0-9-]+[a-z0-9]$`
 	// +kubebuilder:validation:MinLength:=6
 	// +kubebuilder:validation:MaxLength:=30
 	// +kubebuilder:validation:Required
@@ -235,7 +231,7 @@ type GCPKMSKeyReference struct {
 	// location is the GCP location in which the Key Ring exists.
 	// The value must match an existing GCP location, or "global".
 	// Defaults to global, if not set.
-	// +kubebuilder:validation:Pattern:=[a-zA-Z0-9_-]
+	// +kubebuilder:validation:Pattern:=`^[a-zA-Z0-9\_-]$`
 	// +optional
 	Location string `json:"location,omitempty"`
 }

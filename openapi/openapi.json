@@ -5974,6 +5974,48 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.FeatureGateAttributes": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the name of the FeatureGate.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.FeatureGateDetails": {
+      "type": "object",
+      "required": [
+        "version"
+      ],
+      "properties": {
+        "disabled": {
+          "description": "disabled is a list of all feature gates that are disabled in the cluster for the named version.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.FeatureGateAttributes"
+          }
+        },
+        "enabled": {
+          "description": "enabled is a list of all feature gates that are enabled in the cluster for the named version.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.FeatureGateAttributes"
+          }
+        },
+        "version": {
+          "description": "version matches the version provided by the ClusterVersion and in the ClusterOperator.Status.Versions field.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.FeatureGateEnabledDisabled": {
       "type": "object",
       "required": [
@@ -6070,7 +6112,36 @@
       ]
     },
     "com.github.openshift.api.config.v1.FeatureGateStatus": {
-      "type": "object"
+      "type": "object",
+      "required": [
+        "featureGates"
+      ],
+      "properties": {
+        "conditions": {
+          "description": "conditions represent the observations of the current state. Known .status.conditions.type are: \"DeterminationDegraded\"",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "featureGates": {
+          "description": "featureGates contains a list of enabled and disabled featureGates that are keyed by payloadVersion. Operators other than the CVO and cluster-config-operator, must read the .status.featureGates, locate the version they are managing, find the enabled/disabled featuregates and make the operand and operator match. The enabled/disabled values for a particular version may change during the life of the cluster as various .spec.featureSet values are selected. Operators may choose to restart their processes to pick up these changes, but remembering past enable/disable lists is beyond the scope of this API and is the responsibility of individual operators. Only featureGates with .version in the ClusterVersion.status will be present in this list.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.FeatureGateDetails"
+          },
+          "x-kubernetes-list-map-keys": [
+            "version"
+          ],
+          "x-kubernetes-list-type": "map"
+        }
+      }
     },
     "com.github.openshift.api.config.v1.GCPPlatformSpec": {
       "description": "GCPPlatformSpec holds the desired state of the Google Cloud Platform infrastructure provider. This only includes fields that can be modified in the cluster.",

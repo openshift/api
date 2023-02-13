@@ -79,6 +79,46 @@ type CustomFeatureGates struct {
 type FeatureGateName string
 
 type FeatureGateStatus struct {
+	// conditions represent the observations of the current state.
+	// Known .status.conditions.type are: "DeterminationDegraded"
+	// +listType=map
+	// +listMapKey=type
+	Conditions []metav1.Condition `json:"conditions,omitempty"`
+
+	// featureGates contains a list of enabled and disabled featureGates that are keyed by payloadVersion.
+	// Operators other than the CVO and cluster-config-operator, must read the .status.featureGates, locate
+	// the version they are managing, find the enabled/disabled featuregates and make the operand and operator match.
+	// The enabled/disabled values for a particular version may change during the life of the cluster as various
+	// .spec.featureSet values are selected.
+	// Operators may choose to restart their processes to pick up these changes, but remembering past enable/disable
+	// lists is beyond the scope of this API and is the responsibility of individual operators.
+	// Only featureGates with .version in the ClusterVersion.status will be present in this list.
+	// +listType=map
+	// +listMapKey=version
+	FeatureGates []FeatureGateDetails `json:"featureGates"`
+}
+
+type FeatureGateDetails struct {
+	// version matches the version provided by the ClusterVersion and in the ClusterOperator.Status.Versions field.
+	// +kubebuilder:validation:Required
+	// +required
+	Version string `json:"version"`
+	// enabled is a list of all feature gates that are enabled in the cluster for the named version.
+	// +optional
+	Enabled []FeatureGateAttributes `json:"enabled"`
+	// disabled is a list of all feature gates that are disabled in the cluster for the named version.
+	// +optional
+	Disabled []FeatureGateAttributes `json:"disabled"`
+}
+
+type FeatureGateAttributes struct {
+	// name is the name of the FeatureGate.
+	// +kubebuilder:validation:Required
+	Name FeatureGateName `json:"name"`
+
+	// possible (probable?) future additions include
+	// 1. support level (Stable, ServiceDeliveryOnly, TechPreview, DevPreview)
+	// 2. description
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

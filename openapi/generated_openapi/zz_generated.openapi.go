@@ -224,6 +224,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.ExternalPlatformSpec":                                     schema_openshift_api_config_v1_ExternalPlatformSpec(ref),
 		"github.com/openshift/api/config/v1.ExternalPlatformStatus":                                   schema_openshift_api_config_v1_ExternalPlatformStatus(ref),
 		"github.com/openshift/api/config/v1.FeatureGate":                                              schema_openshift_api_config_v1_FeatureGate(ref),
+		"github.com/openshift/api/config/v1.FeatureGateAttributes":                                    schema_openshift_api_config_v1_FeatureGateAttributes(ref),
+		"github.com/openshift/api/config/v1.FeatureGateDetails":                                       schema_openshift_api_config_v1_FeatureGateDetails(ref),
 		"github.com/openshift/api/config/v1.FeatureGateEnabledDisabled":                               schema_openshift_api_config_v1_FeatureGateEnabledDisabled(ref),
 		"github.com/openshift/api/config/v1.FeatureGateList":                                          schema_openshift_api_config_v1_FeatureGateList(ref),
 		"github.com/openshift/api/config/v1.FeatureGateSelection":                                     schema_openshift_api_config_v1_FeatureGateSelection(ref),
@@ -11399,6 +11401,78 @@ func schema_openshift_api_config_v1_FeatureGate(ref common.ReferenceCallback) co
 	}
 }
 
+func schema_openshift_api_config_v1_FeatureGateAttributes(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the name of the FeatureGate.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1_FeatureGateDetails(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Description: "version matches the version provided by the ClusterVersion and in the ClusterOperator.Status.Versions field.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "enabled is a list of all feature gates that are enabled in the cluster for the named version.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.FeatureGateAttributes"),
+									},
+								},
+							},
+						},
+					},
+					"disabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "disabled is a list of all feature gates that are disabled in the cluster for the named version.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.FeatureGateAttributes"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"version"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.FeatureGateAttributes"},
+	}
+}
+
 func schema_openshift_api_config_v1_FeatureGateEnabledDisabled(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -11573,8 +11647,57 @@ func schema_openshift_api_config_v1_FeatureGateStatus(ref common.ReferenceCallba
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions represent the observations of the current state. Known .status.conditions.type are: \"DeterminationDegraded\"",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+					"featureGates": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"version",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "featureGates contains a list of enabled and disabled featureGates that are keyed by payloadVersion. Operators other than the CVO and cluster-config-operator, must read the .status.featureGates, locate the version they are managing, find the enabled/disabled featuregates and make the operand and operator match. The enabled/disabled values for a particular version may change during the life of the cluster as various .spec.featureSet values are selected. Operators may choose to restart their processes to pick up these changes, but remembering past enable/disable lists is beyond the scope of this API and is the responsibility of individual operators. Only featureGates with .version in the ClusterVersion.status will be present in this list.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.FeatureGateDetails"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"featureGates"},
 			},
 		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.FeatureGateDetails", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 

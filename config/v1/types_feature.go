@@ -120,6 +120,7 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		with("CSIInlineVolumeAdmission").          // sig-storage, jdobson, OCP specific
 		with("MatchLabelKeysInPodTopologySpread"). // sig-scheduling, ingvagabund (#forum-workloads), Kubernetes feature gate
 		with("RetroactiveDefaultStorageClass").    // sig-storage, RomanBednar, Kubernetes feature gate
+		with("PDBUnhealthyPodEvictionPolicy").     // sig-apps, atiratree (#forum-workloads), Kubernetes feature gate
 		toFeatures(),
 	LatencySensitive: newDefaultFeatures().
 		with(

@@ -42963,6 +42963,20 @@ func schema_openshift_api_operator_v1_GatewayConfig(ref common.ReferenceCallback
 							Format:      "",
 						},
 					},
+					"v4InternalMasqueradeSubnet": {
+						SchemaProps: spec.SchemaProps{
+							Description: "V4InternalMasqueradeSubnet contains the v4 masquerade addresses used internally by ovn-kubernetes to enable host to service traffic. The host is configured with these addresses, as well as the shared gateway bridge interface. The values can be changed after installation. The subnet chosen should not overlap with other networks specified for OVN-Kubernetes as well as other networks used on the host. Additionally the subnet must be large enough to accommodate 6 IPs (maximum prefix length /29). The default subnet is 169.254.169.0/29",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"v6InternalMasqueradeSubnet": {
+						SchemaProps: spec.SchemaProps{
+							Description: "V6InternalMasqueradeSubnet contains the v6 masquerade addresses used internally by ovn-kubernetes to enable host to service traffic. The host is configured with these addresses, as well as the shared gateway bridge interface. The values can be changed after installation. The subnet chosen should not overlap with other networks specified for OVN-Kubernetes as well as other networks used on the host. Additionally the subnet must be large enough to accommodate 6 IPs (maximum prefix length /125). The default subnet is fd69::/125",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 			},
 		},

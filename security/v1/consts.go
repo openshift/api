@@ -7,4 +7,6 @@ const (
 	SupplementalGroupsAnnotation = "openshift.io/sa.scc.supplemental-groups"
 	MCSAnnotation                = "openshift.io/sa.scc.mcs"
 	ValidatedSCCAnnotation       = "openshift.io/scc"
+	// SCCHistory holds all prior SCCs that the pod was assigned to, if any, from most recent to least recent.
+	SCCHistory = "openshift.io/scc-history"
 )

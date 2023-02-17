@@ -180,7 +180,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.BuildSpec":                                                schema_openshift_api_config_v1_BuildSpec(ref),
 		"github.com/openshift/api/config/v1.CertInfo":                                                 schema_openshift_api_config_v1_CertInfo(ref),
 		"github.com/openshift/api/config/v1.ClientConnectionOverrides":                                schema_openshift_api_config_v1_ClientConnectionOverrides(ref),
-		"github.com/openshift/api/config/v1.CloudControllerManagerSpec":                               schema_openshift_api_config_v1_CloudControllerManagerSpec(ref),
 		"github.com/openshift/api/config/v1.ClusterCondition":                                         schema_openshift_api_config_v1_ClusterCondition(ref),
 		"github.com/openshift/api/config/v1.ClusterNetworkEntry":                                      schema_openshift_api_config_v1_ClusterNetworkEntry(ref),
 		"github.com/openshift/api/config/v1.ClusterOperator":                                          schema_openshift_api_config_v1_ClusterOperator(ref),
@@ -9499,27 +9498,6 @@ func schema_openshift_api_config_v1_ClientConnectionOverrides(ref common.Referen
 	}
 }
 
-func schema_openshift_api_config_v1_CloudControllerManagerSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "CloudControllerManagerSpec holds Cloud Controller Manager (a.k.a. CCM or CPI) related settings",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"state": {
-						SchemaProps: spec.SchemaProps{
-							Description: "state determines whether or not an external Cloud Controller Manager is expected to be installed within the cluster. https://kubernetes.io/docs/tasks/administer-cluster/running-cloud-controller/#running-cloud-controller-manager\n\nWhen set to \"External\", new nodes will be tainted as uninitialized when created, preventing them from running workloads until they are initialized by the cloud controller manager. When omitted or set to \"None\", new nodes will be not tainted and no extra initialization from the cloud controller manager is expected.",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-				},
-			},
-		},
-	}
-}
-
 func schema_openshift_api_config_v1_ClusterCondition(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -11291,18 +11269,9 @@ func schema_openshift_api_config_v1_ExternalPlatformSpec(ref common.ReferenceCal
 							Format:      "",
 						},
 					},
-					"cloudControllerManager": {
-						SchemaProps: spec.SchemaProps{
-							Description: "CloudControllerManager contains settings specific to the external Cloud Controller Manager (a.k.a. CCM or CPI)",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/openshift/api/config/v1.CloudControllerManagerSpec"),
-						},
-					},
 				},
 			},
 		},
-		Dependencies: []string{
-			"github.com/openshift/api/config/v1.CloudControllerManagerSpec"},
 	}
 }
 

@@ -282,6 +282,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.LoadBalancer":                                             schema_openshift_api_config_v1_LoadBalancer(ref),
 		"github.com/openshift/api/config/v1.MTUMigration":                                             schema_openshift_api_config_v1_MTUMigration(ref),
 		"github.com/openshift/api/config/v1.MTUMigrationValues":                                       schema_openshift_api_config_v1_MTUMigrationValues(ref),
+		"github.com/openshift/api/config/v1.MachineNetworkEntry":                                      schema_openshift_api_config_v1_MachineNetworkEntry(ref),
 		"github.com/openshift/api/config/v1.MaxAgePolicy":                                             schema_openshift_api_config_v1_MaxAgePolicy(ref),
 		"github.com/openshift/api/config/v1.ModernTLSProfile":                                         schema_openshift_api_config_v1_ModernTLSProfile(ref),
 		"github.com/openshift/api/config/v1.NamedCertificate":                                         schema_openshift_api_config_v1_NamedCertificate(ref),
@@ -290,6 +291,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.NetworkMigration":                                         schema_openshift_api_config_v1_NetworkMigration(ref),
 		"github.com/openshift/api/config/v1.NetworkSpec":                                              schema_openshift_api_config_v1_NetworkSpec(ref),
 		"github.com/openshift/api/config/v1.NetworkStatus":                                            schema_openshift_api_config_v1_NetworkStatus(ref),
+		"github.com/openshift/api/config/v1.NetworkingSpec":                                           schema_openshift_api_config_v1_NetworkingSpec(ref),
 		"github.com/openshift/api/config/v1.Node":                                                     schema_openshift_api_config_v1_Node(ref),
 		"github.com/openshift/api/config/v1.NodeList":                                                 schema_openshift_api_config_v1_NodeList(ref),
 		"github.com/openshift/api/config/v1.NodeSpec":                                                 schema_openshift_api_config_v1_NodeSpec(ref),
@@ -13093,11 +13095,18 @@ func schema_openshift_api_config_v1_InfrastructureSpec(ref common.ReferenceCallb
 							Ref:         ref("github.com/openshift/api/config/v1.PlatformSpec"),
 						},
 					},
+					"networking": {
+						SchemaProps: spec.SchemaProps{
+							Description: "networking holds the desired state specific to the underlying network of the current cluster.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.NetworkingSpec"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ConfigMapFileReference", "github.com/openshift/api/config/v1.PlatformSpec"},
+			"github.com/openshift/api/config/v1.ConfigMapFileReference", "github.com/openshift/api/config/v1.NetworkingSpec", "github.com/openshift/api/config/v1.PlatformSpec"},
 	}
 }
 
@@ -13847,6 +13856,28 @@ func schema_openshift_api_config_v1_MTUMigrationValues(ref common.ReferenceCallb
 	}
 }
 
+func schema_openshift_api_config_v1_MachineNetworkEntry(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MachineNetworkEntry is a single IP address block for node IP blocks.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"cidr": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CIDR is the IP block address pool for machines within the cluster.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"cidr"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_config_v1_MaxAgePolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -14184,6 +14215,35 @@ func schema_openshift_api_config_v1_NetworkStatus(ref common.ReferenceCallback) 
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/config/v1.ClusterNetworkEntry", "github.com/openshift/api/config/v1.NetworkMigration"},
+	}
+}
+
+func schema_openshift_api_config_v1_NetworkingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NetworkingSpec holds the desired state specific to the underlying network of the cluster.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"machineNetwork": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MachineNetwork is the list of IP address pools for machines.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.MachineNetworkEntry"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.MachineNetworkEntry"},
 	}
 }
 

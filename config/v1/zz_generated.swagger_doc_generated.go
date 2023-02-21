@@ -1208,6 +1208,7 @@ var map_InfrastructureSpec = map[string]string{
 	"":             "InfrastructureSpec contains settings that apply to the cluster infrastructure.",
 	"cloudConfig":  "cloudConfig is a reference to a ConfigMap containing the cloud provider configuration file. This configuration file is used to configure the Kubernetes cloud provider integration when using the built-in cloud provider integration or the external cloud controller manager. The namespace for this config map is openshift-config.\n\ncloudConfig should only be consumed by the kube_cloud_config controller. The controller is responsible for using the user configuration in the spec for various platforms and combining that with the user provided ConfigMap in this field to create a stitched kube cloud config. The controller generates a ConfigMap `kube-cloud-config` in `openshift-config-managed` namespace with the kube cloud config is stored in `cloud.conf` key. All the clients are expected to use the generated ConfigMap only.",
 	"platformSpec": "platformSpec holds desired information specific to the underlying infrastructure provider.",
+	"networking":   "networking holds the desired state specific to the underlying network of the current cluster.",
 }
 
 func (InfrastructureSpec) SwaggerDoc() map[string]string {
@@ -1247,6 +1248,24 @@ var map_KubevirtPlatformStatus = map[string]string{
 
 func (KubevirtPlatformStatus) SwaggerDoc() map[string]string {
 	return map_KubevirtPlatformStatus
+}
+
+var map_MachineNetworkEntry = map[string]string{
+	"":     "MachineNetworkEntry is a single IP address block for node IP blocks.",
+	"cidr": "CIDR is the IP block address pool for machines within the cluster.",
+}
+
+func (MachineNetworkEntry) SwaggerDoc() map[string]string {
+	return map_MachineNetworkEntry
+}
+
+var map_NetworkingSpec = map[string]string{
+	"":               "NetworkingSpec holds the desired state specific to the underlying network of the cluster.",
+	"machineNetwork": "MachineNetwork is the list of IP address pools for machines.",
+}
+
+func (NetworkingSpec) SwaggerDoc() map[string]string {
+	return map_NetworkingSpec
 }
 
 var map_NutanixPlatformLoadBalancer = map[string]string{

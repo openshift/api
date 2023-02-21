@@ -6974,6 +6974,11 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.ConfigMapFileReference"
         },
+        "networking": {
+          "description": "networking holds the desired state specific to the underlying network of the current cluster.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.NetworkingSpec"
+        },
         "platformSpec": {
           "description": "platformSpec holds desired information specific to the underlying infrastructure provider.",
           "default": {},
@@ -7429,6 +7434,20 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.MachineNetworkEntry": {
+      "description": "MachineNetworkEntry is a single IP address block for node IP blocks.",
+      "type": "object",
+      "required": [
+        "cidr"
+      ],
+      "properties": {
+        "cidr": {
+          "description": "CIDR is the IP block address pool for machines within the cluster.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.MaxAgePolicy": {
       "description": "MaxAgePolicy contains a numeric range for specifying a compliant HSTS max-age for the enclosing RequiredHSTSPolicy",
       "type": "object",
@@ -7622,6 +7641,20 @@
           "items": {
             "type": "string",
             "default": ""
+          }
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.NetworkingSpec": {
+      "description": "NetworkingSpec holds the desired state specific to the underlying network of the cluster.",
+      "type": "object",
+      "properties": {
+        "machineNetwork": {
+          "description": "MachineNetwork is the list of IP address pools for machines.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.MachineNetworkEntry"
           }
         }
       }

@@ -45,6 +45,11 @@ type InfrastructureSpec struct {
 	// platformSpec holds desired information specific to the underlying
 	// infrastructure provider.
 	PlatformSpec PlatformSpec `json:"platformSpec,omitempty"`
+
+	// networking holds the desired state specific to the underlying network
+    // of the current cluster.
+	// +optional
+	Networking NetworkingSpec `json:"networking,omitempty"`
 }
 
 // InfrastructureStatus describes the infrastructure the cluster is leveraging.
@@ -310,6 +315,19 @@ type PlatformSpec struct {
 	// Platform-specific components should be supplemented separately.
 	// +optional
 	External *ExternalPlatformSpec `json:"external,omitempty"`
+}
+
+// NetworkingSpec holds the desired state specific to the underlying network
+// of the cluster.
+type NetworkingSpec struct {
+	// MachineNetwork is the list of IP address pools for machines.
+	MachineNetwork []MachineNetworkEntry `json:"machineNetwork,omitempty"`
+}
+
+// MachineNetworkEntry is a single IP address block for node IP blocks.
+type MachineNetworkEntry struct {
+	// CIDR is the IP block address pool for machines within the cluster.
+	CIDR string `json:"cidr"`
 }
 
 // ExternalPlatformStatus holds the current status of the generic External infrastructure provider.

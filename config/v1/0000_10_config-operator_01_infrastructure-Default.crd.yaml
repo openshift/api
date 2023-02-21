@@ -42,6 +42,20 @@ spec:
                     name:
                       type: string
                   type: object
+                networking:
+                  description: networking holds the desired state specific to the underlying network of the current cluster.
+                  properties:
+                    machineNetwork:
+                      description: MachineNetwork is the list of IP address pools for machines.
+                      items:
+                        description: MachineNetworkEntry is a single IP address block for node IP blocks.
+                        properties:
+                          cidr:
+                            description: CIDR is the IP block address pool for machines within the cluster.
+                            type: string
+                        type: object
+                      type: array
+                  type: object
                 platformSpec:
                   description: platformSpec holds desired information specific to the underlying infrastructure provider.
                   properties:

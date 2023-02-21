@@ -119,6 +119,7 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		with("MatchLabelKeysInPodTopologySpread"). // sig-scheduling, ingvagabund (#forum-workloads), Kubernetes feature gate
 		with("RetroactiveDefaultStorageClass").    // sig-storage, RomanBednar, Kubernetes feature gate
 		with("PDBUnhealthyPodEvictionPolicy").     // sig-apps, atiratree (#forum-workloads), Kubernetes feature gate
+		with("DynamicResourceAllocation").         // sig-scheduling, jchaloup (#forum-workloads), Kubernetes feature gate
 		toFeatures(),
 	LatencySensitive: newDefaultFeatures().
 		with(

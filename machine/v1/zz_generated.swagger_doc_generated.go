@@ -13,6 +13,7 @@ package v1
 // AUTO-GENERATED FUNCTIONS START HERE
 var map_AlibabaCloudMachineProviderConfig = map[string]string{
 	"":                  "AlibabaCloudMachineProviderConfig is the Schema for the alibabacloudmachineproviderconfig API Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"metadata":          "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
 	"instanceType":      "The instance type of the instance.",
 	"vpcId":             "The ID of the vpc",
 	"regionId":          "The ID of the region in which to create the instance. You can call the DescribeRegions operation to query the most recent region list.",
@@ -36,7 +37,8 @@ func (AlibabaCloudMachineProviderConfig) SwaggerDoc() map[string]string {
 }
 
 var map_AlibabaCloudMachineProviderConfigList = map[string]string{
-	"": "AlibabaCloudMachineProviderConfigList contains a list of AlibabaCloudMachineProviderConfig Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"":         "AlibabaCloudMachineProviderConfigList contains a list of AlibabaCloudMachineProviderConfig Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"metadata": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
 }
 
 func (AlibabaCloudMachineProviderConfigList) SwaggerDoc() map[string]string {
@@ -45,6 +47,7 @@ func (AlibabaCloudMachineProviderConfigList) SwaggerDoc() map[string]string {
 
 var map_AlibabaCloudMachineProviderStatus = map[string]string{
 	"":              "AlibabaCloudMachineProviderStatus is the Schema for the alibabacloudmachineproviderconfig API Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"metadata":      "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
 	"instanceId":    "InstanceID is the instance ID of the machine created in alibabacloud",
 	"instanceState": "InstanceState is the state of the alibabacloud instance for this machine",
 	"conditions":    "Conditions is a set of conditions associated with the Machine to indicate errors or other status",
@@ -165,7 +168,8 @@ func (AzureFailureDomain) SwaggerDoc() map[string]string {
 }
 
 var map_ControlPlaneMachineSet = map[string]string{
-	"": "ControlPlaneMachineSet ensures that a specified number of control plane machine replicas are running at any given time. Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"":         "ControlPlaneMachineSet ensures that a specified number of control plane machine replicas are running at any given time. Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"metadata": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
 }
 
 func (ControlPlaneMachineSet) SwaggerDoc() map[string]string {
@@ -173,7 +177,8 @@ func (ControlPlaneMachineSet) SwaggerDoc() map[string]string {
 }
 
 var map_ControlPlaneMachineSetList = map[string]string{
-	"": "ControlPlaneMachineSetList contains a list of ControlPlaneMachineSet Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"":         "ControlPlaneMachineSetList contains a list of ControlPlaneMachineSet Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"metadata": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
 }
 
 func (ControlPlaneMachineSetList) SwaggerDoc() map[string]string {
@@ -280,6 +285,7 @@ func (NutanixCategory) SwaggerDoc() map[string]string {
 
 var map_NutanixMachineProviderConfig = map[string]string{
 	"":                  "NutanixMachineProviderConfig is the Schema for the nutanixmachineproviderconfigs API Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"metadata":          "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
 	"cluster":           "cluster is to identify the cluster (the Prism Element under management of the Prism Central), in which the Machine's VM will be created. The cluster identifier (uuid or name) can be obtained from the Prism Central console or using the prism_central API.",
 	"image":             "image is to identify the rhcos image uploaded to the Prism Central (PC) The image identifier (uuid or name) can be obtained from the Prism Central console or using the prism_central API.",
 	"subnets":           "subnets holds a list of identifiers (one or more) of the cluster's network subnets for the Machine's VM to connect to. The subnet identifiers (uuid or name) can be obtained from the Prism Central console or using the prism_central API.",

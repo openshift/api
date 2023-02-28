@@ -12,9 +12,10 @@ package v1alpha1
 
 // AUTO-GENERATED FUNCTIONS START HERE
 var map_NotStableConfigType = map[string]string{
-	"":       "NotStableConfigType is a stable config type that is TechPreviewNoUpgrade only.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
-	"spec":   "spec is the specification of the desired behavior of the NotStableConfigType.",
-	"status": "status is the most recently observed status of the NotStableConfigType.",
+	"":         "NotStableConfigType is a stable config type that is TechPreviewNoUpgrade only.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"metadata": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+	"spec":     "spec is the specification of the desired behavior of the NotStableConfigType.",
+	"status":   "status is the most recently observed status of the NotStableConfigType.",
 }
 
 func (NotStableConfigType) SwaggerDoc() map[string]string {
@@ -22,7 +23,8 @@ func (NotStableConfigType) SwaggerDoc() map[string]string {
 }
 
 var map_NotStableConfigTypeList = map[string]string{
-	"": "NotStableConfigTypeList contains a list of NotStableConfigTypes.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"":         "NotStableConfigTypeList contains a list of NotStableConfigTypes.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"metadata": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
 }
 
 func (NotStableConfigTypeList) SwaggerDoc() map[string]string {

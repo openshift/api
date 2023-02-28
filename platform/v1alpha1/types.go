@@ -67,7 +67,10 @@ type PlatformOperatorStatus struct {
 // Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
 // +openshift:compatibility-gen:level=4
 type PlatformOperator struct {
-	metav1.TypeMeta   `json:",inline"`
+	metav1.TypeMeta `json:",inline"`
+
+	// metadata is the standard object's metadata.
+	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	Spec   PlatformOperatorSpec   `json:"spec"`
@@ -82,6 +85,10 @@ type PlatformOperator struct {
 // +openshift:compatibility-gen:level=4
 type PlatformOperatorList struct {
 	metav1.TypeMeta `json:",inline"`
+
+	// metadata is the standard list's metadata.
+	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []PlatformOperator `json:"items"`
+
+	Items []PlatformOperator `json:"items"`
 }

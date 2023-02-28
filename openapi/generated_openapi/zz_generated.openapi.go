@@ -727,6 +727,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/openshiftcontrolplane/v1.ServiceAccountControllerConfig":            schema_openshift_api_openshiftcontrolplane_v1_ServiceAccountControllerConfig(ref),
 		"github.com/openshift/api/openshiftcontrolplane/v1.ServiceServingCert":                        schema_openshift_api_openshiftcontrolplane_v1_ServiceServingCert(ref),
 		"github.com/openshift/api/openshiftcontrolplane/v1.SourceStrategyDefaultsConfig":              schema_openshift_api_openshiftcontrolplane_v1_SourceStrategyDefaultsConfig(ref),
+		"github.com/openshift/api/operator/v1.AWSCSIDriverConfigSpec":                                 schema_openshift_api_operator_v1_AWSCSIDriverConfigSpec(ref),
 		"github.com/openshift/api/operator/v1.AWSClassicLoadBalancerParameters":                       schema_openshift_api_operator_v1_AWSClassicLoadBalancerParameters(ref),
 		"github.com/openshift/api/operator/v1.AWSLoadBalancerParameters":                              schema_openshift_api_operator_v1_AWSLoadBalancerParameters(ref),
 		"github.com/openshift/api/operator/v1.AWSNetworkLoadBalancerParameters":                       schema_openshift_api_operator_v1_AWSNetworkLoadBalancerParameters(ref),
@@ -737,6 +738,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.AuthenticationList":                                     schema_openshift_api_operator_v1_AuthenticationList(ref),
 		"github.com/openshift/api/operator/v1.AuthenticationSpec":                                     schema_openshift_api_operator_v1_AuthenticationSpec(ref),
 		"github.com/openshift/api/operator/v1.AuthenticationStatus":                                   schema_openshift_api_operator_v1_AuthenticationStatus(ref),
+		"github.com/openshift/api/operator/v1.AzureCSIDriverConfigSpec":                               schema_openshift_api_operator_v1_AzureCSIDriverConfigSpec(ref),
+		"github.com/openshift/api/operator/v1.AzureDiskEncryptionSet":                                 schema_openshift_api_operator_v1_AzureDiskEncryptionSet(ref),
 		"github.com/openshift/api/operator/v1.CSIDriverConfigSpec":                                    schema_openshift_api_operator_v1_CSIDriverConfigSpec(ref),
 		"github.com/openshift/api/operator/v1.CSISnapshotController":                                  schema_openshift_api_operator_v1_CSISnapshotController(ref),
 		"github.com/openshift/api/operator/v1.CSISnapshotControllerList":                              schema_openshift_api_operator_v1_CSISnapshotControllerList(ref),
@@ -786,6 +789,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.ExportNetworkFlows":                                     schema_openshift_api_operator_v1_ExportNetworkFlows(ref),
 		"github.com/openshift/api/operator/v1.FeaturesMigration":                                      schema_openshift_api_operator_v1_FeaturesMigration(ref),
 		"github.com/openshift/api/operator/v1.ForwardPlugin":                                          schema_openshift_api_operator_v1_ForwardPlugin(ref),
+		"github.com/openshift/api/operator/v1.GCPCSIDriverConfigSpec":                                 schema_openshift_api_operator_v1_GCPCSIDriverConfigSpec(ref),
+		"github.com/openshift/api/operator/v1.GCPKMSKeyReference":                                     schema_openshift_api_operator_v1_GCPKMSKeyReference(ref),
 		"github.com/openshift/api/operator/v1.GCPLoadBalancerParameters":                              schema_openshift_api_operator_v1_GCPLoadBalancerParameters(ref),
 		"github.com/openshift/api/operator/v1.GatewayConfig":                                          schema_openshift_api_operator_v1_GatewayConfig(ref),
 		"github.com/openshift/api/operator/v1.GatherStatus":                                           schema_openshift_api_operator_v1_GatherStatus(ref),
@@ -37197,6 +37202,26 @@ func schema_openshift_api_openshiftcontrolplane_v1_SourceStrategyDefaultsConfig(
 	}
 }
 
+func schema_openshift_api_operator_v1_AWSCSIDriverConfigSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "AWSCSIDriverConfigSpec defines properties that can be configured for the AWS CSI driver.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kmsKeyARN": {
+						SchemaProps: spec.SchemaProps{
+							Description: "kmsKeyARN sets the cluster default storage class to encrypt volumes with a user-defined KMS key, rather than the default KMS key used by AWS. The value may be either the ARN or Alias ARN of a KMS key.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_operator_v1_AWSClassicLoadBalancerParameters(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -37635,6 +37660,65 @@ func schema_openshift_api_operator_v1_AuthenticationStatus(ref common.ReferenceC
 	}
 }
 
+func schema_openshift_api_operator_v1_AzureCSIDriverConfigSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "AzureCSIDriverConfigSpec defines properties that can be configured for the Azure CSI driver.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"diskEncryptionSet": {
+						SchemaProps: spec.SchemaProps{
+							Description: "diskEncryptionSet sets the cluster default storage class to encrypt volumes with a customer-managed encryption set, rather than the default platform-managed keys.",
+							Ref:         ref("github.com/openshift/api/operator/v1.AzureDiskEncryptionSet"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1.AzureDiskEncryptionSet"},
+	}
+}
+
+func schema_openshift_api_operator_v1_AzureDiskEncryptionSet(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "AzureDiskEncryptionSet defines the configuration for a disk encryption set.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"subscriptionID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "subscriptionID defines the Azure subscription that contains the disk encryption set. The value should meet the following conditions: 1. It should be a 128-bit number. 2. It should be 36 characters (32 hexadecimal characters and 4 hyphens) long. 3. It should be displayed in five groups separated by hyphens (-). 4. The first group should be 8 characters long. 5. The second, third, and fourth groups should be 4 characters long. 6. The fifth group should be 12 characters long. An Example SubscrionID: f2007bbf-f802-4a47-9336-cf7c6b89b378",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"resourceGroup": {
+						SchemaProps: spec.SchemaProps{
+							Description: "resourceGroup defines the Azure resource group that contains the disk encryption set. The value should consist of only alphanumberic characters, underscores (_), parentheses, hyphens and periods. The value should not end in a period and be at most 90 characters in length.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the name of the disk encryption set that will be set on the default storage class. The value should consist of only alphanumberic characters, underscores (_), hyphens, and be at most 80 characters in length.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"subscriptionID", "resourceGroup", "name"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_operator_v1_CSIDriverConfigSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -37644,10 +37728,28 @@ func schema_openshift_api_operator_v1_CSIDriverConfigSpec(ref common.ReferenceCa
 				Properties: map[string]spec.Schema{
 					"driverType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "driverType indicates type of CSI driver for which the driverConfig is being applied to.\n\nValid values are:\n\n* vSphere\n\nAllows configuration of vsphere CSI driver topology.",
+							Description: "driverType indicates type of CSI driver for which the driverConfig is being applied to. Valid values are: AWS, Azure, GCP, vSphere and omitted. Consumers should treat unknown values as a NO-OP.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
+						},
+					},
+					"aws": {
+						SchemaProps: spec.SchemaProps{
+							Description: "aws is used to configure the AWS CSI driver.",
+							Ref:         ref("github.com/openshift/api/operator/v1.AWSCSIDriverConfigSpec"),
+						},
+					},
+					"azure": {
+						SchemaProps: spec.SchemaProps{
+							Description: "azure is used to configure the Azure CSI driver.",
+							Ref:         ref("github.com/openshift/api/operator/v1.AzureCSIDriverConfigSpec"),
+						},
+					},
+					"gcp": {
+						SchemaProps: spec.SchemaProps{
+							Description: "gcp is used to configure the GCP CSI driver.",
+							Ref:         ref("github.com/openshift/api/operator/v1.GCPCSIDriverConfigSpec"),
 						},
 					},
 					"vSphere": {
@@ -37665,6 +37767,9 @@ func schema_openshift_api_operator_v1_CSIDriverConfigSpec(ref common.ReferenceCa
 						map[string]interface{}{
 							"discriminator": "driverType",
 							"fields-to-discriminateBy": map[string]interface{}{
+								"aws":     "AWS",
+								"azure":   "Azure",
+								"gcp":     "GCP",
 								"vSphere": "VSphere",
 							},
 						},
@@ -37673,7 +37778,7 @@ func schema_openshift_api_operator_v1_CSIDriverConfigSpec(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.VSphereCSIDriverConfigSpec"},
+			"github.com/openshift/api/operator/v1.AWSCSIDriverConfigSpec", "github.com/openshift/api/operator/v1.AzureCSIDriverConfigSpec", "github.com/openshift/api/operator/v1.GCPCSIDriverConfigSpec", "github.com/openshift/api/operator/v1.VSphereCSIDriverConfigSpec"},
 	}
 }
 
@@ -40125,6 +40230,72 @@ func schema_openshift_api_operator_v1_ForwardPlugin(ref common.ReferenceCallback
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/operator/v1.DNSTransportConfig"},
+	}
+}
+
+func schema_openshift_api_operator_v1_GCPCSIDriverConfigSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "GCPCSIDriverConfigSpec defines properties that can be configured for the GCP CSI driver.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kmsKey": {
+						SchemaProps: spec.SchemaProps{
+							Description: "kmsKey sets the cluster default storage class to encrypt volumes with customer-supplied encryption keys, rather than the default keys managed by GCP.",
+							Ref:         ref("github.com/openshift/api/operator/v1.GCPKMSKeyReference"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1.GCPKMSKeyReference"},
+	}
+}
+
+func schema_openshift_api_operator_v1_GCPKMSKeyReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "GCPKMSKeyReference gathers required fields for looking up a GCP KMS Key",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the name of the customer-managed encryption key to be used for disk encryption. The value should correspond to an existing KMS key and should consist of only alphanumeric characters, hyphens (-) and underscores (_), and be at most 63 characters in length.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"keyRing": {
+						SchemaProps: spec.SchemaProps{
+							Description: "keyRing is the name of the KMS Key Ring which the KMS Key belongs to. The value should correspond to an existing KMS key ring and should consist of only alphanumeric characters, hyphens (-) and underscores (_), and be at most 63 characters in length.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"projectID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "projectID is the ID of the Project in which the KMS Key Ring exists. It must be 6 to 30 lowercase letters, digits, or hyphens. It must start with a letter. Trailing hyphens are prohibited.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"location": {
+						SchemaProps: spec.SchemaProps{
+							Description: "location is the GCP location in which the Key Ring exists. The value must match an existing GCP location, or \"global\". Defaults to global, if not set.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name", "keyRing", "projectID"},
+			},
+		},
 	}
 }
 

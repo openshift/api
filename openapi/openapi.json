@@ -16745,6 +16745,26 @@
         }
       }
     },
+    "com.github.openshift.api.machine.v1.LoadBalancerReference": {
+      "description": "LoadBalancerReference is a reference to a load balancer on IBM Cloud virtual private cloud(VPC).",
+      "type": "object",
+      "required": [
+        "name",
+        "type"
+      ],
+      "properties": {
+        "name": {
+          "description": "name of the LoadBalancer in IBM Cloud VPC. The name should be between 1 and 63 characters long and may consist of lowercase alphanumeric characters and hyphens only. The value must not end with a hyphen. It is a reference to existing LoadBalancer created by openshift installer component.",
+          "type": "string",
+          "default": ""
+        },
+        "type": {
+          "description": "type of the LoadBalancer service supported by IBM Cloud VPC. Currently, only Application LoadBalancer is supported. More details about Application LoadBalancer https://cloud.ibm.com/docs/vpc?topic=vpc-load-balancers-about&interface=ui Supported values are Application.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.machine.v1.NutanixCategory": {
       "description": "NutanixCategory identifies a pair of prism category key and value",
       "type": "object",
@@ -16976,6 +16996,14 @@
         "kind": {
           "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
           "type": "string"
+        },
+        "loadBalancers": {
+          "description": "loadBalancers is the set of load balancers to which the new control plane instance should be added once it is created.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machine.v1.LoadBalancerReference"
+          }
         },
         "memoryGiB": {
           "description": "memoryGiB is the size of a virtual machine's memory, in GiB. maximum value for the MemoryGiB depends on the selected SystemType. when SystemType is set to e880 maximum MemoryGiB value is 7463 GiB. when SystemType is set to e980 maximum MemoryGiB value is 15307 GiB. when SystemType is set to s922 maximum MemoryGiB value is 942 GiB. The minimum memory is 32 GiB. When omitted, this means the user has no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is 32.",

@@ -581,6 +581,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/machine/v1.DataDiskProperties":                                      schema_openshift_api_machine_v1_DataDiskProperties(ref),
 		"github.com/openshift/api/machine/v1.FailureDomains":                                          schema_openshift_api_machine_v1_FailureDomains(ref),
 		"github.com/openshift/api/machine/v1.GCPFailureDomain":                                        schema_openshift_api_machine_v1_GCPFailureDomain(ref),
+		"github.com/openshift/api/machine/v1.LoadBalancerReference":                                   schema_openshift_api_machine_v1_LoadBalancerReference(ref),
 		"github.com/openshift/api/machine/v1.NutanixCategory":                                         schema_openshift_api_machine_v1_NutanixCategory(ref),
 		"github.com/openshift/api/machine/v1.NutanixMachineProviderConfig":                            schema_openshift_api_machine_v1_NutanixMachineProviderConfig(ref),
 		"github.com/openshift/api/machine/v1.NutanixMachineProviderStatus":                            schema_openshift_api_machine_v1_NutanixMachineProviderStatus(ref),
@@ -28886,6 +28887,36 @@ func schema_openshift_api_machine_v1_GCPFailureDomain(ref common.ReferenceCallba
 	}
 }
 
+func schema_openshift_api_machine_v1_LoadBalancerReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "LoadBalancerReference is a reference to a load balancer on IBM Cloud virtual private cloud(VPC).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name of the LoadBalancer in IBM Cloud VPC. The name should be between 1 and 63 characters long and may consist of lowercase alphanumeric characters and hyphens only. The value must not end with a hyphen. It is a reference to existing LoadBalancer created by openshift installer component.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type of the LoadBalancer service supported by IBM Cloud VPC. Currently, only Application LoadBalancer is supported. More details about Application LoadBalancer https://cloud.ibm.com/docs/vpc?topic=vpc-load-balancers-about&interface=ui Supported values are Application.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name", "type"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_machine_v1_NutanixCategory(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -29291,12 +29322,26 @@ func schema_openshift_api_machine_v1_PowerVSMachineProviderConfig(ref common.Ref
 							Format:      "int32",
 						},
 					},
+					"loadBalancers": {
+						SchemaProps: spec.SchemaProps{
+							Description: "loadBalancers is the set of load balancers to which the new control plane instance should be added once it is created.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machine/v1.LoadBalancerReference"),
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"serviceInstance", "image", "network", "keyPairName"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1.PowerVSResource", "github.com/openshift/api/machine/v1.PowerVSSecretReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "k8s.io/apimachinery/pkg/util/intstr.IntOrString"},
+			"github.com/openshift/api/machine/v1.LoadBalancerReference", "github.com/openshift/api/machine/v1.PowerVSResource", "github.com/openshift/api/machine/v1.PowerVSSecretReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "k8s.io/apimachinery/pkg/util/intstr.IntOrString"},
 	}
 }
 

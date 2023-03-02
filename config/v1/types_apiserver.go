@@ -184,8 +184,7 @@ type APIServerEncryption struct {
 	Type EncryptionType `json:"type,omitempty"`
 }
 
-// +openshift:validation:FeatureSetAwareEnum:featureSet=Default,enum="";identity;aescbc
-// +openshift:validation:FeatureSetAwareEnum:featureSet=TechPreviewNoUpgrade,enum="";identity;aescbc;aesgcm
+// +kubebuilder:validation:Enum="";identity;aescbc
 type EncryptionType string
 
 const (
@@ -196,10 +195,6 @@ const (
 	// aescbc refers to a type where AES-CBC with PKCS#7 padding and a 32-byte key
 	// is used to perform encryption at the datastore layer.
 	EncryptionTypeAESCBC EncryptionType = "aescbc"
-
-	// aesgcm refers to a type where AES-GCM with random nonce and a 32-byte key
-	// is used to perform encryption at the datastore layer.
-	EncryptionTypeAESGCM EncryptionType = "aesgcm"
 )
 
 type APIServerStatus struct {

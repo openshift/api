@@ -1,18 +1,13 @@
 package cmd
 
-var leadingContentPreProcessing = true
-var unwrapScalar = true
+var unwrapScalarFlag = newUnwrapFlag()
+
+var unwrapScalar = false
 
 var writeInplace = false
 var outputToJSON = false
 var outputFormat = "yaml"
 var inputFormat = "yaml"
-
-var xmlAttributePrefix = "+"
-var xmlContentName = "+content"
-var xmlStrictMode = false
-var xmlKeepNamespace = true
-var xmlUseRawToken = true
 
 var exitStatus = false
 var forceColor = false

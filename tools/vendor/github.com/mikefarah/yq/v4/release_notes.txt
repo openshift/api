@@ -1,3 +1,64 @@
+4.30.5:
+  - XML Decoder: Comment parsing tweak 
+  - XML Decoder: Fixed processing comments in empty XML #1446
+  - XML Decoder: Checking for invalid content outside of a root node #1448
+  - XML Decoder: Fixed issue where content surrounding tags are lost #1447
+  - XML Decoder: Fixed xml decode bug when there is content after a comment
+  - Fixed loading yaml with header issue #1445
+  - guessTagFromCustomType warning log is now a debug.
+  - Special thanks to @Kopfbremse for reporting XML issues!
+
+4.30.4:
+  - Fixed bug in automated versioning (snap/brew)
+
+4.30.3:
+  - Updated release process (automated versioning)
+  - Fixed handling of yaml directives (#1424)
+  - Fixed parsing of newline character in string expression #1430
+  - Fixed length compares to null instead of 0 issue #1427
+
+4.30.2:
+  - Actually updated the default xml prefix :facepalm:
+
+4.30.1:
+  - XML users note: the default attribute prefix has change to `+@` to avoid naming conflicts!
+  - Can use expressions in slice #1419
+  - Fixed unhandled exception when decoding CSV thanks @washanhanzi
+  - Added array_to_map operator for #1415
+  - Fixed sorting by date #1412
+  - Added check to ensure only maps can be encoded to XML #1408
+  - Check merge alias is a map #1425
+  - Explicity setting unwrap flag works for json output #437, #1409
+  - Bumped go version
+
+
+
+4.29.2:
+  - Fixed null pointer exception when parsing CSV with empty field #1404
+
+4.29.1:
+  - Fixed Square brackets removing update #1342
+  - Added slice array operator (.[10:15]) #44
+  - XML decoder/encoder now parses directives and proc instructions (#1344). Please use the new skip flags [documented here](https://mikefarah.gitbook.io/yq/usage/xml) to ignore them.
+  - XML users note that the default attribute prefix will change to `+@` in the 4.30 release to avoid naming conflicts!
+  - Improved comment handling of decoders (breaking change for yqlib users sorry)
+  - Fixed load operator bug when loading yaml file with multiple documents
+  - Bumped Go compiler version
+  - Bumped dependencies
+
+4.28.2:
+  - Fixed Github Actions issues (thanks @mattphelps-8451)
+  - Fixed bug - can now delete documents #1377
+  - Fixed handling of UTF8 encoded CSVs #1373
+  - Detect and fail on missing closing brackets #1366
+  - yq Github actions now build docker image as part of release
+  - Bumped dependencies
+
+4.28.1:
+  - Added `setpath` and `delpaths` operators, like jq (#1374)
+  - Added `is_key` operator, to check if a match was a key when recursing
+  - Added validation when attempting to add sequences to maps (#1341)
+
 4.27.5:
   - Fixed relative merge bug #1333
 

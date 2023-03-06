@@ -206,7 +206,9 @@ func generateOnCreateTable(onCreateTests []OnCreateTestSpec) {
 		}))
 	}
 
-	DescribeTable("On Create", tableEntries...)
+	if len(tableEntries) > 1 {
+		DescribeTable("On Create", tableEntries...)
+	}
 }
 
 // generateOnUpdateTable generates a table of tests from the defined OnUpdate tests
@@ -300,7 +302,9 @@ func generateOnUpdateTable(onUpdateTests []OnUpdateTestSpec) {
 		}))
 	}
 
-	DescribeTable("On Update", tableEntries...)
+	if len(tableEntries) > 1 {
+		DescribeTable("On Update", tableEntries...)
+	}
 }
 
 // newUnstructuredsFor creates a set of unstructured resources for each version of the CRD.

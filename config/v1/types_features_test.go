@@ -5,6 +5,18 @@ import (
 	"testing"
 )
 
+var testFeatures = &FeatureGateEnabledDisabled{
+	Enabled: []string{
+		"APIPriorityAndFairness",         // sig-apimachinery, deads2k
+		"RotateKubeletServerCertificate", // sig-pod, sjenning
+		"DownwardAPIHugePages",           // sig-node, rphillips
+		"OpenShiftPodSecurityAdmission",  // bz-auth, stlaz, OCP specific
+	},
+	Disabled: []string{
+		"RetroactiveDefaultStorageClass", // sig-storage, RomanBednar, Kubernetes feature gate
+	},
+}
+
 func TestFeatureBuilder(t *testing.T) {
 	tests := []struct {
 		name     string
@@ -13,12 +25,12 @@ func TestFeatureBuilder(t *testing.T) {
 	}{
 		{
 			name:     "nothing",
-			actual:   newDefaultFeatures().toFeatures(),
-			expected: defaultFeatures,
+			actual:   newDefaultFeatures().toFeatures(testFeatures),
+			expected: testFeatures,
 		},
 		{
 			name:   "disable-existing",
-			actual: newDefaultFeatures().without("APIPriorityAndFairness").toFeatures(),
+			actual: newDefaultFeatures().without("APIPriorityAndFairness").toFeatures(testFeatures),
 			expected: &FeatureGateEnabledDisabled{
 				Enabled: []string{
 					"RotateKubeletServerCertificate",
@@ -33,7 +45,7 @@ func TestFeatureBuilder(t *testing.T) {
 		},
 		{
 			name:   "enable-existing",
-			actual: newDefaultFeatures().with("CSIMigrationAzureFile").toFeatures(),
+			actual: newDefaultFeatures().with("CSIMigrationAzureFile").toFeatures(testFeatures),
 			expected: &FeatureGateEnabledDisabled{
 				Enabled: []string{
 					"APIPriorityAndFairness",
@@ -49,7 +61,7 @@ func TestFeatureBuilder(t *testing.T) {
 		},
 		{
 			name:   "disable-more",
-			actual: newDefaultFeatures().without("APIPriorityAndFairness", "other").toFeatures(),
+			actual: newDefaultFeatures().without("APIPriorityAndFairness", "other").toFeatures(testFeatures),
 			expected: &FeatureGateEnabledDisabled{
 				Enabled: []string{
 					"RotateKubeletServerCertificate",
@@ -65,7 +77,7 @@ func TestFeatureBuilder(t *testing.T) {
 		},
 		{
 			name:   "enable-more",
-			actual: newDefaultFeatures().with("CSIMigrationAzureFile", "other").toFeatures(),
+			actual: newDefaultFeatures().with("CSIMigrationAzureFile", "other").toFeatures(testFeatures),
 			expected: &FeatureGateEnabledDisabled{
 				Enabled: []string{
 					"APIPriorityAndFairness",

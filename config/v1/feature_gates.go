@@ -242,4 +242,14 @@ var (
 		ResponsiblePerson:   "jspeed",
 		OwningProduct:       ocpSpecific,
 	}
+
+	FeatureGateCloudDualStackNodeIPs = FeatureGateName("CloudDualStackNodeIPs")
+	cloudDualStackNodeIPs            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateCloudDualStackNodeIPs,
+		},
+		OwningJiraComponent: "machine-config-operator/platform-baremetal",
+		ResponsiblePerson:   "mkowalsk",
+		OwningProduct:       kubernetes,
+	}
 )

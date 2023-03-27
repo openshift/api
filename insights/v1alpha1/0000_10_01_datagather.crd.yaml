@@ -19,7 +19,7 @@ spec:
   versions:
     - additionalPrinterColumns:
         - description: DataGather job state
-          jsonPath: .status.state
+          jsonPath: .status.dataGatherState
           name: State
           type: string
         - description: DataGather start time

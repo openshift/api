@@ -31,9 +31,10 @@ func (EvolvingUnion) SwaggerDoc() map[string]string {
 }
 
 var map_StableConfigType = map[string]string{
-	"":       "StableConfigType is a stable config type that may include TechPreviewNoUpgrade fields.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
-	"spec":   "spec is the specification of the desired behavior of the StableConfigType.",
-	"status": "status is the most recently observed status of the StableConfigType.",
+	"":         "StableConfigType is a stable config type that may include TechPreviewNoUpgrade fields.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"metadata": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+	"spec":     "spec is the specification of the desired behavior of the StableConfigType.",
+	"status":   "status is the most recently observed status of the StableConfigType.",
 }
 
 func (StableConfigType) SwaggerDoc() map[string]string {
@@ -41,7 +42,8 @@ func (StableConfigType) SwaggerDoc() map[string]string {
 }
 
 var map_StableConfigTypeList = map[string]string{
-	"": "StableConfigTypeList contains a list of StableConfigTypes.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"":         "StableConfigTypeList contains a list of StableConfigTypes.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"metadata": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
 }
 
 func (StableConfigTypeList) SwaggerDoc() map[string]string {

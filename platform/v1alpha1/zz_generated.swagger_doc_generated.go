@@ -30,7 +30,8 @@ func (Package) SwaggerDoc() map[string]string {
 }
 
 var map_PlatformOperator = map[string]string{
-	"": "PlatformOperator is the Schema for the PlatformOperators API.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"":         "PlatformOperator is the Schema for the PlatformOperators API.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"metadata": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
 }
 
 func (PlatformOperator) SwaggerDoc() map[string]string {
@@ -38,7 +39,8 @@ func (PlatformOperator) SwaggerDoc() map[string]string {
 }
 
 var map_PlatformOperatorList = map[string]string{
-	"": "PlatformOperatorList contains a list of PlatformOperators\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"":         "PlatformOperatorList contains a list of PlatformOperators\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"metadata": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
 }
 
 func (PlatformOperatorList) SwaggerDoc() map[string]string {

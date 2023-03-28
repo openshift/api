@@ -111,10 +111,10 @@ func handleMissingComments(commentPolicy string, rc int, missingComments string)
 	case CommentPolicyIgnore:
 		klog.V(3).Infof("Ignoring %d missing comments", rc)
 		return nil
-	case CommentPolicyWarn, "": // The empty string indicates this is the default policy.
+	case CommentPolicyWarn:
 		klog.Warningf("Found %d missing comments:\n%s", rc, missingComments)
 		return nil
-	case CommentPolicyEnforce:
+	case CommentPolicyEnforce, "": // The empty string indicates this is the default policy.
 		return fmt.Errorf("found %d missing comments:\n%s", rc, missingComments)
 	default:
 		return fmt.Errorf("unknown comment policy: %s", commentPolicy)

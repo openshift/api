@@ -315,8 +315,44 @@ type PlatformSpec struct {
 	External *ExternalPlatformSpec `json:"external,omitempty"`
 }
 
+// CloudControllerManagerState defines whether Cloud Controller Manager presence is expected or not
+type CloudControllerManagerState string
+
+const (
+	// Cloud Controller Manager is enabled and expected to be installed.
+	// This value indicates that new nodes should be tainted as uninitialized when created,
+	// preventing them from running workloads until they are initialized by the cloud controller manager.
+	CloudControllerManagerExternal CloudControllerManagerState = "External"
+
+	// Cloud Controller Manager is disabled and not expected to be installed.
+	// This value indicates that new nodes should not be tainted
+	// and no extra node initialization is expected from the cloud controller manager.
+	CloudControllerManagerNone CloudControllerManagerState = "None"
+)
+
+// CloudControllerManagerStatus holds the state of Cloud Controller Manager (a.k.a. CCM or CPI) related settings
+type CloudControllerManagerStatus struct {
+	// state determines whether or not an external Cloud Controller Manager is expected to
+	// be installed within the cluster.
+	// https://kubernetes.io/docs/tasks/administer-cluster/running-cloud-controller/#running-cloud-controller-manager
+	//
+	// When set to "External", new nodes will be tainted as uninitialized when created,
+	// preventing them from running workloads until they are initialized by the cloud controller manager.
+	// When omitted or set to "None", new nodes will be not tainted
+	// and no extra initialization from the cloud controller manager is expected.
+	// +kubebuilder:default:=""
+	// +default=""
+	// +kubebuilder:validation:Enum="";External;None
+	// +optional
+	State CloudControllerManagerState `json:"state"`
+}
+
 // ExternalPlatformStatus holds the current status of the generic External infrastructure provider.
-type ExternalPlatformStatus struct{}
+type ExternalPlatformStatus struct {
+	// CloudControllerManager contains settings specific to the external Cloud Controller Manager (a.k.a. CCM or CPI)
+	// +optional
+	CloudControllerManager CloudControllerManagerStatus `json:"cloudControllerManager"`
+}
 
 // PlatformStatus holds the current status specific to the underlying infrastructure provider
 // of the current cluster. Since these are used at status-level for the underlying cluster, it

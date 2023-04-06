@@ -77,7 +77,7 @@ spec:
                     - LegacyDeprecatedInTreeDriver
                     - CSIWithMigrationDriver
                   x-kubernetes-validations:
-                    - rule: self == oldSelf || oldSelf == "" || self == "CSIWithMigrationDriver"
+                    - rule: oldSelf != "CSIWithMigrationDriver" || self == "CSIWithMigrationDriver"
                       message: VSphereStorageDriver can not be changed once it is set to CSIWithMigrationDriver
               x-kubernetes-validations:
                 - rule: '!has(oldSelf.vsphereStorageDriver) || has(self.vsphereStorageDriver)'

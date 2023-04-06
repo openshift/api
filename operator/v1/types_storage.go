@@ -45,7 +45,7 @@ type StorageSpec struct {
 	// If this is empty, the platform will choose a good default,
 	// which may change over time without notice.
 	// DEPRECATED: This field will be removed in a future release.
-	// +kubebuilder:validation:XValidation:rule="self == oldSelf || oldSelf == \"\" || self == \"CSIWithMigrationDriver\"",message="VSphereStorageDriver can not be changed once it is set to CSIWithMigrationDriver"
+	// +kubebuilder:validation:XValidation:rule="oldSelf != \"CSIWithMigrationDriver\" || self == \"CSIWithMigrationDriver\"",message="VSphereStorageDriver can not be changed once it is set to CSIWithMigrationDriver"
 	// +optional
 	VSphereStorageDriver StorageDriverType `json:"vsphereStorageDriver"`
 }

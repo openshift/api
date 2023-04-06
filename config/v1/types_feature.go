@@ -127,6 +127,7 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		with("DynamicResourceAllocation").         // sig-scheduling, jchaloup (#forum-workloads), Kubernetes feature gate
 		with("ValidatingAdmissionPolicy").         // sig-api-machinery, benluddy
 		with("AdmissionWebhookMatchConditions").   // sig-api-machinery, benluddy
+		with("AzureWorkloadIdentity").             // cco, abutcher (#forum-cloud-credential-operator), OCP specific
 		toFeatures(defaultFeatures),
 	LatencySensitive: newDefaultFeatures().
 		with(

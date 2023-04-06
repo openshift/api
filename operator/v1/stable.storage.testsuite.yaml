@@ -102,3 +102,21 @@ tests:
       kind: Storage
       spec: {}
     expectedError: "VSphereStorageDriver is required once set"
+  - name: Should allow changing LegacyDeprecatedInTreeDriver to empty string
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Storage
+      spec:
+        vsphereStorageDriver: LegacyDeprecatedInTreeDriver
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Storage
+      spec:
+        vsphereStorageDriver: ""
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Storage
+      spec:
+        vsphereStorageDriver: ""
+        logLevel: Normal
+        operatorLogLevel: Normal

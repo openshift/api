@@ -361,7 +361,7 @@ spec:
                                   default: 1024
                                   description: "maxLength is the maximum length of the syslog message \n If this field is empty, the maxLength is set to \"1024\"."
                                   format: int32
-                                  maximum: 8192
+                                  maximum: 4096
                                   minimum: 480
                                   type: integer
                                 port:

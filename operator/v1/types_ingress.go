@@ -1027,7 +1027,7 @@ type SyslogLoggingDestinationParameters struct {
 	// If this field is empty, the maxLength is set to "1024".
 	//
 	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Maximum=8192
+	// +kubebuilder:validation:Maximum=4096
 	// +kubebuilder:validation:Minimum=480
 	// +kubebuilder:default=1024
 	// +optional

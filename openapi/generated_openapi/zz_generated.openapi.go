@@ -46069,7 +46069,7 @@ func schema_openshift_api_operator_v1_StorageSpec(ref common.ReferenceCallback) 
 					},
 					"vsphereStorageDriver": {
 						SchemaProps: spec.SchemaProps{
-							Description: "VSphereStorageDriver indicates the storage driver to use on VSphere clusters. Once this field is set to CSIWithMigrationDriver, it can not be changed. If this is empty, the platform will choose a good default, which may change over time without notice. DEPRECATED: This field will be removed in a future release.",
+							Description: "VSphereStorageDriver indicates the storage driver to use on VSphere clusters. Once this field is set to CSIWithMigrationDriver, it can not be changed. If this is empty, the platform will choose a good default, which may change over time without notice. The current default is LegacyDeprecatedInTreeDriver. DEPRECATED: This field will be removed in a future release.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",

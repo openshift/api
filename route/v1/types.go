@@ -240,6 +240,8 @@ type RouterShard struct {
 }
 
 // TLSConfig defines config used to secure a route and provide termination
+//
+// +kubebuilder:validation:XValidation:rule="has(self.termination) && has(self.insecureEdgeTerminationPolicy) ? !((self.termination=='passthrough') && (self.insecureEdgeTerminationPolicy=='Allow')) : true", message="cannot have both spec.tls.termination: passthrough and spec.tls.insecureEdgeTerminationPolicy: Allow"
 type TLSConfig struct {
 	// termination indicates termination type.
 	//
@@ -273,6 +275,8 @@ type TLSConfig struct {
 	// * Allow - traffic is sent to the server on the insecure port (edge/reencrypt terminations only) (default).
 	// * None - no traffic is allowed on the insecure port.
 	// * Redirect - clients are redirected to the secure port.
+	//
+	// +kubebuilder:validation:Enum=Allow;None;Redirect;""
 	InsecureEdgeTerminationPolicy InsecureEdgeTerminationPolicyType `json:"insecureEdgeTerminationPolicy,omitempty" protobuf:"bytes,6,opt,name=insecureEdgeTerminationPolicy,casttype=InsecureEdgeTerminationPolicyType"`
 }
 

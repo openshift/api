@@ -1037,9 +1037,11 @@ type SyslogLoggingDestinationParameters struct {
 // ContainerLoggingDestinationParameters describes parameters for the Container
 // logging destination type.
 type ContainerLoggingDestinationParameters struct {
-	// maxLength is the maximum length of the syslog message
+	// maxLength is the maximum length of the log message.
 	//
 	// If this field is empty, the maxLength is set to "1024".
+	//
+	// Allowed values are between "480" and "8192".
 	//
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Maximum=8192

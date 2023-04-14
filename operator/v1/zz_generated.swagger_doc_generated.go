@@ -738,7 +738,7 @@ func (ClientTLS) SwaggerDoc() map[string]string {
 
 var map_ContainerLoggingDestinationParameters = map[string]string{
 	"": "ContainerLoggingDestinationParameters describes parameters for the Container logging destination type.",
-	"maxLength": "maxLength is the maximum length of the log message\n\nIf this field is empty, the maxLength is set to \"1024\".",
+	"maxLength": "maxLength is the maximum length of the log message.\n\nIf this field is empty, the maxLength is set to \"1024\".\n\nAllowed values are between \"480\" and \"8192\".",
 }
 
 func (ContainerLoggingDestinationParameters) SwaggerDoc() map[string]string {

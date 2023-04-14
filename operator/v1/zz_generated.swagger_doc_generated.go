@@ -1611,7 +1611,7 @@ func (StorageList) SwaggerDoc() map[string]string {
 
 var map_StorageSpec = map[string]string{
 	"":                     "StorageSpec is the specification of the desired behavior of the cluster storage operator.",
-	"vsphereStorageDriver": "VSphereStorageDriver indicates the storage driver to use on VSphere clusters. Once this field is set to CSIWithMigrationDriver, it can not be changed. If this is empty, the platform will choose a good default, which may change over time without notice. DEPRECATED: This field will be removed in a future release.",
+	"vsphereStorageDriver": "VSphereStorageDriver indicates the storage driver to use on VSphere clusters. Once this field is set to CSIWithMigrationDriver, it can not be changed. If this is empty, the platform will choose a good default, which may change over time without notice. The current default is LegacyDeprecatedInTreeDriver. DEPRECATED: This field will be removed in a future release.",
 }
 
 func (StorageSpec) SwaggerDoc() map[string]string {

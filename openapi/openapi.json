@@ -23313,7 +23313,14 @@
     },
     "com.github.openshift.api.operator.v1.ContainerLoggingDestinationParameters": {
       "description": "ContainerLoggingDestinationParameters describes parameters for the Container logging destination type.",
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "maxLength": {
+          "description": "maxLength is the maximum length of the log message.\n\nIf this field is empty, the maxLength is set to \"1024\".\n\nAllowed values are between \"480\" and \"8192\".",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
     },
     "com.github.openshift.api.operator.v1.DNS": {
       "description": "DNS manages the CoreDNS component to provide a name resolution service for pods and services in the cluster.\n\nThis supports the DNS-based service discovery specification: https://github.com/kubernetes/dns/blob/master/docs/specification.md\n\nMore details: https://kubernetes.io/docs/tasks/administer-cluster/coredns\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
@@ -27551,7 +27558,7 @@
           "type": "string"
         },
         "maxLength": {
-          "description": "maxLength is the maximum length of the syslog message\n\nIf this field is empty, the maxLength is set to \"1024\".",
+          "description": "maxLength is the maximum length of the log message.\n\nIf this field is empty, the maxLength is set to \"1024\".\n\nAllowed values are between \"480\" and \"4096\".",
           "type": "integer",
           "format": "int64"
         },

@@ -310,7 +310,7 @@ spec:
                               properties:
                                 maxLength:
                                   default: 1024
-                                  description: "maxLength is the maximum length of the log message.\n\nIf this field is empty, the maxLength is set to \"1024\".\n\nAllowed values are between \"480\" and \"8192\"."
+                                  description: "maxLength is the maximum length of the log message. \n If this field is empty, the maxLength is set to \"1024\". \n Allowed values are between \"480\" and \"8192\"."
                                   format: int32
                                   maximum: 8192
                                   minimum: 480
@@ -359,7 +359,7 @@ spec:
                                   type: string
                                 maxLength:
                                   default: 1024
-                                  description: "maxLength is the maximum length of the log message.\n\nIf this field is empty, the maxLength is set to \"1024\".\n\nAllowed values are between \"480\" and \"4096\"."
+                                  description: "maxLength is the maximum length of the log message. \n If this field is empty, the maxLength is set to \"1024\". \n Allowed values are between \"480\" and \"4096\"."
                                   format: int32
                                   maximum: 4096
                                   minimum: 480

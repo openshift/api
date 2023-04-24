@@ -68,11 +68,15 @@ type FeatureGateSelection struct {
 type CustomFeatureGates struct {
 	// enabled is a list of all feature gates that you want to force on
 	// +optional
-	Enabled []string `json:"enabled,omitempty"`
+	Enabled []FeatureGateName `json:"enabled,omitempty"`
 	// disabled is a list of all feature gates that you want to force off
 	// +optional
-	Disabled []string `json:"disabled,omitempty"`
+	Disabled []FeatureGateName `json:"disabled,omitempty"`
 }
+
+// FeatureGateName is a string to enforce patterns on the name of a FeatureGate
+// +kubebuilder:validation:Pattern=`^([A-Za-z0-9-]+\.)*[A-Za-z0-9-]+\.?$`
+type FeatureGateName string
 
 type FeatureGateStatus struct {
 }

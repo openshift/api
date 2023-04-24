@@ -1481,12 +1481,12 @@ func (in *CustomFeatureGates) DeepCopyInto(out *CustomFeatureGates) {
 	*out = *in
 	if in.Enabled != nil {
 		in, out := &in.Enabled, &out.Enabled
-		*out = make([]string, len(*in))
+		*out = make([]FeatureGateName, len(*in))
 		copy(*out, *in)
 	}
 	if in.Disabled != nil {
 		in, out := &in.Disabled, &out.Disabled
-		*out = make([]string, len(*in))
+		*out = make([]FeatureGateName, len(*in))
 		copy(*out, *in)
 	}
 	return

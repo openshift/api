@@ -44,12 +44,16 @@ spec:
                       description: disabled is a list of all feature gates that you want to force off
                       type: array
                       items:
+                        description: FeatureGateName is a string to enforce patterns on the name of a FeatureGate
                         type: string
+                        pattern: ^([A-Za-z0-9-]+\.)*[A-Za-z0-9-]+\.?$
                     enabled:
                       description: enabled is a list of all feature gates that you want to force on
                       type: array
                       items:
+                        description: FeatureGateName is a string to enforce patterns on the name of a FeatureGate
                         type: string
+                        pattern: ^([A-Za-z0-9-]+\.)*[A-Za-z0-9-]+\.?$
                   nullable: true
                 featureSet:
                   description: featureSet changes the list of features in the cluster.  The default is empty.  Be very careful adjusting this setting. Turning on or off features may cause irreversible changes in your cluster which cannot be undone.

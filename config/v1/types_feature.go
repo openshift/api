@@ -172,6 +172,7 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		with("PDBUnhealthyPodEvictionPolicy").     // sig-apps, atiratree (#forum-workloads), Kubernetes feature gate
 		with("DynamicResourceAllocation").         // sig-scheduling, jchaloup (#forum-workloads), Kubernetes feature gate
 		with("AdmissionWebhookMatchConditions").   // sig-api-machinery, benluddy
+		with("AzureWorkloadIdentity").             // cco, abutcher (#forum-cloud-credential-operator), OCP specific
 		toFeatures(defaultFeatures),
 	LatencySensitive: newDefaultFeatures().
 		with(

@@ -225,6 +225,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.ExternalPlatformStatus":                                   schema_openshift_api_config_v1_ExternalPlatformStatus(ref),
 		"github.com/openshift/api/config/v1.FeatureGate":                                              schema_openshift_api_config_v1_FeatureGate(ref),
 		"github.com/openshift/api/config/v1.FeatureGateAttributes":                                    schema_openshift_api_config_v1_FeatureGateAttributes(ref),
+		"github.com/openshift/api/config/v1.FeatureGateDescription":                                   schema_openshift_api_config_v1_FeatureGateDescription(ref),
 		"github.com/openshift/api/config/v1.FeatureGateDetails":                                       schema_openshift_api_config_v1_FeatureGateDetails(ref),
 		"github.com/openshift/api/config/v1.FeatureGateEnabledDisabled":                               schema_openshift_api_config_v1_FeatureGateEnabledDisabled(ref),
 		"github.com/openshift/api/config/v1.FeatureGateList":                                          schema_openshift_api_config_v1_FeatureGateList(ref),
@@ -11422,6 +11423,53 @@ func schema_openshift_api_config_v1_FeatureGateAttributes(ref common.ReferenceCa
 	}
 }
 
+func schema_openshift_api_config_v1_FeatureGateDescription(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "FeatureGateDescription is a golang-only interface used to contains details for a feature gate.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"FeatureGateAttributes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FeatureGateAttributes is the information that appears in the API",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.FeatureGateAttributes"),
+						},
+					},
+					"OwningJiraComponent": {
+						SchemaProps: spec.SchemaProps{
+							Description: "OwningJiraComponent is the jira component that owns most of the impl and first assignment for the bug. This is the team that owns the feature long term.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"ResponsiblePerson": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ResponsiblePerson is the person who is on the hook for first contact.  This is often, but not always, a team lead. It is someone who can make the promise on the behalf of the team.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"OwningProduct": {
+						SchemaProps: spec.SchemaProps{
+							Description: "OwningProduct is the product that owns the lifecycle of the gate.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"FeatureGateAttributes", "OwningJiraComponent", "ResponsiblePerson", "OwningProduct"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.FeatureGateAttributes"},
+	}
+}
+
 func schema_openshift_api_config_v1_FeatureGateDetails(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -11485,9 +11533,8 @@ func schema_openshift_api_config_v1_FeatureGateEnabledDisabled(ref common.Refere
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.FeatureGateDescription"),
 									},
 								},
 							},
@@ -11499,9 +11546,8 @@ func schema_openshift_api_config_v1_FeatureGateEnabledDisabled(ref common.Refere
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.FeatureGateDescription"),
 									},
 								},
 							},
@@ -11511,6 +11557,8 @@ func schema_openshift_api_config_v1_FeatureGateEnabledDisabled(ref common.Refere
 				Required: []string{"Enabled", "Disabled"},
 			},
 		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.FeatureGateDescription"},
 	}
 }
 
@@ -17831,9 +17879,8 @@ func schema_openshift_api_config_v1_featureSetBuilder(ref common.ReferenceCallba
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.FeatureGateDescription"),
 									},
 								},
 							},
@@ -17845,9 +17892,8 @@ func schema_openshift_api_config_v1_featureSetBuilder(ref common.ReferenceCallba
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.FeatureGateDescription"),
 									},
 								},
 							},
@@ -17857,6 +17903,8 @@ func schema_openshift_api_config_v1_featureSetBuilder(ref common.ReferenceCallba
 				Required: []string{"forceOn", "forceOff"},
 			},
 		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.FeatureGateDescription"},
 	}
 }
 

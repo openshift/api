@@ -5987,6 +5987,38 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.FeatureGateDescription": {
+      "description": "FeatureGateDescription is a golang-only interface used to contains details for a feature gate.",
+      "type": "object",
+      "required": [
+        "FeatureGateAttributes",
+        "OwningJiraComponent",
+        "ResponsiblePerson",
+        "OwningProduct"
+      ],
+      "properties": {
+        "FeatureGateAttributes": {
+          "description": "FeatureGateAttributes is the information that appears in the API",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.FeatureGateAttributes"
+        },
+        "OwningJiraComponent": {
+          "description": "OwningJiraComponent is the jira component that owns most of the impl and first assignment for the bug. This is the team that owns the feature long term.",
+          "type": "string",
+          "default": ""
+        },
+        "OwningProduct": {
+          "description": "OwningProduct is the product that owns the lifecycle of the gate.",
+          "type": "string",
+          "default": ""
+        },
+        "ResponsiblePerson": {
+          "description": "ResponsiblePerson is the person who is on the hook for first contact.  This is often, but not always, a team lead. It is someone who can make the promise on the behalf of the team.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.FeatureGateDetails": {
       "type": "object",
       "required": [
@@ -6026,15 +6058,15 @@
         "Disabled": {
           "type": "array",
           "items": {
-            "type": "string",
-            "default": ""
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.FeatureGateDescription"
           }
         },
         "Enabled": {
           "type": "array",
           "items": {
-            "type": "string",
-            "default": ""
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.FeatureGateDescription"
           }
         }
       }
@@ -9805,15 +9837,15 @@
         "forceOff": {
           "type": "array",
           "items": {
-            "type": "string",
-            "default": ""
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.FeatureGateDescription"
           }
         },
         "forceOn": {
           "type": "array",
           "items": {
-            "type": "string",
-            "default": ""
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.FeatureGateDescription"
           }
         }
       }

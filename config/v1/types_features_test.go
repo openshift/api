@@ -5,15 +5,44 @@ import (
 	"testing"
 )
 
+var (
+	featureGateFoo = FeatureGateName("Foo")
+	foo            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: featureGateFoo,
+		},
+		OwningJiraComponent: "auth",
+		ResponsiblePerson:   "stlaz",
+		OwningProduct:       ocpSpecific,
+	}
+
+	featureGateBar = FeatureGateName("Bar")
+	bar            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: featureGateBar,
+		},
+		OwningJiraComponent: "storage",
+		ResponsiblePerson:   "RomanBednar",
+		OwningProduct:       kubernetes,
+	}
+
+	featureGateBaz = FeatureGateName("Baz")
+	baz            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: featureGateBaz,
+		},
+		OwningJiraComponent: "cloud-provider",
+		ResponsiblePerson:   "jspeed",
+		OwningProduct:       ocpSpecific,
+	}
+)
+
 var testFeatures = &FeatureGateEnabledDisabled{
-	Enabled: []string{
-		"APIPriorityAndFairness",         // sig-apimachinery, deads2k
-		"RotateKubeletServerCertificate", // sig-pod, sjenning
-		"DownwardAPIHugePages",           // sig-node, rphillips
-		"OpenShiftPodSecurityAdmission",  // bz-auth, stlaz, OCP specific
+	Enabled: []FeatureGateDescription{
+		foo,
 	},
-	Disabled: []string{
-		"RetroactiveDefaultStorageClass", // sig-storage, RomanBednar, Kubernetes feature gate
+	Disabled: []FeatureGateDescription{
+		bar,
 	},
 }
 
@@ -30,65 +59,50 @@ func TestFeatureBuilder(t *testing.T) {
 		},
 		{
 			name:   "disable-existing",
-			actual: newDefaultFeatures().without("APIPriorityAndFairness").toFeatures(testFeatures),
+			actual: newDefaultFeatures().without(foo).toFeatures(testFeatures),
 			expected: &FeatureGateEnabledDisabled{
-				Enabled: []string{
-					"RotateKubeletServerCertificate",
-					"DownwardAPIHugePages",
-					"OpenShiftPodSecurityAdmission",
-				},
-				Disabled: []string{
-					"RetroactiveDefaultStorageClass",
-					"APIPriorityAndFairness",
+				Enabled: []FeatureGateDescription{},
+				Disabled: []FeatureGateDescription{
+					bar,
+					foo,
 				},
 			},
 		},
 		{
 			name:   "enable-existing",
-			actual: newDefaultFeatures().with("CSIMigrationAzureFile").toFeatures(testFeatures),
+			actual: newDefaultFeatures().with(foo).toFeatures(testFeatures),
 			expected: &FeatureGateEnabledDisabled{
-				Enabled: []string{
-					"APIPriorityAndFairness",
-					"RotateKubeletServerCertificate",
-					"DownwardAPIHugePages",
-					"OpenShiftPodSecurityAdmission",
-					"CSIMigrationAzureFile",
+				Enabled: []FeatureGateDescription{
+					foo,
 				},
-				Disabled: []string{
-					"RetroactiveDefaultStorageClass",
+				Disabled: []FeatureGateDescription{
+					bar,
 				},
 			},
 		},
 		{
 			name:   "disable-more",
-			actual: newDefaultFeatures().without("APIPriorityAndFairness", "other").toFeatures(testFeatures),
+			actual: newDefaultFeatures().without(baz).toFeatures(testFeatures),
 			expected: &FeatureGateEnabledDisabled{
-				Enabled: []string{
-					"RotateKubeletServerCertificate",
-					"DownwardAPIHugePages",
-					"OpenShiftPodSecurityAdmission",
+				Enabled: []FeatureGateDescription{
+					foo,
 				},
-				Disabled: []string{
-					"RetroactiveDefaultStorageClass",
-					"APIPriorityAndFairness",
-					"other",
+				Disabled: []FeatureGateDescription{
+					bar,
+					baz,
 				},
 			},
 		},
 		{
 			name:   "enable-more",
-			actual: newDefaultFeatures().with("CSIMigrationAzureFile", "other").toFeatures(testFeatures),
+			actual: newDefaultFeatures().with(baz).toFeatures(testFeatures),
 			expected: &FeatureGateEnabledDisabled{
-				Enabled: []string{
-					"APIPriorityAndFairness",
-					"RotateKubeletServerCertificate",
-					"DownwardAPIHugePages",
-					"OpenShiftPodSecurityAdmission",
-					"CSIMigrationAzureFile",
-					"other",
+				Enabled: []FeatureGateDescription{
+					foo,
+					baz,
 				},
-				Disabled: []string{
-					"RetroactiveDefaultStorageClass",
+				Disabled: []FeatureGateDescription{
+					bar,
 				},
 			},
 		},

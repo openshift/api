@@ -136,8 +136,8 @@ type FeatureGateList struct {
 }
 
 type FeatureGateEnabledDisabled struct {
-	Enabled  []string
-	Disabled []string
+	Enabled  []FeatureGateDescription
+	Disabled []FeatureGateDescription
 }
 
 // FeatureSets Contains a map of Feature names to Enabled/Disabled Feature.
@@ -155,72 +155,69 @@ type FeatureGateEnabledDisabled struct {
 var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 	Default: defaultFeatures,
 	CustomNoUpgrade: {
-		Enabled:  []string{},
-		Disabled: []string{},
+		Enabled:  []FeatureGateDescription{},
+		Disabled: []FeatureGateDescription{},
 	},
 	TechPreviewNoUpgrade: newDefaultFeatures().
-		with("ExternalCloudProvider").             // sig-cloud-provider, jspeed, OCP specific
-		with("ExternalCloudProviderAzure").        // sig-cloud-provider, jspeed, OCP specific
-		with("ExternalCloudProviderGCP").          // sig-cloud-provider, jspeed, OCP specific
-		with("CSIDriverSharedResource").           // sig-build, adkaplan, OCP specific
-		with("BuildCSIVolumes").                   // sig-build, adkaplan, OCP specific
-		with("NodeSwap").                          // sig-node, ehashman, Kubernetes feature gate
-		with("MachineAPIProviderOpenStack").       // openstack, egarcia (#forum-openstack), OCP specific
-		with("InsightsConfigAPI").                 // insights, tremes (#ccx), OCP specific
-		with("MatchLabelKeysInPodTopologySpread"). // sig-scheduling, ingvagabund (#forum-workloads), Kubernetes feature gate
-		with("RetroactiveDefaultStorageClass").    // sig-storage, RomanBednar, Kubernetes feature gate
-		with("PDBUnhealthyPodEvictionPolicy").     // sig-apps, atiratree (#forum-workloads), Kubernetes feature gate
-		with("DynamicResourceAllocation").         // sig-scheduling, jchaloup (#forum-workloads), Kubernetes feature gate
-		with("AdmissionWebhookMatchConditions").   // sig-api-machinery, benluddy
-		with("AzureWorkloadIdentity").             // cco, abutcher (#forum-cloud-credential-operator), OCP specific
+		with(externalCloudProvider).
+		with(externalCloudProviderAzure).
+		with(externalCloudProviderGCP).
+		with(csiDriverSharedResource).
+		with(buildCSIVolumes).
+		with(nodeSwap).
+		with(machineAPIProviderOpenStack).
+		with(insightsConfigAPI).
+		with(matchLabelKeysInPodTopologySpread).
+		with(retroactiveDefaultStorageClass).
+		with(pdbUnhealthyPodEvictionPolicy).
+		with(dynamicResourceAllocation).
+		with(admissionWebhookMatchConditions).
+		with(azureWorkloadIdentity).
 		toFeatures(defaultFeatures),
 	LatencySensitive: newDefaultFeatures().
-		with(
-			"TopologyManager", // sig-pod, sjenning
-		).
 		toFeatures(defaultFeatures),
 }
 
 var defaultFeatures = &FeatureGateEnabledDisabled{
-	Enabled: []string{
-		"OpenShiftPodSecurityAdmission", // bz-auth, stlaz, OCP specific
+	Enabled: []FeatureGateDescription{
+		openShiftPodSecurityAdmission,
 	},
-	Disabled: []string{
-		"RetroactiveDefaultStorageClass", // sig-storage, RomanBednar, Kubernetes feature gate
+	Disabled: []FeatureGateDescription{
+		retroactiveDefaultStorageClass,
 	},
 }
 
 type featureSetBuilder struct {
-	forceOn  []string
-	forceOff []string
+	forceOn  []FeatureGateDescription
+	forceOff []FeatureGateDescription
 }
 
 func newDefaultFeatures() *featureSetBuilder {
 	return &featureSetBuilder{}
 }
 
-func (f *featureSetBuilder) with(forceOn ...string) *featureSetBuilder {
-	f.forceOn = append(f.forceOn, forceOn...)
+func (f *featureSetBuilder) with(forceOn FeatureGateDescription) *featureSetBuilder {
+	f.forceOn = append(f.forceOn, forceOn)
 	return f
 }
 
-func (f *featureSetBuilder) without(forceOff ...string) *featureSetBuilder {
-	f.forceOff = append(f.forceOff, forceOff...)
+func (f *featureSetBuilder) without(forceOff FeatureGateDescription) *featureSetBuilder {
+	f.forceOff = append(f.forceOff, forceOff)
 	return f
 }
 
-func (f *featureSetBuilder) isForcedOff(needle string) bool {
+func (f *featureSetBuilder) isForcedOff(needle FeatureGateDescription) bool {
 	for _, forcedOff := range f.forceOff {
-		if needle == forcedOff {
+		if needle.FeatureGateAttributes.Name == forcedOff.FeatureGateAttributes.Name {
 			return true
 		}
 	}
 	return false
 }
 
-func (f *featureSetBuilder) isForcedOn(needle string) bool {
+func (f *featureSetBuilder) isForcedOn(needle FeatureGateDescription) bool {
 	for _, forceOn := range f.forceOn {
-		if needle == forceOn {
+		if needle.FeatureGateAttributes.Name == forceOn.FeatureGateAttributes.Name {
 			return true
 		}
 	}
@@ -228,8 +225,8 @@ func (f *featureSetBuilder) isForcedOn(needle string) bool {
 }
 
 func (f *featureSetBuilder) toFeatures(defaultFeatures *FeatureGateEnabledDisabled) *FeatureGateEnabledDisabled {
-	finalOn := []string{}
-	finalOff := []string{}
+	finalOn := []FeatureGateDescription{}
+	finalOff := []FeatureGateDescription{}
 
 	// only add the default enabled features if they haven't been explicitly set off
 	for _, defaultOn := range defaultFeatures.Enabled {
@@ -241,6 +238,16 @@ func (f *featureSetBuilder) toFeatures(defaultFeatures *FeatureGateEnabledDisabl
 		if f.isForcedOff(currOn) {
 			panic("coding error, you can't have features both on and off")
 		}
+		found := false
+		for _, alreadyOn := range finalOn {
+			if alreadyOn.FeatureGateAttributes.Name == currOn.FeatureGateAttributes.Name {
+				found = true
+			}
+		}
+		if found {
+			continue
+		}
+
 		finalOn = append(finalOn, currOn)
 	}
 

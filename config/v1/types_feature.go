@@ -160,6 +160,8 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 	},
 	TechPreviewNoUpgrade: newDefaultFeatures().
 		with("ExternalCloudProvider").             // sig-cloud-provider, jspeed, OCP specific
+		with("ExternalCloudProviderAzure").        // sig-cloud-provider, jspeed, OCP specific
+		with("ExternalCloudProviderGCP").          // sig-cloud-provider, jspeed, OCP specific
 		with("CSIDriverSharedResource").           // sig-build, adkaplan, OCP specific
 		with("BuildCSIVolumes").                   // sig-build, adkaplan, OCP specific
 		with("NodeSwap").                          // sig-node, ehashman, Kubernetes feature gate

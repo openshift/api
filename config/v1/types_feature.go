@@ -1,6 +1,10 @@
 package v1
 
-import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+import (
+	"fmt"
+
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+)
 
 // +genclient
 // +genclient:nonNamespaced
@@ -197,11 +201,21 @@ func newDefaultFeatures() *featureSetBuilder {
 }
 
 func (f *featureSetBuilder) with(forceOn FeatureGateDescription) *featureSetBuilder {
+	for _, curr := range f.forceOn {
+		if curr.FeatureGateAttributes.Name == forceOn.FeatureGateAttributes.Name {
+			panic(fmt.Errorf("coding error: %q enabled twice", forceOn.FeatureGateAttributes.Name))
+		}
+	}
 	f.forceOn = append(f.forceOn, forceOn)
 	return f
 }
 
 func (f *featureSetBuilder) without(forceOff FeatureGateDescription) *featureSetBuilder {
+	for _, curr := range f.forceOff {
+		if curr.FeatureGateAttributes.Name == forceOff.FeatureGateAttributes.Name {
+			panic(fmt.Errorf("coding error: %q disabled twice", forceOff.FeatureGateAttributes.Name))
+		}
+	}
 	f.forceOff = append(f.forceOff, forceOff)
 	return f
 }

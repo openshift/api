@@ -156,7 +156,7 @@ var (
 	FeatureGateAdmissionWebhookMatchConditions = FeatureGateName("AdmissionWebhookMatchConditions")
 	admissionWebhookMatchConditions            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
-			Name: FeatureGateDynamicResourceAllocation,
+			Name: FeatureGateAdmissionWebhookMatchConditions,
 		},
 		OwningJiraComponent: "kube-apiserver",
 		ResponsiblePerson:   "benluddy",
@@ -166,7 +166,7 @@ var (
 	FeatureGateAzureWorkloadIdentity = FeatureGateName("AzureWorkloadIdentity")
 	azureWorkloadIdentity            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
-			Name: FeatureGateDynamicResourceAllocation,
+			Name: FeatureGateAzureWorkloadIdentity,
 		},
 		OwningJiraComponent: "cloud-credential-operator",
 		ResponsiblePerson:   "abutcher",

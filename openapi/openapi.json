@@ -25709,6 +25709,11 @@
           "type": "integer",
           "format": "int64"
         },
+        "maxLogFiles": {
+          "description": "maxLogFiles specifies the maximum number of ACL_audit log files that can be present. Default: 5",
+          "type": "integer",
+          "format": "int32"
+        },
         "rateLimit": {
           "description": "rateLimit is the approximate maximum number of messages to generate per-second per-node. If unset the default of 20 msg/sec is used.",
           "type": "integer",

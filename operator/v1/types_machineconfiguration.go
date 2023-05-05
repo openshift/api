@@ -21,7 +21,6 @@ type MachineConfiguration struct {
 
 	// spec is the specification of the desired behavior of the Machine Config Operator
 	// +kubebuilder:validation:Required
-	// +required
 	Spec MachineConfigurationSpec `json:"spec"`
 
 	// status is the most recently observed status of the Machine Config Operator

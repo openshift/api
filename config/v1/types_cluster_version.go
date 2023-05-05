@@ -466,7 +466,7 @@ type Update struct {
 	// Valid values are 'Multi' and empty.
 	//
 	// +optional
-	Architecture ClusterVersionArchitecture `json:"architecture"`
+	Architecture ClusterVersionArchitecture `json:"architecture,omitempty"`
 
 	// version is a semantic version identifying the update version.
 	// version is ignored if image is specified and required if

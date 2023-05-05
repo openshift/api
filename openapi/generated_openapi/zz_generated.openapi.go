@@ -17342,7 +17342,6 @@ func schema_openshift_api_config_v1_Update(ref common.ReferenceCallback) common.
 					"architecture": {
 						SchemaProps: spec.SchemaProps{
 							Description: "architecture is an optional field that indicates the desired value of the cluster architecture. In this context cluster architecture means either a single architecture or a multi architecture. architecture can only be set to Multi thereby only allowing updates from single to multi architecture. If architecture is set, image cannot be set and version must be set. Valid values are 'Multi' and empty.",
-							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},

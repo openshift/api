@@ -45811,6 +45811,14 @@ func schema_openshift_api_operator_v1_Perspective(ref common.ReferenceCallback) 
 							Ref:         ref("github.com/openshift/api/operator/v1.PerspectiveVisibility"),
 						},
 					},
+					"guidedTour": {
+						SchemaProps: spec.SchemaProps{
+							Description: "guidedTour defines if the guided tour of this perspective will be shown (\"Enabled\") or not (\"Disabled\").",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"pinnedResources": {
 						SchemaProps: spec.SchemaProps{
 							Description: "pinnedResources defines the list of default pinned resources that users will see on the perspective navigation if they have not customized these pinned resources themselves. The list of available Kubernetes resources could be read via `kubectl api-resources`. The console will also provide a configuration UI and a YAML snippet that will list the available resources that can be pinned to the navigation. Incorrect or unknown resources will be ignored.",

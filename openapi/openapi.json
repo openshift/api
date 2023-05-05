@@ -26894,6 +26894,11 @@
         "visibility"
       ],
       "properties": {
+        "guidedTour": {
+          "description": "guidedTour defines if the guided tour of this perspective will be shown (\"Enabled\") or not (\"Disabled\").",
+          "type": "string",
+          "default": ""
+        },
         "id": {
           "description": "id defines the id of the perspective. Example: \"dev\", \"admin\". The available perspective ids can be found in the code snippet section next to the yaml editor. Incorrect or unknown ids will be ignored.",
           "type": "string",

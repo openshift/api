@@ -291,6 +291,14 @@ type PerspectiveVisibility struct {
 	AccessReview *ResourceAttributesAccessReview `json:"accessReview,omitempty"`
 }
 
+// PerspectiveGuidedTourState defines if a guided tour of the perspective will be shown ("Enabled") or not ("Disabled").
+type PerspectiveGuidedTourState string
+
+const (
+	PerspectiveGuidedTourEnabled  PerspectiveGuidedTourState = "Enabled"
+	PerspectiveGuidedTourDisabled PerspectiveGuidedTourState = "Disabled"
+)
+
 // Perspective defines a perspective that cluster admins want to show/hide in the perspective switcher dropdown
 // +kubebuilder:validation:XValidation:rule="has(self.id) && self.id != 'dev'? !has(self.pinnedResources) : true",message="pinnedResources is allowed only for dev and forbidden for other perspectives"
 // +optional
@@ -304,6 +312,9 @@ type Perspective struct {
 	// visibility defines the state of perspective along with access review checks if needed for that perspective.
 	// +kubebuilder:validation:Required
 	Visibility PerspectiveVisibility `json:"visibility"`
+	// guidedTour defines if the guided tour of this perspective will be shown ("Enabled") or not ("Disabled").
+	// +optional
+	GuidedTour PerspectiveGuidedTourState `json:"guidedTour"`
 	// pinnedResources defines the list of default pinned resources that users will see on the perspective navigation if they have not customized these pinned resources themselves.
 	// The list of available Kubernetes resources could be read via `kubectl api-resources`.
 	// The console will also provide a configuration UI and a YAML snippet that will list the available resources that can be pinned to the navigation.

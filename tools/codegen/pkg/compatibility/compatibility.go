@@ -26,7 +26,7 @@ const (
 
 // insertCompatibilityLevelComments adds a compatiblity level comment to any API type
 // within the path given.
-// This is based on the presence of an `opnenshift:compaibility-gen` tag.
+// This is based on the presence of an `openshift:compatibility-gen` tag.
 func insertCompatibilityLevelComments(path string, verifyOnly bool) error {
 	pkgs, err := decorator.ParseDir(token.NewFileSet(), path, onlyTypesFiles, parser.ParseComments)
 	if err != nil {

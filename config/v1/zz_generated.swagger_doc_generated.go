@@ -806,6 +806,24 @@ func (FeatureGate) SwaggerDoc() map[string]string {
 	return map_FeatureGate
 }
 
+var map_FeatureGateAttributes = map[string]string{
+	"name": "name is the name of the FeatureGate.",
+}
+
+func (FeatureGateAttributes) SwaggerDoc() map[string]string {
+	return map_FeatureGateAttributes
+}
+
+var map_FeatureGateDetails = map[string]string{
+	"version":  "version matches the version provided by the ClusterVersion and in the ClusterOperator.Status.Versions field.",
+	"enabled":  "enabled is a list of all feature gates that are enabled in the cluster for the named version.",
+	"disabled": "disabled is a list of all feature gates that are disabled in the cluster for the named version.",
+}
+
+func (FeatureGateDetails) SwaggerDoc() map[string]string {
+	return map_FeatureGateDetails
+}
+
 var map_FeatureGateList = map[string]string{
 	"":         "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 	"metadata": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
@@ -822,6 +840,15 @@ var map_FeatureGateSelection = map[string]string{
 
 func (FeatureGateSelection) SwaggerDoc() map[string]string {
 	return map_FeatureGateSelection
+}
+
+var map_FeatureGateStatus = map[string]string{
+	"conditions":   "conditions represent the observations of the current state. Known .status.conditions.type are: \"DeterminationDegraded\"",
+	"featureGates": "featureGates contains a list of enabled and disabled featureGates that are keyed by payloadVersion. Operators other than the CVO and cluster-config-operator, must read the .status.featureGates, locate the version they are managing, find the enabled/disabled featuregates and make the operand and operator match. The enabled/disabled values for a particular version may change during the life of the cluster as various .spec.featureSet values are selected. Operators may choose to restart their processes to pick up these changes, but remembering past enable/disable lists is beyond the scope of this API and is the responsibility of individual operators. Only featureGates with .version in the ClusterVersion.status will be present in this list.",
+}
+
+func (FeatureGateStatus) SwaggerDoc() map[string]string {
+	return map_FeatureGateStatus
 }
 
 var map_Image = map[string]string{

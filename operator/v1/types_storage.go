@@ -47,8 +47,10 @@ type StorageSpec struct {
 	// Once this field is set to CSIWithMigrationDriver, it can not be changed.
 	// If this is empty, the platform will choose a good default,
 	// which may change over time without notice.
+	// The current default is CSIWithMigrationDriver and may not be changed.
 	// DEPRECATED: This field will be removed in a future release.
 	// +kubebuilder:validation:XValidation:rule="oldSelf != \"CSIWithMigrationDriver\" || self == \"CSIWithMigrationDriver\"",message="VSphereStorageDriver can not be changed once it is set to CSIWithMigrationDriver"
+	// +kubebuilder:validation:XValidation:rule="self != \"LegacyDeprecatedInTreeDriver\"",message="VSphereStorageDriver can not be set to LegacyDeprecatedInTreeDriver"
 	// +optional
 	VSphereStorageDriver StorageDriverType `json:"vsphereStorageDriver"`
 }

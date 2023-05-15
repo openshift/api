@@ -40544,7 +40544,7 @@ func schema_openshift_api_operator_v1_ContainerLoggingDestinationParameters(ref 
 				Properties: map[string]spec.Schema{
 					"maxLength": {
 						SchemaProps: spec.SchemaProps{
-							Description: "maxLength is the maximum length of the log message.\n\nIf this field is empty, the maxLength is set to \"1024\".\n\nAllowed values are between \"480\" and \"8192\".",
+							Description: "maxLength is the maximum length of the log message.\n\nValid values are integers in the range 480 to 8192, inclusive.\n\nWhen omitted, the default value is 1024.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
@@ -47623,7 +47623,7 @@ func schema_openshift_api_operator_v1_SyslogLoggingDestinationParameters(ref com
 					},
 					"maxLength": {
 						SchemaProps: spec.SchemaProps{
-							Description: "maxLength is the maximum length of the log message.\n\nIf this field is empty, the maxLength is set to \"1024\".\n\nAllowed values are between \"480\" and \"4096\".",
+							Description: "maxLength is the maximum length of the log message.\n\nValid values are integers in the range 480 to 4096, inclusive.\n\nWhen omitted, the default value is 1024.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},

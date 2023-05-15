@@ -1024,9 +1024,9 @@ type SyslogLoggingDestinationParameters struct {
 
 	// maxLength is the maximum length of the log message.
 	//
-	// If this field is empty, the maxLength is set to "1024".
+	// Valid values are integers in the range 480 to 4096, inclusive.
 	//
-	// Allowed values are between "480" and "4096".
+	// When omitted, the default value is 1024.
 	//
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Maximum=4096
@@ -1041,9 +1041,9 @@ type SyslogLoggingDestinationParameters struct {
 type ContainerLoggingDestinationParameters struct {
 	// maxLength is the maximum length of the log message.
 	//
-	// If this field is empty, the maxLength is set to "1024".
+	// Valid values are integers in the range 480 to 8192, inclusive.
 	//
-	// Allowed values are between "480" and "8192".
+	// When omitted, the default value is 1024.
 	//
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Maximum=8192

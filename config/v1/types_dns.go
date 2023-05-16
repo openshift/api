@@ -53,6 +53,14 @@ type DNSSpec struct {
 	//
 	// +optional
 	PrivateZone *DNSZone `json:"privateZone,omitempty"`
+	// awsPrivateHostedZoneRole contains the ARN of a role that should be assumed when performing
+	// operations on the cluster's private hosted zone specified in the cluster DNS config.
+	//
+	// When left empty, no role should be assumed.
+	//
+	// +kubebuilder:validation:Pattern:=`^arn:(aws|aws-cn|aws-us-gov):iam:[a-z0-9-]+:[0-9]{12}:role\/.*$`
+	// +optional
+	AWSPrivateHostedZoneRole string `json:"awsPrivateHostedZoneRole,omitempty"`
 }
 
 // DNSZone is used to define a DNS hosted zone.

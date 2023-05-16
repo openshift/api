@@ -10972,6 +10972,13 @@ func schema_openshift_api_config_v1_DNSSpec(ref common.ReferenceCallback) common
 							Ref:         ref("github.com/openshift/api/config/v1.DNSZone"),
 						},
 					},
+					"awsPrivateHostedZoneRole": {
+						SchemaProps: spec.SchemaProps{
+							Description: "awsPrivateHostedZoneRole contains the ARN of a role that should be assumed when performing operations on the cluster's private hosted zone specified in the cluster DNS config.\n\nWhen left empty, no role should be assumed.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 				Required: []string{"baseDomain"},
 			},

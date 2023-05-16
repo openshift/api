@@ -36,6 +36,10 @@ spec:
               description: spec holds user settable values for configuration
               type: object
               properties:
+                awsPrivateHostedZoneRole:
+                  description: "awsPrivateHostedZoneRole contains the ARN of a role that should be assumed when performing operations on the cluster's private hosted zone specified in the cluster DNS config. \n When left empty, no role should be assumed."
+                  type: string
+                  pattern: ^arn:(aws|aws-cn|aws-us-gov):iam:[a-z0-9-]+:[0-9]{12}:role\/.*$
                 baseDomain:
                   description: "baseDomain is the base domain of the cluster. All managed DNS records will be sub-domains of this base. \n For example, given the base domain `openshift.example.com`, an API server DNS record may be created for `cluster-api.openshift.example.com`. \n Once set, this field cannot be changed."
                   type: string

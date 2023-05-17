@@ -36,13 +36,42 @@ spec:
               description: spec holds user settable values for configuration
               type: object
               properties:
-                awsPrivateHostedZoneRole:
-                  description: "awsPrivateHostedZoneRole contains the ARN of a role that should be assumed when performing operations on the cluster's private hosted zone specified in the cluster DNS config. \n When left empty, no role should be assumed."
-                  type: string
-                  pattern: ^arn:(aws|aws-cn|aws-us-gov):iam:[a-z0-9-]+:[0-9]{12}:role\/.*$
                 baseDomain:
                   description: "baseDomain is the base domain of the cluster. All managed DNS records will be sub-domains of this base. \n For example, given the base domain `openshift.example.com`, an API server DNS record may be created for `cluster-api.openshift.example.com`. \n Once set, this field cannot be changed."
                   type: string
+                platform:
+                  description: platform holds configuration specific to the underlying infrastructure provider for DNS. When omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time.
+                  type: object
+                  properties:
+                    aws:
+                      description: aws contains DNS configuration specific to the Amazon Web Services cloud provider.
+                      type: object
+                      properties:
+                        privateZoneIAMRole:
+                          description: privateZoneIAMRole contains the ARN of a role that should be assumed when performing operations on the cluster's private hosted zone specified in the cluster DNS config. When left empty, no role should be assumed.
+                          type: string
+                          pattern: ^arn:(aws|aws-cn|aws-us-gov):iam:[a-z0-9-]+:[0-9]{12}:role\/.*$
+                    type:
+                      description: type is the underlying infrastructure provider for the cluster. Allowed values are "AWS", "Azure", "BareMetal", "GCP", "Libvirt", "OpenStack", "VSphere", "oVirt", "KubeVirt", "EquinixMetal", "PowerVS", "AlibabaCloud", "Nutanix" and "None". Individual components may not support all platforms, and must handle unrecognized platforms as None if they do not support that platform.
+                      type: string
+                      enum:
+                        - ""
+                        - AWS
+                        - Azure
+                        - BareMetal
+                        - GCP
+                        - Libvirt
+                        - OpenStack
+                        - None
+                        - VSphere
+                        - oVirt
+                        - IBMCloud
+                        - KubeVirt
+                        - EquinixMetal
+                        - PowerVS
+                        - AlibabaCloud
+                        - Nutanix
+                        - External
                 privateZone:
                   description: "privateZone is the location where all the DNS records that are only available internally to the cluster exist. \n If this field is nil, no private records should be created. \n Once set, this field cannot be changed."
                   type: object

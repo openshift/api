@@ -53,14 +53,13 @@ type DNSSpec struct {
 	//
 	// +optional
 	PrivateZone *DNSZone `json:"privateZone,omitempty"`
-	// awsPrivateHostedZoneRole contains the ARN of a role that should be assumed when performing
-	// operations on the cluster's private hosted zone specified in the cluster DNS config.
+	// platform holds configuration specific to the underlying
+	// infrastructure provider for DNS.
+	// When omitted, this means the user has no opinion and the platform is left
+	// to choose reasonable defaults. These defaults are subject to change over time.
 	//
-	// When left empty, no role should be assumed.
-	//
-	// +kubebuilder:validation:Pattern:=`^arn:(aws|aws-cn|aws-us-gov):iam:[a-z0-9-]+:[0-9]{12}:role\/.*$`
 	// +optional
-	AWSPrivateHostedZoneRole string `json:"awsPrivateHostedZoneRole,omitempty"`
+	Platform DNSPlatformSpec `json:"platform,omitempty"`
 }
 
 // DNSZone is used to define a DNS hosted zone.
@@ -103,4 +102,32 @@ type DNSList struct {
 	metav1.ListMeta `json:"metadata"`
 
 	Items []DNS `json:"items"`
+}
+
+// DNSPlatformSpec holds cloud-provider-specific configuration
+// for DNS administration.
+// +union
+type DNSPlatformSpec struct {
+	// type is the underlying infrastructure provider for the cluster.
+	// Allowed values are "AWS", "Azure", "BareMetal", "GCP", "Libvirt",
+	// "OpenStack", "VSphere", "oVirt", "KubeVirt", "EquinixMetal", "PowerVS",
+	// "AlibabaCloud", "Nutanix" and "None". Individual components may not support all platforms,
+	// and must handle unrecognized platforms as None if they do not support that platform.
+	//
+	// +unionDiscriminator
+	Type PlatformType `json:"type"`
+
+	// aws contains DNS configuration specific to the Amazon Web Services cloud provider.
+	// +optional
+	AWS *AWSDNSSpec `json:"aws,omitempty"`
+}
+
+// AWSDNSSpec contains DNS configuration specific to the Amazon Web Services cloud provider.
+type AWSDNSSpec struct {
+	// privateZoneIAMRole contains the ARN of a role that should be assumed when performing
+	// operations on the cluster's private hosted zone specified in the cluster DNS config.
+	// When left empty, no role should be assumed.
+	// +kubebuilder:validation:Pattern:=`^arn:(aws|aws-cn|aws-us-gov):iam:[a-z0-9-]+:[0-9]{12}:role\/.*$`
+	// +optional
+	PrivateZoneIAMRole string `json:"privateZoneIAMRole,omitempty"`
 }

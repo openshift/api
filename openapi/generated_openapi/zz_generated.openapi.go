@@ -149,6 +149,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.APIServerServingCerts":                                    schema_openshift_api_config_v1_APIServerServingCerts(ref),
 		"github.com/openshift/api/config/v1.APIServerSpec":                                            schema_openshift_api_config_v1_APIServerSpec(ref),
 		"github.com/openshift/api/config/v1.APIServerStatus":                                          schema_openshift_api_config_v1_APIServerStatus(ref),
+		"github.com/openshift/api/config/v1.AWSDNSSpec":                                               schema_openshift_api_config_v1_AWSDNSSpec(ref),
 		"github.com/openshift/api/config/v1.AWSIngressSpec":                                           schema_openshift_api_config_v1_AWSIngressSpec(ref),
 		"github.com/openshift/api/config/v1.AWSPlatformSpec":                                          schema_openshift_api_config_v1_AWSPlatformSpec(ref),
 		"github.com/openshift/api/config/v1.AWSPlatformStatus":                                        schema_openshift_api_config_v1_AWSPlatformStatus(ref),
@@ -209,6 +210,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.CustomTLSProfile":                                         schema_openshift_api_config_v1_CustomTLSProfile(ref),
 		"github.com/openshift/api/config/v1.DNS":                                                      schema_openshift_api_config_v1_DNS(ref),
 		"github.com/openshift/api/config/v1.DNSList":                                                  schema_openshift_api_config_v1_DNSList(ref),
+		"github.com/openshift/api/config/v1.DNSPlatformSpec":                                          schema_openshift_api_config_v1_DNSPlatformSpec(ref),
 		"github.com/openshift/api/config/v1.DNSSpec":                                                  schema_openshift_api_config_v1_DNSSpec(ref),
 		"github.com/openshift/api/config/v1.DNSStatus":                                                schema_openshift_api_config_v1_DNSStatus(ref),
 		"github.com/openshift/api/config/v1.DNSZone":                                                  schema_openshift_api_config_v1_DNSZone(ref),
@@ -8264,6 +8266,26 @@ func schema_openshift_api_config_v1_APIServerStatus(ref common.ReferenceCallback
 	}
 }
 
+func schema_openshift_api_config_v1_AWSDNSSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "AWSDNSSpec contains DNS configuration specific to the Amazon Web Services cloud provider.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"privateZoneIAMRole": {
+						SchemaProps: spec.SchemaProps{
+							Description: "privateZoneIAMRole contains the ARN of a role that should be assumed when performing operations on the cluster's private hosted zone specified in the cluster DNS config. When left empty, no role should be assumed.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_config_v1_AWSIngressSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -10946,6 +10968,48 @@ func schema_openshift_api_config_v1_DNSList(ref common.ReferenceCallback) common
 	}
 }
 
+func schema_openshift_api_config_v1_DNSPlatformSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DNSPlatformSpec holds cloud-provider-specific configuration for DNS administration.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type is the underlying infrastructure provider for the cluster. Allowed values are \"AWS\", \"Azure\", \"BareMetal\", \"GCP\", \"Libvirt\", \"OpenStack\", \"VSphere\", \"oVirt\", \"KubeVirt\", \"EquinixMetal\", \"PowerVS\", \"AlibabaCloud\", \"Nutanix\" and \"None\". Individual components may not support all platforms, and must handle unrecognized platforms as None if they do not support that platform.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"aws": {
+						SchemaProps: spec.SchemaProps{
+							Description: "aws contains DNS configuration specific to the Amazon Web Services cloud provider.",
+							Ref:         ref("github.com/openshift/api/config/v1.AWSDNSSpec"),
+						},
+					},
+				},
+				Required: []string{"type"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "type",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"aws": "AWS",
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.AWSDNSSpec"},
+	}
+}
+
 func schema_openshift_api_config_v1_DNSSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -10972,11 +11036,11 @@ func schema_openshift_api_config_v1_DNSSpec(ref common.ReferenceCallback) common
 							Ref:         ref("github.com/openshift/api/config/v1.DNSZone"),
 						},
 					},
-					"awsPrivateHostedZoneRole": {
+					"platform": {
 						SchemaProps: spec.SchemaProps{
-							Description: "awsPrivateHostedZoneRole contains the ARN of a role that should be assumed when performing operations on the cluster's private hosted zone specified in the cluster DNS config.\n\nWhen left empty, no role should be assumed.",
-							Type:        []string{"string"},
-							Format:      "",
+							Description: "platform holds configuration specific to the underlying infrastructure provider for DNS. When omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.DNSPlatformSpec"),
 						},
 					},
 				},
@@ -10984,7 +11048,7 @@ func schema_openshift_api_config_v1_DNSSpec(ref common.ReferenceCallback) common
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.DNSZone"},
+			"github.com/openshift/api/config/v1.DNSPlatformSpec", "github.com/openshift/api/config/v1.DNSZone"},
 	}
 }
 

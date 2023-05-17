@@ -939,6 +939,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.IPAMConfig":                                                    schema_openshift_api_operator_v1_IPAMConfig(ref),
 		"github.com/openshift/api/operator/v1.IPFIXConfig":                                                   schema_openshift_api_operator_v1_IPFIXConfig(ref),
 		"github.com/openshift/api/operator/v1.IPsecConfig":                                                   schema_openshift_api_operator_v1_IPsecConfig(ref),
+		"github.com/openshift/api/operator/v1.IPsecFullModeConfig":                                           schema_openshift_api_operator_v1_IPsecFullModeConfig(ref),
 		"github.com/openshift/api/operator/v1.IPv4GatewayConfig":                                             schema_openshift_api_operator_v1_IPv4GatewayConfig(ref),
 		"github.com/openshift/api/operator/v1.IPv4OVNKubernetesConfig":                                       schema_openshift_api_operator_v1_IPv4OVNKubernetesConfig(ref),
 		"github.com/openshift/api/operator/v1.IPv6GatewayConfig":                                             schema_openshift_api_operator_v1_IPv6GatewayConfig(ref),
@@ -47815,6 +47816,46 @@ func schema_openshift_api_operator_v1_IPsecConfig(ref common.ReferenceCallback) 
 					"mode": {
 						SchemaProps: spec.SchemaProps{
 							Description: "mode defines the behaviour of the ipsec configuration within the platform. Valid values are `Disabled`, `External` and `Full`. When 'Disabled', ipsec will not be enabled at the node level. When 'External', ipsec is enabled on the node level but requires the user to configure the secure communication parameters. This mode is for external secure communications and the configuration can be done using the k8s-nmstate operator. When 'Full', ipsec is configured on the node level and inter-pod secure communication within the cluster is configured. Note with `Full`, if ipsec is desired for communication with external (to the cluster) entities (such as storage arrays), this is left to the user to configure.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"full": {
+						SchemaProps: spec.SchemaProps{
+							Description: "full defines configuration parameters for the IPsec `Full` mode. This is permitted only when mode is configured with `Full`, and forbidden otherwise.",
+							Ref:         ref("github.com/openshift/api/operator/v1.IPsecFullModeConfig"),
+						},
+					},
+				},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "mode",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"full": "Full",
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1.IPsecFullModeConfig"},
+	}
+}
+
+func schema_openshift_api_operator_v1_IPsecFullModeConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "IPsecFullModeConfig defines configuration parameters for the IPsec `Full` mode.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"encapsulation": {
+						SchemaProps: spec.SchemaProps{
+							Description: "encapsulation option to configure libreswan on how inter-pod traffic across nodes are encapsulated to handle NAT traversal. When configured it uses UDP port 4500 for the encapsulation. Valid values are Always, Never, Auto and omitted. Always means enable UDP encapsulation regardless of whether NAT is detected. Disable means never enable UDP encapsulation even if NAT is present. Auto means enable UDP encapsulation based on the detection of NAT. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is Auto.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

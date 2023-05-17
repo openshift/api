@@ -24665,7 +24665,13 @@
       }
     },
     "com.github.openshift.api.operator.v1.IPsecConfig": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "encapsulation": {
+          "description": "encapsulation uses rfc3949 encapsulation of IKE and IPsec encryption packets Default is false.",
+          "type": "boolean"
+        }
+      }
     },
     "com.github.openshift.api.operator.v1.IngressController": {
       "description": "IngressController describes a managed ingress controller for the cluster. The controller can service OpenShift Route and Kubernetes Ingress resources.\n\nWhen an IngressController is created, a new ingress controller deployment is created to allow external traffic to reach the services that expose Ingress or Route resources. Updating this resource may lead to disruption for public facing network connections as a new ingress controller revision may be rolled out.\n\nhttps://kubernetes.io/docs/concepts/services-networking/ingress-controllers\n\nWhenever possible, sensible defaults for the platform are used. See each field for more details.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",

@@ -478,6 +478,11 @@ type HybridOverlayConfig struct {
 }
 
 type IPsecConfig struct {
+	// encapsulation uses rfc3949 encapsulation of IKE and IPsec encryption packets
+	// Default is false.
+	// +optional
+	// +kubebuilder:default:=false
+        Encapsulation bool `json:"encapsulation,omitempty"`
 }
 
 // GatewayConfig holds node gateway-related parsed config file parameters and command-line overrides

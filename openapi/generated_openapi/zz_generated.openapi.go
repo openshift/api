@@ -42149,6 +42149,15 @@ func schema_openshift_api_operator_v1_IPsecConfig(ref common.ReferenceCallback) 
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"encapsulation": {
+						SchemaProps: spec.SchemaProps{
+							Description: "encapsulation uses rfc3949 encapsulation of IKE and IPsec encryption packets Default is false.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
 			},
 		},
 	}

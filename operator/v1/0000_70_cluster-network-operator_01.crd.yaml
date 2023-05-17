@@ -253,6 +253,11 @@ spec:
                         ipsecConfig:
                           description: ipsecConfig enables and configures IPsec for pods on the pod network within the cluster.
                           type: object
+                          properties:
+                            encapsulation:
+                              description: encapsulation uses rfc3949 encapsulation of IKE and IPsec encryption packets Default is false.
+                              type: boolean
+                              default: false
                         mtu:
                           description: mtu is the MTU to use for the tunnel interface. This must be 100 bytes smaller than the uplink mtu. Default is 1400
                           type: integer

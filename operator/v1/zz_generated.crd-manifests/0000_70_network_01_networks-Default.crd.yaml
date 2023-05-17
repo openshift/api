@@ -412,6 +412,30 @@ spec:
                           ipsecConfig enables and configures IPsec for pods on the pod network within the
                           cluster.
                         properties:
+                          full:
+                            description: |-
+                              full defines configuration parameters for the IPsec `Full` mode.
+                              This is permitted only when mode is configured with `Full`,
+                              and forbidden otherwise.
+                            minProperties: 1
+                            properties:
+                              encapsulation:
+                                description: |-
+                                  encapsulation option to configure libreswan on how inter-pod traffic across nodes
+                                  are encapsulated to handle NAT traversal. When configured it uses UDP port 4500
+                                  for the encapsulation.
+                                  Valid values are Always, Never, Auto and omitted.
+                                  Always means enable UDP encapsulation regardless of whether NAT is detected.
+                                  Disable means never enable UDP encapsulation even if NAT is present.
+                                  Auto means enable UDP encapsulation based on the detection of NAT.
+                                  When omitted, this means no opinion and the platform is left to choose a reasonable
+                                  default, which is subject to change over time. The current default is Auto.
+                                enum:
+                                - Always
+                                - Never
+                                - Auto
+                                type: string
+                            type: object
                           mode:
                             description: |-
                               mode defines the behaviour of the ipsec configuration within the platform.
@@ -431,6 +455,9 @@ spec:
                         x-kubernetes-validations:
                         - message: ipsecConfig.mode is required
                           rule: self == oldSelf || has(self.mode)
+                        - message: full is forbidden when mode is not Full
+                          rule: 'has(self.mode) && self.mode == ''Full'' ?  true :
+                            !has(self.full)'
                       ipv4:
                         description: |-
                           ipv4 allows users to configure IP settings for IPv4 connections. When ommitted,

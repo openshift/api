@@ -179,6 +179,7 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		with(azureWorkloadIdentity).
 		with(gateGatewayAPI).
 		with(maxUnavailableStatefulSet).
+		with(aggregatedDiscoveryEndpoint).
 		toFeatures(defaultFeatures),
 	LatencySensitive: newDefaultFeatures().
 		toFeatures(defaultFeatures),

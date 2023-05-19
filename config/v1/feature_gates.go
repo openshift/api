@@ -23,6 +23,16 @@ var (
 )
 
 var (
+	FeatureAggregatedDiscoveryEndpoint = FeatureGateName("AggregatedDiscoveryEndpoint")
+	aggregatedDiscoveryEndpoint        = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureAggregatedDiscoveryEndpoint,
+		},
+		OwningJiraComponent: "kube-apiserver",
+		ResponsiblePerson:   "deads2k",
+		OwningProduct:       kubernetes,
+	}
+
 	FeatureGateGatewayAPI = FeatureGateName("GatewayAPI")
 	gateGatewayAPI        = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{

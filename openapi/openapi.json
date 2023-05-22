@@ -5769,7 +5769,6 @@
         },
         "platform": {
           "description": "platform holds configuration specific to the underlying infrastructure provider for DNS. When omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time.",
-          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.DNSPlatformSpec"
         },
         "privateZone": {

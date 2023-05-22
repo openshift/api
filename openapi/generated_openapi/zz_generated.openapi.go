@@ -11039,7 +11039,6 @@ func schema_openshift_api_config_v1_DNSSpec(ref common.ReferenceCallback) common
 					"platform": {
 						SchemaProps: spec.SchemaProps{
 							Description: "platform holds configuration specific to the underlying infrastructure provider for DNS. When omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time.",
-							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.DNSPlatformSpec"),
 						},
 					},

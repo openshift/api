@@ -59,7 +59,7 @@ type DNSSpec struct {
 	// to choose reasonable defaults. These defaults are subject to change over time.
 	//
 	// +optional
-	Platform DNSPlatformSpec `json:"platform,omitempty"`
+	Platform *DNSPlatformSpec `json:"platform,omitempty"`
 }
 
 // DNSZone is used to define a DNS hosted zone.

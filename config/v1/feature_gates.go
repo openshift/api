@@ -192,4 +192,14 @@ var (
 		ResponsiblePerson:   "atiratree",
 		OwningProduct:       kubernetes,
 	}
+
+	FeatureGatePrivateHostedZoneAWS = FeatureGateName("PrivateHostedZoneAWS")
+	privateHostedZoneAWS            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGatePrivateHostedZoneAWS,
+		},
+		OwningJiraComponent: "Routing",
+		ResponsiblePerson:   "miciah",
+		OwningProduct:       ocpSpecific,
+	}
 )

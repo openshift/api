@@ -41739,6 +41739,13 @@ func schema_openshift_api_operator_v1_GatewayConfig(ref common.ReferenceCallback
 							Format:      "",
 						},
 					},
+					"enableIPForwarding": {
+						SchemaProps: spec.SchemaProps{
+							Description: "EnableIPForwarding enables IP forwarding for all traffic on OVN-Kubernetes managed interfaces (such as br-ex). By default this is disabled, and Kubernetes related traffic is still forwarded appropriately. This setting is only useful if there is a desire to for the node to act as a router and forward traffic between interfaces on the host.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 				},
 			},
 		},

@@ -489,6 +489,13 @@ type GatewayConfig struct {
 	// +kubebuilder:default:=false
 	// +optional
 	RoutingViaHost bool `json:"routingViaHost,omitempty"`
+	// EnableIPForwarding enables IP forwarding for all traffic on OVN-Kubernetes managed interfaces (such as br-ex).
+	// By default this is disabled, and Kubernetes related traffic is still forwarded appropriately. This setting
+	// is only useful if there is a desire to for the node to act as a router and forward traffic between interfaces
+	// on the host.
+	// +kubebuilder:default:=false
+	// +optional
+	EnableIPForwarding bool `json:"enableIPForwarding,omitempty"`
 }
 
 type ExportNetworkFlows struct {

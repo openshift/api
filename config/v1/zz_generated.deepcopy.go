@@ -1630,11 +1630,7 @@ func (in *DNSSpec) DeepCopyInto(out *DNSSpec) {
 		*out = new(DNSZone)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.Platform != nil {
-		in, out := &in.Platform, &out.Platform
-		*out = new(DNSPlatformSpec)
-		(*in).DeepCopyInto(*out)
-	}
+	in.Platform.DeepCopyInto(&out.Platform)
 	return
 }
 

@@ -4127,8 +4127,9 @@
       "type": "object",
       "properties": {
         "privateZoneIAMRole": {
-          "description": "privateZoneIAMRole contains the ARN of a role that should be assumed when performing operations on the cluster's private hosted zone specified in the cluster DNS config. When left empty, no role should be assumed.",
-          "type": "string"
+          "description": "privateZoneIAMRole contains the ARN of an IAM role that should be assumed when performing operations on the cluster's private hosted zone specified in the cluster DNS config. When left empty, no role should be assumed.",
+          "type": "string",
+          "default": ""
         }
       }
     },
@@ -5742,7 +5743,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1.AWSDNSSpec"
         },
         "type": {
-          "description": "type is the underlying infrastructure provider for the cluster. Allowed values are \"AWS\", \"Azure\", \"BareMetal\", \"GCP\", \"Libvirt\", \"OpenStack\", \"VSphere\", \"oVirt\", \"KubeVirt\", \"EquinixMetal\", \"PowerVS\", \"AlibabaCloud\", \"Nutanix\" and \"None\". Individual components may not support all platforms, and must handle unrecognized platforms as None if they do not support that platform.",
+          "description": "type is the underlying infrastructure provider for the cluster. Allowed values: \"AWS\". DNSPlatformType is a subset of Infrastructure PlatformType.\n\nIndividual components may not support all platforms, and must handle unrecognized platforms with best-effort defaults.",
           "type": "string",
           "default": ""
         }
@@ -5769,6 +5770,7 @@
         },
         "platform": {
           "description": "platform holds configuration specific to the underlying infrastructure provider for DNS. When omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time.",
+          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.DNSPlatformSpec"
         },
         "privateZone": {

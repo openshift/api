@@ -57,9 +57,9 @@ type DNSSpec struct {
 	// infrastructure provider for DNS.
 	// When omitted, this means the user has no opinion and the platform is left
 	// to choose reasonable defaults. These defaults are subject to change over time.
-	//
+	// +openshift:enable:FeatureSets=TechPreviewNoUpgrade
 	// +optional
-	Platform *DNSPlatformSpec `json:"platform,omitempty"`
+	Platform DNSPlatformSpec `json:"platform,omitempty"`
 }
 
 // DNSZone is used to define a DNS hosted zone.
@@ -104,30 +104,43 @@ type DNSList struct {
 	Items []DNS `json:"items"`
 }
 
+// DNSPlatformType is a cloud infrastructure provider that supports
+// platform specific DNS configuration.
+// +kubebuilder:validation:Enum=AWS
+type DNSPlatformType PlatformType
+
+const (
+	// AWSDNSPlatformType represents Amazon Web Services.
+	AWSDNSPlatformType DNSPlatformType = "AWS"
+)
+
 // DNSPlatformSpec holds cloud-provider-specific configuration
 // for DNS administration.
 // +union
+// +kubebuilder:validation:XValidation:rule="has(self.platform) && self.platform == 'AWS' ?  has(self.aws) : !has(self.aws)",message="aws configuration is required when platform is AWS, and forbidden otherwise"
 type DNSPlatformSpec struct {
 	// type is the underlying infrastructure provider for the cluster.
-	// Allowed values are "AWS", "Azure", "BareMetal", "GCP", "Libvirt",
-	// "OpenStack", "VSphere", "oVirt", "KubeVirt", "EquinixMetal", "PowerVS",
-	// "AlibabaCloud", "Nutanix" and "None". Individual components may not support all platforms,
-	// and must handle unrecognized platforms as None if they do not support that platform.
+	// Allowed values: "AWS".
+	// DNSPlatformType is a subset of Infrastructure PlatformType.
+	//
+	// Individual components may not support all platforms,
+	// and must handle unrecognized platforms with best-effort defaults.
 	//
 	// +unionDiscriminator
-	Type PlatformType `json:"type"`
+	// +kubebuilder:validation:Required
+	Type DNSPlatformType `json:"type"`
 
 	// aws contains DNS configuration specific to the Amazon Web Services cloud provider.
 	// +optional
-	AWS *AWSDNSSpec `json:"aws,omitempty"`
+	AWS *AWSDNSSpec `json:"aws"`
 }
 
 // AWSDNSSpec contains DNS configuration specific to the Amazon Web Services cloud provider.
 type AWSDNSSpec struct {
-	// privateZoneIAMRole contains the ARN of a role that should be assumed when performing
+	// privateZoneIAMRole contains the ARN of an IAM role that should be assumed when performing
 	// operations on the cluster's private hosted zone specified in the cluster DNS config.
 	// When left empty, no role should be assumed.
 	// +kubebuilder:validation:Pattern:=`^arn:(aws|aws-cn|aws-us-gov):iam:[a-z0-9-]+:[0-9]{12}:role\/.*$`
 	// +optional
-	PrivateZoneIAMRole string `json:"privateZoneIAMRole,omitempty"`
+	PrivateZoneIAMRole string `json:"privateZoneIAMRole"`
 }

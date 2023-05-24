@@ -748,7 +748,7 @@ func (ConsoleStatus) SwaggerDoc() map[string]string {
 
 var map_AWSDNSSpec = map[string]string{
 	"":                   "AWSDNSSpec contains DNS configuration specific to the Amazon Web Services cloud provider.",
-	"privateZoneIAMRole": "privateZoneIAMRole contains the ARN of a role that should be assumed when performing operations on the cluster's private hosted zone specified in the cluster DNS config. When left empty, no role should be assumed.",
+	"privateZoneIAMRole": "privateZoneIAMRole contains the ARN of an IAM role that should be assumed when performing operations on the cluster's private hosted zone specified in the cluster DNS config. When left empty, no role should be assumed.",
 }
 
 func (AWSDNSSpec) SwaggerDoc() map[string]string {
@@ -777,7 +777,7 @@ func (DNSList) SwaggerDoc() map[string]string {
 
 var map_DNSPlatformSpec = map[string]string{
 	"":     "DNSPlatformSpec holds cloud-provider-specific configuration for DNS administration.",
-	"type": "type is the underlying infrastructure provider for the cluster. Allowed values are \"AWS\", \"Azure\", \"BareMetal\", \"GCP\", \"Libvirt\", \"OpenStack\", \"VSphere\", \"oVirt\", \"KubeVirt\", \"EquinixMetal\", \"PowerVS\", \"AlibabaCloud\", \"Nutanix\" and \"None\". Individual components may not support all platforms, and must handle unrecognized platforms as None if they do not support that platform.",
+	"type": "type is the underlying infrastructure provider for the cluster. Allowed values: \"AWS\". DNSPlatformType is a subset of Infrastructure PlatformType.\n\nIndividual components may not support all platforms, and must handle unrecognized platforms with best-effort defaults.",
 	"aws":  "aws contains DNS configuration specific to the Amazon Web Services cloud provider.",
 }
 

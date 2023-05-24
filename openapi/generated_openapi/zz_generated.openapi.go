@@ -8275,7 +8275,8 @@ func schema_openshift_api_config_v1_AWSDNSSpec(ref common.ReferenceCallback) com
 				Properties: map[string]spec.Schema{
 					"privateZoneIAMRole": {
 						SchemaProps: spec.SchemaProps{
-							Description: "privateZoneIAMRole contains the ARN of a role that should be assumed when performing operations on the cluster's private hosted zone specified in the cluster DNS config. When left empty, no role should be assumed.",
+							Description: "privateZoneIAMRole contains the ARN of an IAM role that should be assumed when performing operations on the cluster's private hosted zone specified in the cluster DNS config. When left empty, no role should be assumed.",
+							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -10977,7 +10978,7 @@ func schema_openshift_api_config_v1_DNSPlatformSpec(ref common.ReferenceCallback
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "type is the underlying infrastructure provider for the cluster. Allowed values are \"AWS\", \"Azure\", \"BareMetal\", \"GCP\", \"Libvirt\", \"OpenStack\", \"VSphere\", \"oVirt\", \"KubeVirt\", \"EquinixMetal\", \"PowerVS\", \"AlibabaCloud\", \"Nutanix\" and \"None\". Individual components may not support all platforms, and must handle unrecognized platforms as None if they do not support that platform.",
+							Description: "type is the underlying infrastructure provider for the cluster. Allowed values: \"AWS\". DNSPlatformType is a subset of Infrastructure PlatformType.\n\nIndividual components may not support all platforms, and must handle unrecognized platforms with best-effort defaults.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -11039,6 +11040,7 @@ func schema_openshift_api_config_v1_DNSSpec(ref common.ReferenceCallback) common
 					"platform": {
 						SchemaProps: spec.SchemaProps{
 							Description: "platform holds configuration specific to the underlying infrastructure provider for DNS. When omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time.",
+							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.DNSPlatformSpec"),
 						},
 					},

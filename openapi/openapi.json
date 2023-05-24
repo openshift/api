@@ -22751,6 +22751,11 @@
         "managementState"
       ],
       "properties": {
+        "ConfigOverrides": {
+          "description": "ConfigOverrides overrides the final configuration that was computed by the operator.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        },
         "logLevel": {
           "description": "logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for their operands.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
           "type": "string"
@@ -22770,7 +22775,7 @@
           "type": "string"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster. Deprecated: use ConfigOverrides",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -22965,6 +22970,11 @@
         "managementState"
       ],
       "properties": {
+        "ConfigOverrides": {
+          "description": "ConfigOverrides overrides the final configuration that was computed by the operator.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        },
         "logLevel": {
           "description": "logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for their operands.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
           "type": "string"
@@ -22984,7 +22994,7 @@
           "type": "string"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster. Deprecated: use ConfigOverrides",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -23126,6 +23136,11 @@
         "managementState"
       ],
       "properties": {
+        "ConfigOverrides": {
+          "description": "ConfigOverrides overrides the final configuration that was computed by the operator.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        },
         "credentialsMode": {
           "description": "CredentialsMode allows informing CCO that it should not attempt to dynamically determine the root cloud credentials capabilities, and it should just run in the specified mode. It also allows putting the operator into \"manual\" mode if desired. Leaving the field in default mode runs CCO so that the cluster's cloud credentials will be dynamically probed for capabilities (on supported clouds/platforms). Supported modes:\n  AWS/Azure/GCP: \"\" (Default), \"Mint\", \"Passthrough\", \"Manual\"\n  Others: Do not set value as other platforms only support running in \"Passthrough\"",
           "type": "string"
@@ -23149,7 +23164,7 @@
           "type": "string"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster. Deprecated: use ConfigOverrides",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -23263,6 +23278,11 @@
         "managementState"
       ],
       "properties": {
+        "ConfigOverrides": {
+          "description": "ConfigOverrides overrides the final configuration that was computed by the operator.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        },
         "driverConfig": {
           "description": "driverConfig can be used to specify platform specific driver configuration. When omitted, this means no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time.",
           "default": {},
@@ -23291,7 +23311,7 @@
           "type": "string"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster. Deprecated: use ConfigOverrides",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -23424,6 +23444,11 @@
         "managementState"
       ],
       "properties": {
+        "ConfigOverrides": {
+          "description": "ConfigOverrides overrides the final configuration that was computed by the operator.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        },
         "logLevel": {
           "description": "logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for their operands.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
           "type": "string"
@@ -23443,7 +23468,7 @@
           "type": "string"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster. Deprecated: use ConfigOverrides",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -23637,6 +23662,11 @@
         "providers"
       ],
       "properties": {
+        "ConfigOverrides": {
+          "description": "ConfigOverrides overrides the final configuration that was computed by the operator.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        },
         "customization": {
           "description": "customization is used to optionally provide a small set of customization options to the web console.",
           "default": {},
@@ -23679,7 +23709,7 @@
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.ConsoleConfigRoute"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster. Deprecated: use ConfigOverrides",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -24203,6 +24233,11 @@
         "forceRedeploymentReason"
       ],
       "properties": {
+        "ConfigOverrides": {
+          "description": "ConfigOverrides overrides the final configuration that was computed by the operator.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        },
         "failedRevisionLimit": {
           "description": "failedRevisionLimit is the number of failed static pod installer revisions to keep on disk and in the api -1 = unlimited, 0 or unset = 5 (default)",
           "type": "integer",
@@ -24237,7 +24272,7 @@
           "format": "int32"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster. Deprecated: use ConfigOverrides",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -25141,6 +25176,11 @@
         "managementState"
       ],
       "properties": {
+        "ConfigOverrides": {
+          "description": "ConfigOverrides overrides the final configuration that was computed by the operator.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        },
         "logLevel": {
           "description": "logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for their operands.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
           "type": "string"
@@ -25160,7 +25200,7 @@
           "type": "string"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster. Deprecated: use ConfigOverrides",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -25306,6 +25346,11 @@
         "forceRedeploymentReason"
       ],
       "properties": {
+        "ConfigOverrides": {
+          "description": "ConfigOverrides overrides the final configuration that was computed by the operator.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        },
         "failedRevisionLimit": {
           "description": "failedRevisionLimit is the number of failed static pod installer revisions to keep on disk and in the api -1 = unlimited, 0 or unset = 5 (default)",
           "type": "integer",
@@ -25340,7 +25385,7 @@
           "format": "int32"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster. Deprecated: use ConfigOverrides",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -25484,6 +25529,11 @@
         "useMoreSecureServiceCA"
       ],
       "properties": {
+        "ConfigOverrides": {
+          "description": "ConfigOverrides overrides the final configuration that was computed by the operator.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        },
         "failedRevisionLimit": {
           "description": "failedRevisionLimit is the number of failed static pod installer revisions to keep on disk and in the api -1 = unlimited, 0 or unset = 5 (default)",
           "type": "integer",
@@ -25518,7 +25568,7 @@
           "format": "int32"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster. Deprecated: use ConfigOverrides",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
@@ -25658,6 +25708,11 @@
         "forceRedeploymentReason"
       ],
       "properties": {
+        "ConfigOverrides": {
+          "description": "ConfigOverrides overrides the final configuration that was computed by the operator.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        },
         "failedRevisionLimit": {
           "description": "failedRevisionLimit is the number of failed static pod installer revisions to keep on disk and in the api -1 = unlimited, 0 or unset = 5 (default)",
           "type": "integer",
@@ -25692,7 +25747,7 @@
           "format": "int32"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster. Deprecated: use ConfigOverrides",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -25824,6 +25879,11 @@
         "managementState"
       ],
       "properties": {
+        "ConfigOverrides": {
+          "description": "ConfigOverrides overrides the final configuration that was computed by the operator.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        },
         "logLevel": {
           "description": "logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for their operands.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
           "type": "string"
@@ -25843,7 +25903,7 @@
           "type": "string"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster. Deprecated: use ConfigOverrides",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -26065,6 +26125,11 @@
         "managementState"
       ],
       "properties": {
+        "ConfigOverrides": {
+          "description": "ConfigOverrides overrides the final configuration that was computed by the operator.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        },
         "logLevel": {
           "description": "logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for their operands.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
           "type": "string"
@@ -26084,7 +26149,7 @@
           "type": "string"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster. Deprecated: use ConfigOverrides",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -26226,6 +26291,11 @@
         "defaultNetwork"
       ],
       "properties": {
+        "ConfigOverrides": {
+          "description": "ConfigOverrides overrides the final configuration that was computed by the operator.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        },
         "additionalNetworks": {
           "description": "additionalNetworks is a list of extra networks to make available to pods when multiple networks are enabled.",
           "type": "array",
@@ -26299,7 +26369,7 @@
           }
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster. Deprecated: use ConfigOverrides",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
@@ -26559,6 +26629,11 @@
         "managementState"
       ],
       "properties": {
+        "ConfigOverrides": {
+          "description": "ConfigOverrides overrides the final configuration that was computed by the operator.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        },
         "logLevel": {
           "description": "logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for their operands.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
           "type": "string"
@@ -26578,7 +26653,7 @@
           "type": "string"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster. Deprecated: use ConfigOverrides",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -26696,6 +26771,11 @@
         "managementState"
       ],
       "properties": {
+        "ConfigOverrides": {
+          "description": "ConfigOverrides overrides the final configuration that was computed by the operator.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        },
         "logLevel": {
           "description": "logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for their operands.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
           "type": "string"
@@ -26715,7 +26795,7 @@
           "type": "string"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster. Deprecated: use ConfigOverrides",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -26827,6 +26907,11 @@
         "managementState"
       ],
       "properties": {
+        "ConfigOverrides": {
+          "description": "ConfigOverrides overrides the final configuration that was computed by the operator.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        },
         "logLevel": {
           "description": "logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for their operands.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
           "type": "string"
@@ -26846,7 +26931,7 @@
           "type": "string"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster. Deprecated: use ConfigOverrides",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -27263,6 +27348,11 @@
         "managementState"
       ],
       "properties": {
+        "ConfigOverrides": {
+          "description": "ConfigOverrides overrides the final configuration that was computed by the operator.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        },
         "logLevel": {
           "description": "logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for their operands.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
           "type": "string"
@@ -27282,7 +27372,7 @@
           "type": "string"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster. Deprecated: use ConfigOverrides",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -27394,6 +27484,11 @@
         "managementState"
       ],
       "properties": {
+        "ConfigOverrides": {
+          "description": "ConfigOverrides overrides the final configuration that was computed by the operator.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        },
         "logLevel": {
           "description": "logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for their operands.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
           "type": "string"
@@ -27413,7 +27508,7 @@
           "type": "string"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster. Deprecated: use ConfigOverrides",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -27526,6 +27621,11 @@
         "managementState"
       ],
       "properties": {
+        "ConfigOverrides": {
+          "description": "ConfigOverrides overrides the final configuration that was computed by the operator.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        },
         "logLevel": {
           "description": "logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for their operands.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
           "type": "string"
@@ -27545,7 +27645,7 @@
           "type": "string"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster. Deprecated: use ConfigOverrides",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -27706,6 +27806,11 @@
         "forceRedeploymentReason"
       ],
       "properties": {
+        "ConfigOverrides": {
+          "description": "ConfigOverrides overrides the final configuration that was computed by the operator.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        },
         "failedRevisionLimit": {
           "description": "failedRevisionLimit is the number of failed static pod installer revisions to keep on disk and in the api -1 = unlimited, 0 or unset = 5 (default)",
           "type": "integer",
@@ -27740,7 +27845,7 @@
           "format": "int32"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster. Deprecated: use ConfigOverrides",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
@@ -27887,6 +27992,11 @@
         "managementState"
       ],
       "properties": {
+        "ConfigOverrides": {
+          "description": "ConfigOverrides overrides the final configuration that was computed by the operator.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        },
         "logLevel": {
           "description": "logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for their operands.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
           "type": "string"
@@ -27906,7 +28016,7 @@
           "type": "string"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster. Deprecated: use ConfigOverrides",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
@@ -31467,6 +31577,11 @@
         "managementState"
       ],
       "properties": {
+        "ConfigOverrides": {
+          "description": "ConfigOverrides overrides the final configuration that was computed by the operator.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        },
         "logLevel": {
           "description": "logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for their operands.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
           "type": "string"
@@ -31486,7 +31601,7 @@
           "type": "string"
         },
         "unsupportedConfigOverrides": {
-          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster. Deprecated: use ConfigOverrides",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }

@@ -78,10 +78,17 @@ type OperatorSpec struct {
 	// Misuse of this field could lead to unexpected behavior or conflict with other configuration options.
 	// Seek guidance from the Red Hat support before using this field.
 	// Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.
+	// Deprecated: use ConfigOverrides
 	// +optional
 	// +nullable
 	// +kubebuilder:pruning:PreserveUnknownFields
 	UnsupportedConfigOverrides runtime.RawExtension `json:"unsupportedConfigOverrides"`
+
+	// ConfigOverrides overrides the final configuration that was computed by the operator.
+	// +optional
+	// +nullable
+	// +kubebuilder:pruning:PreserveUnknownFields
+	ConfigOverrides runtime.RawExtension `json:"ConfigOverrides"`
 
 	// observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because
 	// it is an input to the level for the operator

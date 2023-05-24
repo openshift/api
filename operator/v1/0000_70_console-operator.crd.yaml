@@ -36,6 +36,11 @@ spec:
               description: ConsoleSpec is the specification of the desired behavior of the Console.
               type: object
               properties:
+                ConfigOverrides:
+                  description: ConfigOverrides overrides the final configuration that was computed by the operator.
+                  type: object
+                  nullable: true
+                  x-kubernetes-preserve-unknown-fields: true
                 customization:
                   description: customization is used to optionally provide a small set of customization options to the web console.
                   type: object
@@ -356,7 +361,7 @@ spec:
                           description: name is the metadata.name of the referenced secret
                           type: string
                 unsupportedConfigOverrides:
-                  description: unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.
+                  description: 'unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster. Deprecated: use ConfigOverrides'
                   type: object
                   nullable: true
                   x-kubernetes-preserve-unknown-fields: true

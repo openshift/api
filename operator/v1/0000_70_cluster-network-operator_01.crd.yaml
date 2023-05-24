@@ -33,6 +33,11 @@ spec:
               description: NetworkSpec is the top-level network configuration object.
               type: object
               properties:
+                ConfigOverrides:
+                  description: ConfigOverrides overrides the final configuration that was computed by the operator.
+                  type: object
+                  nullable: true
+                  x-kubernetes-preserve-unknown-fields: true
                 additionalNetworks:
                   description: additionalNetworks is a list of extra networks to make available to pods when multiple networks are enabled.
                   type: array
@@ -449,7 +454,7 @@ spec:
                   items:
                     type: string
                 unsupportedConfigOverrides:
-                  description: unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.
+                  description: 'unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster. Deprecated: use ConfigOverrides'
                   type: object
                   nullable: true
                   x-kubernetes-preserve-unknown-fields: true

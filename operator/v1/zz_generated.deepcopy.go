@@ -3394,6 +3394,7 @@ func (in *OperatorCondition) DeepCopy() *OperatorCondition {
 func (in *OperatorSpec) DeepCopyInto(out *OperatorSpec) {
 	*out = *in
 	in.UnsupportedConfigOverrides.DeepCopyInto(&out.UnsupportedConfigOverrides)
+	in.ConfigOverrides.DeepCopyInto(&out.ConfigOverrides)
 	in.ObservedConfig.DeepCopyInto(&out.ObservedConfig)
 	return
 }

@@ -180,6 +180,7 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		with(gateGatewayAPI).
 		with(maxUnavailableStatefulSet).
 		with(privateHostedZoneAWS).
+		with(sigstoreImageVerification).
 		toFeatures(defaultFeatures),
 	LatencySensitive: newDefaultFeatures().
 		toFeatures(defaultFeatures),

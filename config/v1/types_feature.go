@@ -179,6 +179,7 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		with(azureWorkloadIdentity).
 		with(gateGatewayAPI).
 		with(maxUnavailableStatefulSet).
+		with(eventedPleg).
 		with(privateHostedZoneAWS).
 		with(sigstoreImageVerification).
 		toFeatures(defaultFeatures),

@@ -1257,9 +1257,9 @@ func (FeaturesMigration) SwaggerDoc() map[string]string {
 }
 
 var map_GatewayConfig = map[string]string{
-	"":                   "GatewayConfig holds node gateway-related parsed config file parameters and command-line overrides",
-	"routingViaHost":     "RoutingViaHost allows pod egress traffic to exit via the ovn-k8s-mp0 management port into the host before sending it out. If this is not set, traffic will always egress directly from OVN to outside without touching the host stack. Setting this to true means hardware offload will not be supported. Default is false if GatewayConfig is specified.",
-	"enableIPForwarding": "EnableIPForwarding enables IP forwarding for all traffic on OVN-Kubernetes managed interfaces (such as br-ex). By default this is disabled, and Kubernetes related traffic is still forwarded appropriately. This setting is only useful if there is a desire to for the node to act as a router and forward traffic between interfaces on the host.",
+	"":               "GatewayConfig holds node gateway-related parsed config file parameters and command-line overrides",
+	"routingViaHost": "RoutingViaHost allows pod egress traffic to exit via the ovn-k8s-mp0 management port into the host before sending it out. If this is not set, traffic will always egress directly from OVN to outside without touching the host stack. Setting this to true means hardware offload will not be supported. Default is false if GatewayConfig is specified.",
+	"ipForwarding":   "IPForwarding controls IP forwarding for all traffic on OVN-Kubernetes managed interfaces (such as br-ex). By default this is set to Restricted, and Kubernetes related traffic is still forwarded appropriately, but other IP traffic will not be routed by the OCP node. If there is a desire to allow the host to forward traffic across OVN-Kubernetes managed interfaces, then set this field to \"Global\". The supported values are \"Restricted\" and \"Global\".",
 }
 
 func (GatewayConfig) SwaggerDoc() map[string]string {

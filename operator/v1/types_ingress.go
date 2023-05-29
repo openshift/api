@@ -1011,7 +1011,7 @@ type SyslogLoggingDestinationParameters struct {
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=65535
 	// +required
-	Port uint32 `json:"port"`
+	Port int32 `json:"port"`
 
 	// facility specifies the syslog facility of log messages.
 	//
@@ -1026,14 +1026,12 @@ type SyslogLoggingDestinationParameters struct {
 	//
 	// Valid values are integers in the range 480 to 4096, inclusive.
 	//
-	// When omitted, the default value is 1024.
-	//
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Maximum=4096
 	// +kubebuilder:validation:Minimum=480
 	// +kubebuilder:default=1024
 	// +optional
-	MaxLength uint32 `json:"maxLength,omitempty"`
+	MaxLength int32 `json:"maxLength,omitempty"`
 }
 
 // ContainerLoggingDestinationParameters describes parameters for the Container
@@ -1043,14 +1041,12 @@ type ContainerLoggingDestinationParameters struct {
 	//
 	// Valid values are integers in the range 480 to 8192, inclusive.
 	//
-	// When omitted, the default value is 1024.
-	//
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Maximum=8192
 	// +kubebuilder:validation:Minimum=480
 	// +kubebuilder:default=1024
 	// +optional
-	MaxLength uint32 `json:"maxLength,omitempty"`
+	MaxLength int32 `json:"maxLength,omitempty"`
 }
 
 // LoggingDestination describes a destination for log messages.

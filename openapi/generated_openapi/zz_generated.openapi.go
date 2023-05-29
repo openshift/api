@@ -41631,6 +41631,14 @@ func schema_openshift_api_operator_v1_ForwardPlugin(ref common.ReferenceCallback
 							Ref:         ref("github.com/openshift/api/operator/v1.DNSTransportConfig"),
 						},
 					},
+					"protocolStrategy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "protocolStrategy specifies the protocol to use for upstream DNS requests. Valid values for protocolStrategy are \"TCP\" and omitted. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is to use the protocol of the original client request. \"TCP\" specifies that the platform should use TCP for all upstream DNS requests, even if the client request uses UDP. \"TCP\" is useful for UDP-specific issues such as those created by non-compliant upstream resolvers, but may consume more bandwidth or increase DNS response time. Note that protocolStrategy only affects the protocol of DNS requests that CoreDNS makes to upstream resolvers. It does not affect the protocol of DNS requests between clients and CoreDNS.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 				Required: []string{"upstreams"},
 			},
@@ -41737,6 +41745,13 @@ func schema_openshift_api_operator_v1_GatewayConfig(ref common.ReferenceCallback
 						SchemaProps: spec.SchemaProps{
 							Description: "RoutingViaHost allows pod egress traffic to exit via the ovn-k8s-mp0 management port into the host before sending it out. If this is not set, traffic will always egress directly from OVN to outside without touching the host stack. Setting this to true means hardware offload will not be supported. Default is false if GatewayConfig is specified.",
 							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"ipForwarding": {
+						SchemaProps: spec.SchemaProps{
+							Description: "IPForwarding controls IP forwarding for all traffic on OVN-Kubernetes managed interfaces (such as br-ex). By default this is set to Restricted, and Kubernetes related traffic is still forwarded appropriately, but other IP traffic will not be routed by the OCP node. If there is a desire to allow the host to forward traffic across OVN-Kubernetes managed interfaces, then set this field to \"Global\". The supported values are \"Restricted\" and \"Global\".",
+							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
@@ -47704,6 +47719,14 @@ func schema_openshift_api_operator_v1_UpstreamResolvers(ref common.ReferenceCall
 							Description: "transportConfig is used to configure the transport type, server name, and optional custom CA or CA bundle to use when forwarding DNS requests to an upstream resolver.\n\nThe default value is \"\" (empty) which results in a standard cleartext connection being used when forwarding DNS requests to an upstream resolver.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/operator/v1.DNSTransportConfig"),
+						},
+					},
+					"protocolStrategy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "protocolStrategy specifies the protocol to use for upstream DNS requests. Valid values for protocolStrategy are \"TCP\" and omitted. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is to use the protocol of the original client request. \"TCP\" specifies that the platform should use TCP for all upstream DNS requests, even if the client request uses UDP. \"TCP\" is useful for UDP-specific issues such as those created by non-compliant upstream resolvers, but may consume more bandwidth or increase DNS response time. Note that protocolStrategy only affects the protocol of DNS requests that CoreDNS makes to upstream resolvers. It does not affect the protocol of DNS requests between clients and CoreDNS.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},

@@ -182,4 +182,44 @@ var (
 		ResponsiblePerson:   "abutcher",
 		OwningProduct:       ocpSpecific,
 	}
+
+	FeatureGateMaxUnavailableStatefulSet = FeatureGateName("MaxUnavailableStatefulSet")
+	maxUnavailableStatefulSet            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateMaxUnavailableStatefulSet,
+		},
+		OwningJiraComponent: "apps",
+		ResponsiblePerson:   "atiratree",
+		OwningProduct:       kubernetes,
+	}
+
+	FeatureGateEventedPLEG = FeatureGateName("EventedPLEG")
+	eventedPleg            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateEventedPLEG,
+		},
+		OwningJiraComponent: "node",
+		ResponsiblePerson:   "sairameshv",
+		OwningProduct:       kubernetes,
+	}
+
+	FeatureGatePrivateHostedZoneAWS = FeatureGateName("PrivateHostedZoneAWS")
+	privateHostedZoneAWS            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGatePrivateHostedZoneAWS,
+		},
+		OwningJiraComponent: "Routing",
+		ResponsiblePerson:   "miciah",
+		OwningProduct:       ocpSpecific,
+	}
+
+	FeatureGateSigstoreImageVerification = FeatureGateName("SigstoreImageVerification")
+	sigstoreImageVerification            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateSigstoreImageVerification,
+		},
+		OwningJiraComponent: "node",
+		ResponsiblePerson:   "sgrunert",
+		OwningProduct:       ocpSpecific,
+	}
 )

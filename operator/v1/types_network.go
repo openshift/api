@@ -116,6 +116,18 @@ type NetworkSpec struct {
 	Migration *NetworkMigration `json:"migration,omitempty"`
 }
 
+// NetworkMigrationMode is an enumeration of the possible mode of the network migration
+// Valid values are "Live", "Offline" and omitted.
+// +kubebuilder:validation:Enum:=Live;Offline;""
+type NetworkMigrationMode string
+
+const (
+	// A "Live" migration operation will not cause service interruption by migrating the CNI of each node one by one. The cluster network will work as normal during the network migration.
+	LiveNetworkMigrationMode NetworkMigrationMode = "Live"
+	// An "Offline" migration operation will cause service interruption. During an "Offline" migration, two rounds of node reboots are required. The cluster network will be malfunctioning during the network migration.
+	OfflineNetworkMigrationMode NetworkMigrationMode = "Offline"
+)
+
 // NetworkMigration represents the cluster network configuration.
 type NetworkMigration struct {
 	// networkType is the target type of network migration. Set this to the
@@ -137,6 +149,15 @@ type NetworkMigration struct {
 	// supported features.
 	// +optional
 	Features *FeaturesMigration `json:"features,omitempty"`
+
+	// mode indicates the mode of network migration.
+	// The supported values are "Live", "Offline" and omitted.
+	// A "Live" migration operation will not cause service interruption by migrating the CNI of each node one by one. The cluster network will work as normal during the network migration.
+	// An "Offline" migration operation will cause service interruption. During an "Offline" migration, two rounds of node reboots are required. The cluster network will be malfunctioning during the network migration.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default which is subject to change over time.
+	// The current default value is "Offline".
+	// +optional
+	Mode NetworkMigrationMode `json:"mode"`
 }
 
 type FeaturesMigration struct {

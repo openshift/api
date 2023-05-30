@@ -1011,7 +1011,7 @@ type SyslogLoggingDestinationParameters struct {
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=65535
 	// +required
-	Port int32 `json:"port"`
+	Port uint32 `json:"port"`
 
 	// facility specifies the syslog facility of log messages.
 	//
@@ -1031,7 +1031,7 @@ type SyslogLoggingDestinationParameters struct {
 	// +kubebuilder:validation:Minimum=480
 	// +kubebuilder:default=1024
 	// +optional
-	MaxLength int32 `json:"maxLength,omitempty"`
+	MaxLength uint32 `json:"maxLength,omitempty"`
 }
 
 // ContainerLoggingDestinationParameters describes parameters for the Container

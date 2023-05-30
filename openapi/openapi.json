@@ -27988,12 +27988,12 @@
         "maxLength": {
           "description": "maxLength is the maximum length of the log message.\n\nValid values are integers in the range 480 to 4096, inclusive.",
           "type": "integer",
-          "format": "int32"
+          "format": "int64"
         },
         "port": {
           "description": "port is the UDP port number of the syslog endpoint that receives log messages.",
           "type": "integer",
-          "format": "int32",
+          "format": "int64",
           "default": 0
         }
       }

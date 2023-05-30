@@ -71,4 +71,44 @@ tests:
           aws:
             privateZoneIAMRole: arn:aws:iam:123456789012:role/foo
     expectedError: "Invalid value: \"object\": aws configuration is required when platform is AWS, and forbidden otherwise"
-
+  onUpdate:
+  - name: Can switch from empty (default), to AWS
+    initial: |
+      apiVersion: config.openshift.io/v1
+      kind: DNS
+      spec:
+        platform:
+          type: ""
+    updated: |
+      apiVersion: config.openshift.io/v1
+      kind: DNS
+      spec:
+        platform:
+          type: AWS
+          aws:
+            privateZoneIAMRole: arn:aws:iam:123456789012:role/foo
+    expected: |
+      apiVersion: config.openshift.io/v1
+      kind: DNS
+      spec:
+        platform:
+          type: AWS
+          aws:
+            privateZoneIAMRole: arn:aws:iam:123456789012:role/foo
+  - name: Upgrade case is valid
+    initial: |
+      apiVersion: config.openshift.io/v1
+      kind: DNS
+      spec: {} # No spec is required for a DNS
+    updated: |
+      apiVersion: config.openshift.io/v1
+      kind: DNS
+      spec:
+        platform:
+          type: ""
+    expected: |
+      apiVersion: config.openshift.io/v1
+      kind: DNS
+      spec:
+        platform:
+          type: ""

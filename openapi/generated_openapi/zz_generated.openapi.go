@@ -729,6 +729,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/oauth/v1.ScopeRestriction":                                          schema_openshift_api_oauth_v1_ScopeRestriction(ref),
 		"github.com/openshift/api/oauth/v1.UserOAuthAccessToken":                                      schema_openshift_api_oauth_v1_UserOAuthAccessToken(ref),
 		"github.com/openshift/api/oauth/v1.UserOAuthAccessTokenList":                                  schema_openshift_api_oauth_v1_UserOAuthAccessTokenList(ref),
+		"github.com/openshift/api/openshiftcontrolplane/v1.APIServers":                                schema_openshift_api_openshiftcontrolplane_v1_APIServers(ref),
 		"github.com/openshift/api/openshiftcontrolplane/v1.BuildControllerConfig":                     schema_openshift_api_openshiftcontrolplane_v1_BuildControllerConfig(ref),
 		"github.com/openshift/api/openshiftcontrolplane/v1.BuildDefaultsConfig":                       schema_openshift_api_openshiftcontrolplane_v1_BuildDefaultsConfig(ref),
 		"github.com/openshift/api/openshiftcontrolplane/v1.BuildOverridesConfig":                      schema_openshift_api_openshiftcontrolplane_v1_BuildOverridesConfig(ref),
@@ -744,6 +745,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/openshiftcontrolplane/v1.NetworkControllerConfig":                   schema_openshift_api_openshiftcontrolplane_v1_NetworkControllerConfig(ref),
 		"github.com/openshift/api/openshiftcontrolplane/v1.OpenShiftAPIServerConfig":                  schema_openshift_api_openshiftcontrolplane_v1_OpenShiftAPIServerConfig(ref),
 		"github.com/openshift/api/openshiftcontrolplane/v1.OpenShiftControllerManagerConfig":          schema_openshift_api_openshiftcontrolplane_v1_OpenShiftControllerManagerConfig(ref),
+		"github.com/openshift/api/openshiftcontrolplane/v1.PerGroupOptions":                           schema_openshift_api_openshiftcontrolplane_v1_PerGroupOptions(ref),
 		"github.com/openshift/api/openshiftcontrolplane/v1.ProjectConfig":                             schema_openshift_api_openshiftcontrolplane_v1_ProjectConfig(ref),
 		"github.com/openshift/api/openshiftcontrolplane/v1.RegistryLocation":                          schema_openshift_api_openshiftcontrolplane_v1_RegistryLocation(ref),
 		"github.com/openshift/api/openshiftcontrolplane/v1.ResourceQuotaControllerConfig":             schema_openshift_api_openshiftcontrolplane_v1_ResourceQuotaControllerConfig(ref),
@@ -37369,6 +37371,35 @@ func schema_openshift_api_oauth_v1_UserOAuthAccessTokenList(ref common.Reference
 	}
 }
 
+func schema_openshift_api_openshiftcontrolplane_v1_APIServers(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"perGroupOptions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "perGroupOptions is a list of enabled/disabled API servers in addition to the defaults",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/openshiftcontrolplane/v1.PerGroupOptions"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"perGroupOptions"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/openshiftcontrolplane/v1.PerGroupOptions"},
+	}
+}
+
 func schema_openshift_api_openshiftcontrolplane_v1_BuildControllerConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -38206,12 +38237,19 @@ func schema_openshift_api_openshiftcontrolplane_v1_OpenShiftAPIServerConfig(ref 
 							},
 						},
 					},
+					"apiServers": {
+						SchemaProps: spec.SchemaProps{
+							Description: "apiServers holds information about enabled/disabled API servers",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/openshiftcontrolplane/v1.APIServers"),
+						},
+					},
 				},
-				Required: []string{"servingInfo", "corsAllowedOrigins", "auditConfig", "storageConfig", "admission", "kubeClientConfig", "aggregatorConfig", "imagePolicyConfig", "projectConfig", "routingConfig", "serviceAccountOAuthGrantMethod", "jenkinsPipelineConfig", "cloudProviderFile", "apiServerArguments"},
+				Required: []string{"servingInfo", "corsAllowedOrigins", "auditConfig", "storageConfig", "admission", "kubeClientConfig", "aggregatorConfig", "imagePolicyConfig", "projectConfig", "routingConfig", "serviceAccountOAuthGrantMethod", "jenkinsPipelineConfig", "cloudProviderFile", "apiServerArguments", "apiServers"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.AdmissionConfig", "github.com/openshift/api/config/v1.AuditConfig", "github.com/openshift/api/config/v1.EtcdStorageConfig", "github.com/openshift/api/config/v1.HTTPServingInfo", "github.com/openshift/api/config/v1.KubeClientConfig", "github.com/openshift/api/openshiftcontrolplane/v1.FrontProxyConfig", "github.com/openshift/api/openshiftcontrolplane/v1.ImagePolicyConfig", "github.com/openshift/api/openshiftcontrolplane/v1.JenkinsPipelineConfig", "github.com/openshift/api/openshiftcontrolplane/v1.ProjectConfig", "github.com/openshift/api/openshiftcontrolplane/v1.RoutingConfig"},
+			"github.com/openshift/api/config/v1.AdmissionConfig", "github.com/openshift/api/config/v1.AuditConfig", "github.com/openshift/api/config/v1.EtcdStorageConfig", "github.com/openshift/api/config/v1.HTTPServingInfo", "github.com/openshift/api/config/v1.KubeClientConfig", "github.com/openshift/api/openshiftcontrolplane/v1.APIServers", "github.com/openshift/api/openshiftcontrolplane/v1.FrontProxyConfig", "github.com/openshift/api/openshiftcontrolplane/v1.ImagePolicyConfig", "github.com/openshift/api/openshiftcontrolplane/v1.JenkinsPipelineConfig", "github.com/openshift/api/openshiftcontrolplane/v1.ProjectConfig", "github.com/openshift/api/openshiftcontrolplane/v1.RoutingConfig"},
 	}
 }
 
@@ -38351,6 +38389,57 @@ func schema_openshift_api_openshiftcontrolplane_v1_OpenShiftControllerManagerCon
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/config/v1.HTTPServingInfo", "github.com/openshift/api/config/v1.KubeClientConfig", "github.com/openshift/api/config/v1.LeaderElection", "github.com/openshift/api/openshiftcontrolplane/v1.BuildControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.DeployerControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.DockerPullSecretControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.ImageImportControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.IngressControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.NetworkControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.ResourceQuotaControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.SecurityAllocator", "github.com/openshift/api/openshiftcontrolplane/v1.ServiceAccountControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.ServiceServingCert"},
+	}
+}
+
+func schema_openshift_api_openshiftcontrolplane_v1_PerGroupOptions(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is an API server name (see OpenShiftAPIserverName typed constants for a complete list of available API servers).",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"enabledVersions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "enabledVersions is a list of versions that must be enabled in addition to the defaults. Must not collide with the list of disabled versions",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"disabledVersions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "disabledVersions is a list of versions that must be disabled in addition to the defaults. Must not collide with the list of enabled versions",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"name", "enabledVersions", "disabledVersions"},
+			},
+		},
 	}
 }
 

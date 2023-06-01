@@ -222,4 +222,14 @@ var (
 		ResponsiblePerson:   "sgrunert",
 		OwningProduct:       ocpSpecific,
 	}
+
+	FeatureGateGCPLabelsTags = FeatureGateName("GCPLabelsTags")
+	gcpLabelsTags            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateGCPLabelsTags,
+		},
+		OwningJiraComponent: "Installer",
+		ResponsiblePerson:   "bhb",
+		OwningProduct:       ocpSpecific,
+	}
 )

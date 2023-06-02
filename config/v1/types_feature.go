@@ -191,6 +191,7 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 var defaultFeatures = &FeatureGateEnabledDisabled{
 	Enabled: []FeatureGateDescription{
 		openShiftPodSecurityAdmission,
+		alibabaPlatform, // This is a bug, it should be TechPreviewNoUpgrade. This must be downgraded before 4.14 is shipped.
 	},
 	Disabled: []FeatureGateDescription{
 		retroactiveDefaultStorageClass,

@@ -351,6 +351,7 @@ type CloudControllerManagerStatus struct {
 // +kubebuilder:validation:XValidation:rule="has(self.cloudControllerManager) == has(oldSelf.cloudControllerManager)",message="cloudControllerManager added or removed once set"
 type ExternalPlatformStatus struct {
 	// CloudControllerManager contains settings specific to the external Cloud Controller Manager (a.k.a. CCM or CPI)
+	// +openshift:enable:FeatureSets=TechPreviewNoUpgrade
 	// +optional
 	CloudControllerManager CloudControllerManagerStatus `json:"cloudControllerManager"`
 }

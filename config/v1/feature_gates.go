@@ -83,6 +83,16 @@ var (
 		OwningProduct:       ocpSpecific,
 	}
 
+	FeatureGateExternalCloudProviderExternal = FeatureGateName("ExternalCloudProviderExternal")
+	externalCloudProviderExternal            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateExternalCloudProviderExternal,
+		},
+		OwningJiraComponent: "cloud-provider",
+		ResponsiblePerson:   "jspeed",
+		OwningProduct:       ocpSpecific,
+	}
+
 	FeatureGateCSIDriverSharedResource = FeatureGateName("CSIDriverSharedResource")
 	csiDriverSharedResource            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{

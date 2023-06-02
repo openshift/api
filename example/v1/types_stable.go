@@ -33,7 +33,7 @@ type StableConfigTypeSpec struct {
 	// coolNewField is a field that is for tech preview only.  On normal clusters this shouldn't be present
 	//
 	// +kubebuilder:validation:Optional
-	// +openshift:enable:FeatureSets=TechPreviewNoUpgrade
+	// +openshift:enable:FeatureSets=CustomNoUpgrade,TechPreviewNoUpgrade
 	// +optional
 	CoolNewField string `json:"coolNewField"`
 

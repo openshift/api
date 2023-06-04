@@ -9910,6 +9910,110 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1alpha1.Backup": {
+      "description": "Backup provides configuration for performing backups of the openshift cluster.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec holds user settable values for configuration",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.BackupSpec"
+        },
+        "status": {
+          "description": "status holds observed values from the cluster. They may not be overridden.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.BackupStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.BackupList": {
+      "description": "BackupList is a collection of items\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "metadata",
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.Backup"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.BackupSpec": {
+      "type": "object",
+      "required": [
+        "etcd"
+      ],
+      "properties": {
+        "etcd": {
+          "description": "etcd specifies the configuration for periodic backups of the etcd cluster",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.EtcdBackupSpec"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.BackupStatus": {
+      "type": "object"
+    },
+    "com.github.openshift.api.config.v1alpha1.EtcdBackupSpec": {
+      "description": "EtcdBackupSpec provides configuration for automated etcd backups to the cluster-etcd-operator",
+      "type": "object",
+      "properties": {
+        "pvcName": {
+          "description": "PVCName specifies the name of the PersistentVolumeClaim (PVC) which binds a PersistentVolume where the etcd backup files would be saved The PVC itself must always be created in the \"openshift-etcd\" namespace If the PVC is left unspecified \"\" then the platform will choose a reasonable default location to save the backup. In the future this would be backups saved across the control-plane master nodes.",
+          "type": "string",
+          "default": ""
+        },
+        "retentionPolicy": {
+          "description": "RetentionPolicy defines the retention policy for retaining and deleting existing backups.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.RetentionPolicy"
+        },
+        "schedule": {
+          "description": "Schedule defines the recurring backup schedule in Cron format every 2 hours: 0 */2 * * * every day at 3am: 0 3 * * * Empty string means no opinion and the platform is left to choose a reasonable default which is subject to change without notice. The current default is \"no backups\", but will change in the future.",
+          "type": "string",
+          "default": ""
+        },
+        "timeZone": {
+          "description": "The time zone name for the given schedule, see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones. If not specified, this will default to the time zone of the kube-controller-manager process. See https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/#time-zones",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.config.v1alpha1.GatherConfig": {
       "description": "gatherConfig provides data gathering configuration options.",
       "type": "object",
@@ -10002,6 +10106,63 @@
     },
     "com.github.openshift.api.config.v1alpha1.InsightsDataGatherStatus": {
       "type": "object"
+    },
+    "com.github.openshift.api.config.v1alpha1.RetentionNumberConfig": {
+      "description": "RetentionNumberConfig specifies the configuration of the retention policy on the number of backups",
+      "type": "object",
+      "properties": {
+        "maxNumberOfBackups": {
+          "description": "MaxNumberOfBackups defines the maximum number of backups to retain. If the existing number of backups saved is equal to MaxNumberOfBackups then the oldest backup will be removed before a new backup is initiated.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.RetentionPolicy": {
+      "description": "RetentionPolicy defines the retention policy for retaining and deleting existing backups. This struct is a discriminated union that allows users to select the type of retention policy from the supported types.",
+      "type": "object",
+      "required": [
+        "retentionType"
+      ],
+      "properties": {
+        "retentionNumber": {
+          "description": "RetentionNumber configures the retention policy based on the number of backups",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.RetentionNumberConfig"
+        },
+        "retentionSize": {
+          "description": "RetentionSize configures the retention policy based on the size of backups",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.RetentionSizeConfig"
+        },
+        "retentionType": {
+          "description": "RetentionType sets the type of retention policy. Currently, the only valid policies are retention by number of backups (RetentionNumber), by the size of backups (RetentionSize). More policies or types may be added in the future. Empty string means no opinion and the platform is left to choose a reasonable default which is subject to change without notice. The current default is RetentionNumber with 15 backups kept.\n\nPossible enum values:\n - `\"RetentionNumber\"` sets the retention policy based on the number of backup files saved\n - `\"RetentionSize\"` sets the retention policy based on the total size of the backup files saved",
+          "type": "string",
+          "default": "",
+          "enum": [
+            "RetentionNumber",
+            "RetentionSize"
+          ]
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "retentionType",
+          "fields-to-discriminateBy": {
+            "retentionNumber": "RetentionNumber",
+            "retentionSize": "RetentionSize"
+          }
+        }
+      ]
+    },
+    "com.github.openshift.api.config.v1alpha1.RetentionSizeConfig": {
+      "description": "RetentionSizeConfig specifies the configuration of the retention policy on the total size of backups",
+      "type": "object",
+      "properties": {
+        "maxSizeOfBackupsGb": {
+          "description": "MaxSizeOfBackupsGb defines the total size in GB of backups to retain. If the current total size backups exceeds MaxSizeOfBackupsGb then the oldest backup will be removed before a new backup is initiated.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
     },
     "com.github.openshift.api.console.v1.ApplicationMenuSpec": {
       "description": "ApplicationMenuSpec is the specification of the desired section and icon used for the link in the application menu.",
@@ -28584,6 +28745,26 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1alpha1.BackupJobReference": {
+      "description": "BackupJobReference holds a reference to the batch/v1 Job created to run the etcd backup",
+      "type": "object",
+      "required": [
+        "namespace",
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the name of the Job. Required",
+          "type": "string",
+          "default": ""
+        },
+        "namespace": {
+          "description": "namespace is the namespace of the Job. this is always expected to be \"openshift-etcd\" since the user provided PVC is also required to be in \"openshift-etcd\" Required",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1alpha1.DelegatedAuthentication": {
       "description": "DelegatedAuthentication allows authentication to be disabled.",
       "type": "object",
@@ -28601,6 +28782,102 @@
         "disabled": {
           "description": "disabled indicates that authorization should be disabled.  By default it will use delegated authorization.",
           "type": "boolean"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1alpha1.EtcdBackup": {
+      "description": "# EtcdBackup provides configuration options and status for a one-time backup attempt of the etcd cluster\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec holds user settable values for configuration",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.EtcdBackupSpec"
+        },
+        "status": {
+          "description": "status holds observed values from the cluster. They may not be overridden.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.EtcdBackupStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1alpha1.EtcdBackupList": {
+      "description": "EtcdBackupList is a collection of items\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "metadata",
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.EtcdBackup"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1alpha1.EtcdBackupSpec": {
+      "type": "object",
+      "properties": {
+        "pvcName": {
+          "description": "PVCName specifies the name of the PersistentVolumeClaim (PVC) which binds a PersistentVolume where the etcd backup file would be saved The PVC itself must always be created in the \"openshift-etcd\" namespace If the PVC is left unspecified \"\" then the platform will choose a reasonable default location to save the backup. In the future this would be backups saved across the control-plane master nodes.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1alpha1.EtcdBackupStatus": {
+      "type": "object",
+      "required": [
+        "backupJob"
+      ],
+      "properties": {
+        "backupJob": {
+          "description": "backupJob is the reference to the Job that executes the backup. Optional",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.BackupJobReference"
+        },
+        "conditions": {
+          "description": "conditions provide details on the status of the etcd backup job.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "type",
+          "x-kubernetes-patch-strategy": "merge"
         }
       }
     },

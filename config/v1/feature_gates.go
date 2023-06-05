@@ -222,4 +222,24 @@ var (
 		ResponsiblePerson:   "sgrunert",
 		OwningProduct:       ocpSpecific,
 	}
+
+	FeatureGateGCPLabelsTags = FeatureGateName("GCPLabelsTags")
+	gcpLabelsTags            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateGCPLabelsTags,
+		},
+		OwningJiraComponent: "Installer",
+		ResponsiblePerson:   "bhb",
+		OwningProduct:       ocpSpecific,
+	}
+
+	FeatureGateAlibabaPlatform = FeatureGateName("AlibabaPlatform")
+	alibabaPlatform            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateAlibabaPlatform,
+		},
+		OwningJiraComponent: "cloud-provider",
+		ResponsiblePerson:   "jspeed",
+		OwningProduct:       ocpSpecific,
+	}
 )

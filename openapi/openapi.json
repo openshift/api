@@ -23730,7 +23730,7 @@
       "type": "object",
       "properties": {
         "maxLength": {
-          "description": "maxLength is the maximum length of the log message.\n\nValid values are integers in the range 480 to 8192, inclusive.",
+          "description": "maxLength is the maximum length of the log message.\n\nValid values are integers in the range 480 to 8192, inclusive.\n\nWhen omitted, the default value is 1024.",
           "type": "integer",
           "format": "int32"
         }
@@ -27986,7 +27986,7 @@
           "type": "string"
         },
         "maxLength": {
-          "description": "maxLength is the maximum length of the log message.\n\nValid values are integers in the range 480 to 4096, inclusive.",
+          "description": "maxLength is the maximum length of the log message.\n\nValid values are integers in the range 480 to 4096, inclusive.\n\nWhen omitted, the default value is 1024.",
           "type": "integer",
           "format": "int64"
         },

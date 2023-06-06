@@ -36,6 +36,9 @@ run-codegen: codegen
 .PHONY:codegen
 codegen: $(OUTPUT_DIR)/codegen
 
+.PHONY:prerelease-lifecycle-gen
+prerelease-lifecycle-gen: $(OUTPUT_DIR)/prerelease-lifecycle-gen
+
 .PHONY:controller-gen
 controller-gen: $(OUTPUT_DIR)/controller-gen
 
@@ -95,6 +98,9 @@ $(OUTPUT_DIR)/protoc-gen-gogo: $(OUTPUT_DIR)/vendor-version
 $(OUTPUT_DIR)/yq: $(OUTPUT_DIR)/vendor-version
 	go build -mod=vendor -o $(OUTPUT_DIR)/yq ./vendor/github.com/mikefarah/yq/v4
 
+$(OUTPUT_DIR)/prerelease-lifecycle-gen: $(OUTPUT_DIR)/vendor-version
+	go build -mod=vendor -o $(OUTPUT_DIR)/prerelease-lifecycle-gen ./vendor/k8s.io/code-generator/cmd/prerelease-lifecycle-gen
+
 ###################################
 #
 # END: Fully qualified tool targets
@@ -124,7 +130,7 @@ $(OUTPUT_DIR)/vendor-version: check-vendor-version
 		mkdir -p $(OUTPUT_DIR); \
 		echo "${VENDOR_VERSION}" > $(OUTPUT_DIR)/vendor-version; \
 	fi
-	
+
 
 # If the codegen utility is built, and the version doesn't match the latest version,
 # Remove it so that it'll be rebuilt before being executed again.

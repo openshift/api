@@ -601,10 +601,12 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/machine/v1.NutanixMachineProviderStatus":                            schema_openshift_api_machine_v1_NutanixMachineProviderStatus(ref),
 		"github.com/openshift/api/machine/v1.NutanixResourceIdentifier":                               schema_openshift_api_machine_v1_NutanixResourceIdentifier(ref),
 		"github.com/openshift/api/machine/v1.OpenShiftMachineV1Beta1MachineTemplate":                  schema_openshift_api_machine_v1_OpenShiftMachineV1Beta1MachineTemplate(ref),
+		"github.com/openshift/api/machine/v1.OpenStackFailureDomain":                                  schema_openshift_api_machine_v1_OpenStackFailureDomain(ref),
 		"github.com/openshift/api/machine/v1.PowerVSMachineProviderConfig":                            schema_openshift_api_machine_v1_PowerVSMachineProviderConfig(ref),
 		"github.com/openshift/api/machine/v1.PowerVSMachineProviderStatus":                            schema_openshift_api_machine_v1_PowerVSMachineProviderStatus(ref),
 		"github.com/openshift/api/machine/v1.PowerVSResource":                                         schema_openshift_api_machine_v1_PowerVSResource(ref),
 		"github.com/openshift/api/machine/v1.PowerVSSecretReference":                                  schema_openshift_api_machine_v1_PowerVSSecretReference(ref),
+		"github.com/openshift/api/machine/v1.RootVolume":                                              schema_openshift_api_machine_v1_RootVolume(ref),
 		"github.com/openshift/api/machine/v1.SystemDiskProperties":                                    schema_openshift_api_machine_v1_SystemDiskProperties(ref),
 		"github.com/openshift/api/machine/v1.Tag":                                                     schema_openshift_api_machine_v1_Tag(ref),
 		"github.com/openshift/api/machine/v1alpha1.AddressPair":                                       schema_openshift_api_machine_v1alpha1_AddressPair(ref),
@@ -29682,6 +29684,20 @@ func schema_openshift_api_machine_v1_FailureDomains(ref common.ReferenceCallback
 							},
 						},
 					},
+					"openstack": {
+						SchemaProps: spec.SchemaProps{
+							Description: "OpenStack configures failure domain information for the OpenStack platform.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machine/v1.OpenStackFailureDomain"),
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"platform"},
 			},
@@ -29691,9 +29707,10 @@ func schema_openshift_api_machine_v1_FailureDomains(ref common.ReferenceCallback
 						map[string]interface{}{
 							"discriminator": "platform",
 							"fields-to-discriminateBy": map[string]interface{}{
-								"aws":   "AWS",
-								"azure": "Azure",
-								"gcp":   "GCP",
+								"aws":       "AWS",
+								"azure":     "Azure",
+								"gcp":       "GCP",
+								"openstack": "OpenStack",
 							},
 						},
 					},
@@ -29701,7 +29718,7 @@ func schema_openshift_api_machine_v1_FailureDomains(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1.AWSFailureDomain", "github.com/openshift/api/machine/v1.AzureFailureDomain", "github.com/openshift/api/machine/v1.GCPFailureDomain"},
+			"github.com/openshift/api/machine/v1.AWSFailureDomain", "github.com/openshift/api/machine/v1.AzureFailureDomain", "github.com/openshift/api/machine/v1.GCPFailureDomain", "github.com/openshift/api/machine/v1.OpenStackFailureDomain"},
 	}
 }
 
@@ -30067,6 +30084,34 @@ func schema_openshift_api_machine_v1_OpenShiftMachineV1Beta1MachineTemplate(ref 
 	}
 }
 
+func schema_openshift_api_machine_v1_OpenStackFailureDomain(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "OpenStackFailureDomain configures failure domain information for the OpenStack platform.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"availabilityZone": {
+						SchemaProps: spec.SchemaProps{
+							Description: "availabilityZone is the nova availability zone in which the OpenStack machine provider will create the VM. If not specified, the VM will be created in the default availability zone specified in the nova configuration. Availability zone names must NOT contain : since it is used by admin users to specify hosts where instances are launched in server creation. Also, it must not contain spaces otherwise it will lead to node that belongs to this availability zone register failure, see kubernetes/cloud-provider-openstack#1379 for further information. The maximum length of availability zone name is 63 as per labels limits.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"rootVolume": {
+						SchemaProps: spec.SchemaProps{
+							Description: "rootVolume contains settings that will be used by the OpenStack machine provider to create the root volume attached to the VM. If not specified, no root volume will be created.",
+							Ref:         ref("github.com/openshift/api/machine/v1.RootVolume"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machine/v1.RootVolume"},
+	}
+}
+
 func schema_openshift_api_machine_v1_PowerVSMachineProviderConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -30334,6 +30379,26 @@ func schema_openshift_api_machine_v1_PowerVSSecretReference(ref common.Reference
 			VendorExtensible: spec.VendorExtensible{
 				Extensions: spec.Extensions{
 					"x-kubernetes-map-type": "atomic",
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_machine_v1_RootVolume(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "RootVolume represents the volume metadata to boot from. The original RootVolume struct is defined in the v1alpha1 but it's not best practice to use it directly here so we define a new one that should stay in sync with the original one.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"availabilityZone": {
+						SchemaProps: spec.SchemaProps{
+							Description: "availabilityZone specifies the Cinder availability zone where the root volume will be created. If not specifified, the root volume will be created in the availability zone specified by the volume type in the cinder configuration. If the volume type (configured in the OpenStack cluster) does not specify an availability zone, the root volume will be created in the default availability zone specified in the cinder configuration. See https://docs.openstack.org/cinder/latest/admin/availability-zone-type.html for more details. If the OpenStack cluster is deployed with the cross_az_attach configuration option set to false, the root volume will have to be in the same availability zone as the VM (defined by OpenStackFailureDomain.AvailabilityZone). Availability zone names must NOT contain spaces otherwise it will lead to volume that belongs to this availability zone register failure, see kubernetes/cloud-provider-openstack#1379 for further information. The maximum length of availability zone name is 63 as per labels limits.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 			},
 		},

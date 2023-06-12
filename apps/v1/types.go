@@ -29,6 +29,7 @@ import (
 // is triggered by any means.
 //
 // Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+// Deprecated: Use deployments or other means for declarative updates for pods instead.
 // +openshift:compatibility-gen:level=1
 type DeploymentConfig struct {
 	metav1.TypeMeta `json:",inline"`

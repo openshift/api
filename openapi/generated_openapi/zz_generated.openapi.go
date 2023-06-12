@@ -9591,7 +9591,7 @@ func schema_openshift_api_config_v1_CloudControllerManagerStatus(ref common.Refe
 				Properties: map[string]spec.Schema{
 					"state": {
 						SchemaProps: spec.SchemaProps{
-							Description: "state determines whether or not an external Cloud Controller Manager is expected to be installed within the cluster. https://kubernetes.io/docs/tasks/administer-cluster/running-cloud-controller/#running-cloud-controller-manager\n\nWhen set to \"External\", new nodes will be tainted as uninitialized when created, preventing them from running workloads until they are initialized by the cloud controller manager. When omitted or set to \"None\", new nodes will be not tainted and no extra initialization from the cloud controller manager is expected.",
+							Description: "state determines whether or not an external Cloud Controller Manager is expected to be installed within the cluster. https://kubernetes.io/docs/tasks/administer-cluster/running-cloud-controller/#running-cloud-controller-manager\n\nValid values are \"External\", \"None\" and omitted. When set to \"External\", new nodes will be tainted as uninitialized when created, preventing them from running workloads until they are initialized by the cloud controller manager. When omitted or set to \"None\", new nodes will be not tainted and no extra initialization from the cloud controller manager is expected.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -11446,7 +11446,7 @@ func schema_openshift_api_config_v1_ExternalPlatformStatus(ref common.ReferenceC
 				Properties: map[string]spec.Schema{
 					"cloudControllerManager": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CloudControllerManager contains settings specific to the external Cloud Controller Manager (a.k.a. CCM or CPI)",
+							Description: "cloudControllerManager contains settings specific to the external Cloud Controller Manager (a.k.a. CCM or CPI). When omitted, new nodes will be not tainted and no extra initialization from the cloud controller manager is expected.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.CloudControllerManagerStatus"),
 						},

@@ -593,9 +593,6 @@ spec:
                     external:
                       description: External contains settings specific to the generic External infrastructure provider.
                       type: object
-                      x-kubernetes-validations:
-                        - message: cloudControllerManager added or removed once set
-                          rule: has(self.cloudControllerManager) == has(oldSelf.cloudControllerManager)
                     gcp:
                       description: GCP contains settings specific to the Google Cloud Platform infrastructure provider.
                       properties:

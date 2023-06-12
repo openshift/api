@@ -89,7 +89,7 @@ var (
 			Name: FeatureGateExternalCloudProviderExternal,
 		},
 		OwningJiraComponent: "cloud-provider",
-		ResponsiblePerson:   "jspeed",
+		ResponsiblePerson:   "elmiko",
 		OwningProduct:       ocpSpecific,
 	}
 

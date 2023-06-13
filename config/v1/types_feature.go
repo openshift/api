@@ -166,6 +166,7 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		with(externalCloudProvider).
 		with(externalCloudProviderAzure).
 		with(externalCloudProviderGCP).
+		with(externalCloudProviderExternal).
 		with(csiDriverSharedResource).
 		with(buildCSIVolumes).
 		with(nodeSwap).

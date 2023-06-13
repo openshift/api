@@ -33,7 +33,7 @@ type StableConfigTypeSpec struct {
 	// coolNewField is a field that is for tech preview only.  On normal clusters this shouldn't be present
 	//
 	// +kubebuilder:validation:Optional
-	// +openshift:enable:FeatureSets=TechPreviewNoUpgrade
+	// +openshift:enable:FeatureSets=CustomNoUpgrade;TechPreviewNoUpgrade
 	// +optional
 	CoolNewField string `json:"coolNewField"`
 
@@ -73,7 +73,7 @@ type EvolvingUnion struct {
 
 // EvolvingDiscriminator defines the audit policy profile type.
 // +openshift:validation:FeatureSetAwareEnum:featureSet=Default,enum="";StableValue
-// +openshift:validation:FeatureSetAwareEnum:featureSet=TechPreviewNoUpgrade,enum="";StableValue;TechPreviewOnlyValue
+// +openshift:validation:FeatureSetAwareEnum:featureSet=CustomNoUpgrade;TechPreviewNoUpgrade,enum="";StableValue;TechPreviewOnlyValue
 type EvolvingDiscriminator string
 
 const (

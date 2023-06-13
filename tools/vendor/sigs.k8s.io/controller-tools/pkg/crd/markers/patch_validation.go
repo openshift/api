@@ -38,12 +38,12 @@ func init() {
 }
 
 type FeatureSetEnum struct {
-	FeatureSetName string   `marker:"featureSet"`
-	EnumValues     []string `marker:"enum"`
+	FeatureSetNames []string `marker:"featureSet"`
+	EnumValues      []string `marker:"enum"`
 }
 
 func (m FeatureSetEnum) ApplyToSchema(schema *apiext.JSONSchemaProps) error {
-	if !RequiredFeatureSets.Has(m.FeatureSetName) {
+	if !RequiredFeatureSets.HasAny(m.FeatureSetNames...) {
 		return nil
 	}
 

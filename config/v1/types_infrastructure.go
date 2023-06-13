@@ -114,7 +114,7 @@ type InfrastructureStatus struct {
 	// +kubebuilder:default=None
 	// +default="None"
 	// +kubebuilder:validation:Enum=None;AllNodes
-	// +openshift:enable:FeatureSets=TechPreviewNoUpgrade
+	// +openshift:enable:FeatureSets=CustomNoUpgrade;TechPreviewNoUpgrade
 	// +optional
 	CPUPartitioning CPUPartitioningMode `json:"cpuPartitioning,omitempty"`
 }
@@ -661,7 +661,7 @@ type BareMetalPlatformStatus struct {
 	// loadBalancer defines how the load balancer used by the cluster is configured.
 	// +default={"type": "OpenShiftManagedDefault"}
 	// +kubebuilder:default={"type": "OpenShiftManagedDefault"}
-	// +openshift:enable:FeatureSets=TechPreviewNoUpgrade
+	// +openshift:enable:FeatureSets=CustomNoUpgrade;TechPreviewNoUpgrade
 	// +optional
 	LoadBalancer *BareMetalPlatformLoadBalancer `json:"loadBalancer,omitempty"`
 }
@@ -811,7 +811,7 @@ type OvirtPlatformStatus struct {
 	// loadBalancer defines how the load balancer used by the cluster is configured.
 	// +default={"type": "OpenShiftManagedDefault"}
 	// +kubebuilder:default={"type": "OpenShiftManagedDefault"}
-	// +openshift:enable:FeatureSets=TechPreviewNoUpgrade
+	// +openshift:enable:FeatureSets=CustomNoUpgrade;TechPreviewNoUpgrade
 	// +optional
 	LoadBalancer *OvirtPlatformLoadBalancer `json:"loadBalancer,omitempty"`
 }
@@ -1077,7 +1077,7 @@ type VSpherePlatformStatus struct {
 	// loadBalancer defines how the load balancer used by the cluster is configured.
 	// +default={"type": "OpenShiftManagedDefault"}
 	// +kubebuilder:default={"type": "OpenShiftManagedDefault"}
-	// +openshift:enable:FeatureSets=TechPreviewNoUpgrade
+	// +openshift:enable:FeatureSets=CustomNoUpgrade;TechPreviewNoUpgrade
 	// +optional
 	LoadBalancer *VSpherePlatformLoadBalancer `json:"loadBalancer,omitempty"`
 }
@@ -1360,7 +1360,7 @@ type NutanixPlatformStatus struct {
 	// loadBalancer defines how the load balancer used by the cluster is configured.
 	// +default={"type": "OpenShiftManagedDefault"}
 	// +kubebuilder:default={"type": "OpenShiftManagedDefault"}
-	// +openshift:enable:FeatureSets=TechPreviewNoUpgrade
+	// +openshift:enable:FeatureSets=CustomNoUpgrade;TechPreviewNoUpgrade
 	// +optional
 	LoadBalancer *NutanixPlatformLoadBalancer `json:"loadBalancer,omitempty"`
 }

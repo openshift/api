@@ -10,6 +10,7 @@ schemapatch:
   - ""
   - "Default"
   - "TechPreviewNoUpgrade"
+  - "CustomNoUpgrade"
 swaggerdocs:
   disabled: false
   commentPolicy: Warn

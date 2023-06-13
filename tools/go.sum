@@ -146,8 +146,8 @@ github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e/go.mod h1:zD1mROLA
 github.com/nxadm/tail v1.4.8 h1:nPr65rt6Y5JFSKQO7qToXr7pePgD6Gwiw05lkbyAQTE=
 github.com/onsi/ginkgo v1.16.5 h1:8xi0RTUf59SOSfEtZMvwTvXYMzG4gV23XVHOZiXNtnE=
 github.com/onsi/gomega v1.24.2 h1:J/tulyYK6JwBldPViHJReihxxZ+22FHs0piGjQAvoUE=
-github.com/openshift/controller-tools v0.9.3-0.20230103140517-a555d1d341c8 h1:Pg8v9jm3qCITGtaeXyturNHuS0CRHKHlUVAdcIj7uAc=
-github.com/openshift/controller-tools v0.9.3-0.20230103140517-a555d1d341c8/go.mod h1:dm4bN3Yp1ZP+hbbeSLF8zOEHsI1/bf15u3JNcgRv2TM=
+github.com/openshift/controller-tools v0.9.3-0.20230613144836-3d921131942a h1:NcQsilMojjmQBPPpdcrsw5XAFURCs1qr57W7NDnYvpo=
+github.com/openshift/controller-tools v0.9.3-0.20230613144836-3d921131942a/go.mod h1:dm4bN3Yp1ZP+hbbeSLF8zOEHsI1/bf15u3JNcgRv2TM=
 github.com/pjbgf/sha1cd v0.2.3/go.mod h1:HOK9QrgzdHpbc2Kzip0Q1yi3M2MFGPADtR6HjG65m5M=
 github.com/pkg/diff v0.0.0-20210226163009-20ebb0f2a09e h1:aoZm08cpOy4WuID//EZDgcC4zIxODThtZNPirFr42+A=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=

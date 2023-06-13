@@ -25,6 +25,7 @@ func init() {
 
 const OpenShiftFeatureSetMarkerName = "openshift:enable:FeatureSets"
 const OpenShiftFeatureSetAwareEnumMarkerName = "openshift:validation:FeatureSetAwareEnum"
+const OpenShiftFeatureSetAwareXValidationMarkerName = "openshift:validation:FeatureSetAwareXValidation"
 
 func init() {
 	ValidationMarkers = append(ValidationMarkers,
@@ -34,6 +35,10 @@ func init() {
 	FieldOnlyMarkers = append(FieldOnlyMarkers,
 		must(markers.MakeDefinition(OpenShiftFeatureSetMarkerName, markers.DescribesField, []string{})).
 			WithHelp(markers.SimpleHelp("OpenShift", "specifies the FeatureSet that is required to generate this field.")),
+	)
+	ValidationMarkers = append(ValidationMarkers,
+		must(markers.MakeDefinition(OpenShiftFeatureSetAwareXValidationMarkerName, markers.DescribesType, FeatureSetXValidation{})).
+			WithHelp(markers.SimpleHelp("OpenShift", "specifies the FeatureSet that is required to generate this XValidation rule.")),
 	)
 }
 
@@ -63,4 +68,23 @@ func (m FeatureSetEnum) ApplyToSchema(schema *apiext.JSONSchemaProps) error {
 
 	schema.Enum = vals
 	return nil
+}
+
+type FeatureSetXValidation struct {
+	FeatureSetNames []string `marker:"featureSet"`
+	Rule            string
+	Message         string `marker:",optional"`
+}
+
+func (m FeatureSetXValidation) ApplyToSchema(schema *apiext.JSONSchemaProps) error {
+	if !RequiredFeatureSets.HasAny(m.FeatureSetNames...) {
+		return nil
+	}
+
+	validation := XValidation{
+		Rule:    m.Rule,
+		Message: m.Message,
+	}
+
+	return validation.ApplyToSchema(schema)
 }

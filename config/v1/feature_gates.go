@@ -262,4 +262,14 @@ var (
 		ResponsiblePerson:   "mkowalsk",
 		OwningProduct:       kubernetes,
 	}
+
+	FeatureGateValidatingAdmissionPolicy = FeatureGateName("ValidatingAdmissionPolicy")
+	validatingAdmissionPolicy            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateValidatingAdmissionPolicy,
+		},
+		OwningJiraComponent: "kube-apiserver",
+		ResponsiblePerson:   "benluddy",
+		OwningProduct:       kubernetes,
+	}
 )

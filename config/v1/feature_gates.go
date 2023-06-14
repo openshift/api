@@ -192,6 +192,16 @@ var (
 		ResponsiblePerson:   "abutcher",
 		OwningProduct:       ocpSpecific,
 	}
+	
+	FeatureGateAzureWorkloadIdentity = FeatureGateName("AWSSecurityTokenService")
+	AWSSecurityTokenService            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateAWSSecurityTokenService,
+		},
+		OwningJiraComponent: "cloud-credential-operator",
+		ResponsiblePerson:   "abutcher",
+		OwningProduct:       ocpSpecific,
+	}
 
 	FeatureGateMaxUnavailableStatefulSet = FeatureGateName("MaxUnavailableStatefulSet")
 	maxUnavailableStatefulSet            = FeatureGateDescription{

@@ -15,6 +15,11 @@ type Config struct {
 	// When omitted, the default configuration will be used.
 	OpenAPI *OpenAPIConfig `json:"openapi,omitempty"`
 
+	// SchemaCheck represents the configuration for the schemacheck generator.
+	// When omitted, the default configuration will be used.
+	// When provided, any equivalent flag provided values are ignored.
+	SchemaCheck *SchemaCheckConfig `json:"schemacheck,omitempty"`
+
 	// SchemaPatch represents the configuration for the schemapatch generator.
 	// When omitted, the default configuration will be used.
 	// When provided, any equivalent flag provided values are ignored.
@@ -53,6 +58,13 @@ type DeepcopyConfig struct {
 type OpenAPIConfig struct {
 	// Disabled determines whether the openapi generator should include this
 	// group or not.
+	// This generator is enabled by default so this field defaults to false.
+	Disabled bool `json:"disabled,omitempty"`
+}
+
+// SchemaCheckConfig is the configuration for the schemacheck generator.
+type SchemaCheckConfig struct {
+	// Disabled determines whether the schemacheck generator should be run or not.
 	// This generator is enabled by default so this field defaults to false.
 	Disabled bool `json:"disabled,omitempty"`
 }

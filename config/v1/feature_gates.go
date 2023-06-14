@@ -192,9 +192,9 @@ var (
 		ResponsiblePerson:   "abutcher",
 		OwningProduct:       ocpSpecific,
 	}
-	
-	FeatureGateAzureWorkloadIdentity = FeatureGateName("AWSSecurityTokenService")
-	AWSSecurityTokenService            = FeatureGateDescription{
+
+	FeatureGateAWSSecurityTokenService = FeatureGateName("AWSSecurityTokenService")
+	awsSecurityTokenService            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
 			Name: FeatureGateAWSSecurityTokenService,
 		},

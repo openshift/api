@@ -67,6 +67,14 @@ type SchemaCheckConfig struct {
 	// Disabled determines whether the schemacheck generator should be run or not.
 	// This generator is enabled by default so this field defaults to false.
 	Disabled bool `json:"disabled,omitempty"`
+
+	// EnabledValidators is a list of the validators that should be enabled.
+	// If this is empty, the default validators are enabled.
+	EnabledValidators []string `json:"enabledValidators,omitempty"`
+
+	// DisabledValidators is a list of the validators that should be disabled.
+	// If this is empty, no default validators are disabled.
+	DisabledValidators []string `json:"disabledValidators,omitempty"`
 }
 
 // SchemaPatchConfig is the configuration for the schemapatch generator.

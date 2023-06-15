@@ -23,18 +23,37 @@ type Options struct {
 	// Disabled indicates whether the schemacheck generator is disabled or not.
 	// This defaults to false as the schemacheck generator is enabled by default.
 	Disabled bool
+
+	// EnabledComparators is a list of the comparators that should be enabled.
+	// If this is empty, the default comparators are enabled.
+	EnabledComparators []string
+
+	// DisabledComparators is a list of the comparators that should be disabled.
+	// If this is empty, no default comparators are disabled.
+	DisabledComparators []string
+
+	// ComparisonBase is the base branch/commit to compare against.
+	// This defaults to "master".
+	// This is not exposed via configuration as it must be set globally.
+	ComparisonBase string
 }
 
 // generator implements the generation.Generator interface.
 // It is designed to verify the CRD schema updates for a particular API group.
 type generator struct {
-	disabled bool
+	disabled            bool
+	enabledComparators  []string
+	disabledComparators []string
+	comparisonBase      string
 }
 
 // NewGenerator builds a new schemacheck generator.
 func NewGenerator(opts Options) generation.Generator {
 	return &generator{
-		disabled: opts.Disabled,
+		disabled:            opts.Disabled,
+		enabledComparators:  opts.EnabledComparators,
+		disabledComparators: opts.DisabledComparators,
+		comparisonBase:      opts.ComparisonBase,
 	}
 }
 
@@ -46,7 +65,10 @@ func (g *generator) ApplyConfig(config *generation.Config) generation.Generator 
 	}
 
 	return NewGenerator(Options{
-		Disabled: config.SchemaCheck.Disabled,
+		Disabled:            config.SchemaCheck.Disabled,
+		EnabledComparators:  config.SchemaCheck.EnabledValidators,
+		DisabledComparators: config.SchemaCheck.DisabledValidators,
+		ComparisonBase:      g.comparisonBase,
 	})
 }
 
@@ -65,6 +87,13 @@ func (g *generator) GenGroup(groupCtx generation.APIGroupContext) error {
 	errs := []error{}
 
 	comparatorOptions := options.NewComparatorOptions()
+	comparatorOptions.EnabledComparators = g.enabledComparators
+	comparatorOptions.DisabledComparators = g.disabledComparators
+
+	if err := comparatorOptions.Validate(); err != nil {
+		return fmt.Errorf("could not validate comparator options: %w", err)
+	}
+
 	comparatorConfig, err := comparatorOptions.Complete()
 	if err != nil {
 		return fmt.Errorf("could not complete comparator options: %w", err)
@@ -87,7 +116,7 @@ func (g *generator) GenGroup(groupCtx generation.APIGroupContext) error {
 
 // genGroupVersion runs the schemacheck generator against a particular version of the API group.
 func (g *generator) genGroupVersion(group string, version generation.APIVersionContext, comparatorConfig *options.ComparatorConfig) error {
-	contexts, err := loadSchemaCheckGenerationContextsForVersion(version, "openshift/master")
+	contexts, err := loadSchemaCheckGenerationContextsForVersion(version, g.comparisonBase)
 	if err != nil {
 		return fmt.Errorf("could not load schema check generation contexts for group/version %s/%s: %w", group, version.Name, err)
 	}

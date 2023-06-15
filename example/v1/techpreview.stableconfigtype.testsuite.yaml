@@ -74,3 +74,17 @@ tests:
         evolvingUnion:
           type: TechPreviewOnlyValue
         immutableField: foo
+  onUpdate:
+  - name: Should not allow removal of a tech preview field
+    initial: |
+      apiVersion: example.openshift.io/v1
+      kind: StableConfigType
+      spec:
+        coolNewField: "Invalid"
+        immutableField: foo
+    updated: |
+      apiVersion: example.openshift.io/v1
+      kind: StableConfigType
+      spec:
+        immutableField: foo
+    expectedError: "spec: Invalid value: \"object\": coolNewField may not be removed once set"

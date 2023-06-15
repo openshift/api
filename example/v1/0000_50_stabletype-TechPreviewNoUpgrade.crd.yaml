@@ -88,6 +88,9 @@ spec:
                 stableField:
                   description: "stableField is a field that is present on default clusters and on tech preview clusters \n If empty, the platform will choose a good default, which may change over time without notice."
                   type: string
+              x-kubernetes-validations:
+                - rule: 'has(oldSelf.coolNewField) ? has(self.coolNewField) : true'
+                  message: coolNewField may not be removed once set
             status:
               description: status is the most recently observed status of the StableConfigType.
               type: object

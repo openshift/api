@@ -25,7 +25,7 @@ require (
 	sigs.k8s.io/yaml v1.3.0
 )
 
-replace sigs.k8s.io/controller-tools => github.com/openshift/controller-tools v0.9.3-0.20230613144836-3d921131942a
+replace sigs.k8s.io/controller-tools => github.com/openshift/controller-tools v0.9.3-0.20230615121909-8a188837e02f
 
 require (
 	github.com/a8m/envsubst v1.3.0 // indirect

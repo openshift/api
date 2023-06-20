@@ -143,16 +143,6 @@ var (
 		OwningProduct:       ocpSpecific,
 	}
 
-	FeatureGateMatchLabelKeysInPodTopologySpread = FeatureGateName("MatchLabelKeysInPodTopologySpread")
-	matchLabelKeysInPodTopologySpread            = FeatureGateDescription{
-		FeatureGateAttributes: FeatureGateAttributes{
-			Name: FeatureGateMatchLabelKeysInPodTopologySpread,
-		},
-		OwningJiraComponent: "scheduling",
-		ResponsiblePerson:   "ingvagabund",
-		OwningProduct:       kubernetes,
-	}
-
 	FeatureGatePDBUnhealthyPodEvictionPolicy = FeatureGateName("PDBUnhealthyPodEvictionPolicy")
 	pdbUnhealthyPodEvictionPolicy            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{

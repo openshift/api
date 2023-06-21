@@ -185,6 +185,7 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		with(privateHostedZoneAWS).
 		with(sigstoreImageVerification).
 		with(gcpLabelsTags).
+		with(vSphereStaticIPs).
 		toFeatures(defaultFeatures),
 	LatencySensitive: newDefaultFeatures().
 		toFeatures(defaultFeatures),

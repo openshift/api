@@ -272,4 +272,13 @@ var (
 		ResponsiblePerson:   "mkowalsk",
 		OwningProduct:       kubernetes,
 	}
+	FeatureGateVSphereStaticIPs = FeatureGateName("VSphereStaticIPs")
+	vSphereStaticIPs            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateVSphereStaticIPs,
+		},
+		OwningJiraComponent: "splat",
+		ResponsiblePerson:   "rvanderp3",
+		OwningProduct:       kubernetes,
+	}
 )

@@ -279,6 +279,6 @@ var (
 		},
 		OwningJiraComponent: "splat",
 		ResponsiblePerson:   "rvanderp3",
-		OwningProduct:       kubernetes,
+		OwningProduct:       ocpSpecific,
 	}
 )

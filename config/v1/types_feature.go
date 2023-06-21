@@ -172,7 +172,6 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		with(nodeSwap).
 		with(machineAPIProviderOpenStack).
 		with(insightsConfigAPI).
-		with(matchLabelKeysInPodTopologySpread).
 		with(retroactiveDefaultStorageClass).
 		with(pdbUnhealthyPodEvictionPolicy).
 		with(dynamicResourceAllocation).

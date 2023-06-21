@@ -405,6 +405,15 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/console/v1.ConsoleQuickStartTask":                                   schema_openshift_api_console_v1_ConsoleQuickStartTask(ref),
 		"github.com/openshift/api/console/v1.ConsoleQuickStartTaskReview":                             schema_openshift_api_console_v1_ConsoleQuickStartTaskReview(ref),
 		"github.com/openshift/api/console/v1.ConsoleQuickStartTaskSummary":                            schema_openshift_api_console_v1_ConsoleQuickStartTaskSummary(ref),
+		"github.com/openshift/api/console/v1.ConsoleSample":                                           schema_openshift_api_console_v1_ConsoleSample(ref),
+		"github.com/openshift/api/console/v1.ConsoleSampleContainerImportSource":                      schema_openshift_api_console_v1_ConsoleSampleContainerImportSource(ref),
+		"github.com/openshift/api/console/v1.ConsoleSampleContainerImportSourceService":               schema_openshift_api_console_v1_ConsoleSampleContainerImportSourceService(ref),
+		"github.com/openshift/api/console/v1.ConsoleSampleGitImportSource":                            schema_openshift_api_console_v1_ConsoleSampleGitImportSource(ref),
+		"github.com/openshift/api/console/v1.ConsoleSampleGitImportSourceRepository":                  schema_openshift_api_console_v1_ConsoleSampleGitImportSourceRepository(ref),
+		"github.com/openshift/api/console/v1.ConsoleSampleGitImportSourceService":                     schema_openshift_api_console_v1_ConsoleSampleGitImportSourceService(ref),
+		"github.com/openshift/api/console/v1.ConsoleSampleList":                                       schema_openshift_api_console_v1_ConsoleSampleList(ref),
+		"github.com/openshift/api/console/v1.ConsoleSampleSource":                                     schema_openshift_api_console_v1_ConsoleSampleSource(ref),
+		"github.com/openshift/api/console/v1.ConsoleSampleSpec":                                       schema_openshift_api_console_v1_ConsoleSampleSpec(ref),
 		"github.com/openshift/api/console/v1.ConsoleYAMLSample":                                       schema_openshift_api_console_v1_ConsoleYAMLSample(ref),
 		"github.com/openshift/api/console/v1.ConsoleYAMLSampleList":                                   schema_openshift_api_console_v1_ConsoleYAMLSampleList(ref),
 		"github.com/openshift/api/console/v1.ConsoleYAMLSampleSpec":                                   schema_openshift_api_console_v1_ConsoleYAMLSampleSpec(ref),
@@ -19509,6 +19518,379 @@ func schema_openshift_api_console_v1_ConsoleQuickStartTaskSummary(ref common.Ref
 				Required: []string{"success", "failed"},
 			},
 		},
+	}
+}
+
+func schema_openshift_api_console_v1_ConsoleSample(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ConsoleSample is an extension to customizing OpenShift web console by adding samples.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec contains configuration for a console sample.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/console/v1.ConsoleSampleSpec"),
+						},
+					},
+				},
+				Required: []string{"metadata", "spec"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/console/v1.ConsoleSampleSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_openshift_api_console_v1_ConsoleSampleContainerImportSource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ConsoleSampleContainerImportSource let the user import a container image.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Description: "reference to a container image that provides a HTTP service. The service must be exposed on the default port (8080) unless otherwise configured with the port field.\n\nSupported formats:\n  - <repository-name>/<image-name>\n  - docker.io/<repository-name>/<image-name>\n  - quay.io/<repository-name>/<image-name>\n  - quay.io/<repository-name>/<image-name>@sha256:<image hash>\n  - quay.io/<repository-name>/<image-name>:<tag>",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"service": {
+						SchemaProps: spec.SchemaProps{
+							Description: "service contains configuration for the Service resource created for this sample.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/console/v1.ConsoleSampleContainerImportSourceService"),
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/console/v1.ConsoleSampleContainerImportSourceService"},
+	}
+}
+
+func schema_openshift_api_console_v1_ConsoleSampleContainerImportSourceService(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ConsoleSampleContainerImportSourceService let the samples author define defaults for the Service created for this sample.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"targetPort": {
+						SchemaProps: spec.SchemaProps{
+							Description: "targetPort is the port that the service listens on for HTTP requests. This port will be used for Service and Route created for this sample. Port must be in the range 1 to 65535. Default port is 8080.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_console_v1_ConsoleSampleGitImportSource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ConsoleSampleGitImportSource let the user import code from a public Git repository.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"repository": {
+						SchemaProps: spec.SchemaProps{
+							Description: "repository contains the reference to the actual Git repository.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/console/v1.ConsoleSampleGitImportSourceRepository"),
+						},
+					},
+					"service": {
+						SchemaProps: spec.SchemaProps{
+							Description: "service contains configuration for the Service resource created for this sample.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/console/v1.ConsoleSampleGitImportSourceService"),
+						},
+					},
+				},
+				Required: []string{"repository"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/console/v1.ConsoleSampleGitImportSourceRepository", "github.com/openshift/api/console/v1.ConsoleSampleGitImportSourceService"},
+	}
+}
+
+func schema_openshift_api_console_v1_ConsoleSampleGitImportSourceRepository(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ConsoleSampleGitImportSourceRepository let the user import code from a public git repository.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"url": {
+						SchemaProps: spec.SchemaProps{
+							Description: "url of the Git repository that contains a HTTP service. The HTTP service must be exposed on the default port (8080) unless otherwise configured with the port field.\n\nOnly public repositories on GitHub, GitLab and Bitbucket are currently supported:\n\n  - https://github.com/<org>/<repository>\n  - https://gitlab.com/<org>/<repository>\n  - https://bitbucket.org/<org>/<repository>\n\nThe url must have a maximum length of 256 characters.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"revision": {
+						SchemaProps: spec.SchemaProps{
+							Description: "revision is the git revision at which to clone the git repository Can be used to clone a specific branch, tag or commit SHA. Must be at most 256 characters in length. When omitted the repository's default branch is used.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"contextDir": {
+						SchemaProps: spec.SchemaProps{
+							Description: "contextDir is used to specify a directory within the repository to build the component. Must start with `/` and have a maximum length of 256 characters. When omitted, the default value is to build from the root of the repository.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"url"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_console_v1_ConsoleSampleGitImportSourceService(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ConsoleSampleGitImportSourceService let the samples author define defaults for the Service created for this sample.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"targetPort": {
+						SchemaProps: spec.SchemaProps{
+							Description: "targetPort is the port that the service listens on for HTTP requests. This port will be used for Service created for this sample. Port must be in the range 1 to 65535. Default port is 8080.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_console_v1_ConsoleSampleList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/console/v1.ConsoleSample"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/console/v1.ConsoleSample", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_openshift_api_console_v1_ConsoleSampleSource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ConsoleSampleSource is the actual sample definition and can hold different sample types. Unsupported sample types will be ignored in the web console.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type of the sample, currently supported: \"GitImport\";\"ContainerImport\"",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"gitImport": {
+						SchemaProps: spec.SchemaProps{
+							Description: "gitImport allows the user to import code from a git repository.",
+							Ref:         ref("github.com/openshift/api/console/v1.ConsoleSampleGitImportSource"),
+						},
+					},
+					"containerImport": {
+						SchemaProps: spec.SchemaProps{
+							Description: "containerImport allows the user import a container image.",
+							Ref:         ref("github.com/openshift/api/console/v1.ConsoleSampleContainerImportSource"),
+						},
+					},
+				},
+				Required: []string{"type"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "type",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"containerImport": "ContainerImport",
+								"gitImport":       "GitImport",
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/console/v1.ConsoleSampleContainerImportSource", "github.com/openshift/api/console/v1.ConsoleSampleGitImportSource"},
+	}
+}
+
+func schema_openshift_api_console_v1_ConsoleSampleSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ConsoleSampleSpec is the desired sample for the web console. Samples will appear with their title, descriptions and a badge in a samples catalog.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"title": {
+						SchemaProps: spec.SchemaProps{
+							Description: "title is the display name of the sample.\n\nIt is required and must be no more than 50 characters in length.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"abstract": {
+						SchemaProps: spec.SchemaProps{
+							Description: "abstract is a short introduction to the sample.\n\nIt is required and must be no more than 100 characters in length.\n\nThe abstract is shown on the sample card tile below the title and provider and is limited to three lines of content.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"description": {
+						SchemaProps: spec.SchemaProps{
+							Description: "description is a long form explanation of the sample.\n\nIt is required and can have a maximum length of **4096** characters.\n\nIt is a README.md-like content for additional information, links, pre-conditions, and other instructions. It will be rendered as Markdown so that it can contain line breaks, links, and other simple formatting.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"icon": {
+						SchemaProps: spec.SchemaProps{
+							Description: "icon is an optional base64 encoded image and shown beside the sample title.\n\nThe format must follow the data: URL format and can have a maximum size of **10 KB**.\n\n  data:[<mediatype>][;base64],<base64 encoded image>\n\nFor example:\n\n  data:image;base64,             plus the base64 encoded image.\n\nVector images can also be used. SVG icons must start with:\n\n  data:image/svg+xml;base64,     plus the base64 encoded SVG image.\n\nAll sample catalog icons will be shown on a white background (also when the dark theme is used). The web console ensures that different aspect ratios work correctly. Currently, the surface of the icon is at most 40x100px.\n\nFor more information on the data URL format, please visit https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URLs.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type is an optional label to group multiple samples.\n\nIt is optional and must be no more than 20 characters in length.\n\nRecommendation is a singular term like \"Builder Image\", \"Devfile\" or \"Serverless Function\".\n\nCurrently, the type is shown a badge on the sample card tile in the top right corner.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"provider": {
+						SchemaProps: spec.SchemaProps{
+							Description: "provider is an optional label to honor who provides the sample.\n\nIt is optional and must be no more than 50 characters in length.\n\nA provider can be a company like \"Red Hat\" or an organization like \"CNCF\" or \"Knative\".\n\nCurrently, the provider is only shown on the sample card tile below the title with the prefix \"Provided by \"",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"tags": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "tags are optional string values that can be used to find samples in the samples catalog.\n\nExamples of common tags may be \"Java\", \"Quarkus\", etc.\n\nThey will be displayed on the samples details page.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"source": {
+						SchemaProps: spec.SchemaProps{
+							Description: "source defines where to deploy the sample service from. The sample may be sourced from an external git repository or container image.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/console/v1.ConsoleSampleSource"),
+						},
+					},
+				},
+				Required: []string{"title", "abstract", "description", "source"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/console/v1.ConsoleSampleSource"},
 	}
 }
 

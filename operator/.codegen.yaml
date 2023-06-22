@@ -1,2 +1,6 @@
+schemapatch:
+  requiredFeatureSets:
+    - ""
+    - "TechPreviewNoUpgrade"
 swaggerdocs:
   commentPolicy: Warn

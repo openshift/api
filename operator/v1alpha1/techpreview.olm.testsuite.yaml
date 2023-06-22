@@ -1,0 +1,16 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "[Tech Preview] OLM"
+crd: 0000_10_config-operator_01_olm.crd.yaml
+tests:
+  onCreate:
+  - name: Should be able to create a minimal OLM
+    initial: |
+      apiVersion: operator.openshift.io/v1alpha1
+      kind: OLM
+      spec: {} # No spec is required for an OLM
+    expected: |
+      apiVersion: operator.openshift.io/v1alpha1
+      kind: OLM
+      spec:
+        logLevel: Normal
+        operatorLogLevel: Normal

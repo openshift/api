@@ -4,5 +4,6 @@ schemapatch:
   - "Default"
   - "TechPreviewNoUpgrade"
   - "CustomNoUpgrade"
+  - "LatencySensitive"
 swaggerdocs:
   commentPolicy: Warn

@@ -60,6 +60,7 @@ spec:
                         - ocp
                         - dedicated
                         - azure
+                        - rosa
                         - OpenShift
                         - OKD
                         - Online

@@ -95,7 +95,7 @@ type ConsoleCustomization struct {
 	// providing the brand field.  There is a limited set of specific brand options.
 	// This field controls elements of the console such as the logo.
 	// Invalid value will prevent a console rollout.
-	// +kubebuilder:validation:Enum:=openshift;okd;online;ocp;dedicated;azure;OpenShift;OKD;Online;OCP;Dedicated;Azure;ROSA
+	// +kubebuilder:validation:Enum:=openshift;okd;online;ocp;dedicated;azure;rosa;OpenShift;OKD;Online;OCP;Dedicated;Azure;ROSA
 	Brand Brand `json:"brand,omitempty"`
 	// documentationBaseURL links to external documentation are shown in various sections
 	// of the web console.  Providing documentationBaseURL will override the default
@@ -354,6 +354,8 @@ const (
 	BrandDedicatedLegacy Brand = "dedicated"
 	// Legacy branding for Azure Red Hat OpenShift
 	BrandAzureLegacy Brand = "azure"
+	// Legacy branding for Red Hat OpenShift Service on AWS
+	BrandROSALegacy Brand = "rosa"
 	// Branding for OpenShift
 	BrandOpenShift Brand = "OpenShift"
 	// Branding for The Origin Community Distribution of Kubernetes

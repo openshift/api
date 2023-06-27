@@ -186,6 +186,7 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		with(gcpLabelsTags).
 		with(vSphereStaticIPs).
 		with(routeExternalCertificate).
+		with(automatedEtcdBackupAPI).
 		toFeatures(defaultFeatures),
 	LatencySensitive: newDefaultFeatures().
 		toFeatures(defaultFeatures),

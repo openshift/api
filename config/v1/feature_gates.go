@@ -281,4 +281,14 @@ var (
 		ResponsiblePerson:   "thejasn",
 		OwningProduct:       ocpSpecific,
 	}
+
+	FeatureGateAutomatedEtcdBackupAPI = FeatureGateName("AutomatedEtcdBackupAPI")
+	automatedEtcdBackupAPI            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateAutomatedEtcdBackupAPI,
+		},
+		OwningJiraComponent: "etcd",
+		ResponsiblePerson:   "hasbro17",
+		OwningProduct:       ocpSpecific,
+	}
 )

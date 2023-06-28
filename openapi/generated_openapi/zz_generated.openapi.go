@@ -31749,6 +31749,13 @@ func schema_openshift_api_machine_v1beta1_AWSMachineProviderConfig(ref common.Re
 							Ref:         ref("github.com/openshift/api/machine/v1beta1.MetadataServiceOptions"),
 						},
 					},
+					"placementGroupName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PlacementGroupName specifies the name of the placement group in which to launch the instance. The placement group must already be created and may use any placement strategy. When omitted, no placement group is used when creating the EC2 instance.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 				Required: []string{"ami", "instanceType", "deviceIndex", "subnet", "placement"},
 			},

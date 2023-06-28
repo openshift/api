@@ -18435,6 +18435,10 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.Placement"
         },
+        "placementGroupName": {
+          "description": "PlacementGroupName specifies the name of the placement group in which to launch the instance. The placement group must already be created and may use any placement strategy. When omitted, no placement group is used when creating the EC2 instance.",
+          "type": "string"
+        },
         "publicIp": {
           "description": "PublicIP specifies whether the instance should get a public IP. If not present, it should use the default of its subnet.",
           "type": "boolean"

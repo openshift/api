@@ -14,6 +14,7 @@ import (
 //
 // Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
 // +openshift:compatibility-gen:level=4
+// +kubebuilder:validation:XValidation:rule="self.metadata.name == 'cluster'",message="olm is a singleton, .metadata.name must be 'cluster'"
 type OLM struct {
 	metav1.TypeMeta `json:",inline"`
 
@@ -23,7 +24,6 @@ type OLM struct {
 
 	//spec holds user settable values for configuration
 	// +kubebuilder:validation:Required
-	// +required
 	Spec OLMSpec `json:"spec"`
 	// status holds observed values from the cluster. They may not be overridden.
 	// +optional

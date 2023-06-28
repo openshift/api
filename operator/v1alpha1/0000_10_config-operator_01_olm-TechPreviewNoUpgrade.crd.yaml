@@ -131,6 +131,9 @@ spec:
                 version:
                   description: version is the level this availability applies to
                   type: string
+          x-kubernetes-validations:
+            - rule: self.metadata.name == 'cluster'
+              message: olm is a singleton, .metadata.name must be 'cluster'
       served: true
       storage: true
       subresources:

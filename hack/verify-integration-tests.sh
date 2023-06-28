@@ -33,12 +33,21 @@ validate_suite_files() {
     KIND=$(${YQ} eval '.spec.names.kind' $file)
     SINGULAR=$(${YQ} eval '.spec.names.singular' $file)
 
-    FILE_BASE="stable"
+    FILE_BASE=""
 
-    FEATURESET=$(${YQ} eval '.metadata.annotations["release.openshift.io/feature-set"]' $file)
-    if [ ${FEATURESET} == "TechPreviewNoUpgrade" ]; then
+    FEATURESET=$(${YQ} eval '.metadata.annotations["release.openshift.io/feature-set"] // ""' $file)
+    if [[ ${FEATURESET} == "Default" || ${FEATURESET} == "" ]]; then
+      # Default CRDs should start with stable for their test suites.
+      FILE_BASE="stable"
+    elif [[ ${FEATURESET} == "TechPreviewNoUpgrade" ]]; then
       # TechPreviewNoUpgrade CRDs should start with techpreview for their test suites.
       FILE_BASE="techpreview"
+    elif [[ ${FEATURESET} == "CustomNoUpgrade" ]]; then
+      # CustomNoUpgrade CRDs should start with custom for their test suites.
+      FILE_BASE="custom"
+    else
+      echo "Unknown feature set ${FEATURESET} found in CRD ${file}"
+      exit 1
     fi
 
     SUITE_FILE=${FOLDER}/${FILE_BASE}.${SINGULAR}.testsuite.yaml

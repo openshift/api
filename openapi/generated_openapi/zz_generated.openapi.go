@@ -52049,7 +52049,7 @@ func schema_openshift_api_route_v1_TLSConfig(ref common.ReferenceCallback) commo
 					},
 					"certificate": {
 						SchemaProps: spec.SchemaProps{
-							Description: "certificate provides certificate contents. This should be a single serving certificate, not a certificate chain. Do not include a CA certificate. If certificate is provided, do not set certificateRef.",
+							Description: "certificate provides certificate contents. This should be a single serving certificate, not a certificate chain. Do not include a CA certificate.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

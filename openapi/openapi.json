@@ -30697,7 +30697,7 @@
           "type": "string"
         },
         "certificate": {
-          "description": "certificate provides certificate contents. This should be a single serving certificate, not a certificate chain. Do not include a CA certificate. If certificate is provided, do not set certificateRef.",
+          "description": "certificate provides certificate contents. This should be a single serving certificate, not a certificate chain. Do not include a CA certificate.",
           "type": "string"
         },
         "destinationCACertificate": {

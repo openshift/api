@@ -254,7 +254,7 @@ message RouterShard {
 // TLSConfig defines config used to secure a route and provide termination
 //
 // +kubebuilder:validation:XValidation:rule="has(self.termination) && has(self.insecureEdgeTerminationPolicy) ? !((self.termination=='passthrough') && (self.insecureEdgeTerminationPolicy=='Allow')) : true", message="cannot have both spec.tls.termination: passthrough and spec.tls.insecureEdgeTerminationPolicy: Allow"
-// +kubebuilder:validation:XValidation:rule="has(self.certificate) && has(self.externalCertificate) ? false : true", message="cannot have both spec.tls.certificate and spec.tls.externalCertificate"
+// +openshift:validation:FeatureSetAwareXValidation:featureSet=TechPreviewNoUpgrade,rule="!(has(self.certificate) && has(self.externalCertificate))", message="cannot have both spec.tls.certificate and spec.tls.externalCertificate"
 message TLSConfig {
   // termination indicates termination type.
   //
@@ -266,7 +266,7 @@ message TLSConfig {
   optional string termination = 1;
 
   // certificate provides certificate contents. This should be a single serving certificate, not a certificate
-  // chain. Do not include a CA certificate. If certificate is provided, do not set certificateRef.
+  // chain. Do not include a CA certificate.
   optional string certificate = 2;
 
   // key provides key file contents

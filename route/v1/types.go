@@ -248,7 +248,7 @@ type RouterShard struct {
 // TLSConfig defines config used to secure a route and provide termination
 //
 // +kubebuilder:validation:XValidation:rule="has(self.termination) && has(self.insecureEdgeTerminationPolicy) ? !((self.termination=='passthrough') && (self.insecureEdgeTerminationPolicy=='Allow')) : true", message="cannot have both spec.tls.termination: passthrough and spec.tls.insecureEdgeTerminationPolicy: Allow"
-// +kubebuilder:validation:XValidation:rule="has(self.certificate) && has(self.externalCertificate) ? false : true", message="cannot have both spec.tls.certificate and spec.tls.externalCertificate"
+// +openshift:validation:FeatureSetAwareXValidation:featureSet=TechPreviewNoUpgrade,rule="!(has(self.certificate) && has(self.externalCertificate))", message="cannot have both spec.tls.certificate and spec.tls.externalCertificate"
 type TLSConfig struct {
 	// termination indicates termination type.
 	//
@@ -260,7 +260,7 @@ type TLSConfig struct {
 	Termination TLSTerminationType `json:"termination" protobuf:"bytes,1,opt,name=termination,casttype=TLSTerminationType"`
 
 	// certificate provides certificate contents. This should be a single serving certificate, not a certificate
-	// chain. Do not include a CA certificate. If certificate is provided, do not set certificateRef.
+	// chain. Do not include a CA certificate.
 	Certificate string `json:"certificate,omitempty" protobuf:"bytes,2,opt,name=certificate"`
 
 	// key provides key file contents

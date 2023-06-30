@@ -48083,7 +48083,7 @@ func schema_openshift_api_operator_v1alpha1_GenerationHistory(ref common.Referen
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "GenerationHistory keeps track of the generation for a given resource so that decisions about forced updated can be made.",
+				Description: "GenerationHistory keeps track of the generation for a given resource so that decisions about forced updated can be made. DEPRECATED: Use fields in v1.GenerationStatus instead",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"group": {
@@ -48317,7 +48317,7 @@ func schema_openshift_api_operator_v1alpha1_LoggingConfig(ref common.ReferenceCa
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "LoggingConfig holds information about configuring logging",
+				Description: "LoggingConfig holds information about configuring logging DEPRECATED: Use v1.LogLevel instead",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"level": {
@@ -48347,7 +48347,7 @@ func schema_openshift_api_operator_v1alpha1_NodeStatus(ref common.ReferenceCallb
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "NodeStatus provides information about the current state of a particular node managed by this operator.",
+				Description: "NodeStatus provides information about the current state of a particular node managed by this operator. Deprecated: Use v1.NodeStatus instead",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"nodeName": {
@@ -48408,7 +48408,7 @@ func schema_openshift_api_operator_v1alpha1_OperatorCondition(ref common.Referen
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "OperatorCondition is just the standard condition fields.",
+				Description: "OperatorCondition is just the standard condition fields. DEPRECATED: Use v1.OperatorCondition instead",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"type": {
@@ -48456,7 +48456,7 @@ func schema_openshift_api_operator_v1alpha1_OperatorSpec(ref common.ReferenceCal
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "OperatorSpec contains common fields for an operator to need.  It is intended to be anonymous included inside of the Spec struct for you particular operator.",
+				Description: "OperatorSpec contains common fields for an operator to need.  It is intended to be anonymous included inside of the Spec struct for you particular operator. DEPRECATED: Use v1.OperatorSpec instead",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"managementState": {
@@ -48511,7 +48511,7 @@ func schema_openshift_api_operator_v1alpha1_OperatorStatus(ref common.ReferenceC
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "OperatorStatus contains common fields for an operator to need.  It is intended to be anonymous included inside of the Status struct for you particular operator.",
+				Description: "OperatorStatus contains common fields for an operator to need.  It is intended to be anonymous included inside of the Status struct for you particular operator. DEPRECATED: Use v1.OperatorStatus instead",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"observedGeneration": {
@@ -48610,7 +48610,7 @@ func schema_openshift_api_operator_v1alpha1_StaticPodOperatorStatus(ref common.R
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "StaticPodOperatorStatus is status for controllers that manage static pods.  There are different needs because individual node status must be tracked.",
+				Description: "StaticPodOperatorStatus is status for controllers that manage static pods.  There are different needs because individual node status must be tracked. DEPRECATED: Use v1.StaticPodOperatorStatus instead",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"observedGeneration": {
@@ -48695,7 +48695,7 @@ func schema_openshift_api_operator_v1alpha1_VersionAvailability(ref common.Refer
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "VersionAvailability gives information about the synchronization and operational status of a particular version of the component",
+				Description: "VersionAvailability gives information about the synchronization and operational status of a particular version of the component DEPRECATED: Use fields in v1.OperatorStatus instead",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"version": {

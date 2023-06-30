@@ -28235,7 +28235,7 @@
       }
     },
     "com.github.openshift.api.operator.v1alpha1.GenerationHistory": {
-      "description": "GenerationHistory keeps track of the generation for a given resource so that decisions about forced updated can be made.",
+      "description": "GenerationHistory keeps track of the generation for a given resource so that decisions about forced updated can be made. DEPRECATED: Use fields in v1.GenerationStatus instead",
       "type": "object",
       "required": [
         "group",
@@ -28379,7 +28379,7 @@
       }
     },
     "com.github.openshift.api.operator.v1alpha1.LoggingConfig": {
-      "description": "LoggingConfig holds information about configuring logging",
+      "description": "LoggingConfig holds information about configuring logging DEPRECATED: Use v1.LogLevel instead",
       "type": "object",
       "required": [
         "level",
@@ -28400,7 +28400,7 @@
       }
     },
     "com.github.openshift.api.operator.v1alpha1.NodeStatus": {
-      "description": "NodeStatus provides information about the current state of a particular node managed by this operator.",
+      "description": "NodeStatus provides information about the current state of a particular node managed by this operator. Deprecated: Use v1.NodeStatus instead",
       "type": "object",
       "required": [
         "nodeName",
@@ -28444,7 +28444,7 @@
       }
     },
     "com.github.openshift.api.operator.v1alpha1.OperatorCondition": {
-      "description": "OperatorCondition is just the standard condition fields.",
+      "description": "OperatorCondition is just the standard condition fields. DEPRECATED: Use v1.OperatorCondition instead",
       "type": "object",
       "required": [
         "type",
@@ -28472,7 +28472,7 @@
       }
     },
     "com.github.openshift.api.operator.v1alpha1.OperatorSpec": {
-      "description": "OperatorSpec contains common fields for an operator to need.  It is intended to be anonymous included inside of the Spec struct for you particular operator.",
+      "description": "OperatorSpec contains common fields for an operator to need.  It is intended to be anonymous included inside of the Spec struct for you particular operator. DEPRECATED: Use v1.OperatorSpec instead",
       "type": "object",
       "required": [
         "managementState",
@@ -28509,7 +28509,7 @@
       }
     },
     "com.github.openshift.api.operator.v1alpha1.OperatorStatus": {
-      "description": "OperatorStatus contains common fields for an operator to need.  It is intended to be anonymous included inside of the Status struct for you particular operator.",
+      "description": "OperatorStatus contains common fields for an operator to need.  It is intended to be anonymous included inside of the Status struct for you particular operator. DEPRECATED: Use v1.OperatorStatus instead",
       "type": "object",
       "properties": {
         "conditions": {
@@ -28566,7 +28566,7 @@
       }
     },
     "com.github.openshift.api.operator.v1alpha1.StaticPodOperatorStatus": {
-      "description": "StaticPodOperatorStatus is status for controllers that manage static pods.  There are different needs because individual node status must be tracked.",
+      "description": "StaticPodOperatorStatus is status for controllers that manage static pods.  There are different needs because individual node status must be tracked. DEPRECATED: Use v1.StaticPodOperatorStatus instead",
       "type": "object",
       "required": [
         "latestAvailableDeploymentGeneration",
@@ -28619,7 +28619,7 @@
       }
     },
     "com.github.openshift.api.operator.v1alpha1.VersionAvailability": {
-      "description": "VersionAvailability gives information about the synchronization and operational status of a particular version of the component",
+      "description": "VersionAvailability gives information about the synchronization and operational status of a particular version of the component DEPRECATED: Use fields in v1.OperatorStatus instead",
       "type": "object",
       "required": [
         "version",

@@ -272,3 +272,12 @@ var (
 		OwningProduct:       ocpSpecific,
 	}
 )
+
+// CloudPublicFeatureGates consists of cloud-specific feature keys.
+// It is heavily inspired by k8s.io/component-base/featuregate and allows us to have a list of
+// features that can be passed to the Cloud Controller Manager.
+// The motivation behind is that not all the features defined above are valid for the CCM even
+// though they are valid for kubelet.
+var CloudPublicFeatureGates = []FeatureGateName{
+	"CloudDualStackNodeIPs",
+}

@@ -247,7 +247,7 @@ const (
 )
 
 // ClusterVersionCapability enumerates optional, core cluster components.
-// +kubebuilder:validation:Enum=openshift-samples;baremetal;marketplace;Console;Insights;Storage;CSISnapshot;NodeTuning;MachineAPI
+// +kubebuilder:validation:Enum=openshift-samples;baremetal;marketplace;Console;Insights;Storage;CSISnapshot;NodeTuning;MachineAPI;Ingress
 type ClusterVersionCapability string
 
 const (
@@ -313,12 +313,27 @@ const (
 	// documentation. This is important part of openshift system
 	// and may cause cluster damage
 	ClusterVersionCapabilityMachineAPI ClusterVersionCapability = "MachineAPI"
+
+	// ClusterVersionCapabilityIngress manages the cluster ingress operator
+	// which is responsible for running the ingress controllers (including OpenShift router).
+	//
+	// The following CRDs are part of the capability as well:
+	// IngressController
+	// DNSRecord
+	// GatewayClass
+	// Gateway
+	// HTTPRoute
+	// ReferenceGrant
+	//
+	// WARNING: This capability cannot be disabled on the standalone OpenShift.
+	ClusterVersionCapabilityIngress ClusterVersionCapability = "Ingress"
 )
 
 // KnownClusterVersionCapabilities includes all known optional, core cluster components.
 var KnownClusterVersionCapabilities = []ClusterVersionCapability{
 	ClusterVersionCapabilityBaremetal,
 	ClusterVersionCapabilityConsole,
+	ClusterVersionCapabilityIngress,
 	ClusterVersionCapabilityInsights,
 	ClusterVersionCapabilityMarketplace,
 	ClusterVersionCapabilityStorage,
@@ -397,6 +412,7 @@ var ClusterVersionCapabilitySets = map[ClusterVersionCapabilitySet][]ClusterVers
 	ClusterVersionCapabilitySet4_14: {
 		ClusterVersionCapabilityBaremetal,
 		ClusterVersionCapabilityConsole,
+		ClusterVersionCapabilityIngress,
 		ClusterVersionCapabilityInsights,
 		ClusterVersionCapabilityMarketplace,
 		ClusterVersionCapabilityStorage,
@@ -408,6 +424,7 @@ var ClusterVersionCapabilitySets = map[ClusterVersionCapabilitySet][]ClusterVers
 	ClusterVersionCapabilitySetCurrent: {
 		ClusterVersionCapabilityBaremetal,
 		ClusterVersionCapabilityConsole,
+		ClusterVersionCapabilityIngress,
 		ClusterVersionCapabilityInsights,
 		ClusterVersionCapabilityMarketplace,
 		ClusterVersionCapabilityStorage,

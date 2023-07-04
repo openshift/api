@@ -41,3 +41,12 @@ require (
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.3 // indirect
 )
+
+// v3.9.0 is the only tag in openshift/api and it was created before go.mod was
+// introduced. We retract it so that go command don't select it automatically
+// when resolving versions like @latest.
+retract v3.9.0+incompatible
+
+// To make go aware of the retraction, we need to tag a new version that can be
+// retracted by itself.
+retract v0.0.1

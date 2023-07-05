@@ -62,6 +62,21 @@ spec:
                   type: array
                   items:
                     type: string
+                helmChart:
+                  description: Helmchart which will be installed by the operator 
+                  type: object
+                  properties:
+                    url:
+                      description: Chart URL
+                      type: string
+                      maxLength: 2048
+                      pattern: ^https?:\/\/
+                    chartName:
+                      description: chartName defines the name of the chart to be installed
+                      type: string
+                    releaseName: 
+                      description: releaseName of the chart which is installed
+                      type: string
             status:
               description: ConfigStatus contains the actual configuration in effect, as well as various details that describe the state of the Samples Operator.
               type: object

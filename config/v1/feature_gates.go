@@ -282,10 +282,10 @@ var (
 		OwningProduct:       ocpSpecific,
 	}
 
-	FeatureGateAutomatedEtcdBackupAPI = FeatureGateName("AutomatedEtcdBackupAPI")
-	automatedEtcdBackupAPI            = FeatureGateDescription{
+	FeatureGateAutomatedEtcdBackup = FeatureGateName("AutomatedEtcdBackup")
+	automatedEtcdBackup            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
-			Name: FeatureGateAutomatedEtcdBackupAPI,
+			Name: FeatureGateAutomatedEtcdBackup,
 		},
 		OwningJiraComponent: "etcd",
 		ResponsiblePerson:   "hasbro17",

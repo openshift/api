@@ -393,7 +393,7 @@ k8s.io/utils/internal/third_party/forked/golang/net
 k8s.io/utils/net
 k8s.io/utils/pointer
 k8s.io/utils/strings/slices
-# sigs.k8s.io/controller-tools v0.11.1 => github.com/openshift/controller-tools v0.9.3-0.20230615121909-8a188837e02f
+# sigs.k8s.io/controller-tools v0.11.1 => github.com/openshift/controller-tools v0.11.2-0.20230707132950-4180f051f655
 ## explicit; go 1.19
 sigs.k8s.io/controller-tools/cmd/controller-gen
 sigs.k8s.io/controller-tools/pkg/crd
@@ -419,4 +419,4 @@ sigs.k8s.io/structured-merge-diff/v4/value
 # sigs.k8s.io/yaml v1.3.0
 ## explicit; go 1.12
 sigs.k8s.io/yaml
-# sigs.k8s.io/controller-tools => github.com/openshift/controller-tools v0.9.3-0.20230615121909-8a188837e02f
+# sigs.k8s.io/controller-tools => github.com/openshift/controller-tools v0.11.2-0.20230707132950-4180f051f655

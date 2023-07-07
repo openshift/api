@@ -88,3 +88,10 @@ func (m FeatureSetXValidation) ApplyToSchema(schema *apiext.JSONSchemaProps) err
 
 	return validation.ApplyToSchema(schema)
 }
+
+// ApplyFirst means that this will be applied in the first run of markers.
+// We do this because, when validations are applied, the markers come out of
+// a map which means that the order is not guaranteed. We want to make sure
+// that the FeatureSetXValidation is applied before the XValidation so that
+// the order is stable.
+func (m FeatureSetXValidation) ApplyFirst() {}

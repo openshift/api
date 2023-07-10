@@ -274,6 +274,9 @@ spec:
                                         type: string
                                         maxLength: 255
                                         minLength: 1
+                                x-kubernetes-validations:
+                                  - rule: '!has(self.availabilityZone) || !has(self.rootVolume) || has(self.rootVolume.availabilityZone)'
+                                    message: rootVolume.availabilityZone is required when availabilityZone is set
                             platform:
                               description: Platform identifies the platform for which the FailureDomain represents. Currently supported values are AWS, Azure, and GCP.
                               type: string

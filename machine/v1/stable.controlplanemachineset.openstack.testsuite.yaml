@@ -368,6 +368,7 @@ tests:
               openstack:
               - availabilityZone: foo
                 rootVolume:
+                  availabilityZone: foo
                   volumeType: bar
     expected: |
       apiVersion: machine.openshift.io/v1
@@ -396,6 +397,7 @@ tests:
               openstack:
               - availabilityZone: foo
                 rootVolume:
+                  availabilityZone: foo
                   volumeType: bar
   - name: Should reject an OpenStack failure domain with too long a rootVolume volumeType name
     initial: |
@@ -448,6 +450,32 @@ tests:
               - availabilityZone: foo
                 rootVolume: {}
     expectedError: "spec.template.machines_v1beta1_machine_openshift_io.failureDomains.openstack[0].rootVolume in body should have at least 1 properties"
+  - name: Should reject an OpenStack failure domain with both availabilityZone and root volume provided but with missing root volume availabilityZone
+    initial: |
+      apiVersion: machine.openshift.io/v1
+      kind: ControlPlaneMachineSet
+      spec:
+        selector:
+          matchLabels:
+            machine.openshift.io/cluster-api-machine-role: master
+            machine.openshift.io/cluster-api-machine-type: master
+        template:
+          machineType: machines_v1beta1_machine_openshift_io
+          machines_v1beta1_machine_openshift_io:
+            metadata:
+              labels:
+                machine.openshift.io/cluster-api-machine-role: master
+                machine.openshift.io/cluster-api-machine-type: master
+                machine.openshift.io/cluster-api-cluster: cluster
+            spec:
+              providerSpec: {}
+            failureDomains:
+              platform: OpenStack
+              openstack:
+              - availabilityZone: foo
+                rootVolume:
+                  volumeType: bar
+    expectedError: "spec.template.machines_v1beta1_machine_openshift_io.failureDomains.openstack[0]: Invalid value: \"object\": rootVolume.availabilityZone is required when availabilityZone is set"
   - name: Should reject an empty OpenStack failure domain
     initial: |
       apiVersion: machine.openshift.io/v1

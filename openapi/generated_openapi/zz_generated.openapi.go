@@ -1084,6 +1084,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/samples/v1.ConfigList":                                              schema_openshift_api_samples_v1_ConfigList(ref),
 		"github.com/openshift/api/samples/v1.ConfigSpec":                                              schema_openshift_api_samples_v1_ConfigSpec(ref),
 		"github.com/openshift/api/samples/v1.ConfigStatus":                                            schema_openshift_api_samples_v1_ConfigStatus(ref),
+		"github.com/openshift/api/samples/v1.HelmChart":                                               schema_openshift_api_samples_v1_HelmChart(ref),
 		"github.com/openshift/api/security/v1.AllowedFlexVolume":                                      schema_openshift_api_security_v1_AllowedFlexVolume(ref),
 		"github.com/openshift/api/security/v1.FSGroupStrategyOptions":                                 schema_openshift_api_security_v1_FSGroupStrategyOptions(ref),
 		"github.com/openshift/api/security/v1.IDRange":                                                schema_openshift_api_security_v1_IDRange(ref),
@@ -54825,9 +54826,25 @@ func schema_openshift_api_samples_v1_ConfigSpec(ref common.ReferenceCallback) co
 							},
 						},
 					},
+					"helmChart": {
+						SchemaProps: spec.SchemaProps{
+							Description: "helmchart list specifies the list of helmcharts that the samples operator will install",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/samples/v1.HelmChart"),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"github.com/openshift/api/samples/v1.HelmChart"},
 	}
 }
 
@@ -54965,6 +54982,36 @@ func schema_openshift_api_samples_v1_ConfigStatus(ref common.ReferenceCallback) 
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/samples/v1.ConfigCondition"},
+	}
+}
+
+func schema_openshift_api_samples_v1_HelmChart(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"url": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"chartName": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"releaseName": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+			},
+		},
 	}
 }
 

@@ -45,6 +45,18 @@ spec:
                   type: array
                   items:
                     type: string
+                helmChart:
+                  description: helmchart list specifies the list of helmcharts that the samples operator will install
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      chartName:
+                        type: string
+                      releaseName:
+                        type: string
+                      url:
+                        type: string
                 managementState:
                   description: managementState is top level on/off type of switch for all operators. When "Managed", this operator processes config and manipulates the samples accordingly. When "Unmanaged", this operator ignores any updates to the resources it watches. When "Removed", it reacts that same wasy as it does if the Config object is deleted, meaning any ImageStreams or Templates it manages (i.e. it honors the skipped lists) and the registry secret are deleted, along with the ConfigMap in the operator's namespace that represents the last config used to manipulate the samples,
                   type: string
@@ -62,21 +74,6 @@ spec:
                   type: array
                   items:
                     type: string
-                helmChart:
-                  description: Helmchart which will be installed by the operator 
-                  type: object
-                  properties:
-                    url:
-                      description: Chart URL
-                      type: string
-                      maxLength: 2048
-                      pattern: ^https?:\/\/
-                    chartName:
-                      description: chartName defines the name of the chart to be installed
-                      type: string
-                    releaseName: 
-                      description: releaseName of the chart which is installed
-                      type: string
             status:
               description: ConfigStatus contains the actual configuration in effect, as well as various details that describe the state of the Samples Operator.
               type: object

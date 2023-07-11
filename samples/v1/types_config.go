@@ -66,7 +66,7 @@ type ConfigSpec struct {
 	SkippedTemplates []string `json:"skippedTemplates,omitempty" protobuf:"bytes,6,opt,name=skippedTemplates"`
 
 	// helmchart list specifies the list of helmcharts that the samples operator will install
-	HelmChart HelmChart `json:"helmChartList,omitempty" protobuf:"bytes,7,opt,name=helmChart"`
+	HelmChartInstalled []HelmChart `json:"helmChart,omitempty" protobuf:"bytes,7,opt,name=helmChartinstalled"`
 }
 
 type HelmChart struct {
@@ -75,16 +75,6 @@ type HelmChart struct {
 	ChartName string `json:"chartName,omitempty"`
 
 	ReleaseName string `json:"releaseName,omitempty"`
-}
-
-type HelmChartList struct {
-	metav1.TypeMeta `json:",inline"`
-
-	// metadata is the standard list's metadata.
-	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
-	metav1.ListMeta `json:"metadata"`
-
-	Items []HelmChart `json:"items"`
 }
 
 // ConfigStatus contains the actual configuration in effect, as well as various details

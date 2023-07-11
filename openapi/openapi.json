@@ -32305,6 +32305,14 @@
             "default": ""
           }
         },
+        "helmChart": {
+          "description": "helmchart list specifies the list of helmcharts that the samples operator will install",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.samples.v1.HelmChart"
+          }
+        },
         "managementState": {
           "description": "managementState is top level on/off type of switch for all operators. When \"Managed\", this operator processes config and manipulates the samples accordingly. When \"Unmanaged\", this operator ignores any updates to the resources it watches. When \"Removed\", it reacts that same wasy as it does if the Config object is deleted, meaning any ImageStreams or Templates it manages (i.e. it honors the skipped lists) and the registry secret are deleted, along with the ConfigMap in the operator's namespace that represents the last config used to manipulate the samples,",
           "type": "string"
@@ -32392,6 +32400,20 @@
           "type": "string",
           "x-kubernetes-patch-merge-key": "type",
           "x-kubernetes-patch-strategy": "merge"
+        }
+      }
+    },
+    "com.github.openshift.api.samples.v1.HelmChart": {
+      "type": "object",
+      "properties": {
+        "chartName": {
+          "type": "string"
+        },
+        "releaseName": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
         }
       }
     },

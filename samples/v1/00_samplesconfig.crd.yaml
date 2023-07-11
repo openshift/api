@@ -51,7 +51,7 @@ spec:
                   items:
                     type: object
                     properties:
-                      chartName:
+                      namespace:
                         type: string
                       releaseName:
                         type: string

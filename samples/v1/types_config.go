@@ -72,7 +72,7 @@ type ConfigSpec struct {
 type HelmChart struct {
 	URL string `json:"url,omitempty"`
 
-	ChartName string `json:"chartName,omitempty"`
+	Namespace string `json:"namespace,omitempty"`
 
 	ReleaseName string `json:"releaseName,omitempty"`
 }

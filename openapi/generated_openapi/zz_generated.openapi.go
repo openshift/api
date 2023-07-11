@@ -54997,7 +54997,7 @@ func schema_openshift_api_samples_v1_HelmChart(ref common.ReferenceCallback) com
 							Format: "",
 						},
 					},
-					"chartName": {
+					"namespace": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
 							Format: "",

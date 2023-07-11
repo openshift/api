@@ -32406,7 +32406,7 @@
     "com.github.openshift.api.samples.v1.HelmChart": {
       "type": "object",
       "properties": {
-        "chartName": {
+        "namespace": {
           "type": "string"
         },
         "releaseName": {

@@ -10829,6 +10829,235 @@
         }
       }
     },
+    "com.github.openshift.api.console.v1.ConsoleSample": {
+      "description": "ConsoleSample is an extension to customizing OpenShift web console by adding samples.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+      "type": "object",
+      "required": [
+        "metadata",
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec contains configuration for a console sample.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.console.v1.ConsoleSampleSpec"
+        }
+      }
+    },
+    "com.github.openshift.api.console.v1.ConsoleSampleContainerImportSource": {
+      "description": "ConsoleSampleContainerImportSource let the user import a container image.",
+      "type": "object",
+      "required": [
+        "image"
+      ],
+      "properties": {
+        "image": {
+          "description": "reference to a container image that provides a HTTP service. The service must be exposed on the default port (8080) unless otherwise configured with the port field.\n\nSupported formats:\n  - <repository-name>/<image-name>\n  - docker.io/<repository-name>/<image-name>\n  - quay.io/<repository-name>/<image-name>\n  - quay.io/<repository-name>/<image-name>@sha256:<image hash>\n  - quay.io/<repository-name>/<image-name>:<tag>",
+          "type": "string",
+          "default": ""
+        },
+        "service": {
+          "description": "service contains configuration for the Service resource created for this sample.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.console.v1.ConsoleSampleContainerImportSourceService"
+        }
+      }
+    },
+    "com.github.openshift.api.console.v1.ConsoleSampleContainerImportSourceService": {
+      "description": "ConsoleSampleContainerImportSourceService let the samples author define defaults for the Service created for this sample.",
+      "type": "object",
+      "properties": {
+        "targetPort": {
+          "description": "targetPort is the port that the service listens on for HTTP requests. This port will be used for Service and Route created for this sample. Port must be in the range 1 to 65535. Default port is 8080.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "com.github.openshift.api.console.v1.ConsoleSampleGitImportSource": {
+      "description": "ConsoleSampleGitImportSource let the user import code from a public Git repository.",
+      "type": "object",
+      "required": [
+        "repository"
+      ],
+      "properties": {
+        "repository": {
+          "description": "repository contains the reference to the actual Git repository.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.console.v1.ConsoleSampleGitImportSourceRepository"
+        },
+        "service": {
+          "description": "service contains configuration for the Service resource created for this sample.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.console.v1.ConsoleSampleGitImportSourceService"
+        }
+      }
+    },
+    "com.github.openshift.api.console.v1.ConsoleSampleGitImportSourceRepository": {
+      "description": "ConsoleSampleGitImportSourceRepository let the user import code from a public git repository.",
+      "type": "object",
+      "required": [
+        "url"
+      ],
+      "properties": {
+        "contextDir": {
+          "description": "contextDir is used to specify a directory within the repository to build the component. Must start with `/` and have a maximum length of 256 characters. When omitted, the default value is to build from the root of the repository.",
+          "type": "string",
+          "default": ""
+        },
+        "revision": {
+          "description": "revision is the git revision at which to clone the git repository Can be used to clone a specific branch, tag or commit SHA. Must be at most 256 characters in length. When omitted the repository's default branch is used.",
+          "type": "string",
+          "default": ""
+        },
+        "url": {
+          "description": "url of the Git repository that contains a HTTP service. The HTTP service must be exposed on the default port (8080) unless otherwise configured with the port field.\n\nOnly public repositories on GitHub, GitLab and Bitbucket are currently supported:\n\n  - https://github.com/<org>/<repository>\n  - https://gitlab.com/<org>/<repository>\n  - https://bitbucket.org/<org>/<repository>\n\nThe url must have a maximum length of 256 characters.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.console.v1.ConsoleSampleGitImportSourceService": {
+      "description": "ConsoleSampleGitImportSourceService let the samples author define defaults for the Service created for this sample.",
+      "type": "object",
+      "properties": {
+        "targetPort": {
+          "description": "targetPort is the port that the service listens on for HTTP requests. This port will be used for Service created for this sample. Port must be in the range 1 to 65535. Default port is 8080.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "com.github.openshift.api.console.v1.ConsoleSampleList": {
+      "description": "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+      "type": "object",
+      "required": [
+        "metadata",
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.console.v1.ConsoleSample"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.console.v1.ConsoleSampleSource": {
+      "description": "ConsoleSampleSource is the actual sample definition and can hold different sample types. Unsupported sample types will be ignored in the web console.",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "containerImport": {
+          "description": "containerImport allows the user import a container image.",
+          "$ref": "#/definitions/com.github.openshift.api.console.v1.ConsoleSampleContainerImportSource"
+        },
+        "gitImport": {
+          "description": "gitImport allows the user to import code from a git repository.",
+          "$ref": "#/definitions/com.github.openshift.api.console.v1.ConsoleSampleGitImportSource"
+        },
+        "type": {
+          "description": "type of the sample, currently supported: \"GitImport\";\"ContainerImport\"",
+          "type": "string",
+          "default": ""
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {
+            "containerImport": "ContainerImport",
+            "gitImport": "GitImport"
+          }
+        }
+      ]
+    },
+    "com.github.openshift.api.console.v1.ConsoleSampleSpec": {
+      "description": "ConsoleSampleSpec is the desired sample for the web console. Samples will appear with their title, descriptions and a badge in a samples catalog.",
+      "type": "object",
+      "required": [
+        "title",
+        "abstract",
+        "description",
+        "source"
+      ],
+      "properties": {
+        "abstract": {
+          "description": "abstract is a short introduction to the sample.\n\nIt is required and must be no more than 100 characters in length.\n\nThe abstract is shown on the sample card tile below the title and provider and is limited to three lines of content.",
+          "type": "string",
+          "default": ""
+        },
+        "description": {
+          "description": "description is a long form explanation of the sample.\n\nIt is required and can have a maximum length of **4096** characters.\n\nIt is a README.md-like content for additional information, links, pre-conditions, and other instructions. It will be rendered as Markdown so that it can contain line breaks, links, and other simple formatting.",
+          "type": "string",
+          "default": ""
+        },
+        "icon": {
+          "description": "icon is an optional base64 encoded image and shown beside the sample title.\n\nThe format must follow the data: URL format and can have a maximum size of **10 KB**.\n\n  data:[<mediatype>][;base64],<base64 encoded image>\n\nFor example:\n\n  data:image;base64,             plus the base64 encoded image.\n\nVector images can also be used. SVG icons must start with:\n\n  data:image/svg+xml;base64,     plus the base64 encoded SVG image.\n\nAll sample catalog icons will be shown on a white background (also when the dark theme is used). The web console ensures that different aspect ratios work correctly. Currently, the surface of the icon is at most 40x100px.\n\nFor more information on the data URL format, please visit https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URLs.",
+          "type": "string",
+          "default": ""
+        },
+        "provider": {
+          "description": "provider is an optional label to honor who provides the sample.\n\nIt is optional and must be no more than 50 characters in length.\n\nA provider can be a company like \"Red Hat\" or an organization like \"CNCF\" or \"Knative\".\n\nCurrently, the provider is only shown on the sample card tile below the title with the prefix \"Provided by \"",
+          "type": "string",
+          "default": ""
+        },
+        "source": {
+          "description": "source defines where to deploy the sample service from. The sample may be sourced from an external git repository or container image.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.console.v1.ConsoleSampleSource"
+        },
+        "tags": {
+          "description": "tags are optional string values that can be used to find samples in the samples catalog.\n\nExamples of common tags may be \"Java\", \"Quarkus\", etc.\n\nThey will be displayed on the samples details page.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        },
+        "title": {
+          "description": "title is the display name of the sample.\n\nIt is required and must be no more than 50 characters in length.",
+          "type": "string",
+          "default": ""
+        },
+        "type": {
+          "description": "type is an optional label to group multiple samples.\n\nIt is optional and must be no more than 20 characters in length.\n\nRecommendation is a singular term like \"Builder Image\", \"Devfile\" or \"Serverless Function\".\n\nCurrently, the type is shown a badge on the sample card tile in the top right corner.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.console.v1.ConsoleYAMLSample": {
       "description": "ConsoleYAMLSample is an extension for customizing OpenShift web console YAML samples.\n\nCompatibility level 2: Stable within a major release for a minimum of 9 months or 3 minor releases (whichever is longer).",
       "type": "object",

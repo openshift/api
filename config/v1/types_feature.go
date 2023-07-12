@@ -180,7 +180,6 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		with(gateGatewayAPI).
 		with(maxUnavailableStatefulSet).
 		without(eventedPleg).
-		with(privateHostedZoneAWS).
 		with(sigstoreImageVerification).
 		with(gcpLabelsTags).
 		with(vSphereStaticIPs).
@@ -198,6 +197,7 @@ var defaultFeatures = &FeatureGateEnabledDisabled{
 		alibabaPlatform, // This is a bug, it should be TechPreviewNoUpgrade. This must be downgraded before 4.14 is shipped.
 		cloudDualStackNodeIPs,
 		externalCloudProviderAzure,
+		privateHostedZoneAWS,
 	},
 	Disabled: []FeatureGateDescription{
 		retroactiveDefaultStorageClass,

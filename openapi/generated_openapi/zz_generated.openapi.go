@@ -44599,7 +44599,7 @@ func schema_openshift_api_operator_v1_PolicyAuditConfig(ref common.ReferenceCall
 					},
 					"maxLogFiles": {
 						SchemaProps: spec.SchemaProps{
-							Description: "maxLogFiles specifies the maximum number of ACL_audit log files that can be present. Default: 5",
+							Description: "maxLogFiles specifies the maximum number of ACL_audit log files that can be present.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},

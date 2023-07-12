@@ -22243,6 +22243,22 @@
         }
       }
     },
+    "com.github.openshift.api.openshiftcontrolplane.v1.APIServers": {
+      "type": "object",
+      "required": [
+        "perGroupOptions"
+      ],
+      "properties": {
+        "perGroupOptions": {
+          "description": "perGroupOptions is a list of enabled/disabled API servers in addition to the defaults",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.openshiftcontrolplane.v1.PerGroupOptions"
+          }
+        }
+      }
+    },
     "com.github.openshift.api.openshiftcontrolplane.v1.BuildControllerConfig": {
       "type": "object",
       "required": [
@@ -22684,7 +22700,8 @@
         "serviceAccountOAuthGrantMethod",
         "jenkinsPipelineConfig",
         "cloudProviderFile",
-        "apiServerArguments"
+        "apiServerArguments",
+        "apiServers"
       ],
       "properties": {
         "admission": {
@@ -22706,6 +22723,11 @@
               "default": ""
             }
           }
+        },
+        "apiServers": {
+          "description": "apiServers holds information about enabled/disabled API servers",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.openshiftcontrolplane.v1.APIServers"
         },
         "apiVersion": {
           "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
@@ -22871,6 +22893,37 @@
         "servingInfo": {
           "description": "servingInfo describes how to start serving",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.HTTPServingInfo"
+        }
+      }
+    },
+    "com.github.openshift.api.openshiftcontrolplane.v1.PerGroupOptions": {
+      "type": "object",
+      "required": [
+        "name",
+        "enabledVersions",
+        "disabledVersions"
+      ],
+      "properties": {
+        "disabledVersions": {
+          "description": "disabledVersions is a list of versions that must be disabled in addition to the defaults. Must not collide with the list of enabled versions",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "enabledVersions": {
+          "description": "enabledVersions is a list of versions that must be enabled in addition to the defaults. Must not collide with the list of disabled versions",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "name": {
+          "description": "name is an API server name (see OpenShiftAPIserverName typed constants for a complete list of available API servers).",
+          "type": "string",
+          "default": ""
         }
       }
     },

@@ -66,7 +66,7 @@ type ConfigSpec struct {
 	SkippedTemplates []string `json:"skippedTemplates,omitempty" protobuf:"bytes,6,opt,name=skippedTemplates"`
 
 	// helmchart list specifies the list of helmcharts that the samples operator will install
-	HelmChartInstalled []HelmChart `json:"helmChart,omitempty" protobuf:"bytes,7,opt,name=helmChartinstalled"`
+	HelmChartList []HelmChart `json:"helmChartList,omitempty" protobuf:"bytes,7,opt,name=helmChartList"`
 }
 
 type HelmChart struct {

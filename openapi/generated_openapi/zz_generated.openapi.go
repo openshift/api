@@ -54826,7 +54826,7 @@ func schema_openshift_api_samples_v1_ConfigSpec(ref common.ReferenceCallback) co
 							},
 						},
 					},
-					"helmChart": {
+					"helmChartList": {
 						SchemaProps: spec.SchemaProps{
 							Description: "helmchart list specifies the list of helmcharts that the samples operator will install",
 							Type:        []string{"array"},

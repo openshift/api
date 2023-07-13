@@ -45,7 +45,7 @@ spec:
                   type: array
                   items:
                     type: string
-                helmChart:
+                helmChartList:
                   description: helmchart list specifies the list of helmcharts that the samples operator will install
                   type: array
                   items:

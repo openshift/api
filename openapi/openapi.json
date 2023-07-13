@@ -27516,7 +27516,7 @@
           "format": "int64"
         },
         "maxLogFiles": {
-          "description": "maxLogFiles specifies the maximum number of ACL_audit log files that can be present. Default: 5",
+          "description": "maxLogFiles specifies the maximum number of ACL_audit log files that can be present.",
           "type": "integer",
           "format": "int32"
         },

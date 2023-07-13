@@ -282,6 +282,16 @@ var (
 		OwningProduct:       ocpSpecific,
 	}
 
+	FeatureGateAdminNetworkPolicy = FeatureGateName("AdminNetworkPolicy")
+	adminNetworkPolicy            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateAdminNetworkPolicy,
+		},
+		OwningJiraComponent: "Networking/ovn-kubernetes",
+		ResponsiblePerson:   "tssurya",
+		OwningProduct:       ocpSpecific,
+	}
+
 	FeatureGateAutomatedEtcdBackup = FeatureGateName("AutomatedEtcdBackup")
 	automatedEtcdBackup            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{

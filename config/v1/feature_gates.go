@@ -311,4 +311,14 @@ var (
 		ResponsiblePerson:   "msluiter",
 		OwningProduct:       ocpSpecific,
 	}
+
+	FeatureGateEgressFirewallDNSName = FeatureGateName("EgressFirewallDNSName")
+	egressFirewallDNSName            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateEgressFirewallDNSName,
+		},
+		OwningJiraComponent: "dns",
+		ResponsiblePerson:   "miciah",
+		OwningProduct:       ocpSpecific,
+	}
 )

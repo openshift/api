@@ -1,0 +1,16 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "[TechPreviewNoUpgrade] EgressFirewallDNSName"
+crd: 0000_70_egressfirewalldnsname_00-techpreview.crd.yaml
+tests:
+  onCreate:
+  - name: Should be able to create a minimal EgressFirewallDNSName
+    initial: |
+      apiVersion: dns.openshift.io/v1alpha1
+      kind: EgressFirewallDNSName
+      spec:
+        name: www.example.com.
+    expected: |
+      apiVersion: dns.openshift.io/v1alpha1
+      kind: EgressFirewallDNSName
+      spec:
+        name: www.example.com.

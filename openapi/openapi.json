@@ -11527,6 +11527,139 @@
         }
       }
     },
+    "com.github.openshift.api.dns.v1alpha1.EgressFirewallDNSName": {
+      "description": "EgressFirewallDNSName describes a DNS name used in a EgressFirewall rule. It is TechPreviewNoUpgrade only.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec is the specification of the desired behavior of the EgressFirewallDNSName.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.dns.v1alpha1.EgressFirewallDNSNameSpec"
+        },
+        "status": {
+          "description": "status is the most recently observed status of the EgressFirewallDNSName.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.dns.v1alpha1.EgressFirewallDNSNameStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.dns.v1alpha1.EgressFirewallDNSNameList": {
+      "description": "EgressFirewallDNSNameList contains a list of EgressFirewallDNSNames.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.dns.v1alpha1.EgressFirewallDNSName"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.dns.v1alpha1.EgressFirewallDNSNameSpec": {
+      "description": "EgressFirewallDNSNameSpec is a desired state description of EgressFirewallDNSName.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the DNS name used in a EgressFirewall rule.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.dns.v1alpha1.EgressFirewallDNSNameStatus": {
+      "description": "EgressFirewallDNSNameStatus defines the observed status of EgressFirewallDNSName.",
+      "type": "object",
+      "properties": {
+        "resolvedNames": {
+          "description": "resolvedNames contains a list of matching DNS names and their corresponding IP addresses along with TTL and last DNS lookup time.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.dns.v1alpha1.EgressFirewallDNSNameStatusItem"
+          }
+        }
+      }
+    },
+    "com.github.openshift.api.dns.v1alpha1.EgressFirewallDNSNameStatusItem": {
+      "description": "EgressFirewallDNSNameStatusItem describes the details of a resolved DNS name.",
+      "type": "object",
+      "required": [
+        "dnsName",
+        "ips",
+        "ttl",
+        "lastLookupTime",
+        "retryCounter"
+      ],
+      "properties": {
+        "dnsName": {
+          "description": "dnsName is the resolved DNS name matching the name field of EgressFirewallDNSNameSpec.",
+          "type": "string",
+          "default": ""
+        },
+        "ips": {
+          "description": "The IP addresses associated with the DNS name used in a EgressFirewall rule.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        },
+        "lastLookupTime": {
+          "description": "Timestamp when the last DNS lookup was successfully completed.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "retryCounter": {
+          "description": "retryCounter keeps the count of how many times the DNS lookup failed for the dnsName field.",
+          "type": "integer",
+          "format": "int32",
+          "default": 0
+        },
+        "ttl": {
+          "description": "Minimum time-to-live value among all the IP addresses.",
+          "type": "integer",
+          "format": "int64",
+          "default": 0
+        }
+      }
+    },
     "com.github.openshift.api.example.v1.CELUnion": {
       "description": "CELUnion demonstrates how to use a discriminated union and how to validate it using CEL.",
       "type": "object",

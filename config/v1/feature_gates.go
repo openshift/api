@@ -312,10 +312,10 @@ var (
 		OwningProduct:       ocpSpecific,
 	}
 
-	FeatureGateEgressFirewallDNSName = FeatureGateName("EgressFirewallDNSName")
-	egressFirewallDNSName            = FeatureGateDescription{
+	FeatureGateDNSNameResolver = FeatureGateName("DNSNameResolver")
+	DNSNameResolver            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
-			Name: FeatureGateEgressFirewallDNSName,
+			Name: FeatureGateDNSNameResolver,
 		},
 		OwningJiraComponent: "dns",
 		ResponsiblePerson:   "miciah",

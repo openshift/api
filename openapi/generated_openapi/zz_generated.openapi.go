@@ -433,11 +433,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/console/v1alpha1.ConsolePluginProxyServiceConfig":                   schema_openshift_api_console_v1alpha1_ConsolePluginProxyServiceConfig(ref),
 		"github.com/openshift/api/console/v1alpha1.ConsolePluginService":                              schema_openshift_api_console_v1alpha1_ConsolePluginService(ref),
 		"github.com/openshift/api/console/v1alpha1.ConsolePluginSpec":                                 schema_openshift_api_console_v1alpha1_ConsolePluginSpec(ref),
-		"github.com/openshift/api/dns/v1alpha1.EgressFirewallDNSName":                                 schema_openshift_api_dns_v1alpha1_EgressFirewallDNSName(ref),
-		"github.com/openshift/api/dns/v1alpha1.EgressFirewallDNSNameList":                             schema_openshift_api_dns_v1alpha1_EgressFirewallDNSNameList(ref),
-		"github.com/openshift/api/dns/v1alpha1.EgressFirewallDNSNameSpec":                             schema_openshift_api_dns_v1alpha1_EgressFirewallDNSNameSpec(ref),
-		"github.com/openshift/api/dns/v1alpha1.EgressFirewallDNSNameStatus":                           schema_openshift_api_dns_v1alpha1_EgressFirewallDNSNameStatus(ref),
-		"github.com/openshift/api/dns/v1alpha1.EgressFirewallDNSNameStatusItem":                       schema_openshift_api_dns_v1alpha1_EgressFirewallDNSNameStatusItem(ref),
 		"github.com/openshift/api/example/v1.CELUnion":                                                schema_openshift_api_example_v1_CELUnion(ref),
 		"github.com/openshift/api/example/v1.EvolvingUnion":                                           schema_openshift_api_example_v1_EvolvingUnion(ref),
 		"github.com/openshift/api/example/v1.StableConfigType":                                        schema_openshift_api_example_v1_StableConfigType(ref),
@@ -746,6 +741,11 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/network/v1.HostSubnetList":                                          schema_openshift_api_network_v1_HostSubnetList(ref),
 		"github.com/openshift/api/network/v1.NetNamespace":                                            schema_openshift_api_network_v1_NetNamespace(ref),
 		"github.com/openshift/api/network/v1.NetNamespaceList":                                        schema_openshift_api_network_v1_NetNamespaceList(ref),
+		"github.com/openshift/api/network/v1alpha1.DNSNameResolver":                                   schema_openshift_api_network_v1alpha1_DNSNameResolver(ref),
+		"github.com/openshift/api/network/v1alpha1.DNSNameResolverList":                               schema_openshift_api_network_v1alpha1_DNSNameResolverList(ref),
+		"github.com/openshift/api/network/v1alpha1.DNSNameResolverSpec":                               schema_openshift_api_network_v1alpha1_DNSNameResolverSpec(ref),
+		"github.com/openshift/api/network/v1alpha1.DNSNameResolverStatus":                             schema_openshift_api_network_v1alpha1_DNSNameResolverStatus(ref),
+		"github.com/openshift/api/network/v1alpha1.DNSNameResolverStatusItem":                         schema_openshift_api_network_v1alpha1_DNSNameResolverStatusItem(ref),
 		"github.com/openshift/api/networkoperator/v1.EgressRouter":                                    schema_openshift_api_networkoperator_v1_EgressRouter(ref),
 		"github.com/openshift/api/networkoperator/v1.EgressRouterSpec":                                schema_openshift_api_networkoperator_v1_EgressRouterSpec(ref),
 		"github.com/openshift/api/oauth/v1.ClusterRoleScopeRestriction":                               schema_openshift_api_oauth_v1_ClusterRoleScopeRestriction(ref),
@@ -20680,225 +20680,6 @@ func schema_openshift_api_console_v1alpha1_ConsolePluginSpec(ref common.Referenc
 	}
 }
 
-func schema_openshift_api_dns_v1alpha1_EgressFirewallDNSName(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "EgressFirewallDNSName describes a DNS name used in a EgressFirewall rule. It is TechPreviewNoUpgrade only.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
-							Default:     map[string]interface{}{},
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Description: "spec is the specification of the desired behavior of the EgressFirewallDNSName.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/openshift/api/dns/v1alpha1.EgressFirewallDNSNameSpec"),
-						},
-					},
-					"status": {
-						SchemaProps: spec.SchemaProps{
-							Description: "status is the most recently observed status of the EgressFirewallDNSName.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/openshift/api/dns/v1alpha1.EgressFirewallDNSNameStatus"),
-						},
-					},
-				},
-				Required: []string{"spec"},
-			},
-		},
-		Dependencies: []string{
-			"github.com/openshift/api/dns/v1alpha1.EgressFirewallDNSNameSpec", "github.com/openshift/api/dns/v1alpha1.EgressFirewallDNSNameStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
-	}
-}
-
-func schema_openshift_api_dns_v1alpha1_EgressFirewallDNSNameList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "EgressFirewallDNSNameList contains a list of EgressFirewallDNSNames.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Description: "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
-							Default:     map[string]interface{}{},
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("github.com/openshift/api/dns/v1alpha1.EgressFirewallDNSName"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"items"},
-			},
-		},
-		Dependencies: []string{
-			"github.com/openshift/api/dns/v1alpha1.EgressFirewallDNSName", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
-	}
-}
-
-func schema_openshift_api_dns_v1alpha1_EgressFirewallDNSNameSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "EgressFirewallDNSNameSpec is a desired state description of EgressFirewallDNSName.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Description: "name is the DNS name used in a EgressFirewall rule.",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-				},
-				Required: []string{"name"},
-			},
-		},
-	}
-}
-
-func schema_openshift_api_dns_v1alpha1_EgressFirewallDNSNameStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "EgressFirewallDNSNameStatus defines the observed status of EgressFirewallDNSName.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"resolvedNames": {
-						SchemaProps: spec.SchemaProps{
-							Description: "resolvedNames contains a list of matching DNS names and their corresponding IP addresses along with TTL and last DNS lookup time.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("github.com/openshift/api/dns/v1alpha1.EgressFirewallDNSNameStatusItem"),
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"github.com/openshift/api/dns/v1alpha1.EgressFirewallDNSNameStatusItem"},
-	}
-}
-
-func schema_openshift_api_dns_v1alpha1_EgressFirewallDNSNameStatusItem(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "EgressFirewallDNSNameStatusItem describes the details of a resolved DNS name.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"dnsName": {
-						SchemaProps: spec.SchemaProps{
-							Description: "dnsName is the resolved DNS name matching the name field of EgressFirewallDNSNameSpec.",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"ips": {
-						VendorExtensible: spec.VendorExtensible{
-							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "set",
-							},
-						},
-						SchemaProps: spec.SchemaProps{
-							Description: "The IP addresses associated with the DNS name used in a EgressFirewall rule.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
-					"ttl": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Minimum time-to-live value among all the IP addresses.",
-							Default:     0,
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"lastLookupTime": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Timestamp when the last DNS lookup was successfully completed.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
-						},
-					},
-					"retryCounter": {
-						SchemaProps: spec.SchemaProps{
-							Description: "retryCounter keeps the count of how many times the DNS lookup failed for the dnsName field.",
-							Default:     0,
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-				},
-				Required: []string{"dnsName", "ips", "ttl", "lastLookupTime", "retryCounter"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
-	}
-}
-
 func schema_openshift_api_example_v1_CELUnion(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -37664,6 +37445,245 @@ func schema_openshift_api_network_v1_NetNamespaceList(ref common.ReferenceCallba
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/network/v1.NetNamespace", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_openshift_api_network_v1alpha1_DNSNameResolver(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DNSNameResolver stores the DNS name resolution information of a DNS name. It is TechPreviewNoUpgrade only.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec is the specification of the desired behavior of the DNSNameResolver.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/network/v1alpha1.DNSNameResolverSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status is the most recently observed status of the DNSNameResolver.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/network/v1alpha1.DNSNameResolverStatus"),
+						},
+					},
+				},
+				Required: []string{"spec"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/network/v1alpha1.DNSNameResolverSpec", "github.com/openshift/api/network/v1alpha1.DNSNameResolverStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_openshift_api_network_v1alpha1_DNSNameResolverList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DNSNameResolverList contains a list of DNSNameResolvers.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/network/v1alpha1.DNSNameResolver"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/network/v1alpha1.DNSNameResolver", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_openshift_api_network_v1alpha1_DNSNameResolverSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DNSNameResolverSpec is a desired state description of DNSNameResolver.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the DNS name for which the DNS name resolution information will be stored. For a regular DNS name, only the DNS name resolution information of the regular DNS name will be stored. For a wildcard DNS name, the DNS name resolution information of all the DNS names, that matches the wildcard DNS name, will be stored. For a wildcard DNS name, the '*' will match only one label. Additionally, only a single '*' can be used at the beginning of the wildcard DNS name. For example, '*.example.com.' will match 'sub1.example.com.' but won't match 'sub2.sub1.example.com.'",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_network_v1alpha1_DNSNameResolverStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DNSNameResolverStatus defines the observed status of DNSNameResolver.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"resolvedNames": {
+						SchemaProps: spec.SchemaProps{
+							Description: "resolvedNames contains a list of matching DNS names and their corresponding IP addresses along with TTL and last DNS lookup time.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/network/v1alpha1.DNSNameResolverStatusItem"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/network/v1alpha1.DNSNameResolverStatusItem"},
+	}
+}
+
+func schema_openshift_api_network_v1alpha1_DNSNameResolverStatusItem(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DNSNameResolverStatusItem describes the details of a resolved DNS name.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"dnsName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "dnsName is the resolved DNS name matching the name field of DNSNameResolverSpec.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"ips": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "ips contains the list of IP addresses associated with the dnsName.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"ttlSeconds": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ttlSeconds is the minimum time-to-live value among all the IP addresses.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"lastLookupTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "lastLookupTime is the timestamp when the last DNS lookup was completed.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"resolutionFailures": {
+						SchemaProps: spec.SchemaProps{
+							Description: "resolutionFailures keeps the count of how many times the DNS resolution failed for the dnsName field. If the DNS resolution succeeds then the field will be set to zero. Upon every failure, the value of the field will be incremented by one. Upon reaching a threshold value, the details about the DNS name will be removed.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions provide information about the state of the DNS name.\n\nThese are the supported conditions:\n\n  * Degraded\n  - True if the following conditions are met:\n    * The last DNS name resolution failed.\n  - False if any of those conditions are unsatisfied.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"dnsName", "ips", "ttlSeconds", "lastLookupTime"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 

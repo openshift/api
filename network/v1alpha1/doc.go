@@ -2,5 +2,5 @@
 // +k8s:defaulter-gen=TypeMeta
 // +k8s:openapi-gen=true
 
-// +groupName=dns.openshift.io
+// +groupName=network.openshift.io
 package v1alpha1

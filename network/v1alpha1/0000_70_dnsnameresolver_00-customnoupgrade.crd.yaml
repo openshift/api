@@ -1,0 +1,133 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    api-approved.openshift.io: https://github.com/openshift/api/pull/1524
+    include.release.openshift.io/ibm-cloud-managed: "true"
+    include.release.openshift.io/self-managed-high-availability: "true"
+    include.release.openshift.io/single-node-developer: "true"
+    release.openshift.io/feature-set: CustomNoUpgrade
+  name: dnsnameresolvers.network.openshift.io
+spec:
+  group: network.openshift.io
+  names:
+    kind: DNSNameResolver
+    listKind: DNSNameResolverList
+    plural: dnsnameresolvers
+    singular: dnsnameresolver
+  scope: Namespaced
+  versions:
+    - name: v1alpha1
+      schema:
+        openAPIV3Schema:
+          description: "DNSNameResolver stores the DNS name resolution information of a DNS name. It is TechPreviewNoUpgrade only. \n Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support."
+          type: object
+          required:
+            - spec
+          properties:
+            apiVersion:
+              description: 'APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+              type: string
+            kind:
+              description: 'Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+              type: string
+            metadata:
+              type: object
+            spec:
+              description: spec is the specification of the desired behavior of the DNSNameResolver.
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  description: name is the DNS name for which the DNS name resolution information will be stored. For a regular DNS name, only the DNS name resolution information of the regular DNS name will be stored. For a wildcard DNS name, the DNS name resolution information of all the DNS names, that matches the wildcard DNS name, will be stored. For a wildcard DNS name, the '*' will match only one label. Additionally, only a single '*' can be used at the beginning of the wildcard DNS name. For example, '*.example.com.' will match 'sub1.example.com.' but won't match 'sub2.sub1.example.com.'
+                  type: string
+                  pattern: ^(\*\.)?([A-Za-z0-9-]+\.)*[A-Za-z0-9-]+\.$
+            status:
+              description: status is the most recently observed status of the DNSNameResolver.
+              type: object
+              properties:
+                resolvedNames:
+                  description: resolvedNames contains a list of matching DNS names and their corresponding IP addresses along with TTL and last DNS lookup time.
+                  type: array
+                  items:
+                    description: DNSNameResolverStatusItem describes the details of a resolved DNS name.
+                    type: object
+                    required:
+                      - dnsName
+                      - ips
+                      - lastLookupTime
+                      - ttlSeconds
+                    properties:
+                      conditions:
+                        description: "conditions provide information about the state of the DNS name. \n These are the supported conditions: \n * Degraded - True if the following conditions are met: * The last DNS name resolution failed. - False if any of those conditions are unsatisfied."
+                        type: array
+                        items:
+                          description: "Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, \n type FooStatus struct{ // Represents the observations of a foo's current state. // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\" // +patchMergeKey=type // +patchStrategy=merge // +listType=map // +listMapKey=type Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"` \n // other fields }"
+                          type: object
+                          required:
+                            - lastTransitionTime
+                            - message
+                            - reason
+                            - status
+                            - type
+                          properties:
+                            lastTransitionTime:
+                              description: lastTransitionTime is the last time the condition transitioned from one status to another. This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                              type: string
+                              format: date-time
+                            message:
+                              description: message is a human readable message indicating details about the transition. This may be an empty string.
+                              type: string
+                              maxLength: 32768
+                            observedGeneration:
+                              description: observedGeneration represents the .metadata.generation that the condition was set based upon. For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date with respect to the current state of the instance.
+                              type: integer
+                              format: int64
+                              minimum: 0
+                            reason:
+                              description: reason contains a programmatic identifier indicating the reason for the condition's last transition. Producers of specific condition types may define expected values and meanings for this field, and whether the values are considered a guaranteed API. The value should be a CamelCase string. This field may not be empty.
+                              type: string
+                              maxLength: 1024
+                              minLength: 1
+                              pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                            status:
+                              description: status of the condition, one of True, False, Unknown.
+                              type: string
+                              enum:
+                                - "True"
+                                - "False"
+                                - Unknown
+                            type:
+                              description: type of condition in CamelCase or in foo.example.com/CamelCase. --- Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be useful (see .node.status.conditions), the ability to deconflict is important. The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                              type: string
+                              maxLength: 316
+                              pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                        x-kubernetes-list-map-keys:
+                          - type
+                        x-kubernetes-list-type: map
+                      dnsName:
+                        description: dnsName is the resolved DNS name matching the name field of DNSNameResolverSpec.
+                        type: string
+                        pattern: ^(\*\.)?([A-Za-z0-9-]+\.)*[A-Za-z0-9-]+\.$
+                      ips:
+                        description: ips contains the list of IP addresses associated with the dnsName.
+                        type: array
+                        items:
+                          type: string
+                        x-kubernetes-list-type: set
+                      lastLookupTime:
+                        description: lastLookupTime is the timestamp when the last DNS lookup was completed.
+                        type: string
+                        format: date-time
+                      resolutionFailures:
+                        description: resolutionFailures keeps the count of how many times the DNS resolution failed for the dnsName field. If the DNS resolution succeeds then the field will be set to zero. Upon every failure, the value of the field will be incremented by one. Upon reaching a threshold value, the details about the DNS name will be removed.
+                        type: integer
+                      ttlSeconds:
+                        description: ttlSeconds is the minimum time-to-live value among all the IP addresses.
+                        type: integer
+                        format: int32
+      served: true
+      storage: true
+      subresources:
+        status: {}

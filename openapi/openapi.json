@@ -11527,139 +11527,6 @@
         }
       }
     },
-    "com.github.openshift.api.dns.v1alpha1.EgressFirewallDNSName": {
-      "description": "EgressFirewallDNSName describes a DNS name used in a EgressFirewall rule. It is TechPreviewNoUpgrade only.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
-      "type": "object",
-      "required": [
-        "spec"
-      ],
-      "properties": {
-        "apiVersion": {
-          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-          "type": "string"
-        },
-        "kind": {
-          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-          "type": "string"
-        },
-        "metadata": {
-          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
-          "default": {},
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
-        },
-        "spec": {
-          "description": "spec is the specification of the desired behavior of the EgressFirewallDNSName.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.dns.v1alpha1.EgressFirewallDNSNameSpec"
-        },
-        "status": {
-          "description": "status is the most recently observed status of the EgressFirewallDNSName.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.dns.v1alpha1.EgressFirewallDNSNameStatus"
-        }
-      }
-    },
-    "com.github.openshift.api.dns.v1alpha1.EgressFirewallDNSNameList": {
-      "description": "EgressFirewallDNSNameList contains a list of EgressFirewallDNSNames.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
-      "type": "object",
-      "required": [
-        "items"
-      ],
-      "properties": {
-        "apiVersion": {
-          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-          "type": "string"
-        },
-        "items": {
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/com.github.openshift.api.dns.v1alpha1.EgressFirewallDNSName"
-          }
-        },
-        "kind": {
-          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-          "type": "string"
-        },
-        "metadata": {
-          "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
-          "default": {},
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
-        }
-      }
-    },
-    "com.github.openshift.api.dns.v1alpha1.EgressFirewallDNSNameSpec": {
-      "description": "EgressFirewallDNSNameSpec is a desired state description of EgressFirewallDNSName.",
-      "type": "object",
-      "required": [
-        "name"
-      ],
-      "properties": {
-        "name": {
-          "description": "name is the DNS name used in a EgressFirewall rule.",
-          "type": "string",
-          "default": ""
-        }
-      }
-    },
-    "com.github.openshift.api.dns.v1alpha1.EgressFirewallDNSNameStatus": {
-      "description": "EgressFirewallDNSNameStatus defines the observed status of EgressFirewallDNSName.",
-      "type": "object",
-      "properties": {
-        "resolvedNames": {
-          "description": "resolvedNames contains a list of matching DNS names and their corresponding IP addresses along with TTL and last DNS lookup time.",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/com.github.openshift.api.dns.v1alpha1.EgressFirewallDNSNameStatusItem"
-          }
-        }
-      }
-    },
-    "com.github.openshift.api.dns.v1alpha1.EgressFirewallDNSNameStatusItem": {
-      "description": "EgressFirewallDNSNameStatusItem describes the details of a resolved DNS name.",
-      "type": "object",
-      "required": [
-        "dnsName",
-        "ips",
-        "ttl",
-        "lastLookupTime",
-        "retryCounter"
-      ],
-      "properties": {
-        "dnsName": {
-          "description": "dnsName is the resolved DNS name matching the name field of EgressFirewallDNSNameSpec.",
-          "type": "string",
-          "default": ""
-        },
-        "ips": {
-          "description": "The IP addresses associated with the DNS name used in a EgressFirewall rule.",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "default": ""
-          },
-          "x-kubernetes-list-type": "set"
-        },
-        "lastLookupTime": {
-          "description": "Timestamp when the last DNS lookup was successfully completed.",
-          "default": {},
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
-        },
-        "retryCounter": {
-          "description": "retryCounter keeps the count of how many times the DNS lookup failed for the dnsName field.",
-          "type": "integer",
-          "format": "int32",
-          "default": 0
-        },
-        "ttl": {
-          "description": "Minimum time-to-live value among all the IP addresses.",
-          "type": "integer",
-          "format": "int64",
-          "default": 0
-        }
-      }
-    },
     "com.github.openshift.api.example.v1.CELUnion": {
       "description": "CELUnion demonstrates how to use a discriminated union and how to validate it using CEL.",
       "type": "object",
@@ -21933,6 +21800,148 @@
           "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.network.v1alpha1.DNSNameResolver": {
+      "description": "DNSNameResolver stores the DNS name resolution information of a DNS name. It is TechPreviewNoUpgrade only.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec is the specification of the desired behavior of the DNSNameResolver.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.network.v1alpha1.DNSNameResolverSpec"
+        },
+        "status": {
+          "description": "status is the most recently observed status of the DNSNameResolver.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.network.v1alpha1.DNSNameResolverStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.network.v1alpha1.DNSNameResolverList": {
+      "description": "DNSNameResolverList contains a list of DNSNameResolvers.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.network.v1alpha1.DNSNameResolver"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.network.v1alpha1.DNSNameResolverSpec": {
+      "description": "DNSNameResolverSpec is a desired state description of DNSNameResolver.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the DNS name for which the DNS name resolution information will be stored. For a regular DNS name, only the DNS name resolution information of the regular DNS name will be stored. For a wildcard DNS name, the DNS name resolution information of all the DNS names, that matches the wildcard DNS name, will be stored. For a wildcard DNS name, the '*' will match only one label. Additionally, only a single '*' can be used at the beginning of the wildcard DNS name. For example, '*.example.com.' will match 'sub1.example.com.' but won't match 'sub2.sub1.example.com.'",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.network.v1alpha1.DNSNameResolverStatus": {
+      "description": "DNSNameResolverStatus defines the observed status of DNSNameResolver.",
+      "type": "object",
+      "properties": {
+        "resolvedNames": {
+          "description": "resolvedNames contains a list of matching DNS names and their corresponding IP addresses along with TTL and last DNS lookup time.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.network.v1alpha1.DNSNameResolverStatusItem"
+          }
+        }
+      }
+    },
+    "com.github.openshift.api.network.v1alpha1.DNSNameResolverStatusItem": {
+      "description": "DNSNameResolverStatusItem describes the details of a resolved DNS name.",
+      "type": "object",
+      "required": [
+        "dnsName",
+        "ips",
+        "ttlSeconds",
+        "lastLookupTime"
+      ],
+      "properties": {
+        "conditions": {
+          "description": "conditions provide information about the state of the DNS name.\n\nThese are the supported conditions:\n\n  * Degraded\n  - True if the following conditions are met:\n    * The last DNS name resolution failed.\n  - False if any of those conditions are unsatisfied.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "dnsName": {
+          "description": "dnsName is the resolved DNS name matching the name field of DNSNameResolverSpec.",
+          "type": "string",
+          "default": ""
+        },
+        "ips": {
+          "description": "ips contains the list of IP addresses associated with the dnsName.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        },
+        "lastLookupTime": {
+          "description": "lastLookupTime is the timestamp when the last DNS lookup was completed.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "resolutionFailures": {
+          "description": "resolutionFailures keeps the count of how many times the DNS resolution failed for the dnsName field. If the DNS resolution succeeds then the field will be set to zero. Upon every failure, the value of the field will be incremented by one. Upon reaching a threshold value, the details about the DNS name will be removed.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "ttlSeconds": {
+          "description": "ttlSeconds is the minimum time-to-live value among all the IP addresses.",
+          "type": "integer",
+          "format": "int32",
+          "default": 0
         }
       }
     },

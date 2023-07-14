@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	GroupName     = "dns.openshift.io"
+	GroupName     = "network.openshift.io"
 	GroupVersion  = schema.GroupVersion{Group: GroupName, Version: "v1alpha1"}
 	schemeBuilder = runtime.NewSchemeBuilder(addKnownTypes, configv1.Install)
 	// Install is a function which adds this version to a scheme
@@ -32,8 +32,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 	metav1.AddToGroupVersion(scheme, GroupVersion)
 
 	scheme.AddKnownTypes(GroupVersion,
-		&EgressFirewallDNSName{},
-		&EgressFirewallDNSNameList{},
+		&DNSNameResolver{},
+		&DNSNameResolverList{},
 	)
 
 	return nil

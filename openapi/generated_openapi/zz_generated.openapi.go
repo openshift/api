@@ -371,11 +371,19 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.VSpherePlatformVCenterSpec":                               schema_openshift_api_config_v1_VSpherePlatformVCenterSpec(ref),
 		"github.com/openshift/api/config/v1.WebhookTokenAuthenticator":                                schema_openshift_api_config_v1_WebhookTokenAuthenticator(ref),
 		"github.com/openshift/api/config/v1.featureSetBuilder":                                        schema_openshift_api_config_v1_featureSetBuilder(ref),
+		"github.com/openshift/api/config/v1alpha1.Backup":                                             schema_openshift_api_config_v1alpha1_Backup(ref),
+		"github.com/openshift/api/config/v1alpha1.BackupList":                                         schema_openshift_api_config_v1alpha1_BackupList(ref),
+		"github.com/openshift/api/config/v1alpha1.BackupSpec":                                         schema_openshift_api_config_v1alpha1_BackupSpec(ref),
+		"github.com/openshift/api/config/v1alpha1.BackupStatus":                                       schema_openshift_api_config_v1alpha1_BackupStatus(ref),
+		"github.com/openshift/api/config/v1alpha1.EtcdBackupSpec":                                     schema_openshift_api_config_v1alpha1_EtcdBackupSpec(ref),
 		"github.com/openshift/api/config/v1alpha1.GatherConfig":                                       schema_openshift_api_config_v1alpha1_GatherConfig(ref),
 		"github.com/openshift/api/config/v1alpha1.InsightsDataGather":                                 schema_openshift_api_config_v1alpha1_InsightsDataGather(ref),
 		"github.com/openshift/api/config/v1alpha1.InsightsDataGatherList":                             schema_openshift_api_config_v1alpha1_InsightsDataGatherList(ref),
 		"github.com/openshift/api/config/v1alpha1.InsightsDataGatherSpec":                             schema_openshift_api_config_v1alpha1_InsightsDataGatherSpec(ref),
 		"github.com/openshift/api/config/v1alpha1.InsightsDataGatherStatus":                           schema_openshift_api_config_v1alpha1_InsightsDataGatherStatus(ref),
+		"github.com/openshift/api/config/v1alpha1.RetentionNumberConfig":                              schema_openshift_api_config_v1alpha1_RetentionNumberConfig(ref),
+		"github.com/openshift/api/config/v1alpha1.RetentionPolicy":                                    schema_openshift_api_config_v1alpha1_RetentionPolicy(ref),
+		"github.com/openshift/api/config/v1alpha1.RetentionSizeConfig":                                schema_openshift_api_config_v1alpha1_RetentionSizeConfig(ref),
 		"github.com/openshift/api/console/v1.ApplicationMenuSpec":                                     schema_openshift_api_console_v1_ApplicationMenuSpec(ref),
 		"github.com/openshift/api/console/v1.CLIDownloadLink":                                         schema_openshift_api_console_v1_CLIDownloadLink(ref),
 		"github.com/openshift/api/console/v1.ConsoleCLIDownload":                                      schema_openshift_api_console_v1_ConsoleCLIDownload(ref),
@@ -957,8 +965,13 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.Upstream":                                               schema_openshift_api_operator_v1_Upstream(ref),
 		"github.com/openshift/api/operator/v1.UpstreamResolvers":                                      schema_openshift_api_operator_v1_UpstreamResolvers(ref),
 		"github.com/openshift/api/operator/v1.VSphereCSIDriverConfigSpec":                             schema_openshift_api_operator_v1_VSphereCSIDriverConfigSpec(ref),
+		"github.com/openshift/api/operator/v1alpha1.BackupJobReference":                               schema_openshift_api_operator_v1alpha1_BackupJobReference(ref),
 		"github.com/openshift/api/operator/v1alpha1.DelegatedAuthentication":                          schema_openshift_api_operator_v1alpha1_DelegatedAuthentication(ref),
 		"github.com/openshift/api/operator/v1alpha1.DelegatedAuthorization":                           schema_openshift_api_operator_v1alpha1_DelegatedAuthorization(ref),
+		"github.com/openshift/api/operator/v1alpha1.EtcdBackup":                                       schema_openshift_api_operator_v1alpha1_EtcdBackup(ref),
+		"github.com/openshift/api/operator/v1alpha1.EtcdBackupList":                                   schema_openshift_api_operator_v1alpha1_EtcdBackupList(ref),
+		"github.com/openshift/api/operator/v1alpha1.EtcdBackupSpec":                                   schema_openshift_api_operator_v1alpha1_EtcdBackupSpec(ref),
+		"github.com/openshift/api/operator/v1alpha1.EtcdBackupStatus":                                 schema_openshift_api_operator_v1alpha1_EtcdBackupStatus(ref),
 		"github.com/openshift/api/operator/v1alpha1.GenerationHistory":                                schema_openshift_api_operator_v1alpha1_GenerationHistory(ref),
 		"github.com/openshift/api/operator/v1alpha1.GenericOperatorConfig":                            schema_openshift_api_operator_v1alpha1_GenericOperatorConfig(ref),
 		"github.com/openshift/api/operator/v1alpha1.ImageContentSourcePolicy":                         schema_openshift_api_operator_v1alpha1_ImageContentSourcePolicy(ref),
@@ -18038,6 +18051,185 @@ func schema_openshift_api_config_v1_featureSetBuilder(ref common.ReferenceCallba
 	}
 }
 
+func schema_openshift_api_config_v1alpha1_Backup(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Backup provides configuration for performing backups of the openshift cluster.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec holds user settable values for configuration",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.BackupSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status holds observed values from the cluster. They may not be overridden.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.BackupStatus"),
+						},
+					},
+				},
+				Required: []string{"spec"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha1.BackupSpec", "github.com/openshift/api/config/v1alpha1.BackupStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_BackupList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "BackupList is a collection of items\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1alpha1.Backup"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha1.Backup", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_BackupSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"etcd": {
+						SchemaProps: spec.SchemaProps{
+							Description: "etcd specifies the configuration for periodic backups of the etcd cluster",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.EtcdBackupSpec"),
+						},
+					},
+				},
+				Required: []string{"etcd"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha1.EtcdBackupSpec"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_BackupStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_EtcdBackupSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "EtcdBackupSpec provides configuration for automated etcd backups to the cluster-etcd-operator",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"schedule": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Schedule defines the recurring backup schedule in Cron format every 2 hours: 0 */2 * * * every day at 3am: 0 3 * * * Empty string means no opinion and the platform is left to choose a reasonable default which is subject to change without notice. The current default is \"no backups\", but will change in the future.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"timeZone": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The time zone name for the given schedule, see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones. If not specified, this will default to the time zone of the kube-controller-manager process. See https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/#time-zones",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"retentionPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RetentionPolicy defines the retention policy for retaining and deleting existing backups.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.RetentionPolicy"),
+						},
+					},
+					"pvcName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PVCName specifies the name of the PersistentVolumeClaim (PVC) which binds a PersistentVolume where the etcd backup files would be saved The PVC itself must always be created in the \"openshift-etcd\" namespace If the PVC is left unspecified \"\" then the platform will choose a reasonable default location to save the backup. In the future this would be backups saved across the control-plane master nodes.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha1.RetentionPolicy"},
+	}
+}
+
 func schema_openshift_api_config_v1alpha1_GatherConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -18200,6 +18392,95 @@ func schema_openshift_api_config_v1alpha1_InsightsDataGatherStatus(ref common.Re
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_RetentionNumberConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "RetentionNumberConfig specifies the configuration of the retention policy on the number of backups",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"maxNumberOfBackups": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MaxNumberOfBackups defines the maximum number of backups to retain. If the existing number of backups saved is equal to MaxNumberOfBackups then the oldest backup will be removed before a new backup is initiated.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_RetentionPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "RetentionPolicy defines the retention policy for retaining and deleting existing backups. This struct is a discriminated union that allows users to select the type of retention policy from the supported types.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"retentionType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RetentionType sets the type of retention policy. Currently, the only valid policies are retention by number of backups (RetentionNumber), by the size of backups (RetentionSize). More policies or types may be added in the future. Empty string means no opinion and the platform is left to choose a reasonable default which is subject to change without notice. The current default is RetentionNumber with 15 backups kept.\n\nPossible enum values:\n - `\"RetentionNumber\"` sets the retention policy based on the number of backup files saved\n - `\"RetentionSize\"` sets the retention policy based on the total size of the backup files saved",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"RetentionNumber", "RetentionSize"}},
+					},
+					"retentionNumber": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RetentionNumber configures the retention policy based on the number of backups",
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.RetentionNumberConfig"),
+						},
+					},
+					"retentionSize": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RetentionSize configures the retention policy based on the size of backups",
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.RetentionSizeConfig"),
+						},
+					},
+				},
+				Required: []string{"retentionType"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "retentionType",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"retentionNumber": "RetentionNumber",
+								"retentionSize":   "RetentionSize",
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha1.RetentionNumberConfig", "github.com/openshift/api/config/v1alpha1.RetentionSizeConfig"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_RetentionSizeConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "RetentionSizeConfig specifies the configuration of the retention policy on the total size of backups",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"maxSizeOfBackupsGb": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MaxSizeOfBackupsGb defines the total size in GB of backups to retain. If the current total size backups exceeds MaxSizeOfBackupsGb then the oldest backup will be removed before a new backup is initiated.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
 			},
 		},
 	}
@@ -48683,6 +48964,36 @@ func schema_openshift_api_operator_v1_VSphereCSIDriverConfigSpec(ref common.Refe
 	}
 }
 
+func schema_openshift_api_operator_v1alpha1_BackupJobReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "BackupJobReference holds a reference to the batch/v1 Job created to run the etcd backup",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"namespace": {
+						SchemaProps: spec.SchemaProps{
+							Description: "namespace is the namespace of the Job. this is always expected to be \"openshift-etcd\" since the user provided PVC is also required to be in \"openshift-etcd\" Required",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the name of the Job. Required",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"namespace", "name"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_operator_v1alpha1_DelegatedAuthentication(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -48720,6 +49031,170 @@ func schema_openshift_api_operator_v1alpha1_DelegatedAuthorization(ref common.Re
 				},
 			},
 		},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_EtcdBackup(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "# EtcdBackup provides configuration options and status for a one-time backup attempt of the etcd cluster\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec holds user settable values for configuration",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1alpha1.EtcdBackupSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status holds observed values from the cluster. They may not be overridden.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1alpha1.EtcdBackupStatus"),
+						},
+					},
+				},
+				Required: []string{"spec"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1alpha1.EtcdBackupSpec", "github.com/openshift/api/operator/v1alpha1.EtcdBackupStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_EtcdBackupList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "EtcdBackupList is a collection of items\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/operator/v1alpha1.EtcdBackup"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1alpha1.EtcdBackup", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_EtcdBackupSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"pvcName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PVCName specifies the name of the PersistentVolumeClaim (PVC) which binds a PersistentVolume where the etcd backup file would be saved The PVC itself must always be created in the \"openshift-etcd\" namespace If the PVC is left unspecified \"\" then the platform will choose a reasonable default location to save the backup. In the future this would be backups saved across the control-plane master nodes.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_EtcdBackupStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type":       "map",
+								"x-kubernetes-patch-merge-key": "type",
+								"x-kubernetes-patch-strategy":  "merge",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions provide details on the status of the etcd backup job.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+					"backupJob": {
+						SchemaProps: spec.SchemaProps{
+							Description: "backupJob is the reference to the Job that executes the backup. Optional",
+							Ref:         ref("github.com/openshift/api/operator/v1alpha1.BackupJobReference"),
+						},
+					},
+				},
+				Required: []string{"backupJob"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1alpha1.BackupJobReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 

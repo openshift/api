@@ -177,7 +177,6 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		with(azureWorkloadIdentity).
 		with(gateGatewayAPI).
 		with(maxUnavailableStatefulSet).
-		without(eventedPleg).
 		with(sigstoreImageVerification).
 		with(gcpLabelsTags).
 		with(vSphereStaticIPs).
@@ -194,6 +193,7 @@ var defaultFeatures = &FeatureGateEnabledDisabled{
 	Enabled: []FeatureGateDescription{
 		openShiftPodSecurityAdmission,
 		alibabaPlatform, // This is a bug, it should be TechPreviewNoUpgrade. This must be downgraded before 4.14 is shipped.
+		eventedPleg,
 		cloudDualStackNodeIPs,
 		externalCloudProviderAzure,
 		externalCloudProviderExternal,

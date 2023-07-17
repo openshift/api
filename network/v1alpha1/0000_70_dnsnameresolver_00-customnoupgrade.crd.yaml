@@ -127,6 +127,9 @@ spec:
                         description: ttlSeconds is the minimum time-to-live value among all the IP addresses.
                         type: integer
                         format: int32
+                  x-kubernetes-list-map-keys:
+                    - dnsName
+                  x-kubernetes-list-type: map
       served: true
       storage: true
       subresources:

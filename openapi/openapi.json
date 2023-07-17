@@ -21888,7 +21888,13 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.network.v1alpha1.DNSNameResolverStatusItem"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "dnsName"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "dnsName",
+          "x-kubernetes-patch-strategy": "merge"
         }
       }
     },

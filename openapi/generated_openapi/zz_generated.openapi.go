@@ -37579,6 +37579,16 @@ func schema_openshift_api_network_v1alpha1_DNSNameResolverStatus(ref common.Refe
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"resolvedNames": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"dnsName",
+								},
+								"x-kubernetes-list-type":       "map",
+								"x-kubernetes-patch-merge-key": "dnsName",
+								"x-kubernetes-patch-strategy":  "merge",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "resolvedNames contains a list of matching DNS names and their corresponding IP addresses along with TTL and last DNS lookup time.",
 							Type:        []string{"array"},

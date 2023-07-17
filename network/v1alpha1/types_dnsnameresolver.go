@@ -46,8 +46,12 @@ type DNSNameResolverSpec struct {
 type DNSNameResolverStatus struct {
 	// resolvedNames contains a list of matching DNS names and their corresponding IP addresses
 	// along with TTL and last DNS lookup time.
+	// +listType=map
+	// +listMapKey=dnsName
+	// +patchMergeKey=dnsName
+	// +patchStrategy=merge
 	// +optional
-	ResolvedNames []DNSNameResolverStatusItem `json:"resolvedNames,omitempty"`
+	ResolvedNames []DNSNameResolverStatusItem `json:"resolvedNames,omitempty" patchStrategy:"merge" patchMergeKey:"dnsName"`
 }
 
 // DNSNameResolverStatusItem describes the details of a resolved DNS name.

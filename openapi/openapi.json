@@ -31491,7 +31491,6 @@
         },
         "externalCertificate": {
           "description": "externalCertificate provides certificate contents as a secret reference. This should be a single serving certificate, not a certificate chain. Do not include a CA certificate. The secret referenced should be present in the same namespace as that of the Route. Forbidden when `certificate` is set.",
-          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.route.v1.LocalObjectReference"
         },
         "insecureEdgeTerminationPolicy": {

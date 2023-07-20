@@ -9,6 +9,7 @@ import (
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+	format "github.com/onsi/gomega/format"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/discovery"
@@ -33,6 +34,8 @@ func TestAPIs(t *testing.T) {
 	RegisterFailHandler(Fail)
 
 	g := NewGomegaWithT(t)
+
+	format.MaxLength = 0
 
 	var err error
 	suites, err = LoadTestSuiteSpecs(filepath.Join(".."))

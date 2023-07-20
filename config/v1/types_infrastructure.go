@@ -349,11 +349,11 @@ type CloudControllerManagerStatus struct {
 }
 
 // ExternalPlatformStatus holds the current status of the generic External infrastructure provider.
+// +kubebuilder:validation:XValidation:rule="has(self.cloudControllerManager) == has(oldSelf.cloudControllerManager)",message="cloudControllerManager may not be added or removed once set"
 type ExternalPlatformStatus struct {
 	// cloudControllerManager contains settings specific to the external Cloud Controller Manager (a.k.a. CCM or CPI).
 	// When omitted, new nodes will be not tainted
 	// and no extra initialization from the cloud controller manager is expected.
-	// +openshift:enable:FeatureSets=TechPreviewNoUpgrade
 	// +optional
 	CloudControllerManager CloudControllerManagerStatus `json:"cloudControllerManager"`
 }

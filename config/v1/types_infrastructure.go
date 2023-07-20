@@ -478,6 +478,14 @@ type AWSPlatformStatus struct {
 	// +kubebuilder:validation:MaxItems=25
 	// +optional
 	ResourceTags []AWSResourceTag `json:"resourceTags,omitempty"`
+
+	// dnsConfig contains information about the type of DNS solution in use
+	// for the cluster.
+	// +default={"provider": ""}
+	// +kubebuilder:default={"provider": ""}
+	// +openshift:enable:FeatureSets=TechPreviewNoUpgrade
+	// +optional
+	DNSConfig *DNSConfigurationType `json:"dnsConfig,omitempty"`
 }
 
 // AWSResourceTag is a tag to apply to AWS resources created for the cluster.
@@ -499,6 +507,38 @@ type AWSResourceTag struct {
 	// +required
 	Value string `json:"value"`
 }
+
+// DNSConfigurationType contains information about who configures DNS for the
+// cluster.
+// +union
+type DNSConfigurationType struct {
+	// provider determines which DNS solution is in use for this cluster.
+	// When the user wants to use their own DNS solution, the `provider`
+	// is set to "UserAndClusterProvided".
+	// When the cluster's DNS solution is the default for IPI or UPI, then
+	// `provider` is set to "" which is also its default value.
+	// +default=""
+	// +kubebuilder:default:=""
+	// +kubebuilder:validation:Enum="UserAndClusterProvided";""
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:XValidation:rule="oldSelf == '' || self == oldSelf",message="provider is immutable once set"
+	// +unionDiscriminator
+	// +optional
+	Provider DNSProviderType `json:"provider,omitempty"`
+}
+
+// DNSProviderType defines the source of the DNS and LB configuration.
+type DNSProviderType string
+
+const (
+	// DNSUserAndClusterProvided indicates that the user configures DNS for API and API-Int.
+	// The cluster handles some of its in-cluster DNS needs without user intervention.
+	DNSUserAndClusterProvided DNSProviderType = "UserAndClusterProvided"
+
+	// DNSDefault indicates the cluster's default way of handling DNS configuration.
+	// This refers to the default DNS configuration expected for both IPI and UPI installs.
+	DNSDefault DNSProviderType = ""
+)
 
 // AzurePlatformSpec holds the desired state of the Azure infrastructure provider.
 // This only includes fields that can be modified in the cluster.

@@ -210,6 +210,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.CustomFeatureGates":                                       schema_openshift_api_config_v1_CustomFeatureGates(ref),
 		"github.com/openshift/api/config/v1.CustomTLSProfile":                                         schema_openshift_api_config_v1_CustomTLSProfile(ref),
 		"github.com/openshift/api/config/v1.DNS":                                                      schema_openshift_api_config_v1_DNS(ref),
+		"github.com/openshift/api/config/v1.DNSConfigurationType":                                     schema_openshift_api_config_v1_DNSConfigurationType(ref),
 		"github.com/openshift/api/config/v1.DNSList":                                                  schema_openshift_api_config_v1_DNSList(ref),
 		"github.com/openshift/api/config/v1.DNSPlatformSpec":                                          schema_openshift_api_config_v1_DNSPlatformSpec(ref),
 		"github.com/openshift/api/config/v1.DNSSpec":                                                  schema_openshift_api_config_v1_DNSSpec(ref),
@@ -8427,12 +8428,19 @@ func schema_openshift_api_config_v1_AWSPlatformStatus(ref common.ReferenceCallba
 							},
 						},
 					},
+					"dnsConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "dnsConfig contains information about the type of DNS solution in use for the cluster.",
+							Default:     map[string]interface{}{"provider": ""},
+							Ref:         ref("github.com/openshift/api/config/v1.DNSConfigurationType"),
+						},
+					},
 				},
 				Required: []string{"region"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.AWSResourceTag", "github.com/openshift/api/config/v1.AWSServiceEndpoint"},
+			"github.com/openshift/api/config/v1.AWSResourceTag", "github.com/openshift/api/config/v1.AWSServiceEndpoint", "github.com/openshift/api/config/v1.DNSConfigurationType"},
 	}
 }
 
@@ -10975,6 +10983,37 @@ func schema_openshift_api_config_v1_DNS(ref common.ReferenceCallback) common.Ope
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/config/v1.DNSSpec", "github.com/openshift/api/config/v1.DNSStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_openshift_api_config_v1_DNSConfigurationType(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DNSConfigurationType contains information about who configures DNS for the cluster.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"provider": {
+						SchemaProps: spec.SchemaProps{
+							Description: "provider determines which DNS solution is in use for this cluster. When the user wants to use their own DNS solution, the `provider` is set to \"UserAndClusterProvided\". When the cluster's DNS solution is the default for IPI or UPI, then `provider` is set to \"\" which is also its default value.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator":            "provider",
+							"fields-to-discriminateBy": map[string]interface{}{},
+						},
+					},
+				},
+			},
+		},
 	}
 }
 

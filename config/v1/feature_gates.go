@@ -311,4 +311,14 @@ var (
 		ResponsiblePerson:   "msluiter",
 		OwningProduct:       ocpSpecific,
 	}
+
+	FeatureGateCustomDNSAWS = FeatureGateName("CustomDNSAWS")
+	customDNSAWS            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateCustomDNSAWS,
+		},
+		OwningJiraComponent: "installer",
+		ResponsiblePerson:   "sadasu",
+		OwningProduct:       ocpSpecific,
+	}
 )

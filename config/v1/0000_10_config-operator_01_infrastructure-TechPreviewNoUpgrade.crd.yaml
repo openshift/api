@@ -466,6 +466,24 @@ spec:
                     aws:
                       description: AWS contains settings specific to the Amazon Web Services infrastructure provider.
                       properties:
+                        dnsConfig:
+                          default:
+                            provider: ""
+                          description: dnsConfig contains information about the type of DNS solution in use for the cluster.
+                          properties:
+                            provider:
+                              default: ""
+                              description: provider determines which DNS solution is in use for this cluster. When the user wants to use their own DNS solution, the `provider` is set to "UserAndClusterProvided". When the cluster's DNS solution is the default for IPI or UPI, then `provider` is set to "" which is also its default value.
+                              enum:
+                                - UserAndClusterProvided
+                                - ""
+                              type: string
+                              x-kubernetes-validations:
+                                - message: provider is immutable once set
+                                  rule: oldSelf == '' || self == oldSelf
+                          required:
+                            - provider
+                          type: object
                         region:
                           description: region holds the default AWS region for new AWS resources created by the cluster.
                           type: string

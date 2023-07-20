@@ -1066,6 +1066,7 @@ var map_AWSPlatformStatus = map[string]string{
 	"region":           "region holds the default AWS region for new AWS resources created by the cluster.",
 	"serviceEndpoints": "ServiceEndpoints list contains custom endpoints which will override default service endpoint of AWS Services. There must be only one ServiceEndpoint for a service.",
 	"resourceTags":     "resourceTags is a list of additional tags to apply to AWS resources created for the cluster. See https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html for information on tagging AWS resources. AWS supports a maximum of 50 tags per resource. OpenShift reserves 25 tags for its use, leaving 25 tags available for the user.",
+	"dnsConfig":        "dnsConfig contains information about the type of DNS solution in use for the cluster.",
 }
 
 func (AWSPlatformStatus) SwaggerDoc() map[string]string {
@@ -1190,6 +1191,15 @@ var map_CloudControllerManagerStatus = map[string]string{
 
 func (CloudControllerManagerStatus) SwaggerDoc() map[string]string {
 	return map_CloudControllerManagerStatus
+}
+
+var map_DNSConfigurationType = map[string]string{
+	"":         "DNSConfigurationType contains information about who configures DNS for the cluster.",
+	"provider": "provider determines which DNS solution is in use for this cluster. When the user wants to use their own DNS solution, the `provider` is set to \"UserAndClusterProvided\". When the cluster's DNS solution is the default for IPI or UPI, then `provider` is set to \"\" which is also its default value.",
+}
+
+func (DNSConfigurationType) SwaggerDoc() map[string]string {
+	return map_DNSConfigurationType
 }
 
 var map_EquinixMetalPlatformSpec = map[string]string{

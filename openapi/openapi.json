@@ -4170,6 +4170,13 @@
         "region"
       ],
       "properties": {
+        "dnsConfig": {
+          "description": "dnsConfig contains information about the type of DNS solution in use for the cluster.",
+          "default": {
+            "provider": ""
+          },
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.DNSConfigurationType"
+        },
         "region": {
           "description": "region holds the default AWS region for new AWS resources created by the cluster.",
           "type": "string",
@@ -5711,6 +5718,23 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1.DNSStatus"
         }
       }
+    },
+    "com.github.openshift.api.config.v1.DNSConfigurationType": {
+      "description": "DNSConfigurationType contains information about who configures DNS for the cluster.",
+      "type": "object",
+      "properties": {
+        "provider": {
+          "description": "provider determines which DNS solution is in use for this cluster. When the user wants to use their own DNS solution, the `provider` is set to \"UserAndClusterProvided\". When the cluster's DNS solution is the default for IPI or UPI, then `provider` is set to \"\" which is also its default value.",
+          "type": "string",
+          "default": ""
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "provider",
+          "fields-to-discriminateBy": {}
+        }
+      ]
     },
     "com.github.openshift.api.config.v1.DNSList": {
       "description": "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",

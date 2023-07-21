@@ -174,7 +174,6 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		with(pdbUnhealthyPodEvictionPolicy).
 		with(dynamicResourceAllocation).
 		with(admissionWebhookMatchConditions).
-		with(awsSecurityTokenService).
 		with(azureWorkloadIdentity).
 		with(gateGatewayAPI).
 		with(maxUnavailableStatefulSet).

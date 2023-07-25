@@ -13,6 +13,7 @@ import (
 //
 // Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=1
+// +kubebuilder:validation:XValidation:rule="has(self.spec.capabilities) && has(self.spec.capabilities.additionalEnabledCapabilities) && self.spec.capabilities.baselineCapabilitySet == 'None' && 'baremetal' in self.spec.capabilities.additionalEnabledCapabilities ? 'MachineAPI' in self.spec.capabilities.additionalEnabledCapabilities || (has(self.status) && has(self.status.capabilities) && has(self.status.capabilities.enabledCapabilities) && 'MachineAPI' in self.status.capabilities.enabledCapabilities) : true",message="the `baremetal` capability requires the `MachineAPI` capability, which is neither explicitly or implicitly enabled in this cluster, please enable the `MachineAPI` capability"
 type ClusterVersion struct {
 	metav1.TypeMeta `json:",inline"`
 

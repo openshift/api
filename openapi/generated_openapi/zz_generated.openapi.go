@@ -42752,6 +42752,14 @@ func schema_openshift_api_operator_v1_EtcdSpec(ref common.ReferenceCallback) com
 							Format:      "int32",
 						},
 					},
+					"controlPlaneHardwareSpeed": {
+						SchemaProps: spec.SchemaProps{
+							Description: "HardwareSpeed allows user to change the etcd tuning profile which configures the latency parameters for heartbeat interval and leader election timeouts allowing the cluster to tolerate longer round-trip-times between etcd members. Valid values are \"\", \"Standard\" and \"Slower\".\n\t\"\" means no opinion and the platform is left to choose a reasonable default\n\twhich is subject to change without notice.\n\nPossible enum values:\n - `\"Slower\"` provides more tolerance for slower hardware and/or higher latency networks. Sets (values subject to change): ETCD_HEARTBEAT_INTERVAL: 5x Standard ETCD_LEADER_ELECTION_TIMEOUT: 2.5x Standard\n - `\"Standard\"` provides the normal tolerances for hardware speed and latency. Currently sets (values subject to change at any time): ETCD_HEARTBEAT_INTERVAL: 100ms ETCD_LEADER_ELECTION_TIMEOUT: 1000ms",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"Slower", "Standard"}},
+					},
 				},
 				Required: []string{"managementState", "forceRedeploymentReason"},
 			},
@@ -42847,8 +42855,16 @@ func schema_openshift_api_operator_v1_EtcdStatus(ref common.ReferenceCallback) c
 							},
 						},
 					},
+					"controlPlaneHardwareSpeed": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Possible enum values:\n - `\"Slower\"` provides more tolerance for slower hardware and/or higher latency networks. Sets (values subject to change): ETCD_HEARTBEAT_INTERVAL: 5x Standard ETCD_LEADER_ELECTION_TIMEOUT: 2.5x Standard\n - `\"Standard\"` provides the normal tolerances for hardware speed and latency. Currently sets (values subject to change at any time): ETCD_HEARTBEAT_INTERVAL: 100ms ETCD_LEADER_ELECTION_TIMEOUT: 1000ms",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"Slower", "Standard"}},
+					},
 				},
-				Required: []string{"readyReplicas"},
+				Required: []string{"readyReplicas", "controlPlaneHardwareSpeed"},
 			},
 		},
 		Dependencies: []string{

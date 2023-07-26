@@ -313,7 +313,7 @@ var (
 	}
 
 	FeatureGateDNSNameResolver = FeatureGateName("DNSNameResolver")
-	DNSNameResolver            = FeatureGateDescription{
+	dnsNameResolver            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
 			Name: FeatureGateDNSNameResolver,
 		},

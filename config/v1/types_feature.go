@@ -198,7 +198,6 @@ var defaultFeatures = &FeatureGateEnabledDisabled{
 		externalCloudProviderAzure,
 		externalCloudProviderExternal,
 		privateHostedZoneAWS,
-		awsSecurityTokenService,
 	},
 	Disabled: []FeatureGateDescription{
 		retroactiveDefaultStorageClass,

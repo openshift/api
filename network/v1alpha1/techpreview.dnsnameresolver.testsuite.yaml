@@ -32,3 +32,20 @@ tests:
       spec:
         name: www.example.com
     expectedError: "DNSNameResolver.network.openshift.io \"example\" is invalid: spec.name: Invalid value: \"www.example.com\": spec.name in body should match '^(\\*\\.)?([A-Za-z0-9-]+\\.)*[A-Za-z0-9-]+\\.$'"
+  onUpdate:
+  - name: Should not update spec.name field
+    initial: |
+      apiVersion: network.openshift.io/v1alpha1
+      kind: DNSNameResolver
+      metadata:
+        name: example
+      spec:
+        name: www.example.com.
+    updated: |
+      apiVersion: network.openshift.io/v1alpha1
+      kind: DNSNameResolver
+      metadata:
+        name: example
+      spec:
+        name: www.newexample.com.
+    expectedError: "DNSNameResolver.network.openshift.io \"example\" is invalid: spec.name: Invalid value: \"string\": spec.name is immutable"

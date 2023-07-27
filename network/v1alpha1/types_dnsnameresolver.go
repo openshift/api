@@ -39,6 +39,7 @@ type DNSNameResolverSpec struct {
 	// will match 'sub1.example.com.' but won't match 'sub2.sub1.example.com.'
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=^(\*\.)?([A-Za-z0-9-]+\.)*[A-Za-z0-9-]+\.$
+	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="spec.name is immutable"
 	Name string `json:"name"`
 }
 

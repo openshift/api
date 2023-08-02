@@ -42,6 +42,7 @@ spec:
                 name:
                   description: name is the DNS name for which the DNS name resolution information will be stored. For a regular DNS name, only the DNS name resolution information of the regular DNS name will be stored. For a wildcard DNS name, the DNS name resolution information of all the DNS names, that matches the wildcard DNS name, will be stored. For a wildcard DNS name, the '*' will match only one label. Additionally, only a single '*' can be used at the beginning of the wildcard DNS name. For example, '*.example.com.' will match 'sub1.example.com.' but won't match 'sub2.sub1.example.com.'
                   type: string
+                  maxLength: 254
                   pattern: ^(\*\.)?([A-Za-z0-9-]+\.)*[A-Za-z0-9-]+\.$
                   x-kubernetes-validations:
                     - rule: self == oldSelf
@@ -58,12 +59,10 @@ spec:
                     type: object
                     required:
                       - dnsName
-                      - ips
-                      - lastLookupTime
-                      - ttlSeconds
+                      - info
                     properties:
                       conditions:
-                        description: "conditions provide information about the state of the DNS name. \n These are the supported conditions: \n * Degraded - True if the following conditions are met: * The last DNS name resolution failed. - False if any of those conditions are unsatisfied."
+                        description: 'conditions provide information about the state of the DNS name. Known .status.conditions.type is: "Degraded"'
                         type: array
                         items:
                           description: "Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, \n type FooStatus struct{ // Represents the observations of a foo's current state. // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\" // +patchMergeKey=type // +patchStrategy=merge // +listType=map // +listMapKey=type Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"` \n // other fields }"
@@ -112,24 +111,36 @@ spec:
                       dnsName:
                         description: dnsName is the resolved DNS name matching the name field of DNSNameResolverSpec.
                         type: string
+                        maxLength: 254
                         pattern: ^(\*\.)?([A-Za-z0-9-]+\.)*[A-Za-z0-9-]+\.$
-                      ips:
-                        description: ips contains the list of IP addresses associated with the dnsName.
+                      info:
+                        description: info gives the list of associated IP addresses and the corresponding TTL and last lookup time for the dnsName.
                         type: array
                         items:
-                          type: string
-                        x-kubernetes-list-type: set
-                      lastLookupTime:
-                        description: lastLookupTime is the timestamp when the last DNS lookup was completed.
-                        type: string
-                        format: date-time
+                          type: object
+                          required:
+                            - ip
+                            - lastLookupTime
+                            - ttlSeconds
+                          properties:
+                            ip:
+                              description: ip is an IP address associated with the dnsName. The validity of the IP address expires after lastLookupTime + ttlSeconds. To refresh the information a DNS lookup will be performed on the expiration of the IP address's validity. If the information is not refreshed then it will be removed after a grace period of 1 second after the expiration of the IP address's validity.
+                              type: string
+                              pattern: ^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\/([0-9]|[1-2][0-9]|3[0-2])$|^s*((([0-9A-Fa-f]{1,4}:){7}(:|([0-9A-Fa-f]{1,4})))|(([0-9A-Fa-f]{1,4}:){6}:([0-9A-Fa-f]{1,4})?)|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){0,1}):([0-9A-Fa-f]{1,4})?))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){0,2}):([0-9A-Fa-f]{1,4})?))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){0,3}):([0-9A-Fa-f]{1,4})?))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){0,4}):([0-9A-Fa-f]{1,4})?))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){0,5}):([0-9A-Fa-f]{1,4})?))|(:(:|((:[0-9A-Fa-f]{1,4}){1,7}))))(%.+)?s*/([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8])$
+                            lastLookupTime:
+                              description: lastLookupTime is the timestamp when the last DNS lookup was completed.
+                              type: string
+                              format: date-time
+                            ttlSeconds:
+                              description: ttlSeconds is the minimum time-to-live value among all the IP addresses.
+                              type: integer
+                              format: int32
+                        x-kubernetes-list-map-keys:
+                          - ip
+                        x-kubernetes-list-type: map
                       resolutionFailures:
-                        description: resolutionFailures keeps the count of how many times the DNS resolution failed for the dnsName field. If the DNS resolution succeeds then the field will be set to zero. Upon every failure, the value of the field will be incremented by one. Upon reaching a threshold value, the details about the DNS name will be removed.
+                        description: resolutionFailures keeps the count of how many consecutive times the DNS resolution failed for the dnsName. If the DNS resolution succeeds then the field will be set to zero. Upon every failure, the value of the field will be incremented by one. Upon reaching the value of 5, the details about the DNS name will be removed.
                         type: integer
-                      ttlSeconds:
-                        description: ttlSeconds is the minimum time-to-live value among all the IP addresses.
-                        type: integer
-                        format: int32
                   x-kubernetes-list-map-keys:
                     - dnsName
                   x-kubernetes-list-type: map

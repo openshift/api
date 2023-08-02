@@ -742,6 +742,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/network/v1.NetNamespace":                                            schema_openshift_api_network_v1_NetNamespace(ref),
 		"github.com/openshift/api/network/v1.NetNamespaceList":                                        schema_openshift_api_network_v1_NetNamespaceList(ref),
 		"github.com/openshift/api/network/v1alpha1.DNSNameResolver":                                   schema_openshift_api_network_v1alpha1_DNSNameResolver(ref),
+		"github.com/openshift/api/network/v1alpha1.DNSNameResolverInfo":                               schema_openshift_api_network_v1alpha1_DNSNameResolverInfo(ref),
 		"github.com/openshift/api/network/v1alpha1.DNSNameResolverList":                               schema_openshift_api_network_v1alpha1_DNSNameResolverList(ref),
 		"github.com/openshift/api/network/v1alpha1.DNSNameResolverSpec":                               schema_openshift_api_network_v1alpha1_DNSNameResolverSpec(ref),
 		"github.com/openshift/api/network/v1alpha1.DNSNameResolverStatus":                             schema_openshift_api_network_v1alpha1_DNSNameResolverStatus(ref),
@@ -37499,6 +37500,43 @@ func schema_openshift_api_network_v1alpha1_DNSNameResolver(ref common.ReferenceC
 	}
 }
 
+func schema_openshift_api_network_v1alpha1_DNSNameResolverInfo(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"ip": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ip is an IP address associated with the dnsName. The validity of the IP address expires after lastLookupTime + ttlSeconds. To refresh the information a DNS lookup will be performed on the expiration of the IP address's validity. If the information is not refreshed then it will be removed after a grace period of 1 second after the expiration of the IP address's validity.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"ttlSeconds": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ttlSeconds is the minimum time-to-live value among all the IP addresses.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"lastLookupTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "lastLookupTime is the timestamp when the last DNS lookup was completed.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+				},
+				Required: []string{"ip", "ttlSeconds", "lastLookupTime"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
 func schema_openshift_api_network_v1alpha1_DNSNameResolverList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -37617,55 +37655,6 @@ func schema_openshift_api_network_v1alpha1_DNSNameResolverStatusItem(ref common.
 				Description: "DNSNameResolverStatusItem describes the details of a resolved DNS name.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"dnsName": {
-						SchemaProps: spec.SchemaProps{
-							Description: "dnsName is the resolved DNS name matching the name field of DNSNameResolverSpec.",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"ips": {
-						VendorExtensible: spec.VendorExtensible{
-							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "set",
-							},
-						},
-						SchemaProps: spec.SchemaProps{
-							Description: "ips contains the list of IP addresses associated with the dnsName.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
-					"ttlSeconds": {
-						SchemaProps: spec.SchemaProps{
-							Description: "ttlSeconds is the minimum time-to-live value among all the IP addresses.",
-							Default:     0,
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"lastLookupTime": {
-						SchemaProps: spec.SchemaProps{
-							Description: "lastLookupTime is the timestamp when the last DNS lookup was completed.",
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
-						},
-					},
-					"resolutionFailures": {
-						SchemaProps: spec.SchemaProps{
-							Description: "resolutionFailures keeps the count of how many times the DNS resolution failed for the dnsName field. If the DNS resolution succeeds then the field will be set to zero. Upon every failure, the value of the field will be incremented by one. Upon reaching a threshold value, the details about the DNS name will be removed.",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
 					"conditions": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
@@ -37676,7 +37665,7 @@ func schema_openshift_api_network_v1alpha1_DNSNameResolverStatusItem(ref common.
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "conditions provide information about the state of the DNS name.\n\nThese are the supported conditions:\n\n  * Degraded\n  - True if the following conditions are met:\n    * The last DNS name resolution failed.\n  - False if any of those conditions are unsatisfied.",
+							Description: "conditions provide information about the state of the DNS name. Known .status.conditions.type is: \"Degraded\"",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -37688,12 +37677,49 @@ func schema_openshift_api_network_v1alpha1_DNSNameResolverStatusItem(ref common.
 							},
 						},
 					},
+					"dnsName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "dnsName is the resolved DNS name matching the name field of DNSNameResolverSpec.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"info": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"ip",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "info gives the list of associated IP addresses and the corresponding TTL and last lookup time for the dnsName.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/network/v1alpha1.DNSNameResolverInfo"),
+									},
+								},
+							},
+						},
+					},
+					"resolutionFailures": {
+						SchemaProps: spec.SchemaProps{
+							Description: "resolutionFailures keeps the count of how many consecutive times the DNS resolution failed for the dnsName. If the DNS resolution succeeds then the field will be set to zero. Upon every failure, the value of the field will be incremented by one. Upon reaching the value of 5, the details about the DNS name will be removed.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 				},
-				Required: []string{"dnsName", "ips", "ttlSeconds", "lastLookupTime"},
+				Required: []string{"dnsName", "info"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+			"github.com/openshift/api/network/v1alpha1.DNSNameResolverInfo", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 

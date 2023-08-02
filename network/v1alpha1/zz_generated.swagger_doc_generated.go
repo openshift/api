@@ -22,6 +22,16 @@ func (DNSNameResolver) SwaggerDoc() map[string]string {
 	return map_DNSNameResolver
 }
 
+var map_DNSNameResolverInfo = map[string]string{
+	"ip":             "ip is an IP address associated with the dnsName. The validity of the IP address expires after lastLookupTime + ttlSeconds. To refresh the information a DNS lookup will be performed on the expiration of the IP address's validity. If the information is not refreshed then it will be removed after a grace period of 1 second after the expiration of the IP address's validity.",
+	"ttlSeconds":     "ttlSeconds is the minimum time-to-live value among all the IP addresses.",
+	"lastLookupTime": "lastLookupTime is the timestamp when the last DNS lookup was completed.",
+}
+
+func (DNSNameResolverInfo) SwaggerDoc() map[string]string {
+	return map_DNSNameResolverInfo
+}
+
 var map_DNSNameResolverList = map[string]string{
 	"":         "DNSNameResolverList contains a list of DNSNameResolvers.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 	"metadata": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
@@ -51,12 +61,10 @@ func (DNSNameResolverStatus) SwaggerDoc() map[string]string {
 
 var map_DNSNameResolverStatusItem = map[string]string{
 	"":                   "DNSNameResolverStatusItem describes the details of a resolved DNS name.",
+	"conditions":         "conditions provide information about the state of the DNS name. Known .status.conditions.type is: \"Degraded\"",
 	"dnsName":            "dnsName is the resolved DNS name matching the name field of DNSNameResolverSpec.",
-	"ips":                "ips contains the list of IP addresses associated with the dnsName.",
-	"ttlSeconds":         "ttlSeconds is the minimum time-to-live value among all the IP addresses.",
-	"lastLookupTime":     "lastLookupTime is the timestamp when the last DNS lookup was completed.",
-	"resolutionFailures": "resolutionFailures keeps the count of how many times the DNS resolution failed for the dnsName field. If the DNS resolution succeeds then the field will be set to zero. Upon every failure, the value of the field will be incremented by one. Upon reaching a threshold value, the details about the DNS name will be removed.",
-	"conditions":         "conditions provide information about the state of the DNS name.\n\nThese are the supported conditions:\n\n  * Degraded\n  - True if the following conditions are met:\n    * The last DNS name resolution failed.\n  - False if any of those conditions are unsatisfied.",
+	"info":               "info gives the list of associated IP addresses and the corresponding TTL and last lookup time for the dnsName.",
+	"resolutionFailures": "resolutionFailures keeps the count of how many consecutive times the DNS resolution failed for the dnsName. If the DNS resolution succeeds then the field will be set to zero. Upon every failure, the value of the field will be incremented by one. Upon reaching the value of 5, the details about the DNS name will be removed.",
 }
 
 func (DNSNameResolverStatusItem) SwaggerDoc() map[string]string {

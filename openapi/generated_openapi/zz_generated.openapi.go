@@ -237,6 +237,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.FeatureGateStatus":                                        schema_openshift_api_config_v1_FeatureGateStatus(ref),
 		"github.com/openshift/api/config/v1.GCPPlatformSpec":                                          schema_openshift_api_config_v1_GCPPlatformSpec(ref),
 		"github.com/openshift/api/config/v1.GCPPlatformStatus":                                        schema_openshift_api_config_v1_GCPPlatformStatus(ref),
+		"github.com/openshift/api/config/v1.GCPResourceLabel":                                         schema_openshift_api_config_v1_GCPResourceLabel(ref),
+		"github.com/openshift/api/config/v1.GCPResourceTag":                                           schema_openshift_api_config_v1_GCPResourceTag(ref),
 		"github.com/openshift/api/config/v1.GenericAPIServerConfig":                                   schema_openshift_api_config_v1_GenericAPIServerConfig(ref),
 		"github.com/openshift/api/config/v1.GenericControllerConfig":                                  schema_openshift_api_config_v1_GenericControllerConfig(ref),
 		"github.com/openshift/api/config/v1.GitHubIdentityProvider":                                   schema_openshift_api_config_v1_GitHubIdentityProvider(ref),
@@ -11935,8 +11937,122 @@ func schema_openshift_api_config_v1_GCPPlatformStatus(ref common.ReferenceCallba
 							Format:      "",
 						},
 					},
+					"resourceLabels": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"key",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "resourceLabels is a list of additional labels to apply to GCP resources created for the cluster. See https://cloud.google.com/compute/docs/labeling-resources for information on labeling GCP resources. GCP supports a maximum of 64 labels per resource. OpenShift reserves 32 labels for internal use, allowing 32 labels for user configuration.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.GCPResourceLabel"),
+									},
+								},
+							},
+						},
+					},
+					"resourceTags": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"key",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "resourceTags is a list of additional tags to apply to GCP resources created for the cluster. See https://cloud.google.com/resource-manager/docs/tags/tags-overview for information on tagging GCP resources. GCP supports a maximum of 50 tags per resource.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.GCPResourceTag"),
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"projectID", "region"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.GCPResourceLabel", "github.com/openshift/api/config/v1.GCPResourceTag"},
+	}
+}
+
+func schema_openshift_api_config_v1_GCPResourceLabel(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "GCPResourceLabel is a label to apply to GCP resources created for the cluster.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"key": {
+						SchemaProps: spec.SchemaProps{
+							Description: "key is the key part of the label. A label key can have a maximum of 63 characters and cannot be empty. Label key must begin with a lowercase letter, and must contain only lowercase letters, numeric characters, and the following special characters `_-`. Label key must not have the reserved prefixes `kubernetes-io` and `openshift-io`.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"value": {
+						SchemaProps: spec.SchemaProps{
+							Description: "value is the value part of the label. A label value can have a maximum of 63 characters and cannot be empty. Value must contain only lowercase letters, numeric characters, and the following special characters `_-`.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"key", "value"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1_GCPResourceTag(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "GCPResourceTag is a tag to apply to GCP resources created for the cluster.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"parentID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "parentID is the ID of the hierarchical resource where the tags are defined, e.g. at the Organization or the Project level. To find the Organization or Project ID refer to the following pages: https://cloud.google.com/resource-manager/docs/creating-managing-organization#retrieving_your_organization_id, https://cloud.google.com/resource-manager/docs/creating-managing-projects#identifying_projects. An OrganizationID must consist of decimal numbers, and cannot have leading zeroes. A ProjectID must be 6 to 30 characters in length, can only contain lowercase letters, numbers, and hyphens, and must start with a letter, and cannot end with a hyphen.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"key": {
+						SchemaProps: spec.SchemaProps{
+							Description: "key is the key part of the tag. A tag key can have a maximum of 63 characters and cannot be empty. Tag key must begin and end with an alphanumeric character, and must contain only uppercase, lowercase alphanumeric characters, and the following special characters `._-`.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"value": {
+						SchemaProps: spec.SchemaProps{
+							Description: "value is the value part of the tag. A tag value can have a maximum of 63 characters and cannot be empty. Tag value must begin and end with an alphanumeric character, and must contain only uppercase, lowercase alphanumeric characters, and the following special characters `_-.@%=+:,*#&(){}[]` and spaces.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"parentID", "key", "value"},
 			},
 		},
 	}

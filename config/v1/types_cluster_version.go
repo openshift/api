@@ -511,8 +511,8 @@ type ComponentOverride struct {
 type URL string
 
 // Update represents an administrator update request.
-// +kubebuilder:validation:XValidation:rule="has(self.architecture) && has(self.image) ? (self.architecture == '' || self.image == '') : true",message="cannot set both Architecture and Image"
-// +kubebuilder:validation:XValidation:rule="has(self.architecture) && self.architecture != '' ? self.version != '' : true",message="Version must be set if Architecture is set"
+// +kubebuilder:validation:XValidation:rule="has(self.architecture) && has(self.image) ? (self.architecture == ” || self.image == ”) : true",message="cannot set both Architecture and Image"
+// +kubebuilder:validation:XValidation:rule="has(self.architecture) && self.architecture != ” ? self.version != ” : true",message="Version must be set if Architecture is set"
 // +k8s:deepcopy-gen=true
 type Update struct {
 	// architecture is an optional field that indicates the desired
@@ -551,7 +551,81 @@ type Update struct {
 	//
 	// +optional
 	Force bool `json:"force"`
+
+	// schedule indicates when the update should be started. If this isn't
+	// explicitly set then the update will be started immediately after the
+	// required images have been downloaded.
+	//
+	// +optional
+	Schedule UpdateSchedule `json:"schedule,omitempty"`
+
+	// imageSource indicates what is the source for the images required for
+	// the update. If this isn't explicitly set then the images will be
+	// downloaded from their corresponding registry servers.
+	//
+	// +optional
+	ImageSource UpdateImageSource `json:"imageSource,omitempty"`
 }
+
+// UpdateSchedule describes when the update should be performed.
+type UpdateSchedule struct {
+	// scheduleType indicates the type of schedule.
+	//
+	// +optional
+	// +kubebuilder:default:=Immediate
+	ScheduleType UpdateScheduleType `json:"scheduleType,omitempty"`
+}
+
+// UpdateScheduleType enumerates update schedule types.
+//
+// +kubebuilder:validation:Enum=Immediate;Manual
+type UpdateScheduleType string
+
+const (
+	// Immediate indicates that the update should be started as soon as the
+	// required images have been downloaded.
+	UpdateScheduleTypeImmediate UpdateScheduleType = "Immediate"
+
+	// Manual indicates that the update will be started manually. The
+	// administrator will need to change the value of this field to
+	// Immediate in order to start the update.
+	UpdateScheduleTypeManual UpdateScheduleType = "Manual"
+)
+
+// UpdateImageSource indicates what is the source for the images required for
+// the update.
+type UpdateImageSource struct {
+	// type indicates the type of image source.
+	//
+	// +unionDiscriminator
+	// +kubebuilder:default:=Registry
+	SourceType UpdateImageSourceType `json:"sourceType,omitempty"`
+
+	// Registry describes how to get update images from their registries.
+	//
+	// +optional
+	Registry *RegistryUpdateImageSource `json:"registry,omitempty"`
+
+	// Bundle describes how to detect and use an update bundle.
+	//
+	// +optional
+	Bundle *BundleUpdateImageSource `json:"bundle,omitempty"`
+}
+
+// UpdateImageSource enumerates update image source types.
+//
+// +kubebuilder:validation:Enum=Registry,Bundle
+type UpdateImageSourceType string
+
+const (
+	// Registry indicates that the images required for the update will be
+	// downloaded from their corresponding image registries.
+	UpdateImagesSourceTypeRegistry UpdateImageSourceType = "Registry"
+
+	// Bundle indicates that the imagse required for the update should be
+	// taken from an update bundle.
+	UpdateImageSourceTypeBundle UpdateImageSourceType = "Bundle"
+)
 
 // Release represents an OpenShift release image and associated metadata.
 // +k8s:deepcopy-gen=true
@@ -579,6 +653,12 @@ type Release struct {
 	// currently belongs.
 	// +optional
 	Channels []string `json:"channels,omitempty"`
+
+	// bundle contains the details of the udpdate bundle that has been automatically
+	// detected or manually specified by the administrator.
+	//
+	// +optional
+	Bundle UpdateBundle `json:"bundle"`
 }
 
 // RetrievedUpdates reports whether available updates have been retrieved from
@@ -707,3 +787,153 @@ type ClusterVersionList struct {
 
 	Items []ClusterVersion `json:"items"`
 }
+
+// RegistryUpdateImageSource describes how to get update images from their registries.
+type RegistryUpdateImageSource struct {
+}
+
+// BundleUpdateImageSource describes how to get images from the update bundle.
+type BundleUpdateImageSource struct {
+	// DetectionMechanism indicates how the bundle will be detected.
+	//
+	// +optional
+	DetectionMechanism UpdateBundleDetectionMechanism `json:"detectionMechanism,omitempty"`
+
+	// The digest ensures that only the intended bundle is applied. Any
+	// mismatch in the digest is an error and prevents the bundle from being
+	// applied.
+	//
+	// +optional
+	// +kubebuilder:validation:Pattern:=sha256:[0-9a-z]{64}
+	Digest string `json:"digest,omitempty"`
+}
+
+// UpdateBundleDetectionMechanism describes how the update bundle will be detected.
+type UpdateBundleDetectionMechanism struct {
+	// type indicates the type of detection mechanism.
+	//
+	// +unionDiscrimiator
+	// +kubebuilder:validation:Required
+	MechanismType UpdateBundleDetectionMechanismType `json:"mechanismType,omitempty"`
+
+	// Manual contains the details of the location of the update bundle.
+	//
+	// +optional
+	Manual *ManualUpdateBundleDetectionMechanism `json:"manual,omitempty"`
+
+	// Automatic describes how to monitor media devices to detect the update bundle.
+	//
+	// +optional
+	Automatic *AutomaticUpdateBundleDetectionMechanism `json:"automatic,omitempty"`
+}
+
+// UpdateBundleDetectionMechanismType enumerates the mechanisms that can be used
+// to detect the update bundle.
+//
+// +kubebuilder:validation:Enum:=Manual,Automatic
+type UpdateBundleDetectionMechanismType string
+
+const (
+	// Manual indicates that the location of the update bundle will be
+	// explicitly specified by the administrator.
+	UpdateBundleDetectionMechanismManual UpdateBundleDetectionMechanismType = "Manual"
+
+	// Automatic indicates  that the cluster will monitor media devices and
+	// will automatically detect those that contain an update bundle.
+	UpdateBundleDetectionMechanismAutomatic UpdateBundleDetectionMechanismType = "Automatic"
+)
+
+// ManualUpdateBundleDetectionMechanism contains the details of the the location
+// of the update bundle.
+type ManualUpdateBundleDetectionMechanism struct {
+	// file indicates the location of the update. It can be an absolute file
+	// path name or an abosolute block device name.
+	//
+	// +optional
+	File string `json:"file"`
+
+	// node contains the name of the node where the update bundle is available. This is
+	// optional, and by default the cluster will look for the bundle in all the nodes.
+	//
+	// +optional
+	Node string `json:"node"`
+}
+
+// AutomaticUpdateBundleDetectionMechanism describes how to monitor media
+// devices to detect the update bundle.
+type AutomaticUpdateBundleDetectionMechanism struct {
+}
+
+// UpdateBundle contains the details of an update bundle automatically detected by the cluster
+// or manually specified by the admnistrator.
+type UpdateBundle struct {
+	// file indicates the location of the bundle. It will be automatically
+	// populated by the cluster when automatic detection is enabled and a
+	// bundle has been detected. If automatic detection is disabled then it
+	// will be copied from the location manually specified by the
+	// administrator.
+	//
+	// +optional
+	File string `json:"file"`
+
+	// nodes contains the current status of the bundle processing in each
+	// node of the cluster. Keys are the names of the nodes.
+	//
+	// +optional
+	Nodes map[string]NodeBundleStatus
+}
+
+// NodeBundleStatus contains the status of the update bundle processing for a
+// node of the cluster, and the resulting metadata.
+type NodeBundleStatus struct {
+	// Conditions contains information about the state of the processing of
+	// the bundle inside the node.
+	//
+	// +optional
+	Conditions []NodeBundleCondition
+
+	// metadata is the content of the metadata.json file that is part of the bundle.
+	//
+	// +optional
+	Metadata string `json:"metadata"`
+}
+
+// NodeBundleCondition represents the state of the bundle processing for a node.
+type NodeBundleCondition struct {
+	// type specifies the aspect reported by this condition.
+	// +kubebuilder:validation:Required
+	// +required
+	Type UpdateBundleConditionType `json:"type"`
+
+	// status of the condition, one of True, False, Unknown.
+	// +kubebuilder:validation:Required
+	// +required
+	Status ConditionStatus `json:"status"`
+
+	// lastTransitionTime is the time of the last update to the current status property.
+	// +kubebuilder:validation:Required
+	// +required
+	LastTransitionTime metav1.Time `json:"lastTransitionTime"`
+
+	// reason is the CamelCase reason for the condition's current status.
+	// +optional
+	Reason string `json:"reason,omitempty"`
+
+	// message provides additional information about the current condition.
+	// This is only to be consumed by humans. It may contain Line Feed
+	// characters (U+000A), which should be rendered as new lines.
+	// +optional
+	Message string `json:"message,omitempty"`
+}
+
+// UpdateBundleConditionType is an aspect of update bundle processing.
+type UpdateBundleConditionType string
+
+const (
+	// Extracted indicates if the bundle has been extracted to a temporary directory.
+	UpdateBundleConditionTypeExtracted UpdateBundleConditionType = "Available"
+
+	// Extracted indicates if the images of the bundle have been copied to
+	// the containers storage directory.
+	UpdateBundleConditionTypeLoaded UpdateBundleConditionType = "Loaded"
+)

@@ -31235,12 +31235,14 @@ func schema_openshift_api_machine_v1_RootVolume(ref common.ReferenceCallback) co
 					},
 					"volumeType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "volumeType specifies the type of the root volume that will be provisioned. If not specifified, the root volume will be created as the type in the machine template. The maximum length of a volume type name is 255 characters, as per the OpenStack limit.",
+							Description: "volumeType specifies the type of the root volume that will be provisioned. The maximum length of a volume type name is 255 characters, as per the OpenStack limit.",
+							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 				},
+				Required: []string{"volumeType"},
 			},
 		},
 	}

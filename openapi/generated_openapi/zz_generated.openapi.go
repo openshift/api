@@ -37516,7 +37516,7 @@ func schema_openshift_api_network_v1alpha1_DNSNameResolverInfo(ref common.Refere
 					},
 					"ttlSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ttlSeconds is the minimum time-to-live value among all the IP addresses.",
+							Description: "ttlSeconds is the time-to-live value of the IP address.",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
@@ -37679,13 +37679,13 @@ func schema_openshift_api_network_v1alpha1_DNSNameResolverStatusItem(ref common.
 					},
 					"dnsName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "dnsName is the resolved DNS name matching the name field of DNSNameResolverSpec.",
+							Description: "dnsName is the resolved DNS name matching the name field of DNSNameResolverSpec. This field can store both regular and wildcard DNS names which match the spec.name field. When the spec.name field contains a regular DNS name, this field will store the same regular DNS name after it is successfully resolved. When the spec.name field contains a wildcard DNS name, this field will store the regular DNS names which match the wildcard DNS name and have been successfully resolved. If the wildcard DNS name can also be successfully resolved, then this field will store the wildcard DNS name as well.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"info": {
+					"resolvedAddresses": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
 								"x-kubernetes-list-map-keys": []interface{}{
@@ -37695,7 +37695,7 @@ func schema_openshift_api_network_v1alpha1_DNSNameResolverStatusItem(ref common.
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "info gives the list of associated IP addresses and the corresponding TTL and last lookup time for the dnsName.",
+							Description: "resolvedAddresses gives the list of associated IP addresses and their corresponding TTLs and last lookup times for the dnsName.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -37715,7 +37715,7 @@ func schema_openshift_api_network_v1alpha1_DNSNameResolverStatusItem(ref common.
 						},
 					},
 				},
-				Required: []string{"dnsName", "info"},
+				Required: []string{"dnsName", "resolvedAddresses"},
 			},
 		},
 		Dependencies: []string{

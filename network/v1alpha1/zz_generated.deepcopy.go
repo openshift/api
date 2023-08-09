@@ -140,8 +140,8 @@ func (in *DNSNameResolverStatusItem) DeepCopyInto(out *DNSNameResolverStatusItem
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
-	if in.Info != nil {
-		in, out := &in.Info, &out.Info
+	if in.ResolvedAddresses != nil {
+		in, out := &in.ResolvedAddresses, &out.ResolvedAddresses
 		*out = make([]DNSNameResolverInfo, len(*in))
 		for i := range *in {
 			(*in)[i].DeepCopyInto(&(*out)[i])

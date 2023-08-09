@@ -24,7 +24,7 @@ func (DNSNameResolver) SwaggerDoc() map[string]string {
 
 var map_DNSNameResolverInfo = map[string]string{
 	"ip":             "ip is an IP address associated with the dnsName. The validity of the IP address expires after lastLookupTime + ttlSeconds. To refresh the information a DNS lookup will be performed on the expiration of the IP address's validity. If the information is not refreshed then it will be removed after a grace period of 1 second after the expiration of the IP address's validity.",
-	"ttlSeconds":     "ttlSeconds is the minimum time-to-live value among all the IP addresses.",
+	"ttlSeconds":     "ttlSeconds is the time-to-live value of the IP address.",
 	"lastLookupTime": "lastLookupTime is the timestamp when the last DNS lookup was completed.",
 }
 
@@ -62,8 +62,8 @@ func (DNSNameResolverStatus) SwaggerDoc() map[string]string {
 var map_DNSNameResolverStatusItem = map[string]string{
 	"":                   "DNSNameResolverStatusItem describes the details of a resolved DNS name.",
 	"conditions":         "conditions provide information about the state of the DNS name. Known .status.conditions.type is: \"Degraded\"",
-	"dnsName":            "dnsName is the resolved DNS name matching the name field of DNSNameResolverSpec.",
-	"info":               "info gives the list of associated IP addresses and the corresponding TTL and last lookup time for the dnsName.",
+	"dnsName":            "dnsName is the resolved DNS name matching the name field of DNSNameResolverSpec. This field can store both regular and wildcard DNS names which match the spec.name field. When the spec.name field contains a regular DNS name, this field will store the same regular DNS name after it is successfully resolved. When the spec.name field contains a wildcard DNS name, this field will store the regular DNS names which match the wildcard DNS name and have been successfully resolved. If the wildcard DNS name can also be successfully resolved, then this field will store the wildcard DNS name as well.",
+	"resolvedAddresses":  "resolvedAddresses gives the list of associated IP addresses and their corresponding TTLs and last lookup times for the dnsName.",
 	"resolutionFailures": "resolutionFailures keeps the count of how many consecutive times the DNS resolution failed for the dnsName. If the DNS resolution succeeds then the field will be set to zero. Upon every failure, the value of the field will be incremented by one. Upon reaching the value of 5, the details about the DNS name will be removed.",
 }
 

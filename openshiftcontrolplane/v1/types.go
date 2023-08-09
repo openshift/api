@@ -192,6 +192,10 @@ type JenkinsPipelineConfig struct {
 	Parameters map[string]string `json:"parameters"`
 }
 
+// OpenShiftControllerName defines a string type used to represent the various
+// OpenShift controllers within openshift-controller-manager. These constants serve as identifiers
+// for the controllers and are used on both openshift/openshift-controller-manager 
+// and openshift/cluster-openshift-controller-manager-operator repositories.
 type OpenShiftControllerName string
 
 const (

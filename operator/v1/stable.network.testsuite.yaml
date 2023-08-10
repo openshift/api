@@ -15,3 +15,182 @@ tests:
         disableNetworkDiagnostics: false
         logLevel: Normal
         operatorLogLevel: Normal
+  - name: Should be able to pass a valid IPV4 CIDR to v4InternalMasqueradeSubnet
+    initial: | 
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+       defaultNetwork:
+          ovnKubernetesConfig:
+            gatewayConfig:
+              ipv4:
+                v4InternalMasqueradeSubnet: "169.254.168.0/29"
+    expected: | 
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig:
+            gatewayConfig:
+              routingViaHost: false
+              ipv4:
+                v4InternalMasqueradeSubnet: "169.254.168.0/29"
+        disableNetworkDiagnostics: false
+        logLevel: Normal
+        operatorLogLevel: Normal
+  - name: Should not be able to pass CIDR with a subnet larger than /29 to v4InternalMasqueradeSubnet
+    initial: | 
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig:
+            gatewayConfig:
+              ipv4:
+                v4InternalMasqueradeSubnet: 10.10.10.10/32
+    expectedError: "Invalid value: \"string\": subnet must be in the range /0 to /29 inclusive"
+  - name: Should not be able to pass CIDR with a subnet smaller than /0 to v4InternalMasqueradeSubnet
+    initial: | 
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig:
+            gatewayConfig:
+              ipv4:
+                v4InternalMasqueradeSubnet: 10.10.10.10/-1
+    expectedError: "Invalid value: \"string\": subnet must be in the range /0 to /29 inclusive"
+  - name: Should not be able to add an IP address with the incorrect number of octets to v4InternalMasqueradeSubnet
+    initial: | 
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig:
+            gatewayConfig:
+              ipv4:
+                v4InternalMasqueradeSubnet: 10.10.10/24
+    expectedError: "Invalid value: \"string\": a valid IPv4 address must contain 4 octets"
+  - name: Should not be able to add an IP address with leading zeros in an octet to v4InternalMasqueradeSubnet
+    initial: | 
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig:
+            gatewayConfig:
+              ipv4:
+                v4InternalMasqueradeSubnet: 10.10.010.10/24
+    expectedError: "Invalid value: \"string\": IP address octets must not contain leading zeros, and must be less or equal to 255"
+  - name: Should not be able to add an IP address with with zero for the first octet to v4InternalMasqueradeSubnet
+    initial: | 
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig:
+            gatewayConfig:
+              ipv4:
+                v4InternalMasqueradeSubnet: 0.10.10.10/24
+    expectedError: "Invalid value: \"string\": first IP address octet must not contain leading zeros, must be greater than 0 and less or equal to 255"
+  - name: Should not be able to add an IP address with an octet greater than 255 to v4InternalMasqueradeSubnet
+    initial: | 
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig:
+            gatewayConfig:
+              ipv4:
+                v4InternalMasqueradeSubnet: 10.10.10.256/24
+    expectedError: "Invalid value: \"string\": IP address octets must not contain leading zeros, and must be less or equal to 255"
+  - name: Should be able to pass a valid IPV6 CIDR to v6InternalMasqueradeSubnet
+    initial: | 
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+       defaultNetwork:
+          ovnKubernetesConfig:
+            gatewayConfig:
+              ipv6:
+                v6InternalMasqueradeSubnet: "abcd:ef01:2345:6789:abcd:ef01:2345:6789/125"
+    expected: | 
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig:
+            gatewayConfig:
+              ipv6:
+                v6InternalMasqueradeSubnet: "abcd:ef01:2345:6789:abcd:ef01:2345:6789/125"
+              routingViaHost: false
+        disableNetworkDiagnostics: false
+        logLevel: Normal
+        operatorLogLevel: Normal
+  - name: Should be able to pass a valid shorthand IPV6 CIDR to v6InternalMasqueradeSubnet
+    initial: | 
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+       defaultNetwork:
+          ovnKubernetesConfig:
+            gatewayConfig:
+              ipv6:
+                v6InternalMasqueradeSubnet: "abcd:ef01::2345:6789/20"
+    expected: | 
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig:
+            gatewayConfig:
+              routingViaHost: false
+              ipv6:
+                v6InternalMasqueradeSubnet: "abcd:ef01::2345:6789/20"
+        disableNetworkDiagnostics: false
+        logLevel: Normal
+        operatorLogLevel: Normal
+  - name: Should not be able to pass invalid IPV6 CIDR to v6InternalMasqueradeSubnet
+    initial: | 
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig:
+            gatewayConfig:
+              ipv6:
+                v6InternalMasqueradeSubnet: "foo"
+    expectedError:  "Invalid value: \"string\": subnet must be in the range /0 to /125 inclusive"
+  - name: Should not be able to add an IP address with the incorrect number of octets to v6InternalMasqueradeSubnet
+    initial: | 
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig:
+            gatewayConfig:
+              ipv6:
+                v6InternalMasqueradeSubnet: abcd:ef01:2345:6789:abcd:ef01:2345:6789:abcd/125
+    expectedError: "Invalid value: \"string\": a valid IPv6 address must contain at most 8 segments, or at most 6 segments for a dual address"
+  - name: Should not be able to add a dual IP address with the incorrect number of octets to v6InternalMasqueradeSubnet
+    initial: | 
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig:
+            gatewayConfig:
+              ipv6:
+                v6InternalMasqueradeSubnet: abcd:ef01:2345:6789:abcd:ef01:2345:1.2.3.4/125
+    expectedError: "Invalid value: \"string\": a valid IPv6 address must contain at most 8 segments, or at most 6 segments for a dual address"
+  - name: Should be able to pass a double shorthand IPV6 CIDR to v6InternalMasqueradeSubnet
+    initial: | 
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+       defaultNetwork:
+          ovnKubernetesConfig:
+            gatewayConfig:
+              ipv6:
+                v6InternalMasqueradeSubnet: "abcd::ef01::2345:6789/20"
+    expectedError: "Invalid value: \"string\": IPv6 addresses must contain at most one '::' and may only be shortened once"

@@ -27,55 +27,55 @@ const KubeletConfigRoleLabelPrefix = "pools.operator.machineconfiguration.opensh
 // +openshift:compatibility-gen:level=1
 type ControllerConfig struct {
 	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	// TODO(jkyros): inconsistent historical generation resulted in the controllerconfig CRD being
 	// generated with all fields required, while everything else was generated with optional
 
 	// +kubebuilder:validation:Required
-	Spec ControllerConfigSpec `json:"spec" protobuf:"bytes,2,opt,name=spec"`
+	Spec ControllerConfigSpec `json:"spec"`
 	// +optional
-	Status ControllerConfigStatus `json:"status" protobuf:"bytes,3,opt,name=status"`
+	Status ControllerConfigStatus `json:"status"`
 }
 
 // ControllerConfigSpec is the spec for ControllerConfig resource.
 type ControllerConfigSpec struct {
 	// clusterDNSIP is the cluster DNS IP address
 	// +kubebuilder:validation:Required
-	ClusterDNSIP string `json:"clusterDNSIP" protobuf:"bytes,1,opt,name=clusterDNSIP"`
+	ClusterDNSIP string `json:"clusterDNSIP"`
 
 	// cloudProviderConfig is the configuration for the given cloud provider
 	// +kubebuilder:validation:Required
-	CloudProviderConfig string `json:"cloudProviderConfig" protobuf:"bytes,2,opt,name=cloudProviderConfig"`
+	CloudProviderConfig string `json:"cloudProviderConfig"`
 
 	// platform is deprecated, use Infra.Status.PlatformStatus.Type instead
 	// +optional
-	Platform string `json:"platform,omitempty" protobuf:"bytes,3,opt,name=platform"`
+	Platform string `json:"platform,omitempty"`
 
 	// etcdDiscoveryDomain is deprecated, use Infra.Status.EtcdDiscoveryDomain instead
 	// +optional
-	EtcdDiscoveryDomain string `json:"etcdDiscoveryDomain,omitempty" protobuf:"bytes,4,opt,name=etcdDiscoveryDomain"`
+	EtcdDiscoveryDomain string `json:"etcdDiscoveryDomain,omitempty"`
 
 	// TODO: Use string for CA data
 
 	// kubeAPIServerServingCAData managed Kubelet to API Server Cert... Rotated automatically
 	// +kubebuilder:validation:Required
-	KubeAPIServerServingCAData []byte `json:"kubeAPIServerServingCAData" protobuf:"bytes,5,opt,name=kubeAPIServerServingCAData"`
+	KubeAPIServerServingCAData []byte `json:"kubeAPIServerServingCAData"`
 
 	// rootCAData specifies the root CA data
 	// +kubebuilder:validation:Required
-	RootCAData []byte `json:"rootCAData" protobuf:"bytes,6,opt,name=rootCAData"`
+	RootCAData []byte `json:"rootCAData"`
 
 	// cloudProvider specifies the cloud provider CA data
 	// +kubebuilder:validation:Required
 	// +nullable
-	CloudProviderCAData []byte `json:"cloudProviderCAData" protobuf:"bytes,7,opt,name=cloudProviderCAData"`
+	CloudProviderCAData []byte `json:"cloudProviderCAData"`
 
 	// additionalTrustBundle is a certificate bundle that will be added to the nodes
 	// trusted certificate store.
 	// +kubebuilder:validation:Required
 	// +nullable
-	AdditionalTrustBundle []byte `json:"additionalTrustBundle" protobuf:"bytes,8,opt,name=additionalTrustBundle"`
+	AdditionalTrustBundle []byte `json:"additionalTrustBundle"`
 
 	// imageRegistryBundleUserData is Image Registry Data provided by the user
 	// +optional
@@ -90,7 +90,7 @@ type ControllerConfigSpec struct {
 	// pullSecret is the default pull secret that needs to be installed
 	// on all machines.
 	// +optional
-	PullSecret *corev1.ObjectReference `json:"pullSecret,omitempty" protobuf:"bytes,9,opt,name=pullSecret"`
+	PullSecret *corev1.ObjectReference `json:"pullSecret,omitempty"`
 
 	// internalRegistryPullSecret is the pull secret for the internal registry, used by
 	// rpm-ostree to pull images from the internal registry if present
@@ -100,44 +100,44 @@ type ControllerConfigSpec struct {
 
 	// images is map of images that are used by the controller to render templates under ./templates/
 	// +kubebuilder:validation:Required
-	Images map[string]string `json:"images" protobuf:"bytes,10,rep,name=images"`
+	Images map[string]string `json:"images"`
 
 	// BaseOSContainerImage is the new-format container image for operating system updates.
 	// +kubebuilder:validation:Required
-	BaseOSContainerImage string `json:"baseOSContainerImage" protobuf:"bytes,11,opt,name=baseOSContainerImage"`
+	BaseOSContainerImage string `json:"baseOSContainerImage"`
 
 	// BaseOSExtensionsContainerImage is the matching extensions container for the new-format container
 	// +optional
-	BaseOSExtensionsContainerImage string `json:"baseOSExtensionsContainerImage" protobuf:"bytes,12,opt,name=baseOSExtensionsContainerImage"`
+	BaseOSExtensionsContainerImage string `json:"baseOSExtensionsContainerImage"`
 
 	// OSImageURL is the old-format container image that contains the OS update payload.
 	// +optional
-	OSImageURL string `json:"osImageURL" protobuf:"bytes,13,opt,name=osImageURL"`
+	OSImageURL string `json:"osImageURL"`
 
 	// releaseImage is the image used when installing the cluster
 	// +kubebuilder:validation:Required
-	ReleaseImage string `json:"releaseImage" protobuf:"bytes,14,opt,name=releaseImage"`
+	ReleaseImage string `json:"releaseImage"`
 
 	// proxy holds the current proxy configuration for the nodes
 	// +kubebuilder:validation:Required
 	// +nullable
-	Proxy *configv1.ProxyStatus `json:"proxy" protobuf:"bytes,15,opt,name=proxy"`
+	Proxy *configv1.ProxyStatus `json:"proxy"`
 
 	// infra holds the infrastructure details
 	// +kubebuilder:validation:EmbeddedResource
 	// +kubebuilder:validation:Required
 	// +nullable
-	Infra *configv1.Infrastructure `json:"infra" protobuf:"bytes,16,opt,name=infra"`
+	Infra *configv1.Infrastructure `json:"infra"`
 
 	// dns holds the cluster dns details
 	// +kubebuilder:validation:EmbeddedResource
 	// +kubebuilder:validation:Required
 	// +nullable
-	DNS *configv1.DNS `json:"dns" protobuf:"bytes,17,opt,name=dns"`
+	DNS *configv1.DNS `json:"dns"`
 
 	// ipFamilies indicates the IP families in use by the cluster network
 	// +kubebuilder:validation:Required
-	IPFamilies IPFamiliesType `json:"ipFamilies" protobuf:"bytes,18,opt,name=ipFamilies,casttype=IPFamiliesType"`
+	IPFamilies IPFamiliesType `json:"ipFamilies"`
 
 	// networkType holds the type of network the cluster is using
 	// XXX: this is temporary and will be dropped as soon as possible in favor of a better support
@@ -145,12 +145,12 @@ type ControllerConfigSpec struct {
 	// Nobody is also changing this once the cluster is up and running the first time, so, disallow
 	// regeneration if this changes.
 	// +optional
-	NetworkType string `json:"networkType,omitempty" protobuf:"bytes,19,opt,name=networkType"`
+	NetworkType string `json:"networkType,omitempty"`
 
 	// Network contains additional network related information
 	// +kubebuilder:validation:Required
 	// +nullable
-	Network *NetworkInfo `json:"network" protobuf:"bytes,20,opt,name=network"`
+	Network *NetworkInfo `json:"network"`
 }
 
 // ImageRegistryBundle contains information for writing image registry certificates
@@ -178,18 +178,18 @@ type NetworkInfo struct {
 	// MTUMigration contains the MTU migration configuration.
 	// +kubebuilder:validation:Required
 	// +nullable
-	MTUMigration *configv1.MTUMigration `json:"mtuMigration" protobuf:"bytes,1,rep,name=mtuMigration"`
+	MTUMigration *configv1.MTUMigration `json:"mtuMigration"`
 }
 
 // ControllerConfigStatus is the status for ControllerConfig
 type ControllerConfigStatus struct {
 	// observedGeneration represents the generation observed by the controller.
 	// +optional
-	ObservedGeneration int64 `json:"observedGeneration,omitempty" protobuf:"varint,1,opt,name=observedGeneration"`
+	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 
 	// conditions represents the latest available observations of current state.
 	// +optional
-	Conditions []ControllerConfigStatusCondition `json:"conditions" protobuf:"bytes,2,rep,name=conditions"`
+	Conditions []ControllerConfigStatusCondition `json:"conditions"`
 	// controllerCertificates represents the latest available observations of the automatically rotating certificates in the MCO.
 	// +optional
 	ControllerCertificates []ControllerCertificate `json:"controllerCertificates"`
@@ -222,25 +222,25 @@ type ControllerCertificate struct {
 type ControllerConfigStatusCondition struct {
 	// type specifies the state of the operator's reconciliation functionality.
 	// +kubebuilder:validation:Required
-	Type ControllerConfigStatusConditionType `json:"type" protobuf:"bytes,1,opt,name=type,casttype=ControllerConfigStatusConditionType"`
+	Type ControllerConfigStatusConditionType `json:"type"`
 
 	// status of the condition, one of True, False, Unknown.
 	// +kubebuilder:validation:Required
-	Status corev1.ConditionStatus `json:"status" protobuf:"bytes,2,opt,name=status,casttype=k8s.io/api/core/v1.ConditionStatus"`
+	Status corev1.ConditionStatus `json:"status"`
 
 	// lastTransitionTime is the time of the last update to the current status object.
 	// +kubebuilder:validation:Required
 	// +nullable
-	LastTransitionTime metav1.Time `json:"lastTransitionTime" protobuf:"bytes,3,opt,name=lastTransitionTime"`
+	LastTransitionTime metav1.Time `json:"lastTransitionTime"`
 
 	// reason is the reason for the condition's last transition.  Reasons are PascalCase
 	// +optional
-	Reason string `json:"reason,omitempty" protobuf:"bytes,4,opt,name=reason"`
+	Reason string `json:"reason,omitempty"`
 
 	// message provides additional information about the current condition.
 	// This is only to be consumed by humans.
 	// +optional
-	Message string `json:"message,omitempty" protobuf:"bytes,5,opt,name=message"`
+	Message string `json:"message,omitempty"`
 }
 
 // ControllerConfigStatusConditionType valid conditions of a ControllerConfigStatus
@@ -265,9 +265,9 @@ const (
 // +openshift:compatibility-gen:level=1
 type ControllerConfigList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata" protobuf:"bytes,1,opt,name=metadata"`
+	metav1.ListMeta `json:"metadata"`
 
-	Items []ControllerConfig `json:"items" protobuf:"bytes,2,rep,name=items"`
+	Items []ControllerConfig `json:"items"`
 }
 
 // +genclient
@@ -281,9 +281,9 @@ type ControllerConfigList struct {
 // +openshift:compatibility-gen:level=1
 type MachineConfig struct {
 	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
 	// +optional
-	Spec MachineConfigSpec `json:"spec" protobuf:"bytes,2,opt,name=spec"`
+	Spec MachineConfigSpec `json:"spec"`
 }
 
 // MachineConfigSpec is the spec for MachineConfig
@@ -291,34 +291,34 @@ type MachineConfigSpec struct {
 	// OSImageURL specifies the remote location that will be used to
 	// fetch the OS.
 	// +optional
-	OSImageURL string `json:"osImageURL" protobuf:"bytes,1,opt,name=osImageURL"`
+	OSImageURL string `json:"osImageURL"`
 
 	// BaseOSExtensionsContainerImage specifies the remote location that will be used
 	// to fetch the extensions container matching a new-format OS image
 	// +optional
-	BaseOSExtensionsContainerImage string `json:"baseOSExtensionsContainerImage" protobuf:"bytes,7,opt,name=baseOSExtensionsContainerImage"`
+	BaseOSExtensionsContainerImage string `json:"baseOSExtensionsContainerImage"`
 
 	// Config is a Ignition Config object.
 	// +optional
-	Config runtime.RawExtension `json:"config" protobuf:"bytes,2,opt,name=config"`
+	Config runtime.RawExtension `json:"config"`
 
 	// kernelArguments contains a list of kernel arguments to be added
 	// +nullable
 	// +optional
-	KernelArguments []string `json:"kernelArguments" protobuf:"bytes,3,rep,name=kernelArguments"`
+	KernelArguments []string `json:"kernelArguments"`
 
 	// extensions contains a list of additional features that can be enabled on host
 	// +optional
-	Extensions []string `json:"extensions" protobuf:"bytes,4,rep,name=extensions"`
+	Extensions []string `json:"extensions"`
 
 	// fips controls FIPS mode
 	// +optional
-	FIPS bool `json:"fips" protobuf:"varint,5,opt,name=fips"`
+	FIPS bool `json:"fips"`
 
 	// kernelType contains which kernel we want to be running like default
 	// (traditional), realtime.
 	// +optional
-	KernelType string `json:"kernelType" protobuf:"bytes,6,opt,name=kernelType"`
+	KernelType string `json:"kernelType"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -329,9 +329,9 @@ type MachineConfigSpec struct {
 // +openshift:compatibility-gen:level=1
 type MachineConfigList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata" protobuf:"bytes,1,opt,name=metadata"`
+	metav1.ListMeta `json:"metadata"`
 
-	Items []MachineConfig `json:"items" protobuf:"bytes,2,rep,name=items"`
+	Items []MachineConfig `json:"items"`
 }
 
 // +genclient
@@ -344,12 +344,12 @@ type MachineConfigList struct {
 // +openshift:compatibility-gen:level=1
 type MachineConfigPool struct {
 	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	// +kubebuilder:validation:Required
-	Spec MachineConfigPoolSpec `json:"spec" protobuf:"bytes,2,opt,name=spec"`
+	Spec MachineConfigPoolSpec `json:"spec"`
 	// +optional
-	Status MachineConfigPoolStatus `json:"status" protobuf:"bytes,3,opt,name=status"`
+	Status MachineConfigPoolStatus `json:"status"`
 }
 
 // MachineConfigPoolSpec is the spec for MachineConfigPool resource.
@@ -357,16 +357,16 @@ type MachineConfigPoolSpec struct {
 	// machineConfigSelector specifies a label selector for MachineConfigs.
 	// Refer https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/ on how label and selectors work.
 	// +optional
-	MachineConfigSelector *metav1.LabelSelector `json:"machineConfigSelector,omitempty" protobuf:"bytes,1,opt,name=machineConfigSelector"`
+	MachineConfigSelector *metav1.LabelSelector `json:"machineConfigSelector,omitempty"`
 
 	// nodeSelector specifies a label selector for Machines
 	// +optional
-	NodeSelector *metav1.LabelSelector `json:"nodeSelector,omitempty" protobuf:"bytes,2,opt,name=nodeSelector"`
+	NodeSelector *metav1.LabelSelector `json:"nodeSelector,omitempty"`
 
 	// paused specifies whether or not changes to this machine config pool should be stopped.
 	// This includes generating new desiredMachineConfig and update of machines.
 	// +optional
-	Paused bool `json:"paused" protobuf:"varint,3,opt,name=paused"`
+	Paused bool `json:"paused"`
 
 	// maxUnavailable defines either an integer number or percentage
 	// of nodes in the pool that can go Unavailable during an update.
@@ -380,48 +380,48 @@ type MachineConfigPoolSpec struct {
 	// Pod Disruption Budgets (PDBs) such as etcd quorum guards, even if
 	// maxUnavailable is greater than one.
 	// +optional
-	MaxUnavailable *intstr.IntOrString `json:"maxUnavailable,omitempty" protobuf:"bytes,4,opt,name=maxUnavailable"`
+	MaxUnavailable *intstr.IntOrString `json:"maxUnavailable,omitempty"`
 
 	// The targeted MachineConfig object for the machine config pool.
 	// +optional
-	Configuration MachineConfigPoolStatusConfiguration `json:"configuration" protobuf:"bytes,5,opt,name=configuration"`
+	Configuration MachineConfigPoolStatusConfiguration `json:"configuration"`
 }
 
 // MachineConfigPoolStatus is the status for MachineConfigPool resource.
 type MachineConfigPoolStatus struct {
 	// observedGeneration represents the generation observed by the controller.
 	// +optional
-	ObservedGeneration int64 `json:"observedGeneration,omitempty" protobuf:"varint,1,opt,name=observedGeneration"`
+	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 
 	// configuration represents the current MachineConfig object for the machine config pool.
 	// +optional
-	Configuration MachineConfigPoolStatusConfiguration `json:"configuration" protobuf:"bytes,2,opt,name=configuration"`
+	Configuration MachineConfigPoolStatusConfiguration `json:"configuration"`
 
 	// machineCount represents the total number of machines in the machine config pool.
 	// +optional
-	MachineCount int32 `json:"machineCount" protobuf:"varint,3,opt,name=machineCount"`
+	MachineCount int32 `json:"machineCount"`
 
 	// updatedMachineCount represents the total number of machines targeted by the pool that have the CurrentMachineConfig as their config.
 	// +optional
-	UpdatedMachineCount int32 `json:"updatedMachineCount" protobuf:"varint,4,opt,name=updatedMachineCount"`
+	UpdatedMachineCount int32 `json:"updatedMachineCount"`
 
 	// readyMachineCount represents the total number of ready machines targeted by the pool.
 	// +optional
-	ReadyMachineCount int32 `json:"readyMachineCount" protobuf:"varint,5,opt,name=readyMachineCount"`
+	ReadyMachineCount int32 `json:"readyMachineCount"`
 
 	// unavailableMachineCount represents the total number of unavailable (non-ready) machines targeted by the pool.
 	// A node is marked unavailable if it is in updating state or NodeReady condition is false.
 	// +optional
-	UnavailableMachineCount int32 `json:"unavailableMachineCount" protobuf:"varint,6,opt,name=unavailableMachineCount"`
+	UnavailableMachineCount int32 `json:"unavailableMachineCount"`
 
 	// degradedMachineCount represents the total number of machines marked degraded (or unreconcilable).
 	// A node is marked degraded if applying a configuration failed..
 	// +optional
-	DegradedMachineCount int32 `json:"degradedMachineCount" protobuf:"varint,7,opt,name=degradedMachineCount"`
+	DegradedMachineCount int32 `json:"degradedMachineCount"`
 
 	// conditions represents the latest available observations of current state.
 	// +optional
-	Conditions []MachineConfigPoolCondition `json:"conditions" protobuf:"bytes,8,rep,name=conditions"`
+	Conditions []MachineConfigPoolCondition `json:"conditions"`
 
 	// certExpirys keeps track of important certificate expiration data
 	// +optional
@@ -444,38 +444,38 @@ type CertExpiry struct {
 // MachineConfigPoolStatusConfiguration stores the current configuration for the pool, and
 // optionally also stores the list of MachineConfig objects used to generate the configuration.
 type MachineConfigPoolStatusConfiguration struct {
-	corev1.ObjectReference `json:",inline"  protobuf:"bytes,1,rep,name=objectReference"`
+	corev1.ObjectReference `json:",inline"`
 
 	// source is the list of MachineConfig objects that were used to generate the single MachineConfig object specified in `content`.
 	// +optional
-	Source []corev1.ObjectReference `json:"source,omitempty" protobuf:"bytes,2,rep,name=source"`
+	Source []corev1.ObjectReference `json:"source,omitempty"`
 }
 
 // MachineConfigPoolCondition contains condition information for an MachineConfigPool.
 type MachineConfigPoolCondition struct {
 	// type of the condition, currently ('Done', 'Updating', 'Failed').
 	// +optional
-	Type MachineConfigPoolConditionType `json:"type" protobuf:"bytes,1,opt,name=type,casttype=MachineConfigPoolConditionType"`
+	Type MachineConfigPoolConditionType `json:"type"`
 
 	// status of the condition, one of ('True', 'False', 'Unknown').
 	// +optional
-	Status corev1.ConditionStatus `json:"status" protobuf:"bytes,2,opt,name=status,casttype=k8s.io/api/core/v1.ConditionStatus"`
+	Status corev1.ConditionStatus `json:"status"`
 
 	// lastTransitionTime is the timestamp corresponding to the last status
 	// change of this condition.
 	// +nullable
 	// +optional
-	LastTransitionTime metav1.Time `json:"lastTransitionTime" protobuf:"bytes,3,opt,name=lastTransitionTime"`
+	LastTransitionTime metav1.Time `json:"lastTransitionTime"`
 
 	// reason is a brief machine readable explanation for the condition's last
 	// transition.
 	// +optional
-	Reason string `json:"reason" protobuf:"bytes,4,opt,name=reason"`
+	Reason string `json:"reason"`
 
 	// message is a human readable description of the details of the last
 	// transition, complementing reason.
 	// +optional
-	Message string `json:"message" protobuf:"bytes,5,opt,name=message"`
+	Message string `json:"message"`
 }
 
 // MachineConfigPoolConditionType valid conditions of a MachineConfigPool
@@ -517,9 +517,9 @@ const (
 // +openshift:compatibility-gen:level=1
 type MachineConfigPoolList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata" protobuf:"bytes,1,opt,name=metadata"`
+	metav1.ListMeta `json:"metadata"`
 
-	Items []MachineConfigPool `json:"items" protobuf:"bytes,2,rep,name=items"`
+	Items []MachineConfigPool `json:"items"`
 }
 
 // +genclient
@@ -532,73 +532,73 @@ type MachineConfigPoolList struct {
 // +openshift:compatibility-gen:level=1
 type KubeletConfig struct {
 	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	// +kubebuilder:validation:Required
-	Spec KubeletConfigSpec `json:"spec" protobuf:"bytes,2,opt,name=spec"`
+	Spec KubeletConfigSpec `json:"spec"`
 	// +optional
-	Status KubeletConfigStatus `json:"status" protobuf:"bytes,3,opt,name=status"`
+	Status KubeletConfigStatus `json:"status"`
 }
 
 // KubeletConfigSpec defines the desired state of KubeletConfig
 type KubeletConfigSpec struct {
 	// +optional
-	AutoSizingReserved *bool `json:"autoSizingReserved,omitempty" protobuf:"varint,1,opt,name=autoSizingReserved"`
+	AutoSizingReserved *bool `json:"autoSizingReserved,omitempty"`
 	// +optional
-	LogLevel *int32 `json:"logLevel,omitempty" protobuf:"varint,2,opt,name=logLevel"`
+	LogLevel *int32 `json:"logLevel,omitempty"`
 
 	// MachineConfigPoolSelector selects which pools the KubeletConfig shoud apply to.
 	// A nil selector will result in no pools being selected.
 	// +optional
-	MachineConfigPoolSelector *metav1.LabelSelector `json:"machineConfigPoolSelector,omitempty" protobuf:"bytes,3,opt,name=machineConfigPoolSelector"`
+	MachineConfigPoolSelector *metav1.LabelSelector `json:"machineConfigPoolSelector,omitempty"`
 	// kubeletConfig fields are defined in kubernetes upstream. Please refer to the types defined in the version/commit used by
 	// OpenShift of the upstream kubernetes. It's important to note that, since the fields of the kubelet configuration are directly fetched from
 	// upstream the validation of those values is handled directly by the kubelet. Please refer to the upstream version of the relevant kubernetes
 	// for the valid values of these fields. Invalid values of the kubelet configuration fields may render cluster nodes unusable.
 	// +optional
-	KubeletConfig *runtime.RawExtension `json:"kubeletConfig,omitempty" protobuf:"bytes,4,opt,name=kubeletConfig"`
+	KubeletConfig *runtime.RawExtension `json:"kubeletConfig,omitempty"`
 
 	// If unset, the default is based on the apiservers.config.openshift.io/cluster resource.
 	// Note that only Old and Intermediate profiles are currently supported, and
 	// the maximum available MinTLSVersions is VersionTLS12.
 	// +optional
-	TLSSecurityProfile *configv1.TLSSecurityProfile `json:"tlsSecurityProfile,omitempty" protobuf:"bytes,5,opt,name=tlsSecurityProfile"`
+	TLSSecurityProfile *configv1.TLSSecurityProfile `json:"tlsSecurityProfile,omitempty"`
 }
 
 // KubeletConfigStatus defines the observed state of a KubeletConfig
 type KubeletConfigStatus struct {
 	// observedGeneration represents the generation observed by the controller.
 	// +optional
-	ObservedGeneration int64 `json:"observedGeneration,omitempty" protobuf:"varint,1,opt,name=observedGeneration"`
+	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 
 	// conditions represents the latest available observations of current state.
 	// +optional
-	Conditions []KubeletConfigCondition `json:"conditions" protobuf:"bytes,2,rep,name=conditions"`
+	Conditions []KubeletConfigCondition `json:"conditions"`
 }
 
 // KubeletConfigCondition defines the state of the KubeletConfig
 type KubeletConfigCondition struct {
 	// type specifies the state of the operator's reconciliation functionality.
 	// +optional
-	Type KubeletConfigStatusConditionType `json:"type" protobuf:"bytes,1,opt,name=type,casttype=KubeletConfigStatusConditionType"`
+	Type KubeletConfigStatusConditionType `json:"type"`
 
 	// status of the condition, one of True, False, Unknown.
 	// +optional
-	Status corev1.ConditionStatus `json:"status" protobuf:"bytes,2,opt,name=status,casttype=k8s.io/api/core/v1.ConditionStatus"`
+	Status corev1.ConditionStatus `json:"status"`
 
 	// lastTransitionTime is the time of the last update to the current status object.
 	// +optional
 	// +nullable
-	LastTransitionTime metav1.Time `json:"lastTransitionTime" protobuf:"bytes,3,opt,name=lastTransitionTime"`
+	LastTransitionTime metav1.Time `json:"lastTransitionTime"`
 
 	// reason is the reason for the condition's last transition.  Reasons are PascalCase
 	// +optional
-	Reason string `json:"reason,omitempty" protobuf:"bytes,4,opt,name=reason"`
+	Reason string `json:"reason,omitempty"`
 
 	// message provides additional information about the current condition.
 	// This is only to be consumed by humans.
 	// +optional
-	Message string `json:"message,omitempty" protobuf:"bytes,5,opt,name=message"`
+	Message string `json:"message,omitempty"`
 }
 
 // KubeletConfigStatusConditionType is the state of the operator's reconciliation functionality.
@@ -620,9 +620,9 @@ const (
 // +openshift:compatibility-gen:level=1
 type KubeletConfigList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata" protobuf:"bytes,1,opt,name=metadata"`
+	metav1.ListMeta `json:"metadata"`
 
-	Items []KubeletConfig `json:"items" protobuf:"bytes,2,rep,name=items"`
+	Items []KubeletConfig `json:"items"`
 }
 
 // +genclient
@@ -635,12 +635,12 @@ type KubeletConfigList struct {
 // +openshift:compatibility-gen:level=1
 type ContainerRuntimeConfig struct {
 	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	// +kubebuilder:validation:Required
-	Spec ContainerRuntimeConfigSpec `json:"spec" protobuf:"bytes,2,opt,name=spec"`
+	Spec ContainerRuntimeConfigSpec `json:"spec"`
 	// +optional
-	Status ContainerRuntimeConfigStatus `json:"status" protobuf:"bytes,3,opt,name=status"`
+	Status ContainerRuntimeConfigStatus `json:"status"`
 }
 
 // ContainerRuntimeConfigSpec defines the desired state of ContainerRuntimeConfig
@@ -648,37 +648,37 @@ type ContainerRuntimeConfigSpec struct {
 	// MachineConfigPoolSelector selects which pools the ContainerRuntimeConfig shoud apply to.
 	// A nil selector will result in no pools being selected.
 	// +optional
-	MachineConfigPoolSelector *metav1.LabelSelector `json:"machineConfigPoolSelector,omitempty" protobuf:"bytes,1,opt,name=machineConfigPoolSelector"`
+	MachineConfigPoolSelector *metav1.LabelSelector `json:"machineConfigPoolSelector,omitempty"`
 
 	// +kubebuilder:validation:Required
-	ContainerRuntimeConfig *ContainerRuntimeConfiguration `json:"containerRuntimeConfig,omitempty" protobuf:"bytes,2,opt,name=containerRuntimeConfig"`
+	ContainerRuntimeConfig *ContainerRuntimeConfiguration `json:"containerRuntimeConfig,omitempty"`
 }
 
 // ContainerRuntimeConfiguration defines the tuneables of the container runtime
 type ContainerRuntimeConfiguration struct {
 	// pidsLimit specifies the maximum number of processes allowed in a container
 	// +optional
-	PidsLimit *int64 `json:"pidsLimit,omitempty" protobuf:"varint,1,opt,name=pidsLimit"`
+	PidsLimit *int64 `json:"pidsLimit,omitempty"`
 
 	// logLevel specifies the verbosity of the logs based on the level it is set to.
 	// Options are fatal, panic, error, warn, info, and debug.
 	// +optional
-	LogLevel string `json:"logLevel,omitempty" protobuf:"bytes,2,opt,name=logLevel"`
+	LogLevel string `json:"logLevel,omitempty"`
 
 	// logSizeMax specifies the Maximum size allowed for the container log file.
 	// Negative numbers indicate that no size limit is imposed.
 	// If it is positive, it must be >= 8192 to match/exceed conmon's read buffer.
 	// +optional
-	LogSizeMax resource.Quantity `json:"logSizeMax,omitempty" protobuf:"bytes,3,opt,name=logSizeMax"`
+	LogSizeMax resource.Quantity `json:"logSizeMax,omitempty"`
 
 	// overlaySize specifies the maximum size of a container image.
 	// This flag can be used to set quota on the size of container images. (default: 10GB)
 	// +optional
-	OverlaySize resource.Quantity `json:"overlaySize,omitempty" protobuf:"bytes,4,opt,name=overlaySize"`
+	OverlaySize resource.Quantity `json:"overlaySize,omitempty"`
 
 	// defaultRuntime is the name of the OCI runtime to be used as the default.
 	// +optional
-	DefaultRuntime ContainerRuntimeDefaultRuntime `json:"defaultRuntime,omitempty" protobuf:"bytes,5,opt,name=defaultRuntime"`
+	DefaultRuntime ContainerRuntimeDefaultRuntime `json:"defaultRuntime,omitempty"`
 }
 
 type ContainerRuntimeDefaultRuntime string
@@ -694,36 +694,36 @@ const (
 type ContainerRuntimeConfigStatus struct {
 	// observedGeneration represents the generation observed by the controller.
 	// +optional
-	ObservedGeneration int64 `json:"observedGeneration,omitempty" protobuf:"varint,1,opt,name=observedGeneration"`
+	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 
 	// conditions represents the latest available observations of current state.
 	// +optional
-	Conditions []ContainerRuntimeConfigCondition `json:"conditions" protobuf:"bytes,2,rep,name=conditions"`
+	Conditions []ContainerRuntimeConfigCondition `json:"conditions"`
 }
 
 // ContainerRuntimeConfigCondition defines the state of the ContainerRuntimeConfig
 type ContainerRuntimeConfigCondition struct {
 	// type specifies the state of the operator's reconciliation functionality.
 	// +optional
-	Type ContainerRuntimeConfigStatusConditionType `json:"type" protobuf:"bytes,1,opt,name=type,casttype=ContainerRuntimeConfigStatusConditionType"`
+	Type ContainerRuntimeConfigStatusConditionType `json:"type"`
 
 	// status of the condition, one of True, False, Unknown.
 	// +optional
-	Status corev1.ConditionStatus `json:"status" protobuf:"bytes,2,opt,name=status,casttype=k8s.io/api/core/v1.ConditionStatus"`
+	Status corev1.ConditionStatus `json:"status"`
 
 	// lastTransitionTime is the time of the last update to the current status object.
 	// +nullable
 	// +optional
-	LastTransitionTime metav1.Time `json:"lastTransitionTime" protobuf:"bytes,3,opt,name=lastTransitionTime"`
+	LastTransitionTime metav1.Time `json:"lastTransitionTime"`
 
 	// reason is the reason for the condition's last transition.  Reasons are PascalCase
 	// +optional
-	Reason string `json:"reason,omitempty" protobuf:"bytes,4,opt,name=reason"`
+	Reason string `json:"reason,omitempty"`
 
 	// message provides additional information about the current condition.
 	// This is only to be consumed by humans.
 	// +optional
-	Message string `json:"message,omitempty" protobuf:"bytes,5,opt,name=message"`
+	Message string `json:"message,omitempty"`
 }
 
 // ContainerRuntimeConfigStatusConditionType is the state of the operator's reconciliation functionality.
@@ -745,7 +745,7 @@ const (
 // +openshift:compatibility-gen:level=1
 type ContainerRuntimeConfigList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata" protobuf:"bytes,1,opt,name=metadata"`
+	metav1.ListMeta `json:"metadata"`
 
-	Items []ContainerRuntimeConfig `json:"items" protobuf:"bytes,2,rep,name=items"`
+	Items []ContainerRuntimeConfig `json:"items"`
 }

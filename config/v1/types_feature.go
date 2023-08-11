@@ -166,7 +166,6 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		with(externalCloudProvider).
 		with(externalCloudProviderGCP).
 		with(csiDriverSharedResource).
-		with(buildCSIVolumes).
 		with(nodeSwap).
 		with(machineAPIProviderOpenStack).
 		with(insightsConfigAPI).
@@ -197,6 +196,7 @@ var defaultFeatures = &FeatureGateEnabledDisabled{
 		externalCloudProviderAzure,
 		externalCloudProviderExternal,
 		privateHostedZoneAWS,
+		buildCSIVolumes,
 	},
 	Disabled: []FeatureGateDescription{
 		retroactiveDefaultStorageClass,

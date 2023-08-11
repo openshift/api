@@ -1,5 +1,9 @@
 package v1
 
+import (
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+)
+
 // FeatureGateDescription is a golang-only interface used to contains details for a feature gate.
 type FeatureGateDescription struct {
 	// FeatureGateAttributes is the information that appears in the API
@@ -23,6 +27,19 @@ var (
 )
 
 var (
+	FeatureGateValidatingAdmissionPolicy = FeatureGateName("ValidatingAdmissionPolicy")
+	validatingAdmissionPolicy            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateGatewayAPI,
+			RequiredAPIs: []metav1.GroupVersion{
+				{Group: "admissionregistration.k8s.io", Version: "v1alpha1"},
+			},
+		},
+		OwningJiraComponent: "kube-apiserver",
+		ResponsiblePerson:   "benluddy",
+		OwningProduct:       kubernetes,
+	}
+
 	FeatureGateGatewayAPI = FeatureGateName("GatewayAPI")
 	gateGatewayAPI        = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{

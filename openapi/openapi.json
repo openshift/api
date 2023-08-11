@@ -24966,6 +24966,15 @@
         "forceRedeploymentReason"
       ],
       "properties": {
+        "controlPlaneHardwareSpeed": {
+          "description": "HardwareSpeed allows user to change the etcd tuning profile which configures the latency parameters for heartbeat interval and leader election timeouts allowing the cluster to tolerate longer round-trip-times between etcd members. Valid values are \"\", \"Standard\" and \"Slower\".\n\t\"\" means no opinion and the platform is left to choose a reasonable default\n\twhich is subject to change without notice.\n\nPossible enum values:\n - `\"Slower\"` provides more tolerance for slower hardware and/or higher latency networks. Sets (values subject to change): ETCD_HEARTBEAT_INTERVAL: 5x Standard ETCD_LEADER_ELECTION_TIMEOUT: 2.5x Standard\n - `\"Standard\"` provides the normal tolerances for hardware speed and latency. Currently sets (values subject to change at any time): ETCD_HEARTBEAT_INTERVAL: 100ms ETCD_LEADER_ELECTION_TIMEOUT: 1000ms",
+          "type": "string",
+          "default": "",
+          "enum": [
+            "Slower",
+            "Standard"
+          ]
+        },
         "failedRevisionLimit": {
           "description": "failedRevisionLimit is the number of failed static pod installer revisions to keep on disk and in the api -1 = unlimited, 0 or unset = 5 (default)",
           "type": "integer",
@@ -25009,7 +25018,8 @@
     "com.github.openshift.api.operator.v1.EtcdStatus": {
       "type": "object",
       "required": [
-        "readyReplicas"
+        "readyReplicas",
+        "controlPlaneHardwareSpeed"
       ],
       "properties": {
         "conditions": {
@@ -25019,6 +25029,15 @@
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
           }
+        },
+        "controlPlaneHardwareSpeed": {
+          "description": "Possible enum values:\n - `\"Slower\"` provides more tolerance for slower hardware and/or higher latency networks. Sets (values subject to change): ETCD_HEARTBEAT_INTERVAL: 5x Standard ETCD_LEADER_ELECTION_TIMEOUT: 2.5x Standard\n - `\"Standard\"` provides the normal tolerances for hardware speed and latency. Currently sets (values subject to change at any time): ETCD_HEARTBEAT_INTERVAL: 100ms ETCD_LEADER_ELECTION_TIMEOUT: 1000ms",
+          "type": "string",
+          "default": "",
+          "enum": [
+            "Slower",
+            "Standard"
+          ]
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",

@@ -129,6 +129,20 @@ spec:
                               description: name is the name of the FeatureGate.
                               type: string
                               pattern: ^([A-Za-z0-9-]+\.)*[A-Za-z0-9-]+\.?$
+                            requiredAPIs:
+                              description: requiredAPIs is a list of API group-versions (e.g. apps/v1, admissionregistration.k8s.io/v1alpha1) that must be enabled in support of the gate. It may not be exhaustive; A required group-version may be omitted if it has been default-enabled in all versions that include the feature.
+                              type: array
+                              items:
+                                description: GroupVersion contains the "group" and the "version", which uniquely identifies the API.
+                                type: object
+                                required:
+                                  - group
+                                  - version
+                                properties:
+                                  group:
+                                    type: string
+                                  version:
+                                    type: string
                       enabled:
                         description: enabled is a list of all feature gates that are enabled in the cluster for the named version.
                         type: array
@@ -141,6 +155,20 @@ spec:
                               description: name is the name of the FeatureGate.
                               type: string
                               pattern: ^([A-Za-z0-9-]+\.)*[A-Za-z0-9-]+\.?$
+                            requiredAPIs:
+                              description: requiredAPIs is a list of API group-versions (e.g. apps/v1, admissionregistration.k8s.io/v1alpha1) that must be enabled in support of the gate. It may not be exhaustive; A required group-version may be omitted if it has been default-enabled in all versions that include the feature.
+                              type: array
+                              items:
+                                description: GroupVersion contains the "group" and the "version", which uniquely identifies the API.
+                                type: object
+                                required:
+                                  - group
+                                  - version
+                                properties:
+                                  group:
+                                    type: string
+                                  version:
+                                    type: string
                       version:
                         description: version matches the version provided by the ClusterVersion and in the ClusterOperator.Status.Versions field.
                         type: string

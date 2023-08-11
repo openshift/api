@@ -11570,10 +11570,26 @@ func schema_openshift_api_config_v1_FeatureGateAttributes(ref common.ReferenceCa
 							Format:      "",
 						},
 					},
+					"requiredAPIs": {
+						SchemaProps: spec.SchemaProps{
+							Description: "requiredAPIs is a list of API group-versions (e.g. apps/v1, admissionregistration.k8s.io/v1alpha1) that must be enabled in support of the gate. It may not be exhaustive; A required group-version may be omitted if it has been default-enabled in all versions that include the feature.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.GroupVersion"),
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"name"},
 			},
 		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.GroupVersion"},
 	}
 }
 

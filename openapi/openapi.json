@@ -6044,6 +6044,14 @@
           "description": "name is the name of the FeatureGate.",
           "type": "string",
           "default": ""
+        },
+        "requiredAPIs": {
+          "description": "requiredAPIs is a list of API group-versions (e.g. apps/v1, admissionregistration.k8s.io/v1alpha1) that must be enabled in support of the gate. It may not be exhaustive; A required group-version may be omitted if it has been default-enabled in all versions that include the feature.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.GroupVersion"
+          }
         }
       }
     },

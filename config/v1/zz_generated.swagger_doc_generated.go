@@ -827,7 +827,8 @@ func (FeatureGate) SwaggerDoc() map[string]string {
 }
 
 var map_FeatureGateAttributes = map[string]string{
-	"name": "name is the name of the FeatureGate.",
+	"name":         "name is the name of the FeatureGate.",
+	"requiredAPIs": "requiredAPIs is a list of API group-versions (e.g. apps/v1, admissionregistration.k8s.io/v1alpha1) that must be enabled in support of the gate. It may not be exhaustive; A required group-version may be omitted if it has been default-enabled in all versions that include the feature.",
 }
 
 func (FeatureGateAttributes) SwaggerDoc() map[string]string {

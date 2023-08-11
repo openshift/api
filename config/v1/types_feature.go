@@ -120,6 +120,12 @@ type FeatureGateAttributes struct {
 	// +kubebuilder:validation:Required
 	Name FeatureGateName `json:"name"`
 
+	// requiredAPIs is a list of API group-versions (e.g. apps/v1,
+	// admissionregistration.k8s.io/v1alpha1) that must be enabled in support of the gate. It
+	// may not be exhaustive; A required group-version may be omitted if it has been
+	// default-enabled in all versions that include the feature.
+	RequiredAPIs []metav1.GroupVersion `json:"requiredAPIs,omitempty"`
+
 	// possible (probable?) future additions include
 	// 1. support level (Stable, ServiceDeliveryOnly, TechPreview, DevPreview)
 	// 2. description

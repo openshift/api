@@ -207,11 +207,11 @@ type ControllerCertificate struct {
 
 	// notBefore is the lower boundary for validity
 	// +kubebuilder:validation:Required
-	NotBefore string `json:"notBefore"`
+	NotBefore *metav1.Time `json:"notBefore"`
 
 	// notAfter is the upper boundary for validity
 	// +kubebuilder:validation:Required
-	NotAfter string `json:"notAfter"`
+	NotAfter *metav1.Time `json:"notAfter"`
 
 	// bundleFile is the larger bundle a cert comes from
 	// +kubebuilder:validation:Required
@@ -438,7 +438,7 @@ type CertExpiry struct {
 	Subject string `json:"subject"`
 	// expiry is the date after which the certificate will no longer be valid
 	// +kubebuilder:validation:Required
-	Expiry string `json:"expiry"`
+	Expiry *metav1.Time `json:"expiry"`
 }
 
 // MachineConfigPoolStatusConfiguration stores the current configuration for the pool, and

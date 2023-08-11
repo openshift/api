@@ -393,6 +393,7 @@ var ClusterVersionCapabilitySets = map[ClusterVersionCapabilitySet][]ClusterVers
 		ClusterVersionCapabilityBaremetal,
 		ClusterVersionCapabilityMarketplace,
 		ClusterVersionCapabilityOpenShiftSamples,
+		ClusterVersionCapabilityMachineAPI,
 	},
 	ClusterVersionCapabilitySet4_12: {
 		ClusterVersionCapabilityBaremetal,
@@ -402,6 +403,7 @@ var ClusterVersionCapabilitySets = map[ClusterVersionCapabilitySet][]ClusterVers
 		ClusterVersionCapabilityStorage,
 		ClusterVersionCapabilityOpenShiftSamples,
 		ClusterVersionCapabilityCSISnapshot,
+		ClusterVersionCapabilityMachineAPI,
 	},
 	ClusterVersionCapabilitySet4_13: {
 		ClusterVersionCapabilityBaremetal,
@@ -412,6 +414,7 @@ var ClusterVersionCapabilitySets = map[ClusterVersionCapabilitySet][]ClusterVers
 		ClusterVersionCapabilityOpenShiftSamples,
 		ClusterVersionCapabilityCSISnapshot,
 		ClusterVersionCapabilityNodeTuning,
+		ClusterVersionCapabilityMachineAPI,
 	},
 	ClusterVersionCapabilitySet4_14: {
 		ClusterVersionCapabilityBaremetal,

@@ -163,7 +163,7 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		Disabled: []FeatureGateDescription{},
 	},
 	TechPreviewNoUpgrade: newDefaultFeatures().
-		without(validatingAdmissionPolicy).
+		with(validatingAdmissionPolicy).
 		with(externalCloudProvider).
 		with(externalCloudProviderGCP).
 		with(csiDriverSharedResource).

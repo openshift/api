@@ -30019,6 +30019,13 @@ func schema_openshift_api_machine_v1_AzureFailureDomain(ref common.ReferenceCall
 							Format:      "",
 						},
 					},
+					"subnet": {
+						SchemaProps: spec.SchemaProps{
+							Description: "subnet is the name of the network subnet in which the VM will be created. When omitted, the subnet value from the machine providerSpec template will be used.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 				Required: []string{"zone"},
 			},

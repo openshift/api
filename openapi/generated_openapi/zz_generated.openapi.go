@@ -42967,13 +42967,15 @@ func schema_openshift_api_operator_v1_GatewayConfig(ref common.ReferenceCallback
 					},
 					"ipv4": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ipv4 allows users to configure IP settings for IPv4 connections. When omitted, this means no opinion and the defualt configuration is used. Check individual members fields within ipv4 for details of default values.",
+							Description: "ipv4 allows users to configure IP settings for IPv4 connections. When omitted, this means no opinion and the default configuration is used. Check individual members fields within ipv4 for details of default values.",
+							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/operator/v1.IPv4GatewayConfig"),
 						},
 					},
 					"ipv6": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ipv6 allows users to configure IP settings for IPv6 connections. When omitted, this means no opinion and the defualt configuration is used. Check individual members fields within ipv6 for details of default values.",
+							Description: "ipv6 allows users to configure IP settings for IPv6 connections. When omitted, this means no opinion and the default configuration is used. Check individual members fields within ipv6 for details of default values.",
+							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/operator/v1.IPv6GatewayConfig"),
 						},
 					},
@@ -43391,11 +43393,12 @@ func schema_openshift_api_operator_v1_IPv4GatewayConfig(ref common.ReferenceCall
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "IPV4GatewayConfig holds the configuration paramaters for IPV4 connections in the GatewayConfig for OVN-Kubernetes",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"v4InternalMasqueradeSubnet": {
+					"internalMasqueradeSubnet": {
 						SchemaProps: spec.SchemaProps{
-							Description: "v4InternalMasqueradeSubnet contains the v4 masquerade addresses used internally by ovn-kubernetes to enable host to service traffic. Each host in the cluster is configured with these addresses, as well as the shared gateway bridge interface. The values can be changed after installation. The subnet chosen should not overlap with other networks specified for OVN-Kubernetes as well as other networks used on the host. Additionally the subnet must be large enough to accommodate 6 IPs (maximum prefix length /29). When omitted, this means no opinion and the platform is left to choose a reasonable default which is subject to change over time. The current default subnet is 169.254.169.0/29",
+							Description: "internalMasqueradeSubnet contains the masquerade addresses in IPV4 CIDR format used internally by ovn-kubernetes to enable host to service traffic. Each host in the cluster is configured with these addresses, as well as the shared gateway bridge interface. The values can be changed after installation. The subnet chosen should not overlap with other networks specified for OVN-Kubernetes as well as other networks used on the host. Additionally the subnet must be large enough to accommodate 6 IPs (maximum prefix length /29). When omitted, this means no opinion and the platform is left to choose a reasonable default which is subject to change over time. The current default subnet is 169.254.169.0/29 The value must be in proper IPV4 CIDR format",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -43410,11 +43413,12 @@ func schema_openshift_api_operator_v1_IPv6GatewayConfig(ref common.ReferenceCall
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "IPV6GatewayConfig holds the configuration paramaters for IPV6 connections in the GatewayConfig for OVN-Kubernetes",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"v6InternalMasqueradeSubnet": {
+					"internalMasqueradeSubnet": {
 						SchemaProps: spec.SchemaProps{
-							Description: "v6InternalMasqueradeSubnet contains the v6 masquerade addresses used internally by ovn-kubernetes to enable host to service traffic. Each host in the cluster is configured with these addresses, as well as the shared gateway bridge interface. The values can be changed after installation. The subnet chosen should not overlap with other networks specified for OVN-Kubernetes as well as other networks used on the host. Additionally the subnet must be large enough to accommodate 6 IPs (maximum prefix length /125). When omitted, this means no opinion and the platform is left to choose a reasonable default which is subject to change over time. The current default subnet is fd69::/125",
+							Description: "internalMasqueradeSubnet contains the masquerade addresses in IPV6 CIDR format used internally by ovn-kubernetes to enable host to service traffic. Each host in the cluster is configured with these addresses, as well as the shared gateway bridge interface. The values can be changed after installation. The subnet chosen should not overlap with other networks specified for OVN-Kubernetes as well as other networks used on the host. Additionally the subnet must be large enough to accommodate 6 IPs (maximum prefix length /125). When omitted, this means no opinion and the platform is left to choose a reasonable default which is subject to change over time. The current default subnet is fd69::/125 Note that IPV6 dual addresses are not permitted",
 							Type:        []string{"string"},
 							Format:      "",
 						},

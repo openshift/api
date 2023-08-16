@@ -118,7 +118,7 @@ type NetworkSpec struct {
 
 // NetworkMigrationMode is an enumeration of the possible mode of the network migration
 // Valid values are "Live" or "Offline".
-// +kubebuilder:validation:Enum:=Live;Offline
+// +kubebuilder:validation:Enum:="";Live;Offline
 type NetworkMigrationMode string
 
 const (
@@ -158,7 +158,7 @@ type NetworkMigration struct {
 	// The current default value is "Offline".
 	// +openshift:enable:FeatureSets=CustomNoUpgrade;TechPreviewNoUpgrade
 	// +optional
-	Mode NetworkMigrationMode `json:"mode,omitempty"`
+	Mode NetworkMigrationMode `json:"mode"`
 }
 
 type FeaturesMigration struct {

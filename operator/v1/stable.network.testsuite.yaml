@@ -15,3 +15,17 @@ tests:
         disableNetworkDiagnostics: false
         logLevel: Normal
         operatorLogLevel: Normal
+  - name: Should not be able to create migration mode
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec: 
+        migration:
+          mode: Live
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        disableNetworkDiagnostics: false
+        logLevel: Normal
+        operatorLogLevel: Normal

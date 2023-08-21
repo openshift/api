@@ -87,8 +87,9 @@ type DNSNameResolverStatusItem struct {
 	ResolvedAddresses []DNSNameResolverInfo `json:"resolvedAddresses"`
 	// resolutionFailures keeps the count of how many consecutive times the DNS resolution failed
 	// for the dnsName. If the DNS resolution succeeds then the field will be set to zero. Upon
-	// every failure, the value of the field will be incremented by one. Upon reaching the value
-	// of 5, the details about the DNS name will be removed.
+	// every failure, the value of the field will be incremented by one. The details about the DNS
+	// name will be removed, if the value of resolutionFailures reaches 5 and the TTL of all the
+	// associated IP addresses have expired.
 	ResolutionFailures int32 `json:"resolutionFailures,omitempty"`
 }
 

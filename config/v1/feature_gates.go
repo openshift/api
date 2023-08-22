@@ -24,7 +24,7 @@ var (
 
 var (
 	FeatureGateValidatingAdmissionPolicy = FeatureGateName("ValidatingAdmissionPolicy")
-	validatingAdmissionPolicy            = FeatureGateDescription{
+	ValidatingAdmissionPolicy            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
 			Name: FeatureGateValidatingAdmissionPolicy,
 		},
@@ -34,7 +34,7 @@ var (
 	}
 
 	FeatureGateGatewayAPI = FeatureGateName("GatewayAPI")
-	gateGatewayAPI        = FeatureGateDescription{
+	GateGatewayAPI        = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
 			Name: FeatureGateGatewayAPI,
 		},
@@ -44,7 +44,7 @@ var (
 	}
 
 	FeatureGateOpenShiftPodSecurityAdmission = FeatureGateName("OpenShiftPodSecurityAdmission")
-	openShiftPodSecurityAdmission            = FeatureGateDescription{
+	OpenShiftPodSecurityAdmission            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
 			Name: FeatureGateOpenShiftPodSecurityAdmission,
 		},
@@ -54,7 +54,7 @@ var (
 	}
 
 	FeatureGateRetroactiveDefaultStorageClass = FeatureGateName("RetroactiveDefaultStorageClass")
-	retroactiveDefaultStorageClass            = FeatureGateDescription{
+	RetroactiveDefaultStorageClass            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
 			Name: FeatureGateRetroactiveDefaultStorageClass,
 		},
@@ -64,7 +64,7 @@ var (
 	}
 
 	FeatureGateExternalCloudProvider = FeatureGateName("ExternalCloudProvider")
-	externalCloudProvider            = FeatureGateDescription{
+	ExternalCloudProvider            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
 			Name: FeatureGateExternalCloudProvider,
 		},
@@ -74,7 +74,7 @@ var (
 	}
 
 	FeatureGateExternalCloudProviderAzure = FeatureGateName("ExternalCloudProviderAzure")
-	externalCloudProviderAzure            = FeatureGateDescription{
+	ExternalCloudProviderAzure            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
 			Name: FeatureGateExternalCloudProviderAzure,
 		},
@@ -84,7 +84,7 @@ var (
 	}
 
 	FeatureGateExternalCloudProviderGCP = FeatureGateName("ExternalCloudProviderGCP")
-	externalCloudProviderGCP            = FeatureGateDescription{
+	ExternalCloudProviderGCP            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
 			Name: FeatureGateExternalCloudProviderGCP,
 		},
@@ -94,7 +94,7 @@ var (
 	}
 
 	FeatureGateExternalCloudProviderExternal = FeatureGateName("ExternalCloudProviderExternal")
-	externalCloudProviderExternal            = FeatureGateDescription{
+	ExternalCloudProviderExternal            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
 			Name: FeatureGateExternalCloudProviderExternal,
 		},
@@ -104,7 +104,7 @@ var (
 	}
 
 	FeatureGateCSIDriverSharedResource = FeatureGateName("CSIDriverSharedResource")
-	csiDriverSharedResource            = FeatureGateDescription{
+	CSIDriverSharedResource            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
 			Name: FeatureGateCSIDriverSharedResource,
 		},
@@ -114,7 +114,7 @@ var (
 	}
 
 	FeatureGateBuildCSIVolumes = FeatureGateName("BuildCSIVolumes")
-	buildCSIVolumes            = FeatureGateDescription{
+	BuildCSIVolumes            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
 			Name: FeatureGateBuildCSIVolumes,
 		},
@@ -124,7 +124,7 @@ var (
 	}
 
 	FeatureGateNodeSwap = FeatureGateName("NodeSwap")
-	nodeSwap            = FeatureGateDescription{
+	NodeSwap            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
 			Name: FeatureGateNodeSwap,
 		},
@@ -134,7 +134,7 @@ var (
 	}
 
 	FeatureGateMachineAPIProviderOpenStack = FeatureGateName("MachineAPIProviderOpenStack")
-	machineAPIProviderOpenStack            = FeatureGateDescription{
+	MachineAPIProviderOpenStack            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
 			Name: FeatureGateMachineAPIProviderOpenStack,
 		},
@@ -144,7 +144,7 @@ var (
 	}
 
 	FeatureGateInsightsConfigAPI = FeatureGateName("InsightsConfigAPI")
-	insightsConfigAPI            = FeatureGateDescription{
+	InsightsConfigAPI            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
 			Name: FeatureGateInsightsConfigAPI,
 		},
@@ -154,7 +154,7 @@ var (
 	}
 
 	FeatureGateDynamicResourceAllocation = FeatureGateName("DynamicResourceAllocation")
-	dynamicResourceAllocation            = FeatureGateDescription{
+	DynamicResourceAllocation            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
 			Name: FeatureGateDynamicResourceAllocation,
 		},
@@ -164,7 +164,7 @@ var (
 	}
 
 	FeatureGateAdmissionWebhookMatchConditions = FeatureGateName("AdmissionWebhookMatchConditions")
-	admissionWebhookMatchConditions            = FeatureGateDescription{
+	AdmissionWebhookMatchConditions            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
 			Name: FeatureGateAdmissionWebhookMatchConditions,
 		},
@@ -174,7 +174,7 @@ var (
 	}
 
 	FeatureGateAzureWorkloadIdentity = FeatureGateName("AzureWorkloadIdentity")
-	azureWorkloadIdentity            = FeatureGateDescription{
+	AzureWorkloadIdentity            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
 			Name: FeatureGateAzureWorkloadIdentity,
 		},
@@ -184,7 +184,7 @@ var (
 	}
 
 	FeatureGateMaxUnavailableStatefulSet = FeatureGateName("MaxUnavailableStatefulSet")
-	maxUnavailableStatefulSet            = FeatureGateDescription{
+	MaxUnavailableStatefulSet            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
 			Name: FeatureGateMaxUnavailableStatefulSet,
 		},
@@ -194,7 +194,7 @@ var (
 	}
 
 	FeatureGateEventedPLEG = FeatureGateName("EventedPLEG")
-	eventedPleg            = FeatureGateDescription{
+	EventedPleg            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
 			Name: FeatureGateEventedPLEG,
 		},
@@ -204,7 +204,7 @@ var (
 	}
 
 	FeatureGatePrivateHostedZoneAWS = FeatureGateName("PrivateHostedZoneAWS")
-	privateHostedZoneAWS            = FeatureGateDescription{
+	PrivateHostedZoneAWS            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
 			Name: FeatureGatePrivateHostedZoneAWS,
 		},
@@ -214,7 +214,7 @@ var (
 	}
 
 	FeatureGateSigstoreImageVerification = FeatureGateName("SigstoreImageVerification")
-	sigstoreImageVerification            = FeatureGateDescription{
+	SigstoreImageVerification            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
 			Name: FeatureGateSigstoreImageVerification,
 		},
@@ -224,7 +224,7 @@ var (
 	}
 
 	FeatureGateGCPLabelsTags = FeatureGateName("GCPLabelsTags")
-	gcpLabelsTags            = FeatureGateDescription{
+	GCPLabelsTags            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
 			Name: FeatureGateGCPLabelsTags,
 		},
@@ -234,7 +234,7 @@ var (
 	}
 
 	FeatureGateAlibabaPlatform = FeatureGateName("AlibabaPlatform")
-	alibabaPlatform            = FeatureGateDescription{
+	AlibabaPlatform            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
 			Name: FeatureGateAlibabaPlatform,
 		},
@@ -244,7 +244,7 @@ var (
 	}
 
 	FeatureGateCloudDualStackNodeIPs = FeatureGateName("CloudDualStackNodeIPs")
-	cloudDualStackNodeIPs            = FeatureGateDescription{
+	CloudDualStackNodeIPs            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
 			Name: FeatureGateCloudDualStackNodeIPs,
 		},
@@ -253,7 +253,7 @@ var (
 		OwningProduct:       kubernetes,
 	}
 	FeatureGateVSphereStaticIPs = FeatureGateName("VSphereStaticIPs")
-	vSphereStaticIPs            = FeatureGateDescription{
+	VSphereStaticIPs            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
 			Name: FeatureGateVSphereStaticIPs,
 		},
@@ -263,7 +263,7 @@ var (
 	}
 
 	FeatureGateRouteExternalCertificate = FeatureGateName("RouteExternalCertificate")
-	routeExternalCertificate            = FeatureGateDescription{
+	RouteExternalCertificate            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
 			Name: FeatureGateRouteExternalCertificate,
 		},
@@ -273,7 +273,7 @@ var (
 	}
 
 	FeatureGateAdminNetworkPolicy = FeatureGateName("AdminNetworkPolicy")
-	adminNetworkPolicy            = FeatureGateDescription{
+	AdminNetworkPolicy            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
 			Name: FeatureGateAdminNetworkPolicy,
 		},
@@ -283,7 +283,7 @@ var (
 	}
 
 	FeatureGateAutomatedEtcdBackup = FeatureGateName("AutomatedEtcdBackup")
-	automatedEtcdBackup            = FeatureGateDescription{
+	AutomatedEtcdBackup            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
 			Name: FeatureGateAutomatedEtcdBackup,
 		},
@@ -293,7 +293,7 @@ var (
 	}
 
 	FeatureGateMachineAPIOperatorDisableMachineHealthCheckController = FeatureGateName("MachineAPIOperatorDisableMachineHealthCheckController")
-	machineAPIOperatorDisableMachineHealthCheckController            = FeatureGateDescription{
+	MachineAPIOperatorDisableMachineHealthCheckController            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
 			Name: FeatureGateMachineAPIOperatorDisableMachineHealthCheckController,
 		},

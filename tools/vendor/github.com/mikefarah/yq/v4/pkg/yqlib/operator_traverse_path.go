@@ -80,6 +80,8 @@ func traverseArrayOperator(d *dataTreeNavigator, context Context, expressionNode
 	// BUT we still return the original context back (see jq)
 	// https://stedolan.github.io/jq/manual/#Variable/SymbolicBindingOperator:...as$identifier|...
 
+	log.Debugf("--traverseArrayOperator")
+
 	if expressionNode.RHS != nil && expressionNode.RHS.RHS != nil && expressionNode.RHS.RHS.Operation.OperationType == createMapOpType {
 		return sliceArrayOperator(d, context, expressionNode.RHS.RHS)
 	}
@@ -89,7 +91,7 @@ func traverseArrayOperator(d *dataTreeNavigator, context Context, expressionNode
 		return Context{}, err
 	}
 
-	// rhs is a collect expression that will yield indexes to retrieve of the arrays
+	// rhs is a collect expression that will yield indices to retrieve of the arrays
 
 	rhs, err := d.GetMatchingNodes(context.ReadOnlyClone(), expressionNode.RHS)
 
@@ -102,6 +104,8 @@ func traverseArrayOperator(d *dataTreeNavigator, context Context, expressionNode
 		prefs = expressionNode.Operation.Preferences.(traversePreferences)
 	}
 	var indicesToTraverse = rhs.MatchingNodes.Front().Value.(*CandidateNode).Node.Content
+
+	log.Debugf("indicesToTraverse %v", len(indicesToTraverse))
 
 	//now we traverse the result of the lhs against the indices we found
 	result, err := traverseNodesWithArrayIndices(lhs, indicesToTraverse, prefs)
@@ -231,7 +235,8 @@ func traverseMap(context Context, matchingNode *CandidateNode, keyNode *yaml.Nod
 		return nil, err
 	}
 
-	if !prefs.DontAutoCreate && !context.DontAutoCreate && newMatches.Len() == 0 {
+	if !splat && !prefs.DontAutoCreate && !context.DontAutoCreate && newMatches.Len() == 0 {
+		log.Debugf("no matches, creating one")
 		//no matches, create one automagically
 		valueNode := &yaml.Node{Tag: "!!null", Kind: yaml.ScalarNode, Value: "null"}
 
@@ -267,7 +272,7 @@ func traverseMap(context Context, matchingNode *CandidateNode, keyNode *yaml.Nod
 
 func doTraverseMap(newMatches *orderedmap.OrderedMap, candidate *CandidateNode, wantedKey string, prefs traversePreferences, splat bool) error {
 	// value.Content is a concatenated array of key, value,
-	// so keys are in the even indexes, values in odd.
+	// so keys are in the even indices, values in odd.
 	// merge aliases are defined first, but we only want to traverse them
 	// if we don't find a match directly on this node first.
 

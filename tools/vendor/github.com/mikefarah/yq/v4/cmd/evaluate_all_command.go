@@ -84,9 +84,15 @@ func evaluateAll(cmd *cobra.Command, args []string) (cmdError error) {
 	if err != nil {
 		return err
 	}
-	encoder := configureEncoder(format)
+	encoder, err := configureEncoder()
+	if err != nil {
+		return err
+	}
 
 	printer := yqlib.NewPrinter(encoder, printerWriter)
+	if nulSepOutput {
+		printer.SetNulSepOutput(true)
+	}
 
 	if frontMatter != "" {
 		frontMatterHandler := yqlib.NewFrontMatterHandler(args[0])

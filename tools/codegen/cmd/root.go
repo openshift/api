@@ -125,6 +125,7 @@ func allGenerators() []generation.Generator {
 	return []generation.Generator{
 		newCompatibilityGenerator(),
 		newDeepcopyGenerator(),
+		newGoToProtobufGenerator(),
 		newSwaggerDocsGenerator(),
 		newSchemaPatchGenerator(),
 	}

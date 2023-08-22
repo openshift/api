@@ -53,7 +53,7 @@ var subtractAssignOpType = &operationType{Type: "SUBTRACT_ASSIGN", NumArgs: 2, P
 
 var assignAttributesOpType = &operationType{Type: "ASSIGN_ATTRIBUTES", NumArgs: 2, Precedence: 40, Handler: assignAttributesOperator}
 var assignStyleOpType = &operationType{Type: "ASSIGN_STYLE", NumArgs: 2, Precedence: 40, Handler: assignStyleOperator}
-var assignVariableOpType = &operationType{Type: "ASSIGN_VARIABLE", NumArgs: 2, Precedence: 40, Handler: assignVariableOperator}
+var assignVariableOpType = &operationType{Type: "ASSIGN_VARIABLE", NumArgs: 2, Precedence: 40, Handler: useWithPipe}
 var assignTagOpType = &operationType{Type: "ASSIGN_TAG", NumArgs: 2, Precedence: 40, Handler: assignTagOperator}
 var assignCommentOpType = &operationType{Type: "ASSIGN_COMMENT", NumArgs: 2, Precedence: 40, Handler: assignCommentsOperator}
 var assignAnchorOpType = &operationType{Type: "ASSIGN_ANCHOR", NumArgs: 2, Precedence: 40, Handler: assignAnchorOperator}
@@ -61,6 +61,10 @@ var assignAliasOpType = &operationType{Type: "ASSIGN_ALIAS", NumArgs: 2, Precede
 
 var multiplyOpType = &operationType{Type: "MULTIPLY", NumArgs: 2, Precedence: 42, Handler: multiplyOperator}
 var multiplyAssignOpType = &operationType{Type: "MULTIPLY_ASSIGN", NumArgs: 2, Precedence: 42, Handler: multiplyAssignOperator}
+
+var divideOpType = &operationType{Type: "DIVIDE", NumArgs: 2, Precedence: 42, Handler: divideOperator}
+
+var moduloOpType = &operationType{Type: "MODULO", NumArgs: 2, Precedence: 42, Handler: moduloOperator}
 
 var addOpType = &operationType{Type: "ADD", NumArgs: 2, Precedence: 42, Handler: addOperator}
 var subtractOpType = &operationType{Type: "SUBTRACT", NumArgs: 2, Precedence: 42, Handler: subtractOperator}
@@ -84,6 +88,7 @@ var expressionOpType = &operationType{Type: "EXP", NumArgs: 0, Precedence: 50, H
 
 var collectOpType = &operationType{Type: "COLLECT", NumArgs: 1, Precedence: 50, Handler: collectOperator}
 var mapOpType = &operationType{Type: "MAP", NumArgs: 1, Precedence: 50, Handler: mapOperator}
+var filterOpType = &operationType{Type: "FILTER", NumArgs: 1, Precedence: 50, Handler: filterOperator}
 var errorOpType = &operationType{Type: "ERROR", NumArgs: 1, Precedence: 50, Handler: errorOperator}
 var pickOpType = &operationType{Type: "PICK", NumArgs: 1, Precedence: 50, Handler: pickOperator}
 var evalOpType = &operationType{Type: "EVAL", NumArgs: 1, Precedence: 50, Handler: evalOperator}
@@ -93,6 +98,8 @@ var formatDateTimeOpType = &operationType{Type: "FORMAT_DATE_TIME", NumArgs: 1, 
 var withDtFormatOpType = &operationType{Type: "WITH_DATE_TIME_FORMAT", NumArgs: 1, Precedence: 50, Handler: withDateTimeFormat}
 var nowOpType = &operationType{Type: "NOW", NumArgs: 0, Precedence: 50, Handler: nowOp}
 var tzOpType = &operationType{Type: "TIMEZONE", NumArgs: 1, Precedence: 50, Handler: tzOp}
+var fromUnixOpType = &operationType{Type: "FROM_UNIX", NumArgs: 0, Precedence: 50, Handler: fromUnixOp}
+var toUnixOpType = &operationType{Type: "TO_UNIX", NumArgs: 0, Precedence: 50, Handler: toUnixOp}
 
 var encodeOpType = &operationType{Type: "ENCODE", NumArgs: 0, Precedence: 50, Handler: encodeOperator}
 var decodeOpType = &operationType{Type: "DECODE", NumArgs: 0, Precedence: 50, Handler: decodeOperator}
@@ -133,6 +140,7 @@ var explodeOpType = &operationType{Type: "EXPLODE", NumArgs: 1, Precedence: 50, 
 var sortByOpType = &operationType{Type: "SORT_BY", NumArgs: 1, Precedence: 50, Handler: sortByOperator}
 var reverseOpType = &operationType{Type: "REVERSE", NumArgs: 0, Precedence: 50, Handler: reverseOperator}
 var sortOpType = &operationType{Type: "SORT", NumArgs: 0, Precedence: 50, Handler: sortOperator}
+var shuffleOpType = &operationType{Type: "SHUFFLE", NumArgs: 0, Precedence: 50, Handler: shuffleOperator}
 
 var sortKeysOpType = &operationType{Type: "SORT_KEYS", NumArgs: 1, Precedence: 50, Handler: sortKeysOperator}
 
@@ -155,6 +163,7 @@ var traverseArrayOpType = &operationType{Type: "TRAVERSE_ARRAY", NumArgs: 2, Pre
 
 var selfReferenceOpType = &operationType{Type: "SELF", NumArgs: 0, Precedence: 55, Handler: selfOperator}
 var valueOpType = &operationType{Type: "VALUE", NumArgs: 0, Precedence: 50, Handler: valueOperator}
+var referenceOpType = &operationType{Type: "REF", NumArgs: 0, Precedence: 50, Handler: referenceOperator}
 var envOpType = &operationType{Type: "ENV", NumArgs: 0, Precedence: 50, Handler: envOperator}
 var notOpType = &operationType{Type: "NOT", NumArgs: 0, Precedence: 50, Handler: notOperator}
 var emptyOpType = &operationType{Type: "EMPTY", Precedence: 50, Handler: emptyOperator}
@@ -334,7 +343,7 @@ func deepCloneWithOptions(node *yaml.Node, cloneContent bool) *yaml.Node {
 		Tag:         node.Tag,
 		Value:       node.Value,
 		Anchor:      node.Anchor,
-		Alias:       deepClone(node.Alias),
+		Alias:       node.Alias,
 		HeadComment: node.HeadComment,
 		LineComment: node.LineComment,
 		FootComment: node.FootComment,
@@ -416,6 +425,7 @@ func footComment(node *yaml.Node) string {
 }
 
 func createValueOperation(value interface{}, stringValue string) *Operation {
+	log.Debug("creating value op for string %v", stringValue)
 	var node = createScalarNode(value, stringValue)
 
 	return &Operation{

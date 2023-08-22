@@ -6,3 +6,5 @@ schemapatch:
     - 'CustomNoUpgrade'
 swaggerdocs:
   commentPolicy: Warn
+protobuf:
+  disabled: false

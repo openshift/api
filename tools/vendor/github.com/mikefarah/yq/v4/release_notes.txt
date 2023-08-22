@@ -1,3 +1,79 @@
+4.35.1:
+  - Added Lua output support (Thanks @Zash)!
+  - Added BSD checksum format (Thanks @viq)!
+  - Bumped dependencies
+
+4.34.2:
+  - Bumped dependencies
+
+
+4.34.1:
+  - Added shell output format thanks @giorgiga
+  - Fixed nil pointer dereference (#1649) thanks @ArthurFritz
+  - Bumped dependency versions
+
+4.33.3:
+  - Fixed bug when splatting empty array #1613
+  - Added scalar output for TOML (#1617)
+  - Fixed passing of readonly context in pipe (partial fix for #1631)
+  - Bumped dependency versions
+
+4.33.2:
+  - Add ``--nul-output|-0`` flag to separate element with NUL character (#1550) Thanks @vaab!
+  - Add removable-media interface plug declaration to the snap packaging(#1618) Thanks @brlin-tw!
+  - Scalar output now handled in csv, tsv and property files
+  - Bumped dependency versions
+
+4.33.1:
+  - Added read-only TOML support! #1364. Thanks @pelletier for making your API available in your toml lib :)
+  - Added warning when auto detect by file type is outputs JSON (#1608)
+
+4.32.2:
+  - Fixed behaviour for unknown file types (defaults to yaml) #1609
+
+4.32.1:
+  - Added divide and modulo operators (#1593) - thanks @teejaded!
+  - Add support for decoding base64 strings without padding (#1555) - thanks @teejaded!
+  - Add filter operation (#1588) - thanks @rbren!
+  - Detect input format based on file name extension (#1582) - thanks @ryenus!
+  - Auto output format when input format is automatically detected
+  - Fixed npe in log #1596
+  - Improved binary file size! 
+  - Bumped dependency versions
+
+4.31.2:
+  - Fixed variable handling #1458, #1566
+  - Fixed merged anchor reference problem #1482
+  - Fixed xml encoding of ProcInst #1563, improved XML comment handling
+  - Allow build without json and xml support (#1556) Thanks @afbjorklund
+  - Bumped dependencies
+
+4.31.1:
+  - Added shuffle command #1503
+  - Added ability to sort by multiple fields #1541
+  - Added @sh encoder #1526
+  - Added @uri/@urid encoder/decoder #1529
+  - Fixed date comparison with string date #1537
+  - Added from_unix/to_unix Operators
+  - Bumped dependency versions
+
+4.30.8:
+ - Log info message when unable to chown file in linux (e.g. snap confinement) #1521
+
+
+4.30.7:
+ - Fixed bug in splice operator #1511
+ - Fixed value operator bug  #1515
+ - Fixed handling of merging null #1501
+ - Ownership of file now maintained in linux (thanks @vaguecoder) #1473
+ - Bumped dependency versions
+
+4.30.6:
+  - Fixed xml comment in array of scalars #1465
+  - Include blank newlines in leading header preprocessing #1462
+  - Added aarch64 build (#1261)
+  - Bumped dependency versions (#1453)
+
 4.30.5:
   - XML Decoder: Comment parsing tweak 
   - XML Decoder: Fixed processing comments in empty XML #1446
@@ -138,7 +214,7 @@
 
 4.24.1:
   - Added comparison operators! (#94)
-  - Bumped golang to 1.18 (#1153)
+  - Bumped Golang to 1.18 (#1153)
   - XML parser no longer runs in strict mode (added new flag to run in strict mode) (#1155)
 
 4.23.1:

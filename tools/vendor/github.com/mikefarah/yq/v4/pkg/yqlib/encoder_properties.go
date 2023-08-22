@@ -51,7 +51,7 @@ func (pe *propertiesEncoder) PrintLeadingContent(writer io.Writer, content strin
 
 		if errors.Is(errReading, io.EOF) {
 			if readline != "" {
-				// the last comment we read didn't have a new line, put one in
+				// the last comment we read didn't have a newline, put one in
 				if err := writeString(writer, "\n"); err != nil {
 					return err
 				}
@@ -63,6 +63,11 @@ func (pe *propertiesEncoder) PrintLeadingContent(writer io.Writer, content strin
 }
 
 func (pe *propertiesEncoder) Encode(writer io.Writer, node *yaml.Node) error {
+
+	if node.Kind == yaml.ScalarNode {
+		return writeString(writer, node.Value+"\n")
+	}
+
 	mapKeysToStrings(node)
 	p := properties.NewProperties()
 	err := pe.doEncode(p, node, "", nil)

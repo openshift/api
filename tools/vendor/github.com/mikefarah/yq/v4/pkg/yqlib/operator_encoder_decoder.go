@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"container/list"
+	"errors"
 	"regexp"
 	"strings"
 
@@ -26,6 +27,10 @@ func configureEncoder(format PrinterOutputFormat, indent int) Encoder {
 		return NewXMLEncoder(indent, ConfiguredXMLPreferences)
 	case Base64OutputFormat:
 		return NewBase64Encoder()
+	case UriOutputFormat:
+		return NewUriEncoder()
+	case ShOutputFormat:
+		return NewShEncoder()
 	}
 	panic("invalid encoder")
 }
@@ -35,6 +40,9 @@ func encodeToString(candidate *CandidateNode, prefs encoderPreferences) (string,
 	log.Debug("printing with indent: %v", prefs.indent)
 
 	encoder := configureEncoder(prefs.format, prefs.indent)
+	if encoder == nil {
+		return "", errors.New("no support for output format")
+	}
 
 	printer := NewPrinter(encoder, NewSinglePrinterWriter(bufio.NewWriter(&output)))
 	err := printer.PrintResults(candidate.AsList())
@@ -71,13 +79,13 @@ func encodeOperator(d *dataTreeNavigator, context Context, expressionNode *Expre
 
 			original := originalList.Front().Value.(*CandidateNode)
 			originalNode := unwrapDoc(original.Node)
-			// original block did not have a new line at the end, get rid of this one too
+			// original block did not have a newline at the end, get rid of this one too
 			if !endWithNewLine.MatchString(originalNode.Value) {
 				stringValue = chomper.ReplaceAllString(stringValue, "")
 			}
 		}
 
-		// dont print a new line when printing json on a single line.
+		// dont print a newline when printing json on a single line.
 		if (preferences.format == JSONOutputFormat && preferences.indent == 0) ||
 			preferences.format == CSVOutputFormat ||
 			preferences.format == TSVOutputFormat {
@@ -94,13 +102,11 @@ type decoderPreferences struct {
 	format InputFormat
 }
 
-/* takes a string and decodes it back into an object */
-func decodeOperator(d *dataTreeNavigator, context Context, expressionNode *ExpressionNode) (Context, error) {
-
-	preferences := expressionNode.Operation.Preferences.(decoderPreferences)
-
+func createDecoder(format InputFormat) Decoder {
 	var decoder Decoder
-	switch preferences.format {
+	switch format {
+	case JsonInputFormat:
+		decoder = NewJSONDecoder()
 	case YamlInputFormat:
 		decoder = NewYamlDecoder(ConfiguredYamlPreferences)
 	case XMLInputFormat:
@@ -113,6 +119,20 @@ func decodeOperator(d *dataTreeNavigator, context Context, expressionNode *Expre
 		decoder = NewCSVObjectDecoder(',')
 	case TSVObjectInputFormat:
 		decoder = NewCSVObjectDecoder('\t')
+	case UriInputFormat:
+		decoder = NewUriDecoder()
+	}
+	return decoder
+}
+
+/* takes a string and decodes it back into an object */
+func decodeOperator(d *dataTreeNavigator, context Context, expressionNode *ExpressionNode) (Context, error) {
+
+	preferences := expressionNode.Operation.Preferences.(decoderPreferences)
+
+	decoder := createDecoder(preferences.format)
+	if decoder == nil {
+		return Context{}, errors.New("no support for input format")
 	}
 
 	var results = list.New()

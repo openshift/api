@@ -10,7 +10,8 @@ import (
 // +kubebuilder:subresource:status
 // +openshift:compatibility-gen:level=4
 
-// DNSNameResolver stores the DNS name resolution information of a DNS name. It is TechPreviewNoUpgrade only.
+// DNSNameResolver stores the DNS name resolution information of a DNS name. It can be enabled by the TechPreviewNoUpgrade feature set.
+// It can also be enabled by the feature gate DNSNameResolver when using CustomNoUpgrade feature set.
 //
 // Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
 type DNSNameResolver struct {
@@ -47,7 +48,7 @@ type DNSNameResolverSpec struct {
 // DNSNameResolverStatus defines the observed status of DNSNameResolver.
 type DNSNameResolverStatus struct {
 	// resolvedNames contains a list of matching DNS names and their corresponding IP addresses
-	// along with TTL and last DNS lookup time.
+	// along with their TTL and last DNS lookup times.
 	// +listType=map
 	// +listMapKey=dnsName
 	// +patchMergeKey=dnsName
@@ -55,10 +56,6 @@ type DNSNameResolverStatus struct {
 	// +optional
 	ResolvedNames []DNSNameResolverStatusItem `json:"resolvedNames,omitempty" patchStrategy:"merge" patchMergeKey:"dnsName"`
 }
-
-// +kubebuilder:validation:Pattern=`^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$|^s*((([0-9A-Fa-f]{1,4}:){7}(:|([0-9A-Fa-f]{1,4})))|(([0-9A-Fa-f]{1,4}:){6}:([0-9A-Fa-f]{1,4})?)|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){0,1}):([0-9A-Fa-f]{1,4})?))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){0,2}):([0-9A-Fa-f]{1,4})?))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){0,3}):([0-9A-Fa-f]{1,4})?))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){0,4}):([0-9A-Fa-f]{1,4})?))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){0,5}):([0-9A-Fa-f]{1,4})?))|(:(:|((:[0-9A-Fa-f]{1,4}){1,7}))))(%.+)?s*$`
-// IPAddressStr is used for validation of an IP address.
-type IPAddressStr string
 
 // DNSNameResolverStatusItem describes the details of a resolved DNS name.
 type DNSNameResolverStatusItem struct {
@@ -99,11 +96,17 @@ type DNSNameResolverInfo struct {
 	// expiration of the IP address's validity. If the information is not refreshed then it will be
 	// removed after a grace period of 1 second after the expiration of the IP address's validity.
 	// +kubebuilder:validation:Required
-	IP IPAddressStr `json:"ip"`
-	// ttlSeconds is the time-to-live value of the IP address.
+	IP string `json:"ip"`
+	// ttlSeconds is the time-to-live value of the IP address. The validity of the IP address expires after
+	// lastLookupTime + ttlSeconds. On a successful DNS lookup the value of this field will be updated with
+	// the current time-to-live value. If the information is not refreshed then it will be removed after a
+	// grace period of 1 second after the expiration of the IP address's validity.
 	// +kubebuilder:validation:Required
 	TTLSeconds int32 `json:"ttlSeconds"`
-	// lastLookupTime is the timestamp when the last DNS lookup was completed.
+	// lastLookupTime is the timestamp when the last DNS lookup was completed successfully. The validity of
+	// the IP address expires after lastLookupTime + ttlSeconds. The value of this field will be updated to
+	// the current time on a successful DNS lookup. If the information is not refreshed then it will be
+	// removed after a grace period of 1 second after the expiration of the IP address's validity.
 	// +kubebuilder:validation:Required
 	LastLookupTime *metav1.Time `json:"lastLookupTime"`
 }

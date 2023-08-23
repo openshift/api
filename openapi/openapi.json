@@ -21804,7 +21804,7 @@
       }
     },
     "com.github.openshift.api.network.v1alpha1.DNSNameResolver": {
-      "description": "DNSNameResolver stores the DNS name resolution information of a DNS name. It is TechPreviewNoUpgrade only.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "description": "DNSNameResolver stores the DNS name resolution information of a DNS name. It can be enabled by the TechPreviewNoUpgrade feature set. It can also be enabled by the feature gate DNSNameResolver when using CustomNoUpgrade feature set.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
       "type": "object",
       "required": [
         "spec"
@@ -21849,11 +21849,11 @@
           "default": ""
         },
         "lastLookupTime": {
-          "description": "lastLookupTime is the timestamp when the last DNS lookup was completed.",
+          "description": "lastLookupTime is the timestamp when the last DNS lookup was completed successfully. The validity of the IP address expires after lastLookupTime + ttlSeconds. The value of this field will be updated to the current time on a successful DNS lookup. If the information is not refreshed then it will be removed after a grace period of 1 second after the expiration of the IP address's validity.",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "ttlSeconds": {
-          "description": "ttlSeconds is the time-to-live value of the IP address.",
+          "description": "ttlSeconds is the time-to-live value of the IP address. The validity of the IP address expires after lastLookupTime + ttlSeconds. On a successful DNS lookup the value of this field will be updated with the current time-to-live value. If the information is not refreshed then it will be removed after a grace period of 1 second after the expiration of the IP address's validity.",
           "type": "integer",
           "format": "int32",
           "default": 0
@@ -21908,7 +21908,7 @@
       "type": "object",
       "properties": {
         "resolvedNames": {
-          "description": "resolvedNames contains a list of matching DNS names and their corresponding IP addresses along with TTL and last DNS lookup time.",
+          "description": "resolvedNames contains a list of matching DNS names and their corresponding IP addresses along with their TTL and last DNS lookup times.",
           "type": "array",
           "items": {
             "default": {},

@@ -12,7 +12,7 @@ package v1alpha1
 
 // AUTO-GENERATED FUNCTIONS START HERE
 var map_DNSNameResolver = map[string]string{
-	"":         "DNSNameResolver stores the DNS name resolution information of a DNS name. It is TechPreviewNoUpgrade only.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"":         "DNSNameResolver stores the DNS name resolution information of a DNS name. It can be enabled by the TechPreviewNoUpgrade feature set. It can also be enabled by the feature gate DNSNameResolver when using CustomNoUpgrade feature set.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 	"metadata": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
 	"spec":     "spec is the specification of the desired behavior of the DNSNameResolver.",
 	"status":   "status is the most recently observed status of the DNSNameResolver.",
@@ -24,8 +24,8 @@ func (DNSNameResolver) SwaggerDoc() map[string]string {
 
 var map_DNSNameResolverInfo = map[string]string{
 	"ip":             "ip is an IP address associated with the dnsName. The validity of the IP address expires after lastLookupTime + ttlSeconds. To refresh the information a DNS lookup will be performed on the expiration of the IP address's validity. If the information is not refreshed then it will be removed after a grace period of 1 second after the expiration of the IP address's validity.",
-	"ttlSeconds":     "ttlSeconds is the time-to-live value of the IP address.",
-	"lastLookupTime": "lastLookupTime is the timestamp when the last DNS lookup was completed.",
+	"ttlSeconds":     "ttlSeconds is the time-to-live value of the IP address. The validity of the IP address expires after lastLookupTime + ttlSeconds. On a successful DNS lookup the value of this field will be updated with the current time-to-live value. If the information is not refreshed then it will be removed after a grace period of 1 second after the expiration of the IP address's validity.",
+	"lastLookupTime": "lastLookupTime is the timestamp when the last DNS lookup was completed successfully. The validity of the IP address expires after lastLookupTime + ttlSeconds. The value of this field will be updated to the current time on a successful DNS lookup. If the information is not refreshed then it will be removed after a grace period of 1 second after the expiration of the IP address's validity.",
 }
 
 func (DNSNameResolverInfo) SwaggerDoc() map[string]string {
@@ -52,7 +52,7 @@ func (DNSNameResolverSpec) SwaggerDoc() map[string]string {
 
 var map_DNSNameResolverStatus = map[string]string{
 	"":              "DNSNameResolverStatus defines the observed status of DNSNameResolver.",
-	"resolvedNames": "resolvedNames contains a list of matching DNS names and their corresponding IP addresses along with TTL and last DNS lookup time.",
+	"resolvedNames": "resolvedNames contains a list of matching DNS names and their corresponding IP addresses along with their TTL and last DNS lookup times.",
 }
 
 func (DNSNameResolverStatus) SwaggerDoc() map[string]string {

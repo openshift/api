@@ -37453,7 +37453,7 @@ func schema_openshift_api_network_v1alpha1_DNSNameResolver(ref common.ReferenceC
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "DNSNameResolver stores the DNS name resolution information of a DNS name. It is TechPreviewNoUpgrade only.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Description: "DNSNameResolver stores the DNS name resolution information of a DNS name. It can be enabled by the TechPreviewNoUpgrade feature set. It can also be enabled by the feature gate DNSNameResolver when using CustomNoUpgrade feature set.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -37516,7 +37516,7 @@ func schema_openshift_api_network_v1alpha1_DNSNameResolverInfo(ref common.Refere
 					},
 					"ttlSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ttlSeconds is the time-to-live value of the IP address.",
+							Description: "ttlSeconds is the time-to-live value of the IP address. The validity of the IP address expires after lastLookupTime + ttlSeconds. On a successful DNS lookup the value of this field will be updated with the current time-to-live value. If the information is not refreshed then it will be removed after a grace period of 1 second after the expiration of the IP address's validity.",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
@@ -37524,7 +37524,7 @@ func schema_openshift_api_network_v1alpha1_DNSNameResolverInfo(ref common.Refere
 					},
 					"lastLookupTime": {
 						SchemaProps: spec.SchemaProps{
-							Description: "lastLookupTime is the timestamp when the last DNS lookup was completed.",
+							Description: "lastLookupTime is the timestamp when the last DNS lookup was completed successfully. The validity of the IP address expires after lastLookupTime + ttlSeconds. The value of this field will be updated to the current time on a successful DNS lookup. If the information is not refreshed then it will be removed after a grace period of 1 second after the expiration of the IP address's validity.",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
 						},
 					},
@@ -37628,7 +37628,7 @@ func schema_openshift_api_network_v1alpha1_DNSNameResolverStatus(ref common.Refe
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "resolvedNames contains a list of matching DNS names and their corresponding IP addresses along with TTL and last DNS lookup time.",
+							Description: "resolvedNames contains a list of matching DNS names and their corresponding IP addresses along with their TTL and last DNS lookup times.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{

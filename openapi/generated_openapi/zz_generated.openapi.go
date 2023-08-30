@@ -16106,7 +16106,7 @@ func schema_openshift_api_config_v1_PlatformSpec(ref common.ReferenceCallback) c
 					},
 					"external": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ExternalPlatformType represents generic infrastructure provider. Platform-specific components should be supplemented separately.",
+							Description: "external contains settings specific to the External platform. Platform-specific components should be supplemented separately.",
 							Ref:         ref("github.com/openshift/api/config/v1.ExternalPlatformSpec"),
 						},
 					},

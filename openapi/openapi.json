@@ -8697,7 +8697,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1.EquinixMetalPlatformSpec"
         },
         "external": {
-          "description": "ExternalPlatformType represents generic infrastructure provider. Platform-specific components should be supplemented separately.",
+          "description": "external contains settings specific to the External platform. Platform-specific components should be supplemented separately.",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.ExternalPlatformSpec"
         },
         "gcp": {

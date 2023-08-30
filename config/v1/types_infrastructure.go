@@ -308,7 +308,7 @@ type PlatformSpec struct {
 	// +optional
 	Nutanix *NutanixPlatformSpec `json:"nutanix,omitempty"`
 
-	// ExternalPlatformType represents generic infrastructure provider.
+	// external contains settings specific to the External platform.
 	// Platform-specific components should be supplemented separately.
 	// +optional
 	External *ExternalPlatformSpec `json:"external,omitempty"`

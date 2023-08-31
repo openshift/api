@@ -194,6 +194,7 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		without(disableKubeletCloudCredentialProviders).
 		with(onClusterBuild).
 		with(signatureStores).
+		with(openShiftPodSecurityAdmission).
 		toFeatures(defaultFeatures),
 	LatencySensitive: newDefaultFeatures().
 		toFeatures(defaultFeatures),
@@ -201,7 +202,6 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 
 var defaultFeatures = &FeatureGateEnabledDisabled{
 	Enabled: []FeatureGateDescription{
-		openShiftPodSecurityAdmission,
 		alibabaPlatform, // This is a bug, it should be TechPreviewNoUpgrade. This must be downgraded before 4.14 is shipped.
 		azureWorkloadIdentity,
 		cloudDualStackNodeIPs,

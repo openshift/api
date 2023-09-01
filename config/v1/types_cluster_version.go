@@ -644,9 +644,11 @@ type ConditionalUpdateRisk struct {
 
 	// name is the CamelCase reason for not recommending a
 	// conditional update, in the event that matchingRules match the
-	// cluster state.
+	// cluster state. Can be used as a reason in a Condition.
 	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MaxLength=1024
 	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:Pattern=`^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$`
 	// +required
 	Name string `json:"name"`
 

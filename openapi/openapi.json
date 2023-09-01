@@ -5498,7 +5498,7 @@
           "default": ""
         },
         "name": {
-          "description": "name is the CamelCase reason for not recommending a conditional update, in the event that matchingRules match the cluster state.",
+          "description": "name is the CamelCase reason for not recommending a conditional update, in the event that matchingRules match the cluster state. Can be used as a reason in a Condition.",
           "type": "string",
           "default": ""
         },

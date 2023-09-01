@@ -10605,7 +10605,7 @@ func schema_openshift_api_config_v1_ConditionalUpdateRisk(ref common.ReferenceCa
 					},
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name is the CamelCase reason for not recommending a conditional update, in the event that matchingRules match the cluster state.",
+							Description: "name is the CamelCase reason for not recommending a conditional update, in the event that matchingRules match the cluster state. Can be used as a reason in a Condition.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",

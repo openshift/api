@@ -341,9 +341,11 @@ spec:
                               type: string
                               minLength: 1
                             name:
-                              description: name is the CamelCase reason for not recommending a conditional update, in the event that matchingRules match the cluster state.
+                              description: name is the CamelCase reason for not recommending a conditional update, in the event that matchingRules match the cluster state. Can be used as a reason in a Condition.
                               type: string
+                              maxLength: 1024
                               minLength: 1
+                              pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
                             url:
                               description: url contains information about this risk.
                               type: string

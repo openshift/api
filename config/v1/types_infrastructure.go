@@ -1,6 +1,8 @@
 package v1
 
-import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+import (
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+)
 
 // +genclient
 // +genclient:nonNamespaced
@@ -1558,6 +1560,75 @@ type NutanixPlatformSpec struct {
 	// +listType=map
 	// +listMapKey=name
 	PrismElements []NutanixPrismElementEndpoint `json:"prismElements"`
+
+	// failureDomains configures failure domains information for the Nutanix platform.
+	// When set, the failure domains defined here may be used to spread Machines across
+	// prism element clusters to improve fault tolerance of the cluster.
+	// +listType=map
+	// +listMapKey=name
+	// +optional
+	FailureDomains []NutanixFailureDomain `json:"failureDomains"`
+}
+
+// NutanixFailureDomain configures failure domain information for the Nutanix platform.
+type NutanixFailureDomain struct {
+	// name defines the unique name of a failure domain.
+	// Name is required and must be at most 64 characters in length.
+	// It must consist of only lower case alphanumeric characters and hyphens (-).
+	// It must start and end with an alphanumeric character.
+	// This value is arbitrary and is used to identify the failure domain within the platform.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=64
+	// +kubebuilder:validation:Pattern=`[a-z0-9]([-a-z0-9]*[a-z0-9])?`
+	Name string `json:"name"`
+
+	// cluster is to identify the cluster (the Prism Element under management of the Prism Central),
+	// in which the Machine's VM will be created. The cluster identifier (uuid or name) can be obtained
+	// from the Prism Central console or using the prism_central API.
+	// +kubebuilder:validation:Required
+	Cluster NutanixResourceIdentifier `json:"cluster"`
+
+	// subnets holds a list of identifiers (one or more) of the cluster's network subnets
+	// for the Machine's VM to connect to. The subnet identifiers (uuid or name) can be
+	// obtained from the Prism Central console or using the prism_central API.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:MaxItems=1
+	// +listType=map
+	// +listMapKey=type
+	Subnets []NutanixResourceIdentifier `json:"subnets"`
+}
+
+// NutanixIdentifierType is an enumeration of different resource identifier types.
+// +kubebuilder:validation:Enum:=UUID;Name
+type NutanixIdentifierType string
+
+const (
+	// NutanixIdentifierUUID is a resource identifier identifying the object by UUID.
+	NutanixIdentifierUUID NutanixIdentifierType = "UUID"
+
+	// NutanixIdentifierName is a resource identifier identifying the object by Name.
+	NutanixIdentifierName NutanixIdentifierType = "Name"
+)
+
+// NutanixResourceIdentifier holds the identity of a Nutanix PC resource (cluster, image, subnet, etc.)
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'UUID' ?  has(self.uuid) : !has(self.uuid)",message="uuid configuration is required when type is UUID, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'Name' ?  has(self.name) : !has(self.name)",message="name configuration is required when type is Name, and forbidden otherwise"
+// +union
+type NutanixResourceIdentifier struct {
+	// type is the identifier type to use for this resource.
+	// +unionDiscriminator
+	// +kubebuilder:validation:Required
+	Type NutanixIdentifierType `json:"type"`
+
+	// uuid is the UUID of the resource in the PC. It cannot be empty if the type is UUID.
+	// +optional
+	UUID *string `json:"uuid,omitempty"`
+
+	// name is the resource name in the PC. It cannot be empty if the type is Name.
+	// +optional
+	Name *string `json:"name,omitempty"`
 }
 
 // NutanixPrismEndpoint holds the endpoint address and port to access the Nutanix Prism Central or Element (cluster)

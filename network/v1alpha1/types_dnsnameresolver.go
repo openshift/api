@@ -39,7 +39,7 @@ type DNSNameResolverSpec struct {
 	// '*' can be used at the beginning of the wildcard DNS name. For example, '*.example.com.'
 	// will match 'sub1.example.com.' but won't match 'sub2.sub1.example.com.'
 	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern=^(\*\.)?([A-Za-z0-9-]+\.)*[A-Za-z0-9-]+\.$
+	// +kubebuilder:validation:Pattern=^(\*\.)?([A-Za-z0-9]([-A-Za-z0-9]*[A-Za-z0-9])?\.)*[A-Za-z0-9]([-A-Za-z0-9]*[A-Za-z0-9])?\.$
 	// +kubebuilder:validation:MaxLength=254
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="spec.name is immutable"
 	Name string `json:"name"`
@@ -68,12 +68,12 @@ type DNSNameResolverStatusItem struct {
 	// dnsName is the resolved DNS name matching the name field of DNSNameResolverSpec. This field can
 	// store both regular and wildcard DNS names which match the spec.name field. When the spec.name
 	// field contains a regular DNS name, this field will store the same regular DNS name after it is
-	// successfully resolved. When the spec.name field contains a wildcard DNS name, this field will
-	// store the regular DNS names which match the wildcard DNS name and have been successfully resolved.
+	// successfully resolved. When the spec.name field contains a wildcard DNS name, each resolvedName.dnsName
+	// will store the regular DNS names which match the wildcard DNS name and have been successfully resolved.
 	// If the wildcard DNS name can also be successfully resolved, then this field will store the wildcard
 	// DNS name as well.
 	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern=^(\*\.)?([A-Za-z0-9-]+\.)*[A-Za-z0-9-]+\.$
+	// +kubebuilder:validation:Pattern=^(\*\.)?([A-Za-z0-9]([-A-Za-z0-9]*[A-Za-z0-9])?\.)*[A-Za-z0-9]([-A-Za-z0-9]*[A-Za-z0-9])?\.$
 	// +kubebuilder:validation:MaxLength=254
 	DNSName string `json:"dnsName"`
 	// resolvedAddresses gives the list of associated IP addresses and their corresponding TTLs and last

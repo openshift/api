@@ -37679,7 +37679,7 @@ func schema_openshift_api_network_v1alpha1_DNSNameResolverStatusItem(ref common.
 					},
 					"dnsName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "dnsName is the resolved DNS name matching the name field of DNSNameResolverSpec. This field can store both regular and wildcard DNS names which match the spec.name field. When the spec.name field contains a regular DNS name, this field will store the same regular DNS name after it is successfully resolved. When the spec.name field contains a wildcard DNS name, this field will store the regular DNS names which match the wildcard DNS name and have been successfully resolved. If the wildcard DNS name can also be successfully resolved, then this field will store the wildcard DNS name as well.",
+							Description: "dnsName is the resolved DNS name matching the name field of DNSNameResolverSpec. This field can store both regular and wildcard DNS names which match the spec.name field. When the spec.name field contains a regular DNS name, this field will store the same regular DNS name after it is successfully resolved. When the spec.name field contains a wildcard DNS name, each resolvedName.dnsName will store the regular DNS names which match the wildcard DNS name and have been successfully resolved. If the wildcard DNS name can also be successfully resolved, then this field will store the wildcard DNS name as well.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",

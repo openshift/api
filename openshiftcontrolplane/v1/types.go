@@ -132,8 +132,6 @@ type ImagePolicyConfig struct {
 
 	// internalRegistryHostname sets the hostname for the default internal image
 	// registry. The value must be in "hostname[:port]" format.
-	// For backward compatibility, users can still use OPENSHIFT_DEFAULT_REGISTRY
-	// environment variable but this setting overrides the environment variable.
 	InternalRegistryHostname string `json:"internalRegistryHostname"`
 	// externalRegistryHostnames provides the hostnames for the default external image
 	// registry. The external hostname should be set only when the image registry
@@ -194,7 +192,7 @@ type JenkinsPipelineConfig struct {
 
 // OpenShiftControllerName defines a string type used to represent the various
 // OpenShift controllers within openshift-controller-manager. These constants serve as identifiers
-// for the controllers and are used on both openshift/openshift-controller-manager 
+// for the controllers and are used on both openshift/openshift-controller-manager
 // and openshift/cluster-openshift-controller-manager-operator repositories.
 type OpenShiftControllerName string
 
@@ -365,7 +363,6 @@ type BuildDefaultsConfig struct {
 // SourceStrategyDefaultsConfig contains values that apply to builds using the
 // source strategy.
 type SourceStrategyDefaultsConfig struct {
-
 	// incremental indicates if s2i build strategies should perform an incremental
 	// build or not
 	Incremental *bool `json:"incremental,omitempty"`

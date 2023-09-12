@@ -9944,6 +9944,10 @@
         "resourcePool": {
           "description": "resourcePool is the absolute path of the resource pool where virtual machines will be created. The absolute path is of the form /<datacenter>/host/<cluster>/Resources/<resourcepool>. The maximum length of the path is 2048 characters.",
           "type": "string"
+        },
+        "template": {
+          "description": "template is the full inventory path of the virtual machine or template that will be cloned when creating new machines in this failure domain. The maximum length of the path is 2048 characters.\n\nif not defined, the template will be calculated by the control plane machineset operator based on the region and zone defined in VSpherePlatformFailureDomainSpec. For example, for zone=zonea, region=region1, and infrastructure name=test, the template path would be calculated as /<datacenter>/vm/test-rhcos-region1-zonea.",
+          "type": "string"
         }
       }
     },
@@ -17775,9 +17779,17 @@
           }
         },
         "platform": {
-          "description": "Platform identifies the platform for which the FailureDomain represents. Currently supported values are AWS, Azure, and GCP.",
+          "description": "Platform identifies the platform for which the FailureDomain represents. Currently supported values are AWS, Azure, GCP, OpenStack, and VSphere.",
           "type": "string",
           "default": ""
+        },
+        "vsphere": {
+          "description": "vsphere configures failure domain information for the VSphere platform.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machine.v1.VSphereFailureDomain"
+          }
         }
       },
       "x-kubernetes-unions": [
@@ -17787,7 +17799,8 @@
             "aws": "AWS",
             "azure": "Azure",
             "gcp": "GCP",
-            "openstack": "OpenStack"
+            "openstack": "OpenStack",
+            "vsphere": "VSphere"
           }
         }
       ]
@@ -18257,6 +18270,20 @@
         },
         "Value": {
           "description": "Value is the value or data of the key pair",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.machine.v1.VSphereFailureDomain": {
+      "description": "VSphereFailureDomain configures failure domain information for the vSphere platform",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name of the failure domain in which the vSphere machine provider will create the VM. Failure domains are defined in a cluster's config.openshift.io/Infrastructure resource. When balancing machines across failure domains, the control plane machine set will inject configuration from the Infrastructure resource into the machine providerSpec to allocate the machine to a failure domain.",
           "type": "string",
           "default": ""
         }

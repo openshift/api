@@ -41,8 +41,7 @@ func (n NamespacedName) String() string {
 // MarshalLog emits a struct containing required key/value pair
 func (n NamespacedName) MarshalLog() interface{} {
 	return struct {
-		Name      string `json:"name"`
-		Namespace string `json:"namespace,omitempty"`
+		Name, Namespace string
 	}{
 		Name:      n.Name,
 		Namespace: n.Namespace,

@@ -22,7 +22,7 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/google/gnostic-models/jsonschema"
+	"github.com/google/gnostic/jsonschema"
 )
 
 // compiler helper functions, usually called from generated code

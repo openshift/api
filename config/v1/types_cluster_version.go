@@ -248,7 +248,7 @@ const (
 )
 
 // ClusterVersionCapability enumerates optional, core cluster components.
-// +kubebuilder:validation:Enum=openshift-samples;baremetal;marketplace;Console;Insights;Storage;CSISnapshot;NodeTuning;MachineAPI;Build;DeploymentConfig;ImageRegistry
+// +kubebuilder:validation:Enum=openshift-samples;baremetal;marketplace;Console;Insights;Storage;CSISnapshot;NodeTuning;MachineAPI;Build;DeploymentConfig
 type ClusterVersionCapability string
 
 const (
@@ -331,9 +331,6 @@ const (
 	// The following resources are taken into account:
 	// - deploymentconfigs
 	ClusterVersionCapabilityDeploymentConfig ClusterVersionCapability = "DeploymentConfig"
-	// ClusterVersionCapabilityImageRegistry manages the image registry which
-	// allows to distribute Docker images
-	ClusterVersionCapabilityImageRegistry ClusterVersionCapability = "ImageRegistry"
 )
 
 // KnownClusterVersionCapabilities includes all known optional, core cluster components.
@@ -349,7 +346,6 @@ var KnownClusterVersionCapabilities = []ClusterVersionCapability{
 	ClusterVersionCapabilityMachineAPI,
 	ClusterVersionCapabilityBuild,
 	ClusterVersionCapabilityDeploymentConfig,
-	ClusterVersionCapabilityImageRegistry,
 }
 
 // ClusterVersionCapabilitySet defines sets of cluster version capabilities.
@@ -433,7 +429,6 @@ var ClusterVersionCapabilitySets = map[ClusterVersionCapabilitySet][]ClusterVers
 		ClusterVersionCapabilityMachineAPI,
 		ClusterVersionCapabilityBuild,
 		ClusterVersionCapabilityDeploymentConfig,
-		ClusterVersionCapabilityImageRegistry,
 	},
 	ClusterVersionCapabilitySetCurrent: {
 		ClusterVersionCapabilityBaremetal,
@@ -447,7 +442,6 @@ var ClusterVersionCapabilitySets = map[ClusterVersionCapabilitySet][]ClusterVers
 		ClusterVersionCapabilityMachineAPI,
 		ClusterVersionCapabilityBuild,
 		ClusterVersionCapabilityDeploymentConfig,
-		ClusterVersionCapabilityImageRegistry,
 	},
 }
 

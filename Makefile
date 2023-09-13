@@ -49,6 +49,7 @@ verify-scripts:
 	bash -x hack/verify-integration-tests.sh
 	bash -x hack/verify-group-versions.sh
 	bash -x hack/verify-prerelease-lifecycle-gen.sh
+	bash -x hack/verify-crd-schema-checker.sh
 
 .PHONY: verify
 verify: verify-scripts verify-codegen-crds

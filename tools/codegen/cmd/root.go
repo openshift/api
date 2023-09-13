@@ -45,7 +45,12 @@ var rootCmd = &cobra.Command{
 			return fmt.Errorf("could not build generation context: %w", err)
 		}
 
-		if err := executeGenerators(genCtx, allGenerators()...); err != nil {
+		generators := allGenerators()
+		if verify {
+			generators = append(generators, allVerifiers()...)
+		}
+
+		if err := executeGenerators(genCtx, generators...); err != nil {
 			return fmt.Errorf("could not run generators: %w", err)
 		}
 
@@ -127,6 +132,14 @@ func allGenerators() []generation.Generator {
 		newDeepcopyGenerator(),
 		newSwaggerDocsGenerator(),
 		newSchemaPatchGenerator(),
+	}
+}
+
+// allVerifiers returns an ordered list of verifiers to run when
+// the root command is executed with the --verify flag.
+func allVerifiers() []generation.Generator {
+	return []generation.Generator{
+		newSchemaCheckGenerator(),
 	}
 }
 

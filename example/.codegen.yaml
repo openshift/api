@@ -4,10 +4,6 @@ deepcopy:
   disabled: false
   headerFilePath: ../hack/empty.txt
   outputFileBaseName: zz_generated.deepcopy
-schemacheck:
-  disabled: false
-  enabledValidators: []
-  disabledValidators: []
 schemapatch:
   disabled: false
   requiredFeatureSets:

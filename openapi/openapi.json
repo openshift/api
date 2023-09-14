@@ -6654,6 +6654,38 @@
         "resourceGroupName": {
           "description": "ResourceGroupName is the Resource Group for new IBMCloud resources created for the cluster.",
           "type": "string"
+        },
+        "serviceEndpoints": {
+          "description": "serviceEndpoints is a list of custom endpoints which will override the default service endpoints of an IBM Cloud service. These endpoints are consumed by components within the cluster to reach the respective IBM Cloud Services.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.IBMCloudServiceEndpoint"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.IBMCloudServiceEndpoint": {
+      "description": "IBMCloudServiceEndpoint stores the configuration of a custom url to override existing defaults of IBM Cloud Services.",
+      "type": "object",
+      "required": [
+        "name",
+        "url"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the name of the IBM Cloud service. For example, the IBM Cloud Private IAM service could be configured with the service `name` of `IAM` and `url` of `https://private.iam.cloud.ibm.com` Whereas the IBM Cloud Private VPC service for US South (Dallas) could be configured with the service `name` of `VPC` and `url` of `https://us.south.private.iaas.cloud.ibm.com`",
+          "type": "string",
+          "default": ""
+        },
+        "url": {
+          "description": "url is fully qualified URI with scheme https, that overrides the default generated endpoint for a client. This must be provided and cannot be empty.",
+          "type": "string",
+          "default": ""
         }
       }
     },

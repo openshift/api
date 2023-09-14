@@ -6,8 +6,6 @@ import (
 	kadmissionregistrationv1 "k8s.io/api/admissionregistration/v1"
 	kadmissionregistrationv1beta1 "k8s.io/api/admissionregistration/v1beta1"
 	kappsv1 "k8s.io/api/apps/v1"
-	kappsv1beta1 "k8s.io/api/apps/v1beta1"
-	kappsv1beta2 "k8s.io/api/apps/v1beta2"
 	kauthenticationv1 "k8s.io/api/authentication/v1"
 	kauthenticationv1beta1 "k8s.io/api/authentication/v1beta1"
 	kauthorizationv1 "k8s.io/api/authorization/v1"
@@ -25,7 +23,6 @@ import (
 	kcorev1 "k8s.io/api/core/v1"
 	keventsv1 "k8s.io/api/events/v1"
 	keventsv1beta1 "k8s.io/api/events/v1beta1"
-	kextensionsv1beta1 "k8s.io/api/extensions/v1beta1"
 	kflowcontrolv1alpha1 "k8s.io/api/flowcontrol/v1alpha1"
 	kflowcontrolv1beta1 "k8s.io/api/flowcontrol/v1beta1"
 	kflowcontrolv1beta2 "k8s.io/api/flowcontrol/v1beta2"
@@ -123,8 +120,6 @@ var (
 		kadmissionregistrationv1.AddToScheme,
 		kadmissionregistrationv1beta1.AddToScheme,
 		kappsv1.AddToScheme,
-		kappsv1beta1.AddToScheme,
-		kappsv1beta2.AddToScheme,
 		kauthenticationv1.AddToScheme,
 		kauthenticationv1beta1.AddToScheme,
 		kauthorizationv1.AddToScheme,
@@ -142,7 +137,6 @@ var (
 		kcoordinationv1beta1.AddToScheme,
 		keventsv1.AddToScheme,
 		keventsv1beta1.AddToScheme,
-		kextensionsv1beta1.AddToScheme,
 		kflowcontrolv1alpha1.AddToScheme,
 		kflowcontrolv1beta1.AddToScheme,
 		kflowcontrolv1beta2.AddToScheme,

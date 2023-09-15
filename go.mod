@@ -7,7 +7,7 @@ require (
 	golang.org/x/tools v0.8.0
 	k8s.io/api v0.28.2
 	k8s.io/apimachinery v0.28.2
-	k8s.io/kube-openapi v0.0.0-20230905202853-d090da108d2f
+	k8s.io/kube-openapi v0.0.0-20230717233707-2695361300d9
 	sigs.k8s.io/yaml v1.3.0
 )
 

@@ -14,22 +14,19 @@ func NewDefaultComparators() manifestcomparators.CRDComparatorRegistry {
 	must(ret.AddComparator(manifestcomparators.NoFieldRemoval()))
 	must(ret.AddComparator(manifestcomparators.NoMaps()))
 	must(ret.AddComparator(manifestcomparators.MustHaveStatus()))
+	must(ret.AddComparator(manifestcomparators.ListsMustHaveSSATags()))
 
 	/*
 		other useful comparators
 
-		1. don't remove field
 		2. don't change field types
 		3. don't tighten validation rules
 		4. don't loosen validation rules (warning)
-		5. status subresource must be used if status exists
 		6. conditions must match metav1.Conditions with proper SSA tags
 		7. all lists must have SSA tags
-		8. don't use maps
 		9. don't use floats
 		10. don't use unsigned ints
 		11. no durations (for kube, openshift configuration API allowed)
-		12. don't use bools
 		13. enumerated values should use CamelCase
 		14. optional should be pointers (for kube, openshift configuration API allowed)
 		15. no new fields can be required

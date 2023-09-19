@@ -17733,9 +17733,6 @@
     "com.github.openshift.api.machine.v1.FailureDomains": {
       "description": "FailureDomain represents the different configurations required to spread Machines across failure domains on different platforms.",
       "type": "object",
-      "required": [
-        "platform"
-      ],
       "properties": {
         "aws": {
           "description": "AWS configures failure domain information for the AWS platform.",
@@ -17771,8 +17768,7 @@
         },
         "platform": {
           "description": "Platform identifies the platform for which the FailureDomain represents. Currently supported values are AWS, Azure, and GCP.",
-          "type": "string",
-          "default": ""
+          "type": "string"
         }
       },
       "x-kubernetes-unions": [

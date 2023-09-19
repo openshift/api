@@ -47,7 +47,7 @@ tests:
             failureDomains:
               openstack:
               - availabilityZone: foo
-    expectedError: "spec.template.machines_v1beta1_machine_openshift_io.failureDomains.platform: Required value"
+    expectedError: "Invalid value: \"object\": openstack configuration is required when platform is OpenStack, and forbidden otherwise"
   - name: Should reject an OpenStack configured failure domain with an empty OpenStack config
     initial: |
       apiVersion: machine.openshift.io/v1

@@ -47,7 +47,7 @@ tests:
             failureDomains:
               azure:
               - zone: foo
-    expectedError: "spec.template.machines_v1beta1_machine_openshift_io.failureDomains.platform: Required value"
+    expectedError: "Invalid value: \"object\": azure configuration is required when platform is Azure, and forbidden otherwise"
   - name: Should reject an Azure configured failure domain with the wrong platform type
     initial: |
       apiVersion: machine.openshift.io/v1

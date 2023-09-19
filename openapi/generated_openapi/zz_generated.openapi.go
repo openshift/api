@@ -30538,7 +30538,6 @@ func schema_openshift_api_machine_v1_FailureDomains(ref common.ReferenceCallback
 					"platform": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Platform identifies the platform for which the FailureDomain represents. Currently supported values are AWS, Azure, and GCP.",
-							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -30600,7 +30599,6 @@ func schema_openshift_api_machine_v1_FailureDomains(ref common.ReferenceCallback
 						},
 					},
 				},
-				Required: []string{"platform"},
 			},
 			VendorExtensible: spec.VendorExtensible{
 				Extensions: spec.Extensions{

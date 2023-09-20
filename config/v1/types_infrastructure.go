@@ -1209,13 +1209,13 @@ type IBMCloudPlatformStatus struct {
 	// for the cluster's base domain
 	DNSInstanceCRN string `json:"dnsInstanceCRN,omitempty"`
 
-        // serviceEndpoints is a list of custom endpoints which will override the default
-        // service endpoints of an IBM Cloud service. These endpoints are consumed by
+	// serviceEndpoints is a list of custom endpoints which will override the default
+	// service endpoints of an IBM Cloud service. These endpoints are consumed by
 	// components within the cluster to reach the respective IBM Cloud Services.
-        // +listType=map
-        // +listMapKey=name
-        // +optional
-        ServiceEndpoints []IBMCloudServiceEndpoint `json:"serviceEndpoints,omitempty"`
+	// +listType=map
+	// +listMapKey=name
+	// +optional
+	ServiceEndpoints []IBMCloudServiceEndpoint `json:"serviceEndpoints,omitempty"`
 }
 
 // KubevirtPlatformSpec holds the desired state of the kubevirt infrastructure provider.

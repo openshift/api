@@ -194,7 +194,7 @@ type JenkinsPipelineConfig struct {
 
 // OpenShiftControllerName defines a string type used to represent the various
 // OpenShift controllers within openshift-controller-manager. These constants serve as identifiers
-// for the controllers and are used on both openshift/openshift-controller-manager 
+// for the controllers and are used on both openshift/openshift-controller-manager
 // and openshift/cluster-openshift-controller-manager-operator repositories.
 type OpenShiftControllerName string
 
@@ -205,7 +205,9 @@ const (
 	OpenshiftOriginNamespaceController           OpenShiftControllerName = "openshift.io/origin-namespace"
 	OpenshiftBuildController                     OpenShiftControllerName = "openshift.io/build"
 	OpenshiftBuildConfigChangeController         OpenShiftControllerName = "openshift.io/build-config-change"
+	OpenShiftBuilderServiceAccountController     OpenShiftControllerName = "openshift.io/builder-serviceaccount"
 	OpenshiftDeployerController                  OpenShiftControllerName = "openshift.io/deployer"
+	OpenShiftDeployerServiceAccountController    OpenShiftControllerName = "openshift.io/deployer-serviceaccount"
 	OpenshiftDeploymentConfigController          OpenShiftControllerName = "openshift.io/deploymentconfig"
 	OpenshiftImageTriggerController              OpenShiftControllerName = "openshift.io/image-trigger"
 	OpenshiftImageImportController               OpenShiftControllerName = "openshift.io/image-import"

@@ -39,7 +39,7 @@ type DNSNameResolverSpec struct {
 	// '*' can be used at the beginning of the wildcard DNS name. For example, '*.example.com.'
 	// will match 'sub1.example.com.' but won't match 'sub2.sub1.example.com.'
 	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern=^(\*\.)?([A-Za-z0-9]([-A-Za-z0-9]*[A-Za-z0-9])?\.)*[A-Za-z0-9]([-A-Za-z0-9]*[A-Za-z0-9])?\.$
+	// +kubebuilder:validation:Pattern=^(\*\.)?([A-Za-z0-9]([-A-Za-z0-9]*[A-Za-z0-9])?\.)+[A-Za-z0-9]([-A-Za-z0-9]*[A-Za-z0-9])?\.$
 	// +kubebuilder:validation:MaxLength=254
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="spec.name is immutable"
 	Name string `json:"name"`
@@ -73,7 +73,7 @@ type DNSNameResolverStatusItem struct {
 	// If the wildcard DNS name can also be successfully resolved, then this field will store the wildcard
 	// DNS name as well.
 	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern=^(\*\.)?([A-Za-z0-9]([-A-Za-z0-9]*[A-Za-z0-9])?\.)*[A-Za-z0-9]([-A-Za-z0-9]*[A-Za-z0-9])?\.$
+	// +kubebuilder:validation:Pattern=^(\*\.)?([A-Za-z0-9]([-A-Za-z0-9]*[A-Za-z0-9])?\.)+[A-Za-z0-9]([-A-Za-z0-9]*[A-Za-z0-9])?\.$
 	// +kubebuilder:validation:MaxLength=254
 	DNSName string `json:"dnsName"`
 	// resolvedAddresses gives the list of associated IP addresses and their corresponding TTLs and last

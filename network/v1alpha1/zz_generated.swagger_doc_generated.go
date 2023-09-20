@@ -22,16 +22,6 @@ func (DNSNameResolver) SwaggerDoc() map[string]string {
 	return map_DNSNameResolver
 }
 
-var map_DNSNameResolverInfo = map[string]string{
-	"ip":             "ip is an IP address associated with the dnsName. The validity of the IP address expires after lastLookupTime + ttlSeconds. To refresh the information a DNS lookup will be performed on the expiration of the IP address's validity. If the information is not refreshed then it will be removed with a grace period after the expiration of the IP address's validity.",
-	"ttlSeconds":     "ttlSeconds is the time-to-live value of the IP address. The validity of the IP address expires after lastLookupTime + ttlSeconds. On a successful DNS lookup the value of this field will be updated with the current time-to-live value. If the information is not refreshed then it will be removed with a grace period after the expiration of the IP address's validity.",
-	"lastLookupTime": "lastLookupTime is the timestamp when the last DNS lookup was completed successfully. The validity of the IP address expires after lastLookupTime + ttlSeconds. The value of this field will be updated to the current time on a successful DNS lookup. If the information is not refreshed then it will be removed with a grace period after the expiration of the IP address's validity.",
-}
-
-func (DNSNameResolverInfo) SwaggerDoc() map[string]string {
-	return map_DNSNameResolverInfo
-}
-
 var map_DNSNameResolverList = map[string]string{
 	"":         "DNSNameResolverList contains a list of DNSNameResolvers.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 	"metadata": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
@@ -39,6 +29,28 @@ var map_DNSNameResolverList = map[string]string{
 
 func (DNSNameResolverList) SwaggerDoc() map[string]string {
 	return map_DNSNameResolverList
+}
+
+var map_DNSNameResolverResolvedAddress = map[string]string{
+	"ip":             "ip is an IP address associated with the dnsName. The validity of the IP address expires after lastLookupTime + ttlSeconds. To refresh the information a DNS lookup will be performed on the expiration of the IP address's validity. If the information is not refreshed then it will be removed with a grace period after the expiration of the IP address's validity.",
+	"ttlSeconds":     "ttlSeconds is the time-to-live value of the IP address. The validity of the IP address expires after lastLookupTime + ttlSeconds. On a successful DNS lookup the value of this field will be updated with the current time-to-live value. If the information is not refreshed then it will be removed with a grace period after the expiration of the IP address's validity.",
+	"lastLookupTime": "lastLookupTime is the timestamp when the last DNS lookup was completed successfully. The validity of the IP address expires after lastLookupTime + ttlSeconds. The value of this field will be updated to the current time on a successful DNS lookup. If the information is not refreshed then it will be removed with a grace period after the expiration of the IP address's validity.",
+}
+
+func (DNSNameResolverResolvedAddress) SwaggerDoc() map[string]string {
+	return map_DNSNameResolverResolvedAddress
+}
+
+var map_DNSNameResolverResolvedName = map[string]string{
+	"":                   "DNSNameResolverResolvedName describes the details of a resolved DNS name.",
+	"conditions":         "conditions provide information about the state of the DNS name. Known .status.conditions.type is: \"Degraded\"",
+	"dnsName":            "dnsName is the resolved DNS name matching the name field of DNSNameResolverSpec. This field can store both regular and wildcard DNS names which match the spec.name field. When the spec.name field contains a regular DNS name, this field will store the same regular DNS name after it is successfully resolved. When the spec.name field contains a wildcard DNS name, each resolvedName.dnsName will store the regular DNS names which match the wildcard DNS name and have been successfully resolved. If the wildcard DNS name can also be successfully resolved, then this field will store the wildcard DNS name as well.",
+	"resolvedAddresses":  "resolvedAddresses gives the list of associated IP addresses and their corresponding TTLs and last lookup times for the dnsName.",
+	"resolutionFailures": "resolutionFailures keeps the count of how many consecutive times the DNS resolution failed for the dnsName. If the DNS resolution succeeds then the field will be set to zero. Upon every failure, the value of the field will be incremented by one. The details about the DNS name will be removed, if the value of resolutionFailures reaches 5 and the TTL of all the associated IP addresses have expired.",
+}
+
+func (DNSNameResolverResolvedName) SwaggerDoc() map[string]string {
+	return map_DNSNameResolverResolvedName
 }
 
 var map_DNSNameResolverSpec = map[string]string{
@@ -57,18 +69,6 @@ var map_DNSNameResolverStatus = map[string]string{
 
 func (DNSNameResolverStatus) SwaggerDoc() map[string]string {
 	return map_DNSNameResolverStatus
-}
-
-var map_DNSNameResolverStatusItem = map[string]string{
-	"":                   "DNSNameResolverStatusItem describes the details of a resolved DNS name.",
-	"conditions":         "conditions provide information about the state of the DNS name. Known .status.conditions.type is: \"Degraded\"",
-	"dnsName":            "dnsName is the resolved DNS name matching the name field of DNSNameResolverSpec. This field can store both regular and wildcard DNS names which match the spec.name field. When the spec.name field contains a regular DNS name, this field will store the same regular DNS name after it is successfully resolved. When the spec.name field contains a wildcard DNS name, each resolvedName.dnsName will store the regular DNS names which match the wildcard DNS name and have been successfully resolved. If the wildcard DNS name can also be successfully resolved, then this field will store the wildcard DNS name as well.",
-	"resolvedAddresses":  "resolvedAddresses gives the list of associated IP addresses and their corresponding TTLs and last lookup times for the dnsName.",
-	"resolutionFailures": "resolutionFailures keeps the count of how many consecutive times the DNS resolution failed for the dnsName. If the DNS resolution succeeds then the field will be set to zero. Upon every failure, the value of the field will be incremented by one. The details about the DNS name will be removed, if the value of resolutionFailures reaches 5 and the TTL of all the associated IP addresses have expired.",
-}
-
-func (DNSNameResolverStatusItem) SwaggerDoc() map[string]string {
-	return map_DNSNameResolverStatusItem
 }
 
 // AUTO-GENERATED FUNCTIONS END HERE

@@ -21835,31 +21835,6 @@
         }
       }
     },
-    "com.github.openshift.api.network.v1alpha1.DNSNameResolverInfo": {
-      "type": "object",
-      "required": [
-        "ip",
-        "ttlSeconds",
-        "lastLookupTime"
-      ],
-      "properties": {
-        "ip": {
-          "description": "ip is an IP address associated with the dnsName. The validity of the IP address expires after lastLookupTime + ttlSeconds. To refresh the information a DNS lookup will be performed on the expiration of the IP address's validity. If the information is not refreshed then it will be removed with a grace period after the expiration of the IP address's validity.",
-          "type": "string",
-          "default": ""
-        },
-        "lastLookupTime": {
-          "description": "lastLookupTime is the timestamp when the last DNS lookup was completed successfully. The validity of the IP address expires after lastLookupTime + ttlSeconds. The value of this field will be updated to the current time on a successful DNS lookup. If the information is not refreshed then it will be removed with a grace period after the expiration of the IP address's validity.",
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
-        },
-        "ttlSeconds": {
-          "description": "ttlSeconds is the time-to-live value of the IP address. The validity of the IP address expires after lastLookupTime + ttlSeconds. On a successful DNS lookup the value of this field will be updated with the current time-to-live value. If the information is not refreshed then it will be removed with a grace period after the expiration of the IP address's validity.",
-          "type": "integer",
-          "format": "int32",
-          "default": 0
-        }
-      }
-    },
     "com.github.openshift.api.network.v1alpha1.DNSNameResolverList": {
       "description": "DNSNameResolverList contains a list of DNSNameResolvers.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
       "type": "object",
@@ -21889,42 +21864,33 @@
         }
       }
     },
-    "com.github.openshift.api.network.v1alpha1.DNSNameResolverSpec": {
-      "description": "DNSNameResolverSpec is a desired state description of DNSNameResolver.",
+    "com.github.openshift.api.network.v1alpha1.DNSNameResolverResolvedAddress": {
       "type": "object",
       "required": [
-        "name"
+        "ip",
+        "ttlSeconds",
+        "lastLookupTime"
       ],
       "properties": {
-        "name": {
-          "description": "name is the DNS name for which the DNS name resolution information will be stored. For a regular DNS name, only the DNS name resolution information of the regular DNS name will be stored. For a wildcard DNS name, the DNS name resolution information of all the DNS names, that matches the wildcard DNS name, will be stored. For a wildcard DNS name, the '*' will match only one label. Additionally, only a single '*' can be used at the beginning of the wildcard DNS name. For example, '*.example.com.' will match 'sub1.example.com.' but won't match 'sub2.sub1.example.com.'",
+        "ip": {
+          "description": "ip is an IP address associated with the dnsName. The validity of the IP address expires after lastLookupTime + ttlSeconds. To refresh the information a DNS lookup will be performed on the expiration of the IP address's validity. If the information is not refreshed then it will be removed with a grace period after the expiration of the IP address's validity.",
           "type": "string",
           "default": ""
+        },
+        "lastLookupTime": {
+          "description": "lastLookupTime is the timestamp when the last DNS lookup was completed successfully. The validity of the IP address expires after lastLookupTime + ttlSeconds. The value of this field will be updated to the current time on a successful DNS lookup. If the information is not refreshed then it will be removed with a grace period after the expiration of the IP address's validity.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "ttlSeconds": {
+          "description": "ttlSeconds is the time-to-live value of the IP address. The validity of the IP address expires after lastLookupTime + ttlSeconds. On a successful DNS lookup the value of this field will be updated with the current time-to-live value. If the information is not refreshed then it will be removed with a grace period after the expiration of the IP address's validity.",
+          "type": "integer",
+          "format": "int32",
+          "default": 0
         }
       }
     },
-    "com.github.openshift.api.network.v1alpha1.DNSNameResolverStatus": {
-      "description": "DNSNameResolverStatus defines the observed status of DNSNameResolver.",
-      "type": "object",
-      "properties": {
-        "resolvedNames": {
-          "description": "resolvedNames contains a list of matching DNS names and their corresponding IP addresses along with their TTL and last DNS lookup times.",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/com.github.openshift.api.network.v1alpha1.DNSNameResolverStatusItem"
-          },
-          "x-kubernetes-list-map-keys": [
-            "dnsName"
-          ],
-          "x-kubernetes-list-type": "map",
-          "x-kubernetes-patch-merge-key": "dnsName",
-          "x-kubernetes-patch-strategy": "merge"
-        }
-      }
-    },
-    "com.github.openshift.api.network.v1alpha1.DNSNameResolverStatusItem": {
-      "description": "DNSNameResolverStatusItem describes the details of a resolved DNS name.",
+    "com.github.openshift.api.network.v1alpha1.DNSNameResolverResolvedName": {
+      "description": "DNSNameResolverResolvedName describes the details of a resolved DNS name.",
       "type": "object",
       "required": [
         "dnsName",
@@ -21958,12 +21924,46 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/com.github.openshift.api.network.v1alpha1.DNSNameResolverInfo"
+            "$ref": "#/definitions/com.github.openshift.api.network.v1alpha1.DNSNameResolverResolvedAddress"
           },
           "x-kubernetes-list-map-keys": [
             "ip"
           ],
           "x-kubernetes-list-type": "map"
+        }
+      }
+    },
+    "com.github.openshift.api.network.v1alpha1.DNSNameResolverSpec": {
+      "description": "DNSNameResolverSpec is a desired state description of DNSNameResolver.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the DNS name for which the DNS name resolution information will be stored. For a regular DNS name, only the DNS name resolution information of the regular DNS name will be stored. For a wildcard DNS name, the DNS name resolution information of all the DNS names, that matches the wildcard DNS name, will be stored. For a wildcard DNS name, the '*' will match only one label. Additionally, only a single '*' can be used at the beginning of the wildcard DNS name. For example, '*.example.com.' will match 'sub1.example.com.' but won't match 'sub2.sub1.example.com.'",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.network.v1alpha1.DNSNameResolverStatus": {
+      "description": "DNSNameResolverStatus defines the observed status of DNSNameResolver.",
+      "type": "object",
+      "properties": {
+        "resolvedNames": {
+          "description": "resolvedNames contains a list of matching DNS names and their corresponding IP addresses along with their TTL and last DNS lookup times.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.network.v1alpha1.DNSNameResolverResolvedName"
+          },
+          "x-kubernetes-list-map-keys": [
+            "dnsName"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "dnsName",
+          "x-kubernetes-patch-strategy": "merge"
         }
       }
     },

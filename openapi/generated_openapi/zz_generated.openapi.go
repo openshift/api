@@ -742,11 +742,11 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/network/v1.NetNamespace":                                            schema_openshift_api_network_v1_NetNamespace(ref),
 		"github.com/openshift/api/network/v1.NetNamespaceList":                                        schema_openshift_api_network_v1_NetNamespaceList(ref),
 		"github.com/openshift/api/network/v1alpha1.DNSNameResolver":                                   schema_openshift_api_network_v1alpha1_DNSNameResolver(ref),
-		"github.com/openshift/api/network/v1alpha1.DNSNameResolverInfo":                               schema_openshift_api_network_v1alpha1_DNSNameResolverInfo(ref),
 		"github.com/openshift/api/network/v1alpha1.DNSNameResolverList":                               schema_openshift_api_network_v1alpha1_DNSNameResolverList(ref),
+		"github.com/openshift/api/network/v1alpha1.DNSNameResolverResolvedAddress":                    schema_openshift_api_network_v1alpha1_DNSNameResolverResolvedAddress(ref),
+		"github.com/openshift/api/network/v1alpha1.DNSNameResolverResolvedName":                       schema_openshift_api_network_v1alpha1_DNSNameResolverResolvedName(ref),
 		"github.com/openshift/api/network/v1alpha1.DNSNameResolverSpec":                               schema_openshift_api_network_v1alpha1_DNSNameResolverSpec(ref),
 		"github.com/openshift/api/network/v1alpha1.DNSNameResolverStatus":                             schema_openshift_api_network_v1alpha1_DNSNameResolverStatus(ref),
-		"github.com/openshift/api/network/v1alpha1.DNSNameResolverStatusItem":                         schema_openshift_api_network_v1alpha1_DNSNameResolverStatusItem(ref),
 		"github.com/openshift/api/networkoperator/v1.EgressRouter":                                    schema_openshift_api_networkoperator_v1_EgressRouter(ref),
 		"github.com/openshift/api/networkoperator/v1.EgressRouterSpec":                                schema_openshift_api_networkoperator_v1_EgressRouterSpec(ref),
 		"github.com/openshift/api/oauth/v1.ClusterRoleScopeRestriction":                               schema_openshift_api_oauth_v1_ClusterRoleScopeRestriction(ref),
@@ -37500,43 +37500,6 @@ func schema_openshift_api_network_v1alpha1_DNSNameResolver(ref common.ReferenceC
 	}
 }
 
-func schema_openshift_api_network_v1alpha1_DNSNameResolverInfo(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"ip": {
-						SchemaProps: spec.SchemaProps{
-							Description: "ip is an IP address associated with the dnsName. The validity of the IP address expires after lastLookupTime + ttlSeconds. To refresh the information a DNS lookup will be performed on the expiration of the IP address's validity. If the information is not refreshed then it will be removed with a grace period after the expiration of the IP address's validity.",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"ttlSeconds": {
-						SchemaProps: spec.SchemaProps{
-							Description: "ttlSeconds is the time-to-live value of the IP address. The validity of the IP address expires after lastLookupTime + ttlSeconds. On a successful DNS lookup the value of this field will be updated with the current time-to-live value. If the information is not refreshed then it will be removed with a grace period after the expiration of the IP address's validity.",
-							Default:     0,
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"lastLookupTime": {
-						SchemaProps: spec.SchemaProps{
-							Description: "lastLookupTime is the timestamp when the last DNS lookup was completed successfully. The validity of the IP address expires after lastLookupTime + ttlSeconds. The value of this field will be updated to the current time on a successful DNS lookup. If the information is not refreshed then it will be removed with a grace period after the expiration of the IP address's validity.",
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
-						},
-					},
-				},
-				Required: []string{"ip", "ttlSeconds", "lastLookupTime"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
-	}
-}
-
 func schema_openshift_api_network_v1alpha1_DNSNameResolverList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -37587,72 +37550,48 @@ func schema_openshift_api_network_v1alpha1_DNSNameResolverList(ref common.Refere
 	}
 }
 
-func schema_openshift_api_network_v1alpha1_DNSNameResolverSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_openshift_api_network_v1alpha1_DNSNameResolverResolvedAddress(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "DNSNameResolverSpec is a desired state description of DNSNameResolver.",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"name": {
+					"ip": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name is the DNS name for which the DNS name resolution information will be stored. For a regular DNS name, only the DNS name resolution information of the regular DNS name will be stored. For a wildcard DNS name, the DNS name resolution information of all the DNS names, that matches the wildcard DNS name, will be stored. For a wildcard DNS name, the '*' will match only one label. Additionally, only a single '*' can be used at the beginning of the wildcard DNS name. For example, '*.example.com.' will match 'sub1.example.com.' but won't match 'sub2.sub1.example.com.'",
+							Description: "ip is an IP address associated with the dnsName. The validity of the IP address expires after lastLookupTime + ttlSeconds. To refresh the information a DNS lookup will be performed on the expiration of the IP address's validity. If the information is not refreshed then it will be removed with a grace period after the expiration of the IP address's validity.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-				},
-				Required: []string{"name"},
-			},
-		},
-	}
-}
-
-func schema_openshift_api_network_v1alpha1_DNSNameResolverStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "DNSNameResolverStatus defines the observed status of DNSNameResolver.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"resolvedNames": {
-						VendorExtensible: spec.VendorExtensible{
-							Extensions: spec.Extensions{
-								"x-kubernetes-list-map-keys": []interface{}{
-									"dnsName",
-								},
-								"x-kubernetes-list-type":       "map",
-								"x-kubernetes-patch-merge-key": "dnsName",
-								"x-kubernetes-patch-strategy":  "merge",
-							},
-						},
+					"ttlSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Description: "resolvedNames contains a list of matching DNS names and their corresponding IP addresses along with their TTL and last DNS lookup times.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("github.com/openshift/api/network/v1alpha1.DNSNameResolverStatusItem"),
-									},
-								},
-							},
+							Description: "ttlSeconds is the time-to-live value of the IP address. The validity of the IP address expires after lastLookupTime + ttlSeconds. On a successful DNS lookup the value of this field will be updated with the current time-to-live value. If the information is not refreshed then it will be removed with a grace period after the expiration of the IP address's validity.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"lastLookupTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "lastLookupTime is the timestamp when the last DNS lookup was completed successfully. The validity of the IP address expires after lastLookupTime + ttlSeconds. The value of this field will be updated to the current time on a successful DNS lookup. If the information is not refreshed then it will be removed with a grace period after the expiration of the IP address's validity.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
 						},
 					},
 				},
+				Required: []string{"ip", "ttlSeconds", "lastLookupTime"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/network/v1alpha1.DNSNameResolverStatusItem"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
-func schema_openshift_api_network_v1alpha1_DNSNameResolverStatusItem(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_openshift_api_network_v1alpha1_DNSNameResolverResolvedName(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "DNSNameResolverStatusItem describes the details of a resolved DNS name.",
+				Description: "DNSNameResolverResolvedName describes the details of a resolved DNS name.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"conditions": {
@@ -37701,7 +37640,7 @@ func schema_openshift_api_network_v1alpha1_DNSNameResolverStatusItem(ref common.
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/openshift/api/network/v1alpha1.DNSNameResolverInfo"),
+										Ref:     ref("github.com/openshift/api/network/v1alpha1.DNSNameResolverResolvedAddress"),
 									},
 								},
 							},
@@ -37719,7 +37658,68 @@ func schema_openshift_api_network_v1alpha1_DNSNameResolverStatusItem(ref common.
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/network/v1alpha1.DNSNameResolverInfo", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
+			"github.com/openshift/api/network/v1alpha1.DNSNameResolverResolvedAddress", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
+	}
+}
+
+func schema_openshift_api_network_v1alpha1_DNSNameResolverSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DNSNameResolverSpec is a desired state description of DNSNameResolver.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the DNS name for which the DNS name resolution information will be stored. For a regular DNS name, only the DNS name resolution information of the regular DNS name will be stored. For a wildcard DNS name, the DNS name resolution information of all the DNS names, that matches the wildcard DNS name, will be stored. For a wildcard DNS name, the '*' will match only one label. Additionally, only a single '*' can be used at the beginning of the wildcard DNS name. For example, '*.example.com.' will match 'sub1.example.com.' but won't match 'sub2.sub1.example.com.'",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_network_v1alpha1_DNSNameResolverStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DNSNameResolverStatus defines the observed status of DNSNameResolver.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"resolvedNames": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"dnsName",
+								},
+								"x-kubernetes-list-type":       "map",
+								"x-kubernetes-patch-merge-key": "dnsName",
+								"x-kubernetes-patch-strategy":  "merge",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "resolvedNames contains a list of matching DNS names and their corresponding IP addresses along with their TTL and last DNS lookup times.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/network/v1alpha1.DNSNameResolverResolvedName"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/network/v1alpha1.DNSNameResolverResolvedName"},
 	}
 }
 

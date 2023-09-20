@@ -54,11 +54,11 @@ type DNSNameResolverStatus struct {
 	// +patchMergeKey=dnsName
 	// +patchStrategy=merge
 	// +optional
-	ResolvedNames []DNSNameResolverStatusItem `json:"resolvedNames,omitempty" patchStrategy:"merge" patchMergeKey:"dnsName"`
+	ResolvedNames []DNSNameResolverResolvedName `json:"resolvedNames,omitempty" patchStrategy:"merge" patchMergeKey:"dnsName"`
 }
 
-// DNSNameResolverStatusItem describes the details of a resolved DNS name.
-type DNSNameResolverStatusItem struct {
+// DNSNameResolverResolvedName describes the details of a resolved DNS name.
+type DNSNameResolverResolvedName struct {
 	// conditions provide information about the state of the DNS name.
 	// Known .status.conditions.type is: "Degraded"
 	// +optional
@@ -81,7 +81,7 @@ type DNSNameResolverStatusItem struct {
 	// +kubebuilder:validation:Required
 	// +listType=map
 	// +listMapKey=ip
-	ResolvedAddresses []DNSNameResolverInfo `json:"resolvedAddresses"`
+	ResolvedAddresses []DNSNameResolverResolvedAddress `json:"resolvedAddresses"`
 	// resolutionFailures keeps the count of how many consecutive times the DNS resolution failed
 	// for the dnsName. If the DNS resolution succeeds then the field will be set to zero. Upon
 	// every failure, the value of the field will be incremented by one. The details about the DNS
@@ -90,7 +90,7 @@ type DNSNameResolverStatusItem struct {
 	ResolutionFailures int32 `json:"resolutionFailures,omitempty"`
 }
 
-type DNSNameResolverInfo struct {
+type DNSNameResolverResolvedAddress struct {
 	// ip is an IP address associated with the dnsName. The validity of the IP address expires after
 	// lastLookupTime + ttlSeconds. To refresh the information a DNS lookup will be performed on the
 	// expiration of the IP address's validity. If the information is not refreshed then it will be

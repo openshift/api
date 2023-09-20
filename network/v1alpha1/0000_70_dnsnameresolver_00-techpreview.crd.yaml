@@ -50,7 +50,7 @@ spec:
                 resolvedNames:
                   description: resolvedNames contains a list of matching DNS names and their corresponding IP addresses along with their TTL and last DNS lookup times.
                   items:
-                    description: DNSNameResolverStatusItem describes the details of a resolved DNS name.
+                    description: DNSNameResolverResolvedName describes the details of a resolved DNS name.
                     properties:
                       conditions:
                         description: 'conditions provide information about the state of the DNS name. Known .status.conditions.type is: "Degraded"'

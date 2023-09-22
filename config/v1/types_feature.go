@@ -170,6 +170,7 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		with(nodeSwap).
 		with(machineAPIProviderOpenStack).
 		with(insightsConfigAPI).
+		with(persistentVolumeLastPhaseTransitionTime).
 		with(retroactiveDefaultStorageClass).
 		with(dynamicResourceAllocation).
 		with(admissionWebhookMatchConditions).
@@ -200,6 +201,7 @@ var defaultFeatures = &FeatureGateEnabledDisabled{
 		buildCSIVolumes,
 	},
 	Disabled: []FeatureGateDescription{
+		persistentVolumeLastPhaseTransitionTime,
 		retroactiveDefaultStorageClass,
 	},
 }

@@ -53,6 +53,16 @@ var (
 		OwningProduct:       ocpSpecific,
 	}
 
+	FeatureGatePersistentVolumeLastPhaseTransitionTime = FeatureGateName("PersistentVolumeLastPhaseTransitionTime")
+	persistentVolumeLastPhaseTransitionTime            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGatePersistentVolumeLastPhaseTransitionTime,
+		},
+		OwningJiraComponent: "storage",
+		ResponsiblePerson:   "RomanBednar",
+		OwningProduct:       kubernetes,
+	}
+
 	FeatureGateRetroactiveDefaultStorageClass = FeatureGateName("RetroactiveDefaultStorageClass")
 	retroactiveDefaultStorageClass            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{

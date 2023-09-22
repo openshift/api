@@ -84,7 +84,21 @@ type StableConfigTypeSpec struct {
 	// +optional
 	// +listType=atomic
 	EvolvingCollection []string `json:"evolvingCollection,omitempty"`
+
+	// set demonstrates how to define and validate set of strings
+	// +optional
+	Set StringSet `json:"set,omitempty"`
 }
+
+// SetValue defines the types allowed in string set type
+// +kubebuilder:validation:Enum:=Foo;Bar;Baz;Qux;Corge
+type SetValue string
+
+// StringSet defines the set of strings
+// +listType=set
+// +kubebuilder:validation:XValidation:rule="self.all(x,self.exists_one(y,x == y))"
+// +kubebuilder:validation:MaxItems=5
+type StringSet []SetValue
 
 type EvolvingUnion struct {
 	// type is the discriminator. It has different values for Default and for TechPreviewNoUpgrade

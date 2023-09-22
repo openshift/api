@@ -12767,6 +12767,14 @@
           "type": "string",
           "default": ""
         },
+        "set": {
+          "description": "set demonstrates how to define and validate set of strings",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
         "stableField": {
           "description": "stableField is a field that is present on default clusters and on tech preview clusters\n\nIf empty, the platform will choose a good default, which may change over time without notice.",
           "type": "string",

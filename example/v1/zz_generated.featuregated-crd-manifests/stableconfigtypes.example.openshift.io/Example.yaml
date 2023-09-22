@@ -118,6 +118,22 @@ spec:
                 x-kubernetes-validations:
                 - message: optionalImmutableField is immutable once set
                   rule: oldSelf == '' || self == oldSelf
+              set:
+                description: set demonstrates how to define and validate set of strings
+                items:
+                  description: SetValue defines the types allowed in string set type
+                  enum:
+                  - Foo
+                  - Bar
+                  - Baz
+                  - Qux
+                  - Corge
+                  type: string
+                maxItems: 5
+                type: array
+                x-kubernetes-list-type: set
+                x-kubernetes-validations:
+                - rule: self.all(x,self.exists_one(y,x == y))
               stableField:
                 description: "stableField is a field that is present on default clusters
                   and on tech preview clusters \n If empty, the platform will choose

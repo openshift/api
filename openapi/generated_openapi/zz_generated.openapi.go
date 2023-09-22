@@ -23097,6 +23097,21 @@ func schema_openshift_api_example_v1_StableConfigTypeSpec(ref common.ReferenceCa
 							},
 						},
 					},
+					"set": {
+						SchemaProps: spec.SchemaProps{
+							Description: "set demonstrates how to define and validate set of strings",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"immutableField"},
 			},

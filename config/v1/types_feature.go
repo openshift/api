@@ -168,7 +168,6 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		with(nodeSwap).
 		with(machineAPIProviderOpenStack).
 		with(insightsConfigAPI).
-		with(retroactiveDefaultStorageClass).
 		with(dynamicResourceAllocation).
 		with(gateGatewayAPI).
 		with(maxUnavailableStatefulSet).
@@ -200,9 +199,7 @@ var defaultFeatures = &FeatureGateEnabledDisabled{
 		privateHostedZoneAWS,
 		buildCSIVolumes,
 	},
-	Disabled: []FeatureGateDescription{
-		retroactiveDefaultStorageClass,
-	},
+	Disabled: []FeatureGateDescription{},
 }
 
 type featureSetBuilder struct {

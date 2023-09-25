@@ -13323,7 +13323,7 @@ func schema_openshift_api_config_v1_ImageStatus(ref common.ReferenceCallback) co
 				Properties: map[string]spec.Schema{
 					"internalRegistryHostname": {
 						SchemaProps: spec.SchemaProps{
-							Description: "internalRegistryHostname sets the hostname for the default internal image registry. The value must be in \"hostname[:port]\" format. This value is set by the image registry operator which controls the internal registry hostname. For backward compatibility, users can still use OPENSHIFT_DEFAULT_REGISTRY environment variable but this setting overrides the environment variable.",
+							Description: "internalRegistryHostname sets the hostname for the default internal image registry. The value must be in \"hostname[:port]\" format. This value is set by the image registry operator which controls the internal registry hostname.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -24374,7 +24374,7 @@ func schema_openshift_api_kubecontrolplane_v1_KubeAPIServerImagePolicyConfig(ref
 				Properties: map[string]spec.Schema{
 					"internalRegistryHostname": {
 						SchemaProps: spec.SchemaProps{
-							Description: "internalRegistryHostname sets the hostname for the default internal image registry. The value must be in \"hostname[:port]\" format. For backward compatibility, users can still use OPENSHIFT_DEFAULT_REGISTRY environment variable but this setting overrides the environment variable.",
+							Description: "internalRegistryHostname sets the hostname for the default internal image registry. The value must be in \"hostname[:port]\" format.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -26544,7 +26544,7 @@ func schema_openshift_api_legacyconfig_v1_ImagePolicyConfig(ref common.Reference
 					},
 					"internalRegistryHostname": {
 						SchemaProps: spec.SchemaProps{
-							Description: "InternalRegistryHostname sets the hostname for the default internal image registry. The value must be in \"hostname[:port]\" format. For backward compatibility, users can still use OPENSHIFT_DEFAULT_REGISTRY environment variable but this setting overrides the environment variable.",
+							Description: "InternalRegistryHostname sets the hostname for the default internal image registry. The value must be in \"hostname[:port]\" format.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -39227,7 +39227,7 @@ func schema_openshift_api_openshiftcontrolplane_v1_ImagePolicyConfig(ref common.
 					},
 					"internalRegistryHostname": {
 						SchemaProps: spec.SchemaProps{
-							Description: "internalRegistryHostname sets the hostname for the default internal image registry. The value must be in \"hostname[:port]\" format. For backward compatibility, users can still use OPENSHIFT_DEFAULT_REGISTRY environment variable but this setting overrides the environment variable.",
+							Description: "internalRegistryHostname sets the hostname for the default internal image registry. The value must be in \"hostname[:port]\" format.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",

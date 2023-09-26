@@ -72,7 +72,7 @@ tests:
       spec:
         name: www.example.com
     expectedError: "DNSNameResolver.network.openshift.io \"example\" is invalid: spec.name: Invalid value: \"www.example.com\": spec.name in body should match '^(\\*\\.)?([A-Za-z0-9]([-A-Za-z0-9]*[A-Za-z0-9])?\\.)+[A-Za-z0-9]([-A-Za-z0-9]*[A-Za-z0-9])?\\.$'"
-  - name: Should not be able to specify a regular TLD DNS name
+  - name: Should not be able to specify just the TLD in a DNS name
     initial: |
       apiVersion: network.openshift.io/v1alpha1
       kind: DNSNameResolver
@@ -81,7 +81,7 @@ tests:
       spec:
         name: com.
     expectedError: "DNSNameResolver.network.openshift.io \"example\" is invalid: spec.name: Invalid value: \"com.\": spec.name in body should match '^(\\*\\.)?([A-Za-z0-9]([-A-Za-z0-9]*[A-Za-z0-9])?\\.)+[A-Za-z0-9]([-A-Za-z0-9]*[A-Za-z0-9])?\\.$'"
-  - name: Should not be able to specify a wildcard TLD DNS name
+  - name: Should not be able to specify a wildcard before TLD in DNS name
     initial: |
       apiVersion: network.openshift.io/v1alpha1
       kind: DNSNameResolver
@@ -91,7 +91,7 @@ tests:
         name: "*.com."
     expectedError: "DNSNameResolver.network.openshift.io \"example\" is invalid: spec.name: Invalid value: \"*.com.\": spec.name in body should match '^(\\*\\.)?([A-Za-z0-9]([-A-Za-z0-9]*[A-Za-z0-9])?\\.)+[A-Za-z0-9]([-A-Za-z0-9]*[A-Za-z0-9])?\\.$'"
   onUpdate:
-  - name: Should not update spec.name field
+  - name: Should not be able to update spec.name field
     initial: |
       apiVersion: network.openshift.io/v1alpha1
       kind: DNSNameResolver

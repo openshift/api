@@ -29,20 +29,23 @@ type DNSNameResolver struct {
 	Status DNSNameResolverStatus `json:"status,omitempty"`
 }
 
+// DNSName is used for validation of a DNS name.
+// +kubebuilder:validation:Pattern=^(\*\.)?([A-Za-z0-9]([-A-Za-z0-9]*[A-Za-z0-9])?\.)+[A-Za-z0-9]([-A-Za-z0-9]*[A-Za-z0-9])?\.$
+// +kubebuilder:validation:MaxLength=254
+type DNSName string
+
 // DNSNameResolverSpec is a desired state description of DNSNameResolver.
 type DNSNameResolverSpec struct {
 	// name is the DNS name for which the DNS name resolution information will be stored.
 	// For a regular DNS name, only the DNS name resolution information of the regular DNS
 	// name will be stored. For a wildcard DNS name, the DNS name resolution information
-	// of all the DNS names, that matches the wildcard DNS name, will be stored.
+	// of all the DNS names that match the wildcard DNS name will be stored.
 	// For a wildcard DNS name, the '*' will match only one label. Additionally, only a single
 	// '*' can be used at the beginning of the wildcard DNS name. For example, '*.example.com.'
 	// will match 'sub1.example.com.' but won't match 'sub2.sub1.example.com.'
 	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern=^(\*\.)?([A-Za-z0-9]([-A-Za-z0-9]*[A-Za-z0-9])?\.)+[A-Za-z0-9]([-A-Za-z0-9]*[A-Za-z0-9])?\.$
-	// +kubebuilder:validation:MaxLength=254
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="spec.name is immutable"
-	Name string `json:"name"`
+	Name DNSName `json:"name"`
 }
 
 // DNSNameResolverStatus defines the observed status of DNSNameResolver.
@@ -65,6 +68,7 @@ type DNSNameResolverResolvedName struct {
 	// +listType=map
 	// +listMapKey=type
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
+
 	// dnsName is the resolved DNS name matching the name field of DNSNameResolverSpec. This field can
 	// store both regular and wildcard DNS names which match the spec.name field. When the spec.name
 	// field contains a regular DNS name, this field will store the same regular DNS name after it is
@@ -73,15 +77,15 @@ type DNSNameResolverResolvedName struct {
 	// If the wildcard DNS name can also be successfully resolved, then this field will store the wildcard
 	// DNS name as well.
 	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern=^(\*\.)?([A-Za-z0-9]([-A-Za-z0-9]*[A-Za-z0-9])?\.)+[A-Za-z0-9]([-A-Za-z0-9]*[A-Za-z0-9])?\.$
-	// +kubebuilder:validation:MaxLength=254
-	DNSName string `json:"dnsName"`
+	DNSName DNSName `json:"dnsName"`
+
 	// resolvedAddresses gives the list of associated IP addresses and their corresponding TTLs and last
 	// lookup times for the dnsName.
 	// +kubebuilder:validation:Required
 	// +listType=map
 	// +listMapKey=ip
 	ResolvedAddresses []DNSNameResolverResolvedAddress `json:"resolvedAddresses"`
+
 	// resolutionFailures keeps the count of how many consecutive times the DNS resolution failed
 	// for the dnsName. If the DNS resolution succeeds then the field will be set to zero. Upon
 	// every failure, the value of the field will be incremented by one. The details about the DNS
@@ -97,12 +101,14 @@ type DNSNameResolverResolvedAddress struct {
 	// removed with a grace period after the expiration of the IP address's validity.
 	// +kubebuilder:validation:Required
 	IP string `json:"ip"`
+
 	// ttlSeconds is the time-to-live value of the IP address. The validity of the IP address expires after
 	// lastLookupTime + ttlSeconds. On a successful DNS lookup the value of this field will be updated with
 	// the current time-to-live value. If the information is not refreshed then it will be removed with a
 	// grace period after the expiration of the IP address's validity.
 	// +kubebuilder:validation:Required
 	TTLSeconds int32 `json:"ttlSeconds"`
+
 	// lastLookupTime is the timestamp when the last DNS lookup was completed successfully. The validity of
 	// the IP address expires after lastLookupTime + ttlSeconds. The value of this field will be updated to
 	// the current time on a successful DNS lookup. If the information is not refreshed then it will be

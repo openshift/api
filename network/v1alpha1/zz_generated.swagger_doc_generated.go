@@ -55,7 +55,7 @@ func (DNSNameResolverResolvedName) SwaggerDoc() map[string]string {
 
 var map_DNSNameResolverSpec = map[string]string{
 	"":     "DNSNameResolverSpec is a desired state description of DNSNameResolver.",
-	"name": "name is the DNS name for which the DNS name resolution information will be stored. For a regular DNS name, only the DNS name resolution information of the regular DNS name will be stored. For a wildcard DNS name, the DNS name resolution information of all the DNS names, that matches the wildcard DNS name, will be stored. For a wildcard DNS name, the '*' will match only one label. Additionally, only a single '*' can be used at the beginning of the wildcard DNS name. For example, '*.example.com.' will match 'sub1.example.com.' but won't match 'sub2.sub1.example.com.'",
+	"name": "name is the DNS name for which the DNS name resolution information will be stored. For a regular DNS name, only the DNS name resolution information of the regular DNS name will be stored. For a wildcard DNS name, the DNS name resolution information of all the DNS names that match the wildcard DNS name will be stored. For a wildcard DNS name, the '*' will match only one label. Additionally, only a single '*' can be used at the beginning of the wildcard DNS name. For example, '*.example.com.' will match 'sub1.example.com.' but won't match 'sub2.sub1.example.com.'",
 }
 
 func (DNSNameResolverSpec) SwaggerDoc() map[string]string {

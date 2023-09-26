@@ -142,6 +142,14 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/cloudnetwork/v1.CloudPrivateIPConfig":                               schema_openshift_api_cloudnetwork_v1_CloudPrivateIPConfig(ref),
 		"github.com/openshift/api/cloudnetwork/v1.CloudPrivateIPConfigSpec":                           schema_openshift_api_cloudnetwork_v1_CloudPrivateIPConfigSpec(ref),
 		"github.com/openshift/api/cloudnetwork/v1.CloudPrivateIPConfigStatus":                         schema_openshift_api_cloudnetwork_v1_CloudPrivateIPConfigStatus(ref),
+		"github.com/openshift/api/cluster/v1alpha1.InfrastructureReference":                           schema_openshift_api_cluster_v1alpha1_InfrastructureReference(ref),
+		"github.com/openshift/api/cluster/v1alpha1.ObjectMeta":                                        schema_openshift_api_cluster_v1alpha1_ObjectMeta(ref),
+		"github.com/openshift/api/cluster/v1alpha1.OpenShiftControlPlane":                             schema_openshift_api_cluster_v1alpha1_OpenShiftControlPlane(ref),
+		"github.com/openshift/api/cluster/v1alpha1.OpenShiftControlPlaneList":                         schema_openshift_api_cluster_v1alpha1_OpenShiftControlPlaneList(ref),
+		"github.com/openshift/api/cluster/v1alpha1.OpenShiftControlPlaneMachineTemplate":              schema_openshift_api_cluster_v1alpha1_OpenShiftControlPlaneMachineTemplate(ref),
+		"github.com/openshift/api/cluster/v1alpha1.OpenShiftControlPlaneSecretRef":                    schema_openshift_api_cluster_v1alpha1_OpenShiftControlPlaneSecretRef(ref),
+		"github.com/openshift/api/cluster/v1alpha1.OpenShiftControlPlaneSpec":                         schema_openshift_api_cluster_v1alpha1_OpenShiftControlPlaneSpec(ref),
+		"github.com/openshift/api/cluster/v1alpha1.OpenShiftControlPlaneStatus":                       schema_openshift_api_cluster_v1alpha1_OpenShiftControlPlaneStatus(ref),
 		"github.com/openshift/api/config/v1.APIServer":                                                schema_openshift_api_config_v1_APIServer(ref),
 		"github.com/openshift/api/config/v1.APIServerEncryption":                                      schema_openshift_api_config_v1_APIServerEncryption(ref),
 		"github.com/openshift/api/config/v1.APIServerList":                                            schema_openshift_api_config_v1_APIServerList(ref),
@@ -8054,6 +8062,359 @@ func schema_openshift_api_cloudnetwork_v1_CloudPrivateIPConfigStatus(ref common.
 					},
 				},
 				Required: []string{"conditions"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
+	}
+}
+
+func schema_openshift_api_cluster_v1alpha1_InfrastructureReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "InfrastructureReference is a reference to a custom resource offered by an infrastructure provider. This is a subset of corev1.ObjectReference. The namespace must be set to the same as the OpenShiftControlPlane, but is required by Cluster API. Upstream discussion: https://github.com/kubernetes-sigs/cluster-api/issues/6539",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "kind of the referent. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"namespace": {
+						SchemaProps: spec.SchemaProps{
+							Description: "namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "apiVersion of the referent.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"kind", "namespace", "name", "apiVersion"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_cluster_v1alpha1_ObjectMeta(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ObjectMeta is a subset of metav1.ObjectMeta. We use this to customise the labels and annotations applied to control plane machines.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"labels": {
+						SchemaProps: spec.SchemaProps{
+							Description: "labels is a map of string keys and values that can be used to organize and categorize (scope and select) objects. May match selectors of replication controllers and services. More info: http://kubernetes.io/docs/user-guide/labels",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"annotations": {
+						SchemaProps: spec.SchemaProps{
+							Description: "annotations is an unstructured key value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: http://kubernetes.io/docs/user-guide/annotations",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_cluster_v1alpha1_OpenShiftControlPlane(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "OpenShiftControlPlane is repsonsible for bootstrapping an OpenShift cluster control plane. Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec is the desired state of the OpenShiftControlPlane.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/cluster/v1alpha1.OpenShiftControlPlaneSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status is the observed state of the OpenShiftControlPlane.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/cluster/v1alpha1.OpenShiftControlPlaneStatus"),
+						},
+					},
+				},
+				Required: []string{"spec"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/cluster/v1alpha1.OpenShiftControlPlaneSpec", "github.com/openshift/api/cluster/v1alpha1.OpenShiftControlPlaneStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_openshift_api_cluster_v1alpha1_OpenShiftControlPlaneList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "OpenShiftControlPlaneList contains a list of OpenShiftControlPlane Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/cluster/v1alpha1.OpenShiftControlPlane"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/cluster/v1alpha1.OpenShiftControlPlane", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_openshift_api_cluster_v1alpha1_OpenShiftControlPlaneMachineTemplate(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "OpenShiftControlPlaneMachineTemplate is the spec of the OpenShift control plane machines.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard object's metadata. This allows for machine labels and annotations to be applied to the control plane machines. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/cluster/v1alpha1.ObjectMeta"),
+						},
+					},
+					"infrastructureRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "infrastructureRef is a required reference to a custom resource offered by an infrastructure provider. The infrastructure reference should define a template for the infrastructure provider to create the bootstrap and control plane nodes.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/cluster/v1alpha1.InfrastructureReference"),
+						},
+					},
+					"nodeDrainTimeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "NodeDrainTimeout is the total amount of time that the controller will spend on draining a controlplane node The default value is 0, meaning that the node can be drained without any time limitations. NOTE: NodeDrainTimeout is different from `kubectl drain --timeout`",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"nodeVolumeDetachTimeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "NodeVolumeDetachTimeout is the total amount of time that the controller will spend on waiting for all volumes to be detached. The default value is 0, meaning that the volumes can be detached without any time limitations.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"nodeDeletionTimeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "NodeDeletionTimeout defines how long the machine controller will attempt to delete the Node that the Machine hosts after the Machine is marked for deletion. A duration of 0 will retry deletion indefinitely. If no value is provided, the default value for this property of the Machine resource will be used.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+				},
+				Required: []string{"infrastructureRef"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/cluster/v1alpha1.InfrastructureReference", "github.com/openshift/api/cluster/v1alpha1.ObjectMeta", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+	}
+}
+
+func schema_openshift_api_cluster_v1alpha1_OpenShiftControlPlaneSecretRef(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "OpenShiftControlPlaneSecretRef is the reference to a secret in the same namespace as the OpenShiftControlPlane.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the name of the secret. It has a maximum length of 253 characters and must be a valid DNS subdomain name. It must consist only of lowercase alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_cluster_v1alpha1_OpenShiftControlPlaneSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "OpenShiftControlPlaneSpec is the spec of the OpenShift control plane resource.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"machineTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "machineTemplate defines the machine template used to create the initial bootstrap and control plane machines. Continued management of the control plane machines will be handled by the control plane machine set. The machine template is therefore immutable and only applicable during the bootstrap process.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/cluster/v1alpha1.OpenShiftControlPlaneMachineTemplate"),
+						},
+					},
+					"installStateSecretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "installStateSecretRef is a reference to a secret containing the install state. The install state secret must contain either the install config or the install state, or both. The install state secret must be in the same namespace as the OpenShiftControlPlane. The install config must be under the key `install-config.yaml` and the install state must be under the key `.openshift_install_state.json`. These files will be passed to the installer to generate the ignition configs for the bootstrap node, control plane nodes and worker nodes.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/cluster/v1alpha1.OpenShiftControlPlaneSecretRef"),
+						},
+					},
+					"manifestsSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "manifestsSelector is a selector to identify secrets containing manifests to be included in the ignition generation phase. The selector must match the labels on the secrets to be injected. Each key in the secret must be the path to a file to be injected into the ignition. This path should start with either `manifests/` or `openshift/`. When omitted, the default manifests generated by the installer will be used.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"),
+						},
+					},
+				},
+				Required: []string{"machineTemplate", "installStateSecretRef"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/cluster/v1alpha1.OpenShiftControlPlaneMachineTemplate", "github.com/openshift/api/cluster/v1alpha1.OpenShiftControlPlaneSecretRef", "k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"},
+	}
+}
+
+func schema_openshift_api_cluster_v1alpha1_OpenShiftControlPlaneStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type":       "map",
+								"x-kubernetes-patch-merge-key": "type",
+								"x-kubernetes-patch-strategy":  "merge",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions represents the observations of the OpenShiftControlPlane's current state.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+					"initialized": {
+						SchemaProps: spec.SchemaProps{
+							Description: "initialized denotes whether or not the control plane has been initialized. This value will be set true once the first control plane node has joined the bootstrap control plane.",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"ready": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ready denotes whether or not the control plane has has reached a ready state. This value will be set true once the bootstrap node has completed the cluster bootstrap and the bootstrap node has been shut down.",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
 			},
 		},
 		Dependencies: []string{

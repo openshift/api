@@ -21898,7 +21898,7 @@
       ],
       "properties": {
         "conditions": {
-          "description": "conditions provide information about the state of the DNS name. Known .status.conditions.type is: \"Degraded\"",
+          "description": "conditions provide information about the state of the DNS name. Known .status.conditions.type is: \"Degraded\". \"Degraded\" is true when the last resolution failed for the DNS name, and false otherwise.",
           "type": "array",
           "items": {
             "default": {},

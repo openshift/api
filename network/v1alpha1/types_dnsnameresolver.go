@@ -30,7 +30,7 @@ type DNSNameResolver struct {
 }
 
 // DNSName is used for validation of a DNS name.
-// +kubebuilder:validation:Pattern=^(\*\.)?([A-Za-z0-9]([-A-Za-z0-9]*[A-Za-z0-9])?\.)+[A-Za-z0-9]([-A-Za-z0-9]*[A-Za-z0-9])?\.$
+// +kubebuilder:validation:Pattern=`^(\*\.)?([a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?\.){2,}$`
 // +kubebuilder:validation:MaxLength=254
 type DNSName string
 
@@ -63,7 +63,9 @@ type DNSNameResolverStatus struct {
 // DNSNameResolverResolvedName describes the details of a resolved DNS name.
 type DNSNameResolverResolvedName struct {
 	// conditions provide information about the state of the DNS name.
-	// Known .status.conditions.type is: "Degraded"
+	// Known .status.conditions.type is: "Degraded".
+	// "Degraded" is true when the last resolution failed for the DNS name,
+	// and false otherwise.
 	// +optional
 	// +listType=map
 	// +listMapKey=type

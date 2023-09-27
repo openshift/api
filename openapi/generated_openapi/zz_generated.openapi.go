@@ -37604,7 +37604,7 @@ func schema_openshift_api_network_v1alpha1_DNSNameResolverResolvedName(ref commo
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "conditions provide information about the state of the DNS name. Known .status.conditions.type is: \"Degraded\"",
+							Description: "conditions provide information about the state of the DNS name. Known .status.conditions.type is: \"Degraded\". \"Degraded\" is true when the last resolution failed for the DNS name, and false otherwise.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{

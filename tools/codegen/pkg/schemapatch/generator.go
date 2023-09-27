@@ -220,7 +220,7 @@ func loadSchemaPatchGenerationContextsForVersion(version generation.APIVersionCo
 
 		partialObject := &metav1.PartialObjectMetadata{}
 		if err := kyaml.Unmarshal(data, partialObject); err != nil {
-			errs = append(errs, fmt.Errorf("could not unmarshal YAML for type meta inspection: %v", err))
+			errs = append(errs, fmt.Errorf("could not unmarshal YAML in file %s for type meta inspection: %v", path, err))
 			continue
 		}
 

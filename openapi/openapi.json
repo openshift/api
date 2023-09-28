@@ -4170,6 +4170,33 @@
         "region"
       ],
       "properties": {
+        "apiServerDNSConfig": {
+          "description": "APIServerDNSConfig contains information to configure DNS for API Server. This field will be set only when the userConfiguredDNS feature is enabled.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.DNSConfig"
+          },
+          "x-kubernetes-list-type": "set"
+        },
+        "ingressDNSConfig": {
+          "description": "IngressDNSConfig contains information to configure DNS for cluster services. This field will be set only when the userConfiguredDNS feature is enabled.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.DNSConfig"
+          },
+          "x-kubernetes-list-type": "set"
+        },
+        "internalAPIServerDNSConfig": {
+          "description": "InternalAPIServerDNSConfig contains information to configure DNS for the Internal API Server. This field will be set only when the userConfiguredDNS feature is enabled.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.DNSConfig"
+          },
+          "x-kubernetes-list-type": "set"
+        },
         "region": {
           "description": "region holds the default AWS region for new AWS resources created by the cluster.",
           "type": "string",
@@ -4563,6 +4590,15 @@
         "resourceGroupName"
       ],
       "properties": {
+        "apiServerDNSConfig": {
+          "description": "APIServerDNSConfig contains information to configure DNS for API Server. This field will be set only when the userConfiguredDNS feature is enabled.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.DNSConfig"
+          },
+          "x-kubernetes-list-type": "set"
+        },
         "armEndpoint": {
           "description": "armEndpoint specifies a URL to use for resource management in non-soverign clouds such as Azure Stack.",
           "type": "string"
@@ -4570,6 +4606,24 @@
         "cloudName": {
           "description": "cloudName is the name of the Azure cloud environment which can be used to configure the Azure SDK with the appropriate Azure API endpoints. If empty, the value is equal to `AzurePublicCloud`.",
           "type": "string"
+        },
+        "ingressDNSConfig": {
+          "description": "IngressDNSConfig contains information to configure DNS for cluster services. This field will be set only when the userConfiguredDNS feature is enabled.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.DNSConfig"
+          },
+          "x-kubernetes-list-type": "set"
+        },
+        "internalAPIServerDNSConfig": {
+          "description": "InternalAPIServerDNSConfig contains information to configure DNS for the Internal API Server. This field will be set only when the userConfiguredDNS feature is enabled.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.DNSConfig"
+          },
+          "x-kubernetes-list-type": "set"
         },
         "networkResourceGroupName": {
           "description": "networkResourceGroupName is the Resource Group for network resources like the Virtual Network and Subnets used by the cluster. If empty, the value is same as ResourceGroupName.",
@@ -4928,6 +4982,39 @@
           "description": "type represents the cluster-condition type. This defines the members and semantics of any additional properties.",
           "type": "string",
           "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.ClusterDNSConfig": {
+      "description": "ClusterDNSConfig store the DNS configuration data related to internal and external API servers as well as ingress.",
+      "type": "object",
+      "properties": {
+        "apiServerDNSConfig": {
+          "description": "APIServerDNSConfig contains information to configure DNS for API Server. This field will be set only when the userConfiguredDNS feature is enabled.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.DNSConfig"
+          },
+          "x-kubernetes-list-type": "set"
+        },
+        "ingressDNSConfig": {
+          "description": "IngressDNSConfig contains information to configure DNS for cluster services. This field will be set only when the userConfiguredDNS feature is enabled.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.DNSConfig"
+          },
+          "x-kubernetes-list-type": "set"
+        },
+        "internalAPIServerDNSConfig": {
+          "description": "InternalAPIServerDNSConfig contains information to configure DNS for the Internal API Server. This field will be set only when the userConfiguredDNS feature is enabled.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.DNSConfig"
+          },
+          "x-kubernetes-list-type": "set"
         }
       }
     },
@@ -5712,6 +5799,26 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.DNSConfig": {
+      "description": "DNSConfig store the load balancer ip addresses and the type of DNS record.",
+      "type": "object",
+      "required": [
+        "recordType",
+        "lbIPAddress"
+      ],
+      "properties": {
+        "lbIPAddress": {
+          "description": "LBIPAddress is the Load Balancer IP address for DNS config",
+          "type": "string",
+          "default": ""
+        },
+        "recordType": {
+          "description": "RecordType is the DNS record type.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.DNSList": {
       "description": "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
@@ -6247,6 +6354,33 @@
         "region"
       ],
       "properties": {
+        "apiServerDNSConfig": {
+          "description": "APIServerDNSConfig contains information to configure DNS for API Server. This field will be set only when the userConfiguredDNS feature is enabled.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.DNSConfig"
+          },
+          "x-kubernetes-list-type": "set"
+        },
+        "ingressDNSConfig": {
+          "description": "IngressDNSConfig contains information to configure DNS for cluster services. This field will be set only when the userConfiguredDNS feature is enabled.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.DNSConfig"
+          },
+          "x-kubernetes-list-type": "set"
+        },
+        "internalAPIServerDNSConfig": {
+          "description": "InternalAPIServerDNSConfig contains information to configure DNS for the Internal API Server. This field will be set only when the userConfiguredDNS feature is enabled.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.DNSConfig"
+          },
+          "x-kubernetes-list-type": "set"
+        },
         "projectID": {
           "description": "resourceGroupName is the Project ID for new GCP resources created for the cluster.",
           "type": "string",

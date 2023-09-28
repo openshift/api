@@ -431,6 +431,43 @@ type PlatformStatus struct {
 	External *ExternalPlatformStatus `json:"external,omitempty"`
 }
 
+// DNSConfig store the load balancer ip addresses and the type of DNS record.
+type DNSConfig struct {
+	// RecordType is the DNS record type.
+	RecordType string `json:"recordType"`
+
+	// LBIPAddress is the Load Balancer IP address for DNS config
+	LBIPAddress string `json:"lbIPAddress"`
+}
+
+// ClusterDNSConfig store the DNS configuration data related to internal and external API servers as
+// well as ingress.
+type ClusterDNSConfig struct {
+	// APIServerDNSConfig contains information to configure DNS for API Server.
+	// This field will be set only when the userConfiguredDNS feature is enabled.
+	// +kubebuilder:validation:XValidation:rule="self.all(x, x in oldSelf) && oldSelf.all(x, x in self)",message="resourceLabels are immutable and may only be configured during installation"
+	// +listType=set
+	// +optional
+	// +openshift:enable:FeatureSets=CustomNoUpgrade;TechPreviewNoUpgrade
+	APIServerDNSConfig []DNSConfig `json:"apiServerDNSConfig,omitempty"`
+
+	// InternalAPIServerDNSConfig contains information to configure DNS for the Internal API Server.
+	// This field will be set only when the userConfiguredDNS feature is enabled.
+	// +kubebuilder:validation:XValidation:rule="self.all(x, x in oldSelf) && oldSelf.all(x, x in self)",message="resourceLabels are immutable and may only be configured during installation"
+	// +listType=set
+	// +optional
+	// +openshift:enable:FeatureSets=CustomNoUpgrade;TechPreviewNoUpgrade
+	InternalAPIServerDNSConfig []DNSConfig `json:"internalAPIServerDNSConfig,omitempty"`
+
+	// IngressDNSConfig contains information to configure DNS for cluster services.
+	// This field will be set only when the userConfiguredDNS feature is enabled.
+	// +kubebuilder:validation:XValidation:rule="self.all(x, x in oldSelf) && oldSelf.all(x, x in self)",message="resourceLabels are immutable and may only be configured during installation"
+	// +listType=set
+	// +optional
+	// +openshift:enable:FeatureSets=CustomNoUpgrade;TechPreviewNoUpgrade
+	IngressDNSConfig []DNSConfig `json:"ingressDNSConfig,omitempty"`
+}
+
 // AWSServiceEndpoint store the configuration of a custom url to
 // override existing defaults of AWS Services.
 type AWSServiceEndpoint struct {
@@ -461,6 +498,10 @@ type AWSPlatformSpec struct {
 
 // AWSPlatformStatus holds the current status of the Amazon Web Services infrastructure provider.
 type AWSPlatformStatus struct {
+	// ClusterDNSConfig contains all the DNS configuration required to configure a custom DNS solution.
+	// +optional
+	ClusterDNSConfig `json:",inline"`
+
 	// region holds the default AWS region for new AWS resources created by the cluster.
 	Region string `json:"region"`
 
@@ -506,6 +547,10 @@ type AzurePlatformSpec struct{}
 // AzurePlatformStatus holds the current status of the Azure infrastructure provider.
 // +kubebuilder:validation:XValidation:rule="!has(oldSelf.resourceTags) && !has(self.resourceTags) || has(oldSelf.resourceTags) && has(self.resourceTags)",message="resourceTags may only be configured during installation"
 type AzurePlatformStatus struct {
+	// ClusterDNSConfig contains all the DNS configuration required to configure a custom DNS solution.
+	// +optional
+	ClusterDNSConfig `json:",inline"`
+
 	// resourceGroupName is the Resource Group for new Azure resources created for the cluster.
 	ResourceGroupName string `json:"resourceGroupName"`
 
@@ -582,6 +627,10 @@ type GCPPlatformSpec struct{}
 // +openshift:validation:FeatureSetAwareXValidation:featureSet=CustomNoUpgrade;TechPreviewNoUpgrade,rule="!has(oldSelf.resourceLabels) && !has(self.resourceLabels) || has(oldSelf.resourceLabels) && has(self.resourceLabels)",message="resourceLabels may only be configured during installation"
 // +openshift:validation:FeatureSetAwareXValidation:featureSet=CustomNoUpgrade;TechPreviewNoUpgrade,rule="!has(oldSelf.resourceTags) && !has(self.resourceTags) || has(oldSelf.resourceTags) && has(self.resourceTags)",message="resourceTags may only be configured during installation"
 type GCPPlatformStatus struct {
+	// ClusterDNSConfig contains all the DNS configuration required to configure a custom DNS solution.
+	// +optional
+	ClusterDNSConfig `json:",inline"`
+
 	// resourceGroupName is the Project ID for new GCP resources created for the cluster.
 	ProjectID string `json:"projectID"`
 
@@ -1209,13 +1258,13 @@ type IBMCloudPlatformStatus struct {
 	// for the cluster's base domain
 	DNSInstanceCRN string `json:"dnsInstanceCRN,omitempty"`
 
-        // serviceEndpoints is a list of custom endpoints which will override the default
-        // service endpoints of an IBM Cloud service. These endpoints are consumed by
+	// serviceEndpoints is a list of custom endpoints which will override the default
+	// service endpoints of an IBM Cloud service. These endpoints are consumed by
 	// components within the cluster to reach the respective IBM Cloud Services.
-        // +listType=map
-        // +listMapKey=name
-        // +optional
-        ServiceEndpoints []IBMCloudServiceEndpoint `json:"serviceEndpoints,omitempty"`
+	// +listType=map
+	// +listMapKey=name
+	// +optional
+	ServiceEndpoints []IBMCloudServiceEndpoint `json:"serviceEndpoints,omitempty"`
 }
 
 // KubevirtPlatformSpec holds the desired state of the kubevirt infrastructure provider.

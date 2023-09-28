@@ -466,6 +466,57 @@ spec:
                     aws:
                       description: AWS contains settings specific to the Amazon Web Services infrastructure provider.
                       properties:
+                        apiServerDNSConfig:
+                          description: APIServerDNSConfig contains information to configure DNS for API Server. This field will be set only when the userConfiguredDNS feature is enabled.
+                          items:
+                            description: DNSConfig store the load balancer ip addresses and the type of DNS record.
+                            properties:
+                              lbIPAddress:
+                                description: LBIPAddress is the Load Balancer IP address for DNS config
+                                type: string
+                              recordType:
+                                description: RecordType is the DNS record type.
+                                type: string
+                            type: object
+                          type: array
+                          x-kubernetes-list-type: set
+                          x-kubernetes-validations:
+                            - message: resourceLabels are immutable and may only be configured during installation
+                              rule: self.all(x, x in oldSelf) && oldSelf.all(x, x in self)
+                        ingressDNSConfig:
+                          description: IngressDNSConfig contains information to configure DNS for cluster services. This field will be set only when the userConfiguredDNS feature is enabled.
+                          items:
+                            description: DNSConfig store the load balancer ip addresses and the type of DNS record.
+                            properties:
+                              lbIPAddress:
+                                description: LBIPAddress is the Load Balancer IP address for DNS config
+                                type: string
+                              recordType:
+                                description: RecordType is the DNS record type.
+                                type: string
+                            type: object
+                          type: array
+                          x-kubernetes-list-type: set
+                          x-kubernetes-validations:
+                            - message: resourceLabels are immutable and may only be configured during installation
+                              rule: self.all(x, x in oldSelf) && oldSelf.all(x, x in self)
+                        internalAPIServerDNSConfig:
+                          description: InternalAPIServerDNSConfig contains information to configure DNS for the Internal API Server. This field will be set only when the userConfiguredDNS feature is enabled.
+                          items:
+                            description: DNSConfig store the load balancer ip addresses and the type of DNS record.
+                            properties:
+                              lbIPAddress:
+                                description: LBIPAddress is the Load Balancer IP address for DNS config
+                                type: string
+                              recordType:
+                                description: RecordType is the DNS record type.
+                                type: string
+                            type: object
+                          type: array
+                          x-kubernetes-list-type: set
+                          x-kubernetes-validations:
+                            - message: resourceLabels are immutable and may only be configured during installation
+                              rule: self.all(x, x in oldSelf) && oldSelf.all(x, x in self)
                         region:
                           description: region holds the default AWS region for new AWS resources created by the cluster.
                           type: string
@@ -511,6 +562,23 @@ spec:
                     azure:
                       description: Azure contains settings specific to the Azure infrastructure provider.
                       properties:
+                        apiServerDNSConfig:
+                          description: APIServerDNSConfig contains information to configure DNS for API Server. This field will be set only when the userConfiguredDNS feature is enabled.
+                          items:
+                            description: DNSConfig store the load balancer ip addresses and the type of DNS record.
+                            properties:
+                              lbIPAddress:
+                                description: LBIPAddress is the Load Balancer IP address for DNS config
+                                type: string
+                              recordType:
+                                description: RecordType is the DNS record type.
+                                type: string
+                            type: object
+                          type: array
+                          x-kubernetes-list-type: set
+                          x-kubernetes-validations:
+                            - message: resourceLabels are immutable and may only be configured during installation
+                              rule: self.all(x, x in oldSelf) && oldSelf.all(x, x in self)
                         armEndpoint:
                           description: armEndpoint specifies a URL to use for resource management in non-soverign clouds such as Azure Stack.
                           type: string
@@ -524,6 +592,40 @@ spec:
                             - AzureGermanCloud
                             - AzureStackCloud
                           type: string
+                        ingressDNSConfig:
+                          description: IngressDNSConfig contains information to configure DNS for cluster services. This field will be set only when the userConfiguredDNS feature is enabled.
+                          items:
+                            description: DNSConfig store the load balancer ip addresses and the type of DNS record.
+                            properties:
+                              lbIPAddress:
+                                description: LBIPAddress is the Load Balancer IP address for DNS config
+                                type: string
+                              recordType:
+                                description: RecordType is the DNS record type.
+                                type: string
+                            type: object
+                          type: array
+                          x-kubernetes-list-type: set
+                          x-kubernetes-validations:
+                            - message: resourceLabels are immutable and may only be configured during installation
+                              rule: self.all(x, x in oldSelf) && oldSelf.all(x, x in self)
+                        internalAPIServerDNSConfig:
+                          description: InternalAPIServerDNSConfig contains information to configure DNS for the Internal API Server. This field will be set only when the userConfiguredDNS feature is enabled.
+                          items:
+                            description: DNSConfig store the load balancer ip addresses and the type of DNS record.
+                            properties:
+                              lbIPAddress:
+                                description: LBIPAddress is the Load Balancer IP address for DNS config
+                                type: string
+                              recordType:
+                                description: RecordType is the DNS record type.
+                                type: string
+                            type: object
+                          type: array
+                          x-kubernetes-list-type: set
+                          x-kubernetes-validations:
+                            - message: resourceLabels are immutable and may only be configured during installation
+                              rule: self.all(x, x in oldSelf) && oldSelf.all(x, x in self)
                         networkResourceGroupName:
                           description: networkResourceGroupName is the Resource Group for network resources like the Virtual Network and Subnets used by the cluster. If empty, the value is same as ResourceGroupName.
                           type: string
@@ -640,6 +742,57 @@ spec:
                     gcp:
                       description: GCP contains settings specific to the Google Cloud Platform infrastructure provider.
                       properties:
+                        apiServerDNSConfig:
+                          description: APIServerDNSConfig contains information to configure DNS for API Server. This field will be set only when the userConfiguredDNS feature is enabled.
+                          items:
+                            description: DNSConfig store the load balancer ip addresses and the type of DNS record.
+                            properties:
+                              lbIPAddress:
+                                description: LBIPAddress is the Load Balancer IP address for DNS config
+                                type: string
+                              recordType:
+                                description: RecordType is the DNS record type.
+                                type: string
+                            type: object
+                          type: array
+                          x-kubernetes-list-type: set
+                          x-kubernetes-validations:
+                            - message: resourceLabels are immutable and may only be configured during installation
+                              rule: self.all(x, x in oldSelf) && oldSelf.all(x, x in self)
+                        ingressDNSConfig:
+                          description: IngressDNSConfig contains information to configure DNS for cluster services. This field will be set only when the userConfiguredDNS feature is enabled.
+                          items:
+                            description: DNSConfig store the load balancer ip addresses and the type of DNS record.
+                            properties:
+                              lbIPAddress:
+                                description: LBIPAddress is the Load Balancer IP address for DNS config
+                                type: string
+                              recordType:
+                                description: RecordType is the DNS record type.
+                                type: string
+                            type: object
+                          type: array
+                          x-kubernetes-list-type: set
+                          x-kubernetes-validations:
+                            - message: resourceLabels are immutable and may only be configured during installation
+                              rule: self.all(x, x in oldSelf) && oldSelf.all(x, x in self)
+                        internalAPIServerDNSConfig:
+                          description: InternalAPIServerDNSConfig contains information to configure DNS for the Internal API Server. This field will be set only when the userConfiguredDNS feature is enabled.
+                          items:
+                            description: DNSConfig store the load balancer ip addresses and the type of DNS record.
+                            properties:
+                              lbIPAddress:
+                                description: LBIPAddress is the Load Balancer IP address for DNS config
+                                type: string
+                              recordType:
+                                description: RecordType is the DNS record type.
+                                type: string
+                            type: object
+                          type: array
+                          x-kubernetes-list-type: set
+                          x-kubernetes-validations:
+                            - message: resourceLabels are immutable and may only be configured during installation
+                              rule: self.all(x, x in oldSelf) && oldSelf.all(x, x in self)
                         projectID:
                           description: resourceGroupName is the Project ID for new GCP resources created for the cluster.
                           type: string

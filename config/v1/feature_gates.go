@@ -301,4 +301,34 @@ var (
 		ResponsiblePerson:   "msluiter",
 		OwningProduct:       ocpSpecific,
 	}
+
+	FeatureGateCustomDNSAWS = FeatureGateName("CustomDNSAWS")
+	customDNSAWS            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateCustomDNSAWS,
+		},
+		OwningJiraComponent: "installer",
+		ResponsiblePerson:   "barbacbd",
+		OwningProduct:       ocpSpecific,
+	}
+
+	FeatureGateCustomDNSAZ = FeatureGateName("CustomDNSAZ")
+	customDNSAZ            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateCustomDNSAZ,
+		},
+		OwningJiraComponent: "installer",
+		ResponsiblePerson:   "barbacbd",
+		OwningProduct:       ocpSpecific,
+	}
+
+	FeatureGateCustomDNSGCP = FeatureGateName("CustomDNSGCP")
+	customDNSGCP            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateCustomDNSGCP,
+		},
+		OwningJiraComponent: "installer",
+		ResponsiblePerson:   "barbacbd",
+		OwningProduct:       ocpSpecific,
+	}
 )

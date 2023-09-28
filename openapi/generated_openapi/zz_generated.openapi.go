@@ -183,6 +183,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.ClientConnectionOverrides":                                schema_openshift_api_config_v1_ClientConnectionOverrides(ref),
 		"github.com/openshift/api/config/v1.CloudControllerManagerStatus":                             schema_openshift_api_config_v1_CloudControllerManagerStatus(ref),
 		"github.com/openshift/api/config/v1.ClusterCondition":                                         schema_openshift_api_config_v1_ClusterCondition(ref),
+		"github.com/openshift/api/config/v1.ClusterDNSConfig":                                         schema_openshift_api_config_v1_ClusterDNSConfig(ref),
 		"github.com/openshift/api/config/v1.ClusterNetworkEntry":                                      schema_openshift_api_config_v1_ClusterNetworkEntry(ref),
 		"github.com/openshift/api/config/v1.ClusterOperator":                                          schema_openshift_api_config_v1_ClusterOperator(ref),
 		"github.com/openshift/api/config/v1.ClusterOperatorList":                                      schema_openshift_api_config_v1_ClusterOperatorList(ref),
@@ -210,6 +211,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.CustomFeatureGates":                                       schema_openshift_api_config_v1_CustomFeatureGates(ref),
 		"github.com/openshift/api/config/v1.CustomTLSProfile":                                         schema_openshift_api_config_v1_CustomTLSProfile(ref),
 		"github.com/openshift/api/config/v1.DNS":                                                      schema_openshift_api_config_v1_DNS(ref),
+		"github.com/openshift/api/config/v1.DNSConfig":                                                schema_openshift_api_config_v1_DNSConfig(ref),
 		"github.com/openshift/api/config/v1.DNSList":                                                  schema_openshift_api_config_v1_DNSList(ref),
 		"github.com/openshift/api/config/v1.DNSPlatformSpec":                                          schema_openshift_api_config_v1_DNSPlatformSpec(ref),
 		"github.com/openshift/api/config/v1.DNSSpec":                                                  schema_openshift_api_config_v1_DNSSpec(ref),
@@ -8407,6 +8409,63 @@ func schema_openshift_api_config_v1_AWSPlatformStatus(ref common.ReferenceCallba
 				Description: "AWSPlatformStatus holds the current status of the Amazon Web Services infrastructure provider.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"apiServerDNSConfig": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "APIServerDNSConfig contains information to configure DNS for API Server. This field will be set only when the userConfiguredDNS feature is enabled.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.DNSConfig"),
+									},
+								},
+							},
+						},
+					},
+					"internalAPIServerDNSConfig": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "InternalAPIServerDNSConfig contains information to configure DNS for the Internal API Server. This field will be set only when the userConfiguredDNS feature is enabled.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.DNSConfig"),
+									},
+								},
+							},
+						},
+					},
+					"ingressDNSConfig": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "IngressDNSConfig contains information to configure DNS for cluster services. This field will be set only when the userConfiguredDNS feature is enabled.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.DNSConfig"),
+									},
+								},
+							},
+						},
+					},
 					"region": {
 						SchemaProps: spec.SchemaProps{
 							Description: "region holds the default AWS region for new AWS resources created by the cluster.",
@@ -8448,7 +8507,7 @@ func schema_openshift_api_config_v1_AWSPlatformStatus(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.AWSResourceTag", "github.com/openshift/api/config/v1.AWSServiceEndpoint"},
+			"github.com/openshift/api/config/v1.AWSResourceTag", "github.com/openshift/api/config/v1.AWSServiceEndpoint", "github.com/openshift/api/config/v1.DNSConfig"},
 	}
 }
 
@@ -9060,6 +9119,63 @@ func schema_openshift_api_config_v1_AzurePlatformStatus(ref common.ReferenceCall
 				Description: "AzurePlatformStatus holds the current status of the Azure infrastructure provider.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"apiServerDNSConfig": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "APIServerDNSConfig contains information to configure DNS for API Server. This field will be set only when the userConfiguredDNS feature is enabled.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.DNSConfig"),
+									},
+								},
+							},
+						},
+					},
+					"internalAPIServerDNSConfig": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "InternalAPIServerDNSConfig contains information to configure DNS for the Internal API Server. This field will be set only when the userConfiguredDNS feature is enabled.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.DNSConfig"),
+									},
+								},
+							},
+						},
+					},
+					"ingressDNSConfig": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "IngressDNSConfig contains information to configure DNS for cluster services. This field will be set only when the userConfiguredDNS feature is enabled.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.DNSConfig"),
+									},
+								},
+							},
+						},
+					},
 					"resourceGroupName": {
 						SchemaProps: spec.SchemaProps{
 							Description: "resourceGroupName is the Resource Group for new Azure resources created for the cluster.",
@@ -9108,7 +9224,7 @@ func schema_openshift_api_config_v1_AzurePlatformStatus(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.AzureResourceTag"},
+			"github.com/openshift/api/config/v1.AzureResourceTag", "github.com/openshift/api/config/v1.DNSConfig"},
 	}
 }
 
@@ -9681,6 +9797,78 @@ func schema_openshift_api_config_v1_ClusterCondition(ref common.ReferenceCallbac
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/config/v1.PromQLClusterCondition"},
+	}
+}
+
+func schema_openshift_api_config_v1_ClusterDNSConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClusterDNSConfig store the DNS configuration data related to internal and external API servers as well as ingress.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"apiServerDNSConfig": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "APIServerDNSConfig contains information to configure DNS for API Server. This field will be set only when the userConfiguredDNS feature is enabled.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.DNSConfig"),
+									},
+								},
+							},
+						},
+					},
+					"internalAPIServerDNSConfig": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "InternalAPIServerDNSConfig contains information to configure DNS for the Internal API Server. This field will be set only when the userConfiguredDNS feature is enabled.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.DNSConfig"),
+									},
+								},
+							},
+						},
+					},
+					"ingressDNSConfig": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "IngressDNSConfig contains information to configure DNS for cluster services. This field will be set only when the userConfiguredDNS feature is enabled.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.DNSConfig"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.DNSConfig"},
 	}
 }
 
@@ -10994,6 +11182,36 @@ func schema_openshift_api_config_v1_DNS(ref common.ReferenceCallback) common.Ope
 	}
 }
 
+func schema_openshift_api_config_v1_DNSConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DNSConfig store the load balancer ip addresses and the type of DNS record.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"recordType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RecordType is the DNS record type.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"lbIPAddress": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LBIPAddress is the Load Balancer IP address for DNS config",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"recordType", "lbIPAddress"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_config_v1_DNSList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -11926,6 +12144,63 @@ func schema_openshift_api_config_v1_GCPPlatformStatus(ref common.ReferenceCallba
 				Description: "GCPPlatformStatus holds the current status of the Google Cloud Platform infrastructure provider.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"apiServerDNSConfig": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "APIServerDNSConfig contains information to configure DNS for API Server. This field will be set only when the userConfiguredDNS feature is enabled.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.DNSConfig"),
+									},
+								},
+							},
+						},
+					},
+					"internalAPIServerDNSConfig": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "InternalAPIServerDNSConfig contains information to configure DNS for the Internal API Server. This field will be set only when the userConfiguredDNS feature is enabled.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.DNSConfig"),
+									},
+								},
+							},
+						},
+					},
+					"ingressDNSConfig": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "IngressDNSConfig contains information to configure DNS for cluster services. This field will be set only when the userConfiguredDNS feature is enabled.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.DNSConfig"),
+									},
+								},
+							},
+						},
+					},
 					"projectID": {
 						SchemaProps: spec.SchemaProps{
 							Description: "resourceGroupName is the Project ID for new GCP resources created for the cluster.",
@@ -11991,7 +12266,7 @@ func schema_openshift_api_config_v1_GCPPlatformStatus(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.GCPResourceLabel", "github.com/openshift/api/config/v1.GCPResourceTag"},
+			"github.com/openshift/api/config/v1.DNSConfig", "github.com/openshift/api/config/v1.GCPResourceLabel", "github.com/openshift/api/config/v1.GCPResourceTag"},
 	}
 }
 

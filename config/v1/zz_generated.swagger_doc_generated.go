@@ -1192,6 +1192,27 @@ func (CloudControllerManagerStatus) SwaggerDoc() map[string]string {
 	return map_CloudControllerManagerStatus
 }
 
+var map_ClusterDNSConfig = map[string]string{
+	"":                           "ClusterDNSConfig store the DNS configuration data related to internal and external API servers as well as ingress.",
+	"apiServerDNSConfig":         "APIServerDNSConfig contains information to configure DNS for API Server. This field will be set only when the userConfiguredDNS feature is enabled.",
+	"internalAPIServerDNSConfig": "InternalAPIServerDNSConfig contains information to configure DNS for the Internal API Server. This field will be set only when the userConfiguredDNS feature is enabled.",
+	"ingressDNSConfig":           "IngressDNSConfig contains information to configure DNS for cluster services. This field will be set only when the userConfiguredDNS feature is enabled.",
+}
+
+func (ClusterDNSConfig) SwaggerDoc() map[string]string {
+	return map_ClusterDNSConfig
+}
+
+var map_DNSConfig = map[string]string{
+	"":            "DNSConfig store the load balancer ip addresses and the type of DNS record.",
+	"recordType":  "RecordType is the DNS record type.",
+	"lbIPAddress": "LBIPAddress is the Load Balancer IP address for DNS config",
+}
+
+func (DNSConfig) SwaggerDoc() map[string]string {
+	return map_DNSConfig
+}
+
 var map_EquinixMetalPlatformSpec = map[string]string{
 	"": "EquinixMetalPlatformSpec holds the desired state of the Equinix Metal infrastructure provider. This only includes fields that can be modified in the cluster.",
 }

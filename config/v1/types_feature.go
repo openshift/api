@@ -182,6 +182,9 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		with(routeExternalCertificate).
 		with(automatedEtcdBackup).
 		without(machineAPIOperatorDisableMachineHealthCheckController).
+		with(customDNSAWS).
+		with(customDNSAZ).
+		with(customDNSGCP).
 		with(adminNetworkPolicy).
 		toFeatures(defaultFeatures),
 	LatencySensitive: newDefaultFeatures().

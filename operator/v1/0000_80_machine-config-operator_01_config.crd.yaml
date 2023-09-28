@@ -18,7 +18,7 @@ spec:
     - name: v1
       schema:
         openAPIV3Schema:
-          description: "MachineConfiguration provides information to configure an operator to manage machine-config-operator. \n Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer)."
+          description: "MachineConfiguration provides information to configure an operator to manage Machine Configuration. \n Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer)."
           type: object
           required:
             - spec
@@ -32,7 +32,7 @@ spec:
             metadata:
               type: object
             spec:
-              description: spec is the specification of the desired behavior of the Kubernetes API Server
+              description: spec is the specification of the desired behavior of the Machine Config Operator
               type: object
               properties:
                 failedRevisionLimit:
@@ -81,7 +81,7 @@ spec:
                   nullable: true
                   x-kubernetes-preserve-unknown-fields: true
             status:
-              description: status is the most recently observed status of the Kubernetes API Server
+              description: status is the most recently observed status of the Machine Config Operator
               type: object
               properties:
                 conditions:

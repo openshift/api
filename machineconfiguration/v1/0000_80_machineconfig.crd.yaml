@@ -49,8 +49,6 @@ spec:
         openAPIV3Schema:
           description: "MachineConfig defines the configuration for a machine \n Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer)."
           type: object
-          required:
-            - spec
           properties:
             apiVersion:
               description: 'APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
@@ -76,6 +74,7 @@ spec:
                   type: array
                   items:
                     type: string
+                  x-kubernetes-list-type: atomic
                 fips:
                   description: fips controls FIPS mode
                   type: boolean
@@ -85,6 +84,7 @@ spec:
                   items:
                     type: string
                   nullable: true
+                  x-kubernetes-list-type: atomic
                 kernelType:
                   description: kernelType contains which kernel we want to be running like default (traditional), realtime.
                   type: string

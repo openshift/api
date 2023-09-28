@@ -115,10 +115,6 @@ spec:
                   items:
                     description: ContainerRuntimeConfigCondition defines the state of the ContainerRuntimeConfig
                     type: object
-                    required:
-                      - lastTransitionTime
-                      - status
-                      - type
                     properties:
                       lastTransitionTime:
                         description: lastTransitionTime is the time of the last update to the current status object.
@@ -137,6 +133,7 @@ spec:
                       type:
                         description: type specifies the state of the operator's reconciliation functionality.
                         type: string
+                  x-kubernetes-list-type: atomic
                 observedGeneration:
                   description: observedGeneration represents the generation observed by the controller.
                   type: integer

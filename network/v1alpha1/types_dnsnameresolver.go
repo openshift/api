@@ -98,9 +98,9 @@ type DNSNameResolverResolvedName struct {
 
 type DNSNameResolverResolvedAddress struct {
 	// ip is an IP address associated with the dnsName. The validity of the IP address expires after
-	// lastLookupTime + ttlSeconds. To refresh the information a DNS lookup will be performed on the
-	// expiration of the IP address's validity. If the information is not refreshed then it will be
-	// removed with a grace period after the expiration of the IP address's validity.
+	// lastLookupTime + ttlSeconds. To refresh the information, a DNS lookup will be performed upon
+	// the expiration of the IP address's validity. If the information is not refreshed then it will
+	// be removed with a grace period after the expiration of the IP address's validity.
 	// +kubebuilder:validation:Required
 	IP string `json:"ip"`
 

@@ -78,10 +78,12 @@ type ControllerConfigSpec struct {
 	AdditionalTrustBundle []byte `json:"additionalTrustBundle"`
 
 	// imageRegistryBundleUserData is Image Registry Data provided by the user
+	// +listType=atomic
 	// +optional
 	ImageRegistryBundleUserData []ImageRegistryBundle `json:"imageRegistryBundleUserData"`
 
 	// imageRegistryBundleData is the ImageRegistryData
+	// +listType=atomic
 	// +optional
 	ImageRegistryBundleData []ImageRegistryBundle `json:"imageRegistryBundleData"`
 
@@ -188,9 +190,11 @@ type ControllerConfigStatus struct {
 	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 
 	// conditions represents the latest available observations of current state.
+	// +listType=atomic
 	// +optional
 	Conditions []ControllerConfigStatusCondition `json:"conditions"`
 	// controllerCertificates represents the latest available observations of the automatically rotating certificates in the MCO.
+	// +listType=atomic
 	// +optional
 	ControllerCertificates []ControllerCertificate `json:"controllerCertificates"`
 }
@@ -303,11 +307,13 @@ type MachineConfigSpec struct {
 	Config runtime.RawExtension `json:"config"`
 
 	// kernelArguments contains a list of kernel arguments to be added
+	// +listType=atomic
 	// +nullable
 	// +optional
 	KernelArguments []string `json:"kernelArguments"`
 
 	// extensions contains a list of additional features that can be enabled on host
+	// +listType=atomic
 	// +optional
 	Extensions []string `json:"extensions"`
 
@@ -420,10 +426,12 @@ type MachineConfigPoolStatus struct {
 	DegradedMachineCount int32 `json:"degradedMachineCount"`
 
 	// conditions represents the latest available observations of current state.
+	// +listType=atomic
 	// +optional
 	Conditions []MachineConfigPoolCondition `json:"conditions"`
 
 	// certExpirys keeps track of important certificate expiration data
+	// +listType=atomic
 	// +optional
 	CertExpirys []CertExpiry `json:"certExpirys"`
 }
@@ -447,6 +455,7 @@ type MachineConfigPoolStatusConfiguration struct {
 	corev1.ObjectReference `json:",inline"`
 
 	// source is the list of MachineConfig objects that were used to generate the single MachineConfig object specified in `content`.
+	// +listType=atomic
 	// +optional
 	Source []corev1.ObjectReference `json:"source,omitempty"`
 }
@@ -697,6 +706,7 @@ type ContainerRuntimeConfigStatus struct {
 	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 
 	// conditions represents the latest available observations of current state.
+	// +listType=atomic
 	// +optional
 	Conditions []ContainerRuntimeConfigCondition `json:"conditions"`
 }

@@ -92,6 +92,9 @@ spec:
                         type: string
                       type:
                         type: string
+                  x-kubernetes-list-map-keys:
+                    - type
+                  x-kubernetes-list-type: map
                 gatherStatus:
                   description: gatherStatus provides basic information about the last Insights data gathering. When omitted, this means no data gathering has taken place yet.
                   type: object
@@ -197,6 +200,12 @@ spec:
                       resource:
                         description: resource is the resource type of the thing you're tracking
                         type: string
+                  x-kubernetes-list-map-keys:
+                    - group
+                    - resource
+                    - namespace
+                    - name
+                  x-kubernetes-list-type: map
                 insightsReport:
                   description: insightsReport provides general Insights analysis results. When omitted, this means no data gathering has taken place yet.
                   type: object

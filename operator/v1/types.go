@@ -115,8 +115,12 @@ type OperatorStatus struct {
 	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 
 	// conditions is a list of conditions and their status
+	// +patchMergeKey=type
+	// +patchStrategy=merge
+	// +listType=map
+	// +listMapKey=type
 	// +optional
-	Conditions []OperatorCondition `json:"conditions,omitempty"`
+	Conditions []OperatorCondition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 
 	// version is the level this availability applies to
 	// +optional
@@ -126,6 +130,16 @@ type OperatorStatus struct {
 	ReadyReplicas int32 `json:"readyReplicas"`
 
 	// generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.
+	// +patchMergeKey=group
+	// +patchMergeKey=resource
+	// +patchMergeKey=namespace
+	// +patchMergeKey=name
+	// +patchStrategy=merge
+	// +listType=map
+	// +listMapKey=group
+	// +listMapKey=resource
+	// +listMapKey=namespace
+	// +listMapKey=name
 	// +optional
 	Generations []GenerationStatus `json:"generations,omitempty"`
 }

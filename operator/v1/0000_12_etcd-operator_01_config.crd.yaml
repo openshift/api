@@ -103,6 +103,9 @@ spec:
                         type: string
                       type:
                         type: string
+                  x-kubernetes-list-map-keys:
+                    - type
+                  x-kubernetes-list-type: map
                 controlPlaneHardwareSpeed:
                   description: ControlPlaneHardwareSpeed declares valid hardware speed tolerance levels
                   type: string
@@ -136,6 +139,12 @@ spec:
                       resource:
                         description: resource is the resource type of the thing you're tracking
                         type: string
+                  x-kubernetes-list-map-keys:
+                    - group
+                    - resource
+                    - namespace
+                    - name
+                  x-kubernetes-list-type: map
                 latestAvailableRevision:
                   description: latestAvailableRevision is the deploymentID of the most recent deployment
                   type: integer

@@ -164,7 +164,9 @@ func (EtcdBackupList) SwaggerDoc() map[string]string {
 }
 
 var map_EtcdBackupSpec = map[string]string{
-	"pvcName": "PVCName specifies the name of the PersistentVolumeClaim (PVC) which binds a PersistentVolume where the etcd backup file would be saved The PVC itself must always be created in the \"openshift-etcd\" namespace If the PVC is left unspecified \"\" then the platform will choose a reasonable default location to save the backup. In the future this would be backups saved across the control-plane master nodes.",
+	"pvcName":      "PVCName specifies the name of the PersistentVolumeClaim (PVC) which binds a PersistentVolume where the etcd backup file would be saved The PVC itself must always be created in the \"openshift-etcd\" namespace If the PVC is left unspecified \"\" then the platform will choose a reasonable default location to save the backup. In the future this would be backups saved across the control-plane master nodes.",
+	"nodeSelector": "nodeSelector is the node selector applied to the backup pods.\n\nIf empty, the cluster-etcd-operator sets a node selector for the \"node-role.kubernetes.io/master\" label. This default is subject to change.",
+	"tolerations":  "tolerations is a list of tolerations applied to the backup pods.\n\nIf empty, the cluster-etcd-operator sets a toleration for the \"node-role.kubernetes.io/master\" taint. This default is subject to change.",
 }
 
 func (EtcdBackupSpec) SwaggerDoc() map[string]string {

@@ -49576,9 +49576,41 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupSpec(ref common.ReferenceC
 							Format:      "",
 						},
 					},
+					"nodeSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "nodeSelector is the node selector applied to the backup pods.\n\nIf empty, the cluster-etcd-operator sets a node selector for the \"node-role.kubernetes.io/master\" label. This default is subject to change.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"tolerations": {
+						SchemaProps: spec.SchemaProps{
+							Description: "tolerations is a list of tolerations applied to the backup pods.\n\nIf empty, the cluster-etcd-operator sets a toleration for the \"node-role.kubernetes.io/master\" taint. This default is subject to change.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.Toleration"),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.Toleration"},
 	}
 }
 

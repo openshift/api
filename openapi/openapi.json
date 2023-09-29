@@ -13340,6 +13340,7 @@
           "type": "string"
         },
         "metadata": {
+          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
@@ -13368,6 +13369,7 @@
           "type": "string"
         },
         "items": {
+          "description": "items contains a list of DataGather resources.",
           "type": "array",
           "items": {
             "default": {},
@@ -13379,12 +13381,14 @@
           "type": "string"
         },
         "metadata": {
+          "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
         }
       }
     },
     "com.github.openshift.api.insights.v1alpha1.DataGatherSpec": {
+      "description": "DataGatherSpec contains the configuration for the DataGather.",
       "type": "object",
       "properties": {
         "dataPolicy": {
@@ -13403,6 +13407,7 @@
       }
     },
     "com.github.openshift.api.insights.v1alpha1.DataGatherStatus": {
+      "description": "DataGatherStatus contains information relating to the DataGather state.",
       "type": "object",
       "properties": {
         "conditions": {

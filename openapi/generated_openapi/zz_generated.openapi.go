@@ -144,6 +144,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/cloudnetwork/v1.CloudPrivateIPConfigStatus":                         schema_openshift_api_cloudnetwork_v1_CloudPrivateIPConfigStatus(ref),
 		"github.com/openshift/api/cluster/v1alpha1.InfrastructureReference":                           schema_openshift_api_cluster_v1alpha1_InfrastructureReference(ref),
 		"github.com/openshift/api/cluster/v1alpha1.ObjectMeta":                                        schema_openshift_api_cluster_v1alpha1_ObjectMeta(ref),
+		"github.com/openshift/api/cluster/v1alpha1.OpenShiftBootstrapConfig":                          schema_openshift_api_cluster_v1alpha1_OpenShiftBootstrapConfig(ref),
+		"github.com/openshift/api/cluster/v1alpha1.OpenShiftBootstrapConfigList":                      schema_openshift_api_cluster_v1alpha1_OpenShiftBootstrapConfigList(ref),
+		"github.com/openshift/api/cluster/v1alpha1.OpenShiftBootstrapConfigStatus":                    schema_openshift_api_cluster_v1alpha1_OpenShiftBootstrapConfigStatus(ref),
 		"github.com/openshift/api/cluster/v1alpha1.OpenShiftControlPlane":                             schema_openshift_api_cluster_v1alpha1_OpenShiftControlPlane(ref),
 		"github.com/openshift/api/cluster/v1alpha1.OpenShiftControlPlaneList":                         schema_openshift_api_cluster_v1alpha1_OpenShiftControlPlaneList(ref),
 		"github.com/openshift/api/cluster/v1alpha1.OpenShiftControlPlaneMachineTemplate":              schema_openshift_api_cluster_v1alpha1_OpenShiftControlPlaneMachineTemplate(ref),
@@ -8157,6 +8160,152 @@ func schema_openshift_api_cluster_v1alpha1_ObjectMeta(ref common.ReferenceCallba
 				},
 			},
 		},
+	}
+}
+
+func schema_openshift_api_cluster_v1alpha1_OpenShiftBootstrapConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "OpenShiftBootstrapConfig is repsonsible for providing ignition configuration to bootstrp nodes on an OpenShift cluster managed by Cluster API. Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status is the observed state of the OpenShiftBootstrapProvider.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/cluster/v1alpha1.OpenShiftBootstrapConfigStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/cluster/v1alpha1.OpenShiftBootstrapConfigStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_openshift_api_cluster_v1alpha1_OpenShiftBootstrapConfigList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "OpenShiftBootstrapConfigList contains a list of OpenShiftBootstrapConfig Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/cluster/v1alpha1.OpenShiftBootstrapConfig"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/cluster/v1alpha1.OpenShiftBootstrapConfig", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_openshift_api_cluster_v1alpha1_OpenShiftBootstrapConfigStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "OpenShiftBootstrapConfigStatus contains status related to the OpenShiftBootstrapConfig state.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type":       "map",
+								"x-kubernetes-patch-merge-key": "type",
+								"x-kubernetes-patch-strategy":  "merge",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions represents the observations of the OpenShiftBootstrapConfig's current state.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+					"ready": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ready denotes whether or not the bootstrap data has been created.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"dataSecretName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "dataSecretName is the name of the user data secret that should be used to bootstrap the owning Machine's Node when it first boots.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 

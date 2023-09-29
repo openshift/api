@@ -4030,6 +4030,87 @@
         }
       }
     },
+    "com.github.openshift.api.cluster.v1alpha1.OpenShiftBootstrapConfig": {
+      "description": "OpenShiftBootstrapConfig is repsonsible for providing ignition configuration to bootstrp nodes on an OpenShift cluster managed by Cluster API. Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "status": {
+          "description": "status is the observed state of the OpenShiftBootstrapProvider.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.cluster.v1alpha1.OpenShiftBootstrapConfigStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.cluster.v1alpha1.OpenShiftBootstrapConfigList": {
+      "description": "OpenShiftBootstrapConfigList contains a list of OpenShiftBootstrapConfig Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.cluster.v1alpha1.OpenShiftBootstrapConfig"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.cluster.v1alpha1.OpenShiftBootstrapConfigStatus": {
+      "description": "OpenShiftBootstrapConfigStatus contains status related to the OpenShiftBootstrapConfig state.",
+      "type": "object",
+      "properties": {
+        "conditions": {
+          "description": "conditions represents the observations of the OpenShiftBootstrapConfig's current state.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "type",
+          "x-kubernetes-patch-strategy": "merge"
+        },
+        "dataSecretName": {
+          "description": "dataSecretName is the name of the user data secret that should be used to bootstrap the owning Machine's Node when it first boots.",
+          "type": "string"
+        },
+        "ready": {
+          "description": "ready denotes whether or not the bootstrap data has been created.",
+          "type": "boolean"
+        }
+      }
+    },
     "com.github.openshift.api.cluster.v1alpha1.OpenShiftControlPlane": {
       "description": "OpenShiftControlPlane is repsonsible for bootstrapping an OpenShift cluster control plane. Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
       "type": "object",

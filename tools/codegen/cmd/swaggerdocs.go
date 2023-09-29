@@ -11,7 +11,7 @@ import (
 var (
 	swaggerOutputFileName string
 
-	swaggerCommentPolicy = swaggerdocs.CommentPolicyWarn
+	swaggerCommentPolicy = swaggerdocs.CommentPolicyEnforce
 )
 
 // swaggerDocsCmd represents the swaggerdocs command
@@ -44,7 +44,7 @@ func init() {
 	rootCmd.AddCommand(swaggerDocsCmd)
 
 	rootCmd.PersistentFlags().StringVar(&swaggerOutputFileName, "swagger:output-file-name", swaggerdocs.DefaultOutputFileName, "Defines the file name to use for the swagger generated docs for each group version.")
-	rootCmd.PersistentFlags().Var(newEnum(&swaggerCommentPolicy, swaggerdocs.CommentPolicyIgnore, swaggerdocs.CommentPolicyWarn, swaggerdocs.CommentPolicyEnforce), "swagger:comment-policy", "Defines the policy to use when a field is missing documentation. Valid values are 'Ignore', 'Warn' and 'Enforce'. The default policy is 'Warn'. Missing comments will be ignored when the policy is set to 'Ignore', a warning will be produced when the policy is set to 'Warn', the generator will fail when the policy is set to 'Enforce'.")
+	rootCmd.PersistentFlags().Var(newEnum(&swaggerCommentPolicy, swaggerdocs.CommentPolicyIgnore, swaggerdocs.CommentPolicyWarn, swaggerdocs.CommentPolicyEnforce), "swagger:comment-policy", "Defines the policy to use when a field is missing documentation. Valid values are 'Ignore', 'Warn' and 'Enforce'. The default policy is 'Enforce'. Missing comments will be ignored when the policy is set to 'Ignore', a warning will be produced when the policy is set to 'Warn', the generator will fail when the policy is set to 'Enforce'.")
 }
 
 // newSwaggerDocsGenerator builds a new swaggerdocs generator.

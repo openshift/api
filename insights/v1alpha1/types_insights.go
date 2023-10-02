@@ -14,7 +14,10 @@ import (
 // Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
 // +openshift:compatibility-gen:level=4
 type DataGather struct {
-	metav1.TypeMeta   `json:",inline"`
+	metav1.TypeMeta `json:",inline"`
+
+	// metadata is the standard object's metadata.
+	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	// spec holds user settable values for configuration
@@ -25,6 +28,7 @@ type DataGather struct {
 	Status DataGatherStatus `json:"status"`
 }
 
+// DataGatherSpec contains the configuration for the DataGather.
 type DataGatherSpec struct {
 	// dataPolicy allows user to enable additional global obfuscation of the IP addresses and base domain
 	// in the Insights archive data. Valid values are "ClearText" and "ObfuscateNetworking".
@@ -91,6 +95,7 @@ type GathererConfig struct {
 // +kubebuilder:validation:XValidation:rule="!(oldSelf == 'Failed' && self == 'Running')", message="dataGatherState cannot transition from Failed to Running"
 type DataGatherState string
 
+// DataGatherStatus contains information relating to the DataGather state.
 // +kubebuilder:validation:XValidation:rule="(!has(oldSelf.insightsRequestID) || has(self.insightsRequestID))",message="cannot remove insightsRequestID attribute from status"
 // +kubebuilder:validation:XValidation:rule="(!has(oldSelf.startTime) || has(self.startTime))",message="cannot remove startTime attribute from status"
 // +kubebuilder:validation:XValidation:rule="(!has(oldSelf.finishTime) || has(self.finishTime))",message="cannot remove finishTime attribute from status"
@@ -250,6 +255,11 @@ type ObjectReference struct {
 // +openshift:compatibility-gen:level=4
 type DataGatherList struct {
 	metav1.TypeMeta `json:",inline"`
+
+	// metadata is the standard list's metadata.
+	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
 	metav1.ListMeta `json:"metadata"`
-	Items           []DataGather `json:"items"`
+
+	// items contains a list of DataGather resources.
+	Items []DataGather `json:"items"`
 }

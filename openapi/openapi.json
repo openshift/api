@@ -7924,6 +7924,18 @@
           "type": "integer",
           "format": "int32"
         },
+        "conditions": {
+          "description": "conditions represents the observations of a network.config current state. Known .status.conditions.type are: \"LiveMigrationRunning\", \"LiveMigrationRoutableMTUApplied\", \"LiveMigrationTargetCNIReady\", \"LiveMigrationTargetMachineConfigApplied\" and \"LiveMigrationOriginalCNIPurged\"",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
         "migration": {
           "description": "Migration contains the cluster network migration configuration.",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.NetworkMigration"

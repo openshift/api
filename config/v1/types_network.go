@@ -5,6 +5,7 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // +genclient
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:subresource:status
 
 // Network holds cluster-wide information about Network. The canonical name is `cluster`. It is used to configure the desired network configuration, such as: IP address pools for services/pod IPs, network plugin, etc.
 // Please view network.spec for an explanation on what applies when configuring this resource.
@@ -85,6 +86,15 @@ type NetworkStatus struct {
 
 	// Migration contains the cluster network migration configuration.
 	Migration *NetworkMigration `json:"migration,omitempty"`
+
+	// conditions represents the observations of a network.config current state.
+	// Known .status.conditions.type are: "LiveMigrationRunning", "LiveMigrationRoutableMTUApplied",
+	// "LiveMigrationTargetCNIReady", "LiveMigrationTargetMachineConfigApplied"
+	// and "LiveMigrationOriginalCNIPurged"
+	// +optional
+	// +listType=map
+	// +listMapKey=type
+	Conditions []metav1.Condition `json:"conditions,omitempty"`
 }
 
 // ClusterNetworkEntry is a contiguous block of IP addresses from which pod IPs

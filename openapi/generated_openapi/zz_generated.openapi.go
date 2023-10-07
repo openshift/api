@@ -14700,11 +14700,35 @@ func schema_openshift_api_config_v1_NetworkStatus(ref common.ReferenceCallback) 
 							Ref:         ref("github.com/openshift/api/config/v1.NetworkMigration"),
 						},
 					},
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type":       "map",
+								"x-kubernetes-patch-merge-key": "type",
+								"x-kubernetes-patch-strategy":  "merge",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions represents the observations of a network.config current state. Known .status.conditions.type are: \"NetworkTypeMigrationInProgress\", \"NetworkTypeMigrationMTUReady\", \"NetworkTypeMigrationTargetCNIAvailable\", \"NetworkTypeMigrationTargetCNIInUse\" and \"NetworkTypeMigrationOriginalCNIPurged\"",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ClusterNetworkEntry", "github.com/openshift/api/config/v1.NetworkMigration"},
+			"github.com/openshift/api/config/v1.ClusterNetworkEntry", "github.com/openshift/api/config/v1.NetworkMigration", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 

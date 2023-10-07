@@ -3631,6 +3631,13 @@ func (in *NetworkStatus) DeepCopyInto(out *NetworkStatus) {
 		*out = new(NetworkMigration)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.Conditions != nil {
+		in, out := &in.Conditions, &out.Conditions
+		*out = make([]metav1.Condition, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
+	}
 	return
 }
 

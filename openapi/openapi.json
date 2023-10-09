@@ -27391,6 +27391,34 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1.MachineConfigurationComponent": {
+      "type": "object",
+      "required": [
+        "name",
+        "conditions"
+      ],
+      "properties": {
+        "conditions": {
+          "description": "conditions is the most recent state reporting for each component",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "type",
+          "x-kubernetes-patch-strategy": "merge"
+        },
+        "name": {
+          "description": "name represents the full name of this component",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1.MachineConfigurationList": {
       "description": "MachineConfigurationList is a collection of items\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
@@ -27426,7 +27454,8 @@
       "type": "object",
       "required": [
         "managementState",
-        "forceRedeploymentReason"
+        "forceRedeploymentReason",
+        "mode"
       ],
       "properties": {
         "failedRevisionLimit": {
@@ -27445,6 +27474,11 @@
         },
         "managementState": {
           "description": "managementState indicates whether and how the operator should manage the component",
+          "type": "string",
+          "default": ""
+        },
+        "mode": {
+          "description": "Mode describes if we are talking about this object in cluster or during bootstrap",
           "type": "string",
           "default": ""
         },
@@ -27472,7 +27506,12 @@
     "com.github.openshift.api.operator.v1.MachineConfigurationStatus": {
       "type": "object",
       "required": [
-        "readyReplicas"
+        "readyReplicas",
+        "daemon",
+        "controller",
+        "operator",
+        "mostRecentError",
+        "health"
       ],
       "properties": {
         "conditions": {
@@ -27483,6 +27522,16 @@
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
           }
         },
+        "controller": {
+          "description": "controller describes the most recent progression of the MCC pods",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.MachineConfigurationComponent"
+        },
+        "daemon": {
+          "description": "daemon describes the most recent progression of the MCD pods",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.MachineConfigurationComponent"
+        },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
           "type": "array",
@@ -27490,6 +27539,11 @@
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
           }
+        },
+        "health": {
+          "description": "health reports the overall status of the MCO given its Progress",
+          "type": "string",
+          "default": ""
         },
         "latestAvailableRevision": {
           "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
@@ -27499,6 +27553,11 @@
         "latestAvailableRevisionReason": {
           "description": "latestAvailableRevisionReason describe the detailed reason for the most recent deployment",
           "type": "string"
+        },
+        "mostRecentError": {
+          "description": "mostRecentError is populated if the State reports an error.",
+          "type": "string",
+          "default": ""
         },
         "nodeStatuses": {
           "description": "nodeStatuses track the deployment values and errors across individual nodes",
@@ -27512,6 +27571,11 @@
           "description": "observedGeneration is the last generation change you've dealt with",
           "type": "integer",
           "format": "int64"
+        },
+        "operator": {
+          "description": "operator describes the most recent progression of the MCO pod",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.MachineConfigurationComponent"
         },
         "readyReplicas": {
           "description": "readyReplicas indicates how many replicas are ready and at the desired state",

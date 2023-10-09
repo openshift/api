@@ -923,6 +923,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.MTUMigration":                                           schema_openshift_api_operator_v1_MTUMigration(ref),
 		"github.com/openshift/api/operator/v1.MTUMigrationValues":                                     schema_openshift_api_operator_v1_MTUMigrationValues(ref),
 		"github.com/openshift/api/operator/v1.MachineConfiguration":                                   schema_openshift_api_operator_v1_MachineConfiguration(ref),
+		"github.com/openshift/api/operator/v1.MachineConfigurationComponent":                          schema_openshift_api_operator_v1_MachineConfigurationComponent(ref),
 		"github.com/openshift/api/operator/v1.MachineConfigurationList":                               schema_openshift_api_operator_v1_MachineConfigurationList(ref),
 		"github.com/openshift/api/operator/v1.MachineConfigurationSpec":                               schema_openshift_api_operator_v1_MachineConfigurationSpec(ref),
 		"github.com/openshift/api/operator/v1.MachineConfigurationStatus":                             schema_openshift_api_operator_v1_MachineConfigurationStatus(ref),
@@ -46722,6 +46723,53 @@ func schema_openshift_api_operator_v1_MachineConfiguration(ref common.ReferenceC
 	}
 }
 
+func schema_openshift_api_operator_v1_MachineConfigurationComponent(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name represents the full name of this component",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type":       "map",
+								"x-kubernetes-patch-merge-key": "type",
+								"x-kubernetes-patch-strategy":  "merge",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions is the most recent state reporting for each component",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"name", "conditions"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
+	}
+}
+
 func schema_openshift_api_operator_v1_MachineConfigurationList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -46837,8 +46885,16 @@ func schema_openshift_api_operator_v1_MachineConfigurationSpec(ref common.Refere
 							Format:      "int32",
 						},
 					},
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Mode describes if we are talking about this object in cluster or during bootstrap",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
-				Required: []string{"managementState", "forceRedeploymentReason"},
+				Required: []string{"managementState", "forceRedeploymentReason", "mode"},
 			},
 		},
 		Dependencies: []string{
@@ -46930,12 +46986,49 @@ func schema_openshift_api_operator_v1_MachineConfigurationStatus(ref common.Refe
 							},
 						},
 					},
+					"daemon": {
+						SchemaProps: spec.SchemaProps{
+							Description: "daemon describes the most recent progression of the MCD pods",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1.MachineConfigurationComponent"),
+						},
+					},
+					"controller": {
+						SchemaProps: spec.SchemaProps{
+							Description: "controller describes the most recent progression of the MCC pods",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1.MachineConfigurationComponent"),
+						},
+					},
+					"operator": {
+						SchemaProps: spec.SchemaProps{
+							Description: "operator describes the most recent progression of the MCO pod",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1.MachineConfigurationComponent"),
+						},
+					},
+					"mostRecentError": {
+						SchemaProps: spec.SchemaProps{
+							Description: "mostRecentError is populated if the State reports an error.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"health": {
+						SchemaProps: spec.SchemaProps{
+							Description: "health reports the overall status of the MCO given its Progress",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
-				Required: []string{"readyReplicas"},
+				Required: []string{"readyReplicas", "daemon", "controller", "operator", "mostRecentError", "health"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.NodeStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
+			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.MachineConfigurationComponent", "github.com/openshift/api/operator/v1.NodeStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
 	}
 }
 

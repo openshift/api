@@ -4515,6 +4515,18 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.ConfigMapNameReference"
         },
+        "oidcProviders": {
+          "description": "OIDCProviders are OIDC identity providers that can issue tokens for this cluster Can only be set if \"Type\" is set to \"OIDC\".\n\nAt most one provider can be configured.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.OIDCProvider"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
         "serviceAccountIssuer": {
           "description": "serviceAccountIssuer is the identifier of the bound service account token issuer. The default is https://kubernetes.default.svc WARNING: Updating this field will not result in immediate invalidation of all bound tokens with the previous issuer value. Instead, the tokens issued by previous service account issuer will continue to be trusted for a time period chosen by the platform (currently set to 24h). This time period is subject to change over time. This allows internal components to transition to use new service account issuer without service distruption.",
           "type": "string",
@@ -4526,7 +4538,7 @@
           "default": ""
         },
         "webhookTokenAuthenticator": {
-          "description": "webhookTokenAuthenticator configures a remote token reviewer. These remote authentication webhooks can be used to verify bearer tokens via the tokenreviews.authentication.k8s.io REST API. This is required to honor bearer tokens that are provisioned by an external authentication service.",
+          "description": "webhookTokenAuthenticator configures a remote token reviewer. These remote authentication webhooks can be used to verify bearer tokens via the tokenreviews.authentication.k8s.io REST API. This is required to honor bearer tokens that are provisioned by an external authentication service.\n\nCan only be set if \"Type\" is set to \"None\".",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.WebhookTokenAuthenticator"
         },
         "webhookTokenAuthenticators": {
@@ -8291,6 +8303,40 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.OIDCProvider": {
+      "type": "object",
+      "required": [
+        "name",
+        "issuer",
+        "claimMappings"
+      ],
+      "properties": {
+        "claimMappings": {
+          "description": "ClaimMappings describes rules on how to transform information from an ID token into a cluster identity",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.TokenClaimMappings"
+        },
+        "claimValidationRules": {
+          "description": "ClaimValidationRules are rules that are applied to validate token claims to authenticate users.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.TokenClaimValidationRule"
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "issuer": {
+          "description": "Issuer describes atributes of the OIDC token issuer",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.TokenIssuer"
+        },
+        "name": {
+          "description": "Name of the OIDC provider",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.ObjectReference": {
       "description": "ObjectReference contains enough information to let you inspect or modify the referred object.",
       "type": "object",
@@ -8883,6 +8929,25 @@
         },
         "url": {
           "description": "url is fully qualified URI with scheme https, that overrides the default generated endpoint for a client. This must be provided and cannot be empty.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.PrefixedClaimMapping": {
+      "type": "object",
+      "required": [
+        "claim",
+        "prefix"
+      ],
+      "properties": {
+        "claim": {
+          "description": "Claim is a JWT token claim to be used in the mapping",
+          "type": "string",
+          "default": ""
+        },
+        "prefix": {
+          "description": "Prefix is a string to prefix the value from the token in the result of the claim mapping.\n\nBy default, no prefixing occurs.\n\nExample: if `prefix` is set to \"myoidc:\"\" and the `claim` in JWT contains an array of strings \"a\", \"b\" and  \"c\", the mapping will result in an array of string \"myoidc:a\", \"myoidc:b\" and \"myoidc:c\".",
           "type": "string",
           "default": ""
         }
@@ -9643,6 +9708,52 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.TokenClaimMapping": {
+      "type": "object",
+      "required": [
+        "claim"
+      ],
+      "properties": {
+        "claim": {
+          "description": "Claim is a JWT token claim to be used in the mapping",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.TokenClaimMappings": {
+      "type": "object",
+      "properties": {
+        "groups": {
+          "description": "Groups is a name of the claim that should be used to construct groups for the cluster identity. The referenced claim must use array of strings values.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.PrefixedClaimMapping"
+        },
+        "username": {
+          "description": "Username is a name of the claim that should be used to construct usernames for the cluster identity.\n\nDefault value: \"sub\"",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.UsernameClaimMapping"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.TokenClaimValidationRule": {
+      "type": "object",
+      "required": [
+        "type",
+        "requiredClaim"
+      ],
+      "properties": {
+        "requiredClaim": {
+          "description": "RequiredClaim allows configuring a required claim name and its expected value",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.TokenRequiredClaim"
+        },
+        "type": {
+          "description": "Type sets the type of the validation rule",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.TokenConfig": {
       "description": "TokenConfig holds the necessary configuration options for authorization and access tokens",
       "type": "object",
@@ -9660,6 +9771,54 @@
           "description": "accessTokenMaxAgeSeconds defines the maximum age of access tokens",
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.TokenIssuer": {
+      "type": "object",
+      "required": [
+        "issuerURL",
+        "audiences",
+        "issuerCertificateAuthority"
+      ],
+      "properties": {
+        "audiences": {
+          "description": "Audiences is an array of audiences that the token was issued for. Valid tokens must include at least one of these values in their \"aud\" claim. Must be set to exactly one value.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        },
+        "issuerCertificateAuthority": {
+          "description": "CertificateAuthority is a reference to a config map in the configuration namespace. The .data of the configMap must contain the \"ca-bundle.crt\" key. If unset, system trust is used instead.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.ConfigMapNameReference"
+        },
+        "issuerURL": {
+          "description": "URL is the serving URL of the token issuer. Must use the https:// scheme.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.TokenRequiredClaim": {
+      "type": "object",
+      "required": [
+        "claim",
+        "requiredValue"
+      ],
+      "properties": {
+        "claim": {
+          "description": "Claim is a name of a required claim. Only claims with string values are supported.",
+          "type": "string",
+          "default": ""
+        },
+        "requiredValue": {
+          "description": "RequiredValue is the required value for the claim.",
+          "type": "string",
+          "default": ""
         }
       }
     },
@@ -9730,6 +9889,41 @@
         },
         "version": {
           "description": "version is a semantic version identifying the update version. If the requested image does not define a version, or if a failure occurs retrieving the image, this value may be empty.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.UsernameClaimMapping": {
+      "type": "object",
+      "required": [
+        "claim",
+        "prefixPolicy",
+        "prefix"
+      ],
+      "properties": {
+        "claim": {
+          "description": "Claim is a JWT token claim to be used in the mapping",
+          "type": "string",
+          "default": ""
+        },
+        "prefix": {
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.UsernamePrefix"
+        },
+        "prefixPolicy": {
+          "description": "PrefixPolicy specifies how a prefix should apply.\n\nBy default, claims other than `email` will be prefixed with the issuer URL to prevent naming clashes with other plugins.\n\nSet to \"NoPrefix\" to disable prefixing.\n\nExample:\n    (1) `prefix` is set to \"myoidc:\" and `claim` is set to \"username\".\n        If the JWT claim `username` contains value `userA`, the resulting\n        mapped value will be \"myoidc:userA\".\n    (2) `prefix` is set to \"myoidc:\" and `claim` is set to \"email\". If the\n        JWT `email` claim contains value \"userA@myoidc.tld\", the resulting\n        mapped value will be \"myoidc:userA@myoidc.tld\".\n    (3) `prefix` is unset, `issuerURL` is set to `https://myoidc.tld`,\n        the JWT claims include \"username\":\"userA\" and \"email\":\"userA@myoidc.tld\",\n        and `claim` is set to:\n        (a) \"username\": the mapped value will be \"https://myoidc.tld#userA\"\n        (b) \"email\": the mapped value will be \"userA@myoidc.tld\"",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.UsernamePrefix": {
+      "type": "object",
+      "required": [
+        "prefixString"
+      ],
+      "properties": {
+        "prefixString": {
           "type": "string",
           "default": ""
         }

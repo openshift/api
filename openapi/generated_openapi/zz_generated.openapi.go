@@ -314,6 +314,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.OAuthSpec":                                                schema_openshift_api_config_v1_OAuthSpec(ref),
 		"github.com/openshift/api/config/v1.OAuthStatus":                                              schema_openshift_api_config_v1_OAuthStatus(ref),
 		"github.com/openshift/api/config/v1.OAuthTemplates":                                           schema_openshift_api_config_v1_OAuthTemplates(ref),
+		"github.com/openshift/api/config/v1.OIDCProvider":                                             schema_openshift_api_config_v1_OIDCProvider(ref),
 		"github.com/openshift/api/config/v1.ObjectReference":                                          schema_openshift_api_config_v1_ObjectReference(ref),
 		"github.com/openshift/api/config/v1.OldTLSProfile":                                            schema_openshift_api_config_v1_OldTLSProfile(ref),
 		"github.com/openshift/api/config/v1.OpenIDClaims":                                             schema_openshift_api_config_v1_OpenIDClaims(ref),
@@ -334,6 +335,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.PowerVSPlatformSpec":                                      schema_openshift_api_config_v1_PowerVSPlatformSpec(ref),
 		"github.com/openshift/api/config/v1.PowerVSPlatformStatus":                                    schema_openshift_api_config_v1_PowerVSPlatformStatus(ref),
 		"github.com/openshift/api/config/v1.PowerVSServiceEndpoint":                                   schema_openshift_api_config_v1_PowerVSServiceEndpoint(ref),
+		"github.com/openshift/api/config/v1.PrefixedClaimMapping":                                     schema_openshift_api_config_v1_PrefixedClaimMapping(ref),
 		"github.com/openshift/api/config/v1.Project":                                                  schema_openshift_api_config_v1_Project(ref),
 		"github.com/openshift/api/config/v1.ProjectList":                                              schema_openshift_api_config_v1_ProjectList(ref),
 		"github.com/openshift/api/config/v1.ProjectSpec":                                              schema_openshift_api_config_v1_ProjectSpec(ref),
@@ -361,9 +363,16 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.TLSProfileSpec":                                           schema_openshift_api_config_v1_TLSProfileSpec(ref),
 		"github.com/openshift/api/config/v1.TLSSecurityProfile":                                       schema_openshift_api_config_v1_TLSSecurityProfile(ref),
 		"github.com/openshift/api/config/v1.TemplateReference":                                        schema_openshift_api_config_v1_TemplateReference(ref),
+		"github.com/openshift/api/config/v1.TokenClaimMapping":                                        schema_openshift_api_config_v1_TokenClaimMapping(ref),
+		"github.com/openshift/api/config/v1.TokenClaimMappings":                                       schema_openshift_api_config_v1_TokenClaimMappings(ref),
+		"github.com/openshift/api/config/v1.TokenClaimValidationRule":                                 schema_openshift_api_config_v1_TokenClaimValidationRule(ref),
 		"github.com/openshift/api/config/v1.TokenConfig":                                              schema_openshift_api_config_v1_TokenConfig(ref),
+		"github.com/openshift/api/config/v1.TokenIssuer":                                              schema_openshift_api_config_v1_TokenIssuer(ref),
+		"github.com/openshift/api/config/v1.TokenRequiredClaim":                                       schema_openshift_api_config_v1_TokenRequiredClaim(ref),
 		"github.com/openshift/api/config/v1.Update":                                                   schema_openshift_api_config_v1_Update(ref),
 		"github.com/openshift/api/config/v1.UpdateHistory":                                            schema_openshift_api_config_v1_UpdateHistory(ref),
+		"github.com/openshift/api/config/v1.UsernameClaimMapping":                                     schema_openshift_api_config_v1_UsernameClaimMapping(ref),
+		"github.com/openshift/api/config/v1.UsernamePrefix":                                           schema_openshift_api_config_v1_UsernamePrefix(ref),
 		"github.com/openshift/api/config/v1.VSpherePlatformFailureDomainSpec":                         schema_openshift_api_config_v1_VSpherePlatformFailureDomainSpec(ref),
 		"github.com/openshift/api/config/v1.VSpherePlatformLoadBalancer":                              schema_openshift_api_config_v1_VSpherePlatformLoadBalancer(ref),
 		"github.com/openshift/api/config/v1.VSpherePlatformNodeNetworking":                            schema_openshift_api_config_v1_VSpherePlatformNodeNetworking(ref),
@@ -9010,7 +9019,7 @@ func schema_openshift_api_config_v1_AuthenticationSpec(ref common.ReferenceCallb
 					},
 					"webhookTokenAuthenticator": {
 						SchemaProps: spec.SchemaProps{
-							Description: "webhookTokenAuthenticator configures a remote token reviewer. These remote authentication webhooks can be used to verify bearer tokens via the tokenreviews.authentication.k8s.io REST API. This is required to honor bearer tokens that are provisioned by an external authentication service.",
+							Description: "webhookTokenAuthenticator configures a remote token reviewer. These remote authentication webhooks can be used to verify bearer tokens via the tokenreviews.authentication.k8s.io REST API. This is required to honor bearer tokens that are provisioned by an external authentication service.\n\nCan only be set if \"Type\" is set to \"None\".",
 							Ref:         ref("github.com/openshift/api/config/v1.WebhookTokenAuthenticator"),
 						},
 					},
@@ -9022,11 +9031,33 @@ func schema_openshift_api_config_v1_AuthenticationSpec(ref common.ReferenceCallb
 							Format:      "",
 						},
 					},
+					"oidcProviders": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "OIDCProviders are OIDC identity providers that can issue tokens for this cluster Can only be set if \"Type\" is set to \"OIDC\".\n\nAt most one provider can be configured.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.OIDCProvider"),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ConfigMapNameReference", "github.com/openshift/api/config/v1.DeprecatedWebhookTokenAuthenticator", "github.com/openshift/api/config/v1.WebhookTokenAuthenticator"},
+			"github.com/openshift/api/config/v1.ConfigMapNameReference", "github.com/openshift/api/config/v1.DeprecatedWebhookTokenAuthenticator", "github.com/openshift/api/config/v1.OIDCProvider", "github.com/openshift/api/config/v1.WebhookTokenAuthenticator"},
 	}
 }
 
@@ -15356,6 +15387,62 @@ func schema_openshift_api_config_v1_OAuthTemplates(ref common.ReferenceCallback)
 	}
 }
 
+func schema_openshift_api_config_v1_OIDCProvider(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name of the OIDC provider",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"issuer": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Issuer describes atributes of the OIDC token issuer",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.TokenIssuer"),
+						},
+					},
+					"claimMappings": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ClaimMappings describes rules on how to transform information from an ID token into a cluster identity",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.TokenClaimMappings"),
+						},
+					},
+					"claimValidationRules": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "ClaimValidationRules are rules that are applied to validate token claims to authenticate users.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.TokenClaimValidationRule"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"name", "issuer", "claimMappings"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.TokenClaimMappings", "github.com/openshift/api/config/v1.TokenClaimValidationRule", "github.com/openshift/api/config/v1.TokenIssuer"},
+	}
+}
+
 func schema_openshift_api_config_v1_ObjectReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -16367,6 +16454,35 @@ func schema_openshift_api_config_v1_PowerVSServiceEndpoint(ref common.ReferenceC
 					},
 				},
 				Required: []string{"name", "url"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1_PrefixedClaimMapping(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"claim": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Claim is a JWT token claim to be used in the mapping",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"prefix": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Prefix is a string to prefix the value from the token in the result of the claim mapping.\n\nBy default, no prefixing occurs.\n\nExample: if `prefix` is set to \"myoidc:\"\" and the `claim` in JWT contains an array of strings \"a\", \"b\" and  \"c\", the mapping will result in an array of string \"myoidc:a\", \"myoidc:b\" and \"myoidc:c\".",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"claim", "prefix"},
 			},
 		},
 	}
@@ -17633,6 +17749,84 @@ func schema_openshift_api_config_v1_TemplateReference(ref common.ReferenceCallba
 	}
 }
 
+func schema_openshift_api_config_v1_TokenClaimMapping(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"claim": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Claim is a JWT token claim to be used in the mapping",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"claim"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1_TokenClaimMappings(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"username": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Username is a name of the claim that should be used to construct usernames for the cluster identity.\n\nDefault value: \"sub\"",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.UsernameClaimMapping"),
+						},
+					},
+					"groups": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Groups is a name of the claim that should be used to construct groups for the cluster identity. The referenced claim must use array of strings values.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.PrefixedClaimMapping"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.PrefixedClaimMapping", "github.com/openshift/api/config/v1.UsernameClaimMapping"},
+	}
+}
+
+func schema_openshift_api_config_v1_TokenClaimValidationRule(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Type sets the type of the validation rule",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"requiredClaim": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RequiredClaim allows configuring a required claim name and its expected value",
+							Ref:         ref("github.com/openshift/api/config/v1.TokenRequiredClaim"),
+						},
+					},
+				},
+				Required: []string{"type", "requiredClaim"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.TokenRequiredClaim"},
+	}
+}
+
 func schema_openshift_api_config_v1_TokenConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -17665,6 +17859,85 @@ func schema_openshift_api_config_v1_TokenConfig(ref common.ReferenceCallback) co
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+	}
+}
+
+func schema_openshift_api_config_v1_TokenIssuer(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"issuerURL": {
+						SchemaProps: spec.SchemaProps{
+							Description: "URL is the serving URL of the token issuer. Must use the https:// scheme.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"audiences": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "Audiences is an array of audiences that the token was issued for. Valid tokens must include at least one of these values in their \"aud\" claim. Must be set to exactly one value.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"issuerCertificateAuthority": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CertificateAuthority is a reference to a config map in the configuration namespace. The .data of the configMap must contain the \"ca-bundle.crt\" key. If unset, system trust is used instead.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.ConfigMapNameReference"),
+						},
+					},
+				},
+				Required: []string{"issuerURL", "audiences", "issuerCertificateAuthority"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.ConfigMapNameReference"},
+	}
+}
+
+func schema_openshift_api_config_v1_TokenRequiredClaim(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"claim": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Claim is a name of a required claim. Only claims with string values are supported.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"requiredValue": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RequiredValue is the required value for the claim.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"claim", "requiredValue"},
+			},
+		},
 	}
 }
 
@@ -17778,6 +18051,62 @@ func schema_openshift_api_config_v1_UpdateHistory(ref common.ReferenceCallback) 
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
+func schema_openshift_api_config_v1_UsernameClaimMapping(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"claim": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Claim is a JWT token claim to be used in the mapping",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"prefixPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PrefixPolicy specifies how a prefix should apply.\n\nBy default, claims other than `email` will be prefixed with the issuer URL to prevent naming clashes with other plugins.\n\nSet to \"NoPrefix\" to disable prefixing.\n\nExample:\n    (1) `prefix` is set to \"myoidc:\" and `claim` is set to \"username\".\n        If the JWT claim `username` contains value `userA`, the resulting\n        mapped value will be \"myoidc:userA\".\n    (2) `prefix` is set to \"myoidc:\" and `claim` is set to \"email\". If the\n        JWT `email` claim contains value \"userA@myoidc.tld\", the resulting\n        mapped value will be \"myoidc:userA@myoidc.tld\".\n    (3) `prefix` is unset, `issuerURL` is set to `https://myoidc.tld`,\n        the JWT claims include \"username\":\"userA\" and \"email\":\"userA@myoidc.tld\",\n        and `claim` is set to:\n        (a) \"username\": the mapped value will be \"https://myoidc.tld#userA\"\n        (b) \"email\": the mapped value will be \"userA@myoidc.tld\"",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"prefix": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("github.com/openshift/api/config/v1.UsernamePrefix"),
+						},
+					},
+				},
+				Required: []string{"claim", "prefixPolicy", "prefix"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.UsernamePrefix"},
+	}
+}
+
+func schema_openshift_api_config_v1_UsernamePrefix(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"prefixString": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"prefixString"},
+			},
+		},
 	}
 }
 

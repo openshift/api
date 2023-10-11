@@ -56,6 +56,9 @@ type AuthenticationSpec struct {
 	// These remote authentication webhooks can be used to verify bearer tokens
 	// via the tokenreviews.authentication.k8s.io REST API. This is required to
 	// honor bearer tokens that are provisioned by an external authentication service.
+	//
+	// Can only be set if "Type" is set to "None".
+	//
 	// +optional
 	WebhookTokenAuthenticator *WebhookTokenAuthenticator `json:"webhookTokenAuthenticator,omitempty"`
 
@@ -69,6 +72,17 @@ type AuthenticationSpec struct {
 	// This allows internal components to transition to use new service account issuer without service distruption.
 	// +optional
 	ServiceAccountIssuer string `json:"serviceAccountIssuer"`
+
+	// OIDCProviders are OIDC identity providers that can issue tokens
+	// for this cluster
+	// Can only be set if "Type" is set to "OIDC".
+	//
+	// At most one provider can be configured.
+	//
+	// +listType=map
+	// +listMapKey=name
+	// +kubebuilder:validation:MaxItems=1
+	OIDCProviders []OIDCProvider `json:"oidcProviders,omitempty"`
 }
 
 type AuthenticationStatus struct {
@@ -110,15 +124,17 @@ type AuthenticationType string
 const (
 	// None means that no cluster managed authentication system is in place.
 	// Note that user login will only work if a manually configured system is in place and
-	// referenced in authentication spec via oauthMetadata and webhookTokenAuthenticators.
+	// referenced in authentication spec via oauthMetadata and
+	// webhookTokenAuthenticator/oidcProviders
 	AuthenticationTypeNone AuthenticationType = "None"
 
 	// IntegratedOAuth refers to the cluster managed OAuth server.
 	// It is configured via the top level OAuth config.
 	AuthenticationTypeIntegratedOAuth AuthenticationType = "IntegratedOAuth"
 
-	// TODO if we add support for an in-cluster operator managed Keycloak instance
-	// AuthenticationTypeKeycloak AuthenticationType = "Keycloak"
+	// AuthenticationTypeOIDC refers to a configuration with an external
+	// OIDC server configured directly with the kube-apiserver.
+	AuthenticationTypeOIDC AuthenticationType = "OIDC"
 )
 
 // deprecatedWebhookTokenAuthenticator holds the necessary configuration options for a remote token authenticator.
@@ -159,3 +175,130 @@ const (
 	// KubeConfigKey is the key for the kube config file data in a secret
 	KubeConfigKey = "kubeConfig"
 )
+
+type OIDCProvider struct {
+	// Name of the OIDC provider
+	//
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:Required
+	// +required
+	Name string `json:"name"`
+	// Issuer describes atributes of the OIDC token issuer
+	//
+	// +kubebuilder:validation:Required
+	// +required
+	Issuer TokenIssuer `json:"issuer"`
+
+	// ClaimMappings describes rules on how to transform information from an
+	// ID token into a cluster identity
+	ClaimMappings TokenClaimMappings `json:"claimMappings"`
+
+	// ClaimValidationRules are rules that are applied to validate token claims to authenticate users.
+	//
+	// +listType=atomic
+	ClaimValidationRules []TokenClaimValidationRule `json:"claimValidationRules,omitempty"`
+}
+
+// +kubebuilder:validation:MinLength=1
+type TokenAudience string
+
+type TokenIssuer struct {
+	// URL is the serving URL of the token issuer.
+	// Must use the https:// scheme.
+	//
+	// +kubebuilder:validation:Pattern=`^https:\/\/[^\s]`
+	// +kubebuilder:validation:Required
+	// +required
+	URL string `json:"url"`
+
+	// Audiences is an array of audiences that the token was issued for.
+	// Valid tokens must include at least one of these values in their
+	// "aud" claim.
+	// Must be set to exactly one value.
+	//
+	// +listType=set
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MaxItems=1
+	// +required
+	Audiences []TokenAudience `json:"audiences"`
+
+	// CertificateAuthority is a reference to a config map in the
+	// configuration namespace. The .data of the configMap must contain
+	// the "ca.crt" key.
+	// If unset, system trust is used instead.
+	CertificateAuthority ConfigMapNameReference `json:"certificateAuthority"`
+}
+
+type TokenClaimMappings struct {
+	// Username is a name of the claim that should be used to construct
+	// usernames for the cluster identity.
+	//
+	// Default value: "sub"
+	Username UsernameClaimMapping `json:"username,omitempty"`
+
+	// Groups is a name of the claim that should be used to construct
+	// groups for the cluster identity.
+	// The referenced claim must use array of strings values.
+	Groups PrefixedClaimMapping `json:"groups,omitempty"`
+}
+
+type TokenClaimMapping struct {
+	// Claim is a JWT token claim to be used in the mapping
+	//
+	// +kubebuilder:validation:Required
+	// +required
+	Claim string `json:"claim"`
+}
+
+type UsernameClaimMapping struct {
+	TokenClaimMapping `json:",inline"`
+
+	// By default, claims other than `email` will be prefixed with the issuer URL to
+	// prevent naming clashes with other plugins.
+	//
+	// Set to "-" to disable prefixing
+	Prefix string `json:"prefix"`
+}
+
+type PrefixedClaimMapping struct {
+	TokenClaimMapping `json:",inline"`
+
+	// Prefix is a string to prefix the value from the token in the result of the
+	// claim mapping
+	Prefix string `json:"prefix"`
+}
+
+type TokenValidationRuleType string
+
+const (
+	TokenValidationRuleTypeRequiredClaim = "RequiredClaim"
+)
+
+type TokenClaimValidationRule struct {
+	// Type sets the type of the validation rule
+	//
+	// +kubebuilder:validation:Enum={"RequiredClaim"}
+	// +kubebuilder:default="RequiredClaim"
+	Type TokenValidationRuleType `json:"type"`
+
+	// RequiredClaim allows configuring a required claim name and its expected
+	// value
+	RequiredClaim *TokenRequiredClaim `json:"requiredClaim"`
+}
+
+type TokenRequiredClaim struct {
+	// Claim is a name of a required claim. Only claims with string values are
+	// supported.
+	//
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:Required
+	// +required
+	Claim string `json:"claim"`
+
+	// RequiredValue is the required value for the claim.
+	//
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:Required
+	// +required
+	RequiredValue string `json:"requiredValue"`
+}

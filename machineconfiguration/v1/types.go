@@ -794,9 +794,17 @@ type PinnedImageSetSpec struct {
 	//              ...
 	//      ]
 	//
+	//
+	// These image references should all be by digest, tags aren't allowed.
+	//
 	// +optional
-	PinnedImages []string `json:"pinnedImages,omitempty"`
+	PinnedImages []PinnedImageRef `json:"pinnedImages,omitempty"`
 }
+
+// PinnedImageRef is an image reference by digest.
+//
+// +kubebuilder:validation:Pattern:=`@sha256:[a-fA-F0-9]{64}$`
+type PinnedImageRef string
 
 // PinnedImageSetStatus defines the observed state of a PinnedImageSet.
 type PinnedImageSetStatus struct {

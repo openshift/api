@@ -1110,12 +1110,12 @@ func (in *ClusterVersionCapabilitiesStatus) DeepCopyInto(out *ClusterVersionCapa
 	*out = *in
 	if in.EnabledCapabilities != nil {
 		in, out := &in.EnabledCapabilities, &out.EnabledCapabilities
-		*out = make([]ClusterVersionCapability, len(*in))
+		*out = make([]ClusterVersionStatusCapability, len(*in))
 		copy(*out, *in)
 	}
 	if in.KnownCapabilities != nil {
 		in, out := &in.KnownCapabilities, &out.KnownCapabilities
-		*out = make([]ClusterVersionCapability, len(*in))
+		*out = make([]ClusterVersionStatusCapability, len(*in))
 		copy(*out, *in)
 	}
 	return

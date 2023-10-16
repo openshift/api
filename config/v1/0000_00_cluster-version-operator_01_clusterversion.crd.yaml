@@ -187,43 +187,15 @@ spec:
                       description: enabledCapabilities lists all the capabilities that are currently managed.
                       type: array
                       items:
-                        description: ClusterVersionCapability enumerates optional, core cluster components.
+                        description: ClusterVersionStatusCapability enumerates optional, core cluster components, but without ClusterVersionCapability's enum.
                         type: string
-                        enum:
-                          - openshift-samples
-                          - baremetal
-                          - marketplace
-                          - Console
-                          - Insights
-                          - Storage
-                          - CSISnapshot
-                          - NodeTuning
-                          - MachineAPI
-                          - Build
-                          - DeploymentConfig
-                          - ImageRegistry
-                          - OperatorLifecycleManager
                       x-kubernetes-list-type: atomic
                     knownCapabilities:
                       description: knownCapabilities lists all the capabilities known to the current cluster.
                       type: array
                       items:
-                        description: ClusterVersionCapability enumerates optional, core cluster components.
+                        description: ClusterVersionStatusCapability enumerates optional, core cluster components, but without ClusterVersionCapability's enum.
                         type: string
-                        enum:
-                          - openshift-samples
-                          - baremetal
-                          - marketplace
-                          - Console
-                          - Insights
-                          - Storage
-                          - CSISnapshot
-                          - NodeTuning
-                          - MachineAPI
-                          - Build
-                          - DeploymentConfig
-                          - ImageRegistry
-                          - OperatorLifecycleManager
                       x-kubernetes-list-type: atomic
                 conditionalUpdates:
                   description: conditionalUpdates contains the list of updates that may be recommended for this cluster if it meets specific required conditions. Consumers interested in the set of updates that are actually recommended for this cluster should use availableUpdates. This list may be empty if no updates are recommended, if the update service is unavailable, or if an empty or invalid channel has been specified.

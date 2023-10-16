@@ -252,6 +252,9 @@ const (
 // +kubebuilder:validation:Enum=openshift-samples;baremetal;marketplace;Console;Insights;Storage;CSISnapshot;NodeTuning;MachineAPI;Build;DeploymentConfig;ImageRegistry;OperatorLifecycleManager
 type ClusterVersionCapability string
 
+// ClusterVersionStatusCapability enumerates optional, core cluster components, but without ClusterVersionCapability's enum.
+type ClusterVersionStatusCapability string
+
 const (
 	// ClusterVersionCapabilityOpenShiftSamples manages the sample
 	// image streams and templates stored in the openshift
@@ -489,12 +492,12 @@ type ClusterVersionCapabilitiesStatus struct {
 	// enabledCapabilities lists all the capabilities that are currently managed.
 	// +listType=atomic
 	// +optional
-	EnabledCapabilities []ClusterVersionCapability `json:"enabledCapabilities,omitempty"`
+	EnabledCapabilities []ClusterVersionStatusCapability `json:"enabledCapabilities,omitempty"`
 
 	// knownCapabilities lists all the capabilities known to the current cluster.
 	// +listType=atomic
 	// +optional
-	KnownCapabilities []ClusterVersionCapability `json:"knownCapabilities,omitempty"`
+	KnownCapabilities []ClusterVersionStatusCapability `json:"knownCapabilities,omitempty"`
 }
 
 // ComponentOverride allows overriding cluster version operator's behavior

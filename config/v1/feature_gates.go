@@ -291,4 +291,14 @@ var (
 		ResponsiblePerson:   "msluiter",
 		OwningProduct:       ocpSpecific,
 	}
+
+	FeatureGateDNSNameResolver = FeatureGateName("DNSNameResolver")
+	dnsNameResolver            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateDNSNameResolver,
+		},
+		OwningJiraComponent: "dns",
+		ResponsiblePerson:   "miciah",
+		OwningProduct:       ocpSpecific,
+	}
 )

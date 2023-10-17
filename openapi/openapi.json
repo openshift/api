@@ -21918,6 +21918,172 @@
         }
       }
     },
+    "com.github.openshift.api.network.v1alpha1.DNSNameResolver": {
+      "description": "DNSNameResolver stores the DNS name resolution information of a DNS name. It can be enabled by the TechPreviewNoUpgrade feature set. It can also be enabled by the feature gate DNSNameResolver when using CustomNoUpgrade feature set.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec is the specification of the desired behavior of the DNSNameResolver.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.network.v1alpha1.DNSNameResolverSpec"
+        },
+        "status": {
+          "description": "status is the most recently observed status of the DNSNameResolver.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.network.v1alpha1.DNSNameResolverStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.network.v1alpha1.DNSNameResolverList": {
+      "description": "DNSNameResolverList contains a list of DNSNameResolvers.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "description": "items gives the list of DNSNameResolvers.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.network.v1alpha1.DNSNameResolver"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.network.v1alpha1.DNSNameResolverResolvedAddress": {
+      "description": "DNSNameResolverResolvedAddress describes the details of an IP address for a resolved DNS name.",
+      "type": "object",
+      "required": [
+        "ip",
+        "ttlSeconds",
+        "lastLookupTime"
+      ],
+      "properties": {
+        "ip": {
+          "description": "ip is an IP address associated with the dnsName. The validity of the IP address expires after lastLookupTime + ttlSeconds. To refresh the information, a DNS lookup will be performed upon the expiration of the IP address's validity. If the information is not refreshed then it will be removed with a grace period after the expiration of the IP address's validity.",
+          "type": "string",
+          "default": ""
+        },
+        "lastLookupTime": {
+          "description": "lastLookupTime is the timestamp when the last DNS lookup was completed successfully. The validity of the IP address expires after lastLookupTime + ttlSeconds. The value of this field will be updated to the current time on a successful DNS lookup. If the information is not refreshed then it will be removed with a grace period after the expiration of the IP address's validity.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "ttlSeconds": {
+          "description": "ttlSeconds is the time-to-live value of the IP address. The validity of the IP address expires after lastLookupTime + ttlSeconds. On a successful DNS lookup the value of this field will be updated with the current time-to-live value. If the information is not refreshed then it will be removed with a grace period after the expiration of the IP address's validity.",
+          "type": "integer",
+          "format": "int32",
+          "default": 0
+        }
+      }
+    },
+    "com.github.openshift.api.network.v1alpha1.DNSNameResolverResolvedName": {
+      "description": "DNSNameResolverResolvedName describes the details of a resolved DNS name.",
+      "type": "object",
+      "required": [
+        "dnsName",
+        "resolvedAddresses"
+      ],
+      "properties": {
+        "conditions": {
+          "description": "conditions provide information about the state of the DNS name. Known .status.conditions.type is: \"Degraded\". \"Degraded\" is true when the last resolution failed for the DNS name, and false otherwise.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "dnsName": {
+          "description": "dnsName is the resolved DNS name matching the name field of DNSNameResolverSpec. This field can store both regular and wildcard DNS names which match the spec.name field. When the spec.name field contains a regular DNS name, this field will store the same regular DNS name after it is successfully resolved. When the spec.name field contains a wildcard DNS name, each resolvedName.dnsName will store the regular DNS names which match the wildcard DNS name and have been successfully resolved. If the wildcard DNS name can also be successfully resolved, then this field will store the wildcard DNS name as well.",
+          "type": "string",
+          "default": ""
+        },
+        "resolutionFailures": {
+          "description": "resolutionFailures keeps the count of how many consecutive times the DNS resolution failed for the dnsName. If the DNS resolution succeeds then the field will be set to zero. Upon every failure, the value of the field will be incremented by one. The details about the DNS name will be removed, if the value of resolutionFailures reaches 5 and the TTL of all the associated IP addresses have expired.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "resolvedAddresses": {
+          "description": "resolvedAddresses gives the list of associated IP addresses and their corresponding TTLs and last lookup times for the dnsName.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.network.v1alpha1.DNSNameResolverResolvedAddress"
+          },
+          "x-kubernetes-list-map-keys": [
+            "ip"
+          ],
+          "x-kubernetes-list-type": "map"
+        }
+      }
+    },
+    "com.github.openshift.api.network.v1alpha1.DNSNameResolverSpec": {
+      "description": "DNSNameResolverSpec is a desired state description of DNSNameResolver.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the DNS name for which the DNS name resolution information will be stored. For a regular DNS name, only the DNS name resolution information of the regular DNS name will be stored. For a wildcard DNS name, the DNS name resolution information of all the DNS names that match the wildcard DNS name will be stored. For a wildcard DNS name, the '*' will match only one label. Additionally, only a single '*' can be used at the beginning of the wildcard DNS name. For example, '*.example.com.' will match 'sub1.example.com.' but won't match 'sub2.sub1.example.com.'",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.network.v1alpha1.DNSNameResolverStatus": {
+      "description": "DNSNameResolverStatus defines the observed status of DNSNameResolver.",
+      "type": "object",
+      "properties": {
+        "resolvedNames": {
+          "description": "resolvedNames contains a list of matching DNS names and their corresponding IP addresses along with their TTL and last DNS lookup times.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.network.v1alpha1.DNSNameResolverResolvedName"
+          },
+          "x-kubernetes-list-map-keys": [
+            "dnsName"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "dnsName",
+          "x-kubernetes-patch-strategy": "merge"
+        }
+      }
+    },
     "com.github.openshift.api.networkoperator.v1.EgressRouter": {
       "description": "EgressRouter is a feature allowing the user to define an egress router that acts as a bridge between pods and external systems. The egress router runs a service that redirects egress traffic originating from a pod or a group of pods to a remote external system or multiple destinations as per configuration.\n\nIt is consumed by the cluster-network-operator. More specifically, given an EgressRouter CR with <name>, the CNO will create and manage: - A service called <name> - An egress pod called <name> - A NAD called <name>\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).\n\nEgressRouter is a single egressrouter pod configuration object.",
       "type": "object",

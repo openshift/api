@@ -37530,7 +37530,8 @@ func schema_openshift_api_network_v1alpha1_DNSNameResolverList(ref common.Refere
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
+							Description: "items gives the list of DNSNameResolvers.",
+							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{

@@ -21847,6 +21847,7 @@
           "type": "string"
         },
         "items": {
+          "description": "items gives the list of DNSNameResolvers.",
           "type": "array",
           "items": {
             "default": {},

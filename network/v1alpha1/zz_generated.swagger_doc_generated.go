@@ -25,6 +25,7 @@ func (DNSNameResolver) SwaggerDoc() map[string]string {
 var map_DNSNameResolverList = map[string]string{
 	"":         "DNSNameResolverList contains a list of DNSNameResolvers.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 	"metadata": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+	"items":    "items gives the list of DNSNameResolvers.",
 }
 
 func (DNSNameResolverList) SwaggerDoc() map[string]string {

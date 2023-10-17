@@ -96,6 +96,7 @@ type DNSNameResolverResolvedName struct {
 	ResolutionFailures int32 `json:"resolutionFailures,omitempty"`
 }
 
+// DNSNameResolverResolvedAddress describes the details of an IP address for a resolved DNS name.
 type DNSNameResolverResolvedAddress struct {
 	// ip is an IP address associated with the dnsName. The validity of the IP address expires after
 	// lastLookupTime + ttlSeconds. To refresh the information, a DNS lookup will be performed upon

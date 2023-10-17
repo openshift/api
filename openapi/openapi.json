@@ -21865,6 +21865,7 @@
       }
     },
     "com.github.openshift.api.network.v1alpha1.DNSNameResolverResolvedAddress": {
+      "description": "DNSNameResolverResolvedAddress describes the details of an IP address for a resolved DNS name.",
       "type": "object",
       "required": [
         "ip",

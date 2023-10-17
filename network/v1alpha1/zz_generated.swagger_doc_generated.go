@@ -32,6 +32,7 @@ func (DNSNameResolverList) SwaggerDoc() map[string]string {
 }
 
 var map_DNSNameResolverResolvedAddress = map[string]string{
+	"":               "DNSNameResolverResolvedAddress describes the details of an IP address for a resolved DNS name.",
 	"ip":             "ip is an IP address associated with the dnsName. The validity of the IP address expires after lastLookupTime + ttlSeconds. To refresh the information, a DNS lookup will be performed upon the expiration of the IP address's validity. If the information is not refreshed then it will be removed with a grace period after the expiration of the IP address's validity.",
 	"ttlSeconds":     "ttlSeconds is the time-to-live value of the IP address. The validity of the IP address expires after lastLookupTime + ttlSeconds. On a successful DNS lookup the value of this field will be updated with the current time-to-live value. If the information is not refreshed then it will be removed with a grace period after the expiration of the IP address's validity.",
 	"lastLookupTime": "lastLookupTime is the timestamp when the last DNS lookup was completed successfully. The validity of the IP address expires after lastLookupTime + ttlSeconds. The value of this field will be updated to the current time on a successful DNS lookup. If the information is not refreshed then it will be removed with a grace period after the expiration of the IP address's validity.",

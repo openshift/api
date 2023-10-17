@@ -37554,7 +37554,8 @@ func schema_openshift_api_network_v1alpha1_DNSNameResolverResolvedAddress(ref co
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "DNSNameResolverResolvedAddress describes the details of an IP address for a resolved DNS name.",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"ip": {
 						SchemaProps: spec.SchemaProps{

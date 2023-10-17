@@ -111,6 +111,7 @@ spec:
                       resolvedAddresses:
                         description: resolvedAddresses gives the list of associated IP addresses and their corresponding TTLs and last lookup times for the dnsName.
                         items:
+                          description: DNSNameResolverResolvedAddress describes the details of an IP address for a resolved DNS name.
                           properties:
                             ip:
                               anyOf:

@@ -213,6 +213,8 @@ const (
 	OpenshiftTemplateInstanceController          OpenShiftControllerName = "openshift.io/templateinstance"
 	OpenshiftTemplateInstanceFinalizerController OpenShiftControllerName = "openshift.io/templateinstancefinalizer"
 	OpenshiftUnidlingController                  OpenShiftControllerName = "openshift.io/unidling"
+	OpenShiftIngressIPController                 OpenShiftControllerName = "openshift.io/ingress-ip"
+	OpenShiftIngressToRouteController            OpenShiftControllerName = "openshift.io/ingress-to-route"
 )
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

@@ -82,6 +82,7 @@ type AuthenticationSpec struct {
 	// +listType=map
 	// +listMapKey=name
 	// +kubebuilder:validation:MaxItems=1
+	// +openshift:enable:FeatureSets=CustomNoUpgrade;TechPreviewNoUpgrade
 	OIDCProviders []OIDCProvider `json:"oidcProviders,omitempty"`
 }
 
@@ -209,7 +210,7 @@ type TokenIssuer struct {
 	// +kubebuilder:validation:Pattern=`^https:\/\/[^\s]`
 	// +kubebuilder:validation:Required
 	// +required
-	URL string `json:"url"`
+	URL string `json:"issuerURL"`
 
 	// Audiences is an array of audiences that the token was issued for.
 	// Valid tokens must include at least one of these values in their
@@ -224,9 +225,9 @@ type TokenIssuer struct {
 
 	// CertificateAuthority is a reference to a config map in the
 	// configuration namespace. The .data of the configMap must contain
-	// the "ca.crt" key.
+	// the "ca-bundle.crt" key.
 	// If unset, system trust is used instead.
-	CertificateAuthority ConfigMapNameReference `json:"certificateAuthority"`
+	CertificateAuthority ConfigMapNameReference `json:"issuerCertificateAuthority"`
 }
 
 type TokenClaimMappings struct {
@@ -256,7 +257,15 @@ type UsernameClaimMapping struct {
 	// By default, claims other than `email` will be prefixed with the issuer URL to
 	// prevent naming clashes with other plugins.
 	//
-	// Set to "-" to disable prefixing
+	// Set to "-" to disable prefixing.
+	//
+	// Example:
+	//     (1) `prefix` is set to `myoidc:` and `claim` is set to "username".
+	//         If the JWT claim `username` contains value `userA`, the resulting
+	//         mapped value will be "myoidc:userA".
+	//     (2) `prefix` is set to `myoidc:` and `claim` is set to "email". If the
+	//         JWT `email` claim contains value "userA@myoidc.tld", the resulting
+	//         mapped value will be "userA@myoidc.tld".
 	Prefix string `json:"prefix"`
 }
 
@@ -264,7 +273,13 @@ type PrefixedClaimMapping struct {
 	TokenClaimMapping `json:",inline"`
 
 	// Prefix is a string to prefix the value from the token in the result of the
-	// claim mapping
+	// claim mapping.
+	//
+	// By default, no prefixing occurs.
+	//
+	// Example: if `prefix` is set to "myoidc:"" and the `claim` in JWT contains
+	// an array of strings "a", "b" and  "c", the mapping will result in an
+	// array of string "myoidc:a", "myoidc:b" and "myoidc:c".
 	Prefix string `json:"prefix"`
 }
 

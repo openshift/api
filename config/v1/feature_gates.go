@@ -321,4 +321,14 @@ var (
 		ResponsiblePerson:   "vincepri",
 		OwningProduct:       ocpSpecific,
 	}
+
+	FeatureGateMetricsServer = FeatureGateName("MetricsServer")
+	metricsServer            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateMetricsServer,
+		},
+		OwningJiraComponent: "Monitoring",
+		ResponsiblePerson:   "slashpai",
+		OwningProduct:       ocpSpecific,
+	}
 )

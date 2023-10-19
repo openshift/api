@@ -260,12 +260,17 @@ type UsernameClaimMapping struct {
 	// Set to "-" to disable prefixing.
 	//
 	// Example:
-	//     (1) `prefix` is set to `myoidc:` and `claim` is set to "username".
+	//     (1) `prefix` is set to "myoidc:" and `claim` is set to "username".
 	//         If the JWT claim `username` contains value `userA`, the resulting
 	//         mapped value will be "myoidc:userA".
-	//     (2) `prefix` is set to `myoidc:` and `claim` is set to "email". If the
+	//     (2) `prefix` is set to "myoidc:" and `claim` is set to "email". If the
 	//         JWT `email` claim contains value "userA@myoidc.tld", the resulting
-	//         mapped value will be "userA@myoidc.tld".
+	//         mapped value will be "myoidc:userA@myoidc.tld".
+	//     (3) `prefix` is unset, `issuerURL` is set to `https://myoidc.tld`,
+	//         the JWT claims include "username":"userA" and "email":"userA@myoidc.tld",
+	//         and `claim` is set to:
+	//         (a) "username": the mapped value will be "https://myoidc.tld#userA"
+	//         (b) "email": the mapped value will be "userA@myoidc.tld"
 	Prefix string `json:"prefix"`
 }
 

@@ -10207,6 +10207,10 @@ func schema_openshift_api_config_v1_ClusterOperatorStatus(ref common.ReferenceCa
 					"conditions": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type":       "map",
 								"x-kubernetes-patch-merge-key": "type",
 								"x-kubernetes-patch-strategy":  "merge",
 							},
@@ -10225,6 +10229,14 @@ func schema_openshift_api_config_v1_ClusterOperatorStatus(ref common.ReferenceCa
 						},
 					},
 					"versions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "versions is a slice of operator and operand version tuples.  Operators which manage multiple operands will have multiple operand entries in the array.  Available operators must report the version of the operator itself with the name \"operator\". An operator reports a new \"operator\" version when it has rolled out the new version to all of its operands.",
 							Type:        []string{"array"},

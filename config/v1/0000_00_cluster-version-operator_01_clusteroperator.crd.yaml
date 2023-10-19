@@ -88,6 +88,9 @@ spec:
                       type:
                         description: type specifies the aspect reported by this condition.
                         type: string
+                  x-kubernetes-list-map-keys:
+                    - type
+                  x-kubernetes-list-type: map
                 extension:
                   description: extension contains any additional status information specific to the operator which owns this status object.
                   type: object
@@ -131,6 +134,9 @@ spec:
                       version:
                         description: version indicates which version of a particular operand is currently being managed.  It must always match the Available operand.  If 1.0.0 is Available, then this must indicate 1.0.0 even if the operator is trying to rollout 1.1.0
                         type: string
+                  x-kubernetes-list-map-keys:
+                    - name
+                  x-kubernetes-list-type: map
       served: true
       storage: true
       subresources:

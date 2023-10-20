@@ -18012,7 +18012,6 @@
       "properties": {
         "failureDomains": {
           "description": "FailureDomains is the list of failure domains (sometimes called availability zones) in which the ControlPlaneMachineSet should balance the Control Plane Machines. This will be merged into the ProviderSpec given in the template. This field is optional on platforms that do not require placement information.",
-          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.machine.v1.FailureDomains"
         },
         "metadata": {

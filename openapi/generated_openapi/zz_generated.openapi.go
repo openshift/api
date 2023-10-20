@@ -30973,7 +30973,6 @@ func schema_openshift_api_machine_v1_OpenShiftMachineV1Beta1MachineTemplate(ref 
 					"failureDomains": {
 						SchemaProps: spec.SchemaProps{
 							Description: "FailureDomains is the list of failure domains (sometimes called availability zones) in which the ControlPlaneMachineSet should balance the Control Plane Machines. This will be merged into the ProviderSpec given in the template. This field is optional on platforms that do not require placement information.",
-							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/machine/v1.FailureDomains"),
 						},
 					},

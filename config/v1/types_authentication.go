@@ -254,10 +254,12 @@ type TokenClaimMapping struct {
 type UsernameClaimMapping struct {
 	TokenClaimMapping `json:",inline"`
 
+	// PrefixPolicy specifies how a prefix should apply.
+	//
 	// By default, claims other than `email` will be prefixed with the issuer URL to
 	// prevent naming clashes with other plugins.
 	//
-	// Set to "-" to disable prefixing.
+	// Set to "NoPrefix" to disable prefixing.
 	//
 	// Example:
 	//     (1) `prefix` is set to "myoidc:" and `claim` is set to "username".
@@ -271,7 +273,31 @@ type UsernameClaimMapping struct {
 	//         and `claim` is set to:
 	//         (a) "username": the mapped value will be "https://myoidc.tld#userA"
 	//         (b) "email": the mapped value will be "userA@myoidc.tld"
-	Prefix string `json:"prefix"`
+	//
+	// +kubebuilder:validation:Enum={"", "NoPrefix", "Prefix"}
+	PrefixPolicy UsernamePrefixPolicy
+
+	Prefix *UsernamePrefix `json:"prefix"`
+}
+
+type UsernamePrefixPolicy string
+
+var (
+	// NoOpinion let's the cluster assign prefixes.  If the username claim is email, there is no prefix
+	// If the username claim is anything else, it is prefixed by the issuerURL
+	NoOpinion UsernamePrefixPolicy = ""
+
+	// NoPrefix means the username claim value will not have any  prefix
+	NoPrefix UsernamePrefixPolicy = "NoPrefix"
+
+	// Prefix means the prefix value must be specified.  It cannot be empty
+	Prefix UsernamePrefixPolicy = "Prefix"
+)
+
+type UsernamePrefix struct {
+	// required
+	// minLength=1
+	PrefixString string `json:"prefixString"`
 }
 
 type PrefixedClaimMapping struct {

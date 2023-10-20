@@ -153,6 +153,16 @@ var (
 		OwningProduct:       ocpSpecific,
 	}
 
+	FeatureGatePDBUnhealthyPodEvictionPolicy = FeatureGateName("PDBUnhealthyPodEvictionPolicy")
+	pdbUnhealthyPodEvictionPolicy            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGatePDBUnhealthyPodEvictionPolicy,
+		},
+		OwningJiraComponent: "apps",
+		ResponsiblePerson:   "atiratree",
+		OwningProduct:       kubernetes,
+	}
+
 	FeatureGateDynamicResourceAllocation = FeatureGateName("DynamicResourceAllocation")
 	dynamicResourceAllocation            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{

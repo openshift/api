@@ -18062,7 +18062,7 @@ func schema_openshift_api_config_v1_UsernameClaimMapping(ref common.ReferenceCal
 							Format:      "",
 						},
 					},
-					"PrefixPolicy": {
+					"prefixPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Description: "PrefixPolicy specifies how a prefix should apply.\n\nBy default, claims other than `email` will be prefixed with the issuer URL to prevent naming clashes with other plugins.\n\nSet to \"NoPrefix\" to disable prefixing.\n\nExample:\n    (1) `prefix` is set to \"myoidc:\" and `claim` is set to \"username\".\n        If the JWT claim `username` contains value `userA`, the resulting\n        mapped value will be \"myoidc:userA\".\n    (2) `prefix` is set to \"myoidc:\" and `claim` is set to \"email\". If the\n        JWT `email` claim contains value \"userA@myoidc.tld\", the resulting\n        mapped value will be \"myoidc:userA@myoidc.tld\".\n    (3) `prefix` is unset, `issuerURL` is set to `https://myoidc.tld`,\n        the JWT claims include \"username\":\"userA\" and \"email\":\"userA@myoidc.tld\",\n        and `claim` is set to:\n        (a) \"username\": the mapped value will be \"https://myoidc.tld#userA\"\n        (b) \"email\": the mapped value will be \"userA@myoidc.tld\"",
 							Default:     "",
@@ -18076,7 +18076,7 @@ func schema_openshift_api_config_v1_UsernameClaimMapping(ref common.ReferenceCal
 						},
 					},
 				},
-				Required: []string{"claim", "PrefixPolicy", "prefix"},
+				Required: []string{"claim", "prefixPolicy", "prefix"},
 			},
 		},
 		Dependencies: []string{

@@ -275,7 +275,7 @@ type UsernameClaimMapping struct {
 	//         (b) "email": the mapped value will be "userA@myoidc.tld"
 	//
 	// +kubebuilder:validation:Enum={"", "NoPrefix", "Prefix"}
-	PrefixPolicy UsernamePrefixPolicy
+	PrefixPolicy UsernamePrefixPolicy `json:"prefixPolicy"`
 
 	Prefix *UsernamePrefix `json:"prefix"`
 }

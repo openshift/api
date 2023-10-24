@@ -630,6 +630,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/machine/v1.RootVolume":                                              schema_openshift_api_machine_v1_RootVolume(ref),
 		"github.com/openshift/api/machine/v1.SystemDiskProperties":                                    schema_openshift_api_machine_v1_SystemDiskProperties(ref),
 		"github.com/openshift/api/machine/v1.Tag":                                                     schema_openshift_api_machine_v1_Tag(ref),
+		"github.com/openshift/api/machine/v1.VSphereFailureDomain":                                    schema_openshift_api_machine_v1_VSphereFailureDomain(ref),
 		"github.com/openshift/api/machine/v1alpha1.AddressPair":                                       schema_openshift_api_machine_v1alpha1_AddressPair(ref),
 		"github.com/openshift/api/machine/v1alpha1.Filter":                                            schema_openshift_api_machine_v1alpha1_Filter(ref),
 		"github.com/openshift/api/machine/v1alpha1.FixedIPs":                                          schema_openshift_api_machine_v1alpha1_FixedIPs(ref),
@@ -18130,6 +18131,13 @@ func schema_openshift_api_config_v1_VSpherePlatformTopology(ref common.Reference
 							Format:      "",
 						},
 					},
+					"template": {
+						SchemaProps: spec.SchemaProps{
+							Description: "template is the full inventory path of the virtual machine or template that will be cloned when creating new machines in this failure domain. The maximum length of the path is 2048 characters.\n\nWhen omitted, the template will be calculated by the control plane machineset operator based on the region and zone defined in VSpherePlatformFailureDomainSpec. For example, for zone=zonea, region=region1, and infrastructure name=test, the template path would be calculated as /<datacenter>/vm/test-rhcos-region1-zonea.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 				Required: []string{"datacenter", "computeCluster", "networks", "datastore"},
 			},
@@ -30552,7 +30560,7 @@ func schema_openshift_api_machine_v1_FailureDomains(ref common.ReferenceCallback
 				Properties: map[string]spec.Schema{
 					"platform": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Platform identifies the platform for which the FailureDomain represents. Currently supported values are AWS, Azure, and GCP.",
+							Description: "Platform identifies the platform for which the FailureDomain represents. Currently supported values are AWS, Azure, GCP, OpenStack, and VSphere.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -30600,6 +30608,20 @@ func schema_openshift_api_machine_v1_FailureDomains(ref common.ReferenceCallback
 							},
 						},
 					},
+					"vsphere": {
+						SchemaProps: spec.SchemaProps{
+							Description: "vsphere configures failure domain information for the VSphere platform.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machine/v1.VSphereFailureDomain"),
+									},
+								},
+							},
+						},
+					},
 					"openstack": {
 						SchemaProps: spec.SchemaProps{
 							Description: "OpenStack configures failure domain information for the OpenStack platform.",
@@ -30627,6 +30649,7 @@ func schema_openshift_api_machine_v1_FailureDomains(ref common.ReferenceCallback
 								"azure":     "Azure",
 								"gcp":       "GCP",
 								"openstack": "OpenStack",
+								"vsphere":   "VSphere",
 							},
 						},
 					},
@@ -30634,7 +30657,7 @@ func schema_openshift_api_machine_v1_FailureDomains(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1.AWSFailureDomain", "github.com/openshift/api/machine/v1.AzureFailureDomain", "github.com/openshift/api/machine/v1.GCPFailureDomain", "github.com/openshift/api/machine/v1.OpenStackFailureDomain"},
+			"github.com/openshift/api/machine/v1.AWSFailureDomain", "github.com/openshift/api/machine/v1.AzureFailureDomain", "github.com/openshift/api/machine/v1.GCPFailureDomain", "github.com/openshift/api/machine/v1.OpenStackFailureDomain", "github.com/openshift/api/machine/v1.VSphereFailureDomain"},
 	}
 }
 
@@ -31395,6 +31418,28 @@ func schema_openshift_api_machine_v1_Tag(ref common.ReferenceCallback) common.Op
 					},
 				},
 				Required: []string{"Key", "Value"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_machine_v1_VSphereFailureDomain(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VSphereFailureDomain configures failure domain information for the vSphere platform",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name of the failure domain in which the vSphere machine provider will create the VM. Failure domains are defined in a cluster's config.openshift.io/Infrastructure resource. When balancing machines across failure domains, the control plane machine set will inject configuration from the Infrastructure resource into the machine providerSpec to allocate the machine to a failure domain.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
 			},
 		},
 	}

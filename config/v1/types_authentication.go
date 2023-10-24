@@ -4,6 +4,7 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 // +genclient
 // +genclient:nonNamespaced
+// +kubebuilder:subresource:status
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // Authentication specifies cluster-wide settings for authentication (like OAuth and
@@ -50,6 +51,7 @@ type AuthenticationSpec struct {
 	OAuthMetadata ConfigMapNameReference `json:"oauthMetadata"`
 
 	// webhookTokenAuthenticators is DEPRECATED, setting it has no effect.
+	// +listType=atomic
 	WebhookTokenAuthenticators []DeprecatedWebhookTokenAuthenticator `json:"webhookTokenAuthenticators,omitempty"`
 
 	// webhookTokenAuthenticator configures a remote token reviewer.

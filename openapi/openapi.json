@@ -4547,7 +4547,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.config.v1.DeprecatedWebhookTokenAuthenticator"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },

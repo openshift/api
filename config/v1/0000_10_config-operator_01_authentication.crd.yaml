@@ -83,6 +83,7 @@ spec:
                           name:
                             description: name is the metadata.name of the referenced secret
                             type: string
+                  x-kubernetes-list-type: atomic
             status:
               description: status holds observed values from the cluster. They may not be overridden.
               type: object

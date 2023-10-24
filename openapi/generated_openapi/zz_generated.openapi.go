@@ -9004,6 +9004,11 @@ func schema_openshift_api_config_v1_AuthenticationSpec(ref common.ReferenceCallb
 						},
 					},
 					"webhookTokenAuthenticators": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "webhookTokenAuthenticators is DEPRECATED, setting it has no effect.",
 							Type:        []string{"array"},

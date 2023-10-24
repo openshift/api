@@ -251,6 +251,7 @@ type TokenClaimMapping struct {
 	Claim string `json:"claim"`
 }
 
+// +kubebuilder:validation:XValidation:rule="has(self.prefixPolicy) && self.prefixPolicy == 'Prefix' ? (has(self.prefix) && size(self.prefix.prefixString) > 0) : !has(self.prefix)",message="prefix must be set if prefixPolicy is 'Prefix', but must remain unset otherwise"
 type UsernameClaimMapping struct {
 	TokenClaimMapping `json:",inline"`
 
@@ -275,7 +276,7 @@ type UsernameClaimMapping struct {
 	//         (b) "email": the mapped value will be "userA@myoidc.tld"
 	//
 	// +kubebuilder:validation:Enum={"", "NoPrefix", "Prefix"}
-	PrefixPolicy UsernamePrefixPolicy
+	PrefixPolicy UsernamePrefixPolicy `json:"prefixPolicy"`
 
 	Prefix *UsernamePrefix `json:"prefix"`
 }
@@ -295,8 +296,9 @@ var (
 )
 
 type UsernamePrefix struct {
-	// required
-	// minLength=1
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=1
+	// +required
 	PrefixString string `json:"prefixString"`
 }
 

@@ -210,11 +210,11 @@ type ControllerCertificate struct {
 	Signer string `json:"signer"`
 
 	// notBefore is the lower boundary for validity
-	// +kubebuilder:validation:Required
+	// +optional
 	NotBefore *metav1.Time `json:"notBefore"`
 
 	// notAfter is the upper boundary for validity
-	// +kubebuilder:validation:Required
+	// +optional
 	NotAfter *metav1.Time `json:"notAfter"`
 
 	// bundleFile is the larger bundle a cert comes from
@@ -445,7 +445,7 @@ type CertExpiry struct {
 	// +kubebuilder:validation:Required
 	Subject string `json:"subject"`
 	// expiry is the date after which the certificate will no longer be valid
-	// +kubebuilder:validation:Required
+	// +optional
 	Expiry *metav1.Time `json:"expiry"`
 }
 

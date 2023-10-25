@@ -311,4 +311,14 @@ var (
 		ResponsiblePerson:   "rvanderp3",
 		OwningProduct:       ocpSpecific,
 	}
+
+	FeatureGateMachineConfigNodes = FeatureGateName("MachineConfigNodes")
+	machineConfigNodes            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateMachineConfigNodes,
+		},
+		OwningJiraComponent: "MachineConfigOperator",
+		ResponsiblePerson:   "cdoern",
+		OwningProduct:       ocpSpecific,
+	}
 )

@@ -182,6 +182,7 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		without(machineAPIOperatorDisableMachineHealthCheckController).
 		with(adminNetworkPolicy).
 		with(dnsNameResolver).
+		with(machineConfigNodes).
 		toFeatures(defaultFeatures),
 	LatencySensitive: newDefaultFeatures().
 		toFeatures(defaultFeatures),

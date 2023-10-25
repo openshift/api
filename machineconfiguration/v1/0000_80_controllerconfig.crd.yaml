@@ -1224,8 +1224,6 @@ spec:
                     type: object
                     required:
                       - bundleFile
-                      - notAfter
-                      - notBefore
                       - signer
                       - subject
                     properties:

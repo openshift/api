@@ -52,6 +52,13 @@ spec:
                 samplesRegistry:
                   description: samplesRegistry allows for the specification of which registry is accessed by the ImageStreams for their image content.  Defaults on the content in https://github.com/openshift/library that are pulled into this github repository, but based on our pulling only ocp content it typically defaults to registry.redhat.io.
                   type: string
+                skippedHelmCharts:
+                  description: skippedhelmcharts specifies names of helm charts that should NOT be managed. Admins can use this to allow them to delete content they don’t want. They will still have to MANUALLY DELETE the content but the operator will not recreate(or update) anything listed here.
+                  type: array
+                  maxItems: 16
+                  items:
+                    type: string
+                  x-kubernetes-list-type: set
                 skippedImagestreams:
                   description: skippedImagestreams specifies names of image streams that should NOT be created/updated.  Admins can use this to allow them to delete content they don’t want.  They will still have to manually delete the content but the operator will not recreate(or update) anything listed here.
                   type: array

@@ -64,6 +64,15 @@ type ConfigSpec struct {
 	// content but the operator will not recreate(or update) anything
 	// listed here.
 	SkippedTemplates []string `json:"skippedTemplates,omitempty" protobuf:"bytes,6,opt,name=skippedTemplates"`
+
+	// skippedhelmcharts specifies names of helm charts that should NOT be
+	// managed. Admins can use this to allow them to delete content
+	// they don’t want. They will still have to MANUALLY DELETE the
+	// content but the operator will not recreate(or update) anything
+	// listed here.
+	// +listType=set
+	// +kubebuilder:validation:MaxItems=16
+	SkippedHelmCharts []string `json:"skippedHelmCharts,omitempty" protobuf:"bytes,7,opt,name=skippedhelmCharts"`
 }
 
 // ConfigStatus contains the actual configuration in effect, as well as various details

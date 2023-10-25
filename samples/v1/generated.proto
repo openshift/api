@@ -98,6 +98,15 @@ message ConfigSpec {
   // content but the operator will not recreate(or update) anything
   // listed here.
   repeated string skippedTemplates = 6;
+
+  // skippedhelmcharts specifies names of helm charts that should NOT be
+  // managed. Admins can use this to allow them to delete content
+  // they don’t want. They will still have to MANUALLY DELETE the
+  // content but the operator will not recreate(or update) anything
+  // listed here.
+  // +listType=set
+  // +kubebuilder:validation:MaxItems=16
+  repeated string skippedhelmCharts = 7;
 }
 
 // ConfigStatus contains the actual configuration in effect, as well as various details

@@ -31,5 +31,4 @@ COPY manifests /manifests
 #COPY operator/v1/0000_10_config-operator_*.yaml /manifests
 #COPY payload-command/empty-resources /manifests
 
-# TODO uncomment after all the other "add a new image" steps are complete.
-#LABEL io.openshift.release.operator true
+LABEL io.openshift.release.operator true

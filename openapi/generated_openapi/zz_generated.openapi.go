@@ -640,7 +640,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/machine/v1.SystemDiskProperties":                                    schema_openshift_api_machine_v1_SystemDiskProperties(ref),
 		"github.com/openshift/api/machine/v1.Tag":                                                     schema_openshift_api_machine_v1_Tag(ref),
 		"github.com/openshift/api/machine/v1.VSphereFailureDomain":                                    schema_openshift_api_machine_v1_VSphereFailureDomain(ref),
+		"github.com/openshift/api/machine/v1alpha1.AdditionalBlockDevice":                             schema_openshift_api_machine_v1alpha1_AdditionalBlockDevice(ref),
 		"github.com/openshift/api/machine/v1alpha1.AddressPair":                                       schema_openshift_api_machine_v1alpha1_AddressPair(ref),
+		"github.com/openshift/api/machine/v1alpha1.BlockDeviceStorage":                                schema_openshift_api_machine_v1alpha1_BlockDeviceStorage(ref),
+		"github.com/openshift/api/machine/v1alpha1.BlockDeviceVolume":                                 schema_openshift_api_machine_v1alpha1_BlockDeviceVolume(ref),
 		"github.com/openshift/api/machine/v1alpha1.Filter":                                            schema_openshift_api_machine_v1alpha1_Filter(ref),
 		"github.com/openshift/api/machine/v1alpha1.FixedIPs":                                          schema_openshift_api_machine_v1alpha1_FixedIPs(ref),
 		"github.com/openshift/api/machine/v1alpha1.NetworkParam":                                      schema_openshift_api_machine_v1alpha1_NetworkParam(ref),
@@ -31779,6 +31782,45 @@ func schema_openshift_api_machine_v1_VSphereFailureDomain(ref common.ReferenceCa
 	}
 }
 
+func schema_openshift_api_machine_v1alpha1_AdditionalBlockDevice(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "additionalBlockDevice is a block device to attach to the server.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name of the block device in the context of a machine. If the block device is a volume, the Cinder volume will be named as a combination of the machine name and this name. Also, this name will be used for tagging the block device. Information about the block device tag can be obtained from the OpenStack metadata API or the config drive.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"sizeGiB": {
+						SchemaProps: spec.SchemaProps{
+							Description: "sizeGiB is the size of the block device in gibibytes (GiB).",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "storage specifies the storage type of the block device and additional storage options.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/machine/v1alpha1.BlockDeviceStorage"),
+						},
+					},
+				},
+				Required: []string{"name", "sizeGiB", "storage"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machine/v1alpha1.BlockDeviceStorage"},
+	}
+}
+
 func schema_openshift_api_machine_v1alpha1_AddressPair(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -31795,6 +31837,75 @@ func schema_openshift_api_machine_v1alpha1_AddressPair(ref common.ReferenceCallb
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
 							Format: "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_machine_v1alpha1_BlockDeviceStorage(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "blockDeviceStorage is the storage type of a block device to create and contains additional storage options.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type is the type of block device to create. This can be either \"Volume\" or \"Local\".",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"volume": {
+						SchemaProps: spec.SchemaProps{
+							Description: "volume contains additional storage options for a volume block device.",
+							Ref:         ref("github.com/openshift/api/machine/v1alpha1.BlockDeviceVolume"),
+						},
+					},
+				},
+				Required: []string{"type"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "type",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"volume": "Volume",
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machine/v1alpha1.BlockDeviceVolume"},
+	}
+}
+
+func schema_openshift_api_machine_v1alpha1_BlockDeviceVolume(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "blockDeviceVolume contains additional storage options for a volume block device.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type is the Cinder volume type of the volume. If omitted, the default Cinder volume type that is configured in the OpenStack cloud will be used.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"availabilityZone": {
+						SchemaProps: spec.SchemaProps{
+							Description: "availabilityZone is the volume availability zone to create the volume in. If omitted, the availability zone of the server will be used. The availability zone must NOT contain spaces otherwise it will lead to volume that belongs to this availability zone register failure, see kubernetes/cloud-provider-openstack#1379 for further information.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},
@@ -32241,6 +32352,28 @@ func schema_openshift_api_machine_v1alpha1_OpenstackProviderSpec(ref common.Refe
 							Ref:         ref("github.com/openshift/api/machine/v1alpha1.RootVolume"),
 						},
 					},
+					"additionalBlockDevices": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "additionalBlockDevices is a list of specifications for additional block devices to attach to the server instance",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machine/v1alpha1.AdditionalBlockDevice"),
+									},
+								},
+							},
+						},
+					},
 					"serverGroupID": {
 						SchemaProps: spec.SchemaProps{
 							Description: "The server group to assign the machine to.",
@@ -32267,7 +32400,7 @@ func schema_openshift_api_machine_v1alpha1_OpenstackProviderSpec(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1alpha1.NetworkParam", "github.com/openshift/api/machine/v1alpha1.PortOpts", "github.com/openshift/api/machine/v1alpha1.RootVolume", "github.com/openshift/api/machine/v1alpha1.SecurityGroupParam", "k8s.io/api/core/v1.SecretReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"github.com/openshift/api/machine/v1alpha1.AdditionalBlockDevice", "github.com/openshift/api/machine/v1alpha1.NetworkParam", "github.com/openshift/api/machine/v1alpha1.PortOpts", "github.com/openshift/api/machine/v1alpha1.RootVolume", "github.com/openshift/api/machine/v1alpha1.SecurityGroupParam", "k8s.io/api/core/v1.SecretReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 

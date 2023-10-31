@@ -321,4 +321,14 @@ var (
 		ResponsiblePerson:   "cdoern",
 		OwningProduct:       ocpSpecific,
 	}
+
+	FeatureGateClusterAPIInstall = FeatureGateName("ClusterAPIInstall")
+	clusterAPIInstall            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateClusterAPIInstall,
+		},
+		OwningJiraComponent: "Installer",
+		ResponsiblePerson:   "vincepri",
+		OwningProduct:       ocpSpecific,
+	}
 )

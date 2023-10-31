@@ -2,7 +2,6 @@ package v1
 
 import (
 	corev1 "k8s.io/api/core/v1"
-	extensionsv1beta1 "k8s.io/api/extensions/v1beta1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -11,7 +10,7 @@ import (
 var (
 	GroupName     = "apps.openshift.io"
 	GroupVersion  = schema.GroupVersion{Group: GroupName, Version: "v1"}
-	schemeBuilder = runtime.NewSchemeBuilder(addKnownTypes, corev1.AddToScheme, extensionsv1beta1.AddToScheme)
+	schemeBuilder = runtime.NewSchemeBuilder(addKnownTypes, corev1.AddToScheme)
 	// Install is a function which adds this version to a scheme
 	Install = schemeBuilder.AddToScheme
 
@@ -38,7 +37,6 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&DeploymentRequest{},
 		&DeploymentLog{},
 		&DeploymentLogOptions{},
-		&extensionsv1beta1.Scale{},
 	)
 	metav1.AddToGroupVersion(scheme, GroupVersion)
 	return nil

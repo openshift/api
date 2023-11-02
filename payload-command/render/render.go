@@ -55,6 +55,7 @@ func (o *RenderOpts) Run() error {
 		if err != nil {
 			return fmt.Errorf("error decoding FeatureGate: %w", err)
 		}
+		// this will fail a cast, but I need a new build to test other PRs.
 		featureGates := featureGatesObj.(*configv1.FeatureGate)
 		currentDetails, err := FeaturesGateDetailsFromFeatureSets(configv1.FeatureSets, featureGates, o.PayloadVersion)
 		if err != nil {

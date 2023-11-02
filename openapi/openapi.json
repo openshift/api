@@ -24301,13 +24301,17 @@
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.AzureCSIDriverConfigSpec"
         },
         "driverType": {
-          "description": "driverType indicates type of CSI driver for which the driverConfig is being applied to. Valid values are: AWS, Azure, GCP, vSphere and omitted. Consumers should treat unknown values as a NO-OP.",
+          "description": "driverType indicates type of CSI driver for which the driverConfig is being applied to. Valid values are: AWS, Azure, GCP, IBMCloud, vSphere and omitted. Consumers should treat unknown values as a NO-OP.",
           "type": "string",
           "default": ""
         },
         "gcp": {
           "description": "gcp is used to configure the GCP CSI driver.",
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.GCPCSIDriverConfigSpec"
+        },
+        "ibmcloud": {
+          "description": "ibmcloud is used to configure the IBM Cloud CSI driver.",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.IBMCloudCSIDriverConfigSpec"
         },
         "vSphere": {
           "description": "vsphere is used to configure the vsphere CSI driver.",
@@ -24321,6 +24325,7 @@
             "aws": "AWS",
             "azure": "Azure",
             "gcp": "GCP",
+            "ibmcloud": "IBMCloud",
             "vSphere": "VSphere"
           }
         }
@@ -26083,6 +26088,20 @@
           "description": "HybridOverlayVXLANPort defines the VXLAN port number to be used by the additional overlay network. Default is 4789",
           "type": "integer",
           "format": "int64"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.IBMCloudCSIDriverConfigSpec": {
+      "description": "IBMCloudCSIDriverConfigSpec defines the properties that can be configured for the IBM Cloud CSI driver.",
+      "type": "object",
+      "required": [
+        "encryptionKeyCRN"
+      ],
+      "properties": {
+        "encryptionKeyCRN": {
+          "description": "encryptionKeyCRN is the IBM Cloud CRN of the customer-managed root key to use for disk encryption of volumes for the default storage classes.",
+          "type": "string",
+          "default": ""
         }
       }
     },

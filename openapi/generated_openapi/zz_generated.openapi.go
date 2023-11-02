@@ -887,6 +887,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.HealthCheck":                                                   schema_openshift_api_operator_v1_HealthCheck(ref),
 		"github.com/openshift/api/operator/v1.HostNetworkStrategy":                                           schema_openshift_api_operator_v1_HostNetworkStrategy(ref),
 		"github.com/openshift/api/operator/v1.HybridOverlayConfig":                                           schema_openshift_api_operator_v1_HybridOverlayConfig(ref),
+		"github.com/openshift/api/operator/v1.IBMCloudCSIDriverConfigSpec":                                   schema_openshift_api_operator_v1_IBMCloudCSIDriverConfigSpec(ref),
 		"github.com/openshift/api/operator/v1.IBMLoadBalancerParameters":                                     schema_openshift_api_operator_v1_IBMLoadBalancerParameters(ref),
 		"github.com/openshift/api/operator/v1.IPAMConfig":                                                    schema_openshift_api_operator_v1_IPAMConfig(ref),
 		"github.com/openshift/api/operator/v1.IPFIXConfig":                                                   schema_openshift_api_operator_v1_IPFIXConfig(ref),
@@ -42000,7 +42001,7 @@ func schema_openshift_api_operator_v1_CSIDriverConfigSpec(ref common.ReferenceCa
 				Properties: map[string]spec.Schema{
 					"driverType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "driverType indicates type of CSI driver for which the driverConfig is being applied to. Valid values are: AWS, Azure, GCP, vSphere and omitted. Consumers should treat unknown values as a NO-OP.",
+							Description: "driverType indicates type of CSI driver for which the driverConfig is being applied to. Valid values are: AWS, Azure, GCP, IBMCloud, vSphere and omitted. Consumers should treat unknown values as a NO-OP.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -42024,6 +42025,12 @@ func schema_openshift_api_operator_v1_CSIDriverConfigSpec(ref common.ReferenceCa
 							Ref:         ref("github.com/openshift/api/operator/v1.GCPCSIDriverConfigSpec"),
 						},
 					},
+					"ibmcloud": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ibmcloud is used to configure the IBM Cloud CSI driver.",
+							Ref:         ref("github.com/openshift/api/operator/v1.IBMCloudCSIDriverConfigSpec"),
+						},
+					},
 					"vSphere": {
 						SchemaProps: spec.SchemaProps{
 							Description: "vsphere is used to configure the vsphere CSI driver.",
@@ -42039,10 +42046,11 @@ func schema_openshift_api_operator_v1_CSIDriverConfigSpec(ref common.ReferenceCa
 						map[string]interface{}{
 							"discriminator": "driverType",
 							"fields-to-discriminateBy": map[string]interface{}{
-								"aws":     "AWS",
-								"azure":   "Azure",
-								"gcp":     "GCP",
-								"vSphere": "VSphere",
+								"aws":      "AWS",
+								"azure":    "Azure",
+								"gcp":      "GCP",
+								"ibmcloud": "IBMCloud",
+								"vSphere":  "VSphere",
 							},
 						},
 					},
@@ -42050,7 +42058,7 @@ func schema_openshift_api_operator_v1_CSIDriverConfigSpec(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.AWSCSIDriverConfigSpec", "github.com/openshift/api/operator/v1.AzureCSIDriverConfigSpec", "github.com/openshift/api/operator/v1.GCPCSIDriverConfigSpec", "github.com/openshift/api/operator/v1.VSphereCSIDriverConfigSpec"},
+			"github.com/openshift/api/operator/v1.AWSCSIDriverConfigSpec", "github.com/openshift/api/operator/v1.AzureCSIDriverConfigSpec", "github.com/openshift/api/operator/v1.GCPCSIDriverConfigSpec", "github.com/openshift/api/operator/v1.IBMCloudCSIDriverConfigSpec", "github.com/openshift/api/operator/v1.VSphereCSIDriverConfigSpec"},
 	}
 }
 
@@ -44993,6 +45001,28 @@ func schema_openshift_api_operator_v1_HybridOverlayConfig(ref common.ReferenceCa
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/operator/v1.ClusterNetworkEntry"},
+	}
+}
+
+func schema_openshift_api_operator_v1_IBMCloudCSIDriverConfigSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "IBMCloudCSIDriverConfigSpec defines the properties that can be configured for the IBM Cloud CSI driver.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"encryptionKeyCRN": {
+						SchemaProps: spec.SchemaProps{
+							Description: "encryptionKeyCRN is the IBM Cloud CRN of the customer-managed root key to use for disk encryption of volumes for the default storage classes.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"encryptionKeyCRN"},
+			},
+		},
 	}
 }
 

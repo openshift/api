@@ -44597,6 +44597,13 @@ func schema_openshift_api_operator_v1_PolicyAuditConfig(ref common.ReferenceCall
 							Format:      "int64",
 						},
 					},
+					"maxLogFiles": {
+						SchemaProps: spec.SchemaProps{
+							Description: "maxLogFiles specifies the maximum number of ACL_audit log files that can be present.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 					"destination": {
 						SchemaProps: spec.SchemaProps{
 							Description: "destination is the location for policy log messages. Regardless of this config, persistent logs will always be dumped to the host at /var/log/ovn/ however Additionally syslog output may be configured as follows. Valid values are: - \"libc\" -> to use the libc syslog() function of the host node's journdald process - \"udp:host:port\" -> for sending syslog over UDP - \"unix:file\" -> for using the UNIX domain socket directly - \"null\" -> to discard all messages logged to syslog The default is \"null\"",

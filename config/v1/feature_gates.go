@@ -331,4 +331,14 @@ var (
 		ResponsiblePerson:   "slashpai",
 		OwningProduct:       ocpSpecific,
 	}
+
+	FeatureGateInstallAlternateInfrastructureAWS = FeatureGateName("InstallAlternateInfrastructureAWS")
+	installAlternateInfrastructureAWS            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateInstallAlternateInfrastructureAWS,
+		},
+		OwningJiraComponent: "Installer",
+		ResponsiblePerson:   "padillon",
+		OwningProduct:       ocpSpecific,
+	}
 )

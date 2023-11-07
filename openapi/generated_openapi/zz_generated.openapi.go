@@ -931,7 +931,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.KubeStorageVersionMigratorList":                                schema_openshift_api_operator_v1_KubeStorageVersionMigratorList(ref),
 		"github.com/openshift/api/operator/v1.KubeStorageVersionMigratorSpec":                                schema_openshift_api_operator_v1_KubeStorageVersionMigratorSpec(ref),
 		"github.com/openshift/api/operator/v1.KubeStorageVersionMigratorStatus":                              schema_openshift_api_operator_v1_KubeStorageVersionMigratorStatus(ref),
-		"github.com/openshift/api/operator/v1.KuryrConfig":                                                   schema_openshift_api_operator_v1_KuryrConfig(ref),
 		"github.com/openshift/api/operator/v1.LoadBalancerStrategy":                                          schema_openshift_api_operator_v1_LoadBalancerStrategy(ref),
 		"github.com/openshift/api/operator/v1.LoggingDestination":                                            schema_openshift_api_operator_v1_LoggingDestination(ref),
 		"github.com/openshift/api/operator/v1.MTUMigration":                                                  schema_openshift_api_operator_v1_MTUMigration(ref),
@@ -43876,18 +43875,12 @@ func schema_openshift_api_operator_v1_DefaultNetworkDefinition(ref common.Refere
 							Ref:         ref("github.com/openshift/api/operator/v1.OVNKubernetesConfig"),
 						},
 					},
-					"kuryrConfig": {
-						SchemaProps: spec.SchemaProps{
-							Description: "KuryrConfig configures the kuryr plugin",
-							Ref:         ref("github.com/openshift/api/operator/v1.KuryrConfig"),
-						},
-					},
 				},
 				Required: []string{"type"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.KuryrConfig", "github.com/openshift/api/operator/v1.OVNKubernetesConfig", "github.com/openshift/api/operator/v1.OpenShiftSDNConfig"},
+			"github.com/openshift/api/operator/v1.OVNKubernetesConfig", "github.com/openshift/api/operator/v1.OpenShiftSDNConfig"},
 	}
 }
 
@@ -47330,75 +47323,6 @@ func schema_openshift_api_operator_v1_KubeStorageVersionMigratorStatus(ref commo
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
-	}
-}
-
-func schema_openshift_api_operator_v1_KuryrConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "KuryrConfig configures the Kuryr-Kubernetes SDN",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"daemonProbesPort": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The port kuryr-daemon will listen for readiness and liveness requests.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"controllerProbesPort": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The port kuryr-controller will listen for readiness and liveness requests.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"openStackServiceNetwork": {
-						SchemaProps: spec.SchemaProps{
-							Description: "openStackServiceNetwork contains the CIDR of network from which to allocate IPs for OpenStack Octavia's Amphora VMs. Please note that with Amphora driver Octavia uses two IPs from that network for each loadbalancer - one given by OpenShift and second for VRRP connections. As the first one is managed by OpenShift's and second by Neutron's IPAMs, those need to come from different pools. Therefore `openStackServiceNetwork` needs to be at least twice the size of `serviceNetwork`, and whole `serviceNetwork` must be overlapping with `openStackServiceNetwork`. cluster-network-operator will then make sure VRRP IPs are taken from the ranges inside `openStackServiceNetwork` that are not overlapping with `serviceNetwork`, effectivly preventing conflicts. If not set cluster-network-operator will use `serviceNetwork` expanded by decrementing the prefix size by 1.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"enablePortPoolsPrepopulation": {
-						SchemaProps: spec.SchemaProps{
-							Description: "enablePortPoolsPrepopulation when true will make Kuryr prepopulate each newly created port pool with a minimum number of ports. Kuryr uses Neutron port pooling to fight the fact that it takes a significant amount of time to create one. It creates a number of ports when the first pod that is configured to use the dedicated network for pods is created in a namespace, and keeps them ready to be attached to pods. Port prepopulation is disabled by default.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"poolMaxPorts": {
-						SchemaProps: spec.SchemaProps{
-							Description: "poolMaxPorts sets a maximum number of free ports that are being kept in a port pool. If the number of ports exceeds this setting, free ports will get deleted. Setting 0 will disable this upper bound, effectively preventing pools from shrinking and this is the default value. For more information about port pools see enablePortPoolsPrepopulation setting.",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"poolMinPorts": {
-						SchemaProps: spec.SchemaProps{
-							Description: "poolMinPorts sets a minimum number of free ports that should be kept in a port pool. If the number of ports is lower than this setting, new ports will get created and added to pool. The default is 1. For more information about port pools see enablePortPoolsPrepopulation setting.",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"poolBatchPorts": {
-						SchemaProps: spec.SchemaProps{
-							Description: "poolBatchPorts sets a number of ports that should be created in a single batch request to extend the port pool. The default is 3. For more information about port pools see enablePortPoolsPrepopulation setting.",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"mtu": {
-						SchemaProps: spec.SchemaProps{
-							Description: "mtu is the MTU that Kuryr should use when creating pod networks in Neutron. The value has to be lower or equal to the MTU of the nodes network and Neutron has to allow creation of tenant networks with such MTU. If unset Pod networks will be created with the same MTU as the nodes network has. This also affects the services network created by cluster-network-operator.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-				},
-			},
-		},
 	}
 }
 

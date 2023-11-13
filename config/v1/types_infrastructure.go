@@ -1182,15 +1182,14 @@ type VSpherePlatformStatus struct {
 // override existing defaults of IBM Cloud Services.
 type IBMCloudServiceEndpoint struct {
 	// name is the name of the IBM Cloud service.
+	// Possible values are: CIS, COS, DNSServices, GlobalSearch, GlobalTagging, HyperProtect, IAM, KeyProtect, ResourceController, ResourceManager, or VPC.
 	// For example, the IBM Cloud Private IAM service could be configured with the
 	// service `name` of `IAM` and `url` of `https://private.iam.cloud.ibm.com`
 	// Whereas the IBM Cloud Private VPC service for US South (Dallas) could be configured
 	// with the service `name` of `VPC` and `url` of `https://us.south.private.iaas.cloud.ibm.com`
 	//
 	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern=`^[a-zA-Z0-9-]+$`
-	// +kubebuilder:validation:MaxLength=32
-	Name string `json:"name"`
+	Name IBMCloudServiceName `json:"name"`
 
 	// url is fully qualified URI with scheme https, that overrides the default generated
 	// endpoint for a client.

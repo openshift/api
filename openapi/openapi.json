@@ -26387,6 +26387,16 @@
     "com.github.openshift.api.operator.v1.IPsecConfig": {
       "type": "object"
     },
+    "com.github.openshift.api.operator.v1.IPsecExternal": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "description": "state controls the node's external (aka NS) IPsec service state. When set to Enabled, the ipsec.service will be installed and enabled on the node, and the user should configure the ipsec parameters and policies via k8s-nmstate operator. When set to Disabled (default), the NS IPsec will be disabled, but EW IPsec can still be enabled via ipsecConfig.",
+          "type": "string",
+          "default": "Disabled"
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1.IPv4GatewayConfig": {
       "description": "IPV4GatewayConfig holds the configuration paramaters for IPV4 connections in the GatewayConfig for OVN-Kubernetes",
       "type": "object",
@@ -28472,8 +28482,13 @@
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.HybridOverlayConfig"
         },
         "ipsecConfig": {
-          "description": "ipsecConfig enables and configures IPsec for pods on the pod network within the cluster.",
+          "description": "ipsecConfig enables and configures IPsec for pods on the pod network within the cluster. ie - for East-West traffic. ipsecConfig and ipsecExternal can be enabled together or separatetly",
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.IPsecConfig"
+        },
+        "ipsecExternal": {
+          "description": "ipsecExternal enables external (North-South) IPsec communication on the cluster. This will only install IPsec and enable its service. The actual NS IPsec policies should be specified by users. This can be done with k8s-nmstate operator. ipsecExternal and ipsecConfig can be enabled together or separately. Default (the value of the field State in ipsecExternal) is Disabled.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.IPsecExternal"
         },
         "mtu": {
           "description": "mtu is the MTU to use for the tunnel interface. This must be 100 bytes smaller than the uplink mtu. Default is 1400",

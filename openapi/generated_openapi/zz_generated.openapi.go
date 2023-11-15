@@ -892,6 +892,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.IPAMConfig":                                                    schema_openshift_api_operator_v1_IPAMConfig(ref),
 		"github.com/openshift/api/operator/v1.IPFIXConfig":                                                   schema_openshift_api_operator_v1_IPFIXConfig(ref),
 		"github.com/openshift/api/operator/v1.IPsecConfig":                                                   schema_openshift_api_operator_v1_IPsecConfig(ref),
+		"github.com/openshift/api/operator/v1.IPsecExternal":                                                 schema_openshift_api_operator_v1_IPsecExternal(ref),
 		"github.com/openshift/api/operator/v1.IPv4GatewayConfig":                                             schema_openshift_api_operator_v1_IPv4GatewayConfig(ref),
 		"github.com/openshift/api/operator/v1.IPv6GatewayConfig":                                             schema_openshift_api_operator_v1_IPv6GatewayConfig(ref),
 		"github.com/openshift/api/operator/v1.IngressController":                                             schema_openshift_api_operator_v1_IngressController(ref),
@@ -45145,6 +45146,26 @@ func schema_openshift_api_operator_v1_IPsecConfig(ref common.ReferenceCallback) 
 	}
 }
 
+func schema_openshift_api_operator_v1_IPsecExternal(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"state": {
+						SchemaProps: spec.SchemaProps{
+							Description: "state controls the node's external (aka NS) IPsec service state. When set to Enabled, the ipsec.service will be installed and enabled on the node, and the user should configure the ipsec parameters and policies via k8s-nmstate operator. When set to Disabled (default), the NS IPsec will be disabled, but EW IPsec can still be enabled via ipsecConfig.",
+							Default:     "Disabled",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_operator_v1_IPv4GatewayConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -48565,8 +48586,15 @@ func schema_openshift_api_operator_v1_OVNKubernetesConfig(ref common.ReferenceCa
 					},
 					"ipsecConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ipsecConfig enables and configures IPsec for pods on the pod network within the cluster.",
+							Description: "ipsecConfig enables and configures IPsec for pods on the pod network within the cluster. ie - for East-West traffic. ipsecConfig and ipsecExternal can be enabled together or separatetly",
 							Ref:         ref("github.com/openshift/api/operator/v1.IPsecConfig"),
+						},
+					},
+					"ipsecExternal": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ipsecExternal enables external (North-South) IPsec communication on the cluster. This will only install IPsec and enable its service. The actual NS IPsec policies should be specified by users. This can be done with k8s-nmstate operator. ipsecExternal and ipsecConfig can be enabled together or separately. Default (the value of the field State in ipsecExternal) is Disabled.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1.IPsecExternal"),
 						},
 					},
 					"policyAuditConfig": {
@@ -48606,7 +48634,7 @@ func schema_openshift_api_operator_v1_OVNKubernetesConfig(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.EgressIPConfig", "github.com/openshift/api/operator/v1.GatewayConfig", "github.com/openshift/api/operator/v1.HybridOverlayConfig", "github.com/openshift/api/operator/v1.IPsecConfig", "github.com/openshift/api/operator/v1.PolicyAuditConfig"},
+			"github.com/openshift/api/operator/v1.EgressIPConfig", "github.com/openshift/api/operator/v1.GatewayConfig", "github.com/openshift/api/operator/v1.HybridOverlayConfig", "github.com/openshift/api/operator/v1.IPsecConfig", "github.com/openshift/api/operator/v1.IPsecExternal", "github.com/openshift/api/operator/v1.PolicyAuditConfig"},
 	}
 }
 

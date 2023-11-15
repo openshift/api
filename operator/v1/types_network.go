@@ -460,9 +460,16 @@ type OVNKubernetesConfig struct {
 	// +optional
 	HybridOverlayConfig *HybridOverlayConfig `json:"hybridOverlayConfig,omitempty"`
 	// ipsecConfig enables and configures IPsec for pods on the pod network within the
-	// cluster.
+	// cluster. ie - for East-West traffic. ipsecConfig and ipsecExternal can be enabled
+	// together or separatetly
 	// +optional
 	IPsecConfig *IPsecConfig `json:"ipsecConfig,omitempty"`
+	// ipsecExternal enables external (North-South) IPsec communication on the cluster. This will only install IPsec and
+	// enable its service. The actual NS IPsec policies should be specified by users. This can be done with k8s-nmstate operator.
+	// ipsecExternal and ipsecConfig can be enabled together or separately.
+	// Default (the value of the field State in ipsecExternal) is Disabled.
+	// +optional
+	IPsecExternal IPsecExternal `json:"ipsecExternal"`
 	// policyAuditConfig is the configuration for network policy audit events. If unset,
 	// reported defaults are used.
 	// +optional
@@ -501,6 +508,19 @@ type HybridOverlayConfig struct {
 }
 
 type IPsecConfig struct {
+}
+
+type IPsecExternal struct {
+	// state controls the node's external (aka NS) IPsec service state. When set to Enabled,
+	// the ipsec.service will be installed and enabled on the node, and the user should
+	// configure the ipsec parameters and policies via k8s-nmstate operator.
+	// When set to Disabled (default), the NS IPsec will be disabled, but EW IPsec
+	// can still be enabled via ipsecConfig.
+	// +kubebuilder:validation:Enum=Enabled;Disabled
+	// +optional
+	// +kubebuilder:default=Disabled
+	// +default="Disabled"
+	State IPSecExternalState `json:"state,omitempty"`
 }
 
 type IPForwardingMode string
@@ -765,4 +785,13 @@ const (
 	IPAMTypeDHCP IPAMType = "DHCP"
 	// IPAMTypeStatic uses static IP
 	IPAMTypeStatic IPAMType = "Static"
+)
+
+type IPSecExternalState string
+
+const (
+	// IPSecExternalStateEnabled enables IPsec for external traffic
+	IPSecExternalStateEnabled IPSecExternalState = "Enabled"
+	// IPSecExternalStateDisabled disables IPsec for external traffic
+	IPSecExternalStateDisabled IPSecExternalState = "Disabled"
 )

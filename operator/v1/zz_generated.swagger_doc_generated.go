@@ -1375,6 +1375,14 @@ func (IPFIXConfig) SwaggerDoc() map[string]string {
 	return map_IPFIXConfig
 }
 
+var map_IPsecExternal = map[string]string{
+	"state": "state controls the node's external (aka NS) IPsec service state. When set to Enabled, the ipsec.service will be installed and enabled on the node, and the user should configure the ipsec parameters and policies via k8s-nmstate operator. When set to Disabled (default), the NS IPsec will be disabled, but EW IPsec can still be enabled via ipsecConfig.",
+}
+
+func (IPsecExternal) SwaggerDoc() map[string]string {
+	return map_IPsecExternal
+}
+
 var map_IPv4GatewayConfig = map[string]string{
 	"":                         "IPV4GatewayConfig holds the configuration paramaters for IPV4 connections in the GatewayConfig for OVN-Kubernetes",
 	"internalMasqueradeSubnet": "internalMasqueradeSubnet contains the masquerade addresses in IPV4 CIDR format used internally by ovn-kubernetes to enable host to service traffic. Each host in the cluster is configured with these addresses, as well as the shared gateway bridge interface. The values can be changed after installation. The subnet chosen should not overlap with other networks specified for OVN-Kubernetes as well as other networks used on the host. Additionally the subnet must be large enough to accommodate 6 IPs (maximum prefix length /29). When omitted, this means no opinion and the platform is left to choose a reasonable default which is subject to change over time. The current default subnet is 169.254.169.0/29 The value must be in proper IPV4 CIDR format",
@@ -1499,7 +1507,8 @@ var map_OVNKubernetesConfig = map[string]string{
 	"mtu":                 "mtu is the MTU to use for the tunnel interface. This must be 100 bytes smaller than the uplink mtu. Default is 1400",
 	"genevePort":          "geneve port is the UDP port to be used by geneve encapulation. Default is 6081",
 	"hybridOverlayConfig": "HybridOverlayConfig configures an additional overlay network for peers that are not using OVN.",
-	"ipsecConfig":         "ipsecConfig enables and configures IPsec for pods on the pod network within the cluster.",
+	"ipsecConfig":         "ipsecConfig enables and configures IPsec for pods on the pod network within the cluster. ie - for East-West traffic. ipsecConfig and ipsecExternal can be enabled together or separatetly",
+	"ipsecExternal":       "ipsecExternal enables external (North-South) IPsec communication on the cluster. This will only install IPsec and enable its service. The actual NS IPsec policies should be specified by users. This can be done with k8s-nmstate operator. ipsecExternal and ipsecConfig can be enabled together or separately. Default (the value of the field State in ipsecExternal) is Disabled.",
 	"policyAuditConfig":   "policyAuditConfig is the configuration for network policy audit events. If unset, reported defaults are used.",
 	"gatewayConfig":       "gatewayConfig holds the configuration for node gateway options.",
 	"v4InternalSubnet":    "v4InternalSubnet is a v4 subnet used internally by ovn-kubernetes in case the default one is being already used by something else. It must not overlap with any other subnet being used by OpenShift or by the node network. The size of the subnet must be larger than the number of nodes. The value cannot be changed after installation. Default is 100.64.0.0/16",

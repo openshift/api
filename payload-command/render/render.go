@@ -8,6 +8,9 @@ import (
 	"sort"
 	"strings"
 
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/apimachinery/pkg/runtime"
+
 	configv1 "github.com/openshift/api/config/v1"
 	assets "github.com/openshift/api/payload-command/render/renderassets"
 	"k8s.io/apimachinery/pkg/util/sets"
@@ -51,12 +54,15 @@ func (o *RenderOpts) Run() error {
 		return fmt.Errorf("problem with featuregate manifests: %w", err)
 	}
 	for _, featureGateFile := range featureGateFiles {
-		featureGatesObj, err := featureGateFile.GetDecodedObj()
+		uncastObj, err := featureGateFile.GetDecodedObj()
 		if err != nil {
 			return fmt.Errorf("error decoding FeatureGate: %w", err)
 		}
-		// this will fail a cast, but I need a new build to test other PRs.
-		featureGates := featureGatesObj.(*configv1.FeatureGate)
+		featureGates := &configv1.FeatureGate{}
+		err = runtime.DefaultUnstructuredConverter.FromUnstructured(uncastObj.(*unstructured.Unstructured).Object, featureGates)
+		if err != nil {
+			return fmt.Errorf("error converting FeatureGate: %w", err)
+		}
 		currentDetails, err := FeaturesGateDetailsFromFeatureSets(configv1.FeatureSets, featureGates, o.PayloadVersion)
 		if err != nil {
 			return fmt.Errorf("error determining FeatureGates: %w", err)

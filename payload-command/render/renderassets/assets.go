@@ -134,7 +134,7 @@ func InstallerFeatureSet(featureSet string) FileContentsPredicate {
 		targetFeatureSet = featureSet
 	}
 	return func(manifest []byte) (bool, error) {
-		uncastObj, _, err := unstructured.UnstructuredJSONScheme.Decode(manifest, nil, &unstructured.Unstructured{})
+		uncastObj, _, err := codecs.UniversalDecoder().Decode(manifest, nil, &unstructured.Unstructured{})
 		if err != nil {
 			panic(fmt.Errorf("unable to decode: %w", err))
 		}

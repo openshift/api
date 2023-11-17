@@ -2,7 +2,7 @@ kind: ImageStream
 apiVersion: image.openshift.io/v1
 spec:
   tags:
-  - name: api
+  - name: cluster-config-api
     from:
       kind: DockerImage
-      name: quay.io/openshift/origin-api:v4.0
+      name: none-of-the-manifests-need-this-image-injected

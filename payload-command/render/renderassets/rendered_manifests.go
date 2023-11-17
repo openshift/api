@@ -8,6 +8,7 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/apimachinery/pkg/runtime/serializer"
 	"k8s.io/klog/v2"
 )
 
@@ -75,16 +76,19 @@ func (renderedManifests RenderedManifests) GetObject(gvk schema.GroupVersionKind
 	return manifest.GetDecodedObj()
 }
 
+var localScheme = runtime.NewScheme()
+var codecs = serializer.NewCodecFactory(localScheme)
+
 func (c *RenderedManifest) GetDecodedObj() (runtime.Object, error) {
 	if c.decodedObj != nil {
 		return c.decodedObj, nil
 	}
 
-	obj, _, err := unstructured.UnstructuredJSONScheme.Decode(c.Content, nil, &unstructured.Unstructured{})
+	udi, _, err := codecs.UniversalDecoder().Decode(c.Content, nil, &unstructured.Unstructured{})
 	if err != nil {
 		return nil, fmt.Errorf("unable to decode %q: %w", c.OriginalFilename, err)
 	}
-	c.decodedObj = obj
+	c.decodedObj = udi
 
 	return c.decodedObj, nil
 }

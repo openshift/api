@@ -8071,6 +8071,39 @@
     "com.github.openshift.api.config.v1.NodeStatus": {
       "type": "object"
     },
+    "com.github.openshift.api.config.v1.NutanixFailureDomain": {
+      "description": "NutanixFailureDomain configures failure domain information for the Nutanix platform.",
+      "type": "object",
+      "required": [
+        "name",
+        "cluster",
+        "subnets"
+      ],
+      "properties": {
+        "cluster": {
+          "description": "cluster is to identify the cluster (the Prism Element under management of the Prism Central), in which the Machine's VM will be created. The cluster identifier (uuid or name) can be obtained from the Prism Central console or using the prism_central API.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.NutanixResourceIdentifier"
+        },
+        "name": {
+          "description": "name defines the unique name of a failure domain. Name is required and must be at most 64 characters in length. It must consist of only lower case alphanumeric characters and hyphens (-). It must start and end with an alphanumeric character. This value is arbitrary and is used to identify the failure domain within the platform.",
+          "type": "string",
+          "default": ""
+        },
+        "subnets": {
+          "description": "subnets holds a list of identifiers (one or more) of the cluster's network subnets for the Machine's VM to connect to. The subnet identifiers (uuid or name) can be obtained from the Prism Central console or using the prism_central API.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.NutanixResourceIdentifier"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.NutanixPlatformLoadBalancer": {
       "description": "NutanixPlatformLoadBalancer defines the load balancer used by the cluster on Nutanix platform.",
       "type": "object",
@@ -8096,6 +8129,18 @@
         "prismElements"
       ],
       "properties": {
+        "failureDomains": {
+          "description": "failureDomains configures failure domains information for the Nutanix platform. When set, the failure domains defined here may be used to spread Machines across prism element clusters to improve fault tolerance of the cluster.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.NutanixFailureDomain"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
         "prismCentral": {
           "description": "prismCentral holds the endpoint address and port to access the Nutanix Prism Central. When a cluster-wide proxy is installed, by default, this endpoint will be accessed via the proxy. Should you wish for communication with this endpoint not to be proxied, please add the endpoint to the proxy spec.noProxy list.",
           "default": {},
@@ -8196,6 +8241,37 @@
           "default": 0
         }
       }
+    },
+    "com.github.openshift.api.config.v1.NutanixResourceIdentifier": {
+      "description": "NutanixResourceIdentifier holds the identity of a Nutanix PC resource (cluster, image, subnet, etc.)",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the resource name in the PC. It cannot be empty if the type is Name.",
+          "type": "string"
+        },
+        "type": {
+          "description": "type is the identifier type to use for this resource.",
+          "type": "string",
+          "default": ""
+        },
+        "uuid": {
+          "description": "uuid is the UUID of the resource in the PC. It cannot be empty if the type is UUID.",
+          "type": "string"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {
+            "name": "Name",
+            "uuid": "UUID"
+          }
+        }
+      ]
     },
     "com.github.openshift.api.config.v1.OAuth": {
       "description": "OAuth holds cluster-wide information about OAuth.  The canonical name is `cluster`. It is used to configure the integrated OAuth server. This configuration is only honored when the top level Authentication config has type set to IntegratedOAuth.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
@@ -18077,6 +18153,18 @@
             "$ref": "#/definitions/com.github.openshift.api.machine.v1.GCPFailureDomain"
           }
         },
+        "nutanix": {
+          "description": "nutanix configures failure domain information for the Nutanix platform.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machine.v1.NutanixFailureDomainReference"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
         "openstack": {
           "description": "OpenStack configures failure domain information for the OpenStack platform.",
           "type": "array",
@@ -18086,7 +18174,7 @@
           }
         },
         "platform": {
-          "description": "Platform identifies the platform for which the FailureDomain represents. Currently supported values are AWS, Azure, GCP, OpenStack, and VSphere.",
+          "description": "Platform identifies the platform for which the FailureDomain represents. Currently supported values are AWS, Azure, GCP, OpenStack, VSphere and Nutanix.",
           "type": "string",
           "default": ""
         },
@@ -18106,6 +18194,7 @@
             "aws": "AWS",
             "azure": "Azure",
             "gcp": "GCP",
+            "nutanix": "Nutanix",
             "openstack": "OpenStack",
             "vsphere": "VSphere"
           }
@@ -18166,6 +18255,20 @@
         }
       }
     },
+    "com.github.openshift.api.machine.v1.NutanixFailureDomainReference": {
+      "description": "NutanixFailureDomainReference refers to the failure domain of the Nutanix platform.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name of the failure domain in which the nutanix machine provider will create the VM. Failure domains are defined in a cluster's config.openshift.io/Infrastructure resource.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.machine.v1.NutanixMachineProviderConfig": {
       "description": "NutanixMachineProviderConfig is the Schema for the nutanixmachineproviderconfigs API Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
@@ -18209,6 +18312,10 @@
         "credentialsSecret": {
           "description": "credentialsSecret is a local reference to a secret that contains the credentials data to access Nutanix PC client",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "failureDomain": {
+          "description": "failureDomain refers to the name of the FailureDomain with which this Machine is associated. If this is configured, the Nutanix machine controller will use the prism_central endpoint and credentials defined in the referenced FailureDomain to communicate to the prism_central. It will also verify that the 'cluster' and subnets' configuration in the NutanixMachineProviderConfig is consistent with that in the referenced failureDomain.",
+          "$ref": "#/definitions/com.github.openshift.api.machine.v1.NutanixFailureDomainReference"
         },
         "image": {
           "description": "image is to identify the rhcos image uploaded to the Prism Central (PC) The image identifier (uuid or name) can be obtained from the Prism Central console or using the prism_central API.",

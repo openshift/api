@@ -303,11 +303,13 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.NodeList":                                                        schema_openshift_api_config_v1_NodeList(ref),
 		"github.com/openshift/api/config/v1.NodeSpec":                                                        schema_openshift_api_config_v1_NodeSpec(ref),
 		"github.com/openshift/api/config/v1.NodeStatus":                                                      schema_openshift_api_config_v1_NodeStatus(ref),
+		"github.com/openshift/api/config/v1.NutanixFailureDomain":                                            schema_openshift_api_config_v1_NutanixFailureDomain(ref),
 		"github.com/openshift/api/config/v1.NutanixPlatformLoadBalancer":                                     schema_openshift_api_config_v1_NutanixPlatformLoadBalancer(ref),
 		"github.com/openshift/api/config/v1.NutanixPlatformSpec":                                             schema_openshift_api_config_v1_NutanixPlatformSpec(ref),
 		"github.com/openshift/api/config/v1.NutanixPlatformStatus":                                           schema_openshift_api_config_v1_NutanixPlatformStatus(ref),
 		"github.com/openshift/api/config/v1.NutanixPrismElementEndpoint":                                     schema_openshift_api_config_v1_NutanixPrismElementEndpoint(ref),
 		"github.com/openshift/api/config/v1.NutanixPrismEndpoint":                                            schema_openshift_api_config_v1_NutanixPrismEndpoint(ref),
+		"github.com/openshift/api/config/v1.NutanixResourceIdentifier":                                       schema_openshift_api_config_v1_NutanixResourceIdentifier(ref),
 		"github.com/openshift/api/config/v1.OAuth":                                                           schema_openshift_api_config_v1_OAuth(ref),
 		"github.com/openshift/api/config/v1.OAuthList":                                                       schema_openshift_api_config_v1_OAuthList(ref),
 		"github.com/openshift/api/config/v1.OAuthRemoteConnectionInfo":                                       schema_openshift_api_config_v1_OAuthRemoteConnectionInfo(ref),
@@ -627,6 +629,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/machine/v1.GCPFailureDomain":                                               schema_openshift_api_machine_v1_GCPFailureDomain(ref),
 		"github.com/openshift/api/machine/v1.LoadBalancerReference":                                          schema_openshift_api_machine_v1_LoadBalancerReference(ref),
 		"github.com/openshift/api/machine/v1.NutanixCategory":                                                schema_openshift_api_machine_v1_NutanixCategory(ref),
+		"github.com/openshift/api/machine/v1.NutanixFailureDomainReference":                                  schema_openshift_api_machine_v1_NutanixFailureDomainReference(ref),
 		"github.com/openshift/api/machine/v1.NutanixMachineProviderConfig":                                   schema_openshift_api_machine_v1_NutanixMachineProviderConfig(ref),
 		"github.com/openshift/api/machine/v1.NutanixMachineProviderStatus":                                   schema_openshift_api_machine_v1_NutanixMachineProviderStatus(ref),
 		"github.com/openshift/api/machine/v1.NutanixResourceIdentifier":                                      schema_openshift_api_machine_v1_NutanixResourceIdentifier(ref),
@@ -15039,6 +15042,59 @@ func schema_openshift_api_config_v1_NodeStatus(ref common.ReferenceCallback) com
 	}
 }
 
+func schema_openshift_api_config_v1_NutanixFailureDomain(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NutanixFailureDomain configures failure domain information for the Nutanix platform.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name defines the unique name of a failure domain. Name is required and must be at most 64 characters in length. It must consist of only lower case alphanumeric characters and hyphens (-). It must start and end with an alphanumeric character. This value is arbitrary and is used to identify the failure domain within the platform.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"cluster": {
+						SchemaProps: spec.SchemaProps{
+							Description: "cluster is to identify the cluster (the Prism Element under management of the Prism Central), in which the Machine's VM will be created. The cluster identifier (uuid or name) can be obtained from the Prism Central console or using the prism_central API.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.NutanixResourceIdentifier"),
+						},
+					},
+					"subnets": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "subnets holds a list of identifiers (one or more) of the cluster's network subnets for the Machine's VM to connect to. The subnet identifiers (uuid or name) can be obtained from the Prism Central console or using the prism_central API.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.NutanixResourceIdentifier"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"name", "cluster", "subnets"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.NutanixResourceIdentifier"},
+	}
+}
+
 func schema_openshift_api_config_v1_NutanixPlatformLoadBalancer(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -15106,12 +15162,34 @@ func schema_openshift_api_config_v1_NutanixPlatformSpec(ref common.ReferenceCall
 							},
 						},
 					},
+					"failureDomains": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "failureDomains configures failure domains information for the Nutanix platform. When set, the failure domains defined here may be used to spread Machines across prism element clusters to improve fault tolerance of the cluster.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.NutanixFailureDomain"),
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"prismCentral", "prismElements"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.NutanixPrismElementEndpoint", "github.com/openshift/api/config/v1.NutanixPrismEndpoint"},
+			"github.com/openshift/api/config/v1.NutanixFailureDomain", "github.com/openshift/api/config/v1.NutanixPrismElementEndpoint", "github.com/openshift/api/config/v1.NutanixPrismEndpoint"},
 	}
 }
 
@@ -15238,6 +15316,55 @@ func schema_openshift_api_config_v1_NutanixPrismEndpoint(ref common.ReferenceCal
 					},
 				},
 				Required: []string{"address", "port"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1_NutanixResourceIdentifier(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NutanixResourceIdentifier holds the identity of a Nutanix PC resource (cluster, image, subnet, etc.)",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type is the identifier type to use for this resource.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"uuid": {
+						SchemaProps: spec.SchemaProps{
+							Description: "uuid is the UUID of the resource in the PC. It cannot be empty if the type is UUID.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the resource name in the PC. It cannot be empty if the type is Name.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"type"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "type",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"name": "Name",
+								"uuid": "UUID",
+							},
+						},
+					},
+				},
 			},
 		},
 	}
@@ -31148,7 +31275,7 @@ func schema_openshift_api_machine_v1_FailureDomains(ref common.ReferenceCallback
 				Properties: map[string]spec.Schema{
 					"platform": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Platform identifies the platform for which the FailureDomain represents. Currently supported values are AWS, Azure, GCP, OpenStack, and VSphere.",
+							Description: "Platform identifies the platform for which the FailureDomain represents. Currently supported values are AWS, Azure, GCP, OpenStack, VSphere and Nutanix.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -31224,6 +31351,28 @@ func schema_openshift_api_machine_v1_FailureDomains(ref common.ReferenceCallback
 							},
 						},
 					},
+					"nutanix": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "nutanix configures failure domain information for the Nutanix platform.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machine/v1.NutanixFailureDomainReference"),
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"platform"},
 			},
@@ -31236,6 +31385,7 @@ func schema_openshift_api_machine_v1_FailureDomains(ref common.ReferenceCallback
 								"aws":       "AWS",
 								"azure":     "Azure",
 								"gcp":       "GCP",
+								"nutanix":   "Nutanix",
 								"openstack": "OpenStack",
 								"vsphere":   "VSphere",
 							},
@@ -31245,7 +31395,7 @@ func schema_openshift_api_machine_v1_FailureDomains(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1.AWSFailureDomain", "github.com/openshift/api/machine/v1.AzureFailureDomain", "github.com/openshift/api/machine/v1.GCPFailureDomain", "github.com/openshift/api/machine/v1.OpenStackFailureDomain", "github.com/openshift/api/machine/v1.VSphereFailureDomain"},
+			"github.com/openshift/api/machine/v1.AWSFailureDomain", "github.com/openshift/api/machine/v1.AzureFailureDomain", "github.com/openshift/api/machine/v1.GCPFailureDomain", "github.com/openshift/api/machine/v1.NutanixFailureDomainReference", "github.com/openshift/api/machine/v1.OpenStackFailureDomain", "github.com/openshift/api/machine/v1.VSphereFailureDomain"},
 	}
 }
 
@@ -31326,6 +31476,28 @@ func schema_openshift_api_machine_v1_NutanixCategory(ref common.ReferenceCallbac
 					},
 				},
 				Required: []string{"key", "value"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_machine_v1_NutanixFailureDomainReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NutanixFailureDomainReference refers to the failure domain of the Nutanix platform.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name of the failure domain in which the nutanix machine provider will create the VM. Failure domains are defined in a cluster's config.openshift.io/Infrastructure resource.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
 			},
 		},
 	}
@@ -31466,12 +31638,18 @@ func schema_openshift_api_machine_v1_NutanixMachineProviderConfig(ref common.Ref
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
+					"failureDomain": {
+						SchemaProps: spec.SchemaProps{
+							Description: "failureDomain refers to the name of the FailureDomain with which this Machine is associated. If this is configured, the Nutanix machine controller will use the prism_central endpoint and credentials defined in the referenced FailureDomain to communicate to the prism_central. It will also verify that the 'cluster' and subnets' configuration in the NutanixMachineProviderConfig is consistent with that in the referenced failureDomain.",
+							Ref:         ref("github.com/openshift/api/machine/v1.NutanixFailureDomainReference"),
+						},
+					},
 				},
 				Required: []string{"cluster", "image", "subnets", "vcpusPerSocket", "vcpuSockets", "memorySize", "systemDiskSize", "credentialsSecret"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1.NutanixCategory", "github.com/openshift/api/machine/v1.NutanixResourceIdentifier", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/api/resource.Quantity", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"github.com/openshift/api/machine/v1.NutanixCategory", "github.com/openshift/api/machine/v1.NutanixFailureDomainReference", "github.com/openshift/api/machine/v1.NutanixResourceIdentifier", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/api/resource.Quantity", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 

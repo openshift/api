@@ -115,8 +115,12 @@ type OperatorStatus struct {
 	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 
 	// conditions is a list of conditions and their status
+	// +patchMergeKey=type
+	// +patchStrategy=merge
+	// +listType=map
+	// +listMapKey=type
 	// +optional
-	Conditions []OperatorCondition `json:"conditions,omitempty"`
+	Conditions []OperatorCondition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 
 	// version is the level this availability applies to
 	// +optional
@@ -126,22 +130,49 @@ type OperatorStatus struct {
 	ReadyReplicas int32 `json:"readyReplicas"`
 
 	// generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.
+	// +patchMergeKey=group
+	// +patchMergeKey=resource
+	// +patchMergeKey=namespace
+	// +patchMergeKey=name
+	// +patchStrategy=merge
+	// +listType=map
+	// +listMapKey=group
+	// +listMapKey=resource
+	// +listMapKey=namespace
+	// +listMapKey=name
 	// +optional
-	Generations []GenerationStatus `json:"generations,omitempty"`
+	Generations []GenerationStatus `json:"generations,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 }
 
 // GenerationStatus keeps track of the generation for a given resource so that decisions about forced updates can be made.
 type GenerationStatus struct {
 	// group is the group of the thing you're tracking
+	// +required
+	// +kubebuilder:validation:Required
+	// +kubebuilder:default=""
 	Group string `json:"group"`
+
 	// resource is the resource type of the thing you're tracking
+	// +required
+	// +kubebuilder:validation:Required
+	// +kubebuilder:default=""
 	Resource string `json:"resource"`
+
 	// namespace is where the thing you're tracking is
+	// +required
+	// +kubebuilder:validation:Required
+	// +kubebuilder:default=""
 	Namespace string `json:"namespace"`
+
 	// name is the name of the thing you're tracking
+	// +required
+	// +kubebuilder:validation:Required
+	// +kubebuilder:default=""
 	Name string `json:"name"`
+
 	// lastGeneration is the last generation of the workload controller involved
 	LastGeneration int64 `json:"lastGeneration"`
+
 	// hash is an optional field set for resources without generation that are content sensitive like secrets and configmaps
 	Hash string `json:"hash"`
 }
@@ -162,11 +193,31 @@ var (
 
 // OperatorCondition is just the standard condition fields.
 type OperatorCondition struct {
-	Type               string          `json:"type"`
-	Status             ConditionStatus `json:"status"`
-	LastTransitionTime metav1.Time     `json:"lastTransitionTime,omitempty"`
-	Reason             string          `json:"reason,omitempty"`
-	Message            string          `json:"message,omitempty"`
+	// type of condition in CamelCase or in foo.example.com/CamelCase.
+	// ---
+	// Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+	// useful (see .node.status.conditions), the ability to deconflict is important.
+	// +required
+	// +kubebuilder:validation:Required
+	// +kubebuilder:default=""
+	Type string `json:"type"`
+
+	// status of the condition, one of True, False, Unknown.
+	Status ConditionStatus `json:"status"`
+
+	// lastTransitionTime is the last time the condition transitioned from one status to another.
+	// This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+	LastTransitionTime metav1.Time `json:"lastTransitionTime,omitempty"`
+
+	// reason contains a programmatic identifier indicating the reason for the condition's last transition.
+	// Producers of specific condition types may define expected values and meanings for this field,
+	// and whether the values are considered a guaranteed API.
+	// The value should be a CamelCase string.
+	Reason string `json:"reason,omitempty"`
+
+	// message is a human readable message indicating details about the transition.
+	// This may be an empty string.
+	Message string `json:"message,omitempty"`
 }
 
 type ConditionStatus string

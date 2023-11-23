@@ -5252,6 +5252,15 @@
             "$ref": "#/definitions/com.github.openshift.api.config.v1.ComponentOverride"
           }
         },
+        "signatureStores": {
+          "description": "signatureStores contains the upstream URIs to verify release signatures. By default, CVO will use existing signature stores if this property is empty. The CVO will check the release signatures in the local ConfigMaps first. It will search for a valid signature in these stores in parallel only when local ConfigMaps did not include a valid signature. Validation will fail if none of the signature stores reply with valid signature before timeout. Setting signatureStores will replace the default signature stores with custom signature stores. Default stores can be used with custom signature stores by adding them manually.\n\nItems in this list should be a valid absolute http/https URI of an upstream signature store as per rfc1738. A maximum of 32 signature stores may be configured.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        },
         "upstream": {
           "description": "upstream may be used to specify the preferred update server. By default it will use the appropriate update server for the cluster and region.",
           "type": "string"

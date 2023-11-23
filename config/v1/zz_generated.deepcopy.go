@@ -1191,6 +1191,11 @@ func (in *ClusterVersionSpec) DeepCopyInto(out *ClusterVersionSpec) {
 		*out = new(ClusterVersionCapabilitiesSpec)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.SignatureStores != nil {
+		in, out := &in.SignatureStores, &out.SignatureStores
+		*out = make([]string, len(*in))
+		copy(*out, *in)
+	}
 	if in.Overrides != nil {
 		in, out := &in.Overrides, &out.Overrides
 		*out = make([]ComponentOverride, len(*in))

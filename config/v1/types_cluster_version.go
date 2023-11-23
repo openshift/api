@@ -88,6 +88,22 @@ type ClusterVersionSpec struct {
 	// +optional
 	Capabilities *ClusterVersionCapabilitiesSpec `json:"capabilities,omitempty"`
 
+	// signatureStores contains the upstream URIs to verify release signatures.
+	// By default, CVO will use existing signature stores if this property is empty.
+	// The CVO will check the release signatures in the local ConfigMaps first. It will search for a valid signature
+	// in these stores in parallel only when local ConfigMaps did not include a valid signature.
+	// Validation will fail if none of the signature stores reply with valid signature before timeout.
+	// Setting signatureStores will replace the default signature stores with custom signature stores.
+	// Default stores can be used with custom signature stores by adding them manually.
+	//
+	// Items in this list should be a valid absolute http/https URI of an upstream signature store as per rfc1738.
+	// A maximum of 32 signature stores may be configured.
+	// +kubebuilder:validation:XValidation:rule="self.all(x, isURL(x))",message="signatureStores must contain only valid absolute URLs per the Go net/url standard"
+	// +kubebuilder:validation:MaxItems=32
+	// +listType=set
+	// +optional
+	SignatureStores []string `json:"signatureStores"`
+
 	// overrides is list of overides for components that are managed by
 	// cluster version operator. Marking a component unmanaged will prevent
 	// the operator from creating or updating the object.

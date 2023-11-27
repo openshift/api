@@ -361,4 +361,14 @@ var (
 		ResponsiblePerson:   "barbacbd",
 		OwningProduct:       ocpSpecific,
 	}
+
+	FeatureGateMixedCPUsAllocation = FeatureGateName("MixedCPUsAllocation")
+	mixedCPUsAllocation            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateMixedCPUsAllocation,
+		},
+		OwningJiraComponent: "NodeTuningOperator",
+		ResponsiblePerson:   "titzhak",
+		OwningProduct:       ocpSpecific,
+	}
 )

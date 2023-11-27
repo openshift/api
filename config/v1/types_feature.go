@@ -187,6 +187,7 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		with(installAlternateInfrastructureAWS).
 		without(clusterAPIInstall).
 		with(sdnLiveMigration).
+		with(mixedCPUsAllocation).
 		toFeatures(defaultFeatures),
 	LatencySensitive: newDefaultFeatures().
 		toFeatures(defaultFeatures),

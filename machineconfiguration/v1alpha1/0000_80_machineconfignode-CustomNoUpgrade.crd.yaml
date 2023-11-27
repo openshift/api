@@ -53,11 +53,11 @@ spec:
           name: UpdatedFilesAndOS
           priority: 1
           type: string
-        - jsonPath: .status.conditions[?(@.type=="CordonedNode")].status
+        - jsonPath: .status.conditions[?(@.type=="Cordoned")].status
           name: CordonedNode
           priority: 1
           type: string
-        - jsonPath: .status.conditions[?(@.type=="DrainedNode")].status
+        - jsonPath: .status.conditions[?(@.type=="Drained")].status
           name: DrainedNode
           priority: 1
           type: string

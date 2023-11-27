@@ -264,3 +264,27 @@ tests:
         logLevel: Normal
         operatorLogLevel: Normal
         migration: {}
+  - name: Should have state disabled by default when specifiying north-south IPsec
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+       defaultNetwork:
+          ovnKubernetesConfig:
+            ipsecExternal: {}
+        defaultNetwork:
+          ovnKubernetesConfig:
+            ipsecExternal:
+              state: Disabled
+        disableNetworkDiagnostics: false
+        logLevel: Normal
+        operatorLogLevel: Normal
+  - name: Check that empty string is illegal value for 'state' activating north-south IPsec
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+       defaultNetwork:
+          ovnKubernetesConfig:
+            ipsecExternal: { "state": "" }
+    expectedError: "Unsupported value: \"\": supported values: \"Enabled\", \"Disabled\""

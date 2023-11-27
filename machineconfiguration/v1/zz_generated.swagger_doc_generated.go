@@ -22,6 +22,17 @@ func (CertExpiry) SwaggerDoc() map[string]string {
 	return map_CertExpiry
 }
 
+var map_CloudLBConfig = map[string]string{
+	"":             "CloudLBConfig contains IPs for API, API-Int and Ingress Cloud Load Balancers",
+	"apiLBIPs":     "apiLBIPs holds API Load Balancer IPs. Could be empty for private clusters.",
+	"apiIntLBIPs":  "apiIntLBIPs holds Load Balancer IPs for API-Int.",
+	"ingressLBIPs": "ingressLBIPs holds IPs for Ingress Loda Balancers.",
+}
+
+func (CloudLBConfig) SwaggerDoc() map[string]string {
+	return map_CloudLBConfig
+}
+
 var map_ContainerRuntimeConfig = map[string]string{
 	"": "ContainerRuntimeConfig describes a customized Container Runtime configuration.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 }
@@ -137,6 +148,7 @@ var map_ControllerConfigSpec = map[string]string{
 	"ipFamilies":                     "ipFamilies indicates the IP families in use by the cluster network",
 	"networkType":                    "networkType holds the type of network the cluster is using XXX: this is temporary and will be dropped as soon as possible in favor of a better support to start network related services the proper way. Nobody is also changing this once the cluster is up and running the first time, so, disallow regeneration if this changes.",
 	"network":                        "Network contains additional network related information",
+	"cloudLBIPs":                     "cloudLBIPs contains the LB IP addresses for API, API-Int and Ingress Load Balancers. Its values would not be populated for on-prem platforms.",
 }
 
 func (ControllerConfigSpec) SwaggerDoc() map[string]string {

@@ -381,4 +381,14 @@ var (
 		ResponsiblePerson:   "djoshy",
 		OwningProduct:       ocpSpecific,
 	}
+
+	FeatureGateGCPCloudLBIPs = FeatureGateName("GCPCloudLBIPs")
+	gcpCloudLBIPs            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateGCPCloudLBIPs,
+		},
+		OwningJiraComponent: "Installer",
+		ResponsiblePerson:   "sadasu",
+		OwningProduct:       ocpSpecific,
+	}
 )

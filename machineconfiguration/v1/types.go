@@ -153,6 +153,13 @@ type ControllerConfigSpec struct {
 	// +kubebuilder:validation:Required
 	// +nullable
 	Network *NetworkInfo `json:"network"`
+
+	// cloudLBIPs contains the LB IP addresses for API, API-Int and Ingress
+	// Load Balancers. Its values would not be populated for on-prem platforms.
+	// +optional
+	// +nullable
+	// +openshift:enable:FeatureSets=CustomNoUpgrade;TechPreviewNoUpgrade
+	CloudLBIPs *CloudLBConfig `json:"cloudLBIPs"`
 }
 
 // ImageRegistryBundle contains information for writing image registry certificates
@@ -181,6 +188,23 @@ type NetworkInfo struct {
 	// +kubebuilder:validation:Required
 	// +nullable
 	MTUMigration *configv1.MTUMigration `json:"mtuMigration"`
+}
+
+// CloudLBConfig contains IPs for API, API-Int and Ingress Cloud Load Balancers
+type CloudLBConfig struct {
+	// apiLBIPs holds API Load Balancer IPs. Could be empty for private clusters.
+	// +kubebuilder:validation:Format=ip
+	// +listType=set
+	// +optional
+	ApiLBIPs []string `json:"apiLBIPs"`
+	// apiIntLBIPs holds Load Balancer IPs for API-Int.
+	// +kubebuilder:validation:Format=ip
+	// +listType=set
+	ApiIntLBIPs []string `json:"apiIntLBIPs"`
+	// ingressLBIPs holds IPs for Ingress Loda Balancers.
+	// +kubebuilder:validation:Format=ip
+	// +listType=set
+	IngressLBIPs []string `json:"ingressLBIPs"`
 }
 
 // ControllerConfigStatus is the status for ControllerConfig

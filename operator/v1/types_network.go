@@ -129,6 +129,7 @@ const (
 )
 
 // NetworkMigration represents the cluster network configuration.
+// +openshift:validation:FeatureSetAwareXValidation:featureSet=CustomNoUpgrade;TechPreviewNoUpgrade,rule="!has(self.mtu) || !has(self.networkType) || self.networkType == '' || has(self.mode) && self.mode == 'Live'",message="networkType migration in mode other than 'Live' may not be configured at the same time as mtu migration"
 type NetworkMigration struct {
 	// networkType is the target type of network migration. Set this to the
 	// target network type to allow changing the default network. If unset, the

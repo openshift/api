@@ -7,7 +7,7 @@ tests:
       initial: |
         apiVersion: operator.openshift.io/v1
         kind: Network
-        spec: 
+        spec:
           migration:
             mode: Live
       expected: |
@@ -19,4 +19,82 @@ tests:
           operatorLogLevel: Normal
           migration:
             mode: Live
-
+    - name: Should be able to create mtu migration without setting the migration mode
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Network
+        spec:
+          migration:
+            mtu:
+              network:
+                from: 1450
+                to: 1400
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Network
+        spec:
+          disableNetworkDiagnostics: false
+          logLevel: Normal
+          operatorLogLevel: Normal
+          migration:
+            mtu:
+              network:
+                from: 1450
+                to: 1400
+    - name: Should be able to create networkType migration in in offline migration mode
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Network
+        spec:
+          migration:
+            networkType: OVNKubernetes
+            mode: Offline
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Network
+        spec:
+          disableNetworkDiagnostics: false
+          logLevel: Normal
+          operatorLogLevel: Normal
+          migration:
+            networkType: OVNKubernetes
+            mode: Offline
+    - name: Should throw an error when mtu and networkType migration is created in offline migration mode
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Network
+        spec:
+          migration:
+            networkType: OVNKubernetes
+            mtu:
+              network:
+                from: 1450
+                to: 1400
+            mode: Offline
+      expectedError: "networkType migration in mode other than 'Live' may not be configured at the same time as mtu migration"
+    - name: Should be able to create mtu and networkType migration in live migration mode
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Network
+        spec:
+          migration:
+            networkType: OVNKubernetes
+            mtu:
+              network:
+                from: 1450
+                to: 1400
+            mode: Live
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Network
+        spec:
+          disableNetworkDiagnostics: false
+          logLevel: Normal
+          operatorLogLevel: Normal
+          migration:
+            networkType: OVNKubernetes
+            mtu:
+              network:
+                from: 1450
+                to: 1400
+            mode: Live

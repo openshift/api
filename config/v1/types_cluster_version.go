@@ -100,6 +100,7 @@ type ClusterVersionSpec struct {
 	// A maximum of 32 signature stores may be configured.
 	// +kubebuilder:validation:XValidation:rule="self.all(x, isURL(x))",message="signatureStores must contain only valid absolute URLs per the Go net/url standard"
 	// +kubebuilder:validation:MaxItems=32
+	// +openshift:enable:FeatureSets=TechPreviewNoUpgrade
 	// +listType=set
 	// +optional
 	SignatureStores []string `json:"signatureStores"`

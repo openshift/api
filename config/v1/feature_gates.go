@@ -23,6 +23,16 @@ var (
 )
 
 var (
+	FeatureGateDummy = FeatureGateName("Dummy")
+	dummy            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateDummy,
+		},
+		OwningJiraComponent: "dummy",
+		ResponsiblePerson:   "deads2k",
+		OwningProduct:       ocpSpecific,
+	}
+
 	FeatureGateValidatingAdmissionPolicy = FeatureGateName("ValidatingAdmissionPolicy")
 	validatingAdmissionPolicy            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{

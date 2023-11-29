@@ -177,6 +177,7 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		with(sigstoreImageVerification).
 		with(gcpLabelsTags).
 		with(gcpClusterHostedDNS).
+		with(azureClusterHostedDNS).
 		with(vSphereStaticIPs).
 		with(routeExternalCertificate).
 		with(automatedEtcdBackup).

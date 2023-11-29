@@ -159,7 +159,7 @@ type NetworkMigration struct {
 	// The current default value is "Offline".
 	// +openshift:enable:FeatureSets=CustomNoUpgrade;TechPreviewNoUpgrade
 	// +optional
-	Mode NetworkMigrationMode `json:"mode"`
+	Mode NetworkMigrationMode `json:"mode,omitempty"`
 }
 
 type FeaturesMigration struct {

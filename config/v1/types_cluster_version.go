@@ -108,6 +108,11 @@ type ClusterVersionSpec struct {
 	// overrides is list of overides for components that are managed by
 	// cluster version operator. Marking a component unmanaged will prevent
 	// the operator from creating or updating the object.
+	// +listType=map
+	// +listMapKey=kind
+	// +listMapKey=group
+	// +listMapKey=namespace
+	// +listMapKey=name
 	// +optional
 	Overrides []ComponentOverride `json:"overrides,omitempty"`
 }
@@ -133,6 +138,7 @@ type ClusterVersionStatus struct {
 	// Completed if the rollout completed - if an update was failing or halfway
 	// applied the state will be Partial. Only a limited amount of update history
 	// is preserved.
+	// +listType=atomic
 	// +optional
 	History []UpdateHistory `json:"history,omitempty"`
 
@@ -160,8 +166,12 @@ type ClusterVersionStatus struct {
 	// by a temporary or permanent error. Conditions are only valid for the
 	// current desiredUpdate when metadata.generation is equal to
 	// status.generation.
+	// +listType=map
+	// +listMapKey=type
+	// +patchMergeKey=type
+	// +patchStrategy=merge
 	// +optional
-	Conditions []ClusterOperatorStatusCondition `json:"conditions,omitempty"`
+	Conditions []ClusterOperatorStatusCondition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 
 	// availableUpdates contains updates recommended for this
 	// cluster. Updates which appear in conditionalUpdates but not in
@@ -170,6 +180,7 @@ type ClusterVersionStatus struct {
 	// is unavailable, or if an invalid channel has been specified.
 	// +nullable
 	// +kubebuilder:validation:Required
+	// +listType=atomic
 	// +required
 	AvailableUpdates []Release `json:"availableUpdates"`
 
@@ -643,6 +654,7 @@ type Release struct {
 
 	// channels is the set of Cincinnati channels to which the release
 	// currently belongs.
+	// +listType=set
 	// +optional
 	Channels []string `json:"channels,omitempty"`
 }

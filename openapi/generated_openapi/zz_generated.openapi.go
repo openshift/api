@@ -316,6 +316,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.OAuthSpec":                                                       schema_openshift_api_config_v1_OAuthSpec(ref),
 		"github.com/openshift/api/config/v1.OAuthStatus":                                                     schema_openshift_api_config_v1_OAuthStatus(ref),
 		"github.com/openshift/api/config/v1.OAuthTemplates":                                                  schema_openshift_api_config_v1_OAuthTemplates(ref),
+		"github.com/openshift/api/config/v1.OIDCClientConfig":                                                schema_openshift_api_config_v1_OIDCClientConfig(ref),
+		"github.com/openshift/api/config/v1.OIDCClientReference":                                             schema_openshift_api_config_v1_OIDCClientReference(ref),
+		"github.com/openshift/api/config/v1.OIDCClientStatus":                                                schema_openshift_api_config_v1_OIDCClientStatus(ref),
 		"github.com/openshift/api/config/v1.OIDCProvider":                                                    schema_openshift_api_config_v1_OIDCProvider(ref),
 		"github.com/openshift/api/config/v1.ObjectReference":                                                 schema_openshift_api_config_v1_ObjectReference(ref),
 		"github.com/openshift/api/config/v1.OldTLSProfile":                                                   schema_openshift_api_config_v1_OldTLSProfile(ref),
@@ -9093,12 +9096,35 @@ func schema_openshift_api_config_v1_AuthenticationStatus(ref common.ReferenceCal
 							Ref:         ref("github.com/openshift/api/config/v1.ConfigMapNameReference"),
 						},
 					},
+					"oidcClients": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"componentNamespace",
+									"componentName",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "OIDCClients is where participating operators place the current OIDC client status for OIDC clients that can be customized by the cluster-admin.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.OIDCClientStatus"),
+									},
+								},
+							},
+						},
+					},
 				},
-				Required: []string{"integratedOAuthMetadata"},
+				Required: []string{"integratedOAuthMetadata", "oidcClients"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ConfigMapNameReference"},
+			"github.com/openshift/api/config/v1.ConfigMapNameReference", "github.com/openshift/api/config/v1.OIDCClientStatus"},
 	}
 }
 
@@ -15644,6 +15670,205 @@ func schema_openshift_api_config_v1_OAuthTemplates(ref common.ReferenceCallback)
 	}
 }
 
+func schema_openshift_api_config_v1_OIDCClientConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"componentName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ComponentName is the name of the component that is supposed to consume this client configuration",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"componentNamespace": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ComponentNamespace is the namespace of the component that is supposed to consume this client configuration",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"clientID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ClientID is the identifier of the OIDC client from the OIDC provider",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"clientSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ClientSecret refers to a secret in the `openshift-config` namespace that contains the client secret in the `clientSecret` key of the `.data` field",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.SecretNameReference"),
+						},
+					},
+					"extraScopes": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "ExtraScopes is an optional set of scopes to request tokens with.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"componentName", "componentNamespace", "clientID", "clientSecret", "extraScopes"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.SecretNameReference"},
+	}
+}
+
+func schema_openshift_api_config_v1_OIDCClientReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"oidcProviderName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "OIDCName refers to the `name` of the provider from `oidcProviders`",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"issuerURL": {
+						SchemaProps: spec.SchemaProps{
+							Description: "URL is the serving URL of the token issuer. Must use the https:// scheme.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"clientID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ClientID is the identifier of the OIDC client from the OIDC provider",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"oidcProviderName", "issuerURL", "clientID"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1_OIDCClientStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"componentName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ComponentName is the name of the component that will consume a client configuration.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"componentNamespace": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ComponentNamespace is the namespace of the component that will consume a client configuration.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"currentOIDCClients": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"issuerURL",
+									"clientID",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "CurrentOIDCClients is a list of clients that the component is currently using.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.OIDCClientReference"),
+									},
+								},
+							},
+						},
+					},
+					"consumingUsers": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "ConsumingUsers is a slice of ServiceAccounts that need to have read permission on the `clientSecret` secret.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "Conditions are used to communicate the state of the `oidcClients` entry.\n\nSupported conditions include Available, Degraded and Progressing.\n\nIf Available is true, the component is successfully using the configured client. If Degraded is true, that means something has gone wrong trying to handle the client configuration. If Progressing is true, that means the component is taking some action related to the `oidcClients` entry.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"componentName", "componentNamespace", "currentOIDCClients", "consumingUsers"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.OIDCClientReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
+	}
+}
+
 func schema_openshift_api_config_v1_OIDCProvider(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -15663,6 +15888,29 @@ func schema_openshift_api_config_v1_OIDCProvider(ref common.ReferenceCallback) c
 							Description: "Issuer describes atributes of the OIDC token issuer",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.TokenIssuer"),
+						},
+					},
+					"oidcClients": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"componentNamespace",
+									"componentName",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "OIDCClients contains configuration for the platform's clients that need to request tokens from the issuer",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.OIDCClientConfig"),
+									},
+								},
+							},
 						},
 					},
 					"claimMappings": {
@@ -15692,11 +15940,11 @@ func schema_openshift_api_config_v1_OIDCProvider(ref common.ReferenceCallback) c
 						},
 					},
 				},
-				Required: []string{"name", "issuer", "claimMappings"},
+				Required: []string{"name", "issuer", "oidcClients", "claimMappings"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.TokenClaimMappings", "github.com/openshift/api/config/v1.TokenClaimValidationRule", "github.com/openshift/api/config/v1.TokenIssuer"},
+			"github.com/openshift/api/config/v1.OIDCClientConfig", "github.com/openshift/api/config/v1.TokenClaimMappings", "github.com/openshift/api/config/v1.TokenClaimValidationRule", "github.com/openshift/api/config/v1.TokenIssuer"},
 	}
 }
 

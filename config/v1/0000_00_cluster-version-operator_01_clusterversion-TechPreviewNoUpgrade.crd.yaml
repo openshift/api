@@ -155,15 +155,33 @@ spec:
                     - name
                   x-kubernetes-list-type: map
                 signatureStores:
-                  description: "signatureStores contains the upstream URIs to verify release signatures. By default, CVO will use existing signature stores if this property is empty. The CVO will check the release signatures in the local ConfigMaps first. It will search for a valid signature in these stores in parallel only when local ConfigMaps did not include a valid signature. Validation will fail if none of the signature stores reply with valid signature before timeout. Setting signatureStores will replace the default signature stores with custom signature stores. Default stores can be used with custom signature stores by adding them manually. \n Items in this list should be a valid absolute http/https URI of an upstream signature store as per rfc1738. A maximum of 32 signature stores may be configured."
+                  description: "signatureStores contains the upstream URIs to verify release signatures and optional reference to a config map by name containing the PEM-encoded CA bundle. \n By default, CVO will use existing signature stores if this property is empty. The CVO will check the release signatures in the local ConfigMaps first. It will search for a valid signature in these stores in parallel only when local ConfigMaps did not include a valid signature. Validation will fail if none of the signature stores reply with valid signature before timeout. Setting signatureStores will replace the default signature stores with custom signature stores. Default stores can be used with custom signature stores by adding them manually. \n A maximum of 32 signature stores may be configured."
                   type: array
                   maxItems: 32
                   items:
-                    type: string
-                  x-kubernetes-list-type: set
-                  x-kubernetes-validations:
-                    - rule: self.all(x, isURL(x))
-                      message: signatureStores must contain only valid absolute URLs per the Go net/url standard
+                    description: SignatureStore represents the URL of custom Signature Store
+                    type: object
+                    required:
+                      - url
+                    properties:
+                      ca:
+                        description: ca is an optional reference to a config map by name containing the PEM-encoded CA bundle. It is used as a trust anchor to validate the TLS certificate presented by the remote server. The key "ca.crt" is used to locate the data. If specified and the config map or expected key is not found, the signature store is not honored. If the specified ca data is not valid, the signature store is not honored. If empty, we fall back to the CA configured via Proxy, which is appended to the default system roots. The namespace for this config map is openshift-config.
+                        type: object
+                        required:
+                          - name
+                        properties:
+                          name:
+                            description: name is the metadata.name of the referenced config map
+                            type: string
+                      url:
+                        description: url contains the upstream custom signature store URL. url should be a valid absolute http/https URI of an upstream signature store as per rfc1738. This must be provided and cannot be empty.
+                        type: string
+                        x-kubernetes-validations:
+                          - rule: isURL(self)
+                            message: url must be a valid absolute URL
+                  x-kubernetes-list-map-keys:
+                    - url
+                  x-kubernetes-list-type: map
                 upstream:
                   description: upstream may be used to specify the preferred update server. By default it will use the appropriate update server for the cluster and region.
                   type: string

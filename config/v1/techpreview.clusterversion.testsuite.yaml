@@ -169,14 +169,14 @@ tests:
       spec:
         clusterID: foo
         signatureStores: 
-          - "https://osus.ocp.com"
+          - url: "https://osus.ocp.com"
     expected: |
       apiVersion: config.openshift.io/v1
       kind: ClusterVersion
       spec:
         clusterID: foo
         signatureStores: 
-          - "https://osus.ocp.com"
+          - url: "https://osus.ocp.com"
   - name: Should be able to set multiple custom signature store
     initial: |
       apiVersion: config.openshift.io/v1
@@ -184,16 +184,16 @@ tests:
       spec:
         clusterID: foo
         signatureStores: 
-          - "https://osus1.ocp.com"
-          - "https://osus2.ocp.com"
+          - url: "https://osus1.ocp.com"
+          - url: "https://osus2.ocp.com"
     expected: |
       apiVersion: config.openshift.io/v1
       kind: ClusterVersion
       spec:
         clusterID: foo
         signatureStores: 
-          - "https://osus1.ocp.com"
-          - "https://osus2.ocp.com"
+          - url: "https://osus1.ocp.com"
+          - url: "https://osus2.ocp.com"
   - name: Invalid custom signature store should throw error
     initial: |
       apiVersion: config.openshift.io/v1
@@ -201,8 +201,8 @@ tests:
       spec:
         clusterID: foo
         signatureStores: 
-          - "osus1.ocp.com"
-    expectedError: "signatureStores must contain only valid absolute URLs per the Go net/url standard"
+          - url: "osus1.ocp.com"
+    expectedError: "url must be a valid absolute URL"
   - name: Should be able to unset the signature stores
     initial: |
       apiVersion: config.openshift.io/v1

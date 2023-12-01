@@ -38017,6 +38017,21 @@ func schema_openshift_api_machine_v1beta1_VSphereMachineProviderSpec(ref common.
 							Format:      "int32",
 						},
 					},
+					"tagIDs": {
+						SchemaProps: spec.SchemaProps{
+							Description: "tagIDs is an optional set of tags to add to an instance. Specified tagIDs must use URN-notation instead of display names. A maximum of 10 tag IDs may be specified.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
 					"snapshot": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Snapshot is the name of the snapshot from which the VM was cloned",

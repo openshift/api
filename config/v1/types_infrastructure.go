@@ -500,6 +500,24 @@ type AWSPlatformStatus struct {
 	// +listType=atomic
 	// +optional
 	ResourceTags []AWSResourceTag `json:"resourceTags,omitempty"`
+
+	// clusterHostedDNS indicates the type of DNS solution in use within the cluster. Its default value of
+	// "Disabled" indicates that the cluster's DNS is the default provided by the cloud platform. It can be
+	// "Enabled" during install to bypass the configuration of the cloud default DNS. When "Enabled", the
+	// cluster needs to provide a self-hosted DNS solution for the cluster's installation to succeed.
+	// The cluster's use of the cloud's Load Balancers is unaffected by this setting.
+	// The value is immutable after it has been set at install time.
+	// Currently, there is no way for the customer to add additional DNS entries into the cluster hosted DNS.
+	// Enabling this functionality allows the user to start their own DNS solution outside the cluster after
+	// installation is complete. The customer would be responsible for configuring this custom DNS solution,
+	// and it can be run in addition to the in-cluster DNS solution.
+	// +kubebuilder:default:="Disabled"
+	// +default="Disabled"
+	// +kubebuilder:validation:Enum="Enabled";"Disabled"
+	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="clusterHostedDNS is immutable and may only be configured during installation"
+	// +optional
+	// +openshift:enable:FeatureSets=CustomNoUpgrade;TechPreviewNoUpgrade
+	ClusterHostedDNS ClusterHostedDNS `json:"clusterHostedDNS,omitempty"`
 }
 
 // AWSResourceTag is a tag to apply to AWS resources created for the cluster.

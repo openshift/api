@@ -231,22 +231,22 @@ const (
 	IBMCloudProviderTypeUPI IBMCloudProviderType = "UPI"
 )
 
-// ClusterHostedDNS indicates whether the cluster DNS is hosted by the cluster or Core DNS .
-type ClusterHostedDNS string
+// DNSType indicates whether the cluster DNS is hosted by the cluster or Core DNS .
+type DNSType string
 
 const (
-	// EnabledClusterHostedDNS indicates that a DNS solution other than the default provided by the
+	// ClusterHosted indicates that a DNS solution other than the default provided by the
 	// cloud platform is in use. In this mode, the cluster hosts a DNS solution during installation and the
 	// user is expected to provide their own DNS solution post-install.
-	// When "Enabled", the cluster will continue to use the default Load Balancers provided by the cloud
-	// platform.
-	EnabledClusterHostedDNS ClusterHostedDNS = "Enabled"
+	// When the DNS solution is `ClusterHosted`, the cluster will continue to use the
+	// default Load Balancers provided by the cloud platform.
+	ClusterHostedDNSType DNSType = "ClusterHosted"
 
-	// DisabledClusterHostedDNS indicates that the cluster is using the default DNS solution for the
+	// PlatformDefault indicates that the cluster is using the default DNS solution for the
 	// cloud platform. OpenShift is responsible for all the LB and DNS configuration needed for the
 	// cluster to be functional with no intervention from the user. To accomplish this, OpenShift
 	// configures the default LB and DNS solutions provided by the underlying cloud.
-	DisabledClusterHostedDNS ClusterHostedDNS = "Disabled"
+	PlatformDefaultDNSType DNSType = "PlatformDefault"
 )
 
 // ExternalPlatformSpec holds the desired state for the generic External infrastructure provider.
@@ -635,23 +635,24 @@ type GCPPlatformStatus struct {
 	// +openshift:enable:FeatureSets=CustomNoUpgrade;TechPreviewNoUpgrade
 	ResourceTags []GCPResourceTag `json:"resourceTags,omitempty"`
 
-	// clusterHostedDNS indicates the type of DNS solution in use within the cluster. Its default value of
-	// "Disabled" indicates that the cluster's DNS is the default provided by the cloud platform. It can be
-	// "Enabled" during install to bypass the configuration of the cloud default DNS. When "Enabled", the
-	// cluster needs to provide a self-hosted DNS solution for the cluster's installation to succeed.
-	// The cluster's use of the cloud's Load Balancers is unaffected by this setting.
-	// The value is immutable after it has been set at install time.
-	// Currently, there is no way for the customer to add additional DNS entries into the cluster hosted DNS.
-	// Enabling this functionality allows the user to start their own DNS solution outside the cluster after
-	// installation is complete. The customer would be responsible for configuring this custom DNS solution,
-	// and it can be run in addition to the in-cluster DNS solution.
-	// +kubebuilder:default:="Disabled"
-	// +default="Disabled"
-	// +kubebuilder:validation:Enum="Enabled";"Disabled"
-	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="clusterHostedDNS is immutable and may only be configured during installation"
-	// +optional
+	// This field was introduced and removed under tech preview.
+	// To avoid conflicts with serialisation, this field name may never be used again.
+	// Tombstone the field as a reminder.
+	// ClusterHostedDNS ClusterHostedDNS `json:"clusterHostedDNS,omitempty"`
+
+	// cloudLoadBalancerConfig is a union that contains the IP addresses of API,
+	// API-Int and Ingress Load Balancers created on the cloud platform. These
+	// values would not be populated on on-prem platforms. These Load Balancer
+	// IPs are used to configure the in-cluster DNS instances for API, API-Int
+	// and Ingress services. `dnsType` is expected to be set to `ClusterHosted`
+	// when these Load Balancer IP addresses are populated and used.
+	//
+	// +default={"dnsType": "PlatformDefault"}
+	// +kubebuilder:default={"dnsType": "PlatformDefault"}
 	// +openshift:enable:FeatureSets=CustomNoUpgrade;TechPreviewNoUpgrade
-	ClusterHostedDNS ClusterHostedDNS `json:"clusterHostedDNS,omitempty"`
+	// +optional
+	// +nullable
+	CloudLoadBalancerConfig *CloudLoadBalancerConfig `json:"cloudLoadBalancerConfig,omitempty"`
 }
 
 // GCPResourceLabel is a label to apply to GCP resources created for the cluster.
@@ -708,6 +709,77 @@ type GCPResourceTag struct {
 	// +kubebuilder:validation:MaxLength=63
 	// +kubebuilder:validation:Pattern=`^[a-zA-Z0-9]([0-9A-Za-z_.@%=+:,*#&()\[\]{}\-\s]{0,61}[a-zA-Z0-9])?$`
 	Value string `json:"value"`
+}
+
+// CloudLoadBalancerConfig contains an union discriminator indicating the type of DNS
+// solution in use within the cluster. When the DNSType is `ClusterHosted`, the cloud's
+// Load Balancer configuration needs to be provided so that the DNS solution hosted
+// within the cluster can be configured with those values.
+// +kubebuilder:validation:XValidation:rule="has(self.dnsType) && self.dnsType != 'ClusterHosted' ? !has(self.clusterHosted) : true",message="clusterHosted is permitted only when dnsType is ClusterHosted"
+// +union
+type CloudLoadBalancerConfig struct {
+	// dnsType indicates the type of DNS solution in use within the cluster. Its default value of
+	// `PlatformDefault` indicates that the cluster's DNS is the default provided by the cloud platform.
+	// It can be set to `ClusterHosted` to bypass the configuration of the cloud default DNS. In this mode,
+	// the cluster needs to provide a self-hosted DNS solution for the cluster's installation to succeed.
+	// The cluster's use of the cloud's Load Balancers is unaffected by this setting.
+	// The value is immutable after it has been set at install time.
+	// Currently, there is no way for the customer to add additional DNS entries into the cluster hosted DNS.
+	// Enabling this functionality allows the user to start their own DNS solution outside the cluster after
+	// installation is complete. The customer would be responsible for configuring this custom DNS solution,
+	// and it can be run in addition to the in-cluster DNS solution.
+	// +default="PlatformDefault"
+	// +kubebuilder:default:="PlatformDefault"
+	// +kubebuilder:validation:Enum="ClusterHosted";"PlatformDefault"
+	// +kubebuilder:validation:XValidation:rule="oldSelf == '' || self == oldSelf",message="dnsType is immutable"
+	// +optional
+	// +unionDiscriminator
+	DNSType DNSType `json:"dnsType,omitempty"`
+
+	// clusterHosted holds the IP addresses of API, API-Int and Ingress Load
+	// Balancers on Cloud Platforms. The DNS solution hosted within the cluster
+	// use these IP addresses to provide resolution for API, API-Int and Ingress
+	// services.
+	// +optional
+	// +unionMember,optional
+	ClusterHosted *CloudLoadBalancerIPs `json:"clusterHosted,omitempty"`
+}
+
+// CloudLoadBalancerIPs contains the Load Balancer IPs for the cloud's API,
+// API-Int and Ingress Load balancers. They will be populated as soon as the
+// respective Load Balancers have been configured. These values are utilized
+// to configure the DNS solution hosted within the cluster.
+type CloudLoadBalancerIPs struct {
+	// apiIntLoadBalancerIPs holds Load Balancer IPs for the internal API service.
+	// These Load Balancer IP addresses can be IPv4 and/or IPv6 addresses.
+	// Entries in the apiIntLoadBalancerIPs must be unique.
+	// A maximum of 16 IP addresses are permitted.
+	// +kubebuilder:validation:Format=ip
+	// +listType=set
+	// +kubebuilder:validation:MaxItems=16
+	// +optional
+	APIIntLoadBalancerIPs []IP `json:"apiIntLoadBalancerIPs,omitempty"`
+
+	// apiLoadBalancerIPs holds Load Balancer IPs for the API service.
+	// These Load Balancer IP addresses can be IPv4 and/or IPv6 addresses.
+	// Could be empty for private clusters.
+	// Entries in the apiLoadBalancerIPs must be unique.
+	// A maximum of 16 IP addresses are permitted.
+	// +kubebuilder:validation:Format=ip
+	// +listType=set
+	// +kubebuilder:validation:MaxItems=16
+	// +optional
+	APILoadBalancerIPs []IP `json:"apiLoadBalancerIPs,omitempty"`
+
+	// ingressLoadBalancerIPs holds IPs for Ingress Load Balancers.
+	// These Load Balancer IP addresses can be IPv4 and/or IPv6 addresses.
+	// Entries in the ingressLoadBalancerIPs must be unique.
+	// A maximum of 16 IP addresses are permitted.
+	// +kubebuilder:validation:Format=ip
+	// +listType=set
+	// +kubebuilder:validation:MaxItems=16
+	// +optional
+	IngressLoadBalancerIPs []IP `json:"ingressLoadBalancerIPs,omitempty"`
 }
 
 // BareMetalPlatformLoadBalancer defines the load balancer used by the cluster on BareMetal platform.
@@ -1637,3 +1709,11 @@ type InfrastructureList struct {
 
 	Items []Infrastructure `json:"items"`
 }
+
+// IP is an IP address (for example, "10.0.0.0" or "fd00::").
+// +kubebuilder:validation:Pattern=`(^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$)|(^s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]d|1dd|[1-9]?d)(.(25[0-5]|2[0-4]d|1dd|[1-9]?d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]d|1dd|[1-9]?d)(.(25[0-5]|2[0-4]d|1dd|[1-9]?d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]d|1dd|[1-9]?d)(.(25[0-5]|2[0-4]d|1dd|[1-9]?d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]d|1dd|[1-9]?d)(.(25[0-5]|2[0-4]d|1dd|[1-9]?d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]d|1dd|[1-9]?d)(.(25[0-5]|2[0-4]d|1dd|[1-9]?d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]d|1dd|[1-9]?d)(.(25[0-5]|2[0-4]d|1dd|[1-9]?d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]d|1dd|[1-9]?d)(.(25[0-5]|2[0-4]d|1dd|[1-9]?d)){3}))|:)))(%.+)?s*)`
+// + ---
+// + The regex for the IPv4 and IPv6 address was taken from
+// + https://blog.markhatton.co.uk/2011/03/15/regular-expressions-for-ip-addresses-cidr-ranges-and-hostnames/
+// + The resulting regex is an OR of both regexes.
+type IP string

@@ -381,4 +381,14 @@ var (
 		ResponsiblePerson:   "djoshy",
 		OwningProduct:       ocpSpecific,
 	}
+
+	FeatureGateDisableKubeletCloudCredentialProviders = FeatureGateName("DisableKubeletCloudCredentialProviders")
+	disableKubeletCloudCredentialProviders            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateDisableKubeletCloudCredentialProviders,
+		},
+		OwningJiraComponent: "cloud-provider",
+		ResponsiblePerson:   "jspeed",
+		OwningProduct:       kubernetes,
+	}
 )

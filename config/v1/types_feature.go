@@ -159,8 +159,10 @@ type FeatureGateEnabledDisabled struct {
 var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 	Default: defaultFeatures,
 	CustomNoUpgrade: {
-		Enabled:  []FeatureGateDescription{},
-		Disabled: []FeatureGateDescription{},
+		Enabled: []FeatureGateDescription{},
+		Disabled: []FeatureGateDescription{
+			disableKubeletCloudCredentialProviders, // We do not currently ship the correct config to use the external credentials provider.
+		},
 	},
 	TechPreviewNoUpgrade: newDefaultFeatures().
 		with(validatingAdmissionPolicy).
@@ -189,6 +191,7 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		with(sdnLiveMigration).
 		with(mixedCPUsAllocation).
 		with(managedBootImages).
+		without(disableKubeletCloudCredentialProviders).
 		toFeatures(defaultFeatures),
 	LatencySensitive: newDefaultFeatures().
 		toFeatures(defaultFeatures),
@@ -207,7 +210,9 @@ var defaultFeatures = &FeatureGateEnabledDisabled{
 		privateHostedZoneAWS,
 		buildCSIVolumes,
 	},
-	Disabled: []FeatureGateDescription{},
+	Disabled: []FeatureGateDescription{
+		disableKubeletCloudCredentialProviders, // We do not currently ship the correct config to use the external credentials provider.
+	},
 }
 
 type featureSetBuilder struct {

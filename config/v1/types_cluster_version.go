@@ -100,7 +100,7 @@ type ClusterVersionSpec struct {
 	//
 	// A maximum of 32 signature stores may be configured.
 	// +kubebuilder:validation:MaxItems=32
-	// +openshift:enable:FeatureSets=TechPreviewNoUpgrade
+	// +openshift:enable:FeatureSets=CustomNoUpgrade;TechPreviewNoUpgrade
 	// +listType=map
 	// +listMapKey=url
 	// +optional

@@ -363,6 +363,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.SchedulerStatus":                                                 schema_openshift_api_config_v1_SchedulerStatus(ref),
 		"github.com/openshift/api/config/v1.SecretNameReference":                                             schema_openshift_api_config_v1_SecretNameReference(ref),
 		"github.com/openshift/api/config/v1.ServingInfo":                                                     schema_openshift_api_config_v1_ServingInfo(ref),
+		"github.com/openshift/api/config/v1.SignatureStore":                                                  schema_openshift_api_config_v1_SignatureStore(ref),
 		"github.com/openshift/api/config/v1.StringSource":                                                    schema_openshift_api_config_v1_StringSource(ref),
 		"github.com/openshift/api/config/v1.StringSourceSpec":                                                schema_openshift_api_config_v1_StringSourceSpec(ref),
 		"github.com/openshift/api/config/v1.TLSProfileSpec":                                                  schema_openshift_api_config_v1_TLSProfileSpec(ref),
@@ -10269,7 +10270,40 @@ func schema_openshift_api_config_v1_ClusterVersionSpec(ref common.ReferenceCallb
 							Ref:         ref("github.com/openshift/api/config/v1.ClusterVersionCapabilitiesSpec"),
 						},
 					},
+					"signatureStores": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"url",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "signatureStores contains the upstream URIs to verify release signatures and optional reference to a config map by name containing the PEM-encoded CA bundle.\n\nBy default, CVO will use existing signature stores if this property is empty. The CVO will check the release signatures in the local ConfigMaps first. It will search for a valid signature in these stores in parallel only when local ConfigMaps did not include a valid signature. Validation will fail if none of the signature stores reply with valid signature before timeout. Setting signatureStores will replace the default signature stores with custom signature stores. Default stores can be used with custom signature stores by adding them manually.\n\nA maximum of 32 signature stores may be configured.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.SignatureStore"),
+									},
+								},
+							},
+						},
+					},
 					"overrides": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"kind",
+									"group",
+									"namespace",
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "overrides is list of overides for components that are managed by cluster version operator. Marking a component unmanaged will prevent the operator from creating or updating the object.",
 							Type:        []string{"array"},
@@ -10288,7 +10322,7 @@ func schema_openshift_api_config_v1_ClusterVersionSpec(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ClusterVersionCapabilitiesSpec", "github.com/openshift/api/config/v1.ComponentOverride", "github.com/openshift/api/config/v1.Update"},
+			"github.com/openshift/api/config/v1.ClusterVersionCapabilitiesSpec", "github.com/openshift/api/config/v1.ComponentOverride", "github.com/openshift/api/config/v1.SignatureStore", "github.com/openshift/api/config/v1.Update"},
 	}
 }
 
@@ -10307,6 +10341,11 @@ func schema_openshift_api_config_v1_ClusterVersionStatus(ref common.ReferenceCal
 						},
 					},
 					"history": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "history contains a list of the most recent versions applied to the cluster. This value may be empty during cluster startup, and then will be updated when a new update is being applied. The newest update is first in the list and it is ordered by recency. Updates in the history have state Completed if the rollout completed - if an update was failing or halfway applied the state will be Partial. Only a limited amount of update history is preserved.",
 							Type:        []string{"array"},
@@ -10344,6 +10383,16 @@ func schema_openshift_api_config_v1_ClusterVersionStatus(ref common.ReferenceCal
 						},
 					},
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type":       "map",
+								"x-kubernetes-patch-merge-key": "type",
+								"x-kubernetes-patch-strategy":  "merge",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "conditions provides information about the cluster version. The condition \"Available\" is set to true if the desiredUpdate has been reached. The condition \"Progressing\" is set to true if an update is being applied. The condition \"Degraded\" is set to true if an update is currently blocked by a temporary or permanent error. Conditions are only valid for the current desiredUpdate when metadata.generation is equal to status.generation.",
 							Type:        []string{"array"},
@@ -10358,6 +10407,11 @@ func schema_openshift_api_config_v1_ClusterVersionStatus(ref common.ReferenceCal
 						},
 					},
 					"availableUpdates": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "availableUpdates contains updates recommended for this cluster. Updates which appear in conditionalUpdates but not in availableUpdates may expose this cluster to known issues. This list may be empty if no updates are recommended, if the update service is unavailable, or if an invalid channel has been specified.",
 							Type:        []string{"array"},
@@ -17405,6 +17459,11 @@ func schema_openshift_api_config_v1_Release(ref common.ReferenceCallback) common
 						},
 					},
 					"channels": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "channels is the set of Cincinnati channels to which the release currently belongs.",
 							Type:        []string{"array"},
@@ -17956,6 +18015,37 @@ func schema_openshift_api_config_v1_ServingInfo(ref common.ReferenceCallback) co
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/config/v1.NamedCertificate"},
+	}
+}
+
+func schema_openshift_api_config_v1_SignatureStore(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "SignatureStore represents the URL of custom Signature Store",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"url": {
+						SchemaProps: spec.SchemaProps{
+							Description: "url contains the upstream custom signature store URL. url should be a valid absolute http/https URI of an upstream signature store as per rfc1738. This must be provided and cannot be empty.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"ca": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ca is an optional reference to a config map by name containing the PEM-encoded CA bundle. It is used as a trust anchor to validate the TLS certificate presented by the remote server. The key \"ca.crt\" is used to locate the data. If specified and the config map or expected key is not found, the signature store is not honored. If the specified ca data is not valid, the signature store is not honored. If empty, we fall back to the CA configured via Proxy, which is appended to the default system roots. The namespace for this config map is openshift-config.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.ConfigMapNameReference"),
+						},
+					},
+				},
+				Required: []string{"url"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.ConfigMapNameReference"},
 	}
 }
 

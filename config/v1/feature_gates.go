@@ -391,4 +391,14 @@ var (
 		ResponsiblePerson:   "jspeed",
 		OwningProduct:       kubernetes,
 	}
+
+	FeatureGateSignatureStores = FeatureGateName("SignatureStores")
+	signatureStores            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateSignatureStores,
+		},
+		OwningJiraComponent: "over-the-air-updates",
+		ResponsiblePerson:   "lmohanty",
+		OwningProduct:       ocpSpecific,
+	}
 )

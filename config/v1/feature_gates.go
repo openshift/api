@@ -392,6 +392,7 @@ var (
 		OwningProduct:       kubernetes,
 	}
 
+
 	FeatureGateOnClusterBuild = FeatureGateName("OnClusterBuild")
 	onClusterBuild            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
@@ -399,6 +400,16 @@ var (
 		},
 		OwningJiraComponent: "MachineConfigOperator",
 		ResponsiblePerson:   "dkhater",
+		OwningProduct:       ocpSpecific,
+	}
+
+	FeatureGateSignatureStores = FeatureGateName("SignatureStores")
+	signatureStores            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateSignatureStores,
+		},
+		OwningJiraComponent: "over-the-air-updates",
+		ResponsiblePerson:   "lmohanty",
 		OwningProduct:       ocpSpecific,
 	}
 )

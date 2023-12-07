@@ -8416,6 +8416,14 @@ func schema_openshift_api_config_v1_AWSPlatformSpec(ref common.ReferenceCallback
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"serviceEndpoints": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "serviceEndpoints list contains custom endpoints which will override default service endpoint of AWS Services. There must be only one ServiceEndpoint for a service.",
 							Type:        []string{"array"},
@@ -8453,6 +8461,14 @@ func schema_openshift_api_config_v1_AWSPlatformStatus(ref common.ReferenceCallba
 						},
 					},
 					"serviceEndpoints": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "ServiceEndpoints list contains custom endpoints which will override default service endpoint of AWS Services. There must be only one ServiceEndpoint for a service.",
 							Type:        []string{"array"},
@@ -8467,6 +8483,11 @@ func schema_openshift_api_config_v1_AWSPlatformStatus(ref common.ReferenceCallba
 						},
 					},
 					"resourceTags": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "resourceTags is a list of additional tags to apply to AWS resources created for the cluster. See https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html for information on tagging AWS resources. AWS supports a maximum of 50 tags per resource. OpenShift reserves 25 tags for its use, leaving 25 tags available for the user.",
 							Type:        []string{"array"},
@@ -9177,6 +9198,11 @@ func schema_openshift_api_config_v1_AzurePlatformStatus(ref common.ReferenceCall
 						},
 					},
 					"resourceTags": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "resourceTags is a list of additional tags to apply to Azure resources created for the cluster. See https://docs.microsoft.com/en-us/rest/api/resources/tags for information on tagging Azure resources. Due to limitations on Automation, Content Delivery Network, DNS Azure resources, a maximum of 15 tags may be applied. OpenShift reserves 5 tags for internal use, allowing 10 tags for user configuration.",
 							Type:        []string{"array"},
@@ -9286,6 +9312,11 @@ func schema_openshift_api_config_v1_BareMetalPlatformStatus(ref common.Reference
 						},
 					},
 					"apiServerInternalIPs": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "apiServerInternalIPs are the IP addresses to contact the Kubernetes API server that can be used by components inside the cluster, like kubelets using the infrastructure rather than Kubernetes networking. These are the IPs for a self-hosted load balancer in front of the API servers. In dual stack clusters this list contains two IPs otherwise only one.",
 							Type:        []string{"array"},
@@ -9308,6 +9339,11 @@ func schema_openshift_api_config_v1_BareMetalPlatformStatus(ref common.Reference
 						},
 					},
 					"ingressIPs": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "ingressIPs are the external IPs which route to the default ingress controller. The IPs are suitable targets of a wildcard DNS record used to resolve default route host names. In dual stack clusters this list contains two IPs otherwise only one.",
 							Type:        []string{"array"},
@@ -15238,6 +15274,11 @@ func schema_openshift_api_config_v1_NutanixPlatformStatus(ref common.ReferenceCa
 						},
 					},
 					"apiServerInternalIPs": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "apiServerInternalIPs are the IP addresses to contact the Kubernetes API server that can be used by components inside the cluster, like kubelets using the infrastructure rather than Kubernetes networking. These are the IPs for a self-hosted load balancer in front of the API servers. In dual stack clusters this list contains two IPs otherwise only one.",
 							Type:        []string{"array"},
@@ -15260,6 +15301,11 @@ func schema_openshift_api_config_v1_NutanixPlatformStatus(ref common.ReferenceCa
 						},
 					},
 					"ingressIPs": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "ingressIPs are the external IPs which route to the default ingress controller. The IPs are suitable targets of a wildcard DNS record used to resolve default route host names. In dual stack clusters this list contains two IPs otherwise only one.",
 							Type:        []string{"array"},
@@ -16210,6 +16256,11 @@ func schema_openshift_api_config_v1_OpenStackPlatformStatus(ref common.Reference
 						},
 					},
 					"apiServerInternalIPs": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "apiServerInternalIPs are the IP addresses to contact the Kubernetes API server that can be used by components inside the cluster, like kubelets using the infrastructure rather than Kubernetes networking. These are the IPs for a self-hosted load balancer in front of the API servers. In dual stack clusters this list contains two IPs otherwise only one.",
 							Type:        []string{"array"},
@@ -16239,6 +16290,11 @@ func schema_openshift_api_config_v1_OpenStackPlatformStatus(ref common.Reference
 						},
 					},
 					"ingressIPs": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "ingressIPs are the external IPs which route to the default ingress controller. The IPs are suitable targets of a wildcard DNS record used to resolve default route host names. In dual stack clusters this list contains two IPs otherwise only one.",
 							Type:        []string{"array"},
@@ -16526,6 +16582,11 @@ func schema_openshift_api_config_v1_OvirtPlatformStatus(ref common.ReferenceCall
 						},
 					},
 					"apiServerInternalIPs": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "apiServerInternalIPs are the IP addresses to contact the Kubernetes API server that can be used by components inside the cluster, like kubelets using the infrastructure rather than Kubernetes networking. These are the IPs for a self-hosted load balancer in front of the API servers. In dual stack clusters this list contains two IPs otherwise only one.",
 							Type:        []string{"array"},
@@ -16548,6 +16609,11 @@ func schema_openshift_api_config_v1_OvirtPlatformStatus(ref common.ReferenceCall
 						},
 					},
 					"ingressIPs": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "ingressIPs are the external IPs which route to the default ingress controller. The IPs are suitable targets of a wildcard DNS record used to resolve default route host names. In dual stack clusters this list contains two IPs otherwise only one.",
 							Type:        []string{"array"},
@@ -16870,6 +16936,14 @@ func schema_openshift_api_config_v1_PowerVSPlatformStatus(ref common.ReferenceCa
 						},
 					},
 					"serviceEndpoints": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "serviceEndpoints is a list of custom endpoints which will override the default service endpoints of a Power VS service.",
 							Type:        []string{"array"},
@@ -18746,6 +18820,11 @@ func schema_openshift_api_config_v1_VSpherePlatformNodeNetworkingSpec(ref common
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"networkSubnetCidr": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "networkSubnetCidr IP address on VirtualMachine's network interfaces included in the fields' CIDRs that will be used in respective status.addresses fields.",
 							Type:        []string{"array"},
@@ -18768,6 +18847,11 @@ func schema_openshift_api_config_v1_VSpherePlatformNodeNetworkingSpec(ref common
 						},
 					},
 					"excludeNetworkSubnetCidr": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "excludeNetworkSubnetCidr IP addresses in subnet ranges will be excluded when selecting the IP address from the VirtualMachine's VM for use in the status.addresses fields.",
 							Type:        []string{"array"},
@@ -18796,6 +18880,11 @@ func schema_openshift_api_config_v1_VSpherePlatformSpec(ref common.ReferenceCall
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"vcenters": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "vcenters holds the connection details for services to communicate with vCenter. Currently, only a single vCenter is supported.",
 							Type:        []string{"array"},
@@ -18810,6 +18899,14 @@ func schema_openshift_api_config_v1_VSpherePlatformSpec(ref common.ReferenceCall
 						},
 					},
 					"failureDomains": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "failureDomains contains the definition of region, zone and the vCenter topology. If this is omitted failure domains (regions and zones) will not be used.",
 							Type:        []string{"array"},
@@ -18853,6 +18950,11 @@ func schema_openshift_api_config_v1_VSpherePlatformStatus(ref common.ReferenceCa
 						},
 					},
 					"apiServerInternalIPs": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "apiServerInternalIPs are the IP addresses to contact the Kubernetes API server that can be used by components inside the cluster, like kubelets using the infrastructure rather than Kubernetes networking. These are the IPs for a self-hosted load balancer in front of the API servers. In dual stack clusters this list contains two IPs otherwise only one.",
 							Type:        []string{"array"},
@@ -18875,6 +18977,11 @@ func schema_openshift_api_config_v1_VSpherePlatformStatus(ref common.ReferenceCa
 						},
 					},
 					"ingressIPs": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "ingressIPs are the external IPs which route to the default ingress controller. The IPs are suitable targets of a wildcard DNS record used to resolve default route host names. In dual stack clusters this list contains two IPs otherwise only one.",
 							Type:        []string{"array"},
@@ -18936,6 +19043,11 @@ func schema_openshift_api_config_v1_VSpherePlatformTopology(ref common.Reference
 						},
 					},
 					"networks": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "networks is the list of port group network names within this failure domain. Currently, we only support a single interface per RHCOS virtual machine. The available networks (port groups) can be listed using `govc ls 'network/*'` The single interface should be the absolute path of the form /<datacenter>/network/<portgroup>.",
 							Type:        []string{"array"},
@@ -19009,6 +19121,11 @@ func schema_openshift_api_config_v1_VSpherePlatformVCenterSpec(ref common.Refere
 						},
 					},
 					"datacenters": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "The vCenter Datacenters in which the RHCOS vm guests are located. This field will be used by the Cloud Controller Manager. Each datacenter listed here should be used within a topology.",
 							Type:        []string{"array"},

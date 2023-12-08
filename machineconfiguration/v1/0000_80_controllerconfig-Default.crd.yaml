@@ -278,9 +278,7 @@ spec:
                                         description: url is fully qualified URI with scheme https, that overrides the default generated endpoint for a client. This must be provided and cannot be empty.
                                         type: string
                                         pattern: ^https://
-                                  x-kubernetes-list-map-keys:
-                                    - name
-                                  x-kubernetes-list-type: map
+                                  x-kubernetes-list-type: atomic
                             azure:
                               description: Azure contains settings specific to the Azure infrastructure provider.
                               type: object
@@ -795,9 +793,7 @@ spec:
                                         description: url is fully qualified URI with scheme https, that overrides the default generated endpoint for a client. This must be provided and cannot be empty.
                                         type: string
                                         pattern: ^https://
-                                  x-kubernetes-list-map-keys:
-                                    - name
-                                  x-kubernetes-list-type: map
+                                  x-kubernetes-list-type: atomic
                             azure:
                               description: Azure contains settings specific to the Azure infrastructure provider.
                               type: object

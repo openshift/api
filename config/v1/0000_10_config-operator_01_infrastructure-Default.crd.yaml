@@ -66,9 +66,7 @@ spec:
                                 type: string
                             type: object
                           type: array
-                          x-kubernetes-list-map-keys:
-                            - name
-                          x-kubernetes-list-type: map
+                          x-kubernetes-list-type: atomic
                       type: object
                     azure:
                       description: Azure contains settings specific to the Azure infrastructure provider.
@@ -595,9 +593,7 @@ spec:
                                 type: string
                             type: object
                           type: array
-                          x-kubernetes-list-map-keys:
-                            - name
-                          x-kubernetes-list-type: map
+                          x-kubernetes-list-type: atomic
                       type: object
                     azure:
                       description: Azure contains settings specific to the Azure infrastructure provider.

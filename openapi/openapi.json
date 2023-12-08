@@ -4160,10 +4160,7 @@
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.config.v1.AWSServiceEndpoint"
           },
-          "x-kubernetes-list-map-keys": [
-            "name"
-          ],
-          "x-kubernetes-list-type": "map"
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -4195,10 +4192,7 @@
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.config.v1.AWSServiceEndpoint"
           },
-          "x-kubernetes-list-map-keys": [
-            "name"
-          ],
-          "x-kubernetes-list-type": "map"
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },

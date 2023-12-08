@@ -475,8 +475,7 @@ type AWSPlatformSpec struct {
 	// serviceEndpoints list contains custom endpoints which will override default
 	// service endpoint of AWS Services.
 	// There must be only one ServiceEndpoint for a service.
-	// +listType=map
-	// +listMapKey=name
+	// +listType=atomic
 	// +optional
 	ServiceEndpoints []AWSServiceEndpoint `json:"serviceEndpoints,omitempty"`
 }
@@ -489,8 +488,7 @@ type AWSPlatformStatus struct {
 	// ServiceEndpoints list contains custom endpoints which will override default
 	// service endpoint of AWS Services.
 	// There must be only one ServiceEndpoint for a service.
-	// +listType=map
-	// +listMapKey=name
+	// +listType=atomic
 	// +optional
 	ServiceEndpoints []AWSServiceEndpoint `json:"serviceEndpoints,omitempty"`
 

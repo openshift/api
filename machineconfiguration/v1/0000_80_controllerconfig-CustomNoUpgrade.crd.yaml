@@ -10,6 +10,7 @@ metadata:
     include.release.openshift.io/ibm-cloud-managed: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
     include.release.openshift.io/single-node-developer: "true"
+    release.openshift.io/feature-set: CustomNoUpgrade
 spec:
   # group name to use for REST API: /apis/<group>/<version>
   group: machineconfiguration.openshift.io
@@ -565,6 +566,12 @@ spec:
                                             type: string
                                             maxLength: 2048
                                             pattern: ^/.*?/host/.*?/Resources.*
+                                          template:
+                                            description: "template is the full inventory path of the virtual machine or template that will be cloned when creating new machines in this failure domain. The maximum length of the path is 2048 characters. \n When omitted, the template will be calculated by the control plane machineset operator based on the region and zone defined in VSpherePlatformFailureDomainSpec. For example, for zone=zonea, region=region1, and infrastructure name=test, the template path would be calculated as /<datacenter>/vm/test-rhcos-region1-zonea."
+                                            type: string
+                                            maxLength: 2048
+                                            minLength: 1
+                                            pattern: ^/.*?/vm/.*?
                                       zone:
                                         description: zone defines the name of a zone tag that will be attached to a vCenter cluster. The tag category in vCenter must be named openshift-zone.
                                         type: string
@@ -872,6 +879,22 @@ spec:
                                   items:
                                     type: string
                                   x-kubernetes-list-type: set
+                                loadBalancer:
+                                  description: loadBalancer defines how the load balancer used by the cluster is configured.
+                                  type: object
+                                  default:
+                                    type: OpenShiftManagedDefault
+                                  properties:
+                                    type:
+                                      description: type defines the type of load balancer used by the cluster on BareMetal platform which can be a user-managed or openshift-managed load balancer that is to be used for the OpenShift API and Ingress endpoints. When set to OpenShiftManagedDefault the static pods in charge of API and Ingress traffic load-balancing defined in the machine config operator will be deployed. When set to UserManaged these static pods will not be deployed and it is expected that the load balancer is configured out of band by the deployer. When omitted, this means no opinion and the platform is left to choose a reasonable default. The default value is OpenShiftManagedDefault.
+                                      type: string
+                                      default: OpenShiftManagedDefault
+                                      enum:
+                                        - OpenShiftManagedDefault
+                                        - UserManaged
+                                      x-kubernetes-validations:
+                                        - rule: oldSelf == '' || self == oldSelf
+                                          message: type is immutable once set
                                 nodeDNSIP:
                                   description: nodeDNSIP is the IP address for the internal DNS used by the nodes. Unlike the one managed by the DNS operator, `NodeDNSIP` provides name resolution for the nodes themselves. There is no DNS-as-a-service for BareMetal deployments. In order to minimize necessary changes to the datacenter DNS, a DNS service is hosted as a static pod to serve those hostnames to the nodes in the cluster.
                                   type: string
@@ -913,12 +936,95 @@ spec:
                               description: GCP contains settings specific to the Google Cloud Platform infrastructure provider.
                               type: object
                               properties:
+                                clusterHostedDNS:
+                                  description: clusterHostedDNS indicates the type of DNS solution in use within the cluster. Its default value of "Disabled" indicates that the cluster's DNS is the default provided by the cloud platform. It can be "Enabled" during install to bypass the configuration of the cloud default DNS. When "Enabled", the cluster needs to provide a self-hosted DNS solution for the cluster's installation to succeed. The cluster's use of the cloud's Load Balancers is unaffected by this setting. The value is immutable after it has been set at install time. Currently, there is no way for the customer to add additional DNS entries into the cluster hosted DNS. Enabling this functionality allows the user to start their own DNS solution outside the cluster after installation is complete. The customer would be responsible for configuring this custom DNS solution, and it can be run in addition to the in-cluster DNS solution.
+                                  type: string
+                                  default: Disabled
+                                  enum:
+                                    - Enabled
+                                    - Disabled
+                                  x-kubernetes-validations:
+                                    - rule: self == oldSelf
+                                      message: clusterHostedDNS is immutable and may only be configured during installation
                                 projectID:
                                   description: resourceGroupName is the Project ID for new GCP resources created for the cluster.
                                   type: string
                                 region:
                                   description: region holds the region for new GCP resources created for the cluster.
                                   type: string
+                                resourceLabels:
+                                  description: resourceLabels is a list of additional labels to apply to GCP resources created for the cluster. See https://cloud.google.com/compute/docs/labeling-resources for information on labeling GCP resources. GCP supports a maximum of 64 labels per resource. OpenShift reserves 32 labels for internal use, allowing 32 labels for user configuration.
+                                  type: array
+                                  maxItems: 32
+                                  items:
+                                    description: GCPResourceLabel is a label to apply to GCP resources created for the cluster.
+                                    type: object
+                                    required:
+                                      - key
+                                      - value
+                                    properties:
+                                      key:
+                                        description: key is the key part of the label. A label key can have a maximum of 63 characters and cannot be empty. Label key must begin with a lowercase letter, and must contain only lowercase letters, numeric characters, and the following special characters `_-`. Label key must not have the reserved prefixes `kubernetes-io` and `openshift-io`.
+                                        type: string
+                                        maxLength: 63
+                                        minLength: 1
+                                        pattern: ^[a-z][0-9a-z_-]{0,62}$
+                                        x-kubernetes-validations:
+                                          - rule: '!self.startsWith(''openshift-io'') && !self.startsWith(''kubernetes-io'')'
+                                            message: label keys must not start with either `openshift-io` or `kubernetes-io`
+                                      value:
+                                        description: value is the value part of the label. A label value can have a maximum of 63 characters and cannot be empty. Value must contain only lowercase letters, numeric characters, and the following special characters `_-`.
+                                        type: string
+                                        maxLength: 63
+                                        minLength: 1
+                                        pattern: ^[0-9a-z_-]{1,63}$
+                                  x-kubernetes-list-map-keys:
+                                    - key
+                                  x-kubernetes-list-type: map
+                                  x-kubernetes-validations:
+                                    - rule: self.all(x, x in oldSelf) && oldSelf.all(x, x in self)
+                                      message: resourceLabels are immutable and may only be configured during installation
+                                resourceTags:
+                                  description: resourceTags is a list of additional tags to apply to GCP resources created for the cluster. See https://cloud.google.com/resource-manager/docs/tags/tags-overview for information on tagging GCP resources. GCP supports a maximum of 50 tags per resource.
+                                  type: array
+                                  maxItems: 50
+                                  items:
+                                    description: GCPResourceTag is a tag to apply to GCP resources created for the cluster.
+                                    type: object
+                                    required:
+                                      - key
+                                      - parentID
+                                      - value
+                                    properties:
+                                      key:
+                                        description: key is the key part of the tag. A tag key can have a maximum of 63 characters and cannot be empty. Tag key must begin and end with an alphanumeric character, and must contain only uppercase, lowercase alphanumeric characters, and the following special characters `._-`.
+                                        type: string
+                                        maxLength: 63
+                                        minLength: 1
+                                        pattern: ^[a-zA-Z0-9]([0-9A-Za-z_.-]{0,61}[a-zA-Z0-9])?$
+                                      parentID:
+                                        description: 'parentID is the ID of the hierarchical resource where the tags are defined, e.g. at the Organization or the Project level. To find the Organization or Project ID refer to the following pages: https://cloud.google.com/resource-manager/docs/creating-managing-organization#retrieving_your_organization_id, https://cloud.google.com/resource-manager/docs/creating-managing-projects#identifying_projects. An OrganizationID must consist of decimal numbers, and cannot have leading zeroes. A ProjectID must be 6 to 30 characters in length, can only contain lowercase letters, numbers, and hyphens, and must start with a letter, and cannot end with a hyphen.'
+                                        type: string
+                                        maxLength: 32
+                                        minLength: 1
+                                        pattern: (^[1-9][0-9]{0,31}$)|(^[a-z][a-z0-9-]{4,28}[a-z0-9]$)
+                                      value:
+                                        description: value is the value part of the tag. A tag value can have a maximum of 63 characters and cannot be empty. Tag value must begin and end with an alphanumeric character, and must contain only uppercase, lowercase alphanumeric characters, and the following special characters `_-.@%=+:,*#&(){}[]` and spaces.
+                                        type: string
+                                        maxLength: 63
+                                        minLength: 1
+                                        pattern: ^[a-zA-Z0-9]([0-9A-Za-z_.@%=+:,*#&()\[\]{}\-\s]{0,61}[a-zA-Z0-9])?$
+                                  x-kubernetes-list-map-keys:
+                                    - key
+                                  x-kubernetes-list-type: map
+                                  x-kubernetes-validations:
+                                    - rule: self.all(x, x in oldSelf) && oldSelf.all(x, x in self)
+                                      message: resourceTags are immutable and may only be configured during installation
+                              x-kubernetes-validations:
+                                - rule: '!has(oldSelf.resourceLabels) && !has(self.resourceLabels) || has(oldSelf.resourceLabels) && has(self.resourceLabels)'
+                                  message: resourceLabels may only be configured during installation
+                                - rule: '!has(oldSelf.resourceTags) && !has(self.resourceTags) || has(oldSelf.resourceTags) && has(self.resourceTags)'
+                                  message: resourceTags may only be configured during installation
                             ibmcloud:
                               description: IBMCloud contains settings specific to the IBMCloud infrastructure provider.
                               type: object
@@ -1008,6 +1114,22 @@ spec:
                                   items:
                                     type: string
                                   x-kubernetes-list-type: set
+                                loadBalancer:
+                                  description: loadBalancer defines how the load balancer used by the cluster is configured.
+                                  type: object
+                                  default:
+                                    type: OpenShiftManagedDefault
+                                  properties:
+                                    type:
+                                      description: type defines the type of load balancer used by the cluster on Nutanix platform which can be a user-managed or openshift-managed load balancer that is to be used for the OpenShift API and Ingress endpoints. When set to OpenShiftManagedDefault the static pods in charge of API and Ingress traffic load-balancing defined in the machine config operator will be deployed. When set to UserManaged these static pods will not be deployed and it is expected that the load balancer is configured out of band by the deployer. When omitted, this means no opinion and the platform is left to choose a reasonable default. The default value is OpenShiftManagedDefault.
+                                      type: string
+                                      default: OpenShiftManagedDefault
+                                      enum:
+                                        - OpenShiftManagedDefault
+                                        - UserManaged
+                                      x-kubernetes-validations:
+                                        - rule: oldSelf == '' || self == oldSelf
+                                          message: type is immutable once set
                             openstack:
                               description: OpenStack contains settings specific to the OpenStack infrastructure provider.
                               type: object
@@ -1082,6 +1204,22 @@ spec:
                                   items:
                                     type: string
                                   x-kubernetes-list-type: set
+                                loadBalancer:
+                                  description: loadBalancer defines how the load balancer used by the cluster is configured.
+                                  type: object
+                                  default:
+                                    type: OpenShiftManagedDefault
+                                  properties:
+                                    type:
+                                      description: type defines the type of load balancer used by the cluster on Ovirt platform which can be a user-managed or openshift-managed load balancer that is to be used for the OpenShift API and Ingress endpoints. When set to OpenShiftManagedDefault the static pods in charge of API and Ingress traffic load-balancing defined in the machine config operator will be deployed. When set to UserManaged these static pods will not be deployed and it is expected that the load balancer is configured out of band by the deployer. When omitted, this means no opinion and the platform is left to choose a reasonable default. The default value is OpenShiftManagedDefault.
+                                      type: string
+                                      default: OpenShiftManagedDefault
+                                      enum:
+                                        - OpenShiftManagedDefault
+                                        - UserManaged
+                                      x-kubernetes-validations:
+                                        - rule: oldSelf == '' || self == oldSelf
+                                          message: type is immutable once set
                                 nodeDNSIP:
                                   description: 'deprecated: as of 4.6, this field is no longer set or honored.  It will be removed in a future release.'
                                   type: string
@@ -1181,6 +1319,22 @@ spec:
                                   items:
                                     type: string
                                   x-kubernetes-list-type: set
+                                loadBalancer:
+                                  description: loadBalancer defines how the load balancer used by the cluster is configured.
+                                  type: object
+                                  default:
+                                    type: OpenShiftManagedDefault
+                                  properties:
+                                    type:
+                                      description: type defines the type of load balancer used by the cluster on VSphere platform which can be a user-managed or openshift-managed load balancer that is to be used for the OpenShift API and Ingress endpoints. When set to OpenShiftManagedDefault the static pods in charge of API and Ingress traffic load-balancing defined in the machine config operator will be deployed. When set to UserManaged these static pods will not be deployed and it is expected that the load balancer is configured out of band by the deployer. When omitted, this means no opinion and the platform is left to choose a reasonable default. The default value is OpenShiftManagedDefault.
+                                      type: string
+                                      default: OpenShiftManagedDefault
+                                      enum:
+                                        - OpenShiftManagedDefault
+                                        - UserManaged
+                                      x-kubernetes-validations:
+                                        - rule: oldSelf == '' || self == oldSelf
+                                          message: type is immutable once set
                                 nodeDNSIP:
                                   description: nodeDNSIP is the IP address for the internal DNS used by the nodes. Unlike the one managed by the DNS operator, `NodeDNSIP` provides name resolution for the nodes themselves. There is no DNS-as-a-service for vSphere deployments. In order to minimize necessary changes to the datacenter DNS, a DNS service is hosted as a static pod to serve those hostnames to the nodes in the cluster.
                                   type: string

@@ -177,6 +177,8 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		with(sigstoreImageVerification).
 		with(gcpLabelsTags).
 		with(gcpClusterHostedDNS).
+		with(externalCloudProviderGCP).
+		with(externalCloudProvider).
 		with(vSphereStaticIPs).
 		with(routeExternalCertificate).
 		with(automatedEtcdBackup).
@@ -205,9 +207,7 @@ var defaultFeatures = &FeatureGateEnabledDisabled{
 		alibabaPlatform, // This is a bug, it should be TechPreviewNoUpgrade. This must be downgraded before 4.14 is shipped.
 		azureWorkloadIdentity,
 		cloudDualStackNodeIPs,
-		externalCloudProvider,
 		externalCloudProviderAzure,
-		externalCloudProviderGCP,
 		externalCloudProviderExternal,
 		privateHostedZoneAWS,
 		buildCSIVolumes,

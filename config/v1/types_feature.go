@@ -211,6 +211,7 @@ var defaultFeatures = &FeatureGateEnabledDisabled{
 		externalCloudProviderExternal,
 		privateHostedZoneAWS,
 		buildCSIVolumes,
+		kmsv1,
 	},
 	Disabled: []FeatureGateDescription{
 		disableKubeletCloudCredentialProviders, // We do not currently ship the correct config to use the external credentials provider.

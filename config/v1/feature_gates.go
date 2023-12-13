@@ -392,7 +392,6 @@ var (
 		OwningProduct:       kubernetes,
 	}
 
-
 	FeatureGateOnClusterBuild = FeatureGateName("OnClusterBuild")
 	onClusterBuild            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
@@ -411,5 +410,15 @@ var (
 		OwningJiraComponent: "over-the-air-updates",
 		ResponsiblePerson:   "lmohanty",
 		OwningProduct:       ocpSpecific,
+	}
+
+	FeatureGateKMSv1 = FeatureGateName("KMSv1")
+	kmsv1            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateKMSv1,
+		},
+		OwningJiraComponent: "kube-apiserver",
+		ResponsiblePerson:   "dgrisonnet",
+		OwningProduct:       kubernetes,
 	}
 )

@@ -73,9 +73,6 @@
                         "name": "MixedCPUsAllocation"
                     },
                     {
-                        "name": "NetworkLiveMigration"
-                    },
-                    {
                         "name": "NodeSwap"
                     },
                     {
@@ -127,6 +124,9 @@
                     },
                     {
                         "name": "ExternalCloudProviderGCP"
+                    },
+                    {
+                        "name": "NetworkLiveMigration"
                     },
                     {
                         "name": "PrivateHostedZoneAWS"

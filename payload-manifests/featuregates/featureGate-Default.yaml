@@ -71,9 +71,6 @@
                         "name": "MixedCPUsAllocation"
                     },
                     {
-                        "name": "NetworkLiveMigration"
-                    },
-                    {
                         "name": "NodeSwap"
                     },
                     {
@@ -131,6 +128,9 @@
                     },
                     {
                         "name": "KMSv1"
+                    },
+                    {
+                        "name": "NetworkLiveMigration"
                     },
                     {
                         "name": "OpenShiftPodSecurityAdmission"

@@ -535,6 +535,12 @@ type PolicyAuditConfig struct {
 	// +optional
 	MaxFileSize *uint32 `json:"maxFileSize,omitempty"`
 
+	// maxLogFiles specifies the maximum number of ACL_audit log files that can be present.
+	// +kubebuilder:default=5
+	// +kubebuilder:validation:Minimum=1
+	// +optional
+	MaxLogFiles *int32 `json:"maxLogFiles,omitempty"`
+
 	// destination is the location for policy log messages.
 	// Regardless of this config, persistent logs will always be dumped to the host
 	// at /var/log/ovn/ however

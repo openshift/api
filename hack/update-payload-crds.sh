@@ -9,7 +9,9 @@ crd_globs="\
     securityinternal/v1/*.crd*yaml\
     authorization/v1/*.crd*yaml\
     operator/v1alpha1/0000_10_config-operator_01_imagecontentsourcepolicy.crd*yaml\
-    operator/v1/0000_10_config-operator_*.yaml
+    operator/v1/0000_10_config-operator_*.yaml\
+    config/v1alpha1/0000_10_config-operator_01_clusterimagepolicy-*.crd*yaml\
+    config/v1alpha1/0000_10_config-operator_01_imagepolicy-*.crd*yaml\
     "
 
 # To allow the crd_globs to be sourced in the verify script,

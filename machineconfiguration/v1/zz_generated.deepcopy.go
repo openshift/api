@@ -284,6 +284,11 @@ func (in *ControllerConfigSpec) DeepCopyInto(out *ControllerConfigSpec) {
 		*out = make([]byte, len(*in))
 		copy(*out, *in)
 	}
+	if in.KubeAPIServerClientCA != nil {
+		in, out := &in.KubeAPIServerClientCA, &out.KubeAPIServerClientCA
+		*out = make([]byte, len(*in))
+		copy(*out, *in)
+	}
 	if in.RootCAData != nil {
 		in, out := &in.RootCAData, &out.RootCAData
 		*out = make([]byte, len(*in))

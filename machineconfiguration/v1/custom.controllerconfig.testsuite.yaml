@@ -8,6 +8,7 @@ tests:
       apiVersion: machineconfiguration.openshift.io/v1
       kind: ControllerConfig
       spec:
+        internalAPICert: Y2VydGlmaWNhdGUK
         additionalTrustBundle: Y2VydGlmaWNhdGUK
         baseOSContainerImage: example.com/example/openshift-release-dev@sha256:d98795f7932441b30bb8bcfbbf05912875383fad1f2b3be08a22ec148d68607e
         baseOSExtensionsContainerImage: example.com/example/openshift-release-dev@sha256:d98795f7932441b30bb8bcfbbf05912875383fad1f2b3be08a22ec148d68607e
@@ -66,6 +67,7 @@ tests:
       apiVersion: machineconfiguration.openshift.io/v1
       kind: ControllerConfig
       spec:
+        internalAPICert: Y2VydGlmaWNhdGUK
         additionalTrustBundle: Y2VydGlmaWNhdGUK
         baseOSContainerImage: example.com/example/openshift-release-dev@sha256:d98795f7932441b30bb8bcfbbf05912875383fad1f2b3be08a22ec148d68607e
         baseOSExtensionsContainerImage: example.com/example/openshift-release-dev@sha256:d98795f7932441b30bb8bcfbbf05912875383fad1f2b3be08a22ec148d68607e

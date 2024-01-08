@@ -2113,9 +2113,15 @@ spec:
                 description: ipFamilies indicates the IP families in use by the cluster
                   network
                 type: string
+              kubeAPIServerClientCA:
+                description: kubeAPIServerClientCA managed Kubelet to API Client Cert...
+                  Rotated automatically. This data is written to /etc/kubernetes/kubelet-ca.crt
+                format: byte
+                nullable: true
+                type: string
               kubeAPIServerServingCAData:
                 description: kubeAPIServerServingCAData managed Kubelet to API Server
-                  Cert... Rotated automatically
+                  Cert... Rotated automatically. This data gets written to /etc/kubernetes/kubeconfig
                 format: byte
                 type: string
               network:
@@ -2245,6 +2251,7 @@ spec:
             - images
             - infra
             - ipFamilies
+            - kubeAPIServerClientCA
             - kubeAPIServerServingCAData
             - network
             - proxy

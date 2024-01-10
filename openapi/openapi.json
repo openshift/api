@@ -33386,7 +33386,7 @@
           "default": ""
         },
         "type": {
-          "description": "Type is the type of the condition. Currently only Admitted.",
+          "description": "Type is the type of the condition. Currently only Admitted or UnservableInFutureVersions.",
           "type": "string",
           "default": ""
         }

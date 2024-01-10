@@ -618,7 +618,7 @@ spec:
                             type: string
                           type:
                             description: Type is the type of the condition. Currently
-                              only Admitted.
+                              only Admitted or UnservableInFutureVersions.
                             type: string
                         required:
                         - status

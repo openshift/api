@@ -1,0 +1,145 @@
+{
+    "apiVersion": "config.openshift.io/v1",
+    "kind": "FeatureGate",
+    "metadata": {
+        "creationTimestamp": null,
+        "name": "cluster"
+    },
+    "spec": {
+        "featureSet": "LatencySensitive"
+    },
+    "status": {
+        "featureGates": [
+            {
+                "disabled": [
+                    {
+                        "name": "AdminNetworkPolicy"
+                    },
+                    {
+                        "name": "AutomatedEtcdBackup"
+                    },
+                    {
+                        "name": "CSIDriverSharedResource"
+                    },
+                    {
+                        "name": "ClusterAPIInstall"
+                    },
+                    {
+                        "name": "DNSNameResolver"
+                    },
+                    {
+                        "name": "DisableKubeletCloudCredentialProviders"
+                    },
+                    {
+                        "name": "DynamicResourceAllocation"
+                    },
+                    {
+                        "name": "EventedPLEG"
+                    },
+                    {
+                        "name": "GCPClusterHostedDNS"
+                    },
+                    {
+                        "name": "GCPLabelsTags"
+                    },
+                    {
+                        "name": "GatewayAPI"
+                    },
+                    {
+                        "name": "InsightsConfigAPI"
+                    },
+                    {
+                        "name": "InstallAlternateInfrastructureAWS"
+                    },
+                    {
+                        "name": "MachineAPIOperatorDisableMachineHealthCheckController"
+                    },
+                    {
+                        "name": "MachineAPIProviderOpenStack"
+                    },
+                    {
+                        "name": "MachineConfigNodes"
+                    },
+                    {
+                        "name": "ManagedBootImages"
+                    },
+                    {
+                        "name": "MaxUnavailableStatefulSet"
+                    },
+                    {
+                        "name": "MetricsServer"
+                    },
+                    {
+                        "name": "MixedCPUsAllocation"
+                    },
+                    {
+                        "name": "NetworkLiveMigration"
+                    },
+                    {
+                        "name": "NodeSwap"
+                    },
+                    {
+                        "name": "OnClusterBuild"
+                    },
+                    {
+                        "name": "PinnedImages"
+                    },
+                    {
+                        "name": "RouteExternalCertificate"
+                    },
+                    {
+                        "name": "SignatureStores"
+                    },
+                    {
+                        "name": "SigstoreImageVerification"
+                    },
+                    {
+                        "name": "VSphereControlPlaneMachineSet"
+                    },
+                    {
+                        "name": "VSphereStaticIPs"
+                    },
+                    {
+                        "name": "ValidatingAdmissionPolicy"
+                    }
+                ],
+                "enabled": [
+                    {
+                        "name": "AlibabaPlatform"
+                    },
+                    {
+                        "name": "AzureWorkloadIdentity"
+                    },
+                    {
+                        "name": "BuildCSIVolumes"
+                    },
+                    {
+                        "name": "CloudDualStackNodeIPs"
+                    },
+                    {
+                        "name": "ExternalCloudProvider"
+                    },
+                    {
+                        "name": "ExternalCloudProviderAzure"
+                    },
+                    {
+                        "name": "ExternalCloudProviderExternal"
+                    },
+                    {
+                        "name": "ExternalCloudProviderGCP"
+                    },
+                    {
+                        "name": "KMSv1"
+                    },
+                    {
+                        "name": "OpenShiftPodSecurityAdmission"
+                    },
+                    {
+                        "name": "PrivateHostedZoneAWS"
+                    }
+                ],
+                "version": ""
+            }
+        ]
+    }
+}

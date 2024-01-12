@@ -195,6 +195,7 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		with(onClusterBuild).
 		with(signatureStores).
 		with(pinnedImages).
+		with(upgradeStatus).
 		toFeatures(defaultFeatures),
 	LatencySensitive: newDefaultFeatures().
 		toFeatures(defaultFeatures),

@@ -431,4 +431,14 @@ var (
 		ResponsiblePerson:   "jhernand",
 		OwningProduct:       ocpSpecific,
 	}
+
+	FeatureGateUpgradeStatus = FeatureGateName("UpgradeStatus")
+	upgradeStatus            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateUpgradeStatus,
+		},
+		OwningJiraComponent: "Cluster Version Operator",
+		ResponsiblePerson:   "pmuller",
+		OwningProduct:       ocpSpecific,
+	}
 )

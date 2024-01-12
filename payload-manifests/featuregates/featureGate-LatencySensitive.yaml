@@ -94,6 +94,9 @@
                         "name": "SigstoreImageVerification"
                     },
                     {
+                        "name": "UpgradeStatus"
+                    },
+                    {
                         "name": "VSphereControlPlaneMachineSet"
                     },
                     {

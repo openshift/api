@@ -407,7 +407,7 @@ var (
 		FeatureGateAttributes: FeatureGateAttributes{
 			Name: FeatureGateSignatureStores,
 		},
-		OwningJiraComponent: "over-the-air-updates",
+		OwningJiraComponent: "Cluster Version Operator",
 		ResponsiblePerson:   "lmohanty",
 		OwningProduct:       ocpSpecific,
 	}

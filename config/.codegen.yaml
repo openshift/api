@@ -1,8 +1,12 @@
 schemapatch:
   requiredFeatureSets:
-  - ""
-  - "Default"
-  - "TechPreviewNoUpgrade"
-  - "CustomNoUpgrade"
+    - ""
+    - "Default"
+    - "TechPreviewNoUpgrade"
+    - "CustomNoUpgrade"
+  mustHaveOneOfClusterProfile:
+    - "ibm-cloud-managed"
+    - "self-managed-high-availability"
+    - "single-node-developer"
 swaggerdocs:
   commentPolicy: Warn

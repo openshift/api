@@ -26,6 +26,9 @@ func mayHandleField(field markers.FieldInfo) bool {
 	}
 
 	uncastFeatureSet = field.Markers.Get(crdmarkers.OpenShiftClusterProfileAwareFeatureSets)
+	if uncastFeatureSet == nil{
+		return true
+	}
 	clusterProfileAndFeatureSet, ok := uncastFeatureSet.(crdmarkers.FeatureSetClusterProfileTuple)
 	if !ok {
 		panic(fmt.Sprintf("actually got %t", uncastFeatureSet))
@@ -47,8 +50,7 @@ func mayHandleField(field markers.FieldInfo) bool {
 
 	for _, currClusterProfileForFeature := range clusterProfileAndFeatureSet.ClusterProfiles{
 		if crdmarkers.RequiredClusterProfiles.Has(currClusterProfileForFeature) {
-			foundFeatureSet = true
-			break
+			return true
 		}
 	}
 

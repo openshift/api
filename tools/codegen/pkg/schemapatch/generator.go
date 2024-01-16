@@ -251,11 +251,12 @@ func loadSchemaPatchGenerationContextsForVersion(version generation.APIVersionCo
 		}
 
 		generationContexts = append(generationContexts, schemaPatchGenerationContext{
-			manifestPath:        filepath.Join(version.Path, fileInfo.Name()),
-			manifestFileMode:    manifestInfo.Mode(),
-			manifestData:        data,
-			patchPath:           patchPath,
-			requiredFeatureSets: getObjectFeatureSets(partialObject),
+			manifestPath:                filepath.Join(version.Path, fileInfo.Name()),
+			manifestFileMode:            manifestInfo.Mode(),
+			manifestData:                data,
+			patchPath:                   patchPath,
+			requiredFeatureSets:         getObjectFeatureSets(partialObject),
+			mustHaveOneOfClusterProfile: getObjectClusterProfiles(partialObject),
 		})
 	}
 

@@ -10,8 +10,9 @@ import (
 )
 
 var (
-	controllerGen       string
-	requiredFeatureSets []string
+	controllerGen               string
+	requiredFeatureSets         []string
+	mustHaveOneOfClusterProfile []string
 )
 
 // schemapatchCmd represents the schemapatch command
@@ -45,6 +46,7 @@ func init() {
 
 	rootCmd.PersistentFlags().StringVar(&controllerGen, "controller-gen", "", "Path to the controller-gen tool to use. If omitted, will use the built in generator (Only applicable to the schemapatch generator)")
 	rootCmd.PersistentFlags().StringSliceVar(&requiredFeatureSets, "required-feature-sets", []string{}, "Specific feature sets to generate CRDs schemas for (Only applicable to the schemapatch generator)")
+	rootCmd.PersistentFlags().StringSliceVar(&mustHaveOneOfClusterProfile, "cluster-profiles", []string{}, "Specific cluster profiles to generate CRDs schemas for (Only applicable to the schemapatch generator)")
 }
 
 // newSchemaPatchGenerator builds a new schemapatch generator.
@@ -55,8 +57,9 @@ func newSchemaPatchGenerator() generation.Generator {
 	}
 
 	return schemapatch.NewGenerator(schemapatch.Options{
-		ControllerGen:       controllerGen,
-		RequiredFeatureSets: requiredFeatureSetsList,
-		Verify:              verify,
+		ControllerGen:               controllerGen,
+		RequiredFeatureSets:         requiredFeatureSetsList,
+		MustHaveOneOfClusterProfile: sets.NewString(mustHaveOneOfClusterProfile...),
+		Verify:                      verify,
 	})
 }

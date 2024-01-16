@@ -34,6 +34,10 @@ type Options struct {
 	// When omitted, any manifest with a feature set annotation will be ignored.
 	RequiredFeatureSets []sets.String
 
+	// MustHaveOneOfClusterProfile is used to filter the featureset manifests that should be generated.
+	// When omitted, any (or missing) clusterprofile will be accepted.
+	MustHaveOneOfClusterProfile sets.String
+
 	// Verify determines whether the generator should verify the content instead
 	// of updating the generated file.
 	Verify bool
@@ -42,19 +46,21 @@ type Options struct {
 // generator implements the generation.Generator interface.
 // It is designed to generate schemapatch updates for a particular API group.
 type generator struct {
-	controllerGen       string
-	disabled            bool
-	requiredFeatureSets []sets.String
-	verify              bool
+	controllerGen               string
+	disabled                    bool
+	requiredFeatureSets         []sets.String
+	mustHaveOneOfClusterProfile sets.String
+	verify                      bool
 }
 
 // NewGenerator builds a new schemapatch generator.
 func NewGenerator(opts Options) generation.Generator {
 	return &generator{
-		controllerGen:       opts.ControllerGen,
-		disabled:            opts.Disabled,
-		requiredFeatureSets: opts.RequiredFeatureSets,
-		verify:              opts.Verify,
+		controllerGen:               opts.ControllerGen,
+		disabled:                    opts.Disabled,
+		requiredFeatureSets:         opts.RequiredFeatureSets,
+		mustHaveOneOfClusterProfile: opts.MustHaveOneOfClusterProfile,
+		verify:                      opts.Verify,
 	}
 }
 
@@ -71,10 +77,11 @@ func (g *generator) ApplyConfig(config *generation.Config) generation.Generator 
 	}
 
 	return NewGenerator(Options{
-		ControllerGen:       g.controllerGen,
-		Disabled:            config.SchemaPatch.Disabled,
-		RequiredFeatureSets: featureSets,
-		Verify:              g.verify,
+		ControllerGen:               g.controllerGen,
+		Disabled:                    config.SchemaPatch.Disabled,
+		RequiredFeatureSets:         featureSets,
+		MustHaveOneOfClusterProfile: sets.NewString(config.SchemaPatch.MustHaveOneOfClusterProfile...),
+		Verify:                      g.verify,
 	})
 }
 
@@ -95,7 +102,7 @@ func (g *generator) GenGroup(groupCtx generation.APIGroupContext) error {
 	errs := []error{}
 
 	for _, version := range groupCtx.Versions {
-		versionRequired, err := shouldProcessGroupVersion(version, g.requiredFeatureSets)
+		versionRequired, err := shouldProcessGroupVersion(version, g.requiredFeatureSets, g.mustHaveOneOfClusterProfile)
 		if err != nil {
 			return fmt.Errorf("could not determine if version %s is required: %w", version.Name, err)
 		}
@@ -125,7 +132,7 @@ func (g *generator) GenGroup(groupCtx generation.APIGroupContext) error {
 
 // genGroupVersion runs the schemapatch generator against a particular version of the API group.
 func (g *generator) genGroupVersion(group string, version generation.APIVersionContext, versionPaths []string) error {
-	generationContexts, err := loadSchemaPatchGenerationContextsForVersion(version, g.requiredFeatureSets)
+	generationContexts, err := loadSchemaPatchGenerationContextsForVersion(version, g.requiredFeatureSets, g.mustHaveOneOfClusterProfile)
 	if err != nil {
 		return fmt.Errorf("could not load generation contexts: %w", err)
 	}
@@ -178,18 +185,20 @@ func allVersionPaths(versions []generation.APIVersionContext) []string {
 // schemaPatchGenerationContext contains the context required to generate a schemapatch
 // for a particular manifest.
 type schemaPatchGenerationContext struct {
-	manifestPath        string
-	manifestFileMode    fs.FileMode
-	manifestData        []byte
-	patchPath           string
-	requiredFeatureSets sets.String
+	manifestPath                string
+	manifestFileMode            fs.FileMode
+	manifestData                []byte
+	patchPath                   string
+	requiredFeatureSets         sets.String
+	mustHaveOneOfClusterProfile sets.String
+	clusterProfiles             sets.String
 }
 
 // loadSchemaPatchGenerationContextsForVersion loads the generation contexts for all the manifests
 // within a particular API group version.
 // It finds all CRD manifests, their corresponding YAML patch manifest if available and the expected
 // feature sets for the manifest.
-func loadSchemaPatchGenerationContextsForVersion(version generation.APIVersionContext, requiredFeatureSets []sets.String) ([]schemaPatchGenerationContext, error) {
+func loadSchemaPatchGenerationContextsForVersion(version generation.APIVersionContext, requiredFeatureSets []sets.String, mustHaveOneOfClusterProfile sets.String) ([]schemaPatchGenerationContext, error) {
 	errs := []error{}
 
 	dirEntries, err := os.ReadDir(version.Path)
@@ -225,7 +234,7 @@ func loadSchemaPatchGenerationContextsForVersion(version generation.APIVersionCo
 		}
 
 		// Ignore any file that doesn't have a kind of CustomResourceDefinition or does not have the correct feature set annotation.
-		if !isCustomResourceDefinition(partialObject) || !hasRequiredFeatureSet(partialObject, requiredFeatureSets) {
+		if !isCustomResourceDefinition(partialObject) || !hasRequiredAnnotations(partialObject, requiredFeatureSets, mustHaveOneOfClusterProfile) {
 			continue
 		}
 
@@ -264,15 +273,15 @@ func isCustomResourceDefinition(partialObject *metav1.PartialObjectMetadata) boo
 	return partialObject.APIVersion == apiextensionsv1.SchemeGroupVersion.String() && partialObject.Kind == "CustomResourceDefinition"
 }
 
-// hasRequiredFeatureSet returns true if the object has the desired required feature set.
-func hasRequiredFeatureSet(partialObject *metav1.PartialObjectMetadata, requiredFeatureSets []sets.String) bool {
+// hasRequiredAnnotations returns true if the object has the desired required feature set.
+func hasRequiredAnnotations(partialObject *metav1.PartialObjectMetadata, requiredFeatureSets []sets.String, mustHaveOneOfClusterProfile sets.String) bool {
 	// Try an empty set in case no features were configured.
 	// If this returns true then the object should be handled even if no
 	// other requiredFeatureSets match.
-	shouldHandle := mayHandleObject(partialObject, sets.NewString())
+	shouldHandle := mayHandleObject(partialObject, sets.NewString(), mustHaveOneOfClusterProfile)
 
 	for _, requiredFeatureSet := range requiredFeatureSets {
-		if mayHandleObject(partialObject, requiredFeatureSet) {
+		if mayHandleObject(partialObject, requiredFeatureSet, mustHaveOneOfClusterProfile) {
 			shouldHandle = true
 			break
 		}

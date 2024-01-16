@@ -91,6 +91,8 @@ type SchemaPatchConfig struct {
 	// When omitted, any manifest with a feature set annotation will be ignored.
 	// Example entries are `""` (empty string), `"TechPreviewNoUpgrade"` or `"TechPreviewNoUpgrade,CustomNoUpgrade"`.
 	RequiredFeatureSets []string `json:"requiredFeatureSets,omitempty"`
+
+	MustHaveOneOfClusterProfile []string `json:"mustHaveOneOfClusterProfile,omitempty"`
 }
 
 // SwaggerDocsConfig is the configuration for the swaggerdocs generator.

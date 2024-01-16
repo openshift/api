@@ -18,7 +18,10 @@ import (
 	"sigs.k8s.io/controller-tools/pkg/schemapatcher"
 )
 
-const openshiftFeatureSetEnv = "OPENSHIFT_REQUIRED_FEATURESET"
+const (
+	openshiftFeatureSetEnv     = "OPENSHIFT_REQUIRED_FEATURESET"
+	openshiftClusterProfileEnv = "OPENSHIFT_REQUIRED_CLUSTERPROFILE"
+)
 
 // executeSchemaPatchForManifestWithBinary executes the controller-gen binary with the schemapatch:manifests arg.
 func executeSchemaPatchForManifestWithBinary(controllerGen string, dir string, versionPaths []string, buf *bytes.Buffer, requiredFeatureSets sets.String) error {
@@ -96,6 +99,11 @@ func executeSchemaPatchForManifest(gc schemaPatchGenerationContext, buf *bytes.B
 	markers.RequiredFeatureSets.Insert(gc.requiredFeatureSets.List()...)
 	defer func() {
 		markers.RequiredFeatureSets = sets.NewString()
+	}()
+
+	markers.RequiredClusterProfiles.Insert(gc.mustHaveOneOfClusterProfile.List()...)
+	defer func() {
+		markers.RequiredClusterProfiles = sets.NewString()
 	}()
 
 	gen := schemapatcher.Generator{

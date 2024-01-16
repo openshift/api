@@ -10,16 +10,22 @@ import (
 	"sigs.k8s.io/controller-tools/pkg/markers"
 )
 
-var RequiredFeatureSets = sets.NewString()
+var (
+	RequiredFeatureSets = sets.NewString()
+	RequiredClusterProfiles = sets.NewString()
+)
 
 func init() {
-	featureSet := os.Getenv("OPENSHIFT_REQUIRED_FEATURESET")
-	if len(featureSet) == 0 {
-		return
+	if featureSet := os.Getenv("OPENSHIFT_REQUIRED_FEATURESET"); len(featureSet) > 0 {
+		for _, curr := range strings.Split(featureSet, ",") {
+			RequiredFeatureSets.Insert(curr)
+		}
 	}
 
-	for _, curr := range strings.Split(featureSet, ",") {
-		RequiredFeatureSets.Insert(curr)
+	if clusterProfile := os.Getenv("OPENSHIFT_REQUIRED_CLUSTERPROFILE"); len(clusterProfile) > 0 {
+		for _, curr := range strings.Split(clusterProfile, ",") {
+			RequiredClusterProfiles.Insert(curr)
+		}
 	}
 }
 

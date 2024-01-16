@@ -152,6 +152,31 @@ func InstallerFeatureSet(featureSet string) FileContentsPredicate {
 	}
 }
 
+// ClusterProfile returns a predicate for LoadFilesRecursively that filters manifests
+// based on the specified FeatureSet.
+func ClusterProfile(clusterProfile string) FileContentsPredicate {
+	// be compatible with previous behavior
+	if len(clusterProfile) == 0 {
+		return func(manifest []byte) (bool, error) {
+			return true, nil
+		}
+	}
+
+	clusterProfileAnnotationName := fmt.Sprintf("include.release.openshift.io/%s", clusterProfile)
+	return func(manifest []byte) (bool, error) {
+		uncastObj, _, err := codecs.UniversalDecoder().Decode(manifest, nil, &unstructured.Unstructured{})
+		if err != nil {
+			panic(fmt.Errorf("unable to decode: %w", err))
+		}
+
+		isClusterProfileEnabled := uncastObj.(*unstructured.Unstructured).GetAnnotations()[clusterProfileAnnotationName]
+		if isClusterProfileEnabled == "true" {
+			return true, nil
+		}
+		return false, nil
+	}
+}
+
 // LoadFilesRecursively returns a map from relative path names to file content.
 func LoadFilesRecursively(dir string, predicates ...FileInfoPredicate) (map[string][]byte, error) {
 	files := map[string][]byte{}

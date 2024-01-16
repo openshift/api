@@ -86,6 +86,7 @@ type AuthenticationSpec struct {
 	// +listMapKey=name
 	// +kubebuilder:validation:MaxItems=1
 	// +openshift:enable:FeatureSets=CustomNoUpgrade;TechPreviewNoUpgrade
+	// +openshift:enable:FeatureSets=Default,ClusterProfile=HostedControlPlane
 	OIDCProviders []OIDCProvider `json:"oidcProviders,omitempty"`
 }
 

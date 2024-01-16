@@ -86,7 +86,7 @@ type AuthenticationSpec struct {
 	// +listMapKey=name
 	// +kubebuilder:validation:MaxItems=1
 	// +openshift:enable:ClusterProfileAwareFeatureSets:featureSet=CustomNoUpgrade;TechPreviewNoUpgrade
-	// +openshift:enable:ClusterProfileAwareFeatureSets:featureSet=Default,clusterProfile=HostedControlPlane
+	// +openshift:enable:ClusterProfileAwareFeatureSets:featureSet=Default,clusterProfile=ibm-cloud-managed
 	OIDCProviders []OIDCProvider `json:"oidcProviders,omitempty"`
 }
 

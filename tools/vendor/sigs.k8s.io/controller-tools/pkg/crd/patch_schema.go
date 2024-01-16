@@ -17,7 +17,14 @@ func mayHandleField(field markers.FieldInfo) bool {
 
 	featureSetsForField, ok := uncastFeatureSet.([]string)
 	if !ok {
-		panic(fmt.Sprintf("actually got %t", uncastFeatureSet))
+		clusterProfileAndFeatureSet, ok := uncastFeatureSet.(crdmarkers.FeatureSetClusterProfileTuple)
+		if !ok {
+			panic(fmt.Sprintf("actually got %t", uncastFeatureSet))
+		}
+		if false{
+			fmt.Printf("#### got %v\n", clusterProfileAndFeatureSet)
+		}
+		return false
 	}
 	//  if any of the field's declared featureSets match any of the manifest's declared featuresets, include the field.
 	for _, currFeatureSetForField := range featureSetsForField {

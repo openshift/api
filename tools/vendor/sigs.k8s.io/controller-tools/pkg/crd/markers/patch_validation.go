@@ -24,6 +24,8 @@ func init() {
 }
 
 const OpenShiftFeatureSetMarkerName = "openshift:enable:FeatureSets"
+// TODO, owed to Joel in 4.16 to update all FeatureSets to be a FeatureSetClusterProfileTuple and collapse this back down
+const OpenShiftClusterProfileAwareFeatureSets = "openshift:enable:ClusterProfileAwareFeatureSets"
 const OpenShiftFeatureSetAwareEnumMarkerName = "openshift:validation:FeatureSetAwareEnum"
 const OpenShiftFeatureSetAwareXValidationMarkerName = "openshift:validation:FeatureSetAwareXValidation"
 
@@ -36,10 +38,20 @@ func init() {
 		must(markers.MakeDefinition(OpenShiftFeatureSetMarkerName, markers.DescribesField, []string{})).
 			WithHelp(markers.SimpleHelp("OpenShift", "specifies the FeatureSet that is required to generate this field.")),
 	)
+	FieldOnlyMarkers = append(FieldOnlyMarkers,
+		must(markers.MakeDefinition(OpenShiftClusterProfileAwareFeatureSets, markers.DescribesField, FeatureSetClusterProfileTuple{})).
+			WithHelp(markers.SimpleHelp("OpenShift", "specifies the FeatureSet that is required to generate this field.")),
+	)
 	ValidationMarkers = append(ValidationMarkers,
 		must(markers.MakeDefinition(OpenShiftFeatureSetAwareXValidationMarkerName, markers.DescribesType, FeatureSetXValidation{})).
 			WithHelp(markers.SimpleHelp("OpenShift", "specifies the FeatureSet that is required to generate this XValidation rule.")),
 	)
+}
+
+
+type FeatureSetClusterProfileTuple struct {
+	FeatureSetNames []string `marker:"featureSet"`
+	ClusterProfiles      []string `marker:"clusterProfile,optional"`
 }
 
 type FeatureSetEnum struct {

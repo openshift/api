@@ -407,7 +407,7 @@ var (
 		FeatureGateAttributes: FeatureGateAttributes{
 			Name: FeatureGateSignatureStores,
 		},
-		OwningJiraComponent: "over-the-air-updates",
+		OwningJiraComponent: "Cluster Version Operator",
 		ResponsiblePerson:   "lmohanty",
 		OwningProduct:       ocpSpecific,
 	}
@@ -429,6 +429,16 @@ var (
 		},
 		OwningJiraComponent: "MachineConfigOperator",
 		ResponsiblePerson:   "jhernand",
+		OwningProduct:       ocpSpecific,
+	}
+
+	FeatureGateUpgradeStatus = FeatureGateName("UpgradeStatus")
+	upgradeStatus            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateUpgradeStatus,
+		},
+		OwningJiraComponent: "Cluster Version Operator",
+		ResponsiblePerson:   "pmuller",
 		OwningProduct:       ocpSpecific,
 	}
 )

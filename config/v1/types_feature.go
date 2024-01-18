@@ -180,7 +180,6 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		with(vSphereStaticIPs).
 		with(routeExternalCertificate).
 		with(automatedEtcdBackup).
-		with(vSphereControlPlaneMachineset).
 		without(machineAPIOperatorDisableMachineHealthCheckController).
 		with(adminNetworkPolicy).
 		with(dnsNameResolver).
@@ -211,6 +210,7 @@ var defaultFeatures = &FeatureGateEnabledDisabled{
 		privateHostedZoneAWS,
 		buildCSIVolumes,
 		kmsv1,
+		vSphereControlPlaneMachineset,
 	},
 	Disabled: []FeatureGateDescription{
 		disableKubeletCloudCredentialProviders, // We do not currently ship the correct config to use the external credentials provider.

@@ -18866,7 +18866,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.machine.v1.VSphereFailureDomain"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         }
       },
       "x-kubernetes-unions": [

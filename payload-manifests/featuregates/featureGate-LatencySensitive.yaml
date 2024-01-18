@@ -100,9 +100,6 @@
                         "name": "UpgradeStatus"
                     },
                     {
-                        "name": "VSphereControlPlaneMachineSet"
-                    },
-                    {
                         "name": "VSphereStaticIPs"
                     },
                     {
@@ -142,6 +139,9 @@
                     },
                     {
                         "name": "PrivateHostedZoneAWS"
+                    },
+                    {
+                        "name": "VSphereControlPlaneMachineSet"
                     }
                 ],
                 "version": ""

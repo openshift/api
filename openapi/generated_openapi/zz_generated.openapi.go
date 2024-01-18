@@ -32577,6 +32577,14 @@ func schema_openshift_api_machine_v1_FailureDomains(ref common.ReferenceCallback
 						},
 					},
 					"vsphere": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "vsphere configures failure domain information for the VSphere platform.",
 							Type:        []string{"array"},

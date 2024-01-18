@@ -27,6 +27,7 @@ type RenderOpts struct {
 	RenderedManifestInputFilename string
 	PayloadVersion                string
 	AssetOutputDir                string
+	ClusterProfile                string
 }
 
 func (o *RenderOpts) AddFlags(fs *flag.FlagSet) {
@@ -34,10 +35,20 @@ func (o *RenderOpts) AddFlags(fs *flag.FlagSet) {
 		"files or directories containing yaml or json manifests that will be created via cluster-bootstrapping.")
 	fs.StringVar(&o.PayloadVersion, "payload-version", o.PayloadVersion, "Version that will eventually be placed into ClusterOperator.status.  This normally comes from the CVO set via env var: OPERATOR_IMAGE_VERSION.")
 	fs.StringVar(&o.AssetOutputDir, "asset-output-dir", o.AssetOutputDir, "Output path for rendered manifests.")
+	fs.StringVar(&o.ClusterProfile, "cluster-profile", o.ClusterProfile, "self-managed-high-availability, single-node-developer, ibm-cloud-managed")
 }
 
 // Validate verifies the inputs.
 func (o *RenderOpts) Validate() error {
+	switch o.ClusterProfile {
+	case "":
+		// to be disallowed soonish
+	case "self-managed-high-availability", "single-node-developer", "ibm-cloud-managed":
+		// ok
+	default:
+		return fmt.Errorf("--cluster-profile must be one of self-managed-high-availability, single-node-developer, ibm-cloud-managed")
+	}
+
 	return nil
 }
 
@@ -80,6 +91,7 @@ func (o *RenderOpts) Run() error {
 		bootstrapManifestLocation,
 		filepath.Join(o.AssetOutputDir, "manifests"),
 		featureSet,
+		o.ClusterProfile,
 		nil,
 	)
 	if err != nil {

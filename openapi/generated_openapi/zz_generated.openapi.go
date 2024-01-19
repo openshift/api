@@ -734,6 +734,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/machine/v1beta1.ObjectMeta":                                                schema_openshift_api_machine_v1beta1_ObjectMeta(ref),
 		"github.com/openshift/api/machine/v1beta1.Placement":                                                 schema_openshift_api_machine_v1beta1_Placement(ref),
 		"github.com/openshift/api/machine/v1beta1.ProviderSpec":                                              schema_openshift_api_machine_v1beta1_ProviderSpec(ref),
+		"github.com/openshift/api/machine/v1beta1.ResourceManagerTag":                                        schema_openshift_api_machine_v1beta1_ResourceManagerTag(ref),
 		"github.com/openshift/api/machine/v1beta1.SecurityProfile":                                           schema_openshift_api_machine_v1beta1_SecurityProfile(ref),
 		"github.com/openshift/api/machine/v1beta1.SecuritySettings":                                          schema_openshift_api_machine_v1beta1_SecuritySettings(ref),
 		"github.com/openshift/api/machine/v1beta1.SpotMarketOptions":                                         schema_openshift_api_machine_v1beta1_SpotMarketOptions(ref),
@@ -36080,7 +36081,7 @@ func schema_openshift_api_machine_v1beta1_GCPMachineProviderSpec(ref common.Refe
 					},
 					"tags": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Tags list of tags to apply to the VM.",
+							Description: "Tags list of network tags to apply to the VM.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -36188,12 +36189,34 @@ func schema_openshift_api_machine_v1beta1_GCPMachineProviderSpec(ref common.Refe
 							Format:      "",
 						},
 					},
+					"resourceManagerTags": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"key",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "resourceManagerTags is an optional list of tags to apply to the GCP resources created for the cluster. See https://cloud.google.com/resource-manager/docs/tags/tags-overview for information on tagging GCP resources. GCP supports a maximum of 50 tags per resource.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machine/v1beta1.ResourceManagerTag"),
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"canIPForward", "deletionProtection", "serviceAccounts", "machineType", "region", "zone"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.GCPDisk", "github.com/openshift/api/machine/v1beta1.GCPGPUConfig", "github.com/openshift/api/machine/v1beta1.GCPMetadata", "github.com/openshift/api/machine/v1beta1.GCPNetworkInterface", "github.com/openshift/api/machine/v1beta1.GCPServiceAccount", "github.com/openshift/api/machine/v1beta1.GCPShieldedInstanceConfig", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"github.com/openshift/api/machine/v1beta1.GCPDisk", "github.com/openshift/api/machine/v1beta1.GCPGPUConfig", "github.com/openshift/api/machine/v1beta1.GCPMetadata", "github.com/openshift/api/machine/v1beta1.GCPNetworkInterface", "github.com/openshift/api/machine/v1beta1.GCPServiceAccount", "github.com/openshift/api/machine/v1beta1.GCPShieldedInstanceConfig", "github.com/openshift/api/machine/v1beta1.ResourceManagerTag", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -37664,6 +37687,44 @@ func schema_openshift_api_machine_v1beta1_ProviderSpec(ref common.ReferenceCallb
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
+	}
+}
+
+func schema_openshift_api_machine_v1beta1_ResourceManagerTag(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ResourceManagerTag is a tag to apply to GCP resources created for the cluster.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"parentID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "parentID is the ID of the hierarchical resource where the tags are defined e.g. at the Organization or the Project level. To find the Organization or Project ID ref https://cloud.google.com/resource-manager/docs/creating-managing-organization#retrieving_your_organization_id https://cloud.google.com/resource-manager/docs/creating-managing-projects#identifying_projects An OrganizationID can have a maximum of 32 characters and must consist of decimal numbers, and cannot have leading zeroes. A ProjectID must be 6 to 30 characters in length, can only contain lowercase letters, numbers, and hyphens, and must start with a letter, and cannot end with a hyphen.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"key": {
+						SchemaProps: spec.SchemaProps{
+							Description: "key is the key part of the tag. A tag key can have a maximum of 63 characters and cannot be empty. Tag key must begin and end with an alphanumeric character, and must contain only uppercase, lowercase alphanumeric characters, and the following special characters `._-`.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"value": {
+						SchemaProps: spec.SchemaProps{
+							Description: "value is the value part of the tag. A tag value can have a maximum of 63 characters and cannot be empty. Tag value must begin and end with an alphanumeric character, and must contain only uppercase, lowercase alphanumeric characters, and the following special characters `_-.@%=+:,*#&(){}[]` and spaces.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"parentID", "key", "value"},
+			},
+		},
 	}
 }
 

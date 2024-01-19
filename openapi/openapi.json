@@ -20943,6 +20943,18 @@
           "type": "string",
           "default": ""
         },
+        "resourceManagerTags": {
+          "description": "resourceManagerTags is an optional list of tags to apply to the GCP resources created for the cluster. See https://cloud.google.com/resource-manager/docs/tags/tags-overview for information on tagging GCP resources. GCP supports a maximum of 50 tags per resource.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.ResourceManagerTag"
+          },
+          "x-kubernetes-list-map-keys": [
+            "key"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
         "restartPolicy": {
           "description": "RestartPolicy determines the behavior when an instance crashes or the underlying infrastructure provider stops the instance as part of a maintenance event (default \"Always\"). Cannot be \"Always\" with preemptible instances. Otherwise, allowed values are \"Always\" and \"Never\". If omitted, the platform chooses a default, which is subject to change over time, currently that default is \"Always\". RestartPolicy represents AutomaticRestart in GCP compute api",
           "type": "string"
@@ -20961,7 +20973,7 @@
           "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.GCPShieldedInstanceConfig"
         },
         "tags": {
-          "description": "Tags list of tags to apply to the VM.",
+          "description": "Tags list of network tags to apply to the VM.",
           "type": "array",
           "items": {
             "type": "string",
@@ -21840,6 +21852,32 @@
         "value": {
           "description": "Value is an inlined, serialized representation of the resource configuration. It is recommended that providers maintain their own versioned API types that should be serialized/deserialized from this field, akin to component config.",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        }
+      }
+    },
+    "com.github.openshift.api.machine.v1beta1.ResourceManagerTag": {
+      "description": "ResourceManagerTag is a tag to apply to GCP resources created for the cluster.",
+      "type": "object",
+      "required": [
+        "parentID",
+        "key",
+        "value"
+      ],
+      "properties": {
+        "key": {
+          "description": "key is the key part of the tag. A tag key can have a maximum of 63 characters and cannot be empty. Tag key must begin and end with an alphanumeric character, and must contain only uppercase, lowercase alphanumeric characters, and the following special characters `._-`.",
+          "type": "string",
+          "default": ""
+        },
+        "parentID": {
+          "description": "parentID is the ID of the hierarchical resource where the tags are defined e.g. at the Organization or the Project level. To find the Organization or Project ID ref https://cloud.google.com/resource-manager/docs/creating-managing-organization#retrieving_your_organization_id https://cloud.google.com/resource-manager/docs/creating-managing-projects#identifying_projects An OrganizationID can have a maximum of 32 characters and must consist of decimal numbers, and cannot have leading zeroes. A ProjectID must be 6 to 30 characters in length, can only contain lowercase letters, numbers, and hyphens, and must start with a letter, and cannot end with a hyphen.",
+          "type": "string",
+          "default": ""
+        },
+        "value": {
+          "description": "value is the value part of the tag. A tag value can have a maximum of 63 characters and cannot be empty. Tag value must begin and end with an alphanumeric character, and must contain only uppercase, lowercase alphanumeric characters, and the following special characters `_-.@%=+:,*#&(){}[]` and spaces.",
+          "type": "string",
+          "default": ""
         }
       }
     },

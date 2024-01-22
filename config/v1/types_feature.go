@@ -196,6 +196,7 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		with(signatureStores).
 		with(pinnedImages).
 		with(upgradeStatus).
+		with(translateStreamCloseWebsocketRequests).
 		toFeatures(defaultFeatures),
 	LatencySensitive: newDefaultFeatures().
 		toFeatures(defaultFeatures),

@@ -1,6 +1,7 @@
 package v1alpha1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -37,6 +38,24 @@ type EtcdBackupSpec struct {
 	// +optional
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="pvcName is immutable once set"
 	PVCName string `json:"pvcName"`
+
+	// nodeSelector is the node selector applied to the backup pods.
+	//
+	// If empty, the cluster-etcd-operator sets a node selector for the
+	// "node-role.kubernetes.io/master" label. This default is subject to
+	// change.
+	//
+	// +optional
+	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
+
+	// tolerations is a list of tolerations applied to the backup pods.
+	//
+	// If empty, the cluster-etcd-operator sets a toleration for the
+	// "node-role.kubernetes.io/master" taint. This default is subject to
+	// change.
+	//
+	// +optional
+	Tolerations []corev1.Toleration `json:"tolerations,omitempty"`
 }
 
 // +kubebuilder:validation:Optional

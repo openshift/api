@@ -41,12 +41,40 @@ spec:
               description: spec holds user settable values for configuration
               type: object
               properties:
+                nodeSelector:
+                  description: "nodeSelector is the node selector applied to the backup pods. \n If empty, the cluster-etcd-operator sets a node selector for the \"node-role.kubernetes.io/master\" label. This default is subject to change."
+                  type: object
+                  additionalProperties:
+                    type: string
                 pvcName:
                   description: PVCName specifies the name of the PersistentVolumeClaim (PVC) which binds a PersistentVolume where the etcd backup file would be saved The PVC itself must always be created in the "openshift-etcd" namespace If the PVC is left unspecified "" then the platform will choose a reasonable default location to save the backup. In the future this would be backups saved across the control-plane master nodes.
                   type: string
                   x-kubernetes-validations:
                     - rule: self == oldSelf
                       message: pvcName is immutable once set
+                tolerations:
+                  description: "tolerations is a list of tolerations applied to the backup pods. \n If empty, the cluster-etcd-operator sets a toleration for the \"node-role.kubernetes.io/master\" taint. This default is subject to change."
+                  type: array
+                  items:
+                    description: The pod this Toleration is attached to tolerates any taint that matches the triple <key,value,effect> using the matching operator <operator>.
+                    type: object
+                    properties:
+                      effect:
+                        description: Effect indicates the taint effect to match. Empty means match all taint effects. When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.
+                        type: string
+                      key:
+                        description: Key is the taint key that the toleration applies to. Empty means match all taint keys. If the key is empty, operator must be Exists; this combination means to match all values and all keys.
+                        type: string
+                      operator:
+                        description: Operator represents a key's relationship to the value. Valid operators are Exists and Equal. Defaults to Equal. Exists is equivalent to wildcard for value, so that a pod can tolerate all taints of a particular category.
+                        type: string
+                      tolerationSeconds:
+                        description: TolerationSeconds represents the period of time the toleration (which must be of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default, it is not set, which means tolerate the taint forever (do not evict). Zero and negative values will be treated as 0 (evict immediately) by the system.
+                        type: integer
+                        format: int64
+                      value:
+                        description: Value is the taint value the toleration matches to. If the operator is Exists, the value should be empty, otherwise just a regular string.
+                        type: string
             status:
               description: status holds observed values from the cluster. They may not be overridden.
               type: object

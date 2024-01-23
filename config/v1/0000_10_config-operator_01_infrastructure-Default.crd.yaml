@@ -127,6 +127,9 @@ spec:
                             - message: platform name cannot be changed once set
                               rule: oldSelf == 'Unknown' || self == oldSelf
                       type: object
+                      x-kubernetes-validations:
+                        - message: clusterHostedDNS may not be removed once set
+                          rule: has(self.clusterHostedDNS) || !has(oldSelf.clusterHostedDNS)
                     gcp:
                       description: GCP contains settings specific to the Google Cloud Platform infrastructure provider.
                       type: object

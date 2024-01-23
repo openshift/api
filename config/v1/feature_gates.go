@@ -390,6 +390,17 @@ var (
 		OwningJiraComponent: "cloud-provider",
 		ResponsiblePerson:   "jspeed",
 		OwningProduct:       kubernetes,
+		OwningProduct:       ocpSpecific,
+	}
+
+	FeatureGateAWSClusterHostedDNS = FeatureGateName("AWSClusterHostedDNS")
+	awsClusterHostedDNS            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateAWSClusterHostedDNS,
+		},
+		OwningJiraComponent: "Installer",
+		ResponsiblePerson:   "jhixson",
+		OwningProduct:       ocpSpecific,
 	}
 
 	FeatureGateOnClusterBuild = FeatureGateName("OnClusterBuild")

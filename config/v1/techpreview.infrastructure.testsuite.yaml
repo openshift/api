@@ -46,6 +46,51 @@ tests:
       status:
         cpuPartitioning: "Invalid"
     expectedStatusError: 'status.cpuPartitioning: Unsupported value: "Invalid": supported values: "None", "AllNodes"'
+  - name: Should not be able to modify the cluster hosted dns value for AWS Platform Status
+    initial: |
+      apiVersion: config.openshift.io/v1
+      kind: Infrastructure
+      spec: {}
+      status:
+        controlPlaneTopology: "HighlyAvailable"
+        infrastructureTopology: "HighlyAvailable"
+        platform: AWS
+        platformStatus:
+          type: AWS
+          aws:
+            clusterHostedDNS: "Enabled"
+    updated: |
+      apiVersion: config.openshift.io/v1
+      kind: Infrastructure
+      spec: {}
+      status:
+        platform: AWS
+        platformStatus:
+          type: AWS
+          aws:
+            clusterHostedDNS: "Disabled"
+    expectedStatusError: "status.platformStatus.aws.clusterHostedDNS: Invalid value: \"string\": clusterHostedDNS is immutable and may only be configured during installation"
+  - name: Should not be able to remove AWS cluster hosted DNS from platformStatus.aws
+    initial: |
+      apiVersion: config.openshift.io/v1
+      kind: Infrastructure
+      spec: {}
+      status:
+        platform: AWS
+        platformStatus:
+          type: AWS
+          aws:
+            clusterHostedDNS: "Enabled"
+    updated: |
+      apiVersion: config.openshift.io/v1
+      kind: Infrastructure
+      spec: {}
+      status:
+        platform: AWS
+        platformStatus:
+          type: AWS
+          aws: {}
+    expectedStatusError: "status.platformStatus.aws.clusterHostedDNS: Invalid value: \"string\": clusterHostedDNS is immutable and may only be configured during installation"
   - name: Should set load balancer type to OpenShiftManagedDefault if not specified
     initial: |
       apiVersion: config.openshift.io/v1

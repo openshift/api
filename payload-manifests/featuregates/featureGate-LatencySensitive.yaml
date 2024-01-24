@@ -34,9 +34,6 @@
                         "name": "DynamicResourceAllocation"
                     },
                     {
-                        "name": "EventedPLEG"
-                    },
-                    {
                         "name": "GCPClusterHostedDNS"
                     },
                     {
@@ -121,6 +118,9 @@
                     },
                     {
                         "name": "CloudDualStackNodeIPs"
+                    },
+                    {
+                        "name": "EventedPLEG"
                     },
                     {
                         "name": "ExternalCloudProvider"

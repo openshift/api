@@ -42,6 +42,9 @@ type SchedulerSpec struct {
 	// Defaults to "LowNodeUtilization"
 	// +optional
 	Profile SchedulerProfile `json:"profile,omitempty"`
+	// ProfileCustomizations contains various parameters for modifying the default behavior of existing profiles.
+	// +openshift:enable:FeatureSets=CustomNoUpgrade;TechPreviewNoUpgrade
+	ProfileCustomizations ProfileCustomizations `json:"profileCustomizations"`
 	// defaultNodeSelector helps set the cluster-wide default node selector to
 	// restrict pod placement to specific nodes. This is applied to the pods
 	// created in all namespaces and creates an intersection with any existing
@@ -91,6 +94,23 @@ var (
 	// NoScoring defines a scheduling profile which tries to provide lower-latency scheduling
 	// at the expense of potentially less optimal pod placement decisions.
 	NoScoring SchedulerProfile = "NoScoring"
+)
+
+// ProfileCustomizations contains various parameters for modifying the default behavior of certain profiles
+type ProfileCustomizations struct {
+	// experimentalDynamicResourceAllocation enables/disables dynamic resource allocation feature.
+	// Set to "" by default which means disabled. The default is subject to change.
+	DynamicResourceAllocation DRAEnablement `json:"dynamicResourceAllocation,omitempty"`
+}
+
+// +kubebuilder:validation:Enum:="";"Enabled";"Disabled"
+type DRAEnablement string
+
+var (
+	// DRAEnablementEnabled enables dynamic resource allocation feature
+	DRAEnablementEnabled DRAEnablement = "Enabled"
+	// DRAEnablementDisabled disables dynamic resource allocation feature
+	DRAEnablementDisabled DRAEnablement = "Disabled"
 )
 
 type SchedulerStatus struct {

@@ -9375,6 +9375,16 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.ProfileCustomizations": {
+      "description": "ProfileCustomizations contains various parameters for modifying the default behavior of certain profiles",
+      "type": "object",
+      "properties": {
+        "dynamicResourceAllocation": {
+          "description": "experimentalDynamicResourceAllocation enables/disables dynamic resource allocation feature. Set to \"\" by default which means disabled. The default is subject to change.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.Project": {
       "description": "Project holds cluster-wide information about Project.  The canonical name is `cluster`\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
@@ -9898,6 +9908,9 @@
     },
     "com.github.openshift.api.config.v1.SchedulerSpec": {
       "type": "object",
+      "required": [
+        "profileCustomizations"
+      ],
       "properties": {
         "defaultNodeSelector": {
           "description": "defaultNodeSelector helps set the cluster-wide default node selector to restrict pod placement to specific nodes. This is applied to the pods created in all namespaces and creates an intersection with any existing nodeSelectors already set on a pod, additionally constraining that pod's selector. For example, defaultNodeSelector: \"type=user-node,region=east\" would set nodeSelector field in pod spec to \"type=user-node,region=east\" to all pods created in all namespaces. Namespaces having project-wide node selectors won't be impacted even if this field is set. This adds an annotation section to the namespace. For example, if a new namespace is created with node-selector='type=user-node,region=east', the annotation openshift.io/node-selector: type=user-node,region=east gets added to the project. When the openshift.io/node-selector annotation is set on the project the value is used in preference to the value we are setting for defaultNodeSelector field. For instance, openshift.io/node-selector: \"type=user-node,region=west\" means that the default of \"type=user-node,region=east\" set in defaultNodeSelector would not be applied.",
@@ -9916,6 +9929,11 @@
         "profile": {
           "description": "profile sets which scheduling profile should be set in order to configure scheduling decisions for new pods.\n\nValid values are \"LowNodeUtilization\", \"HighNodeUtilization\", \"NoScoring\" Defaults to \"LowNodeUtilization\"",
           "type": "string"
+        },
+        "profileCustomizations": {
+          "description": "ProfileCustomizations contains various parameters for modifying the default behavior of existing profiles.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.ProfileCustomizations"
         }
       }
     },

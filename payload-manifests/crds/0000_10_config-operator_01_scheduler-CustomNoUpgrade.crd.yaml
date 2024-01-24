@@ -6,6 +6,7 @@ metadata:
     include.release.openshift.io/ibm-cloud-managed: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
     include.release.openshift.io/single-node-developer: "true"
+    release.openshift.io/feature-set: CustomNoUpgrade
   name: schedulers.config.openshift.io
 spec:
   group: config.openshift.io
@@ -94,6 +95,20 @@ spec:
                 - HighNodeUtilization
                 - NoScoring
                 type: string
+              profileCustomizations:
+                description: ProfileCustomizations contains various parameters for
+                  modifying the default behavior of existing profiles.
+                properties:
+                  dynamicResourceAllocation:
+                    description: experimentalDynamicResourceAllocation enables/disables
+                      dynamic resource allocation feature. Set to "" by default which
+                      means disabled. The default is subject to change.
+                    enum:
+                    - ""
+                    - Enabled
+                    - Disabled
+                    type: string
+                type: object
             type: object
           status:
             description: status holds observed values from the cluster. They may not

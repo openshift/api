@@ -343,6 +343,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.PowerVSPlatformStatus":                                           schema_openshift_api_config_v1_PowerVSPlatformStatus(ref),
 		"github.com/openshift/api/config/v1.PowerVSServiceEndpoint":                                          schema_openshift_api_config_v1_PowerVSServiceEndpoint(ref),
 		"github.com/openshift/api/config/v1.PrefixedClaimMapping":                                            schema_openshift_api_config_v1_PrefixedClaimMapping(ref),
+		"github.com/openshift/api/config/v1.ProfileCustomizations":                                           schema_openshift_api_config_v1_ProfileCustomizations(ref),
 		"github.com/openshift/api/config/v1.Project":                                                         schema_openshift_api_config_v1_Project(ref),
 		"github.com/openshift/api/config/v1.ProjectList":                                                     schema_openshift_api_config_v1_ProjectList(ref),
 		"github.com/openshift/api/config/v1.ProjectSpec":                                                     schema_openshift_api_config_v1_ProjectSpec(ref),
@@ -17333,6 +17334,26 @@ func schema_openshift_api_config_v1_PrefixedClaimMapping(ref common.ReferenceCal
 	}
 }
 
+func schema_openshift_api_config_v1_ProfileCustomizations(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ProfileCustomizations contains various parameters for modifying the default behavior of certain profiles",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"dynamicResourceAllocation": {
+						SchemaProps: spec.SchemaProps{
+							Description: "experimentalDynamicResourceAllocation enables/disables dynamic resource allocation feature. Set to \"\" by default which means disabled. The default is subject to change.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_config_v1_Project(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -18240,6 +18261,13 @@ func schema_openshift_api_config_v1_SchedulerSpec(ref common.ReferenceCallback) 
 							Format:      "",
 						},
 					},
+					"profileCustomizations": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ProfileCustomizations contains various parameters for modifying the default behavior of existing profiles.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.ProfileCustomizations"),
+						},
+					},
 					"defaultNodeSelector": {
 						SchemaProps: spec.SchemaProps{
 							Description: "defaultNodeSelector helps set the cluster-wide default node selector to restrict pod placement to specific nodes. This is applied to the pods created in all namespaces and creates an intersection with any existing nodeSelectors already set on a pod, additionally constraining that pod's selector. For example, defaultNodeSelector: \"type=user-node,region=east\" would set nodeSelector field in pod spec to \"type=user-node,region=east\" to all pods created in all namespaces. Namespaces having project-wide node selectors won't be impacted even if this field is set. This adds an annotation section to the namespace. For example, if a new namespace is created with node-selector='type=user-node,region=east', the annotation openshift.io/node-selector: type=user-node,region=east gets added to the project. When the openshift.io/node-selector annotation is set on the project the value is used in preference to the value we are setting for defaultNodeSelector field. For instance, openshift.io/node-selector: \"type=user-node,region=west\" means that the default of \"type=user-node,region=east\" set in defaultNodeSelector would not be applied.",
@@ -18256,10 +18284,11 @@ func schema_openshift_api_config_v1_SchedulerSpec(ref common.ReferenceCallback) 
 						},
 					},
 				},
+				Required: []string{"profileCustomizations"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ConfigMapNameReference"},
+			"github.com/openshift/api/config/v1.ConfigMapNameReference", "github.com/openshift/api/config/v1.ProfileCustomizations"},
 	}
 }
 

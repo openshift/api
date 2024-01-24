@@ -19,9 +19,6 @@
                         "name": "DisableKubeletCloudCredentialProviders"
                     },
                     {
-                        "name": "EventedPLEG"
-                    },
-                    {
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
                     }
                 ],
@@ -52,6 +49,9 @@
                     },
                     {
                         "name": "DynamicResourceAllocation"
+                    },
+                    {
+                        "name": "EventedPLEG"
                     },
                     {
                         "name": "ExternalCloudProvider"

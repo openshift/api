@@ -42,6 +42,14 @@ type NodeSpec struct {
 	// the status and corresponding reaction of the cluster
 	// +optional
 	WorkerLatencyProfile WorkerLatencyProfileType `json:"workerLatencyProfile,omitempty"`
+
+	// eventedPleg enables the event based PLEG between the kubelet and CRI-O
+	// Reference: https://github.com/kubernetes/enhancements/blob/master/keps/sig-node/3386-kubelet-evented-pleg/README.md
+	// Valid values are `Enabled`, `Disabled` and ""
+	// By default, the evented pleg feature is not enabled in the cluster
+	// +openshift:enable:FeatureSets=TechPreviewNoUpgrade
+	// +optional
+	EventedPleg EventedPLEG `json:"eventedPleg"`
 }
 
 type NodeStatus struct{}
@@ -68,6 +76,17 @@ const (
 
 	// Default values of relavent Kubelet, Kube Controller Manager and Kube API Server
 	DefaultUpdateDefaultReaction WorkerLatencyProfileType = "Default"
+)
+
+// +kubebuilder:validation:Enum=Enabled;Disabled;""
+type EventedPLEG string
+
+const (
+	// Enabled enables the event based pleg between the kubelet and the cri-o
+	Enabled EventedPLEG = "Enabled"
+
+	// Disabled disables the event based pleg between the kubelet and the cri-o
+	Disabled EventedPLEG = "Disabled"
 )
 
 const (

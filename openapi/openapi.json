@@ -8186,6 +8186,11 @@
           "description": "CgroupMode determines the cgroups version on the node",
           "type": "string"
         },
+        "eventedPleg": {
+          "description": "eventedPleg enables the event based PLEG between the kubelet and CRI-O Reference: https://github.com/kubernetes/enhancements/blob/master/keps/sig-node/3386-kubelet-evented-pleg/README.md Valid values are `Enabled`, `Disabled` and \"\" By default, the evented pleg feature is not enabled in the cluster",
+          "type": "string",
+          "default": ""
+        },
         "workerLatencyProfile": {
           "description": "WorkerLatencyProfile determins the how fast the kubelet is updating the status and corresponding reaction of the cluster",
           "type": "string"

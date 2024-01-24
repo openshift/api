@@ -2056,6 +2056,7 @@ func (NodeList) SwaggerDoc() map[string]string {
 var map_NodeSpec = map[string]string{
 	"cgroupMode":           "CgroupMode determines the cgroups version on the node",
 	"workerLatencyProfile": "WorkerLatencyProfile determins the how fast the kubelet is updating the status and corresponding reaction of the cluster",
+	"eventedPleg":          "eventedPleg enables the event based PLEG between the kubelet and CRI-O Reference: https://github.com/kubernetes/enhancements/blob/master/keps/sig-node/3386-kubelet-evented-pleg/README.md Valid values are `Enabled`, `Disabled` and \"\" By default, the evented pleg feature is not enabled in the cluster",
 }
 
 func (NodeSpec) SwaggerDoc() map[string]string {

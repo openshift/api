@@ -15304,6 +15304,14 @@ func schema_openshift_api_config_v1_NodeSpec(ref common.ReferenceCallback) commo
 							Format:      "",
 						},
 					},
+					"eventedPleg": {
+						SchemaProps: spec.SchemaProps{
+							Description: "eventedPleg enables the event based PLEG between the kubelet and CRI-O Reference: https://github.com/kubernetes/enhancements/blob/master/keps/sig-node/3386-kubelet-evented-pleg/README.md Valid values are `Enabled`, `Disabled` and \"\" By default, the evented pleg feature is not enabled in the cluster",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 			},
 		},

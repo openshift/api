@@ -451,4 +451,14 @@ var (
 		ResponsiblePerson:   "akashem",
 		OwningProduct:       kubernetes,
 	}
+
+	FeatureGateUnauthenticatedHTTP2DOSMitigation = FeatureGateName("UnauthenticatedHTTP2DOSMitigation")
+	unauthenticatedHTTP2DOSMitigation            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateUnauthenticatedHTTP2DOSMitigation,
+		},
+		OwningJiraComponent: "kube-apiserver",
+		ResponsiblePerson:   "dgrisonnet",
+		OwningProduct:       kubernetes,
+	}
 )

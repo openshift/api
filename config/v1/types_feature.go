@@ -215,6 +215,7 @@ var defaultFeatures = &FeatureGateEnabledDisabled{
 		privateHostedZoneAWS,
 		buildCSIVolumes,
 		kmsv1,
+		unauthenticatedHTTP2DOSMitigation,
 	},
 	Disabled: []FeatureGateDescription{
 		disableKubeletCloudCredentialProviders, // We do not currently ship the correct config to use the external credentials provider.

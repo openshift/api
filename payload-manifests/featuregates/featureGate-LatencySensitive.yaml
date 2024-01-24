@@ -142,6 +142,9 @@
                     },
                     {
                         "name": "PrivateHostedZoneAWS"
+                    },
+                    {
+                        "name": "UnauthenticatedHTTP2DOSMitigation"
                     }
                 ],
                 "version": ""

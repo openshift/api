@@ -124,4 +124,5 @@ status:
     - name: KMSv1
     - name: OpenShiftPodSecurityAdmission
     - name: PrivateHostedZoneAWS
+    - name: UnauthenticatedHTTP2DOSMitigation
     version: 4.15.0-0.ci.test-2023-11-14-160047-ci-op-tfcc12t7-latest`

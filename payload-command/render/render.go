@@ -16,28 +16,35 @@ import (
 	"k8s.io/apimachinery/pkg/util/sets"
 )
 
-const (
-	// bootstrapManifestLocation is the location in the image that contains the manifests to copy into the bootstrap
-	// manifests that are created during bootkube.
-	bootstrapManifestLocation = "/usr/share/bootkube/manifests/manifests"
-)
-
 // RenderOpts holds values to drive the render command.
 type RenderOpts struct {
+	ImageProvidedManifestDir      string
 	RenderedManifestInputFilename string
 	PayloadVersion                string
 	AssetOutputDir                string
+	ClusterProfile                string
 }
 
 func (o *RenderOpts) AddFlags(fs *flag.FlagSet) {
 	fs.StringVar(&o.RenderedManifestInputFilename, "rendered-manifest-dir", o.RenderedManifestInputFilename,
 		"files or directories containing yaml or json manifests that will be created via cluster-bootstrapping.")
+	fs.StringVar(&o.ImageProvidedManifestDir, "image-manifests", o.ImageProvidedManifestDir, "Directory containing the manifest templates provided by the image.")
 	fs.StringVar(&o.PayloadVersion, "payload-version", o.PayloadVersion, "Version that will eventually be placed into ClusterOperator.status.  This normally comes from the CVO set via env var: OPERATOR_IMAGE_VERSION.")
 	fs.StringVar(&o.AssetOutputDir, "asset-output-dir", o.AssetOutputDir, "Output path for rendered manifests.")
+	fs.StringVar(&o.ClusterProfile, "cluster-profile", o.ClusterProfile, "self-managed-high-availability, single-node-developer, ibm-cloud-managed")
 }
 
 // Validate verifies the inputs.
 func (o *RenderOpts) Validate() error {
+	switch o.ClusterProfile {
+	case "":
+		// to be disallowed soonish
+	case "self-managed-high-availability", "single-node-developer", "ibm-cloud-managed":
+		// ok
+	default:
+		return fmt.Errorf("--cluster-profile must be one of self-managed-high-availability, single-node-developer, ibm-cloud-managed")
+	}
+
 	return nil
 }
 
@@ -77,9 +84,10 @@ func (o *RenderOpts) Run() error {
 	}
 
 	err = assets.SubstituteAndCopyFiles(
-		bootstrapManifestLocation,
+		o.ImageProvidedManifestDir,
 		filepath.Join(o.AssetOutputDir, "manifests"),
 		featureSet,
+		o.ClusterProfile,
 		nil,
 	)
 	if err != nil {

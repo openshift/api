@@ -401,4 +401,67 @@ var (
 		ResponsiblePerson:   "dkhater",
 		OwningProduct:       ocpSpecific,
 	}
+<<<<<<< HEAD
+=======
+
+	FeatureGateSignatureStores = FeatureGateName("SignatureStores")
+	signatureStores            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateSignatureStores,
+		},
+		OwningJiraComponent: "Cluster Version Operator",
+		ResponsiblePerson:   "lmohanty",
+		OwningProduct:       ocpSpecific,
+	}
+
+	FeatureGateKMSv1 = FeatureGateName("KMSv1")
+	kmsv1            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateKMSv1,
+		},
+		OwningJiraComponent: "kube-apiserver",
+		ResponsiblePerson:   "dgrisonnet",
+		OwningProduct:       kubernetes,
+	}
+
+	FeatureGatePinnedImages = FeatureGateName("PinnedImages")
+	pinnedImages            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGatePinnedImages,
+		},
+		OwningJiraComponent: "MachineConfigOperator",
+		ResponsiblePerson:   "jhernand",
+		OwningProduct:       ocpSpecific,
+	}
+
+	FeatureGateUpgradeStatus = FeatureGateName("UpgradeStatus")
+	upgradeStatus            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateUpgradeStatus,
+		},
+		OwningJiraComponent: "Cluster Version Operator",
+		ResponsiblePerson:   "pmuller",
+		OwningProduct:       ocpSpecific,
+	}
+
+	FeatureGateTranslateStreamCloseWebsocketRequests = FeatureGateName("TranslateStreamCloseWebsocketRequests")
+	translateStreamCloseWebsocketRequests            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateTranslateStreamCloseWebsocketRequests,
+		},
+		OwningJiraComponent: "kube-apiserver",
+		ResponsiblePerson:   "akashem",
+		OwningProduct:       kubernetes,
+	}
+
+	FeatureGateVolumeGroupSnapshot = FeatureGateName("VolumeGroupSnapshot")
+	volumeGroupSnapshot            = FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: FeatureGateVolumeGroupSnapshot,
+		},
+		OwningJiraComponent: "Storage / Kubernetes External Components",
+		ResponsiblePerson:   "fbertina",
+		OwningProduct:       kubernetes,
+	}
+>>>>>>> e4016b62 (Add new API for VolumeGroupSnapshot)
 )

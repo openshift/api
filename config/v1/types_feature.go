@@ -191,6 +191,14 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		with(managedBootImages).
 		without(disableKubeletCloudCredentialProviders).
 		with(onClusterBuild).
+<<<<<<< HEAD
+=======
+		with(signatureStores).
+		with(pinnedImages).
+		with(upgradeStatus).
+		with(translateStreamCloseWebsocketRequests).
+		with(volumeGroupSnapshot).
+>>>>>>> e4016b62 (Add new API for VolumeGroupSnapshot)
 		toFeatures(defaultFeatures),
 	LatencySensitive: newDefaultFeatures().
 		toFeatures(defaultFeatures),

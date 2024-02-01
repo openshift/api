@@ -963,6 +963,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.MachineConfigurationList":                                      schema_openshift_api_operator_v1_MachineConfigurationList(ref),
 		"github.com/openshift/api/operator/v1.MachineConfigurationSpec":                                      schema_openshift_api_operator_v1_MachineConfigurationSpec(ref),
 		"github.com/openshift/api/operator/v1.MachineConfigurationStatus":                                    schema_openshift_api_operator_v1_MachineConfigurationStatus(ref),
+		"github.com/openshift/api/operator/v1.MachineManager":                                                schema_openshift_api_operator_v1_MachineManager(ref),
+		"github.com/openshift/api/operator/v1.MachineManagerSelector":                                        schema_openshift_api_operator_v1_MachineManagerSelector(ref),
+		"github.com/openshift/api/operator/v1.ManagedBootImages":                                             schema_openshift_api_operator_v1_ManagedBootImages(ref),
 		"github.com/openshift/api/operator/v1.MyOperatorResource":                                            schema_openshift_api_operator_v1_MyOperatorResource(ref),
 		"github.com/openshift/api/operator/v1.MyOperatorResourceSpec":                                        schema_openshift_api_operator_v1_MyOperatorResourceSpec(ref),
 		"github.com/openshift/api/operator/v1.MyOperatorResourceStatus":                                      schema_openshift_api_operator_v1_MyOperatorResourceStatus(ref),
@@ -989,6 +992,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.OperatorCondition":                                             schema_openshift_api_operator_v1_OperatorCondition(ref),
 		"github.com/openshift/api/operator/v1.OperatorSpec":                                                  schema_openshift_api_operator_v1_OperatorSpec(ref),
 		"github.com/openshift/api/operator/v1.OperatorStatus":                                                schema_openshift_api_operator_v1_OperatorStatus(ref),
+		"github.com/openshift/api/operator/v1.PartialSelector":                                               schema_openshift_api_operator_v1_PartialSelector(ref),
 		"github.com/openshift/api/operator/v1.Perspective":                                                   schema_openshift_api_operator_v1_Perspective(ref),
 		"github.com/openshift/api/operator/v1.PerspectiveVisibility":                                         schema_openshift_api_operator_v1_PerspectiveVisibility(ref),
 		"github.com/openshift/api/operator/v1.PinnedResourceReference":                                       schema_openshift_api_operator_v1_PinnedResourceReference(ref),
@@ -48991,12 +48995,19 @@ func schema_openshift_api_operator_v1_MachineConfigurationSpec(ref common.Refere
 							Format:      "int32",
 						},
 					},
+					"managedBootImages": {
+						SchemaProps: spec.SchemaProps{
+							Description: "managedBootImages allows configuration for the management of boot images for machine resources within the cluster. This configuration allows users to select resources that should be updated to the latest boot images during cluster upgrades, ensuring that new machines always boot with the current cluster version's boot image. When omitted, no boot images will be updated.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1.ManagedBootImages"),
+						},
+					},
 				},
 				Required: []string{"managementState", "forceRedeploymentReason"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
+			"github.com/openshift/api/operator/v1.ManagedBootImages", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -49090,6 +49101,123 @@ func schema_openshift_api_operator_v1_MachineConfigurationStatus(ref common.Refe
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.NodeStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
+	}
+}
+
+func schema_openshift_api_operator_v1_MachineManager(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MachineManager describes a target machine resource that is registered for boot image updates. It stores identifying information such as the resource type and the API Group of the resource. It also provides granular control via the selection field.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"resource": {
+						SchemaProps: spec.SchemaProps{
+							Description: "resource is the machine management resource's type. The only current valid value is machinesets. machinesets means that the machine manager will only register resources of the kind MachineSet.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiGroup": {
+						SchemaProps: spec.SchemaProps{
+							Description: "apiGroup is name of the APIGroup that the machine management resource belongs to. The only current valid value is machine.openshift.io. machine.openshift.io means that the machine manager will only register resources that belong to OpenShift machine API group.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"selection": {
+						SchemaProps: spec.SchemaProps{
+							Description: "selection allows granular control of the machine management resources that will be registered for boot image updates.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1.MachineManagerSelector"),
+						},
+					},
+				},
+				Required: []string{"resource", "apiGroup", "selection"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1.MachineManagerSelector"},
+	}
+}
+
+func schema_openshift_api_operator_v1_MachineManagerSelector(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "mode determines how machine managers will be selected for updates. Valid values are All and Partial. All means that every resource matched by the machine manager will be updated. Partial requires specified selector(s) and allows customisation of which resources matched by the machine manager will be updated.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"partial": {
+						SchemaProps: spec.SchemaProps{
+							Description: "partial provides label selector(s) that can be used to match machine management resources. Only permitted when mode is set to \"Partial\".",
+							Ref:         ref("github.com/openshift/api/operator/v1.PartialSelector"),
+						},
+					},
+				},
+				Required: []string{"mode"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "mode",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"partial": "Partial",
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1.PartialSelector"},
+	}
+}
+
+func schema_openshift_api_operator_v1_ManagedBootImages(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"machineManagers": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"resource",
+									"apiGroup",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "machineManagers can be used to register machine management resources for boot image updates. The Machine Config Operator will watch for changes to this list. Only one entry is permitted per type of machine management resource.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/operator/v1.MachineManager"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1.MachineManager"},
 	}
 }
 
@@ -50530,6 +50658,27 @@ func schema_openshift_api_operator_v1_OperatorStatus(ref common.ReferenceCallbac
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
+	}
+}
+
+func schema_openshift_api_operator_v1_PartialSelector(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PartialSelector provides label selector(s) that can be used to match machine management resources.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"machineResourceSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "machineResourceSelector is a label selector that can be used to select machine resources like MachineSets.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"},
 	}
 }
 

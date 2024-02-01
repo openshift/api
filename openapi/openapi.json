@@ -28632,6 +28632,11 @@
           "description": "logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for their operands.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
           "type": "string"
         },
+        "managedBootImages": {
+          "description": "managedBootImages allows configuration for the management of boot images for machine resources within the cluster. This configuration allows users to select resources that should be updated to the latest boot images during cluster upgrades, ensuring that new machines always boot with the current cluster version's boot image. When omitted, no boot images will be updated.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.ManagedBootImages"
+        },
         "managementState": {
           "description": "managementState indicates whether and how the operator should manage the component",
           "type": "string",
@@ -28711,6 +28716,75 @@
         "version": {
           "description": "version is the level this availability applies to",
           "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.MachineManager": {
+      "description": "MachineManager describes a target machine resource that is registered for boot image updates. It stores identifying information such as the resource type and the API Group of the resource. It also provides granular control via the selection field.",
+      "type": "object",
+      "required": [
+        "resource",
+        "apiGroup",
+        "selection"
+      ],
+      "properties": {
+        "apiGroup": {
+          "description": "apiGroup is name of the APIGroup that the machine management resource belongs to. The only current valid value is machine.openshift.io. machine.openshift.io means that the machine manager will only register resources that belong to OpenShift machine API group.",
+          "type": "string",
+          "default": ""
+        },
+        "resource": {
+          "description": "resource is the machine management resource's type. The only current valid value is machinesets. machinesets means that the machine manager will only register resources of the kind MachineSet.",
+          "type": "string",
+          "default": ""
+        },
+        "selection": {
+          "description": "selection allows granular control of the machine management resources that will be registered for boot image updates.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.MachineManagerSelector"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.MachineManagerSelector": {
+      "type": "object",
+      "required": [
+        "mode"
+      ],
+      "properties": {
+        "mode": {
+          "description": "mode determines how machine managers will be selected for updates. Valid values are All and Partial. All means that every resource matched by the machine manager will be updated. Partial requires specified selector(s) and allows customisation of which resources matched by the machine manager will be updated.",
+          "type": "string",
+          "default": ""
+        },
+        "partial": {
+          "description": "partial provides label selector(s) that can be used to match machine management resources. Only permitted when mode is set to \"Partial\".",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.PartialSelector"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "mode",
+          "fields-to-discriminateBy": {
+            "partial": "Partial"
+          }
+        }
+      ]
+    },
+    "com.github.openshift.api.operator.v1.ManagedBootImages": {
+      "type": "object",
+      "properties": {
+        "machineManagers": {
+          "description": "machineManagers can be used to register machine management resources for boot image updates. The Machine Config Operator will watch for changes to this list. Only one entry is permitted per type of machine management resource.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.MachineManager"
+          },
+          "x-kubernetes-list-map-keys": [
+            "resource",
+            "apiGroup"
+          ],
+          "x-kubernetes-list-type": "map"
         }
       }
     },
@@ -29583,6 +29657,16 @@
         "version": {
           "description": "version is the level this availability applies to",
           "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.PartialSelector": {
+      "description": "PartialSelector provides label selector(s) that can be used to match machine management resources.",
+      "type": "object",
+      "properties": {
+        "machineResourceSelector": {
+          "description": "machineResourceSelector is a label selector that can be used to select machine resources like MachineSets.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector"
         }
       }
     },

@@ -101,6 +101,9 @@
                     },
                     {
                         "name": "ValidatingAdmissionPolicy"
+                    },
+                    {
+                        "name": "VolumeGroupSnapshot"
                     }
                 ],
                 "enabled": [

@@ -195,6 +195,7 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		with(pinnedImages).
 		with(upgradeStatus).
 		with(translateStreamCloseWebsocketRequests).
+		with(volumeGroupSnapshot).
 		toFeatures(defaultFeatures),
 	LatencySensitive: newDefaultFeatures().
 		toFeatures(defaultFeatures),

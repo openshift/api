@@ -142,6 +142,9 @@
                     },
                     {
                         "name": "ValidatingAdmissionPolicy"
+                    },
+                    {
+                        "name": "VolumeGroupSnapshot"
                     }
                 ],
                 "version": ""

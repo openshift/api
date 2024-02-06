@@ -64,6 +64,20 @@ type ConfigSpec struct {
 	// content but the operator will not recreate(or update) anything
 	// listed here.
 	SkippedTemplates []string `json:"skippedTemplates,omitempty" protobuf:"bytes,6,opt,name=skippedTemplates"`
+
+	// skippedhelmcharts specifies names of helm charts that should NOT be
+	// managed. Admins can use this to allow them to delete content
+	// they don’t want. They will still have to MANUALLY DELETE the
+	// content but the operator will not recreate(or update) anything
+	// listed here. Few examples of the name of helmcharts which can be skipped are
+	// 'redhat-redhat-perl-imagestreams','redhat-redhat-nodejs-imagestreams','redhat-nginx-imagestreams',
+	// 'redhat-redhat-ruby-imagestreams','redhat-redhat-python-imagestreams','redhat-redhat-php-imagestreams',
+	// 'redhat-httpd-imagestreams','redhat-redhat-dotnet-imagestreams'. Rest of the names can be obtained from
+	// openshift console --> helmcharts -->installed helmcarts. This will display the list of all the 12 helmcharts
+	// being installed by Samples Operator
+	// +listType=set
+	// +kubebuilder:validation:MaxItems=16
+	SkippedHelmCharts []string `json:"skippedHelmCharts,omitempty" protobuf:"bytes,7,opt,name=skippedhelmCharts"`
 }
 
 // ConfigStatus contains the actual configuration in effect, as well as various details

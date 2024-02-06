@@ -530,6 +530,6 @@ var (
 						reportProblemsToJiraComponent("metal").
 						contactPerson("EmilienM").
 						productScope(ocpSpecific).
-						enableIn(TechPreviewNoUpgrade).
+						enableIn(Default, TechPreviewNoUpgrade).
 						mustRegister()
 )

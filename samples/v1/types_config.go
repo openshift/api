@@ -74,9 +74,14 @@ type ConfigSpec struct {
 	// 'redhat-redhat-ruby-imagestreams','redhat-redhat-python-imagestreams','redhat-redhat-php-imagestreams',
 	// 'redhat-httpd-imagestreams','redhat-redhat-dotnet-imagestreams'. Rest of the names can be obtained from
 	// openshift console --> helmcharts -->installed helmcharts. This will display the list of all the
-	// 12 helmcharts(of imagestreams)being installed by Samples Operator
+	// 12 helmcharts(of imagestreams)being installed by Samples Operator. The skippedHelmCharts must be a
+	// valid Kubernetes resource name. May contain only lowercase alphanumeric characters, hyphens and periods,
+	// and each period separated segment must begin and end with an alphanumeric character. It must be non-empty
+	// and at most 253 characters in length
 	// +listType=set
 	// +kubebuilder:validation:MaxItems=16
+	// +kubebuilder:validation:XValidation:rule=`self.all(x, x.matches('^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$'))`,message="skippedHelmCharts must be a valid Kubernetes resource name .May contain only lowercase alphanumeric characters, hyphens and periods, and each period separated segment must begin and end with an alphanumeric character"
+	// +kubebuilder:validation:XValidation:rule="self.all(x, x.size() > 0 && x.size() < 254)", message="skippedHelmCharts must be non-empty and at most 253 characters in length"
 	SkippedHelmCharts []string `json:"skippedHelmCharts,omitempty" protobuf:"bytes,7,opt,name=skippedhelmCharts"`
 }
 

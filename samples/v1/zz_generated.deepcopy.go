@@ -108,7 +108,7 @@ func (in *ConfigSpec) DeepCopyInto(out *ConfigSpec) {
 	}
 	if in.SkippedHelmCharts != nil {
 		in, out := &in.SkippedHelmCharts, &out.SkippedHelmCharts
-		*out = make([]string, len(*in))
+		*out = make([]HelmChartName, len(*in))
 		copy(*out, *in)
 	}
 	return

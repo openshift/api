@@ -80,10 +80,14 @@ type ConfigSpec struct {
 	// and at most 253 characters in length
 	// +listType=set
 	// +kubebuilder:validation:MaxItems=16
-	// +kubebuilder:validation:XValidation:rule="self.all(x, x.matches('^[a-z0-9]([a-z0-9-]*[a-z0-9])?$'))",message="skippedHelmCharts must be a valid Kubernetes resource name .May contain only lowercase alphanumeric characters, hyphens and periods, and each period separated segment must begin and end with an alphanumeric character"
-	// +kubebuilder:validation:XValidation:rule="self.all(x, x.size() > 0 && x.size() < 254)", message="skippedHelmCharts must be non-empty and at most 253 characters in length"
-	SkippedHelmCharts []string `json:"skippedHelmCharts,omitempty" protobuf:"bytes,7,opt,name=skippedhelmCharts"`
+	// +kubebuilder:validation:XValidation:rule="self.all(x, x.matches('^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$'))",message="skippedHelmCharts must be a valid Kubernetes resource name. May contain only lowercase alphanumeric characters, hyphens and periods, and each period separated segment must begin and end with an alphanumeric character"
+	SkippedHelmCharts []HelmChartName `json:"skippedHelmCharts,omitempty" protobuf:"bytes,7,opt,name=skippedhelmCharts"`
 }
+
+// HelmChartName is a string alias that is used to represent the name of a helm chart.
+// +kubebuilder:validation:MinLength=1
+// +kubebuilder:validation:MaxLength=253
+type HelmChartName string
 
 // ConfigStatus contains the actual configuration in effect, as well as various details
 // that describe the state of the Samples Operator.

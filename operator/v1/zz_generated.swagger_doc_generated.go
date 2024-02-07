@@ -1648,6 +1648,14 @@ func (OpenShiftControllerManagerList) SwaggerDoc() map[string]string {
 	return map_OpenShiftControllerManagerList
 }
 
+var map_OpenShiftControllerManagerSpec = map[string]string{
+	"imageRegistryAuthTokenType": "imageRegistryAuthTokenType specifies the kind of service account token when used when generating image pull secrets for the integrated image registry.",
+}
+
+func (OpenShiftControllerManagerSpec) SwaggerDoc() map[string]string {
+	return map_OpenShiftControllerManagerSpec
+}
+
 var map_KubeScheduler = map[string]string{
 	"":         "KubeScheduler provides information to configure an operator to manage scheduler.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 	"metadata": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",

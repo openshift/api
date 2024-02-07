@@ -39,6 +39,13 @@ spec:
             type: object
           spec:
             properties:
+              imageRegistryAuthTokenType:
+                description: imageRegistryAuthTokenType specifies the kind of service
+                  account token when used when generating image pull secrets for the
+                  integrated image registry.
+                enum:
+                - Legacy
+                type: string
               logLevel:
                 default: Normal
                 description: "logLevel is an intent based logging for an overall component.

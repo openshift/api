@@ -29391,6 +29391,10 @@
         "managementState"
       ],
       "properties": {
+        "imageRegistryAuthTokenType": {
+          "description": "imageRegistryAuthTokenType specifies the kind of service account token when used when generating image pull secrets for the integrated image registry.",
+          "type": "string"
+        },
         "logLevel": {
           "description": "logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for their operands.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
           "type": "string"

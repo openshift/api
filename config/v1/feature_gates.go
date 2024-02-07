@@ -193,16 +193,6 @@ var (
 		OwningProduct:       ocpSpecific,
 	}
 
-	FeatureGateSigstoreImageVerification = FeatureGateName("SigstoreImageVerification")
-	sigstoreImageVerification            = FeatureGateDescription{
-		FeatureGateAttributes: FeatureGateAttributes{
-			Name: FeatureGateSigstoreImageVerification,
-		},
-		OwningJiraComponent: "node",
-		ResponsiblePerson:   "sgrunert",
-		OwningProduct:       ocpSpecific,
-	}
-
 	FeatureGateGCPLabelsTags = FeatureGateName("GCPLabelsTags")
 	gcpLabelsTags            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{
@@ -391,7 +381,6 @@ var (
 		ResponsiblePerson:   "jspeed",
 		OwningProduct:       kubernetes,
 	}
-
 
 	FeatureGateOnClusterBuild = FeatureGateName("OnClusterBuild")
 	onClusterBuild            = FeatureGateDescription{

@@ -88,9 +88,6 @@
                         "name": "SignatureStores"
                     },
                     {
-                        "name": "SigstoreImageVerification"
-                    },
-                    {
                         "name": "VSphereControlPlaneMachineSet"
                     },
                     {

@@ -49,16 +49,11 @@ tests:
         skippedHelmCharts:
         - 
     expectedError: "Invalid value: \"null\": spec.skippedHelmCharts[0] in body must be of type string: \"null\""
-  - name: Should reject empty string in skippedHelmCharts list
+  - name: Should reject too long string in skippedHelmCharts list
     initial: |
       apiVersion: samples.operator.openshift.io/v1
       kind: Config
       spec: 
         skippedHelmCharts:
         - foobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobar
-    expected: |
-      apiVersion: samples.operator.openshift.io/v1
-      kind: Config
-      spec: 
-        skippedHelmCharts:
-        - foobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobar
+    expectedError: "Too long: may not be longer than 253"

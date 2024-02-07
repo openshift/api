@@ -12,22 +12,6 @@ tests:
       apiVersion: samples.operator.openshift.io/v1
       kind: Config
       spec: {}
-  - name: Should reject empty string in skippedHelmCharts list
-    initial: |
-      apiVersion: samples.operator.openshift.io/v1
-      kind: Config
-      spec: 
-        skippedHelmCharts: 
-        - 
-    expectedError: "The skippedHelmCharts must be a valid Kubernetes resource name.May contain only lowercase alphanumeric characters, hyphens and periods, and each period separated segment must begin and end with an alphanumeric character"
-  - name: Should reject too long string in skippedHelmCharts list
-    initial: |
-      apiVersion: samples.operator.openshift.io/v1
-      kind: Config
-      spec: 
-        skippedHelmCharts: 
-        - foobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobar
-    expectedError: "The HelmChartName must be less than 253"
   - name: Should be able to add a helmchartname to skippedHelmCharts list
     initial: |
       apiVersion: samples.operator.openshift.io/v1

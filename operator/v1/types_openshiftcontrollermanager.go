@@ -28,7 +28,19 @@ type OpenShiftControllerManager struct {
 
 type OpenShiftControllerManagerSpec struct {
 	OperatorSpec `json:",inline"`
+
+	// imageRegistryAuthTokenType specifies the kind of service account token when used
+	// when generating image pull secrets for the integrated image registry.
+	// +kubebuilder:validation:Enum=Legacy
+	// +optional
+	ImageRegistryAuthTokenType ServiceAccountTokenType `json:"imageRegistryAuthTokenType,omitempty"`
 }
+
+type ServiceAccountTokenType string
+
+const (
+	ServiceAccountLegacyTokenType ServiceAccountTokenType = "Legacy"
+)
 
 type OpenShiftControllerManagerStatus struct {
 	OperatorStatus `json:",inline"`

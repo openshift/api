@@ -32,9 +32,25 @@ tests:
       spec: 
         skippedHelmCharts:
         - foo.-bar.baz
+    expectedError: "Invalid value: \"array\": skippedHelmCharts must be a valid Kubernetes resource name. May contain only lowercase alphanumeric characters, hyphens and periods, and each period separated segment must begin and end with an alphanumeric character"
+  - name: Should reject invalid string in skippedHelmCharts list
+    initial: |
+      apiVersion: samples.operator.openshift.io/v1
+      kind: Config
+      spec: 
+        skippedHelmCharts:
+        - foo.bar.baz.
+    expectedError: "Invalid value: \"array\": skippedHelmCharts must be a valid Kubernetes resource name. May contain only lowercase alphanumeric characters, hyphens and periods, and each period separated segment must begin and end with an alphanumeric character"
+  - name: Should reject empty string in skippedHelmCharts list
+    initial: |
+      apiVersion: samples.operator.openshift.io/v1
+      kind: Config
+      spec: 
+        skippedHelmCharts:
+        - 
     expected: |
       apiVersion: samples.operator.openshift.io/v1
       kind: Config
       spec: 
         skippedHelmCharts:
-        - foo.-bar.baz
+        - 

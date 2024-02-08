@@ -42,7 +42,7 @@ type SchedulerSpec struct {
 	// Defaults to "LowNodeUtilization"
 	// +optional
 	Profile SchedulerProfile `json:"profile,omitempty"`
-	// ProfileCustomizations contains various parameters for modifying the default behavior of existing profiles.
+	// profileCustomizations contains configuration for modifying the default behavior of existing scheduler profiles.
 	// +openshift:enable:FeatureSets=CustomNoUpgrade;TechPreviewNoUpgrade
 	ProfileCustomizations ProfileCustomizations `json:"profileCustomizations"`
 	// defaultNodeSelector helps set the cluster-wide default node selector to

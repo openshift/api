@@ -44,6 +44,7 @@ type SchedulerSpec struct {
 	Profile SchedulerProfile `json:"profile,omitempty"`
 	// profileCustomizations contains configuration for modifying the default behavior of existing scheduler profiles.
 	// +openshift:enable:FeatureSets=CustomNoUpgrade;TechPreviewNoUpgrade
+	// +optional
 	ProfileCustomizations ProfileCustomizations `json:"profileCustomizations"`
 	// defaultNodeSelector helps set the cluster-wide default node selector to
 	// restrict pod placement to specific nodes. This is applied to the pods
@@ -106,6 +107,7 @@ type ProfileCustomizations struct {
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default,
 	// which is subject to change over time.
 	// The current default is Disabled.
+	// +optional
 	DynamicResourceAllocation DRAEnablement `json:"dynamicResourceAllocation"`
 }
 

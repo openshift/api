@@ -98,7 +98,8 @@ var (
 
 // ProfileCustomizations contains various parameters for modifying the default behavior of certain profiles
 type ProfileCustomizations struct {
-	// experimentalDynamicResourceAllocation enables/disables dynamic resource allocation feature.
+	// dynamicResourceAllocation allows to enable or disable dynamic resource allocation within the scheduler.
+	// <insert very short synopsis of what DRA does>.
 	// Valid values are Enabled, Disabled and omitted.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default,
 	// which is subject to change over time.

@@ -29,9 +29,11 @@ type OpenShiftControllerManager struct {
 type OpenShiftControllerManagerSpec struct {
 	OperatorSpec `json:",inline"`
 
-	// imageRegistryAuthTokenType specifies the kind of service account token when used
-	// when generating image pull secrets for the integrated image registry.
-	// +kubebuilder:validation:Enum=Legacy
+	// imageRegistryAuthTokenType directs the openshift-controller-manager to use either a
+	// legacy,(unbound, long-lived) service acccount tokens or a bound service account
+	// token when generating image pull secrets for the integrated image registry.
+	// +kubebuilder:default=Bound
+	// +kubebuilder:validation:Enum=Legacy;Bound
 	// +optional
 	ImageRegistryAuthTokenType ServiceAccountTokenType `json:"imageRegistryAuthTokenType,omitempty"`
 }
@@ -40,6 +42,7 @@ type ServiceAccountTokenType string
 
 const (
 	ServiceAccountLegacyTokenType ServiceAccountTokenType = "Legacy"
+	ServiceAccountBoundTokenType  ServiceAccountTokenType = "Bound"
 )
 
 type OpenShiftControllerManagerStatus struct {

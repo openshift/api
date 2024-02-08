@@ -17343,7 +17343,8 @@ func schema_openshift_api_config_v1_ProfileCustomizations(ref common.ReferenceCa
 				Properties: map[string]spec.Schema{
 					"dynamicResourceAllocation": {
 						SchemaProps: spec.SchemaProps{
-							Description: "experimentalDynamicResourceAllocation enables/disables dynamic resource allocation feature. Set to \"\" by default which means disabled. The default is subject to change.",
+							Description: "dynamicResourceAllocation allows to enable or disable dynamic resource allocation within the scheduler. Dynamic resource allocation is an API for requesting and sharing resources between pods and containers inside a pod. Third-party resource drivers are responsible for tracking and allocating resources. Different kinds of resources support arbitrary parameters for defining requirements and initialization. Valid values are Enabled, Disabled and omitted. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is Disabled.",
+							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -18263,7 +18264,7 @@ func schema_openshift_api_config_v1_SchedulerSpec(ref common.ReferenceCallback) 
 					},
 					"profileCustomizations": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ProfileCustomizations contains various parameters for modifying the default behavior of existing profiles.",
+							Description: "profileCustomizations contains configuration for modifying the default behavior of existing scheduler profiles.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.ProfileCustomizations"),
 						},
@@ -18284,7 +18285,6 @@ func schema_openshift_api_config_v1_SchedulerSpec(ref common.ReferenceCallback) 
 						},
 					},
 				},
-				Required: []string{"profileCustomizations"},
 			},
 		},
 		Dependencies: []string{

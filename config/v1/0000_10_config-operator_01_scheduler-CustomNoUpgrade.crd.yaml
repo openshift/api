@@ -96,13 +96,20 @@ spec:
                 - NoScoring
                 type: string
               profileCustomizations:
-                description: ProfileCustomizations contains various parameters for
-                  modifying the default behavior of existing profiles.
+                description: profileCustomizations contains configuration for modifying
+                  the default behavior of existing scheduler profiles.
                 properties:
                   dynamicResourceAllocation:
-                    description: experimentalDynamicResourceAllocation enables/disables
-                      dynamic resource allocation feature. Set to "" by default which
-                      means disabled. The default is subject to change.
+                    description: dynamicResourceAllocation allows to enable or disable
+                      dynamic resource allocation within the scheduler. Dynamic resource
+                      allocation is an API for requesting and sharing resources between
+                      pods and containers inside a pod. Third-party resource drivers
+                      are responsible for tracking and allocating resources. Different
+                      kinds of resources support arbitrary parameters for defining
+                      requirements and initialization. Valid values are Enabled, Disabled
+                      and omitted. When omitted, this means no opinion and the platform
+                      is left to choose a reasonable default, which is subject to
+                      change over time. The current default is Disabled.
                     enum:
                     - ""
                     - Enabled

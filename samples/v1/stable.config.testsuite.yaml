@@ -48,7 +48,7 @@ tests:
       spec: 
         skippedHelmCharts:
         - ""
-    expectedError: "Invalid value: \"null\": spec.skippedHelmCharts[0] in body must be of type string: \"null\""
+    expectedError: "Invalid value: \"\": spec.skippedHelmCharts[0] in body should be at least 1 chars long"
   - name: Should reject too long string in skippedHelmCharts list
     initial: |
       apiVersion: samples.operator.openshift.io/v1

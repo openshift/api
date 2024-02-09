@@ -47,7 +47,7 @@ tests:
       kind: Config
       spec: 
         skippedHelmCharts:
-        - 
+        - ""
     expectedError: "Invalid value: \"null\": spec.skippedHelmCharts[0] in body must be of type string: \"null\""
   - name: Should reject too long string in skippedHelmCharts list
     initial: |

@@ -50217,7 +50217,7 @@ func schema_openshift_api_operator_v1_OpenShiftControllerManagerSpec(ref common.
 					},
 					"imageRegistryAuthTokenType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "imageRegistryAuthTokenType specifies the kind of service account token when used when generating image pull secrets for the integrated image registry.",
+							Description: "imageRegistryAuthTokenType directs the openshift-controller-manager to use either a legacy,(unbound, long-lived) service acccount tokens or a bound service account token when generating image pull secrets for the integrated image registry.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

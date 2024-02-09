@@ -1649,7 +1649,7 @@ func (OpenShiftControllerManagerList) SwaggerDoc() map[string]string {
 }
 
 var map_OpenShiftControllerManagerSpec = map[string]string{
-	"imageRegistryAuthTokenType": "imageRegistryAuthTokenType specifies the kind of service account token when used when generating image pull secrets for the integrated image registry.",
+	"imageRegistryAuthTokenType": "imageRegistryAuthTokenType directs the openshift-controller-manager to use either a legacy,(unbound, long-lived) service acccount tokens or a bound service account token when generating image pull secrets for the integrated image registry.",
 }
 
 func (OpenShiftControllerManagerSpec) SwaggerDoc() map[string]string {

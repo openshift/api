@@ -10917,7 +10917,7 @@
         "fulcioCAData": {
           "description": "fulcioCAData contains inline base64-encoded data for the PEM format fulcio CA. fulcioCAData must be at most 8192 characters.",
           "type": "string",
-          "default": ""
+          "format": "byte"
         },
         "fulcioSubject": {
           "description": "fulcioSubject specifies OIDC issuer and the email of the Fulcio authentication configuration.",
@@ -10927,7 +10927,7 @@
         "rekorKeyData": {
           "description": "rekorKeyData contains inline base64-encoded data for the PEM format from the Rekor public key. rekorKeyData must be at most 8192 characters.",
           "type": "string",
-          "default": ""
+          "format": "byte"
         }
       }
     },
@@ -11270,11 +11270,12 @@
         "keyData": {
           "description": "keyData contains inline base64-encoded data for the PEM format public key. KeyData must be at most 8192 characters.",
           "type": "string",
-          "default": ""
+          "format": "byte"
         },
         "rekorKeyData": {
           "description": "rekorKeyData contains inline base64-encoded data for the PEM format from the Rekor public key. rekorKeyData must be at most 8192 characters.",
-          "type": "string"
+          "type": "string",
+          "format": "byte"
         }
       }
     },

@@ -19954,17 +19954,15 @@ func schema_openshift_api_config_v1alpha1_FulcioCAWithRekor(ref common.Reference
 					"fulcioCAData": {
 						SchemaProps: spec.SchemaProps{
 							Description: "fulcioCAData contains inline base64-encoded data for the PEM format fulcio CA. fulcioCAData must be at most 8192 characters.",
-							Default:     "",
 							Type:        []string{"string"},
-							Format:      "",
+							Format:      "byte",
 						},
 					},
 					"rekorKeyData": {
 						SchemaProps: spec.SchemaProps{
 							Description: "rekorKeyData contains inline base64-encoded data for the PEM format from the Rekor public key. rekorKeyData must be at most 8192 characters.",
-							Default:     "",
 							Type:        []string{"string"},
-							Format:      "",
+							Format:      "byte",
 						},
 					},
 					"fulcioSubject": {
@@ -20548,16 +20546,15 @@ func schema_openshift_api_config_v1alpha1_PublicKey(ref common.ReferenceCallback
 					"keyData": {
 						SchemaProps: spec.SchemaProps{
 							Description: "keyData contains inline base64-encoded data for the PEM format public key. KeyData must be at most 8192 characters.",
-							Default:     "",
 							Type:        []string{"string"},
-							Format:      "",
+							Format:      "byte",
 						},
 					},
 					"rekorKeyData": {
 						SchemaProps: spec.SchemaProps{
 							Description: "rekorKeyData contains inline base64-encoded data for the PEM format from the Rekor public key. rekorKeyData must be at most 8192 characters.",
 							Type:        []string{"string"},
-							Format:      "",
+							Format:      "byte",
 						},
 					},
 				},

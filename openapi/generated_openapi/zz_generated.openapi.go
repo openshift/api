@@ -50244,6 +50244,13 @@ func schema_openshift_api_operator_v1_OpenShiftControllerManagerSpec(ref common.
 							Ref:         ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
 						},
 					},
+					"imageRegistryAuthTokenType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "imageRegistryAuthTokenType directs the openshift-controller-manager to use either a legacy,(unbound, long-lived) service acccount tokens or a bound service account token when generating image pull secrets for the integrated image registry.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 				Required: []string{"managementState"},
 			},

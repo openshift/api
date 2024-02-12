@@ -200,6 +200,7 @@ const (
 	OpenShiftServiceAccountController            OpenShiftControllerName = "openshift.io/serviceaccount"
 	OpenShiftDefaultRoleBindingsController       OpenShiftControllerName = "openshift.io/default-rolebindings"
 	OpenShiftServiceAccountPullSecretsController OpenShiftControllerName = "openshift.io/serviceaccount-pull-secrets"
+	OpenShiftImageRegistryPullSecretsController  OpenShiftControllerName = "openshift.io/image-registry-pull-secrets"
 	OpenShiftOriginNamespaceController           OpenShiftControllerName = "openshift.io/origin-namespace"
 	OpenShiftBuildController                     OpenShiftControllerName = "openshift.io/build"
 	OpenShiftBuildConfigChangeController         OpenShiftControllerName = "openshift.io/build-config-change"

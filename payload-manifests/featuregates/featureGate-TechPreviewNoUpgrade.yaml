@@ -23,6 +23,9 @@
                     },
                     {
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
+                    },
+                    {
+                        "name": "VolumeGroupSnapshot"
                     }
                 ],
                 "enabled": [
@@ -142,9 +145,6 @@
                     },
                     {
                         "name": "ValidatingAdmissionPolicy"
-                    },
-                    {
-                        "name": "VolumeGroupSnapshot"
                     }
                 ],
                 "version": ""

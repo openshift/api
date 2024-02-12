@@ -12,5 +12,6 @@ tests:
       apiVersion: operator.openshift.io/v1
       kind: OpenShiftControllerManager
       spec:
+        imageRegistryAuthTokenType: Legacy
         logLevel: Normal
         operatorLogLevel: Normal

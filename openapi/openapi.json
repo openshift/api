@@ -25184,7 +25184,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -25192,7 +25196,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "oauthAPIServer": {
           "description": "OAuthAPIServer holds status specific only to oauth-apiserver",
@@ -25404,7 +25409,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -25412,7 +25421,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -25569,7 +25579,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -25577,7 +25591,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -25711,7 +25726,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -25719,7 +25738,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -25862,7 +25882,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -25870,7 +25894,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -26099,7 +26124,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -26107,7 +26136,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -26669,7 +26699,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "controlPlaneHardwareSpeed": {
           "description": "Possible enum values:\n - `\"Slower\"` provides more tolerance for slower hardware and/or higher latency networks. Sets (values subject to change): ETCD_HEARTBEAT_INTERVAL: 5x Standard ETCD_LEADER_ELECTION_TIMEOUT: 2.5x Standard\n - `\"Standard\"` provides the normal tolerances for hardware speed and latency. Currently sets (values subject to change at any time): ETCD_HEARTBEAT_INTERVAL: 100ms ETCD_LEADER_ELECTION_TIMEOUT: 1000ms",
@@ -26686,7 +26720,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "latestAvailableRevision": {
           "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
@@ -26703,7 +26738,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeStatus"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "nodeName"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -27748,7 +27787,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "gatherStatus": {
           "description": "gatherStatus provides basic information about the last Insights data gathering. When omitted, this means no data gathering has taken place yet.",
@@ -27761,7 +27804,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "insightsReport": {
           "description": "insightsReport provides general Insights analysis results. When omitted, this means no data gathering has taken place yet.",
@@ -27928,7 +27972,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -27936,7 +27984,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "latestAvailableRevision": {
           "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
@@ -27953,7 +28002,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeStatus"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "nodeName"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -28109,7 +28162,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -28117,7 +28174,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "latestAvailableRevision": {
           "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
@@ -28134,7 +28192,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeStatus"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "nodeName"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -28276,7 +28338,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -28284,7 +28350,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "latestAvailableRevision": {
           "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
@@ -28301,7 +28368,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeStatus"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "nodeName"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -28425,7 +28496,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -28433,7 +28508,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -28675,7 +28751,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -28683,7 +28763,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "latestAvailableRevision": {
           "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
@@ -28700,7 +28781,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeStatus"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "nodeName"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -28863,7 +28948,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -28871,7 +28960,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -29088,7 +29178,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -29096,7 +29190,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -29177,7 +29272,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "lastFailedTime": {
           "description": "lastFailedTime is the time the last failed revision failed the last time.",
@@ -29365,7 +29461,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -29373,7 +29473,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "latestAvailableRevision": {
           "description": "latestAvailableRevision is the latest revision used as suffix of revisioned secrets like encryption-config. A new revision causes a new deployment of pods.",
@@ -29502,7 +29603,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -29510,7 +29615,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -29633,7 +29739,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -29641,7 +29751,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -30079,7 +30190,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -30087,7 +30202,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -30210,7 +30326,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -30218,7 +30338,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -30342,7 +30463,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -30350,7 +30475,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -30538,7 +30664,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -30546,7 +30676,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "latestAvailableRevision": {
           "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
@@ -30563,7 +30694,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeStatus"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "nodeName"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -30707,7 +30842,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -30715,7 +30854,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -31281,7 +31421,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -31289,7 +31433,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -34660,7 +34805,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -34668,7 +34817,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",

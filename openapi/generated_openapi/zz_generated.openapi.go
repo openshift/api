@@ -43250,6 +43250,14 @@ func schema_openshift_api_operator_v1_AuthenticationStatus(ref common.ReferenceC
 						},
 					},
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "conditions is a list of conditions and their status",
 							Type:        []string{"array"},
@@ -43279,6 +43287,11 @@ func schema_openshift_api_operator_v1_AuthenticationStatus(ref common.ReferenceC
 						},
 					},
 					"generations": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
 							Type:        []string{"array"},
@@ -43598,6 +43611,14 @@ func schema_openshift_api_operator_v1_CSISnapshotControllerStatus(ref common.Ref
 						},
 					},
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "conditions is a list of conditions and their status",
 							Type:        []string{"array"},
@@ -43627,6 +43648,11 @@ func schema_openshift_api_operator_v1_CSISnapshotControllerStatus(ref common.Ref
 						},
 					},
 					"generations": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
 							Type:        []string{"array"},
@@ -43873,6 +43899,14 @@ func schema_openshift_api_operator_v1_CloudCredentialStatus(ref common.Reference
 						},
 					},
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "conditions is a list of conditions and their status",
 							Type:        []string{"array"},
@@ -43902,6 +43936,11 @@ func schema_openshift_api_operator_v1_CloudCredentialStatus(ref common.Reference
 						},
 					},
 					"generations": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
 							Type:        []string{"array"},
@@ -44106,6 +44145,14 @@ func schema_openshift_api_operator_v1_ClusterCSIDriverStatus(ref common.Referenc
 						},
 					},
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "conditions is a list of conditions and their status",
 							Type:        []string{"array"},
@@ -44135,6 +44182,11 @@ func schema_openshift_api_operator_v1_ClusterCSIDriverStatus(ref common.Referenc
 						},
 					},
 					"generations": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
 							Type:        []string{"array"},
@@ -44351,6 +44403,14 @@ func schema_openshift_api_operator_v1_ConfigStatus(ref common.ReferenceCallback)
 						},
 					},
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "conditions is a list of conditions and their status",
 							Type:        []string{"array"},
@@ -44380,6 +44440,11 @@ func schema_openshift_api_operator_v1_ConfigStatus(ref common.ReferenceCallback)
 						},
 					},
 					"generations": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
 							Type:        []string{"array"},
@@ -44748,6 +44813,14 @@ func schema_openshift_api_operator_v1_ConsoleStatus(ref common.ReferenceCallback
 						},
 					},
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "conditions is a list of conditions and their status",
 							Type:        []string{"array"},
@@ -44777,6 +44850,11 @@ func schema_openshift_api_operator_v1_ConsoleStatus(ref common.ReferenceCallback
 						},
 					},
 					"generations": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
 							Type:        []string{"array"},
@@ -45716,6 +45794,14 @@ func schema_openshift_api_operator_v1_EtcdStatus(ref common.ReferenceCallback) c
 						},
 					},
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "conditions is a list of conditions and their status",
 							Type:        []string{"array"},
@@ -45745,6 +45831,11 @@ func schema_openshift_api_operator_v1_EtcdStatus(ref common.ReferenceCallback) c
 						},
 					},
 					"generations": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
 							Type:        []string{"array"},
@@ -45773,6 +45864,14 @@ func schema_openshift_api_operator_v1_EtcdStatus(ref common.ReferenceCallback) c
 						},
 					},
 					"nodeStatuses": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"nodeName",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "nodeStatuses track the deployment values and errors across individual nodes",
 							Type:        []string{"array"},
@@ -47524,6 +47623,14 @@ func schema_openshift_api_operator_v1_InsightsOperatorStatus(ref common.Referenc
 						},
 					},
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "conditions is a list of conditions and their status",
 							Type:        []string{"array"},
@@ -47553,6 +47660,11 @@ func schema_openshift_api_operator_v1_InsightsOperatorStatus(ref common.Referenc
 						},
 					},
 					"generations": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
 							Type:        []string{"array"},
@@ -47819,6 +47931,14 @@ func schema_openshift_api_operator_v1_KubeAPIServerStatus(ref common.ReferenceCa
 						},
 					},
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "conditions is a list of conditions and their status",
 							Type:        []string{"array"},
@@ -47848,6 +47968,11 @@ func schema_openshift_api_operator_v1_KubeAPIServerStatus(ref common.ReferenceCa
 						},
 					},
 					"generations": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
 							Type:        []string{"array"},
@@ -47876,6 +48001,14 @@ func schema_openshift_api_operator_v1_KubeAPIServerStatus(ref common.ReferenceCa
 						},
 					},
 					"nodeStatuses": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"nodeName",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "nodeStatuses track the deployment values and errors across individual nodes",
 							Type:        []string{"array"},
@@ -48109,6 +48242,14 @@ func schema_openshift_api_operator_v1_KubeControllerManagerStatus(ref common.Ref
 						},
 					},
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "conditions is a list of conditions and their status",
 							Type:        []string{"array"},
@@ -48138,6 +48279,11 @@ func schema_openshift_api_operator_v1_KubeControllerManagerStatus(ref common.Ref
 						},
 					},
 					"generations": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
 							Type:        []string{"array"},
@@ -48166,6 +48312,14 @@ func schema_openshift_api_operator_v1_KubeControllerManagerStatus(ref common.Ref
 						},
 					},
 					"nodeStatuses": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"nodeName",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "nodeStatuses track the deployment values and errors across individual nodes",
 							Type:        []string{"array"},
@@ -48377,6 +48531,14 @@ func schema_openshift_api_operator_v1_KubeSchedulerStatus(ref common.ReferenceCa
 						},
 					},
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "conditions is a list of conditions and their status",
 							Type:        []string{"array"},
@@ -48406,6 +48568,11 @@ func schema_openshift_api_operator_v1_KubeSchedulerStatus(ref common.ReferenceCa
 						},
 					},
 					"generations": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
 							Type:        []string{"array"},
@@ -48434,6 +48601,14 @@ func schema_openshift_api_operator_v1_KubeSchedulerStatus(ref common.ReferenceCa
 						},
 					},
 					"nodeStatuses": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"nodeName",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "nodeStatuses track the deployment values and errors across individual nodes",
 							Type:        []string{"array"},
@@ -48621,6 +48796,14 @@ func schema_openshift_api_operator_v1_KubeStorageVersionMigratorStatus(ref commo
 						},
 					},
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "conditions is a list of conditions and their status",
 							Type:        []string{"array"},
@@ -48650,6 +48833,11 @@ func schema_openshift_api_operator_v1_KubeStorageVersionMigratorStatus(ref commo
 						},
 					},
 					"generations": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
 							Type:        []string{"array"},
@@ -49025,6 +49213,14 @@ func schema_openshift_api_operator_v1_MachineConfigurationStatus(ref common.Refe
 						},
 					},
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "conditions is a list of conditions and their status",
 							Type:        []string{"array"},
@@ -49054,6 +49250,11 @@ func schema_openshift_api_operator_v1_MachineConfigurationStatus(ref common.Refe
 						},
 					},
 					"generations": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
 							Type:        []string{"array"},
@@ -49082,6 +49283,14 @@ func schema_openshift_api_operator_v1_MachineConfigurationStatus(ref common.Refe
 						},
 					},
 					"nodeStatuses": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"nodeName",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "nodeStatuses track the deployment values and errors across individual nodes",
 							Type:        []string{"array"},
@@ -49335,6 +49544,14 @@ func schema_openshift_api_operator_v1_MyOperatorResourceStatus(ref common.Refere
 						},
 					},
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "conditions is a list of conditions and their status",
 							Type:        []string{"array"},
@@ -49364,6 +49581,11 @@ func schema_openshift_api_operator_v1_MyOperatorResourceStatus(ref common.Refere
 						},
 					},
 					"generations": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
 							Type:        []string{"array"},
@@ -49717,6 +49939,14 @@ func schema_openshift_api_operator_v1_NetworkStatus(ref common.ReferenceCallback
 						},
 					},
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "conditions is a list of conditions and their status",
 							Type:        []string{"array"},
@@ -49746,6 +49976,11 @@ func schema_openshift_api_operator_v1_NetworkStatus(ref common.ReferenceCallback
 						},
 					},
 					"generations": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
 							Type:        []string{"array"},
@@ -49888,6 +50123,11 @@ func schema_openshift_api_operator_v1_NodeStatus(ref common.ReferenceCallback) c
 						},
 					},
 					"lastFailedRevisionErrors": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "lastFailedRevisionErrors is a list of human readable errors during the failed deployment referenced in lastFailedRevision.",
 							Type:        []string{"array"},
@@ -50172,6 +50412,14 @@ func schema_openshift_api_operator_v1_OpenShiftAPIServerStatus(ref common.Refere
 						},
 					},
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "conditions is a list of conditions and their status",
 							Type:        []string{"array"},
@@ -50201,6 +50449,11 @@ func schema_openshift_api_operator_v1_OpenShiftAPIServerStatus(ref common.Refere
 						},
 					},
 					"generations": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
 							Type:        []string{"array"},
@@ -50395,6 +50648,14 @@ func schema_openshift_api_operator_v1_OpenShiftControllerManagerStatus(ref commo
 						},
 					},
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "conditions is a list of conditions and their status",
 							Type:        []string{"array"},
@@ -50424,6 +50685,11 @@ func schema_openshift_api_operator_v1_OpenShiftControllerManagerStatus(ref commo
 						},
 					},
 					"generations": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
 							Type:        []string{"array"},
@@ -50610,6 +50876,14 @@ func schema_openshift_api_operator_v1_OperatorStatus(ref common.ReferenceCallbac
 						},
 					},
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "conditions is a list of conditions and their status",
 							Type:        []string{"array"},
@@ -50639,6 +50913,11 @@ func schema_openshift_api_operator_v1_OperatorStatus(ref common.ReferenceCallbac
 						},
 					},
 					"generations": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
 							Type:        []string{"array"},
@@ -51375,6 +51654,14 @@ func schema_openshift_api_operator_v1_ServiceCAStatus(ref common.ReferenceCallba
 						},
 					},
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "conditions is a list of conditions and their status",
 							Type:        []string{"array"},
@@ -51404,6 +51691,11 @@ func schema_openshift_api_operator_v1_ServiceCAStatus(ref common.ReferenceCallba
 						},
 					},
 					"generations": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
 							Type:        []string{"array"},
@@ -51591,6 +51883,14 @@ func schema_openshift_api_operator_v1_ServiceCatalogAPIServerStatus(ref common.R
 						},
 					},
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "conditions is a list of conditions and their status",
 							Type:        []string{"array"},
@@ -51620,6 +51920,11 @@ func schema_openshift_api_operator_v1_ServiceCatalogAPIServerStatus(ref common.R
 						},
 					},
 					"generations": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
 							Type:        []string{"array"},
@@ -51807,6 +52112,14 @@ func schema_openshift_api_operator_v1_ServiceCatalogControllerManagerStatus(ref 
 						},
 					},
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "conditions is a list of conditions and their status",
 							Type:        []string{"array"},
@@ -51836,6 +52149,11 @@ func schema_openshift_api_operator_v1_ServiceCatalogControllerManagerStatus(ref 
 						},
 					},
 					"generations": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
 							Type:        []string{"array"},
@@ -52145,6 +52463,14 @@ func schema_openshift_api_operator_v1_StaticPodOperatorStatus(ref common.Referen
 						},
 					},
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "conditions is a list of conditions and their status",
 							Type:        []string{"array"},
@@ -52174,6 +52500,11 @@ func schema_openshift_api_operator_v1_StaticPodOperatorStatus(ref common.Referen
 						},
 					},
 					"generations": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
 							Type:        []string{"array"},
@@ -52202,6 +52533,14 @@ func schema_openshift_api_operator_v1_StaticPodOperatorStatus(ref common.Referen
 						},
 					},
 					"nodeStatuses": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"nodeName",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "nodeStatuses track the deployment values and errors across individual nodes",
 							Type:        []string{"array"},
@@ -52422,6 +52761,14 @@ func schema_openshift_api_operator_v1_StorageStatus(ref common.ReferenceCallback
 						},
 					},
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "conditions is a list of conditions and their status",
 							Type:        []string{"array"},
@@ -52451,6 +52798,11 @@ func schema_openshift_api_operator_v1_StorageStatus(ref common.ReferenceCallback
 						},
 					},
 					"generations": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
 							Type:        []string{"array"},
@@ -53358,6 +53710,14 @@ func schema_openshift_api_operator_v1alpha1_OLMStatus(ref common.ReferenceCallba
 						},
 					},
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "conditions is a list of conditions and their status",
 							Type:        []string{"array"},
@@ -53387,6 +53747,11 @@ func schema_openshift_api_operator_v1alpha1_OLMStatus(ref common.ReferenceCallba
 						},
 					},
 					"generations": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
 							Type:        []string{"array"},
@@ -58929,6 +59294,14 @@ func schema_openshift_api_servicecertsigner_v1alpha1_ServiceCertSignerOperatorCo
 						},
 					},
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "conditions is a list of conditions and their status",
 							Type:        []string{"array"},
@@ -58958,6 +59331,11 @@ func schema_openshift_api_servicecertsigner_v1alpha1_ServiceCertSignerOperatorCo
 						},
 					},
 					"generations": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
 							Type:        []string{"array"},

@@ -730,7 +730,6 @@ type ConditionalUpdate struct {
 
 	// conditions represents the observations of the conditional update's
 	// current status. Known types are:
-	// * Evaluating, for whether the cluster-version operator will attempt to evaluate any risks[].matchingRules.
 	// * Recommended, for whether the update is recommended for the current cluster.
 	// +patchMergeKey=type
 	// +patchStrategy=merge

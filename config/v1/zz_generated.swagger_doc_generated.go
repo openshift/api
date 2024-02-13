@@ -743,7 +743,7 @@ var map_ConditionalUpdate = map[string]string{
 	"":           "ConditionalUpdate represents an update which is recommended to some clusters on the version the current cluster is reconciling, but which may not be recommended for the current cluster.",
 	"release":    "release is the target of the update.",
 	"risks":      "risks represents the range of issues associated with updating to the target release. The cluster-version operator will evaluate all entries, and only recommend the update if there is at least one entry and all entries recommend the update.",
-	"conditions": "conditions represents the observations of the conditional update's current status. Known types are: * Evaluating, for whether the cluster-version operator will attempt to evaluate any risks[].matchingRules. * Recommended, for whether the update is recommended for the current cluster.",
+	"conditions": "conditions represents the observations of the conditional update's current status. Known types are: * Recommended, for whether the update is recommended for the current cluster.",
 }
 
 func (ConditionalUpdate) SwaggerDoc() map[string]string {

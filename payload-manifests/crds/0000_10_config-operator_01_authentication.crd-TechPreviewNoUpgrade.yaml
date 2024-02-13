@@ -270,7 +270,7 @@ spec:
                   - issuer
                   - name
                   type: object
-                maxItems: 1
+                maxItems: 10
                 type: array
                 x-kubernetes-list-map-keys:
                 - name

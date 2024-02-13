@@ -84,7 +84,7 @@ type AuthenticationSpec struct {
 	//
 	// +listType=map
 	// +listMapKey=name
-	// +kubebuilder:validation:MaxItems=1
+	// +kubebuilder:validation:MaxItems=10
 	// +openshift:enable:FeatureSets=CustomNoUpgrade;TechPreviewNoUpgrade
 	OIDCProviders []OIDCProvider `json:"oidcProviders,omitempty"`
 }

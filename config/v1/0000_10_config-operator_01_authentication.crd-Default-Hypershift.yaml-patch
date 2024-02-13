@@ -3,7 +3,7 @@
   value:
     description: "OIDCProviders are OIDC identity providers that can issue tokens for this cluster Can only be set if \"Type\" is set to \"OIDC\". \n At most one provider can be configured."
     type: array
-    maxItems: 1
+    maxItems: 10
     items:
       type: object
       required:

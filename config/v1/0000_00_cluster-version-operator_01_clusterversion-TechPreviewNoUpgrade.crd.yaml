@@ -82,6 +82,7 @@ spec:
                       - ImageRegistry
                       - OperatorLifecycleManager
                       - CloudCredential
+                      - Ingress
                       type: string
                     type: array
                     x-kubernetes-list-type: atomic
@@ -97,6 +98,7 @@ spec:
                     - v4.13
                     - v4.14
                     - v4.15
+                    - v4.16
                     - vCurrent
                     type: string
                 type: object
@@ -348,6 +350,7 @@ spec:
                       - ImageRegistry
                       - OperatorLifecycleManager
                       - CloudCredential
+                      - Ingress
                       type: string
                     type: array
                     x-kubernetes-list-type: atomic
@@ -372,6 +375,7 @@ spec:
                       - ImageRegistry
                       - OperatorLifecycleManager
                       - CloudCredential
+                      - Ingress
                       type: string
                     type: array
                     x-kubernetes-list-type: atomic

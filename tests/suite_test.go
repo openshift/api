@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"testing"
 
 	. "github.com/onsi/ginkgo/v2"
@@ -69,7 +70,7 @@ var _ = BeforeSuite(func() {
 
 	Expect(serverVersion.Major).To(Equal("1"))
 
-	minorInt, err := strconv.Atoi(serverVersion.Minor)
+	minorInt, err := strconv.Atoi(strings.Split(serverVersion.Minor, "+")[0])
 	Expect(err).ToNot(HaveOccurred())
 	Expect(minorInt).To(BeNumerically(">=", 25), fmt.Sprintf("This test suite requires a Kube API server of at least version 1.25, current version is 1.%s", serverVersion.Minor))
 

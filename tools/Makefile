@@ -27,6 +27,12 @@ clean:
 run-codegen: codegen
 	$(OUTPUT_DIR)/codegen --base-dir $(BASE_DIR) --api-group-versions $(API_GROUP_VERSIONS) --required-feature-sets $(OPENSHIFT_REQUIRED_FEATURESETS)
 
+PULL_SECRET?=${PULL_SECRET:-$(HOME)/pull-secret.txt}
+
+.PHONY: publish-kubebuilder-tools
+publish-kubebuilder-tools:
+	go run ./publish-kubebuilder-tools/main.go -version 1.29.1 -output-dir /tmp/kubebuilder-tools -payload=registry.ci.openshift.org/ocp/release:4.16.0-0.ci-2024-02-20-022620 -pull-secret $(PULL_SECRET)
+
 #############################################
 #
 # BEGIN: Shortcuts to fully qualified targets

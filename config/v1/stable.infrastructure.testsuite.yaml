@@ -408,7 +408,7 @@ tests:
           platformStatus:
             powervs:
               resourceGroup: resource-group-should-not-accept-the-string-that-exceeds-max-length-set
-      expectedStatusError: "status.platformStatus.powervs.resourceGroup: Too long: may not be longer than 40"
+      expectedStatusError: "platformStatus.powervs.resourceGroup: Too long: may not be longer than 40"
     - name: PowerVS platform status's resourceGroup should match the regex configured
       initial: |
         apiVersion: config.openshift.io/v1
@@ -432,7 +432,7 @@ tests:
           platformStatus:
             powervs:
               resourceGroup: re$ource-group
-      expectedStatusError: "status.platformStatus.powervs.resourceGroup in body should match '^[a-zA-Z0-9-_ ]+$'"
+      expectedStatusError: "platformStatus.powervs.resourceGroup in body should match '^[a-zA-Z0-9-_ ]+$'"
     - name: Should not be able to change PowerVS platform status's resourceGroup once it was set
       initial: |
         apiVersion: config.openshift.io/v1
@@ -646,7 +646,7 @@ tests:
               loadBalancer:
                 type: FooBar
             type: OpenStack
-      expectedStatusError: "status.platformStatus.openstack.loadBalancer.type: Unsupported value: \"FooBar\": supported values: \"OpenShiftManagedDefault\", \"UserManaged\""
+      expectedStatusError: "platformStatus.openstack.loadBalancer.type: Unsupported value: \"FooBar\": supported values: \"OpenShiftManagedDefault\", \"UserManaged\""
     - name: Should not be able to update cloudControllerManager state to empty string when state is already set to None
       initial: |
         apiVersion: config.openshift.io/v1
@@ -1233,7 +1233,7 @@ tests:
                 url: https://dummy.vpc.com
               - name: COS
                 url: dummy-cos-com
-      expectedStatusError: " status.platformStatus.ibmcloud.serviceEndpoints[1].url: Invalid value: \"string\": url must be a valid absolute URL"
+      expectedStatusError: "platformStatus.ibmcloud.serviceEndpoints[1].url: Invalid value: \"string\": url must be a valid absolute URL"
     - name: Should not be able to add invalid (Name) ServiceEndpoints to IBMCloud PlatformStatus
       initial: |
         apiVersion: config.openshift.io/v1
@@ -1259,4 +1259,4 @@ tests:
                 url: https://dummy.vpc.com
               - name: BadService
                 url: https://bad-service.com
-      expectedStatusError: " status.platformStatus.ibmcloud.serviceEndpoints[1].name: Unsupported value: \"BadService\": supported values: \"CIS\", \"COS\", \"DNSServices\", \"GlobalSearch\", \"GlobalTagging\", \"HyperProtect\", \"IAM\", \"KeyProtect\", \"ResourceController\", \"ResourceManager\", \"VPC\""
+      expectedStatusError: "platformStatus.ibmcloud.serviceEndpoints[1].name: Unsupported value: \"BadService\": supported values: \"CIS\", \"COS\", \"DNSServices\", \"GlobalSearch\", \"GlobalTagging\", \"HyperProtect\", \"IAM\", \"KeyProtect\", \"ResourceController\", \"ResourceManager\", \"VPC\""

@@ -15,7 +15,6 @@ spec:
     listKind: BuildList
     plural: builds
     singular: build
-  preserveUnknownFields: false
   scope: Cluster
   versions:
   - name: v1

@@ -2,32 +2,28 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    api-approved.openshift.io: https://github.com/openshift/api/pull/859
-  name: cloudprivateipconfigs.cloud.network.openshift.io
+    api-approved.openshift.io: https://github.com/openshift/api/pull/xxx
+    include.release.openshift.io/ibm-cloud-managed: "true"
+    include.release.openshift.io/self-managed-high-availability: "true"
+    include.release.openshift.io/single-node-developer: "true"
+    release.openshift.io/feature-set: CustomNoUpgrade
+  name: notstableconfigtypes.example.openshift.io
 spec:
-  group: cloud.network.openshift.io
+  group: example.openshift.io
   names:
-    kind: CloudPrivateIPConfig
-    listKind: CloudPrivateIPConfigList
-    plural: cloudprivateipconfigs
-    singular: cloudprivateipconfig
+    kind: NotStableConfigType
+    listKind: NotStableConfigTypeList
+    plural: notstableconfigtypes
+    singular: notstableconfigtype
   scope: Cluster
   versions:
-  - name: v1
+  - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: "CloudPrivateIPConfig performs an assignment of a private IP
-          address to the primary NIC associated with cloud VMs. This is done by specifying
-          the IP and Kubernetes node which the IP should be assigned to. This CRD
-          is intended to be used by the network plugin which manages the cluster network.
-          The spec side represents the desired state requested by the network plugin,
-          and the status side represents the current state that this CRD's controller
-          has executed. No users will have permission to modify it, and if a cluster-admin
-          decides to edit it for some reason, their changes will be overwritten the
-          next time the network plugin reconciles the object. Note: the CR's name
-          must specify the requested private IP address (can be IPv4 or IPv6). \n
-          Compatibility level 1: Stable within a major release for a minimum of 12
-          months or 3 minor releases (whichever is longer)."
+        description: "NotStableConfigType is a stable config type that is TechPreviewNoUpgrade
+          only. \n Compatibility level 4: No compatibility is provided, the API can
+          change at any point for any reason. These capabilities should not be used
+          by applications needing long term support."
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -40,28 +36,25 @@ spec:
               submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
             type: string
           metadata:
-            properties:
-              name:
-                anyOf:
-                - format: ipv4
-                - pattern: ^[0-9a-f]{4}(\.[0-9a-f]{4}){7}$
-                type: string
             type: object
           spec:
-            description: spec is the definition of the desired private IP request.
+            description: spec is the specification of the desired behavior of the
+              NotStableConfigType.
             properties:
-              node:
-                description: 'node is the node name, as specified by the Kubernetes
-                  field: node.metadata.name'
+              newField:
+                description: newField is a field that is tech preview, but because
+                  the entire type is gated, there is no marker on the field.
                 type: string
+            required:
+            - newField
             type: object
           status:
-            description: status is the observed status of the desired private IP request.
-              Read-only.
+            description: status is the most recently observed status of the NotStableConfigType.
             properties:
               conditions:
-                description: condition is the assignment condition of the private
-                  IP and its status
+                description: 'Represents the observations of a foo''s current state.
+                  Known .status.conditions.type are: "Available", "Progressing", and
+                  "Degraded"'
                 items:
                   description: "Condition contains details for one aspect of the current
                     state of this API Resource. --- This struct is intended for direct
@@ -129,17 +122,10 @@ spec:
                   - type
                   type: object
                 type: array
-              node:
-                description: 'node is the node name, as specified by the Kubernetes
-                  field: node.metadata.name'
-                type: string
-            required:
-            - conditions
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
             type: object
-        required:
-        - spec
         type: object
     served: true
     storage: true
-    subresources:
-      status: {}

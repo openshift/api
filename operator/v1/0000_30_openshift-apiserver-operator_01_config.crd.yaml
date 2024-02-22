@@ -13,6 +13,7 @@ spec:
     categories:
     - coreoperators
     kind: OpenShiftAPIServer
+    listKind: OpenShiftAPIServerList
     plural: openshiftapiservers
     singular: openshiftapiserver
   scope: Cluster

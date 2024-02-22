@@ -11,6 +11,7 @@ spec:
   group: operator.openshift.io
   names:
     kind: CSISnapshotController
+    listKind: CSISnapshotControllerList
     plural: csisnapshotcontrollers
     singular: csisnapshotcontroller
   scope: Cluster

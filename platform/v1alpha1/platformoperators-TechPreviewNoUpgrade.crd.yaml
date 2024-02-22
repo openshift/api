@@ -7,7 +7,6 @@ metadata:
     include.release.openshift.io/self-managed-high-availability: "true"
     include.release.openshift.io/single-node-developer: "true"
     release.openshift.io/feature-set: TechPreviewNoUpgrade
-  creationTimestamp: null
   name: platformoperators.platform.openshift.io
 spec:
   group: platform.openshift.io

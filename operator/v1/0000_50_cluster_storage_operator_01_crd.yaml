@@ -11,6 +11,7 @@ spec:
   group: operator.openshift.io
   names:
     kind: Storage
+    listKind: StorageList
     plural: storages
     singular: storage
   scope: Cluster

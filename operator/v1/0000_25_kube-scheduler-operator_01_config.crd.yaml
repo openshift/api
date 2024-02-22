@@ -13,6 +13,7 @@ spec:
     categories:
     - coreoperators
     kind: KubeScheduler
+    listKind: KubeSchedulerList
     plural: kubeschedulers
     singular: kubescheduler
   scope: Cluster

@@ -11,6 +11,7 @@ spec:
   group: operator.openshift.io
   names:
     kind: ClusterCSIDriver
+    listKind: ClusterCSIDriverList
     plural: clustercsidrivers
     singular: clustercsidriver
   scope: Cluster

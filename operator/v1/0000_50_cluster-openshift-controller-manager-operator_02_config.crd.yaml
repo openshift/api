@@ -13,6 +13,7 @@ spec:
     categories:
     - coreoperators
     kind: OpenShiftControllerManager
+    listKind: OpenShiftControllerManagerList
     plural: openshiftcontrollermanagers
     singular: openshiftcontrollermanager
   scope: Cluster

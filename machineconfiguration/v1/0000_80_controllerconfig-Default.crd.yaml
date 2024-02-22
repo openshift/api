@@ -14,6 +14,7 @@ spec:
   group: machineconfiguration.openshift.io
   names:
     kind: ControllerConfig
+    listKind: ControllerConfigList
     plural: controllerconfigs
     singular: controllerconfig
   scope: Cluster

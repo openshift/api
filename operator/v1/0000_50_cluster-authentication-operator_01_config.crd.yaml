@@ -10,6 +10,7 @@ spec:
   group: operator.openshift.io
   names:
     kind: Authentication
+    listKind: AuthenticationList
     plural: authentications
     singular: authentication
   scope: Cluster

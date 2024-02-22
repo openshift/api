@@ -11,6 +11,7 @@ spec:
   group: operator.openshift.io
   names:
     kind: MachineConfiguration
+    listKind: MachineConfigurationList
     plural: machineconfigurations
     singular: machineconfiguration
   scope: Cluster

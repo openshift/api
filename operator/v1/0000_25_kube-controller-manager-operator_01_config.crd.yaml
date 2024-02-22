@@ -13,6 +13,7 @@ spec:
     categories:
     - coreoperators
     kind: KubeControllerManager
+    listKind: KubeControllerManagerList
     plural: kubecontrollermanagers
     singular: kubecontrollermanager
   scope: Cluster

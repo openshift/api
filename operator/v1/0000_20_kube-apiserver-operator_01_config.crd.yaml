@@ -10,7 +10,10 @@ metadata:
 spec:
   group: operator.openshift.io
   names:
+    categories:
+    - coreoperators
     kind: KubeAPIServer
+    listKind: KubeAPIServerList
     plural: kubeapiservers
     singular: kubeapiserver
   scope: Cluster

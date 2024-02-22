@@ -761,6 +761,11 @@ spec:
                       OVNKubernetes
                     type: string
                 type: object
+                x-kubernetes-validations:
+                - message: networkType migration in mode other than 'Live' may not
+                    be configured at the same time as mtu migration
+                  rule: '!has(self.mtu) || !has(self.networkType) || self.networkType
+                    == '''' || has(self.mode) && self.mode == ''Live'''
               observedConfig:
                 description: observedConfig holds a sparse config that controller
                   has observed from the cluster state.  It exists in spec because

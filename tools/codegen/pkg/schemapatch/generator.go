@@ -223,7 +223,8 @@ func loadSchemaPatchGenerationContextsForVersion(version generation.APIVersionCo
 		}
 
 		// Ignore any file that doesn't have a kind of CustomResourceDefinition or does not have the correct feature set annotation.
-		if !isCustomResourceDefinition(partialObject) || !hasRequiredFeatureSet(partialObject, requiredFeatureSets) {
+		isMergedManifest := partialObject.Annotations["api.openshift.io/merged-by-featuregates"] == "true"
+		if !isCustomResourceDefinition(partialObject) || !hasRequiredFeatureSet(partialObject, requiredFeatureSets) || isMergedManifest {
 			return nil
 		}
 

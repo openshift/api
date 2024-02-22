@@ -14,7 +14,13 @@
                         "name": "AdminNetworkPolicy"
                     },
                     {
+                        "name": "AlertingRules"
+                    },
+                    {
                         "name": "AutomatedEtcdBackup"
+                    },
+                    {
+                        "name": "BareMetalLoadBalancer"
                     },
                     {
                         "name": "CSIDriverSharedResource"
@@ -35,6 +41,15 @@
                         "name": "EventedPLEG"
                     },
                     {
+                        "name": "Example"
+                    },
+                    {
+                        "name": "ExternalOIDC"
+                    },
+                    {
+                        "name": "ExternalRouteCertificate"
+                    },
+                    {
                         "name": "GCPClusterHostedDNS"
                     },
                     {
@@ -44,7 +59,13 @@
                         "name": "GatewayAPI"
                     },
                     {
+                        "name": "HardwareSpeed"
+                    },
+                    {
                         "name": "InsightsConfigAPI"
+                    },
+                    {
+                        "name": "InsightsOnDemandDataGather"
                     },
                     {
                         "name": "InstallAlternateInfrastructureAWS"
@@ -78,6 +99,9 @@
                     },
                     {
                         "name": "PinnedImages"
+                    },
+                    {
+                        "name": "PlatformOperators"
                     },
                     {
                         "name": "RouteExternalCertificate"

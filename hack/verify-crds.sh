@@ -24,6 +24,17 @@ for f in $(find . -name "*.yaml" -type f); do
         fi
     fi
 
+    # skip the files that are merged to produce the final outcome
+    if [[ "$f" == *"zz_generated.featuregated-crd-manifests"* ]]; then
+      continue
+    fi
+    if [[ "$f" == *"manual-override-crd-manifests"* ]]; then
+      continue
+    fi
+    if [[ "$f" == *"testdata"* ]]; then
+      continue
+    fi
+
     if [[ $(./_output/tools/bin/yq r $f metadata.annotations[api-approved.openshift.io]) == "null" ]]; then
         echo "Error: missing 'api-approved.openshift.io' annotation pointing to openshift/api pull request in $f"
         FAILS=true

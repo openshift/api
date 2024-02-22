@@ -1,5 +1,15 @@
 schemapatch:
-  requiredFeatureSets:
-  - "TechPreviewNoUpgrade"
 swaggerdocs:
   commentPolicy: Warn
+manifestMerge:
+  tupleOverrides:
+    - crdName: platformoperators.platform.openshift.io
+      featureSet: TechPreviewNoUpgrade
+      clusterProfilesToInject:
+        - include.release.openshift.io/self-managed-high-availability
+        - include.release.openshift.io/single-node-developer
+    - crdName: platformoperators.platform.openshift.io
+      featureSet: CustomNoUpgrade
+      clusterProfilesToInject:
+        - include.release.openshift.io/self-managed-high-availability
+        - include.release.openshift.io/single-node-developer

@@ -22,7 +22,9 @@ require (
 	k8s.io/gengo v0.0.0-20230829151522-9cce18d56c01
 	k8s.io/klog/v2 v2.100.1
 	k8s.io/kube-openapi v0.0.0-20230905202853-d090da108d2f
+	k8s.io/utils v0.0.0-20230406110748-d93618cff8a2
 	sigs.k8s.io/controller-tools v0.11.1
+	sigs.k8s.io/structured-merge-diff/v4 v4.2.3
 	sigs.k8s.io/yaml v1.3.0
 )
 
@@ -82,9 +84,7 @@ require (
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	k8s.io/api v0.28.1 // indirect
-	k8s.io/utils v0.0.0-20230406110748-d93618cff8a2 // indirect
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect
-	sigs.k8s.io/structured-merge-diff/v4 v4.2.3 // indirect
 )
 
 // This version produces an incorrect diff, see https://github.com/sergi/go-diff/issues/123

@@ -1,0 +1,20 @@
+stableconfigtypes.example.openshift.io:
+  Annotations: {}
+  ApprovedPRNumber: https://github.com/openshift/api/pull/xxx
+  CRDName: stableconfigtypes.example.openshift.io
+  Capability: ""
+  Category: ""
+  FeatureGates:
+  - Example
+  GroupName: example.openshift.io
+  HasStatus: true
+  KindName: StableConfigType
+  Labels: {}
+  PluralName: stableconfigtypes
+  PrinterColumns: []
+  Scope: Cluster
+  ShortName: ""
+  TargetFilenamePattern: 0000_50_stabletypeMARKERS.crd.yaml
+  TopLevelFeatureGates: []
+  Version: v1
+

@@ -363,7 +363,9 @@ func mergeAllPertinentCRDsInDir(resourcePath string, filter ManifestFilter, feat
 		unstructuredResultingCRD = startingCRD.DeepCopy()
 
 	} else {
-		annotations := map[string]string{}
+		annotations := map[string]string{
+			"api.openshift.io/merged-by-featuregates": "true",
+		}
 		if len(featureSet) > 0 {
 			annotations["release.openshift.io/feature-set"] = featureSet
 		}

@@ -18,21 +18,20 @@ package fake
 
 import (
 	"io"
-	gopath "path"
 	"path/filepath"
 	"strings"
 
-	"k8s.io/gengo/generator"
-	"k8s.io/gengo/namer"
-	"k8s.io/gengo/types"
+	"k8s.io/gengo/v2/generator"
+	"k8s.io/gengo/v2/namer"
+	"k8s.io/gengo/v2/types"
 
 	"k8s.io/code-generator/cmd/client-gen/generators/util"
 )
 
 // genFakeForType produces a file for each top-level type.
 type genFakeForType struct {
-	generator.DefaultGen
-	outputPackage             string
+	generator.GolangGenerator
+	outputPackage             string // Must be a Go import-path
 	group                     string
 	version                   string
 	groupGoName               string
@@ -77,7 +76,7 @@ func genStatus(t *types.Type) bool {
 // hasObjectMeta returns true if the type has a ObjectMeta field.
 func hasObjectMeta(t *types.Type) bool {
 	for _, m := range t.Members {
-		if m.Embedded == true && m.Name == "ObjectMeta" {
+		if m.Embedded && m.Name == "ObjectMeta" {
 			return true
 		}
 	}
@@ -153,7 +152,7 @@ func (g *genFakeForType) GenerateType(c *generator.Context, t *types.Type, w io.
 	if generateApply {
 		// Generated apply builder type references required for generated Apply function
 		_, gvString := util.ParsePathGroupVersion(g.inputPackage)
-		m["inputApplyConfig"] = types.Ref(gopath.Join(g.applyConfigurationPackage, gvString), t.Name.Name+"ApplyConfiguration")
+		m["inputApplyConfig"] = types.Ref(filepath.Join(g.applyConfigurationPackage, gvString), t.Name.Name+"ApplyConfiguration")
 	}
 
 	if tags.NonNamespaced {
@@ -237,7 +236,7 @@ func (g *genFakeForType) GenerateType(c *generator.Context, t *types.Type, w io.
 		m["resultType"] = &resultType
 		m["subresourcePath"] = e.SubResourcePath
 		if e.HasVerb("apply") {
-			m["inputApplyConfig"] = types.Ref(gopath.Join(g.applyConfigurationPackage, inputGVString), inputType.Name.Name+"ApplyConfiguration")
+			m["inputApplyConfig"] = types.Ref(filepath.Join(g.applyConfigurationPackage, inputGVString), inputType.Name.Name+"ApplyConfiguration")
 		}
 
 		if e.HasVerb("get") {
@@ -300,7 +299,9 @@ func (g *genFakeForType) GenerateType(c *generator.Context, t *types.Type, w io.
 // TODO: Make the verbs in templates parametrized so the strings.Replace() is
 // not needed.
 func adjustTemplate(name, verbType, template string) string {
-	return strings.Replace(template, " "+strings.Title(verbType), " "+name, -1)
+	//nolint:staticcheck
+	// TODO: convert this to use golang.org/x/text/cases
+	return strings.ReplaceAll(template, " "+strings.Title(verbType), " "+name)
 }
 
 // template for the struct that implements the type's interface

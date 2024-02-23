@@ -22,14 +22,14 @@ import (
 	"strings"
 
 	clientgentypes "k8s.io/code-generator/cmd/client-gen/types"
-	"k8s.io/gengo/generator"
-	"k8s.io/gengo/namer"
-	"k8s.io/gengo/types"
+	"k8s.io/gengo/v2/generator"
+	"k8s.io/gengo/v2/namer"
+	"k8s.io/gengo/v2/types"
 )
 
 // groupInterfaceGenerator generates the per-group interface file.
 type groupInterfaceGenerator struct {
-	generator.DefaultGen
+	generator.GolangGenerator
 	outputPackage             string
 	imports                   namer.ImportTracker
 	groupVersions             clientgentypes.GroupVersions

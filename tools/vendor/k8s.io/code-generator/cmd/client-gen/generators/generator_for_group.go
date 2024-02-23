@@ -20,17 +20,17 @@ import (
 	"io"
 	"path/filepath"
 
-	"k8s.io/gengo/generator"
-	"k8s.io/gengo/namer"
-	"k8s.io/gengo/types"
+	"k8s.io/gengo/v2"
+	"k8s.io/gengo/v2/generator"
+	"k8s.io/gengo/v2/namer"
+	"k8s.io/gengo/v2/types"
 
 	"k8s.io/code-generator/cmd/client-gen/generators/util"
-	"k8s.io/code-generator/cmd/client-gen/path"
 )
 
 // genGroup produces a file for a group client, e.g. ExtensionsClient for the extension group.
 type genGroup struct {
-	generator.DefaultGen
+	generator.GolangGenerator
 	outputPackage string
 	group         string
 	version       string
@@ -40,7 +40,7 @@ type genGroup struct {
 	types            []*types.Type
 	imports          namer.ImportTracker
 	inputPackage     string
-	clientsetPackage string
+	clientsetPackage string // must be a Go import-path
 	// If the genGroup has been called. This generator should only execute once.
 	called bool
 }
@@ -83,8 +83,8 @@ func (g *genGroup) GenerateType(c *generator.Context, t *types.Type, w io.Writer
 		groupName = ""
 	}
 	// allow user to define a group name that's different from the one parsed from the directory.
-	p := c.Universe.Package(path.Vendorless(g.inputPackage))
-	if override := types.ExtractCommentTags("+", p.Comments)["groupName"]; override != nil {
+	p := c.Universe.Package(g.inputPackage)
+	if override := gengo.ExtractCommentTags("+", p.Comments)["groupName"]; override != nil {
 		groupName = override[0]
 	}
 
@@ -104,7 +104,7 @@ func (g *genGroup) GenerateType(c *generator.Context, t *types.Type, w io.Writer
 		"RESTHTTPClientFor":                c.Universe.Function(types.Name{Package: "k8s.io/client-go/rest", Name: "HTTPClientFor"}),
 		"restRESTClientFor":                c.Universe.Function(types.Name{Package: "k8s.io/client-go/rest", Name: "RESTClientFor"}),
 		"restRESTClientForConfigAndClient": c.Universe.Function(types.Name{Package: "k8s.io/client-go/rest", Name: "RESTClientForConfigAndClient"}),
-		"SchemeGroupVersion":               c.Universe.Variable(types.Name{Package: path.Vendorless(g.inputPackage), Name: "SchemeGroupVersion"}),
+		"SchemeGroupVersion":               c.Universe.Variable(types.Name{Package: g.inputPackage, Name: "SchemeGroupVersion"}),
 	}
 	sw.Do(groupInterfaceTemplate, m)
 	sw.Do(groupClientTemplate, m)

@@ -23,29 +23,28 @@ import (
 	"strings"
 
 	clientgentypes "k8s.io/code-generator/cmd/client-gen/types"
-	"k8s.io/gengo/generator"
-	"k8s.io/gengo/namer"
-	"k8s.io/gengo/types"
+	"k8s.io/gengo/v2/generator"
+	"k8s.io/gengo/v2/namer"
+	"k8s.io/gengo/v2/types"
 )
 
 // genClientset generates a package for a clientset.
 type genClientset struct {
-	generator.DefaultGen
+	generator.GolangGenerator
 	groups               []clientgentypes.GroupVersions
 	groupGoNames         map[clientgentypes.GroupVersion]string
-	fakeClientsetPackage string
-	outputPackage        string
+	fakeClientsetPackage string // must be a Go import-path
 	imports              namer.ImportTracker
 	clientsetGenerated   bool
 	// the import path of the generated real clientset.
-	realClientsetPackage string
+	realClientsetPackage string // must be a Go import-path
 }
 
 var _ generator.Generator = &genClientset{}
 
 func (g *genClientset) Namers(c *generator.Context) namer.NameSystems {
 	return namer.NameSystems{
-		"raw": namer.NewRawNamer(g.outputPackage, g.imports),
+		"raw": namer.NewRawNamer(g.fakeClientsetPackage, g.imports),
 	}
 }
 

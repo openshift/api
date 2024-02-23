@@ -10,7 +10,7 @@ import (
 
 const (
 	// DefaultOutputFileBaseName is the default output file base name for the generated deepcopy functions.
-	DefaultOutputFileBaseName = "zz_generated.deepcopy"
+	DefaultOutputFileBaseName = "zz_generated.deepcopy.go"
 )
 
 // Options contains the configuration required for the compatibility generator.

@@ -42047,8 +42047,16 @@ func schema_openshift_api_openshiftcontrolplane_v1_ImageImportControllerConfig(r
 							Format:      "int32",
 						},
 					},
+					"workers": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Workers is the number of workers that execute import of images. The default value is 50.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 				},
-				Required: []string{"maxScheduledImageImportsPerMinute", "disableScheduledImport", "scheduledImageImportMinimumIntervalSeconds"},
+				Required: []string{"maxScheduledImageImportsPerMinute", "disableScheduledImport", "scheduledImageImportMinimumIntervalSeconds", "workers"},
 			},
 		},
 	}

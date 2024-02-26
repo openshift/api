@@ -24407,7 +24407,8 @@
       "required": [
         "maxScheduledImageImportsPerMinute",
         "disableScheduledImport",
-        "scheduledImageImportMinimumIntervalSeconds"
+        "scheduledImageImportMinimumIntervalSeconds",
+        "workers"
       ],
       "properties": {
         "disableScheduledImport": {
@@ -24423,6 +24424,12 @@
         },
         "scheduledImageImportMinimumIntervalSeconds": {
           "description": "scheduledImageImportMinimumIntervalSeconds is the minimum number of seconds that can elapse between when image streams scheduled for background import are checked against the upstream repository. The default value is 15 minutes.",
+          "type": "integer",
+          "format": "int32",
+          "default": 0
+        },
+        "workers": {
+          "description": "Workers is the number of workers that execute import of images. The default value is 50.",
           "type": "integer",
           "format": "int32",
           "default": 0

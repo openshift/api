@@ -320,6 +320,9 @@ type ImageImportControllerConfig struct {
 	// scheduledImageImportMinimumIntervalSeconds is the minimum number of seconds that can elapse between when image streams
 	// scheduled for background import are checked against the upstream repository. The default value is 15 minutes.
 	ScheduledImageImportMinimumIntervalSeconds int `json:"scheduledImageImportMinimumIntervalSeconds"`
+	// Workers is the number of workers that execute import of images.
+	// The default value is 50.
+	Workers int `json:"workers"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

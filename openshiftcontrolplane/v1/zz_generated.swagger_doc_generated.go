@@ -102,6 +102,7 @@ var map_ImageImportControllerConfig = map[string]string{
 	"maxScheduledImageImportsPerMinute":          "maxScheduledImageImportsPerMinute is the maximum number of image streams that will be imported in the background per minute. The default value is 60. Set to -1 for unlimited.",
 	"disableScheduledImport":                     "disableScheduledImport allows scheduled background import of images to be disabled.",
 	"scheduledImageImportMinimumIntervalSeconds": "scheduledImageImportMinimumIntervalSeconds is the minimum number of seconds that can elapse between when image streams scheduled for background import are checked against the upstream repository. The default value is 15 minutes.",
+	"workers": "Workers is the number of workers that execute import of images. The default value is 50.",
 }
 
 func (ImageImportControllerConfig) SwaggerDoc() map[string]string {

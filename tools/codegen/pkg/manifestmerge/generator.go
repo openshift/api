@@ -5,7 +5,10 @@ import (
 	_ "embed"
 	"encoding/json"
 	"fmt"
-	"github.com/ghodss/yaml"
+	"os"
+	"strings"
+	"sync"
+
 	"github.com/openshift/api/tools/codegen/pkg/generation"
 	"github.com/openshift/api/tools/codegen/pkg/utils"
 	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
@@ -18,11 +21,8 @@ import (
 	"k8s.io/kube-openapi/pkg/spec3"
 	"k8s.io/kube-openapi/pkg/validation/spec"
 	"k8s.io/utils/pointer"
-	"os"
 	"path/filepath"
 	kyaml "sigs.k8s.io/yaml"
-	"strings"
-	"sync"
 )
 
 var defaultClusterProfilesToInject = []string{
@@ -41,6 +41,10 @@ type Options struct {
 	// of updating the generated file.
 	Verify bool
 
+	// TupleOverrides is temporary. Once we generate all CRDs, we won't need this.
+	// This allows specification of a CRD that is "ungated". This concept will go away
+	// and FeatureGate handling will be required and we'll generate multiple files.
+	// It also allows the specification of custom clusterProfiles until we normalize that too.
 	TupleOverrides []generation.TupleOverride
 }
 
@@ -215,7 +219,7 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 				resultingCRD.SetAnnotations(annotations)
 
 				// duplication is ugly, but it's only during the trip from here to there.
-				manifestData, err := yaml.Marshal(resultingCRD)
+				manifestData, err := kyaml.Marshal(resultingCRD)
 				if err != nil {
 					errs = append(errs, fmt.Errorf("could not encode file %s: %v", outputFile, err))
 					continue
@@ -343,6 +347,10 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 	return kerrors.NewAggregate(errs)
 }
 
+// pertinent is determined by the `filter`. If it passes the filter, it's pertinent.
+// filters commonly include clusterprofile and featureset-to-feature-gate mapping.
+// for example, the TechPreviewNoUpgrade featureset produces a filter that looks to see if the featuregate specified is
+// enabled when TechPreviewNoUpgrade is set.
 func mergeAllPertinentCRDsInDirs(resourcePaths []string, filter ManifestFilter, featureSet string) (*unstructured.Unstructured, []error) {
 	var resultingCRD *unstructured.Unstructured
 	var errs []error
@@ -356,6 +364,10 @@ func mergeAllPertinentCRDsInDirs(resourcePaths []string, filter ManifestFilter, 
 	return resultingCRD, errs
 }
 
+// pertinent is determined by the `filter`. If it passes the filter, it's pertinent.
+// filters commonly include clusterprofile and featureset-to-feature-gate mapping.
+// for example, the TechPreviewNoUpgrade featureset produces a filter that looks to see if the featuregate specified is
+// enabled when TechPreviewNoUpgrade is set.
 func mergeAllPertinentCRDsInDir(resourcePath string, filter ManifestFilter, featureSet string, startingCRD *unstructured.Unstructured) (*unstructured.Unstructured, []error) {
 
 	var unstructuredResultingCRD *unstructured.Unstructured
@@ -536,7 +548,7 @@ func (p *applyPatcher) applyPatchToCurrentObject(obj runtime.Object) (runtime.Ob
 	}
 
 	patchObj := &unstructured.Unstructured{Object: map[string]interface{}{}}
-	if err := yaml.Unmarshal(p.patch, &patchObj.Object); err != nil {
+	if err := kyaml.Unmarshal(p.patch, &patchObj.Object); err != nil {
 		return nil, fmt.Errorf("unable to unmarshal the patch: %w", err)
 	}
 
@@ -549,7 +561,7 @@ func (p *applyPatcher) applyPatchToCurrentObject(obj runtime.Object) (runtime.Ob
 }
 
 func readCRDYaml(data []byte) (*unstructured.Unstructured, error) {
-	json, err := yaml.YAMLToJSON(data)
+	json, err := kyaml.YAMLToJSON(data)
 	if err != nil {
 		json = data
 	}

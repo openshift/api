@@ -24,7 +24,6 @@ type CustomArgs struct {
 	BoundingDirs []string // Only deal with types rooted under these dirs.
 }
 
-// TODO: This is created only to reduce number of changes in a single PR.
 // Remove it and use PublicNamer instead.
 func featureGatedPartialSchemasNamer() *namer.NameStrategy {
 	return &namer.NameStrategy{

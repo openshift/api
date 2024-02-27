@@ -32,6 +32,8 @@ func FilterForFeatureSet(featureSetName string) (ManifestFilter, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	// use unstructured to pull this information to avoid vendoring openshift/api
 	uncastFeatureGate := map[string]interface{}{}
 	if err := kyaml.Unmarshal(featureGateBytes, &uncastFeatureGate); err != nil {
 		return nil, fmt.Errorf("unable to parse featuregate %q: %w", featureGateFilename, err)
@@ -97,7 +99,7 @@ func featureGatesFromManifest(manifest metav1.Object) sets.String {
 	ret := sets.String{}
 	for existingAnnotation := range manifest.GetAnnotations() {
 		if strings.HasPrefix(existingAnnotation, "feature-gate.release.openshift.io/") {
-			featureGateName := existingAnnotation[len("feature-gate.release.openshift.io/"):]
+			featureGateName := strings.TrimPrefix(existingAnnotation, "feature-gate.release.openshift.io/")
 			ret.Insert(featureGateName)
 		}
 	}

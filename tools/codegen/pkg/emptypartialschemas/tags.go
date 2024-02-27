@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-// This is the comment tag that carries parameters for deep-copy generation.
+// known tags that are handled by empty partial schema generation.
 const (
 	openshiftPackageGenerationEnablementMarkerName = "openshift:featuregated-schema-gen"
 	tagGroupName                                   = "groupName"

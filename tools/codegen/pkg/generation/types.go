@@ -121,6 +121,7 @@ type EmptyPartialSchema struct {
 
 // TODO remove most of this, but this gives us a diff we can read
 type TupleOverride struct {
+	// CRDName is the resource.group name of the CRD this exception applies to.
 	CRDName string `json:"crdName"`
 
 	// Ungated means applied without restrictions.  We'll eliminate this eventually, but need a starting point for a diff

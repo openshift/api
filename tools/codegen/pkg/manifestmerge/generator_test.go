@@ -16,53 +16,44 @@ func Test_mergeCRD2(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want any
+		want []byte
 	}{
 		{
 			name: "version-overlay",
 			args: args{
-				obj:   readCRDYamlOrDie2(t, "testdata/field-overlay/01.yaml"),
+				obj:   readCRDYamlOrDie(t, "testdata/field-overlay/01.yaml"),
 				patch: readFileOrDie(t, "testdata/field-overlay/02.yaml"),
 			},
+			want: readFileOrDie(t, "testdata/field-overlay/expected-01-first.yaml"),
 		},
 		{
 			name: "version-invert",
 			args: args{
-				obj:   readCRDYamlOrDie2(t, "testdata/field-overlay/02.yaml"),
+				obj:   readCRDYamlOrDie(t, "testdata/field-overlay/02.yaml"),
 				patch: readFileOrDie(t, "testdata/field-overlay/01.yaml"),
 			},
-		},
-		{
-			name: "cluster-version-signature-store",
-			args: args{
-				obj:   readCRDYamlOrDie2(t, "/home/deads/workspaces/api/src/github.com/openshift/api/config/v1/crd-manifests-by-featuregate/clusterversions/aaa_no-gates.yaml"),
-				patch: readFileOrDie(t, "/home/deads/workspaces/api/src/github.com/openshift/api/config/v1/crd-manifests-by-featuregate/clusterversions/SignatureStores.yaml"),
-			},
-		},
-		{
-			name: "cluster-version-signature-store-accidental-removal?",
-			args: args{
-				obj:   readCRDYamlOrDie2(t, "/home/deads/workspaces/api/src/github.com/openshift/api/config/v1/crd-manifests-by-featuregate/clusterversions/SignatureStores.yaml"),
-				patch: readFileOrDie(t, "/home/deads/workspaces/api/src/github.com/openshift/api/config/v1/crd-manifests-by-featuregate/clusterversions/SigstoreImageVerification.yaml"),
-			},
+			want: readFileOrDie(t, "testdata/field-overlay/expected-02-first.yaml"),
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := mergeCRD(tt.args.obj, tt.args.patch); !reflect.DeepEqual(got, tt.want) {
-				outBytes, err := kyaml.Marshal(got)
+			t.Skip("left these for convenience, but the field manager time needs to be stripped")
+			if got, _ := mergeCRD(tt.args.obj, tt.args.patch, "field-manager-a"); !reflect.DeepEqual(got, tt.want) {
+				asMap := got.(*unstructured.Unstructured).Object
+				outBytes, err := kyaml.Marshal(asMap)
 				if err != nil {
 					t.Fatal(err)
 				}
-				t.Log(string(outBytes))
-				t.Errorf("mergeCRD() = %v, want %v", got, tt.want)
+				if !reflect.DeepEqual(outBytes, tt.want) {
+					t.Errorf("%v", string(outBytes))
+				}
 			}
 		})
 	}
 }
 
-func readCRDYamlOrDie2(t *testing.T, path string) *unstructured.Unstructured {
+func readCRDYamlOrDie(t *testing.T, path string) *unstructured.Unstructured {
 	t.Helper()
 
 	data, err := os.ReadFile(path)

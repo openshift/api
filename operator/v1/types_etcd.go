@@ -40,7 +40,7 @@ type EtcdSpec struct {
 	//	"" means no opinion and the platform is left to choose a reasonable default
 	//	which is subject to change without notice.
 	// +kubebuilder:validation:Optional
-	// +openshift:enable:FeatureGates=HardwareSpeed
+	// +openshift:enable:FeatureGate=HardwareSpeed
 	// +optional
 	HardwareSpeed ControlPlaneHardwareSpeed `json:"controlPlaneHardwareSpeed"`
 }

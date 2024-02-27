@@ -3,11 +3,8 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.openshift.io: https://github.com/openshift/api/pull/752
-    api.openshift.io/merged-by-featuregates: "true"
-    include.release.openshift.io/ibm-cloud-managed: "true"
-    include.release.openshift.io/self-managed-high-availability: "true"
-    include.release.openshift.io/single-node-developer: "true"
-    release.openshift.io/feature-set: Default
+    api.openshift.io/filename-pattern: 0000_12_etcd-operator_01_configMARKERS.crd.yaml
+    feature-gate.release.openshift.io/HardwareSpeed: "true"
   name: etcds.operator.openshift.io
 spec:
   group: operator.openshift.io
@@ -41,6 +38,18 @@ spec:
             type: object
           spec:
             properties:
+              controlPlaneHardwareSpeed:
+                description: HardwareSpeed allows user to change the etcd tuning profile
+                  which configures the latency parameters for heartbeat interval and
+                  leader election timeouts allowing the cluster to tolerate longer
+                  round-trip-times between etcd members. Valid values are "", "Standard"
+                  and "Slower". "" means no opinion and the platform is left to choose
+                  a reasonable default which is subject to change without notice.
+                enum:
+                - ""
+                - Standard
+                - Slower
+                type: string
               failedRevisionLimit:
                 description: failedRevisionLimit is the number of failed static pod
                   installer revisions to keep on disk and in the api -1 = unlimited,
@@ -130,13 +139,8 @@ spec:
                       type: string
                     type:
                       type: string
-                  required:
-                  - type
                   type: object
                 type: array
-                x-kubernetes-list-map-keys:
-                - type
-                x-kubernetes-list-type: map
               controlPlaneHardwareSpeed:
                 description: ControlPlaneHardwareSpeed declares valid hardware speed
                   tolerance levels
@@ -177,7 +181,6 @@ spec:
                       type: string
                   type: object
                 type: array
-                x-kubernetes-list-type: atomic
               latestAvailableRevision:
                 description: latestAvailableRevision is the deploymentID of the most
                   recent deployment
@@ -218,7 +221,6 @@ spec:
                       items:
                         type: string
                       type: array
-                      x-kubernetes-list-type: atomic
                     lastFailedTime:
                       description: lastFailedTime is the time the last failed revision
                         failed the last time.
@@ -236,13 +238,8 @@ spec:
                         we're trying to apply
                       format: int32
                       type: integer
-                  required:
-                  - nodeName
                   type: object
                 type: array
-                x-kubernetes-list-map-keys:
-                - nodeName
-                x-kubernetes-list-type: map
               observedGeneration:
                 description: observedGeneration is the last generation change you've
                   dealt with

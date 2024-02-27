@@ -137,7 +137,8 @@ etcds.operator.openshift.io:
   CRDName: etcds.operator.openshift.io
   Capability: ""
   Category: coreoperators
-  FeatureGates: []
+  FeatureGates:
+  - HardwareSpeed
   GroupName: operator.openshift.io
   HasStatus: true
   KindName: Etcd

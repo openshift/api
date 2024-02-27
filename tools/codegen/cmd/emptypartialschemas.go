@@ -9,7 +9,6 @@ import (
 )
 
 var (
-	emptyPartialSchemasOutputFileBaseName      string
 	emptyPartialSchemaReportOutputFileBaseName string = "zz_generated.featuregated-crd-manifests.yaml"
 )
 
@@ -34,8 +33,6 @@ var emptyPartialSchemasCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(emptyPartialSchemasCmd)
-
-	rootCmd.PersistentFlags().StringVar(&emptyPartialSchemasOutputFileBaseName, "empty-partial-schemas:output-dir", "", "directory to generator into")
 }
 
 // newDeepcopyhGenerator builds a new empty-partial-schemas generator.

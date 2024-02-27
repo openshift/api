@@ -23,6 +23,11 @@ manifestMerge:
       clusterProfilesToInject:
         - include.release.openshift.io/self-managed-high-availability
         - include.release.openshift.io/single-node-developer
+    - crdName: authentications.config.openshift.io
+      featureSet: Default
+      clusterProfilesToInject:
+        - include.release.openshift.io/self-managed-high-availability
+        - include.release.openshift.io/single-node-developer
     - crdName: proxies.config.openshift.io
       ungated: true
     - crdName: operatorhubs.config.openshift.io

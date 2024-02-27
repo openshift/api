@@ -31,7 +31,7 @@ func createFeatureGatedCRDManifests(allCRDInfo map[string]*CRDInfo, outputDir st
 			yamlName := fmt.Sprintf("%s.yaml", featureGate)
 			if len(featureGate) == 0 {
 				if len(crdInfo.TopLevelFeatureGates) > 0 {
-					klog.Infof("skipping to ungated file because the top level type is featuregated")
+					klog.V(3).Infof("skipping to ungated file because the top level type is featuregated")
 					continue
 				}
 				// we need the directory walk to hit the ungated first so the rest cleanly overlay.
@@ -40,7 +40,7 @@ func createFeatureGatedCRDManifests(allCRDInfo map[string]*CRDInfo, outputDir st
 			}
 			filename := filepath.Join(crdDir, yamlName)
 			allowedFiles.Insert(yamlName)
-			klog.Infof("  working with %v in featuregate %q in %v", crdInfo.CRDName, featureGate, yamlName)
+			klog.V(2).Infof("working with %v in featuregate %q in %v", crdInfo.CRDName, featureGate, yamlName)
 
 			minimalCRD := minimalCRDFor(crdInfo, featureGate)
 
@@ -94,7 +94,7 @@ func createFeatureGatedCRDManifests(allCRDInfo map[string]*CRDInfo, outputDir st
 					continue
 				}
 
-				fmt.Printf("  Removing %q\n", fileToRemove)
+				klog.Infof("Removing %q", fileToRemove)
 				if err := os.Remove(fileToRemove); err != nil {
 					return err
 				}
@@ -111,12 +111,14 @@ func ensureNoExtraFields(minimalCRD, existingCRD *apiextensionsv1.CustomResource
 	}
 	existingCRDCopy := existingCRD.DeepCopy()
 	// the only diff should be the schema
+	// We have exactly one version for each partial schema because they are generated per version.
 	if len(existingCRDCopy.Spec.Versions) != 1 {
 		return fmt.Errorf("bad versions")
 	}
 	existingCRDCopy.Spec.Versions[0].Schema = nil
 
 	if !equality.Semantic.DeepEqual(minimalCRD, existingCRDCopy) {
+		// TODO could be replaced with a prettier diff printer from schemapatch.
 		return fmt.Errorf("unexpected diff: %v", cmp.Diff(minimalCRD, existingCRD))
 	}
 

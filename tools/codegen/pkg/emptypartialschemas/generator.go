@@ -18,7 +18,7 @@ type Options struct {
 
 	// OutputFileBaseName is the base name of the output file.
 	// When omitted, DefaultOutputFileBaseName is used.
-	// The current value of DefaultOutputFileBaseName is "zz_generated.deepcopy".
+	// The current value of DefaultOutputFileBaseName is "MISSING".
 	OutputFileBaseName string
 
 	// Verify determines whether the generator should verify the content instead

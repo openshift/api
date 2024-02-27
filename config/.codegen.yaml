@@ -49,6 +49,3 @@ manifestMerge:
       ungated: true
     - crdName: builds.config.openshift.io
       ungated: true
-
-
-

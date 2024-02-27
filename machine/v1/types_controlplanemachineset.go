@@ -8,8 +8,6 @@ import (
 
 // +genclient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-
-// ControlPlaneMachineSet ensures that a specified number of control plane machine replicas are running at any given time.
 // +k8s:openapi-gen=true
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=controlplanemachinesets,scope=Namespaced

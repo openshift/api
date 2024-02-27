@@ -4,3 +4,4 @@ manifestMerge:
   tupleOverrides:
     - crdName: dnsrecords.ingress.operator.openshift.io
       ungated: true
+      

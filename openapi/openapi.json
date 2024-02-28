@@ -22296,6 +22296,169 @@
         }
       }
     },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.MachineOSImage": {
+      "description": "MachineOSImage describes an image build for a MachineConfigPool Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec describes the machineosimage spec",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.MachineOSImageSpec"
+        },
+        "status": {
+          "description": "status describes the machineosimage status",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.MachineOSImageStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.MachineOSImageList": {
+      "description": "MachineOSImageList describes all of the OS Images on the system\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "metadata",
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.MachineOSImage"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.MachineOSImageSpec": {
+      "description": "MachineOSImageSpec contains user-configurable options and other information about an OS image.",
+      "type": "object",
+      "required": [
+        "baseImage",
+        "imagePullSpec",
+        "machineConfigPool"
+      ],
+      "properties": {
+        "baseImage": {
+          "description": "baseImage is the base OS image that this object was built from",
+          "type": "string",
+          "default": ""
+        },
+        "imagePullSpec": {
+          "description": "imagePullSpec contains the final pull spec of the built image",
+          "type": "string",
+          "default": ""
+        },
+        "machineConfig": {
+          "description": "machineConfig is a reference to the MC that was used to build this image.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.MachineOSObjectReference"
+        },
+        "machineConfigPool": {
+          "description": "machineConfigPool contains the MCP that the image has been rolled out to",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.MachineOSObjectReference"
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.MachineOSImageState": {
+      "description": "MachineOSImageState describes the lifecycle of an image",
+      "type": "object",
+      "required": [
+        "usage"
+      ],
+      "properties": {
+        "usage": {
+          "description": "usage describes which point in its lifecycle an image is at Valid types are: InUse, Stale, Rotten",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.MachineOSImageStatus": {
+      "description": "MachineOSImageStatus contains state ralted information about an image.",
+      "type": "object",
+      "required": [
+        "age",
+        "rolloutStatus",
+        "imageUsage"
+      ],
+      "properties": {
+        "age": {
+          "description": "age is how long the image has existed",
+          "default": 0,
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        },
+        "conditions": {
+          "description": "conditions contains status conditions related to the image.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "type",
+          "x-kubernetes-patch-strategy": "merge"
+        },
+        "imageUsage": {
+          "description": "imageUsage describes how recently this image has been used. Once this gets to Rotten, the image can be garbage collected Valid types are: InUse, Stale, Rotten",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.MachineOSImageState"
+        },
+        "observedGeneration": {
+          "description": "observedGeneration represents the generation observed by the controller.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "rolloutStatus": {
+          "description": "rolloutStatus represents how the image is progressing in its rollout after being built Valid types are: RolledOut, RolloutPending, RolloutFailed",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.MachineOSObjectReference": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the name of the referenced object.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.monitoring.v1.AlertRelabelConfig": {
       "description": "AlertRelabelConfig defines a set of relabel configs for alerts.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",

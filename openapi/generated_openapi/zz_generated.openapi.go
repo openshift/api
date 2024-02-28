@@ -753,6 +753,12 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeSpecMachineConfigVersion":   schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeSpecMachineConfigVersion(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeStatus":                     schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatus(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeStatusMachineConfigVersion": schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatusMachineConfigVersion(ref),
+		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineOSImage":                              schema_openshift_api_machineconfiguration_v1alpha1_MachineOSImage(ref),
+		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineOSImageList":                          schema_openshift_api_machineconfiguration_v1alpha1_MachineOSImageList(ref),
+		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineOSImageSpec":                          schema_openshift_api_machineconfiguration_v1alpha1_MachineOSImageSpec(ref),
+		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineOSImageState":                         schema_openshift_api_machineconfiguration_v1alpha1_MachineOSImageState(ref),
+		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineOSImageStatus":                        schema_openshift_api_machineconfiguration_v1alpha1_MachineOSImageStatus(ref),
+		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineOSObjectReference":                    schema_openshift_api_machineconfiguration_v1alpha1_MachineOSObjectReference(ref),
 		"github.com/openshift/api/monitoring/v1.AlertRelabelConfig":                                          schema_openshift_api_monitoring_v1_AlertRelabelConfig(ref),
 		"github.com/openshift/api/monitoring/v1.AlertRelabelConfigList":                                      schema_openshift_api_monitoring_v1_AlertRelabelConfigList(ref),
 		"github.com/openshift/api/monitoring/v1.AlertRelabelConfigSpec":                                      schema_openshift_api_monitoring_v1_AlertRelabelConfigSpec(ref),
@@ -38427,6 +38433,263 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatusM
 					},
 				},
 				Required: []string{"desired"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1alpha1_MachineOSImage(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MachineOSImage describes an image build for a MachineConfigPool Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec describes the machineosimage spec",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/machineconfiguration/v1alpha1.MachineOSImageSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status describes the machineosimage status",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/machineconfiguration/v1alpha1.MachineOSImageStatus"),
+						},
+					},
+				},
+				Required: []string{"spec"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machineconfiguration/v1alpha1.MachineOSImageSpec", "github.com/openshift/api/machineconfiguration/v1alpha1.MachineOSImageStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1alpha1_MachineOSImageList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MachineOSImageList describes all of the OS Images on the system\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machineconfiguration/v1alpha1.MachineOSImage"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machineconfiguration/v1alpha1.MachineOSImage", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1alpha1_MachineOSImageSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MachineOSImageSpec contains user-configurable options and other information about an OS image.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"baseImage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "baseImage is the base OS image that this object was built from",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"imagePullSpec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "imagePullSpec contains the final pull spec of the built image",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"machineConfigPool": {
+						SchemaProps: spec.SchemaProps{
+							Description: "machineConfigPool contains the MCP that the image has been rolled out to",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/machineconfiguration/v1alpha1.MachineOSObjectReference"),
+						},
+					},
+					"machineConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "machineConfig is a reference to the MC that was used to build this image.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/machineconfiguration/v1alpha1.MachineOSObjectReference"),
+						},
+					},
+				},
+				Required: []string{"baseImage", "imagePullSpec", "machineConfigPool"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machineconfiguration/v1alpha1.MachineOSObjectReference"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1alpha1_MachineOSImageState(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MachineOSImageState describes the lifecycle of an image",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"usage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "usage describes which point in its lifecycle an image is at Valid types are: InUse, Stale, Rotten",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"usage"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1alpha1_MachineOSImageStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MachineOSImageStatus contains state ralted information about an image.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"observedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedGeneration represents the generation observed by the controller.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type":       "map",
+								"x-kubernetes-patch-merge-key": "type",
+								"x-kubernetes-patch-strategy":  "merge",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions contains status conditions related to the image.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+					"age": {
+						SchemaProps: spec.SchemaProps{
+							Description: "age is how long the image has existed",
+							Default:     0,
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"rolloutStatus": {
+						SchemaProps: spec.SchemaProps{
+							Description: "rolloutStatus represents how the image is progressing in its rollout after being built Valid types are: RolledOut, RolloutPending, RolloutFailed",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"imageUsage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "imageUsage describes how recently this image has been used. Once this gets to Rotten, the image can be garbage collected Valid types are: InUse, Stale, Rotten",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/machineconfiguration/v1alpha1.MachineOSImageState"),
+						},
+					},
+				},
+				Required: []string{"age", "rolloutStatus", "imageUsage"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machineconfiguration/v1alpha1.MachineOSImageState", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1alpha1_MachineOSObjectReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the name of the referenced object.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
 			},
 		},
 	}

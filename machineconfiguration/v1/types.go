@@ -58,9 +58,16 @@ type ControllerConfigSpec struct {
 
 	// TODO: Use string for CA data
 
-	// kubeAPIServerServingCAData managed Kubelet to API Server Cert... Rotated automatically
+	// kubeAPIServerServingCAData managed Kubelet to API Server Cert... Rotated automatically. This data gets
+	// written to /etc/kubernetes/kubeconfig
 	// +kubebuilder:validation:Required
 	KubeAPIServerServingCAData []byte `json:"kubeAPIServerServingCAData"`
+
+	// kubeAPIServerClientCA managed Kubelet to API Client Cert... Rotated automatically. This data is
+	// written to /etc/kubernetes/kubelet-ca.crt
+	// +kubebuilder:validation:Required
+	// +nullable
+	KubeAPIServerClientCA []byte `json:"kubeAPIServerClientCA"`
 
 	// rootCAData specifies the root CA data
 	// +kubebuilder:validation:Required

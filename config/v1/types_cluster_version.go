@@ -278,7 +278,7 @@ const (
 )
 
 // ClusterVersionCapability enumerates optional, core cluster components.
-// +kubebuilder:validation:Enum=openshift-samples;baremetal;marketplace;Console;Insights;Storage;CSISnapshot;NodeTuning;MachineAPI;Build;DeploymentConfig;ImageRegistry;OperatorLifecycleManager;CloudCredential;Ingress
+// +kubebuilder:validation:Enum=openshift-samples;baremetal;marketplace;Console;Insights;Storage;CSISnapshot;NodeTuning;MachineAPI;Build;DeploymentConfig;ImageRegistry;OperatorLifecycleManager;CloudCredential;Ingress;CloudControllerManager
 type ClusterVersionCapability string
 
 const (
@@ -390,6 +390,11 @@ const (
 	//
 	// WARNING: This capability cannot be disabled on the standalone OpenShift.
 	ClusterVersionCapabilityIngress ClusterVersionCapability = "Ingress"
+
+	// ClusterVersionCapabilityCloudControllerManager manages various Cloud Controller
+	// Managers deployed on top of OpenShift. They help you to work with cloud
+	// provider API and embeds cloud-specific control logic.
+	ClusterVersionCapabilityCloudControllerManager ClusterVersionCapability = "CloudControllerManager"
 )
 
 // KnownClusterVersionCapabilities includes all known optional, core cluster components.
@@ -409,6 +414,7 @@ var KnownClusterVersionCapabilities = []ClusterVersionCapability{
 	ClusterVersionCapabilityOperatorLifecycleManager,
 	ClusterVersionCapabilityCloudCredential,
 	ClusterVersionCapabilityIngress,
+	ClusterVersionCapabilityCloudControllerManager,
 }
 
 // ClusterVersionCapabilitySet defines sets of cluster version capabilities.
@@ -538,6 +544,7 @@ var ClusterVersionCapabilitySets = map[ClusterVersionCapabilitySet][]ClusterVers
 		ClusterVersionCapabilityOperatorLifecycleManager,
 		ClusterVersionCapabilityCloudCredential,
 		ClusterVersionCapabilityIngress,
+		ClusterVersionCapabilityCloudControllerManager,
 	},
 	ClusterVersionCapabilitySetCurrent: {
 		ClusterVersionCapabilityBaremetal,
@@ -555,6 +562,7 @@ var ClusterVersionCapabilitySets = map[ClusterVersionCapabilitySet][]ClusterVers
 		ClusterVersionCapabilityOperatorLifecycleManager,
 		ClusterVersionCapabilityCloudCredential,
 		ClusterVersionCapabilityIngress,
+		ClusterVersionCapabilityCloudControllerManager,
 	},
 }
 

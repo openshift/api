@@ -50182,7 +50182,9 @@ func schema_openshift_api_operator_v1_MachineConfigurationStatus(ref common.Refe
 								"x-kubernetes-list-map-keys": []interface{}{
 									"type",
 								},
-								"x-kubernetes-list-type": "map",
+								"x-kubernetes-list-type":       "map",
+								"x-kubernetes-patch-merge-key": "type",
+								"x-kubernetes-patch-strategy":  "merge",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -50192,77 +50194,7 @@ func schema_openshift_api_operator_v1_MachineConfigurationStatus(ref common.Refe
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/openshift/api/operator/v1.OperatorCondition"),
-									},
-								},
-							},
-						},
-					},
-					"version": {
-						SchemaProps: spec.SchemaProps{
-							Description: "version is the level this availability applies to",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"readyReplicas": {
-						SchemaProps: spec.SchemaProps{
-							Description: "readyReplicas indicates how many replicas are ready and at the desired state",
-							Default:     0,
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"generations": {
-						VendorExtensible: spec.VendorExtensible{
-							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "atomic",
-							},
-						},
-						SchemaProps: spec.SchemaProps{
-							Description: "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("github.com/openshift/api/operator/v1.GenerationStatus"),
-									},
-								},
-							},
-						},
-					},
-					"latestAvailableRevision": {
-						SchemaProps: spec.SchemaProps{
-							Description: "latestAvailableRevision is the deploymentID of the most recent deployment",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"latestAvailableRevisionReason": {
-						SchemaProps: spec.SchemaProps{
-							Description: "latestAvailableRevisionReason describe the detailed reason for the most recent deployment",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"nodeStatuses": {
-						VendorExtensible: spec.VendorExtensible{
-							Extensions: spec.Extensions{
-								"x-kubernetes-list-map-keys": []interface{}{
-									"nodeName",
-								},
-								"x-kubernetes-list-type": "map",
-							},
-						},
-						SchemaProps: spec.SchemaProps{
-							Description: "nodeStatuses track the deployment values and errors across individual nodes",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("github.com/openshift/api/operator/v1.NodeStatus"),
+										Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Condition"),
 									},
 								},
 							},
@@ -50276,11 +50208,10 @@ func schema_openshift_api_operator_v1_MachineConfigurationStatus(ref common.Refe
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatus", "github.com/openshift/api/operator/v1.NodeStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
+			"github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 

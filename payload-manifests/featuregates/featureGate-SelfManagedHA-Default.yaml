@@ -98,6 +98,9 @@
                         "name": "MixedCPUsAllocation"
                     },
                     {
+                        "name": "NetworkDiagnosticsConfig"
+                    },
+                    {
                         "name": "NewOLM"
                     },
                     {

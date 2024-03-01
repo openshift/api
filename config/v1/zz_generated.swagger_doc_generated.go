@@ -1987,6 +1987,26 @@ func (Network) SwaggerDoc() map[string]string {
 	return map_Network
 }
 
+var map_NetworkDiagnostics = map[string]string{
+	"mode":            "mode controls the network diagnostics mode\n\nBy default the value is set to All.",
+	"sourcePlacement": "sourcePlacement controls the scheduling of network diagnostics source deployment\n\nSee NetworkDiagnosticsNodePlacement for more details about default values.",
+	"targetPlacement": "targetPlacement controls the scheduling of network diagnostics target daemonset\n\nSee NetworkDiagnosticsNodePlacement for more details about default values.",
+}
+
+func (NetworkDiagnostics) SwaggerDoc() map[string]string {
+	return map_NetworkDiagnostics
+}
+
+var map_NetworkDiagnosticsNodePlacement = map[string]string{
+	"":             "NetworkDiagnosticsNodePlacement defines node scheduling configuration network diagnostics components",
+	"nodeSelector": "nodeSelector is the node selector applied to network diagnostics components\n\nBy default this is set to `kubernetes.io/os: linux`",
+	"tolerations":  "tolerations is a list of tolerations applied to network diagnostics components\n\nFor SourcePlacement, this is set to an empty list by default.\n\nFor TargetPlacement, this is set to `- operator: \"Exists\"` by default. It means that it tolerates all taints.",
+}
+
+func (NetworkDiagnosticsNodePlacement) SwaggerDoc() map[string]string {
+	return map_NetworkDiagnosticsNodePlacement
+}
+
 var map_NetworkList = map[string]string{
 	"":         "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 	"metadata": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
@@ -2013,6 +2033,7 @@ var map_NetworkSpec = map[string]string{
 	"networkType":          "NetworkType is the plugin that is to be deployed (e.g. OpenShiftSDN). This should match a value that the cluster-network-operator understands, or else no networking will be installed. Currently supported values are: - OpenShiftSDN This field is immutable after installation.",
 	"externalIP":           "externalIP defines configuration for controllers that affect Service.ExternalIP. If nil, then ExternalIP is not allowed to be set.",
 	"serviceNodePortRange": "The port range allowed for Services of type NodePort. If not specified, the default of 30000-32767 will be used. Such Services without a NodePort specified will have one automatically allocated from this range. This parameter can be updated after the cluster is installed.",
+	"networkDiagnostics":   "networkDiagnostics defines network diagnostics configuration.\n\nCannot be specified when spec.disableNetworkDiagnostics is set to true in network.operator.openshift.io. If networkDiagnostics is not specified, the network diagnostics feature is controlled by the spec.disableNetworkDiagnostics flag in network.operator.openshift.io.",
 }
 
 func (NetworkSpec) SwaggerDoc() map[string]string {
@@ -2026,7 +2047,7 @@ var map_NetworkStatus = map[string]string{
 	"networkType":       "NetworkType is the plugin that is deployed (e.g. OpenShiftSDN).",
 	"clusterNetworkMTU": "ClusterNetworkMTU is the MTU for inter-pod networking.",
 	"migration":         "Migration contains the cluster network migration configuration.",
-	"conditions":        "conditions represents the observations of a network.config current state. Known .status.conditions.type are: \"NetworkTypeMigrationInProgress\", \"NetworkTypeMigrationMTUReady\", \"NetworkTypeMigrationTargetCNIAvailable\", \"NetworkTypeMigrationTargetCNIInUse\" and \"NetworkTypeMigrationOriginalCNIPurged\"",
+	"conditions":        "conditions represents the observations of a network.config current state. Known .status.conditions.type are: \"NetworkTypeMigrationInProgress\", \"NetworkTypeMigrationMTUReady\", \"NetworkTypeMigrationTargetCNIAvailable\", \"NetworkTypeMigrationTargetCNIInUse\", \"NetworkTypeMigrationOriginalCNIPurged\" and \"NetworkDiagnosticsAvailable\"",
 }
 
 func (NetworkStatus) SwaggerDoc() map[string]string {

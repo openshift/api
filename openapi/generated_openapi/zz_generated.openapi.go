@@ -297,6 +297,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.ModernTLSProfile":                                                schema_openshift_api_config_v1_ModernTLSProfile(ref),
 		"github.com/openshift/api/config/v1.NamedCertificate":                                                schema_openshift_api_config_v1_NamedCertificate(ref),
 		"github.com/openshift/api/config/v1.Network":                                                         schema_openshift_api_config_v1_Network(ref),
+		"github.com/openshift/api/config/v1.NetworkDiagnostics":                                              schema_openshift_api_config_v1_NetworkDiagnostics(ref),
+		"github.com/openshift/api/config/v1.NetworkDiagnosticsNodePlacement":                                 schema_openshift_api_config_v1_NetworkDiagnosticsNodePlacement(ref),
 		"github.com/openshift/api/config/v1.NetworkList":                                                     schema_openshift_api_config_v1_NetworkList(ref),
 		"github.com/openshift/api/config/v1.NetworkMigration":                                                schema_openshift_api_config_v1_NetworkMigration(ref),
 		"github.com/openshift/api/config/v1.NetworkSpec":                                                     schema_openshift_api_config_v1_NetworkSpec(ref),
@@ -14974,6 +14976,92 @@ func schema_openshift_api_config_v1_Network(ref common.ReferenceCallback) common
 	}
 }
 
+func schema_openshift_api_config_v1_NetworkDiagnostics(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "mode controls the network diagnostics mode\n\nBy default the value is set to All.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"sourcePlacement": {
+						SchemaProps: spec.SchemaProps{
+							Description: "sourcePlacement controls the scheduling of network diagnostics source deployment\n\nSee NetworkDiagnosticsNodePlacement for more details about default values.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.NetworkDiagnosticsNodePlacement"),
+						},
+					},
+					"targetPlacement": {
+						SchemaProps: spec.SchemaProps{
+							Description: "targetPlacement controls the scheduling of network diagnostics target daemonset\n\nSee NetworkDiagnosticsNodePlacement for more details about default values.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.NetworkDiagnosticsNodePlacement"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.NetworkDiagnosticsNodePlacement"},
+	}
+}
+
+func schema_openshift_api_config_v1_NetworkDiagnosticsNodePlacement(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NetworkDiagnosticsNodePlacement defines node scheduling configuration network diagnostics components",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"nodeSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "nodeSelector is the node selector applied to network diagnostics components\n\nBy default this is set to `kubernetes.io/os: linux`",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"tolerations": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "tolerations is a list of tolerations applied to network diagnostics components\n\nFor SourcePlacement, this is set to an empty list by default.\n\nFor TargetPlacement, this is set to `- operator: \"Exists\"` by default. It means that it tolerates all taints.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.Toleration"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.Toleration"},
+	}
+}
+
 func schema_openshift_api_config_v1_NetworkList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -15109,12 +15197,19 @@ func schema_openshift_api_config_v1_NetworkSpec(ref common.ReferenceCallback) co
 							Format:      "",
 						},
 					},
+					"networkDiagnostics": {
+						SchemaProps: spec.SchemaProps{
+							Description: "networkDiagnostics defines network diagnostics configuration.\n\nCannot be specified when spec.disableNetworkDiagnostics is set to true in network.operator.openshift.io. If networkDiagnostics is not specified, the network diagnostics feature is controlled by the spec.disableNetworkDiagnostics flag in network.operator.openshift.io.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.NetworkDiagnostics"),
+						},
+					},
 				},
 				Required: []string{"clusterNetwork", "serviceNetwork", "networkType"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ClusterNetworkEntry", "github.com/openshift/api/config/v1.ExternalIPConfig"},
+			"github.com/openshift/api/config/v1.ClusterNetworkEntry", "github.com/openshift/api/config/v1.ExternalIPConfig", "github.com/openshift/api/config/v1.NetworkDiagnostics"},
 	}
 }
 
@@ -15186,7 +15281,7 @@ func schema_openshift_api_config_v1_NetworkStatus(ref common.ReferenceCallback) 
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "conditions represents the observations of a network.config current state. Known .status.conditions.type are: \"NetworkTypeMigrationInProgress\", \"NetworkTypeMigrationMTUReady\", \"NetworkTypeMigrationTargetCNIAvailable\", \"NetworkTypeMigrationTargetCNIInUse\" and \"NetworkTypeMigrationOriginalCNIPurged\"",
+							Description: "conditions represents the observations of a network.config current state. Known .status.conditions.type are: \"NetworkTypeMigrationInProgress\", \"NetworkTypeMigrationMTUReady\", \"NetworkTypeMigrationTargetCNIAvailable\", \"NetworkTypeMigrationTargetCNIInUse\", \"NetworkTypeMigrationOriginalCNIPurged\" and \"NetworkDiagnosticsAvailable\"",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{

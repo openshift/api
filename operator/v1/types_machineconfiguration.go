@@ -43,7 +43,7 @@ type MachineConfigurationSpec struct {
 	// be updated to the latest boot images during cluster upgrades, ensuring that new machines
 	// always boot with the current cluster version's boot image. When omitted, no boot images
 	// will be updated.
-	// +openshift:enable:FeatureSets=CustomNoUpgrade;TechPreviewNoUpgrade
+	// +openshift:enable:FeatureGate=ManagedBootImages
 	// +optional
 	ManagedBootImages ManagedBootImages `json:"managedBootImages"`
 }

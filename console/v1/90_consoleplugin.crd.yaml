@@ -6,6 +6,7 @@ metadata:
     capability.openshift.io/name: Console
     description: Extension for configuring openshift web console plugins.
     displayName: ConsolePlugin
+    include.release.openshift.io/hypershift: "true"
     include.release.openshift.io/ibm-cloud-managed: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
     include.release.openshift.io/single-node-developer: "true"

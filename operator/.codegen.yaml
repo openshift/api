@@ -38,8 +38,6 @@ manifestMerge:
       ungated: true
     - crdName: csisnapshotcontrollers.operator.openshift.io
       ungated: true
-    - crdName: machineconfigurations.operator.openshift.io
-      ungated: true
     - crdName: clustercsidrivers.operator.openshift.io
       ungated: true
     - crdName: networks.operator.openshift.io

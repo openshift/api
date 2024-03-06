@@ -271,7 +271,8 @@ machineconfigurations.operator.openshift.io:
   CRDName: machineconfigurations.operator.openshift.io
   Capability: ""
   Category: ""
-  FeatureGates: []
+  FeatureGates:
+  - ManagedBootImages
   GroupName: operator.openshift.io
   HasStatus: true
   KindName: MachineConfiguration

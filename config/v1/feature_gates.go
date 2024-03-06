@@ -595,4 +595,11 @@ var (
 						productScope(ocpSpecific).
 						enableIn(TechPreviewNoUpgrade).
 						mustRegister()
+
+	FeatureGateInPlacePodVerticalScaling = newFeatureGate("InPlacePodVerticalScaling").
+						reportProblemsToJiraComponent("node").
+						contactPerson("joelsmith").
+						productScope(kubernetes).
+						enableIn(TechPreviewNoUpgrade).
+						mustRegister()
 )

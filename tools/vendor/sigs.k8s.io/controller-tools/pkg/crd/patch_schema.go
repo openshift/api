@@ -35,6 +35,5 @@ func mayHandleField(field markers.FieldInfo) bool {
 		return crdmarkers.FeatureGatesForCurrentFile.HasAny(featureGatesForField...)
 	}
 
-
 	return true
 }

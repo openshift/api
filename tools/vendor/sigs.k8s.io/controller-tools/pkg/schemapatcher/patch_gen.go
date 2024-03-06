@@ -22,7 +22,7 @@ func mayHandleFile(filename string, rawContent []byte) bool {
 	// always set the featuregate values
 	crdmarkers.FeatureGatesForCurrentFile = featureGatesFromManifest(manifest)
 
-	if len(crdmarkers.RequiredFeatureSets) > 0{
+	if len(crdmarkers.RequiredFeatureSets) > 0 {
 		manifestFeatureSets := sets.String{}
 		if manifestFeatureSetString := manifest.GetAnnotations()["release.openshift.io/feature-set"]; len(manifestFeatureSetString) > 0 {
 			for _, curr := range strings.Split(manifestFeatureSetString, ",") {
@@ -32,11 +32,10 @@ func mayHandleFile(filename string, rawContent []byte) bool {
 		return manifestFeatureSets.Equal(crdmarkers.RequiredFeatureSets)
 	}
 
-
 	return true
 }
 
-func featureGatesFromManifest(manifest *unstructured.Unstructured) sets.String{
+func featureGatesFromManifest(manifest *unstructured.Unstructured) sets.String {
 	ret := sets.String{}
 	for existingAnnotation := range manifest.GetAnnotations() {
 		if strings.HasPrefix(existingAnnotation, "feature-gate.release.openshift.io/") {

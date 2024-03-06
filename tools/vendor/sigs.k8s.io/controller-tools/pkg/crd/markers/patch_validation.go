@@ -10,7 +10,7 @@ import (
 	"sigs.k8s.io/controller-tools/pkg/markers"
 )
 
-// FeatureGatesForCurrentFile is reset every 
+// FeatureGatesForCurrentFile is reset every
 var FeatureGatesForCurrentFile = sets.String{}
 
 var RequiredFeatureSets = sets.NewString()
@@ -115,11 +115,9 @@ func (m FeatureSetXValidation) ApplyToSchema(schema *apiext.JSONSchemaProps) err
 // the order is stable.
 func (m FeatureSetXValidation) ApplyFirst() {}
 
-
-
 type FeatureGateEnum struct {
 	FeatureGateNames []string `marker:"featureGate"`
-	EnumValues      []string `marker:"enum"`
+	EnumValues       []string `marker:"enum"`
 }
 
 func (m FeatureGateEnum) ApplyToSchema(schema *apiext.JSONSchemaProps) error {
@@ -147,8 +145,8 @@ func (m FeatureGateEnum) ApplyToSchema(schema *apiext.JSONSchemaProps) error {
 
 type FeatureGateXValidation struct {
 	FeatureGateNames []string `marker:"featureGate"`
-	Rule            string
-	Message         string `marker:",optional"`
+	Rule             string
+	Message          string `marker:",optional"`
 }
 
 func (m FeatureGateXValidation) ApplyToSchema(schema *apiext.JSONSchemaProps) error {

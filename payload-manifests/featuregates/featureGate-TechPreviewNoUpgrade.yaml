@@ -16,9 +16,6 @@
                         "name": "ClusterAPIInstall"
                     },
                     {
-                        "name": "DisableKubeletCloudCredentialProviders"
-                    },
-                    {
                         "name": "EventedPLEG"
                     },
                     {

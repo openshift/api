@@ -26,9 +26,6 @@
                         "name": "DNSNameResolver"
                     },
                     {
-                        "name": "DisableKubeletCloudCredentialProviders"
-                    },
-                    {
                         "name": "DynamicResourceAllocation"
                     },
                     {

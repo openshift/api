@@ -1,0 +1,21 @@
+notstableconfigtypes.example.openshift.io:
+  Annotations: {}
+  ApprovedPRNumber: https://github.com/openshift/api/pull/xxx
+  CRDName: notstableconfigtypes.example.openshift.io
+  Capability: ""
+  Category: ""
+  FeatureGates:
+  - Example
+  GroupName: example.openshift.io
+  HasStatus: false
+  KindName: NotStableConfigType
+  Labels: {}
+  PluralName: notstableconfigtypes
+  PrinterColumns: []
+  Scope: Cluster
+  ShortName: ""
+  TargetFilenamePattern: 0000_50_notstabletypeMARKERS.crd.yaml
+  TopLevelFeatureGates:
+  - Example
+  Version: v1alpha1
+

@@ -7,14 +7,17 @@ import (
 // +genclient
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-// +kubebuilder:object:root=true
-// +kubebuilder:subresource:status
 // +openshift:compatibility-gen:level=1
+// +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/xxx
+// +openshift:file-pattern=0000_50_stabletypeMARKERS.crd.yaml
 
 // StableConfigType is a stable config type that may include TechPreviewNoUpgrade fields.
 //
 // Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=1
+// +kubebuilder:object:root=true
+// +kubebuilder:resource:path=stableconfigtypes,scope=Cluster
+// +kubebuilder:subresource:status
 type StableConfigType struct {
 	metav1.TypeMeta `json:",inline"`
 
@@ -29,12 +32,12 @@ type StableConfigType struct {
 }
 
 // StableConfigTypeSpec is the desired state
-// +openshift:validation:FeatureSetAwareXValidation:featureSet=CustomNoUpgrade;TechPreviewNoUpgrade,rule="has(oldSelf.coolNewField) ? has(self.coolNewField) : true",message="coolNewField may not be removed once set"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=Example,rule="has(oldSelf.coolNewField) ? has(self.coolNewField) : true",message="coolNewField may not be removed once set"
 type StableConfigTypeSpec struct {
 	// coolNewField is a field that is for tech preview only.  On normal clusters this shouldn't be present
 	//
 	// +kubebuilder:validation:Optional
-	// +openshift:enable:FeatureSets=CustomNoUpgrade;TechPreviewNoUpgrade
+	// +openshift:enable:FeatureGate=Example
 	// +optional
 	CoolNewField string `json:"coolNewField"`
 
@@ -73,8 +76,8 @@ type EvolvingUnion struct {
 }
 
 // EvolvingDiscriminator defines the audit policy profile type.
-// +openshift:validation:FeatureSetAwareEnum:featureSet=Default,enum="";StableValue
-// +openshift:validation:FeatureSetAwareEnum:featureSet=CustomNoUpgrade;TechPreviewNoUpgrade,enum="";StableValue;TechPreviewOnlyValue
+// +openshift:validation:FeatureGateAwareEnum:featureGate="",enum="";StableValue
+// +openshift:validation:FeatureGateAwareEnum:featureGate=Example,enum="";StableValue;TechPreviewOnlyValue
 type EvolvingDiscriminator string
 
 const (
@@ -137,7 +140,6 @@ type StableConfigTypeStatus struct {
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-// +kubebuilder:object:root=true
 // +openshift:compatibility-gen:level=1
 
 // StableConfigTypeList contains a list of StableConfigTypes.

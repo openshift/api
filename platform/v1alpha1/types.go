@@ -61,6 +61,10 @@ type PlatformOperatorStatus struct {
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:resource:path=platformoperators,scope=Cluster
+// +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/1234
+// +openshift:file-pattern=platformoperatorsMARKERS.crd.yaml
+// +openshift:enable:FeatureGate=PlatformOperators
 
 // PlatformOperator is the Schema for the PlatformOperators API.
 //

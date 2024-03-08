@@ -10,6 +10,10 @@ import (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
+// +kubebuilder:resource:path=dnsrecords,scope=Namespaced
+// +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/584
+// +openshift:capability=Ingress
+// +openshift:file-pattern=0000_50_dns-recordMARKERS.yaml
 
 // DNSRecord is a DNS record managed in the zones defined by
 // dns.config.openshift.io/cluster .spec.publicZone and .spec.privateZone.
@@ -158,7 +162,6 @@ const (
 )
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-// +kubebuilder:object:root=true
 
 // DNSRecordList contains a list of dnsrecords.
 //

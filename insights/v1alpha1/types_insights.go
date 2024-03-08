@@ -6,8 +6,16 @@ import (
 
 // +genclient
 // +genclient:nonNamespaced
-// +kubebuilder:resource:scope=Cluster
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:object:root=true
+// +kubebuilder:resource:path=datagathers,scope=Cluster
+// +kubebuilder:subresource:status
+// +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/1365
+// +openshift:file-pattern=0000_10_01_datagatherMARKERS.crd.yaml
+// +openshift:enable:FeatureGate=InsightsOnDemandDataGather
+// +kubebuilder:printcolumn:name=State,type=string,JSONPath=.status.dataGatherState,description=DataGather job state
+// +kubebuilder:printcolumn:name=StartTime,type=date,JSONPath=.status.startTime,description=DataGather start time
+// +kubebuilder:printcolumn:name=FinishTime,type=date,JSONPath=.status.finishTime,description=DataGather finish time
 //
 // DataGather provides data gather configuration options and status for the particular Insights data gathering.
 //

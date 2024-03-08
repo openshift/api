@@ -30,6 +30,9 @@
                         "name": "AdminNetworkPolicy"
                     },
                     {
+                        "name": "AlertingRules"
+                    },
+                    {
                         "name": "AlibabaPlatform"
                     },
                     {
@@ -37,6 +40,9 @@
                     },
                     {
                         "name": "AzureWorkloadIdentity"
+                    },
+                    {
+                        "name": "BareMetalLoadBalancer"
                     },
                     {
                         "name": "BuildCSIVolumes"
@@ -54,6 +60,9 @@
                         "name": "DynamicResourceAllocation"
                     },
                     {
+                        "name": "Example"
+                    },
+                    {
                         "name": "ExternalCloudProvider"
                     },
                     {
@@ -66,6 +75,12 @@
                         "name": "ExternalCloudProviderGCP"
                     },
                     {
+                        "name": "ExternalOIDC"
+                    },
+                    {
+                        "name": "ExternalRouteCertificate"
+                    },
+                    {
                         "name": "GCPClusterHostedDNS"
                     },
                     {
@@ -75,7 +90,13 @@
                         "name": "GatewayAPI"
                     },
                     {
+                        "name": "HardwareSpeed"
+                    },
+                    {
                         "name": "InsightsConfigAPI"
+                    },
+                    {
+                        "name": "InsightsOnDemandDataGather"
                     },
                     {
                         "name": "InstallAlternateInfrastructureAWS"
@@ -115,6 +136,9 @@
                     },
                     {
                         "name": "PinnedImages"
+                    },
+                    {
+                        "name": "PlatformOperators"
                     },
                     {
                         "name": "PrivateHostedZoneAWS"

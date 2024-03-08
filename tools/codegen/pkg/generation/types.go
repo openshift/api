@@ -25,6 +25,16 @@ type Config struct {
 	// When provided, any equivalent flag provided values are ignored.
 	SchemaPatch *SchemaPatchConfig `json:"schemapatch,omitempty"`
 
+	// ManifestMerge represents the configuration for the manifest merge generator.
+	// When omitted, the default configuration will be used.
+	// When provided, any equivalent flag provided values are ignored.
+	ManifestMerge *ManifestMerge `json:"manifestMerge,omitempty"`
+
+	// EmptyPartialSchema represents the configuration for the manifest merge generator.
+	// When omitted, the default configuration will be used.
+	// When provided, any equivalent flag provided values are ignored.
+	EmptyPartialSchema *EmptyPartialSchema `json:"emptyPartialSchema,omitempty"`
+
 	// SwaggerDocs represents the configuration for the swaggerdocs generator.
 	// When omitted, the default configuration will be used.
 	// When provided, any equivalent flag provided values are ignored.
@@ -91,6 +101,44 @@ type SchemaPatchConfig struct {
 	// When omitted, any manifest with a feature set annotation will be ignored.
 	// Example entries are `""` (empty string), `"TechPreviewNoUpgrade"` or `"TechPreviewNoUpgrade,CustomNoUpgrade"`.
 	RequiredFeatureSets []string `json:"requiredFeatureSets,omitempty"`
+}
+
+// ManifestMerge is the configuration for the manifest merge generator.
+type ManifestMerge struct {
+	// Disabled determines whether the schemapatch generator should be run or not.
+	// This generator is enabled by default so this field defaults to false.
+	Disabled bool `json:"disabled,omitempty"`
+
+	TupleOverrides []TupleOverride `json:"tupleOverrides,omitempty"`
+}
+
+// ManifestMerge is the configuration for the manifest merge generator.
+type EmptyPartialSchema struct {
+	// Disabled determines whether the schemapatch generator should be run or not.
+	// This generator is enabled by default so this field defaults to false.
+	Disabled bool `json:"disabled,omitempty"`
+}
+
+// TODO remove most of this, but this gives us a diff we can read
+type TupleOverride struct {
+	// CRDName is the resource.group name of the CRD this exception applies to.
+	CRDName string `json:"crdName"`
+
+	// Ungated means applied without restrictions.  We'll eliminate this eventually, but need a starting point for a diff
+	Ungated bool `json:"ungated"`
+	// featureSet indicates which featureset this override applies to.
+	FeatureSet string `json:"featureSet"`
+
+	// ClusterProfilesToInject indicates which cluster profiles to force in via annotations for this manifest.
+	// eventually we will remove this, but to have a reviewable PR we need to start here.
+	ClusterProfilesToInject []string `json:"clusterProfilesToInject,omitempty"`
+
+	// Filename provides a destination.  Eventually we will remove this and allow specifying a prefix to override, but to have
+	// a reviewable PR, we need to keep this diff small.
+	Filename string `json:"filename,omitempty"`
+
+	// Skip means don't generate this. We'll remove this eventually, but to have a reviewable PR, we must skip some tuples
+	Skip bool `json:"skip,omitempty"`
 }
 
 // SwaggerDocsConfig is the configuration for the swaggerdocs generator.

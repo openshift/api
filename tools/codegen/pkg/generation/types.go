@@ -124,8 +124,6 @@ type TupleOverride struct {
 	// CRDName is the resource.group name of the CRD this exception applies to.
 	CRDName string `json:"crdName"`
 
-	// Ungated means applied without restrictions.  We'll eliminate this eventually, but need a starting point for a diff
-	Ungated bool `json:"ungated"`
 	// featureSet indicates which featureset this override applies to.
 	FeatureSet string `json:"featureSet"`
 

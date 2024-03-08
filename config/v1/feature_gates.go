@@ -113,6 +113,7 @@ func (b *featureGateBuilder) register() (FeatureGateName, error) {
 		OwningProduct:       b.owningProduct,
 	}
 
+	// statusByClusterProfileByFeatureSet is initialized by constructor to be false for every combination
 	for clusterProfile, byFeatureSet := range b.statusByClusterProfileByFeatureSet {
 		for featureSet, enabled := range byFeatureSet {
 			if _, ok := allFeatureGates[clusterProfile]; !ok {

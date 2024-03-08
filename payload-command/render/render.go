@@ -72,6 +72,9 @@ func (o *RenderOpts) Run() error {
 		if err != nil {
 			return fmt.Errorf("error converting FeatureGate: %w", err)
 		}
+		if featureGates.Annotations == nil {
+			featureGates.Annotations = map[string]string{}
+		}
 
 		// if the manifest has cluster profiles specified, the manifest's list must include the configured clusterprofile.
 		manifestClusterProfiles := clusterProfilesFrom(featureGates.Annotations)

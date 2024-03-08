@@ -6,22 +6,22 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/util/sets"
 	"os"
+	"path"
 	kyaml "sigs.k8s.io/yaml"
 	"strings"
 )
 
-func FilterForFeatureSet(featureSetName string) (ManifestFilter, error) {
+func FilterForFeatureSet(payloadFeatureGatePath, featureSetName string) (ManifestFilter, error) {
 	if featureSetName == "CustomNoUpgrade" {
 		return &CustomNoUpgrade{}, nil
 	}
 
-	// TODO find pointers to serialized featuregates.  I'm sure Joel has some sneaky thing that prevents me from doing the "simple" relative path.
 	featureGateFilename := ""
 	switch {
 	case featureSetName == "TechPreviewNoUpgrade":
-		featureGateFilename = "payload-manifests/featuregates/featureGate-TechPreviewNoUpgrade.yaml"
+		featureGateFilename = path.Join(payloadFeatureGatePath, "featureGate-TechPreviewNoUpgrade.yaml")
 	case featureSetName == "Default":
-		featureGateFilename = "payload-manifests/featuregates/featureGate-Default.yaml"
+		featureGateFilename = path.Join(payloadFeatureGatePath, "featureGate-Default.yaml")
 	default:
 		return nil, fmt.Errorf("unrecognized featureset name %q", featureSetName)
 	}

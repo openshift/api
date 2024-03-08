@@ -1,5 +1,7 @@
 package v1
 
+import "fmt"
+
 // FeatureGateDescription is a golang-only interface used to contains details for a feature gate.
 type FeatureGateDescription struct {
 	// FeatureGateAttributes is the information that appears in the API
@@ -15,6 +17,15 @@ type FeatureGateDescription struct {
 	OwningProduct OwningProduct
 }
 
+type ClusterProfileName string
+
+var (
+	Hypershift         = ClusterProfileName("include.release.openshift.io/ibm-cloud-managed")
+	SelfManaged        = ClusterProfileName("include.release.openshift.io/self-managed-high-availability")
+	SingleNode         = ClusterProfileName("include.release.openshift.io/single-node-developer")
+	AllClusterProfiles = []ClusterProfileName{Hypershift, SelfManaged, SingleNode}
+)
+
 type OwningProduct string
 
 var (
@@ -22,7 +33,144 @@ var (
 	kubernetes  = OwningProduct("Kubernetes")
 )
 
+type featureGateBuilder struct {
+	name                string
+	owningJiraComponent string
+	responsiblePerson   string
+	owningProduct       OwningProduct
+
+	statusByClusterProfileByFeatureSet map[ClusterProfileName]map[FeatureSet]bool
+}
+
+// newFeatureGate featuregate are disabled in every FeatureSet and selectively enabled
+func newFeatureGate(name string) *featureGateBuilder {
+	b := &featureGateBuilder{
+		name:                               name,
+		statusByClusterProfileByFeatureSet: map[ClusterProfileName]map[FeatureSet]bool{},
+	}
+	for _, clusterProfile := range AllClusterProfiles {
+		byFeatureSet := map[FeatureSet]bool{}
+		for _, featureSet := range AllFixedFeatureSets {
+			byFeatureSet[featureSet] = false
+		}
+		b.statusByClusterProfileByFeatureSet[clusterProfile] = byFeatureSet
+	}
+	return b
+}
+
+func (b *featureGateBuilder) reportProblemsToJiraComponent(owningJiraComponent string) *featureGateBuilder {
+	b.owningJiraComponent = owningJiraComponent
+	return b
+}
+
+func (b *featureGateBuilder) contactPerson(responsiblePerson string) *featureGateBuilder {
+	b.responsiblePerson = responsiblePerson
+	return b
+}
+
+func (b *featureGateBuilder) productScope(owningProduct OwningProduct) *featureGateBuilder {
+	b.owningProduct = owningProduct
+	return b
+}
+
+func (b *featureGateBuilder) enableIn(featureSets ...FeatureSet) *featureGateBuilder {
+	for clusterProfile := range b.statusByClusterProfileByFeatureSet {
+		for _, featureSet := range featureSets {
+			b.statusByClusterProfileByFeatureSet[clusterProfile][featureSet] = true
+		}
+	}
+	return b
+}
+
+func (b *featureGateBuilder) enableForClusterProfile(clusterProfile ClusterProfileName, featureSets ...FeatureSet) *featureGateBuilder {
+	for _, featureSet := range featureSets {
+		b.statusByClusterProfileByFeatureSet[clusterProfile][featureSet] = true
+	}
+	return b
+}
+
+func (b *featureGateBuilder) register() (FeatureGateName, error) {
+	if len(b.name) == 0 {
+		return "", fmt.Errorf("missing name")
+	}
+	if len(b.owningJiraComponent) == 0 {
+		return "", fmt.Errorf("missing owningJiraComponent")
+	}
+	if len(b.responsiblePerson) == 0 {
+		return "", fmt.Errorf("missing responsiblePerson")
+	}
+	if len(b.owningProduct) == 0 {
+		return "", fmt.Errorf("missing owningProduct")
+	}
+
+	featureGateName := FeatureGateName(b.name)
+	description := FeatureGateDescription{
+		FeatureGateAttributes: FeatureGateAttributes{
+			Name: featureGateName,
+		},
+		OwningJiraComponent: b.owningJiraComponent,
+		ResponsiblePerson:   b.responsiblePerson,
+		OwningProduct:       b.owningProduct,
+	}
+
+	for clusterProfile, byFeatureSet := range b.statusByClusterProfileByFeatureSet {
+		for featureSet, enabled := range byFeatureSet {
+			if _, ok := allFeatureGates[clusterProfile]; !ok {
+				allFeatureGates[clusterProfile] = map[FeatureSet]*FeatureGateEnabledDisabled{}
+			}
+			if _, ok := allFeatureGates[clusterProfile][featureSet]; !ok {
+				allFeatureGates[clusterProfile][featureSet] = &FeatureGateEnabledDisabled{}
+			}
+
+			if enabled {
+				allFeatureGates[clusterProfile][featureSet].Enabled = append(allFeatureGates[clusterProfile][featureSet].Enabled, description)
+			} else {
+				allFeatureGates[clusterProfile][featureSet].Disabled = append(allFeatureGates[clusterProfile][featureSet].Disabled, description)
+			}
+		}
+	}
+
+	return featureGateName, nil
+}
+
+func (b *featureGateBuilder) mustRegister() FeatureGateName {
+	ret, err := b.register()
+	if err != nil {
+		panic(err)
+	}
+	return ret
+}
+
+func FeatureSets(clusterProfile ClusterProfileName, featureSet FeatureSet) (*FeatureGateEnabledDisabled, error) {
+	byFeatureSet, ok := allFeatureGates[clusterProfile]
+	if !ok {
+		return nil, fmt.Errorf("no information found for ClusterProfile=%q", clusterProfile)
+	}
+	featureGates, ok := byFeatureSet[featureSet]
+	if !ok {
+		return nil, fmt.Errorf("no information found for FeatureSet=%q under ClusterProfile=%q", featureSet, clusterProfile)
+	}
+	return featureGates.DeepCopy(), nil
+}
+
+func AllFeatureSets() map[ClusterProfileName]map[FeatureSet]*FeatureGateEnabledDisabled {
+	ret := map[ClusterProfileName]map[FeatureSet]*FeatureGateEnabledDisabled{}
+
+	for clusterProfile, byFeatureSet := range allFeatureGates {
+		newByFeatureSet := map[FeatureSet]*FeatureGateEnabledDisabled{}
+
+		for featureSet, enabledDisabled := range byFeatureSet {
+			newByFeatureSet[featureSet] = enabledDisabled.DeepCopy()
+		}
+		ret[clusterProfile] = newByFeatureSet
+	}
+
+	return ret
+}
+
 var (
+	allFeatureGates = map[ClusterProfileName]map[FeatureSet]*FeatureGateEnabledDisabled{}
+
 	FeatureGateValidatingAdmissionPolicy = FeatureGateName("ValidatingAdmissionPolicy")
 	validatingAdmissionPolicy            = FeatureGateDescription{
 		FeatureGateAttributes: FeatureGateAttributes{

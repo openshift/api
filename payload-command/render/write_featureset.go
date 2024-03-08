@@ -3,11 +3,18 @@ package render
 import (
 	"flag"
 	"fmt"
-	"os"
-	"path/filepath"
-
 	configv1 "github.com/openshift/api/config/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"os"
+	"path/filepath"
+)
+
+var (
+	clusterProfileToShortName = map[configv1.ClusterProfileName]string{
+		configv1.Hypershift:  "Hypershift",
+		configv1.SelfManaged: "SelfManagedHA",
+		configv1.SingleNode:  "SingleNode",
+	}
 )
 
 // WriteFeatureSets holds values to drive the render command.
@@ -38,33 +45,58 @@ func (o *WriteFeatureSets) Run() error {
 		return err
 	}
 
-	for featureSetName := range configv1.FeatureSets {
-		featureGates := &configv1.FeatureGate{
-			ObjectMeta: metav1.ObjectMeta{
-				Name: "cluster",
-			},
-			Spec: configv1.FeatureGateSpec{
-				FeatureGateSelection: configv1.FeatureGateSelection{
-					FeatureSet: featureSetName,
+	statusByClusterProfileByFeatureSet := configv1.AllFeatureSets()
+	for clusterProfile, byFeatureSet := range statusByClusterProfileByFeatureSet {
+		for featureSetName, featureGateStatuses := range byFeatureSet {
+			currentDetails := FeaturesGateDetailsFromFeatureSets(featureGateStatuses, o.PayloadVersion)
+
+			featureGateInstance := &configv1.FeatureGate{
+				ObjectMeta: metav1.ObjectMeta{
+					Name: "cluster",
+					Annotations: map[string]string{
+						string(clusterProfile): "true",
+					},
 				},
-			},
-		}
+				Spec: configv1.FeatureGateSpec{
+					FeatureGateSelection: configv1.FeatureGateSelection{
+						FeatureSet: featureSetName,
+					},
+				},
+				Status: configv1.FeatureGateStatus{
+					FeatureGates: []configv1.FeatureGateDetails{
+						*currentDetails,
+					},
+				},
+			}
 
-		currentDetails, err := FeaturesGateDetailsFromFeatureSets(configv1.FeatureSets, featureGates, o.PayloadVersion)
-		if err != nil {
-			return fmt.Errorf("error determining FeatureGates: %w", err)
-		}
-		featureGates.Status.FeatureGates = []configv1.FeatureGateDetails{*currentDetails}
+			featureGateOutBytes := writeFeatureGateV1OrDie(featureGateInstance)
+			featureSetFileName := fmt.Sprintf("featureGate-%s-%s.yaml", featureSetName, clusterProfileToShortName[clusterProfile])
+			if len(featureSetName) == 0 {
+				featureSetFileName = fmt.Sprintf("featureGate-%s-%s.yaml", "Default", clusterProfileToShortName[clusterProfile])
+			}
 
-		featureGateOutBytes := writeFeatureGateV1OrDie(featureGates)
-		featureSetFileName := fmt.Sprintf("featureGate-%s.yaml", featureSetName)
-		if len(featureSetName) == 0 {
-			featureSetFileName = fmt.Sprintf("featureGate-%s.yaml", "Default")
-		}
+			destFile := filepath.Join(o.AssetOutputDir, featureSetFileName)
+			if err := os.WriteFile(destFile, []byte(featureGateOutBytes), 0644); err != nil {
+				return fmt.Errorf("error writing FeatureGate manifest: %w", err)
+			}
 
-		destFile := filepath.Join(o.AssetOutputDir, featureSetFileName)
-		if err := os.WriteFile(destFile, []byte(featureGateOutBytes), 0644); err != nil {
-			return fmt.Errorf("error writing FeatureGate manifest: %w", err)
+			// for compatibility during the transition, we'll copy the old, invalid featuregates
+			legacyFilename := ""
+			switch {
+			case len(featureSetName) == 0 && clusterProfile == configv1.SelfManaged:
+				legacyFilename = "featureGate-Default.yaml"
+			case featureSetName == configv1.TechPreviewNoUpgrade && clusterProfile == configv1.SelfManaged:
+				legacyFilename = "featureGate-TechPreviewNoUpgrade.yaml"
+			}
+			if len(legacyFilename) > 0 {
+				legacyFeatureGateInstance := featureGateInstance.DeepCopy()
+				delete(legacyFeatureGateInstance.Annotations, "include.release.openshift.io/self-managed-high-availability")
+				legacyFeatureGateBytes := writeFeatureGateV1OrDie(legacyFeatureGateInstance)
+				legacyFile := filepath.Join(o.AssetOutputDir, legacyFilename)
+				if err := os.WriteFile(legacyFile, []byte(legacyFeatureGateBytes), 0644); err != nil {
+					return fmt.Errorf("error writing FeatureGate manifest: %w", err)
+				}
+			}
 		}
 	}
 

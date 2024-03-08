@@ -52,6 +52,9 @@ var (
 
 	// TopologyManager enables ToplogyManager support. Upgrades are enabled with this feature.
 	LatencySensitive FeatureSet = "LatencySensitive"
+
+	// AllFixedFeatureSets are the featuresets that have known featuregates.  Custom doesn't for instance.  LatencySensitive is dead
+	AllFixedFeatureSets = []FeatureSet{Default, TechPreviewNoUpgrade}
 )
 
 type FeatureGateSpec struct {
@@ -161,7 +164,7 @@ type FeatureGateEnabledDisabled struct {
 //	if featureSet, ok := FeatureSets["SomeNewFeature"]; ok { }
 //
 // If you put an item in either of these lists, put your area and name on it so we can find owners.
-var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
+var FeatureSets2 = map[FeatureSet]*FeatureGateEnabledDisabled{
 	Default: defaultFeatures,
 	CustomNoUpgrade: {
 		Enabled: []FeatureGateDescription{},

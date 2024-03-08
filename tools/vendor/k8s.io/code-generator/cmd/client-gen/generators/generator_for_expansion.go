@@ -28,7 +28,7 @@ import (
 
 // genExpansion produces a file for a group client, e.g. ExtensionsClient for the extension group.
 type genExpansion struct {
-	generator.GolangGenerator
+	generator.GoGenerator
 	groupPackagePath string
 	// types in a group
 	types []*types.Type

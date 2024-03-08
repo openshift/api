@@ -417,6 +417,10 @@ function kube::codegen::gen_openapi() {
 #   --applyconfig-name <string = "applyconfiguration">
 #     An optional override for the leaf name of the generated "applyconfiguration" directory.
 #
+#   --applyconfig-externals <string = "">
+#     An optional list of comma separated external apply configurations locations
+#     in <type-package>.<type-name>:<applyconfiguration-package> form.
+#
 #   --with-watch
 #     Enables generation of listers and informers for APIs which support WATCH.
 #
@@ -438,6 +442,7 @@ function kube::codegen::gen_client() {
     local clientset_versioned_name="versioned"
     local applyconfig="false"
     local applyconfig_subdir="applyconfiguration"
+    local applyconfig_external=""
     local watchable="false"
     local listers_subdir="listers"
     local informers_subdir="informers"
@@ -477,6 +482,10 @@ function kube::codegen::gen_client() {
                 ;;
             "--applyconfig-name")
                 applyconfig_subdir="$2"
+                shift 2
+                ;;
+            "--applyconfig-externals")
+                applyconfig_external="$2"
                 shift 2
                 ;;
             "--with-watch")
@@ -584,6 +593,7 @@ function kube::codegen::gen_client() {
             --go-header-file "${boilerplate}" \
             --output-dir "${out_dir}/${applyconfig_subdir}" \
             --output-pkg "${applyconfig_pkg}" \
+            --external-applyconfigurations "${applyconfig_external}" \
             "${input_pkgs[@]}"
     fi
 

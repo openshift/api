@@ -30,7 +30,7 @@ type SimpleTarget struct {
 	// "import example.com/xxxx/yyyy"). Required.
 	PkgPath string
 	// PkgDir is the location of the resulting package on disk (which may not
-	// exist yet). Required.
+	// exist yet). It may be absolute or relative to CWD. Required.
 	PkgDir string
 
 	// HeaderComment is emitted at the top of every output file. Optional.

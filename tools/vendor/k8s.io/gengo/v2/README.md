@@ -1,3 +1,10 @@
+[![GoDoc Widget]][GoDoc]  [![GoReport]][GoReportStatus]
+
+[GoDoc]: https://godoc.org/k8s.io/gengo
+[GoDoc Widget]: https://godoc.org/k8s.io/gengo?status.svg
+[GoReport]: https://goreportcard.com/badge/github.com/kubernetes/gengo
+[GoReportStatus]: https://goreportcard.com/report/github.com/kubernetes/gengo
+
 # Gengo: a framework for building simple code generators
 
 This repo is used by Kubernetes to build some codegen tooling.  It is not
@@ -40,3 +47,7 @@ the set of types further.  Finally, the generator will be called to emit code
 for all of the remaining types.
 
 The `tracer` example in this repo can be used to examine all of the hooks.
+
+## Contributing
+
+Please see [CONTRIBUTING.md](CONTRIBUTING.md) for instructions on how to contribute.

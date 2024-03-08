@@ -19,7 +19,7 @@ package generators
 import (
 	"fmt"
 	"io"
-	"path/filepath"
+	"path"
 	"strings"
 
 	clientgentypes "k8s.io/code-generator/cmd/client-gen/types"
@@ -30,7 +30,7 @@ import (
 
 // genClientset generates a package for a clientset.
 type genClientset struct {
-	generator.GolangGenerator
+	generator.GoGenerator
 	groups             []clientgentypes.GroupVersions
 	groupGoNames       map[clientgentypes.GroupVersion]string
 	clientsetPackage   string // must be a Go import-path
@@ -57,7 +57,7 @@ func (g *genClientset) Imports(c *generator.Context) (imports []string) {
 	imports = append(imports, g.imports.ImportLines()...)
 	for _, group := range g.groups {
 		for _, version := range group.Versions {
-			typedClientPath := filepath.Join(g.clientsetPackage, "typed", strings.ToLower(group.PackageName), strings.ToLower(version.NonEmpty()))
+			typedClientPath := path.Join(g.clientsetPackage, "typed", strings.ToLower(group.PackageName), strings.ToLower(version.NonEmpty()))
 			groupAlias := strings.ToLower(g.groupGoNames[clientgentypes.GroupVersion{Group: group.Group, Version: version.Version}])
 			imports = append(imports, fmt.Sprintf("%s%s \"%s\"", groupAlias, strings.ToLower(version.NonEmpty()), typedClientPath))
 		}

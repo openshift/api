@@ -19,6 +19,7 @@ package generators
 import (
 	"fmt"
 	"io"
+	"path"
 	"path/filepath"
 	"strings"
 
@@ -118,9 +119,9 @@ func GetTargets(context *generator.Context, args *args.Args) []generator.Target 
 		orderer := namer.Orderer{Namer: namer.NewPrivateNamer(0)}
 		typesToGenerate = orderer.OrderTypes(typesToGenerate)
 
-		subdir := filepath.Join(groupPackageName, strings.ToLower(gv.Version.NonEmpty()))
-		outputDir := filepath.Join(args.OutputDir, subdir)
-		outputPkg := filepath.Join(args.OutputPkg, subdir)
+		subdir := []string{groupPackageName, strings.ToLower(gv.Version.NonEmpty())}
+		outputDir := filepath.Join(args.OutputDir, filepath.Join(subdir...))
+		outputPkg := path.Join(args.OutputPkg, path.Join(subdir...))
 		targetList = append(targetList, &generator.SimpleTarget{
 			PkgName:       strings.ToLower(gv.Version.NonEmpty()),
 			PkgPath:       outputPkg,
@@ -132,7 +133,7 @@ func GetTargets(context *generator.Context, args *args.Args) []generator.Target 
 			},
 			GeneratorsFunc: func(c *generator.Context) (generators []generator.Generator) {
 				generators = append(generators, &expansionGenerator{
-					GolangGenerator: generator.GolangGenerator{
+					GoGenerator: generator.GoGenerator{
 						OutputFilename: "expansion_generated.go",
 					},
 					outputPath: outputDir,
@@ -141,7 +142,7 @@ func GetTargets(context *generator.Context, args *args.Args) []generator.Target 
 
 				for _, t := range typesToGenerate {
 					generators = append(generators, &listerGenerator{
-						GolangGenerator: generator.GolangGenerator{
+						GoGenerator: generator.GoGenerator{
 							OutputFilename: strings.ToLower(t.Name.Name) + ".go",
 						},
 						outputPackage:  outputPkg,
@@ -189,7 +190,7 @@ func isInternal(m types.Member) bool {
 // listerGenerator produces a file of listers for a given GroupVersion and
 // type.
 type listerGenerator struct {
-	generator.GolangGenerator
+	generator.GoGenerator
 	outputPackage  string
 	groupVersion   clientgentypes.GroupVersion
 	internalGVPkg  string

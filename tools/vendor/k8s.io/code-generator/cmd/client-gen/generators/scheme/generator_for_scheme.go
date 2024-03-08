@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 
@@ -31,7 +32,7 @@ import (
 
 // GenScheme produces a package for a clientset with the scheme, codecs and parameter codecs.
 type GenScheme struct {
-	generator.GolangGenerator
+	generator.GoGenerator
 	OutputPkg       string // Must be a Go import-path
 	OutputPath      string // optional
 	Groups          []clientgentypes.GroupVersions
@@ -65,9 +66,9 @@ func (g *GenScheme) Imports(c *generator.Context) (imports []string) {
 			if g.CreateRegistry {
 				// import the install package for internal clientsets instead of the type package with register.go
 				if version.Version != "" {
-					packagePath = filepath.Dir(packagePath)
+					packagePath = path.Dir(packagePath)
 				}
-				packagePath = filepath.Join(packagePath, "install")
+				packagePath = path.Join(packagePath, "install")
 
 				imports = append(imports, fmt.Sprintf("%s \"%s\"", groupAlias, packagePath))
 				break

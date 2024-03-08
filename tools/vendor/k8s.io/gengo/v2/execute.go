@@ -63,6 +63,8 @@ func GoBoilerplate(headerFile, buildTag, generatedBy string) ([]byte, error) {
 
 	if generatedBy != "" {
 		generatorName := filepath.Base(os.Args[0])
+		// Strip the extension from the name to normalize output between *nix and Windows.
+		generatorName = generatorName[:len(generatorName)-len(filepath.Ext(generatorName))]
 		generatedByComment := strings.ReplaceAll(generatedBy, "GENERATOR_NAME", generatorName)
 		buf.WriteString(fmt.Sprintf("%s\n\n", generatedByComment))
 	}
@@ -77,7 +79,7 @@ func Execute(nameSystems namer.NameSystems, defaultSystem string, getTargets fun
 		buildTags = append(buildTags, buildTag)
 	}
 
-	p := parser.New(buildTags)
+	p := parser.NewWithOptions(parser.Options{BuildTags: buildTags})
 	if err := p.LoadPackages(patterns...); err != nil {
 		return fmt.Errorf("failed making a parser: %v", err)
 	}

@@ -30,7 +30,7 @@ import (
 
 // utilGenerator generates the ForKind() utility function.
 type internalGenerator struct {
-	generator.GolangGenerator
+	generator.GoGenerator
 	outputPackage string
 	imports       namer.ImportTracker
 	typeModels    *typeModels

@@ -17,6 +17,7 @@ limitations under the License.
 package fake
 
 import (
+	"path"
 	"path/filepath"
 	"strings"
 
@@ -31,10 +32,10 @@ import (
 
 func TargetForGroup(gv clientgentypes.GroupVersion, typeList []*types.Type, clientsetDir, clientsetPkg string, groupPkgName string, groupGoName string, inputPkg string, applyBuilderPackage string, boilerplate []byte) generator.Target {
 	// TODO: should make this a function, called by here and in client-generator.go
-	subdir := filepath.Join("typed", strings.ToLower(groupPkgName), strings.ToLower(gv.Version.NonEmpty()))
-	outputDir := filepath.Join(clientsetDir, subdir, "fake")
-	outputPkg := filepath.Join(clientsetPkg, subdir, "fake")
-	realClientPkg := filepath.Join(clientsetPkg, subdir)
+	subdir := []string{"typed", strings.ToLower(groupPkgName), strings.ToLower(gv.Version.NonEmpty())}
+	outputDir := filepath.Join(clientsetDir, filepath.Join(subdir...), "fake")
+	outputPkg := path.Join(clientsetPkg, path.Join(subdir...), "fake")
+	realClientPkg := path.Join(clientsetPkg, path.Join(subdir...))
 
 	return &generator.SimpleTarget{
 		PkgName:       "fake",
@@ -47,13 +48,13 @@ func TargetForGroup(gv clientgentypes.GroupVersion, typeList []*types.Type, clie
 		GeneratorsFunc: func(c *generator.Context) (generators []generator.Generator) {
 			generators = []generator.Generator{
 				// Always generate a "doc.go" file.
-				generator.GolangGenerator{OutputFilename: "doc.go"},
+				generator.GoGenerator{OutputFilename: "doc.go"},
 			}
 			// Since we want a file per type that we generate a client for, we
 			// have to provide a function for this.
 			for _, t := range typeList {
 				generators = append(generators, &genFakeForType{
-					GolangGenerator: generator.GolangGenerator{
+					GoGenerator: generator.GoGenerator{
 						OutputFilename: "fake_" + strings.ToLower(c.Namers["private"].Name(t)) + ".go",
 					},
 					outputPackage:             outputPkg,
@@ -68,7 +69,7 @@ func TargetForGroup(gv clientgentypes.GroupVersion, typeList []*types.Type, clie
 			}
 
 			generators = append(generators, &genFakeForGroup{
-				GolangGenerator: generator.GolangGenerator{
+				GoGenerator: generator.GoGenerator{
 					OutputFilename: "fake_" + groupPkgName + "_client.go",
 				},
 				outputPackage:     outputPkg,
@@ -92,7 +93,7 @@ func TargetForClientset(args *args.Args, clientsetDir, clientsetPkg string, grou
 		// TODO: we'll generate fake clientset for different release in the future.
 		// Package name and path are hard coded for now.
 		PkgName:       "fake",
-		PkgPath:       filepath.Join(clientsetPkg, "fake"),
+		PkgPath:       path.Join(clientsetPkg, "fake"),
 		PkgDir:        filepath.Join(clientsetDir, "fake"),
 		HeaderComment: boilerplate,
 		PkgDocComment: []byte("// This package has the automatically generated fake clientset.\n"),
@@ -101,10 +102,10 @@ func TargetForClientset(args *args.Args, clientsetDir, clientsetPkg string, grou
 		GeneratorsFunc: func(c *generator.Context) (generators []generator.Generator) {
 			generators = []generator.Generator{
 				// Always generate a "doc.go" file.
-				generator.GolangGenerator{OutputFilename: "doc.go"},
+				generator.GoGenerator{OutputFilename: "doc.go"},
 
 				&genClientset{
-					GolangGenerator: generator.GolangGenerator{
+					GoGenerator: generator.GoGenerator{
 						OutputFilename: "clientset_generated.go",
 					},
 					groups:               args.Groups,
@@ -114,7 +115,7 @@ func TargetForClientset(args *args.Args, clientsetDir, clientsetPkg string, grou
 					realClientsetPackage: clientsetPkg,
 				},
 				&scheme.GenScheme{
-					GolangGenerator: generator.GolangGenerator{
+					GoGenerator: generator.GoGenerator{
 						OutputFilename: "register.go",
 					},
 					InputPackages: args.GroupVersionPackages(),

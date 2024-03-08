@@ -18,7 +18,7 @@ package generators
 
 import (
 	"io"
-	"path/filepath"
+	"path"
 
 	"k8s.io/gengo/v2"
 	"k8s.io/gengo/v2/generator"
@@ -30,7 +30,7 @@ import (
 
 // genGroup produces a file for a group client, e.g. ExtensionsClient for the extension group.
 type genGroup struct {
-	generator.GolangGenerator
+	generator.GoGenerator
 	outputPackage string
 	group         string
 	version       string
@@ -64,7 +64,7 @@ func (g *genGroup) Namers(c *generator.Context) namer.NameSystems {
 
 func (g *genGroup) Imports(c *generator.Context) (imports []string) {
 	imports = append(imports, g.imports.ImportLines()...)
-	imports = append(imports, filepath.Join(g.clientsetPackage, "scheme"))
+	imports = append(imports, path.Join(g.clientsetPackage, "scheme"))
 	return
 }
 

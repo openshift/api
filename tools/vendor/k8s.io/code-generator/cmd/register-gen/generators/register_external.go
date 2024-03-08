@@ -27,7 +27,7 @@ import (
 )
 
 type registerExternalGenerator struct {
-	generator.GolangGenerator
+	generator.GoGenerator
 	outputPackage   string
 	gv              clientgentypes.GroupVersion
 	typesToGenerate []*types.Type
@@ -91,7 +91,7 @@ var (
 	// localSchemeBuilder and AddToScheme will stay in k8s.io/kubernetes.
 	SchemeBuilder      runtime.SchemeBuilder
 	localSchemeBuilder = &SchemeBuilder
-    // Depreciated: use Install instead
+    // Deprecated: use Install instead
 	AddToScheme        = localSchemeBuilder.AddToScheme
 	Install            = localSchemeBuilder.AddToScheme
 )

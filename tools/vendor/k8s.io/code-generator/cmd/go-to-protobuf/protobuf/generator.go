@@ -36,7 +36,7 @@ import (
 type genProtoIDL struct {
 	// This base type is close enough to what we need, if we redefine some
 	// methods.
-	generator.GolangGenerator
+	generator.GoGenerator
 	localPackage   types.Name
 	localGoPackage types.Name
 	imports        namer.ImportTracker
@@ -562,7 +562,7 @@ func protobufTagToField(tag string, field *protoField, m types.Member, t *types.
 	}
 	protoTag, err := strconv.Atoi(parts[1])
 	if err != nil {
-		return fmt.Errorf("member %q of %q malformed 'protobuf' tag, field ID is %q which is not an integer: %v", m.Name, t.Name, parts[1], err)
+		return fmt.Errorf("member %q of %q malformed 'protobuf' tag, field ID is %q which is not an integer: %w", m.Name, t.Name, parts[1], err)
 	}
 	field.Tag = protoTag
 

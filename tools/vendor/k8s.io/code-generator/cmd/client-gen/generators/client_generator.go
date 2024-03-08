@@ -19,6 +19,7 @@ package generators
 
 import (
 	"fmt"
+	"path"
 	"path/filepath"
 	"strings"
 
@@ -128,9 +129,9 @@ func DefaultNameSystem() string {
 }
 
 func targetForGroup(gv clientgentypes.GroupVersion, typeList []*types.Type, clientsetDir, clientsetPkg string, groupPkgName string, groupGoName string, apiPath string, inputPkg string, applyBuilderPkg string, boilerplate []byte) generator.Target {
-	subdir := filepath.Join("typed", strings.ToLower(groupPkgName), strings.ToLower(gv.Version.NonEmpty()))
-	gvDir := filepath.Join(clientsetDir, subdir)
-	gvPkg := filepath.Join(clientsetPkg, subdir)
+	subdir := []string{"typed", strings.ToLower(groupPkgName), strings.ToLower(gv.Version.NonEmpty())}
+	gvDir := filepath.Join(clientsetDir, filepath.Join(subdir...))
+	gvPkg := path.Join(clientsetPkg, path.Join(subdir...))
 
 	return &generator.SimpleTarget{
 		PkgName:       strings.ToLower(gv.Version.NonEmpty()),
@@ -143,13 +144,13 @@ func targetForGroup(gv clientgentypes.GroupVersion, typeList []*types.Type, clie
 		GeneratorsFunc: func(c *generator.Context) (generators []generator.Generator) {
 			generators = []generator.Generator{
 				// Always generate a "doc.go" file.
-				generator.GolangGenerator{OutputFilename: "doc.go"},
+				generator.GoGenerator{OutputFilename: "doc.go"},
 			}
 			// Since we want a file per type that we generate a client for, we
 			// have to provide a function for this.
 			for _, t := range typeList {
 				generators = append(generators, &genClientForType{
-					GolangGenerator: generator.GolangGenerator{
+					GoGenerator: generator.GoGenerator{
 						OutputFilename: strings.ToLower(c.Namers["private"].Name(t)) + ".go",
 					},
 					outputPackage:             gvPkg,
@@ -165,7 +166,7 @@ func targetForGroup(gv clientgentypes.GroupVersion, typeList []*types.Type, clie
 			}
 
 			generators = append(generators, &genGroup{
-				GolangGenerator: generator.GolangGenerator{
+				GoGenerator: generator.GoGenerator{
 					OutputFilename: groupPkgName + "_client.go",
 				},
 				outputPackage:    gvPkg,
@@ -182,7 +183,7 @@ func targetForGroup(gv clientgentypes.GroupVersion, typeList []*types.Type, clie
 			expansionFileName := "generated_expansion.go"
 			generators = append(generators, &genExpansion{
 				groupPackagePath: gvDir,
-				GolangGenerator: generator.GolangGenerator{
+				GoGenerator: generator.GoGenerator{
 					OutputFilename: expansionFileName,
 				},
 				types: typeList,
@@ -207,7 +208,7 @@ func targetForClientset(args *args.Args, clientsetDir, clientsetPkg string, grou
 		GeneratorsFunc: func(c *generator.Context) (generators []generator.Generator) {
 			generators = []generator.Generator{
 				&genClientset{
-					GolangGenerator: generator.GolangGenerator{
+					GoGenerator: generator.GoGenerator{
 						OutputFilename: "clientset.go",
 					},
 					groups:           args.Groups,
@@ -223,7 +224,7 @@ func targetForClientset(args *args.Args, clientsetDir, clientsetPkg string, grou
 
 func targetForScheme(args *args.Args, clientsetDir, clientsetPkg string, groupGoNames map[clientgentypes.GroupVersion]string, boilerplate []byte) generator.Target {
 	schemeDir := filepath.Join(clientsetDir, "scheme")
-	schemePkg := filepath.Join(clientsetPkg, "scheme")
+	schemePkg := path.Join(clientsetPkg, "scheme")
 
 	// create runtime.Registry for internal client because it has to know about group versions
 	internalClient := false
@@ -248,10 +249,10 @@ NextGroup:
 		GeneratorsFunc: func(c *generator.Context) (generators []generator.Generator) {
 			generators = []generator.Generator{
 				// Always generate a "doc.go" file.
-				generator.GolangGenerator{OutputFilename: "doc.go"},
+				generator.GoGenerator{OutputFilename: "doc.go"},
 
 				&scheme.GenScheme{
-					GolangGenerator: generator.GolangGenerator{
+					GoGenerator: generator.GoGenerator{
 						OutputFilename: "register.go",
 					},
 					InputPackages:  args.GroupVersionPackages(),
@@ -394,7 +395,7 @@ func GetTargets(context *generator.Context, args *args.Args) []generator.Target 
 	}
 
 	clientsetDir := filepath.Join(args.OutputDir, args.ClientsetName)
-	clientsetPkg := filepath.Join(args.OutputPkg, args.ClientsetName)
+	clientsetPkg := path.Join(args.OutputPkg, args.ClientsetName)
 
 	var targetList []generator.Target
 

@@ -28,7 +28,7 @@ import (
 
 // versionInterfaceGenerator generates the per-version interface file.
 type versionInterfaceGenerator struct {
-	generator.GolangGenerator
+	generator.GoGenerator
 	outputPackage             string
 	imports                   namer.ImportTracker
 	types                     []*types.Type

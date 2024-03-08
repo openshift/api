@@ -14,27 +14,25 @@ require (
 	github.com/spf13/cobra v1.7.0
 	github.com/spf13/pflag v1.0.5
 	github.com/vmware-archive/yaml-patch v0.0.11
-	golang.org/x/tools v0.16.1
+	golang.org/x/tools v0.18.0
 	k8s.io/apiextensions-apiserver v0.28.1
 	k8s.io/apimachinery v0.28.1
 	k8s.io/code-generator v0.28.1
 	k8s.io/gengo v0.0.0-20240125162126-43eaf97b8561
-	k8s.io/gengo/v2 v2.0.0-00010101000000-000000000000
+	k8s.io/gengo/v2 v2.0.0-20240228010128-51d4e06bde70
 	k8s.io/klog/v2 v2.120.1
-	k8s.io/kube-openapi v0.0.0-20231113174909-778a5567bc1e
+	k8s.io/kube-openapi v0.0.0-20240228011516-70dd3763d340
 	sigs.k8s.io/controller-tools v0.11.1
 	sigs.k8s.io/yaml v1.3.0
 )
 
 replace sigs.k8s.io/controller-tools => github.com/openshift/controller-tools v0.11.2-0.20230707132950-4180f051f655
 
-replace k8s.io/apiextensions-apiserver => github.com/thockin/kubernetes/staging/src/k8s.io/apiextensions-apiserver v0.0.0-20240220163900-c6cf85d42f47
+replace k8s.io/apiextensions-apiserver => github.com/kubernetes/kubernetes/staging/src/k8s.io/apiextensions-apiserver v0.0.0-20240308032448-7ea3d0245a63
 
-replace k8s.io/apimachinery => github.com/thockin/kubernetes/staging/src/k8s.io/apimachinery v0.0.0-20240220163900-c6cf85d42f47
+replace k8s.io/apimachinery => github.com/kubernetes/kubernetes/staging/src/k8s.io/apimachinery v0.0.0-20240308032448-7ea3d0245a63
 
-replace k8s.io/gengo/v2 => github.com/thockin/kubernetes/gengo-v2/v2 v2.0.0-20240220163900-c6cf85d42f47
-
-replace k8s.io/code-generator => github.com/thockin/kubernetes/staging/src/k8s.io/code-generator v0.0.0-20240220163900-c6cf85d42f47
+replace k8s.io/code-generator => github.com/kubernetes/kubernetes/staging/src/k8s.io/code-generator v0.0.0-20240308032448-7ea3d0245a63
 
 require (
 	github.com/Microsoft/go-winio v0.5.2 // indirect
@@ -57,7 +55,7 @@ require (
 	github.com/gobuffalo/flect v0.3.0 // indirect
 	github.com/goccy/go-json v0.9.11 // indirect
 	github.com/goccy/go-yaml v1.9.6 // indirect
-	github.com/golang/protobuf v1.5.3 // indirect
+	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/google/gnostic-models v0.6.8 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/imdario/mergo v0.3.13 // indirect
@@ -78,13 +76,13 @@ require (
 	github.com/pjbgf/sha1cd v0.2.3 // indirect
 	github.com/skeema/knownhosts v1.1.0 // indirect
 	github.com/xanzy/ssh-agent v0.3.3 // indirect
-	golang.org/x/crypto v0.16.0 // indirect
-	golang.org/x/mod v0.14.0 // indirect
-	golang.org/x/net v0.19.0 // indirect
-	golang.org/x/sys v0.15.0 // indirect
+	golang.org/x/crypto v0.19.0 // indirect
+	golang.org/x/mod v0.15.0 // indirect
+	golang.org/x/net v0.21.0 // indirect
+	golang.org/x/sys v0.17.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
-	google.golang.org/protobuf v1.31.0 // indirect
+	google.golang.org/protobuf v1.33.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/op/go-logging.v1 v1.0.0-20160211212156-b2cb9fa56473 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect

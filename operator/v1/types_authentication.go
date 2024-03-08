@@ -12,6 +12,8 @@ import (
 // +kubebuilder:subresource:status
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/475
 // +openshift:file-pattern=0000_50_cluster-authentication-operator_01_configMARKERS.crd.yaml
+// +kubebuilder:metadata:annotations=include.release.openshift.io/self-managed-high-availability=true
+// +kubebuilder:metadata:annotations=include.release.openshift.io/single-node-developer=true
 
 // Authentication provides information to configure an operator to manage authentication.
 //

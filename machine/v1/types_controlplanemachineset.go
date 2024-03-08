@@ -24,6 +24,7 @@ import (
 // +openshift:file-pattern=0000_10_controlplanemachinesetMARKERS.crd.yaml
 // +openshift:capability=MachineAPI
 // +kubebuilder:metadata:annotations="exclude.release.openshift.io/internal-openshift-hosted=true"
+// +kubebuilder:metadata:annotations=include.release.openshift.io/self-managed-high-availability=true
 
 // ControlPlaneMachineSet ensures that a specified number of control plane machine replicas are running at any given time.
 // Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).

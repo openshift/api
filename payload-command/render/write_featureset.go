@@ -54,7 +54,10 @@ func (o *WriteFeatureSets) Run() error {
 				ObjectMeta: metav1.ObjectMeta{
 					Name: "cluster",
 					Annotations: map[string]string{
-						string(clusterProfile): "true",
+						// we can't do this because it will get the manifest included by the CVO and that isn't what we want
+						// this makes it interesting to indicate which cluster-profile the cluster-config-operator should use
+						//string(clusterProfile): "true",
+						string(clusterProfile): "false-except-for-the-config-operator",
 					},
 				},
 				Spec: configv1.FeatureGateSpec{

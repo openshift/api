@@ -11,7 +11,7 @@ import (
 
 const (
 	// DefaultOutputFileBaseName is the default output file base name for the generated openapi functions.
-	DefaultOutputFileBaseName = "zz_generated.openapi"
+	DefaultOutputFileBaseName = "zz_generated.openapi.go"
 )
 
 var (
@@ -24,7 +24,7 @@ var (
 		"k8s.io/apimachinery/pkg/runtime",
 		"k8s.io/apimachinery/pkg/util/intstr",
 		"k8s.io/apimachinery/pkg/api/resource",
-		"k8s.io/apimachinery/pkg/version",
+		// "k8s.io/apimachinery/pkg/version",
 		"k8s.io/api/core/v1",
 		"k8s.io/api/rbac/v1",
 		"k8s.io/api/authorization/v1",

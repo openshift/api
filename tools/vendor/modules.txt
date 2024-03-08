@@ -2096,7 +2096,6 @@ k8s.io/component-base/version
 # k8s.io/gengo v0.0.0-20240404160639-a0386bf69313
 ## explicit; go 1.13
 k8s.io/gengo/args
-k8s.io/gengo/examples/deepcopy-gen/generators
 k8s.io/gengo/generator
 k8s.io/gengo/namer
 k8s.io/gengo/parser

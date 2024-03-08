@@ -7,7 +7,6 @@ metadata:
     capability.openshift.io/name: MachineAPI
     exclude.release.openshift.io/internal-openshift-hosted: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
-    release.openshift.io/feature-set: TechPreviewNoUpgrade
   name: controlplanemachinesets.machine.openshift.io
 spec:
   group: machine.openshift.io

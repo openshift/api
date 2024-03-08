@@ -3,7 +3,7 @@ package utils
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 
 	"github.com/go-git/go-git/v5"
@@ -42,8 +42,8 @@ func GitDiff(packagePath, fileName string) (string, error) {
 		return "", fmt.Errorf("could not get file content of %q from HEAD: %w", pathedFileName, err)
 	}
 
-	currentContent, err := ioutil.ReadFile(pathedFileName)
-	if err != nil {
+	currentContent, err := os.ReadFile(pathedFileName)
+	if err != nil && !errors.Is(err, os.ErrNotExist) {
 		return "", fmt.Errorf("could not read file %q: %w", pathedFileName, err)
 	}
 

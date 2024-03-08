@@ -3,7 +3,7 @@ compatibility:
 deepcopy:
   disabled: false
   headerFilePath: ../hack/empty.txt
-  outputFileBaseName: zz_generated.deepcopy
+  outputFileBaseName: zz_generated.deepcopy.go
 schemacheck:
   disabled: false
   enabledValidators: []

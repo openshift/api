@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/openshift/api/tools/codegen/pkg/utils"
 	"k8s.io/code-generator/cmd/deepcopy-gen/args"
 	"k8s.io/code-generator/cmd/deepcopy-gen/generators"
 
@@ -42,11 +43,6 @@ func generateDeepcopyFunctions(path, packagePath, outputBaseFileName, headerFile
 		OutputFile:   outputBaseFileName,
 	}
 
-	// Temporary to prevent me merging this
-	if verify {
-		return errors.New("verify is not supported")
-	}
-
 	klog.V(2).Infof("Generating deepcopy into %s", filepath.Join(wd, strings.TrimPrefix(packagePath, pathPrefix)))
 
 	myTargets := func(context *gengogenerator.Context) []gengogenerator.Target {
@@ -61,6 +57,16 @@ func generateDeepcopyFunctions(path, packagePath, outputBaseFileName, headerFile
 		[]string{inputPath},
 	); err != nil {
 		return fmt.Errorf("error executing deepcopy generator: %w", err)
+	}
+
+	if verify {
+		diff, err := utils.GitDiff(inputPath, outputBaseFileName)
+		if err != nil {
+			return fmt.Errorf("could not calculate git diff: %w", err)
+		}
+		if len(diff) > 0 {
+			return fmt.Errorf("deepcopy for %s is out of date, please regenerate the deepcopy code:\n%s", packagePath, diff)
+		}
 	}
 
 	return nil

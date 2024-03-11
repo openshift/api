@@ -108,8 +108,6 @@ type ManifestMerge struct {
 	// Disabled determines whether the schemapatch generator should be run or not.
 	// This generator is enabled by default so this field defaults to false.
 	Disabled bool `json:"disabled,omitempty"`
-
-	TupleOverrides []TupleOverride `json:"tupleOverrides,omitempty"`
 }
 
 // ManifestMerge is the configuration for the manifest merge generator.
@@ -117,26 +115,6 @@ type EmptyPartialSchema struct {
 	// Disabled determines whether the schemapatch generator should be run or not.
 	// This generator is enabled by default so this field defaults to false.
 	Disabled bool `json:"disabled,omitempty"`
-}
-
-// TODO remove most of this, but this gives us a diff we can read
-type TupleOverride struct {
-	// CRDName is the resource.group name of the CRD this exception applies to.
-	CRDName string `json:"crdName"`
-
-	// featureSet indicates which featureset this override applies to.
-	FeatureSet string `json:"featureSet"`
-
-	// ClusterProfilesToInject indicates which cluster profiles to force in via annotations for this manifest.
-	// eventually we will remove this, but to have a reviewable PR we need to start here.
-	ClusterProfilesToInject []string `json:"clusterProfilesToInject,omitempty"`
-
-	// Filename provides a destination.  Eventually we will remove this and allow specifying a prefix to override, but to have
-	// a reviewable PR, we need to keep this diff small.
-	Filename string `json:"filename,omitempty"`
-
-	// Skip means don't generate this. We'll remove this eventually, but to have a reviewable PR, we must skip some tuples
-	Skip bool `json:"skip,omitempty"`
 }
 
 // SwaggerDocsConfig is the configuration for the swaggerdocs generator.

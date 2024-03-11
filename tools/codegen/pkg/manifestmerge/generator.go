@@ -55,12 +55,6 @@ type Options struct {
 	// of updating the generated file.
 	Verify bool
 
-	// TupleOverrides is temporary. Once we generate all CRDs, we won't need this.
-	// This allows specification of a CRD that is "ungated". This concept will go away
-	// and FeatureGate handling will be required and we'll generate multiple files.
-	// It also allows the specification of custom clusterProfiles until we normalize that too.
-	TupleOverrides []generation.TupleOverride
-
 	// PayloadFeatureGatePath is a specified path for the featuregate CRD to inform whether particular
 	// gates are off or on.
 	// If not set, the default "payload-manifests/featuregates" is used.
@@ -72,7 +66,6 @@ type Options struct {
 type generator struct {
 	disabled               bool
 	verify                 bool
-	tupleOverrides         []generation.TupleOverride
 	payloadFeatureGatePath string
 }
 
@@ -86,7 +79,6 @@ func NewGenerator(opts Options) generation.Generator {
 	return &generator{
 		disabled:               opts.Disabled,
 		verify:                 opts.Verify,
-		tupleOverrides:         opts.TupleOverrides,
 		payloadFeatureGatePath: payloadFeatureGatePath,
 	}
 }
@@ -99,9 +91,8 @@ func (g *generator) ApplyConfig(config *generation.Config) generation.Generator 
 	}
 
 	return NewGenerator(Options{
-		Disabled:       config.ManifestMerge.Disabled,
-		Verify:         g.verify,
-		TupleOverrides: config.ManifestMerge.TupleOverrides,
+		Disabled: config.ManifestMerge.Disabled,
+		Verify:   g.verify,
 	})
 }
 
@@ -138,25 +129,6 @@ func (g *generator) GenGroup(groupCtx generation.APIGroupContext) error {
 		return kerrors.NewAggregate(errs)
 	}
 
-	return nil
-}
-
-func (g *generator) findExceptions(crdName string) []generation.TupleOverride {
-	ret := []generation.TupleOverride{}
-	for _, curr := range g.tupleOverrides {
-		if curr.CRDName == crdName {
-			ret = append(ret, curr)
-		}
-	}
-	return ret
-}
-
-func (g *generator) findExceptionForFeatureSet(crdName, featureSetName string) *generation.TupleOverride {
-	for _, curr := range g.tupleOverrides {
-		if curr.CRDName == crdName && curr.FeatureSet == featureSetName {
-			return &curr
-		}
-	}
 	return nil
 }
 

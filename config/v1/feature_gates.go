@@ -532,4 +532,18 @@ var (
 						productScope(ocpSpecific).
 						enableIn(TechPreviewNoUpgrade).
 						mustRegister()
+
+	FeatureGateInsightsConfig = newFeatureGate("InsightsConfig").
+					reportProblemsToJiraComponent("insights").
+					contactPerson("tremes").
+					productScope(ocpSpecific).
+					enableIn(TechPreviewNoUpgrade).
+					mustRegister()
+
+	FeatureGateImagePolicy = newFeatureGate("ImagePolicy").
+				reportProblemsToJiraComponent("node").
+				contactPerson("rphillips").
+				productScope(ocpSpecific).
+				enableIn(TechPreviewNoUpgrade).
+				mustRegister()
 )

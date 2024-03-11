@@ -79,15 +79,6 @@ func (MachineConfigNodeStatusMachineConfigVersion) SwaggerDoc() map[string]strin
 	return map_MachineConfigNodeStatusMachineConfigVersion
 }
 
-var map_MachineConfigPoolSpec = map[string]string{
-	"":                "MachineConfigPoolSpec is the spec for MachineConfigPool resource. Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
-	"pinnedImageSets": "pinnedImageSets is a list of PinnedImageSetRef objects that should be applied to the nodes in this pool.",
-}
-
-func (MachineConfigPoolSpec) SwaggerDoc() map[string]string {
-	return map_MachineConfigPoolSpec
-}
-
 var map_PinnedImageSet = map[string]string{
 	"":     "PinnedImageSet describes a set of images that should be pinned by CRI-O and pulled to the nodes which are members of the declared MachineConfigPools.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 	"spec": "spec describes the configuration of this pinned image set.",
@@ -104,14 +95,6 @@ var map_PinnedImageSetList = map[string]string{
 
 func (PinnedImageSetList) SwaggerDoc() map[string]string {
 	return map_PinnedImageSetList
-}
-
-var map_PinnedImageSetRef = map[string]string{
-	"name": "name is a reference to the name of a PinnedImageSet. Must adhere to RFC-1123 (https://tools.ietf.org/html/rfc1123)",
-}
-
-func (PinnedImageSetRef) SwaggerDoc() map[string]string {
-	return map_PinnedImageSetRef
 }
 
 var map_PinnedImageSetSpec = map[string]string{

@@ -279,6 +279,7 @@ var map_MachineConfigPoolSpec = map[string]string{
 	"paused":                "paused specifies whether or not changes to this machine config pool should be stopped. This includes generating new desiredMachineConfig and update of machines.",
 	"maxUnavailable":        "maxUnavailable defines either an integer number or percentage of nodes in the pool that can go Unavailable during an update. This includes nodes Unavailable for any reason, including user initiated cordons, failing nodes, etc. The default value is 1.\n\nA value larger than 1 will mean multiple nodes going unavailable during the update, which may affect your workload stress on the remaining nodes. You cannot set this value to 0 to stop updates (it will default back to 1); to stop updates, use the 'paused' property instead. Drain will respect Pod Disruption Budgets (PDBs) such as etcd quorum guards, even if maxUnavailable is greater than one.",
 	"configuration":         "The targeted MachineConfig object for the machine config pool.",
+	"pinnedImageSets":       "pinnedImageSets is a list of PinnedImageSetRef objects that should be applied to the nodes in this pool.",
 }
 
 func (MachineConfigPoolSpec) SwaggerDoc() map[string]string {
@@ -333,6 +334,14 @@ var map_NetworkInfo = map[string]string{
 
 func (NetworkInfo) SwaggerDoc() map[string]string {
 	return map_NetworkInfo
+}
+
+var map_PinnedImageSetRef = map[string]string{
+	"name": "name is a reference to the name of a PinnedImageSet. Must adhere to RFC-1123 (https://tools.ietf.org/html/rfc1123)",
+}
+
+func (PinnedImageSetRef) SwaggerDoc() map[string]string {
+	return map_PinnedImageSetRef
 }
 
 // AUTO-GENERATED FUNCTIONS END HERE

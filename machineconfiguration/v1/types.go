@@ -421,6 +421,24 @@ type MachineConfigPoolSpec struct {
 	// The targeted MachineConfig object for the machine config pool.
 	// +optional
 	Configuration MachineConfigPoolStatusConfiguration `json:"configuration"`
+
+	// pinnedImageSets is a list of PinnedImageSetRef objects that should be
+	// applied to the nodes in this pool.
+	// +openshift:enable:FeatureGate=PinnedImages
+	// +optional
+	// +listType=atomic
+	PinnedImageSets []PinnedImageSetRef `json:"pinnedImageSets"`
+}
+
+type PinnedImageSetRef struct {
+	// name is a reference to the name of a PinnedImageSet.
+	// Must adhere to RFC-1123 (https://tools.ietf.org/html/rfc1123)
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=253
+	// +kubebuilder:validation:Pattern=`^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9]))*$`
+	// +kubebuilder:validation:Required
+	// +openshift:enable:FeatureGate=PinnedImages
+	Name string `json:"name"`
 }
 
 // MachineConfigPoolStatus is the status for MachineConfigPool resource.

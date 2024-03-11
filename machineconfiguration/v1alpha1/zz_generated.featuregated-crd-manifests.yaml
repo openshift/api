@@ -68,7 +68,7 @@ machineconfignodes.machineconfiguration.openshift.io:
 
 pinnedimagesets.machineconfiguration.openshift.io:
   Annotations: {}
-  ApprovedPRNumber: ""
+  ApprovedPRNumber: https://github.com/openshift/api/pull/1713
   CRDName: pinnedimagesets.machineconfiguration.openshift.io
   Capability: ""
   Category: ""

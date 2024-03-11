@@ -9,6 +9,7 @@ import (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=pinnedimagesets,scope=Cluster
+// +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/1713
 // +openshift:file-pattern=0000_80_pinnedimagesetMARKERS.crd.yaml
 // +openshift:enable:FeatureGate=PinnedImages
 // +kubebuilder:metadata:labels=openshift.io/operator-managed=
@@ -73,25 +74,4 @@ type PinnedImageSetList struct {
 	metav1.ListMeta `json:"metadata"`
 
 	Items []PinnedImageSet `json:"items"`
-}
-
-// MachineConfigPoolSpec is the spec for MachineConfigPool resource.
-// Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
-// +openshift:compatibility-gen:level=4
-type MachineConfigPoolSpec struct {
-	// pinnedImageSets is a list of PinnedImageSetRef objects that should be
-	// applied to the nodes in this pool.
-	// +optional
-	// +listType=atomic
-	PinnedImageSets []PinnedImageSetRef `json:"pinnedImageSets"`
-}
-
-type PinnedImageSetRef struct {
-	// name is a reference to the name of a PinnedImageSet.
-	// Must adhere to RFC-1123 (https://tools.ietf.org/html/rfc1123)
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=253
-	// +kubebuilder:validation:Pattern=`^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9]))*$`
-	// +kubebuilder:validation:Required
-	Name string `json:"name"`
 }

@@ -1,6 +1,6 @@
 apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
-name: "[TechPreviewNoUpgrade] Authentication"
-crd: 0000_10_config-operator_01_authentication.crd-SelfManagedHA-TechPreviewNoUpgrade.yaml
+name: "[CustomNoUpgrade] Authentication SingleNode"
+crd: 0000_10_config-operator_01_authentication.crd-SingleNode-CustomNoUpgrade.yaml
 tests:
   onCreate:
   - name: Should be able to create a minimal Authentication
@@ -282,17 +282,3 @@ tests:
         - componentNamespace: namespace2
           componentName: name3
     expected: *addClient
-  - name: Remove all oidcProviders
-    initial: *initConfig
-    updated: &removeFromStatus |
-      apiVersion: config.openshift.io/v1
-      kind: Authentication
-      spec:
-        type: OIDC
-      status:
-        oidcClients:
-        - componentNamespace: namespace2
-          componentName: name2
-        - componentNamespace: namespace2
-          componentName: name3
-    expected: *removeFromStatus

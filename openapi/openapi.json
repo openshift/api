@@ -10692,25 +10692,40 @@
         }
       }
     },
-    "com.github.openshift.api.config.v1.featureSetBuilder": {
+    "com.github.openshift.api.config.v1.featureGateBuilder": {
       "type": "object",
       "required": [
-        "forceOn",
-        "forceOff"
+        "name",
+        "owningJiraComponent",
+        "responsiblePerson",
+        "owningProduct",
+        "statusByClusterProfileByFeatureSet"
       ],
       "properties": {
-        "forceOff": {
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/com.github.openshift.api.config.v1.FeatureGateDescription"
-          }
+        "name": {
+          "type": "string",
+          "default": ""
         },
-        "forceOn": {
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/com.github.openshift.api.config.v1.FeatureGateDescription"
+        "owningJiraComponent": {
+          "type": "string",
+          "default": ""
+        },
+        "owningProduct": {
+          "type": "string",
+          "default": ""
+        },
+        "responsiblePerson": {
+          "type": "string",
+          "default": ""
+        },
+        "statusByClusterProfileByFeatureSet": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "boolean",
+              "default": false
+            }
           }
         }
       }

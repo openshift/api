@@ -391,7 +391,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.VSpherePlatformTopology":                                         schema_openshift_api_config_v1_VSpherePlatformTopology(ref),
 		"github.com/openshift/api/config/v1.VSpherePlatformVCenterSpec":                                      schema_openshift_api_config_v1_VSpherePlatformVCenterSpec(ref),
 		"github.com/openshift/api/config/v1.WebhookTokenAuthenticator":                                       schema_openshift_api_config_v1_WebhookTokenAuthenticator(ref),
-		"github.com/openshift/api/config/v1.featureSetBuilder":                                               schema_openshift_api_config_v1_featureSetBuilder(ref),
+		"github.com/openshift/api/config/v1.featureGateBuilder":                                              schema_openshift_api_config_v1_featureGateBuilder(ref),
 		"github.com/openshift/api/config/v1alpha1.Backup":                                                    schema_openshift_api_config_v1alpha1_Backup(ref),
 		"github.com/openshift/api/config/v1alpha1.BackupList":                                                schema_openshift_api_config_v1alpha1_BackupList(ref),
 		"github.com/openshift/api/config/v1alpha1.BackupSpec":                                                schema_openshift_api_config_v1alpha1_BackupSpec(ref),
@@ -19577,44 +19577,67 @@ func schema_openshift_api_config_v1_WebhookTokenAuthenticator(ref common.Referen
 	}
 }
 
-func schema_openshift_api_config_v1_featureSetBuilder(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_openshift_api_config_v1_featureGateBuilder(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"forceOn": {
+					"name": {
 						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("github.com/openshift/api/config/v1.FeatureGateDescription"),
-									},
-								},
-							},
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
 						},
 					},
-					"forceOff": {
+					"owningJiraComponent": {
 						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"responsiblePerson": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"owningProduct": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"statusByClusterProfileByFeatureSet": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("github.com/openshift/api/config/v1.FeatureGateDescription"),
+										Type: []string{"object"},
+										AdditionalProperties: &spec.SchemaOrBool{
+											Allows: true,
+											Schema: &spec.Schema{
+												SchemaProps: spec.SchemaProps{
+													Default: false,
+													Type:    []string{"boolean"},
+													Format:  "",
+												},
+											},
+										},
 									},
 								},
 							},
 						},
 					},
 				},
-				Required: []string{"forceOn", "forceOff"},
+				Required: []string{"name", "owningJiraComponent", "responsiblePerson", "owningProduct", "statusByClusterProfileByFeatureSet"},
 			},
 		},
-		Dependencies: []string{
-			"github.com/openshift/api/config/v1.FeatureGateDescription"},
 	}
 }
 

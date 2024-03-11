@@ -22,7 +22,7 @@ type RenderOpts struct {
 	RenderedManifestInputFilename string
 	PayloadVersion                string
 	AssetOutputDir                string
-	ClusterProfile                string
+	UnprefixedClusterProfile      string
 }
 
 func (o *RenderOpts) AddFlags(fs *flag.FlagSet) {
@@ -31,12 +31,12 @@ func (o *RenderOpts) AddFlags(fs *flag.FlagSet) {
 	fs.StringVar(&o.ImageProvidedManifestDir, "image-manifests", o.ImageProvidedManifestDir, "Directory containing the manifest templates provided by the image.")
 	fs.StringVar(&o.PayloadVersion, "payload-version", o.PayloadVersion, "Version that will eventually be placed into ClusterOperator.status.  This normally comes from the CVO set via env var: OPERATOR_IMAGE_VERSION.")
 	fs.StringVar(&o.AssetOutputDir, "asset-output-dir", o.AssetOutputDir, "Output path for rendered manifests.")
-	fs.StringVar(&o.ClusterProfile, "cluster-profile", o.ClusterProfile, "self-managed-high-availability, single-node-developer, ibm-cloud-managed")
+	fs.StringVar(&o.UnprefixedClusterProfile, "cluster-profile", o.UnprefixedClusterProfile, "self-managed-high-availability, single-node-developer, ibm-cloud-managed")
 }
 
 // Validate verifies the inputs.
 func (o *RenderOpts) Validate() error {
-	switch o.ClusterProfile {
+	switch o.UnprefixedClusterProfile {
 	case "":
 		// to be disallowed soonish
 	case "self-managed-high-availability", "single-node-developer", "ibm-cloud-managed":
@@ -60,6 +60,8 @@ func (o *RenderOpts) Run() error {
 	if err != nil {
 		return fmt.Errorf("problem with featuregate manifests: %w", err)
 	}
+	clusterProfileAnnotationName := fmt.Sprintf("include.release.openshift.io/%s", o.UnprefixedClusterProfile)
+
 	for _, featureGateFile := range featureGateFiles {
 		uncastObj, err := featureGateFile.GetDecodedObj()
 		if err != nil {
@@ -70,10 +72,25 @@ func (o *RenderOpts) Run() error {
 		if err != nil {
 			return fmt.Errorf("error converting FeatureGate: %w", err)
 		}
-		currentDetails, err := FeaturesGateDetailsFromFeatureSets(configv1.FeatureSets, featureGates, o.PayloadVersion)
-		if err != nil {
-			return fmt.Errorf("error determining FeatureGates: %w", err)
+		if featureGates.Annotations == nil {
+			featureGates.Annotations = map[string]string{}
 		}
+
+		// if the manifest has cluster profiles specified, the manifest's list must include the configured clusterprofile.
+		manifestClusterProfiles := clusterProfilesFrom(featureGates.Annotations)
+		switch {
+		case len(manifestClusterProfiles) > 0 && !manifestClusterProfiles.Has(clusterProfileAnnotationName):
+			return fmt.Errorf("manifest has cluster-profile preferences (%v) that do not contain the configured clusterProfile: %q",
+				manifestClusterProfiles.UnsortedList(), clusterProfileAnnotationName)
+		case len(manifestClusterProfiles) == 0 && len(clusterProfileAnnotationName) != 0:
+			featureGates.Annotations[clusterProfileAnnotationName] = "true"
+		}
+
+		featureGateStatus, err := configv1.FeatureSets(configv1.ClusterProfileName(clusterProfileAnnotationName), featureGates.Spec.FeatureSet)
+		if err != nil {
+			return fmt.Errorf("unable to resolve featureGateStatus: %w", err)
+		}
+		currentDetails := FeaturesGateDetailsFromFeatureSets(featureGateStatus, o.PayloadVersion)
 		featureGates.Status.FeatureGates = []configv1.FeatureGateDetails{*currentDetails}
 
 		featureGateOutBytes := writeFeatureGateV1OrDie(featureGates)
@@ -87,7 +104,7 @@ func (o *RenderOpts) Run() error {
 		o.ImageProvidedManifestDir,
 		filepath.Join(o.AssetOutputDir, "manifests"),
 		featureSet,
-		o.ClusterProfile,
+		o.UnprefixedClusterProfile,
 		nil,
 	)
 	if err != nil {
@@ -95,6 +112,16 @@ func (o *RenderOpts) Run() error {
 	}
 
 	return nil
+}
+
+func clusterProfilesFrom(annotations map[string]string) sets.Set[string] {
+	ret := sets.New[string]()
+	for k, v := range annotations {
+		if strings.HasPrefix(k, "include.release.openshift.io/") && v == "true" {
+			ret.Insert(k)
+		}
+	}
+	return ret
 }
 
 func featureGateManifests(renderedManifestInputFilenames []string) (assets.RenderedManifests, error) {
@@ -123,30 +150,22 @@ func featureGateManifests(renderedManifestInputFilenames []string) (assets.Rende
 	return featureGates, nil
 }
 
-func FeaturesGateDetailsFromFeatureSets(featureSetMap map[configv1.FeatureSet]*configv1.FeatureGateEnabledDisabled, featureGates *configv1.FeatureGate, currentVersion string) (*configv1.FeatureGateDetails, error) {
-	enabled, disabled, err := featuresGatesFromFeatureSets(featureSetMap, featureGates)
-	if err != nil {
-		return nil, err
-	}
+func FeaturesGateDetailsFromFeatureSets(featureGateStatus *configv1.FeatureGateEnabledDisabled, currentVersion string) *configv1.FeatureGateDetails {
 	currentDetails := configv1.FeatureGateDetails{
 		Version: currentVersion,
 	}
-	for _, gateName := range enabled {
-		currentDetails.Enabled = append(currentDetails.Enabled, configv1.FeatureGateAttributes{
-			Name: gateName,
-		})
+	for _, gateName := range featureGateStatus.Enabled {
+		currentDetails.Enabled = append(currentDetails.Enabled, *gateName.FeatureGateAttributes.DeepCopy())
 	}
-	for _, gateName := range disabled {
-		currentDetails.Disabled = append(currentDetails.Disabled, configv1.FeatureGateAttributes{
-			Name: gateName,
-		})
+	for _, gateName := range featureGateStatus.Disabled {
+		currentDetails.Disabled = append(currentDetails.Disabled, *gateName.FeatureGateAttributes.DeepCopy())
 	}
 
 	// sort for stability
 	sort.Sort(byName(currentDetails.Enabled))
 	sort.Sort(byName(currentDetails.Disabled))
 
-	return &currentDetails, nil
+	return &currentDetails
 }
 
 type byName []configv1.FeatureGateAttributes

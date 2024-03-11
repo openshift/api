@@ -2,16 +2,33 @@
     "apiVersion": "config.openshift.io/v1",
     "kind": "FeatureGate",
     "metadata": {
+        "annotations": {
+            "include.release.openshift.io/single-node-developer": "false-except-for-the-config-operator"
+        },
         "creationTimestamp": null,
         "name": "cluster"
     },
     "spec": {
-        "featureSet": "LatencySensitive"
+        "featureSet": "TechPreviewNoUpgrade"
     },
     "status": {
         "featureGates": [
             {
                 "disabled": [
+                    {
+                        "name": "ClusterAPIInstall"
+                    },
+                    {
+                        "name": "DisableKubeletCloudCredentialProviders"
+                    },
+                    {
+                        "name": "EventedPLEG"
+                    },
+                    {
+                        "name": "MachineAPIOperatorDisableMachineHealthCheckController"
+                    }
+                ],
+                "enabled": [
                     {
                         "name": "AdminNetworkPolicy"
                     },
@@ -19,31 +36,46 @@
                         "name": "AlertingRules"
                     },
                     {
+                        "name": "AlibabaPlatform"
+                    },
+                    {
                         "name": "AutomatedEtcdBackup"
+                    },
+                    {
+                        "name": "AzureWorkloadIdentity"
                     },
                     {
                         "name": "BareMetalLoadBalancer"
                     },
                     {
+                        "name": "BuildCSIVolumes"
+                    },
+                    {
                         "name": "CSIDriverSharedResource"
                     },
                     {
-                        "name": "ClusterAPIInstall"
+                        "name": "CloudDualStackNodeIPs"
                     },
                     {
                         "name": "DNSNameResolver"
                     },
                     {
-                        "name": "DisableKubeletCloudCredentialProviders"
-                    },
-                    {
                         "name": "DynamicResourceAllocation"
                     },
                     {
-                        "name": "EventedPLEG"
+                        "name": "Example"
                     },
                     {
-                        "name": "Example"
+                        "name": "ExternalCloudProvider"
+                    },
+                    {
+                        "name": "ExternalCloudProviderAzure"
+                    },
+                    {
+                        "name": "ExternalCloudProviderExternal"
+                    },
+                    {
+                        "name": "ExternalCloudProviderGCP"
                     },
                     {
                         "name": "ExternalOIDC"
@@ -73,7 +105,7 @@
                         "name": "InstallAlternateInfrastructureAWS"
                     },
                     {
-                        "name": "MachineAPIOperatorDisableMachineHealthCheckController"
+                        "name": "KMSv1"
                     },
                     {
                         "name": "MachineAPIProviderOpenStack"
@@ -94,16 +126,25 @@
                         "name": "MixedCPUsAllocation"
                     },
                     {
+                        "name": "NetworkLiveMigration"
+                    },
+                    {
                         "name": "NodeSwap"
                     },
                     {
                         "name": "OnClusterBuild"
                     },
                     {
+                        "name": "OpenShiftPodSecurityAdmission"
+                    },
+                    {
                         "name": "PinnedImages"
                     },
                     {
                         "name": "PlatformOperators"
+                    },
+                    {
+                        "name": "PrivateHostedZoneAWS"
                     },
                     {
                         "name": "RouteExternalCertificate"
@@ -121,6 +162,9 @@
                         "name": "UpgradeStatus"
                     },
                     {
+                        "name": "VSphereControlPlaneMachineSet"
+                    },
+                    {
                         "name": "VSphereStaticIPs"
                     },
                     {
@@ -128,47 +172,6 @@
                     },
                     {
                         "name": "VolumeGroupSnapshot"
-                    }
-                ],
-                "enabled": [
-                    {
-                        "name": "AlibabaPlatform"
-                    },
-                    {
-                        "name": "AzureWorkloadIdentity"
-                    },
-                    {
-                        "name": "BuildCSIVolumes"
-                    },
-                    {
-                        "name": "CloudDualStackNodeIPs"
-                    },
-                    {
-                        "name": "ExternalCloudProvider"
-                    },
-                    {
-                        "name": "ExternalCloudProviderAzure"
-                    },
-                    {
-                        "name": "ExternalCloudProviderExternal"
-                    },
-                    {
-                        "name": "ExternalCloudProviderGCP"
-                    },
-                    {
-                        "name": "KMSv1"
-                    },
-                    {
-                        "name": "NetworkLiveMigration"
-                    },
-                    {
-                        "name": "OpenShiftPodSecurityAdmission"
-                    },
-                    {
-                        "name": "PrivateHostedZoneAWS"
-                    },
-                    {
-                        "name": "VSphereControlPlaneMachineSet"
                     }
                 ],
                 "version": ""

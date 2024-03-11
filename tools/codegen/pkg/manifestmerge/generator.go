@@ -26,6 +26,10 @@ import (
 	kyaml "sigs.k8s.io/yaml"
 )
 
+var (
+	DefaultPayloadFeatureGatePath = filepath.Join("payload-manifests", "featuregates")
+)
+
 var defaultClusterProfilesToInject = []string{
 	"include.release.openshift.io/ibm-cloud-managed",
 	"include.release.openshift.io/self-managed-high-availability",
@@ -47,22 +51,34 @@ type Options struct {
 	// and FeatureGate handling will be required and we'll generate multiple files.
 	// It also allows the specification of custom clusterProfiles until we normalize that too.
 	TupleOverrides []generation.TupleOverride
+
+	// PayloadFeatureGatePath is a specified path for the featuregate CRD to inform whether particular
+	// gates are off or on.
+	// If not set, the default "payload-manifests/featuregates" is used.
+	PayloadFeatureGatePath string
 }
 
 // generator implements the generation.Generator interface.
 // It is designed to generate schemapatch updates for a particular API group.
 type generator struct {
-	disabled       bool
-	verify         bool
-	tupleOverrides []generation.TupleOverride
+	disabled               bool
+	verify                 bool
+	tupleOverrides         []generation.TupleOverride
+	payloadFeatureGatePath string
 }
 
 // NewGenerator builds a new schemapatch generator.
 func NewGenerator(opts Options) generation.Generator {
+	payloadFeatureGatePath := DefaultPayloadFeatureGatePath
+	if opts.PayloadFeatureGatePath != "" {
+		payloadFeatureGatePath = opts.PayloadFeatureGatePath
+	}
+
 	return &generator{
-		disabled:       opts.Disabled,
-		verify:         opts.Verify,
-		tupleOverrides: opts.TupleOverrides,
+		disabled:               opts.Disabled,
+		verify:                 opts.Verify,
+		tupleOverrides:         opts.TupleOverrides,
+		payloadFeatureGatePath: payloadFeatureGatePath,
 	}
 }
 
@@ -178,7 +194,7 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 			allFeatureSets := []string{"Default", "TechPreviewNoUpgrade", "CustomNoUpgrade"}
 			for _, featureSetName := range allFeatureSets {
 				// TODO this will eventually need the clusterprofile too
-				partialManifestFilter, err := FilterForFeatureSet(featureSetName)
+				partialManifestFilter, err := FilterForFeatureSet(g.payloadFeatureGatePath, featureSetName)
 				if err != nil {
 					errs = append(errs, err)
 					continue

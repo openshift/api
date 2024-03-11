@@ -2,10 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/openshift/api/tools/codegen/pkg/manifestmerge"
-
 	"github.com/openshift/api/tools/codegen/pkg/generation"
+	"github.com/openshift/api/tools/codegen/pkg/manifestmerge"
 	"github.com/spf13/cobra"
+)
+
+var (
+	manifestMergePayloadManifestPath string
 )
 
 // schemapatchCmd represents the schemapatch command
@@ -30,6 +33,8 @@ var crdManifestMerge = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(crdManifestMerge)
+
+	rootCmd.PersistentFlags().StringVar(&manifestMergePayloadManifestPath, "manifest-merge:payload-manifest-path", manifestmerge.DefaultPayloadFeatureGatePath, "path to directory containing the FeatureGate YAMLs for each FeatureSet,ClusterProfile tuple.")
 }
 
 // newSchemaPatchGenerator builds a new schemapatch generator.

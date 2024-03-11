@@ -96,6 +96,12 @@
                         "name": "HardwareSpeed"
                     },
                     {
+                        "name": "ImagePolicy"
+                    },
+                    {
+                        "name": "InsightsConfig"
+                    },
+                    {
                         "name": "InsightsConfigAPI"
                     },
                     {

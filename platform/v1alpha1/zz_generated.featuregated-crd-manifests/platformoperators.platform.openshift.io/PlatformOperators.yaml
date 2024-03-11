@@ -5,6 +5,8 @@ metadata:
     api-approved.openshift.io: https://github.com/openshift/api/pull/1234
     api.openshift.io/filename-pattern: platformoperatorsMARKERS.crd.yaml
     feature-gate.release.openshift.io/PlatformOperators: "true"
+    include.release.openshift.io/self-managed-high-availability: "true"
+    include.release.openshift.io/single-node-developer: "true"
   name: platformoperators.platform.openshift.io
 spec:
   group: platform.openshift.io

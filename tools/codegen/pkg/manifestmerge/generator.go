@@ -5,6 +5,7 @@ import (
 	_ "embed"
 	"encoding/json"
 	"fmt"
+	"k8s.io/apimachinery/pkg/api/equality"
 	"os"
 	"strings"
 	"sync"
@@ -170,87 +171,12 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 				allResourcePaths = append(allResourcePaths, manualCRDOverridesForCRDPath)
 			}
 
-			if crdExceptions := g.findExceptions(crdName); len(crdExceptions) == 1 && crdExceptions[0].Ungated {
-				// this means we're supposed to create a single file with everything
-				resultingCRD, newErrs := mergeAllPertinentCRDsInDirs(allResourcePaths, &AllFeatureGates{}, "")
-				if len(newErrs) > 0 {
-					errs = append(errs, newErrs...)
-					continue
-				}
-				resultingCRD.SetManagedFields(nil)
-
-				outputFileBaseName := ""
-				if outputFilenamePattern := resultingCRD.GetAnnotations()["api.openshift.io/filename-pattern"]; len(outputFilenamePattern) > 0 {
-					if !strings.Contains(outputFilenamePattern, "MARKERS") {
-						errs = append(errs, fmt.Errorf("crd %q is missing ungated MARKERS from '// +openshift:file-pattern='", crdName))
-						continue
-					}
-					outputFileBaseName = strings.ReplaceAll(outputFilenamePattern, "MARKERS", "")
-				}
-				if len(outputFileBaseName) == 0 {
-					errs = append(errs, fmt.Errorf("crd %q needs '// +openshift:file-pattern=' for ungated", crdName))
-					continue
-				}
-				outputFile := filepath.Join(versionPath, outputFileBaseName)
-
-				annotations := resultingCRD.GetAnnotations()
-				delete(annotations, "api.openshift.io/filename-pattern")
-				for key := range annotations {
-					if strings.HasPrefix(key, "feature-gate.release.openshift.io/") {
-						delete(annotations, key)
-					}
-				}
-				if len(crdExceptions[0].ClusterProfilesToInject) > 0 {
-					for _, clusterProfile := range crdExceptions[0].ClusterProfilesToInject {
-						annotations[clusterProfile] = "true"
-					}
-				} else {
-					for _, clusterProfile := range defaultClusterProfilesToInject {
-						annotations[clusterProfile] = "true"
-					}
-				}
-				for key := range annotations {
-					if strings.HasSuffix(key, "-") {
-						toRemove := key[:len(key)-1]
-						delete(annotations, toRemove)
-						delete(annotations, key)
-					}
-				}
-				resultingCRD.SetAnnotations(annotations)
-
-				// duplication is ugly, but it's only during the trip from here to there.
-				manifestData, err := kyaml.Marshal(resultingCRD)
-				if err != nil {
-					errs = append(errs, fmt.Errorf("could not encode file %s: %v", outputFile, err))
-					continue
-				}
-
-				if g.verify {
-					existingBytes, err := os.ReadFile(outputFile)
-					if err != nil {
-						errs = append(errs, fmt.Errorf("could not read file %s: %v", outputFile, err))
-						continue
-					}
-					if !bytes.Equal(manifestData, existingBytes) {
-						diff := utils.Diff(existingBytes, manifestData, outputFile)
-
-						return fmt.Errorf("API schema for %s is out of date, please regenerate the API schema:\n%s", outputFile, diff)
-					}
-
-					continue
-				}
-
-				if err := os.WriteFile(outputFile, manifestData, 0644); err != nil {
-					return fmt.Errorf("could not write manifest %s: %w", outputFile, err)
-				}
-
-				continue
-			}
-
-			// ok, if we're down here, then we need to iterate through all known featuresets
 			// again in the future we'll expand to clusterprofile, featureset tuples, but for now all clusterprofiles are considered combined
 			// this assumption works for everything *except* for authentication.
-			for _, featureSetName := range []string{"Default", "TechPreviewNoUpgrade", "CustomNoUpgrade"} {
+			resultingCRDs := []crdForFeatureSet{}
+			ungatedCRDFilename := ""
+			allFeatureSets := []string{"Default", "TechPreviewNoUpgrade", "CustomNoUpgrade"}
+			for _, featureSetName := range allFeatureSets {
 				// TODO this will eventually need the clusterprofile too
 				partialManifestFilter, err := FilterForFeatureSet(featureSetName)
 				if err != nil {
@@ -279,6 +205,10 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 					// TODO this should include clusterProfile once we accommodate it.
 					fileMarker := fmt.Sprintf("-%s", featureSetName)
 					outputFileBaseName = strings.ReplaceAll(outputFilenamePattern, "MARKERS", fileMarker)
+
+					if len(ungatedCRDFilename) == 0 {
+						ungatedCRDFilename = filepath.Join(versionPath, strings.ReplaceAll(outputFilenamePattern, "MARKERS", ""))
+					}
 				}
 				if len(outputFileBaseName) == 0 {
 					errs = append(errs, fmt.Errorf("crd %q needs '// +openshift:file-pattern='", crdName))
@@ -301,7 +231,7 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 					for _, clusterProfile := range exception.ClusterProfilesToInject {
 						annotations[clusterProfile] = "true"
 					}
-				} else {
+				} else if !hasClusterProfilePreference(annotations) {
 					for _, clusterProfile := range defaultClusterProfilesToInject {
 						annotations[clusterProfile] = "true"
 					}
@@ -315,29 +245,48 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 				}
 				resultingCRD.SetAnnotations(annotations)
 
-				manifestData, err := kyaml.Marshal(resultingCRD.Object)
+				resultingCRDs = append(resultingCRDs, crdForFeatureSet{
+					crd:        resultingCRD,
+					featureSet: featureSetName,
+					outputFile: outputFile,
+				})
+			}
+
+			// check to see if all the resultingCRDs are the same
+			crdPresentInAllFeatureSets := len(resultingCRDs) == len(allFeatureSets)
+			if areAllCRDsTheSameModuloFeatureSet(resultingCRDs) && crdPresentInAllFeatureSets {
+				resultingCRDs = []crdForFeatureSet{
+					{
+						crd:        removeFeatureSet(resultingCRDs[0].crd),
+						outputFile: ungatedCRDFilename,
+					},
+				}
+			}
+
+			for _, resultingCRD := range resultingCRDs {
+				manifestData, err := kyaml.Marshal(resultingCRD.crd.Object)
 				if err != nil {
-					errs = append(errs, fmt.Errorf("could not encode file %s: %v", outputFile, err))
+					errs = append(errs, fmt.Errorf("could not encode file %s: %v", resultingCRD.outputFile, err))
 					continue
 				}
 
 				if g.verify {
-					existingBytes, err := os.ReadFile(outputFile)
+					existingBytes, err := os.ReadFile(resultingCRD.outputFile)
 					if err != nil {
-						errs = append(errs, fmt.Errorf("could not read file %s: %v", outputFile, err))
+						errs = append(errs, fmt.Errorf("could not read file %s: %v", resultingCRD.outputFile, err))
 						continue
 					}
 					if !bytes.Equal(manifestData, existingBytes) {
-						diff := utils.Diff(existingBytes, manifestData, outputFile)
+						diff := utils.Diff(existingBytes, manifestData, resultingCRD.outputFile)
 
-						return fmt.Errorf("API schema for %s is out of date, please regenerate the API schema:\n%s", outputFile, diff)
+						return fmt.Errorf("API schema for %s is out of date, please regenerate the API schema:\n%s", resultingCRD.outputFile, diff)
 					}
 
 					continue
 				}
 
-				if err := os.WriteFile(outputFile, manifestData, 0644); err != nil {
-					return fmt.Errorf("could not write manifest %s: %w", outputFile, err)
+				if err := os.WriteFile(resultingCRD.outputFile, manifestData, 0644); err != nil {
+					return fmt.Errorf("could not write manifest %s: %w", resultingCRD.outputFile, err)
 				}
 			}
 
@@ -345,6 +294,47 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 	}
 
 	return kerrors.NewAggregate(errs)
+}
+
+func hasClusterProfilePreference(annotations map[string]string) bool {
+	for k := range annotations {
+		if strings.HasPrefix(k, "include.release.openshift.io/") {
+			return true
+		}
+	}
+
+	return false
+}
+
+func areAllCRDsTheSameModuloFeatureSet(resultingCRDs []crdForFeatureSet) bool {
+	var prevCRDMinusFeatureSet *unstructured.Unstructured
+	for _, currCRD := range resultingCRDs {
+		currCRDMinusFeatureSet := removeFeatureSet(currCRD.crd)
+
+		if prevCRDMinusFeatureSet == nil {
+			prevCRDMinusFeatureSet = currCRDMinusFeatureSet
+			continue
+		}
+		if !equality.Semantic.DeepEqual(prevCRDMinusFeatureSet, currCRDMinusFeatureSet) {
+			return false
+		}
+	}
+
+	return true
+}
+
+func removeFeatureSet(in *unstructured.Unstructured) *unstructured.Unstructured {
+	ret := in.DeepCopy()
+	annotations := ret.GetAnnotations()
+	delete(annotations, "release.openshift.io/feature-set")
+	ret.SetAnnotations(annotations)
+	return ret
+}
+
+type crdForFeatureSet struct {
+	crd        *unstructured.Unstructured
+	featureSet string
+	outputFile string
 }
 
 // pertinent is determined by the `filter`. If it passes the filter, it's pertinent.

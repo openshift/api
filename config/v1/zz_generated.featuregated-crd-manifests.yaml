@@ -312,19 +312,19 @@ ingresses.config.openshift.io:
   TopLevelFeatureGates: []
   Version: v1
 
-projects.config.openshift.io:
+networks.config.openshift.io:
   Annotations: {}
-  ApprovedPRNumber: ""
-  CRDName: projects.config.openshift.io
+  ApprovedPRNumber: https://github.com/openshift/api/pull/470
+  CRDName: networks.config.openshift.io
   Capability: ""
   Category: ""
   FeatureGates:
   - NetworkLiveMigration
   GroupName: config.openshift.io
-  HasStatus: true
+  HasStatus: false
   KindName: Network
   Labels: {}
-  PluralName: projects
+  PluralName: networks
   PrinterColumns: []
   Scope: Cluster
   ShortNames: null
@@ -367,6 +367,25 @@ oauths.config.openshift.io:
   Scope: Cluster
   ShortNames: null
   TargetFilenamePattern: 0000_10_config-operator_01_oauthMARKERS.crd.yaml
+  TopLevelFeatureGates: []
+  Version: v1
+
+operatorhubs.config.openshift.io:
+  Annotations: {}
+  ApprovedPRNumber: https://github.com/openshift/api/pull/470
+  CRDName: operatorhubs.config.openshift.io
+  Capability: marketplace
+  Category: ""
+  FeatureGates: []
+  GroupName: config.openshift.io
+  HasStatus: true
+  KindName: OperatorHub
+  Labels: {}
+  PluralName: operatorhubs
+  PrinterColumns: []
+  Scope: Cluster
+  ShortNames: null
+  TargetFilenamePattern: 0000_03_marketplace-operator_01_operatorhubMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1
 

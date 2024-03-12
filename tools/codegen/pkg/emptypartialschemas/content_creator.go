@@ -176,8 +176,8 @@ func minimalCRDFor(crdInfo *CRDInfo, featureGate string) *apiextensionsv1.Custom
 		ret.Labels[k] = v
 	}
 
-	if len(crdInfo.ShortName) > 0 {
-		ret.Spec.Names.ShortNames = []string{crdInfo.ShortName}
+	if len(crdInfo.ShortNames) > 0 {
+		ret.Spec.Names.ShortNames = crdInfo.ShortNames
 	}
 	if len(crdInfo.Category) > 0 {
 		ret.Spec.Names.Categories = []string{crdInfo.Category}

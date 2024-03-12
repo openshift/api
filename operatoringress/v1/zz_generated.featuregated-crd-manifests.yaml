@@ -12,7 +12,7 @@ dnsrecords.ingress.operator.openshift.io:
   PluralName: dnsrecords
   PrinterColumns: []
   Scope: Namespaced
-  ShortName: ""
+  ShortNames: null
   TargetFilenamePattern: 0000_50_dns-recordMARKERS.yaml
   TopLevelFeatureGates: []
   Version: v1

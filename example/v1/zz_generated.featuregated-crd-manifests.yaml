@@ -13,7 +13,7 @@ stableconfigtypes.example.openshift.io:
   PluralName: stableconfigtypes
   PrinterColumns: []
   Scope: Cluster
-  ShortName: ""
+  ShortNames: null
   TargetFilenamePattern: 0000_50_stabletypeMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1

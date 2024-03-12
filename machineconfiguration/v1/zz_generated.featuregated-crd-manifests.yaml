@@ -13,7 +13,8 @@ containerruntimeconfigs.machineconfiguration.openshift.io:
   PluralName: containerruntimeconfigs
   PrinterColumns: []
   Scope: Cluster
-  ShortName: ctrcfg
+  ShortNames:
+  - ctrcfg
   TargetFilenamePattern: 0000_80_containerruntimeconfigMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1
@@ -37,7 +38,7 @@ controllerconfigs.machineconfiguration.openshift.io:
   PluralName: controllerconfigs
   PrinterColumns: []
   Scope: Cluster
-  ShortName: ""
+  ShortNames: null
   TargetFilenamePattern: 0000_80_controllerconfigMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1
@@ -57,7 +58,7 @@ kubeletconfigs.machineconfiguration.openshift.io:
   PluralName: kubeletconfigs
   PrinterColumns: []
   Scope: Cluster
-  ShortName: ""
+  ShortNames: null
   TargetFilenamePattern: 0000_80_kubeletconfigMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1
@@ -89,7 +90,8 @@ machineconfigs.machineconfiguration.openshift.io:
     name: Age
     type: date
   Scope: Cluster
-  ShortName: mc
+  ShortNames:
+  - mc
   TargetFilenamePattern: 0000_80_machineconfigMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1
@@ -147,7 +149,8 @@ machineconfigpools.machineconfiguration.openshift.io:
     name: Age
     type: date
   Scope: Cluster
-  ShortName: mcp
+  ShortNames:
+  - mcp
   TargetFilenamePattern: 0000_80_machineconfigpoolMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1

@@ -62,7 +62,7 @@ type CRDInfo struct {
 	Scope                 string
 	HasStatus             bool
 	FeatureGates          []string
-	ShortName             string
+	ShortNames            []string
 	Category              string
 	ApprovedPRNumber      string
 	TargetFilenamePattern string
@@ -289,7 +289,6 @@ func (g *genFeatureGatedPartialSchemas) GenerateType(c *gengogenerator.Context, 
 		PluralName:            resourceName,
 		KindName:              t.Name.Name,
 		Scope:                 scope,
-		ShortName:             kubeBuilderResourceValues["shortName"],
 		Category:              kubeBuilderResourceValues["categories"],
 		HasStatus:             tagExistsForType(t, kubeBuilderStatus),
 		FeatureGates:          allFeatureGates.List(),
@@ -299,6 +298,9 @@ func (g *genFeatureGatedPartialSchemas) GenerateType(c *gengogenerator.Context, 
 		Capability:            extractStringTagForType(t, openshiftCapabilityMarkerName),
 		Annotations:           annotations,
 		Labels:                labels,
+	}
+	if len(kubeBuilderResourceValues["shortName"]) > 0{
+		crdInfo.ShortNames = strings.Split(kubeBuilderResourceValues["shortName"], ";")
 	}
 	g.crdInfoTracker.crdNamesToFeatureGates[crdName] = crdInfo
 

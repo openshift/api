@@ -13,7 +13,7 @@ notstableconfigtypes.example.openshift.io:
   PluralName: notstableconfigtypes
   PrinterColumns: []
   Scope: Cluster
-  ShortName: ""
+  ShortNames: null
   TargetFilenamePattern: 0000_50_notstabletypeMARKERS.crd.yaml
   TopLevelFeatureGates:
   - Example

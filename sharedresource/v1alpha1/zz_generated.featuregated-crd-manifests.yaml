@@ -17,7 +17,7 @@ sharedconfigmaps.sharedresource.openshift.io:
   PluralName: sharedconfigmaps
   PrinterColumns: []
   Scope: Cluster
-  ShortName: ""
+  ShortNames: null
   TargetFilenamePattern: 0000_10_sharedconfigmapMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1alpha1
@@ -41,7 +41,7 @@ sharedsecrets.sharedresource.openshift.io:
   PluralName: sharedsecrets
   PrinterColumns: []
   Scope: Cluster
-  ShortName: ""
+  ShortNames: null
   TargetFilenamePattern: 0000_10_sharedsecretMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1alpha1

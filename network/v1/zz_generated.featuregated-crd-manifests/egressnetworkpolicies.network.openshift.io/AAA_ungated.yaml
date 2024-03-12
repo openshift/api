@@ -5,9 +5,6 @@ metadata:
     api-approved.openshift.io: https://github.com/openshift/api/pull/527
     api.openshift.io/filename-pattern: 004-egressnetworkpolicyMARKERS-crd.yaml
     feature-gate.release.openshift.io/: "true"
-    include.release.openshift.io/ibm-cloud-managed-: ""
-    include.release.openshift.io/self-managed-high-availability-: ""
-    include.release.openshift.io/single-node-developer-: ""
   name: egressnetworkpolicies.network.openshift.io
 spec:
   group: network.openshift.io

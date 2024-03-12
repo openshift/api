@@ -1,8 +1,5 @@
 clusternetworks.network.openshift.io:
-  Annotations:
-    include.release.openshift.io/ibm-cloud-managed-: ""
-    include.release.openshift.io/self-managed-high-availability-: ""
-    include.release.openshift.io/single-node-developer-: ""
+  Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/527
   CRDName: clusternetworks.network.openshift.io
   Capability: ""
@@ -27,16 +24,13 @@ clusternetworks.network.openshift.io:
     name: Plugin Name
     type: string
   Scope: Cluster
-  ShortName: ""
+  ShortNames: null
   TargetFilenamePattern: 001-clusternetworkMARKERS-crd.yaml
   TopLevelFeatureGates: []
   Version: v1
 
 egressnetworkpolicies.network.openshift.io:
-  Annotations:
-    include.release.openshift.io/ibm-cloud-managed-: ""
-    include.release.openshift.io/self-managed-high-availability-: ""
-    include.release.openshift.io/single-node-developer-: ""
+  Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/527
   CRDName: egressnetworkpolicies.network.openshift.io
   Capability: ""
@@ -49,16 +43,13 @@ egressnetworkpolicies.network.openshift.io:
   PluralName: egressnetworkpolicies
   PrinterColumns: []
   Scope: Namespaced
-  ShortName: ""
+  ShortNames: null
   TargetFilenamePattern: 004-egressnetworkpolicyMARKERS-crd.yaml
   TopLevelFeatureGates: []
   Version: v1
 
 hostsubnets.network.openshift.io:
-  Annotations:
-    include.release.openshift.io/ibm-cloud-managed-: ""
-    include.release.openshift.io/self-managed-high-availability-: ""
-    include.release.openshift.io/single-node-developer-: ""
+  Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/527
   CRDName: hostsubnets.network.openshift.io
   Capability: ""
@@ -93,16 +84,13 @@ hostsubnets.network.openshift.io:
     name: Egress IPs
     type: string
   Scope: Cluster
-  ShortName: ""
+  ShortNames: null
   TargetFilenamePattern: 002-hostsubnetMARKERS-crd.yaml
   TopLevelFeatureGates: []
   Version: v1
 
 netnamespaces.network.openshift.io:
-  Annotations:
-    include.release.openshift.io/ibm-cloud-managed-: ""
-    include.release.openshift.io/self-managed-high-availability-: ""
-    include.release.openshift.io/single-node-developer-: ""
+  Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/527
   CRDName: netnamespaces.network.openshift.io
   Capability: ""
@@ -123,7 +111,7 @@ netnamespaces.network.openshift.io:
     name: Egress IPs
     type: string
   Scope: Cluster
-  ShortName: ""
+  ShortNames: null
   TargetFilenamePattern: 003-netnamespaceMARKERS-crd.yaml
   TopLevelFeatureGates: []
   Version: v1

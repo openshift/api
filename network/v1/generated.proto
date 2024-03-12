@@ -20,9 +20,6 @@ option go_package = "github.com/openshift/api/network/v1";
 // +kubebuilder:resource:path=clusternetworks,scope=Cluster
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/527
 // +openshift:file-pattern=001-clusternetworkMARKERS-crd.yaml
-// +kubebuilder:metadata:annotations="include.release.openshift.io/ibm-cloud-managed-="
-// +kubebuilder:metadata:annotations="include.release.openshift.io/self-managed-high-availability-="
-// +kubebuilder:metadata:annotations="include.release.openshift.io/single-node-developer-="
 // +kubebuilder:printcolumn:name="Cluster Network",type=string,JSONPath=.network,description="The primary cluster network CIDR"
 // +kubebuilder:printcolumn:name="Service Network",type=string,JSONPath=.serviceNetwork,description="The service network CIDR"
 // +kubebuilder:printcolumn:name="Plugin Name",type=string,JSONPath=.pluginName,description="The OpenShift SDN network plug-in in use"
@@ -105,9 +102,6 @@ message ClusterNetworkList {
 // +kubebuilder:resource:path=egressnetworkpolicies,scope=Namespaced
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/527
 // +openshift:file-pattern=004-egressnetworkpolicyMARKERS-crd.yaml
-// +kubebuilder:metadata:annotations="include.release.openshift.io/ibm-cloud-managed-="
-// +kubebuilder:metadata:annotations="include.release.openshift.io/self-managed-high-availability-="
-// +kubebuilder:metadata:annotations="include.release.openshift.io/single-node-developer-="
 // +openshift:compatibility-gen:level=1
 message EgressNetworkPolicy {
   // metadata is the standard object's metadata.
@@ -168,9 +162,6 @@ message EgressNetworkPolicySpec {
 // +kubebuilder:resource:path=hostsubnets,scope=Cluster
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/527
 // +openshift:file-pattern=002-hostsubnetMARKERS-crd.yaml
-// +kubebuilder:metadata:annotations="include.release.openshift.io/ibm-cloud-managed-="
-// +kubebuilder:metadata:annotations="include.release.openshift.io/self-managed-high-availability-="
-// +kubebuilder:metadata:annotations="include.release.openshift.io/single-node-developer-="
 // +kubebuilder:printcolumn:name="Host",type=string,JSONPath=.host,description="The name of the node"
 // +kubebuilder:printcolumn:name="Host IP",type=string,JSONPath=.hostIP,description="The IP address to be used as a VTEP by other nodes in the overlay network"
 // +kubebuilder:printcolumn:name="Subnet",type=string,JSONPath=.subnet,description="The CIDR range of the overlay network assigned to the node for its pods"
@@ -229,9 +220,6 @@ message HostSubnetList {
 // +kubebuilder:resource:path=netnamespaces,scope=Cluster
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/527
 // +openshift:file-pattern=003-netnamespaceMARKERS-crd.yaml
-// +kubebuilder:metadata:annotations="include.release.openshift.io/ibm-cloud-managed-="
-// +kubebuilder:metadata:annotations="include.release.openshift.io/self-managed-high-availability-="
-// +kubebuilder:metadata:annotations="include.release.openshift.io/single-node-developer-="
 // +kubebuilder:printcolumn:name="NetID",type=integer,JSONPath=.netid,description="The network identifier of the network namespace"
 // +kubebuilder:printcolumn:name="Egress IPs",type=string,JSONPath=.egressIPs,description="The network egress IP addresses"
 // +openshift:compatibility-gen:level=1

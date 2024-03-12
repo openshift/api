@@ -3,9 +3,13 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.openshift.io: https://github.com/openshift/api/pull/979
-    api.openshift.io/merged-by-featuregates: "true"
+    api.openshift.io/filename-pattern: 0000_10_sharedconfigmapMARKERS.crd.yaml
     description: Extension for sharing ConfigMaps across Namespaces
     displayName: SharedConfigMap
+    feature-gate.release.openshift.io/: "true"
+    include.release.openshift.io/ibm-cloud-managed-: ""
+    include.release.openshift.io/self-managed-high-availability-: ""
+    include.release.openshift.io/single-node-developer-: ""
   name: sharedconfigmaps.sharedresource.openshift.io
 spec:
   group: sharedresource.openshift.io

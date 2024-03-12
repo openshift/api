@@ -3,35 +3,39 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.openshift.io: https://github.com/openshift/api/pull/979
-    api.openshift.io/merged-by-featuregates: "true"
-    description: Extension for sharing ConfigMaps across Namespaces
-    displayName: SharedConfigMap
-  name: sharedconfigmaps.sharedresource.openshift.io
+    api.openshift.io/filename-pattern: 0000_10_sharedsecretMARKERS.crd.yaml
+    description: Extension for sharing Secrets across Namespaces
+    displayName: SharedSecret
+    feature-gate.release.openshift.io/: "true"
+    include.release.openshift.io/ibm-cloud-managed-: ""
+    include.release.openshift.io/self-managed-high-availability-: ""
+    include.release.openshift.io/single-node-developer-: ""
+  name: sharedsecrets.sharedresource.openshift.io
 spec:
   group: sharedresource.openshift.io
   names:
-    kind: SharedConfigMap
-    listKind: SharedConfigMapList
-    plural: sharedconfigmaps
-    singular: sharedconfigmap
+    kind: SharedSecret
+    listKind: SharedSecretList
+    plural: sharedsecrets
+    singular: sharedsecret
   scope: Cluster
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: "SharedConfigMap allows a ConfigMap to be shared across namespaces.
-          Pods can mount the shared ConfigMap by adding a CSI volume to the pod specification
+        description: "SharedSecret allows a Secret to be shared across namespaces.
+          Pods can mount the shared Secret by adding a CSI volume to the pod specification
           using the \"csi.sharedresource.openshift.io\" CSI driver and a reference
-          to the SharedConfigMap in the volume attributes: \n spec: volumes: - name:
-          shared-configmap csi: driver: csi.sharedresource.openshift.io volumeAttributes:
-          sharedConfigMap: my-share \n For the mount to be successful, the pod's service
-          account must be granted permission to 'use' the named SharedConfigMap object
+          to the SharedSecret in the volume attributes: \n spec: volumes: - name:
+          shared-secret csi: driver: csi.sharedresource.openshift.io volumeAttributes:
+          sharedSecret: my-share \n For the mount to be successful, the pod's service
+          account must be granted permission to 'use' the named SharedSecret object
           within its namespace with an appropriate Role and RoleBinding. For compactness,
           here are example `oc` invocations for creating such Role and RoleBinding
-          objects. \n `oc create role shared-resource-my-share --verb=use --resource=sharedconfigmaps.sharedresource.openshift.io
+          objects. \n `oc create role shared-resource-my-share --verb=use --resource=sharedsecrets.sharedresource.openshift.io
           --resource-name=my-share` `oc create rolebinding shared-resource-my-share
           --role=shared-resource-my-share --serviceaccount=my-namespace:default` \n
-          Shared resource objects, in this case ConfigMaps, have default permissions
+          Shared resource objects, in this case Secrets, have default permissions
           of list, get, and watch for system authenticated users. \n Compatibility
           level 4: No compatibility is provided, the API can change at any point for
           any reason. These capabilities should not be used by applications needing
@@ -51,32 +55,32 @@ spec:
           metadata:
             type: object
           spec:
-            description: spec is the specification of the desired shared configmap
+            description: spec is the specification of the desired shared secret
             properties:
-              configMapRef:
-                description: configMapRef is a reference to the ConfigMap to share
+              description:
+                description: description is a user readable explanation of what the
+                  backing resource provides.
+                type: string
+              secretRef:
+                description: secretRef is a reference to the Secret to share
                 properties:
                   name:
-                    description: name represents the name of the ConfigMap that is
-                      being referenced.
+                    description: name represents the name of the Secret that is being
+                      referenced.
                     type: string
                   namespace:
                     description: namespace represents the namespace where the referenced
-                      ConfigMap is located.
+                      Secret is located.
                     type: string
                 required:
                 - name
                 - namespace
                 type: object
-              description:
-                description: description is a user readable explanation of what the
-                  backing resource provides.
-                type: string
             required:
-            - configMapRef
+            - secretRef
             type: object
           status:
-            description: status is the observed status of the shared configmap
+            description: status is the observed status of the shared secret
             properties:
               conditions:
                 description: conditions represents any observations made on this particular

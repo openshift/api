@@ -49,7 +49,7 @@ securitycontextconstraints.security.openshift.io:
     name: Volumes
     type: string
   Scope: Cluster
-  ShortName: ""
+  ShortNames: null
   TargetFilenamePattern: 0000_03_security-openshift_01_sccMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1

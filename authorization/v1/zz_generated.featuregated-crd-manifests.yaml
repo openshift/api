@@ -12,7 +12,7 @@ rolebindingrestrictions.authorization.openshift.io:
   PluralName: rolebindingrestrictions
   PrinterColumns: []
   Scope: Namespaced
-  ShortName: ""
+  ShortNames: null
   TargetFilenamePattern: 0000_03_authorization-openshift_01_rolebindingrestrictionMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1

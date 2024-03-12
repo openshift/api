@@ -12,7 +12,7 @@ clusterresourcequotas.quota.openshift.io:
   PluralName: clusterresourcequotas
   PrinterColumns: []
   Scope: Cluster
-  ShortName: ""
+  ShortNames: null
   TargetFilenamePattern: 0000_03_quota-openshift_01_clusterresourcequotaMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1

@@ -119,9 +119,6 @@
                         "name": "UpgradeStatus"
                     },
                     {
-                        "name": "VSphereStaticIPs"
-                    },
-                    {
                         "name": "ValidatingAdmissionPolicy"
                     },
                     {
@@ -167,6 +164,9 @@
                     },
                     {
                         "name": "VSphereControlPlaneMachineSet"
+                    },
+                    {
+                        "name": "VSphereStaticIPs"
                     }
                 ],
                 "version": ""

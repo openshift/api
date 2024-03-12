@@ -322,7 +322,7 @@ var (
 					reportProblemsToJiraComponent("splat").
 					contactPerson("rvanderp3").
 					productScope(ocpSpecific).
-					enableIn(TechPreviewNoUpgrade).
+					enableIn(Default, TechPreviewNoUpgrade).
 					mustRegister()
 
 	FeatureGateRouteExternalCertificate = newFeatureGate("RouteExternalCertificate").

@@ -141,6 +141,8 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 
 		manualCRDOverridesPath := filepath.Join(versionPath, "manual-override-crd-manifests")
 		byFeatureGatePath := filepath.Join(versionPath, "zz_generated.featuregated-crd-manifests")
+		generatedOutputPath := filepath.Join(versionPath, "zz_generated.crd-manifests")
+
 		possibleResources, err := os.ReadDir(byFeatureGatePath)
 		if os.IsNotExist(err) {
 			continue
@@ -153,6 +155,8 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 				resourcePaths = append(resourcePaths, filepath.Join(byFeatureGatePath, path.Name()))
 			}
 		}
+
+		allCRDsToRender := []crdForFeatureSet{}
 
 		for _, resourcePath := range resourcePaths {
 			// at this point we have a few paths.  In the end, we want to generate manifests for every (crd, clusterprofile, featureset) tuple.
@@ -258,32 +262,70 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 			}
 
 			// check to see if all the resultingCRDs are the same
-			crdsToRender := getCRDsToRender(resultingCRDs, crdFilenamePattern, versionPath)
+			crdsToRender := getCRDsToRender(resultingCRDs, crdFilenamePattern, generatedOutputPath)
+			allCRDsToRender = append(allCRDsToRender, crdsToRender...)
+		}
 
-			for _, resultingCRD := range crdsToRender {
-				manifestData, err := kyaml.Marshal(resultingCRD.crd.Object)
+		if !g.verify {
+			if err := os.MkdirAll(generatedOutputPath, 0755); err != nil {
+				errs = append(errs, fmt.Errorf("failed creating directory: %w", err))
+				continue
+			}
+		}
+		
+		for _, resultingCRD := range allCRDsToRender {
+			manifestData, err := kyaml.Marshal(resultingCRD.crd.Object)
+			if err != nil {
+				errs = append(errs, fmt.Errorf("could not encode file %s: %v", resultingCRD.outputFile, err))
+				continue
+			}
+
+			if g.verify {
+				existingBytes, err := os.ReadFile(resultingCRD.outputFile)
 				if err != nil {
-					errs = append(errs, fmt.Errorf("could not encode file %s: %v", resultingCRD.outputFile, err))
+					errs = append(errs, fmt.Errorf("could not read file %s: %v", resultingCRD.outputFile, err))
 					continue
 				}
+				if !bytes.Equal(manifestData, existingBytes) {
+					diff := utils.Diff(existingBytes, manifestData, resultingCRD.outputFile)
 
-				if g.verify {
-					existingBytes, err := os.ReadFile(resultingCRD.outputFile)
-					if err != nil {
-						errs = append(errs, fmt.Errorf("could not read file %s: %v", resultingCRD.outputFile, err))
-						continue
-					}
-					if !bytes.Equal(manifestData, existingBytes) {
-						diff := utils.Diff(existingBytes, manifestData, resultingCRD.outputFile)
-
-						return fmt.Errorf("API schema for %s is out of date, please regenerate the API schema:\n%s", resultingCRD.outputFile, diff)
-					}
-
-					continue
+					return fmt.Errorf("API schema for %s is out of date, please regenerate the API schema:\n%s", resultingCRD.outputFile, diff)
 				}
 
-				if err := os.WriteFile(resultingCRD.outputFile, manifestData, 0644); err != nil {
-					return fmt.Errorf("could not write manifest %s: %w", resultingCRD.outputFile, err)
+				continue
+			}
+
+			if err := os.WriteFile(resultingCRD.outputFile, manifestData, 0644); err != nil {
+				return fmt.Errorf("could not write manifest %s: %w", resultingCRD.outputFile, err)
+			}
+		}
+
+		// remove extra content.
+		outputResources, err := os.ReadDir(generatedOutputPath)
+		switch {
+		case g.verify && os.IsNotExist(err):
+			// do nothing, may not be a failure if there's nothing to put here
+		case err != nil:
+			errs = append(errs, fmt.Errorf("failed to read generated output: %w", err))
+		}
+		for _, curr := range outputResources {
+			if curr.IsDir() {
+				errs = append(errs, fmt.Errorf("unexpected directory: %q", curr.Name()))
+			}
+			found := false
+			for _, expectedCRD := range allCRDsToRender {
+				filename := filepath.Base(expectedCRD.outputFile)
+				if curr.Name() == filename {
+					found = true
+					break
+				}
+			}
+			switch {
+			case !found && g.verify:
+				errs = append(errs, fmt.Errorf("need to remove: %q", curr.Name()))
+			case !found && !g.verify:
+				if err := os.Remove(filepath.Join(generatedOutputPath, curr.Name())); err != nil {
+					errs = append(errs, fmt.Errorf("failed to remove: %q", curr.Name()))
 				}
 			}
 		}
@@ -302,13 +344,13 @@ func hasClusterProfilePreference(annotations map[string]string) bool {
 	return false
 }
 
-func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, versionPath string) []crdForFeatureSet {
+func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, outputPath string) []crdForFeatureSet {
 	allCRDsWithData := filterCRDs(resultingCRDs, &HasData{})
 	sameSchemaInAllCRDs := areCRDsTheSame(allCRDsWithData)
 	hasAllFeatureSets := featureSetsFromCRDs(allCRDsWithData).Equal(sets.NewString(allFeatureSets...))
 	if sameSchemaInAllCRDs && hasAllFeatureSets {
 		crdFilename := strings.ReplaceAll(crdFilenamePattern, "MARKERS", "")
-		crdFullPath := filepath.Join(versionPath, crdFilename)
+		crdFullPath := filepath.Join(outputPath, crdFilename)
 		crdToWrite := allCRDsWithData[0].crd.DeepCopy()
 
 		clusterProfilesToAdd := clusterProfilesFromCRDs(allCRDsWithData)
@@ -363,7 +405,7 @@ func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, versi
 			}
 
 			crdFilename := strings.ReplaceAll(crdFilenamePattern, "MARKERS", fmt.Sprintf("-%s", featureSet))
-			crdFullPath := filepath.Join(versionPath, crdFilename)
+			crdFullPath := filepath.Join(outputPath, crdFilename)
 			crdToWrite := filteredCRDs[0].crd.DeepCopy()
 
 			clusterProfilesToAdd := clusterProfilesFromCRDs(filteredCRDs)
@@ -402,7 +444,7 @@ func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, versi
 		}
 
 		crdFilename := strings.ReplaceAll(crdFilenamePattern, "MARKERS", fmt.Sprintf("-%s", clusterProfileToShortName[clusterProfile]))
-		crdFullPath := filepath.Join(versionPath, crdFilename)
+		crdFullPath := filepath.Join(outputPath, crdFilename)
 		crdToWrite := filteredCRDs[0].crd.DeepCopy()
 
 		annotations := crdToWrite.GetAnnotations()
@@ -427,7 +469,7 @@ func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, versi
 			continue
 		}
 		crdFilename := strings.ReplaceAll(crdFilenamePattern, "MARKERS", fmt.Sprintf("-%s-%s", clusterProfileToShortName[curr.clusterProfile], curr.featureSet))
-		crdFullPath := filepath.Join(versionPath, crdFilename)
+		crdFullPath := filepath.Join(outputPath, crdFilename)
 
 		crdToWrite := notHandled[i].crd.DeepCopy()
 		annotations := crdToWrite.GetAnnotations()

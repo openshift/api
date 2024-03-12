@@ -27,6 +27,16 @@ clean:
 run-codegen: codegen
 	$(OUTPUT_DIR)/codegen --base-dir $(BASE_DIR) --api-group-versions $(API_GROUP_VERSIONS) --required-feature-sets $(OPENSHIFT_REQUIRED_FEATURESETS)
 
+PULL_SECRET?=${PULL_SECRET:-$(HOME)/pull-secret.txt}
+
+.PHONY: publish-kubebuilder-tools
+publish-kubebuilder-tools:
+	@# This should only need to be run once per combination of args.
+	@# Make sure to update the `-version` to the full semver (x.y.z) of the Kube version that the release is based on (check o/k).
+	@# The payload should be any nightly or EC build published in the CI registry that matches the defined version.
+	@# Pull secret should be the standard pull secret used for spinning up OpenShift clusters, if you do not have one, follow https://docs.google.com/document/d/1ez2jrjiIQJChobfSu2ISJ5uM_-3HGouamL_xIa2_1W4/edit#heading=h.me93l6citmsq
+	go run ./publish-kubebuilder-tools/main.go -version 1.29.1 -output-dir /tmp/kubebuilder-tools -payload=registry.ci.openshift.org/ocp/release:4.16.0-0.ci-2024-02-20-022620 -pull-secret $(PULL_SECRET)
+
 #############################################
 #
 # BEGIN: Shortcuts to fully qualified targets

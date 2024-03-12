@@ -3,8 +3,9 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.openshift.io: https://github.com/openshift/api/pull/470
-    include.release.openshift.io/ibm-cloud-managed: "true"
-    release.openshift.io/feature-set: Default
+    api.openshift.io/merged-by-featuregates: "true"
+    include.release.openshift.io/self-managed-high-availability: "true"
+    release.openshift.io/feature-set: TechPreviewNoUpgrade
   name: authentications.config.openshift.io
 spec:
   group: config.openshift.io

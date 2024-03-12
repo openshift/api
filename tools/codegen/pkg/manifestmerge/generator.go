@@ -6,6 +6,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"k8s.io/apimachinery/pkg/api/equality"
+	"k8s.io/apimachinery/pkg/util/sets"
+	"math/rand"
 	"os"
 	"strings"
 	"sync"
@@ -28,6 +30,13 @@ import (
 
 var (
 	DefaultPayloadFeatureGatePath = filepath.Join("payload-manifests", "featuregates")
+
+	allClusterProfiles = []string{
+		"include.release.openshift.io/ibm-cloud-managed",
+		"include.release.openshift.io/self-managed-high-availability",
+		"include.release.openshift.io/single-node-developer",
+	}
+	allFeatureSets = []string{"Default", "TechPreviewNoUpgrade", "CustomNoUpgrade"}
 )
 
 var defaultClusterProfilesToInject = []string{
@@ -46,12 +55,6 @@ type Options struct {
 	// of updating the generated file.
 	Verify bool
 
-	// TupleOverrides is temporary. Once we generate all CRDs, we won't need this.
-	// This allows specification of a CRD that is "ungated". This concept will go away
-	// and FeatureGate handling will be required and we'll generate multiple files.
-	// It also allows the specification of custom clusterProfiles until we normalize that too.
-	TupleOverrides []generation.TupleOverride
-
 	// PayloadFeatureGatePath is a specified path for the featuregate CRD to inform whether particular
 	// gates are off or on.
 	// If not set, the default "payload-manifests/featuregates" is used.
@@ -63,7 +66,6 @@ type Options struct {
 type generator struct {
 	disabled               bool
 	verify                 bool
-	tupleOverrides         []generation.TupleOverride
 	payloadFeatureGatePath string
 }
 
@@ -77,7 +79,6 @@ func NewGenerator(opts Options) generation.Generator {
 	return &generator{
 		disabled:               opts.Disabled,
 		verify:                 opts.Verify,
-		tupleOverrides:         opts.TupleOverrides,
 		payloadFeatureGatePath: payloadFeatureGatePath,
 	}
 }
@@ -90,9 +91,8 @@ func (g *generator) ApplyConfig(config *generation.Config) generation.Generator 
 	}
 
 	return NewGenerator(Options{
-		Disabled:       config.ManifestMerge.Disabled,
-		Verify:         g.verify,
-		TupleOverrides: config.ManifestMerge.TupleOverrides,
+		Disabled: config.ManifestMerge.Disabled,
+		Verify:   g.verify,
 	})
 }
 
@@ -129,25 +129,6 @@ func (g *generator) GenGroup(groupCtx generation.APIGroupContext) error {
 		return kerrors.NewAggregate(errs)
 	}
 
-	return nil
-}
-
-func (g *generator) findExceptions(crdName string) []generation.TupleOverride {
-	ret := []generation.TupleOverride{}
-	for _, curr := range g.tupleOverrides {
-		if curr.CRDName == crdName {
-			ret = append(ret, curr)
-		}
-	}
-	return ret
-}
-
-func (g *generator) findExceptionForFeatureSet(crdName, featureSetName string) *generation.TupleOverride {
-	for _, curr := range g.tupleOverrides {
-		if curr.CRDName == crdName && curr.FeatureSet == featureSetName {
-			return &curr
-		}
-	}
 	return nil
 }
 
@@ -190,96 +171,96 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 			// again in the future we'll expand to clusterprofile, featureset tuples, but for now all clusterprofiles are considered combined
 			// this assumption works for everything *except* for authentication.
 			resultingCRDs := []crdForFeatureSet{}
-			ungatedCRDFilename := ""
-			allFeatureSets := []string{"Default", "TechPreviewNoUpgrade", "CustomNoUpgrade"}
-			for _, featureSetName := range allFeatureSets {
-				// TODO this will eventually need the clusterprofile too
-				partialManifestFilter, err := FilterForFeatureSet(g.payloadFeatureGatePath, featureSetName)
-				if err != nil {
-					errs = append(errs, err)
-					continue
-				}
-
-				var mergeErrors []error
-				resultingCRD, mergeErrors := mergeAllPertinentCRDsInDirs(allResourcePaths, partialManifestFilter, featureSetName)
-				if len(mergeErrors) > 0 {
-					errs = append(errs, mergeErrors...)
-					continue
-				}
-
-				// TODO the filename is carried on the CRD, need to work out how to clean up. probably easier once we have a dedicated directory
-				if resultingCRD == nil { // this means we didn't find any file that matched the filter this is ok, we have nothing to do.
-					continue
-				}
-
-				outputFileBaseName := ""
-				if outputFilenamePattern := resultingCRD.GetAnnotations()["api.openshift.io/filename-pattern"]; len(outputFilenamePattern) > 0 {
-					if !strings.Contains(outputFilenamePattern, "MARKERS") {
-						errs = append(errs, fmt.Errorf("crd %q is missing featureset/%q MARKERS from '// +openshift:file-pattern=' %q", crdName, featureSetName, outputFilenamePattern))
+			crdFilenamePattern := ""
+			for _, clusterProfile := range allClusterProfiles {
+				for _, featureSetName := range allFeatureSets {
+					partialManifestFilter, err := FilterForFeatureSet(g.payloadFeatureGatePath, clusterProfile, featureSetName)
+					if err != nil {
+						errs = append(errs, err)
 						continue
 					}
-					// TODO this should include clusterProfile once we accommodate it.
-					fileMarker := fmt.Sprintf("-%s", featureSetName)
-					outputFileBaseName = strings.ReplaceAll(outputFilenamePattern, "MARKERS", fileMarker)
 
-					if len(ungatedCRDFilename) == 0 {
-						ungatedCRDFilename = filepath.Join(versionPath, strings.ReplaceAll(outputFilenamePattern, "MARKERS", ""))
+					var mergeErrors []error
+					resultingCRD, mergeErrors := mergeAllPertinentCRDsInDirs(allResourcePaths, partialManifestFilter)
+					if len(mergeErrors) > 0 {
+						errs = append(errs, mergeErrors...)
+						continue
 					}
-				}
-				if len(outputFileBaseName) == 0 {
-					errs = append(errs, fmt.Errorf("crd %q needs '// +openshift:file-pattern='", crdName))
-					continue
-				}
-				outputFile := filepath.Join(versionPath, outputFileBaseName)
 
-				resultingCRD.SetManagedFields(nil)
+					// TODO the filename is carried on the CRD, need to work out how to clean up. probably easier once we have a dedicated directory
+					if resultingCRD == nil { // this means we didn't find any file that matched the filter this is ok, we have nothing to do.
+						unstructuredResultingCRD := &unstructured.Unstructured{}
+						unstructuredResultingCRD.GetObjectKind().SetGroupVersionKind(apiextensionsv1.SchemeGroupVersion.WithKind("CustomResourceDefinition"))
+						unstructuredResultingCRD.SetAnnotations(map[string]string{
+							"CRDNotPresent": fmt.Sprintf("%d", rand.Int31()), // ensures they won't be equal
+						})
 
-				annotations := resultingCRD.GetAnnotations()
-				delete(annotations, "api.openshift.io/filename-pattern")
-				for key := range annotations {
-					if strings.HasPrefix(key, "feature-gate.release.openshift.io/") {
-						delete(annotations, key)
+						resultingCRDs = append(resultingCRDs, crdForFeatureSet{
+							crd:            unstructuredResultingCRD,
+							featureSet:     featureSetName,
+							clusterProfile: clusterProfile,
+							outputFile:     "",
+							noData:         true,
+						})
+						continue
 					}
-				}
-				// TODO probably have cases for different clusterprofiles
-				exception := g.findExceptionForFeatureSet(crdName, featureSetName)
-				if exception != nil && len(exception.ClusterProfilesToInject) > 0 {
-					for _, clusterProfile := range exception.ClusterProfilesToInject {
-						annotations[clusterProfile] = "true"
-					}
-				} else if !hasClusterProfilePreference(annotations) {
-					for _, clusterProfile := range defaultClusterProfilesToInject {
-						annotations[clusterProfile] = "true"
-					}
-				}
-				for key := range annotations {
-					if strings.HasSuffix(key, "-") {
-						toRemove := key[:len(key)-1]
-						delete(annotations, toRemove)
-						delete(annotations, key)
-					}
-				}
-				resultingCRD.SetAnnotations(annotations)
 
-				resultingCRDs = append(resultingCRDs, crdForFeatureSet{
-					crd:        resultingCRD,
-					featureSet: featureSetName,
-					outputFile: outputFile,
-				})
+					outputFileBaseName := ""
+					if outputFilenamePattern := resultingCRD.GetAnnotations()["api.openshift.io/filename-pattern"]; len(outputFilenamePattern) > 0 {
+						if !strings.Contains(outputFilenamePattern, "MARKERS") {
+							errs = append(errs, fmt.Errorf("crd %q is missing featureset/%q MARKERS from '// +openshift:file-pattern=' %q", crdName, featureSetName, outputFilenamePattern))
+							continue
+						}
+						fileMarker := fmt.Sprintf("-%s-%s", clusterProfile, featureSetName)
+						outputFileBaseName = strings.ReplaceAll(outputFilenamePattern, "MARKERS", fileMarker)
+
+						if len(crdFilenamePattern) == 0 {
+							crdFilenamePattern = outputFilenamePattern
+						}
+					}
+					if len(outputFileBaseName) == 0 {
+						errs = append(errs, fmt.Errorf("crd %q needs '// +openshift:file-pattern=' %v", crdName, resultingCRD.GetAnnotations()))
+						continue
+					}
+					outputFile := filepath.Join(versionPath, outputFileBaseName)
+
+					resultingCRD.SetManagedFields(nil)
+
+					annotations := resultingCRD.GetAnnotations()
+					delete(annotations, "api.openshift.io/filename-pattern")
+					for key := range annotations {
+						if strings.HasPrefix(key, "feature-gate.release.openshift.io/") {
+							delete(annotations, key)
+						}
+						if strings.HasPrefix(key, "include.release.openshift.io/") {
+							delete(annotations, key)
+						}
+						if strings.HasPrefix(key, "partial-filename.release.openshift.io/") {
+							delete(annotations, key)
+						}
+					}
+					for key := range annotations {
+						if strings.HasSuffix(key, "-") {
+							toRemove := key[:len(key)-1]
+							delete(annotations, toRemove)
+							delete(annotations, key)
+						}
+					}
+					resultingCRD.SetAnnotations(annotations)
+
+					resultingCRDs = append(resultingCRDs, crdForFeatureSet{
+						crd:            resultingCRD,
+						featureSet:     featureSetName,
+						clusterProfile: clusterProfile,
+						outputFile:     outputFile,
+					})
+				}
 			}
 
 			// check to see if all the resultingCRDs are the same
-			crdPresentInAllFeatureSets := len(resultingCRDs) == len(allFeatureSets)
-			if areAllCRDsTheSameModuloFeatureSet(resultingCRDs) && crdPresentInAllFeatureSets {
-				resultingCRDs = []crdForFeatureSet{
-					{
-						crd:        removeFeatureSet(resultingCRDs[0].crd),
-						outputFile: ungatedCRDFilename,
-					},
-				}
-			}
+			crdsToRender := getCRDsToRender(resultingCRDs, crdFilenamePattern, versionPath)
 
-			for _, resultingCRD := range resultingCRDs {
+			for _, resultingCRD := range crdsToRender {
 				manifestData, err := kyaml.Marshal(resultingCRD.crd.Object)
 				if err != nil {
 					errs = append(errs, fmt.Errorf("could not encode file %s: %v", resultingCRD.outputFile, err))
@@ -305,7 +286,6 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 					return fmt.Errorf("could not write manifest %s: %w", resultingCRD.outputFile, err)
 				}
 			}
-
 		}
 	}
 
@@ -322,16 +302,191 @@ func hasClusterProfilePreference(annotations map[string]string) bool {
 	return false
 }
 
-func areAllCRDsTheSameModuloFeatureSet(resultingCRDs []crdForFeatureSet) bool {
-	var prevCRDMinusFeatureSet *unstructured.Unstructured
-	for _, currCRD := range resultingCRDs {
-		currCRDMinusFeatureSet := removeFeatureSet(currCRD.crd)
+func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, versionPath string) []crdForFeatureSet {
+	allCRDsWithData := filterCRDs(resultingCRDs, &HasData{})
+	sameSchemaInAllCRDs := areCRDsTheSame(allCRDsWithData)
+	hasAllFeatureSets := featureSetsFromCRDs(allCRDsWithData).Equal(sets.NewString(allFeatureSets...))
+	if sameSchemaInAllCRDs && hasAllFeatureSets {
+		crdFilename := strings.ReplaceAll(crdFilenamePattern, "MARKERS", "")
+		crdFullPath := filepath.Join(versionPath, crdFilename)
+		crdToWrite := allCRDsWithData[0].crd.DeepCopy()
 
-		if prevCRDMinusFeatureSet == nil {
-			prevCRDMinusFeatureSet = currCRDMinusFeatureSet
+		clusterProfilesToAdd := clusterProfilesFromCRDs(allCRDsWithData)
+		if len(clusterProfilesToAdd) == 0 {
+			clusterProfilesToAdd = sets.NewString(allClusterProfiles...)
+		}
+		annotations := crdToWrite.GetAnnotations()
+		for _, clusterProfile := range clusterProfilesToAdd.List() {
+			annotations[clusterProfile] = "true"
+		}
+		crdToWrite.SetAnnotations(annotations)
+
+		return []crdForFeatureSet{
+			{
+				crd:        crdToWrite,
+				outputFile: crdFullPath,
+			},
+		}
+	}
+
+	// so they aren't all the same. Check first to see if they're the same for FeatureSet across all ClusterProfiles
+	// then check if they're the same for all featuresets on clusterProfile.
+	// if they only vary by featureset, then featureset files only
+	// if they only vary by clusterprofile, then clusterprofile files only
+	// if they vary by both, slice by clusterprofile first, then by featureset
+	eachFeatureSetTheSameForAllClusterProfiles := true
+	for _, featureSet := range allFeatureSets {
+		filter := &AndCRDFilter{
+			filters: []CRDFilter{
+				&HasData{},
+				&FeatureSetFilter{featureSetName: featureSet},
+			},
+		}
+		filteredCRDs := filterCRDs(resultingCRDs, filter)
+		sameSchema := areCRDsTheSame(filteredCRDs)
+		if len(filteredCRDs) > 0 && !sameSchema {
+			eachFeatureSetTheSameForAllClusterProfiles = false
+		}
+	}
+	if eachFeatureSetTheSameForAllClusterProfiles {
+		crdsToWrite := []crdForFeatureSet{}
+		for _, featureSet := range allFeatureSets {
+			filter := &AndCRDFilter{
+				filters: []CRDFilter{
+					&HasData{},
+					&FeatureSetFilter{featureSetName: featureSet},
+				},
+			}
+			filteredCRDs := filterCRDs(resultingCRDs, filter)
+			if len(filteredCRDs) == 0 {
+				continue
+			}
+
+			crdFilename := strings.ReplaceAll(crdFilenamePattern, "MARKERS", fmt.Sprintf("-%s", featureSet))
+			crdFullPath := filepath.Join(versionPath, crdFilename)
+			crdToWrite := filteredCRDs[0].crd.DeepCopy()
+
+			clusterProfilesToAdd := clusterProfilesFromCRDs(filteredCRDs)
+			annotations := crdToWrite.GetAnnotations()
+			annotations["release.openshift.io/feature-set"] = featureSet
+			for _, clusterProfile := range clusterProfilesToAdd.List() {
+				annotations[clusterProfile] = "true"
+			}
+			crdToWrite.SetAnnotations(annotations)
+
+			crdsToWrite = append(crdsToWrite, crdForFeatureSet{
+				crd:        crdToWrite,
+				featureSet: featureSet,
+				outputFile: crdFullPath,
+			})
+		}
+		return crdsToWrite
+	}
+
+	eachClusterProfiletheSameForAllFeatureSets := true
+	notHandled := []crdForFeatureSet{}
+	crdsToWrite := []crdForFeatureSet{}
+	for _, clusterProfile := range allClusterProfiles {
+		filter := &AndCRDFilter{
+			filters: []CRDFilter{
+				&HasData{},
+				&ClusterProfileFilter{clusterProfile: clusterProfile},
+			},
+		}
+		filteredCRDs := filterCRDs(resultingCRDs, filter)
+		sameSchema := areCRDsTheSame(filteredCRDs)
+		if !sameSchema {
+			eachClusterProfiletheSameForAllFeatureSets = false
+			notHandled = append(notHandled, filteredCRDs...)
 			continue
 		}
-		if !equality.Semantic.DeepEqual(prevCRDMinusFeatureSet, currCRDMinusFeatureSet) {
+
+		crdFilename := strings.ReplaceAll(crdFilenamePattern, "MARKERS", fmt.Sprintf("-%s", clusterProfileToShortName[clusterProfile]))
+		crdFullPath := filepath.Join(versionPath, crdFilename)
+		crdToWrite := filteredCRDs[0].crd.DeepCopy()
+
+		annotations := crdToWrite.GetAnnotations()
+		annotations[clusterProfile] = "true"
+		crdToWrite.SetAnnotations(annotations)
+
+		crdsToWrite = append(crdsToWrite, crdForFeatureSet{
+			crd:            crdToWrite,
+			clusterProfile: clusterProfile,
+			outputFile:     crdFullPath,
+		})
+	}
+
+	if eachClusterProfiletheSameForAllFeatureSets {
+		return crdsToWrite
+	}
+
+	// at this point, write each clusterProfile that IS unique, then write the remainder
+
+	for i, curr := range notHandled {
+		if curr.noData {
+			continue
+		}
+		crdFilename := strings.ReplaceAll(crdFilenamePattern, "MARKERS", fmt.Sprintf("-%s-%s", clusterProfileToShortName[curr.clusterProfile], curr.featureSet))
+		crdFullPath := filepath.Join(versionPath, crdFilename)
+
+		crdToWrite := notHandled[i].crd.DeepCopy()
+		annotations := crdToWrite.GetAnnotations()
+		annotations["release.openshift.io/feature-set"] = curr.featureSet
+		annotations[curr.clusterProfile] = "true"
+		crdToWrite.SetAnnotations(annotations)
+		crdsToWrite = append(crdsToWrite, crdForFeatureSet{
+			crd:            crdToWrite,
+			featureSet:     curr.featureSet,
+			clusterProfile: curr.clusterProfile,
+			outputFile:     crdFullPath,
+		})
+	}
+	return crdsToWrite
+}
+
+func clusterProfilesFromCRDs(resultingCRDs []crdForFeatureSet) sets.String {
+	ret := sets.String{}
+	for _, currCRD := range resultingCRDs {
+		ret.Insert(currCRD.clusterProfile)
+	}
+
+	return ret
+}
+
+func featureSetsFromCRDs(resultingCRDs []crdForFeatureSet) sets.String {
+	ret := sets.String{}
+	for _, currCRD := range resultingCRDs {
+		ret.Insert(currCRD.featureSet)
+	}
+
+	return ret
+}
+
+func filterCRDs(resultingCRDs []crdForFeatureSet, filter CRDFilter) []crdForFeatureSet {
+	ret := []crdForFeatureSet{}
+	for i, currCRD := range resultingCRDs {
+		if ok, _ := filter.UseCRD(currCRD); ok {
+			ret = append(ret, resultingCRDs[i])
+		}
+	}
+
+	return ret
+}
+
+func areCRDsTheSame(resultingCRDs []crdForFeatureSet) bool {
+	if len(resultingCRDs) == 0 {
+		return false
+	}
+
+	var prevCRDMinusIdentifier *unstructured.Unstructured
+	for _, currCRD := range resultingCRDs {
+		currCRDMinusIdentifier := currCRD.crd.DeepCopy()
+
+		if prevCRDMinusIdentifier == nil {
+			prevCRDMinusIdentifier = currCRDMinusIdentifier
+			continue
+		}
+		if !equality.Semantic.DeepEqual(*prevCRDMinusIdentifier, *currCRDMinusIdentifier) {
 			return false
 		}
 	}
@@ -339,31 +494,25 @@ func areAllCRDsTheSameModuloFeatureSet(resultingCRDs []crdForFeatureSet) bool {
 	return true
 }
 
-func removeFeatureSet(in *unstructured.Unstructured) *unstructured.Unstructured {
-	ret := in.DeepCopy()
-	annotations := ret.GetAnnotations()
-	delete(annotations, "release.openshift.io/feature-set")
-	ret.SetAnnotations(annotations)
-	return ret
-}
-
 type crdForFeatureSet struct {
-	crd        *unstructured.Unstructured
-	featureSet string
-	outputFile string
+	crd            *unstructured.Unstructured
+	featureSet     string
+	clusterProfile string
+	outputFile     string
+	noData         bool
 }
 
 // pertinent is determined by the `filter`. If it passes the filter, it's pertinent.
 // filters commonly include clusterprofile and featureset-to-feature-gate mapping.
 // for example, the TechPreviewNoUpgrade featureset produces a filter that looks to see if the featuregate specified is
 // enabled when TechPreviewNoUpgrade is set.
-func mergeAllPertinentCRDsInDirs(resourcePaths []string, filter ManifestFilter, featureSet string) (*unstructured.Unstructured, []error) {
+func mergeAllPertinentCRDsInDirs(resourcePaths []string, filter ManifestFilter) (*unstructured.Unstructured, []error) {
 	var resultingCRD *unstructured.Unstructured
 	var errs []error
 
 	for _, resourcePath := range resourcePaths {
 		var currErrs []error
-		resultingCRD, currErrs = mergeAllPertinentCRDsInDir(resourcePath, filter, featureSet, resultingCRD)
+		resultingCRD, currErrs = mergeAllPertinentCRDsInDir(resourcePath, filter, resultingCRD)
 		errs = append(errs, currErrs...)
 	}
 
@@ -374,7 +523,7 @@ func mergeAllPertinentCRDsInDirs(resourcePaths []string, filter ManifestFilter, 
 // filters commonly include clusterprofile and featureset-to-feature-gate mapping.
 // for example, the TechPreviewNoUpgrade featureset produces a filter that looks to see if the featuregate specified is
 // enabled when TechPreviewNoUpgrade is set.
-func mergeAllPertinentCRDsInDir(resourcePath string, filter ManifestFilter, featureSet string, startingCRD *unstructured.Unstructured) (*unstructured.Unstructured, []error) {
+func mergeAllPertinentCRDsInDir(resourcePath string, filter ManifestFilter, startingCRD *unstructured.Unstructured) (*unstructured.Unstructured, []error) {
 
 	var unstructuredResultingCRD *unstructured.Unstructured
 	if startingCRD != nil {
@@ -383,9 +532,6 @@ func mergeAllPertinentCRDsInDir(resourcePath string, filter ManifestFilter, feat
 	} else {
 		annotations := map[string]string{
 			"api.openshift.io/merged-by-featuregates": "true",
-		}
-		if len(featureSet) > 0 {
-			annotations["release.openshift.io/feature-set"] = featureSet
 		}
 
 		unstructuredResultingCRD = &unstructured.Unstructured{}
@@ -426,6 +572,12 @@ func mergeAllPertinentCRDsInDir(resourcePath string, filter ManifestFilter, feat
 			errs = append(errs, fmt.Errorf("error applying %q: %w", path, err))
 			continue
 		}
+
+		// I added this to debug which files were being combined part way through the generation
+		annotations := newResult.(*unstructured.Unstructured).GetAnnotations()
+		annotations[fmt.Sprintf("partial-filename.release.openshift.io/%s", path)] = "true"
+		newResult.(*unstructured.Unstructured).SetAnnotations(annotations)
+
 		resultingCRD = newResult
 	}
 
@@ -469,13 +621,6 @@ func mergeCRD(obj runtime.Object, patchBytes []byte, fieldManager string) (runti
 	}
 
 	return output, nil
-}
-
-// isCustomResourceDefinition returns true if the object is a CustomResourceDefinition.
-// This is determined by the object having a Kind of CustomResourceDefinition and the
-// correct APIVersion.
-func isCustomResourceDefinition(partialObject *metav1.PartialObjectMetadata) bool {
-	return partialObject.APIVersion == apiextensionsv1.SchemeGroupVersion.String() && partialObject.Kind == "CustomResourceDefinition"
 }
 
 //go:embed crd-schema.json

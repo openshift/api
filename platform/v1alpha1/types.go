@@ -67,6 +67,7 @@ type PlatformOperatorStatus struct {
 // +openshift:enable:FeatureGate=PlatformOperators
 // +kubebuilder:metadata:annotations=include.release.openshift.io/self-managed-high-availability=true
 // +kubebuilder:metadata:annotations=include.release.openshift.io/single-node-developer=true
+// +kubebuilder:metadata:annotations="exclude.release.openshift.io/internal-openshift-hosted=true"
 
 // PlatformOperator is the Schema for the PlatformOperators API.
 //

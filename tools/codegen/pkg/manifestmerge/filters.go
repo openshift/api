@@ -11,20 +11,31 @@ import (
 	"strings"
 )
 
-func FilterForFeatureSet(payloadFeatureGatePath, featureSetName string) (ManifestFilter, error) {
+var clusterProfileToShortName = map[string]string{
+	"include.release.openshift.io/ibm-cloud-managed":              "Hypershift",
+	"include.release.openshift.io/self-managed-high-availability": "SelfManagedHA",
+	"include.release.openshift.io/single-node-developer":          "SingleNode",
+}
+
+func FilterForFeatureSet(payloadFeatureGatePath, clusterProfile, featureSetName string) (ManifestFilter, error) {
 	if featureSetName == "CustomNoUpgrade" {
-		return &CustomNoUpgrade{}, nil
+		return &AndManifestFilter{
+			filters: []ManifestFilter{
+				&CustomNoUpgrade{},
+				&ClusterProfileFilter{
+					clusterProfile: clusterProfile,
+				},
+			},
+		}, nil
 	}
 
-	featureGateFilename := ""
 	switch {
 	case featureSetName == "TechPreviewNoUpgrade":
-		featureGateFilename = path.Join(payloadFeatureGatePath, "featureGate-TechPreviewNoUpgrade.yaml")
 	case featureSetName == "Default":
-		featureGateFilename = path.Join(payloadFeatureGatePath, "featureGate-Default.yaml")
 	default:
 		return nil, fmt.Errorf("unrecognized featureset name %q", featureSetName)
 	}
+	featureGateFilename := path.Join(payloadFeatureGatePath, fmt.Sprintf("featureGate-%s-%s.yaml", featureSetName, clusterProfileToShortName[clusterProfile]))
 
 	enabledFeatureGatesSet := sets.NewString()
 
@@ -55,8 +66,15 @@ func FilterForFeatureSet(payloadFeatureGatePath, featureSetName string) (Manifes
 		enabledFeatureGatesSet.Insert(featureGateName)
 	}
 
-	return &ForFeatureGates{
-		allowedFeatureGates: enabledFeatureGatesSet,
+	return &AndManifestFilter{
+		filters: []ManifestFilter{
+			&ForFeatureGates{
+				allowedFeatureGates: enabledFeatureGatesSet,
+			},
+			&ClusterProfileFilter{
+				clusterProfile: clusterProfile,
+			},
+		},
 	}, nil
 }
 
@@ -74,6 +92,10 @@ type CustomNoUpgrade struct{}
 
 func (*CustomNoUpgrade) UseManifest([]byte) (bool, error) {
 	return true, nil
+}
+
+func (f *CustomNoUpgrade) String() string {
+	return fmt.Sprintf("CustomNoUpgrade")
 }
 
 type ForFeatureGates struct {
@@ -95,6 +117,10 @@ func (f *ForFeatureGates) UseManifest(data []byte) (bool, error) {
 	return manifestFeatureGates.HasAny(f.allowedFeatureGates.UnsortedList()...), nil
 }
 
+func (f *ForFeatureGates) String() string {
+	return fmt.Sprintf("featureGates/%d", len(f.allowedFeatureGates))
+}
+
 func featureGatesFromManifest(manifest metav1.Object) sets.String {
 	ret := sets.String{}
 	for existingAnnotation := range manifest.GetAnnotations() {
@@ -104,4 +130,134 @@ func featureGatesFromManifest(manifest metav1.Object) sets.String {
 		}
 	}
 	return ret
+}
+
+type ClusterProfileFilter struct {
+	clusterProfile string
+}
+
+func (f *ClusterProfileFilter) UseManifest(data []byte) (bool, error) {
+	partialObject := &metav1.PartialObjectMetadata{}
+	if err := kyaml.Unmarshal(data, partialObject); err != nil {
+		return false, err
+	}
+	// if there's no preferenceinclude everywhere
+	if !hasClusterProfilePreference(partialObject.GetAnnotations()) {
+		return true, nil
+	}
+
+	forThisProfile := partialObject.GetAnnotations()[f.clusterProfile] == "true"
+	return forThisProfile, nil
+}
+
+func (f *ClusterProfileFilter) UseCRD(metadata crdForFeatureSet) (bool, error) {
+	return metadata.clusterProfile == f.clusterProfile, nil
+}
+
+func (f *ClusterProfileFilter) String() string {
+	return fmt.Sprintf("clusterProfile=%v", f.clusterProfile)
+}
+
+type AndManifestFilter struct {
+	filters []ManifestFilter
+}
+
+func (f *AndManifestFilter) UseManifest(data []byte) (bool, error) {
+	for _, curr := range f.filters {
+		ret, err := curr.UseManifest(data)
+		if err != nil {
+			return false, err
+		}
+		if !ret {
+			return false, nil
+		}
+	}
+
+	return true, nil
+}
+
+func (f *AndManifestFilter) String() string {
+	str := []string{}
+	for _, curr := range f.filters {
+		str = append(str, fmt.Sprintf("%v", curr))
+	}
+	return strings.Join(str, " AND ")
+}
+
+type CRDFilter interface {
+	UseCRD(metadata crdForFeatureSet) (bool, error)
+}
+
+type AndCRDFilter struct {
+	filters []CRDFilter
+}
+
+func (f *AndCRDFilter) UseCRD(metadata crdForFeatureSet) (bool, error) {
+	for _, curr := range f.filters {
+		ret, err := curr.UseCRD(metadata)
+		if err != nil {
+			return false, err
+		}
+		if !ret {
+			return false, nil
+		}
+	}
+
+	return true, nil
+}
+
+func (f *AndCRDFilter) String() string {
+	str := []string{}
+	for _, curr := range f.filters {
+		str = append(str, fmt.Sprintf("%v", curr))
+	}
+	return strings.Join(str, " AND ")
+}
+
+type FeatureSetFilter struct {
+	featureSetName string
+}
+
+func (f *FeatureSetFilter) UseManifest(data []byte) (bool, error) {
+	partialObject := &metav1.PartialObjectMetadata{}
+	if err := kyaml.Unmarshal(data, partialObject); err != nil {
+		return false, err
+	}
+
+	forThisFeatureSet := partialObject.GetAnnotations()["release.openshift.io/feature-set"] == f.featureSetName
+	return forThisFeatureSet, nil
+}
+
+func (f *FeatureSetFilter) UseCRD(metadata crdForFeatureSet) (bool, error) {
+	return metadata.featureSet == f.featureSetName, nil
+}
+
+func (f *FeatureSetFilter) String() string {
+	return fmt.Sprintf("featureSetName=%v", f.featureSetName)
+}
+
+type HasData struct {
+}
+
+func (f *HasData) UseCRD(metadata crdForFeatureSet) (bool, error) {
+	return metadata.noData == false, nil
+}
+
+func (f *HasData) String() string {
+	return "HasData"
+}
+
+type Everything struct {
+}
+
+func (f *Everything) UseManifest(data []byte) (bool, error) {
+	return true, nil
+}
+
+func (f *Everything) UseCRD(metadata crdForFeatureSet) (bool, error) {
+	return true, nil
+}
+
+func (f *Everything) String() string {
+	return "Everything"
 }

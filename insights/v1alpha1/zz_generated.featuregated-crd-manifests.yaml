@@ -25,7 +25,7 @@ datagathers.insights.openshift.io:
     name: FinishTime
     type: date
   Scope: Cluster
-  ShortName: ""
+  ShortNames: null
   TargetFilenamePattern: 0000_10_01_datagatherMARKERS.crd.yaml
   TopLevelFeatureGates:
   - InsightsOnDemandDataGather

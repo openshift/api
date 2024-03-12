@@ -16,7 +16,7 @@ platformoperators.platform.openshift.io:
   PluralName: platformoperators
   PrinterColumns: []
   Scope: Cluster
-  ShortName: ""
+  ShortNames: null
   TargetFilenamePattern: platformoperatorsMARKERS.crd.yaml
   TopLevelFeatureGates:
   - PlatformOperators

@@ -60,7 +60,7 @@ machineconfignodes.machineconfiguration.openshift.io:
     priority: 1
     type: string
   Scope: Cluster
-  ShortName: ""
+  ShortNames: null
   TargetFilenamePattern: 0000_80_machineconfignodeMARKERS.crd.yaml
   TopLevelFeatureGates:
   - MachineConfigNodes

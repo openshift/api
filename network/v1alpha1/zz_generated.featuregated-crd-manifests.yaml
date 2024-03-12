@@ -13,7 +13,7 @@ dnsnameresolvers.network.openshift.io:
   PluralName: dnsnameresolvers
   PrinterColumns: []
   Scope: Namespaced
-  ShortName: ""
+  ShortNames: null
   TargetFilenamePattern: 0000_70_dnsnameresolver_00MARKERS.crd.yaml
   TopLevelFeatureGates:
   - DNSNameResolver

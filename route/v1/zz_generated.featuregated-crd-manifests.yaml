@@ -25,7 +25,7 @@ routes.route.openshift.io:
     name: TLS
     type: string
   Scope: Namespaced
-  ShortName: ""
+  ShortNames: null
   TargetFilenamePattern: routeMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1

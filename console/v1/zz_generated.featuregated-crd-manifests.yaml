@@ -21,7 +21,7 @@ consoleclidownloads.console.openshift.io:
     name: Age
     type: string
   Scope: Cluster
-  ShortName: ""
+  ShortNames: null
   TargetFilenamePattern: 00_consoleclidownloadMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1
@@ -52,7 +52,7 @@ consoleexternalloglinks.console.openshift.io:
     name: Age
     type: date
   Scope: Cluster
-  ShortName: ""
+  ShortNames: null
   TargetFilenamePattern: 00_consoleexternalloglinkMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1
@@ -85,7 +85,7 @@ consolelinks.console.openshift.io:
     name: Age
     type: date
   Scope: Cluster
-  ShortName: ""
+  ShortNames: null
   TargetFilenamePattern: 00_consolelinkMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1
@@ -115,7 +115,7 @@ consolenotifications.console.openshift.io:
     name: Age
     type: date
   Scope: Cluster
-  ShortName: ""
+  ShortNames: null
   TargetFilenamePattern: 00_consolenotificationMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1
@@ -137,7 +137,7 @@ consoleplugins.console.openshift.io:
   PluralName: consoleplugins
   PrinterColumns: []
   Scope: Cluster
-  ShortName: ""
+  ShortNames: null
   TargetFilenamePattern: 90_consolepluginMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1
@@ -159,7 +159,7 @@ consolequickstarts.console.openshift.io:
   PluralName: consolequickstarts
   PrinterColumns: []
   Scope: Cluster
-  ShortName: ""
+  ShortNames: null
   TargetFilenamePattern: 00_consolequickstartMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1
@@ -181,7 +181,7 @@ consolesamples.console.openshift.io:
   PluralName: consolesamples
   PrinterColumns: []
   Scope: Cluster
-  ShortName: ""
+  ShortNames: null
   TargetFilenamePattern: 00_consolesampleMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1
@@ -202,7 +202,7 @@ consoleyamlsamples.console.openshift.io:
   PluralName: consoleyamlsamples
   PrinterColumns: []
   Scope: Cluster
-  ShortName: ""
+  ShortNames: null
   TargetFilenamePattern: 00_consoleyamlsampleMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1

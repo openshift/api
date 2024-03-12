@@ -14,7 +14,7 @@ alertrelabelconfigs.monitoring.openshift.io:
   PluralName: alertrelabelconfigs
   PrinterColumns: []
   Scope: Namespaced
-  ShortName: ""
+  ShortNames: null
   TargetFilenamePattern: 0000_50_monitoring_02_alertrelabelconfigsMARKERS.crd.yaml
   TopLevelFeatureGates:
   - AlertingRules
@@ -36,7 +36,7 @@ alertingrules.monitoring.openshift.io:
   PluralName: alertingrules
   PrinterColumns: []
   Scope: Namespaced
-  ShortName: ""
+  ShortNames: null
   TargetFilenamePattern: 0000_50_monitoring_01_alertingrulesMARKERS.crd.yaml
   TopLevelFeatureGates:
   - AlertingRules

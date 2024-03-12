@@ -150,8 +150,8 @@ func (f *ClusterProfileFilter) UseManifest(data []byte) (bool, error) {
 	return forThisProfile, nil
 }
 
-func (f *ClusterProfileFilter) UseCRD(metadata crdForFeatureSet) (bool, error) {
-	return metadata.clusterProfile == f.clusterProfile, nil
+func (f *ClusterProfileFilter) UseCRD(metadata crdForFeatureSet) bool {
+	return metadata.clusterProfile == f.clusterProfile
 }
 
 func (f *ClusterProfileFilter) String() string {
@@ -185,25 +185,22 @@ func (f *AndManifestFilter) String() string {
 }
 
 type CRDFilter interface {
-	UseCRD(metadata crdForFeatureSet) (bool, error)
+	UseCRD(metadata crdForFeatureSet) bool
 }
 
 type AndCRDFilter struct {
 	filters []CRDFilter
 }
 
-func (f *AndCRDFilter) UseCRD(metadata crdForFeatureSet) (bool, error) {
+func (f *AndCRDFilter) UseCRD(metadata crdForFeatureSet) bool {
 	for _, curr := range f.filters {
-		ret, err := curr.UseCRD(metadata)
-		if err != nil {
-			return false, err
-		}
+		ret := curr.UseCRD(metadata)
 		if !ret {
-			return false, nil
+			return false
 		}
 	}
 
-	return true, nil
+	return true
 }
 
 func (f *AndCRDFilter) String() string {
@@ -228,8 +225,8 @@ func (f *FeatureSetFilter) UseManifest(data []byte) (bool, error) {
 	return forThisFeatureSet, nil
 }
 
-func (f *FeatureSetFilter) UseCRD(metadata crdForFeatureSet) (bool, error) {
-	return metadata.featureSet == f.featureSetName, nil
+func (f *FeatureSetFilter) UseCRD(metadata crdForFeatureSet) bool {
+	return metadata.featureSet == f.featureSetName
 }
 
 func (f *FeatureSetFilter) String() string {
@@ -239,8 +236,8 @@ func (f *FeatureSetFilter) String() string {
 type HasData struct {
 }
 
-func (f *HasData) UseCRD(metadata crdForFeatureSet) (bool, error) {
-	return metadata.noData == false, nil
+func (f *HasData) UseCRD(metadata crdForFeatureSet) bool {
+	return metadata.noData == false
 }
 
 func (f *HasData) String() string {
@@ -254,8 +251,8 @@ func (f *Everything) UseManifest(data []byte) (bool, error) {
 	return true, nil
 }
 
-func (f *Everything) UseCRD(metadata crdForFeatureSet) (bool, error) {
-	return true, nil
+func (f *Everything) UseCRD(metadata crdForFeatureSet) bool {
+	return true
 }
 
 func (f *Everything) String() string {

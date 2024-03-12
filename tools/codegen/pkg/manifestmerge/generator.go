@@ -465,7 +465,7 @@ func featureSetsFromCRDs(resultingCRDs []crdForFeatureSet) sets.String {
 func filterCRDs(resultingCRDs []crdForFeatureSet, filter CRDFilter) []crdForFeatureSet {
 	ret := []crdForFeatureSet{}
 	for i, currCRD := range resultingCRDs {
-		if ok, _ := filter.UseCRD(currCRD); ok {
+		if ok := filter.UseCRD(currCRD); ok {
 			ret = append(ret, resultingCRDs[i])
 		}
 	}

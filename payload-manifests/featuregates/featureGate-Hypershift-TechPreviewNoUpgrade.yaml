@@ -19,9 +19,6 @@
                         "name": "ClusterAPIInstall"
                     },
                     {
-                        "name": "DisableKubeletCloudCredentialProviders"
-                    },
-                    {
                         "name": "EventedPLEG"
                     },
                     {
@@ -58,6 +55,9 @@
                     },
                     {
                         "name": "DNSNameResolver"
+                    },
+                    {
+                        "name": "DisableKubeletCloudCredentialProviders"
                     },
                     {
                         "name": "DynamicResourceAllocation"

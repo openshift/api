@@ -32,9 +32,6 @@
                         "name": "DNSNameResolver"
                     },
                     {
-                        "name": "DisableKubeletCloudCredentialProviders"
-                    },
-                    {
                         "name": "DynamicResourceAllocation"
                     },
                     {
@@ -152,6 +149,9 @@
                     },
                     {
                         "name": "CloudDualStackNodeIPs"
+                    },
+                    {
+                        "name": "DisableKubeletCloudCredentialProviders"
                     },
                     {
                         "name": "ExternalCloudProvider"

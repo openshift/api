@@ -75,6 +75,10 @@ func (o *RenderOpts) Run() error {
 		if featureGates.Annotations == nil {
 			featureGates.Annotations = map[string]string{}
 		}
+		// we have no information to provide for CustomNoUpgrade featureGates
+		if featureGates.Spec.FeatureSet == configv1.CustomNoUpgrade {
+			continue
+		}
 
 		// if the manifest has cluster profiles specified, the manifest's list must include the configured clusterprofile.
 		manifestClusterProfiles := clusterProfilesFrom(featureGates.Annotations)

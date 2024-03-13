@@ -23,9 +23,6 @@
                         "name": "AutomatedEtcdBackup"
                     },
                     {
-                        "name": "BareMetalLoadBalancer"
-                    },
-                    {
                         "name": "CSIDriverSharedResource"
                     },
                     {
@@ -140,6 +137,9 @@
                     },
                     {
                         "name": "AzureWorkloadIdentity"
+                    },
+                    {
+                        "name": "BareMetalLoadBalancer"
                     },
                     {
                         "name": "BuildCSIVolumes"

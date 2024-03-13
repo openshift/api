@@ -35,7 +35,7 @@ func FilterForFeatureSet(payloadFeatureGatePath, clusterProfile, featureSetName 
 	default:
 		return nil, fmt.Errorf("unrecognized featureset name %q", featureSetName)
 	}
-	featureGateFilename := path.Join(payloadFeatureGatePath, fmt.Sprintf("featureGate-%s-%s.yaml", featureSetName, clusterProfileToShortName[clusterProfile]))
+	featureGateFilename := path.Join(payloadFeatureGatePath, fmt.Sprintf("featureGate-%s-%s.yaml", clusterProfileToShortName[clusterProfile], featureSetName))
 
 	enabledFeatureGatesSet := sets.NewString()
 

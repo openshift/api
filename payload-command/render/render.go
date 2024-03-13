@@ -77,6 +77,19 @@ func (o *RenderOpts) Run() error {
 		}
 		// we have no information to provide for CustomNoUpgrade featureGates
 		if featureGates.Spec.FeatureSet == configv1.CustomNoUpgrade {
+			// if possible, set the payload version to ease usage during install of different versions
+			if len(featureGates.Status.FeatureGates) != 1 {
+				continue
+			}
+			if len(featureGates.Status.FeatureGates[0].Version) != 0 {
+				continue
+			}
+			featureGates.Status.FeatureGates[0].Version = o.PayloadVersion
+			featureGateOutBytes := writeFeatureGateV1OrDie(featureGates)
+			if err := os.WriteFile(featureGateFile.OriginalFilename, []byte(featureGateOutBytes), 0644); err != nil {
+				return fmt.Errorf("error writing FeatureGate manifest: %w", err)
+			}
+			featureSet = string(featureGates.Spec.FeatureSet)
 			continue
 		}
 

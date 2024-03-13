@@ -7,9 +7,6 @@ metadata:
     description: Extension for sharing Secrets across Namespaces
     displayName: SharedSecret
     feature-gate.release.openshift.io/: "true"
-    include.release.openshift.io/ibm-cloud-managed-: ""
-    include.release.openshift.io/self-managed-high-availability-: ""
-    include.release.openshift.io/single-node-developer-: ""
   name: sharedsecrets.sharedresource.openshift.io
 spec:
   group: sharedresource.openshift.io

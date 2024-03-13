@@ -35,9 +35,6 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // +kubebuilder:subresource:status
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/979
 // +openshift:file-pattern=0000_10_sharedsecretMARKERS.crd.yaml
-// +kubebuilder:metadata:annotations="include.release.openshift.io/ibm-cloud-managed-="
-// +kubebuilder:metadata:annotations="include.release.openshift.io/self-managed-high-availability-="
-// +kubebuilder:metadata:annotations="include.release.openshift.io/single-node-developer-="
 // +kubebuilder:metadata:annotations="description=Extension for sharing Secrets across Namespaces"
 // +kubebuilder:metadata:annotations="displayName=SharedSecret"
 type SharedSecret struct {

@@ -193,34 +193,6 @@ var (
 							enableIn(Default, TechPreviewNoUpgrade).
 							mustRegister()
 
-	FeatureGateExternalCloudProvider = newFeatureGate("ExternalCloudProvider").
-						reportProblemsToJiraComponent("cloud-provider").
-						contactPerson("jspeed").
-						productScope(ocpSpecific).
-						enableIn(Default, TechPreviewNoUpgrade).
-						mustRegister()
-
-	FeatureGateExternalCloudProviderAzure = newFeatureGate("ExternalCloudProviderAzure").
-						reportProblemsToJiraComponent("cloud-provider").
-						contactPerson("jspeed").
-						productScope(ocpSpecific).
-						enableIn(Default, TechPreviewNoUpgrade).
-						mustRegister()
-
-	FeatureGateExternalCloudProviderGCP = newFeatureGate("ExternalCloudProviderGCP").
-						reportProblemsToJiraComponent("cloud-provider").
-						contactPerson("jspeed").
-						productScope(ocpSpecific).
-						enableIn(Default, TechPreviewNoUpgrade).
-						mustRegister()
-
-	FeatureGateExternalCloudProviderExternal = newFeatureGate("ExternalCloudProviderExternal").
-							reportProblemsToJiraComponent("cloud-provider").
-							contactPerson("elmiko").
-							productScope(ocpSpecific).
-							enableIn(Default, TechPreviewNoUpgrade).
-							mustRegister()
-
 	FeatureGateCSIDriverSharedResource = newFeatureGate("CSIDriverSharedResource").
 						reportProblemsToJiraComponent("builds").
 						contactPerson("adkaplan").

@@ -505,6 +505,13 @@ var (
 					enableIn(TechPreviewNoUpgrade).
 					mustRegister()
 
+	FeatureGateNewOLM = newFeatureGate("NewOLM").
+				reportProblemsToJiraComponent("olm").
+				contactPerson("joe").
+				productScope(ocpSpecific).
+				enableIn(TechPreviewNoUpgrade).
+				mustRegister()
+
 	FeatureGateExternalRouteCertificate = newFeatureGate("ExternalRouteCertificate").
 						reportProblemsToJiraComponent("network-edge").
 						contactPerson("miciah").

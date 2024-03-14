@@ -75,28 +75,14 @@ func (o *RenderOpts) Run() error {
 		if featureGates.Annotations == nil {
 			featureGates.Annotations = map[string]string{}
 		}
-		// we have no information to provide for CustomNoUpgrade featureGates
+
 		if featureGates.Spec.FeatureSet == configv1.CustomNoUpgrade {
 			featureSet = string(featureGates.Spec.FeatureSet)
-
-			// if possible, set the payload version to ease usage during install of different versions
-			switch {
-			case len(featureGates.Status.FeatureGates) > 1:
-				continue
-			case len(featureGates.Status.FeatureGates) == 1 && len(featureGates.Status.FeatureGates[0].Version) != 0:
-				continue
-
-			case len(featureGates.Status.FeatureGates) == 1 && len(featureGates.Status.FeatureGates[0].Version) == 0:
-				featureGates.Status.FeatureGates[0].Version = o.PayloadVersion
-			case len(featureGates.Status.FeatureGates) == 0:
-				featureGates.Status.FeatureGates = append(featureGates.Status.FeatureGates, configv1.FeatureGateDetails{
-					Version:  o.PayloadVersion,
-					Enabled:  []configv1.FeatureGateAttributes{},
-					Disabled: []configv1.FeatureGateAttributes{},
-				})
+			renderedFeatureGates, err := renderCustomNoUpgradeFeatureGate(featureGates, configv1.ClusterProfileName(clusterProfileAnnotationName), o.PayloadVersion)
+			if err != nil {
+				return err
 			}
-
-			featureGateOutBytes := writeFeatureGateV1OrDie(featureGates)
+			featureGateOutBytes := writeFeatureGateV1OrDie(renderedFeatureGates)
 			if err := os.WriteFile(featureGateFile.OriginalFilename, []byte(featureGateOutBytes), 0644); err != nil {
 				return fmt.Errorf("error writing FeatureGate manifest: %w", err)
 			}
@@ -139,6 +125,98 @@ func (o *RenderOpts) Run() error {
 	}
 
 	return nil
+}
+
+func renderCustomNoUpgradeFeatureGate(in *configv1.FeatureGate, clusterProfile configv1.ClusterProfileName, payloadVersion string) (*configv1.FeatureGate, error) {
+	if in.Spec.FeatureSet != configv1.CustomNoUpgrade {
+		return nil, fmt.Errorf("not CustomNoUpgrade")
+	}
+	for _, forceEnabled := range in.Spec.CustomNoUpgrade.Enabled {
+		if inListOfNames(in.Spec.CustomNoUpgrade.Disabled, forceEnabled) {
+			return nil, fmt.Errorf("trying to enable and disable %q", forceEnabled)
+		}
+	}
+
+	ret := in.DeepCopy()
+
+	// if possible, set the payload version to ease usage during install of different versions
+	switch {
+	case len(in.Status.FeatureGates) > 1:
+		return in, nil
+	case len(in.Status.FeatureGates) == 1 && len(in.Status.FeatureGates[0].Version) != 0:
+		return in, nil
+
+	case len(in.Status.FeatureGates) == 1 && len(in.Status.FeatureGates[0].Version) == 0:
+		ret.Status.FeatureGates[0].Version = payloadVersion
+	case len(in.Status.FeatureGates) == 0:
+		ret.Status.FeatureGates = append(ret.Status.FeatureGates, configv1.FeatureGateDetails{
+			Version:  payloadVersion,
+			Enabled:  []configv1.FeatureGateAttributes{},
+			Disabled: []configv1.FeatureGateAttributes{},
+		})
+	}
+
+	defaultFeatureGates, err := configv1.FeatureSets(clusterProfile, configv1.Default)
+	if err != nil {
+		return nil, err
+	}
+
+	enabled := []configv1.FeatureGateAttributes{}
+	disabled := []configv1.FeatureGateAttributes{}
+	if in.Spec.CustomNoUpgrade != nil {
+		enabled = []configv1.FeatureGateAttributes{}
+		for _, forceEnabled := range in.Spec.CustomNoUpgrade.Enabled {
+			enabled = append(enabled, configv1.FeatureGateAttributes{Name: forceEnabled})
+		}
+		for _, defaultEnabled := range defaultFeatureGates.Enabled {
+			if !inListOfNames(in.Spec.CustomNoUpgrade.Disabled, defaultEnabled.FeatureGateAttributes.Name) {
+				enabled = append(enabled, defaultEnabled.FeatureGateAttributes)
+			}
+		}
+
+		disabled = []configv1.FeatureGateAttributes{}
+		for _, forceDisabled := range in.Spec.CustomNoUpgrade.Disabled {
+			disabled = append(disabled, configv1.FeatureGateAttributes{Name: forceDisabled})
+		}
+		for _, defaultDisabled := range defaultFeatureGates.Disabled {
+			if !inListOfNames(in.Spec.CustomNoUpgrade.Enabled, defaultDisabled.FeatureGateAttributes.Name) {
+				disabled = append(disabled, defaultDisabled.FeatureGateAttributes)
+			}
+		}
+	} else {
+		for _, defaultEnabled := range defaultFeatureGates.Enabled {
+			enabled = append(enabled, defaultEnabled.FeatureGateAttributes)
+		}
+		for _, defaultDisabled := range defaultFeatureGates.Disabled {
+			disabled = append(disabled, defaultDisabled.FeatureGateAttributes)
+		}
+	}
+
+	// sort for stability
+	sort.Sort(byName(enabled))
+	sort.Sort(byName(disabled))
+	ret.Status.FeatureGates[0].Enabled = enabled
+	ret.Status.FeatureGates[0].Disabled = disabled
+
+	return ret, nil
+}
+
+func inListOfNames(haystack []configv1.FeatureGateName, needle configv1.FeatureGateName) bool {
+	for _, curr := range haystack {
+		if curr == needle {
+			return true
+		}
+	}
+	return false
+}
+
+func inListOfDescriptions(haystack []configv1.FeatureGateDescription, needle configv1.FeatureGateName) bool {
+	for _, curr := range haystack {
+		if curr.FeatureGateAttributes.Name == needle {
+			return true
+		}
+	}
+	return false
 }
 
 func clusterProfilesFrom(annotations map[string]string) sets.Set[string] {

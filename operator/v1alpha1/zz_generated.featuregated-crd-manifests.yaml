@@ -1,0 +1,61 @@
+etcdbackups.operator.openshift.io:
+  Annotations: {}
+  ApprovedPRNumber: https://github.com/openshift/api/pull/1482
+  CRDName: etcdbackups.operator.openshift.io
+  Capability: ""
+  Category: ""
+  FeatureGates:
+  - AutomatedEtcdBackup
+  GroupName: operator.openshift.io
+  HasStatus: true
+  KindName: EtcdBackup
+  Labels: {}
+  PluralName: etcdbackups
+  PrinterColumns: []
+  Scope: Cluster
+  ShortNames: null
+  TargetFilenamePattern: 0000_10_01_etcdbackupMARKERS.crd.yaml
+  TopLevelFeatureGates:
+  - AutomatedEtcdBackup
+  Version: v1alpha1
+
+imagecontentsourcepolicies.operator.openshift.io:
+  Annotations: {}
+  ApprovedPRNumber: https://github.com/openshift/api/pull/470
+  CRDName: imagecontentsourcepolicies.operator.openshift.io
+  Capability: ""
+  Category: ""
+  FeatureGates: []
+  GroupName: operator.openshift.io
+  HasStatus: true
+  KindName: ImageContentSourcePolicy
+  Labels: {}
+  PluralName: imagecontentsourcepolicies
+  PrinterColumns: []
+  Scope: Cluster
+  ShortNames: null
+  TargetFilenamePattern: 0000_10_config-operator_01_imagecontentsourcepolicyMARKERS.crd.yaml
+  TopLevelFeatureGates: []
+  Version: v1alpha1
+
+olms.operator.openshift.io:
+  Annotations: {}
+  ApprovedPRNumber: https://github.com/openshift/api/pull/1504
+  CRDName: olms.operator.openshift.io
+  Capability: ""
+  Category: ""
+  FeatureGates:
+  - NewOLM
+  GroupName: operator.openshift.io
+  HasStatus: true
+  KindName: OLM
+  Labels: {}
+  PluralName: olms
+  PrinterColumns: []
+  Scope: Cluster
+  ShortNames: null
+  TargetFilenamePattern: 0000_10_config-operator_01_olmMARKERS.crd.yaml
+  TopLevelFeatureGates:
+  - NewOLM
+  Version: v1alpha1
+

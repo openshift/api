@@ -1,0 +1,21 @@
+configs.samples.operator.openshift.io:
+  Annotations:
+    description: Extension for configuring openshift samples operator.
+    displayName: ConfigsSamples
+  ApprovedPRNumber: https://github.com/openshift/api/pull/513
+  CRDName: configs.samples.operator.openshift.io
+  Capability: ""
+  Category: ""
+  FeatureGates: []
+  GroupName: samples.operator.openshift.io
+  HasStatus: true
+  KindName: Config
+  Labels: {}
+  PluralName: configs
+  PrinterColumns: []
+  Scope: Cluster
+  ShortNames: null
+  TargetFilenamePattern: 00_samplesconfigMARKERS.crd.yaml
+  TopLevelFeatureGates: []
+  Version: v1
+

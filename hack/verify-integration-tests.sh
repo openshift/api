@@ -14,7 +14,7 @@ fi
 validate_suite_files() {
   FOLDER=$1
 
-  for file in ${FOLDER}/*.yaml; do
+  for file in ${FOLDER}/zz_generated.crd-manifests/*.yaml; do
     if [ ! -f $file ]; then
       # It's likely the bash expansion didn't find any yaml files.
       continue
@@ -53,13 +53,13 @@ validate_suite_files() {
     SUITE_FILE=${FOLDER}/${FILE_BASE}.${SINGULAR}.testsuite.yaml
 
     if [ ! -f ${SUITE_FILE} ]; then
-      echo "No test suite file found for CRD ${file}"
+      echo "No test suite file found for CRD ${file}, expected ${SUITE_FILE}"
       exit 1
     fi
   done
 }
 
 for groupVersion in ${API_GROUP_VERSIONS}; do
-  echo "Validating integration tests for ${groupVersion}"
+  echo "Validating integration tests for ${groupVersion}/zz_generated.crd-manifests"
   validate_suite_files ${SCRIPT_ROOT}/${groupVersion}
 done

@@ -2,6 +2,7 @@ package v1
 
 import (
 	"io/ioutil"
+	"path"
 	"testing"
 
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -23,7 +24,7 @@ func TestInfrastructureStatusDefault(t *testing.T) {
 	filePaths := []string{infraCRDDefaultFilePath, infraCRDTestPreviewFilePath}
 
 	for _, filepath := range filePaths {
-		infraCRDBytes, err := ioutil.ReadFile(filepath)
+		infraCRDBytes, err := ioutil.ReadFile(path.Join("zz_generated.crd-manifests", filepath))
 		if err != nil {
 			t.Fatalf("failed to read infrastructure CRD file %q: %v", filepath, err)
 		}

@@ -73,32 +73,14 @@ func (o *WriteFeatureSets) Run() error {
 			}
 
 			featureGateOutBytes := writeFeatureGateV1OrDie(featureGateInstance)
-			featureSetFileName := fmt.Sprintf("featureGate-%s-%s.yaml", featureSetName, clusterProfileToShortName[clusterProfile])
+			featureSetFileName := fmt.Sprintf("featureGate-%s-%s.yaml", clusterProfileToShortName[clusterProfile], featureSetName)
 			if len(featureSetName) == 0 {
-				featureSetFileName = fmt.Sprintf("featureGate-%s-%s.yaml", "Default", clusterProfileToShortName[clusterProfile])
+				featureSetFileName = fmt.Sprintf("featureGate-%s-%s.yaml", clusterProfileToShortName[clusterProfile], "Default")
 			}
 
 			destFile := filepath.Join(o.AssetOutputDir, featureSetFileName)
 			if err := os.WriteFile(destFile, []byte(featureGateOutBytes), 0644); err != nil {
 				return fmt.Errorf("error writing FeatureGate manifest: %w", err)
-			}
-
-			// for compatibility during the transition, we'll copy the old, invalid featuregates
-			legacyFilename := ""
-			switch {
-			case len(featureSetName) == 0 && clusterProfile == configv1.SelfManaged:
-				legacyFilename = "featureGate-Default.yaml"
-			case featureSetName == configv1.TechPreviewNoUpgrade && clusterProfile == configv1.SelfManaged:
-				legacyFilename = "featureGate-TechPreviewNoUpgrade.yaml"
-			}
-			if len(legacyFilename) > 0 {
-				legacyFeatureGateInstance := featureGateInstance.DeepCopy()
-				delete(legacyFeatureGateInstance.Annotations, "include.release.openshift.io/self-managed-high-availability")
-				legacyFeatureGateBytes := writeFeatureGateV1OrDie(legacyFeatureGateInstance)
-				legacyFile := filepath.Join(o.AssetOutputDir, legacyFilename)
-				if err := os.WriteFile(legacyFile, []byte(legacyFeatureGateBytes), 0644); err != nil {
-					return fmt.Errorf("error writing FeatureGate manifest: %w", err)
-				}
 			}
 		}
 	}

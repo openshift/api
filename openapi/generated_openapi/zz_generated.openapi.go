@@ -45791,6 +45791,14 @@ func schema_openshift_api_operator_v1_EtcdSpec(ref common.ReferenceCallback) com
 							Enum:        []interface{}{"Slower", "Standard"},
 						},
 					},
+					"backendQuotaGiB": {
+						SchemaProps: spec.SchemaProps{
+							Description: "BackendQuotaGiB sets the etcd backend storage size limit in gigabytes. Defaults to 8GiB.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
 				},
 				Required: []string{"managementState", "forceRedeploymentReason"},
 			},

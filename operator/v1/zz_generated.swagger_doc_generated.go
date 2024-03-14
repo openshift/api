@@ -698,6 +698,7 @@ func (EtcdList) SwaggerDoc() map[string]string {
 
 var map_EtcdSpec = map[string]string{
 	"controlPlaneHardwareSpeed": "HardwareSpeed allows user to change the etcd tuning profile which configures the latency parameters for heartbeat interval and leader election timeouts allowing the cluster to tolerate longer round-trip-times between etcd members. Valid values are \"\", \"Standard\" and \"Slower\".\n\t\"\" means no opinion and the platform is left to choose a reasonable default\n\twhich is subject to change without notice.",
+	"backendQuotaGiB":           "BackendQuotaGiB sets the etcd backend storage size limit in gigabytes. Defaults to 8GiB.",
 }
 
 func (EtcdSpec) SwaggerDoc() map[string]string {

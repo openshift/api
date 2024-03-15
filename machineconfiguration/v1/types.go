@@ -424,16 +424,22 @@ type MachineConfigPoolSpec struct {
 
 	// pinnedImageSets specifies a sequence of PinnedImageSetRef objects for the
 	// pool. Nodes within this pool will preload and pin images defined in the
-	// PinnedImageSet. Before pulling images the controller will ensure the
-	// total uncompressed size of all the images does not exceed available
-	// resources. Images from multiple PinnedImageSets are loaded and pinned
-	// sequentially as listed. Duplicate and existing images will be
+	// PinnedImageSet. Before pulling images the MachineConfigDaemon will ensure
+	// the total uncompressed size of all the images does not exceed available
+	// resources. If the total size of the images exceeds the available
+	// resources the controller will report a Degraded status to the
+	// MachineConfigPool and not attempt to pull any images. Also to help ensure
+	// the kubelet can mitigate storage risk, the pinned_image configuration and
+	// subsequent service reload will happen only after all of the images have
+	// been pulled for each set. Images from multiple PinnedImageSets are loaded
+	// and pinned sequentially as listed. Duplicate and existing images will be
 	// skipped.
 	//
-	// Failure to pull an image by a node results in the MachineConfigPool
-	// status set to Degraded. Resolving such failures is the responsibility of
-	// the user.
-	// +openshift:enable:FeatureGate=PinnedImages  
+	// Any failure to prefetch or pin images will result in a Degraded pool.
+	// Resolving these failures is the responsibility of the user. The admin
+	// should be proactive in ensuring adequate storage and proper image
+	// authentication exists in advance.
+	// +openshift:enable:FeatureGate=PinnedImages
 	// +optional
 	// +listType=map
 	// +listMapKey=name
@@ -451,7 +457,7 @@ type PinnedImageSetRef struct {
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=253
 	// +kubebuilder:validation:Pattern=`^(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$`
-	// +kubebuilder:validation:Required	
+	// +kubebuilder:validation:Required
 	Name string `json:"name"`
 }
 

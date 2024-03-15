@@ -46,7 +46,7 @@ type PinnedImageSetSpec struct {
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=2000
-    // +listType=map
+	// +listType=map
 	// +listMapKey=name
 	PinnedImages []PinnedImageRef `json:"pinnedImages"`
 }

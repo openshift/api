@@ -5,6 +5,7 @@ import (
 	_ "embed"
 	"encoding/json"
 	"fmt"
+	"github.com/google/go-cmp/cmp"
 	"k8s.io/apimachinery/pkg/api/equality"
 	"k8s.io/apimachinery/pkg/util/sets"
 	"math/rand"
@@ -230,7 +231,6 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 						errs = append(errs, fmt.Errorf("crd %q needs '// +openshift:file-pattern=' %v", crdName, resultingCRD.GetAnnotations()))
 						continue
 					}
-					outputFile := filepath.Join(versionPath, outputFileBaseName)
 
 					resultingCRD.SetManagedFields(nil)
 
@@ -262,7 +262,6 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 						crd:            resultingCRD,
 						featureSet:     featureSetName,
 						clusterProfile: clusterProfile,
-						outputFile:     outputFile,
 					})
 				}
 			}
@@ -272,10 +271,31 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 			allCRDsToRender = append(allCRDsToRender, crdsToRender...)
 		}
 
+		// write this doc.go out so we can vendor these directories and copy content
+		depGoFilename := filepath.Join(generatedOutputPath, "doc.go")
+		versionFromPath := filepath.Base(versionPath)
+		groupFromPath := filepath.Base(filepath.Dir(versionPath))
+		simplestGoFile := []byte(fmt.Sprintf("package %s_%s_crdmanifests\n", groupFromPath, versionFromPath))
 		if !g.verify {
 			if err := os.MkdirAll(generatedOutputPath, 0755); err != nil {
 				errs = append(errs, fmt.Errorf("failed creating directory: %w", err))
 				continue
+			}
+			if err := os.WriteFile(depGoFilename, simplestGoFile, 0644); err != nil {
+				errs = append(errs, fmt.Errorf("unable to write dep file: %w", err))
+				continue
+			}
+		} else {
+			existingContent, err := os.ReadFile(depGoFilename)
+			switch {
+			case os.IsNotExist(err):
+				errs = append(errs, fmt.Errorf("missing doc.go in %v: %w", depGoFilename, err))
+			case err != nil:
+				errs = append(errs, fmt.Errorf("unable to read dep file: %w", err))
+			default:
+				if !bytes.Equal(simplestGoFile, existingContent) {
+					errs = append(errs, fmt.Errorf("%s content does not match: %v", simplestGoFile, cmp.Diff(simplestGoFile, existingContent)))
+				}
 			}
 		}
 
@@ -326,6 +346,11 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 					break
 				}
 			}
+			// always expect the doc.go
+			if curr.Name() == "doc.go" {
+				found = true
+			}
+
 			switch {
 			case !found && g.verify:
 				errs = append(errs, fmt.Errorf("need to remove: %q", curr.Name()))

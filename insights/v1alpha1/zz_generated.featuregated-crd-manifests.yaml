@@ -6,6 +6,9 @@ datagathers.insights.openshift.io:
   Category: ""
   FeatureGates:
   - InsightsOnDemandDataGather
+  FilenameOperatorName: insights
+  FilenameOperatorOrdering: "01"
+  FilenameRunLevel: "0000_10"
   GroupName: insights.openshift.io
   HasStatus: true
   KindName: DataGather
@@ -26,7 +29,6 @@ datagathers.insights.openshift.io:
     type: date
   Scope: Cluster
   ShortNames: null
-  TargetFilenamePattern: 0000_10_01_datagatherMARKERS.crd.yaml
   TopLevelFeatureGates:
   - InsightsOnDemandDataGather
   Version: v1alpha1

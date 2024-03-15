@@ -3,7 +3,9 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.openshift.io: https://github.com/openshift/api/pull/692
-    api.openshift.io/filename-pattern: 0000_40_cloud-credential-operator_00_configMARKERS.crd.yaml
+    api.openshift.io/filename-cvo-runlevel: "0000_40"
+    api.openshift.io/filename-operator: cloud-credential
+    api.openshift.io/filename-ordering: "00"
     capability.openshift.io/name: CloudCredential
     feature-gate.release.openshift.io/: "true"
   name: cloudcredentials.operator.openshift.io

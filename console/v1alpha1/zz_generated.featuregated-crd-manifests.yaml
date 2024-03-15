@@ -8,6 +8,9 @@ consoleplugins.console.openshift.io:
   Capability: Console
   Category: ""
   FeatureGates: []
+  FilenameOperatorName: ""
+  FilenameOperatorOrdering: "90"
+  FilenameRunLevel: ""
   GroupName: console.openshift.io
   HasStatus: false
   KindName: ConsolePlugin
@@ -16,7 +19,6 @@ consoleplugins.console.openshift.io:
   PrinterColumns: []
   Scope: Cluster
   ShortNames: null
-  TargetFilenamePattern: 90_consolepluginMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1alpha1
 

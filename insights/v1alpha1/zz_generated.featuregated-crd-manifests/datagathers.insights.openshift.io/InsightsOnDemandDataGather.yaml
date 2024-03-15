@@ -3,7 +3,9 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.openshift.io: https://github.com/openshift/api/pull/1365
-    api.openshift.io/filename-pattern: 0000_10_01_datagatherMARKERS.crd.yaml
+    api.openshift.io/filename-cvo-runlevel: "0000_10"
+    api.openshift.io/filename-operator: insights
+    api.openshift.io/filename-ordering: "01"
     feature-gate.release.openshift.io/InsightsOnDemandDataGather: "true"
   name: datagathers.insights.openshift.io
 spec:

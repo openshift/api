@@ -6,6 +6,9 @@ etcdbackups.operator.openshift.io:
   Category: ""
   FeatureGates:
   - AutomatedEtcdBackup
+  FilenameOperatorName: etcd
+  FilenameOperatorOrdering: "01"
+  FilenameRunLevel: "0000_10"
   GroupName: operator.openshift.io
   HasStatus: true
   KindName: EtcdBackup
@@ -14,7 +17,6 @@ etcdbackups.operator.openshift.io:
   PrinterColumns: []
   Scope: Cluster
   ShortNames: null
-  TargetFilenamePattern: 0000_10_01_etcdbackupMARKERS.crd.yaml
   TopLevelFeatureGates:
   - AutomatedEtcdBackup
   Version: v1alpha1
@@ -26,6 +28,9 @@ imagecontentsourcepolicies.operator.openshift.io:
   Capability: ""
   Category: ""
   FeatureGates: []
+  FilenameOperatorName: config-operator
+  FilenameOperatorOrdering: "01"
+  FilenameRunLevel: "0000_10"
   GroupName: operator.openshift.io
   HasStatus: true
   KindName: ImageContentSourcePolicy
@@ -34,7 +39,6 @@ imagecontentsourcepolicies.operator.openshift.io:
   PrinterColumns: []
   Scope: Cluster
   ShortNames: null
-  TargetFilenamePattern: 0000_10_config-operator_01_imagecontentsourcepolicyMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1alpha1
 
@@ -46,6 +50,9 @@ olms.operator.openshift.io:
   Category: ""
   FeatureGates:
   - NewOLM
+  FilenameOperatorName: config-operator
+  FilenameOperatorOrdering: "01"
+  FilenameRunLevel: "0000_10"
   GroupName: operator.openshift.io
   HasStatus: true
   KindName: OLM
@@ -54,7 +61,6 @@ olms.operator.openshift.io:
   PrinterColumns: []
   Scope: Cluster
   ShortNames: null
-  TargetFilenamePattern: 0000_10_config-operator_01_olmMARKERS.crd.yaml
   TopLevelFeatureGates:
   - NewOLM
   Version: v1alpha1

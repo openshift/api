@@ -5,6 +5,9 @@ dnsrecords.ingress.operator.openshift.io:
   Capability: Ingress
   Category: ""
   FeatureGates: []
+  FilenameOperatorName: dns
+  FilenameOperatorOrdering: "01"
+  FilenameRunLevel: "0000_50"
   GroupName: ingress.operator.openshift.io
   HasStatus: true
   KindName: DNSRecord
@@ -13,7 +16,6 @@ dnsrecords.ingress.operator.openshift.io:
   PrinterColumns: []
   Scope: Namespaced
   ShortNames: null
-  TargetFilenamePattern: 0000_50_dns-recordMARKERS.yaml
   TopLevelFeatureGates: []
   Version: v1
 

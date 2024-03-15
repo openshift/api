@@ -5,6 +5,9 @@ configs.imageregistry.operator.openshift.io:
   Capability: ""
   Category: ""
   FeatureGates: []
+  FilenameOperatorName: ""
+  FilenameOperatorOrdering: "00"
+  FilenameRunLevel: ""
   GroupName: imageregistry.operator.openshift.io
   HasStatus: true
   KindName: Config
@@ -13,7 +16,6 @@ configs.imageregistry.operator.openshift.io:
   PrinterColumns: []
   Scope: Cluster
   ShortNames: null
-  TargetFilenamePattern: 00_imageregistryMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1
 
@@ -24,6 +26,9 @@ imagepruners.imageregistry.operator.openshift.io:
   Capability: ""
   Category: ""
   FeatureGates: []
+  FilenameOperatorName: ""
+  FilenameOperatorOrdering: "01"
+  FilenameRunLevel: ""
   GroupName: imageregistry.operator.openshift.io
   HasStatus: true
   KindName: ImagePruner
@@ -32,7 +37,6 @@ imagepruners.imageregistry.operator.openshift.io:
   PrinterColumns: []
   Scope: Cluster
   ShortNames: null
-  TargetFilenamePattern: 01_imageprunerMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1
 

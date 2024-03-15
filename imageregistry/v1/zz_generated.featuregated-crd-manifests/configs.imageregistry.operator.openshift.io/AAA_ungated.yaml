@@ -3,7 +3,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.openshift.io: https://github.com/openshift/api/pull/519
-    api.openshift.io/filename-pattern: 00_imageregistryMARKERS.crd.yaml
+    api.openshift.io/filename-ordering: "00"
     feature-gate.release.openshift.io/: "true"
   name: configs.imageregistry.operator.openshift.io
 spec:

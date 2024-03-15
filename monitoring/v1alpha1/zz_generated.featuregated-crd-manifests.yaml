@@ -7,6 +7,9 @@ alertrelabelconfigs.monitoring.openshift.io:
   Category: ""
   FeatureGates:
   - AlertingRules
+  FilenameOperatorName: monitoring
+  FilenameOperatorOrdering: "02"
+  FilenameRunLevel: "0000_50"
   GroupName: monitoring.openshift.io
   HasStatus: true
   KindName: AlertRelabelConfig
@@ -15,7 +18,6 @@ alertrelabelconfigs.monitoring.openshift.io:
   PrinterColumns: []
   Scope: Namespaced
   ShortNames: null
-  TargetFilenamePattern: 0000_50_monitoring_02_alertrelabelconfigsMARKERS.crd.yaml
   TopLevelFeatureGates:
   - AlertingRules
   Version: v1alpha1
@@ -29,6 +31,9 @@ alertingrules.monitoring.openshift.io:
   Category: ""
   FeatureGates:
   - AlertingRules
+  FilenameOperatorName: monitoring
+  FilenameOperatorOrdering: "01"
+  FilenameRunLevel: "0000_50"
   GroupName: monitoring.openshift.io
   HasStatus: true
   KindName: AlertingRule
@@ -37,7 +42,6 @@ alertingrules.monitoring.openshift.io:
   PrinterColumns: []
   Scope: Namespaced
   ShortNames: null
-  TargetFilenamePattern: 0000_50_monitoring_01_alertingrulesMARKERS.crd.yaml
   TopLevelFeatureGates:
   - AlertingRules
   Version: v1alpha1

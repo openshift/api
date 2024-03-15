@@ -3,7 +3,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.openshift.io: https://github.com/openshift/api/pull/527
-    api.openshift.io/filename-pattern: 001-clusternetworkMARKERS-crd.yaml
+    api.openshift.io/filename-ordering: "001"
     feature-gate.release.openshift.io/: "true"
   name: clusternetworks.network.openshift.io
 spec:

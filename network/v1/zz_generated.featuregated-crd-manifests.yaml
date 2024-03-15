@@ -5,6 +5,9 @@ clusternetworks.network.openshift.io:
   Capability: ""
   Category: ""
   FeatureGates: []
+  FilenameOperatorName: ""
+  FilenameOperatorOrdering: "001"
+  FilenameRunLevel: ""
   GroupName: network.openshift.io
   HasStatus: false
   KindName: ClusterNetwork
@@ -25,7 +28,6 @@ clusternetworks.network.openshift.io:
     type: string
   Scope: Cluster
   ShortNames: null
-  TargetFilenamePattern: 001-clusternetworkMARKERS-crd.yaml
   TopLevelFeatureGates: []
   Version: v1
 
@@ -36,6 +38,9 @@ egressnetworkpolicies.network.openshift.io:
   Capability: ""
   Category: ""
   FeatureGates: []
+  FilenameOperatorName: ""
+  FilenameOperatorOrdering: "004"
+  FilenameRunLevel: ""
   GroupName: network.openshift.io
   HasStatus: false
   KindName: EgressNetworkPolicy
@@ -44,7 +49,6 @@ egressnetworkpolicies.network.openshift.io:
   PrinterColumns: []
   Scope: Namespaced
   ShortNames: null
-  TargetFilenamePattern: 004-egressnetworkpolicyMARKERS-crd.yaml
   TopLevelFeatureGates: []
   Version: v1
 
@@ -55,6 +59,9 @@ hostsubnets.network.openshift.io:
   Capability: ""
   Category: ""
   FeatureGates: []
+  FilenameOperatorName: ""
+  FilenameOperatorOrdering: "002"
+  FilenameRunLevel: ""
   GroupName: network.openshift.io
   HasStatus: false
   KindName: HostSubnet
@@ -85,7 +92,6 @@ hostsubnets.network.openshift.io:
     type: string
   Scope: Cluster
   ShortNames: null
-  TargetFilenamePattern: 002-hostsubnetMARKERS-crd.yaml
   TopLevelFeatureGates: []
   Version: v1
 
@@ -96,6 +102,9 @@ netnamespaces.network.openshift.io:
   Capability: ""
   Category: ""
   FeatureGates: []
+  FilenameOperatorName: ""
+  FilenameOperatorOrdering: "003"
+  FilenameRunLevel: ""
   GroupName: network.openshift.io
   HasStatus: false
   KindName: NetNamespace
@@ -112,7 +121,6 @@ netnamespaces.network.openshift.io:
     type: string
   Scope: Cluster
   ShortNames: null
-  TargetFilenamePattern: 003-netnamespaceMARKERS-crd.yaml
   TopLevelFeatureGates: []
   Version: v1
 

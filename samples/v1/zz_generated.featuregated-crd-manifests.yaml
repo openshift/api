@@ -7,6 +7,9 @@ configs.samples.operator.openshift.io:
   Capability: ""
   Category: ""
   FeatureGates: []
+  FilenameOperatorName: ""
+  FilenameOperatorOrdering: "00"
+  FilenameRunLevel: ""
   GroupName: samples.operator.openshift.io
   HasStatus: true
   KindName: Config
@@ -15,7 +18,6 @@ configs.samples.operator.openshift.io:
   PrinterColumns: []
   Scope: Cluster
   ShortNames: null
-  TargetFilenamePattern: 00_samplesconfigMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1
 

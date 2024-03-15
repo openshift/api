@@ -7,6 +7,9 @@ podnetworkconnectivitychecks.controlplane.operator.openshift.io:
   Capability: ""
   Category: ""
   FeatureGates: []
+  FilenameOperatorName: network
+  FilenameOperatorOrdering: "01"
+  FilenameRunLevel: "0000_10"
   GroupName: controlplane.operator.openshift.io
   HasStatus: true
   KindName: PodNetworkConnectivityCheck
@@ -15,7 +18,6 @@ podnetworkconnectivitychecks.controlplane.operator.openshift.io:
   PrinterColumns: []
   Scope: Namespaced
   ShortNames: null
-  TargetFilenamePattern: 0000_10-pod-network-connectivity-checkMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1alpha1
 

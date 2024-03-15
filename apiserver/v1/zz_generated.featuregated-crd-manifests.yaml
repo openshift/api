@@ -7,6 +7,9 @@ apirequestcounts.apiserver.openshift.io:
   Capability: ""
   Category: ""
   FeatureGates: []
+  FilenameOperatorName: kube-apiserver
+  FilenameOperatorOrdering: ""
+  FilenameRunLevel: ""
   GroupName: apiserver.openshift.io
   HasStatus: true
   KindName: APIRequestCount
@@ -27,7 +30,6 @@ apirequestcounts.apiserver.openshift.io:
     type: integer
   Scope: Cluster
   ShortNames: null
-  TargetFilenamePattern: apiserver.openshift.io_apirequestcountMARKERS.yaml
   TopLevelFeatureGates: []
   Version: v1
 

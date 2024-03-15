@@ -5,6 +5,9 @@ rolebindingrestrictions.authorization.openshift.io:
   Capability: ""
   Category: ""
   FeatureGates: []
+  FilenameOperatorName: config-operator
+  FilenameOperatorOrdering: "01"
+  FilenameRunLevel: "0000_03"
   GroupName: authorization.openshift.io
   HasStatus: false
   KindName: RoleBindingRestriction
@@ -13,7 +16,6 @@ rolebindingrestrictions.authorization.openshift.io:
   PrinterColumns: []
   Scope: Namespaced
   ShortNames: null
-  TargetFilenamePattern: 0000_03_authorization-openshift_01_rolebindingrestrictionMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1
 

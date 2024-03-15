@@ -9,6 +9,9 @@ platformoperators.platform.openshift.io:
   Category: ""
   FeatureGates:
   - PlatformOperators
+  FilenameOperatorName: ""
+  FilenameOperatorOrdering: ""
+  FilenameRunLevel: ""
   GroupName: platform.openshift.io
   HasStatus: true
   KindName: PlatformOperator
@@ -17,7 +20,6 @@ platformoperators.platform.openshift.io:
   PrinterColumns: []
   Scope: Cluster
   ShortNames: null
-  TargetFilenamePattern: platformoperatorsMARKERS.crd.yaml
   TopLevelFeatureGates:
   - PlatformOperators
   Version: v1alpha1

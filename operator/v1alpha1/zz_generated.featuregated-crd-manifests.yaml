@@ -50,7 +50,7 @@ olms.operator.openshift.io:
   Category: ""
   FeatureGates:
   - NewOLM
-  FilenameOperatorName: config-operator
+  FilenameOperatorName: operator-lifecycle-manager
   FilenameOperatorOrdering: "01"
   FilenameRunLevel: "0000_10"
   GroupName: operator.openshift.io

@@ -39,12 +39,6 @@ var (
 	allFeatureSets = []string{"Default", "TechPreviewNoUpgrade", "CustomNoUpgrade"}
 )
 
-var defaultClusterProfilesToInject = []string{
-	"include.release.openshift.io/ibm-cloud-managed",
-	"include.release.openshift.io/self-managed-high-availability",
-	"include.release.openshift.io/single-node-developer",
-}
-
 // Options contains the configuration required for the schemapatch generator.
 type Options struct {
 	// Disabled indicates whether the schemapatch generator is disabled or not.
@@ -209,18 +203,28 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 						continue
 					}
 
-					outputFileBaseName := ""
-					if outputFilenamePattern := resultingCRD.GetAnnotations()["api.openshift.io/filename-pattern"]; len(outputFilenamePattern) > 0 {
-						if !strings.Contains(outputFilenamePattern, "MARKERS") {
-							errs = append(errs, fmt.Errorf("crd %q is missing featureset/%q MARKERS from '// +openshift:file-pattern=' %q", crdName, featureSetName, outputFilenamePattern))
-							continue
-						}
-						fileMarker := fmt.Sprintf("-%s-%s", clusterProfile, featureSetName)
-						outputFileBaseName = strings.ReplaceAll(outputFilenamePattern, "MARKERS", fileMarker)
+					pluralCRDName, _, _ := unstructured.NestedString(resultingCRD.Object, "spec", "names", "plural")
+					fileCVORunLevel := resultingCRD.GetAnnotations()["api.openshift.io/filename-cvo-runlevel"]
+					fileOperatorName := resultingCRD.GetAnnotations()["api.openshift.io/filename-operator"]
+					fileOperatorOrdering := resultingCRD.GetAnnotations()["api.openshift.io/filename-ordering"]
+					outputFilePattern := ""
+					switch {
+					case len(fileCVORunLevel) > 0 && len(fileOperatorName) > 0 && len(fileOperatorOrdering) > 0:
+						outputFilePattern = fmt.Sprintf("%s_%s_%s_%sMARKERS.crd.yaml", fileCVORunLevel, fileOperatorName, fileOperatorOrdering, pluralCRDName)
+					case len(fileOperatorName) > 0 && len(fileOperatorOrdering) > 0:
+						outputFilePattern = fmt.Sprintf("%s_%s_%sMARKERS.crd.yaml", fileOperatorName, fileOperatorOrdering, pluralCRDName)
+					case len(fileOperatorName) > 0:
+						outputFilePattern = fmt.Sprintf("%s_%sMARKERS.crd.yaml", fileOperatorName, pluralCRDName)
+					case len(fileOperatorOrdering) > 0:
+						outputFilePattern = fmt.Sprintf("%s_%sMARKERS.crd.yaml", fileOperatorOrdering, pluralCRDName)
+					default:
+						outputFilePattern = fmt.Sprintf("%sMARKERS.crd.yaml", pluralCRDName)
+					}
+					fileMarker := fmt.Sprintf("-%s-%s", clusterProfile, featureSetName)
+					outputFileBaseName := strings.ReplaceAll(outputFilePattern, "MARKERS", fileMarker)
 
-						if len(crdFilenamePattern) == 0 {
-							crdFilenamePattern = outputFilenamePattern
-						}
+					if len(crdFilenamePattern) == 0 {
+						crdFilenamePattern = outputFilePattern
 					}
 					if len(outputFileBaseName) == 0 {
 						errs = append(errs, fmt.Errorf("crd %q needs '// +openshift:file-pattern=' %v", crdName, resultingCRD.GetAnnotations()))
@@ -231,8 +235,10 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 					resultingCRD.SetManagedFields(nil)
 
 					annotations := resultingCRD.GetAnnotations()
-					delete(annotations, "api.openshift.io/filename-pattern")
 					for key := range annotations {
+						if strings.HasPrefix(key, "api.openshift.io/filename") {
+							delete(annotations, key)
+						}
 						if strings.HasPrefix(key, "feature-gate.release.openshift.io/") {
 							delete(annotations, key)
 						}
@@ -272,7 +278,7 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 				continue
 			}
 		}
-		
+
 		for _, resultingCRD := range allCRDsToRender {
 			manifestData, err := kyaml.Marshal(resultingCRD.crd.Object)
 			if err != nil {

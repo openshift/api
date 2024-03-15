@@ -102,7 +102,8 @@ machineconfigpools.machineconfiguration.openshift.io:
   CRDName: machineconfigpools.machineconfiguration.openshift.io
   Capability: ""
   Category: ""
-  FeatureGates: []
+  FeatureGates:
+  - PinnedImages
   GroupName: machineconfiguration.openshift.io
   HasStatus: true
   KindName: MachineConfigPool

@@ -755,6 +755,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeSpecMachineConfigVersion":   schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeSpecMachineConfigVersion(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeStatus":                     schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatus(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeStatusMachineConfigVersion": schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatusMachineConfigVersion(ref),
+		"github.com/openshift/api/machineconfiguration/v1alpha1.PinnedImageRef":                              schema_openshift_api_machineconfiguration_v1alpha1_PinnedImageRef(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.PinnedImageSet":                              schema_openshift_api_machineconfiguration_v1alpha1_PinnedImageSet(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.PinnedImageSetList":                          schema_openshift_api_machineconfiguration_v1alpha1_PinnedImageSetList(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.PinnedImageSetSpec":                          schema_openshift_api_machineconfiguration_v1alpha1_PinnedImageSetSpec(ref),
@@ -38557,6 +38558,27 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatusM
 	}
 }
 
+func schema_openshift_api_machineconfiguration_v1alpha1_PinnedImageRef(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is an OCI Image referenced by digest.\n\nThe format of the image ref is: host[:port][/namespace]/name@sha256:<digest>",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_machineconfiguration_v1alpha1_PinnedImageSet(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -38660,7 +38682,10 @@ func schema_openshift_api_machineconfiguration_v1alpha1_PinnedImageSetSpec(ref c
 					"pinnedImages": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "atomic",
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -38669,9 +38694,8 @@ func schema_openshift_api_machineconfiguration_v1alpha1_PinnedImageSetSpec(ref c
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machineconfiguration/v1alpha1.PinnedImageRef"),
 									},
 								},
 							},
@@ -38681,6 +38705,8 @@ func schema_openshift_api_machineconfiguration_v1alpha1_PinnedImageSetSpec(ref c
 				Required: []string{"pinnedImages"},
 			},
 		},
+		Dependencies: []string{
+			"github.com/openshift/api/machineconfiguration/v1alpha1.PinnedImageRef"},
 	}
 }
 

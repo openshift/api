@@ -53,19 +53,26 @@ spec:
                   ... ] \n These image references should all be by digest, tags aren't
                   allowed."
                 items:
-                  description: "PinnedImageRef is an OCI Image referenced by digest.
-                    \n The format of the image ref is: host[:port][/namespace]/name@sha256:<digest>"
-                  maxLength: 447
-                  minLength: 1
-                  type: string
-                  x-kubernetes-validations:
-                  - message: The image reference must be in the format host[:port][/namespace]/name@sha256:<digest>
-                      with a valid SHA256 digest
-                    rule: self.matches('^([a-zA-Z0-9-]+\\.)+[a-zA-Z0-9-]+(:[0-9]{2,5})?/([a-zA-Z0-9-_]{0,61}/)?[a-zA-Z0-9-_.]*@sha256:[a-f0-9]{64}$')
+                  properties:
+                    name:
+                      description: "name is an OCI Image referenced by digest. \n
+                        The format of the image ref is: host[:port][/namespace]/name@sha256:<digest>"
+                      maxLength: 447
+                      minLength: 1
+                      type: string
+                      x-kubernetes-validations:
+                      - message: The OCI Image reference must be in the format host[:port][/namespace]/name@sha256:<digest>
+                          with a valid SHA256 digest
+                        rule: self.matches('^([a-zA-Z0-9-]+\\.)+[a-zA-Z0-9-]+(:[0-9]{2,5})?/([a-zA-Z0-9-_]{0,61}/)?[a-zA-Z0-9-_.]*@sha256:[a-f0-9]{64}$')
+                  required:
+                  - name
+                  type: object
                 maxItems: 2000
                 minItems: 1
                 type: array
-                x-kubernetes-list-type: atomic
+                x-kubernetes-list-map-keys:
+                - name
+                x-kubernetes-list-type: map
             required:
             - pinnedImages
             type: object

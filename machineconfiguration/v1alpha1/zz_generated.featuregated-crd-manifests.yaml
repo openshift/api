@@ -82,7 +82,7 @@ pinnedimagesets.machineconfiguration.openshift.io:
   PluralName: pinnedimagesets
   PrinterColumns: []
   Scope: Cluster
-  ShortName: ""
+  ShortNames: null
   TargetFilenamePattern: 0000_80_pinnedimagesetMARKERS.crd.yaml
   TopLevelFeatureGates:
   - PinnedImages

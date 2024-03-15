@@ -279,7 +279,7 @@ var map_MachineConfigPoolSpec = map[string]string{
 	"paused":                "paused specifies whether or not changes to this machine config pool should be stopped. This includes generating new desiredMachineConfig and update of machines.",
 	"maxUnavailable":        "maxUnavailable defines either an integer number or percentage of nodes in the pool that can go Unavailable during an update. This includes nodes Unavailable for any reason, including user initiated cordons, failing nodes, etc. The default value is 1.\n\nA value larger than 1 will mean multiple nodes going unavailable during the update, which may affect your workload stress on the remaining nodes. You cannot set this value to 0 to stop updates (it will default back to 1); to stop updates, use the 'paused' property instead. Drain will respect Pod Disruption Budgets (PDBs) such as etcd quorum guards, even if maxUnavailable is greater than one.",
 	"configuration":         "The targeted MachineConfig object for the machine config pool.",
-	"pinnedImageSets":       "pinnedImageSets is a list of PinnedImageSetRef objects that should be applied to the nodes in this pool.",
+	"pinnedImageSets":       "pinnedImageSets specifies a sequence of PinnedImageSetRef objects for the pool. Nodes within this pool will preload and pin images defined in the PinnedImageSet. Before pulling images the controller will ensure the total uncompressed size of all the images does not exceed available resources. Images from multiple PinnedImageSets are loaded and pinned sequentially as listed. Duplicate and existing images will be skipped.\n\nFailure to pull an image by a node results in the MachineConfigPool status set to Degraded. Resolving such failures is the responsibility of the user.",
 }
 
 func (MachineConfigPoolSpec) SwaggerDoc() map[string]string {
@@ -337,7 +337,7 @@ func (NetworkInfo) SwaggerDoc() map[string]string {
 }
 
 var map_PinnedImageSetRef = map[string]string{
-	"name": "name is a reference to the name of a PinnedImageSet. Must adhere to RFC-1123 (https://tools.ietf.org/html/rfc1123)",
+	"name": "name is a reference to the name of a PinnedImageSet.  Must adhere to RFC-1123 (https://tools.ietf.org/html/rfc1123). Made up of one of more period-separated (.) segments, where each segment consists of alphanumeric characters and hyphens (-), must begin and end with an alphanumeric character, and is at most 63 characters in length. The total length of the name must not exceed 253 characters.",
 }
 
 func (PinnedImageSetRef) SwaggerDoc() map[string]string {

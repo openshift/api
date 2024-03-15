@@ -422,22 +422,36 @@ type MachineConfigPoolSpec struct {
 	// +optional
 	Configuration MachineConfigPoolStatusConfiguration `json:"configuration"`
 
-	// pinnedImageSets is a list of PinnedImageSetRef objects that should be
-	// applied to the nodes in this pool.
-	// +openshift:enable:FeatureGate=PinnedImages
+	// pinnedImageSets specifies a sequence of PinnedImageSetRef objects for the
+	// pool. Nodes within this pool will preload and pin images defined in the
+	// PinnedImageSet. Before pulling images the controller will ensure the
+	// total uncompressed size of all the images does not exceed available
+	// resources. Images from multiple PinnedImageSets are loaded and pinned
+	// sequentially as listed. Duplicate and existing images will be
+	// skipped.
+	//
+	// Failure to pull an image by a node results in the MachineConfigPool
+	// status set to Degraded. Resolving such failures is the responsibility of
+	// the user.
+	// +openshift:enable:FeatureGate=PinnedImages  
 	// +optional
-	// +listType=atomic
-	PinnedImageSets []PinnedImageSetRef `json:"pinnedImageSets"`
+	// +listType=map
+	// +listMapKey=name
+	PinnedImageSets []PinnedImageSetRef `json:"pinnedImageSets,omitempty"`
 }
 
 type PinnedImageSetRef struct {
-	// name is a reference to the name of a PinnedImageSet.
-	// Must adhere to RFC-1123 (https://tools.ietf.org/html/rfc1123)
+	// name is a reference to the name of a PinnedImageSet.  Must adhere to
+	// RFC-1123 (https://tools.ietf.org/html/rfc1123).
+	// Made up of one of more period-separated (.) segments, where each segment
+	// consists of alphanumeric characters and hyphens (-), must begin and end
+	// with an alphanumeric character, and is at most 63 characters in length.
+	// The total length of the name must not exceed 253 characters.
+	// +openshift:enable:FeatureGate=PinnedImages
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=253
-	// +kubebuilder:validation:Pattern=`^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9]))*$`
-	// +kubebuilder:validation:Required
-	// +openshift:enable:FeatureGate=PinnedImages
+	// +kubebuilder:validation:Pattern=`^(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$`
+	// +kubebuilder:validation:Required	
 	Name string `json:"name"`
 }
 

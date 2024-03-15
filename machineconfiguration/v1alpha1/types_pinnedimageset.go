@@ -46,19 +46,22 @@ type PinnedImageSetSpec struct {
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=2000
-	// +listType=atomic
+    // +listType=map
+	// +listMapKey=name
 	PinnedImages []PinnedImageRef `json:"pinnedImages"`
 }
 
-// PinnedImageRef is an OCI Image referenced by digest.
-//
-// The format of the image ref is:
-// host[:port][/namespace]/name@sha256:<digest>
-// +kubebuilder:validation:Required
-// +kubebuilder:validation:MinLength=1
-// +kubebuilder:validation:MaxLength=447
-// +kubebuilder:validation:XValidation:rule=`self.matches('^([a-zA-Z0-9-]+\\.)+[a-zA-Z0-9-]+(:[0-9]{2,5})?/([a-zA-Z0-9-_]{0,61}/)?[a-zA-Z0-9-_.]*@sha256:[a-f0-9]{64}$')`,message="The image reference must be in the format host[:port][/namespace]/name@sha256:<digest> with a valid SHA256 digest"
-type PinnedImageRef string
+type PinnedImageRef struct {
+	// name is an OCI Image referenced by digest.
+	//
+	// The format of the image ref is:
+	// host[:port][/namespace]/name@sha256:<digest>
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=447
+	// +kubebuilder:validation:XValidation:rule=`self.matches('^([a-zA-Z0-9-]+\\.)+[a-zA-Z0-9-]+(:[0-9]{2,5})?/([a-zA-Z0-9-_]{0,61}/)?[a-zA-Z0-9-_.]*@sha256:[a-f0-9]{64}$')`,message="The OCI Image reference must be in the format host[:port][/namespace]/name@sha256:<digest> with a valid SHA256 digest"
+	Name string `json:"name"`
+}
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 

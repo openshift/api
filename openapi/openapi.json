@@ -22370,6 +22370,19 @@
         }
       }
     },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.PinnedImageRef": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is an OCI Image referenced by digest.\n\nThe format of the image ref is: host[:port][/namespace]/name@sha256:<digest>",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.machineconfiguration.v1alpha1.PinnedImageSet": {
       "description": "PinnedImageSet describes a set of images that should be pinned by CRI-O and pulled to the nodes which are members of the declared MachineConfigPools.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
       "type": "object",
@@ -22437,10 +22450,13 @@
           "description": "pinnedImages is a list of OCI Image referenced by digest that should be pinned and pre-loaded by the nodes of a MachineConfigPool. Translates into a new file inside the /etc/crio/crio.conf.d directory with content similar to this:\n\n     pinned_images = [\n             \"quay.io/openshift-release-dev/ocp-release@sha256:...\",\n             \"quay.io/openshift-release-dev/ocp-v4.0-art-dev@sha256:...\",\n             \"quay.io/openshift-release-dev/ocp-v4.0-art-dev@sha256:...\",\n             ...\n     ]\n\nThese image references should all be by digest, tags aren't allowed.",
           "type": "array",
           "items": {
-            "type": "string",
-            "default": ""
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.PinnedImageRef"
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         }
       }
     },

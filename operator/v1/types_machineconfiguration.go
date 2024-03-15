@@ -49,7 +49,37 @@ type MachineConfigurationSpec struct {
 }
 
 type MachineConfigurationStatus struct {
-	StaticPodOperatorStatus `json:",inline"`
+	// observedGeneration is the last generation change you've dealt with
+	// +optional
+	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
+
+	// conditions is a list of conditions and their status
+	// +patchMergeKey=type
+	// +patchStrategy=merge
+	// +listType=map
+	// +listMapKey=type
+	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
+
+	// Previously there was a StaticPodOperatorStatus for legacy reasons. The following fields are tombstoned
+	// after lifting out the StaticPodOperatorStatus
+
+	// Tombstone: legacy field from StaticPodOperatorStatus
+	// Version string `json:"version,omitempty"`
+
+	// Tombstone: legacy field from StaticPodOperatorStatus
+	// ReadyReplicas int32 `json:"readyReplicas"`
+
+	// Tombstone: legacy field from StaticPodOperatorStatus
+	// Generations []GenerationStatus `json:"generations,omitempty"`
+
+	// Tombstone: legacy field from StaticPodOperatorStatus
+	// LatestAvailableRevision int32 `json:"latestAvailableRevision,omitempty"`
+
+	// Tombstone: legacy field from StaticPodOperatorStatus
+	// LatestAvailableRevisionReason string `json:"latestAvailableRevisionReason,omitempty"`
+
+	// Tombstone: legacy field from StaticPodOperatorStatus
+	// NodeStatuses []NodeStatus `json:"nodeStatuses,omitempty"`
 
 	// TODO(jkyros): This is where we can put additional bespoke status fields
 }

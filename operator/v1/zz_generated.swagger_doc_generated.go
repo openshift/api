@@ -1282,6 +1282,15 @@ func (MachineConfigurationSpec) SwaggerDoc() map[string]string {
 	return map_MachineConfigurationSpec
 }
 
+var map_MachineConfigurationStatus = map[string]string{
+	"observedGeneration": "observedGeneration is the last generation change you've dealt with",
+	"conditions":         "conditions is a list of conditions and their status",
+}
+
+func (MachineConfigurationStatus) SwaggerDoc() map[string]string {
+	return map_MachineConfigurationStatus
+}
+
 var map_MachineManager = map[string]string{
 	"":          "MachineManager describes a target machine resource that is registered for boot image updates. It stores identifying information such as the resource type and the API Group of the resource. It also provides granular control via the selection field.",
 	"resource":  "resource is the machine management resource's type. The only current valid value is machinesets. machinesets means that the machine manager will only register resources of the kind MachineSet.",

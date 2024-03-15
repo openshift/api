@@ -18,7 +18,7 @@ import (
 // +kubebuilder:resource:path=olms,scope=Cluster
 // +kubebuilder:subresource:status
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/1504
-// +openshift:file-pattern=0000_10_config-operator_01_olmMARKERS.crd.yaml
+// +openshift:file-pattern=cvoRunLevel=0000_10,operatorName=operator-lifecycle-manager,operatorOrdering=01
 // +openshift:enable:FeatureGate=NewOLM
 // +kubebuilder:validation:XValidation:rule="self.metadata.name == 'cluster'",message="olm is a singleton, .metadata.name must be 'cluster'"
 type OLM struct {

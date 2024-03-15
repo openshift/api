@@ -11,7 +11,7 @@ import (
 // +kubebuilder:resource:path=machineconfigurations,scope=Cluster
 // +kubebuilder:subresource:status
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/1453
-// +openshift:file-pattern=0000_80_machine-config-operator_01_configMARKERS.crd.yaml
+// +openshift:file-pattern=cvoRunLevel=0000_80,operatorName=machine-config,operatorOrdering=01
 
 // MachineConfiguration provides information to configure an operator to manage Machine Configuration.
 //

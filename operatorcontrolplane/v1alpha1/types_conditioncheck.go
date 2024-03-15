@@ -16,7 +16,7 @@ import (
 // +kubebuilder:resource:path=podnetworkconnectivitychecks,scope=Namespaced
 // +kubebuilder:subresource:status
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/639
-// +openshift:file-pattern=0000_10-pod-network-connectivity-checkMARKERS.crd.yaml
+// +openshift:file-pattern=cvoRunLevel=0000_10,operatorName=network,operatorOrdering=01
 // +kubebuilder:metadata:annotations=include.release.openshift.io/self-managed-high-availability=true
 // +kubebuilder:metadata:annotations=include.release.openshift.io/single-node-developer=true
 // +openshift:compatibility-gen:level=4

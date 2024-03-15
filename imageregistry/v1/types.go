@@ -43,7 +43,7 @@ const (
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:path=configs,scope=Cluster
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/519
-// +openshift:file-pattern=00_imageregistryMARKERS.crd.yaml
+// +openshift:file-pattern=operatorOrdering=00
 type Config struct {
 	metav1.TypeMeta `json:",inline"`
 

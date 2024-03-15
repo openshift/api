@@ -13,7 +13,7 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // +kubebuilder:resource:path=consoleexternalloglinks,scope=Cluster
 // +kubebuilder:subresource:status
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/481
-// +openshift:file-pattern=00_consoleexternalloglinkMARKERS.crd.yaml
+// +openshift:file-pattern=operatorOrdering=00
 // +openshift:capability=Console
 // +kubebuilder:metadata:annotations="description=ConsoleExternalLogLink is an extension for customizing OpenShift web console log links."
 // +kubebuilder:metadata:annotations="displayName=ConsoleExternalLogLinks"

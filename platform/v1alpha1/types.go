@@ -63,7 +63,6 @@ type PlatformOperatorStatus struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +kubebuilder:resource:path=platformoperators,scope=Cluster
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/1234
-// +openshift:file-pattern=platformoperatorsMARKERS.crd.yaml
 // +openshift:enable:FeatureGate=PlatformOperators
 // +kubebuilder:metadata:annotations=include.release.openshift.io/self-managed-high-availability=true
 // +kubebuilder:metadata:annotations=include.release.openshift.io/single-node-developer=true

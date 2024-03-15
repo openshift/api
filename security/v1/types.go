@@ -25,7 +25,7 @@ var AllowAllCapabilities corev1.Capability = "*"
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=securitycontextconstraints,scope=Cluster
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/470
-// +openshift:file-pattern=0000_03_security-openshift_01_sccMARKERS.crd.yaml
+// +openshift:file-pattern=cvoRunLevel=0000_03,operatorName=config-operator,operatorOrdering=01
 // +kubebuilder:printcolumn:name="Priv",type=string,JSONPath=.allowPrivilegedContainer,description="Determines if a container can request to be run as privileged"
 // +kubebuilder:printcolumn:name="Caps",type=string,JSONPath=.allowedCapabilities,description="A list of capabilities that can be requested to add to the container"
 // +kubebuilder:printcolumn:name="SELinux",type=string,JSONPath=.seLinuxContext.type,description="Strategy that will dictate what labels will be set in the SecurityContext"

@@ -13,7 +13,7 @@ import (
 // +kubebuilder:resource:path=machinesets,scope=Namespaced
 // +kubebuilder:subresource:status
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/1032
-// +openshift:file-pattern=0000_10_machinesetMARKERS.crd.yaml
+// +openshift:file-pattern=cvoRunLevel=0000_10,operatorName=machine-api,operatorOrdering=01
 // +openshift:capability=MachineAPI
 // +kubebuilder:metadata:annotations="exclude.release.openshift.io/internal-openshift-hosted=true"
 // +kubebuilder:metadata:annotations="include.release.openshift.io/self-managed-high-availability=true"

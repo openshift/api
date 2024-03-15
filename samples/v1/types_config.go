@@ -19,7 +19,7 @@ import (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +kubebuilder:resource:path=configs,scope=Cluster
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/513
-// +openshift:file-pattern=00_samplesconfigMARKERS.crd.yaml
+// +openshift:file-pattern=operatorOrdering=00
 // +kubebuilder:metadata:annotations="description=Extension for configuring openshift samples operator."
 // +kubebuilder:metadata:annotations="displayName=ConfigsSamples"
 type Config struct {

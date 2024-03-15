@@ -9,7 +9,7 @@ import (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +openshift:compatibility-gen:level=1
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/xxx
-// +openshift:file-pattern=0000_50_stabletypeMARKERS.crd.yaml
+// +openshift:file-pattern=cvoRunLevel=0000_50,operatorName=my-operator,operatorOrdering=01
 
 // StableConfigType is a stable config type that may include TechPreviewNoUpgrade fields.
 //

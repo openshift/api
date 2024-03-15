@@ -13,7 +13,7 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // +kubebuilder:resource:path=consolelinks,scope=Cluster
 // +kubebuilder:subresource:status
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/481
-// +openshift:file-pattern=00_consolelinkMARKERS.crd.yaml
+// +openshift:file-pattern=operatorOrdering=00
 // +openshift:capability=Console
 // +kubebuilder:metadata:annotations="description=Extension for customizing OpenShift web console links"
 // +kubebuilder:metadata:annotations="displayName=ConsoleLinks"

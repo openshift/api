@@ -14,7 +14,7 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=consoleplugins,scope=Cluster
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/1186
-// +openshift:file-pattern=90_consolepluginMARKERS.crd.yaml
+// +openshift:file-pattern=operatorOrdering=90
 // +openshift:capability=Console
 // +kubebuilder:metadata:annotations="description=Extension for configuring openshift web console plugins."
 // +kubebuilder:metadata:annotations="displayName=ConsolePlugin"

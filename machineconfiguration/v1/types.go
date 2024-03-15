@@ -23,7 +23,7 @@ const KubeletConfigRoleLabelPrefix = "pools.operator.machineconfiguration.opensh
 // +kubebuilder:resource:path=controllerconfigs,scope=Cluster
 // +kubebuilder:subresource:status
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/1453
-// +openshift:file-pattern=0000_80_controllerconfigMARKERS.crd.yaml
+// +openshift:file-pattern=cvoRunLevel=0000_80,operatorName=machine-config,operatorOrdering=01
 // +kubebuilder:metadata:labels=openshift.io/operator-managed=
 
 // ControllerConfig describes configuration for MachineConfigController.
@@ -292,7 +292,7 @@ type ControllerConfigList struct {
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=machineconfigs,scope=Cluster,shortName=mc
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/1453
-// +openshift:file-pattern=0000_80_machineconfigMARKERS.crd.yaml
+// +openshift:file-pattern=cvoRunLevel=0000_80,operatorName=machine-config,operatorOrdering=01
 // +kubebuilder:metadata:labels="openshift.io/operator-managed="
 // +kubebuilder:printcolumn:name=GeneratedByController,JSONPath=.metadata.annotations.machineconfiguration\.openshift\.io/generated-by-controller-version,type=string,description=Version of the controller that generated the machineconfig. This will be empty if the machineconfig is not managed by a controller.
 // +kubebuilder:printcolumn:name=IgnitionVersion,JSONPath=.spec.config.ignition.version,type=string,description=Version of the Ignition Config defined in the machineconfig.
@@ -366,7 +366,7 @@ type MachineConfigList struct {
 // +kubebuilder:resource:path=machineconfigpools,scope=Cluster,shortName=mcp
 // +kubebuilder:subresource:status
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/1453
-// +openshift:file-pattern=0000_80_machineconfigpoolMARKERS.crd.yaml
+// +openshift:file-pattern=cvoRunLevel=0000_80,operatorName=machine-config,operatorOrdering=01
 // +kubebuilder:metadata:labels="openshift.io/operator-managed="
 // +kubebuilder:printcolumn:name=Config,JSONPath=.status.configuration.name,type=string
 // +kubebuilder:printcolumn:name=Updated,JSONPath=.status.conditions[?(@.type=="Updated")].status,type=string,description=When all the machines in the pool are updated to the correct machine config.
@@ -574,7 +574,7 @@ type MachineConfigPoolList struct {
 // +kubebuilder:resource:path=kubeletconfigs,scope=Cluster
 // +kubebuilder:subresource:status
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/1453
-// +openshift:file-pattern=0000_80_kubeletconfigMARKERS.crd.yaml
+// +openshift:file-pattern=cvoRunLevel=0000_80,operatorName=machine-config,operatorOrdering=01
 // +kubebuilder:metadata:labels="openshift.io/operator-managed="
 // +openshift:compatibility-gen:level=1
 type KubeletConfig struct {
@@ -683,7 +683,7 @@ type KubeletConfigList struct {
 // +kubebuilder:resource:path=containerruntimeconfigs,scope=Cluster,shortName=ctrcfg
 // +kubebuilder:subresource:status
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/1453
-// +openshift:file-pattern=0000_80_containerruntimeconfigMARKERS.crd.yaml
+// +openshift:file-pattern=cvoRunLevel=0000_80,operatorName=machine-config,operatorOrdering=01
 // +kubebuilder:metadata:labels="openshift.io/operator-managed="
 // +openshift:compatibility-gen:level=1
 type ContainerRuntimeConfig struct {

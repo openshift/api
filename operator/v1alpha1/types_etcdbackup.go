@@ -16,7 +16,7 @@ import (
 // +kubebuilder:resource:path=etcdbackups,scope=Cluster
 // +kubebuilder:subresource:status
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/1482
-// +openshift:file-pattern=0000_10_01_etcdbackupMARKERS.crd.yaml
+// +openshift:file-pattern=cvoRunLevel=0000_10,operatorName=etcd,operatorOrdering=01
 // +openshift:enable:FeatureGate=AutomatedEtcdBackup
 type EtcdBackup struct {
 	metav1.TypeMeta   `json:",inline"`

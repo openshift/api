@@ -99,7 +99,8 @@ func setAbsolutePath(suitePath string, path *string) error {
 		return nil
 	}
 	dir := filepath.Dir(suitePath)
-	relPath := filepath.Join(dir, *path)
+	// account for the generated file move.
+	relPath := filepath.Join(dir, "zz_generated.crd-manifests", *path)
 
 	absPath, err := filepath.Abs(relPath)
 	if err != nil {
@@ -446,6 +447,6 @@ func getSuiteSpecTestVersion(suiteSpec SuiteSpec) (string, error) {
 
 	// When there's multiple versions we fall back to an educated guess based
 	// on the directory structure. Normally the folder name is the version.
-	packageDir := filepath.Dir(suiteSpec.CRD)
+	packageDir := filepath.Dir(filepath.Dir(suiteSpec.CRD))
 	return filepath.Base(packageDir), nil
 }

@@ -3,7 +3,9 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.openshift.io: https://github.com/openshift/api/pull/475
-    api.openshift.io/filename-pattern: 0000_70_dns-operator_00MARKERS.crd.yaml
+    api.openshift.io/filename-cvo-runlevel: "0000_70"
+    api.openshift.io/filename-operator: dns
+    api.openshift.io/filename-ordering: "00"
     feature-gate.release.openshift.io/: "true"
   name: dnses.operator.openshift.io
 spec:

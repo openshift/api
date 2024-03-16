@@ -6,6 +6,9 @@ notstableconfigtypes.example.openshift.io:
   Category: ""
   FeatureGates:
   - Example
+  FilenameOperatorName: my-operator
+  FilenameOperatorOrdering: "01"
+  FilenameRunLevel: "0000_50"
   GroupName: example.openshift.io
   HasStatus: false
   KindName: NotStableConfigType
@@ -14,7 +17,6 @@ notstableconfigtypes.example.openshift.io:
   PrinterColumns: []
   Scope: Cluster
   ShortNames: null
-  TargetFilenamePattern: 0000_50_notstabletypeMARKERS.crd.yaml
   TopLevelFeatureGates:
   - Example
   Version: v1alpha1

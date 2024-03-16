@@ -8,6 +8,9 @@ machines.machine.openshift.io:
   Capability: MachineAPI
   Category: ""
   FeatureGates: []
+  FilenameOperatorName: machine-api
+  FilenameOperatorOrdering: "01"
+  FilenameRunLevel: "0000_10"
   GroupName: machine.openshift.io
   HasStatus: true
   KindName: Machine
@@ -51,7 +54,6 @@ machines.machine.openshift.io:
     type: string
   Scope: Namespaced
   ShortNames: null
-  TargetFilenamePattern: 0000_10_machineMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1beta1
 
@@ -65,6 +67,9 @@ machinehealthchecks.machine.openshift.io:
   Capability: MachineAPI
   Category: ""
   FeatureGates: []
+  FilenameOperatorName: machine-api
+  FilenameOperatorOrdering: "01"
+  FilenameRunLevel: "0000_10"
   GroupName: machine.openshift.io
   HasStatus: true
   KindName: MachineHealthCheck
@@ -87,7 +92,6 @@ machinehealthchecks.machine.openshift.io:
   ShortNames:
   - mhc
   - mhcs
-  TargetFilenamePattern: 0000_10_machinehealthcheckMARKERS.yaml
   TopLevelFeatureGates: []
   Version: v1beta1
 
@@ -101,6 +105,9 @@ machinesets.machine.openshift.io:
   Capability: MachineAPI
   Category: ""
   FeatureGates: []
+  FilenameOperatorName: machine-api
+  FilenameOperatorOrdering: "01"
+  FilenameRunLevel: "0000_10"
   GroupName: machine.openshift.io
   HasStatus: true
   KindName: MachineSet
@@ -129,7 +136,6 @@ machinesets.machine.openshift.io:
     type: date
   Scope: Namespaced
   ShortNames: null
-  TargetFilenamePattern: 0000_10_machinesetMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1beta1
 

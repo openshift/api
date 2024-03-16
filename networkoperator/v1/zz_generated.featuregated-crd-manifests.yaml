@@ -7,6 +7,9 @@ egressrouters.network.operator.openshift.io:
   Capability: ""
   Category: ""
   FeatureGates: []
+  FilenameOperatorName: ""
+  FilenameOperatorOrdering: "001"
+  FilenameRunLevel: ""
   GroupName: network.operator.openshift.io
   HasStatus: true
   KindName: EgressRouter
@@ -21,7 +24,6 @@ egressrouters.network.operator.openshift.io:
     type: string
   Scope: Namespaced
   ShortNames: null
-  TargetFilenamePattern: 001-egressrouterMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1
 

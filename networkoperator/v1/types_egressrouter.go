@@ -25,7 +25,7 @@ import (
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:path=egressrouters,scope=Namespaced
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/851
-// +openshift:file-pattern=001-egressrouterMARKERS.crd.yaml
+// +openshift:file-pattern=operatorOrdering=001
 // +kubebuilder:metadata:annotations=include.release.openshift.io/self-managed-high-availability=true
 // +kubebuilder:metadata:annotations=include.release.openshift.io/ibm-cloud-managed=true
 // +kubebuilder:printcolumn:name="Condition",type=string,JSONPath=".status.conditions[*].type"

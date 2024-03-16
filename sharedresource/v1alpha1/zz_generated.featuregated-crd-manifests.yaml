@@ -7,6 +7,9 @@ sharedconfigmaps.sharedresource.openshift.io:
   Capability: ""
   Category: ""
   FeatureGates: []
+  FilenameOperatorName: ""
+  FilenameOperatorOrdering: ""
+  FilenameRunLevel: ""
   GroupName: sharedresource.openshift.io
   HasStatus: true
   KindName: SharedConfigMap
@@ -15,7 +18,6 @@ sharedconfigmaps.sharedresource.openshift.io:
   PrinterColumns: []
   Scope: Cluster
   ShortNames: null
-  TargetFilenamePattern: 0000_10_sharedconfigmapMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1alpha1
 
@@ -28,6 +30,9 @@ sharedsecrets.sharedresource.openshift.io:
   Capability: ""
   Category: ""
   FeatureGates: []
+  FilenameOperatorName: ""
+  FilenameOperatorOrdering: ""
+  FilenameRunLevel: ""
   GroupName: sharedresource.openshift.io
   HasStatus: true
   KindName: SharedSecret
@@ -36,7 +41,6 @@ sharedsecrets.sharedresource.openshift.io:
   PrinterColumns: []
   Scope: Cluster
   ShortNames: null
-  TargetFilenamePattern: 0000_10_sharedsecretMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1alpha1
 

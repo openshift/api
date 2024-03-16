@@ -3,7 +3,9 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.openshift.io: https://github.com/openshift/api/pull/486
-    api.openshift.io/filename-pattern: 00_console-operatorMARKERS.crd.yaml
+    api.openshift.io/filename-cvo-runlevel: "0000_50"
+    api.openshift.io/filename-operator: console
+    api.openshift.io/filename-ordering: "01"
     feature-gate.release.openshift.io/: "true"
   name: consoles.operator.openshift.io
 spec:

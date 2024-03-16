@@ -3,7 +3,9 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.openshift.io: https://github.com/openshift/api/pull/470
-    api.openshift.io/filename-pattern: 0000_10_openshift-controller-manager-operator_01_buildMARKERS.crd.yaml
+    api.openshift.io/filename-cvo-runlevel: "0000_10"
+    api.openshift.io/filename-operator: openshift-controller-manager
+    api.openshift.io/filename-ordering: "01"
     capability.openshift.io/name: Build
     feature-gate.release.openshift.io/: "true"
   name: builds.config.openshift.io

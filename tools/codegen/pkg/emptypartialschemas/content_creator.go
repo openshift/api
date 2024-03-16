@@ -160,8 +160,14 @@ func minimalCRDFor(crdInfo *CRDInfo, featureGate string) *apiextensionsv1.Custom
 			PreserveUnknownFields: false,
 		},
 	}
-	if len(crdInfo.TargetFilenamePattern) > 0 {
-		ret.Annotations["api.openshift.io/filename-pattern"] = crdInfo.TargetFilenamePattern
+	if len(crdInfo.FilenameRunLevel) > 0 {
+		ret.Annotations["api.openshift.io/filename-cvo-runlevel"] = crdInfo.FilenameRunLevel
+	}
+	if len(crdInfo.FilenameOperatorName) > 0 {
+		ret.Annotations["api.openshift.io/filename-operator"] = crdInfo.FilenameOperatorName
+	}
+	if len(crdInfo.FilenameOperatorOrdering) > 0 {
+		ret.Annotations["api.openshift.io/filename-ordering"] = crdInfo.FilenameOperatorOrdering
 	}
 	if len(crdInfo.ApprovedPRNumber) > 0 {
 		ret.Annotations["api-approved.openshift.io"] = crdInfo.ApprovedPRNumber

@@ -3,7 +3,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.openshift.io: https://github.com/openshift/api/pull/513
-    api.openshift.io/filename-pattern: 00_samplesconfigMARKERS.crd.yaml
+    api.openshift.io/filename-ordering: "00"
     description: Extension for configuring openshift samples operator.
     displayName: ConfigsSamples
     feature-gate.release.openshift.io/: "true"

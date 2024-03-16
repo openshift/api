@@ -3,7 +3,9 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.openshift.io: https://github.com/openshift/api/pull/1179
-    api.openshift.io/filename-pattern: 0000_50_monitoring_02_alertrelabelconfigsMARKERS.crd.yaml
+    api.openshift.io/filename-cvo-runlevel: "0000_50"
+    api.openshift.io/filename-operator: monitoring
+    api.openshift.io/filename-ordering: "02"
     description: OpenShift Monitoring alert relabel configurations
     feature-gate.release.openshift.io/AlertingRules: "true"
   name: alertrelabelconfigs.monitoring.openshift.io

@@ -8,6 +8,9 @@ consoleclidownloads.console.openshift.io:
   Capability: Console
   Category: ""
   FeatureGates: []
+  FilenameOperatorName: ""
+  FilenameOperatorOrdering: "00"
+  FilenameRunLevel: ""
   GroupName: console.openshift.io
   HasStatus: true
   KindName: ConsoleCLIDownload
@@ -22,7 +25,6 @@ consoleclidownloads.console.openshift.io:
     type: string
   Scope: Cluster
   ShortNames: null
-  TargetFilenamePattern: 00_consoleclidownloadMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1
 
@@ -36,6 +38,9 @@ consoleexternalloglinks.console.openshift.io:
   Capability: Console
   Category: ""
   FeatureGates: []
+  FilenameOperatorName: ""
+  FilenameOperatorOrdering: "00"
+  FilenameRunLevel: ""
   GroupName: console.openshift.io
   HasStatus: true
   KindName: ConsoleExternalLogLink
@@ -53,7 +58,6 @@ consoleexternalloglinks.console.openshift.io:
     type: date
   Scope: Cluster
   ShortNames: null
-  TargetFilenamePattern: 00_consoleexternalloglinkMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1
 
@@ -66,6 +70,9 @@ consolelinks.console.openshift.io:
   Capability: Console
   Category: ""
   FeatureGates: []
+  FilenameOperatorName: ""
+  FilenameOperatorOrdering: "00"
+  FilenameRunLevel: ""
   GroupName: console.openshift.io
   HasStatus: true
   KindName: ConsoleLink
@@ -86,7 +93,6 @@ consolelinks.console.openshift.io:
     type: date
   Scope: Cluster
   ShortNames: null
-  TargetFilenamePattern: 00_consolelinkMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1
 
@@ -99,6 +105,9 @@ consolenotifications.console.openshift.io:
   Capability: Console
   Category: ""
   FeatureGates: []
+  FilenameOperatorName: ""
+  FilenameOperatorOrdering: "00"
+  FilenameRunLevel: ""
   GroupName: console.openshift.io
   HasStatus: true
   KindName: ConsoleNotification
@@ -116,7 +125,6 @@ consolenotifications.console.openshift.io:
     type: date
   Scope: Cluster
   ShortNames: null
-  TargetFilenamePattern: 00_consolenotificationMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1
 
@@ -130,6 +138,9 @@ consoleplugins.console.openshift.io:
   Capability: Console
   Category: ""
   FeatureGates: []
+  FilenameOperatorName: ""
+  FilenameOperatorOrdering: "90"
+  FilenameRunLevel: ""
   GroupName: console.openshift.io
   HasStatus: false
   KindName: ConsolePlugin
@@ -138,7 +149,6 @@ consoleplugins.console.openshift.io:
   PrinterColumns: []
   Scope: Cluster
   ShortNames: null
-  TargetFilenamePattern: 90_consolepluginMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1
 
@@ -152,6 +162,9 @@ consolequickstarts.console.openshift.io:
   Capability: Console
   Category: ""
   FeatureGates: []
+  FilenameOperatorName: ""
+  FilenameOperatorOrdering: "00"
+  FilenameRunLevel: ""
   GroupName: console.openshift.io
   HasStatus: false
   KindName: ConsoleQuickStart
@@ -160,7 +173,6 @@ consolequickstarts.console.openshift.io:
   PrinterColumns: []
   Scope: Cluster
   ShortNames: null
-  TargetFilenamePattern: 00_consolequickstartMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1
 
@@ -174,6 +186,9 @@ consolesamples.console.openshift.io:
   Capability: Console
   Category: ""
   FeatureGates: []
+  FilenameOperatorName: ""
+  FilenameOperatorOrdering: "00"
+  FilenameRunLevel: ""
   GroupName: console.openshift.io
   HasStatus: false
   KindName: ConsoleSample
@@ -182,7 +197,6 @@ consolesamples.console.openshift.io:
   PrinterColumns: []
   Scope: Cluster
   ShortNames: null
-  TargetFilenamePattern: 00_consolesampleMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1
 
@@ -195,6 +209,9 @@ consoleyamlsamples.console.openshift.io:
   Capability: Console
   Category: ""
   FeatureGates: []
+  FilenameOperatorName: ""
+  FilenameOperatorOrdering: "00"
+  FilenameRunLevel: ""
   GroupName: console.openshift.io
   HasStatus: false
   KindName: ConsoleYAMLSample
@@ -203,7 +220,6 @@ consoleyamlsamples.console.openshift.io:
   PrinterColumns: []
   Scope: Cluster
   ShortNames: null
-  TargetFilenamePattern: 00_consoleyamlsampleMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1
 

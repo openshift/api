@@ -1,6 +1,6 @@
 apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
 name: "[TechPreviewNoUpgrade] Example API"
-crd: 0000_50_stabletype-TechPreviewNoUpgrade.crd.yaml
+crd: 0000_50_my-operator_01_stableconfigtypes-TechPreviewNoUpgrade.crd.yaml
 tests:
   onCreate:
   - name: Should persist stable fields

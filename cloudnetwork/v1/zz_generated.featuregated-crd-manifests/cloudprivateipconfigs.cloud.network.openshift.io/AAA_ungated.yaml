@@ -3,7 +3,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.openshift.io: https://github.com/openshift/api/pull/859
-    api.openshift.io/filename-pattern: 001-cloudprivateipconfigMARKERS.crd.yaml
+    api.openshift.io/filename-ordering: "001"
     feature-gate.release.openshift.io/: "true"
   name: cloudprivateipconfigs.cloud.network.openshift.io
 spec:

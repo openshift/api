@@ -33,7 +33,6 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // +kubebuilder:resource:path=sharedconfigmaps,scope=Cluster
 // +kubebuilder:subresource:status
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/979
-// +openshift:file-pattern=0000_10_sharedconfigmapMARKERS.crd.yaml
 // +kubebuilder:metadata:annotations="description=Extension for sharing ConfigMaps across Namespaces"
 // +kubebuilder:metadata:annotations="displayName=SharedConfigMap"
 // +k8s:openapi-gen=true

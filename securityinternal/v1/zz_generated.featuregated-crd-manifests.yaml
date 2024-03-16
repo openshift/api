@@ -5,6 +5,9 @@ rangeallocations.security.internal.openshift.io:
   Capability: ""
   Category: ""
   FeatureGates: []
+  FilenameOperatorName: config-operator
+  FilenameOperatorOrdering: "02"
+  FilenameRunLevel: "0000_03"
   GroupName: security.internal.openshift.io
   HasStatus: false
   KindName: RangeAllocation
@@ -13,7 +16,6 @@ rangeallocations.security.internal.openshift.io:
   PrinterColumns: []
   Scope: Cluster
   ShortNames: null
-  TargetFilenamePattern: 0000_03_securityinternal-openshift_02_rangeallocationMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1
 

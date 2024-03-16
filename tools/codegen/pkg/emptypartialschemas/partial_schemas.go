@@ -53,23 +53,25 @@ type generatorResultGatherer struct {
 }
 
 type CRDInfo struct {
-	CRDName               string
-	TopLevelFeatureGates  []string
-	GroupName             string
-	Version               string
-	PluralName            string
-	KindName              string
-	Scope                 string
-	HasStatus             bool
-	FeatureGates          []string
-	ShortNames            []string
-	Category              string
-	ApprovedPRNumber      string
-	TargetFilenamePattern string
-	Capability            string
-	PrinterColumns        []apiextensionsv1.CustomResourceColumnDefinition
-	Annotations           map[string]string
-	Labels                map[string]string
+	CRDName                  string
+	TopLevelFeatureGates     []string
+	GroupName                string
+	Version                  string
+	PluralName               string
+	KindName                 string
+	Scope                    string
+	HasStatus                bool
+	FeatureGates             []string
+	ShortNames               []string
+	Category                 string
+	ApprovedPRNumber         string
+	FilenameRunLevel         string
+	FilenameOperatorName     string
+	FilenameOperatorOrdering string
+	Capability               string
+	PrinterColumns           []apiextensionsv1.CustomResourceColumnDefinition
+	Annotations              map[string]string
+	Labels                   map[string]string
 }
 
 func (g *generatorResultGatherer) Packages(context *gengogenerator.Context, arguments *args.GeneratorArgs) gengogenerator.Packages {
@@ -271,6 +273,11 @@ func (g *genFeatureGatedPartialSchemas) GenerateType(c *gengogenerator.Context, 
 	}
 	kubeBuilderResourceValues := allResources[0]
 
+	filenameValues, err := extractNamedValuesForType(t, openshiftCRDFilenameMarkerName)
+	if err != nil {
+		return fmt.Errorf("failed extracting %q: %w", openshiftCRDFilenameMarkerName, err)
+	}
+
 	resourceName := kubeBuilderResourceValues["path"]
 	scope := kubeBuilderResourceValues["scope"]
 	if len(resourceName) == 0 {
@@ -282,24 +289,27 @@ func (g *genFeatureGatedPartialSchemas) GenerateType(c *gengogenerator.Context, 
 	crdName := fmt.Sprintf("%s.%s", resourceName, g.groupName)
 	annotations, labels := extractMetadataForType(t)
 	crdInfo := &CRDInfo{
-		CRDName:               crdName,
-		TopLevelFeatureGates:  topLevelTypeConditional,
-		GroupName:             g.groupName,
-		Version:               filepath.Base(g.targetPackage),
-		PluralName:            resourceName,
-		KindName:              t.Name.Name,
-		Scope:                 scope,
-		Category:              kubeBuilderResourceValues["categories"],
-		HasStatus:             tagExistsForType(t, kubeBuilderStatus),
-		FeatureGates:          allFeatureGates.List(),
-		PrinterColumns:        extractPrinterColumnsForType(t),
-		ApprovedPRNumber:      extractStringTagForType(t, openshiftApprovedPRMarkerName),
-		TargetFilenamePattern: extractStringTagForType(t, openshiftCRDFilenameMarkerName),
-		Capability:            extractStringTagForType(t, openshiftCapabilityMarkerName),
-		Annotations:           annotations,
-		Labels:                labels,
+		CRDName:                  crdName,
+		TopLevelFeatureGates:     topLevelTypeConditional,
+		GroupName:                g.groupName,
+		Version:                  filepath.Base(g.targetPackage),
+		PluralName:               resourceName,
+		KindName:                 t.Name.Name,
+		Scope:                    scope,
+		HasStatus:                tagExistsForType(t, kubeBuilderStatus),
+		FeatureGates:             allFeatureGates.List(),
+		ShortNames:               nil,
+		Category:                 kubeBuilderResourceValues["categories"],
+		ApprovedPRNumber:         extractStringTagForType(t, openshiftApprovedPRMarkerName),
+		FilenameRunLevel:         filenameValues["cvoRunLevel"],
+		FilenameOperatorName:     filenameValues["operatorName"],
+		FilenameOperatorOrdering: filenameValues["operatorOrdering"],
+		Capability:               extractStringTagForType(t, openshiftCapabilityMarkerName),
+		PrinterColumns:           extractPrinterColumnsForType(t),
+		Annotations:              annotations,
+		Labels:                   labels,
 	}
-	if len(kubeBuilderResourceValues["shortName"]) > 0{
+	if len(kubeBuilderResourceValues["shortName"]) > 0 {
 		crdInfo.ShortNames = strings.Split(kubeBuilderResourceValues["shortName"], ";")
 	}
 	g.crdInfoTracker.crdNamesToFeatureGates[crdName] = crdInfo

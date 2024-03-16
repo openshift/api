@@ -5,6 +5,9 @@ clusterresourcequotas.quota.openshift.io:
   Capability: ""
   Category: ""
   FeatureGates: []
+  FilenameOperatorName: config-operator
+  FilenameOperatorOrdering: "01"
+  FilenameRunLevel: "0000_03"
   GroupName: quota.openshift.io
   HasStatus: true
   KindName: ClusterResourceQuota
@@ -13,7 +16,6 @@ clusterresourcequotas.quota.openshift.io:
   PrinterColumns: []
   Scope: Cluster
   ShortNames: null
-  TargetFilenamePattern: 0000_03_quota-openshift_01_clusterresourcequotaMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1
 

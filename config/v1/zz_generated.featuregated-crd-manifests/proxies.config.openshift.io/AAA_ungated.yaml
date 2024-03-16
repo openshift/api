@@ -3,7 +3,9 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.openshift.io: https://github.com/openshift/api/pull/470
-    api.openshift.io/filename-pattern: 0000_03_config-operator_01_proxyMARKERS.crd.yaml
+    api.openshift.io/filename-cvo-runlevel: "0000_03"
+    api.openshift.io/filename-operator: config-operator
+    api.openshift.io/filename-ordering: "01"
     feature-gate.release.openshift.io/: "true"
   name: proxies.config.openshift.io
 spec:

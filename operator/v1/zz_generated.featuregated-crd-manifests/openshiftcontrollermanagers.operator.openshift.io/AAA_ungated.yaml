@@ -3,7 +3,9 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.openshift.io: https://github.com/openshift/api/pull/475
-    api.openshift.io/filename-pattern: 0000_50_cluster-openshift-controller-manager-operator_02_configMARKERS.crd.yaml
+    api.openshift.io/filename-cvo-runlevel: "0000_50"
+    api.openshift.io/filename-operator: openshift-controller-manager
+    api.openshift.io/filename-ordering: "02"
     feature-gate.release.openshift.io/: "true"
   name: openshiftcontrollermanagers.operator.openshift.io
 spec:

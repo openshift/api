@@ -80,10 +80,17 @@ func extractFeatureGatesFromValidationMarker(comments []string, tagName string) 
 	return ret
 }
 
+func extractNamedValuesForType(t *types.Type, tagName string) (map[string]string, error) {
+	return extractNamedValues(allCommentsForType(t), tagName)
+}
+
 func extractNamedValues(comments []string, tagName string) (map[string]string, error) {
 	tagVals := types.ExtractCommentTags("+", comments)[tagName]
 	if len(tagVals) > 1 {
 		return nil, fmt.Errorf("too many tag values: %d", len(tagVals))
+	}
+	if len(tagVals) == 0 {
+		return nil, nil
 	}
 
 	return extractNamedValuesFromSingleLine(tagVals[0]), nil

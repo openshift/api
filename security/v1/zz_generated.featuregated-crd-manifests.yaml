@@ -5,6 +5,9 @@ securitycontextconstraints.security.openshift.io:
   Capability: ""
   Category: ""
   FeatureGates: []
+  FilenameOperatorName: config-operator
+  FilenameOperatorOrdering: "01"
+  FilenameRunLevel: "0000_03"
   GroupName: security.openshift.io
   HasStatus: false
   KindName: SecurityContextConstraints
@@ -50,7 +53,6 @@ securitycontextconstraints.security.openshift.io:
     type: string
   Scope: Cluster
   ShortNames: null
-  TargetFilenamePattern: 0000_03_security-openshift_01_sccMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1
 

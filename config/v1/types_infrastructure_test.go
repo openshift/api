@@ -11,8 +11,8 @@ import (
 )
 
 const (
-	infraCRDDefaultFilePath     = "0000_10_config-operator_01_infrastructure-Default.crd.yaml"
-	infraCRDTestPreviewFilePath = "0000_10_config-operator_01_infrastructure-TechPreviewNoUpgrade.crd.yaml"
+	infraCRDDefaultFilePath     = "0000_10_config-operator_01_infrastructures-Default.crd.yaml"
+	infraCRDTestPreviewFilePath = "0000_10_config-operator_01_infrastructures-TechPreviewNoUpgrade.crd.yaml"
 )
 
 // TestInfrastructureStatusDefault verifies that the infrastructure CR status does not have default value

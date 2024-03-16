@@ -5,6 +5,9 @@ helmchartrepositories.helm.openshift.io:
   Capability: ""
   Category: ""
   FeatureGates: []
+  FilenameOperatorName: ""
+  FilenameOperatorOrdering: "00"
+  FilenameRunLevel: ""
   GroupName: helm.openshift.io
   HasStatus: true
   KindName: HelmChartRepository
@@ -13,7 +16,6 @@ helmchartrepositories.helm.openshift.io:
   PrinterColumns: []
   Scope: Cluster
   ShortNames: null
-  TargetFilenamePattern: 00_helm-chart-repositoryMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1beta1
 
@@ -24,6 +26,9 @@ projecthelmchartrepositories.helm.openshift.io:
   Capability: ""
   Category: ""
   FeatureGates: []
+  FilenameOperatorName: ""
+  FilenameOperatorOrdering: "00"
+  FilenameRunLevel: ""
   GroupName: helm.openshift.io
   HasStatus: true
   KindName: ProjectHelmChartRepository
@@ -32,7 +37,6 @@ projecthelmchartrepositories.helm.openshift.io:
   PrinterColumns: []
   Scope: Namespaced
   ShortNames: null
-  TargetFilenamePattern: 00_project-helm-chart-repositoryMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1beta1
 

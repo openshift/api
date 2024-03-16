@@ -22,7 +22,7 @@ const (
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:path=apirequestcounts,scope=Cluster
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/897
-// +openshift:file-pattern=apiserver.openshift.io_apirequestcountMARKERS.yaml
+// +openshift:file-pattern=operatorName=kube-apiserver
 // +kubebuilder:metadata:annotations=include.release.openshift.io/self-managed-high-availability=true
 // +kubebuilder:metadata:annotations=include.release.openshift.io/single-node-developer=true
 // +kubebuilder:printcolumn:name=RemovedInRelease,JSONPath=.status.removedInRelease,type=string,description=Release in which an API will be removed.

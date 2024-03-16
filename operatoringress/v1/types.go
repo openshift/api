@@ -13,7 +13,7 @@ import (
 // +kubebuilder:resource:path=dnsrecords,scope=Namespaced
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/584
 // +openshift:capability=Ingress
-// +openshift:file-pattern=0000_50_dns-recordMARKERS.yaml
+// +openshift:file-pattern=cvoRunLevel=0000_50,operatorName=dns,operatorOrdering=01
 
 // DNSRecord is a DNS record managed in the zones defined by
 // dns.config.openshift.io/cluster .spec.publicZone and .spec.privateZone.

@@ -3,7 +3,6 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.openshift.io: https://github.com/openshift/api/pull/979
-    api.openshift.io/filename-pattern: 0000_10_sharedsecretMARKERS.crd.yaml
     description: Extension for sharing Secrets across Namespaces
     displayName: SharedSecret
     feature-gate.release.openshift.io/: "true"

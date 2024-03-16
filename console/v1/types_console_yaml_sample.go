@@ -12,7 +12,7 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=consoleyamlsamples,scope=Cluster
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/481
-// +openshift:file-pattern=00_consoleyamlsampleMARKERS.crd.yaml
+// +openshift:file-pattern=operatorOrdering=00
 // +openshift:capability=Console
 // +kubebuilder:metadata:annotations="description=Extension for configuring openshift web console YAML samples."
 // +kubebuilder:metadata:annotations="displayName=ConsoleYAMLSample"

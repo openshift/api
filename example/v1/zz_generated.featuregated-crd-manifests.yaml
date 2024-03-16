@@ -6,6 +6,9 @@ stableconfigtypes.example.openshift.io:
   Category: ""
   FeatureGates:
   - Example
+  FilenameOperatorName: my-operator
+  FilenameOperatorOrdering: "01"
+  FilenameRunLevel: "0000_50"
   GroupName: example.openshift.io
   HasStatus: true
   KindName: StableConfigType
@@ -14,7 +17,6 @@ stableconfigtypes.example.openshift.io:
   PrinterColumns: []
   Scope: Cluster
   ShortNames: null
-  TargetFilenamePattern: 0000_50_stabletypeMARKERS.crd.yaml
   TopLevelFeatureGates: []
   Version: v1
 

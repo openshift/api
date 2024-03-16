@@ -3,7 +3,9 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.openshift.io: https://github.com/openshift/api/pull/475
-    api.openshift.io/filename-pattern: 0000_50_service-ca-operator_02_MARKERScrd.yaml
+    api.openshift.io/filename-cvo-runlevel: "0000_50"
+    api.openshift.io/filename-operator: service-ca
+    api.openshift.io/filename-ordering: "02"
     feature-gate.release.openshift.io/: "true"
   name: servicecas.operator.openshift.io
 spec:

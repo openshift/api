@@ -17,7 +17,7 @@ import (
 // +kubebuilder:resource:path=clusterresourcequotas,scope=Cluster
 // +kubebuilder:subresource:status
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/470
-// +openshift:file-pattern=0000_03_quota-openshift_01_clusterresourcequotaMARKERS.crd.yaml
+// +openshift:file-pattern=cvoRunLevel=0000_03,operatorName=config-operator,operatorOrdering=01
 // +openshift:compatibility-gen:level=1
 type ClusterResourceQuota struct {
 	metav1.TypeMeta `json:",inline"`

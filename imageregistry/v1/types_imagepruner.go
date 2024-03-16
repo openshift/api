@@ -37,7 +37,7 @@ type ImagePrunerList struct {
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:path=imagepruners,scope=Cluster
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/555
-// +openshift:file-pattern=01_imageprunerMARKERS.crd.yaml
+// +openshift:file-pattern=operatorOrdering=01
 type ImagePruner struct {
 	metav1.TypeMeta `json:",inline"`
 

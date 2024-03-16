@@ -3,7 +3,9 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.openshift.io: https://github.com/openshift/api/pull/584
-    api.openshift.io/filename-pattern: 0000_50_dns-recordMARKERS.yaml
+    api.openshift.io/filename-cvo-runlevel: "0000_50"
+    api.openshift.io/filename-operator: dns
+    api.openshift.io/filename-ordering: "01"
     capability.openshift.io/name: Ingress
     feature-gate.release.openshift.io/: "true"
   name: dnsrecords.ingress.operator.openshift.io

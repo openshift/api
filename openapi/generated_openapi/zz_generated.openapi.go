@@ -975,13 +975,17 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.NetworkMigration":                                              schema_openshift_api_operator_v1_NetworkMigration(ref),
 		"github.com/openshift/api/operator/v1.NetworkSpec":                                                   schema_openshift_api_operator_v1_NetworkSpec(ref),
 		"github.com/openshift/api/operator/v1.NetworkStatus":                                                 schema_openshift_api_operator_v1_NetworkStatus(ref),
-		"github.com/openshift/api/operator/v1.NodeDisruptionPolicyAction":                                    schema_openshift_api_operator_v1_NodeDisruptionPolicyAction(ref),
 		"github.com/openshift/api/operator/v1.NodeDisruptionPolicyClusterStatus":                             schema_openshift_api_operator_v1_NodeDisruptionPolicyClusterStatus(ref),
 		"github.com/openshift/api/operator/v1.NodeDisruptionPolicyConfig":                                    schema_openshift_api_operator_v1_NodeDisruptionPolicyConfig(ref),
-		"github.com/openshift/api/operator/v1.NodeDisruptionPolicyFile":                                      schema_openshift_api_operator_v1_NodeDisruptionPolicyFile(ref),
-		"github.com/openshift/api/operator/v1.NodeDisruptionPolicySSHKey":                                    schema_openshift_api_operator_v1_NodeDisruptionPolicySSHKey(ref),
+		"github.com/openshift/api/operator/v1.NodeDisruptionPolicySpecAction":                                schema_openshift_api_operator_v1_NodeDisruptionPolicySpecAction(ref),
+		"github.com/openshift/api/operator/v1.NodeDisruptionPolicySpecFile":                                  schema_openshift_api_operator_v1_NodeDisruptionPolicySpecFile(ref),
+		"github.com/openshift/api/operator/v1.NodeDisruptionPolicySpecSSHKey":                                schema_openshift_api_operator_v1_NodeDisruptionPolicySpecSSHKey(ref),
+		"github.com/openshift/api/operator/v1.NodeDisruptionPolicySpecUnit":                                  schema_openshift_api_operator_v1_NodeDisruptionPolicySpecUnit(ref),
 		"github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatus":                                    schema_openshift_api_operator_v1_NodeDisruptionPolicyStatus(ref),
-		"github.com/openshift/api/operator/v1.NodeDisruptionPolicyUnit":                                      schema_openshift_api_operator_v1_NodeDisruptionPolicyUnit(ref),
+		"github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatusAction":                              schema_openshift_api_operator_v1_NodeDisruptionPolicyStatusAction(ref),
+		"github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatusFile":                                schema_openshift_api_operator_v1_NodeDisruptionPolicyStatusFile(ref),
+		"github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatusSSHKey":                              schema_openshift_api_operator_v1_NodeDisruptionPolicyStatusSSHKey(ref),
+		"github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatusUnit":                                schema_openshift_api_operator_v1_NodeDisruptionPolicyStatusUnit(ref),
 		"github.com/openshift/api/operator/v1.NodePlacement":                                                 schema_openshift_api_operator_v1_NodePlacement(ref),
 		"github.com/openshift/api/operator/v1.NodePortStrategy":                                              schema_openshift_api_operator_v1_NodePortStrategy(ref),
 		"github.com/openshift/api/operator/v1.NodeStatus":                                                    schema_openshift_api_operator_v1_NodeStatus(ref),
@@ -49977,7 +49981,139 @@ func schema_openshift_api_operator_v1_NetworkStatus(ref common.ReferenceCallback
 	}
 }
 
-func schema_openshift_api_operator_v1_NodeDisruptionPolicyAction(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_openshift_api_operator_v1_NodeDisruptionPolicyClusterStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NodeDisruptionPolicyClusterStatus is the type for the status object, rendered by the controller as a merge of cluster defaults and user provided policies",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"files": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"path",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "files is a list of MachineConfig file definitions and actions to take to changes on those paths",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatusFile"),
+									},
+								},
+							},
+						},
+					},
+					"units": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "units is a list MachineConfig unit definitions and actions to take on changes to those services",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatusUnit"),
+									},
+								},
+							},
+						},
+					},
+					"sshkey": {
+						SchemaProps: spec.SchemaProps{
+							Description: "sshkey is the overall sshkey MachineConfig definition",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatusSSHKey"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatusFile", "github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatusSSHKey", "github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatusUnit"},
+	}
+}
+
+func schema_openshift_api_operator_v1_NodeDisruptionPolicyConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NodeDisruptionPolicyConfig is the overall spec definition for files/units/sshkeys",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"files": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"path",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "files is a list of MachineConfig file definitions and actions to take to changes on those paths This list supports a maximum of 50 entries.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/operator/v1.NodeDisruptionPolicySpecFile"),
+									},
+								},
+							},
+						},
+					},
+					"units": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "units is a list MachineConfig unit definitions and actions to take on changes to those services This list supports a maximum of 50 entries.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/operator/v1.NodeDisruptionPolicySpecUnit"),
+									},
+								},
+							},
+						},
+					},
+					"sshkey": {
+						SchemaProps: spec.SchemaProps{
+							Description: "sshkey maps to the ignition.sshkeys field in the MachineConfig object, definition an action for this will apply to all sshkey changes in the cluster",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1.NodeDisruptionPolicySpecSSHKey"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1.NodeDisruptionPolicySpecFile", "github.com/openshift/api/operator/v1.NodeDisruptionPolicySpecSSHKey", "github.com/openshift/api/operator/v1.NodeDisruptionPolicySpecUnit"},
+	}
+}
+
+func schema_openshift_api_operator_v1_NodeDisruptionPolicySpecAction(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -49985,7 +50121,7 @@ func schema_openshift_api_operator_v1_NodeDisruptionPolicyAction(ref common.Refe
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "type represents the commands that will be carried out if this NodeDisruptionPolicyActionType is executed Valid value are Reboot, Drain, Reload, Restart, DaemonReload, None and Special reload/restart requires a corresponding service target specified in the reload/restart field. Other values require no further configuration",
+							Description: "type represents the commands that will be carried out if this NodeDisruptionPolicySpecActionType is executed Valid value are Reboot, Drain, Reload, Restart, DaemonReload, None and Special reload/restart requires a corresponding service target specified in the reload/restart field. Other values require no further configuration",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -50025,143 +50161,11 @@ func schema_openshift_api_operator_v1_NodeDisruptionPolicyAction(ref common.Refe
 	}
 }
 
-func schema_openshift_api_operator_v1_NodeDisruptionPolicyClusterStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_openshift_api_operator_v1_NodeDisruptionPolicySpecFile(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "NodeDisruptionPolicyClusterStatus is the type for the status object, rendered by the controller as a merge of cluster defaults and user provided policies",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"files": {
-						VendorExtensible: spec.VendorExtensible{
-							Extensions: spec.Extensions{
-								"x-kubernetes-list-map-keys": []interface{}{
-									"path",
-								},
-								"x-kubernetes-list-type": "map",
-							},
-						},
-						SchemaProps: spec.SchemaProps{
-							Description: "files is a list of MachineConfig file definitions and actions to take to changes on those paths",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("github.com/openshift/api/operator/v1.NodeDisruptionPolicyFile"),
-									},
-								},
-							},
-						},
-					},
-					"units": {
-						VendorExtensible: spec.VendorExtensible{
-							Extensions: spec.Extensions{
-								"x-kubernetes-list-map-keys": []interface{}{
-									"name",
-								},
-								"x-kubernetes-list-type": "map",
-							},
-						},
-						SchemaProps: spec.SchemaProps{
-							Description: "units is a list MachineConfig unit definitions and actions to take on changes to those services",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("github.com/openshift/api/operator/v1.NodeDisruptionPolicyUnit"),
-									},
-								},
-							},
-						},
-					},
-					"sshkey": {
-						SchemaProps: spec.SchemaProps{
-							Description: "sshkey is the overall sshkey MachineConfig definition",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/openshift/api/operator/v1.NodeDisruptionPolicySSHKey"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.NodeDisruptionPolicyFile", "github.com/openshift/api/operator/v1.NodeDisruptionPolicySSHKey", "github.com/openshift/api/operator/v1.NodeDisruptionPolicyUnit"},
-	}
-}
-
-func schema_openshift_api_operator_v1_NodeDisruptionPolicyConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "NodeDisruptionPolicyConfig is the overall spec definition for files/units/sshkeys",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"files": {
-						VendorExtensible: spec.VendorExtensible{
-							Extensions: spec.Extensions{
-								"x-kubernetes-list-map-keys": []interface{}{
-									"path",
-								},
-								"x-kubernetes-list-type": "map",
-							},
-						},
-						SchemaProps: spec.SchemaProps{
-							Description: "files is a list of MachineConfig file definitions and actions to take to changes on those paths This list supports a maximum of 50 entries.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("github.com/openshift/api/operator/v1.NodeDisruptionPolicyFile"),
-									},
-								},
-							},
-						},
-					},
-					"units": {
-						VendorExtensible: spec.VendorExtensible{
-							Extensions: spec.Extensions{
-								"x-kubernetes-list-map-keys": []interface{}{
-									"name",
-								},
-								"x-kubernetes-list-type": "map",
-							},
-						},
-						SchemaProps: spec.SchemaProps{
-							Description: "units is a list MachineConfig unit definitions and actions to take on changes to those services This list supports a maximum of 50 entries.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("github.com/openshift/api/operator/v1.NodeDisruptionPolicyUnit"),
-									},
-								},
-							},
-						},
-					},
-					"sshkey": {
-						SchemaProps: spec.SchemaProps{
-							Description: "sshkey maps to the ignition.sshkeys field in the MachineConfig object, definition an action for this will apply to all sshkey changes in the cluster",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/openshift/api/operator/v1.NodeDisruptionPolicySSHKey"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.NodeDisruptionPolicyFile", "github.com/openshift/api/operator/v1.NodeDisruptionPolicySSHKey", "github.com/openshift/api/operator/v1.NodeDisruptionPolicyUnit"},
-	}
-}
-
-func schema_openshift_api_operator_v1_NodeDisruptionPolicyFile(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "NodeDisruptionPolicyFile is a file entry and corresponding actions to take",
+				Description: "NodeDisruptionPolicySpecFile is a file entry and corresponding actions to take and is used in the NodeDisruptionPolicyConfig object",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"path": {
@@ -50185,7 +50189,7 @@ func schema_openshift_api_operator_v1_NodeDisruptionPolicyFile(ref common.Refere
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/openshift/api/operator/v1.NodeDisruptionPolicyAction"),
+										Ref:     ref("github.com/openshift/api/operator/v1.NodeDisruptionPolicySpecAction"),
 									},
 								},
 							},
@@ -50196,15 +50200,15 @@ func schema_openshift_api_operator_v1_NodeDisruptionPolicyFile(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.NodeDisruptionPolicyAction"},
+			"github.com/openshift/api/operator/v1.NodeDisruptionPolicySpecAction"},
 	}
 }
 
-func schema_openshift_api_operator_v1_NodeDisruptionPolicySSHKey(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_openshift_api_operator_v1_NodeDisruptionPolicySpecSSHKey(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "NodeDisruptionPolicySSHKey is actions to take for any SSHKey change",
+				Description: "NodeDisruptionPolicySpecSSHKey is actions to take for any SSHKey change and is used in the NodeDisruptionPolicyConfig object",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"actions": {
@@ -50220,7 +50224,7 @@ func schema_openshift_api_operator_v1_NodeDisruptionPolicySSHKey(ref common.Refe
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/openshift/api/operator/v1.NodeDisruptionPolicyAction"),
+										Ref:     ref("github.com/openshift/api/operator/v1.NodeDisruptionPolicySpecAction"),
 									},
 								},
 							},
@@ -50231,7 +50235,50 @@ func schema_openshift_api_operator_v1_NodeDisruptionPolicySSHKey(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.NodeDisruptionPolicyAction"},
+			"github.com/openshift/api/operator/v1.NodeDisruptionPolicySpecAction"},
+	}
+}
+
+func schema_openshift_api_operator_v1_NodeDisruptionPolicySpecUnit(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NodeDisruptionPolicySpecUnit is a systemd unit name and corresponding actions to take and is used in the NodeDisruptionPolicyConfig object",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name represents the service name of a systemd service managed through a MachineConfig Actions specified will be applied for changes to the named service. Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long. ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, \":\", \"-\", \"_\", \".\", and \"\". ${SERVICETYPE} must be one of \".service\", \".socket\", \".device\", \".mount\", \".automount\", \".swap\", \".target\", \".path\", \".timer\", \".snapshot\", \".slice\" or \".scope\".",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"actions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "actions represents the series of commands to be executed on changes to the file at the corresponding file path. Actions will be applied in the order that they are set in this list. If there are other incoming changes to other MachineConfig entries in the same update that require a reboot, the reboot will supercede these actions. Valid actions are Reboot, Drain, Reload, DaemonReload and None. The Reboot action and the None action cannot be used in conjunction with any of the other actions. This list supports a maximum of 10 entries.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/operator/v1.NodeDisruptionPolicySpecAction"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"name", "actions"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1.NodeDisruptionPolicySpecAction"},
 	}
 }
 
@@ -50256,11 +50303,137 @@ func schema_openshift_api_operator_v1_NodeDisruptionPolicyStatus(ref common.Refe
 	}
 }
 
-func schema_openshift_api_operator_v1_NodeDisruptionPolicyUnit(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_openshift_api_operator_v1_NodeDisruptionPolicyStatusAction(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "NodeDisruptionPolicyUnit is a systemd unit name and corresponding actions to take",
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type represents the commands that will be carried out if this NodeDisruptionPolicyStatusActionType is executed Valid value are Reboot, Drain, Reload, Restart, DaemonReload, None and Special reload/restart requires a corresponding service target specified in the reload/restart field. Other values require no further configuration",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"reload": {
+						SchemaProps: spec.SchemaProps{
+							Description: "reload specifies the service to reload, only valid if type is reload",
+							Ref:         ref("github.com/openshift/api/operator/v1.ReloadService"),
+						},
+					},
+					"restart": {
+						SchemaProps: spec.SchemaProps{
+							Description: "restart specifies the service to restart, only valid if type is restart",
+							Ref:         ref("github.com/openshift/api/operator/v1.RestartService"),
+						},
+					},
+				},
+				Required: []string{"type"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "type",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"reload":  "Reload",
+								"restart": "Restart",
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1.ReloadService", "github.com/openshift/api/operator/v1.RestartService"},
+	}
+}
+
+func schema_openshift_api_operator_v1_NodeDisruptionPolicyStatusFile(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NodeDisruptionPolicyStatusFile is a file entry and corresponding actions to take and is used in the NodeDisruptionPolicyClusterStatus object",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"path": {
+						SchemaProps: spec.SchemaProps{
+							Description: "path is the location of the file being managed through a MachineConfig. Actions specified will be applied when changes to the file at the path configured in this field.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"actions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "actions represents the series of commands to be executed on changes to the file at the corresponding file path. Actions will be applied in the order that they are set in this list. If there are other incoming changes to other MachineConfig entries in the same update that require a reboot, the reboot will supercede these actions. Valid actions are Reboot, Drain, Reload, DaemonReload and None. The Reboot action and the None action cannot be used in conjunction with any of the other actions. This list supports a maximum of 10 entries.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatusAction"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"path", "actions"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatusAction"},
+	}
+}
+
+func schema_openshift_api_operator_v1_NodeDisruptionPolicyStatusSSHKey(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NodeDisruptionPolicyStatusSSHKey is actions to take for any SSHKey change and is used in the NodeDisruptionPolicyClusterStatus object",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"actions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "actions represents the series of commands to be executed on changes to the file at the corresponding file path. Actions will be applied in the order that they are set in this list. If there are other incoming changes to other MachineConfig entries in the same update that require a reboot, the reboot will supercede these actions. Valid actions are Reboot, Drain, Reload, DaemonReload and None. The Reboot action and the None action cannot be used in conjunction with any of the other actions. This list supports a maximum of 10 entries.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatusAction"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"actions"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatusAction"},
+	}
+}
+
+func schema_openshift_api_operator_v1_NodeDisruptionPolicyStatusUnit(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NodeDisruptionPolicyStatusUnit is a systemd unit name and corresponding actions to take and is used in the NodeDisruptionPolicyClusterStatus object",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"name": {
@@ -50284,7 +50457,7 @@ func schema_openshift_api_operator_v1_NodeDisruptionPolicyUnit(ref common.Refere
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/openshift/api/operator/v1.NodeDisruptionPolicyAction"),
+										Ref:     ref("github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatusAction"),
 									},
 								},
 							},
@@ -50295,7 +50468,7 @@ func schema_openshift_api_operator_v1_NodeDisruptionPolicyUnit(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.NodeDisruptionPolicyAction"},
+			"github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatusAction"},
 	}
 }
 

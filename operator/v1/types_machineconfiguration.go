@@ -194,18 +194,18 @@ type NodeDisruptionPolicyConfig struct {
 	// +listType=map
 	// +listMapKey=path
 	// +kubebuilder:validation:MaxItems=50
-	Files []NodeDisruptionPolicyFile `json:"files"`
+	Files []NodeDisruptionPolicySpecFile `json:"files"`
 	// units is a list MachineConfig unit definitions and actions to take on changes to those services
 	// This list supports a maximum of 50 entries.
 	// +optional
 	// +listType=map
 	// +listMapKey=name
 	// +kubebuilder:validation:MaxItems=50
-	Units []NodeDisruptionPolicyUnit `json:"units"`
+	Units []NodeDisruptionPolicySpecUnit `json:"units"`
 	// sshkey maps to the ignition.sshkeys field in the MachineConfig object, definition an action for this
 	// will apply to all sshkey changes in the cluster
 	// +optional
-	SSHKey NodeDisruptionPolicySSHKey `json:"sshkey"`
+	SSHKey NodeDisruptionPolicySpecSSHKey `json:"sshkey"`
 }
 
 // NodeDisruptionPolicyClusterStatus is the type for the status object, rendered by the controller as a
@@ -216,20 +216,20 @@ type NodeDisruptionPolicyClusterStatus struct {
 	// +listType=map
 	// +listMapKey=path
 	// +kubebuilder:validation:MaxItems=100
-	Files []NodeDisruptionPolicyFile `json:"files,omitempty"`
+	Files []NodeDisruptionPolicyStatusFile `json:"files,omitempty"`
 	// units is a list MachineConfig unit definitions and actions to take on changes to those services
 	// +optional
 	// +listType=map
 	// +listMapKey=name
 	// +kubebuilder:validation:MaxItems=100
-	Units []NodeDisruptionPolicyUnit `json:"units,omitempty"`
+	Units []NodeDisruptionPolicyStatusUnit `json:"units,omitempty"`
 	// sshkey is the overall sshkey MachineConfig definition
 	// +optional
-	SSHKey NodeDisruptionPolicySSHKey `json:"sshkey,omitempty"`
+	SSHKey NodeDisruptionPolicyStatusSSHKey `json:"sshkey,omitempty"`
 }
 
-// NodeDisruptionPolicyFile is a file entry and corresponding actions to take
-type NodeDisruptionPolicyFile struct {
+// NodeDisruptionPolicySpecFile is a file entry and corresponding actions to take and is used in the NodeDisruptionPolicyConfig object
+type NodeDisruptionPolicySpecFile struct {
 	// path is the location of the file being managed through a MachineConfig.
 	// Actions specified will be applied when changes to the file at the path
 	// configured in this field.
@@ -247,18 +247,40 @@ type NodeDisruptionPolicyFile struct {
 	// +kubebuilder:validation:MaxItems=10
 	// +kubebuilder:validation:XValidation:rule="self.exists(x, x.type=='Reboot') ? size(self) == 1 : true", message="Reboot action can only be specified standalone, as it will override any other actions"
 	// +kubebuilder:validation:XValidation:rule="self.exists(x, x.type=='None') ? size(self) == 1 : true", message="None action can only be specified standalone, as it will override any other actions"
-	Actions []NodeDisruptionPolicyAction `json:"actions"`
+	Actions []NodeDisruptionPolicySpecAction `json:"actions"`
 }
 
-// NodeDisruptionPolicyUnit is a systemd unit name and corresponding actions to take
-type NodeDisruptionPolicyUnit struct {
+// NodeDisruptionPolicyStatusFile is a file entry and corresponding actions to take and is used in the NodeDisruptionPolicyClusterStatus object
+type NodeDisruptionPolicyStatusFile struct {
+	// path is the location of the file being managed through a MachineConfig.
+	// Actions specified will be applied when changes to the file at the path
+	// configured in this field.
+	// +kubebuilder:validation:Required
+	Path string `json:"path"`
+	// actions represents the series of commands to be executed on changes to the file at
+	// the corresponding file path. Actions will be applied in the order that
+	// they are set in this list. If there are other incoming changes to other MachineConfig
+	// entries in the same update that require a reboot, the reboot will supercede these actions.
+	// Valid actions are Reboot, Drain, Reload, DaemonReload and None.
+	// The Reboot action and the None action cannot be used in conjunction with any of the other actions.
+	// This list supports a maximum of 10 entries.
+	// +kubebuilder:validation:Required
+	// +listType=atomic
+	// +kubebuilder:validation:MaxItems=10
+	// +kubebuilder:validation:XValidation:rule="self.exists(x, x.type=='Reboot') ? size(self) == 1 : true", message="Reboot action can only be specified standalone, as it will override any other actions"
+	// +kubebuilder:validation:XValidation:rule="self.exists(x, x.type=='None') ? size(self) == 1 : true", message="None action can only be specified standalone, as it will override any other actions"
+	Actions []NodeDisruptionPolicyStatusAction `json:"actions"`
+}
+
+// NodeDisruptionPolicySpecUnit is a systemd unit name and corresponding actions to take and is used in the NodeDisruptionPolicyConfig object
+type NodeDisruptionPolicySpecUnit struct {
 	// name represents the service name of a systemd service managed through a MachineConfig
 	// Actions specified will be applied for changes to the named service.
 	// Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long.
 	// ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, ":", "-", "_", ".", and "\".
 	// ${SERVICETYPE} must be one of ".service", ".socket", ".device", ".mount", ".automount", ".swap", ".target", ".path", ".timer", ".snapshot", ".slice" or ".scope".
-	// +kubebuilder:validation:XValidation:rule=`self.matches('^[a-zA-Z0-9:._\\\\-]+\\..*$')`, message="Invalid ${NAME} in service name. Expected format is ${NAME}${SERVICETYPE}, where {NAME} must be atleast 1 character long and can only consist of alphabets, digits, \":\", \"-\", \"_\", \".\", and \"\\\""
 	// +kubebuilder:validation:XValidation:rule=`self.matches('\\.(service|socket|device|mount|automount|swap|target|path|timer|snapshot|slice|scope)$')`, message="Invalid ${SERVICETYPE} in service name. Expected format is ${NAME}${SERVICETYPE}, where ${SERVICETYPE} must be one of \".service\", \".socket\", \".device\", \".mount\", \".automount\", \".swap\", \".target\", \".path\", \".timer\",\".snapshot\", \".slice\" or \".scope\"."
+	// +kubebuilder:validation:XValidation:rule=`self.matches('^[a-zA-Z0-9:._\\\\-]+\\..')`, message="Invalid ${NAME} in service name. Expected format is ${NAME}${SERVICETYPE}, where {NAME} must be atleast 1 character long and can only consist of alphabets, digits, \":\", \"-\", \"_\", \".\", and \"\\\""
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MaxLength=255
 	Name string `json:"name"`
@@ -275,11 +297,22 @@ type NodeDisruptionPolicyUnit struct {
 	// +kubebuilder:validation:MaxItems=10
 	// +kubebuilder:validation:XValidation:rule="self.exists(x, x.type=='Reboot') ? size(self) == 1 : true", message="Reboot action can only be specified standalone, as it will override any other actions"
 	// +kubebuilder:validation:XValidation:rule="self.exists(x, x.type=='None') ? size(self) == 1 : true", message="None action can only be specified standalone, as it will override any other actions"
-	Actions []NodeDisruptionPolicyAction `json:"actions"`
+	Actions []NodeDisruptionPolicySpecAction `json:"actions"`
 }
 
-// NodeDisruptionPolicySSHKey is actions to take for any SSHKey change
-type NodeDisruptionPolicySSHKey struct {
+// NodeDisruptionPolicyStatusUnit is a systemd unit name and corresponding actions to take and is used in the NodeDisruptionPolicyClusterStatus object
+type NodeDisruptionPolicyStatusUnit struct {
+	// name represents the service name of a systemd service managed through a MachineConfig
+	// Actions specified will be applied for changes to the named service.
+	// Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long.
+	// ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, ":", "-", "_", ".", and "\".
+	// ${SERVICETYPE} must be one of ".service", ".socket", ".device", ".mount", ".automount", ".swap", ".target", ".path", ".timer", ".snapshot", ".slice" or ".scope".
+	// +kubebuilder:validation:XValidation:rule=`self.matches('\\.(service|socket|device|mount|automount|swap|target|path|timer|snapshot|slice|scope)$')`, message="Invalid ${SERVICETYPE} in service name. Expected format is ${NAME}${SERVICETYPE}, where ${SERVICETYPE} must be one of \".service\", \".socket\", \".device\", \".mount\", \".automount\", \".swap\", \".target\", \".path\", \".timer\",\".snapshot\", \".slice\" or \".scope\"."
+	// +kubebuilder:validation:XValidation:rule=`self.matches('^[a-zA-Z0-9:._\\\\-]+\\..')`, message="Invalid ${NAME} in service name. Expected format is ${NAME}${SERVICETYPE}, where {NAME} must be atleast 1 character long and can only consist of alphabets, digits, \":\", \"-\", \"_\", \".\", and \"\\\""
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MaxLength=255
+	Name string `json:"name"`
+
 	// actions represents the series of commands to be executed on changes to the file at
 	// the corresponding file path. Actions will be applied in the order that
 	// they are set in this list. If there are other incoming changes to other MachineConfig
@@ -292,20 +325,73 @@ type NodeDisruptionPolicySSHKey struct {
 	// +kubebuilder:validation:MaxItems=10
 	// +kubebuilder:validation:XValidation:rule="self.exists(x, x.type=='Reboot') ? size(self) == 1 : true", message="Reboot action can only be specified standalone, as it will override any other actions"
 	// +kubebuilder:validation:XValidation:rule="self.exists(x, x.type=='None') ? size(self) == 1 : true", message="None action can only be specified standalone, as it will override any other actions"
-	Actions []NodeDisruptionPolicyAction `json:"actions"`
+	Actions []NodeDisruptionPolicyStatusAction `json:"actions"`
+}
+
+// NodeDisruptionPolicySpecSSHKey is actions to take for any SSHKey change and is used in the NodeDisruptionPolicyConfig object
+type NodeDisruptionPolicySpecSSHKey struct {
+	// actions represents the series of commands to be executed on changes to the file at
+	// the corresponding file path. Actions will be applied in the order that
+	// they are set in this list. If there are other incoming changes to other MachineConfig
+	// entries in the same update that require a reboot, the reboot will supercede these actions.
+	// Valid actions are Reboot, Drain, Reload, DaemonReload and None.
+	// The Reboot action and the None action cannot be used in conjunction with any of the other actions.
+	// This list supports a maximum of 10 entries.
+	// +kubebuilder:validation:Required
+	// +listType=atomic
+	// +kubebuilder:validation:MaxItems=10
+	// +kubebuilder:validation:XValidation:rule="self.exists(x, x.type=='Reboot') ? size(self) == 1 : true", message="Reboot action can only be specified standalone, as it will override any other actions"
+	// +kubebuilder:validation:XValidation:rule="self.exists(x, x.type=='None') ? size(self) == 1 : true", message="None action can only be specified standalone, as it will override any other actions"
+	Actions []NodeDisruptionPolicySpecAction `json:"actions"`
+}
+
+// NodeDisruptionPolicyStatusSSHKey is actions to take for any SSHKey change and is used in the NodeDisruptionPolicyClusterStatus object
+type NodeDisruptionPolicyStatusSSHKey struct {
+	// actions represents the series of commands to be executed on changes to the file at
+	// the corresponding file path. Actions will be applied in the order that
+	// they are set in this list. If there are other incoming changes to other MachineConfig
+	// entries in the same update that require a reboot, the reboot will supercede these actions.
+	// Valid actions are Reboot, Drain, Reload, DaemonReload and None.
+	// The Reboot action and the None action cannot be used in conjunction with any of the other actions.
+	// This list supports a maximum of 10 entries.
+	// +kubebuilder:validation:Required
+	// +listType=atomic
+	// +kubebuilder:validation:MaxItems=10
+	// +kubebuilder:validation:XValidation:rule="self.exists(x, x.type=='Reboot') ? size(self) == 1 : true", message="Reboot action can only be specified standalone, as it will override any other actions"
+	// +kubebuilder:validation:XValidation:rule="self.exists(x, x.type=='None') ? size(self) == 1 : true", message="None action can only be specified standalone, as it will override any other actions"
+	Actions []NodeDisruptionPolicyStatusAction `json:"actions"`
 }
 
 // +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'Reload' ? has(self.reload) : !has(self.reload)",message="Reload is required when type is reload, and forbidden otherwise"
 // +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'Restart' ? has(self.restart) : !has(self.restart)",message="Restart is required when type is restart, and forbidden otherwise"
 // +union
-type NodeDisruptionPolicyAction struct {
-	// type represents the commands that will be carried out if this NodeDisruptionPolicyActionType is executed
+type NodeDisruptionPolicySpecAction struct {
+	// type represents the commands that will be carried out if this NodeDisruptionPolicySpecActionType is executed
 	// Valid value are Reboot, Drain, Reload, Restart, DaemonReload, None and Special
 	// reload/restart requires a corresponding service target specified in the reload/restart field.
 	// Other values require no further configuration
 	// +unionDiscriminator
 	// +kubebuilder:validation:Required
-	Type NodeDisruptionPolicyActionType `json:"type"`
+	Type NodeDisruptionPolicySpecActionType `json:"type"`
+	// reload specifies the service to reload, only valid if type is reload
+	// +optional
+	Reload *ReloadService `json:"reload,omitempty"`
+	// restart specifies the service to restart, only valid if type is restart
+	// +optional
+	Restart *RestartService `json:"restart,omitempty"`
+}
+
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'Reload' ? has(self.reload) : !has(self.reload)",message="Reload is required when type is reload, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'Restart' ? has(self.restart) : !has(self.restart)",message="Restart is required when type is restart, and forbidden otherwise"
+// +union
+type NodeDisruptionPolicyStatusAction struct {
+	// type represents the commands that will be carried out if this NodeDisruptionPolicyStatusActionType is executed
+	// Valid value are Reboot, Drain, Reload, Restart, DaemonReload, None and Special
+	// reload/restart requires a corresponding service target specified in the reload/restart field.
+	// Other values require no further configuration
+	// +unionDiscriminator
+	// +kubebuilder:validation:Required
+	Type NodeDisruptionPolicyStatusActionType `json:"type"`
 	// reload specifies the service to reload, only valid if type is reload
 	// +optional
 	Reload *ReloadService `json:"reload,omitempty"`
@@ -320,8 +406,8 @@ type ReloadService struct {
 	// Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long.
 	// ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, ":", "-", "_", ".", and "\".
 	// ${SERVICETYPE} must be one of ".service", ".socket", ".device", ".mount", ".automount", ".swap", ".target", ".path", ".timer", ".snapshot", ".slice" or ".scope".
-	// +kubebuilder:validation:XValidation:rule=`self.matches('^[a-zA-Z0-9:._\\\\-]+\\..*$')`, message="Invalid ${NAME} in service name. Expected format is ${NAME}${SERVICETYPE}, where {NAME} must be atleast 1 character long and can only consist of alphabets, digits, \":\", \"-\", \"_\", \".\", and \"\\\""
 	// +kubebuilder:validation:XValidation:rule=`self.matches('\\.(service|socket|device|mount|automount|swap|target|path|timer|snapshot|slice|scope)$')`, message="Invalid ${SERVICETYPE} in service name. Expected format is ${NAME}${SERVICETYPE}, where ${SERVICETYPE} must be one of \".service\", \".socket\", \".device\", \".mount\", \".automount\", \".swap\", \".target\", \".path\", \".timer\",\".snapshot\", \".slice\" or \".scope\"."
+	// +kubebuilder:validation:XValidation:rule=`self.matches('^[a-zA-Z0-9:._\\\\-]+\\..')`, message="Invalid ${NAME} in service name. Expected format is ${NAME}${SERVICETYPE}, where {NAME} must be atleast 1 character long and can only consist of alphabets, digits, \":\", \"-\", \"_\", \".\", and \"\\\""
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MaxLength=255
 	ServiceName string `json:"serviceName"`
@@ -333,37 +419,64 @@ type RestartService struct {
 	// Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long.
 	// ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, ":", "-", "_", ".", and "\".
 	// ${SERVICETYPE} must be one of ".service", ".socket", ".device", ".mount", ".automount", ".swap", ".target", ".path", ".timer", ".snapshot", ".slice" or ".scope".
-	// +kubebuilder:validation:XValidation:rule=`self.matches('^[a-zA-Z0-9:._\\\\-]+\\..*$')`, message="Invalid ${NAME} in service name. Expected format is ${NAME}${SERVICETYPE}, where {NAME} must be atleast 1 character long and can only consist of alphabets, digits, \":\", \"-\", \"_\", \".\", and \"\\\""
 	// +kubebuilder:validation:XValidation:rule=`self.matches('\\.(service|socket|device|mount|automount|swap|target|path|timer|snapshot|slice|scope)$')`, message="Invalid ${SERVICETYPE} in service name. Expected format is ${NAME}${SERVICETYPE}, where ${SERVICETYPE} must be one of \".service\", \".socket\", \".device\", \".mount\", \".automount\", \".swap\", \".target\", \".path\", \".timer\",\".snapshot\", \".slice\" or \".scope\"."
+	// +kubebuilder:validation:XValidation:rule=`self.matches('^[a-zA-Z0-9:._\\\\-]+\\..')`, message="Invalid ${NAME} in service name. Expected format is ${NAME}${SERVICETYPE}, where {NAME} must be atleast 1 character long and can only consist of alphabets, digits, \":\", \"-\", \"_\", \".\", and \"\\\""
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MaxLength=255
 	ServiceName string `json:"serviceName"`
 }
 
-// NodeDisruptionPolicyActionType is a string enum used in a NodeDisruptionPolicyAction object. They describe an action to be performed.
-// +kubebuilder:validation:Enum:="Reboot";"Drain";"Reload";"Restart";"DaemonReload";"None";"Special"
-type NodeDisruptionPolicyActionType string
+// NodeDisruptionPolicySpecActionType is a string enum used in a NodeDisruptionPolicySpecAction object. They describe an action to be performed.
+// +kubebuilder:validation:Enum:="Reboot";"Drain";"Reload";"Restart";"DaemonReload";"None"
+type NodeDisruptionPolicySpecActionType string
 
 const (
 	// Reboot represents an action that will cause nodes to be rebooted. This is the default action by the MCO
 	// if a reboot policy is not found for a change/update being performed by the MCO.
-	Reboot NodeDisruptionPolicyActionType = "Reboot"
+	RebootSpecAction NodeDisruptionPolicySpecActionType = "Reboot"
 
 	// Drain represents an action that will cause nodes to be drained of their workloads.
-	Drain NodeDisruptionPolicyActionType = "Drain"
+	DrainSpecAction NodeDisruptionPolicySpecActionType = "Drain"
 
 	// Reload represents an action that will cause nodes to reload the service described by the Target field.
-	Reload NodeDisruptionPolicyActionType = "Reload"
+	ReloadSpecAction NodeDisruptionPolicySpecActionType = "Reload"
 
 	// Restart represents an action that will cause nodes to restart the service described by the Target field.
-	Restart NodeDisruptionPolicyActionType = "Restart"
+	RestartSpecAction NodeDisruptionPolicySpecActionType = "Restart"
 
 	// DaemonReload represents an action that TBD
-	DaemonReload NodeDisruptionPolicyActionType = "DaemonReload"
+	DaemonReloadSpecAction NodeDisruptionPolicySpecActionType = "DaemonReload"
 
 	// None represents an action that no handling is required by the MCO.
-	None NodeDisruptionPolicyActionType = "None"
+	NoneSpecAction NodeDisruptionPolicySpecActionType = "None"
+)
+
+// NodeDisruptionPolicyStatusActionType is a string enum used in a NodeDisruptionPolicyStatusAction object. They describe an action to be performed.
+// The key difference of this object from NodeDisruptionPolicySpecActionType is that there is a additional SpecialStatusAction value in this enum. This will only be
+// used by the MCO's controller to indicate some internal actions. They are not part of the NodeDisruptionPolicyConfig object and cannot be set by the user.
+// +kubebuilder:validation:Enum:="Reboot";"Drain";"Reload";"Restart";"DaemonReload";"None";"Special"
+type NodeDisruptionPolicyStatusActionType string
+
+const (
+	// Reboot represents an action that will cause nodes to be rebooted. This is the default action by the MCO
+	// if a reboot policy is not found for a change/update being performed by the MCO.
+	RebootStatusAction NodeDisruptionPolicyStatusActionType = "Reboot"
+
+	// Drain represents an action that will cause nodes to be drained of their workloads.
+	DrainStatusAction NodeDisruptionPolicyStatusActionType = "Drain"
+
+	// Reload represents an action that will cause nodes to reload the service described by the Target field.
+	ReloadStatusAction NodeDisruptionPolicyStatusActionType = "Reload"
+
+	// Restart represents an action that will cause nodes to restart the service described by the Target field.
+	RestartStatusAction NodeDisruptionPolicyStatusActionType = "Restart"
+
+	// DaemonReload represents an action that TBD
+	DaemonReloadStatusAction NodeDisruptionPolicyStatusActionType = "DaemonReload"
+
+	// None represents an action that no handling is required by the MCO.
+	NoneStatusAction NodeDisruptionPolicyStatusActionType = "None"
 
 	// Special represents an action that is internal to the MCO, and is not allowed in user defined NodeDisruption policies.
-	Special NodeDisruptionPolicyActionType = "Special"
+	SpecialStatusAction NodeDisruptionPolicyStatusActionType = "Special"
 )

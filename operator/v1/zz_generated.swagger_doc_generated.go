@@ -1321,16 +1321,6 @@ func (ManagedBootImages) SwaggerDoc() map[string]string {
 	return map_ManagedBootImages
 }
 
-var map_NodeDisruptionPolicyAction = map[string]string{
-	"type":    "type represents the commands that will be carried out if this NodeDisruptionPolicyActionType is executed Valid value are Reboot, Drain, Reload, Restart, DaemonReload, None and Special reload/restart requires a corresponding service target specified in the reload/restart field. Other values require no further configuration",
-	"reload":  "reload specifies the service to reload, only valid if type is reload",
-	"restart": "restart specifies the service to restart, only valid if type is restart",
-}
-
-func (NodeDisruptionPolicyAction) SwaggerDoc() map[string]string {
-	return map_NodeDisruptionPolicyAction
-}
-
 var map_NodeDisruptionPolicyClusterStatus = map[string]string{
 	"":       "NodeDisruptionPolicyClusterStatus is the type for the status object, rendered by the controller as a merge of cluster defaults and user provided policies",
 	"files":  "files is a list of MachineConfig file definitions and actions to take to changes on those paths",
@@ -1353,23 +1343,43 @@ func (NodeDisruptionPolicyConfig) SwaggerDoc() map[string]string {
 	return map_NodeDisruptionPolicyConfig
 }
 
-var map_NodeDisruptionPolicyFile = map[string]string{
-	"":        "NodeDisruptionPolicyFile is a file entry and corresponding actions to take",
+var map_NodeDisruptionPolicySpecAction = map[string]string{
+	"type":    "type represents the commands that will be carried out if this NodeDisruptionPolicySpecActionType is executed Valid value are Reboot, Drain, Reload, Restart, DaemonReload, None and Special reload/restart requires a corresponding service target specified in the reload/restart field. Other values require no further configuration",
+	"reload":  "reload specifies the service to reload, only valid if type is reload",
+	"restart": "restart specifies the service to restart, only valid if type is restart",
+}
+
+func (NodeDisruptionPolicySpecAction) SwaggerDoc() map[string]string {
+	return map_NodeDisruptionPolicySpecAction
+}
+
+var map_NodeDisruptionPolicySpecFile = map[string]string{
+	"":        "NodeDisruptionPolicySpecFile is a file entry and corresponding actions to take and is used in the NodeDisruptionPolicyConfig object",
 	"path":    "path is the location of the file being managed through a MachineConfig. Actions specified will be applied when changes to the file at the path configured in this field.",
 	"actions": "actions represents the series of commands to be executed on changes to the file at the corresponding file path. Actions will be applied in the order that they are set in this list. If there are other incoming changes to other MachineConfig entries in the same update that require a reboot, the reboot will supercede these actions. Valid actions are Reboot, Drain, Reload, DaemonReload and None. The Reboot action and the None action cannot be used in conjunction with any of the other actions. This list supports a maximum of 10 entries.",
 }
 
-func (NodeDisruptionPolicyFile) SwaggerDoc() map[string]string {
-	return map_NodeDisruptionPolicyFile
+func (NodeDisruptionPolicySpecFile) SwaggerDoc() map[string]string {
+	return map_NodeDisruptionPolicySpecFile
 }
 
-var map_NodeDisruptionPolicySSHKey = map[string]string{
-	"":        "NodeDisruptionPolicySSHKey is actions to take for any SSHKey change",
+var map_NodeDisruptionPolicySpecSSHKey = map[string]string{
+	"":        "NodeDisruptionPolicySpecSSHKey is actions to take for any SSHKey change and is used in the NodeDisruptionPolicyConfig object",
 	"actions": "actions represents the series of commands to be executed on changes to the file at the corresponding file path. Actions will be applied in the order that they are set in this list. If there are other incoming changes to other MachineConfig entries in the same update that require a reboot, the reboot will supercede these actions. Valid actions are Reboot, Drain, Reload, DaemonReload and None. The Reboot action and the None action cannot be used in conjunction with any of the other actions. This list supports a maximum of 10 entries.",
 }
 
-func (NodeDisruptionPolicySSHKey) SwaggerDoc() map[string]string {
-	return map_NodeDisruptionPolicySSHKey
+func (NodeDisruptionPolicySpecSSHKey) SwaggerDoc() map[string]string {
+	return map_NodeDisruptionPolicySpecSSHKey
+}
+
+var map_NodeDisruptionPolicySpecUnit = map[string]string{
+	"":        "NodeDisruptionPolicySpecUnit is a systemd unit name and corresponding actions to take and is used in the NodeDisruptionPolicyConfig object",
+	"name":    "name represents the service name of a systemd service managed through a MachineConfig Actions specified will be applied for changes to the named service. Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long. ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, \":\", \"-\", \"_\", \".\", and \"\". ${SERVICETYPE} must be one of \".service\", \".socket\", \".device\", \".mount\", \".automount\", \".swap\", \".target\", \".path\", \".timer\", \".snapshot\", \".slice\" or \".scope\".",
+	"actions": "actions represents the series of commands to be executed on changes to the file at the corresponding file path. Actions will be applied in the order that they are set in this list. If there are other incoming changes to other MachineConfig entries in the same update that require a reboot, the reboot will supercede these actions. Valid actions are Reboot, Drain, Reload, DaemonReload and None. The Reboot action and the None action cannot be used in conjunction with any of the other actions. This list supports a maximum of 10 entries.",
+}
+
+func (NodeDisruptionPolicySpecUnit) SwaggerDoc() map[string]string {
+	return map_NodeDisruptionPolicySpecUnit
 }
 
 var map_NodeDisruptionPolicyStatus = map[string]string{
@@ -1380,14 +1390,43 @@ func (NodeDisruptionPolicyStatus) SwaggerDoc() map[string]string {
 	return map_NodeDisruptionPolicyStatus
 }
 
-var map_NodeDisruptionPolicyUnit = map[string]string{
-	"":        "NodeDisruptionPolicyUnit is a systemd unit name and corresponding actions to take",
+var map_NodeDisruptionPolicyStatusAction = map[string]string{
+	"type":    "type represents the commands that will be carried out if this NodeDisruptionPolicyStatusActionType is executed Valid value are Reboot, Drain, Reload, Restart, DaemonReload, None and Special reload/restart requires a corresponding service target specified in the reload/restart field. Other values require no further configuration",
+	"reload":  "reload specifies the service to reload, only valid if type is reload",
+	"restart": "restart specifies the service to restart, only valid if type is restart",
+}
+
+func (NodeDisruptionPolicyStatusAction) SwaggerDoc() map[string]string {
+	return map_NodeDisruptionPolicyStatusAction
+}
+
+var map_NodeDisruptionPolicyStatusFile = map[string]string{
+	"":        "NodeDisruptionPolicyStatusFile is a file entry and corresponding actions to take and is used in the NodeDisruptionPolicyClusterStatus object",
+	"path":    "path is the location of the file being managed through a MachineConfig. Actions specified will be applied when changes to the file at the path configured in this field.",
+	"actions": "actions represents the series of commands to be executed on changes to the file at the corresponding file path. Actions will be applied in the order that they are set in this list. If there are other incoming changes to other MachineConfig entries in the same update that require a reboot, the reboot will supercede these actions. Valid actions are Reboot, Drain, Reload, DaemonReload and None. The Reboot action and the None action cannot be used in conjunction with any of the other actions. This list supports a maximum of 10 entries.",
+}
+
+func (NodeDisruptionPolicyStatusFile) SwaggerDoc() map[string]string {
+	return map_NodeDisruptionPolicyStatusFile
+}
+
+var map_NodeDisruptionPolicyStatusSSHKey = map[string]string{
+	"":        "NodeDisruptionPolicyStatusSSHKey is actions to take for any SSHKey change and is used in the NodeDisruptionPolicyClusterStatus object",
+	"actions": "actions represents the series of commands to be executed on changes to the file at the corresponding file path. Actions will be applied in the order that they are set in this list. If there are other incoming changes to other MachineConfig entries in the same update that require a reboot, the reboot will supercede these actions. Valid actions are Reboot, Drain, Reload, DaemonReload and None. The Reboot action and the None action cannot be used in conjunction with any of the other actions. This list supports a maximum of 10 entries.",
+}
+
+func (NodeDisruptionPolicyStatusSSHKey) SwaggerDoc() map[string]string {
+	return map_NodeDisruptionPolicyStatusSSHKey
+}
+
+var map_NodeDisruptionPolicyStatusUnit = map[string]string{
+	"":        "NodeDisruptionPolicyStatusUnit is a systemd unit name and corresponding actions to take and is used in the NodeDisruptionPolicyClusterStatus object",
 	"name":    "name represents the service name of a systemd service managed through a MachineConfig Actions specified will be applied for changes to the named service. Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long. ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, \":\", \"-\", \"_\", \".\", and \"\". ${SERVICETYPE} must be one of \".service\", \".socket\", \".device\", \".mount\", \".automount\", \".swap\", \".target\", \".path\", \".timer\", \".snapshot\", \".slice\" or \".scope\".",
 	"actions": "actions represents the series of commands to be executed on changes to the file at the corresponding file path. Actions will be applied in the order that they are set in this list. If there are other incoming changes to other MachineConfig entries in the same update that require a reboot, the reboot will supercede these actions. Valid actions are Reboot, Drain, Reload, DaemonReload and None. The Reboot action and the None action cannot be used in conjunction with any of the other actions. This list supports a maximum of 10 entries.",
 }
 
-func (NodeDisruptionPolicyUnit) SwaggerDoc() map[string]string {
-	return map_NodeDisruptionPolicyUnit
+func (NodeDisruptionPolicyStatusUnit) SwaggerDoc() map[string]string {
+	return map_NodeDisruptionPolicyStatusUnit
 }
 
 var map_PartialSelector = map[string]string{

@@ -78,13 +78,60 @@ After this, calling `make update-codegen-crds` should generate a new structural 
   
 For more information on the API markers to add to your Go types, see the [Kubebuilder book](https://book.kubebuilder.io/reference/markers.html)
 
-### Post-schema-generation Patches
+### Order of generation
+`make update-codegen-crds` does roughly this:
 
-Schema generation features might be limited or fall behind what CRD schemas supports in the latest Kubernetes version.
-To work around this, there are two patch mechanisms implemented by the `add-crd-gen` target. Basic idea is that you 
-place a patch file next to the CRD yaml manifest with either `yaml-merge-patch` or `yaml-patch` as extension, 
-but with the same base name. The `update-codegen-crds` Makefile target will apply these **after** calling 
-kubebuilder's controller-gen:
+1. Run the `empty-partial-schema` tool.  This creates empty CRD manifests in `zz_generated.featuregated-crd-manifests` for each FeatureGate.
+2. Run the `schemapatch` tool.  This fills in the schema for each per-FeatureGate CRD manifest.
+3. Run the `manifest-merge` tool.  This combines all the per-FeatureGate CRD manifests and `manual-overrides`
 
-- `yaml-merge-patch`: these are applied via `yq m -x <yaml-file> <patch-file>` compare https://mikefarah.gitbook.io/yq/commands/merge#overwrite-values.
-- `yaml-patch`: these are applied via `yaml-patch -o <patch-file> < <yaml-file>` using https://github.com/krishicks/yaml-patch.
+#### empty-partial-schema
+This tool is gengo based and scans all types for a `// +kubebuilder:object:root=true` marker.
+For each type match, the type is navigated and all tags that include a `featureGate`
+(`// +openshift:enable:FeatureGate`, `// +openshift:validation:FeatureGateAwareEnum`, and `// +openshift:validation:FeatureGateAwareXValidation`)
+are tracked.
+For each type, for each FeatureGate, a file CRD manifest is created in `zz_generated.featuregated-crd-manifests`.
+The most common kube-builder tags are re-implemented in this stage to fill in the non-schema portion of the CRD manifests.
+This includes things like metadata, resource, and some custom openshift tags as well.
+
+The generator ignores the schema when doing verify, so it doesn't fail on needing to run `schemapatch`.
+The generator should clean up old FeatureGated manifests when the gate is removed.
+Ungated files are created for resources that are sometimes ungated.
+Annotations are injected to indicate which FeatureGate a manifest is for: this is later read by `schemapatch` and `manifest-merge`.
+
+#### schemapatch
+This tool is kubebuilder based with patches to handle FeatureGated types, members, and validation.
+It reads the injected annotation from `empty-partial-schema` to decide which FeatureGate should be considered enabled when
+creating the schema that needs to be injected.
+It has no knowledge of whether the FeatureGate is enabled or disabled in particular ClusterProfile,FeatureSet tuples.
+It only needs a single pass over all the FeatureGated partial manifests.
+
+If the schema generation isn't doing what you want, `manual-override-crd-manifests` allows partially overlaying bits of the CRD manifest.
+`yamlpatch` is no longer supported.
+The format is just "write the CRD you want and delete the stuff the generator sets properly".
+More specifically, it is the partial manifest that server-side-apply (structured merge diff) would properly merge on top of
+the CRD that is generated otherwise.
+Caveat, you cannot test this with a kube-apiserver because the CRD schema uses atomic lists and we had to patch that
+schema to indicate map lists keyed by version.
+
+#### manifest-merge
+This tool is gengo based and it combines the files in `zz_generated.featuregated-crd-manifests` and `manual-override-crd-manifests`
+on a per ClusterProfile,FeatureSet tuple.
+This tool takes as input all possible ClusterProfiles and all possible FeatureSets.
+It then maps from ClusterProfile,FeatureSet tuple to the set of enabled and disabled FeatureGates.
+Then for each CRD,ClusterProfile,Feature tuple, it merges the pertinent input using structured-merge-diff (SSA) logic
+based on the CRD schema plus a patch to make atomic fields map-lists.
+Pertinence is determined based on
+1. does this manifest have preferred ClusterProfile annotations: if so, honor them; if not, include everywhere.
+2. does this manifest have FeatureGate annotations: if so, match against the enabled set for the ClusterProfile,FeatureSet tuple.
+   Note that CustomNoUpgrade selects everything
+
+Once we have CRD for each ClusterProfile,FeatureSet tuple we choose what to serialize.
+This roughly follows:
+1. if all the CRDs are the same, write a single file and annotate with no FeatureSet and every ClusterProfile. Done.
+2. if all the CRDs are the same across all ClusterProfiles for each FeatureSet, create one file per FeatureSet and
+   annotate with one FeatureSet and all ClusterProfiles. Done.
+3. if all the CRDs are the same across all FeatureSets for one ClusterProfile, create one file and annotate
+   with no FeatureSet and one ClusterProfile. Continue to 4.
+4. for all remaining ClusterProfile,FeatureSet tuples, serialize a file with one FeatureSet and one ClusterProfile.
+

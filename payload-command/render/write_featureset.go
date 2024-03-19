@@ -4,16 +4,17 @@ import (
 	"flag"
 	"fmt"
 	configv1 "github.com/openshift/api/config/v1"
+	"github.com/openshift/api/features"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"os"
 	"path/filepath"
 )
 
 var (
-	clusterProfileToShortName = map[configv1.ClusterProfileName]string{
-		configv1.Hypershift:  "Hypershift",
-		configv1.SelfManaged: "SelfManagedHA",
-		configv1.SingleNode:  "SingleNode",
+	clusterProfileToShortName = map[features.ClusterProfileName]string{
+		features.Hypershift:  "Hypershift",
+		features.SelfManaged: "SelfManagedHA",
+		features.SingleNode:  "SingleNode",
 	}
 )
 
@@ -45,7 +46,7 @@ func (o *WriteFeatureSets) Run() error {
 		return err
 	}
 
-	statusByClusterProfileByFeatureSet := configv1.AllFeatureSets()
+	statusByClusterProfileByFeatureSet := features.AllFeatureSets()
 	for clusterProfile, byFeatureSet := range statusByClusterProfileByFeatureSet {
 		for featureSetName, featureGateStatuses := range byFeatureSet {
 			currentDetails := FeaturesGateDetailsFromFeatureSets(featureGateStatuses, o.PayloadVersion)

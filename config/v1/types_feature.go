@@ -144,8 +144,3 @@ type FeatureGateList struct {
 
 	Items []FeatureGate `json:"items"`
 }
-
-type FeatureGateEnabledDisabled struct {
-	Enabled  []FeatureGateDescription
-	Disabled []FeatureGateDescription
-}

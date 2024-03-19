@@ -3,6 +3,7 @@ package render
 import (
 	"flag"
 	"fmt"
+	"github.com/openshift/api/features"
 	"os"
 	"path/filepath"
 	"sort"
@@ -83,7 +84,7 @@ func (o *RenderOpts) Run() error {
 
 		if featureGates.Spec.FeatureSet == configv1.CustomNoUpgrade {
 			featureSet = string(featureGates.Spec.FeatureSet)
-			renderedFeatureGates, err := renderCustomNoUpgradeFeatureGate(featureGates, configv1.ClusterProfileName(clusterProfileAnnotationName), o.PayloadVersion)
+			renderedFeatureGates, err := renderCustomNoUpgradeFeatureGate(featureGates, features.ClusterProfileName(clusterProfileAnnotationName), o.PayloadVersion)
 			if err != nil {
 				return err
 			}
@@ -104,7 +105,7 @@ func (o *RenderOpts) Run() error {
 			featureGates.Annotations[clusterProfileAnnotationName] = "true"
 		}
 
-		featureGateStatus, err := configv1.FeatureSets(configv1.ClusterProfileName(clusterProfileAnnotationName), featureGates.Spec.FeatureSet)
+		featureGateStatus, err := features.FeatureSets(features.ClusterProfileName(clusterProfileAnnotationName), featureGates.Spec.FeatureSet)
 		if err != nil {
 			return fmt.Errorf("unable to resolve featureGateStatus: %w", err)
 		}
@@ -132,7 +133,7 @@ func (o *RenderOpts) Run() error {
 	return nil
 }
 
-func renderCustomNoUpgradeFeatureGate(in *configv1.FeatureGate, clusterProfile configv1.ClusterProfileName, payloadVersion string) (*configv1.FeatureGate, error) {
+func renderCustomNoUpgradeFeatureGate(in *configv1.FeatureGate, clusterProfile features.ClusterProfileName, payloadVersion string) (*configv1.FeatureGate, error) {
 	if in.Spec.FeatureSet != configv1.CustomNoUpgrade {
 		return nil, fmt.Errorf("not CustomNoUpgrade")
 	}
@@ -161,7 +162,7 @@ func renderCustomNoUpgradeFeatureGate(in *configv1.FeatureGate, clusterProfile c
 		})
 	}
 
-	defaultFeatureGates, err := configv1.FeatureSets(clusterProfile, configv1.Default)
+	defaultFeatureGates, err := features.FeatureSets(clusterProfile, configv1.Default)
 	if err != nil {
 		return nil, err
 	}
@@ -251,7 +252,7 @@ func featureGateManifests(renderedManifestInputFilenames []string) (assets.Rende
 	return featureGates, nil
 }
 
-func FeaturesGateDetailsFromFeatureSets(featureGateStatus *configv1.FeatureGateEnabledDisabled, currentVersion string) *configv1.FeatureGateDetails {
+func FeaturesGateDetailsFromFeatureSets(featureGateStatus *features.FeatureGateEnabledDisabled, currentVersion string) *configv1.FeatureGateDetails {
 	currentDetails := configv1.FeatureGateDetails{
 		Version: currentVersion,
 	}
@@ -280,7 +281,7 @@ func (a byName) Less(i, j int) bool {
 	return false
 }
 
-func featuresGatesFromFeatureSets(knownFeatureSets map[configv1.FeatureSet]*configv1.FeatureGateEnabledDisabled, featureGates *configv1.FeatureGate) ([]configv1.FeatureGateName, []configv1.FeatureGateName, error) {
+func featuresGatesFromFeatureSets(knownFeatureSets map[configv1.FeatureSet]*features.FeatureGateEnabledDisabled, featureGates *configv1.FeatureGate) ([]configv1.FeatureGateName, []configv1.FeatureGateName, error) {
 	if featureGates.Spec.FeatureSet == configv1.CustomNoUpgrade {
 		if featureGates.Spec.FeatureGateSelection.CustomNoUpgrade != nil {
 			completeEnabled, completeDisabled := completeFeatureGates(knownFeatureSets, featureGates.Spec.FeatureGateSelection.CustomNoUpgrade.Enabled, featureGates.Spec.FeatureGateSelection.CustomNoUpgrade.Disabled)
@@ -298,7 +299,7 @@ func featuresGatesFromFeatureSets(knownFeatureSets map[configv1.FeatureSet]*conf
 	return completeEnabled, completeDisabled, nil
 }
 
-func toFeatureGateNames(in []configv1.FeatureGateDescription) []configv1.FeatureGateName {
+func toFeatureGateNames(in []features.FeatureGateDescription) []configv1.FeatureGateName {
 	out := []configv1.FeatureGateName{}
 	for _, curr := range in {
 		out = append(out, curr.FeatureGateAttributes.Name)
@@ -308,7 +309,7 @@ func toFeatureGateNames(in []configv1.FeatureGateDescription) []configv1.Feature
 }
 
 // completeFeatureGates identifies every known feature and ensures that is explicitly on or explicitly off
-func completeFeatureGates(knownFeatureSets map[configv1.FeatureSet]*configv1.FeatureGateEnabledDisabled, enabled, disabled []configv1.FeatureGateName) ([]configv1.FeatureGateName, []configv1.FeatureGateName) {
+func completeFeatureGates(knownFeatureSets map[configv1.FeatureSet]*features.FeatureGateEnabledDisabled, enabled, disabled []configv1.FeatureGateName) ([]configv1.FeatureGateName, []configv1.FeatureGateName) {
 	specificallyEnabledFeatureGates := sets.New[configv1.FeatureGateName]()
 	specificallyEnabledFeatureGates.Insert(enabled...)
 

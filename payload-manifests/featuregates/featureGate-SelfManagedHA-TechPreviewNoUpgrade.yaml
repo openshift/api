@@ -138,6 +138,9 @@
                         "name": "NewOLM"
                     },
                     {
+                        "name": "NodeDisruptionPolicy"
+                    },
+                    {
                         "name": "NodeSwap"
                     },
                     {

@@ -559,4 +559,11 @@ var (
 					productScope(ocpSpecific).
 					enableIn(TechPreviewNoUpgrade).
 					mustRegister()
+
+	FeatureGateMetricsCollectionProfiles = newFeatureGate("MetricsCollectionProfiles").
+						reportProblemsToJiraComponent("Monitoring").
+						contactPerson("rexagod").
+						productScope(ocpSpecific).
+						enableIn(Default, TechPreviewNoUpgrade).
+						mustRegister()
 )

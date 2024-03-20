@@ -169,6 +169,9 @@
                         "name": "KMSv1"
                     },
                     {
+                        "name": "MetricsCollectionProfiles"
+                    },
+                    {
                         "name": "NetworkLiveMigration"
                     },
                     {

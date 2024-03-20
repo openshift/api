@@ -58,6 +58,7 @@ var map_StableConfigTypeSpec = map[string]string{
 	"optionalImmutableField": "optionalImmutableField is a field that is immutable once set. It is optional but may not be changed once set.",
 	"evolvingUnion":          "evolvingUnion demonstrates how to phase in new values into discriminated union",
 	"celUnion":               "celUnion demonstrates how to validate a discrminated union using CEL",
+	"set":                    "set demonstrates how to define and validate set of strings",
 }
 
 func (StableConfigTypeSpec) SwaggerDoc() map[string]string {

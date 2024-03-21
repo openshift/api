@@ -230,7 +230,7 @@ tests:
               actions:
                 - type: DaemonReload
                 - type: Reload
-    expectedError: "Reload is required when type is reload, and forbidden otherwise"
+    expectedError: "reload is required when type is Reload, and forbidden otherwise"
   - name: Node disruption policies that specify a reboot action should not allow other actions in the list
     initial: |
       apiVersion: operator.openshift.io/v1

@@ -57,16 +57,8 @@ type MachineConfigurationSpec struct {
 }
 
 type MachineConfigurationStatus struct {
-	// conditions is a list of conditions and their status
-	// +patchMergeKey=type
-	// +patchStrategy=merge
-	// +listType=map
-	// +listMapKey=type
-	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
-
-	// observedGeneration is the last generation change you've dealt with
-	// +optional
-	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
+	// TODO tombstone this field
+	StaticPodOperatorStatus `json:",inline"`
 
 	// nodeDisruptionPolicyStatus status reflects what the latest cluster-validated policies are,
 	// and will be used by the Machine Config Daemon during future node updates.
@@ -230,9 +222,8 @@ type NodeDisruptionPolicyClusterStatus struct {
 
 // NodeDisruptionPolicySpecFile is a file entry and corresponding actions to take and is used in the NodeDisruptionPolicyConfig object
 type NodeDisruptionPolicySpecFile struct {
-	// path is the location of the file being managed through a MachineConfig.
-	// Actions specified will be applied when changes to the file at the path
-	// configured in this field.
+	// path is the location of a file being managed through a MachineConfig.
+	// The Actions in the policy will apply to changes to the file at this path.
 	// +kubebuilder:validation:Required
 	Path string `json:"path"`
 	// actions represents the series of commands to be executed on changes to the file at
@@ -252,9 +243,8 @@ type NodeDisruptionPolicySpecFile struct {
 
 // NodeDisruptionPolicyStatusFile is a file entry and corresponding actions to take and is used in the NodeDisruptionPolicyClusterStatus object
 type NodeDisruptionPolicyStatusFile struct {
-	// path is the location of the file being managed through a MachineConfig.
-	// Actions specified will be applied when changes to the file at the path
-	// configured in this field.
+	// path is the location of a file being managed through a MachineConfig.
+	// The Actions in the policy will apply to changes to the file at this path.
 	// +kubebuilder:validation:Required
 	Path string `json:"path"`
 	// actions represents the series of commands to be executed on changes to the file at
@@ -279,11 +269,8 @@ type NodeDisruptionPolicySpecUnit struct {
 	// Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long.
 	// ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, ":", "-", "_", ".", and "\".
 	// ${SERVICETYPE} must be one of ".service", ".socket", ".device", ".mount", ".automount", ".swap", ".target", ".path", ".timer", ".snapshot", ".slice" or ".scope".
-	// +kubebuilder:validation:XValidation:rule=`self.matches('\\.(service|socket|device|mount|automount|swap|target|path|timer|snapshot|slice|scope)$')`, message="Invalid ${SERVICETYPE} in service name. Expected format is ${NAME}${SERVICETYPE}, where ${SERVICETYPE} must be one of \".service\", \".socket\", \".device\", \".mount\", \".automount\", \".swap\", \".target\", \".path\", \".timer\",\".snapshot\", \".slice\" or \".scope\"."
-	// +kubebuilder:validation:XValidation:rule=`self.matches('^[a-zA-Z0-9:._\\\\-]+\\..')`, message="Invalid ${NAME} in service name. Expected format is ${NAME}${SERVICETYPE}, where {NAME} must be atleast 1 character long and can only consist of alphabets, digits, \":\", \"-\", \"_\", \".\", and \"\\\""
 	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:MaxLength=255
-	Name string `json:"name"`
+	Name NodeDisruptionPolicyServiceName `json:"name"`
 
 	// actions represents the series of commands to be executed on changes to the file at
 	// the corresponding file path. Actions will be applied in the order that
@@ -307,11 +294,8 @@ type NodeDisruptionPolicyStatusUnit struct {
 	// Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long.
 	// ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, ":", "-", "_", ".", and "\".
 	// ${SERVICETYPE} must be one of ".service", ".socket", ".device", ".mount", ".automount", ".swap", ".target", ".path", ".timer", ".snapshot", ".slice" or ".scope".
-	// +kubebuilder:validation:XValidation:rule=`self.matches('\\.(service|socket|device|mount|automount|swap|target|path|timer|snapshot|slice|scope)$')`, message="Invalid ${SERVICETYPE} in service name. Expected format is ${NAME}${SERVICETYPE}, where ${SERVICETYPE} must be one of \".service\", \".socket\", \".device\", \".mount\", \".automount\", \".swap\", \".target\", \".path\", \".timer\",\".snapshot\", \".slice\" or \".scope\"."
-	// +kubebuilder:validation:XValidation:rule=`self.matches('^[a-zA-Z0-9:._\\\\-]+\\..')`, message="Invalid ${NAME} in service name. Expected format is ${NAME}${SERVICETYPE}, where {NAME} must be atleast 1 character long and can only consist of alphabets, digits, \":\", \"-\", \"_\", \".\", and \"\\\""
 	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:MaxLength=255
-	Name string `json:"name"`
+	Name NodeDisruptionPolicyServiceName `json:"name"`
 
 	// actions represents the series of commands to be executed on changes to the file at
 	// the corresponding file path. Actions will be applied in the order that
@@ -362,8 +346,8 @@ type NodeDisruptionPolicyStatusSSHKey struct {
 	Actions []NodeDisruptionPolicyStatusAction `json:"actions"`
 }
 
-// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'Reload' ? has(self.reload) : !has(self.reload)",message="Reload is required when type is reload, and forbidden otherwise"
-// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'Restart' ? has(self.restart) : !has(self.restart)",message="Restart is required when type is restart, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'Reload' ? has(self.reload) : !has(self.reload)",message="reload is required when type is Reload, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'Restart' ? has(self.restart) : !has(self.restart)",message="restart is required when type is Restart, and forbidden otherwise"
 // +union
 type NodeDisruptionPolicySpecAction struct {
 	// type represents the commands that will be carried out if this NodeDisruptionPolicySpecActionType is executed
@@ -381,8 +365,8 @@ type NodeDisruptionPolicySpecAction struct {
 	Restart *RestartService `json:"restart,omitempty"`
 }
 
-// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'Reload' ? has(self.reload) : !has(self.reload)",message="Reload is required when type is reload, and forbidden otherwise"
-// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'Restart' ? has(self.restart) : !has(self.restart)",message="Restart is required when type is restart, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'Reload' ? has(self.reload) : !has(self.reload)",message="reload is required when type is Reload, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'Restart' ? has(self.restart) : !has(self.restart)",message="restart is required when type is Restart, and forbidden otherwise"
 // +union
 type NodeDisruptionPolicyStatusAction struct {
 	// type represents the commands that will be carried out if this NodeDisruptionPolicyStatusActionType is executed
@@ -406,11 +390,8 @@ type ReloadService struct {
 	// Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long.
 	// ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, ":", "-", "_", ".", and "\".
 	// ${SERVICETYPE} must be one of ".service", ".socket", ".device", ".mount", ".automount", ".swap", ".target", ".path", ".timer", ".snapshot", ".slice" or ".scope".
-	// +kubebuilder:validation:XValidation:rule=`self.matches('\\.(service|socket|device|mount|automount|swap|target|path|timer|snapshot|slice|scope)$')`, message="Invalid ${SERVICETYPE} in service name. Expected format is ${NAME}${SERVICETYPE}, where ${SERVICETYPE} must be one of \".service\", \".socket\", \".device\", \".mount\", \".automount\", \".swap\", \".target\", \".path\", \".timer\",\".snapshot\", \".slice\" or \".scope\"."
-	// +kubebuilder:validation:XValidation:rule=`self.matches('^[a-zA-Z0-9:._\\\\-]+\\..')`, message="Invalid ${NAME} in service name. Expected format is ${NAME}${SERVICETYPE}, where {NAME} must be atleast 1 character long and can only consist of alphabets, digits, \":\", \"-\", \"_\", \".\", and \"\\\""
 	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:MaxLength=255
-	ServiceName string `json:"serviceName"`
+	ServiceName NodeDisruptionPolicyServiceName `json:"serviceName"`
 }
 
 // RestartService allows the user to specify the services to be restarted
@@ -419,16 +400,18 @@ type RestartService struct {
 	// Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long.
 	// ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, ":", "-", "_", ".", and "\".
 	// ${SERVICETYPE} must be one of ".service", ".socket", ".device", ".mount", ".automount", ".swap", ".target", ".path", ".timer", ".snapshot", ".slice" or ".scope".
-	// +kubebuilder:validation:XValidation:rule=`self.matches('\\.(service|socket|device|mount|automount|swap|target|path|timer|snapshot|slice|scope)$')`, message="Invalid ${SERVICETYPE} in service name. Expected format is ${NAME}${SERVICETYPE}, where ${SERVICETYPE} must be one of \".service\", \".socket\", \".device\", \".mount\", \".automount\", \".swap\", \".target\", \".path\", \".timer\",\".snapshot\", \".slice\" or \".scope\"."
-	// +kubebuilder:validation:XValidation:rule=`self.matches('^[a-zA-Z0-9:._\\\\-]+\\..')`, message="Invalid ${NAME} in service name. Expected format is ${NAME}${SERVICETYPE}, where {NAME} must be atleast 1 character long and can only consist of alphabets, digits, \":\", \"-\", \"_\", \".\", and \"\\\""
 	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:MaxLength=255
-	ServiceName string `json:"serviceName"`
+	ServiceName NodeDisruptionPolicyServiceName `json:"serviceName"`
 }
 
 // NodeDisruptionPolicySpecActionType is a string enum used in a NodeDisruptionPolicySpecAction object. They describe an action to be performed.
 // +kubebuilder:validation:Enum:="Reboot";"Drain";"Reload";"Restart";"DaemonReload";"None"
 type NodeDisruptionPolicySpecActionType string
+
+// +kubebuilder:validation:XValidation:rule=`self.matches('\\.(service|socket|device|mount|automount|swap|target|path|timer|snapshot|slice|scope)$')`, message="Invalid ${SERVICETYPE} in service name. Expected format is ${NAME}${SERVICETYPE}, where ${SERVICETYPE} must be one of \".service\", \".socket\", \".device\", \".mount\", \".automount\", \".swap\", \".target\", \".path\", \".timer\",\".snapshot\", \".slice\" or \".scope\"."
+// +kubebuilder:validation:XValidation:rule=`self.matches('^[a-zA-Z0-9:._\\\\-]+\\..')`, message="Invalid ${NAME} in service name. Expected format is ${NAME}${SERVICETYPE}, where {NAME} must be atleast 1 character long and can only consist of alphabets, digits, \":\", \"-\", \"_\", \".\", and \"\\\""
+// +kubebuilder:validation:MaxLength=255
+type NodeDisruptionPolicyServiceName string
 
 const (
 	// Reboot represents an action that will cause nodes to be rebooted. This is the default action by the MCO

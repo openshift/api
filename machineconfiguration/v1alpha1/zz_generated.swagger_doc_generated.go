@@ -79,14 +79,6 @@ func (MachineConfigNodeStatusMachineConfigVersion) SwaggerDoc() map[string]strin
 	return map_MachineConfigNodeStatusMachineConfigVersion
 }
 
-var map_PinnedImageRef = map[string]string{
-	"name": "name is an OCI Image referenced by digest.\n\nThe format of the image ref is: host[:port][/namespace]/name@sha256:<digest>",
-}
-
-func (PinnedImageRef) SwaggerDoc() map[string]string {
-	return map_PinnedImageRef
-}
-
 var map_PinnedImageSet = map[string]string{
 	"":     "PinnedImageSet describes a set of images that should be pinned by CRI-O and pulled to the nodes which are members of the declared MachineConfigPools.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 	"spec": "spec describes the configuration of this pinned image set.",

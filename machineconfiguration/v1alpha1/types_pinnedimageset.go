@@ -10,7 +10,7 @@ import (
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=pinnedimagesets,scope=Cluster
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/1713
-// +openshift:file-pattern=0000_80_pinnedimagesetMARKERS.crd.yaml
+// +openshift:file-pattern=cvoRunLevel=0000_80,operatorName=machine-config,operatorOrdering=01
 // +openshift:enable:FeatureGate=PinnedImages
 // +kubebuilder:metadata:labels=openshift.io/operator-managed=
 
@@ -45,7 +45,7 @@ type PinnedImageSetSpec struct {
 	// These image references should all be by digest, tags aren't allowed.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinItems=1
-	// +kubebuilder:validation:MaxItems=2000
+	// +kubebuilder:validation:MaxItems=500
 	// +listType=map
 	// +listMapKey=name
 	PinnedImages []PinnedImageRef `json:"pinnedImages"`
@@ -59,7 +59,9 @@ type PinnedImageRef struct {
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=447
-	// +kubebuilder:validation:XValidation:rule=`self.matches('^([a-zA-Z0-9-]+\\.)+[a-zA-Z0-9-]+(:[0-9]{2,5})?/([a-zA-Z0-9-_]{0,61}/)?[a-zA-Z0-9-_.]*@sha256:[a-f0-9]{64}$')`,message="The OCI Image reference must be in the format host[:port][/namespace]/name@sha256:<digest> with a valid SHA256 digest"
+	// +kubebuilder:validation:XValidation:rule=`self.split('@').size() == 2 && self.split('@')[1].matches('^sha256:[a-f0-9]{64}$')`,message="the OCI Image reference must end with a valid '@sha256:<digest>' suffix, where '<digest>' is 64 characters long"
+	// +kubebuilder:validation:XValidation:rule=`self.split('@')[0].matches('^([a-zA-Z0-9-]+\\.)+[a-zA-Z0-9-]+(:[0-9]{2,5})?/([a-zA-Z0-9-_]{0,61}/)?[a-zA-Z0-9-_.]*?$')`,message="the OCI Image name should follow the host[:port][/namespace]/name format, resembling a valid URL without the scheme"
+
 	Name string `json:"name"`
 }
 

@@ -68,3 +68,27 @@ machineconfignodes.machineconfiguration.openshift.io:
   - MachineConfigNodes
   Version: v1alpha1
 
+pinnedimagesets.machineconfiguration.openshift.io:
+  Annotations: {}
+  ApprovedPRNumber: https://github.com/openshift/api/pull/1713
+  CRDName: pinnedimagesets.machineconfiguration.openshift.io
+  Capability: ""
+  Category: ""
+  FeatureGates:
+  - PinnedImages
+  FilenameOperatorName: ""
+  FilenameOperatorOrdering: ""
+  FilenameRunLevel: ""
+  GroupName: machineconfiguration.openshift.io
+  HasStatus: false
+  KindName: PinnedImageSet
+  Labels:
+    openshift.io/operator-managed: ""
+  PluralName: pinnedimagesets
+  PrinterColumns: []
+  Scope: Cluster
+  ShortNames: null
+  TopLevelFeatureGates:
+  - PinnedImages
+  Version: v1alpha1
+

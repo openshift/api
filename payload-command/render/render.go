@@ -210,15 +210,6 @@ func inListOfNames(haystack []configv1.FeatureGateName, needle configv1.FeatureG
 	return false
 }
 
-func inListOfDescriptions(haystack []configv1.FeatureGateDescription, needle configv1.FeatureGateName) bool {
-	for _, curr := range haystack {
-		if curr.FeatureGateAttributes.Name == needle {
-			return true
-		}
-	}
-	return false
-}
-
 func clusterProfilesFrom(annotations map[string]string) sets.Set[string] {
 	ret := sets.New[string]()
 	for k, v := range annotations {

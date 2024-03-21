@@ -2,6 +2,7 @@ package manifestmerge
 
 import (
 	"fmt"
+	"github.com/openshift/api/tools/codegen/pkg/utils"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/util/sets"
@@ -10,12 +11,6 @@ import (
 	kyaml "sigs.k8s.io/yaml"
 	"strings"
 )
-
-var clusterProfileToShortName = map[string]string{
-	"include.release.openshift.io/ibm-cloud-managed":              "Hypershift",
-	"include.release.openshift.io/self-managed-high-availability": "SelfManagedHA",
-	"include.release.openshift.io/single-node-developer":          "SingleNode",
-}
 
 func FilterForFeatureSet(payloadFeatureGatePath, clusterProfile, featureSetName string) (ManifestFilter, error) {
 	if featureSetName == "CustomNoUpgrade" {
@@ -35,7 +30,7 @@ func FilterForFeatureSet(payloadFeatureGatePath, clusterProfile, featureSetName 
 	default:
 		return nil, fmt.Errorf("unrecognized featureset name %q", featureSetName)
 	}
-	featureGateFilename := path.Join(payloadFeatureGatePath, fmt.Sprintf("featureGate-%s-%s.yaml", clusterProfileToShortName[clusterProfile], featureSetName))
+	featureGateFilename := path.Join(payloadFeatureGatePath, fmt.Sprintf("featureGate-%s-%s.yaml", utils.ClusterProfileToShortName(clusterProfile), featureSetName))
 
 	enabledFeatureGatesSet := sets.NewString()
 
@@ -142,7 +137,7 @@ func (f *ClusterProfileFilter) UseManifest(data []byte) (bool, error) {
 		return false, err
 	}
 	// if there's no preferenceinclude everywhere
-	if !hasClusterProfilePreference(partialObject.GetAnnotations()) {
+	if !utils.HasClusterProfilePreference(partialObject.GetAnnotations()) {
 		return true, nil
 	}
 

@@ -365,16 +365,6 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 	return kerrors.NewAggregate(errs)
 }
 
-func hasClusterProfilePreference(annotations map[string]string) bool {
-	for k := range annotations {
-		if strings.HasPrefix(k, "include.release.openshift.io/") {
-			return true
-		}
-	}
-
-	return false
-}
-
 func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, outputPath string) []crdForFeatureSet {
 	allCRDsWithData := filterCRDs(resultingCRDs, &HasData{})
 	sameSchemaInAllCRDs := areCRDsTheSame(allCRDsWithData)
@@ -474,7 +464,7 @@ func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, outpu
 			continue
 		}
 
-		crdFilename := strings.ReplaceAll(crdFilenamePattern, "MARKERS", fmt.Sprintf("-%s", clusterProfileToShortName[clusterProfile]))
+		crdFilename := strings.ReplaceAll(crdFilenamePattern, "MARKERS", fmt.Sprintf("-%s", utils.ClusterProfileToShortName(clusterProfile)))
 		crdFullPath := filepath.Join(outputPath, crdFilename)
 		crdToWrite := filteredCRDs[0].crd.DeepCopy()
 
@@ -499,7 +489,7 @@ func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, outpu
 		if curr.noData {
 			continue
 		}
-		crdFilename := strings.ReplaceAll(crdFilenamePattern, "MARKERS", fmt.Sprintf("-%s-%s", clusterProfileToShortName[curr.clusterProfile], curr.featureSet))
+		crdFilename := strings.ReplaceAll(crdFilenamePattern, "MARKERS", fmt.Sprintf("-%s-%s", utils.ClusterProfileToShortName(curr.clusterProfile), curr.featureSet))
 		crdFullPath := filepath.Join(outputPath, crdFilename)
 
 		crdToWrite := notHandled[i].crd.DeepCopy()

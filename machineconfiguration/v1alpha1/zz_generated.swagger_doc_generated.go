@@ -79,4 +79,64 @@ func (MachineConfigNodeStatusMachineConfigVersion) SwaggerDoc() map[string]strin
 	return map_MachineConfigNodeStatusMachineConfigVersion
 }
 
+var map_MachineOSImage = map[string]string{
+	"":       "MachineOSImage describes an image build for a MachineConfigPool Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"spec":   "spec describes the machineosimage spec",
+	"status": "status describes the machineosimage status",
+}
+
+func (MachineOSImage) SwaggerDoc() map[string]string {
+	return map_MachineOSImage
+}
+
+var map_MachineOSImageList = map[string]string{
+	"": "MachineOSImageList describes all of the OS Images on the system\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+}
+
+func (MachineOSImageList) SwaggerDoc() map[string]string {
+	return map_MachineOSImageList
+}
+
+var map_MachineOSImageSpec = map[string]string{
+	"":                  "MachineOSImageSpec contains user-configurable options and other information about an OS image.",
+	"baseImage":         "baseImage is the base OS image that this object was built from",
+	"imagePullSpec":     "imagePullSpec contains the final pull spec of the built image",
+	"machineConfigPool": "machineConfigPool contains the MCP that the image has been rolled out to",
+	"machineConfig":     "machineConfig is a reference to the MC that was used to build this image.",
+}
+
+func (MachineOSImageSpec) SwaggerDoc() map[string]string {
+	return map_MachineOSImageSpec
+}
+
+var map_MachineOSImageState = map[string]string{
+	"":      "MachineOSImageState describes the lifecycle of an image",
+	"usage": "usage describes which point in its lifecycle an image is at Valid types are: InUse, Stale, Rotten",
+}
+
+func (MachineOSImageState) SwaggerDoc() map[string]string {
+	return map_MachineOSImageState
+}
+
+var map_MachineOSImageStatus = map[string]string{
+	"":                   "MachineOSImageStatus contains state ralted information about an image.",
+	"observedGeneration": "observedGeneration represents the generation observed by the controller.",
+	"conditions":         "conditions contains status conditions related to the image.",
+	"age":                "age is how long the image has existed",
+	"rolloutStatus":      "rolloutStatus represents how the image is progressing in its rollout after being built Valid types are: RolledOut, RolloutPending, RolloutFailed",
+	"imageUsage":         "imageUsage describes how recently this image has been used. Once this gets to Rotten, the image can be garbage collected Valid types are: InUse, Stale, Rotten",
+}
+
+func (MachineOSImageStatus) SwaggerDoc() map[string]string {
+	return map_MachineOSImageStatus
+}
+
+var map_MachineOSObjectReference = map[string]string{
+	"name": "name is the name of the referenced object.",
+}
+
+func (MachineOSObjectReference) SwaggerDoc() map[string]string {
+	return map_MachineOSObjectReference
+}
+
 // AUTO-GENERATED FUNCTIONS END HERE

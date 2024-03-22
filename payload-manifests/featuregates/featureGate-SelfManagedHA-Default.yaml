@@ -65,6 +65,9 @@
                         "name": "ImagePolicy"
                     },
                     {
+                        "name": "InPlacePodVerticalScaling"
+                    },
+                    {
                         "name": "InsightsConfig"
                     },
                     {

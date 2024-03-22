@@ -37,7 +37,6 @@ var (
 		"include.release.openshift.io/self-managed-high-availability",
 		"include.release.openshift.io/single-node-developer",
 	}
-	allFeatureSets = []string{"Default", "TechPreviewNoUpgrade", "CustomNoUpgrade"}
 )
 
 // Options contains the configuration required for the schemapatch generator.
@@ -62,6 +61,7 @@ type generator struct {
 	disabled               bool
 	verify                 bool
 	payloadFeatureGatePath string
+	allKnownFeatureSets    sets.String
 }
 
 // NewGenerator builds a new schemapatch generator.
@@ -71,10 +71,16 @@ func NewGenerator(opts Options) generation.Generator {
 		payloadFeatureGatePath = opts.PayloadFeatureGatePath
 	}
 
+	allKnownFeatureSets, err := AllKnownFeatureSets(payloadFeatureGatePath)
+	if err != nil {
+		panic(err)
+	}
+
 	return &generator{
 		disabled:               opts.Disabled,
 		verify:                 opts.Verify,
 		payloadFeatureGatePath: payloadFeatureGatePath,
+		allKnownFeatureSets:    allKnownFeatureSets,
 	}
 }
 
@@ -85,10 +91,12 @@ func (g *generator) ApplyConfig(config *generation.Config) generation.Generator 
 		return g
 	}
 
-	return NewGenerator(Options{
-		Disabled: config.ManifestMerge.Disabled,
-		Verify:   g.verify,
-	})
+	return NewGenerator(
+		Options{
+			Disabled: config.ManifestMerge.Disabled,
+			Verify:   g.verify,
+		},
+	)
 }
 
 // Name returns the name of the generator.
@@ -172,7 +180,7 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 			resultingCRDs := []crdForFeatureSet{}
 			crdFilenamePattern := ""
 			for _, clusterProfile := range allClusterProfiles {
-				for _, featureSetName := range allFeatureSets {
+				for _, featureSetName := range g.allKnownFeatureSets.List() {
 					partialManifestFilter, err := FilterForFeatureSet(g.payloadFeatureGatePath, clusterProfile, featureSetName)
 					if err != nil {
 						errs = append(errs, err)
@@ -267,7 +275,7 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 			}
 
 			// check to see if all the resultingCRDs are the same
-			crdsToRender := getCRDsToRender(resultingCRDs, crdFilenamePattern, generatedOutputPath)
+			crdsToRender := getCRDsToRender(resultingCRDs, crdFilenamePattern, generatedOutputPath, g.allKnownFeatureSets)
 			allCRDsToRender = append(allCRDsToRender, crdsToRender...)
 		}
 
@@ -365,10 +373,10 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 	return kerrors.NewAggregate(errs)
 }
 
-func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, outputPath string) []crdForFeatureSet {
+func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, outputPath string, allKnownFeatureSets sets.String) []crdForFeatureSet {
 	allCRDsWithData := filterCRDs(resultingCRDs, &HasData{})
 	sameSchemaInAllCRDs := areCRDsTheSame(allCRDsWithData)
-	hasAllFeatureSets := featureSetsFromCRDs(allCRDsWithData).Equal(sets.NewString(allFeatureSets...))
+	hasAllFeatureSets := featureSetsFromCRDs(allCRDsWithData).Equal(allKnownFeatureSets)
 	if sameSchemaInAllCRDs && hasAllFeatureSets {
 		crdFilename := strings.ReplaceAll(crdFilenamePattern, "MARKERS", "")
 		crdFullPath := filepath.Join(outputPath, crdFilename)
@@ -398,7 +406,7 @@ func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, outpu
 	// if they only vary by clusterprofile, then clusterprofile files only
 	// if they vary by both, slice by clusterprofile first, then by featureset
 	eachFeatureSetTheSameForAllClusterProfiles := true
-	for _, featureSet := range allFeatureSets {
+	for _, featureSet := range allKnownFeatureSets.List() {
 		filter := &AndCRDFilter{
 			filters: []CRDFilter{
 				&HasData{},
@@ -413,7 +421,7 @@ func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, outpu
 	}
 	if eachFeatureSetTheSameForAllClusterProfiles {
 		crdsToWrite := []crdForFeatureSet{}
-		for _, featureSet := range allFeatureSets {
+		for _, featureSet := range allKnownFeatureSets.List() {
 			filter := &AndCRDFilter{
 				filters: []CRDFilter{
 					&HasData{},

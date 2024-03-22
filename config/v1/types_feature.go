@@ -43,16 +43,17 @@ var (
 	// this feature set on CANNOT BE UNDONE and PREVENTS UPGRADES.
 	TechPreviewNoUpgrade FeatureSet = "TechPreviewNoUpgrade"
 
+	// DevPreviewNoUpgrade turns on dev preview features that are not part of the normal supported platform. Turning
+	// this feature set on CANNOT BE UNDONE and PREVENTS UPGRADES.
+	DevPreviewNoUpgrade FeatureSet = "DevPreviewNoUpgrade"
+
 	// CustomNoUpgrade allows the enabling or disabling of any feature. Turning this feature set on IS NOT SUPPORTED, CANNOT BE UNDONE, and PREVENTS UPGRADES.
 	// Because of its nature, this setting cannot be validated.  If you have any typos or accidentally apply invalid combinations
 	// your cluster may fail in an unrecoverable way.
 	CustomNoUpgrade FeatureSet = "CustomNoUpgrade"
 
-	// TopologyManager enables ToplogyManager support. Upgrades are enabled with this feature.
-	LatencySensitive FeatureSet = "LatencySensitive"
-
 	// AllFixedFeatureSets are the featuresets that have known featuregates.  Custom doesn't for instance.  LatencySensitive is dead
-	AllFixedFeatureSets = []FeatureSet{Default, TechPreviewNoUpgrade}
+	AllFixedFeatureSets = []FeatureSet{Default, TechPreviewNoUpgrade, DevPreviewNoUpgrade}
 )
 
 type FeatureGateSpec struct {

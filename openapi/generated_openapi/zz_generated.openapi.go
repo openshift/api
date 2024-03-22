@@ -53140,6 +53140,11 @@ func schema_openshift_api_operator_v1_VSphereCSIDriverConfigSpec(ref common.Refe
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"topologyCategories": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "topologyCategories indicates tag categories with which vcenter resources such as hostcluster or datacenter were tagged with. If cluster Infrastructure object has a topology, values specified in Infrastructure object will be used and modifications to topologyCategories will be rejected.",
 							Type:        []string{"array"},
@@ -53152,6 +53157,27 @@ func schema_openshift_api_operator_v1_VSphereCSIDriverConfigSpec(ref common.Refe
 									},
 								},
 							},
+						},
+					},
+					"globalMaxSnapshotsPerBlockVolume": {
+						SchemaProps: spec.SchemaProps{
+							Description: "globalMaxSnapshotsPerBlockVolume is a global configuration parameter that applies to volumes on all kinds of datastores. If unset it defaults to 3. Increasing number of snapshots above 3 can have negative impact on performance, for more details see: https://kb.vmware.com/s/article/1025279 Volume snapshot documentation: https://docs.vmware.com/en/VMware-vSphere-Container-Storage-Plug-in/3.0/vmware-vsphere-csp-getting-started/GUID-E0B41C69-7EEB-450F-A73D-5FD2FF39E891.html",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"granularMaxSnapshotsPerBlockVolumeInVSAN": {
+						SchemaProps: spec.SchemaProps{
+							Description: "granularMaxSnapshotsPerBlockVolumeInVSAN is a granular configuration parameter on vSAN datastore only. It overrides GlobalMaxSnapshotsPerBlockVolume if set, while it falls back to the global constraint if unset.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"granularMaxSnapshotsPerBlockVolumeInVVOL": {
+						SchemaProps: spec.SchemaProps{
+							Description: "granularMaxSnapshotsPerBlockVolumeInVVOL is a granular configuration parameter on Virtual Volumes datastore only. It overrides GlobalMaxSnapshotsPerBlockVolume if set, while it falls back to the global constraint if unset.",
+							Type:        []string{"integer"},
+							Format:      "int64",
 						},
 					},
 				},

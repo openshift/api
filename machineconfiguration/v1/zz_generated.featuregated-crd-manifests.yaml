@@ -110,7 +110,8 @@ machineconfigpools.machineconfiguration.openshift.io:
   CRDName: machineconfigpools.machineconfiguration.openshift.io
   Capability: ""
   Category: ""
-  FeatureGates: []
+  FeatureGates:
+  - PinnedImages
   FilenameOperatorName: machine-config
   FilenameOperatorOrdering: "01"
   FilenameRunLevel: "0000_80"

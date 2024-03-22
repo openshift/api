@@ -54,6 +54,8 @@ spec:
                 items:
                   properties:
                     name:
+                      description: "name is an OCI Image referenced by digest. \n
+                        The format of the image ref is: host[:port][/namespace]/name@sha256:<digest>"
                       maxLength: 447
                       minLength: 1
                       type: string

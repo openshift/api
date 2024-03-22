@@ -120,11 +120,11 @@ func GenerateTestSuite(suiteSpec SuiteSpec) {
 	suiteName, err := generateSuiteName(suiteSpec)
 	Expect(err).ToNot(HaveOccurred())
 
-	Describe(suiteName, func() {
+	Describe(suiteName, Ordered, func() {
 		var crdOptions envtest.CRDInstallOptions
 		var crd *apiextensionsv1.CustomResourceDefinition
 
-		BeforeEach(func() {
+		BeforeEach(OncePerOrdered, func() {
 			Expect(k8sClient).ToNot(BeNil(), "Kuberentes client is not initialised")
 
 			crdOptions = envtest.CRDInstallOptions{
@@ -147,7 +147,9 @@ func GenerateTestSuite(suiteSpec SuiteSpec) {
 			for _, u := range newUnstructuredsFor(crd) {
 				Expect(k8sClient.DeleteAllOf(ctx, u, client.InNamespace("default")))
 			}
+		})
 
+		AfterEach(OncePerOrdered, func() {
 			// Remove the CRD and wait for it to be removed from the API.
 			// If we don't wait then subsequent tests may fail.
 			Expect(envtest.UninstallCRDs(cfg, crdOptions)).ToNot(HaveOccurred())

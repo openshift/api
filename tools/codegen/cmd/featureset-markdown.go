@@ -251,7 +251,12 @@ func readFeatureGate(ctx context.Context, featureSetManifestDir string) (sets.St
 		if len(clusterProfiles) != 1 {
 			return nil, nil, nil, nil, fmt.Errorf("expected exactly one clusterProfile from %q: %v", featureGateFilename, clusterProfiles.List())
 		}
-		currFeatureGateInfo.clusterProfile = utils.ClusterProfileToShortName(clusterProfiles.List()[0])
+
+		clusterProfileShortName, err := utils.ClusterProfileToShortName(clusterProfiles.List()[0])
+		if err != nil {
+			return nil, nil, nil, nil, fmt.Errorf("unrecognized clusterprofile name %q: %w", clusterProfiles.List()[0], err)
+		}
+		currFeatureGateInfo.clusterProfile = clusterProfileShortName
 		allClusterProfiles.Insert(currFeatureGateInfo.clusterProfile)
 
 		currFeatureGateInfo.featureSet, _, _ = unstructured.NestedString(uncastFeatureGate.Object, "spec", "featureSet")

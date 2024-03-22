@@ -8,9 +8,44 @@ import (
 	"k8s.io/apimachinery/pkg/util/sets"
 	"os"
 	"path"
+	"path/filepath"
 	kyaml "sigs.k8s.io/yaml"
 	"strings"
 )
+
+func AllKnownFeatureSets(payloadFeatureGatePath string) (sets.String, error) {
+	allFeatureSets := sets.String{}
+	allFeatureSets.Insert("CustomNoUpgrade") // this one won't have a rendered version since we don't know the gates
+
+	featureSetManifestFiles, err := os.ReadDir(payloadFeatureGatePath)
+	if err != nil {
+		return nil, fmt.Errorf("cannot read FeatureSetManifestDir: %w", err)
+	}
+	for _, currFeatureSetManifestFile := range featureSetManifestFiles {
+		featureGateFilename := filepath.Join(payloadFeatureGatePath, currFeatureSetManifestFile.Name())
+		featureGateBytes, err := os.ReadFile(featureGateFilename)
+		if err != nil {
+			return nil, fmt.Errorf("unable to read %q: %w", featureGateFilename, err)
+		}
+
+		// use unstructured to pull this information to avoid vendoring openshift/api
+		featureGateMap := map[string]interface{}{}
+		if err := kyaml.Unmarshal(featureGateBytes, &featureGateMap); err != nil {
+			return nil, fmt.Errorf("unable to parse featuregate %q: %w", featureGateFilename, err)
+		}
+		uncastFeatureGate := unstructured.Unstructured{
+			Object: featureGateMap,
+		}
+
+		currFeatureSet, _, _ := unstructured.NestedString(uncastFeatureGate.Object, "spec", "featureSet")
+		if len(currFeatureSet) == 0 {
+			currFeatureSet = "Default"
+		}
+		allFeatureSets.Insert(currFeatureSet)
+	}
+
+	return allFeatureSets, nil
+}
 
 func FilterForFeatureSet(payloadFeatureGatePath, clusterProfile, featureSetName string) (ManifestFilter, error) {
 	if featureSetName == "CustomNoUpgrade" {
@@ -24,13 +59,18 @@ func FilterForFeatureSet(payloadFeatureGatePath, clusterProfile, featureSetName 
 		}, nil
 	}
 
-	switch {
-	case featureSetName == "TechPreviewNoUpgrade":
-	case featureSetName == "Default":
-	default:
+	allKnownFeatureSets, err := AllKnownFeatureSets(payloadFeatureGatePath)
+	if err != nil {
+		return nil, fmt.Errorf("failed reading featuresets from %q", payloadFeatureGatePath)
+	}
+	if !allKnownFeatureSets.Has(featureSetName) {
 		return nil, fmt.Errorf("unrecognized featureset name %q", featureSetName)
 	}
-	featureGateFilename := path.Join(payloadFeatureGatePath, fmt.Sprintf("featureGate-%s-%s.yaml", utils.ClusterProfileToShortName(clusterProfile), featureSetName))
+	clusterProfileShortName, err := utils.ClusterProfileToShortName(clusterProfile)
+	if err != nil {
+		return nil, fmt.Errorf("unrecognized clusterprofile name %q: %w", clusterProfile, err)
+	}
+	featureGateFilename := path.Join(payloadFeatureGatePath, fmt.Sprintf("featureGate-%s-%s.yaml", clusterProfileShortName, featureSetName))
 
 	enabledFeatureGatesSet := sets.NewString()
 

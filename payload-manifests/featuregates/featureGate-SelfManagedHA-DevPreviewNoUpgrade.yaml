@@ -19,27 +19,15 @@
                         "name": "ClusterAPIInstall"
                     },
                     {
-                        "name": "DisableKubeletCloudCredentialProviders"
-                    },
-                    {
                         "name": "EventedPLEG"
                     },
                     {
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
-                    },
-                    {
-                        "name": "MetricsCollectionProfiles"
-                    },
-                    {
-                        "name": "NodeDisruptionPolicy"
                     }
                 ],
                 "enabled": [
                     {
                         "name": "AdminNetworkPolicy"
-                    },
-                    {
-                        "name": "AlertingRules"
                     },
                     {
                         "name": "AlibabaPlatform"
@@ -64,6 +52,9 @@
                     },
                     {
                         "name": "DNSNameResolver"
+                    },
+                    {
+                        "name": "DisableKubeletCloudCredentialProviders"
                     },
                     {
                         "name": "DynamicResourceAllocation"
@@ -132,16 +123,25 @@
                         "name": "MaxUnavailableStatefulSet"
                     },
                     {
+                        "name": "MetricsCollectionProfiles"
+                    },
+                    {
                         "name": "MetricsServer"
                     },
                     {
                         "name": "MixedCPUsAllocation"
                     },
                     {
+                        "name": "NetworkDiagnosticsConfig"
+                    },
+                    {
                         "name": "NetworkLiveMigration"
                     },
                     {
                         "name": "NewOLM"
+                    },
+                    {
+                        "name": "NodeDisruptionPolicy"
                     },
                     {
                         "name": "NodeSwap"
@@ -165,6 +165,15 @@
                         "name": "RouteExternalCertificate"
                     },
                     {
+                        "name": "ServiceAccountTokenNodeBinding"
+                    },
+                    {
+                        "name": "ServiceAccountTokenNodeBindingValidation"
+                    },
+                    {
+                        "name": "ServiceAccountTokenPodNodeInfo"
+                    },
+                    {
                         "name": "SignatureStores"
                     },
                     {
@@ -178,6 +187,9 @@
                     },
                     {
                         "name": "VSphereControlPlaneMachineSet"
+                    },
+                    {
+                        "name": "VSphereDriverConfiguration"
                     },
                     {
                         "name": "VSphereStaticIPs"

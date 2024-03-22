@@ -142,7 +142,7 @@ func (o *FeatureSetOptions) Run(ctx context.Context) error {
 		}
 		return fmt.Errorf("actual content not match: %v", cmp.Diff(expectedContent, actualContent))
 	}
-	
+
 	if err := os.WriteFile(o.OutputFile, md.ExactBytes(), 0644); err != nil {
 		return err
 	}
@@ -156,6 +156,9 @@ func getOrderedFeatureGates(info map[string]map[string]*featureGateInfo) []strin
 		for _, byFeature := range byClusterProfile {
 			for _, featureGate := range byFeature.enabled.List() {
 				counts[featureGate] = counts[featureGate] + 1
+			}
+			for _, featureGate := range byFeature.disabled.List() {
+				counts[featureGate] = counts[featureGate] + 0
 			}
 		}
 	}

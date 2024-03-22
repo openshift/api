@@ -157,6 +157,9 @@ func getOrderedFeatureGates(info map[string]map[string]*featureGateInfo) []strin
 			for _, featureGate := range byFeature.enabled.List() {
 				counts[featureGate] = counts[featureGate] + 1
 			}
+			for _, featureGate := range byFeature.disabled.List() {
+				counts[featureGate] = counts[featureGate] + 0
+			}
 		}
 	}
 

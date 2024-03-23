@@ -635,7 +635,10 @@ type AWSClassicLoadBalancerParameters struct {
 // AWSNetworkLoadBalancerParameters holds configuration parameters for an
 // AWS Network load balancer.
 type AWSNetworkLoadBalancerParameters struct {
+	EIPAllocations EIPAllocations `json:"eip-allocations,omitempty"`
 }
+
+type EIPAllocations string
 
 // HostNetworkStrategy holds parameters for the HostNetwork endpoint publishing
 // strategy.

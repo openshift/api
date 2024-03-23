@@ -28824,6 +28824,11 @@
           "type": "string",
           "default": ""
         },
+        "nodeDisruptionPolicy": {
+          "description": "nodeDisruptionPolicy allows an admin to set granular node disruption actions for MachineConfig-based updates, such as drains, service reloads, etc. Specifying this will allow for less downtime when doing small configuration updates to the cluster. This configuration has no effect on cluster upgrades which will still incur node disruption where required.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeDisruptionPolicyConfig"
+        },
         "observedConfig": {
           "description": "observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because it is an input to the level for the operator",
           "default": {},
@@ -28880,6 +28885,11 @@
         "latestAvailableRevisionReason": {
           "description": "latestAvailableRevisionReason describe the detailed reason for the most recent deployment",
           "type": "string"
+        },
+        "nodeDisruptionPolicyStatus": {
+          "description": "nodeDisruptionPolicyStatus status reflects what the latest cluster-validated policies are, and will be used by the Machine Config Daemon during future node updates.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeDisruptionPolicyStatus"
         },
         "nodeStatuses": {
           "description": "nodeStatuses track the deployment values and errors across individual nodes",
@@ -29313,6 +29323,278 @@
         "version": {
           "description": "version is the level this availability applies to",
           "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.NodeDisruptionPolicyClusterStatus": {
+      "description": "NodeDisruptionPolicyClusterStatus is the type for the status object, rendered by the controller as a merge of cluster defaults and user provided policies",
+      "type": "object",
+      "properties": {
+        "files": {
+          "description": "files is a list of MachineConfig file definitions and actions to take to changes on those paths",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeDisruptionPolicyStatusFile"
+          },
+          "x-kubernetes-list-map-keys": [
+            "path"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "sshkey": {
+          "description": "sshkey is the overall sshkey MachineConfig definition",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeDisruptionPolicyStatusSSHKey"
+        },
+        "units": {
+          "description": "units is a list MachineConfig unit definitions and actions to take on changes to those services",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeDisruptionPolicyStatusUnit"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.NodeDisruptionPolicyConfig": {
+      "description": "NodeDisruptionPolicyConfig is the overall spec definition for files/units/sshkeys",
+      "type": "object",
+      "properties": {
+        "files": {
+          "description": "files is a list of MachineConfig file definitions and actions to take to changes on those paths This list supports a maximum of 50 entries.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeDisruptionPolicySpecFile"
+          },
+          "x-kubernetes-list-map-keys": [
+            "path"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "sshkey": {
+          "description": "sshkey maps to the ignition.sshkeys field in the MachineConfig object, definition an action for this will apply to all sshkey changes in the cluster",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeDisruptionPolicySpecSSHKey"
+        },
+        "units": {
+          "description": "units is a list MachineConfig unit definitions and actions to take on changes to those services This list supports a maximum of 50 entries.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeDisruptionPolicySpecUnit"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.NodeDisruptionPolicySpecAction": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "reload": {
+          "description": "reload specifies the service to reload, only valid if type is reload",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.ReloadService"
+        },
+        "restart": {
+          "description": "restart specifies the service to restart, only valid if type is restart",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.RestartService"
+        },
+        "type": {
+          "description": "type represents the commands that will be carried out if this NodeDisruptionPolicySpecActionType is executed Valid value are Reboot, Drain, Reload, Restart, DaemonReload, None and Special reload/restart requires a corresponding service target specified in the reload/restart field. Other values require no further configuration",
+          "type": "string",
+          "default": ""
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {
+            "reload": "Reload",
+            "restart": "Restart"
+          }
+        }
+      ]
+    },
+    "com.github.openshift.api.operator.v1.NodeDisruptionPolicySpecFile": {
+      "description": "NodeDisruptionPolicySpecFile is a file entry and corresponding actions to take and is used in the NodeDisruptionPolicyConfig object",
+      "type": "object",
+      "required": [
+        "path",
+        "actions"
+      ],
+      "properties": {
+        "actions": {
+          "description": "actions represents the series of commands to be executed on changes to the file at the corresponding file path. Actions will be applied in the order that they are set in this list. If there are other incoming changes to other MachineConfig entries in the same update that require a reboot, the reboot will supercede these actions. Valid actions are Reboot, Drain, Reload, DaemonReload and None. The Reboot action and the None action cannot be used in conjunction with any of the other actions. This list supports a maximum of 10 entries.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeDisruptionPolicySpecAction"
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "path": {
+          "description": "path is the location of a file being managed through a MachineConfig. The Actions in the policy will apply to changes to the file at this path.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.NodeDisruptionPolicySpecSSHKey": {
+      "description": "NodeDisruptionPolicySpecSSHKey is actions to take for any SSHKey change and is used in the NodeDisruptionPolicyConfig object",
+      "type": "object",
+      "required": [
+        "actions"
+      ],
+      "properties": {
+        "actions": {
+          "description": "actions represents the series of commands to be executed on changes to the file at the corresponding file path. Actions will be applied in the order that they are set in this list. If there are other incoming changes to other MachineConfig entries in the same update that require a reboot, the reboot will supercede these actions. Valid actions are Reboot, Drain, Reload, DaemonReload and None. The Reboot action and the None action cannot be used in conjunction with any of the other actions. This list supports a maximum of 10 entries.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeDisruptionPolicySpecAction"
+          },
+          "x-kubernetes-list-type": "atomic"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.NodeDisruptionPolicySpecUnit": {
+      "description": "NodeDisruptionPolicySpecUnit is a systemd unit name and corresponding actions to take and is used in the NodeDisruptionPolicyConfig object",
+      "type": "object",
+      "required": [
+        "name",
+        "actions"
+      ],
+      "properties": {
+        "actions": {
+          "description": "actions represents the series of commands to be executed on changes to the file at the corresponding file path. Actions will be applied in the order that they are set in this list. If there are other incoming changes to other MachineConfig entries in the same update that require a reboot, the reboot will supercede these actions. Valid actions are Reboot, Drain, Reload, DaemonReload and None. The Reboot action and the None action cannot be used in conjunction with any of the other actions. This list supports a maximum of 10 entries.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeDisruptionPolicySpecAction"
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "name": {
+          "description": "name represents the service name of a systemd service managed through a MachineConfig Actions specified will be applied for changes to the named service. Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long. ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, \":\", \"-\", \"_\", \".\", and \"\". ${SERVICETYPE} must be one of \".service\", \".socket\", \".device\", \".mount\", \".automount\", \".swap\", \".target\", \".path\", \".timer\", \".snapshot\", \".slice\" or \".scope\".",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.NodeDisruptionPolicyStatus": {
+      "type": "object",
+      "properties": {
+        "clusterPolicies": {
+          "description": "clusterPolicies is a merge of cluster default and user provided node disruption policies.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeDisruptionPolicyClusterStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.NodeDisruptionPolicyStatusAction": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "reload": {
+          "description": "reload specifies the service to reload, only valid if type is reload",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.ReloadService"
+        },
+        "restart": {
+          "description": "restart specifies the service to restart, only valid if type is restart",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.RestartService"
+        },
+        "type": {
+          "description": "type represents the commands that will be carried out if this NodeDisruptionPolicyStatusActionType is executed Valid value are Reboot, Drain, Reload, Restart, DaemonReload, None and Special reload/restart requires a corresponding service target specified in the reload/restart field. Other values require no further configuration",
+          "type": "string",
+          "default": ""
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {
+            "reload": "Reload",
+            "restart": "Restart"
+          }
+        }
+      ]
+    },
+    "com.github.openshift.api.operator.v1.NodeDisruptionPolicyStatusFile": {
+      "description": "NodeDisruptionPolicyStatusFile is a file entry and corresponding actions to take and is used in the NodeDisruptionPolicyClusterStatus object",
+      "type": "object",
+      "required": [
+        "path",
+        "actions"
+      ],
+      "properties": {
+        "actions": {
+          "description": "actions represents the series of commands to be executed on changes to the file at the corresponding file path. Actions will be applied in the order that they are set in this list. If there are other incoming changes to other MachineConfig entries in the same update that require a reboot, the reboot will supercede these actions. Valid actions are Reboot, Drain, Reload, DaemonReload and None. The Reboot action and the None action cannot be used in conjunction with any of the other actions. This list supports a maximum of 10 entries.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeDisruptionPolicyStatusAction"
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "path": {
+          "description": "path is the location of a file being managed through a MachineConfig. The Actions in the policy will apply to changes to the file at this path.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.NodeDisruptionPolicyStatusSSHKey": {
+      "description": "NodeDisruptionPolicyStatusSSHKey is actions to take for any SSHKey change and is used in the NodeDisruptionPolicyClusterStatus object",
+      "type": "object",
+      "required": [
+        "actions"
+      ],
+      "properties": {
+        "actions": {
+          "description": "actions represents the series of commands to be executed on changes to the file at the corresponding file path. Actions will be applied in the order that they are set in this list. If there are other incoming changes to other MachineConfig entries in the same update that require a reboot, the reboot will supercede these actions. Valid actions are Reboot, Drain, Reload, DaemonReload and None. The Reboot action and the None action cannot be used in conjunction with any of the other actions. This list supports a maximum of 10 entries.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeDisruptionPolicyStatusAction"
+          },
+          "x-kubernetes-list-type": "atomic"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.NodeDisruptionPolicyStatusUnit": {
+      "description": "NodeDisruptionPolicyStatusUnit is a systemd unit name and corresponding actions to take and is used in the NodeDisruptionPolicyClusterStatus object",
+      "type": "object",
+      "required": [
+        "name",
+        "actions"
+      ],
+      "properties": {
+        "actions": {
+          "description": "actions represents the series of commands to be executed on changes to the file at the corresponding file path. Actions will be applied in the order that they are set in this list. If there are other incoming changes to other MachineConfig entries in the same update that require a reboot, the reboot will supercede these actions. Valid actions are Reboot, Drain, Reload, DaemonReload and None. The Reboot action and the None action cannot be used in conjunction with any of the other actions. This list supports a maximum of 10 entries.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeDisruptionPolicyStatusAction"
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "name": {
+          "description": "name represents the service name of a systemd service managed through a MachineConfig Actions specified will be applied for changes to the named service. Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long. ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, \":\", \"-\", \"_\", \".\", and \"\". ${SERVICETYPE} must be one of \".service\", \".socket\", \".device\", \".mount\", \".automount\", \".swap\", \".target\", \".path\", \".timer\", \".snapshot\", \".slice\" or \".scope\".",
+          "type": "string",
+          "default": ""
         }
       }
     },
@@ -30094,6 +30376,20 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1.ReloadService": {
+      "description": "ReloadService allows the user to specify the services to be reloaded",
+      "type": "object",
+      "required": [
+        "serviceName"
+      ],
+      "properties": {
+        "serviceName": {
+          "description": "serviceName is the full name (e.g. crio.service) of the service to be reloaded Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long. ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, \":\", \"-\", \"_\", \".\", and \"\". ${SERVICETYPE} must be one of \".service\", \".socket\", \".device\", \".mount\", \".automount\", \".swap\", \".target\", \".path\", \".timer\", \".snapshot\", \".slice\" or \".scope\".",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1.ResourceAttributesAccessReview": {
       "description": "ResourceAttributesAccessReview defines the visibility of the perspective depending on the access review checks. `required` and  `missing` can work together esp. in the case where the cluster admin wants to show another perspective to users without specific permissions. Out of `required` and `missing` atleast one property should be non-empty.",
       "type": "object",
@@ -30113,6 +30409,20 @@
             "default": {},
             "$ref": "#/definitions/io.k8s.api.authorization.v1.ResourceAttributes"
           }
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.RestartService": {
+      "description": "RestartService allows the user to specify the services to be restarted",
+      "type": "object",
+      "required": [
+        "serviceName"
+      ],
+      "properties": {
+        "serviceName": {
+          "description": "serviceName is the full name (e.g. crio.service) of the service to be restarted Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long. ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, \":\", \"-\", \"_\", \".\", and \"\". ${SERVICETYPE} must be one of \".service\", \".socket\", \".device\", \".mount\", \".automount\", \".swap\", \".target\", \".path\", \".timer\", \".snapshot\", \".slice\" or \".scope\".",
+          "type": "string",
+          "default": ""
         }
       }
     },

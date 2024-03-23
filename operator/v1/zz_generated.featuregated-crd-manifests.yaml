@@ -303,6 +303,7 @@ machineconfigurations.operator.openshift.io:
   Category: ""
   FeatureGates:
   - ManagedBootImages
+  - NodeDisruptionPolicy
   FilenameOperatorName: machine-config
   FilenameOperatorOrdering: "01"
   FilenameRunLevel: "0000_80"

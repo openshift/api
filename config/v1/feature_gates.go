@@ -553,4 +553,11 @@ var (
 				productScope(ocpSpecific).
 				enableIn(TechPreviewNoUpgrade).
 				mustRegister()
+
+	FeatureGateNodeDisruptionPolicy = newFeatureGate("NodeDisruptionPolicy").
+					reportProblemsToJiraComponent("MachineConfigOperator").
+					contactPerson("jerzhang").
+					productScope(ocpSpecific).
+					enableIn(TechPreviewNoUpgrade).
+					mustRegister()
 )

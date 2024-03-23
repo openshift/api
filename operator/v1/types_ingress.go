@@ -390,6 +390,7 @@ var (
 type CIDR string
 
 // LoadBalancerStrategy holds parameters for a load balancer.
+// +kubebuilder:validation:XValidation:rule="!has(self.scope) || self.scope != 'Internal' || !has(self.providerParameters) || !has(self.providerParameters.aws) || !has(self.providerParameters.aws.networkLoadBalancer) || !has(self.providerParameters.aws.networkLoadBalancer.eipAllocations)",message="eipAllocations can't be provided when the scope is Internal."
 type LoadBalancerStrategy struct {
 	// scope indicates the scope at which the load balancer is exposed.
 	// Possible values are "External" and "Internal".
@@ -512,6 +513,8 @@ const (
 
 // AWSLoadBalancerParameters provides configuration settings that are
 // specific to AWS load balancers.
+// +kubebuilder:validation:XValidation:rule="self.type == 'NLB' ? true : !has(self.networkLoadBalancer)",message="Network load balancer parameters are allowed only when load balancer type is NLB."
+// +kubebuilder:validation:XValidation:rule="self.type == 'Classic' ? true : !has(self.classicLoadBalancer)",message="Classic load balancer parameters are allowed only when load balancer type is Classic."
 // +union
 type AWSLoadBalancerParameters struct {
 	// type is the type of AWS load balancer to instantiate for an ingresscontroller.
@@ -633,8 +636,18 @@ type AWSClassicLoadBalancerParameters struct {
 }
 
 // AWSNetworkLoadBalancerParameters holds configuration parameters for an
-// AWS Network load balancer.
+// AWS Network load balancer. For Example: Setting AWS EIPs https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html
 type AWSNetworkLoadBalancerParameters struct {
+	// eipAllocations assign Elastic IP addresses to the Network Load Balancer.
+	// The number of Allocation IDs must match the number of subnets that are used for the load balancer.
+	// See https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html for general
+	// information about configuration, characteristics, and limitations of Elastic IP addresses.
+	// +openshift:enable:FeatureGate=SetEIPForNLBIngressController
+	// +optional
+	// +listType=atomic
+	// +kubebuilder:validation:XValidation:rule=`self.all(x, self.exists_one(y, x == y))`,message="eipAllocations cannot contain duplicates"
+	// +kubebuilder:validation:MaxItems=10
+	EIPAllocations []configv1.EIPAllocation `json:"eipAllocations"`
 }
 
 // HostNetworkStrategy holds parameters for the HostNetwork endpoint publishing

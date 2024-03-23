@@ -43,7 +43,7 @@ tests:
           baremetal:
             apiServerInternalIPs:
               - not-an-ip-address
-    expectedError: "Invalid value: \"not-an-ip-address\""
+    expectedError: "spec.platformSpec.baremetal.apiServerInternalIPs[0]: Invalid value: \"string\": value must be a valid IP address"
   - name: Should not be able to pass 2 IPv4 addresses to apiServerInternalIPs in the platform spec
     initial: |
       apiVersion: config.openshift.io/v1
@@ -112,7 +112,7 @@ tests:
           baremetal:
             ingressIPs:
               - not-an-ip-address
-    expectedError: "Invalid value: \"not-an-ip-address\""
+    expectedError: "spec.platformSpec.baremetal.ingressIPs[0]: Invalid value: \"string\": value must be a valid IP address"
   - name: Should not be able to pass 2 IPv4 addresses to ingressIPs in the platform spec
     initial: |
       apiVersion: config.openshift.io/v1
@@ -181,7 +181,7 @@ tests:
           baremetal:
             machineNetworks:
               - 192.0.2.1
-    expectedError: "Invalid value: \"192.0.2.1\""
+    expectedError: "spec.platformSpec.baremetal.machineNetworks[0]: Invalid value: \"string\": value must be a valid CIDR network address"
   onUpdate:
     - name: Should be able to change External platformName from unknown to something else
       initial: |

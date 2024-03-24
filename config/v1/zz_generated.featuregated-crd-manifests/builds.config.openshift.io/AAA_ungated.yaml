@@ -355,6 +355,7 @@ spec:
                       in the builds, i.e. false disables force pull for all builds,
                       true enables force pull for all builds, independently of what
                       each build specifies itself
+                    nullable: true
                     type: boolean
                   imageLabels:
                     description: ImageLabels is a list of docker labels that are applied

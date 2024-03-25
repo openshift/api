@@ -6,7 +6,6 @@ metadata:
     exclude.release.openshift.io/internal-openshift-hosted: "true"
     feature-gate.release.openshift.io/PlatformOperators: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
-    include.release.openshift.io/single-node-developer: "true"
   name: platformoperators.platform.openshift.io
 spec:
   group: platform.openshift.io

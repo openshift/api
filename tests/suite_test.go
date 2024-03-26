@@ -36,6 +36,7 @@ func TestAPIs(t *testing.T) {
 	g := NewGomegaWithT(t)
 
 	var err error
+	// this assumes a directory.  Because it does, we shall assume a path to the serialized featuregate manifests too.
 	suites, err = LoadTestSuiteSpecs(filepath.Join(".."))
 	g.Expect(err).ToNot(HaveOccurred())
 

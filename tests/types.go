@@ -5,8 +5,12 @@ type SuiteSpec struct {
 	// Name is the name of the test suite.
 	Name string `json:"name"`
 
-	// CRD is a CRD file path that should be installed as a part of this test.
-	CRD string `json:"crd"`
+	CRDName string `json:"crdName"`
+
+	// featureGate is the featureGate that must be enabled for this test to be run.
+	// As the gate progresses from DevPreview to TechPreview to Default, this won't need changing.
+	// When it eventually goes unconditional, this should to be removed.
+	FeatureGate string `json:"featureGate"`
 
 	// Version is the version of the CRD under test in this file.
 	// When omitted, if there is a single version in the CRD, this is assumed to be the correct version.
@@ -15,6 +19,9 @@ type SuiteSpec struct {
 
 	// Tests defines the test cases to run for this test suite.
 	Tests TestSpec `json:"tests"`
+
+	// PerTestRuntimeInfo cannot be specified in the testcase itself, but at runtime must be computed.
+	PerTestRuntimeInfo *PerTestRuntimeInfo `json:"-"`
 }
 
 // TestSpec defines the test specs for individual tests in this suite.
@@ -46,6 +53,12 @@ type OnCreateTestSpec struct {
 	// Note `apiVersion` and `kind` fields are required though `metadata` can be omitted.
 	// Typically this will vary in `spec` only test to test.
 	Expected string `json:"expected"`
+}
+
+type PerTestRuntimeInfo struct {
+	// CRDFilenames indicates all the CRD filenames that this test applies to.  Remember that tests can apply to multiple
+	// files depending on whether their gates are included in each one.
+	CRDFilenames []string `json:"-"`
 }
 
 // OnUpdateTestSpec defines an individual test case for the on update style tests.

@@ -88,8 +88,9 @@ func (PinnedImageRef) SwaggerDoc() map[string]string {
 }
 
 var map_PinnedImageSet = map[string]string{
-	"":     "PinnedImageSet describes a set of images that should be pinned by CRI-O and pulled to the nodes which are members of the declared MachineConfigPools.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
-	"spec": "spec describes the configuration of this pinned image set.",
+	"":       "PinnedImageSet describes a set of images that should be pinned by CRI-O and pulled to the nodes which are members of the declared MachineConfigPools.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"spec":   "spec describes the configuration of this pinned image set.",
+	"status": "status describes the last observed state of this pinned image set.",
 }
 
 func (PinnedImageSet) SwaggerDoc() map[string]string {
@@ -112,6 +113,15 @@ var map_PinnedImageSetSpec = map[string]string{
 
 func (PinnedImageSetSpec) SwaggerDoc() map[string]string {
 	return map_PinnedImageSetSpec
+}
+
+var map_PinnedImageSetStatus = map[string]string{
+	"":           "PinnedImageSetStatus describes the current state of a PinnedImageSet.",
+	"conditions": "conditions represent the observations of a pinned image set's current state.",
+}
+
+func (PinnedImageSetStatus) SwaggerDoc() map[string]string {
+	return map_PinnedImageSetStatus
 }
 
 // AUTO-GENERATED FUNCTIONS END HERE

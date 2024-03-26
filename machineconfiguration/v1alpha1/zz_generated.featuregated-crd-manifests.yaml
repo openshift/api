@@ -80,7 +80,7 @@ pinnedimagesets.machineconfiguration.openshift.io:
   FilenameOperatorOrdering: "01"
   FilenameRunLevel: "0000_80"
   GroupName: machineconfiguration.openshift.io
-  HasStatus: false
+  HasStatus: true
   KindName: PinnedImageSet
   Labels:
     openshift.io/operator-managed: ""

@@ -22406,6 +22406,11 @@
           "description": "spec describes the configuration of this pinned image set.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.PinnedImageSetSpec"
+        },
+        "status": {
+          "description": "status describes the last observed state of this pinned image set.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.PinnedImageSetStatus"
         }
       }
     },
@@ -22457,6 +22462,26 @@
             "name"
           ],
           "x-kubernetes-list-type": "map"
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.PinnedImageSetStatus": {
+      "description": "PinnedImageSetStatus describes the current state of a PinnedImageSet.",
+      "type": "object",
+      "properties": {
+        "conditions": {
+          "description": "conditions represent the observations of a pinned image set's current state.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "type",
+          "x-kubernetes-patch-strategy": "merge"
         }
       }
     },

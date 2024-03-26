@@ -759,6 +759,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/machineconfiguration/v1alpha1.PinnedImageSet":                              schema_openshift_api_machineconfiguration_v1alpha1_PinnedImageSet(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.PinnedImageSetList":                          schema_openshift_api_machineconfiguration_v1alpha1_PinnedImageSetList(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.PinnedImageSetSpec":                          schema_openshift_api_machineconfiguration_v1alpha1_PinnedImageSetSpec(ref),
+		"github.com/openshift/api/machineconfiguration/v1alpha1.PinnedImageSetStatus":                        schema_openshift_api_machineconfiguration_v1alpha1_PinnedImageSetStatus(ref),
 		"github.com/openshift/api/monitoring/v1.AlertRelabelConfig":                                          schema_openshift_api_monitoring_v1_AlertRelabelConfig(ref),
 		"github.com/openshift/api/monitoring/v1.AlertRelabelConfigList":                                      schema_openshift_api_monitoring_v1_AlertRelabelConfigList(ref),
 		"github.com/openshift/api/monitoring/v1.AlertRelabelConfigSpec":                                      schema_openshift_api_monitoring_v1_AlertRelabelConfigSpec(ref),
@@ -38626,12 +38627,19 @@ func schema_openshift_api_machineconfiguration_v1alpha1_PinnedImageSet(ref commo
 							Ref:         ref("github.com/openshift/api/machineconfiguration/v1alpha1.PinnedImageSetSpec"),
 						},
 					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status describes the last observed state of this pinned image set.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/machineconfiguration/v1alpha1.PinnedImageSetStatus"),
+						},
+					},
 				},
 				Required: []string{"spec"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machineconfiguration/v1alpha1.PinnedImageSetSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"github.com/openshift/api/machineconfiguration/v1alpha1.PinnedImageSetSpec", "github.com/openshift/api/machineconfiguration/v1alpha1.PinnedImageSetStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -38720,6 +38728,45 @@ func schema_openshift_api_machineconfiguration_v1alpha1_PinnedImageSetSpec(ref c
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/machineconfiguration/v1alpha1.PinnedImageRef"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1alpha1_PinnedImageSetStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PinnedImageSetStatus describes the current state of a PinnedImageSet.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type":       "map",
+								"x-kubernetes-patch-merge-key": "type",
+								"x-kubernetes-patch-strategy":  "merge",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions represent the observations of a pinned image set's current state.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 

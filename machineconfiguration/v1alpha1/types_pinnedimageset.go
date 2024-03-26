@@ -9,6 +9,7 @@ import (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=pinnedimagesets,scope=Cluster
+// +kubebuilder:subresource:status
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/1713
 // +openshift:file-pattern=cvoRunLevel=0000_80,operatorName=machine-config,operatorOrdering=01
 // +openshift:enable:FeatureGate=PinnedImages
@@ -26,6 +27,20 @@ type PinnedImageSet struct {
 	// spec describes the configuration of this pinned image set.
 	// +kubebuilder:validation:Required
 	Spec PinnedImageSetSpec `json:"spec"`
+
+	// status describes the last observed state of this pinned image set.
+	// +optional
+	Status PinnedImageSetStatus `json:"status"`
+}
+
+// PinnedImageSetStatus describes the current state of a PinnedImageSet.
+type PinnedImageSetStatus struct {
+	// conditions represent the observations of a pinned image set's current state.
+	// +patchMergeKey=type
+	// +patchStrategy=merge
+	// +listType=map
+	// +listMapKey=type
+	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 }
 
 // PinnedImageSetSpec defines the desired state of a PinnedImageSet.

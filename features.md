@@ -30,6 +30,9 @@
 | PinnedImages| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | PlatformOperators| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | RouteExternalCertificate| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
+| ServiceAccountTokenNodeBinding| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
+| ServiceAccountTokenNodeBindingValidation| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
+| ServiceAccountTokenPodNodeInfo| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | SignatureStores| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | SigstoreImageVerification| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | TranslateStreamCloseWebsocketRequests| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |

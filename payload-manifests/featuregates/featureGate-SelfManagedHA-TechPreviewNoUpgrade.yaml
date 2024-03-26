@@ -162,6 +162,15 @@
                         "name": "RouteExternalCertificate"
                     },
                     {
+                        "name": "ServiceAccountTokenNodeBinding"
+                    },
+                    {
+                        "name": "ServiceAccountTokenNodeBindingValidation"
+                    },
+                    {
+                        "name": "ServiceAccountTokenPodNodeInfo"
+                    },
+                    {
                         "name": "SignatureStores"
                     },
                     {

@@ -47613,6 +47613,12 @@ func schema_openshift_api_operator_v1_IngressControllerTuningOptions(ref common.
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
+					"connectTimeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ConnectTimeout defines the maximum time to wait for a connection attempt to a server/backend to succeed.\n\nIf unset, the default timeout is 5s.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
 					"tlsInspectDelay": {
 						SchemaProps: spec.SchemaProps{
 							Description: "tlsInspectDelay defines how long the router can hold data to find a matching route.\n\nSetting this too short can cause the router to fall back to the default certificate for edge-terminated or reencrypt routes even when a better matching certificate could be used.\n\nIf unset, the default inspect delay is 5s",

@@ -92,6 +92,9 @@
                         "name": "MaxUnavailableStatefulSet"
                     },
                     {
+                        "name": "MetricsCollectionProfiles"
+                    },
+                    {
                         "name": "MetricsServer"
                     },
                     {
@@ -167,9 +170,6 @@
                     },
                     {
                         "name": "KMSv1"
-                    },
-                    {
-                        "name": "MetricsCollectionProfiles"
                     },
                     {
                         "name": "NetworkLiveMigration"

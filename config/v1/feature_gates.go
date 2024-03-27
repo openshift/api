@@ -564,6 +564,6 @@ var (
 						reportProblemsToJiraComponent("Monitoring").
 						contactPerson("rexagod").
 						productScope(ocpSpecific).
-						enableIn(Default, TechPreviewNoUpgrade).
+						enableIn(TechPreviewNoUpgrade).
 						mustRegister()
 )

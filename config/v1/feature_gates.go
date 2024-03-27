@@ -559,4 +559,10 @@ var (
 					productScope(ocpSpecific).
 					enableIn(TechPreviewNoUpgrade).
 					mustRegister()
+
+	FeatureGateMachineAPIMigration = newFeatureGate("MachineAPIMigration").
+					reportProblemsToJiraComponent("OCPCLOUD").
+					contactPerson("jspeed").
+					productScope(ocpSpecific).
+					mustRegister()
 )

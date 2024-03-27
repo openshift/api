@@ -39,7 +39,7 @@ func (o *RenderOpts) Validate() error {
 	switch o.UnprefixedClusterProfile {
 	case "":
 		// to be disallowed soonish
-	case "self-managed-high-availability", "single-node-developer", "ibm-cloud-managed":
+	case "self-managed-high-availability", "ibm-cloud-managed":
 		// ok
 	default:
 		return fmt.Errorf("--cluster-profile must be one of self-managed-high-availability, single-node-developer, ibm-cloud-managed")
@@ -50,6 +50,11 @@ func (o *RenderOpts) Validate() error {
 
 // Complete fills in missing values before command execution.
 func (o *RenderOpts) Complete() error {
+	// TODO cluster-config-operator improperly assumes all single node clusters are this single-node-developer.  apparently single node is something different.
+	// TODO once cluster-config-operator is fixed, this line can be removed, but big rocks first.
+	if o.UnprefixedClusterProfile == "single-node-developer" {
+		o.UnprefixedClusterProfile = "self-managed-high-availability"
+	}
 	return nil
 }
 

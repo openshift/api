@@ -22,8 +22,7 @@ type ClusterProfileName string
 var (
 	Hypershift         = ClusterProfileName("include.release.openshift.io/ibm-cloud-managed")
 	SelfManaged        = ClusterProfileName("include.release.openshift.io/self-managed-high-availability")
-	SingleNode         = ClusterProfileName("include.release.openshift.io/single-node-developer")
-	AllClusterProfiles = []ClusterProfileName{Hypershift, SelfManaged, SingleNode}
+	AllClusterProfiles = []ClusterProfileName{Hypershift, SelfManaged}
 )
 
 type OwningProduct string

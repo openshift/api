@@ -35,7 +35,6 @@ var (
 	allClusterProfiles = []string{
 		"include.release.openshift.io/ibm-cloud-managed",
 		"include.release.openshift.io/self-managed-high-availability",
-		"include.release.openshift.io/single-node-developer",
 	}
 	allFeatureSets = []string{"Default", "TechPreviewNoUpgrade", "CustomNoUpgrade"}
 )

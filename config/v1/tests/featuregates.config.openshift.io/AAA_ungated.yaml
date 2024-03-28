@@ -12,3 +12,83 @@ tests:
         apiVersion: config.openshift.io/v1
         kind: FeatureGate
         spec: {}
+    - name: Can create TechPreview
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: FeatureGate
+        spec:
+          featureSet: TechPreviewNoUpgrade
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: FeatureGate
+        spec:
+          featureSet: TechPreviewNoUpgrade
+  onUpdate:
+    - name: Default to TechPreview
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: FeatureGate
+        spec:
+          featureSet: ""
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: FeatureGate
+        spec:
+          featureSet: TechPreviewNoUpgrade
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: FeatureGate
+        spec:
+          featureSet: TechPreviewNoUpgrade
+    - name: TechPreview to Default
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: FeatureGate
+        spec:
+          featureSet: TechPreviewNoUpgrade
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: FeatureGate
+        spec:
+          featureSet: ""
+      expectedError: "TechPreviewNoUpgrade may not be changed"
+    - name: TechPreview to Custom
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: FeatureGate
+        spec:
+          featureSet: TechPreviewNoUpgrade
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: FeatureGate
+        spec:
+          featureSet: CustomNoUpgrade
+      expectedError: "TechPreviewNoUpgrade may not be changed"
+    - name: Default to Custom
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: FeatureGate
+        spec:
+          featureSet: ""
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: FeatureGate
+        spec:
+          featureSet: CustomNoUpgrade
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: FeatureGate
+        spec:
+          featureSet: CustomNoUpgrade
+    - name: Custom to Default
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: FeatureGate
+        spec:
+          featureSet: CustomNoUpgrade
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: FeatureGate
+        spec:
+          featureSet: ""
+      expectedError: "CustomNoUpgrade may not be changed"

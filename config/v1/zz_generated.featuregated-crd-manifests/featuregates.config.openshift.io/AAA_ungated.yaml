@@ -74,6 +74,13 @@ spec:
                   on or off features may cause irreversible changes in your cluster
                   which cannot be undone.
                 type: string
+                x-kubernetes-validations:
+                - message: CustomNoUpgrade may not be changed
+                  rule: 'oldSelf == ''CustomNoUpgrade'' ? self == ''CustomNoUpgrade''
+                    : true'
+                - message: TechPreviewNoUpgrade may not be changed
+                  rule: 'oldSelf == ''TechPreviewNoUpgrade'' ? self == ''TechPreviewNoUpgrade''
+                    : true'
             type: object
           status:
             description: status holds observed values from the cluster. They may not

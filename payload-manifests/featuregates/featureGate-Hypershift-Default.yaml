@@ -89,6 +89,9 @@
                         "name": "MaxUnavailableStatefulSet"
                     },
                     {
+                        "name": "MetricsCollectionProfiles"
+                    },
+                    {
                         "name": "MetricsServer"
                     },
                     {

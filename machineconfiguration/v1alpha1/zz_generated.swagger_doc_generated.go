@@ -59,10 +59,11 @@ func (MachineConfigNodeSpecMachineConfigVersion) SwaggerDoc() map[string]string 
 }
 
 var map_MachineConfigNodeStatus = map[string]string{
-	"":                   "MachineConfigNodeStatus holds the reported information on a particular machine config node.",
-	"conditions":         "conditions represent the observations of a machine config node's current state.",
-	"observedGeneration": "observedGeneration represents the generation observed by the controller. This field is updated when the controller observes a change to the desiredConfig in the configVersion of the machine config node spec.",
-	"configVersion":      "configVersion describes the current and desired machine config for this node. The current version represents the current machine config for the node and is updated after a successful update. The desired version represents the machine config the node will attempt to update to. This desired machine config has been compared to the current machine config and has been validated by the machine config operator as one that is valid and that exists.",
+	"":                      "MachineConfigNodeStatus holds the reported information on a particular machine config node.",
+	"conditions":            "conditions represent the observations of a machine config node's current state.",
+	"observedGeneration":    "observedGeneration represents the generation observed by the controller. This field is updated when the controller observes a change to the desiredConfig in the configVersion of the machine config node spec.",
+	"configVersion":         "configVersion describes the current and desired machine config for this node. The current version represents the current machine config for the node and is updated after a successful update. The desired version represents the machine config the node will attempt to update to. This desired machine config has been compared to the current machine config and has been validated by the machine config operator as one that is valid and that exists.",
+	"pinnedImageSetVersion": "pinnedImageSetVersion holds the version details of the pinned image sets that the node is currently using. The current version is the generation of the pinned image set that has most recently been applied. The desired version is the generation of the pinned image set that the node should be upgraded to.",
 }
 
 func (MachineConfigNodeStatus) SwaggerDoc() map[string]string {
@@ -77,6 +78,17 @@ var map_MachineConfigNodeStatusMachineConfigVersion = map[string]string{
 
 func (MachineConfigNodeStatusMachineConfigVersion) SwaggerDoc() map[string]string {
 	return map_MachineConfigNodeStatusMachineConfigVersion
+}
+
+var map_MachineConfigNodeStatusPinnedImageSetVersion = map[string]string{
+	"":        "MachineConfigNodeStatusPinnedImageSetVersion holds the pinned image set version information for the node.",
+	"name":    "name is the name of the pinned image set. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
+	"current": "current is the generation of the pinned image set that has most recently been applied.",
+	"desired": "desired is the generation of the pinned image set that the node should be upgraded to.",
+}
+
+func (MachineConfigNodeStatusPinnedImageSetVersion) SwaggerDoc() map[string]string {
+	return map_MachineConfigNodeStatusPinnedImageSetVersion
 }
 
 var map_PinnedImageRef = map[string]string{

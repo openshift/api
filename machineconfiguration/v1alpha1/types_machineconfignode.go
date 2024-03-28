@@ -107,6 +107,31 @@ type MachineConfigNodeStatus struct {
 	// This desired machine config has been compared to the current machine config and has been validated by the machine config operator as one that is valid and that exists.
 	// +kubebuilder:validation:Required
 	ConfigVersion MachineConfigNodeStatusMachineConfigVersion `json:"configVersion"`
+	// pinnedImageSetVersion holds the version details of the pinned image sets that the node is currently using.
+	// The current version is the generation of the pinned image set that has most recently been applied.
+	// The desired version is the generation of the pinned image set that the node should be upgraded to.
+	// +listType=map
+	// +listMapKey=name
+	// +optional
+	PinnedImageSetVersion []MachineConfigNodeStatusPinnedImageSetVersion `json:"pinnedImageSetVersion,omitempty"`
+}
+
+// MachineConfigNodeStatusPinnedImageSetVersion holds the pinned image set version information for the node.
+type MachineConfigNodeStatusPinnedImageSetVersion struct {
+	// name is the name of the pinned image set.
+	// Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123)
+	// It may consist of only alphanumeric characters, hyphens (-) and periods (.)
+	// and must be at most 253 characters in length.
+	// +kubebuilder:validation:MaxLength:=253
+	// +kubebuilder:validation:Pattern=`^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9]))*$`
+	// +kubebuilder:validation:Required
+	Name string `json:"name"`
+	// current is the generation of the pinned image set that has most recently been applied.
+	// +kubebuilder:validation:Required
+	Current int32 `json:"current"`
+	// desired is the generation of the pinned image set that the node should be upgraded to.
+	// +kubebuilder:validation:Required
+	Desired int32 `json:"desired"`
 }
 
 // MachineConfigNodeStatusMachineConfigVersion holds the current and desired config versions as last updated in the MCN status.
@@ -187,4 +212,8 @@ const (
 	MachineConfigNodeUpdateRebooted StateProgress = "RebootedNode"
 	// MachineConfigNodeUpdateReloaded describes the part of the post action phase where the node reloads its CRIO service
 	MachineConfigNodeUpdateReloaded StateProgress = "ReloadedCRIO"
+	// MachineConfigNodePinnedImageSetInProgress describes a machine currently in the process of pulling the images of the pinned image sets
+	MachineConfigNodePinnedImageSetInProgress StateProgress = "PinnedImageSetInProgress"
+	// MachineConfigNodePinnedImageSetComplete describes a machine that has successfully pulled and pinned the images of the pinned image sets
+	MachineConfigNodePinnedImageSetComplete StateProgress = "PinnedImageSetComplete"
 )

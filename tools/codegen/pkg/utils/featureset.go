@@ -8,6 +8,7 @@ var (
 	clusterProfileToShortName = map[string]string{
 		"include.release.openshift.io/ibm-cloud-managed":              "Hypershift",
 		"include.release.openshift.io/self-managed-high-availability": "SelfManagedHA",
+		"include.release.openshift.io/single-node-developer":          "SingleNode",
 	}
 )
 

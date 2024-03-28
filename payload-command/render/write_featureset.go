@@ -13,6 +13,7 @@ var (
 	clusterProfileToShortName = map[configv1.ClusterProfileName]string{
 		configv1.Hypershift:  "Hypershift",
 		configv1.SelfManaged: "SelfManagedHA",
+		configv1.SingleNode:  "SingleNode",
 	}
 )
 

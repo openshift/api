@@ -151,7 +151,21 @@ type AWSIngressSpec struct {
 	// +kubebuilder:validation:Enum:=NLB;Classic
 	// +kubebuilder:validation:Required
 	Type AWSLBType `json:"type,omitempty"`
+
+	// networkLoadBalancerParameters holds configuration parameters for an AWS
+	// network load balancer. Present only if type is NLB.
+	//
+	// +optional
+	NetworkLoadBalancerParameters *AWSNetworkLoadBalancerParameters `json:"networkLoadBalancer,omitempty"`
 }
+
+// AWSNetworkLoadBalancerParameters holds configuration parameters for an
+// AWS Network load balancer.
+type AWSNetworkLoadBalancerParameters struct {
+	EIPAllocations EIPAllocations `json:"eip-allocations,omitempty"`
+}
+
+type EIPAllocations string
 
 type AWSLBType string
 

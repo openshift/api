@@ -151,6 +151,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.APIServerStatus":                                                 schema_openshift_api_config_v1_APIServerStatus(ref),
 		"github.com/openshift/api/config/v1.AWSDNSSpec":                                                      schema_openshift_api_config_v1_AWSDNSSpec(ref),
 		"github.com/openshift/api/config/v1.AWSIngressSpec":                                                  schema_openshift_api_config_v1_AWSIngressSpec(ref),
+		"github.com/openshift/api/config/v1.AWSNetworkLoadBalancerParameters":                                schema_openshift_api_config_v1_AWSNetworkLoadBalancerParameters(ref),
 		"github.com/openshift/api/config/v1.AWSPlatformSpec":                                                 schema_openshift_api_config_v1_AWSPlatformSpec(ref),
 		"github.com/openshift/api/config/v1.AWSPlatformStatus":                                               schema_openshift_api_config_v1_AWSPlatformStatus(ref),
 		"github.com/openshift/api/config/v1.AWSResourceTag":                                                  schema_openshift_api_config_v1_AWSResourceTag(ref),
@@ -8438,14 +8439,43 @@ func schema_openshift_api_config_v1_AWSIngressSpec(ref common.ReferenceCallback)
 							Format:      "",
 						},
 					},
+					"networkLoadBalancer": {
+						SchemaProps: spec.SchemaProps{
+							Description: "networkLoadBalancerParameters holds configuration parameters for an AWS network load balancer. Present only if type is NLB.",
+							Ref:         ref("github.com/openshift/api/config/v1.AWSNetworkLoadBalancerParameters"),
+						},
+					},
 				},
 			},
 			VendorExtensible: spec.VendorExtensible{
 				Extensions: spec.Extensions{
 					"x-kubernetes-unions": []interface{}{
 						map[string]interface{}{
-							"discriminator":            "type",
-							"fields-to-discriminateBy": map[string]interface{}{},
+							"discriminator": "type",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"networkLoadBalancer": "NetworkLoadBalancerParameters",
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.AWSNetworkLoadBalancerParameters"},
+	}
+}
+
+func schema_openshift_api_config_v1_AWSNetworkLoadBalancerParameters(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "AWSNetworkLoadBalancerParameters holds configuration parameters for an AWS Network load balancer.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"eip-allocations": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
 						},
 					},
 				},
@@ -43173,6 +43203,14 @@ func schema_openshift_api_operator_v1_AWSNetworkLoadBalancerParameters(ref commo
 			SchemaProps: spec.SchemaProps{
 				Description: "AWSNetworkLoadBalancerParameters holds configuration parameters for an AWS Network load balancer.",
 				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"eip-allocations": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
 			},
 		},
 	}

@@ -284,6 +284,9 @@ spec:
                                 description: networkLoadBalancerParameters holds configuration
                                   parameters for an AWS network load balancer. Present
                                   only if type is NLB.
+                                properties:
+                                  eip-allocations:
+                                    type: string
                                 type: object
                               type:
                                 description: "type is the type of AWS load balancer
@@ -1909,6 +1912,9 @@ spec:
                                 description: networkLoadBalancerParameters holds configuration
                                   parameters for an AWS network load balancer. Present
                                   only if type is NLB.
+                                properties:
+                                  eip-allocations:
+                                    type: string
                                 type: object
                               type:
                                 description: "type is the type of AWS load balancer

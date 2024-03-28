@@ -133,6 +133,14 @@ spec:
                         description: aws contains settings specific to the Amazon
                           Web Services infrastructure provider.
                         properties:
+                          networkLoadBalancer:
+                            description: networkLoadBalancerParameters holds configuration
+                              parameters for an AWS network load balancer. Present
+                              only if type is NLB.
+                            properties:
+                              eip-allocations:
+                                type: string
+                            type: object
                           type:
                             description: "type allows user to set a load balancer
                               type. When this field is set the default ingresscontroller

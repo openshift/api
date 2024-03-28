@@ -431,6 +431,7 @@ var (
 								reportProblemsToJiraComponent("cloud-provider").
 								contactPerson("jspeed").
 								productScope(kubernetes).
+								enableIn(Default, TechPreviewNoUpgrade).
 								mustRegister()
 
 	FeatureGateOnClusterBuild = newFeatureGate("OnClusterBuild").

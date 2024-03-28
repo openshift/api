@@ -22348,6 +22348,18 @@
           "description": "observedGeneration represents the generation observed by the controller. This field is updated when the controller observes a change to the desiredConfig in the configVersion of the machine config node spec.",
           "type": "integer",
           "format": "int64"
+        },
+        "pinnedImageSetVersion": {
+          "description": "pinnedImageSetVersion holds the version details of the pinned image sets that the node is currently using. The current version is the generation of the pinned image set that has most recently been applied. The desired version is the generation of the pinned image set that the node should be upgraded to.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigNodeStatusPinnedImageSetVersion"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         }
       }
     },
@@ -22365,6 +22377,34 @@
         },
         "desired": {
           "description": "desired is the MachineConfig the node wants to upgrade to. This value gets set in the machine config node status once the machine config has been validated against the current machine config. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigNodeStatusPinnedImageSetVersion": {
+      "description": "MachineConfigNodeStatusPinnedImageSetVersion holds the pinned image set version information for the node.",
+      "type": "object",
+      "required": [
+        "name",
+        "current",
+        "desired"
+      ],
+      "properties": {
+        "current": {
+          "description": "current is the generation of the pinned image set that has most recently been applied.",
+          "type": "integer",
+          "format": "int32",
+          "default": 0
+        },
+        "desired": {
+          "description": "desired is the generation of the pinned image set that the node should be upgraded to.",
+          "type": "integer",
+          "format": "int32",
+          "default": 0
+        },
+        "name": {
+          "description": "name is the name of the pinned image set. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
           "type": "string",
           "default": ""
         }

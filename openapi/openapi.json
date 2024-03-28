@@ -7984,6 +7984,49 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.NetworkDiagnostics": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "description": "mode controls the network diagnostics mode\n\nBy default the value is set to All.",
+          "type": "string",
+          "default": ""
+        },
+        "sourcePlacement": {
+          "description": "sourcePlacement controls the scheduling of network diagnostics source deployment\n\nSee NetworkDiagnosticsNodePlacement for more details about default values.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.NetworkDiagnosticsNodePlacement"
+        },
+        "targetPlacement": {
+          "description": "targetPlacement controls the scheduling of network diagnostics target daemonset\n\nSee NetworkDiagnosticsNodePlacement for more details about default values.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.NetworkDiagnosticsNodePlacement"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.NetworkDiagnosticsNodePlacement": {
+      "description": "NetworkDiagnosticsNodePlacement defines node scheduling configuration network diagnostics components",
+      "type": "object",
+      "properties": {
+        "nodeSelector": {
+          "description": "nodeSelector is the node selector applied to network diagnostics components\n\nBy default this is set to `kubernetes.io/os: linux`",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "tolerations": {
+          "description": "tolerations is a list of tolerations applied to network diagnostics components\n\nFor SourcePlacement, this is set to an empty list by default.\n\nFor TargetPlacement, this is set to `- operator: \"Exists\"` by default. It means that it tolerates all taints.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.Toleration"
+          },
+          "x-kubernetes-list-type": "atomic"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.NetworkList": {
       "description": "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
@@ -8049,6 +8092,11 @@
           "description": "externalIP defines configuration for controllers that affect Service.ExternalIP. If nil, then ExternalIP is not allowed to be set.",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.ExternalIPConfig"
         },
+        "networkDiagnostics": {
+          "description": "networkDiagnostics defines network diagnostics configuration.\n\nCannot be specified when spec.disableNetworkDiagnostics is set to true in network.operator.openshift.io. If networkDiagnostics is not specified, the network diagnostics feature is controlled by the spec.disableNetworkDiagnostics flag in network.operator.openshift.io.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.NetworkDiagnostics"
+        },
         "networkType": {
           "description": "NetworkType is the plugin that is to be deployed (e.g. OpenShiftSDN). This should match a value that the cluster-network-operator understands, or else no networking will be installed. Currently supported values are: - OpenShiftSDN This field is immutable after installation.",
           "type": "string",
@@ -8086,7 +8134,7 @@
           "format": "int32"
         },
         "conditions": {
-          "description": "conditions represents the observations of a network.config current state. Known .status.conditions.type are: \"NetworkTypeMigrationInProgress\", \"NetworkTypeMigrationMTUReady\", \"NetworkTypeMigrationTargetCNIAvailable\", \"NetworkTypeMigrationTargetCNIInUse\" and \"NetworkTypeMigrationOriginalCNIPurged\"",
+          "description": "conditions represents the observations of a network.config current state. Known .status.conditions.type are: \"NetworkTypeMigrationInProgress\", \"NetworkTypeMigrationMTUReady\", \"NetworkTypeMigrationTargetCNIAvailable\", \"NetworkTypeMigrationTargetCNIInUse\", \"NetworkTypeMigrationOriginalCNIPurged\" and \"NetworkDiagnosticsAvailable\"",
           "type": "array",
           "items": {
             "default": {},

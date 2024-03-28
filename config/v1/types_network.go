@@ -1,6 +1,9 @@
 package v1
 
-import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+import (
+	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+)
 
 // +genclient
 // +genclient:nonNamespaced
@@ -38,6 +41,7 @@ type Network struct {
 // As a general rule, this SHOULD NOT be read directly. Instead, you should
 // consume the NetworkStatus, as it indicates the currently deployed configuration.
 // Currently, most spec fields are immutable after installation. Please view the individual ones for further details on each.
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=NetworkDiagnosticsConfig,rule="!has(self.networkDiagnostics) || self.networkDiagnostics.mode!='Disabled' || !has(self.networkDiagnostics.sourcePlacement) && !has(self.networkDiagnostics.targetPlacement)",message="cannot set networkDiagnostics.sourcePlacement and networkDiagnostics.targetPlacement when networkDiagnostics.mode is Disabled"
 type NetworkSpec struct {
 	// IP address pool to use for pod IPs.
 	// This field is immutable after installation.
@@ -70,6 +74,16 @@ type NetworkSpec struct {
 	// installed.
 	// +kubebuilder:validation:Pattern=`^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])-([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$`
 	ServiceNodePortRange string `json:"serviceNodePortRange,omitempty"`
+
+	// networkDiagnostics defines network diagnostics configuration.
+	//
+	// Cannot be specified when spec.disableNetworkDiagnostics is set to true in network.operator.openshift.io.
+	// If networkDiagnostics is not specified, the network diagnostics feature is controlled by the
+	// spec.disableNetworkDiagnostics flag in network.operator.openshift.io.
+	//
+	// +optional
+	// +openshift:enable:FeatureGate=NetworkDiagnosticsConfig
+	NetworkDiagnostics NetworkDiagnostics `json:"networkDiagnostics"`
 }
 
 // NetworkStatus is the current network configuration.
@@ -92,14 +106,15 @@ type NetworkStatus struct {
 
 	// conditions represents the observations of a network.config current state.
 	// Known .status.conditions.type are: "NetworkTypeMigrationInProgress", "NetworkTypeMigrationMTUReady",
-	// "NetworkTypeMigrationTargetCNIAvailable", "NetworkTypeMigrationTargetCNIInUse"
-	// and "NetworkTypeMigrationOriginalCNIPurged"
+	// "NetworkTypeMigrationTargetCNIAvailable", "NetworkTypeMigrationTargetCNIInUse",
+	// "NetworkTypeMigrationOriginalCNIPurged" and "NetworkDiagnosticsAvailable"
 	// +optional
 	// +patchMergeKey=type
 	// +patchStrategy=merge
 	// +listType=map
 	// +listMapKey=type
 	// +openshift:enable:FeatureGate=NetworkLiveMigration
+	// +openshift:enable:FeatureGate=NetworkDiagnosticsConfig
 	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 }
 
@@ -196,4 +211,63 @@ type MTUMigrationValues struct {
 	// +kubebuilder:validation:Minimum=0
 	// +optional
 	From *uint32 `json:"from,omitempty"`
+}
+
+// NetworkDiagnosticsMode is an enumeration of the available network diagnostics modes
+// Valid values are "All", "Disabled".
+// +kubebuilder:validation:Enum:=All;Disabled
+type NetworkDiagnosticsMode string
+
+const (
+	// NetworkDiagnosticsAll meants that all network diagnostics checks are enabled
+	NetworkDiagnosticsAll NetworkDiagnosticsMode = "All"
+	// NetworkDiagnosticsDisabled means that network diagnostics is disabled
+	NetworkDiagnosticsDisabled NetworkDiagnosticsMode = "Disabled"
+)
+
+// NetworkDiagnostics defines network diagnostics configuration
+
+type NetworkDiagnostics struct {
+	// mode controls the network diagnostics mode
+	//
+	// By default the value is set to All.
+	//
+	// +optional
+	// +kubebuilder:default=All
+	Mode NetworkDiagnosticsMode `json:"mode"`
+
+	// sourcePlacement controls the scheduling of network diagnostics source deployment
+	//
+	// See NetworkDiagnosticsNodePlacement for more details about default values.
+	//
+	// +optional
+	SourcePlacement NetworkDiagnosticsNodePlacement `json:"sourcePlacement"`
+
+	// targetPlacement controls the scheduling of network diagnostics target daemonset
+	//
+	// See NetworkDiagnosticsNodePlacement for more details about default values.
+	//
+	// +optional
+	TargetPlacement NetworkDiagnosticsNodePlacement `json:"targetPlacement"`
+}
+
+// NetworkDiagnosticsNodePlacement defines node scheduling configuration network diagnostics components
+type NetworkDiagnosticsNodePlacement struct {
+	// nodeSelector is the node selector applied to network diagnostics components
+	//
+	// By default this is set to `kubernetes.io/os: linux`
+	//
+	// +optional
+	NodeSelector map[string]string `json:"nodeSelector"`
+
+	// tolerations is a list of tolerations applied to network diagnostics components
+	//
+	// For SourcePlacement, this is set to an empty list by default.
+	//
+	// For TargetPlacement, this is set to `- operator: "Exists"` by default.
+	// It means that it tolerates all taints.
+	//
+	// +optional
+	// +listType=atomic
+	Tolerations []corev1.Toleration `json:"tolerations"`
 }

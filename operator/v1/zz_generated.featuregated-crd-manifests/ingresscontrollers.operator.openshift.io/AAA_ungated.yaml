@@ -1534,6 +1534,12 @@ spec:
                       the default timeout is 30s"
                     format: duration
                     type: string
+                  connectTimeout:
+                    description: "ConnectTimeout defines the maximum time to wait
+                      for a connection attempt to a server/backend to succeed. \n
+                      If unset, the default timeout is 5s."
+                    format: duration
+                    type: string
                   headerBufferBytes:
                     description: "headerBufferBytes describes how much memory should
                       be reserved (in bytes) for IngressController connection sessions.

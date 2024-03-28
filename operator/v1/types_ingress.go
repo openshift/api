@@ -1649,6 +1649,15 @@ type IngressControllerTuningOptions struct {
 	// +optional
 	TunnelTimeout *metav1.Duration `json:"tunnelTimeout,omitempty"`
 
+	// ConnectTimeout defines the maximum time to wait for
+	// a connection attempt to a server/backend to succeed.
+	//
+	// If unset, the default timeout is 5s.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Format=duration
+	// +optional
+	ConnectTimeout *metav1.Duration `json:"connectTimeout,omitempty"`
+
 	// tlsInspectDelay defines how long the router can hold data to find a
 	// matching route.
 	//

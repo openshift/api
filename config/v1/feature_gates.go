@@ -171,6 +171,27 @@ func AllFeatureSets() map[ClusterProfileName]map[FeatureSet]*FeatureGateEnabledD
 var (
 	allFeatureGates = map[ClusterProfileName]map[FeatureSet]*FeatureGateEnabledDisabled{}
 
+	FeatureGateServiceAccountTokenNodeBindingValidation = newFeatureGate("ServiceAccountTokenNodeBindingValidation").
+								reportProblemsToJiraComponent("apiserver-auth").
+								contactPerson("stlaz").
+								productScope(kubernetes).
+								enableIn(TechPreviewNoUpgrade).
+								mustRegister()
+
+	FeatureGateServiceAccountTokenNodeBinding = newFeatureGate("ServiceAccountTokenNodeBinding").
+							reportProblemsToJiraComponent("apiserver-auth").
+							contactPerson("stlaz").
+							productScope(kubernetes).
+							enableIn(TechPreviewNoUpgrade).
+							mustRegister()
+
+	FeatureGateServiceAccountTokenPodNodeInfo = newFeatureGate("ServiceAccountTokenPodNodeInfo").
+							reportProblemsToJiraComponent("apiserver-auth").
+							contactPerson("stlaz").
+							productScope(kubernetes).
+							enableIn(TechPreviewNoUpgrade).
+							mustRegister()
+
 	FeatureGateValidatingAdmissionPolicy = newFeatureGate("ValidatingAdmissionPolicy").
 						reportProblemsToJiraComponent("kube-apiserver").
 						contactPerson("benluddy").

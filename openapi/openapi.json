@@ -26768,6 +26768,12 @@
         "forceRedeploymentReason"
       ],
       "properties": {
+        "backendQuotaGiB": {
+          "description": "BackendQuotaGiB sets the etcd backend storage size limit in gigabytes. Defaults to 8GiB.",
+          "type": "integer",
+          "format": "int64",
+          "default": 0
+        },
         "controlPlaneHardwareSpeed": {
           "description": "HardwareSpeed allows user to change the etcd tuning profile which configures the latency parameters for heartbeat interval and leader election timeouts allowing the cluster to tolerate longer round-trip-times between etcd members. Valid values are \"\", \"Standard\" and \"Slower\".\n\t\"\" means no opinion and the platform is left to choose a reasonable default\n\twhich is subject to change without notice.\n\nPossible enum values:\n - `\"Slower\"` provides more tolerance for slower hardware and/or higher latency networks. Sets (values subject to change): ETCD_HEARTBEAT_INTERVAL: 5x Standard ETCD_LEADER_ELECTION_TIMEOUT: 2.5x Standard\n - `\"Standard\"` provides the normal tolerances for hardware speed and latency. Currently sets (values subject to change at any time): ETCD_HEARTBEAT_INTERVAL: 100ms ETCD_LEADER_ELECTION_TIMEOUT: 1000ms",
           "type": "string",

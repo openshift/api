@@ -32,14 +32,14 @@ func (m *Markdown) Bytes() []byte {
 	fmt.Fprintf(ret, m.tableOfContents.String())
 	fmt.Fprintln(ret, "")
 	fmt.Fprintln(ret, "")
-	fmt.Fprintf(ret, m.body.String())
+	ret.WriteString(m.body.String())
 	return ret.Bytes()
 }
 
 // ExactBytes returns markdown with table of contents or title.  Useful for embedding.
 func (m *Markdown) ExactBytes() []byte {
 	ret := &bytes.Buffer{}
-	fmt.Fprintf(ret, m.body.String())
+	ret.WriteString(m.body.String())
 	return ret.Bytes()
 }
 
@@ -75,7 +75,7 @@ func (m *Markdown) ExactText(text string) {
 }
 
 func (m *Markdown) Exact(text string) {
-	fmt.Fprintf(m.body, "%s", text)
+	m.body.WriteString(text)
 }
 
 func (m *Markdown) Text(text string) {

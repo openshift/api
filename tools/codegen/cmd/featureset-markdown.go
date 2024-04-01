@@ -87,7 +87,7 @@ func init() {
 }
 
 func (o *FeatureSetOptions) Run(ctx context.Context) error {
-	allClusterProfiles, allFeatureSets, _, byClusterProfilebyFeatureSet, err := o.readFeatureGate(ctx)
+	allClusterProfiles, allFeatureSets, _, byClusterProfilebyFeatureSet, err := readFeatureGate(ctx, o.FeatureSetManifestDir)
 	if err != nil {
 		return err
 	}
@@ -142,7 +142,7 @@ func (o *FeatureSetOptions) Run(ctx context.Context) error {
 		}
 		return fmt.Errorf("actual content not match: %v", cmp.Diff(expectedContent, actualContent))
 	}
-	
+
 	if err := os.WriteFile(o.OutputFile, md.ExactBytes(), 0644); err != nil {
 		return err
 	}
@@ -212,13 +212,13 @@ type featureGateInfo struct {
 	allFeatureGates map[string]bool
 }
 
-func (o *FeatureSetOptions) readFeatureGate(ctx context.Context) (sets.String, sets.String, sets.String, map[string]map[string]*featureGateInfo, error) {
+func readFeatureGate(ctx context.Context, featureSetManifestDir string) (sets.String, sets.String, sets.String, map[string]map[string]*featureGateInfo, error) {
 	allClusterProfiles := sets.String{}
 	allFeatureSets := sets.String{}
 	allFeatureGates := sets.String{}
 	clusterProfileToFeatureSetToFeatureGates := map[string]map[string]*featureGateInfo{}
 
-	featureSetManifestFile, err := os.ReadDir(o.FeatureSetManifestDir)
+	featureSetManifestFile, err := os.ReadDir(featureSetManifestDir)
 	if err != nil {
 		return nil, nil, nil, nil, fmt.Errorf("cannot read FeatureSetManifestDir: %w", err)
 	}
@@ -229,7 +229,7 @@ func (o *FeatureSetOptions) readFeatureGate(ctx context.Context) (sets.String, s
 			allFeatureGates: map[string]bool{},
 		}
 
-		featureGateFilename := filepath.Join(o.FeatureSetManifestDir, currFeatureSetManifestFile.Name())
+		featureGateFilename := filepath.Join(featureSetManifestDir, currFeatureSetManifestFile.Name())
 		featureGateBytes, err := os.ReadFile(featureGateFilename)
 		if err != nil {
 			return nil, nil, nil, nil, fmt.Errorf("unable to read %q: %w", featureGateFilename, err)

@@ -1,7 +1,7 @@
 apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
 name: "Etcd"
 crdName: etcds.operator.openshift.io
-featureGate: HardwareSpeed
+featureGate: -EtcdBackendQuota
 tests:
   onCreate:
     - name: Should be able to create with Standard hardware speed
@@ -17,7 +17,6 @@ tests:
           logLevel: Normal
           operatorLogLevel: Normal
           controlPlaneHardwareSpeed: Standard
-          backendQuotaGiB: 8
     - name: Should be able to create with Slower hardware speed
       initial: |
         apiVersion: operator.openshift.io/v1
@@ -31,7 +30,6 @@ tests:
           logLevel: Normal
           operatorLogLevel: Normal
           controlPlaneHardwareSpeed: Slower
-          backendQuotaGiB: 8
   onUpdate:
     - name: Should be able to create with Standard, then set to Slower
       initial: |
@@ -51,7 +49,6 @@ tests:
           logLevel: Normal
           operatorLogLevel: Normal
           controlPlaneHardwareSpeed: Slower
-          backendQuotaGiB: 8
     - name: Should not be allowed to try to set invalid hardware speed
       initial: |
         apiVersion: operator.openshift.io/v1

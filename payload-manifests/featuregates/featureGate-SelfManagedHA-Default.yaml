@@ -80,9 +80,6 @@
                         "name": "GatewayAPI"
                     },
                     {
-                        "name": "HardwareSpeed"
-                    },
-                    {
                         "name": "ImagePolicy"
                     },
                     {
@@ -206,6 +203,9 @@
                     },
                     {
                         "name": "ExternalCloudProviderGCP"
+                    },
+                    {
+                        "name": "HardwareSpeed"
                     },
                     {
                         "name": "KMSv1"

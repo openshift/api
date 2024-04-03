@@ -14,9 +14,6 @@
             {
                 "disabled": [
                     {
-                        "name": "AdminNetworkPolicy"
-                    },
-                    {
                         "name": "AlertingRules"
                     },
                     {
@@ -144,6 +141,9 @@
                     }
                 ],
                 "enabled": [
+                    {
+                        "name": "AdminNetworkPolicy"
+                    },
                     {
                         "name": "AlibabaPlatform"
                     },

@@ -356,7 +356,7 @@ var (
 					reportProblemsToJiraComponent("Networking/ovn-kubernetes").
 					contactPerson("tssurya").
 					productScope(ocpSpecific).
-					enableIn(TechPreviewNoUpgrade).
+					enableIn(Default, TechPreviewNoUpgrade).
 					mustRegister()
 
 	FeatureGateNetworkLiveMigration = newFeatureGate("NetworkLiveMigration").

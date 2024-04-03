@@ -1542,15 +1542,27 @@ spec:
                   clientFinTimeout:
                     description: "clientFinTimeout defines how long a connection will
                       be held open while waiting for the client response to the server/backend
-                      closing the connection. \n If unset, the default timeout is
-                      1s"
-                    format: duration
+                      closing the connection. \n This field expects an unsigned duration
+                      string of decimal numbers, each with optional fraction and a
+                      unit suffix, e.g. \"300ms\", \"1.5h\" or \"2h45m\". Valid time
+                      units are \"ns\", \"us\" (or \"µs\" U+00B5 or \"μs\" U+03BC),
+                      \"ms\", \"s\", \"m\", \"h\". \n When omitted, this means the
+                      user has no opinion and the platform is left to choose a reasonable
+                      default. This default is subject to change over time. The current
+                      default is 1s."
+                    pattern: ^(0|([0-9]+(\.[0-9]+)?(ns|us|µs|μs|ms|s|m|h))+)$
                     type: string
                   clientTimeout:
                     description: "clientTimeout defines how long a connection will
-                      be held open while waiting for a client response. \n If unset,
-                      the default timeout is 30s"
-                    format: duration
+                      be held open while waiting for a client response. \n This field
+                      expects an unsigned duration string of decimal numbers, each
+                      with optional fraction and a unit suffix, e.g. \"300ms\", \"1.5h\"
+                      or \"2h45m\". Valid time units are \"ns\", \"us\" (or \"µs\"
+                      U+00B5 or \"μs\" U+03BC), \"ms\", \"s\", \"m\", \"h\". \n When
+                      omitted, this means the user has no opinion and the platform
+                      is left to choose a reasonable default. This default is subject
+                      to change over time. The current default is 30s."
+                    pattern: ^(0|([0-9]+(\.[0-9]+)?(ns|us|µs|μs|ms|s|m|h))+)$
                     type: string
                   connectTimeout:
                     description: "ConnectTimeout defines the maximum time to wait
@@ -1678,15 +1690,27 @@ spec:
                   serverFinTimeout:
                     description: "serverFinTimeout defines how long a connection will
                       be held open while waiting for the server/backend response to
-                      the client closing the connection. \n If unset, the default
-                      timeout is 1s"
-                    format: duration
+                      the client closing the connection. \n This field expects an
+                      unsigned duration string of decimal numbers, each with optional
+                      fraction and a unit suffix, e.g. \"300ms\", \"1.5h\" or \"2h45m\".
+                      Valid time units are \"ns\", \"us\" (or \"µs\" U+00B5 or \"μs\"
+                      U+03BC), \"ms\", \"s\", \"m\", \"h\". \n When omitted, this
+                      means the user has no opinion and the platform is left to choose
+                      a reasonable default. This default is subject to change over
+                      time. The current default is 1s."
+                    pattern: ^(0|([0-9]+(\.[0-9]+)?(ns|us|µs|μs|ms|s|m|h))+)$
                     type: string
                   serverTimeout:
                     description: "serverTimeout defines how long a connection will
                       be held open while waiting for a server/backend response. \n
-                      If unset, the default timeout is 30s"
-                    format: duration
+                      This field expects an unsigned duration string of decimal numbers,
+                      each with optional fraction and a unit suffix, e.g. \"300ms\",
+                      \"1.5h\" or \"2h45m\". Valid time units are \"ns\", \"us\" (or
+                      \"µs\" U+00B5 or \"μs\" U+03BC), \"ms\", \"s\", \"m\", \"h\".
+                      \n When omitted, this means the user has no opinion and the
+                      platform is left to choose a reasonable default. This default
+                      is subject to change over time. The current default is 30s."
+                    pattern: ^(0|([0-9]+(\.[0-9]+)?(ns|us|µs|μs|ms|s|m|h))+)$
                     type: string
                   threadCount:
                     description: "threadCount defines the number of threads created
@@ -1717,8 +1741,14 @@ spec:
                   tunnelTimeout:
                     description: "tunnelTimeout defines how long a tunnel connection
                       (including websockets) will be held open while the tunnel is
-                      idle. \n If unset, the default timeout is 1h"
-                    format: duration
+                      idle. \n This field expects an unsigned duration string of decimal
+                      numbers, each with optional fraction and a unit suffix, e.g.
+                      \"300ms\", \"1.5h\" or \"2h45m\". Valid time units are \"ns\",
+                      \"us\" (or \"µs\" U+00B5 or \"μs\" U+03BC), \"ms\", \"s\", \"m\",
+                      \"h\". \n When omitted, this means the user has no opinion and
+                      the platform is left to choose a reasonable default. This default
+                      is subject to change over time. The current default is 1h."
+                    pattern: ^(0|([0-9]+(\.[0-9]+)?(ns|us|µs|μs|ms|s|m|h))+)$
                     type: string
                 type: object
               unsupportedConfigOverrides:

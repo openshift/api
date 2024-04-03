@@ -1605,9 +1605,17 @@ type IngressControllerTuningOptions struct {
 	// clientTimeout defines how long a connection will be held open while
 	// waiting for a client response.
 	//
-	// If unset, the default timeout is 30s
+	// This field expects an unsigned duration string of decimal numbers, each with optional
+	// fraction and a unit suffix, e.g. "300ms", "1.5h" or "2h45m".
+	// Valid time units are "ns", "us" (or "µs" U+00B5 or "μs" U+03BC), "ms", "s", "m", "h".
+	//
+	// When omitted, this means the user has no opinion and the platform is left
+	// to choose a reasonable default. This default is subject to change over time.
+	// The current default is 30s.
+	//
 	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Format=duration
+	// +kubebuilder:validation:Pattern=^(0|([0-9]+(\.[0-9]+)?(ns|us|µs|μs|ms|s|m|h))+)$
+	// +kubebuilder:validation:Type:=string
 	// +optional
 	ClientTimeout *metav1.Duration `json:"clientTimeout,omitempty"`
 
@@ -1615,18 +1623,34 @@ type IngressControllerTuningOptions struct {
 	// waiting for the client response to the server/backend closing the
 	// connection.
 	//
-	// If unset, the default timeout is 1s
+	// This field expects an unsigned duration string of decimal numbers, each with optional
+	// fraction and a unit suffix, e.g. "300ms", "1.5h" or "2h45m".
+	// Valid time units are "ns", "us" (or "µs" U+00B5 or "μs" U+03BC), "ms", "s", "m", "h".
+	//
+	// When omitted, this means the user has no opinion and the platform is left
+	// to choose a reasonable default. This default is subject to change over time.
+	// The current default is 1s.
+	//
 	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Format=duration
+	// +kubebuilder:validation:Pattern=^(0|([0-9]+(\.[0-9]+)?(ns|us|µs|μs|ms|s|m|h))+)$
+	// +kubebuilder:validation:Type:=string
 	// +optional
 	ClientFinTimeout *metav1.Duration `json:"clientFinTimeout,omitempty"`
 
 	// serverTimeout defines how long a connection will be held open while
 	// waiting for a server/backend response.
 	//
-	// If unset, the default timeout is 30s
+	// This field expects an unsigned duration string of decimal numbers, each with optional
+	// fraction and a unit suffix, e.g. "300ms", "1.5h" or "2h45m".
+	// Valid time units are "ns", "us" (or "µs" U+00B5 or "μs" U+03BC), "ms", "s", "m", "h".
+	//
+	// When omitted, this means the user has no opinion and the platform is left
+	// to choose a reasonable default. This default is subject to change over time.
+	// The current default is 30s.
+	//
 	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Format=duration
+	// +kubebuilder:validation:Pattern=^(0|([0-9]+(\.[0-9]+)?(ns|us|µs|μs|ms|s|m|h))+)$
+	// +kubebuilder:validation:Type:=string
 	// +optional
 	ServerTimeout *metav1.Duration `json:"serverTimeout,omitempty"`
 
@@ -1634,18 +1658,34 @@ type IngressControllerTuningOptions struct {
 	// waiting for the server/backend response to the client closing the
 	// connection.
 	//
-	// If unset, the default timeout is 1s
+	// This field expects an unsigned duration string of decimal numbers, each with optional
+	// fraction and a unit suffix, e.g. "300ms", "1.5h" or "2h45m".
+	// Valid time units are "ns", "us" (or "µs" U+00B5 or "μs" U+03BC), "ms", "s", "m", "h".
+	//
+	// When omitted, this means the user has no opinion and the platform is left
+	// to choose a reasonable default. This default is subject to change over time.
+	// The current default is 1s.
+	//
 	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Format=duration
+	// +kubebuilder:validation:Pattern=^(0|([0-9]+(\.[0-9]+)?(ns|us|µs|μs|ms|s|m|h))+)$
+	// +kubebuilder:validation:Type:=string
 	// +optional
 	ServerFinTimeout *metav1.Duration `json:"serverFinTimeout,omitempty"`
 
 	// tunnelTimeout defines how long a tunnel connection (including
 	// websockets) will be held open while the tunnel is idle.
 	//
-	// If unset, the default timeout is 1h
+	// This field expects an unsigned duration string of decimal numbers, each with optional
+	// fraction and a unit suffix, e.g. "300ms", "1.5h" or "2h45m".
+	// Valid time units are "ns", "us" (or "µs" U+00B5 or "μs" U+03BC), "ms", "s", "m", "h".
+	//
+	// When omitted, this means the user has no opinion and the platform is left
+	// to choose a reasonable default. This default is subject to change over time.
+	// The current default is 1h.
+	//
 	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Format=duration
+	// +kubebuilder:validation:Pattern=^(0|([0-9]+(\.[0-9]+)?(ns|us|µs|μs|ms|s|m|h))+)$
+	// +kubebuilder:validation:Type:=string
 	// +optional
 	TunnelTimeout *metav1.Duration `json:"tunnelTimeout,omitempty"`
 

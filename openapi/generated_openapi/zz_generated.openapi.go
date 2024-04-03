@@ -47585,31 +47585,31 @@ func schema_openshift_api_operator_v1_IngressControllerTuningOptions(ref common.
 					},
 					"clientTimeout": {
 						SchemaProps: spec.SchemaProps{
-							Description: "clientTimeout defines how long a connection will be held open while waiting for a client response.\n\nIf unset, the default timeout is 30s",
+							Description: "clientTimeout defines how long a connection will be held open while waiting for a client response.\n\nThis field expects an unsigned duration string of decimal numbers, each with optional fraction and a unit suffix, e.g. \"300ms\", \"1.5h\" or \"2h45m\". Valid time units are \"ns\", \"us\" (or \"µs\" U+00B5 or \"μs\" U+03BC), \"ms\", \"s\", \"m\", \"h\".\n\nWhen omitted, this means the user has no opinion and the platform is left to choose a reasonable default. This default is subject to change over time. The current default is 30s.",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
 					"clientFinTimeout": {
 						SchemaProps: spec.SchemaProps{
-							Description: "clientFinTimeout defines how long a connection will be held open while waiting for the client response to the server/backend closing the connection.\n\nIf unset, the default timeout is 1s",
+							Description: "clientFinTimeout defines how long a connection will be held open while waiting for the client response to the server/backend closing the connection.\n\nThis field expects an unsigned duration string of decimal numbers, each with optional fraction and a unit suffix, e.g. \"300ms\", \"1.5h\" or \"2h45m\". Valid time units are \"ns\", \"us\" (or \"µs\" U+00B5 or \"μs\" U+03BC), \"ms\", \"s\", \"m\", \"h\".\n\nWhen omitted, this means the user has no opinion and the platform is left to choose a reasonable default. This default is subject to change over time. The current default is 1s.",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
 					"serverTimeout": {
 						SchemaProps: spec.SchemaProps{
-							Description: "serverTimeout defines how long a connection will be held open while waiting for a server/backend response.\n\nIf unset, the default timeout is 30s",
+							Description: "serverTimeout defines how long a connection will be held open while waiting for a server/backend response.\n\nThis field expects an unsigned duration string of decimal numbers, each with optional fraction and a unit suffix, e.g. \"300ms\", \"1.5h\" or \"2h45m\". Valid time units are \"ns\", \"us\" (or \"µs\" U+00B5 or \"μs\" U+03BC), \"ms\", \"s\", \"m\", \"h\".\n\nWhen omitted, this means the user has no opinion and the platform is left to choose a reasonable default. This default is subject to change over time. The current default is 30s.",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
 					"serverFinTimeout": {
 						SchemaProps: spec.SchemaProps{
-							Description: "serverFinTimeout defines how long a connection will be held open while waiting for the server/backend response to the client closing the connection.\n\nIf unset, the default timeout is 1s",
+							Description: "serverFinTimeout defines how long a connection will be held open while waiting for the server/backend response to the client closing the connection.\n\nThis field expects an unsigned duration string of decimal numbers, each with optional fraction and a unit suffix, e.g. \"300ms\", \"1.5h\" or \"2h45m\". Valid time units are \"ns\", \"us\" (or \"µs\" U+00B5 or \"μs\" U+03BC), \"ms\", \"s\", \"m\", \"h\".\n\nWhen omitted, this means the user has no opinion and the platform is left to choose a reasonable default. This default is subject to change over time. The current default is 1s.",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
 					"tunnelTimeout": {
 						SchemaProps: spec.SchemaProps{
-							Description: "tunnelTimeout defines how long a tunnel connection (including websockets) will be held open while the tunnel is idle.\n\nIf unset, the default timeout is 1h",
+							Description: "tunnelTimeout defines how long a tunnel connection (including websockets) will be held open while the tunnel is idle.\n\nThis field expects an unsigned duration string of decimal numbers, each with optional fraction and a unit suffix, e.g. \"300ms\", \"1.5h\" or \"2h45m\". Valid time units are \"ns\", \"us\" (or \"µs\" U+00B5 or \"μs\" U+03BC), \"ms\", \"s\", \"m\", \"h\".\n\nWhen omitted, this means the user has no opinion and the platform is left to choose a reasonable default. This default is subject to change over time. The current default is 1h.",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},

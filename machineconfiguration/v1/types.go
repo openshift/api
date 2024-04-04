@@ -443,6 +443,7 @@ type MachineConfigPoolSpec struct {
 	// +optional
 	// +listType=map
 	// +listMapKey=name
+	// +kubebuilder:validation:MaxItems=100
 	PinnedImageSets []PinnedImageSetRef `json:"pinnedImageSets,omitempty"`
 }
 

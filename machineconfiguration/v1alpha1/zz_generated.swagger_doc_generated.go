@@ -39,10 +39,11 @@ func (MachineConfigNodeList) SwaggerDoc() map[string]string {
 }
 
 var map_MachineConfigNodeSpec = map[string]string{
-	"":              "MachineConfigNodeSpec describes the MachineConfigNode we are managing.",
-	"node":          "node contains a reference to the node for this machine config node.",
-	"pool":          "pool contains a reference to the machine config pool that this machine config node's referenced node belongs to.",
-	"configVersion": "configVersion holds the desired config version for the node targeted by this machine config node resource. The desired version represents the machine config the node will attempt to update to. This gets set before the machine config operator validates the new machine config against the current machine config.",
+	"":                "MachineConfigNodeSpec describes the MachineConfigNode we are managing.",
+	"node":            "node contains a reference to the node for this machine config node.",
+	"pool":            "pool contains a reference to the machine config pool that this machine config node's referenced node belongs to.",
+	"configVersion":   "configVersion holds the desired config version for the node targeted by this machine config node resource. The desired version represents the machine config the node will attempt to update to. This gets set before the machine config operator validates the new machine config against the current machine config.",
+	"pinnedImageSets": "pinnedImageSets holds the desired pinned image sets that this node should pin and pull.",
 }
 
 func (MachineConfigNodeSpec) SwaggerDoc() map[string]string {
@@ -58,11 +59,20 @@ func (MachineConfigNodeSpecMachineConfigVersion) SwaggerDoc() map[string]string 
 	return map_MachineConfigNodeSpecMachineConfigVersion
 }
 
+var map_MachineConfigNodeSpecPinnedImageSet = map[string]string{
+	"name": "name is the name of the pinned image set. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
+}
+
+func (MachineConfigNodeSpecPinnedImageSet) SwaggerDoc() map[string]string {
+	return map_MachineConfigNodeSpecPinnedImageSet
+}
+
 var map_MachineConfigNodeStatus = map[string]string{
 	"":                   "MachineConfigNodeStatus holds the reported information on a particular machine config node.",
 	"conditions":         "conditions represent the observations of a machine config node's current state.",
 	"observedGeneration": "observedGeneration represents the generation observed by the controller. This field is updated when the controller observes a change to the desiredConfig in the configVersion of the machine config node spec.",
 	"configVersion":      "configVersion describes the current and desired machine config for this node. The current version represents the current machine config for the node and is updated after a successful update. The desired version represents the machine config the node will attempt to update to. This desired machine config has been compared to the current machine config and has been validated by the machine config operator as one that is valid and that exists.",
+	"pinnedImageSets":    "pinnedImageSets describes the current and desired pinned image sets for this node. The current version is the generation of the pinned image set that has most recently been successfully pulled and pinned on this node. The desired version is the generation of the pinned image set that is targeted to be pulled and pinned on this node.",
 }
 
 func (MachineConfigNodeStatus) SwaggerDoc() map[string]string {
@@ -77,6 +87,18 @@ var map_MachineConfigNodeStatusMachineConfigVersion = map[string]string{
 
 func (MachineConfigNodeStatusMachineConfigVersion) SwaggerDoc() map[string]string {
 	return map_MachineConfigNodeStatusMachineConfigVersion
+}
+
+var map_MachineConfigNodeStatusPinnedImageSet = map[string]string{
+	"name":                       "name is the name of the pinned image set. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
+	"currentGeneration":          "currentGeneration is the generation of the pinned image set that has most recently been successfully pulled and pinned on this node.",
+	"desiredGeneration":          "desiredGeneration version is the generation of the pinned image set that is targeted to be pulled and pinned on this node.",
+	"lastFailedGeneration":       "lastFailedGeneration is the generation of the most recent pinned image set that failed to be pulled and pinned on this node.",
+	"lastFailedGenerationErrors": "lastFailedGenerationErrors is a list of errors why the lastFailed generation failed to be pulled and pinned.",
+}
+
+func (MachineConfigNodeStatusPinnedImageSet) SwaggerDoc() map[string]string {
+	return map_MachineConfigNodeStatusPinnedImageSet
 }
 
 var map_PinnedImageRef = map[string]string{

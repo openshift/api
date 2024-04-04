@@ -753,8 +753,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeList":                       schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeList(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeSpec":                       schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeSpec(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeSpecMachineConfigVersion":   schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeSpecMachineConfigVersion(ref),
+		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeSpecPinnedImageSet":         schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeSpecPinnedImageSet(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeStatus":                     schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatus(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeStatusMachineConfigVersion": schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatusMachineConfigVersion(ref),
+		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeStatusPinnedImageSet":       schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatusPinnedImageSet(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.PinnedImageRef":                              schema_openshift_api_machineconfiguration_v1alpha1_PinnedImageRef(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.PinnedImageSet":                              schema_openshift_api_machineconfiguration_v1alpha1_PinnedImageSet(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.PinnedImageSetList":                          schema_openshift_api_machineconfiguration_v1alpha1_PinnedImageSetList(ref),
@@ -38459,12 +38461,34 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeSpec(re
 							Ref:         ref("github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeSpecMachineConfigVersion"),
 						},
 					},
+					"pinnedImageSets": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "pinnedImageSets holds the desired pinned image sets that this node should pin and pull.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeSpecPinnedImageSet"),
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"node", "pool", "configVersion"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machineconfiguration/v1alpha1.MCOObjectReference", "github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeSpecMachineConfigVersion"},
+			"github.com/openshift/api/machineconfiguration/v1alpha1.MCOObjectReference", "github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeSpecMachineConfigVersion", "github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeSpecPinnedImageSet"},
 	}
 }
 
@@ -38485,6 +38509,27 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeSpecMac
 					},
 				},
 				Required: []string{"desired"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeSpecPinnedImageSet(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the name of the pinned image set. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
 			},
 		},
 	}
@@ -38535,12 +38580,34 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatus(
 							Ref:         ref("github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeStatusMachineConfigVersion"),
 						},
 					},
+					"pinnedImageSets": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "pinnedImageSets describes the current and desired pinned image sets for this node. The current version is the generation of the pinned image set that has most recently been successfully pulled and pinned on this node. The desired version is the generation of the pinned image set that is targeted to be pulled and pinned on this node.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeStatusPinnedImageSet"),
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"configVersion"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeStatusMachineConfigVersion", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
+			"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeStatusMachineConfigVersion", "github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeStatusPinnedImageSet", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -38569,6 +38636,63 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatusM
 					},
 				},
 				Required: []string{"desired"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatusPinnedImageSet(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the name of the pinned image set. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"currentGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "currentGeneration is the generation of the pinned image set that has most recently been successfully pulled and pinned on this node.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"desiredGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "desiredGeneration version is the generation of the pinned image set that is targeted to be pulled and pinned on this node.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"lastFailedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "lastFailedGeneration is the generation of the most recent pinned image set that failed to be pulled and pinned on this node.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"lastFailedGenerationErrors": {
+						SchemaProps: spec.SchemaProps{
+							Description: "lastFailedGenerationErrors is a list of errors why the lastFailed generation failed to be pulled and pinned.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"name"},
 			},
 		},
 	}

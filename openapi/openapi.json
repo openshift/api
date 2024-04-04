@@ -22297,6 +22297,18 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.MCOObjectReference"
         },
+        "pinnedImageSets": {
+          "description": "pinnedImageSets holds the desired pinned image sets that this node should pin and pull.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigNodeSpecPinnedImageSet"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
         "pool": {
           "description": "pool contains a reference to the machine config pool that this machine config node's referenced node belongs to.",
           "default": {},
@@ -22313,6 +22325,19 @@
       "properties": {
         "desired": {
           "description": "desired is the name of the machine config that the the node should be upgraded to. This value is set when the machine config pool generates a new version of its rendered configuration. When this value is changed, the machine config daemon starts the node upgrade process. This value gets set in the machine config node spec once the machine config has been targeted for upgrade and before it is validated. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigNodeSpecPinnedImageSet": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the name of the pinned image set. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
           "type": "string",
           "default": ""
         }
@@ -22348,6 +22373,18 @@
           "description": "observedGeneration represents the generation observed by the controller. This field is updated when the controller observes a change to the desiredConfig in the configVersion of the machine config node spec.",
           "type": "integer",
           "format": "int64"
+        },
+        "pinnedImageSets": {
+          "description": "pinnedImageSets describes the current and desired pinned image sets for this node. The current version is the generation of the pinned image set that has most recently been successfully pulled and pinned on this node. The desired version is the generation of the pinned image set that is targeted to be pulled and pinned on this node.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigNodeStatusPinnedImageSet"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         }
       }
     },
@@ -22365,6 +22402,42 @@
         },
         "desired": {
           "description": "desired is the MachineConfig the node wants to upgrade to. This value gets set in the machine config node status once the machine config has been validated against the current machine config. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigNodeStatusPinnedImageSet": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "currentGeneration": {
+          "description": "currentGeneration is the generation of the pinned image set that has most recently been successfully pulled and pinned on this node.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "desiredGeneration": {
+          "description": "desiredGeneration version is the generation of the pinned image set that is targeted to be pulled and pinned on this node.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "lastFailedGeneration": {
+          "description": "lastFailedGeneration is the generation of the most recent pinned image set that failed to be pulled and pinned on this node.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "lastFailedGenerationErrors": {
+          "description": "lastFailedGenerationErrors is a list of errors why the lastFailed generation failed to be pulled and pinned.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "name": {
+          "description": "name is the name of the pinned image set. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
           "type": "string",
           "default": ""
         }

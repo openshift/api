@@ -128,6 +128,27 @@ spec:
                 required:
                 - name
                 type: object
+              pinnedImageSets:
+                description: pinnedImageSets holds the desired pinned image sets that
+                  this node should pin and pull.
+                items:
+                  properties:
+                    name:
+                      description: name is the name of the pinned image set. Must
+                        be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123)
+                        It may consist of only alphanumeric characters, hyphens (-)
+                        and periods (.) and must be at most 253 characters in length.
+                      maxLength: 253
+                      pattern: ^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9]))*$
+                      type: string
+                  required:
+                  - name
+                  type: object
+                maxItems: 100
+                type: array
+                x-kubernetes-list-map-keys:
+                - name
+                x-kubernetes-list-type: map
               pool:
                 description: pool contains a reference to the machine config pool
                   that this machine config node's referenced node belongs to.
@@ -266,6 +287,70 @@ spec:
                   config node spec.
                 format: int64
                 type: integer
+              pinnedImageSets:
+                description: pinnedImageSets describes the current and desired pinned
+                  image sets for this node. The current version is the generation
+                  of the pinned image set that has most recently been successfully
+                  pulled and pinned on this node. The desired version is the generation
+                  of the pinned image set that is targeted to be pulled and pinned
+                  on this node.
+                items:
+                  properties:
+                    currentGeneration:
+                      description: currentGeneration is the generation of the pinned
+                        image set that has most recently been successfully pulled
+                        and pinned on this node.
+                      format: int32
+                      type: integer
+                    desiredGeneration:
+                      description: desiredGeneration version is the generation of
+                        the pinned image set that is targeted to be pulled and pinned
+                        on this node.
+                      format: int32
+                      minimum: 0
+                      type: integer
+                    lastFailedGeneration:
+                      description: lastFailedGeneration is the generation of the most
+                        recent pinned image set that failed to be pulled and pinned
+                        on this node.
+                      format: int32
+                      minimum: 0
+                      type: integer
+                    lastFailedGenerationErrors:
+                      description: lastFailedGenerationErrors is a list of errors
+                        why the lastFailed generation failed to be pulled and pinned.
+                      items:
+                        type: string
+                      maxItems: 10
+                      type: array
+                    name:
+                      description: name is the name of the pinned image set. Must
+                        be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123)
+                        It may consist of only alphanumeric characters, hyphens (-)
+                        and periods (.) and must be at most 253 characters in length.
+                      maxLength: 253
+                      pattern: ^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9]))*$
+                      type: string
+                  required:
+                  - name
+                  type: object
+                  x-kubernetes-validations:
+                  - message: desired generation must be greater than or equal to the
+                      current generation
+                    rule: 'has(self.desiredGeneration) && has(self.currentGeneration)
+                      ? self.desiredGeneration >= self.currentGeneration : true'
+                  - message: desired generation must be greater than last failed generation
+                    rule: 'has(self.lastFailedGeneration) && has(self.desiredGeneration)
+                      ? self.desiredGeneration >= self.lastFailedGeneration : true'
+                  - message: desired generation must be defined if last failed generation
+                      is defined
+                    rule: 'has(self.lastFailedGeneration) ? has(self.desiredGeneration):
+                      true'
+                maxItems: 100
+                type: array
+                x-kubernetes-list-map-keys:
+                - name
+                x-kubernetes-list-type: map
             required:
             - configVersion
             type: object

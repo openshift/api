@@ -22721,7 +22721,6 @@
       "description": "MachineOSBuildStatus describes the state of a build and other helpful information.",
       "type": "object",
       "required": [
-        "builderReference",
         "buildStart"
       ],
       "properties": {
@@ -22869,8 +22868,7 @@
       "type": "object",
       "required": [
         "machineConfigPool",
-        "buildInputs",
-        "buildOutputs"
+        "buildInputs"
       ],
       "properties": {
         "buildInputs": {

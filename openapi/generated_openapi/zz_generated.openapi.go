@@ -39252,7 +39252,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineOSBuildStatus(ref
 						},
 					},
 				},
-				Required: []string{"builderReference", "buildStart"},
+				Required: []string{"buildStart"},
 			},
 		},
 		Dependencies: []string{
@@ -39452,7 +39452,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineOSConfigSpec(ref 
 						},
 					},
 				},
-				Required: []string{"machineConfigPool", "buildInputs", "buildOutputs"},
+				Required: []string{"machineConfigPool", "buildInputs"},
 			},
 		},
 		Dependencies: []string{

@@ -53,8 +53,8 @@ type MachineOSConfigSpec struct {
 	// +kubebuilder:validation:Required
 	BuildInputs BuildInputs `json:"buildInputs"`
 	// buildOutputs is where user input options for the build live
-	// +kubebuilder:validation:Required
-	BuildOutputs BuildOutputs `json:"buildOutputs"`
+	// +optional
+	BuildOutputs BuildOutputs `json:"buildOutputs,omitempty"`
 }
 
 // MachineOSConfigStatus describes the status this config object and relates it to the builds associated with this MachineOSConfig

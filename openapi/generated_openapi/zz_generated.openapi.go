@@ -237,6 +237,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.FeatureGateSelection":                                            schema_openshift_api_config_v1_FeatureGateSelection(ref),
 		"github.com/openshift/api/config/v1.FeatureGateSpec":                                                 schema_openshift_api_config_v1_FeatureGateSpec(ref),
 		"github.com/openshift/api/config/v1.FeatureGateStatus":                                               schema_openshift_api_config_v1_FeatureGateStatus(ref),
+		"github.com/openshift/api/config/v1.FeatureGateTests":                                                schema_openshift_api_config_v1_FeatureGateTests(ref),
 		"github.com/openshift/api/config/v1.GCPPlatformSpec":                                                 schema_openshift_api_config_v1_GCPPlatformSpec(ref),
 		"github.com/openshift/api/config/v1.GCPPlatformStatus":                                               schema_openshift_api_config_v1_GCPPlatformStatus(ref),
 		"github.com/openshift/api/config/v1.GCPResourceLabel":                                                schema_openshift_api_config_v1_GCPResourceLabel(ref),
@@ -375,6 +376,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.TLSProfileSpec":                                                  schema_openshift_api_config_v1_TLSProfileSpec(ref),
 		"github.com/openshift/api/config/v1.TLSSecurityProfile":                                              schema_openshift_api_config_v1_TLSSecurityProfile(ref),
 		"github.com/openshift/api/config/v1.TemplateReference":                                               schema_openshift_api_config_v1_TemplateReference(ref),
+		"github.com/openshift/api/config/v1.TestDetails":                                                     schema_openshift_api_config_v1_TestDetails(ref),
+		"github.com/openshift/api/config/v1.TestReporting":                                                   schema_openshift_api_config_v1_TestReporting(ref),
+		"github.com/openshift/api/config/v1.TestReportingSpec":                                               schema_openshift_api_config_v1_TestReportingSpec(ref),
+		"github.com/openshift/api/config/v1.TestReportingStatus":                                             schema_openshift_api_config_v1_TestReportingStatus(ref),
 		"github.com/openshift/api/config/v1.TokenClaimMapping":                                               schema_openshift_api_config_v1_TokenClaimMapping(ref),
 		"github.com/openshift/api/config/v1.TokenClaimMappings":                                              schema_openshift_api_config_v1_TokenClaimMappings(ref),
 		"github.com/openshift/api/config/v1.TokenClaimValidationRule":                                        schema_openshift_api_config_v1_TokenClaimValidationRule(ref),
@@ -12345,6 +12350,43 @@ func schema_openshift_api_config_v1_FeatureGateStatus(ref common.ReferenceCallba
 	}
 }
 
+func schema_openshift_api_config_v1_FeatureGateTests(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"featureGate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FeatureGate is the name of the FeatureGate as it appears in The FeatureGate CR instance.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"tests": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Tests contains an item for every TestName",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.TestDetails"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"featureGate", "tests"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.TestDetails"},
+	}
+}
+
 func schema_openshift_api_config_v1_GCPPlatformSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -18844,6 +18886,116 @@ func schema_openshift_api_config_v1_TemplateReference(ref common.ReferenceCallba
 					},
 				},
 				Required: []string{"name"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1_TestDetails(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"testName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TestName is the name of the test as it appears in junit XMLs. It does not include the suite name since the same test can be executed in many suites.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"testName"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1_TestReporting(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "TestReporting is used for origin (and potentially others) to report the test names for a given FeatureGate into the payload for later analysis on a per-payload basis. This doesn't need any CRD because it's never stored in the cluster.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/openshift/api/config/v1.TestReportingSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status holds observed values from the cluster. They may not be overridden.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.TestReportingStatus"),
+						},
+					},
+				},
+				Required: []string{"spec"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.TestReportingSpec", "github.com/openshift/api/config/v1.TestReportingStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_openshift_api_config_v1_TestReportingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"testsForFeatureGates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TestsForFeatureGates is a list, indexed by FeatureGate and includes information about testing.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.FeatureGateTests"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"testsForFeatureGates"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.FeatureGateTests"},
+	}
+}
+
+func schema_openshift_api_config_v1_TestReportingStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
 			},
 		},
 	}

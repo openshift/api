@@ -6389,6 +6389,28 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.FeatureGateTests": {
+      "type": "object",
+      "required": [
+        "featureGate",
+        "tests"
+      ],
+      "properties": {
+        "featureGate": {
+          "description": "FeatureGate is the name of the FeatureGate as it appears in The FeatureGate CR instance.",
+          "type": "string",
+          "default": ""
+        },
+        "tests": {
+          "description": "Tests contains an item for every TestName",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.TestDetails"
+          }
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.GCPPlatformSpec": {
       "description": "GCPPlatformSpec holds the desired state of the Google Cloud Platform infrastructure provider. This only includes fields that can be modified in the cluster.",
       "type": "object"
@@ -10236,6 +10258,69 @@
           "default": ""
         }
       }
+    },
+    "com.github.openshift.api.config.v1.TestDetails": {
+      "type": "object",
+      "required": [
+        "testName"
+      ],
+      "properties": {
+        "testName": {
+          "description": "TestName is the name of the test as it appears in junit XMLs. It does not include the suite name since the same test can be executed in many suites.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.TestReporting": {
+      "description": "TestReporting is used for origin (and potentially others) to report the test names for a given FeatureGate into the payload for later analysis on a per-payload basis. This doesn't need any CRD because it's never stored in the cluster.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.TestReportingSpec"
+        },
+        "status": {
+          "description": "status holds observed values from the cluster. They may not be overridden.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.TestReportingStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.TestReportingSpec": {
+      "type": "object",
+      "required": [
+        "testsForFeatureGates"
+      ],
+      "properties": {
+        "testsForFeatureGates": {
+          "description": "TestsForFeatureGates is a list, indexed by FeatureGate and includes information about testing.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.FeatureGateTests"
+          }
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.TestReportingStatus": {
+      "type": "object"
     },
     "com.github.openshift.api.config.v1.TokenClaimMapping": {
       "type": "object",

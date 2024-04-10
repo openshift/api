@@ -90,7 +90,7 @@ type MachineOSBuildStatus struct {
 	// +optional
 	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 	// ImageBuilderType describes the image builder set in the MachineOSConfig
-	// +unionDiscriminator
+	// +optional
 	BuilderReference *MachineOSBuilderReference `json:"builderReference"`
 	// relatedObjects is a list of objects that are related to the build process.
 	RelatedObjects []ObjectReference `json:"relatedObjects,omitempty"`

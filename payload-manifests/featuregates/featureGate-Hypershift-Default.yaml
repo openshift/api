@@ -35,9 +35,6 @@
                         "name": "EventedPLEG"
                     },
                     {
-                        "name": "Example"
-                    },
-                    {
                         "name": "ExternalRouteCertificate"
                     },
                     {
@@ -119,9 +116,6 @@
                         "name": "ServiceAccountTokenNodeBinding"
                     },
                     {
-                        "name": "ServiceAccountTokenNodeBindingValidation"
-                    },
-                    {
                         "name": "ServiceAccountTokenPodNodeInfo"
                     },
                     {
@@ -166,6 +160,9 @@
                         "name": "DisableKubeletCloudCredentialProviders"
                     },
                     {
+                        "name": "Example"
+                    },
+                    {
                         "name": "ExternalCloudProvider"
                     },
                     {
@@ -191,6 +188,9 @@
                     },
                     {
                         "name": "PrivateHostedZoneAWS"
+                    },
+                    {
+                        "name": "ServiceAccountTokenNodeBindingValidation"
                     },
                     {
                         "name": "VSphereControlPlaneMachineSet"

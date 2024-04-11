@@ -175,7 +175,7 @@ var (
 								reportProblemsToJiraComponent("apiserver-auth").
 								contactPerson("stlaz").
 								productScope(kubernetes).
-								enableIn(TechPreviewNoUpgrade).
+								enableIn(Default, TechPreviewNoUpgrade).
 								mustRegister()
 
 	FeatureGateServiceAccountTokenNodeBinding = newFeatureGate("ServiceAccountTokenNodeBinding").
@@ -523,7 +523,7 @@ var (
 				reportProblemsToJiraComponent("cluster-config").
 				contactPerson("deads").
 				productScope(ocpSpecific).
-				enableIn(TechPreviewNoUpgrade).
+				enableIn(Default, TechPreviewNoUpgrade).
 				mustRegister()
 
 	FeatureGatePlatformOperators = newFeatureGate("PlatformOperators").

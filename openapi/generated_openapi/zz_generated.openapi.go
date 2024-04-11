@@ -37114,6 +37114,13 @@ func schema_openshift_api_machine_v1beta1_MachineSetSpec(ref common.ReferenceCal
 							Ref:         ref("github.com/openshift/api/machine/v1beta1.MachineTemplateSpec"),
 						},
 					},
+					"authoritativeAPI": {
+						SchemaProps: spec.SchemaProps{
+							Description: "authoritativeAPI is the API that is authoritative for this resource. Valid values are MachineAPI and ClusterAPI. When set to MachineAPI, writes to the spec of the machine.openshift.io copy of this resource will be reflected into the cluster.x-k8s.io copy. When set to ClusterAPI, writes to the spec of the cluster.x-k8s.io copy of this resource will be reflected into the machine.openshift.io copy. Updates to the status will be reflected in both copies of the resource, based on the controller implementing the functionality of the API. Currently the authoritative API determines which controller will manage the resource, this will change in a future release. To ensure the change has been accepted, please verify that the `status.authoritativeAPI` field has been updated to the desired value and that the `Synchronized` condition is present and set to `True`.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 				Required: []string{"selector"},
 			},
@@ -37179,6 +37186,20 @@ func schema_openshift_api_machine_v1beta1_MachineSetStatus(ref common.ReferenceC
 							Format: "",
 						},
 					},
+					"authoritativeAPI": {
+						SchemaProps: spec.SchemaProps{
+							Description: "authoritativeAPI is the API that is authoritative for this resource. Valid values are MachineAPI, ClusterAPI and Migrating. This value is updated by the migration controller to reflect the authoritative API. Machine API and Cluster API controllers use this value to determine whether or not to reconcile the resource. When set to Migrating, the migration controller is currently performing the handover of authority from one API to the other.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"synchronizedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "synchronizedGeneration is the generation of the authoritative resource that the non-authoritative resource is synchronised with. This field is set when the authoritative resource is updated and the sync controller has updated the non-authoritative resource to match.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
 				},
 				Required: []string{"replicas"},
 			},
@@ -37231,6 +37252,13 @@ func schema_openshift_api_machine_v1beta1_MachineSpec(ref common.ReferenceCallba
 					"providerID": {
 						SchemaProps: spec.SchemaProps{
 							Description: "ProviderID is the identification ID of the machine provided by the provider. This field must match the provider ID as seen on the node object corresponding to this machine. This field is required by higher level consumers of cluster-api. Example use case is cluster autoscaler with cluster-api as provider. Clean-up logic in the autoscaler compares machines to nodes to find out machines at provider which could not get registered as Kubernetes nodes. With cluster-api as a generic out-of-tree provider for autoscaler, this field is required by autoscaler to be able to have a provider view of the list of machines. Another list of nodes is queried from the k8s apiserver and then a comparison is done to find out unregistered machines and are marked for delete. This field will be set by the actuators and consumed by higher level entities like autoscaler that will be interfacing with cluster-api as generic provider.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"authoritativeAPI": {
+						SchemaProps: spec.SchemaProps{
+							Description: "authoritativeAPI is the API that is authoritative for this resource. Valid values are MachineAPI and ClusterAPI. When set to MachineAPI, writes to the spec of the machine.openshift.io copy of this resource will be reflected into the cluster.x-k8s.io copy. When set to ClusterAPI, writes to the spec of the cluster.x-k8s.io copy of this resource will be reflected into the machine.openshift.io copy. Updates to the status will be reflected in both copies of the resource, based on the controller implementing the functionality of the API. Currently the authoritative API determines which controller will manage the resource, this will change in a future release. To ensure the change has been accepted, please verify that the `status.authoritativeAPI` field has been updated to the desired value and that the `Synchronized` condition is present and set to `True`.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -37321,6 +37349,20 @@ func schema_openshift_api_machine_v1beta1_MachineStatus(ref common.ReferenceCall
 									},
 								},
 							},
+						},
+					},
+					"authoritativeAPI": {
+						SchemaProps: spec.SchemaProps{
+							Description: "authoritativeAPI is the API that is authoritative for this resource. Valid values are MachineAPI, ClusterAPI and Migrating. This value is updated by the migration controller to reflect the authoritative API. Machine API and Cluster API controllers use this value to determine whether or not to reconcile the resource. When set to Migrating, the migration controller is currently performing the handover of authority from one API to the other.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"synchronizedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "synchronizedGeneration is the generation of the authoritative resource that the non-authoritative resource is synchronised with. This field is set when the authoritative resource is updated and the sync controller has updated the non-authoritative resource to match.",
+							Type:        []string{"integer"},
+							Format:      "int64",
 						},
 					},
 				},

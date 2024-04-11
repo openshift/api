@@ -21442,6 +21442,10 @@
         "selector"
       ],
       "properties": {
+        "authoritativeAPI": {
+          "description": "authoritativeAPI is the API that is authoritative for this resource. Valid values are MachineAPI and ClusterAPI. When set to MachineAPI, writes to the spec of the machine.openshift.io copy of this resource will be reflected into the cluster.x-k8s.io copy. When set to ClusterAPI, writes to the spec of the cluster.x-k8s.io copy of this resource will be reflected into the machine.openshift.io copy. Updates to the status will be reflected in both copies of the resource, based on the controller implementing the functionality of the API. Currently the authoritative API determines which controller will manage the resource, this will change in a future release. To ensure the change has been accepted, please verify that the `status.authoritativeAPI` field has been updated to the desired value and that the `Synchronized` condition is present and set to `True`.",
+          "type": "string"
+        },
         "deletePolicy": {
           "description": "DeletePolicy defines the policy used to identify nodes to delete when downscaling. Defaults to \"Random\".  Valid values are \"Random, \"Newest\", \"Oldest\"",
           "type": "string"
@@ -21475,6 +21479,10 @@
         "replicas"
       ],
       "properties": {
+        "authoritativeAPI": {
+          "description": "authoritativeAPI is the API that is authoritative for this resource. Valid values are MachineAPI, ClusterAPI and Migrating. This value is updated by the migration controller to reflect the authoritative API. Machine API and Cluster API controllers use this value to determine whether or not to reconcile the resource. When set to Migrating, the migration controller is currently performing the handover of authority from one API to the other.",
+          "type": "string"
+        },
         "availableReplicas": {
           "description": "The number of available replicas (ready for at least minReadySeconds) for this MachineSet.",
           "type": "integer",
@@ -21507,6 +21515,11 @@
           "type": "integer",
           "format": "int32",
           "default": 0
+        },
+        "synchronizedGeneration": {
+          "description": "synchronizedGeneration is the generation of the authoritative resource that the non-authoritative resource is synchronised with. This field is set when the authoritative resource is updated and the sync controller has updated the non-authoritative resource to match.",
+          "type": "integer",
+          "format": "int64"
         }
       }
     },
@@ -21514,6 +21527,10 @@
       "description": "MachineSpec defines the desired state of Machine",
       "type": "object",
       "properties": {
+        "authoritativeAPI": {
+          "description": "authoritativeAPI is the API that is authoritative for this resource. Valid values are MachineAPI and ClusterAPI. When set to MachineAPI, writes to the spec of the machine.openshift.io copy of this resource will be reflected into the cluster.x-k8s.io copy. When set to ClusterAPI, writes to the spec of the cluster.x-k8s.io copy of this resource will be reflected into the machine.openshift.io copy. Updates to the status will be reflected in both copies of the resource, based on the controller implementing the functionality of the API. Currently the authoritative API determines which controller will manage the resource, this will change in a future release. To ensure the change has been accepted, please verify that the `status.authoritativeAPI` field has been updated to the desired value and that the `Synchronized` condition is present and set to `True`.",
+          "type": "string"
+        },
         "lifecycleHooks": {
           "description": "LifecycleHooks allow users to pause operations on the machine at certain predefined points within the machine lifecycle.",
           "default": {},
@@ -21555,6 +21572,10 @@
             "$ref": "#/definitions/io.k8s.api.core.v1.NodeAddress"
           }
         },
+        "authoritativeAPI": {
+          "description": "authoritativeAPI is the API that is authoritative for this resource. Valid values are MachineAPI, ClusterAPI and Migrating. This value is updated by the migration controller to reflect the authoritative API. Machine API and Cluster API controllers use this value to determine whether or not to reconcile the resource. When set to Migrating, the migration controller is currently performing the handover of authority from one API to the other.",
+          "type": "string"
+        },
         "conditions": {
           "description": "Conditions defines the current state of the Machine",
           "type": "array",
@@ -21590,6 +21611,11 @@
         "providerStatus": {
           "description": "ProviderStatus details a Provider-specific status. It is recommended that providers maintain their own versioned API types that should be serialized/deserialized from this field.",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        },
+        "synchronizedGeneration": {
+          "description": "synchronizedGeneration is the generation of the authoritative resource that the non-authoritative resource is synchronised with. This field is set when the authoritative resource is updated and the sync controller has updated the non-authoritative resource to match.",
+          "type": "integer",
+          "format": "int64"
         }
       }
     },

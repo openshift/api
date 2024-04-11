@@ -1285,6 +1285,7 @@ func (MachineConfigurationSpec) SwaggerDoc() map[string]string {
 
 var map_MachineConfigurationStatus = map[string]string{
 	"nodeDisruptionPolicyStatus": "nodeDisruptionPolicyStatus status reflects what the latest cluster-validated policies are, and will be used by the Machine Config Daemon during future node updates.",
+	"nodeSynchronizersStatus":    "nodeSynchronizersStatus is the status of the machines managed by the node synchronizers.",
 }
 
 func (MachineConfigurationStatus) SwaggerDoc() map[string]string {
@@ -1425,6 +1426,22 @@ var map_NodeDisruptionPolicyStatusUnit = map[string]string{
 
 func (NodeDisruptionPolicyStatusUnit) SwaggerDoc() map[string]string {
 	return map_NodeDisruptionPolicyStatusUnit
+}
+
+var map_NodeSynchronizerStatus = map[string]string{
+	"name":                    "name is the name of the node synchronizer. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
+	"nodeSynchronizerType":    "nodeSynchronizerType is the name of the node synchronizer type.",
+	"nodeSelector":            "nodeSelector specifies a label selector for Machines that match this synchronizer.",
+	"machineCount":            "machineCount is the number of machines that are managed by the node synchronizer.",
+	"updatedMachineCount":     "updatedMachineCount is the number of machines that have been updated by the node synchronizer.",
+	"readyMachineCount":       "readyMachineCount is the number of machines managed by the node synchronizer that are in a ready state.",
+	"availableMachineCount":   "availableMachineCount is the number of machines managed by the node synchronizer which are available.",
+	"unavailableMachineCount": "unavailableMachineCount is the number of machines managed by the node synchronizer but are unavailable.",
+	"observedGeneration":      "observedGeneration is the last generation change that has been applied.",
+}
+
+func (NodeSynchronizerStatus) SwaggerDoc() map[string]string {
+	return map_NodeSynchronizerStatus
 }
 
 var map_PartialSelector = map[string]string{

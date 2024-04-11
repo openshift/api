@@ -998,6 +998,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.NodePlacement":                                                 schema_openshift_api_operator_v1_NodePlacement(ref),
 		"github.com/openshift/api/operator/v1.NodePortStrategy":                                              schema_openshift_api_operator_v1_NodePortStrategy(ref),
 		"github.com/openshift/api/operator/v1.NodeStatus":                                                    schema_openshift_api_operator_v1_NodeStatus(ref),
+		"github.com/openshift/api/operator/v1.NodeSynchronizerStatus":                                        schema_openshift_api_operator_v1_NodeSynchronizerStatus(ref),
 		"github.com/openshift/api/operator/v1.OAuthAPIServerStatus":                                          schema_openshift_api_operator_v1_OAuthAPIServerStatus(ref),
 		"github.com/openshift/api/operator/v1.OVNKubernetesConfig":                                           schema_openshift_api_operator_v1_OVNKubernetesConfig(ref),
 		"github.com/openshift/api/operator/v1.OpenShiftAPIServer":                                            schema_openshift_api_operator_v1_OpenShiftAPIServer(ref),
@@ -49732,12 +49733,34 @@ func schema_openshift_api_operator_v1_MachineConfigurationStatus(ref common.Refe
 							Ref:         ref("github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatus"),
 						},
 					},
+					"nodeSynchronizersStatus": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "nodeSynchronizersStatus is the status of the machines managed by the node synchronizers.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/operator/v1.NodeSynchronizerStatus"),
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatus", "github.com/openshift/api/operator/v1.NodeStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
+			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatus", "github.com/openshift/api/operator/v1.NodeStatus", "github.com/openshift/api/operator/v1.NodeSynchronizerStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
 	}
 }
 
@@ -51067,6 +51090,90 @@ func schema_openshift_api_operator_v1_NodeStatus(ref common.ReferenceCallback) c
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
+func schema_openshift_api_operator_v1_NodeSynchronizerStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the name of the node synchronizer. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"nodeSynchronizerType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "nodeSynchronizerType is the name of the node synchronizer type.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"nodeSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "nodeSelector specifies a label selector for Machines that match this synchronizer.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"),
+						},
+					},
+					"machineCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "machineCount is the number of machines that are managed by the node synchronizer.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"updatedMachineCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "updatedMachineCount is the number of machines that have been updated by the node synchronizer.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"readyMachineCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "readyMachineCount is the number of machines managed by the node synchronizer that are in a ready state.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"availableMachineCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "availableMachineCount is the number of machines managed by the node synchronizer which are available.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"unavailableMachineCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "unavailableMachineCount is the number of machines managed by the node synchronizer but are unavailable.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"observedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedGeneration is the last generation change that has been applied.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+				},
+				Required: []string{"name", "nodeSynchronizerType", "machineCount", "updatedMachineCount", "readyMachineCount", "availableMachineCount", "unavailableMachineCount"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"},
 	}
 }
 

@@ -1,0 +1,94 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "MachineConfiguration"
+crdName: machineconfigurations.operator.openshift.io
+featureGate: PinnedImages
+tests:
+  onCreate:
+    - name: Should be able to create a minimal MachineConfiguration
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec: {} # No spec is required for a MachineConfiguration
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+  onUpdate:
+    - name: MachineCount must be greater than or equal to updatedMachineCount
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec: {} # No spec is required for a MachineConfiguration
+        status:
+          nodeSynchronizersStatus:
+            - name: master-pool
+              nodeSynchronizerType: PinnedImageSets
+              nodeSelector:
+                matchLabels:
+                  machineconfiguration.openshift.io/role: "master"
+              machineCount: 3
+              updatedMachineCount: 3
+              readyMachineCount: 3
+              availableMachineCount: 3
+              unavailableMachineCount: 0
+              observedGeneration: 1
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          nodeSynchronizersStatus:
+            - name: master-pool
+              nodeSynchronizerType: PinnedImageSets
+              nodeSelector:
+                matchLabels:
+                  machineconfiguration.openshift.io/role: "master"
+              machineCount: 3
+              updatedMachineCount: 4
+              readyMachineCount: 3
+              availableMachineCount: 3
+              unavailableMachineCount: 0
+              observedGeneration: 0
+      expectedStatusError: "Invalid value: \"object\": machineCount must be greater than or equal to updatedMachineCount"
+    - name: availableMachineCount must be greater than or equal to readyMachineCount
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec: {} # No spec is required for a MachineConfiguration
+        status:
+          nodeSynchronizersStatus:
+            - name: worker-pool
+              nodeSynchronizerType: PinnedImageSets
+              nodeSelector:
+                matchLabels:
+                  machineconfiguration.openshift.io/role: "worker"
+              machineCount: 3
+              updatedMachineCount: 3
+              readyMachineCount: 3
+              availableMachineCount: 3
+              unavailableMachineCount: 0
+              observedGeneration: 0
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          nodeSynchronizersStatus:
+            - name: worker-pool
+              nodeSynchronizerType: PinnedImageSets
+              nodeSelector:
+                matchLabels:
+                  machineconfiguration.openshift.io/role: "worker"
+              machineCount: 3
+              updatedMachineCount: 3
+              readyMachineCount: 3
+              availableMachineCount: 2
+              unavailableMachineCount: 0
+              observedGeneration: 0
+      expectedStatusError: "Invalid value: \"object\": availableMachineCount must be greater than or equal to readyMachineCount"

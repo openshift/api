@@ -65,7 +65,70 @@ type MachineConfigurationStatus struct {
 	// +openshift:enable:FeatureGate=NodeDisruptionPolicy
 	// +optional
 	NodeDisruptionPolicyStatus NodeDisruptionPolicyStatus `json:"nodeDisruptionPolicyStatus"`
+
+	// nodeSynchronizersStatus is the status of the machines managed by the node synchronizers.
+	// +openshift:enable:FeatureGate=PinnedImages
+	// +listType=map
+	// +listMapKey=name
+	// +optional
+	NodeSynchronizersStatus []NodeSynchronizerStatus `json:"nodeSynchronizersStatus"`
 }
+
+// +kubebuilder:validation:XValidation:rule="self.machineCount >= self.updatedMachineCount", message="machineCount must be greater than or equal to updatedMachineCount"
+// +kubebuilder:validation:XValidation:rule="self.machineCount >= self.availableMachineCount", message="machineCount must be greater than or equal to availableMachineCount"
+// +kubebuilder:validation:XValidation:rule="self.machineCount >= self.unavailableMachineCount", message="machineCount must be greater than or equal to unavailableMachineCount"
+// +kubebuilder:validation:XValidation:rule="self.machineCount >= self.readyMachineCount", message="machineCount must be greater than or equal to readyMachineCount"
+// +kubebuilder:validation:XValidation:rule="self.availableMachineCount >= self.readyMachineCount", message="availableMachineCount must be greater than or equal to readyMachineCount"
+type NodeSynchronizerStatus struct {
+	// name is the name of the node synchronizer.
+	// Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123)
+	// It may consist of only alphanumeric characters, hyphens (-) and periods (.)
+	// and must be at most 253 characters in length.
+	// +kubebuilder:validation:MaxLength=253
+	// +kubebuilder:validation:Pattern=`^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9]))*$`
+	// +kubebuilder:validation:Required
+	Name string `json:"name"`
+	// nodeSynchronizerType is the name of the node synchronizer type.
+	// +kubebuilder:validation:Required
+	NodeSynchronizerType NodeSynchronizerType `json:"nodeSynchronizerType"`
+	// nodeSelector specifies a label selector for Machines that match this synchronizer.
+	// +optional
+	NodeSelector *metav1.LabelSelector `json:"nodeSelector,omitempty"`
+	// machineCount is the number of machines that are managed by the node synchronizer.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Minimum=0
+	MachineCount int64 `json:"machineCount"`
+	// updatedMachineCount is the number of machines that have been updated by the node synchronizer.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Minimum=0
+	UpdatedMachineCount int64 `json:"updatedMachineCount"`
+	// readyMachineCount is the number of machines managed by the node synchronizer that are in a ready state.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Minimum=0
+	ReadyMachineCount int64 `json:"readyMachineCount"`
+	// availableMachineCount is the number of machines managed by the node synchronizer which are available.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Minimum=0
+	AvailableMachineCount int64 `json:"availableMachineCount"`
+	// unavailableMachineCount is the number of machines managed by the node synchronizer but are unavailable.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Minimum=0
+	UnavailableMachineCount int64 `json:"unavailableMachineCount"`
+	// observedGeneration is the last generation change that has been applied.
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
+}
+
+// NodeSynchronizerType is a string enum used in a NodeSynchronizers object. They describe the type of node synchronizer.
+// +kubebuilder:validation:Enum:="PinnedImageSets"
+// +kubebuilder:validation:MaxLength=256
+type NodeSynchronizerType string
+
+const (
+	// PinnedImageSets represents a node synchronizer for pinned image sets.
+	PinnedImageSets NodeSynchronizerType = "PinnedImageSets"
+)
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 

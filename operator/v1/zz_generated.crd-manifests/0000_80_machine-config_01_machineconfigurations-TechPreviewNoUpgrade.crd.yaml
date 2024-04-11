@@ -1270,6 +1270,133 @@ spec:
                 x-kubernetes-list-map-keys:
                 - nodeName
                 x-kubernetes-list-type: map
+              nodeSynchronizersStatus:
+                description: nodeSynchronizersStatus is the status of the machines
+                  managed by the node synchronizers.
+                items:
+                  properties:
+                    availableMachineCount:
+                      description: availableMachineCount is the number of machines
+                        managed by the node synchronizer which are available.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    machineCount:
+                      description: machineCount is the number of machines that are
+                        managed by the node synchronizer.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    name:
+                      description: name is the name of the node synchronizer. Must
+                        be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123)
+                        It may consist of only alphanumeric characters, hyphens (-)
+                        and periods (.) and must be at most 253 characters in length.
+                      maxLength: 253
+                      pattern: ^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9]))*$
+                      type: string
+                    nodeSelector:
+                      description: nodeSelector specifies a label selector for Machines
+                        that match this synchronizer.
+                      properties:
+                        matchExpressions:
+                          description: matchExpressions is a list of label selector
+                            requirements. The requirements are ANDed.
+                          items:
+                            description: A label selector requirement is a selector
+                              that contains values, a key, and an operator that relates
+                              the key and values.
+                            properties:
+                              key:
+                                description: key is the label key that the selector
+                                  applies to.
+                                type: string
+                              operator:
+                                description: operator represents a key's relationship
+                                  to a set of values. Valid operators are In, NotIn,
+                                  Exists and DoesNotExist.
+                                type: string
+                              values:
+                                description: values is an array of string values.
+                                  If the operator is In or NotIn, the values array
+                                  must be non-empty. If the operator is Exists or
+                                  DoesNotExist, the values array must be empty. This
+                                  array is replaced during a strategic merge patch.
+                                items:
+                                  type: string
+                                type: array
+                            required:
+                            - key
+                            - operator
+                            type: object
+                          type: array
+                        matchLabels:
+                          additionalProperties:
+                            type: string
+                          description: matchLabels is a map of {key,value} pairs.
+                            A single {key,value} in the matchLabels map is equivalent
+                            to an element of matchExpressions, whose key field is
+                            "key", the operator is "In", and the values array contains
+                            only "value". The requirements are ANDed.
+                          type: object
+                      type: object
+                      x-kubernetes-map-type: atomic
+                    nodeSynchronizerType:
+                      description: nodeSynchronizerType is the name of the node synchronizer
+                        type.
+                      enum:
+                      - PinnedImageSets
+                      maxLength: 256
+                      type: string
+                    observedGeneration:
+                      description: observedGeneration is the last generation change
+                        that has been applied.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    readyMachineCount:
+                      description: readyMachineCount is the number of machines managed
+                        by the node synchronizer that are in a ready state.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    unavailableMachineCount:
+                      description: unavailableMachineCount is the number of machines
+                        managed by the node synchronizer but are unavailable.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    updatedMachineCount:
+                      description: updatedMachineCount is the number of machines that
+                        have been updated by the node synchronizer.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                  required:
+                  - availableMachineCount
+                  - machineCount
+                  - name
+                  - nodeSynchronizerType
+                  - readyMachineCount
+                  - unavailableMachineCount
+                  - updatedMachineCount
+                  type: object
+                  x-kubernetes-validations:
+                  - message: machineCount must be greater than or equal to updatedMachineCount
+                    rule: self.machineCount >= self.updatedMachineCount
+                  - message: machineCount must be greater than or equal to availableMachineCount
+                    rule: self.machineCount >= self.availableMachineCount
+                  - message: machineCount must be greater than or equal to unavailableMachineCount
+                    rule: self.machineCount >= self.unavailableMachineCount
+                  - message: machineCount must be greater than or equal to readyMachineCount
+                    rule: self.machineCount >= self.readyMachineCount
+                  - message: availableMachineCount must be greater than or equal to
+                      readyMachineCount
+                    rule: self.availableMachineCount >= self.readyMachineCount
+                type: array
+                x-kubernetes-list-map-keys:
+                - name
+                x-kubernetes-list-type: map
               observedGeneration:
                 description: observedGeneration is the last generation change you've
                   dealt with

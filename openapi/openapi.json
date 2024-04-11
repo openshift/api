@@ -29027,6 +29027,18 @@
           ],
           "x-kubernetes-list-type": "map"
         },
+        "nodeSynchronizersStatus": {
+          "description": "nodeSynchronizersStatus is the status of the machines managed by the node synchronizers.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeSynchronizerStatus"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
           "type": "integer",
@@ -29805,6 +29817,69 @@
           "description": "targetRevision is the generation of the deployment we're trying to apply",
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.NodeSynchronizerStatus": {
+      "type": "object",
+      "required": [
+        "name",
+        "nodeSynchronizerType",
+        "machineCount",
+        "updatedMachineCount",
+        "readyMachineCount",
+        "availableMachineCount",
+        "unavailableMachineCount"
+      ],
+      "properties": {
+        "availableMachineCount": {
+          "description": "availableMachineCount is the number of machines managed by the node synchronizer which are available.",
+          "type": "integer",
+          "format": "int64",
+          "default": 0
+        },
+        "machineCount": {
+          "description": "machineCount is the number of machines that are managed by the node synchronizer.",
+          "type": "integer",
+          "format": "int64",
+          "default": 0
+        },
+        "name": {
+          "description": "name is the name of the node synchronizer. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
+          "type": "string",
+          "default": ""
+        },
+        "nodeSelector": {
+          "description": "nodeSelector specifies a label selector for Machines that match this synchronizer.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector"
+        },
+        "nodeSynchronizerType": {
+          "description": "nodeSynchronizerType is the name of the node synchronizer type.",
+          "type": "string",
+          "default": ""
+        },
+        "observedGeneration": {
+          "description": "observedGeneration is the last generation change that has been applied.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "readyMachineCount": {
+          "description": "readyMachineCount is the number of machines managed by the node synchronizer that are in a ready state.",
+          "type": "integer",
+          "format": "int64",
+          "default": 0
+        },
+        "unavailableMachineCount": {
+          "description": "unavailableMachineCount is the number of machines managed by the node synchronizer but are unavailable.",
+          "type": "integer",
+          "format": "int64",
+          "default": 0
+        },
+        "updatedMachineCount": {
+          "description": "updatedMachineCount is the number of machines that have been updated by the node synchronizer.",
+          "type": "integer",
+          "format": "int64",
+          "default": 0
         }
       }
     },

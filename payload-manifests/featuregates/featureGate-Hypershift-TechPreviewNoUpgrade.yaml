@@ -192,6 +192,9 @@
                         "name": "VSphereControlPlaneMachineSet"
                     },
                     {
+                        "name": "VSphereDriverConfiguration"
+                    },
+                    {
                         "name": "VSphereStaticIPs"
                     },
                     {

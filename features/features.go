@@ -426,13 +426,6 @@ var (
 						enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 						mustRegister()
 
-	FeatureGateInsightsConfig = newFeatureGate("InsightsConfig").
-					reportProblemsToJiraComponent("insights").
-					contactPerson("tremes").
-					productScope(ocpSpecific).
-					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-					mustRegister()
-
 	FeatureGateImagePolicy = newFeatureGate("ImagePolicy").
 				reportProblemsToJiraComponent("node").
 				contactPerson("rphillips").

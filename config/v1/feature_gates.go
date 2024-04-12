@@ -554,13 +554,6 @@ var (
 						enableIn(TechPreviewNoUpgrade).
 						mustRegister()
 
-	FeatureGateAlertingRules = newFeatureGate("AlertingRules").
-					reportProblemsToJiraComponent("Monitoring").
-					contactPerson("simon").
-					productScope(ocpSpecific).
-					enableIn(TechPreviewNoUpgrade).
-					mustRegister()
-
 	FeatureGateBareMetalLoadBalancer = newFeatureGate("BareMetalLoadBalancer").
 						reportProblemsToJiraComponent("metal").
 						contactPerson("EmilienM").

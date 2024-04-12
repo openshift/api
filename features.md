@@ -1,6 +1,5 @@
 | FeatureGate | Default on Hypershift | Default on SelfManagedHA | TechPreviewNoUpgrade on Hypershift | TechPreviewNoUpgrade on SelfManagedHA  |
 | ------ | --- | --- | --- | ---  |
-| AlertingRules| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | AutomatedEtcdBackup| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | CSIDriverSharedResource| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | DNSNameResolver| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |

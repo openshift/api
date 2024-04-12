@@ -30,9 +30,6 @@
                         "name": "AdminNetworkPolicy"
                     },
                     {
-                        "name": "AlertingRules"
-                    },
-                    {
                         "name": "AlibabaPlatform"
                     },
                     {

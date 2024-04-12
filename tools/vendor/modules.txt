@@ -357,9 +357,15 @@ github.com/openshift/crd-schema-checker/pkg/resourceread
 github.com/pjbgf/sha1cd
 github.com/pjbgf/sha1cd/cgo
 github.com/pjbgf/sha1cd/ubc
+# github.com/russross/blackfriday v2.0.0+incompatible
+## explicit
+github.com/russross/blackfriday
 # github.com/sergi/go-diff v1.1.0
 ## explicit; go 1.12
 github.com/sergi/go-diff/diffmatchpatch
+# github.com/shurcooL/sanitized_anchor_name v1.0.0
+## explicit
+github.com/shurcooL/sanitized_anchor_name
 # github.com/skeema/knownhosts v1.1.0
 ## explicit; go 1.17
 github.com/skeema/knownhosts

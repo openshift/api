@@ -245,6 +245,13 @@ var (
 					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
 
+	FeatureGateBackendQuotaGiB = newFeatureGate("EtcdBackendQuota").
+					reportProblemsToJiraComponent("etcd").
+					contactPerson("hasbro17").
+					productScope(ocpSpecific).
+					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+					mustRegister()
+
 	FeatureGateAutomatedEtcdBackup = newFeatureGate("AutomatedEtcdBackup").
 					reportProblemsToJiraComponent("etcd").
 					contactPerson("hasbro17").

@@ -3,7 +3,7 @@
     "kind": "FeatureGate",
     "metadata": {
         "annotations": {
-            "include.release.openshift.io/ibm-cloud-managed": "false-except-for-the-config-operator"
+            "include.release.openshift.io/hypershift": "false-except-for-the-config-operator"
         },
         "creationTimestamp": null,
         "name": "cluster"

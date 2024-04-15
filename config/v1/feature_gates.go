@@ -20,7 +20,8 @@ type FeatureGateDescription struct {
 type ClusterProfileName string
 
 var (
-	Hypershift         = ClusterProfileName("include.release.openshift.io/ibm-cloud-managed")
+	Hypershift         = ClusterProfileName("include.release.openshift.io/hypershift")
+	IbmCloudManaged    = ClusterProfileName("include.release.openshift.io/ibm-cloud-managed")
 	SelfManaged        = ClusterProfileName("include.release.openshift.io/self-managed-high-availability")
 	AllClusterProfiles = []ClusterProfileName{Hypershift, SelfManaged}
 )

@@ -140,6 +140,9 @@
                         "name": "UpgradeStatus"
                     },
                     {
+                        "name": "VSphereDriverConfiguration"
+                    },
+                    {
                         "name": "ValidatingAdmissionPolicy"
                     },
                     {

@@ -274,7 +274,11 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 			}
 
 			// check to see if all the resultingCRDs are the same
-			crdsToRender := getCRDsToRender(resultingCRDs, crdFilenamePattern, generatedOutputPath, g.allKnownFeatureSets)
+			crdsToRender, err := getCRDsToRender(resultingCRDs, crdFilenamePattern, generatedOutputPath, g.allKnownFeatureSets)
+			if err != nil {
+				errs = append(errs, fmt.Errorf("crd %q failed to compute CRDs to render: %w", crdName, err))
+				continue
+			}
 			allCRDsToRender = append(allCRDsToRender, crdsToRender...)
 		}
 
@@ -372,7 +376,7 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 	return kerrors.NewAggregate(errs)
 }
 
-func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, outputPath string, allKnownFeatureSets sets.String) []crdForFeatureSet {
+func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, outputPath string, allKnownFeatureSets sets.String) ([]crdForFeatureSet, error) {
 	allCRDsWithData := filterCRDs(resultingCRDs, &HasData{})
 	sameSchemaInAllCRDs := areCRDsTheSame(allCRDsWithData)
 	hasAllFeatureSets := featureSetsFromCRDs(allCRDsWithData).Equal(allKnownFeatureSets)
@@ -396,7 +400,7 @@ func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, outpu
 				crd:        crdToWrite,
 				outputFile: crdFullPath,
 			},
-		}
+		}, nil
 	}
 
 	// so they aren't all the same. Check first to see if they're the same for FeatureSet across all ClusterProfiles
@@ -450,7 +454,7 @@ func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, outpu
 				outputFile: crdFullPath,
 			})
 		}
-		return crdsToWrite
+		return crdsToWrite, nil
 	}
 
 	eachClusterProfiletheSameForAllFeatureSets := true
@@ -473,7 +477,7 @@ func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, outpu
 
 		clusterProfileShortName, err := utils.ClusterProfileToShortName(clusterProfile)
 		if err != nil {
-			panic(fmt.Sprintf("unrecognized clusterprofile name %q: %w", clusterProfile, err))
+			return nil, fmt.Errorf("unrecognized clusterprofile name %q: %w", clusterProfile, err)
 		}
 		crdFilename := strings.ReplaceAll(crdFilenamePattern, "MARKERS", fmt.Sprintf("-%s", clusterProfileShortName))
 		crdFullPath := filepath.Join(outputPath, crdFilename)
@@ -491,7 +495,7 @@ func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, outpu
 	}
 
 	if eachClusterProfiletheSameForAllFeatureSets {
-		return crdsToWrite
+		return crdsToWrite, nil
 	}
 
 	// at this point, write each clusterProfile that IS unique, then write the remainder
@@ -502,7 +506,7 @@ func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, outpu
 		}
 		clusterProfileShortName, err := utils.ClusterProfileToShortName(curr.clusterProfile)
 		if err != nil {
-			panic(fmt.Sprintf("unrecognized clusterprofile name %q: %w", curr.clusterProfile, err))
+			return nil, fmt.Errorf("unrecognized clusterprofile name %q: %w", curr.clusterProfile, err)
 		}
 		crdFilename := strings.ReplaceAll(crdFilenamePattern, "MARKERS", fmt.Sprintf("-%s-%s", clusterProfileShortName, curr.featureSet))
 		crdFullPath := filepath.Join(outputPath, crdFilename)
@@ -519,7 +523,7 @@ func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, outpu
 			outputFile:     crdFullPath,
 		})
 	}
-	return crdsToWrite
+	return crdsToWrite, nil
 }
 
 func clusterProfilesFromCRDs(resultingCRDs []crdForFeatureSet) sets.String {

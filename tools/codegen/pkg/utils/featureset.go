@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"strings"
 )
 
@@ -11,8 +12,12 @@ var (
 	}
 )
 
-func ClusterProfileToShortName(annotation string) string {
-	return clusterProfileToShortName[annotation]
+func ClusterProfileToShortName(annotation string) (string, error) {
+	ret, ok := clusterProfileToShortName[annotation]
+	if !ok {
+		return "FAIL", fmt.Errorf("failed on %v", annotation)
+	}
+	return ret, nil
 }
 
 func HasClusterProfilePreference(annotations map[string]string) bool {

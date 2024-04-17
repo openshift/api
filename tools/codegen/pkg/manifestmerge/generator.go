@@ -36,7 +36,6 @@ var (
 		"include.release.openshift.io/ibm-cloud-managed",
 		"include.release.openshift.io/self-managed-high-availability",
 	}
-	allFeatureSets = []string{"Default", "TechPreviewNoUpgrade", "CustomNoUpgrade"}
 )
 
 // Options contains the configuration required for the schemapatch generator.
@@ -61,6 +60,7 @@ type generator struct {
 	disabled               bool
 	verify                 bool
 	payloadFeatureGatePath string
+	allKnownFeatureSets    sets.String
 }
 
 // NewGenerator builds a new schemapatch generator.
@@ -70,10 +70,16 @@ func NewGenerator(opts Options) generation.Generator {
 		payloadFeatureGatePath = opts.PayloadFeatureGatePath
 	}
 
+	allKnownFeatureSets, err := AllKnownFeatureSets(payloadFeatureGatePath)
+	if err != nil {
+		panic(err)
+	}
+
 	return &generator{
 		disabled:               opts.Disabled,
 		verify:                 opts.Verify,
 		payloadFeatureGatePath: payloadFeatureGatePath,
+		allKnownFeatureSets:    allKnownFeatureSets,
 	}
 }
 
@@ -84,10 +90,12 @@ func (g *generator) ApplyConfig(config *generation.Config) generation.Generator 
 		return g
 	}
 
-	return NewGenerator(Options{
-		Disabled: config.ManifestMerge.Disabled,
-		Verify:   g.verify,
-	})
+	return NewGenerator(
+		Options{
+			Disabled: config.ManifestMerge.Disabled,
+			Verify:   g.verify,
+		},
+	)
 }
 
 // Name returns the name of the generator.
@@ -171,7 +179,7 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 			resultingCRDs := []crdForFeatureSet{}
 			crdFilenamePattern := ""
 			for _, clusterProfile := range allClusterProfiles {
-				for _, featureSetName := range allFeatureSets {
+				for _, featureSetName := range g.allKnownFeatureSets.List() {
 					partialManifestFilter, err := FilterForFeatureSet(g.payloadFeatureGatePath, clusterProfile, featureSetName)
 					if err != nil {
 						errs = append(errs, err)
@@ -266,7 +274,11 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 			}
 
 			// check to see if all the resultingCRDs are the same
-			crdsToRender := getCRDsToRender(resultingCRDs, crdFilenamePattern, generatedOutputPath)
+			crdsToRender, err := getCRDsToRender(resultingCRDs, crdFilenamePattern, generatedOutputPath, g.allKnownFeatureSets)
+			if err != nil {
+				errs = append(errs, fmt.Errorf("crd %q failed to compute CRDs to render: %w", crdName, err))
+				continue
+			}
 			allCRDsToRender = append(allCRDsToRender, crdsToRender...)
 		}
 
@@ -364,10 +376,10 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 	return kerrors.NewAggregate(errs)
 }
 
-func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, outputPath string) []crdForFeatureSet {
+func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, outputPath string, allKnownFeatureSets sets.String) ([]crdForFeatureSet, error) {
 	allCRDsWithData := filterCRDs(resultingCRDs, &HasData{})
 	sameSchemaInAllCRDs := areCRDsTheSame(allCRDsWithData)
-	hasAllFeatureSets := featureSetsFromCRDs(allCRDsWithData).Equal(sets.NewString(allFeatureSets...))
+	hasAllFeatureSets := featureSetsFromCRDs(allCRDsWithData).Equal(allKnownFeatureSets)
 	if sameSchemaInAllCRDs && hasAllFeatureSets {
 		crdFilename := strings.ReplaceAll(crdFilenamePattern, "MARKERS", "")
 		crdFullPath := filepath.Join(outputPath, crdFilename)
@@ -388,7 +400,7 @@ func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, outpu
 				crd:        crdToWrite,
 				outputFile: crdFullPath,
 			},
-		}
+		}, nil
 	}
 
 	// so they aren't all the same. Check first to see if they're the same for FeatureSet across all ClusterProfiles
@@ -397,7 +409,7 @@ func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, outpu
 	// if they only vary by clusterprofile, then clusterprofile files only
 	// if they vary by both, slice by clusterprofile first, then by featureset
 	eachFeatureSetTheSameForAllClusterProfiles := true
-	for _, featureSet := range allFeatureSets {
+	for _, featureSet := range allKnownFeatureSets.List() {
 		filter := &AndCRDFilter{
 			filters: []CRDFilter{
 				&HasData{},
@@ -412,7 +424,7 @@ func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, outpu
 	}
 	if eachFeatureSetTheSameForAllClusterProfiles {
 		crdsToWrite := []crdForFeatureSet{}
-		for _, featureSet := range allFeatureSets {
+		for _, featureSet := range allKnownFeatureSets.List() {
 			filter := &AndCRDFilter{
 				filters: []CRDFilter{
 					&HasData{},
@@ -442,7 +454,7 @@ func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, outpu
 				outputFile: crdFullPath,
 			})
 		}
-		return crdsToWrite
+		return crdsToWrite, nil
 	}
 
 	eachClusterProfiletheSameForAllFeatureSets := true
@@ -463,7 +475,11 @@ func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, outpu
 			continue
 		}
 
-		crdFilename := strings.ReplaceAll(crdFilenamePattern, "MARKERS", fmt.Sprintf("-%s", utils.ClusterProfileToShortName(clusterProfile)))
+		clusterProfileShortName, err := utils.ClusterProfileToShortName(clusterProfile)
+		if err != nil {
+			return nil, fmt.Errorf("unrecognized clusterprofile name %q: %w", clusterProfile, err)
+		}
+		crdFilename := strings.ReplaceAll(crdFilenamePattern, "MARKERS", fmt.Sprintf("-%s", clusterProfileShortName))
 		crdFullPath := filepath.Join(outputPath, crdFilename)
 		crdToWrite := filteredCRDs[0].crd.DeepCopy()
 
@@ -479,7 +495,7 @@ func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, outpu
 	}
 
 	if eachClusterProfiletheSameForAllFeatureSets {
-		return crdsToWrite
+		return crdsToWrite, nil
 	}
 
 	// at this point, write each clusterProfile that IS unique, then write the remainder
@@ -488,7 +504,11 @@ func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, outpu
 		if curr.noData {
 			continue
 		}
-		crdFilename := strings.ReplaceAll(crdFilenamePattern, "MARKERS", fmt.Sprintf("-%s-%s", utils.ClusterProfileToShortName(curr.clusterProfile), curr.featureSet))
+		clusterProfileShortName, err := utils.ClusterProfileToShortName(curr.clusterProfile)
+		if err != nil {
+			return nil, fmt.Errorf("unrecognized clusterprofile name %q: %w", curr.clusterProfile, err)
+		}
+		crdFilename := strings.ReplaceAll(crdFilenamePattern, "MARKERS", fmt.Sprintf("-%s-%s", clusterProfileShortName, curr.featureSet))
 		crdFullPath := filepath.Join(outputPath, crdFilename)
 
 		crdToWrite := notHandled[i].crd.DeepCopy()
@@ -503,7 +523,7 @@ func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, outpu
 			outputFile:     crdFullPath,
 		})
 	}
-	return crdsToWrite
+	return crdsToWrite, nil
 }
 
 func clusterProfilesFromCRDs(resultingCRDs []crdForFeatureSet) sets.String {

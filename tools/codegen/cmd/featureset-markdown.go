@@ -157,6 +157,9 @@ func getOrderedFeatureGates(info map[string]map[string]*featureGateInfo) []strin
 			for _, featureGate := range byFeature.enabled.List() {
 				counts[featureGate] = counts[featureGate] + 1
 			}
+			for _, featureGate := range byFeature.disabled.List() {
+				counts[featureGate] = counts[featureGate] + 0
+			}
 		}
 	}
 
@@ -248,7 +251,12 @@ func readFeatureGate(ctx context.Context, featureSetManifestDir string) (sets.St
 		if len(clusterProfiles) != 1 {
 			return nil, nil, nil, nil, fmt.Errorf("expected exactly one clusterProfile from %q: %v", featureGateFilename, clusterProfiles.List())
 		}
-		currFeatureGateInfo.clusterProfile = utils.ClusterProfileToShortName(clusterProfiles.List()[0])
+
+		clusterProfileShortName, err := utils.ClusterProfileToShortName(clusterProfiles.List()[0])
+		if err != nil {
+			return nil, nil, nil, nil, fmt.Errorf("unrecognized clusterprofile name %q: %w", clusterProfiles.List()[0], err)
+		}
+		currFeatureGateInfo.clusterProfile = clusterProfileShortName
 		allClusterProfiles.Insert(currFeatureGateInfo.clusterProfile)
 
 		currFeatureGateInfo.featureSet, _, _ = unstructured.NestedString(uncastFeatureGate.Object, "spec", "featureSet")

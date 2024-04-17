@@ -34,6 +34,7 @@ var (
 
 	allClusterProfiles = []string{
 		"include.release.openshift.io/ibm-cloud-managed",
+		"include.release.openshift.io/hypershift",
 		"include.release.openshift.io/self-managed-high-availability",
 	}
 )

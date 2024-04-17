@@ -28,6 +28,7 @@ import (
 // +openshift:file-pattern=operatorOrdering=001
 // +kubebuilder:metadata:annotations=include.release.openshift.io/self-managed-high-availability=true
 // +kubebuilder:metadata:annotations=include.release.openshift.io/ibm-cloud-managed=true
+// +kubebuilder:metadata:annotations=include.release.openshift.io/hypershift=true
 // +kubebuilder:printcolumn:name="Condition",type=string,JSONPath=".status.conditions[*].type"
 // +kubebuilder:printcolumn:name="Status",type=string,JSONPath=".status.conditions[*].status"
 type EgressRouter struct {

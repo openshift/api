@@ -3,6 +3,20 @@
 set -o nounset
 set -o pipefail
 
+if ! command -v yq > /dev/null; then
+  echo "Can't find 'yq' tool in PATH, please install from https://github.com/mikefarah/yq"
+  exit 1
+fi
+
+if [[ "$#" -lt 2 ]]; then
+  echo "${0} <folder> <version>: generate minimal tests"
+  echo
+  echo "  Examples:"
+  echo "    $0 operator/v1 v1   # Generates minimal tests for operator/v1 folder, and version v1 specifically."
+  echo
+  exit 2
+fi
+
 FOLDER=$1
 VERSION=$2
 

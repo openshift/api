@@ -34,7 +34,7 @@ type SippyTestInfo struct {
 	PreviousFlakes            int         `json:"previous_flakes"`
 	PreviousPassPercentage    float64     `json:"previous_pass_percentage"`
 	PreviousFailurePercentage float64     `json:"previous_failure_percentage"`
-	PreviousFlakePercentage   int         `json:"previous_flake_percentage"`
+	PreviousFlakePercentage   float64     `json:"previous_flake_percentage"`
 	PreviousWorkingPercentage float64     `json:"previous_working_percentage"`
 	PreviousRuns              int         `json:"previous_runs"`
 	NetFailureImprovement     float64     `json:"net_failure_improvement"`

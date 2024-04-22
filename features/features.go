@@ -508,4 +508,11 @@ var (
 						contactPerson("rvanderp3").
 						productScope(ocpSpecific).
 						mustRegister()
+
+	FeatureGateChunkSizeMiB = newFeatureGate("ChunkSizeMiB").
+				reportProblemsToJiraComponent("Image Registry").
+				contactPerson("flavianmissi").
+				productScope(ocpSpecific).
+				enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+				mustRegister()
 )

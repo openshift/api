@@ -6201,38 +6201,6 @@
         }
       }
     },
-    "com.github.openshift.api.config.v1.FeatureGateDescription": {
-      "description": "FeatureGateDescription is a golang-only interface used to contains details for a feature gate.",
-      "type": "object",
-      "required": [
-        "FeatureGateAttributes",
-        "OwningJiraComponent",
-        "ResponsiblePerson",
-        "OwningProduct"
-      ],
-      "properties": {
-        "FeatureGateAttributes": {
-          "description": "FeatureGateAttributes is the information that appears in the API",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1.FeatureGateAttributes"
-        },
-        "OwningJiraComponent": {
-          "description": "OwningJiraComponent is the jira component that owns most of the impl and first assignment for the bug. This is the team that owns the feature long term.",
-          "type": "string",
-          "default": ""
-        },
-        "OwningProduct": {
-          "description": "OwningProduct is the product that owns the lifecycle of the gate.",
-          "type": "string",
-          "default": ""
-        },
-        "ResponsiblePerson": {
-          "description": "ResponsiblePerson is the person who is on the hook for first contact.  This is often, but not always, a team lead. It is someone who can make the promise on the behalf of the team.",
-          "type": "string",
-          "default": ""
-        }
-      }
-    },
     "com.github.openshift.api.config.v1.FeatureGateDetails": {
       "type": "object",
       "required": [
@@ -6259,29 +6227,6 @@
           "description": "version matches the version provided by the ClusterVersion and in the ClusterOperator.Status.Versions field.",
           "type": "string",
           "default": ""
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1.FeatureGateEnabledDisabled": {
-      "type": "object",
-      "required": [
-        "Enabled",
-        "Disabled"
-      ],
-      "properties": {
-        "Disabled": {
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/com.github.openshift.api.config.v1.FeatureGateDescription"
-          }
-        },
-        "Enabled": {
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/com.github.openshift.api.config.v1.FeatureGateDescription"
-          }
         }
       }
     },
@@ -10845,44 +10790,6 @@
           "description": "kubeConfig references a secret that contains kube config file data which describes how to access the remote webhook service. The namespace for the referenced secret is openshift-config.\n\nFor further details, see:\n\nhttps://kubernetes.io/docs/reference/access-authn-authz/authentication/#webhook-token-authentication\n\nThe key \"kubeConfig\" is used to locate the data. If the secret or expected key is not found, the webhook is not honored. If the specified kube config data is not valid, the webhook is not honored.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.SecretNameReference"
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1.featureGateBuilder": {
-      "type": "object",
-      "required": [
-        "name",
-        "owningJiraComponent",
-        "responsiblePerson",
-        "owningProduct",
-        "statusByClusterProfileByFeatureSet"
-      ],
-      "properties": {
-        "name": {
-          "type": "string",
-          "default": ""
-        },
-        "owningJiraComponent": {
-          "type": "string",
-          "default": ""
-        },
-        "owningProduct": {
-          "type": "string",
-          "default": ""
-        },
-        "responsiblePerson": {
-          "type": "string",
-          "default": ""
-        },
-        "statusByClusterProfileByFeatureSet": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "boolean",
-              "default": false
-            }
-          }
         }
       }
     },

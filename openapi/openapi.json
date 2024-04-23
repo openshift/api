@@ -4669,7 +4669,7 @@
             "type": "string",
             "default": ""
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-type": "set"
         },
         "ingressIPs": {
           "description": "ingressIPs are the external IPs which route to the default ingress controller. The IPs are suitable targets of a wildcard DNS record used to resolve default route host names. In dual stack clusters this list contains two IP addresses, one from IPv4 family and one from IPv6. In single stack clusters a single IP address is expected. When omitted, values from the status.ingressIPs will be used. Once set, the list cannot be completely removed (but its second entry can).",
@@ -4678,7 +4678,7 @@
             "type": "string",
             "default": ""
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-type": "set"
         },
         "machineNetworks": {
           "description": "machineNetworks are IP networks used to connect all the OpenShift cluster nodes. Each network is provided in the CIDR format and should be IPv4 or IPv6, for example \"10.0.0.0/8\" or \"fd00::/8\".",
@@ -4687,7 +4687,7 @@
             "type": "string",
             "default": ""
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-type": "set"
         }
       }
     },
@@ -4710,7 +4710,7 @@
             "type": "string",
             "default": ""
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-type": "set"
         },
         "ingressIP": {
           "description": "ingressIP is an external IP which routes to the default ingress controller. The IP is a suitable target of a wildcard DNS record used to resolve default route host names.\n\nDeprecated: Use IngressIPs instead.",
@@ -4723,7 +4723,7 @@
             "type": "string",
             "default": ""
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-type": "set"
         },
         "loadBalancer": {
           "description": "loadBalancer defines how the load balancer used by the cluster is configured.",
@@ -4739,7 +4739,7 @@
             "type": "string",
             "default": ""
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-type": "set"
         },
         "nodeDNSIP": {
           "description": "nodeDNSIP is the IP address for the internal DNS used by the nodes. Unlike the one managed by the DNS operator, `NodeDNSIP` provides name resolution for the nodes themselves. There is no DNS-as-a-service for BareMetal deployments. In order to minimize necessary changes to the datacenter DNS, a DNS service is hosted as a static pod to serve those hostnames to the nodes in the cluster.",
@@ -6204,6 +6204,38 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.FeatureGateDescription": {
+      "description": "FeatureGateDescription is a golang-only interface used to contains details for a feature gate.",
+      "type": "object",
+      "required": [
+        "FeatureGateAttributes",
+        "OwningJiraComponent",
+        "ResponsiblePerson",
+        "OwningProduct"
+      ],
+      "properties": {
+        "FeatureGateAttributes": {
+          "description": "FeatureGateAttributes is the information that appears in the API",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.FeatureGateAttributes"
+        },
+        "OwningJiraComponent": {
+          "description": "OwningJiraComponent is the jira component that owns most of the impl and first assignment for the bug. This is the team that owns the feature long term.",
+          "type": "string",
+          "default": ""
+        },
+        "OwningProduct": {
+          "description": "OwningProduct is the product that owns the lifecycle of the gate.",
+          "type": "string",
+          "default": ""
+        },
+        "ResponsiblePerson": {
+          "description": "ResponsiblePerson is the person who is on the hook for first contact.  This is often, but not always, a team lead. It is someone who can make the promise on the behalf of the team.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.FeatureGateDetails": {
       "type": "object",
       "required": [
@@ -6230,6 +6262,29 @@
           "description": "version matches the version provided by the ClusterVersion and in the ClusterOperator.Status.Versions field.",
           "type": "string",
           "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.FeatureGateEnabledDisabled": {
+      "type": "object",
+      "required": [
+        "Enabled",
+        "Disabled"
+      ],
+      "properties": {
+        "Disabled": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.FeatureGateDescription"
+          }
+        },
+        "Enabled": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.FeatureGateDescription"
+          }
         }
       }
     },
@@ -8915,7 +8970,7 @@
             "type": "string",
             "default": ""
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-type": "set"
         },
         "ingressIPs": {
           "description": "ingressIPs are the external IPs which route to the default ingress controller. The IPs are suitable targets of a wildcard DNS record used to resolve default route host names. In dual stack clusters this list contains two IP addresses, one from IPv4 family and one from IPv6. In single stack clusters a single IP address is expected. When omitted, values from the status.ingressIPs will be used. Once set, the list cannot be completely removed (but its second entry can).",
@@ -8924,7 +8979,7 @@
             "type": "string",
             "default": ""
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-type": "set"
         },
         "machineNetworks": {
           "description": "machineNetworks are IP networks used to connect all the OpenShift cluster nodes. Each network is provided in the CIDR format and should be IPv4 or IPv6, for example \"10.0.0.0/8\" or \"fd00::/8\".",
@@ -8933,7 +8988,7 @@
             "type": "string",
             "default": ""
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-type": "set"
         }
       }
     },
@@ -8956,7 +9011,7 @@
             "type": "string",
             "default": ""
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-type": "set"
         },
         "cloudName": {
           "description": "cloudName is the name of the desired OpenStack cloud in the client configuration file (`clouds.yaml`).",
@@ -8973,7 +9028,7 @@
             "type": "string",
             "default": ""
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-type": "set"
         },
         "loadBalancer": {
           "description": "loadBalancer defines how the load balancer used by the cluster is configured.",
@@ -8989,7 +9044,7 @@
             "type": "string",
             "default": ""
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-type": "set"
         },
         "nodeDNSIP": {
           "description": "nodeDNSIP is the IP address for the internal DNS used by the nodes. Unlike the one managed by the DNS operator, `NodeDNSIP` provides name resolution for the nodes themselves. There is no DNS-as-a-service for OpenStack deployments. In order to minimize necessary changes to the datacenter DNS, a DNS service is hosted as a static pod to serve those hostnames to the nodes in the cluster.",
@@ -10605,7 +10660,7 @@
             "type": "string",
             "default": ""
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-type": "set"
         },
         "failureDomains": {
           "description": "failureDomains contains the definition of region, zone and the vCenter topology. If this is omitted failure domains (regions and zones) will not be used.",
@@ -10626,7 +10681,7 @@
             "type": "string",
             "default": ""
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-type": "set"
         },
         "machineNetworks": {
           "description": "machineNetworks are IP networks used to connect all the OpenShift cluster nodes. Each network is provided in the CIDR format and should be IPv4 or IPv6, for example \"10.0.0.0/8\" or \"fd00::/8\".",
@@ -10635,7 +10690,7 @@
             "type": "string",
             "default": ""
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-type": "set"
         },
         "nodeNetworking": {
           "description": "nodeNetworking contains the definition of internal and external network constraints for assigning the node's networking. If this field is omitted, networking defaults to the legacy address selection behavior which is to only support a single address and return the first one found.",
@@ -10672,7 +10727,7 @@
             "type": "string",
             "default": ""
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-type": "set"
         },
         "ingressIP": {
           "description": "ingressIP is an external IP which routes to the default ingress controller. The IP is a suitable target of a wildcard DNS record used to resolve default route host names.\n\nDeprecated: Use IngressIPs instead.",
@@ -10685,7 +10740,7 @@
             "type": "string",
             "default": ""
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-type": "set"
         },
         "loadBalancer": {
           "description": "loadBalancer defines how the load balancer used by the cluster is configured.",
@@ -10701,7 +10756,7 @@
             "type": "string",
             "default": ""
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-type": "set"
         },
         "nodeDNSIP": {
           "description": "nodeDNSIP is the IP address for the internal DNS used by the nodes. Unlike the one managed by the DNS operator, `NodeDNSIP` provides name resolution for the nodes themselves. There is no DNS-as-a-service for vSphere deployments. In order to minimize necessary changes to the datacenter DNS, a DNS service is hosted as a static pod to serve those hostnames to the nodes in the cluster.",
@@ -10797,6 +10852,44 @@
           "description": "kubeConfig references a secret that contains kube config file data which describes how to access the remote webhook service. The namespace for the referenced secret is openshift-config.\n\nFor further details, see:\n\nhttps://kubernetes.io/docs/reference/access-authn-authz/authentication/#webhook-token-authentication\n\nThe key \"kubeConfig\" is used to locate the data. If the secret or expected key is not found, the webhook is not honored. If the specified kube config data is not valid, the webhook is not honored.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.SecretNameReference"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.featureGateBuilder": {
+      "type": "object",
+      "required": [
+        "name",
+        "owningJiraComponent",
+        "responsiblePerson",
+        "owningProduct",
+        "statusByClusterProfileByFeatureSet"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "default": ""
+        },
+        "owningJiraComponent": {
+          "type": "string",
+          "default": ""
+        },
+        "owningProduct": {
+          "type": "string",
+          "default": ""
+        },
+        "responsiblePerson": {
+          "type": "string",
+          "default": ""
+        },
+        "statusByClusterProfileByFeatureSet": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "boolean",
+              "default": false
+            }
+          }
         }
       }
     },
@@ -20488,7 +20581,7 @@
           "type": "string"
         },
         "capacityReservationGroupID": {
-          "description": "capacityReservationGroupID specifies the capacity reservation group resource id that should be used for allocating the virtual machine. The field size should be greater than 0 and the field input must start with '/'. The input for capacityReservationGroupID must be similar to '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/capacityReservationGroups/{capacityReservationGroupName}'. The keys which are used should be among 'subscriptions', 'providers' and 'resourcegroups' followed by valid ID or names respectively. It is optional but may not be changed once set.",
+          "description": "CapacityReservationGroupID specifies the capacity reservation group resource id that should be used for allocating the virtual machine. It is optional but may not be changed once set.",
           "type": "string"
         },
         "credentialsSecret": {
@@ -29243,30 +29336,71 @@
     },
     "com.github.openshift.api.operator.v1.MachineConfigurationStatus": {
       "type": "object",
+      "required": [
+        "readyReplicas"
+      ],
       "properties": {
         "conditions": {
           "description": "conditions is a list of conditions and their status",
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
           },
           "x-kubernetes-list-map-keys": [
             "type"
           ],
-          "x-kubernetes-list-type": "map",
-          "x-kubernetes-patch-merge-key": "type",
-          "x-kubernetes-patch-strategy": "merge"
+          "x-kubernetes-list-type": "map"
+        },
+        "generations": {
+          "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "latestAvailableRevision": {
+          "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
+          "type": "integer",
+          "format": "int32"
+        },
+        "latestAvailableRevisionReason": {
+          "description": "latestAvailableRevisionReason describe the detailed reason for the most recent deployment",
+          "type": "string"
         },
         "nodeDisruptionPolicyStatus": {
           "description": "nodeDisruptionPolicyStatus status reflects what the latest cluster-validated policies are, and will be used by the Machine Config Daemon during future node updates.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeDisruptionPolicyStatus"
         },
+        "nodeStatuses": {
+          "description": "nodeStatuses track the deployment values and errors across individual nodes",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeStatus"
+          },
+          "x-kubernetes-list-map-keys": [
+            "nodeName"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
           "type": "integer",
           "format": "int64"
+        },
+        "readyReplicas": {
+          "description": "readyReplicas indicates how many replicas are ready and at the desired state",
+          "type": "integer",
+          "format": "int32",
+          "default": 0
+        },
+        "version": {
+          "description": "version is the level this availability applies to",
+          "type": "string"
         }
       }
     },
@@ -29761,7 +29895,7 @@
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.RestartService"
         },
         "type": {
-          "description": "type represents the commands that will be carried out if this NodeDisruptionPolicySpecActionType is executed Valid values are Reboot, Drain, Reload, Restart, DaemonReload and None. reload/restart requires a corresponding service target specified in the reload/restart field. Other values require no further configuration",
+          "description": "type represents the commands that will be carried out if this NodeDisruptionPolicySpecActionType is executed Valid value are Reboot, Drain, Reload, Restart, DaemonReload, None and Special reload/restart requires a corresponding service target specified in the reload/restart field. Other values require no further configuration",
           "type": "string",
           "default": ""
         }
@@ -29867,7 +30001,7 @@
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.RestartService"
         },
         "type": {
-          "description": "type represents the commands that will be carried out if this NodeDisruptionPolicyStatusActionType is executed Valid values are Reboot, Drain, Reload, Restart, DaemonReload, None and Special. reload/restart requires a corresponding service target specified in the reload/restart field. Other values require no further configuration",
+          "description": "type represents the commands that will be carried out if this NodeDisruptionPolicyStatusActionType is executed Valid value are Reboot, Drain, Reload, Restart, DaemonReload, None and Special reload/restart requires a corresponding service target specified in the reload/restart field. Other values require no further configuration",
           "type": "string",
           "default": ""
         }
@@ -34618,7 +34752,7 @@
           "$ref": "#/definitions/com.github.openshift.api.route.v1.LocalObjectReference"
         },
         "insecureEdgeTerminationPolicy": {
-          "description": "insecureEdgeTerminationPolicy indicates the desired behavior for insecure connections to a route. While each router may make its own decisions on which ports to expose, this is normally port 80.\n\nIf a route does not specify insecureEdgeTerminationPolicy, then the default behavior is \"None\".\n\n* Allow - traffic is sent to the server on the insecure port (edge/reencrypt terminations only).\n\n* None - no traffic is allowed on the insecure port (default).\n\n* Redirect - clients are redirected to the secure port.",
+          "description": "insecureEdgeTerminationPolicy indicates the desired behavior for insecure connections to a route. While each router may make its own decisions on which ports to expose, this is normally port 80.\n\n* Allow - traffic is sent to the server on the insecure port (edge/reencrypt terminations only) (default). * None - no traffic is allowed on the insecure port. * Redirect - clients are redirected to the secure port.",
           "type": "string"
         },
         "key": {

@@ -230,7 +230,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.ExternalPlatformStatus":                                          schema_openshift_api_config_v1_ExternalPlatformStatus(ref),
 		"github.com/openshift/api/config/v1.FeatureGate":                                                     schema_openshift_api_config_v1_FeatureGate(ref),
 		"github.com/openshift/api/config/v1.FeatureGateAttributes":                                           schema_openshift_api_config_v1_FeatureGateAttributes(ref),
+		"github.com/openshift/api/config/v1.FeatureGateDescription":                                          schema_openshift_api_config_v1_FeatureGateDescription(ref),
 		"github.com/openshift/api/config/v1.FeatureGateDetails":                                              schema_openshift_api_config_v1_FeatureGateDetails(ref),
+		"github.com/openshift/api/config/v1.FeatureGateEnabledDisabled":                                      schema_openshift_api_config_v1_FeatureGateEnabledDisabled(ref),
 		"github.com/openshift/api/config/v1.FeatureGateList":                                                 schema_openshift_api_config_v1_FeatureGateList(ref),
 		"github.com/openshift/api/config/v1.FeatureGateSelection":                                            schema_openshift_api_config_v1_FeatureGateSelection(ref),
 		"github.com/openshift/api/config/v1.FeatureGateSpec":                                                 schema_openshift_api_config_v1_FeatureGateSpec(ref),
@@ -397,6 +399,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.VSpherePlatformTopology":                                         schema_openshift_api_config_v1_VSpherePlatformTopology(ref),
 		"github.com/openshift/api/config/v1.VSpherePlatformVCenterSpec":                                      schema_openshift_api_config_v1_VSpherePlatformVCenterSpec(ref),
 		"github.com/openshift/api/config/v1.WebhookTokenAuthenticator":                                       schema_openshift_api_config_v1_WebhookTokenAuthenticator(ref),
+		"github.com/openshift/api/config/v1.featureGateBuilder":                                              schema_openshift_api_config_v1_featureGateBuilder(ref),
 		"github.com/openshift/api/config/v1alpha1.Backup":                                                    schema_openshift_api_config_v1alpha1_Backup(ref),
 		"github.com/openshift/api/config/v1alpha1.BackupList":                                                schema_openshift_api_config_v1alpha1_BackupList(ref),
 		"github.com/openshift/api/config/v1alpha1.BackupSpec":                                                schema_openshift_api_config_v1alpha1_BackupSpec(ref),
@@ -9351,7 +9354,7 @@ func schema_openshift_api_config_v1_BareMetalPlatformSpec(ref common.ReferenceCa
 					"apiServerInternalIPs": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "atomic",
+								"x-kubernetes-list-type": "set",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -9371,7 +9374,7 @@ func schema_openshift_api_config_v1_BareMetalPlatformSpec(ref common.ReferenceCa
 					"ingressIPs": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "atomic",
+								"x-kubernetes-list-type": "set",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -9391,7 +9394,7 @@ func schema_openshift_api_config_v1_BareMetalPlatformSpec(ref common.ReferenceCa
 					"machineNetworks": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "atomic",
+								"x-kubernetes-list-type": "set",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -9431,7 +9434,7 @@ func schema_openshift_api_config_v1_BareMetalPlatformStatus(ref common.Reference
 					"apiServerInternalIPs": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "atomic",
+								"x-kubernetes-list-type": "set",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -9458,7 +9461,7 @@ func schema_openshift_api_config_v1_BareMetalPlatformStatus(ref common.Reference
 					"ingressIPs": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "atomic",
+								"x-kubernetes-list-type": "set",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -9492,7 +9495,7 @@ func schema_openshift_api_config_v1_BareMetalPlatformStatus(ref common.Reference
 					"machineNetworks": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "atomic",
+								"x-kubernetes-list-type": "set",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -12024,6 +12027,53 @@ func schema_openshift_api_config_v1_FeatureGateAttributes(ref common.ReferenceCa
 	}
 }
 
+func schema_openshift_api_config_v1_FeatureGateDescription(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "FeatureGateDescription is a golang-only interface used to contains details for a feature gate.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"FeatureGateAttributes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FeatureGateAttributes is the information that appears in the API",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.FeatureGateAttributes"),
+						},
+					},
+					"OwningJiraComponent": {
+						SchemaProps: spec.SchemaProps{
+							Description: "OwningJiraComponent is the jira component that owns most of the impl and first assignment for the bug. This is the team that owns the feature long term.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"ResponsiblePerson": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ResponsiblePerson is the person who is on the hook for first contact.  This is often, but not always, a team lead. It is someone who can make the promise on the behalf of the team.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"OwningProduct": {
+						SchemaProps: spec.SchemaProps{
+							Description: "OwningProduct is the product that owns the lifecycle of the gate.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"FeatureGateAttributes", "OwningJiraComponent", "ResponsiblePerson", "OwningProduct"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.FeatureGateAttributes"},
+	}
+}
+
 func schema_openshift_api_config_v1_FeatureGateDetails(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -12072,6 +12122,47 @@ func schema_openshift_api_config_v1_FeatureGateDetails(ref common.ReferenceCallb
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/config/v1.FeatureGateAttributes"},
+	}
+}
+
+func schema_openshift_api_config_v1_FeatureGateEnabledDisabled(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"Enabled": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.FeatureGateDescription"),
+									},
+								},
+							},
+						},
+					},
+					"Disabled": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.FeatureGateDescription"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"Enabled", "Disabled"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.FeatureGateDescription"},
 	}
 }
 
@@ -16617,7 +16708,7 @@ func schema_openshift_api_config_v1_OpenStackPlatformSpec(ref common.ReferenceCa
 					"apiServerInternalIPs": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "atomic",
+								"x-kubernetes-list-type": "set",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -16637,7 +16728,7 @@ func schema_openshift_api_config_v1_OpenStackPlatformSpec(ref common.ReferenceCa
 					"ingressIPs": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "atomic",
+								"x-kubernetes-list-type": "set",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -16657,7 +16748,7 @@ func schema_openshift_api_config_v1_OpenStackPlatformSpec(ref common.ReferenceCa
 					"machineNetworks": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "atomic",
+								"x-kubernetes-list-type": "set",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -16697,7 +16788,7 @@ func schema_openshift_api_config_v1_OpenStackPlatformStatus(ref common.Reference
 					"apiServerInternalIPs": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "atomic",
+								"x-kubernetes-list-type": "set",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -16731,7 +16822,7 @@ func schema_openshift_api_config_v1_OpenStackPlatformStatus(ref common.Reference
 					"ingressIPs": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "atomic",
+								"x-kubernetes-list-type": "set",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -16765,7 +16856,7 @@ func schema_openshift_api_config_v1_OpenStackPlatformStatus(ref common.Reference
 					"machineNetworks": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "atomic",
+								"x-kubernetes-list-type": "set",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -19527,7 +19618,7 @@ func schema_openshift_api_config_v1_VSpherePlatformSpec(ref common.ReferenceCall
 					"apiServerInternalIPs": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "atomic",
+								"x-kubernetes-list-type": "set",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -19547,7 +19638,7 @@ func schema_openshift_api_config_v1_VSpherePlatformSpec(ref common.ReferenceCall
 					"ingressIPs": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "atomic",
+								"x-kubernetes-list-type": "set",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -19567,7 +19658,7 @@ func schema_openshift_api_config_v1_VSpherePlatformSpec(ref common.ReferenceCall
 					"machineNetworks": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "atomic",
+								"x-kubernetes-list-type": "set",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -19609,7 +19700,7 @@ func schema_openshift_api_config_v1_VSpherePlatformStatus(ref common.ReferenceCa
 					"apiServerInternalIPs": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "atomic",
+								"x-kubernetes-list-type": "set",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -19636,7 +19727,7 @@ func schema_openshift_api_config_v1_VSpherePlatformStatus(ref common.ReferenceCa
 					"ingressIPs": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "atomic",
+								"x-kubernetes-list-type": "set",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -19670,7 +19761,7 @@ func schema_openshift_api_config_v1_VSpherePlatformStatus(ref common.ReferenceCa
 					"machineNetworks": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "atomic",
+								"x-kubernetes-list-type": "set",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -19844,6 +19935,70 @@ func schema_openshift_api_config_v1_WebhookTokenAuthenticator(ref common.Referen
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/config/v1.SecretNameReference"},
+	}
+}
+
+func schema_openshift_api_config_v1_featureGateBuilder(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"owningJiraComponent": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"responsiblePerson": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"owningProduct": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"statusByClusterProfileByFeatureSet": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type: []string{"object"},
+										AdditionalProperties: &spec.SchemaOrBool{
+											Allows: true,
+											Schema: &spec.Schema{
+												SchemaProps: spec.SchemaProps{
+													Default: false,
+													Type:    []string{"boolean"},
+													Format:  "",
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"name", "owningJiraComponent", "responsiblePerson", "owningProduct", "statusByClusterProfileByFeatureSet"},
+			},
+		},
 	}
 }
 
@@ -35649,7 +35804,7 @@ func schema_openshift_api_machine_v1beta1_AzureMachineProviderSpec(ref common.Re
 					},
 					"capacityReservationGroupID": {
 						SchemaProps: spec.SchemaProps{
-							Description: "capacityReservationGroupID specifies the capacity reservation group resource id that should be used for allocating the virtual machine. The field size should be greater than 0 and the field input must start with '/'. The input for capacityReservationGroupID must be similar to '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/capacityReservationGroups/{capacityReservationGroupName}'. The keys which are used should be among 'subscriptions', 'providers' and 'resourcegroups' followed by valid ID or names respectively. It is optional but may not be changed once set.",
+							Description: "CapacityReservationGroupID specifies the capacity reservation group resource id that should be used for allocating the virtual machine. It is optional but may not be changed once set.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -50105,9 +50260,7 @@ func schema_openshift_api_operator_v1_MachineConfigurationStatus(ref common.Refe
 								"x-kubernetes-list-map-keys": []interface{}{
 									"type",
 								},
-								"x-kubernetes-list-type":       "map",
-								"x-kubernetes-patch-merge-key": "type",
-								"x-kubernetes-patch-strategy":  "merge",
+								"x-kubernetes-list-type": "map",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -50117,7 +50270,77 @@ func schema_openshift_api_operator_v1_MachineConfigurationStatus(ref common.Refe
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Condition"),
+										Ref:     ref("github.com/openshift/api/operator/v1.OperatorCondition"),
+									},
+								},
+							},
+						},
+					},
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Description: "version is the level this availability applies to",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"readyReplicas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "readyReplicas indicates how many replicas are ready and at the desired state",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"generations": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/operator/v1.GenerationStatus"),
+									},
+								},
+							},
+						},
+					},
+					"latestAvailableRevision": {
+						SchemaProps: spec.SchemaProps{
+							Description: "latestAvailableRevision is the deploymentID of the most recent deployment",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"latestAvailableRevisionReason": {
+						SchemaProps: spec.SchemaProps{
+							Description: "latestAvailableRevisionReason describe the detailed reason for the most recent deployment",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"nodeStatuses": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"nodeName",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "nodeStatuses track the deployment values and errors across individual nodes",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/operator/v1.NodeStatus"),
 									},
 								},
 							},
@@ -50131,10 +50354,11 @@ func schema_openshift_api_operator_v1_MachineConfigurationStatus(ref common.Refe
 						},
 					},
 				},
+				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
+			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatus", "github.com/openshift/api/operator/v1.NodeStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
 	}
 }
 
@@ -50968,7 +51192,7 @@ func schema_openshift_api_operator_v1_NodeDisruptionPolicySpecAction(ref common.
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "type represents the commands that will be carried out if this NodeDisruptionPolicySpecActionType is executed Valid values are Reboot, Drain, Reload, Restart, DaemonReload and None. reload/restart requires a corresponding service target specified in the reload/restart field. Other values require no further configuration",
+							Description: "type represents the commands that will be carried out if this NodeDisruptionPolicySpecActionType is executed Valid value are Reboot, Drain, Reload, Restart, DaemonReload, None and Special reload/restart requires a corresponding service target specified in the reload/restart field. Other values require no further configuration",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -51158,7 +51382,7 @@ func schema_openshift_api_operator_v1_NodeDisruptionPolicyStatusAction(ref commo
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "type represents the commands that will be carried out if this NodeDisruptionPolicyStatusActionType is executed Valid values are Reboot, Drain, Reload, Restart, DaemonReload, None and Special. reload/restart requires a corresponding service target specified in the reload/restart field. Other values require no further configuration",
+							Description: "type represents the commands that will be carried out if this NodeDisruptionPolicyStatusActionType is executed Valid value are Reboot, Drain, Reload, Restart, DaemonReload, None and Special reload/restart requires a corresponding service target specified in the reload/restart field. Other values require no further configuration",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -59034,7 +59258,7 @@ func schema_openshift_api_route_v1_TLSConfig(ref common.ReferenceCallback) commo
 					},
 					"insecureEdgeTerminationPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "insecureEdgeTerminationPolicy indicates the desired behavior for insecure connections to a route. While each router may make its own decisions on which ports to expose, this is normally port 80.\n\nIf a route does not specify insecureEdgeTerminationPolicy, then the default behavior is \"None\".\n\n* Allow - traffic is sent to the server on the insecure port (edge/reencrypt terminations only).\n\n* None - no traffic is allowed on the insecure port (default).\n\n* Redirect - clients are redirected to the secure port.",
+							Description: "insecureEdgeTerminationPolicy indicates the desired behavior for insecure connections to a route. While each router may make its own decisions on which ports to expose, this is normally port 80.\n\n* Allow - traffic is sent to the server on the insecure port (edge/reencrypt terminations only) (default). * None - no traffic is allowed on the insecure port. * Redirect - clients are redirected to the secure port.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

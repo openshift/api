@@ -116,9 +116,6 @@
                         "name": "MetricsCollectionProfiles"
                     },
                     {
-                        "name": "MetricsServer"
-                    },
-                    {
                         "name": "MixedCPUsAllocation"
                     },
                     {
@@ -215,6 +212,9 @@
                     },
                     {
                         "name": "KMSv1"
+                    },
+                    {
+                        "name": "MetricsServer"
                     },
                     {
                         "name": "NetworkLiveMigration"

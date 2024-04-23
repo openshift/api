@@ -2,6 +2,7 @@ package features
 
 import (
 	"fmt"
+
 	configv1 "github.com/openshift/api/config/v1"
 )
 
@@ -458,5 +459,53 @@ var (
 						contactPerson("rbednar").
 						productScope(ocpSpecific).
 						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						mustRegister()
+
+	FeatureGateClusterAPIInstallAWS = newFeatureGate("ClusterAPIInstallAWS").
+					reportProblemsToJiraComponent("Installer").
+					contactPerson("r4f4").
+					productScope(ocpSpecific).
+					mustRegister()
+
+	FeatureGateClusterAPIInstallAzure = newFeatureGate("ClusterAPIInstallAzure").
+						reportProblemsToJiraComponent("Installer").
+						contactPerson("jhixson74").
+						productScope(ocpSpecific).
+						mustRegister()
+
+	FeatureGateClusterAPIInstallGCP = newFeatureGate("ClusterAPIInstallGCP").
+					reportProblemsToJiraComponent("Installer").
+					contactPerson("bfournie").
+					productScope(ocpSpecific).
+					mustRegister()
+
+	FeatureGateClusterAPIInstallIBMCloud = newFeatureGate("ClusterAPIInstallIBMCloud").
+						reportProblemsToJiraComponent("Installer").
+						contactPerson("cjschaef").
+						productScope(ocpSpecific).
+						mustRegister()
+
+	FeatureGateClusterAPIInstallNutanix = newFeatureGate("ClusterAPIInstallNutanix").
+						reportProblemsToJiraComponent("Installer").
+						contactPerson("yanhua121").
+						productScope(ocpSpecific).
+						mustRegister()
+
+	FeatureGateClusterAPIInstallOpenStack = newFeatureGate("ClusterAPIInstallOpenStack").
+						reportProblemsToJiraComponent("Installer").
+						contactPerson("stephenfin").
+						productScope(ocpSpecific).
+						mustRegister()
+
+	FeatureGateClusterAPIInstallPowerVS = newFeatureGate("ClusterAPIInstallPowerVS").
+						reportProblemsToJiraComponent("Installer").
+						contactPerson("mjturek").
+						productScope(ocpSpecific).
+						mustRegister()
+
+	FeatureGateClusterAPIInstallVSphere = newFeatureGate("ClusterAPIInstallVSphere").
+						reportProblemsToJiraComponent("Installer").
+						contactPerson("rvanderp3").
+						productScope(ocpSpecific).
 						mustRegister()
 )

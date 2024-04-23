@@ -35649,7 +35649,7 @@ func schema_openshift_api_machine_v1beta1_AzureMachineProviderSpec(ref common.Re
 					},
 					"capacityReservationGroupID": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CapacityReservationGroupID specifies the capacity reservation group resource id that should be used for allocating the virtual machine.",
+							Description: "capacityReservationGroupID specifies the capacity reservation group resource id that should be used for allocating the virtual machine. It is optional but may not be changed once set.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

@@ -20581,7 +20581,7 @@
           "type": "string"
         },
         "capacityReservationGroupID": {
-          "description": "CapacityReservationGroupID specifies the capacity reservation group resource id that should be used for allocating the virtual machine. It is optional but may not be changed once set.",
+          "description": "capacityReservationGroupID specifies the capacity reservation group resource id that should be used for allocating the virtual machine. It is optional but may not be changed once set.",
           "type": "string"
         },
         "credentialsSecret": {

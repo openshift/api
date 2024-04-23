@@ -255,6 +255,28 @@ tests:
               ipv6:
                 internalMasqueradeSubnet: "abcd:eff01:2345:6789::2345:6789/20"
     expectedError: "Invalid value: \"string\": each segment of an IPv6 address must be a hexadecimal number between 0 and FFFF, failed on segment 2"
+  - name: Should be able to pass a valid IPV4 CIDR to IPV4 internalTransitSwitchSubnet
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+       defaultNetwork:
+          ovnKubernetesConfig:
+            ipv4:
+              internalTransitSwitchSubnet: "169.254.168.0/29"
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+       defaultNetwork:
+          ovnKubernetesConfig:
+            ipsecConfig:
+              mode: Disabled
+            ipv4:
+              internalTransitSwitchSubnet: "169.254.168.0/29"
+       disableNetworkDiagnostics: false
+       logLevel: "Normal"
+       operatorLogLevel: "Normal"
   - name: Should be able to create migration mode
     initial: |
       apiVersion: operator.openshift.io/v1

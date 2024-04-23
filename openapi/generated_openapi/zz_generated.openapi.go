@@ -35647,6 +35647,13 @@ func schema_openshift_api_machine_v1beta1_AzureMachineProviderSpec(ref common.Re
 							Ref:         ref("github.com/openshift/api/machine/v1beta1.AzureDiagnostics"),
 						},
 					},
+					"capacityReservationGroupID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CapacityReservationGroupID specifies the capacity reservation group resource id that should be used for allocating the virtual machine. It is optional but may not be changed once set.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 				Required: []string{"image", "osDisk", "publicIP", "subnet"},
 			},

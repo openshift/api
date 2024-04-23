@@ -20487,6 +20487,10 @@
           "description": "AvailabilitySet specifies the availability set to use for this instance. Availability set should be precreated, before using this field.",
           "type": "string"
         },
+        "capacityReservationGroupID": {
+          "description": "CapacityReservationGroupID specifies the capacity reservation group resource id that should be used for allocating the virtual machine. It is optional but may not be changed once set.",
+          "type": "string"
+        },
         "credentialsSecret": {
           "description": "CredentialsSecret is a reference to the secret with Azure credentials.",
           "$ref": "#/definitions/io.k8s.api.core.v1.SecretReference"

@@ -339,7 +339,7 @@ tests:
       status:
         authoritativeAPI: MachineAPI
         synchronizedGeneration: 1
-    expectedStatusError: "status: Invalid value: \"object\": syncronizedGeneration must not decrease unless authoritativeAPI is transitioning from Migrating to another value"
+    expectedStatusError: "status.synchronizedGeneration: Invalid value: \"object\": synchronizedGeneration must not decrease unless authoritativeAPI is transitioning from Migrating to another value"
   - name: Should not allow decreasing the synchronizedGeneration while the Authoritative API is Migrating
     initial: |
       apiVersion: machine.openshift.io/v1beta1
@@ -357,7 +357,7 @@ tests:
       status:
         authoritativeAPI: Migrating
         synchronizedGeneration: 1
-    expectedStatusError: "status: Invalid value: \"object\": syncronizedGeneration must not decrease unless authoritativeAPI is transitioning from Migrating to another value"
+    expectedStatusError: "status.synchronizedGeneration: Invalid value: \"object\": synchronizedGeneration must not decrease unless authoritativeAPI is transitioning from Migrating to another value"
   - name: Should not allow decreasing the synchronizedGeneration while the Authoritative API is ClusterAPI
     initial: |
       apiVersion: machine.openshift.io/v1beta1
@@ -375,7 +375,7 @@ tests:
       status:
         authoritativeAPI: ClusterAPI
         synchronizedGeneration: 1
-    expectedStatusError: "status: Invalid value: \"object\": syncronizedGeneration must not decrease unless authoritativeAPI is transitioning from Migrating to another value"
+    expectedStatusError: "status.synchronizedGeneration: Invalid value: \"object\": synchronizedGeneration must not decrease unless authoritativeAPI is transitioning from Migrating to another value"
   - name: Should allow decreasing the synchronizedGeneration while the Authoritative API is moved from Migrating to MachineAPI
     initial: |
       apiVersion: machine.openshift.io/v1beta1

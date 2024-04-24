@@ -526,8 +526,10 @@ spec:
                 type: integer
             type: object
             x-kubernetes-validations:
-            - message: synchronizedGeneration must not decrease unless authoritativeAPI
+            - fieldPath: .synchronizedGeneration
+              message: synchronizedGeneration must not decrease unless authoritativeAPI
                 is transitioning from Migrating to another value
+              reason: FieldValueInvalid
               rule: '!has(oldSelf.synchronizedGeneration) || (has(self.synchronizedGeneration)
                 && self.synchronizedGeneration >= oldSelf.synchronizedGeneration)
                 || (oldSelf.authoritativeAPI == ''Migrating'' && self.authoritativeAPI

@@ -174,11 +174,11 @@ spec:
                               type:
                                 description: type represents the commands that will
                                   be carried out if this NodeDisruptionPolicySpecActionType
-                                  is executed Valid value are Reboot, Drain, Reload,
-                                  Restart, DaemonReload, None and Special reload/restart
-                                  requires a corresponding service target specified
-                                  in the reload/restart field. Other values require
-                                  no further configuration
+                                  is executed Valid values are Reboot, Drain, Reload,
+                                  Restart, DaemonReload and None. reload/restart requires
+                                  a corresponding service target specified in the
+                                  reload/restart field. Other values require no further
+                                  configuration
                                 enum:
                                 - Reboot
                                 - Drain
@@ -314,11 +314,10 @@ spec:
                             type:
                               description: type represents the commands that will
                                 be carried out if this NodeDisruptionPolicySpecActionType
-                                is executed Valid value are Reboot, Drain, Reload,
-                                Restart, DaemonReload, None and Special reload/restart
-                                requires a corresponding service target specified
-                                in the reload/restart field. Other values require
-                                no further configuration
+                                is executed Valid values are Reboot, Drain, Reload,
+                                Restart, DaemonReload and None. reload/restart requires
+                                a corresponding service target specified in the reload/restart
+                                field. Other values require no further configuration
                               enum:
                               - Reboot
                               - Drain
@@ -447,11 +446,11 @@ spec:
                               type:
                                 description: type represents the commands that will
                                   be carried out if this NodeDisruptionPolicySpecActionType
-                                  is executed Valid value are Reboot, Drain, Reload,
-                                  Restart, DaemonReload, None and Special reload/restart
-                                  requires a corresponding service target specified
-                                  in the reload/restart field. Other values require
-                                  no further configuration
+                                  is executed Valid values are Reboot, Drain, Reload,
+                                  Restart, DaemonReload and None. reload/restart requires
+                                  a corresponding service target specified in the
+                                  reload/restart field. Other values require no further
+                                  configuration
                                 enum:
                                 - Reboot
                                 - Drain
@@ -731,11 +730,11 @@ spec:
                                   type:
                                     description: type represents the commands that
                                       will be carried out if this NodeDisruptionPolicyStatusActionType
-                                      is executed Valid value are Reboot, Drain, Reload,
-                                      Restart, DaemonReload, None and Special reload/restart
-                                      requires a corresponding service target specified
-                                      in the reload/restart field. Other values require
-                                      no further configuration
+                                      is executed Valid values are Reboot, Drain,
+                                      Reload, Restart, DaemonReload, None and Special.
+                                      reload/restart requires a corresponding service
+                                      target specified in the reload/restart field.
+                                      Other values require no further configuration
                                     enum:
                                     - Reboot
                                     - Drain
@@ -870,8 +869,8 @@ spec:
                                 type:
                                   description: type represents the commands that will
                                     be carried out if this NodeDisruptionPolicyStatusActionType
-                                    is executed Valid value are Reboot, Drain, Reload,
-                                    Restart, DaemonReload, None and Special reload/restart
+                                    is executed Valid values are Reboot, Drain, Reload,
+                                    Restart, DaemonReload, None and Special. reload/restart
                                     requires a corresponding service target specified
                                     in the reload/restart field. Other values require
                                     no further configuration
@@ -1006,11 +1005,11 @@ spec:
                                   type:
                                     description: type represents the commands that
                                       will be carried out if this NodeDisruptionPolicyStatusActionType
-                                      is executed Valid value are Reboot, Drain, Reload,
-                                      Restart, DaemonReload, None and Special reload/restart
-                                      requires a corresponding service target specified
-                                      in the reload/restart field. Other values require
-                                      no further configuration
+                                      is executed Valid values are Reboot, Drain,
+                                      Reload, Restart, DaemonReload, None and Special.
+                                      reload/restart requires a corresponding service
+                                      target specified in the reload/restart field.
+                                      Other values require no further configuration
                                     enum:
                                     - Reboot
                                     - Drain

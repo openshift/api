@@ -19,6 +19,30 @@
                         "name": "ClusterAPIInstall"
                     },
                     {
+                        "name": "ClusterAPIInstallAWS"
+                    },
+                    {
+                        "name": "ClusterAPIInstallAzure"
+                    },
+                    {
+                        "name": "ClusterAPIInstallGCP"
+                    },
+                    {
+                        "name": "ClusterAPIInstallIBMCloud"
+                    },
+                    {
+                        "name": "ClusterAPIInstallNutanix"
+                    },
+                    {
+                        "name": "ClusterAPIInstallOpenStack"
+                    },
+                    {
+                        "name": "ClusterAPIInstallPowerVS"
+                    },
+                    {
+                        "name": "ClusterAPIInstallVSphere"
+                    },
+                    {
                         "name": "EventedPLEG"
                     },
                     {

@@ -130,7 +130,7 @@ spec:
                             rule: isIP(self)
                         maxItems: 2
                         type: array
-                        x-kubernetes-list-type: set
+                        x-kubernetes-list-type: atomic
                         x-kubernetes-validations:
                         - message: apiServerInternalIPs must contain at most one IPv4
                             address and at most one IPv6 address
@@ -157,7 +157,7 @@ spec:
                             rule: isIP(self)
                         maxItems: 2
                         type: array
-                        x-kubernetes-list-type: set
+                        x-kubernetes-list-type: atomic
                         x-kubernetes-validations:
                         - message: ingressIPs must contain at most one IPv4 address
                             and at most one IPv6 address
@@ -179,7 +179,9 @@ spec:
                             rule: isCIDR(self)
                         maxItems: 32
                         type: array
-                        x-kubernetes-list-type: set
+                        x-kubernetes-list-type: atomic
+                        x-kubernetes-validations:
+                        - rule: self.all(x, self.exists_one(y, x == y))
                     type: object
                     x-kubernetes-validations:
                     - message: apiServerInternalIPs list is required once set
@@ -441,7 +443,7 @@ spec:
                             rule: isIP(self)
                         maxItems: 2
                         type: array
-                        x-kubernetes-list-type: set
+                        x-kubernetes-list-type: atomic
                         x-kubernetes-validations:
                         - message: apiServerInternalIPs must contain at most one IPv4
                             address and at most one IPv6 address
@@ -468,7 +470,7 @@ spec:
                             rule: isIP(self)
                         maxItems: 2
                         type: array
-                        x-kubernetes-list-type: set
+                        x-kubernetes-list-type: atomic
                         x-kubernetes-validations:
                         - message: ingressIPs must contain at most one IPv4 address
                             and at most one IPv6 address
@@ -490,7 +492,9 @@ spec:
                             rule: isCIDR(self)
                         maxItems: 32
                         type: array
-                        x-kubernetes-list-type: set
+                        x-kubernetes-list-type: atomic
+                        x-kubernetes-validations:
+                        - rule: self.all(x, self.exists_one(y, x == y))
                     type: object
                     x-kubernetes-validations:
                     - message: apiServerInternalIPs list is required once set
@@ -595,7 +599,7 @@ spec:
                             rule: isIP(self)
                         maxItems: 2
                         type: array
-                        x-kubernetes-list-type: set
+                        x-kubernetes-list-type: atomic
                         x-kubernetes-validations:
                         - message: apiServerInternalIPs must contain at most one IPv4
                             address and at most one IPv6 address
@@ -730,7 +734,7 @@ spec:
                             rule: isIP(self)
                         maxItems: 2
                         type: array
-                        x-kubernetes-list-type: set
+                        x-kubernetes-list-type: atomic
                         x-kubernetes-validations:
                         - message: ingressIPs must contain at most one IPv4 address
                             and at most one IPv6 address
@@ -752,7 +756,9 @@ spec:
                             rule: isCIDR(self)
                         maxItems: 32
                         type: array
-                        x-kubernetes-list-type: set
+                        x-kubernetes-list-type: atomic
+                        x-kubernetes-validations:
+                        - rule: self.all(x, self.exists_one(y, x == y))
                       nodeNetworking:
                         description: nodeNetworking contains the definition of internal
                           and external network constraints for assigning the node's
@@ -1185,7 +1191,13 @@ spec:
                           type: string
                         maxItems: 2
                         type: array
-                        x-kubernetes-list-type: set
+                        x-kubernetes-list-type: atomic
+                        x-kubernetes-validations:
+                        - message: apiServerInternalIPs must contain at most one IPv4
+                            address and at most one IPv6 address
+                          rule: 'self == oldSelf || (size(self) == 2 && isIP(self[0])
+                            && isIP(self[1]) ? ip(self[0]).family() != ip(self[1]).family()
+                            : true)'
                       ingressIP:
                         description: "ingressIP is an external IP which routes to
                           the default ingress controller. The IP is a suitable target
@@ -1203,7 +1215,13 @@ spec:
                           type: string
                         maxItems: 2
                         type: array
-                        x-kubernetes-list-type: set
+                        x-kubernetes-list-type: atomic
+                        x-kubernetes-validations:
+                        - message: ingressIPs must contain at most one IPv4 address
+                            and at most one IPv6 address
+                          rule: 'self == oldSelf || (size(self) == 2 && isIP(self[0])
+                            && isIP(self[1]) ? ip(self[0]).family() != ip(self[1]).family()
+                            : true)'
                       machineNetworks:
                         description: machineNetworks are IP networks used to connect
                           all the OpenShift cluster nodes.
@@ -1218,7 +1236,9 @@ spec:
                             rule: isCIDR(self)
                         maxItems: 32
                         type: array
-                        x-kubernetes-list-type: set
+                        x-kubernetes-list-type: atomic
+                        x-kubernetes-validations:
+                        - rule: self.all(x, self.exists_one(y, x == y))
                       nodeDNSIP:
                         description: nodeDNSIP is the IP address for the internal
                           DNS used by the nodes. Unlike the one managed by the DNS
@@ -1541,6 +1561,12 @@ spec:
                         maxItems: 2
                         type: array
                         x-kubernetes-list-type: set
+                        x-kubernetes-validations:
+                        - message: apiServerInternalIPs must contain at most one IPv4
+                            address and at most one IPv6 address
+                          rule: 'self == oldSelf || (size(self) == 2 && isIP(self[0])
+                            && isIP(self[1]) ? ip(self[0]).family() != ip(self[1]).family()
+                            : true)'
                       ingressIP:
                         description: "ingressIP is an external IP which routes to
                           the default ingress controller. The IP is a suitable target
@@ -1559,6 +1585,12 @@ spec:
                         maxItems: 2
                         type: array
                         x-kubernetes-list-type: set
+                        x-kubernetes-validations:
+                        - message: ingressIPs must contain at most one IPv4 address
+                            and at most one IPv6 address
+                          rule: 'self == oldSelf || (size(self) == 2 && isIP(self[0])
+                            && isIP(self[1]) ? ip(self[0]).family() != ip(self[1]).family()
+                            : true)'
                     type: object
                   openstack:
                     description: OpenStack contains settings specific to the OpenStack
@@ -1586,7 +1618,13 @@ spec:
                           type: string
                         maxItems: 2
                         type: array
-                        x-kubernetes-list-type: set
+                        x-kubernetes-list-type: atomic
+                        x-kubernetes-validations:
+                        - message: apiServerInternalIPs must contain at most one IPv4
+                            address and at most one IPv6 address
+                          rule: 'self == oldSelf || (size(self) == 2 && isIP(self[0])
+                            && isIP(self[1]) ? ip(self[0]).family() != ip(self[1]).family()
+                            : true)'
                       cloudName:
                         description: cloudName is the name of the desired OpenStack
                           cloud in the client configuration file (`clouds.yaml`).
@@ -1608,7 +1646,13 @@ spec:
                           type: string
                         maxItems: 2
                         type: array
-                        x-kubernetes-list-type: set
+                        x-kubernetes-list-type: atomic
+                        x-kubernetes-validations:
+                        - message: ingressIPs must contain at most one IPv4 address
+                            and at most one IPv6 address
+                          rule: 'self == oldSelf || (size(self) == 2 && isIP(self[0])
+                            && isIP(self[1]) ? ip(self[0]).family() != ip(self[1]).family()
+                            : true)'
                       loadBalancer:
                         default:
                           type: OpenShiftManagedDefault
@@ -1651,7 +1695,9 @@ spec:
                             rule: isCIDR(self)
                         maxItems: 32
                         type: array
-                        x-kubernetes-list-type: set
+                        x-kubernetes-list-type: atomic
+                        x-kubernetes-validations:
+                        - rule: self.all(x, self.exists_one(y, x == y))
                       nodeDNSIP:
                         description: nodeDNSIP is the IP address for the internal
                           DNS used by the nodes. Unlike the one managed by the DNS
@@ -1689,6 +1735,12 @@ spec:
                         maxItems: 2
                         type: array
                         x-kubernetes-list-type: set
+                        x-kubernetes-validations:
+                        - message: apiServerInternalIPs must contain at most one IPv4
+                            address and at most one IPv6 address
+                          rule: 'self == oldSelf || (size(self) == 2 && isIP(self[0])
+                            && isIP(self[1]) ? ip(self[0]).family() != ip(self[1]).family()
+                            : true)'
                       ingressIP:
                         description: "ingressIP is an external IP which routes to
                           the default ingress controller. The IP is a suitable target
@@ -1707,6 +1759,12 @@ spec:
                         maxItems: 2
                         type: array
                         x-kubernetes-list-type: set
+                        x-kubernetes-validations:
+                        - message: ingressIPs must contain at most one IPv4 address
+                            and at most one IPv6 address
+                          rule: 'self == oldSelf || (size(self) == 2 && isIP(self[0])
+                            && isIP(self[1]) ? ip(self[0]).family() != ip(self[1]).family()
+                            : true)'
                       nodeDNSIP:
                         description: 'deprecated: as of 4.6, this field is no longer
                           set or honored.  It will be removed in a future release.'
@@ -1843,7 +1901,13 @@ spec:
                           type: string
                         maxItems: 2
                         type: array
-                        x-kubernetes-list-type: set
+                        x-kubernetes-list-type: atomic
+                        x-kubernetes-validations:
+                        - message: apiServerInternalIPs must contain at most one IPv4
+                            address and at most one IPv6 address
+                          rule: 'self == oldSelf || (size(self) == 2 && isIP(self[0])
+                            && isIP(self[1]) ? ip(self[0]).family() != ip(self[1]).family()
+                            : true)'
                       ingressIP:
                         description: "ingressIP is an external IP which routes to
                           the default ingress controller. The IP is a suitable target
@@ -1861,7 +1925,13 @@ spec:
                           type: string
                         maxItems: 2
                         type: array
-                        x-kubernetes-list-type: set
+                        x-kubernetes-list-type: atomic
+                        x-kubernetes-validations:
+                        - message: ingressIPs must contain at most one IPv4 address
+                            and at most one IPv6 address
+                          rule: 'self == oldSelf || (size(self) == 2 && isIP(self[0])
+                            && isIP(self[1]) ? ip(self[0]).family() != ip(self[1]).family()
+                            : true)'
                       machineNetworks:
                         description: machineNetworks are IP networks used to connect
                           all the OpenShift cluster nodes.
@@ -1876,7 +1946,9 @@ spec:
                             rule: isCIDR(self)
                         maxItems: 32
                         type: array
-                        x-kubernetes-list-type: set
+                        x-kubernetes-list-type: atomic
+                        x-kubernetes-validations:
+                        - rule: self.all(x, self.exists_one(y, x == y))
                       nodeDNSIP:
                         description: nodeDNSIP is the IP address for the internal
                           DNS used by the nodes. Unlike the one managed by the DNS

@@ -12914,6 +12914,12 @@
           "type": "string",
           "default": ""
         },
+        "nonZeroDefault": {
+          "description": "nonZeroDefault is a demonstration of creating an integer field that has a non zero default. It required two default tags (one for CRD generation, one for client generation) and must have `omitempty` and be optional. A minimum value is added to demonstrate that a zero value would not be accepted.",
+          "type": "integer",
+          "format": "int32",
+          "default": 8
+        },
         "optionalImmutableField": {
           "description": "optionalImmutableField is a field that is immutable once set. It is optional but may not be changed once set.",
           "type": "string",

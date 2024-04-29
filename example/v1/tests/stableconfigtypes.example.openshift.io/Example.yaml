@@ -17,6 +17,7 @@ tests:
         spec:
           stableField: "Allowed"
           immutableField: foo
+          nonZeroDefault: 8
     - name: Should persist a tech preview field
       initial: |
         apiVersion: example.openshift.io/v1
@@ -30,6 +31,7 @@ tests:
         spec:
           coolNewField: "Invalid"
           immutableField: foo
+          nonZeroDefault: 8
     - name: With an EvolvingUnion, Should allow an empty enum value
       initial: |
         apiVersion: example.openshift.io/v1
@@ -45,6 +47,7 @@ tests:
           evolvingUnion:
             type: ""
           immutableField: foo
+          nonZeroDefault: 8
     - name: With an EvolvingUnion, Should allow a Stable enum value
       initial: |
         apiVersion: example.openshift.io/v1
@@ -60,6 +63,7 @@ tests:
           evolvingUnion:
             type: StableValue
           immutableField: foo
+          nonZeroDefault: 8
     - name: With an EvolvingUnion, Should allow a TechPreview enum value
       initial: |
         apiVersion: example.openshift.io/v1
@@ -75,6 +79,7 @@ tests:
           evolvingUnion:
             type: TechPreviewOnlyValue
           immutableField: foo
+          nonZeroDefault: 8
   onUpdate:
     - name: Should not allow removal of a tech preview field
       initial: |

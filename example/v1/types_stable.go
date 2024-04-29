@@ -67,6 +67,15 @@ type StableConfigTypeSpec struct {
 	// celUnion demonstrates how to validate a discrminated union using CEL
 	// +optional
 	CELUnion CELUnion `json:"celUnion,omitempty"`
+
+	// nonZeroDefault is a demonstration of creating an integer field that has a non zero default.
+	// It required two default tags (one for CRD generation, one for client generation) and must have `omitempty` and be optional.
+	// A minimum value is added to demonstrate that a zero value would not be accepted.
+	// +kubebuilder:default:=8
+	// +default=8
+	// +kubebuilder:validation:Minimum:=8
+	// +optional
+	NonZeroDefault int32 `json:"nonZeroDefault,omitempty"`
 }
 
 type EvolvingUnion struct {

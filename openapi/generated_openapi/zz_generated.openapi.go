@@ -23297,6 +23297,26 @@ func schema_openshift_api_example_v1_StableConfigTypeSpec(ref common.ReferenceCa
 							Format:      "int32",
 						},
 					},
+					"evolvingCollection": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "evolvingCollection demonstrates how to have a collection where the maximum number of items varies on cluster type. For default clusters, this will be \"1\" but on TechPreview clusters, this value will be \"3\".",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"immutableField"},
 			},

@@ -216,38 +216,6 @@ tests:
                 - IBMCloud2
                 port: 443
                 server: server2.dev.cluster.com
-#      expected: |
-#        apiVersion: config.openshift.io/v1
-#        kind: Infrastructure
-#        spec:
-#          platformSpec:
-#            type: VSphere
-#            vsphere:
-#              failureDomains:
-#              - name: generated-failure-domain
-#                region: generated-region
-#                server: server1.dev.cluster.com
-#                topology:
-#                  computeCluster: /IBMCloud/host/vcs-8e-workload
-#                  datacenter: IBMCloud
-#                  datastore: /IBMCloud/datastore/mdcnc-ds-shared
-#                  networks:
-#                    - ocp-ci-seg-13
-#                  resourcePool: /IBMCloud/host/vcs-8e-workload/Resources
-#                  template: /IBMCloud/vm/ngirard-dev-rqh5s-rhcos-generated-region-generated-zone
-#                zone: generated-zone
-#              nodeNetworking:
-#                external: {}
-#                internal: {}
-#              vcenters:
-#              - datacenters:
-#                - IBMCloud
-#                port: 443
-#                server: server1.dev.cluster.com
-#              - datacenters:
-#                - IBMCloud2
-#                port: 443
-#                server: server2.dev.cluster.com
       expectedError: "Too many: 2: must have at most 1 items"
   onUpdate:
     - name: Should be able to change External platformName from unknown to something else

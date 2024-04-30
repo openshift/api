@@ -118,6 +118,11 @@ func (in *StableConfigTypeSpec) DeepCopyInto(out *StableConfigTypeSpec) {
 	*out = *in
 	out.EvolvingUnion = in.EvolvingUnion
 	in.CELUnion.DeepCopyInto(&out.CELUnion)
+	if in.EvolvingCollection != nil {
+		in, out := &in.EvolvingCollection, &out.EvolvingCollection
+		*out = make([]string, len(*in))
+		copy(*out, *in)
+	}
 	return
 }
 

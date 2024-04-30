@@ -76,6 +76,14 @@ type StableConfigTypeSpec struct {
 	// +kubebuilder:validation:Minimum:=8
 	// +optional
 	NonZeroDefault int32 `json:"nonZeroDefault,omitempty"`
+
+	// evolvingCollection demonstrates how to have a collection where the maximum number of items varies on cluster type.
+	// For default clusters, this will be "1" but on TechPreview clusters, this value will be "3".
+	// +openshift:validation:FeatureGateAwareMaxItems:featureGate="",maxItems=1
+	// +openshift:validation:FeatureGateAwareMaxItems:featureGate=Example,maxItems=3
+	// +optional
+	// +listType=atomic
+	EvolvingCollection []string `json:"evolvingCollection,omitempty"`
 }
 
 type EvolvingUnion struct {

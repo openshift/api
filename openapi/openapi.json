@@ -29211,71 +29211,30 @@
     },
     "com.github.openshift.api.operator.v1.MachineConfigurationStatus": {
       "type": "object",
-      "required": [
-        "readyReplicas"
-      ],
       "properties": {
         "conditions": {
           "description": "conditions is a list of conditions and their status",
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
           },
           "x-kubernetes-list-map-keys": [
             "type"
           ],
-          "x-kubernetes-list-type": "map"
-        },
-        "generations": {
-          "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
-          },
-          "x-kubernetes-list-type": "atomic"
-        },
-        "latestAvailableRevision": {
-          "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
-          "type": "integer",
-          "format": "int32"
-        },
-        "latestAvailableRevisionReason": {
-          "description": "latestAvailableRevisionReason describe the detailed reason for the most recent deployment",
-          "type": "string"
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "type",
+          "x-kubernetes-patch-strategy": "merge"
         },
         "nodeDisruptionPolicyStatus": {
           "description": "nodeDisruptionPolicyStatus status reflects what the latest cluster-validated policies are, and will be used by the Machine Config Daemon during future node updates.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeDisruptionPolicyStatus"
         },
-        "nodeStatuses": {
-          "description": "nodeStatuses track the deployment values and errors across individual nodes",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/com.github.openshift.api.operator.v1.NodeStatus"
-          },
-          "x-kubernetes-list-map-keys": [
-            "nodeName"
-          ],
-          "x-kubernetes-list-type": "map"
-        },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
           "type": "integer",
           "format": "int64"
-        },
-        "readyReplicas": {
-          "description": "readyReplicas indicates how many replicas are ready and at the desired state",
-          "type": "integer",
-          "format": "int32",
-          "default": 0
-        },
-        "version": {
-          "description": "version is the level this availability applies to",
-          "type": "string"
         }
       }
     },

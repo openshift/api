@@ -1288,6 +1288,8 @@ func (MachineConfigurationSpec) SwaggerDoc() map[string]string {
 }
 
 var map_MachineConfigurationStatus = map[string]string{
+	"observedGeneration":         "observedGeneration is the last generation change you've dealt with",
+	"conditions":                 "conditions is a list of conditions and their status",
 	"nodeDisruptionPolicyStatus": "nodeDisruptionPolicyStatus status reflects what the latest cluster-validated policies are, and will be used by the Machine Config Daemon during future node updates.",
 }
 

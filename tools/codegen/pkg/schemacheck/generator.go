@@ -7,6 +7,7 @@ import (
 
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
+	"github.com/go-git/go-git/v5/plumbing/object"
 	"github.com/openshift/api/tools/codegen/pkg/generation"
 	"github.com/openshift/crd-schema-checker/pkg/cmd/options"
 	"github.com/openshift/crd-schema-checker/pkg/resourceread"
@@ -121,6 +122,11 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 		return fmt.Errorf("could not load schema check generation contexts for group/version %s/%s: %w", group, version.Name, err)
 	}
 
+	if len(contexts) == 0 {
+		klog.V(1).Infof("No CRD manifests found for %s/%s", group, version.Name)
+		return nil
+	}
+
 	var manifestErrs []error
 
 	for _, context := range contexts {
@@ -167,8 +173,6 @@ type schemaCheckGenerationContext struct {
 // within a particular API group version.
 // It finds all CRD manifests, loads the data and the original version of the manifest for comparison.
 func loadSchemaCheckGenerationContextsForVersion(version generation.APIVersionContext, gitBaseSHA string) ([]schemaCheckGenerationContext, error) {
-	errs := []error{}
-
 	repo, err := git.PlainOpenWithOptions(version.Path, &git.PlainOpenOptions{
 		DetectDotGit: true,
 	})
@@ -193,7 +197,18 @@ func loadSchemaCheckGenerationContextsForVersion(version generation.APIVersionCo
 		return nil, fmt.Errorf("could not resolve git commit %s: %w", gitBaseSHA, err)
 	}
 
-	dirEntries, err := os.ReadDir(version.Path)
+	generationContexts, err := loadSchemaCheckGenerationContextsForVersionFromDir(version, baseCommit, repoBaseDir, version.Path, gitBaseSHA)
+	if err != nil {
+		return nil, fmt.Errorf("could not load schema check generation contexts from dir %q: %w", repoBaseDir, err)
+	}
+
+	return generationContexts, nil
+}
+
+func loadSchemaCheckGenerationContextsForVersionFromDir(version generation.APIVersionContext, baseCommit *object.Commit, repoBaseDir, searchPath, gitBaseSHA string) ([]schemaCheckGenerationContext, error) {
+	var errs []error
+
+	dirEntries, err := os.ReadDir(searchPath)
 	if err != nil {
 		return nil, fmt.Errorf("could not read file info for directory %s: %v", version.Path, err)
 	}
@@ -201,12 +216,22 @@ func loadSchemaCheckGenerationContextsForVersion(version generation.APIVersionCo
 	generationContexts := []schemaCheckGenerationContext{}
 
 	for _, fileInfo := range dirEntries {
-		// Ignore any file that isn't a yaml file.
-		if fileInfo.IsDir() || filepath.Ext(fileInfo.Name()) != ".yaml" {
+		if fileInfo.IsDir() {
+			subContexts, err := loadSchemaCheckGenerationContextsForVersionFromDir(version, baseCommit, repoBaseDir, filepath.Join(searchPath, fileInfo.Name()), gitBaseSHA)
+			if err != nil {
+				errs = append(errs, fmt.Errorf("could not load schema check generation contexts from dir %q: %v", filepath.Join(searchPath, fileInfo.Name()), err))
+				continue
+			}
+
+			generationContexts = append(generationContexts, subContexts...)
 			continue
 		}
 
-		path := filepath.Join(version.Path, fileInfo.Name())
+		if filepath.Ext(fileInfo.Name()) != ".yaml" {
+			continue
+		}
+
+		path := filepath.Join(searchPath, fileInfo.Name())
 		data, err := os.ReadFile(path)
 		if err != nil {
 			errs = append(errs, fmt.Errorf("could not read file %s: %v", path, err))
@@ -227,6 +252,22 @@ func loadSchemaCheckGenerationContextsForVersion(version generation.APIVersionCo
 		crd, err := resourceread.ReadCustomResourceDefinitionV1(data)
 		if err != nil {
 			errs = append(errs, fmt.Errorf("could not read CustomResourceDefinition from file %s: %v", path, err))
+			continue
+		}
+
+		hasVersionedSchema := false
+		for i, version := range crd.Spec.Versions {
+			if version.Schema != nil && version.Schema.OpenAPIV3Schema != nil {
+				hasVersionedSchema = true
+				break
+			} else {
+				// Remove the version if it doesn't have a schema in case there are multiple versions.
+				crd.Spec.Versions = append(crd.Spec.Versions[:i], crd.Spec.Versions[i+1:]...)
+			}
+		}
+
+		if !hasVersionedSchema {
+			klog.V(1).Infof("Skipping schema check for %s as it does not have a versioned schema", path)
 			continue
 		}
 
@@ -254,10 +295,26 @@ func loadSchemaCheckGenerationContextsForVersion(version generation.APIVersionCo
 				errs = append(errs, fmt.Errorf("could not read CustomResourceDefinition from file %s in git commit %s: %v", oldFilePath, gitBaseSHA, err))
 				continue
 			}
+
+			hasVersionedSchema := false
+			for i, version := range oldCRD.Spec.Versions {
+				if version.Schema != nil && version.Schema.OpenAPIV3Schema != nil {
+					hasVersionedSchema = true
+					break
+				} else {
+					// Remove the version if it doesn't have a schema in case there are multiple versions.
+					oldCRD.Spec.Versions = append(oldCRD.Spec.Versions[:i], oldCRD.Spec.Versions[i+1:]...)
+				}
+			}
+
+			if !hasVersionedSchema {
+				// We still want to check the new schema.
+				oldCRD = nil
+			}
 		}
 
 		generationContexts = append(generationContexts, schemaCheckGenerationContext{
-			manifestName: fileInfo.Name(),
+			manifestName: oldFilePath,
 			manifestCRD:  crd,
 			oldCRD:       oldCRD,
 		})

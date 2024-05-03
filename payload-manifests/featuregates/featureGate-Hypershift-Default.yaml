@@ -53,6 +53,9 @@
                         "name": "DynamicResourceAllocation"
                     },
                     {
+                        "name": "EtcdBackendQuota"
+                    },
+                    {
                         "name": "EventedPLEG"
                     },
                     {

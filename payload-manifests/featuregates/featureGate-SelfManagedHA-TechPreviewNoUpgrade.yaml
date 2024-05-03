@@ -84,6 +84,9 @@
                         "name": "DynamicResourceAllocation"
                     },
                     {
+                        "name": "EtcdBackendQuota"
+                    },
+                    {
                         "name": "Example"
                     },
                     {

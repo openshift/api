@@ -72,6 +72,9 @@
                         "name": "CSIDriverSharedResource"
                     },
                     {
+                        "name": "ChunkSizeMiB"
+                    },
+                    {
                         "name": "CloudDualStackNodeIPs"
                     },
                     {

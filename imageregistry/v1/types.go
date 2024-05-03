@@ -82,6 +82,7 @@ type ImageRegistrySpec struct {
 	// requests controls how many parallel requests a given registry instance
 	// will handle before queuing additional requests.
 	// +optional
+	// +structType=atomic
 	Requests ImageRegistryConfigRequests `json:"requests,omitempty"`
 	// defaultRoute indicates whether an external facing route for the registry
 	// should be created using the default generated hostname.
@@ -90,6 +91,7 @@ type ImageRegistrySpec struct {
 	// routes defines additional external facing routes which should be
 	// created for the registry.
 	// +optional
+	// +listType=atomic
 	Routes []ImageRegistryConfigRoute `json:"routes,omitempty"`
 	// replicas determines the number of registry instances to run.
 	Replicas int32 `json:"replicas"`
@@ -98,13 +100,16 @@ type ImageRegistrySpec struct {
 	Logging int64 `json:"logging,omitempty"`
 	// resources defines the resource requests+limits for the registry pod.
 	// +optional
+	// +structType=atomic
 	Resources *corev1.ResourceRequirements `json:"resources,omitempty"`
 	// nodeSelector defines the node selection constraints for the registry
 	// pod.
 	// +optional
+	// +mapType=atomic
 	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
 	// tolerations defines the tolerations for the registry pod.
 	// +optional
+	// +listType=atomic
 	Tolerations []corev1.Toleration `json:"tolerations,omitempty"`
 	// rolloutStrategy defines rollout strategy for the image registry
 	// deployment.
@@ -113,9 +118,11 @@ type ImageRegistrySpec struct {
 	RolloutStrategy string `json:"rolloutStrategy,omitempty"`
 	// affinity is a group of node affinity scheduling rules for the image registry pod(s).
 	// +optional
+	// +structType=atomic
 	Affinity *corev1.Affinity `json:"affinity,omitempty"`
 	// topologySpreadConstraints specify how to spread matching pods among the given topology.
 	// +optional
+	// +listType=atomic
 	TopologySpreadConstraints []corev1.TopologySpreadConstraint `json:"topologySpreadConstraints,omitempty"`
 }
 
@@ -212,6 +219,7 @@ type ImageRegistryConfigStorageS3 struct {
 	// cloudFront configures Amazon Cloudfront as the storage middleware in a
 	// registry.
 	// +optional
+	// +structType=atomic
 	CloudFront *ImageRegistryConfigStorageS3CloudFront `json:"cloudFront,omitempty"`
 	// virtualHostedStyle enables using S3 virtual hosted style bucket paths with
 	// a custom RegionEndpoint
@@ -552,6 +560,7 @@ type ImageRegistryConfigStorage struct {
 }
 
 // ImageRegistryConfigRequests defines registry limits on requests read and write.
+// +structType=atomic
 type ImageRegistryConfigRequests struct {
 	// read defines limits for image registry's reads.
 	// +optional

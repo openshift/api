@@ -1,19 +1,19 @@
 | FeatureGate | Default on Hypershift | Default on SelfManagedHA | DevPreviewNoUpgrade on Hypershift | DevPreviewNoUpgrade on SelfManagedHA | TechPreviewNoUpgrade on Hypershift | TechPreviewNoUpgrade on SelfManagedHA  |
 | ------ | --- | --- | --- | --- | --- | ---  |
 | ClusterAPIInstall| | | | | |  |
-| ClusterAPIInstallAWS| | | | | |  |
 | ClusterAPIInstallAzure| | | | | |  |
 | ClusterAPIInstallGCP| | | | | |  |
 | ClusterAPIInstallIBMCloud| | | | | |  |
-| ClusterAPIInstallNutanix| | | | | |  |
-| ClusterAPIInstallOpenStack| | | | | |  |
-| ClusterAPIInstallPowerVS| | | | | |  |
-| ClusterAPIInstallVSphere| | | | | |  |
 | EventedPLEG| | | | | |  |
 | MachineAPIOperatorDisableMachineHealthCheckController| | | | | |  |
 | AutomatedEtcdBackup| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | CSIDriverSharedResource| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | ChunkSizeMiB| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
+| ClusterAPIInstallAWS| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
+| ClusterAPIInstallNutanix| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
+| ClusterAPIInstallOpenStack| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
+| ClusterAPIInstallPowerVS| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
+| ClusterAPIInstallVSphere| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | DNSNameResolver| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | DynamicResourceAllocation| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | EtcdBackendQuota| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |

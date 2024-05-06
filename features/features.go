@@ -472,6 +472,7 @@ var (
 					reportProblemsToJiraComponent("Installer").
 					contactPerson("r4f4").
 					productScope(ocpSpecific).
+					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
 
 	FeatureGateClusterAPIInstallAzure = newFeatureGate("ClusterAPIInstallAzure").
@@ -496,24 +497,28 @@ var (
 						reportProblemsToJiraComponent("Installer").
 						contactPerson("yanhua121").
 						productScope(ocpSpecific).
+						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 						mustRegister()
 
 	FeatureGateClusterAPIInstallOpenStack = newFeatureGate("ClusterAPIInstallOpenStack").
 						reportProblemsToJiraComponent("Installer").
 						contactPerson("stephenfin").
 						productScope(ocpSpecific).
+						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 						mustRegister()
 
 	FeatureGateClusterAPIInstallPowerVS = newFeatureGate("ClusterAPIInstallPowerVS").
 						reportProblemsToJiraComponent("Installer").
 						contactPerson("mjturek").
 						productScope(ocpSpecific).
+						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 						mustRegister()
 
 	FeatureGateClusterAPIInstallVSphere = newFeatureGate("ClusterAPIInstallVSphere").
 						reportProblemsToJiraComponent("Installer").
 						contactPerson("rvanderp3").
 						productScope(ocpSpecific).
+						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 						mustRegister()
 
 	FeatureGateChunkSizeMiB = newFeatureGate("ChunkSizeMiB").

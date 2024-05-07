@@ -16,6 +16,7 @@ tests:
         kind: StableConfigType
         spec:
           immutableField: foo
+          nonZeroDefault: 8
     - name: With an EvolvingUnion, Should not allow a TechPreview enum value
       initial: |
         apiVersion: example.openshift.io/v1
@@ -40,6 +41,7 @@ tests:
           celUnion:
             type: EmptyMember
           immutableField: foo
+          nonZeroDefault: 8
     - name: With an CEL validated Discrminated union, should allow an empty member with the empty type value
       initial: |
         apiVersion: example.openshift.io/v1
@@ -55,6 +57,7 @@ tests:
           celUnion:
             type: EmptyMember
           immutableField: foo
+          nonZeroDefault: 8
     - name: With an CEL validated Discrminated union, should allow a required member with the required type value
       initial: |
         apiVersion: example.openshift.io/v1
@@ -72,6 +75,7 @@ tests:
             type: RequiredMember
             requiredMember: foo
           immutableField: foo
+          nonZeroDefault: 8
     - name: With an CEL validated Discrminated union, should not allow omitting required member with the required type value
       initial: |
         apiVersion: example.openshift.io/v1
@@ -118,6 +122,7 @@ tests:
             type: OptionalMember
             optionalMember: foo
           immutableField: foo
+          nonZeroDefault: 8
     - name: With an CEL validated Discrminated union, should allow omitting the optional member with the optional type value
       initial: |
         apiVersion: example.openshift.io/v1
@@ -133,6 +138,7 @@ tests:
           celUnion:
             type: OptionalMember
           immutableField: foo
+          nonZeroDefault: 8
     - name: With an CEL validated Discrminated union, should not allow the optional member without the optional type value
       initial: |
         apiVersion: example.openshift.io/v1
@@ -183,6 +189,7 @@ tests:
         spec:
           immutableField: foo
           optionalImmutableField: foo
+          nonZeroDefault: 8
     - name: Should not allow changing the optional immutable field
       initial: |
         apiVersion: example.openshift.io/v1

@@ -58,6 +58,7 @@ var map_StableConfigTypeSpec = map[string]string{
 	"optionalImmutableField": "optionalImmutableField is a field that is immutable once set. It is optional but may not be changed once set.",
 	"evolvingUnion":          "evolvingUnion demonstrates how to phase in new values into discriminated union",
 	"celUnion":               "celUnion demonstrates how to validate a discrminated union using CEL",
+	"nonZeroDefault":         "nonZeroDefault is a demonstration of creating an integer field that has a non zero default. It required two default tags (one for CRD generation, one for client generation) and must have `omitempty` and be optional. A minimum value is added to demonstrate that a zero value would not be accepted.",
 }
 
 func (StableConfigTypeSpec) SwaggerDoc() map[string]string {

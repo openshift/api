@@ -23289,6 +23289,14 @@ func schema_openshift_api_example_v1_StableConfigTypeSpec(ref common.ReferenceCa
 							Ref:         ref("github.com/openshift/api/example/v1.CELUnion"),
 						},
 					},
+					"nonZeroDefault": {
+						SchemaProps: spec.SchemaProps{
+							Description: "nonZeroDefault is a demonstration of creating an integer field that has a non zero default. It required two default tags (one for CRD generation, one for client generation) and must have `omitempty` and be optional. A minimum value is added to demonstrate that a zero value would not be accepted.",
+							Default:     8,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 				},
 				Required: []string{"immutableField"},
 			},

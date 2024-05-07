@@ -105,7 +105,6 @@ type ImageRegistrySpec struct {
 	// nodeSelector defines the node selection constraints for the registry
 	// pod.
 	// +optional
-	// +mapType=atomic
 	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
 	// tolerations defines the tolerations for the registry pod.
 	// +optional
@@ -118,7 +117,6 @@ type ImageRegistrySpec struct {
 	RolloutStrategy string `json:"rolloutStrategy,omitempty"`
 	// affinity is a group of node affinity scheduling rules for the image registry pod(s).
 	// +optional
-	// +structType=atomic
 	Affinity *corev1.Affinity `json:"affinity,omitempty"`
 	// topologySpreadConstraints specify how to spread matching pods among the given topology.
 	// +optional
@@ -230,7 +228,6 @@ type ImageRegistryConfigStorageS3 struct {
 	// cloudFront configures Amazon Cloudfront as the storage middleware in a
 	// registry.
 	// +optional
-	// +structType=atomic
 	CloudFront *ImageRegistryConfigStorageS3CloudFront `json:"cloudFront,omitempty"`
 	// virtualHostedStyle enables using S3 virtual hosted style bucket paths with
 	// a custom RegionEndpoint
@@ -571,7 +568,6 @@ type ImageRegistryConfigStorage struct {
 }
 
 // ImageRegistryConfigRequests defines registry limits on requests read and write.
-// +structType=atomic
 type ImageRegistryConfigRequests struct {
 	// read defines limits for image registry's reads.
 	// +optional

@@ -1020,7 +1020,6 @@ spec:
                         type: array
                     type: object
                 type: object
-                x-kubernetes-map-type: atomic
               defaultRoute:
                 description: defaultRoute indicates whether an external facing route
                   for the registry should be created using the default generated hostname.
@@ -1062,7 +1061,6 @@ spec:
                 description: nodeSelector defines the node selection constraints for
                   the registry pod.
                 type: object
-                x-kubernetes-map-type: atomic
               observedConfig:
                 description: observedConfig holds a sparse config that controller
                   has observed from the cluster state.  It exists in spec because
@@ -1564,7 +1562,6 @@ spec:
                         - keypairID
                         - privateKey
                         type: object
-                        x-kubernetes-map-type: atomic
                       encrypt:
                         description: encrypt specifies whether the registry stores
                           the image in encrypted format or not. Optional, defaults
@@ -2284,7 +2281,6 @@ spec:
                         - keypairID
                         - privateKey
                         type: object
-                        x-kubernetes-map-type: atomic
                       encrypt:
                         description: encrypt specifies whether the registry stores
                           the image in encrypted format or not. Optional, defaults

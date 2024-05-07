@@ -82,7 +82,6 @@ type ImageRegistrySpec struct {
 	// requests controls how many parallel requests a given registry instance
 	// will handle before queuing additional requests.
 	// +optional
-	// +structType=atomic
 	Requests ImageRegistryConfigRequests `json:"requests,omitempty"`
 	// defaultRoute indicates whether an external facing route for the registry
 	// should be created using the default generated hostname.
@@ -100,7 +99,6 @@ type ImageRegistrySpec struct {
 	Logging int64 `json:"logging,omitempty"`
 	// resources defines the resource requests+limits for the registry pod.
 	// +optional
-	// +structType=atomic
 	Resources *corev1.ResourceRequirements `json:"resources,omitempty"`
 	// nodeSelector defines the node selection constraints for the registry
 	// pod.

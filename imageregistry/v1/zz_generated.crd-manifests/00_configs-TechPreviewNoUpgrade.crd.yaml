@@ -1149,7 +1149,6 @@ spec:
                         type: string
                     type: object
                 type: object
-                x-kubernetes-map-type: atomic
               resources:
                 description: resources defines the resource requests+limits for the
                   registry pod.
@@ -1199,7 +1198,6 @@ spec:
                       More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
                     type: object
                 type: object
-                x-kubernetes-map-type: atomic
               rolloutStrategy:
                 description: rolloutStrategy defines rollout strategy for the image
                   registry deployment.

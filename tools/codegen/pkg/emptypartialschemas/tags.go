@@ -23,6 +23,7 @@ const (
 	openshiftCapabilityMarkerName                  = "openshift:capability"
 	openshiftFeatureGateMarkerName                 = "openshift:enable:FeatureGate"
 	openshiftFeatureGateAwareEnumMarkerName        = "openshift:validation:FeatureGateAwareEnum"
+	openshiftFeatureGateAwareMaxItemsMarkerName    = "openshift:validation:FeatureGateAwareMaxItems"
 	openshiftFeatureGateAwareXValidationMarkerName = "openshift:validation:FeatureGateAwareXValidation"
 )
 
@@ -45,6 +46,10 @@ func extractFeatureGatesFromComments(comments []string) []string {
 			anyPossibilityFound = true
 			break
 		}
+		if strings.Contains(line, openshiftFeatureGateAwareMaxItemsMarkerName) {
+			anyPossibilityFound = true
+			break
+		}
 	}
 	if !anyPossibilityFound {
 		return nil
@@ -54,6 +59,7 @@ func extractFeatureGatesFromComments(comments []string) []string {
 	ret = append(ret, extractStringSliceTagFromComments(comments, openshiftFeatureGateMarkerName)...)
 	ret = append(ret, extractFeatureGatesFromValidationMarker(comments, openshiftFeatureGateAwareXValidationMarkerName)...)
 	ret = append(ret, extractFeatureGatesFromValidationMarker(comments, openshiftFeatureGateAwareEnumMarkerName)...)
+	ret = append(ret, extractFeatureGatesFromValidationMarker(comments, openshiftFeatureGateAwareMaxItemsMarkerName)...)
 
 	return ret
 }

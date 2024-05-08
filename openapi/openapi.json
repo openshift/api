@@ -12904,6 +12904,15 @@
           "type": "string",
           "default": ""
         },
+        "evolvingCollection": {
+          "description": "evolvingCollection demonstrates how to have a collection where the maximum number of items varies on cluster type. For default clusters, this will be \"1\" but on TechPreview clusters, this value will be \"3\".",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
         "evolvingUnion": {
           "description": "evolvingUnion demonstrates how to phase in new values into discriminated union",
           "default": {},

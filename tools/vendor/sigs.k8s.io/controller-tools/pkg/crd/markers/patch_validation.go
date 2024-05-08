@@ -2,6 +2,7 @@ package markers
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"strings"
 
@@ -31,6 +32,7 @@ const OpenShiftFeatureSetAwareEnumMarkerName = "openshift:validation:FeatureSetA
 const OpenShiftFeatureSetAwareXValidationMarkerName = "openshift:validation:FeatureSetAwareXValidation"
 const OpenShiftFeatureGateMarkerName = "openshift:enable:FeatureGate"
 const OpenShiftFeatureGateAwareEnumMarkerName = "openshift:validation:FeatureGateAwareEnum"
+const OpenShiftFeatureGateAwareMaxItemsMarkerName = "openshift:validation:FeatureGateAwareMaxItems"
 const OpenShiftFeatureGateAwareXValidationMarkerName = "openshift:validation:FeatureGateAwareXValidation"
 
 func init() {
@@ -49,6 +51,10 @@ func init() {
 
 	ValidationMarkers = append(ValidationMarkers,
 		must(markers.MakeDefinition(OpenShiftFeatureGateAwareEnumMarkerName, markers.DescribesField, FeatureGateEnum{})).
+			WithHelp(markers.SimpleHelp("OpenShift", "specifies the FeatureGate that is required to generate this field.")),
+	)
+	ValidationMarkers = append(ValidationMarkers,
+		must(markers.MakeDefinition(OpenShiftFeatureGateAwareMaxItemsMarkerName, markers.DescribesField, FeatureGateMaxItems{})).
 			WithHelp(markers.SimpleHelp("OpenShift", "specifies the FeatureGate that is required to generate this field.")),
 	)
 	FieldOnlyMarkers = append(FieldOnlyMarkers,
@@ -140,6 +146,24 @@ func (m FeatureGateEnum) ApplyToSchema(schema *apiext.JSONSchemaProps) error {
 	}
 
 	schema.Enum = vals
+	return nil
+}
+
+type FeatureGateMaxItems struct {
+	FeatureGateNames []string `marker:"featureGate"`
+	MaxItems         int      `marker:"maxItems"`
+}
+
+func (m FeatureGateMaxItems) ApplyToSchema(schema *apiext.JSONSchemaProps) error {
+	if !FeatureGatesForCurrentFile.HasAny(m.FeatureGateNames...) {
+		return nil
+	}
+
+	if schema.Type != "array" {
+		return fmt.Errorf("must apply maxitem to an array")
+	}
+	val := int64(m.MaxItems)
+	schema.MaxItems = &val
 	return nil
 }
 

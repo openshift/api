@@ -1,0 +1,239 @@
+{
+    "apiVersion": "config.openshift.io/v1",
+    "kind": "FeatureGate",
+    "metadata": {
+        "annotations": {
+            "include.release.openshift.io/hypershift": "false-except-for-the-config-operator"
+        },
+        "creationTimestamp": null,
+        "name": "cluster"
+    },
+    "spec": {},
+    "status": {
+        "featureGates": [
+            {
+                "disabled": [
+                    {
+                        "name": "AutomatedEtcdBackup"
+                    },
+                    {
+                        "name": "CSIDriverSharedResource"
+                    },
+                    {
+                        "name": "ChunkSizeMiB"
+                    },
+                    {
+                        "name": "ClusterAPIInstall"
+                    },
+                    {
+                        "name": "ClusterAPIInstallAzure"
+                    },
+                    {
+                        "name": "ClusterAPIInstallGCP"
+                    },
+                    {
+                        "name": "ClusterAPIInstallIBMCloud"
+                    },
+                    {
+                        "name": "ClusterAPIInstallPowerVS"
+                    },
+                    {
+                        "name": "DNSNameResolver"
+                    },
+                    {
+                        "name": "DynamicResourceAllocation"
+                    },
+                    {
+                        "name": "EtcdBackendQuota"
+                    },
+                    {
+                        "name": "EventedPLEG"
+                    },
+                    {
+                        "name": "Example"
+                    },
+                    {
+                        "name": "ExternalOIDC"
+                    },
+                    {
+                        "name": "ExternalRouteCertificate"
+                    },
+                    {
+                        "name": "GCPClusterHostedDNS"
+                    },
+                    {
+                        "name": "GCPLabelsTags"
+                    },
+                    {
+                        "name": "GatewayAPI"
+                    },
+                    {
+                        "name": "HardwareSpeed"
+                    },
+                    {
+                        "name": "ImagePolicy"
+                    },
+                    {
+                        "name": "InsightsConfig"
+                    },
+                    {
+                        "name": "InsightsConfigAPI"
+                    },
+                    {
+                        "name": "InsightsOnDemandDataGather"
+                    },
+                    {
+                        "name": "InstallAlternateInfrastructureAWS"
+                    },
+                    {
+                        "name": "MachineAPIOperatorDisableMachineHealthCheckController"
+                    },
+                    {
+                        "name": "MachineAPIProviderOpenStack"
+                    },
+                    {
+                        "name": "MachineConfigNodes"
+                    },
+                    {
+                        "name": "ManagedBootImages"
+                    },
+                    {
+                        "name": "MaxUnavailableStatefulSet"
+                    },
+                    {
+                        "name": "MetricsCollectionProfiles"
+                    },
+                    {
+                        "name": "MixedCPUsAllocation"
+                    },
+                    {
+                        "name": "NewOLM"
+                    },
+                    {
+                        "name": "NodeDisruptionPolicy"
+                    },
+                    {
+                        "name": "NodeSwap"
+                    },
+                    {
+                        "name": "OnClusterBuild"
+                    },
+                    {
+                        "name": "PinnedImages"
+                    },
+                    {
+                        "name": "PlatformOperators"
+                    },
+                    {
+                        "name": "RouteExternalCertificate"
+                    },
+                    {
+                        "name": "ServiceAccountTokenNodeBinding"
+                    },
+                    {
+                        "name": "ServiceAccountTokenNodeBindingValidation"
+                    },
+                    {
+                        "name": "ServiceAccountTokenPodNodeInfo"
+                    },
+                    {
+                        "name": "SignatureStores"
+                    },
+                    {
+                        "name": "SigstoreImageVerification"
+                    },
+                    {
+                        "name": "TranslateStreamCloseWebsocketRequests"
+                    },
+                    {
+                        "name": "UpgradeStatus"
+                    },
+                    {
+                        "name": "VSphereDriverConfiguration"
+                    },
+                    {
+                        "name": "VSphereMultiVCenters"
+                    },
+                    {
+                        "name": "VolumeGroupSnapshot"
+                    }
+                ],
+                "enabled": [
+                    {
+                        "name": "AdminNetworkPolicy"
+                    },
+                    {
+                        "name": "AlibabaPlatform"
+                    },
+                    {
+                        "name": "AzureWorkloadIdentity"
+                    },
+                    {
+                        "name": "BareMetalLoadBalancer"
+                    },
+                    {
+                        "name": "BuildCSIVolumes"
+                    },
+                    {
+                        "name": "CloudDualStackNodeIPs"
+                    },
+                    {
+                        "name": "ClusterAPIInstallAWS"
+                    },
+                    {
+                        "name": "ClusterAPIInstallNutanix"
+                    },
+                    {
+                        "name": "ClusterAPIInstallOpenStack"
+                    },
+                    {
+                        "name": "ClusterAPIInstallVSphere"
+                    },
+                    {
+                        "name": "DisableKubeletCloudCredentialProviders"
+                    },
+                    {
+                        "name": "ExternalCloudProvider"
+                    },
+                    {
+                        "name": "ExternalCloudProviderAzure"
+                    },
+                    {
+                        "name": "ExternalCloudProviderExternal"
+                    },
+                    {
+                        "name": "ExternalCloudProviderGCP"
+                    },
+                    {
+                        "name": "KMSv1"
+                    },
+                    {
+                        "name": "MetricsServer"
+                    },
+                    {
+                        "name": "NetworkDiagnosticsConfig"
+                    },
+                    {
+                        "name": "NetworkLiveMigration"
+                    },
+                    {
+                        "name": "OpenShiftPodSecurityAdmission"
+                    },
+                    {
+                        "name": "PrivateHostedZoneAWS"
+                    },
+                    {
+                        "name": "VSphereControlPlaneMachineSet"
+                    },
+                    {
+                        "name": "VSphereStaticIPs"
+                    },
+                    {
+                        "name": "ValidatingAdmissionPolicy"
+                    }
+                ],
+                "version": ""
+            }
+        ]
+    }
+}

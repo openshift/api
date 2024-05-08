@@ -854,6 +854,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.AWSClassicLoadBalancerParameters":                              schema_openshift_api_operator_v1_AWSClassicLoadBalancerParameters(ref),
 		"github.com/openshift/api/operator/v1.AWSLoadBalancerParameters":                                     schema_openshift_api_operator_v1_AWSLoadBalancerParameters(ref),
 		"github.com/openshift/api/operator/v1.AWSNetworkLoadBalancerParameters":                              schema_openshift_api_operator_v1_AWSNetworkLoadBalancerParameters(ref),
+		"github.com/openshift/api/operator/v1.AWSSubnets":                                                    schema_openshift_api_operator_v1_AWSSubnets(ref),
 		"github.com/openshift/api/operator/v1.AccessLogging":                                                 schema_openshift_api_operator_v1_AccessLogging(ref),
 		"github.com/openshift/api/operator/v1.AddPage":                                                       schema_openshift_api_operator_v1_AddPage(ref),
 		"github.com/openshift/api/operator/v1.AdditionalNetworkDefinition":                                   schema_openshift_api_operator_v1_AdditionalNetworkDefinition(ref),
@@ -43555,11 +43556,17 @@ func schema_openshift_api_operator_v1_AWSClassicLoadBalancerParameters(ref commo
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
+					"subnets": {
+						SchemaProps: spec.SchemaProps{
+							Description: "subnets specifies the subnets to which the load balancer will attach. The subnets may be specified by either their ID or name. The total number of subnets is limited to 10.\n\nIn order for the load balancer to be provisioned with subnets, each subnet must exist, each subnet must be from a different availability zone, and the load balancer service must be recreated to pick up new values.\n\nWhen omitted from the spec, the subnets will be auto-discovered for each availability zone. Auto-discovered subnets are not reported in the status of the IngressController object.",
+							Ref:         ref("github.com/openshift/api/operator/v1.AWSSubnets"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+			"github.com/openshift/api/operator/v1.AWSSubnets", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
 	}
 }
 
@@ -43618,6 +43625,69 @@ func schema_openshift_api_operator_v1_AWSNetworkLoadBalancerParameters(ref commo
 			SchemaProps: spec.SchemaProps{
 				Description: "AWSNetworkLoadBalancerParameters holds configuration parameters for an AWS Network load balancer.",
 				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"subnets": {
+						SchemaProps: spec.SchemaProps{
+							Description: "subnets specifies the subnets to which the load balancer will attach. The subnets may be specified by either their ID or name. The total number of subnets is limited to 10.\n\nIn order for the load balancer to be provisioned with subnets, each subnet must exist, each subnet must be from a different availability zone, and the load balancer service must be recreated to pick up new values.\n\nWhen omitted from the spec, the subnets will be auto-discovered for each availability zone. Auto-discovered subnets are not reported in the status of the IngressController object.",
+							Ref:         ref("github.com/openshift/api/operator/v1.AWSSubnets"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1.AWSSubnets"},
+	}
+}
+
+func schema_openshift_api_operator_v1_AWSSubnets(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "AWSSubnets contains a list of references to AWS subnets by ID or name.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"ids": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "ids specifies a list of AWS subnets by subnet ID. Subnet IDs must start with \"subnet-\", consist only of alphanumeric characters, must be exactly 24 characters long, must be unique, and the total number of subnets specified by ids and names must not exceed 10.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"names": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "names specifies a list of AWS subnets by subnet name. Subnet names must not start with \"subnet-\", must not include commas, must be under 256 characters in length, must be unique, and the total number of subnets specified by ids and names must not exceed 10.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
 			},
 		},
 	}

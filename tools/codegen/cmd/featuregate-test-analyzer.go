@@ -438,6 +438,9 @@ func listTestResultFor(featureGate string, clusterProfiles sets.Set[string]) (ma
 	if clusterProfiles.Has("Hypershift") {
 		jobVariantsToCheck = append(jobVariantsToCheck, requiredHypershiftJobVariants...)
 	}
+	if clusterProfiles.Has("HypershiftIndependent") {
+		jobVariantsToCheck = append(jobVariantsToCheck, requiredHypershiftJobVariants...)
+	}
 	if clusterProfiles.Has("SelfManagedHA") {
 		jobVariantsToCheck = append(jobVariantsToCheck, requiredSelfManagedJobVariants...)
 	}

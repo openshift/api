@@ -8,6 +8,7 @@ metadata:
     description: ConsoleExternalLogLink is an extension for customizing OpenShift
       web console log links.
     displayName: ConsoleExternalLogLinks
+    include.release.openshift.io/hypershift: "true"
     include.release.openshift.io/ibm-cloud-managed: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
   name: consoleexternalloglinks.console.openshift.io

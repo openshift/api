@@ -8,6 +8,7 @@ import (
 var (
 	clusterProfileToShortName = map[string]string{
 		"include.release.openshift.io/ibm-cloud-managed":              "Hypershift",
+		"include.release.openshift.io/hypershift":                     "HypershiftIndependent",
 		"include.release.openshift.io/self-managed-high-availability": "SelfManagedHA",
 	}
 )

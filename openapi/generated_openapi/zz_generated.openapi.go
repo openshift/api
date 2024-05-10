@@ -932,6 +932,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.IPv4OVNKubernetesConfig":                                       schema_openshift_api_operator_v1_IPv4OVNKubernetesConfig(ref),
 		"github.com/openshift/api/operator/v1.IPv6GatewayConfig":                                             schema_openshift_api_operator_v1_IPv6GatewayConfig(ref),
 		"github.com/openshift/api/operator/v1.IPv6OVNKubernetesConfig":                                       schema_openshift_api_operator_v1_IPv6OVNKubernetesConfig(ref),
+		"github.com/openshift/api/operator/v1.Ingress":                                                       schema_openshift_api_operator_v1_Ingress(ref),
 		"github.com/openshift/api/operator/v1.IngressController":                                             schema_openshift_api_operator_v1_IngressController(ref),
 		"github.com/openshift/api/operator/v1.IngressControllerCaptureHTTPCookie":                            schema_openshift_api_operator_v1_IngressControllerCaptureHTTPCookie(ref),
 		"github.com/openshift/api/operator/v1.IngressControllerCaptureHTTPCookieUnion":                       schema_openshift_api_operator_v1_IngressControllerCaptureHTTPCookieUnion(ref),
@@ -45326,12 +45327,19 @@ func schema_openshift_api_operator_v1_ConsoleSpec(ref common.ReferenceCallback) 
 							},
 						},
 					},
+					"ingress": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ingress allows to configure the alternative ingress for the console. This field is intended for clusters without ingress capability, where access to routes is not possible.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1.Ingress"),
+						},
+					},
 				},
 				Required: []string{"managementState", "providers"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.ConsoleConfigRoute", "github.com/openshift/api/operator/v1.ConsoleCustomization", "github.com/openshift/api/operator/v1.ConsoleProviders", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
+			"github.com/openshift/api/operator/v1.ConsoleConfigRoute", "github.com/openshift/api/operator/v1.ConsoleCustomization", "github.com/openshift/api/operator/v1.ConsoleProviders", "github.com/openshift/api/operator/v1.Ingress", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -47210,6 +47218,35 @@ func schema_openshift_api_operator_v1_IPv6OVNKubernetesConfig(ref common.Referen
 					"internalJoinSubnet": {
 						SchemaProps: spec.SchemaProps{
 							Description: "internalJoinSubnet is a v6 subnet used internally by ovn-kubernetes in case the default one is being already used by something else. It must not overlap with any other subnet being used by OpenShift or by the node network. The size of the subnet must be larger than the number of nodes. The value cannot be changed after installation. The subnet must be large enough to accomadate one IP per node in your cluster The current default value is fd98::/48 The value must be in proper IPV6 CIDR format Note that IPV6 dual addresses are not permitted",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_operator_v1_Ingress(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Ingress allows cluster admin to configure alternative ingress for the console.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"consoleURL": {
+						SchemaProps: spec.SchemaProps{
+							Description: "consoleURL is a URL to be used as the base console address. If not specified, the console route hostname will be used. This field is required for clusters without ingress capability, where access to routes is not possible. Make sure that appropriate ingress is set up at this URL. The console operator will monitor the URL and may go degraded if it's unreachable for an extended period. Must use the HTTPS scheme.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"clientDownloadsURL": {
+						SchemaProps: spec.SchemaProps{
+							Description: "clientDownloadsURL is a URL to be used as the address to download client binaries. If not specified, the downloads route hostname will be used. This field is required for clusters without ingress capability, where access to routes is not possible. The console operator will monitor the URL and may go degraded if it's unreachable for an extended period. Must use the HTTPS scheme.",
+							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},

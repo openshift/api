@@ -147,8 +147,9 @@ type AzureMachineProviderSpec struct {
 	Diagnostics AzureDiagnostics `json:"diagnostics,omitempty"`
 	// capacityReservationGroupID specifies the capacity reservation group resource id that should be
 	// used for allocating the virtual machine.
-	// It is optional but may not be changed once set.
-	// +kubebuilder:validation:XValidation:rule="oldSelf == '' || self == oldSelf",message="CapacityReservationGroupID is immutable once set"
+	// The field size should be greater than 0 and the field input must start with '/'.
+	// The input for capacityReservationGroupID must be similar to '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/capacityReservationGroups/{capacityReservationGroupName}'.
+	// The keys which are used should be among 'subscriptions', 'providers' and 'resourcegroups' followed by valid ID or names respectively.
 	// +optional
 	CapacityReservationGroupID string `json:"capacityReservationGroupID,omitempty"`
 }

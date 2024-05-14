@@ -11829,6 +11829,11 @@ func schema_openshift_api_config_v1_ExternalIPConfig(ref common.ReferenceCallbac
 						},
 					},
 					"autoAssignCIDRs": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "autoAssignCIDRs is a list of CIDRs from which to automatically assign Service.ExternalIP. These are assigned when the service is of type LoadBalancer. In general, this is only useful for bare-metal clusters. In Openshift 3.x, this was misleadingly called \"IngressIPs\". Automatically assigned External IPs are not affected by any ExternalIPPolicy rules. Currently, only one entry may be provided.",
 							Type:        []string{"array"},
@@ -11859,6 +11864,11 @@ func schema_openshift_api_config_v1_ExternalIPPolicy(ref common.ReferenceCallbac
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"allowedCIDRs": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "allowedCIDRs is the list of allowed CIDRs.",
 							Type:        []string{"array"},
@@ -11874,6 +11884,11 @@ func schema_openshift_api_config_v1_ExternalIPPolicy(ref common.ReferenceCallbac
 						},
 					},
 					"rejectedCIDRs": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "rejectedCIDRs is the list of disallowed CIDRs. These take precedence over allowedCIDRs.",
 							Type:        []string{"array"},
@@ -15160,6 +15175,11 @@ func schema_openshift_api_config_v1_NetworkSpec(ref common.ReferenceCallback) co
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"clusterNetwork": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "IP address pool to use for pod IPs. This field is immutable after installation.",
 							Type:        []string{"array"},
@@ -15174,6 +15194,11 @@ func schema_openshift_api_config_v1_NetworkSpec(ref common.ReferenceCallback) co
 						},
 					},
 					"serviceNetwork": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "IP address pool for services. Currently, we only support a single entry here. This field is immutable after installation.",
 							Type:        []string{"array"},
@@ -15233,6 +15258,11 @@ func schema_openshift_api_config_v1_NetworkStatus(ref common.ReferenceCallback) 
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"clusterNetwork": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "IP address pool to use for pod IPs.",
 							Type:        []string{"array"},
@@ -15247,6 +15277,11 @@ func schema_openshift_api_config_v1_NetworkStatus(ref common.ReferenceCallback) 
 						},
 					},
 					"serviceNetwork": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "IP address pool for services. Currently, we only support a single entry here.",
 							Type:        []string{"array"},

@@ -119,9 +119,6 @@
                         "name": "MixedCPUsAllocation"
                     },
                     {
-                        "name": "NetworkDiagnosticsConfig"
-                    },
-                    {
                         "name": "NewOLM"
                     },
                     {
@@ -215,6 +212,9 @@
                     },
                     {
                         "name": "MetricsServer"
+                    },
+                    {
+                        "name": "NetworkDiagnosticsConfig"
                     },
                     {
                         "name": "NetworkLiveMigration"

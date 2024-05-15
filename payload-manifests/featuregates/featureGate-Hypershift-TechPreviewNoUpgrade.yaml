@@ -28,6 +28,9 @@
                         "name": "EventedPLEG"
                     },
                     {
+                        "name": "GatewayAPI"
+                    },
+                    {
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
                     }
                 ],
@@ -115,9 +118,6 @@
                     },
                     {
                         "name": "GCPLabelsTags"
-                    },
-                    {
-                        "name": "GatewayAPI"
                     },
                     {
                         "name": "HardwareSpeed"

@@ -68,8 +68,9 @@ func (ClusterNetworkEntry) SwaggerDoc() map[string]string {
 }
 
 var map_DockerPullSecretControllerConfig = map[string]string{
-	"registryURLs":             "registryURLs is a list of urls that the docker pull secrets should be valid for.",
-	"internalRegistryHostname": "internalRegistryHostname is the hostname for the default internal image registry. The value must be in \"hostname[:port]\" format.  Docker pull secrets will be generated for this registry.",
+	"registryURLs":                       "registryURLs is a list of urls that the docker pull secrets should be valid for.",
+	"internalRegistryHostname":           "internalRegistryHostname is the hostname for the default internal image registry. The value must be in \"hostname[:port]\" format.  Docker pull secrets will be generated for this registry.",
+	"serviceAccountSigningPublicKeyFile": "serviceAccountSigningPublicKeyFile specifies the path to a file that contains the current public key of the service account token issuer. This field should be specified if the controller cannot automatically locate the service account token issuer key. The issuer signs issued ID tokens using the corresponding private key.",
 }
 
 func (DockerPullSecretControllerConfig) SwaggerDoc() map[string]string {

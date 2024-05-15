@@ -42678,6 +42678,13 @@ func schema_openshift_api_openshiftcontrolplane_v1_DockerPullSecretControllerCon
 							Format:      "",
 						},
 					},
+					"serviceAccountSigningPublicKeyFile": {
+						SchemaProps: spec.SchemaProps{
+							Description: "serviceAccountSigningPublicKeyFile specifies the path to a file that contains the current public key of the service account token issuer. This field should be specified if the controller cannot automatically locate the service account token issuer key. The issuer signs issued ID tokens using the corresponding private key.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 				Required: []string{"registryURLs", "internalRegistryHostname"},
 			},

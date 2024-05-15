@@ -24779,6 +24779,10 @@
             "type": "string",
             "default": ""
           }
+        },
+        "serviceAccountSigningPublicKeyFile": {
+          "description": "serviceAccountSigningPublicKeyFile specifies the path to a file that contains the current public key of the service account token issuer. This field should be specified if the controller cannot automatically locate the service account token issuer key. The issuer signs issued ID tokens using the corresponding private key.",
+          "type": "string"
         }
       }
     },

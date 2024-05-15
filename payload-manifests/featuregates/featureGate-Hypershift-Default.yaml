@@ -168,6 +168,9 @@
                     },
                     {
                         "name": "VolumeGroupSnapshot"
+                    },
+                    {
+                        "name": "CRDBasedCMO"
                     }
                 ],
                 "enabled": [

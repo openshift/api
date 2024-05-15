@@ -535,4 +535,11 @@ var (
 				productScope(ocpSpecific).
 				enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 				mustRegister()
+
+	FeatureGateCRDBasedCMO = newFeatureGate("CRDBasedCMO").
+				reportProblemsToJiraComponent("Monitoring").
+				contactPerson("marioferh").
+				productScope(ocpSpecific).
+				enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+				mustRegister()
 )

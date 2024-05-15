@@ -84,6 +84,9 @@
                         "name": "ClusterAPIInstallVSphere"
                     },
                     {
+                        "name": "ClusterMonitoringConfig"
+                    },
+                    {
                         "name": "DNSNameResolver"
                     },
                     {

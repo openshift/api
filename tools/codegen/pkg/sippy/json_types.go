@@ -1,7 +1,5 @@
 package sippy
 
-import "fmt"
-
 type SippyQueryStruct struct {
 	Items        []SippyQueryItem `json:"items"`
 	LinkOperator string           `json:"linkOperator"`
@@ -46,10 +44,16 @@ type SippyTestInfo struct {
 	OpenBugs                  int         `json:"open_bugs"`
 }
 
-func QueriesFor(cloud, architecture, topology, featureGate string) []*SippyQueryStruct {
+func QueriesFor(cloud, architecture, topology, testPattern string) []*SippyQueryStruct {
 	return []*SippyQueryStruct{
 		{
 			Items: []SippyQueryItem{
+				{
+					ColumnField:   "variants",
+					Not:           false,
+					OperatorValue: "contains",
+					Value:         "techpreview",
+				},
 				{
 					ColumnField:   "variants",
 					Not:           false,
@@ -72,7 +76,7 @@ func QueriesFor(cloud, architecture, topology, featureGate string) []*SippyQuery
 					ColumnField:   "name",
 					Not:           false,
 					OperatorValue: "contains",
-					Value:         fmt.Sprintf("[OCPFeatureGate:%s]", featureGate),
+					Value:         testPattern,
 				},
 			},
 			LinkOperator: "and",
@@ -101,7 +105,7 @@ func QueriesFor(cloud, architecture, topology, featureGate string) []*SippyQuery
 					ColumnField:   "name",
 					Not:           false,
 					OperatorValue: "contains",
-					Value:         fmt.Sprintf("[FeatureGate:%s]", featureGate),
+					Value:         testPattern,
 				},
 			},
 			LinkOperator: "and",

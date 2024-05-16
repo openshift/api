@@ -6104,7 +6104,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "policy": {
           "description": "policy is a set of restrictions applied to the ExternalIP field. If nil or empty, then ExternalIP is not allowed to be set.",
@@ -6122,7 +6123,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "rejectedCIDRs": {
           "description": "rejectedCIDRs is the list of disallowed CIDRs. These take precedence over allowedCIDRs.",
@@ -6130,7 +6132,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -8076,7 +8079,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.config.v1.ClusterNetworkEntry"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "externalIP": {
           "description": "externalIP defines configuration for controllers that affect Service.ExternalIP. If nil, then ExternalIP is not allowed to be set.",
@@ -8098,7 +8102,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "serviceNodePortRange": {
           "description": "The port range allowed for Services of type NodePort. If not specified, the default of 30000-32767 will be used. Such Services without a NodePort specified will have one automatically allocated from this range. This parameter can be updated after the cluster is installed.",
@@ -8116,7 +8121,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.config.v1.ClusterNetworkEntry"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "clusterNetworkMTU": {
           "description": "ClusterNetworkMTU is the MTU for inter-pod networking.",
@@ -8151,7 +8157,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },

@@ -7,7 +7,6 @@ metadata:
     api.openshift.io/filename-operator: network
     api.openshift.io/filename-ordering: "01"
     feature-gate.release.openshift.io/NetworkLiveMigration: "true"
-    include.release.openshift.io/self-managed-high-availability: "true"
   name: networks.operator.openshift.io
 spec:
   group: operator.openshift.io

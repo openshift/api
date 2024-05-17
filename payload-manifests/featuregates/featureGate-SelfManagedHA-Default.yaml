@@ -26,9 +26,6 @@
                         "name": "ClusterAPIInstall"
                     },
                     {
-                        "name": "ClusterAPIInstallAWS"
-                    },
-                    {
                         "name": "ClusterAPIInstallAzure"
                     },
                     {
@@ -38,16 +35,7 @@
                         "name": "ClusterAPIInstallIBMCloud"
                     },
                     {
-                        "name": "ClusterAPIInstallNutanix"
-                    },
-                    {
-                        "name": "ClusterAPIInstallOpenStack"
-                    },
-                    {
                         "name": "ClusterAPIInstallPowerVS"
-                    },
-                    {
-                        "name": "ClusterAPIInstallVSphere"
                     },
                     {
                         "name": "DNSNameResolver"
@@ -191,6 +179,18 @@
                     },
                     {
                         "name": "CloudDualStackNodeIPs"
+                    },
+                    {
+                        "name": "ClusterAPIInstallAWS"
+                    },
+                    {
+                        "name": "ClusterAPIInstallNutanix"
+                    },
+                    {
+                        "name": "ClusterAPIInstallOpenStack"
+                    },
+                    {
+                        "name": "ClusterAPIInstallVSphere"
                     },
                     {
                         "name": "DisableKubeletCloudCredentialProviders"

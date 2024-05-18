@@ -155,9 +155,6 @@
                         "name": "VSphereMultiVCenters"
                     },
                     {
-                        "name": "ValidatingAdmissionPolicy"
-                    },
-                    {
                         "name": "VolumeGroupSnapshot"
                     }
                 ],
@@ -230,6 +227,9 @@
                     },
                     {
                         "name": "VSphereStaticIPs"
+                    },
+                    {
+                        "name": "ValidatingAdmissionPolicy"
                     }
                 ],
                 "version": ""

@@ -177,6 +177,23 @@ func ClusterProfile(clusterProfile string) FileContentsPredicate {
 	}
 }
 
+// BootstrapRequiredCRD returns a predicate for LoadFilesRecursively that filters manifests
+// based on whether they are marked as being required for bootstrap or not.
+func BootstrapRequiredCRD() FileContentsPredicate {
+	return func(manifest []byte) (bool, error) {
+		uncastObj, _, err := codecs.UniversalDecoder().Decode(manifest, nil, &unstructured.Unstructured{})
+		if err != nil {
+			panic(fmt.Errorf("unable to decode: %w", err))
+		}
+
+		isBootstrapCRD := uncastObj.(*unstructured.Unstructured).GetAnnotations()["release.openshift.io/bootstrap-required"]
+		if isBootstrapCRD == "true" {
+			return true, nil
+		}
+		return false, nil
+	}
+}
+
 // LoadFilesRecursively returns a map from relative path names to file content.
 func LoadFilesRecursively(dir string, predicates ...FileInfoPredicate) (map[string][]byte, error) {
 	files := map[string][]byte{}

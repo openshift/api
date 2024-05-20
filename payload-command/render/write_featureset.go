@@ -12,8 +12,9 @@ import (
 
 var (
 	clusterProfileToShortName = map[features.ClusterProfileName]string{
-		features.Hypershift:  "Hypershift",
-		features.SelfManaged: "SelfManagedHA",
+		features.Hypershift:            "Hypershift",
+		features.HypershiftIndependent: "HypershiftIndependent",
+		features.SelfManaged:           "SelfManagedHA",
 	}
 )
 

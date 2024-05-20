@@ -28,9 +28,10 @@ type FeatureGateEnabledDisabled struct {
 type ClusterProfileName string
 
 var (
-	Hypershift         = ClusterProfileName("include.release.openshift.io/ibm-cloud-managed")
-	SelfManaged        = ClusterProfileName("include.release.openshift.io/self-managed-high-availability")
-	AllClusterProfiles = []ClusterProfileName{Hypershift, SelfManaged}
+	Hypershift            = ClusterProfileName("include.release.openshift.io/ibm-cloud-managed")
+	HypershiftIndependent = ClusterProfileName("include.release.openshift.io/hypershift")
+	SelfManaged           = ClusterProfileName("include.release.openshift.io/self-managed-high-availability")
+	AllClusterProfiles    = []ClusterProfileName{Hypershift, SelfManaged, HypershiftIndependent}
 )
 
 type OwningProduct string

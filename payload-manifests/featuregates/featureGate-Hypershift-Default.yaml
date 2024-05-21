@@ -65,9 +65,6 @@
                         "name": "GatewayAPI"
                     },
                     {
-                        "name": "HardwareSpeed"
-                    },
-                    {
                         "name": "ImagePolicy"
                     },
                     {
@@ -206,6 +203,9 @@
                     },
                     {
                         "name": "ExternalOIDC"
+                    },
+                    {
+                        "name": "HardwareSpeed"
                     },
                     {
                         "name": "KMSv1"

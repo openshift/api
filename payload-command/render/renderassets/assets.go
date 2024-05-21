@@ -187,7 +187,15 @@ func BootstrapRequiredCRD() FileContentsPredicate {
 		}
 
 		isBootstrapCRD := uncastObj.(*unstructured.Unstructured).GetAnnotations()["release.openshift.io/bootstrap-required"]
+		isCapabilityCRD := uncastObj.(*unstructured.Unstructured).GetAnnotations()["capability.openshift.io/name"]
+
 		if isBootstrapCRD == "true" {
+			if isCapabilityCRD != "" {
+				// Until Cluster Bootstrap can understand the capability annotation, we should error if a CRD has both annotations.
+				// Target to remove this before 4.17 closes out.
+				panic(fmt.Errorf("CRD %s has both bootstrap-required and capability annotations. These are currently not compatible annotations.", uncastObj.(*unstructured.Unstructured).GetName()))
+			}
+
 			return true, nil
 		}
 		return false, nil

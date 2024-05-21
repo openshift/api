@@ -239,6 +239,7 @@ type MachineSpec struct {
 	// the taint the machine controller will put it back) but not have the machine controller
 	// remove any taints
 	// +optional
+	// +listType=atomic
 	Taints []corev1.Taint `json:"taints,omitempty"`
 
 	// ProviderSpec details Provider-specific configuration to use during node creation.
@@ -373,6 +374,7 @@ type MachineStatus struct {
 
 	// Addresses is a list of addresses assigned to the machine. Queried from cloud provider, if available.
 	// +optional
+	// +listType=atomic
 	Addresses []corev1.NodeAddress `json:"addresses,omitempty"`
 
 	// LastOperation describes the last-operation performed by the machine-controller.
@@ -388,7 +390,9 @@ type MachineStatus struct {
 	Phase *string `json:"phase,omitempty"`
 
 	// Conditions defines the current state of the Machine
-	Conditions Conditions `json:"conditions,omitempty"`
+	// +listType=map
+	// +listMapKey=type
+	Conditions []Condition `json:"conditions,omitempty"`
 
 	// authoritativeAPI is the API that is authoritative for this resource.
 	// Valid values are MachineAPI, ClusterAPI and Migrating.

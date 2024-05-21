@@ -115,11 +115,13 @@ spec:
                           items:
                             type: string
                           type: array
+                          x-kubernetes-list-type: atomic
                       required:
                       - key
                       - operator
                       type: object
                     type: array
+                    x-kubernetes-list-type: atomic
                   matchLabels:
                     additionalProperties:
                       type: string
@@ -237,6 +239,9 @@ spec:
                           type: object
                           x-kubernetes-map-type: atomic
                         type: array
+                        x-kubernetes-list-map-keys:
+                        - uid
+                        x-kubernetes-list-type: map
                     type: object
                   spec:
                     description: 'Specification of the desired behavior of the machine.
@@ -425,6 +430,9 @@ spec:
                               type: object
                               x-kubernetes-map-type: atomic
                             type: array
+                            x-kubernetes-list-map-keys:
+                            - uid
+                            x-kubernetes-list-type: map
                         type: object
                       providerID:
                         description: ProviderID is the identification ID of the machine
@@ -494,6 +502,7 @@ spec:
                           - key
                           type: object
                         type: array
+                        x-kubernetes-list-type: atomic
                     type: object
                 type: object
             type: object

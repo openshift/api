@@ -239,10 +239,12 @@ spec:
                                             items:
                                               type: string
                                             type: array
+                                            x-kubernetes-list-type: atomic
                                         required:
                                         - name
                                         type: object
                                       type: array
+                                      x-kubernetes-list-type: atomic
                                     id:
                                       description: ID of resource.
                                       type: string
@@ -272,6 +274,7 @@ spec:
                                       ?  has(self.filters) : !has(self.filters)'
                               type: object
                             type: array
+                            x-kubernetes-list-type: atomic
                           azure:
                             description: Azure configures failure domain information
                               for the Azure platform.
@@ -296,6 +299,7 @@ spec:
                               - zone
                               type: object
                             type: array
+                            x-kubernetes-list-type: atomic
                           gcp:
                             description: GCP configures failure domain information
                               for the GCP platform.
@@ -311,6 +315,7 @@ spec:
                               - zone
                               type: object
                             type: array
+                            x-kubernetes-list-type: atomic
                           nutanix:
                             description: nutanix configures failure domain information
                               for the Nutanix platform.
@@ -412,6 +417,7 @@ spec:
                                 rule: '!has(self.availabilityZone) || !has(self.rootVolume)
                                   || has(self.rootVolume.availabilityZone)'
                             type: array
+                            x-kubernetes-list-type: atomic
                           platform:
                             description: Platform identifies the platform for which
                               the FailureDomain represents. Currently supported values
@@ -734,6 +740,9 @@ spec:
                                   - uid
                                   type: object
                                 type: array
+                                x-kubernetes-list-map-keys:
+                                - uid
+                                x-kubernetes-list-type: map
                             type: object
                           providerID:
                             description: ProviderID is the identification ID of the
@@ -805,6 +814,7 @@ spec:
                               - key
                               type: object
                             type: array
+                            x-kubernetes-list-type: atomic
                         type: object
                     required:
                     - metadata

@@ -31639,6 +31639,11 @@ func schema_openshift_api_machine_v1_AWSResourceFilter(ref common.ReferenceCallb
 						},
 					},
 					"values": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "Values includes one or more filter values. Filter values are case-sensitive.",
 							Type:        []string{"array"},
@@ -31690,6 +31695,11 @@ func schema_openshift_api_machine_v1_AWSResourceReference(ref common.ReferenceCa
 						},
 					},
 					"filters": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "Filters is a set of filters used to identify a resource.",
 							Type:        []string{"array"},
@@ -32545,6 +32555,11 @@ func schema_openshift_api_machine_v1_FailureDomains(ref common.ReferenceCallback
 						},
 					},
 					"aws": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "AWS configures failure domain information for the AWS platform.",
 							Type:        []string{"array"},
@@ -32559,6 +32574,11 @@ func schema_openshift_api_machine_v1_FailureDomains(ref common.ReferenceCallback
 						},
 					},
 					"azure": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "Azure configures failure domain information for the Azure platform.",
 							Type:        []string{"array"},
@@ -32573,6 +32593,11 @@ func schema_openshift_api_machine_v1_FailureDomains(ref common.ReferenceCallback
 						},
 					},
 					"gcp": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "GCP configures failure domain information for the GCP platform.",
 							Type:        []string{"array"},
@@ -32609,6 +32634,11 @@ func schema_openshift_api_machine_v1_FailureDomains(ref common.ReferenceCallback
 						},
 					},
 					"openstack": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "OpenStack configures failure domain information for the OpenStack platform.",
 							Type:        []string{"array"},
@@ -36902,6 +36932,14 @@ func schema_openshift_api_machine_v1beta1_MachineHealthCheckStatus(ref common.Re
 						},
 					},
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "Conditions defines the current state of the MachineHealthCheck",
 							Type:        []string{"array"},
@@ -37229,6 +37267,11 @@ func schema_openshift_api_machine_v1beta1_MachineSpec(ref common.ReferenceCallba
 						},
 					},
 					"taints": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "The list of the taints to be applied to the corresponding Node in additive manner. This list will not overwrite any other taints added to the Node on an ongoing basis by other entities. These taints should be actively reconciled e.g. if you ask the machine controller to apply a taint and then manually remove the taint the machine controller will put it back) but not have the machine controller remove any taints",
 							Type:        []string{"array"},
@@ -37311,6 +37354,11 @@ func schema_openshift_api_machine_v1beta1_MachineStatus(ref common.ReferenceCall
 						},
 					},
 					"addresses": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "Addresses is a list of addresses assigned to the machine. Queried from cloud provider, if available.",
 							Type:        []string{"array"},
@@ -37338,6 +37386,14 @@ func schema_openshift_api_machine_v1beta1_MachineStatus(ref common.ReferenceCall
 						},
 					},
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "Conditions defines the current state of the Machine",
 							Type:        []string{"array"},
@@ -37677,6 +37733,10 @@ func schema_openshift_api_machine_v1beta1_ObjectMeta(ref common.ReferenceCallbac
 					"ownerReferences": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"uid",
+								},
+								"x-kubernetes-list-type":       "map",
 								"x-kubernetes-patch-merge-key": "uid",
 								"x-kubernetes-patch-strategy":  "merge",
 							},

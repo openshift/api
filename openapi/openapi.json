@@ -18218,7 +18218,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -18239,7 +18240,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.machine.v1.AWSResourceFilter"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "id": {
           "description": "ID of resource.",
@@ -18758,7 +18760,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.machine.v1.AWSFailureDomain"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "azure": {
           "description": "Azure configures failure domain information for the Azure platform.",
@@ -18766,7 +18769,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.machine.v1.AzureFailureDomain"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "gcp": {
           "description": "GCP configures failure domain information for the GCP platform.",
@@ -18774,7 +18778,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.machine.v1.GCPFailureDomain"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "nutanix": {
           "description": "nutanix configures failure domain information for the Nutanix platform.",
@@ -18794,7 +18799,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.machine.v1.OpenStackFailureDomain"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "platform": {
           "description": "Platform identifies the platform for which the FailureDomain represents. Currently supported values are AWS, Azure, GCP, OpenStack, VSphere and Nutanix.",
@@ -21330,7 +21336,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.Condition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "currentHealthy": {
           "description": "total number of machines counted by this machine health check",
@@ -21556,7 +21566,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/io.k8s.api.core.v1.Taint"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -21570,7 +21581,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/io.k8s.api.core.v1.NodeAddress"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "authoritativeAPI": {
           "description": "authoritativeAPI is the API that is authoritative for this resource. Valid values are MachineAPI, ClusterAPI and Migrating. This value is updated by the migration controller to reflect the authoritative API. Machine API and Cluster API controllers use this value to determine whether or not to reconcile the resource. When set to Migrating, the migration controller is currently performing the handover of authority from one API to the other.",
@@ -21582,7 +21594,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.Condition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "errorMessage": {
           "description": "ErrorMessage will be set in the event that there is a terminal problem reconciling the Machine and will contain a more verbose string suitable for logging and human consumption.\n\nThis field should not be set for transitive errors that a controller faces that are expected to be fixed automatically over time (like service outages), but instead indicate that something is fundamentally wrong with the Machine's spec or the configuration of the controller, and that manual intervention is required. Examples of terminal errors would be invalid combinations of settings in the spec, values that are unsupported by the controller, or the responsible controller itself being critically misconfigured.\n\nAny transient errors that occur during the reconciliation of Machines can be added as events to the Machine object and/or logged in the controller's output.",
@@ -21797,6 +21813,10 @@
             "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.OwnerReference"
           },
+          "x-kubernetes-list-map-keys": [
+            "uid"
+          ],
+          "x-kubernetes-list-type": "map",
           "x-kubernetes-patch-merge-key": "uid",
           "x-kubernetes-patch-strategy": "merge"
         }

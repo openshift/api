@@ -54059,6 +54059,11 @@ func schema_openshift_api_operator_v1_VSphereCSIDriverConfigSpec(ref common.Refe
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"topologyCategories": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "topologyCategories indicates tag categories with which vcenter resources such as hostcluster or datacenter were tagged with. If cluster Infrastructure object has a topology, values specified in Infrastructure object will be used and modifications to topologyCategories will be rejected.",
 							Type:        []string{"array"},

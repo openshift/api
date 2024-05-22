@@ -55746,7 +55746,7 @@ func schema_openshift_api_route_v1_RouteIngressCondition(ref common.ReferenceCal
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Type is the type of the condition. Currently only Admitted.",
+							Description: "Type is the type of the condition. Currently only Admitted or UnservableInFutureVersions.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",

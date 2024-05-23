@@ -143,9 +143,6 @@
                         "name": "UpgradeStatus"
                     },
                     {
-                        "name": "VSphereDriverConfiguration"
-                    },
-                    {
                         "name": "VSphereMultiVCenters"
                     },
                     {
@@ -224,6 +221,9 @@
                     },
                     {
                         "name": "VSphereControlPlaneMachineSet"
+                    },
+                    {
+                        "name": "VSphereDriverConfiguration"
                     },
                     {
                         "name": "VSphereStaticIPs"

@@ -7,6 +7,7 @@ metadata:
     api.openshift.io/filename-operator: config-operator
     api.openshift.io/filename-ordering: "01"
     feature-gate.release.openshift.io/: "true"
+    release.openshift.io/bootstrap-required: "true"
   name: dnses.config.openshift.io
 spec:
   group: config.openshift.io

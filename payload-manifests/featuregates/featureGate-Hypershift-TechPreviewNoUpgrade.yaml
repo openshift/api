@@ -31,6 +31,9 @@
                         "name": "GatewayAPI"
                     },
                     {
+                        "name": "MachineAPIMigration"
+                    },
+                    {
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
                     }
                 ],

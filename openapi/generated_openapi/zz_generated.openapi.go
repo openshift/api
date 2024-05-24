@@ -31639,6 +31639,11 @@ func schema_openshift_api_machine_v1_AWSResourceFilter(ref common.ReferenceCallb
 						},
 					},
 					"values": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "Values includes one or more filter values. Filter values are case-sensitive.",
 							Type:        []string{"array"},
@@ -31690,6 +31695,11 @@ func schema_openshift_api_machine_v1_AWSResourceReference(ref common.ReferenceCa
 						},
 					},
 					"filters": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "Filters is a set of filters used to identify a resource.",
 							Type:        []string{"array"},
@@ -32545,6 +32555,11 @@ func schema_openshift_api_machine_v1_FailureDomains(ref common.ReferenceCallback
 						},
 					},
 					"aws": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "AWS configures failure domain information for the AWS platform.",
 							Type:        []string{"array"},
@@ -32559,6 +32574,11 @@ func schema_openshift_api_machine_v1_FailureDomains(ref common.ReferenceCallback
 						},
 					},
 					"azure": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "Azure configures failure domain information for the Azure platform.",
 							Type:        []string{"array"},
@@ -32573,6 +32593,11 @@ func schema_openshift_api_machine_v1_FailureDomains(ref common.ReferenceCallback
 						},
 					},
 					"gcp": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "GCP configures failure domain information for the GCP platform.",
 							Type:        []string{"array"},
@@ -32609,6 +32634,11 @@ func schema_openshift_api_machine_v1_FailureDomains(ref common.ReferenceCallback
 						},
 					},
 					"openstack": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "OpenStack configures failure domain information for the OpenStack platform.",
 							Type:        []string{"array"},
@@ -36902,6 +36932,14 @@ func schema_openshift_api_machine_v1beta1_MachineHealthCheckStatus(ref common.Re
 						},
 					},
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "Conditions defines the current state of the MachineHealthCheck",
 							Type:        []string{"array"},
@@ -37114,6 +37152,13 @@ func schema_openshift_api_machine_v1beta1_MachineSetSpec(ref common.ReferenceCal
 							Ref:         ref("github.com/openshift/api/machine/v1beta1.MachineTemplateSpec"),
 						},
 					},
+					"authoritativeAPI": {
+						SchemaProps: spec.SchemaProps{
+							Description: "authoritativeAPI is the API that is authoritative for this resource. Valid values are MachineAPI and ClusterAPI. When set to MachineAPI, writes to the spec of the machine.openshift.io copy of this resource will be reflected into the cluster.x-k8s.io copy. When set to ClusterAPI, writes to the spec of the cluster.x-k8s.io copy of this resource will be reflected into the machine.openshift.io copy. Updates to the status will be reflected in both copies of the resource, based on the controller implementing the functionality of the API. Currently the authoritative API determines which controller will manage the resource, this will change in a future release. To ensure the change has been accepted, please verify that the `status.authoritativeAPI` field has been updated to the desired value and that the `Synchronized` condition is present and set to `True`.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 				Required: []string{"selector"},
 			},
@@ -37179,6 +37224,20 @@ func schema_openshift_api_machine_v1beta1_MachineSetStatus(ref common.ReferenceC
 							Format: "",
 						},
 					},
+					"authoritativeAPI": {
+						SchemaProps: spec.SchemaProps{
+							Description: "authoritativeAPI is the API that is authoritative for this resource. Valid values are MachineAPI, ClusterAPI and Migrating. This value is updated by the migration controller to reflect the authoritative API. Machine API and Cluster API controllers use this value to determine whether or not to reconcile the resource. When set to Migrating, the migration controller is currently performing the handover of authority from one API to the other.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"synchronizedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "synchronizedGeneration is the generation of the authoritative resource that the non-authoritative resource is synchronised with. This field is set when the authoritative resource is updated and the sync controller has updated the non-authoritative resource to match.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
 				},
 				Required: []string{"replicas"},
 			},
@@ -37208,6 +37267,11 @@ func schema_openshift_api_machine_v1beta1_MachineSpec(ref common.ReferenceCallba
 						},
 					},
 					"taints": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "The list of the taints to be applied to the corresponding Node in additive manner. This list will not overwrite any other taints added to the Node on an ongoing basis by other entities. These taints should be actively reconciled e.g. if you ask the machine controller to apply a taint and then manually remove the taint the machine controller will put it back) but not have the machine controller remove any taints",
 							Type:        []string{"array"},
@@ -37231,6 +37295,13 @@ func schema_openshift_api_machine_v1beta1_MachineSpec(ref common.ReferenceCallba
 					"providerID": {
 						SchemaProps: spec.SchemaProps{
 							Description: "ProviderID is the identification ID of the machine provided by the provider. This field must match the provider ID as seen on the node object corresponding to this machine. This field is required by higher level consumers of cluster-api. Example use case is cluster autoscaler with cluster-api as provider. Clean-up logic in the autoscaler compares machines to nodes to find out machines at provider which could not get registered as Kubernetes nodes. With cluster-api as a generic out-of-tree provider for autoscaler, this field is required by autoscaler to be able to have a provider view of the list of machines. Another list of nodes is queried from the k8s apiserver and then a comparison is done to find out unregistered machines and are marked for delete. This field will be set by the actuators and consumed by higher level entities like autoscaler that will be interfacing with cluster-api as generic provider.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"authoritativeAPI": {
+						SchemaProps: spec.SchemaProps{
+							Description: "authoritativeAPI is the API that is authoritative for this resource. Valid values are MachineAPI and ClusterAPI. When set to MachineAPI, writes to the spec of the machine.openshift.io copy of this resource will be reflected into the cluster.x-k8s.io copy. When set to ClusterAPI, writes to the spec of the cluster.x-k8s.io copy of this resource will be reflected into the machine.openshift.io copy. Updates to the status will be reflected in both copies of the resource, based on the controller implementing the functionality of the API. Currently the authoritative API determines which controller will manage the resource, this will change in a future release. To ensure the change has been accepted, please verify that the `status.authoritativeAPI` field has been updated to the desired value and that the `Synchronized` condition is present and set to `True`.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -37283,6 +37354,11 @@ func schema_openshift_api_machine_v1beta1_MachineStatus(ref common.ReferenceCall
 						},
 					},
 					"addresses": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "Addresses is a list of addresses assigned to the machine. Queried from cloud provider, if available.",
 							Type:        []string{"array"},
@@ -37310,6 +37386,14 @@ func schema_openshift_api_machine_v1beta1_MachineStatus(ref common.ReferenceCall
 						},
 					},
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "Conditions defines the current state of the Machine",
 							Type:        []string{"array"},
@@ -37321,6 +37405,20 @@ func schema_openshift_api_machine_v1beta1_MachineStatus(ref common.ReferenceCall
 									},
 								},
 							},
+						},
+					},
+					"authoritativeAPI": {
+						SchemaProps: spec.SchemaProps{
+							Description: "authoritativeAPI is the API that is authoritative for this resource. Valid values are MachineAPI, ClusterAPI and Migrating. This value is updated by the migration controller to reflect the authoritative API. Machine API and Cluster API controllers use this value to determine whether or not to reconcile the resource. When set to Migrating, the migration controller is currently performing the handover of authority from one API to the other.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"synchronizedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "synchronizedGeneration is the generation of the authoritative resource that the non-authoritative resource is synchronised with. This field is set when the authoritative resource is updated and the sync controller has updated the non-authoritative resource to match.",
+							Type:        []string{"integer"},
+							Format:      "int64",
 						},
 					},
 				},
@@ -37635,6 +37733,10 @@ func schema_openshift_api_machine_v1beta1_ObjectMeta(ref common.ReferenceCallbac
 					"ownerReferences": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"uid",
+								},
+								"x-kubernetes-list-type":       "map",
 								"x-kubernetes-patch-merge-key": "uid",
 								"x-kubernetes-patch-strategy":  "merge",
 							},

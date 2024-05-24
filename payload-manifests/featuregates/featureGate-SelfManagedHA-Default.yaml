@@ -83,6 +83,9 @@
                         "name": "InstallAlternateInfrastructureAWS"
                     },
                     {
+                        "name": "MachineAPIMigration"
+                    },
+                    {
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
                     },
                     {

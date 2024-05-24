@@ -155,3 +155,85 @@ tests:
                 resource: Deployment
                 version: v1
       expectedError: "spec.customization.perspectives[0].pinnedResources[0].resource in body should match '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'"
+    - name: Should be able to add https urls
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          ingress:
+            consoleURL: "https://testingress.com"
+            clientDownloadsURL: "https://testingress.com"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          ingress:
+            consoleURL: "https://testingress.com"
+            clientDownloadsURL: "https://testingress.com"
+    - name: Should be able to add empty urls
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          ingress:
+            consoleURL: ""
+            clientDownloadsURL: ""
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          ingress:
+            consoleURL: ""
+            clientDownloadsURL: ""
+    - name: Should throw an error if the value of console url has http scheme
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          ingress:
+            consoleURL: "http://testingress.com"
+      expectedError: "spec.ingress.consoleURL: Invalid value: \"string\": console url scheme must be https"
+    - name: Should throw an error if the value of client downloads url has http scheme
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          ingress:
+            clientDownloadsURL: "http://testingress.com"
+      expectedError: "spec.ingress.clientDownloadsURL: Invalid value: \"string\": client downloads url scheme must be https"
+    - name: Should throw an error if console url is invalid
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          ingress:
+            consoleURL: "https://\ntestingress.com"
+      expectedError: "spec.ingress.consoleURL: Invalid value: \"string\": console url must be a valid absolute URL"
+    - name: Should throw an error if client downloads url is invalid
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          ingress:
+            clientDownloadsURL: "https://\ntestingress.com"
+      expectedError: "spec.ingress.clientDownloadsURL: Invalid value: \"string\": client downloads url must be a valid absolute URL"
+    - name: Should throw an invalid url error if console url is invalid and has no scheme
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          ingress:
+            consoleURL: "\ntestingress.com"
+      expectedError: "spec.ingress.consoleURL: Invalid value: \"string\": console url must be a valid absolute URL"
+    - name: Should throw an invalid error if client downloads url is invalid and has no scheme
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          ingress:
+            clientDownloadsURL: "\ntestingress.com"
+      expectedError: "spec.ingress.clientDownloadsURL: Invalid value: \"string\": client downloads url must be a valid absolute URL"

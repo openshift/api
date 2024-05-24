@@ -26399,6 +26399,11 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.ConsoleCustomization"
         },
+        "ingress": {
+          "description": "ingress allows to configure the alternative ingress for the console. This field is intended for clusters without ingress capability, where access to routes is not possible.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.Ingress"
+        },
         "logLevel": {
           "description": "logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for their operands.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
           "type": "string"
@@ -27537,6 +27542,22 @@
         "internalTransitSwitchSubnet": {
           "description": "internalTransitSwitchSubnet is a v4 subnet in IPV4 CIDR format used internally by OVN-Kubernetes for the distributed transit switch in the OVN Interconnect architecture that connects the cluster routers on each node together to enable east west traffic. The subnet chosen should not overlap with other networks specified for OVN-Kubernetes as well as other networks used on the host. The value cannot be changed after installation. When ommitted, this means no opinion and the platform is left to choose a reasonable default which is subject to change over time. The subnet must be large enough to accomadate one IP per node in your cluster The current default subnet is fd97::/64 The value must be in proper IPV6 CIDR format Note that IPV6 dual addresses are not permitted",
           "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.Ingress": {
+      "description": "Ingress allows cluster admin to configure alternative ingress for the console.",
+      "type": "object",
+      "properties": {
+        "clientDownloadsURL": {
+          "description": "clientDownloadsURL is a URL to be used as the address to download client binaries. If not specified, the downloads route hostname will be used. This field is required for clusters without ingress capability, where access to routes is not possible. The console operator will monitor the URL and may go degraded if it's unreachable for an extended period. Must use the HTTPS scheme.",
+          "type": "string",
+          "default": ""
+        },
+        "consoleURL": {
+          "description": "consoleURL is a URL to be used as the base console address. If not specified, the console route hostname will be used. This field is required for clusters without ingress capability, where access to routes is not possible. Make sure that appropriate ingress is set up at this URL. The console operator will monitor the URL and may go degraded if it's unreachable for an extended period. Must use the HTTPS scheme.",
+          "type": "string",
+          "default": ""
         }
       }
     },

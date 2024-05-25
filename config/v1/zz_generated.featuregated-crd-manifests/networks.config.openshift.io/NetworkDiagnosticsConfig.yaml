@@ -7,6 +7,7 @@ metadata:
     api.openshift.io/filename-operator: config-operator
     api.openshift.io/filename-ordering: "01"
     feature-gate.release.openshift.io/NetworkDiagnosticsConfig: "true"
+    release.openshift.io/bootstrap-required: "true"
   name: networks.config.openshift.io
 spec:
   group: config.openshift.io

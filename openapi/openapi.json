@@ -37417,8 +37417,9 @@
       "type": "object",
       "properties": {
         "name": {
-          "description": "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
-          "type": "string"
+          "description": "Name of the referent. This field is effectively required, but due to backwards compatibility is allowed to be empty. Instances of this type with an empty value here are almost certainly wrong. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+          "type": "string",
+          "default": ""
         },
         "optional": {
           "description": "Specify whether the ConfigMap must be defined",
@@ -37439,8 +37440,9 @@
           "default": ""
         },
         "name": {
-          "description": "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
-          "type": "string"
+          "description": "Name of the referent. This field is effectively required, but due to backwards compatibility is allowed to be empty. Instances of this type with an empty value here are almost certainly wrong. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+          "type": "string",
+          "default": ""
         },
         "optional": {
           "description": "Specify whether the ConfigMap or its key must be defined",
@@ -37527,8 +37529,9 @@
           "x-kubernetes-list-type": "atomic"
         },
         "name": {
-          "description": "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
-          "type": "string"
+          "description": "Name of the referent. This field is effectively required, but due to backwards compatibility is allowed to be empty. Instances of this type with an empty value here are almost certainly wrong. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+          "type": "string",
+          "default": ""
         },
         "optional": {
           "description": "optional specify whether the ConfigMap or its keys must be defined",
@@ -37555,8 +37558,9 @@
           "x-kubernetes-list-type": "atomic"
         },
         "name": {
-          "description": "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
-          "type": "string"
+          "description": "Name of the referent. This field is effectively required, but due to backwards compatibility is allowed to be empty. Instances of this type with an empty value here are almost certainly wrong. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+          "type": "string",
+          "default": ""
         },
         "optional": {
           "description": "optional specify whether the ConfigMap or its keys must be defined",
@@ -39122,6 +39126,9 @@
     "io.k8s.api.core.v1.HostAlias": {
       "description": "HostAlias holds the mapping between IP and hostnames that will be injected as an entry in the pod's hosts file.",
       "type": "object",
+      "required": [
+        "ip"
+      ],
       "properties": {
         "hostnames": {
           "description": "Hostnames for the above IP address.",
@@ -39134,7 +39141,8 @@
         },
         "ip": {
           "description": "IP address of the host file entry.",
-          "type": "string"
+          "type": "string",
+          "default": ""
         }
       }
     },
@@ -39568,8 +39576,9 @@
       "type": "object",
       "properties": {
         "name": {
-          "description": "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
-          "type": "string"
+          "description": "Name of the referent. This field is effectively required, but due to backwards compatibility is allowed to be empty. Instances of this type with an empty value here are almost certainly wrong. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+          "type": "string",
+          "default": ""
         }
       },
       "x-kubernetes-map-type": "atomic"
@@ -43036,8 +43045,9 @@
       "type": "object",
       "properties": {
         "name": {
-          "description": "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
-          "type": "string"
+          "description": "Name of the referent. This field is effectively required, but due to backwards compatibility is allowed to be empty. Instances of this type with an empty value here are almost certainly wrong. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+          "type": "string",
+          "default": ""
         },
         "optional": {
           "description": "Specify whether the Secret must be defined",
@@ -43058,8 +43068,9 @@
           "default": ""
         },
         "name": {
-          "description": "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
-          "type": "string"
+          "description": "Name of the referent. This field is effectively required, but due to backwards compatibility is allowed to be empty. Instances of this type with an empty value here are almost certainly wrong. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+          "type": "string",
+          "default": ""
         },
         "optional": {
           "description": "Specify whether the Secret or its key must be defined",
@@ -43112,8 +43123,9 @@
           "x-kubernetes-list-type": "atomic"
         },
         "name": {
-          "description": "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
-          "type": "string"
+          "description": "Name of the referent. This field is effectively required, but due to backwards compatibility is allowed to be empty. Instances of this type with an empty value here are almost certainly wrong. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+          "type": "string",
+          "default": ""
         },
         "optional": {
           "description": "optional field specify whether the Secret or its key must be defined",
@@ -43595,7 +43607,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.SessionAffinityConfig"
         },
         "trafficDistribution": {
-          "description": "TrafficDistribution offers a way to express preferences for how traffic is distributed to Service endpoints. Implementations can use this field as a hint, but are not required to guarantee strict adherence. If the field is not set, the implementation will apply its default routing strategy. If set to \"PreferClose\", implementations should prioritize endpoints that are topologically close (e.g., same zone).",
+          "description": "TrafficDistribution offers a way to express preferences for how traffic is distributed to Service endpoints. Implementations can use this field as a hint, but are not required to guarantee strict adherence. If the field is not set, the implementation will apply its default routing strategy. If set to \"PreferClose\", implementations should prioritize endpoints that are topologically close (e.g., same zone). This is an alpha field and requires enabling ServiceTrafficDistribution feature.",
           "type": "string"
         },
         "type": {

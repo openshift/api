@@ -37225,6 +37225,28 @@ func schema_openshift_api_machine_v1beta1_MachineSetStatus(ref common.ReferenceC
 							Format: "",
 						},
 					},
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "Conditions defines the current state of the MachineSet",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machine/v1beta1.Condition"),
+									},
+								},
+							},
+						},
+					},
 					"authoritativeAPI": {
 						SchemaProps: spec.SchemaProps{
 							Description: "authoritativeAPI is the API that is authoritative for this resource. Valid values are MachineAPI, ClusterAPI and Migrating. This value is updated by the migration controller to reflect the authoritative API. Machine API and Cluster API controllers use this value to determine whether or not to reconcile the resource. When set to Migrating, the migration controller is currently performing the handover of authority from one API to the other.",
@@ -37243,6 +37265,8 @@ func schema_openshift_api_machine_v1beta1_MachineSetStatus(ref common.ReferenceC
 				Required: []string{"replicas"},
 			},
 		},
+		Dependencies: []string{
+			"github.com/openshift/api/machine/v1beta1.Condition"},
 	}
 }
 

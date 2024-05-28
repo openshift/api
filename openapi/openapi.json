@@ -21498,6 +21498,18 @@
           "type": "integer",
           "format": "int32"
         },
+        "conditions": {
+          "description": "Conditions defines the current state of the MachineSet",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
         "errorMessage": {
           "type": "string"
         },

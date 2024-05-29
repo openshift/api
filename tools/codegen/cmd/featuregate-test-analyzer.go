@@ -11,16 +11,18 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"regexp"
 	"sort"
 	"strings"
 	"time"
 
-	"github.com/openshift/api/tools/codegen/pkg/sippy"
-	"github.com/openshift/api/tools/codegen/pkg/utils"
 	"github.com/russross/blackfriday"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"k8s.io/apimachinery/pkg/util/sets"
+
+	"github.com/openshift/api/tools/codegen/pkg/sippy"
+	"github.com/openshift/api/tools/codegen/pkg/utils"
 )
 
 const (
@@ -363,6 +365,21 @@ var (
 		//},
 	}
 
+	// These are only checked if the feature gate is platform specific
+	optionalSelfManagedPlatformVariants = []JobVariant{
+		{
+			Cloud:        "nutanix",
+			Architecture: "amd64",
+			Topology:     "ha",
+		},
+		{
+			Cloud:        "openstack",
+			Architecture: "amd64",
+			Topology:     "ha",
+		},
+	}
+
+	nonHypershiftPlatforms        = regexp.MustCompile("(?i)nutanix|metal|vsphere|openstack|azure|gcp")
 	requiredHypershiftJobVariants = []JobVariant{
 		{
 			Cloud:        "aws",
@@ -429,20 +446,24 @@ func testResultByName(results []TestResults, testName string) *TestResults {
 }
 
 func listTestResultFor(featureGate string, clusterProfiles sets.Set[string]) (map[JobVariant]*TestingResults, error) {
-	testPattern := fmt.Sprintf("[OCPFeatureGate:%s]", featureGate)
-	fmt.Printf("Query component readiness for all test run results for pattern %q on clusterProfile %q\n", testPattern, sets.List(clusterProfiles))
+	fmt.Printf("Query component readiness for all test run results for feature gate %q on clusterProfile %q\n", featureGate, sets.List(clusterProfiles))
 
 	results := map[JobVariant]*TestingResults{}
 
-	jobVariantsToCheck := []JobVariant{}
-	if clusterProfiles.Has("Hypershift") {
-		jobVariantsToCheck = append(jobVariantsToCheck, requiredHypershiftJobVariants...)
+	var jobVariantsToCheck []JobVariant
+	if clusterProfiles.Has("Hypershift") && !nonHypershiftPlatforms.MatchString(featureGate) {
+		jobVariantsToCheck = append(jobVariantsToCheck, filterVariants(featureGate, requiredHypershiftJobVariants)...)
 	}
 	if clusterProfiles.Has("SelfManagedHA") {
-		jobVariantsToCheck = append(jobVariantsToCheck, requiredSelfManagedJobVariants...)
-	}
-	if len(jobVariantsToCheck) == 0 {
-		jobVariantsToCheck = append(jobVariantsToCheck, requiredSelfManagedJobVariants...)
+		// See if the feature gate is specific to any platform
+		selfManagedPlatformVariants := filterVariants(featureGate, optionalSelfManagedPlatformVariants, requiredSelfManagedJobVariants)
+
+		// If this isn't a platform specific variant, then check all required ones
+		if len(selfManagedPlatformVariants) == 0 {
+			selfManagedPlatformVariants = requiredSelfManagedJobVariants
+		}
+
+		jobVariantsToCheck = append(jobVariantsToCheck, selfManagedPlatformVariants...)
 	}
 
 	for _, jobVariant := range jobVariantsToCheck {
@@ -456,8 +477,33 @@ func listTestResultFor(featureGate string, clusterProfiles sets.Set[string]) (ma
 	return results, nil
 }
 
+func filterVariants(featureGate string, variantsList ...[]JobVariant) []JobVariant {
+	var filteredVariants []JobVariant
+	normalizedFeatureGate := strings.ToLower(featureGate)
+
+	for _, variants := range variantsList {
+		for _, variant := range variants {
+			normalizedCloud := strings.ReplaceAll(strings.ToLower(variant.Cloud), "-ipi", "") // The feature gate probably won't include the install type, but some cloud variants do
+			normalizedArchitecture := strings.ToLower(variant.Architecture)
+
+			if strings.Contains(normalizedFeatureGate, normalizedCloud) || strings.Contains(normalizedFeatureGate, normalizedArchitecture) {
+				filteredVariants = append(filteredVariants, variant)
+			}
+		}
+	}
+
+	return filteredVariants
+}
+
 func listTestResultForVariant(featureGate string, jobVariant JobVariant) (*TestingResults, error) {
-	testPattern := fmt.Sprintf("[OCPFeatureGate:%s]", featureGate)
+	// Substring here matches for both [OCPFeatureGate:...] and [FeatureGate:...]
+	testPattern := fmt.Sprintf("FeatureGate:%s]", featureGate)
+
+	// Feature gates used by the installer don't need separate tests, use the overall install tests
+	if strings.Contains(featureGate, "Install") {
+		testPattern = fmt.Sprintf("install should succeed")
+	}
+
 	fmt.Printf("Query component readiness for all test run results for pattern %q on variant %#v\n", testPattern, jobVariant)
 
 	defaultTransport := &http.Transport{
@@ -478,7 +524,7 @@ func listTestResultForVariant(featureGate string, jobVariant JobVariant) (*Testi
 	}
 
 	testNameToResults := map[string]*TestResults{}
-	queries := sippy.QueriesFor(jobVariant.Cloud, jobVariant.Architecture, jobVariant.Topology, featureGate)
+	queries := sippy.QueriesFor(jobVariant.Cloud, jobVariant.Architecture, jobVariant.Topology, testPattern)
 	for _, currQuery := range queries {
 		currURL := &url.URL{
 			Scheme: "https",

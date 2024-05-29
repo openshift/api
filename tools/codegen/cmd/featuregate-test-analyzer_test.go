@@ -22,8 +22,8 @@ func Test_listTestResultFor(t *testing.T) {
 		{
 			name: "test example",
 			args: args{
-				featureGate:    "SelfManagedHA",
-				clusterProfile: "Example",
+				clusterProfile: "SelfManagedHA",
+				featureGate:    "Example",
 			},
 			want:    nil,
 			wantErr: false,
@@ -31,8 +31,8 @@ func Test_listTestResultFor(t *testing.T) {
 		{
 			name: "platform example",
 			args: args{
-				featureGate:    "VSphereGate",
-				clusterProfile: "Example",
+				clusterProfile: "VSphereGate",
+				featureGate:    "Example",
 			},
 			want:    nil,
 			wantErr: false,

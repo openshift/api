@@ -452,17 +452,18 @@ func listTestResultFor(featureGate string, clusterProfiles sets.Set[string]) (ma
 
 	var jobVariantsToCheck []JobVariant
 	if clusterProfiles.Has("Hypershift") && !nonHypershiftPlatforms.MatchString(featureGate) {
-		jobVariantsToCheck = append(jobVariantsToCheck, filterVariants(featureGate, requiredHypershiftJobVariants, false)...)
+		jobVariantsToCheck = append(jobVariantsToCheck, filterVariants(featureGate, requiredHypershiftJobVariants)...)
 	}
 	if clusterProfiles.Has("SelfManagedHA") {
-		// See if the feature gate is specific to any optional platform
-		optionalPlatformVariants := filterVariants(featureGate, optionalSelfManagedPlatformVariants, true)
-		jobVariantsToCheck = append(jobVariantsToCheck, optionalPlatformVariants...)
+		// See if the feature gate is specific to any platform
+		selfManagedPlatformVariants := filterVariants(featureGate, optionalSelfManagedPlatformVariants, requiredSelfManagedJobVariants)
 
-		// If not, check the rest
-		if len(optionalPlatformVariants) == 0 {
-			jobVariantsToCheck = append(jobVariantsToCheck, filterVariants(featureGate, requiredSelfManagedJobVariants, false)...)
+		// If this isn't a platform specific variant, then check all required ones
+		if len(selfManagedPlatformVariants) == 0 {
+			selfManagedPlatformVariants = requiredSelfManagedJobVariants
 		}
+
+		jobVariantsToCheck = append(jobVariantsToCheck, selfManagedPlatformVariants...)
 	}
 
 	for _, jobVariant := range jobVariantsToCheck {
@@ -476,26 +477,27 @@ func listTestResultFor(featureGate string, clusterProfiles sets.Set[string]) (ma
 	return results, nil
 }
 
-func filterVariants(featureGate string, variants []JobVariant, optional bool) []JobVariant {
+func filterVariants(featureGate string, variantsList ...[]JobVariant) []JobVariant {
 	var filteredVariants []JobVariant
 	normalizedFeatureGate := strings.ToLower(featureGate)
-	for _, variant := range variants {
-		normalizedCloud := strings.ReplaceAll(strings.ToLower(variant.Cloud), "-ipi", "") // The feature gate probably won't include the install type, but some cloud variants do
-		normalizedArchitecture := strings.ToLower(variant.Architecture)
 
-		if strings.Contains(normalizedFeatureGate, normalizedCloud) || strings.Contains(normalizedFeatureGate, normalizedArchitecture) {
-			filteredVariants = append(filteredVariants, variant)
+	for _, variants := range variantsList {
+		for _, variant := range variants {
+			normalizedCloud := strings.ReplaceAll(strings.ToLower(variant.Cloud), "-ipi", "") // The feature gate probably won't include the install type, but some cloud variants do
+			normalizedArchitecture := strings.ToLower(variant.Architecture)
+
+			if strings.Contains(normalizedFeatureGate, normalizedCloud) || strings.Contains(normalizedFeatureGate, normalizedArchitecture) {
+				filteredVariants = append(filteredVariants, variant)
+			}
 		}
 	}
 
-	if len(filteredVariants) == 0 && !optional {
-		return variants
-	}
 	return filteredVariants
 }
 
 func listTestResultForVariant(featureGate string, jobVariant JobVariant) (*TestingResults, error) {
-	testPattern := fmt.Sprintf("[OCPFeatureGate:%s]", featureGate)
+	// Substring here matches for both [OCPFeatureGate:...] and [FeatureGate:...]
+	testPattern := fmt.Sprintf("FeatureGate:%s]", featureGate)
 
 	// Feature gates used by the installer don't need separate tests, use the overall install tests
 	if strings.Contains(featureGate, "Install") {

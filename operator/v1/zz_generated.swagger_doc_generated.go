@@ -401,12 +401,33 @@ func (StatuspageProvider) SwaggerDoc() map[string]string {
 }
 
 var map_AWSCSIDriverConfigSpec = map[string]string{
-	"":          "AWSCSIDriverConfigSpec defines properties that can be configured for the AWS CSI driver.",
-	"kmsKeyARN": "kmsKeyARN sets the cluster default storage class to encrypt volumes with a user-defined KMS key, rather than the default KMS key used by AWS. The value may be either the ARN or Alias ARN of a KMS key.",
+	"":                 "AWSCSIDriverConfigSpec defines properties that can be configured for the AWS CSI driver.",
+	"kmsKeyARN":        "kmsKeyARN sets the cluster default storage class to encrypt volumes with a user-defined KMS key, rather than the default KMS key used by AWS. The value may be either the ARN or Alias ARN of a KMS key.",
+	"efsVolumeMetrics": "efsVolumeMetrics sets the configuration for collecting metrics from EFS volumes used by the EFS CSI Driver.",
 }
 
 func (AWSCSIDriverConfigSpec) SwaggerDoc() map[string]string {
 	return map_AWSCSIDriverConfigSpec
+}
+
+var map_AWSEFSVolumeMetrics = map[string]string{
+	"":        "AWSEFSVolumeMetrics defines the configuration for Volume Metrics in the EFS CSI Driver.",
+	"state":   "state defines the state of metric collection in the AWS EFS CSI Driver. Enabling this option will cause the AWS EFS CSI Driver to recursively scan volumes to collect metrics. This process may result in high CPU and memory usage, depending on the volume size. The default value is Disabled.",
+	"options": "options provides additional configuration for volume metrics in the AWS EFS CSI Driver.",
+}
+
+func (AWSEFSVolumeMetrics) SwaggerDoc() map[string]string {
+	return map_AWSEFSVolumeMetrics
+}
+
+var map_AWSEFSVolumeMetricsOptions = map[string]string{
+	"":              "AWSEFSVolumeMetricsOptions defines options for volume metrics in the EFS CSI Driver.",
+	"refreshPeriod": "refreshPeriod specifies the frequency, in minutes, at which volume metrics are refreshed. The default refresh period is 240 minutes.",
+	"fsRateLimit":   "fsRateLimit defines the rate limit, in goroutines per file system, for processing volume metrics. The default rate limit is 5 goroutines per file system.",
+}
+
+func (AWSEFSVolumeMetricsOptions) SwaggerDoc() map[string]string {
+	return map_AWSEFSVolumeMetricsOptions
 }
 
 var map_AzureCSIDriverConfigSpec = map[string]string{

@@ -81,35 +81,6 @@ func QueriesFor(cloud, architecture, topology, testPattern string) []*SippyQuery
 			},
 			LinkOperator: "and",
 		},
-		{
-			Items: []SippyQueryItem{
-				{
-					ColumnField:   "variants",
-					Not:           false,
-					OperatorValue: "contains",
-					Value:         cloud,
-				},
-				{
-					ColumnField:   "variants",
-					Not:           false,
-					OperatorValue: "contains",
-					Value:         architecture,
-				},
-				{
-					ColumnField:   "variants",
-					Not:           false,
-					OperatorValue: "contains",
-					Value:         topology,
-				},
-				{
-					ColumnField:   "name",
-					Not:           false,
-					OperatorValue: "contains",
-					Value:         testPattern,
-				},
-			},
-			LinkOperator: "and",
-		},
 	}
 
 }

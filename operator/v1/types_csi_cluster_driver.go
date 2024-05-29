@@ -168,6 +168,61 @@ type AWSCSIDriverConfigSpec struct {
 	// +kubebuilder:validation:Pattern:=`^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b|aws-iso-e|aws-iso-f):kms:[a-z0-9-]+:[0-9]{12}:(key|alias)\/.*$`
 	// +optional
 	KMSKeyARN string `json:"kmsKeyARN,omitempty"`
+
+	// efsVolumeMetrics sets the configuration for collecting metrics from EFS volumes used by the EFS CSI Driver.
+	// +openshift:enable:FeatureGate=AWSEFSDriverVolumeMetrics
+	EFSVolumeMetrics AWSEFSVolumeMetrics `json:"efsVolumeMetrics"`
+}
+
+// AWSEFSVolumeMetricsState defines if the collection of volume metrics in the AWS EFS CSI Driver is enabled or disabled.
+// +openshift:enable:FeatureGate=AWSEFSDriverVolumeMetrics
+// +kubebuilder:validation:Enum:="Enabled";"Disabled"
+type AWSEFSVolumeMetricsState string
+
+const (
+	// AWSEFSVolumeMetricsEnabled defines that the collection of volume metrics in the AWS EFS CSI Driver is enabled.
+	AWSEFSVolumeMetricsEnabled AWSEFSVolumeMetricsState = "Enabled"
+
+	// AWSEFSVolumeMetricsDisabled defines that the collection of volume metrics in the AWS EFS CSI Driver is disabled.
+	AWSEFSVolumeMetricsDisabled AWSEFSVolumeMetricsState = "Disabled"
+)
+
+// AWSEFSVolumeMetrics defines the configuration for Volume Metrics in the EFS CSI Driver.
+// +union
+type AWSEFSVolumeMetrics struct {
+	// state defines the state of metric collection in the AWS EFS CSI Driver. Enabling this option
+	// will cause the AWS EFS CSI Driver to recursively scan volumes to collect metrics. This process
+	// may result in high CPU and memory usage, depending on the volume size.
+	// The default value is Disabled.
+	// +unionDiscriminator
+	// +kubebuilder:validation:Required
+	// +kubebuilder:default:=Disabled
+	// +default="Disabled"
+	State AWSEFSVolumeMetricsState `json:"state,omitempty"`
+
+	// options provides additional configuration for volume metrics in the AWS EFS CSI Driver.
+	// +unionMember,optional
+	Options *AWSEFSVolumeMetricsOptions `json:"options,omitempty"`
+}
+
+// AWSEFSVolumeMetricsOptions defines options for volume metrics in the EFS CSI Driver.
+type AWSEFSVolumeMetricsOptions struct {
+	// refreshPeriod specifies the frequency, in minutes, at which volume metrics are refreshed.
+	// The default refresh period is 240 minutes.
+	// +openshift:enable:FeatureGate=AWSEFSDriverVolumeMetrics
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:default=240
+	// +default:=240
+	RefreshPeriod int64 `json:"refreshPeriod,omitempty"`
+
+	// fsRateLimit defines the rate limit, in goroutines per file system, for processing volume metrics.
+	// The default rate limit is 5 goroutines per file system.
+	// +openshift:enable:FeatureGate=AWSEFSDriverVolumeMetrics
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:default=5
+	// +default:=5
+	FSRateLimit int32 `json:"fsRateLimit,omitempty"`
 }
 
 // AzureDiskEncryptionSet defines the configuration for a disk encryption set.

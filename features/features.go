@@ -541,4 +541,11 @@ var (
 					contactPerson("jspeed").
 					productScope(ocpSpecific).
 					mustRegister()
+
+	FeatureGateAWSEFSDriverVolumeMetrics = newFeatureGate("AWSEFSDriverVolumeMetrics").
+						reportProblemsToJiraComponent("Storage / Kubernetes External Components").
+						contactPerson("fbertina").
+						productScope(ocpSpecific).
+						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						mustRegister()
 )

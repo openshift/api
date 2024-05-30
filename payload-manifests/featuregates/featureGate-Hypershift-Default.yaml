@@ -113,6 +113,9 @@
                         "name": "OnClusterBuild"
                     },
                     {
+                        "name": "OpenShiftPodSecurityAdmission"
+                    },
+                    {
                         "name": "PinnedImages"
                     },
                     {
@@ -218,9 +221,6 @@
                     },
                     {
                         "name": "NetworkLiveMigration"
-                    },
-                    {
-                        "name": "OpenShiftPodSecurityAdmission"
                     },
                     {
                         "name": "PrivateHostedZoneAWS"

@@ -497,7 +497,7 @@ func filterVariants(featureGate string, variantsList ...[]JobVariant) []JobVaria
 
 func listTestResultForVariant(featureGate string, jobVariant JobVariant) (*TestingResults, error) {
 	// Substring here matches for both [OCPFeatureGate:...] and [FeatureGate:...]
-	testPattern := fmt.Sprintf("FeatureGate:%s]", featureGate)
+	testPattern := fmt.Sprintf("Feature:%s]", featureGate)
 
 	// Feature gates used by the installer don't need separate tests, use the overall install tests
 	if strings.Contains(featureGate, "Install") {

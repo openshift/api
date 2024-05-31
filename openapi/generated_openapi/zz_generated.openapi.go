@@ -852,6 +852,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/openshiftcontrolplane/v1.SourceStrategyDefaultsConfig":                     schema_openshift_api_openshiftcontrolplane_v1_SourceStrategyDefaultsConfig(ref),
 		"github.com/openshift/api/operator/v1.AWSCSIDriverConfigSpec":                                        schema_openshift_api_operator_v1_AWSCSIDriverConfigSpec(ref),
 		"github.com/openshift/api/operator/v1.AWSClassicLoadBalancerParameters":                              schema_openshift_api_operator_v1_AWSClassicLoadBalancerParameters(ref),
+		"github.com/openshift/api/operator/v1.AWSEFSVolumeMetrics":                                           schema_openshift_api_operator_v1_AWSEFSVolumeMetrics(ref),
+		"github.com/openshift/api/operator/v1.AWSEFSVolumeMetricsOptions":                                    schema_openshift_api_operator_v1_AWSEFSVolumeMetricsOptions(ref),
 		"github.com/openshift/api/operator/v1.AWSLoadBalancerParameters":                                     schema_openshift_api_operator_v1_AWSLoadBalancerParameters(ref),
 		"github.com/openshift/api/operator/v1.AWSNetworkLoadBalancerParameters":                              schema_openshift_api_operator_v1_AWSNetworkLoadBalancerParameters(ref),
 		"github.com/openshift/api/operator/v1.AccessLogging":                                                 schema_openshift_api_operator_v1_AccessLogging(ref),
@@ -43519,9 +43521,19 @@ func schema_openshift_api_operator_v1_AWSCSIDriverConfigSpec(ref common.Referenc
 							Format:      "",
 						},
 					},
+					"efsVolumeMetrics": {
+						SchemaProps: spec.SchemaProps{
+							Description: "efsVolumeMetrics sets the configuration for collecting metrics from EFS volumes used by the EFS CSI Driver.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1.AWSEFSVolumeMetrics"),
+						},
+					},
 				},
+				Required: []string{"efsVolumeMetrics"},
 			},
 		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1.AWSEFSVolumeMetrics"},
 	}
 }
 
@@ -43543,6 +43555,74 @@ func schema_openshift_api_operator_v1_AWSClassicLoadBalancerParameters(ref commo
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+	}
+}
+
+func schema_openshift_api_operator_v1_AWSEFSVolumeMetrics(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "AWSEFSVolumeMetrics defines the configuration for Volume Metrics in the EFS CSI Driver.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"state": {
+						SchemaProps: spec.SchemaProps{
+							Description: "state defines the state of metric collection in the AWS EFS CSI Driver. Enabling this option will cause the AWS EFS CSI Driver to recursively scan volumes to collect metrics. This process may result in high CPU and memory usage, depending on the volume size. The default value is Disabled.",
+							Default:     "Disabled",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"options": {
+						SchemaProps: spec.SchemaProps{
+							Description: "options provides additional configuration for volume metrics in the AWS EFS CSI Driver.",
+							Ref:         ref("github.com/openshift/api/operator/v1.AWSEFSVolumeMetricsOptions"),
+						},
+					},
+				},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "state",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"options": "Options",
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1.AWSEFSVolumeMetricsOptions"},
+	}
+}
+
+func schema_openshift_api_operator_v1_AWSEFSVolumeMetricsOptions(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "AWSEFSVolumeMetricsOptions defines options for volume metrics in the EFS CSI Driver.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"refreshPeriod": {
+						SchemaProps: spec.SchemaProps{
+							Description: "refreshPeriod specifies the frequency, in minutes, at which volume metrics are refreshed. The default refresh period is 240 minutes.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"fsRateLimit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "fsRateLimit defines the rate limit, in goroutines per file system, for processing volume metrics. The default rate limit is 5 goroutines per file system.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
 	}
 }
 

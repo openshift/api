@@ -25294,7 +25294,15 @@
     "com.github.openshift.api.operator.v1.AWSCSIDriverConfigSpec": {
       "description": "AWSCSIDriverConfigSpec defines properties that can be configured for the AWS CSI driver.",
       "type": "object",
+      "required": [
+        "efsVolumeMetrics"
+      ],
       "properties": {
+        "efsVolumeMetrics": {
+          "description": "efsVolumeMetrics sets the configuration for collecting metrics from EFS volumes used by the EFS CSI Driver.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.AWSEFSVolumeMetrics"
+        },
         "kmsKeyARN": {
           "description": "kmsKeyARN sets the cluster default storage class to encrypt volumes with a user-defined KMS key, rather than the default KMS key used by AWS. The value may be either the ARN or Alias ARN of a KMS key.",
           "type": "string"
@@ -25308,6 +25316,45 @@
         "connectionIdleTimeout": {
           "description": "connectionIdleTimeout specifies the maximum time period that a connection may be idle before the load balancer closes the connection.  The value must be parseable as a time duration value; see <https://pkg.go.dev/time#ParseDuration>.  A nil or zero value means no opinion, in which case a default value is used.  The default value for this field is 60s.  This default is subject to change.",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.AWSEFSVolumeMetrics": {
+      "description": "AWSEFSVolumeMetrics defines the configuration for Volume Metrics in the EFS CSI Driver.",
+      "type": "object",
+      "properties": {
+        "options": {
+          "description": "options provides additional configuration for volume metrics in the AWS EFS CSI Driver.",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.AWSEFSVolumeMetricsOptions"
+        },
+        "state": {
+          "description": "state defines the state of metric collection in the AWS EFS CSI Driver. Enabling this option will cause the AWS EFS CSI Driver to recursively scan volumes to collect metrics. This process may result in high CPU and memory usage, depending on the volume size. The default value is Disabled.",
+          "type": "string",
+          "default": "Disabled"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "state",
+          "fields-to-discriminateBy": {
+            "options": "Options"
+          }
+        }
+      ]
+    },
+    "com.github.openshift.api.operator.v1.AWSEFSVolumeMetricsOptions": {
+      "description": "AWSEFSVolumeMetricsOptions defines options for volume metrics in the EFS CSI Driver.",
+      "type": "object",
+      "properties": {
+        "fsRateLimit": {
+          "description": "fsRateLimit defines the rate limit, in goroutines per file system, for processing volume metrics. The default rate limit is 5 goroutines per file system.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "refreshPeriod": {
+          "description": "refreshPeriod specifies the frequency, in minutes, at which volume metrics are refreshed. The default refresh period is 240 minutes.",
+          "type": "integer",
+          "format": "int64"
         }
       }
     },

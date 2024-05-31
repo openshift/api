@@ -6,6 +6,7 @@ metadata:
     api.openshift.io/merged-by-featuregates: "true"
     include.release.openshift.io/ibm-cloud-managed: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
+    release.openshift.io/feature-set: DevPreviewNoUpgrade
   name: clustercsidrivers.operator.openshift.io
 spec:
   group: operator.openshift.io
@@ -70,6 +71,49 @@ spec:
                   aws:
                     description: aws is used to configure the AWS CSI driver.
                     properties:
+                      efsVolumeMetrics:
+                        description: efsVolumeMetrics sets the configuration for collecting
+                          metrics from EFS volumes used by the EFS CSI Driver.
+                        properties:
+                          options:
+                            description: options provides additional configuration
+                              for volume metrics in the AWS EFS CSI Driver.
+                            properties:
+                              fsRateLimit:
+                                default: 5
+                                description: fsRateLimit defines the rate limit, in
+                                  goroutines per file system, for processing volume
+                                  metrics. The default rate limit is 5 goroutines
+                                  per file system.
+                                format: int32
+                                minimum: 1
+                                type: integer
+                              refreshPeriod:
+                                default: 240
+                                description: refreshPeriod specifies the frequency,
+                                  in minutes, at which volume metrics are refreshed.
+                                  The default refresh period is 240 minutes.
+                                format: int64
+                                minimum: 1
+                                type: integer
+                            required:
+                            - refreshPeriod
+                            type: object
+                          state:
+                            default: Disabled
+                            description: state defines the state of metric collection
+                              in the AWS EFS CSI Driver. Enabling this option will
+                              cause the AWS EFS CSI Driver to recursively scan volumes
+                              to collect metrics. This process may result in high
+                              CPU and memory usage, depending on the volume size.
+                              The default value is Disabled.
+                            enum:
+                            - Enabled
+                            - Disabled
+                            type: string
+                        required:
+                        - state
+                        type: object
                       kmsKeyARN:
                         description: kmsKeyARN sets the cluster default storage class
                           to encrypt volumes with a user-defined KMS key, rather than

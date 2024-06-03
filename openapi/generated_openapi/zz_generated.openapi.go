@@ -779,6 +779,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/machineconfiguration/v1alpha1.PinnedImageSetSpec":                          schema_openshift_api_machineconfiguration_v1alpha1_PinnedImageSetSpec(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.PinnedImageSetStatus":                        schema_openshift_api_machineconfiguration_v1alpha1_PinnedImageSetStatus(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.RenderedMachineConfigReference":              schema_openshift_api_machineconfiguration_v1alpha1_RenderedMachineConfigReference(ref),
+		"github.com/openshift/api/monitoring/v1.AdditionalAlertmanagerConfig":                                schema_openshift_api_monitoring_v1_AdditionalAlertmanagerConfig(ref),
 		"github.com/openshift/api/monitoring/v1.AlertRelabelConfig":                                          schema_openshift_api_monitoring_v1_AlertRelabelConfig(ref),
 		"github.com/openshift/api/monitoring/v1.AlertRelabelConfigList":                                      schema_openshift_api_monitoring_v1_AlertRelabelConfigList(ref),
 		"github.com/openshift/api/monitoring/v1.AlertRelabelConfigSpec":                                      schema_openshift_api_monitoring_v1_AlertRelabelConfigSpec(ref),
@@ -787,10 +788,45 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/monitoring/v1.AlertingRuleList":                                            schema_openshift_api_monitoring_v1_AlertingRuleList(ref),
 		"github.com/openshift/api/monitoring/v1.AlertingRuleSpec":                                            schema_openshift_api_monitoring_v1_AlertingRuleSpec(ref),
 		"github.com/openshift/api/monitoring/v1.AlertingRuleStatus":                                          schema_openshift_api_monitoring_v1_AlertingRuleStatus(ref),
+		"github.com/openshift/api/monitoring/v1.AlertmanagerMainConfig":                                      schema_openshift_api_monitoring_v1_AlertmanagerMainConfig(ref),
+		"github.com/openshift/api/monitoring/v1.AlertmanagerUserWorkloadConfig":                              schema_openshift_api_monitoring_v1_AlertmanagerUserWorkloadConfig(ref),
+		"github.com/openshift/api/monitoring/v1.Audit":                                                       schema_openshift_api_monitoring_v1_Audit(ref),
+		"github.com/openshift/api/monitoring/v1.ClusterMonitoringOperator":                                   schema_openshift_api_monitoring_v1_ClusterMonitoringOperator(ref),
+		"github.com/openshift/api/monitoring/v1.ClusterMonitoringOperatorList":                               schema_openshift_api_monitoring_v1_ClusterMonitoringOperatorList(ref),
+		"github.com/openshift/api/monitoring/v1.ClusterMonitoringOperatorSpec":                               schema_openshift_api_monitoring_v1_ClusterMonitoringOperatorSpec(ref),
+		"github.com/openshift/api/monitoring/v1.ClusterMonitoringOperatorStatus":                             schema_openshift_api_monitoring_v1_ClusterMonitoringOperatorStatus(ref),
+		"github.com/openshift/api/monitoring/v1.DedicatedServiceMonitors":                                    schema_openshift_api_monitoring_v1_DedicatedServiceMonitors(ref),
+		"github.com/openshift/api/monitoring/v1.HTTPConfig":                                                  schema_openshift_api_monitoring_v1_HTTPConfig(ref),
+		"github.com/openshift/api/monitoring/v1.K8sPrometheusAdapter":                                        schema_openshift_api_monitoring_v1_K8sPrometheusAdapter(ref),
+		"github.com/openshift/api/monitoring/v1.KubeStateMetricsConfig":                                      schema_openshift_api_monitoring_v1_KubeStateMetricsConfig(ref),
+		"github.com/openshift/api/monitoring/v1.MetricsServerConfig":                                         schema_openshift_api_monitoring_v1_MetricsServerConfig(ref),
+		"github.com/openshift/api/monitoring/v1.MonitoringPluginConfig":                                      schema_openshift_api_monitoring_v1_MonitoringPluginConfig(ref),
+		"github.com/openshift/api/monitoring/v1.NodeExporterCollectorBuddyInfoConfig":                        schema_openshift_api_monitoring_v1_NodeExporterCollectorBuddyInfoConfig(ref),
+		"github.com/openshift/api/monitoring/v1.NodeExporterCollectorConfig":                                 schema_openshift_api_monitoring_v1_NodeExporterCollectorConfig(ref),
+		"github.com/openshift/api/monitoring/v1.NodeExporterCollectorCpufreqConfig":                          schema_openshift_api_monitoring_v1_NodeExporterCollectorCpufreqConfig(ref),
+		"github.com/openshift/api/monitoring/v1.NodeExporterCollectorKSMDConfig":                             schema_openshift_api_monitoring_v1_NodeExporterCollectorKSMDConfig(ref),
+		"github.com/openshift/api/monitoring/v1.NodeExporterCollectorMountStatsConfig":                       schema_openshift_api_monitoring_v1_NodeExporterCollectorMountStatsConfig(ref),
+		"github.com/openshift/api/monitoring/v1.NodeExporterCollectorNetClassConfig":                         schema_openshift_api_monitoring_v1_NodeExporterCollectorNetClassConfig(ref),
+		"github.com/openshift/api/monitoring/v1.NodeExporterCollectorNetDevConfig":                           schema_openshift_api_monitoring_v1_NodeExporterCollectorNetDevConfig(ref),
+		"github.com/openshift/api/monitoring/v1.NodeExporterCollectorProcessesConfig":                        schema_openshift_api_monitoring_v1_NodeExporterCollectorProcessesConfig(ref),
+		"github.com/openshift/api/monitoring/v1.NodeExporterCollectorSystemdConfig":                          schema_openshift_api_monitoring_v1_NodeExporterCollectorSystemdConfig(ref),
+		"github.com/openshift/api/monitoring/v1.NodeExporterCollectorTcpStatConfig":                          schema_openshift_api_monitoring_v1_NodeExporterCollectorTcpStatConfig(ref),
+		"github.com/openshift/api/monitoring/v1.NodeExporterConfig":                                          schema_openshift_api_monitoring_v1_NodeExporterConfig(ref),
+		"github.com/openshift/api/monitoring/v1.OpenShiftStateMetricsConfig":                                 schema_openshift_api_monitoring_v1_OpenShiftStateMetricsConfig(ref),
+		"github.com/openshift/api/monitoring/v1.PrometheusK8sConfig":                                         schema_openshift_api_monitoring_v1_PrometheusK8sConfig(ref),
+		"github.com/openshift/api/monitoring/v1.PrometheusOperatorAdmissionWebhookConfig":                    schema_openshift_api_monitoring_v1_PrometheusOperatorAdmissionWebhookConfig(ref),
+		"github.com/openshift/api/monitoring/v1.PrometheusOperatorConfig":                                    schema_openshift_api_monitoring_v1_PrometheusOperatorConfig(ref),
+		"github.com/openshift/api/monitoring/v1.PrometheusRestrictedConfig":                                  schema_openshift_api_monitoring_v1_PrometheusRestrictedConfig(ref),
 		"github.com/openshift/api/monitoring/v1.PrometheusRuleRef":                                           schema_openshift_api_monitoring_v1_PrometheusRuleRef(ref),
 		"github.com/openshift/api/monitoring/v1.RelabelConfig":                                               schema_openshift_api_monitoring_v1_RelabelConfig(ref),
+		"github.com/openshift/api/monitoring/v1.RemoteWriteSpec":                                             schema_openshift_api_monitoring_v1_RemoteWriteSpec(ref),
 		"github.com/openshift/api/monitoring/v1.Rule":                                                        schema_openshift_api_monitoring_v1_Rule(ref),
 		"github.com/openshift/api/monitoring/v1.RuleGroup":                                                   schema_openshift_api_monitoring_v1_RuleGroup(ref),
+		"github.com/openshift/api/monitoring/v1.TLSConfig":                                                   schema_openshift_api_monitoring_v1_TLSConfig(ref),
+		"github.com/openshift/api/monitoring/v1.TelemeterClientConfig":                                       schema_openshift_api_monitoring_v1_TelemeterClientConfig(ref),
+		"github.com/openshift/api/monitoring/v1.ThanosQuerierConfig":                                         schema_openshift_api_monitoring_v1_ThanosQuerierConfig(ref),
+		"github.com/openshift/api/monitoring/v1.ThanosRulerConfig":                                           schema_openshift_api_monitoring_v1_ThanosRulerConfig(ref),
+		"github.com/openshift/api/monitoring/v1.UserWorkloadConfiguration":                                   schema_openshift_api_monitoring_v1_UserWorkloadConfiguration(ref),
 		"github.com/openshift/api/network/v1.ClusterNetwork":                                                 schema_openshift_api_network_v1_ClusterNetwork(ref),
 		"github.com/openshift/api/network/v1.ClusterNetworkEntry":                                            schema_openshift_api_network_v1_ClusterNetworkEntry(ref),
 		"github.com/openshift/api/network/v1.ClusterNetworkList":                                             schema_openshift_api_network_v1_ClusterNetworkList(ref),
@@ -39734,6 +39770,79 @@ func schema_openshift_api_machineconfiguration_v1alpha1_RenderedMachineConfigRef
 	}
 }
 
+func schema_openshift_api_monitoring_v1_AdditionalAlertmanagerConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "The `AdditionalAlertmanagerConfig` resource defines settings for how a component communicates with additional Alertmanager instances.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the API version of Alertmanager. Possible values are `v1` or `v2`. The default is `v2`.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"bearerToken": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the secret key reference containing the bearer token to use when authenticating to Alertmanager.",
+							Ref:         ref("k8s.io/api/core/v1.SecretKeySelector"),
+						},
+					},
+					"pathPrefix": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the path prefix to add in front of the push endpoint path.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"scheme": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the URL scheme to use when communicating with Alertmanager instances. Possible values are `http` or `https`. The default value is `http`.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"staticConfigs": {
+						SchemaProps: spec.SchemaProps{
+							Description: "A list of statically configured Alertmanager endpoints in the form of `<hosts>:<port>`.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"timeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the timeout value used when sending alerts.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"tlsConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the TLS settings to use for Alertmanager connections.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/monitoring/v1.TLSConfig"),
+						},
+					},
+				},
+				Required: []string{"apiVersion"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/monitoring/v1.TLSConfig", "k8s.io/api/core/v1.SecretKeySelector"},
+	}
+}
+
 func schema_openshift_api_monitoring_v1_AlertRelabelConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -40063,6 +40172,1618 @@ func schema_openshift_api_monitoring_v1_AlertingRuleStatus(ref common.ReferenceC
 	}
 }
 
+func schema_openshift_api_monitoring_v1_AlertmanagerMainConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "The `AlertmanagerMainConfig` resource defines settings for the Alertmanager component in the `openshift-monitoring` namespace.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "A Boolean flag that enables or disables the main Alertmanager instance in the `openshift-monitoring` namespace. The default value is `true`.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"enableUserAlertmanagerConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "A Boolean flag that enables or disables user-defined namespaces to be selected for `AlertmanagerConfig` lookups. This setting only applies if the user workload monitoring instance of Alertmanager is not enabled. The default value is `false`.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"logLevel": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the log level setting for Alertmanager. The possible values are: `error`, `warn`, `info`, `debug`. The default value is `info`.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"nodeSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the nodes on which the Pods are scheduled.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"resources": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines resource requests and limits for the Alertmanager container.",
+							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
+					"secrets": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines a list of secrets that need to be mounted into the Alertmanager. The secrets must reside within the same namespace as the Alertmanager object. They will be added as volumes named secret-<secret-name> and mounted at /etc/alertmanager/secrets/<secret-name> within the 'alertmanager' container of the Alertmanager Pods.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"tolerations": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines tolerations for the pods.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.Toleration"),
+									},
+								},
+							},
+						},
+					},
+					"topologySpreadConstraints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines a pod's topology spread constraints.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.TopologySpreadConstraint"),
+									},
+								},
+							},
+						},
+					},
+					"volumeClaimTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines persistent storage for Alertmanager. Use this setting to configure the persistent volume claim, including storage class, volume size, and name.",
+							Ref:         ref("github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1.EmbeddedPersistentVolumeClaim"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1.EmbeddedPersistentVolumeClaim", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint"},
+	}
+}
+
+func schema_openshift_api_monitoring_v1_AlertmanagerUserWorkloadConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "The `AlertmanagerUserWorkloadConfig` resource defines the settings for the Alertmanager instance used for user-defined projects.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "A Boolean flag that enables or disables a dedicated instance of Alertmanager for user-defined alerts in the `openshift-user-workload-monitoring` namespace. The default value is `false`.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"enableAlertmanagerConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "A Boolean flag to enable or disable user-defined namespaces to be selected for `AlertmanagerConfig` lookup. The default value is `false`.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"logLevel": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the log level setting for Alertmanager for user workload monitoring. The possible values are `error`, `warn`, `info`, and `debug`. The default value is `info`.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"resources": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines resource requests and limits for the Alertmanager container.",
+							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
+					"secrets": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines a list of secrets that need to be mounted into the Alertmanager. The secrets must reside within the same namespace as the Alertmanager object. They will be added as volumes named secret-<secret-name> and mounted at /etc/alertmanager/secrets/<secret-name> within the 'alertmanager' container of the Alertmanager Pods.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"nodeSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the nodes on which the pods are scheduled.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"tolerations": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines tolerations for the pods.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.Toleration"),
+									},
+								},
+							},
+						},
+					},
+					"topologySpreadConstraints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines a pod's topology spread constraints.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.TopologySpreadConstraint"),
+									},
+								},
+							},
+						},
+					},
+					"volumeClaimTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines persistent storage for Alertmanager. Use this setting to configure the persistent volume claim, including storage class, volume size and name.",
+							Ref:         ref("github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1.EmbeddedPersistentVolumeClaim"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1.EmbeddedPersistentVolumeClaim", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint"},
+	}
+}
+
+func schema_openshift_api_monitoring_v1_Audit(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Audit profile configurations",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"profile": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The Profile to set for audit logs. This currently matches the various audit log levels such as: \"metadata, request, requestresponse, none\". The default audit log level is \"metadata\"\n\nsee: https://kubernetes.io/docs/tasks/debug-application-cluster/audit/#audit-policy for more information about auditing and log levels.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"profile"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_monitoring_v1_ClusterMonitoringOperator(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClusterMonitoringOperator is the Schema for the clustermonitoringoperators API",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/openshift/api/monitoring/v1.ClusterMonitoringOperatorSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/openshift/api/monitoring/v1.ClusterMonitoringOperatorStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/monitoring/v1.ClusterMonitoringOperatorSpec", "github.com/openshift/api/monitoring/v1.ClusterMonitoringOperatorStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_openshift_api_monitoring_v1_ClusterMonitoringOperatorList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClusterMonitoringOperatorList contains a list of ClusterMonitoringOperator",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/monitoring/v1.ClusterMonitoringOperator"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/monitoring/v1.ClusterMonitoringOperator", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_openshift_api_monitoring_v1_ClusterMonitoringOperatorSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClusterMonitoringOperatorSpec defines the desired state of ClusterMonitoringOperator",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"alertmanagerMain": {
+						SchemaProps: spec.SchemaProps{
+							Description: "`AlertmanagerMainConfig` defines settings for the Alertmanager component in the `openshift-monitoring` namespace.",
+							Ref:         ref("github.com/openshift/api/monitoring/v1.AlertmanagerMainConfig"),
+						},
+					},
+					"enableUserWorkload": {
+						SchemaProps: spec.SchemaProps{
+							Description: "`UserWorkloadEnabled` is a Boolean flag that enables monitoring for user-defined projects.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"http": {
+						SchemaProps: spec.SchemaProps{
+							Description: "OmitFromDoc",
+							Ref:         ref("github.com/openshift/api/monitoring/v1.HTTPConfig"),
+						},
+					},
+					"k8sPrometheusAdapter": {
+						SchemaProps: spec.SchemaProps{
+							Description: "`K8sPrometheusAdapter` defines settings for the Prometheus Adapter component.",
+							Ref:         ref("github.com/openshift/api/monitoring/v1.K8sPrometheusAdapter"),
+						},
+					},
+					"metricsServer": {
+						SchemaProps: spec.SchemaProps{
+							Description: "`MetricsServer` defines settings for the MetricsServer component.",
+							Ref:         ref("github.com/openshift/api/monitoring/v1.MetricsServerConfig"),
+						},
+					},
+					"kubeStateMetrics": {
+						SchemaProps: spec.SchemaProps{
+							Description: "`KubeStateMetricsConfig` defines settings for the `kube-state-metrics` agent.",
+							Ref:         ref("github.com/openshift/api/monitoring/v1.KubeStateMetricsConfig"),
+						},
+					},
+					"prometheusK8s": {
+						SchemaProps: spec.SchemaProps{
+							Description: "`PrometheusK8sConfig` defines settings for the Prometheus component.",
+							Ref:         ref("github.com/openshift/api/monitoring/v1.PrometheusK8sConfig"),
+						},
+					},
+					"prometheusOperator": {
+						SchemaProps: spec.SchemaProps{
+							Description: "`PrometheusOperatorConfig` defines settings for the Prometheus Operator component.",
+							Ref:         ref("github.com/openshift/api/monitoring/v1.PrometheusOperatorConfig"),
+						},
+					},
+					"prometheusOperatorAdmissionWebhook": {
+						SchemaProps: spec.SchemaProps{
+							Description: "`PrometheusOperatorAdmissionWebhookConfig` defines settings for the Prometheus Operator's admission webhook component.",
+							Ref:         ref("github.com/openshift/api/monitoring/v1.PrometheusOperatorAdmissionWebhookConfig"),
+						},
+					},
+					"openshiftStateMetrics": {
+						SchemaProps: spec.SchemaProps{
+							Description: "`OpenShiftMetricsConfig` defines settings for the `openshift-state-metrics` agent.",
+							Ref:         ref("github.com/openshift/api/monitoring/v1.OpenShiftStateMetricsConfig"),
+						},
+					},
+					"telemeterClient": {
+						SchemaProps: spec.SchemaProps{
+							Description: "`TelemeterClientConfig` defines settings for the Telemeter Client component.",
+							Ref:         ref("github.com/openshift/api/monitoring/v1.TelemeterClientConfig"),
+						},
+					},
+					"thanosQuerier": {
+						SchemaProps: spec.SchemaProps{
+							Description: "`ThanosQuerierConfig` defines settings for the Thanos Querier component.",
+							Ref:         ref("github.com/openshift/api/monitoring/v1.ThanosQuerierConfig"),
+						},
+					},
+					"nodeExporter": {
+						SchemaProps: spec.SchemaProps{
+							Description: "`NodeExporterConfig` defines settings for the `node-exporter` agent.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/monitoring/v1.NodeExporterConfig"),
+						},
+					},
+					"monitoringPlugin": {
+						SchemaProps: spec.SchemaProps{
+							Description: "`MonitoringPluginConfig` defines settings for the monitoring `console-plugin`.",
+							Ref:         ref("github.com/openshift/api/monitoring/v1.MonitoringPluginConfig"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/monitoring/v1.AlertmanagerMainConfig", "github.com/openshift/api/monitoring/v1.HTTPConfig", "github.com/openshift/api/monitoring/v1.K8sPrometheusAdapter", "github.com/openshift/api/monitoring/v1.KubeStateMetricsConfig", "github.com/openshift/api/monitoring/v1.MetricsServerConfig", "github.com/openshift/api/monitoring/v1.MonitoringPluginConfig", "github.com/openshift/api/monitoring/v1.NodeExporterConfig", "github.com/openshift/api/monitoring/v1.OpenShiftStateMetricsConfig", "github.com/openshift/api/monitoring/v1.PrometheusK8sConfig", "github.com/openshift/api/monitoring/v1.PrometheusOperatorAdmissionWebhookConfig", "github.com/openshift/api/monitoring/v1.PrometheusOperatorConfig", "github.com/openshift/api/monitoring/v1.TelemeterClientConfig", "github.com/openshift/api/monitoring/v1.ThanosQuerierConfig"},
+	}
+}
+
+func schema_openshift_api_monitoring_v1_ClusterMonitoringOperatorStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClusterMonitoringOperatorStatus defines the observed state of ClusterMonitoringOperator",
+				Type:        []string{"object"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_monitoring_v1_DedicatedServiceMonitors(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "OmitFromDoc: This is deprecated and will be removed in a future version, setting it has no effect.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_monitoring_v1_HTTPConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"httpProxy": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"httpsProxy": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"noProxy": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"httpProxy", "httpsProxy", "noProxy"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_monitoring_v1_K8sPrometheusAdapter(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "The `K8sPrometheusAdapter` resource defines settings for the Prometheus Adapter component.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"audit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the audit configuration used by the Prometheus Adapter instance. Possible profile values are: `metadata`, `request`, `requestresponse`, and `none`. The default value is `metadata`.",
+							Ref:         ref("github.com/openshift/api/monitoring/v1.Audit"),
+						},
+					},
+					"nodeSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the nodes on which the pods are scheduled.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"resources": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines resource requests and limits for the PrometheusAdapter container.",
+							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
+					"tolerations": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines tolerations for the pods.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.Toleration"),
+									},
+								},
+							},
+						},
+					},
+					"topologySpreadConstraints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines a pod's topology spread constraints.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.TopologySpreadConstraint"),
+									},
+								},
+							},
+						},
+					},
+					"dedicatedServiceMonitors": {
+						SchemaProps: spec.SchemaProps{
+							Description: "OmitFromDoc: Defines dedicated service monitors.",
+							Ref:         ref("github.com/openshift/api/monitoring/v1.DedicatedServiceMonitors"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/monitoring/v1.Audit", "github.com/openshift/api/monitoring/v1.DedicatedServiceMonitors", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint"},
+	}
+}
+
+func schema_openshift_api_monitoring_v1_KubeStateMetricsConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "The `KubeStateMetricsConfig` resource defines settings for the `kube-state-metrics` agent.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"nodeSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the nodes on which the pods are scheduled.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"resources": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines resource requests and limits for the KubeStateMetrics container.",
+							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
+					"tolerations": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines tolerations for the pods.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.Toleration"),
+									},
+								},
+							},
+						},
+					},
+					"topologySpreadConstraints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines a pod's topology spread constraints.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.TopologySpreadConstraint"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint"},
+	}
+}
+
+func schema_openshift_api_monitoring_v1_MetricsServerConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "The `MetricsServerConfig` resource defines settings for the Metrics Server component. Note that this setting only applies when the MetricsServer feature gate is enabled.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"audit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the audit configuration used by the Metrics Server instance. Possible profile values are: `metadata`, `request`, `requestresponse`, and `none`. The default value is `metadata`.",
+							Ref:         ref("github.com/openshift/api/monitoring/v1.Audit"),
+						},
+					},
+					"nodeSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the nodes on which the pods are scheduled.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"tolerations": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines tolerations for the pods.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.Toleration"),
+									},
+								},
+							},
+						},
+					},
+					"resources": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines resource requests and limits for the Metrics Server container.",
+							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
+					"topologySpreadConstraints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines a pod's topology spread constraints.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.TopologySpreadConstraint"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/monitoring/v1.Audit", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint"},
+	}
+}
+
+func schema_openshift_api_monitoring_v1_MonitoringPluginConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "The `MonitoringPluginConfig` resource defines settings for the Console Plugin component in the `openshift-monitoring` namespace.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"nodeSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the nodes on which the Pods are scheduled.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"resources": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines resource requests and limits for the console-plugin container.",
+							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
+					"tolerations": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines tolerations for the pods.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.Toleration"),
+									},
+								},
+							},
+						},
+					},
+					"topologySpreadConstraints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines a pod's topology spread constraints.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.TopologySpreadConstraint"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint"},
+	}
+}
+
+func schema_openshift_api_monitoring_v1_NodeExporterCollectorBuddyInfoConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "The `NodeExporterCollectorBuddyInfoConfig` resource works as an on/off switch for the `buddyinfo` collector of the `node-exporter` agent. By default, the `buddyinfo` collector is disabled.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "A Boolean flag that enables or disables the `buddyinfo` collector.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_monitoring_v1_NodeExporterCollectorConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "The `NodeExporterCollectorConfig` resource defines settings for individual collectors of the `node-exporter` agent.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"cpufreq": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the configuration of the `cpufreq` collector, which collects CPU frequency statistics. Disabled by default.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/monitoring/v1.NodeExporterCollectorCpufreqConfig"),
+						},
+					},
+					"tcpstat": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the configuration of the `tcpstat` collector, which collects TCP connection statistics. Disabled by default.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/monitoring/v1.NodeExporterCollectorTcpStatConfig"),
+						},
+					},
+					"netdev": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the configuration of the `netdev` collector, which collects network devices statistics. Enabled by default.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/monitoring/v1.NodeExporterCollectorNetDevConfig"),
+						},
+					},
+					"netclass": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the configuration of the `netclass` collector, which collects information about network devices. Enabled by default.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/monitoring/v1.NodeExporterCollectorNetClassConfig"),
+						},
+					},
+					"buddyinfo": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the configuration of the `buddyinfo` collector, which collects statistics about memory fragmentation from the `node_buddyinfo_blocks` metric. This metric collects data from `/proc/buddyinfo`. Disabled by default.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/monitoring/v1.NodeExporterCollectorBuddyInfoConfig"),
+						},
+					},
+					"mountstats": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the configuration of the `mountstats` collector, which collects statistics about NFS volume I/O activities. Disabled by default.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/monitoring/v1.NodeExporterCollectorMountStatsConfig"),
+						},
+					},
+					"ksmd": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the configuration of the `ksmd` collector, which collects statistics from the kernel same-page merger daemon. Disabled by default.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/monitoring/v1.NodeExporterCollectorKSMDConfig"),
+						},
+					},
+					"processes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the configuration of the `processes` collector, which collects statistics from processes and threads running in the system. Disabled by default.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/monitoring/v1.NodeExporterCollectorProcessesConfig"),
+						},
+					},
+					"systemd": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the configuration of the `systemd` collector, which collects statistics on the systemd daemon and its managed services. Disabled by default.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/monitoring/v1.NodeExporterCollectorSystemdConfig"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/monitoring/v1.NodeExporterCollectorBuddyInfoConfig", "github.com/openshift/api/monitoring/v1.NodeExporterCollectorCpufreqConfig", "github.com/openshift/api/monitoring/v1.NodeExporterCollectorKSMDConfig", "github.com/openshift/api/monitoring/v1.NodeExporterCollectorMountStatsConfig", "github.com/openshift/api/monitoring/v1.NodeExporterCollectorNetClassConfig", "github.com/openshift/api/monitoring/v1.NodeExporterCollectorNetDevConfig", "github.com/openshift/api/monitoring/v1.NodeExporterCollectorProcessesConfig", "github.com/openshift/api/monitoring/v1.NodeExporterCollectorSystemdConfig", "github.com/openshift/api/monitoring/v1.NodeExporterCollectorTcpStatConfig"},
+	}
+}
+
+func schema_openshift_api_monitoring_v1_NodeExporterCollectorCpufreqConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "The `NodeExporterCollectorCpufreqConfig` resource works as an on/off switch for the `cpufreq` collector of the `node-exporter` agent. By default, the `cpufreq` collector is disabled. Under certain circumstances, enabling the cpufreq collector increases CPU usage on machines with many cores. If you enable this collector and have machines with many cores, monitor your systems closely for excessive CPU usage. Please refer to https://github.com/prometheus/node_exporter/issues/1880 for more details. A related bug: https://bugzilla.redhat.com/show_bug.cgi?id=1972076",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "A Boolean flag that enables or disables the `cpufreq` collector.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_monitoring_v1_NodeExporterCollectorKSMDConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "The `NodeExporterCollectorKSMDConfig` resource works as an on/off switch for the `ksmd` collector of the `node-exporter` agent. By default, the `ksmd` collector is disabled.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "A Boolean flag that enables or disables the `ksmd` collector.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_monitoring_v1_NodeExporterCollectorMountStatsConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "The `NodeExporterCollectorMountStatsConfig` resource works as an on/off switch for the `mountstats` collector of the `node-exporter` agent. By default, the `mountstats` collector is disabled. If enabled, these metrics become available:\n\n\t`node_mountstats_nfs_read_bytes_total`,\n\t`node_mountstats_nfs_write_bytes_total`,\n\t`node_mountstats_nfs_operations_requests_total`.\n\nPlease be aware that these metrics can have a high cardinality. If you enable this collector, closely monitor any increases in memory usage for the `prometheus-k8s` pods.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "A Boolean flag that enables or disables the `mountstats` collector.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_monitoring_v1_NodeExporterCollectorNetClassConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "The `NodeExporterCollectorNetClassConfig` resource works as an on/off switch for the `netclass` collector of the `node-exporter` agent. By default, the `netclass` collector is enabled. If disabled, these metrics become unavailable: `node_network_info`, `node_network_address_assign_type`, `node_network_carrier`, `node_network_carrier_changes_total`, `node_network_carrier_up_changes_total`, `node_network_carrier_down_changes_total`, `node_network_device_id`, `node_network_dormant`, `node_network_flags`, `node_network_iface_id`, `node_network_iface_link`, `node_network_iface_link_mode`, `node_network_mtu_bytes`, `node_network_name_assign_type`, `node_network_net_dev_group`, `node_network_speed_bytes`, `node_network_transmit_queue_length`, `node_network_protocol_type`.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "A Boolean flag that enables or disables the `netclass` collector.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"useNetlink": {
+						SchemaProps: spec.SchemaProps{
+							Description: "A Boolean flag that activates the `netlink` implementation of the `netclass` collector. Its default value is `true`: activating the netlink mode. This implementation improves the performance of the `netclass` collector.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_monitoring_v1_NodeExporterCollectorNetDevConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "The `NodeExporterCollectorNetDevConfig` resource works as an on/off switch for the `netdev` collector of the `node-exporter` agent. By default, the `netdev` collector is enabled. If disabled, these metrics become unavailable: `node_network_receive_bytes_total`, `node_network_receive_compressed_total`, `node_network_receive_drop_total`, `node_network_receive_errs_total`, `node_network_receive_fifo_total`, `node_network_receive_frame_total`, `node_network_receive_multicast_total`, `node_network_receive_nohandler_total`, `node_network_receive_packets_total`, `node_network_transmit_bytes_total`, `node_network_transmit_carrier_total`, `node_network_transmit_colls_total`, `node_network_transmit_compressed_total`, `node_network_transmit_drop_total`, `node_network_transmit_errs_total`, `node_network_transmit_fifo_total`, `node_network_transmit_packets_total`.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "A Boolean flag that enables or disables the `netdev` collector.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_monitoring_v1_NodeExporterCollectorProcessesConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "The `NodeExporterCollectorProcessesConfig` resource works as an on/off switch for the `processes` collector of the `node-exporter` agent. If enabled, these metrics become available: `node_processes_max_processes`, `node_processes_pids`, `node_processes_state`, `node_processes_threads`, `node_processes_threads_state`. The metric `node_processes_state` and `node_processes_threads_state` can have up to 5 series each, depending on the state of the processes and threads. The possible states of a process or a thread are: 'D' (UNINTERRUPTABLE_SLEEP), 'R' (RUNNING & RUNNABLE), 'S' (INTERRRUPTABLE_SLEEP), 'T' (STOPPED), 'Z' (ZOMBIE). By default, the `processes` collector is disabled.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "A Boolean flag that enables or disables the `processes` collector.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_monitoring_v1_NodeExporterCollectorSystemdConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "The `NodeExporterCollectorSystemdConfig` resource works as an on/off switch for the `systemd` collector of the `node-exporter` agent. By default, the `systemd` collector is disabled. If enabled, the following metrics become available: `node_systemd_system_running`, `node_systemd_units`, `node_systemd_version`. If the unit uses a socket, it also generates these 3 metrics: `node_systemd_socket_accepted_connections_total`, `node_systemd_socket_current_connections`, `node_systemd_socket_refused_connections_total`. You can use the `units` parameter to select the systemd units to be included by the `systemd` collector. The selected units are used to generate the `node_systemd_unit_state` metric, which shows the state of each systemd unit. The timer units such as `logrotate.timer` generate one more metric `node_systemd_timer_last_trigger_seconds`. However, this metric's cardinality might be high (at least 5 series per unit per node). If you enable this collector with a long list of selected units, closely monitor the `prometheus-k8s` deployment for excessive memory usage.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "A Boolean flag that enables or disables the `systemd` collector.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"units": {
+						SchemaProps: spec.SchemaProps{
+							Description: "A list of regular expression (regex) patterns that match systemd units to be included by the `systemd` collector. By default, the list is empty, so the collector exposes no metrics for systemd units.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_monitoring_v1_NodeExporterCollectorTcpStatConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "The `NodeExporterCollectorTcpStatConfig` resource works as an on/off switch for the `tcpstat` collector of the `node-exporter` agent. By default, the `tcpstat` collector is disabled.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "A Boolean flag that enables or disables the `tcpstat` collector.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_monitoring_v1_NodeExporterConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "The `NodeExporterConfig` resource defines settings for the `node-exporter` agent.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"collectors": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines which collectors are enabled and their additional configuration parameters.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/monitoring/v1.NodeExporterCollectorConfig"),
+						},
+					},
+					"maxProcs": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The target number of CPUs on which the Node Exporter's process will run. Use this setting to override the default value, which is set either to `4` or to the number of CPUs on the host, whichever is smaller. The default value is computed at runtime and set via the `GOMAXPROCS` environment variable before Node Exporter is launched. If a kernel deadlock occurs or if performance degrades when reading from `sysfs` concurrently, you can change this value to `1`, which limits Node Exporter to running on one CPU. For nodes with a high CPU count, setting the limit to a low number saves resources by preventing Go routines from being scheduled to run on all CPUs. However, I/O performance degrades if the `maxProcs` value is set too low, and there are many metrics to collect.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"ignoredNetworkDevices": {
+						SchemaProps: spec.SchemaProps{
+							Description: "A list of network devices, as regular expressions, to be excluded from the relevant collector configuration such as `netdev` and `netclass`. When not set, the Cluster Monitoring Operator uses a predefined list of devices to be excluded to minimize the impact on memory usage. When set as an empty list, no devices are excluded. If you modify this setting, monitor the `prometheus-k8s` deployment closely for excessive memory usage.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"resources": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines resource requests and limits for the NodeExporter container.",
+							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/monitoring/v1.NodeExporterCollectorConfig", "k8s.io/api/core/v1.ResourceRequirements"},
+	}
+}
+
+func schema_openshift_api_monitoring_v1_OpenShiftStateMetricsConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "The `OpenShiftStateMetricsConfig` resource defines settings for the `openshift-state-metrics` agent.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"nodeSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the nodes on which the pods are scheduled.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"resources": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines resource requests and limits for the OpenShiftStateMetrics container.",
+							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
+					"tolerations": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines tolerations for the pods.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.Toleration"),
+									},
+								},
+							},
+						},
+					},
+					"topologySpreadConstraints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines a pod's topology spread constraints.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.TopologySpreadConstraint"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint"},
+	}
+}
+
+func schema_openshift_api_monitoring_v1_PrometheusK8sConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "The `PrometheusK8sConfig` resource defines settings for the Prometheus component.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"additionalAlertmanagerConfigs": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Configures additional Alertmanager instances that receive alerts from the Prometheus component. By default, no additional Alertmanager instances are configured.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/monitoring/v1.AdditionalAlertmanagerConfig"),
+									},
+								},
+							},
+						},
+					},
+					"enforcedBodySizeLimit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Enforces a body size limit for Prometheus scraped metrics. If a scraped target's body response is larger than the limit, the scrape will fail. The following values are valid: an empty value to specify no limit, a numeric value in Prometheus size format (such as `64MB`), or the string `automatic`, which indicates that the limit will be automatically calculated based on cluster capacity. The default value is empty, which indicates no limit.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"externalLabels": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines labels to be added to any time series or alerts when communicating with external systems such as federation, remote storage, and Alertmanager. By default, no labels are added.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"logLevel": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the log level setting for Prometheus. The possible values are: `error`, `warn`, `info`, and `debug`. The default value is `info`.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"nodeSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the nodes on which the pods are scheduled.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"queryLogFile": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the file to which PromQL queries are logged. This setting can be either a filename, in which case the queries are saved to an `emptyDir` volume at `/var/log/prometheus`, or a full path to a location where an `emptyDir` volume will be mounted and the queries saved. Writing to `/dev/stderr`, `/dev/stdout` or `/dev/null` is supported, but writing to any other `/dev/` path is not supported. Relative paths are also not supported. By default, PromQL queries are not logged.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"remoteWrite": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the remote write configuration, including URL, authentication, and relabeling settings.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/monitoring/v1.RemoteWriteSpec"),
+									},
+								},
+							},
+						},
+					},
+					"resources": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines resource requests and limits for the Prometheus container.",
+							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
+					"retention": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the duration for which Prometheus retains data. This definition must be specified using the following regular expression pattern: `[0-9]+(ms|s|m|h|d|w|y)` (ms = milliseconds, s= seconds,m = minutes, h = hours, d = days, w = weeks, y = years). The default value is `15d`.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"retentionSize": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the maximum amount of disk space used by data blocks plus the write-ahead log (WAL). Supported values are `B`, `KB`, `KiB`, `MB`, `MiB`, `GB`, `GiB`, `TB`, `TiB`, `PB`, `PiB`, `EB`, and `EiB`. By default, no limit is defined.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"tolerations": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines tolerations for the pods.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.Toleration"),
+									},
+								},
+							},
+						},
+					},
+					"topologySpreadConstraints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the pod's topology spread constraints.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.TopologySpreadConstraint"),
+									},
+								},
+							},
+						},
+					},
+					"collectionProfile": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the metrics collection profile that Prometheus uses to collect metrics from the platform components. Supported values are `full` or `minimal`. In the `full` profile (default), Prometheus collects all metrics that are exposed by the platform components. In the `minimal` profile, Prometheus only collects metrics necessary for the default platform alerts, recording rules, telemetry and console dashboards.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"volumeClaimTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines persistent storage for Prometheus. Use this setting to configure the persistent volume claim, including storage class, volume size and name.",
+							Ref:         ref("github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1.EmbeddedPersistentVolumeClaim"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/monitoring/v1.AdditionalAlertmanagerConfig", "github.com/openshift/api/monitoring/v1.RemoteWriteSpec", "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1.EmbeddedPersistentVolumeClaim", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint"},
+	}
+}
+
+func schema_openshift_api_monitoring_v1_PrometheusOperatorAdmissionWebhookConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "The `PrometheusOperatorAdmissionWebhookConfig` resource defines settings for the Prometheus Operator's admission webhook workload.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"resources": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines resource requests and limits for the prometheus-operator-admission-webhook container.",
+							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
+					"topologySpreadConstraints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines a pod's topology spread constraints.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.TopologySpreadConstraint"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.TopologySpreadConstraint"},
+	}
+}
+
+func schema_openshift_api_monitoring_v1_PrometheusOperatorConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "The `PrometheusOperatorConfig` resource defines settings for the Prometheus Operator component.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"logLevel": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the log level settings for Prometheus Operator. The possible values are `error`, `warn`, `info`, and `debug`. The default value is `info`.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"nodeSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the nodes on which the pods are scheduled.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"resources": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines resource requests and limits for the PrometheusOperator container.",
+							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
+					"tolerations": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines tolerations for the pods.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.Toleration"),
+									},
+								},
+							},
+						},
+					},
+					"topologySpreadConstraints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines a pod's topology spread constraints.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.TopologySpreadConstraint"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint"},
+	}
+}
+
+func schema_openshift_api_monitoring_v1_PrometheusRestrictedConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "The `PrometheusRestrictedConfig` resource defines the settings for the Prometheus component that monitors user-defined projects.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"additionalAlertmanagerConfigs": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Configures additional Alertmanager instances that receive alerts from the Prometheus component. By default, no additional Alertmanager instances are configured.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/monitoring/v1.AdditionalAlertmanagerConfig"),
+									},
+								},
+							},
+						},
+					},
+					"enforcedLabelLimit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies a per-scrape limit on the number of labels accepted for a sample. If the number of labels exceeds this limit after metric relabeling, the entire scrape is treated as failed. The default value is `0`, which means that no limit is set.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"enforcedLabelNameLengthLimit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies a per-scrape limit on the length of a label name for a sample. If the length of a label name exceeds this limit after metric relabeling, the entire scrape is treated as failed. The default value is `0`, which means that no limit is set.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"enforcedLabelValueLengthLimit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies a per-scrape limit on the length of a label value for a sample. If the length of a label value exceeds this limit after metric relabeling, the entire scrape is treated as failed. The default value is `0`, which means that no limit is set.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"enforcedSampleLimit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies a global limit on the number of scraped samples that will be accepted. This setting overrides the `SampleLimit` value set in any user-defined `ServiceMonitor` or `PodMonitor` object if the value is greater than `enforcedTargetLimit`. Administrators can use this setting to keep the overall number of samples under control. The default value is `0`, which means that no limit is set.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"enforcedTargetLimit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies a global limit on the number of scraped targets. This setting overrides the `TargetLimit` value set in any user-defined `ServiceMonitor` or `PodMonitor` object if the value is greater than `enforcedSampleLimit`. Administrators can use this setting to keep the overall number of targets under control. The default value is `0`.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"externalLabels": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines labels to be added to any time series or alerts when communicating with external systems such as federation, remote storage, and Alertmanager. By default, no labels are added.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"logLevel": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the log level setting for Prometheus. The possible values are `error`, `warn`, `info`, and `debug`. The default setting is `info`.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"nodeSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the nodes on which the pods are scheduled.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"queryLogFile": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the file to which PromQL queries are logged. This setting can be either a filename, in which case the queries are saved to an `emptyDir` volume at `/var/log/prometheus`, or a full path to a location where an `emptyDir` volume will be mounted and the queries saved. Writing to `/dev/stderr`, `/dev/stdout` or `/dev/null` is supported, but writing to any other `/dev/` path is not supported. Relative paths are also not supported. By default, PromQL queries are not logged.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"remoteWrite": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the remote write configuration, including URL, authentication, and relabeling settings.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/monitoring/v1.RemoteWriteSpec"),
+									},
+								},
+							},
+						},
+					},
+					"resources": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines resource requests and limits for the Prometheus container.",
+							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
+					"retention": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the duration for which Prometheus retains data. This definition must be specified using the following regular expression pattern: `[0-9]+(ms|s|m|h|d|w|y)` (ms = milliseconds, s= seconds,m = minutes, h = hours, d = days, w = weeks, y = years). The default value is `15d`.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"retentionSize": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the maximum amount of disk space used by data blocks plus the write-ahead log (WAL). Supported values are `B`, `KB`, `KiB`, `MB`, `MiB`, `GB`, `GiB`, `TB`, `TiB`, `PB`, `PiB`, `EB`, and `EiB`. The default value is `nil`.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"tolerations": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines tolerations for the pods.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.Toleration"),
+									},
+								},
+							},
+						},
+					},
+					"topologySpreadConstraints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines a pod's topology spread constraints.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.TopologySpreadConstraint"),
+									},
+								},
+							},
+						},
+					},
+					"volumeClaimTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines persistent storage for Prometheus. Use this setting to configure the storage class and size of a volume.",
+							Ref:         ref("github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1.EmbeddedPersistentVolumeClaim"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/monitoring/v1.AdditionalAlertmanagerConfig", "github.com/openshift/api/monitoring/v1.RemoteWriteSpec", "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1.EmbeddedPersistentVolumeClaim", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint"},
+	}
+}
+
 func schema_openshift_api_monitoring_v1_PrometheusRuleRef(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -40152,6 +41873,137 @@ func schema_openshift_api_monitoring_v1_RelabelConfig(ref common.ReferenceCallba
 				},
 			},
 		},
+	}
+}
+
+func schema_openshift_api_monitoring_v1_RemoteWriteSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "The `RemoteWriteSpec` resource defines the settings for remote write storage.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"authorization": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the authorization settings for remote write storage.",
+							Ref:         ref("github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1.SafeAuthorization"),
+						},
+					},
+					"basicAuth": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines basic authentication settings for the remote write endpoint URL.",
+							Ref:         ref("github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1.BasicAuth"),
+						},
+					},
+					"bearerTokenFile": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the file that contains the bearer token for the remote write endpoint. However, because you cannot mount secrets in a pod, in practice you can only reference the token of the service account.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"headers": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the custom HTTP headers to be sent along with each remote write request. Headers set by Prometheus cannot be overwritten.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"metadataConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines settings for sending series metadata to remote write storage.",
+							Ref:         ref("github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1.MetadataConfig"),
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the name of the remote write queue. This name is used in metrics and logging to differentiate queues. If specified, this name must be unique.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"oauth2": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines OAuth2 authentication settings for the remote write endpoint.",
+							Ref:         ref("github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1.OAuth2"),
+						},
+					},
+					"proxyUrl": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines an optional proxy URL.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"queueConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Allows tuning configuration for remote write queue parameters.",
+							Ref:         ref("github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1.QueueConfig"),
+						},
+					},
+					"remoteTimeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the timeout value for requests to the remote write endpoint.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"sendExemplars": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Enables sending exemplars via remote write. When enabled, Prometheus is configured to store a maximum of 100,000 exemplars in memory. Note that this setting only applies to user-defined monitoring. It is not applicable to default in-cluster monitoring.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"sigv4": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines AWS Signature Version 4 authentication settings.",
+							Ref:         ref("github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1.Sigv4"),
+						},
+					},
+					"tlsConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines TLS authentication settings for the remote write endpoint.",
+							Ref:         ref("github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1.SafeTLSConfig"),
+						},
+					},
+					"url": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the URL of the remote write endpoint to which samples will be sent.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"writeRelabelConfigs": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the list of remote write relabel configurations.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1.RelabelConfig"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"url"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1.BasicAuth", "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1.MetadataConfig", "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1.OAuth2", "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1.QueueConfig", "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1.RelabelConfig", "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1.SafeAuthorization", "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1.SafeTLSConfig", "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1.Sigv4"},
 	}
 }
 
@@ -40267,6 +42119,373 @@ func schema_openshift_api_monitoring_v1_RuleGroup(ref common.ReferenceCallback) 
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/monitoring/v1.Rule"},
+	}
+}
+
+func schema_openshift_api_monitoring_v1_TLSConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "The `TLSConfig` resource configures the settings for TLS connections.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"ca": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the secret key reference containing the Certificate Authority (CA) to use for the remote host.",
+							Ref:         ref("k8s.io/api/core/v1.SecretKeySelector"),
+						},
+					},
+					"cert": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the secret key reference containing the public certificate to use for the remote host.",
+							Ref:         ref("k8s.io/api/core/v1.SecretKeySelector"),
+						},
+					},
+					"key": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the secret key reference containing the private key to use for the remote host.",
+							Ref:         ref("k8s.io/api/core/v1.SecretKeySelector"),
+						},
+					},
+					"serverName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Used to verify the hostname on the returned certificate.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"insecureSkipVerify": {
+						SchemaProps: spec.SchemaProps{
+							Description: "When set to `true`, disables the verification of the remote host's certificate and name.",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"insecureSkipVerify"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.SecretKeySelector"},
+	}
+}
+
+func schema_openshift_api_monitoring_v1_TelemeterClientConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "`TelemeterClientConfig` defines settings for the Telemeter Client component.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"clusterID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "OmitFromDoc",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "OmitFromDoc",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"nodeSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the nodes on which the pods are scheduled.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"resources": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines resource requests and limits for the TelemeterClient container.",
+							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
+					"telemeterServerURL": {
+						SchemaProps: spec.SchemaProps{
+							Description: "OmitFromDoc",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"token": {
+						SchemaProps: spec.SchemaProps{
+							Description: "OmitFromDoc",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"tolerations": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines tolerations for the pods.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.Toleration"),
+									},
+								},
+							},
+						},
+					},
+					"topologySpreadConstraints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines a pod's topology spread constraints.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.TopologySpreadConstraint"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"nodeSelector", "tolerations"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint"},
+	}
+}
+
+func schema_openshift_api_monitoring_v1_ThanosQuerierConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "The `ThanosQuerierConfig` resource defines settings for the Thanos Querier component.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enableRequestLogging": {
+						SchemaProps: spec.SchemaProps{
+							Description: "A Boolean flag that enables or disables request logging. The default value is `false`.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"logLevel": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the log level setting for Thanos Querier. The possible values are `error`, `warn`, `info`, and `debug`. The default value is `info`.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"enableCORS": {
+						SchemaProps: spec.SchemaProps{
+							Description: "A Boolean flag that enables setting CORS headers. The headers would allow access from any origin. The default value is `false`.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"nodeSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the nodes on which the pods are scheduled.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"resources": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines resource requests and limits for the Thanos Querier container.",
+							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
+					"tolerations": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines tolerations for the pods.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.Toleration"),
+									},
+								},
+							},
+						},
+					},
+					"topologySpreadConstraints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines a pod's topology spread constraints.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.TopologySpreadConstraint"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint"},
+	}
+}
+
+func schema_openshift_api_monitoring_v1_ThanosRulerConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "The `ThanosRulerConfig` resource defines configuration for the Thanos Ruler instance for user-defined projects.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"additionalAlertmanagerConfigs": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Configures how the Thanos Ruler component communicates with additional Alertmanager instances. The default value is `nil`.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/monitoring/v1.AdditionalAlertmanagerConfig"),
+									},
+								},
+							},
+						},
+					},
+					"logLevel": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the log level setting for Thanos Ruler. The possible values are `error`, `warn`, `info`, and `debug`. The default value is `info`.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"nodeSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the nodes on which the Pods are scheduled.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"resources": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines resource requests and limits for the Thanos Ruler container.",
+							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
+					"retention": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the duration for which Prometheus retains data. This definition must be specified using the following regular expression pattern: `[0-9]+(ms|s|m|h|d|w|y)` (ms = milliseconds, s= seconds,m = minutes, h = hours, d = days, w = weeks, y = years). The default value is `15d`.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"tolerations": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines tolerations for the pods.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.Toleration"),
+									},
+								},
+							},
+						},
+					},
+					"topologySpreadConstraints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines topology spread constraints for the pods.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.TopologySpreadConstraint"),
+									},
+								},
+							},
+						},
+					},
+					"volumeClaimTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines persistent storage for Thanos Ruler. Use this setting to configure the storage class and size of a volume.",
+							Ref:         ref("github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1.EmbeddedPersistentVolumeClaim"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/monitoring/v1.AdditionalAlertmanagerConfig", "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1.EmbeddedPersistentVolumeClaim", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint"},
+	}
+}
+
+func schema_openshift_api_monitoring_v1_UserWorkloadConfiguration(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "The `UserWorkloadConfiguration` resource defines the settings responsible for user-defined projects in the `user-workload-monitoring-config` config map  in the `openshift-user-workload-monitoring` namespace. You can only enable `UserWorkloadConfiguration` after you have set `enableUserWorkload` to `true` in the `cluster-monitoring-config` config map under the `openshift-monitoring` namespace.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"alertmanager": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the settings for the Alertmanager component in user workload monitoring.",
+							Ref:         ref("github.com/openshift/api/monitoring/v1.AlertmanagerUserWorkloadConfig"),
+						},
+					},
+					"prometheus": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the settings for the Prometheus component in user workload monitoring.",
+							Ref:         ref("github.com/openshift/api/monitoring/v1.PrometheusRestrictedConfig"),
+						},
+					},
+					"prometheusOperator": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the settings for the Prometheus Operator component in user workload monitoring.",
+							Ref:         ref("github.com/openshift/api/monitoring/v1.PrometheusOperatorConfig"),
+						},
+					},
+					"thanosRuler": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the settings for the Thanos Ruler component in user workload monitoring.",
+							Ref:         ref("github.com/openshift/api/monitoring/v1.ThanosRulerConfig"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/monitoring/v1.AlertmanagerUserWorkloadConfig", "github.com/openshift/api/monitoring/v1.PrometheusOperatorConfig", "github.com/openshift/api/monitoring/v1.PrometheusRestrictedConfig", "github.com/openshift/api/monitoring/v1.ThanosRulerConfig"},
 	}
 }
 

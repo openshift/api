@@ -138,4 +138,456 @@ func (RuleGroup) SwaggerDoc() map[string]string {
 	return map_RuleGroup
 }
 
+var map_AdditionalAlertmanagerConfig = map[string]string{
+	"":              "The `AdditionalAlertmanagerConfig` resource defines settings for how a component communicates with additional Alertmanager instances.",
+	"apiVersion":    "Defines the API version of Alertmanager. Possible values are `v1` or `v2`. The default is `v2`.",
+	"bearerToken":   "Defines the secret key reference containing the bearer token to use when authenticating to Alertmanager.",
+	"pathPrefix":    "Defines the path prefix to add in front of the push endpoint path.",
+	"scheme":        "Defines the URL scheme to use when communicating with Alertmanager instances. Possible values are `http` or `https`. The default value is `http`.",
+	"staticConfigs": "A list of statically configured Alertmanager endpoints in the form of `<hosts>:<port>`.",
+	"timeout":       "Defines the timeout value used when sending alerts.",
+	"tlsConfig":     "Defines the TLS settings to use for Alertmanager connections.",
+}
+
+func (AdditionalAlertmanagerConfig) SwaggerDoc() map[string]string {
+	return map_AdditionalAlertmanagerConfig
+}
+
+var map_AlertmanagerMainConfig = map[string]string{
+	"":                             "The `AlertmanagerMainConfig` resource defines settings for the Alertmanager component in the `openshift-monitoring` namespace.",
+	"enabled":                      "A Boolean flag that enables or disables the main Alertmanager instance in the `openshift-monitoring` namespace. The default value is `true`.",
+	"enableUserAlertmanagerConfig": "A Boolean flag that enables or disables user-defined namespaces to be selected for `AlertmanagerConfig` lookups. This setting only applies if the user workload monitoring instance of Alertmanager is not enabled. The default value is `false`.",
+	"logLevel":                     "Defines the log level setting for Alertmanager. The possible values are: `error`, `warn`, `info`, `debug`. The default value is `info`.",
+	"nodeSelector":                 "Defines the nodes on which the Pods are scheduled.",
+	"resources":                    "Defines resource requests and limits for the Alertmanager container.",
+	"secrets":                      "Defines a list of secrets that need to be mounted into the Alertmanager. The secrets must reside within the same namespace as the Alertmanager object. They will be added as volumes named secret-<secret-name> and mounted at /etc/alertmanager/secrets/<secret-name> within the 'alertmanager' container of the Alertmanager Pods.",
+	"tolerations":                  "Defines tolerations for the pods.",
+	"topologySpreadConstraints":    "Defines a pod's topology spread constraints.",
+	"volumeClaimTemplate":          "Defines persistent storage for Alertmanager. Use this setting to configure the persistent volume claim, including storage class, volume size, and name.",
+}
+
+func (AlertmanagerMainConfig) SwaggerDoc() map[string]string {
+	return map_AlertmanagerMainConfig
+}
+
+var map_AlertmanagerUserWorkloadConfig = map[string]string{
+	"":                          "The `AlertmanagerUserWorkloadConfig` resource defines the settings for the Alertmanager instance used for user-defined projects.",
+	"enabled":                   "A Boolean flag that enables or disables a dedicated instance of Alertmanager for user-defined alerts in the `openshift-user-workload-monitoring` namespace. The default value is `false`.",
+	"enableAlertmanagerConfig":  "A Boolean flag to enable or disable user-defined namespaces to be selected for `AlertmanagerConfig` lookup. The default value is `false`.",
+	"logLevel":                  "Defines the log level setting for Alertmanager for user workload monitoring. The possible values are `error`, `warn`, `info`, and `debug`. The default value is `info`.",
+	"resources":                 "Defines resource requests and limits for the Alertmanager container.",
+	"secrets":                   "Defines a list of secrets that need to be mounted into the Alertmanager. The secrets must reside within the same namespace as the Alertmanager object. They will be added as volumes named secret-<secret-name> and mounted at /etc/alertmanager/secrets/<secret-name> within the 'alertmanager' container of the Alertmanager Pods.",
+	"nodeSelector":              "Defines the nodes on which the pods are scheduled.",
+	"tolerations":               "Defines tolerations for the pods.",
+	"topologySpreadConstraints": "Defines a pod's topology spread constraints.",
+	"volumeClaimTemplate":       "Defines persistent storage for Alertmanager. Use this setting to configure the persistent volume claim, including storage class, volume size and name.",
+}
+
+func (AlertmanagerUserWorkloadConfig) SwaggerDoc() map[string]string {
+	return map_AlertmanagerUserWorkloadConfig
+}
+
+var map_Audit = map[string]string{
+	"":        "Audit profile configurations",
+	"profile": "The Profile to set for audit logs. This currently matches the various audit log levels such as: \"metadata, request, requestresponse, none\". The default audit log level is \"metadata\"\n\nsee: https://kubernetes.io/docs/tasks/debug-application-cluster/audit/#audit-policy for more information about auditing and log levels.",
+}
+
+func (Audit) SwaggerDoc() map[string]string {
+	return map_Audit
+}
+
+var map_ClusterMonitoringOperator = map[string]string{
+	"": "ClusterMonitoringOperator is the Schema for the clustermonitoringoperators API",
+}
+
+func (ClusterMonitoringOperator) SwaggerDoc() map[string]string {
+	return map_ClusterMonitoringOperator
+}
+
+var map_ClusterMonitoringOperatorList = map[string]string{
+	"": "ClusterMonitoringOperatorList contains a list of ClusterMonitoringOperator",
+}
+
+func (ClusterMonitoringOperatorList) SwaggerDoc() map[string]string {
+	return map_ClusterMonitoringOperatorList
+}
+
+var map_ClusterMonitoringOperatorSpec = map[string]string{
+	"":                                   "ClusterMonitoringOperatorSpec defines the desired state of ClusterMonitoringOperator",
+	"alertmanagerMain":                   "`AlertmanagerMainConfig` defines settings for the Alertmanager component in the `openshift-monitoring` namespace.",
+	"enableUserWorkload":                 "`UserWorkloadEnabled` is a Boolean flag that enables monitoring for user-defined projects.",
+	"http":                               "OmitFromDoc",
+	"k8sPrometheusAdapter":               "`K8sPrometheusAdapter` defines settings for the Prometheus Adapter component.",
+	"metricsServer":                      "`MetricsServer` defines settings for the MetricsServer component.",
+	"kubeStateMetrics":                   "`KubeStateMetricsConfig` defines settings for the `kube-state-metrics` agent.",
+	"prometheusK8s":                      "`PrometheusK8sConfig` defines settings for the Prometheus component.",
+	"prometheusOperator":                 "`PrometheusOperatorConfig` defines settings for the Prometheus Operator component.",
+	"prometheusOperatorAdmissionWebhook": "`PrometheusOperatorAdmissionWebhookConfig` defines settings for the Prometheus Operator's admission webhook component.",
+	"openshiftStateMetrics":              "`OpenShiftMetricsConfig` defines settings for the `openshift-state-metrics` agent.",
+	"telemeterClient":                    "`TelemeterClientConfig` defines settings for the Telemeter Client component.",
+	"thanosQuerier":                      "`ThanosQuerierConfig` defines settings for the Thanos Querier component.",
+	"nodeExporter":                       "`NodeExporterConfig` defines settings for the `node-exporter` agent.",
+	"monitoringPlugin":                   "`MonitoringPluginConfig` defines settings for the monitoring `console-plugin`.",
+}
+
+func (ClusterMonitoringOperatorSpec) SwaggerDoc() map[string]string {
+	return map_ClusterMonitoringOperatorSpec
+}
+
+var map_ClusterMonitoringOperatorStatus = map[string]string{
+	"": "ClusterMonitoringOperatorStatus defines the observed state of ClusterMonitoringOperator",
+}
+
+func (ClusterMonitoringOperatorStatus) SwaggerDoc() map[string]string {
+	return map_ClusterMonitoringOperatorStatus
+}
+
+var map_DedicatedServiceMonitors = map[string]string{
+	"": "OmitFromDoc: This is deprecated and will be removed in a future version, setting it has no effect.",
+}
+
+func (DedicatedServiceMonitors) SwaggerDoc() map[string]string {
+	return map_DedicatedServiceMonitors
+}
+
+var map_K8sPrometheusAdapter = map[string]string{
+	"":                          "The `K8sPrometheusAdapter` resource defines settings for the Prometheus Adapter component.",
+	"audit":                     "Defines the audit configuration used by the Prometheus Adapter instance. Possible profile values are: `metadata`, `request`, `requestresponse`, and `none`. The default value is `metadata`.",
+	"nodeSelector":              "Defines the nodes on which the pods are scheduled.",
+	"resources":                 "Defines resource requests and limits for the PrometheusAdapter container.",
+	"tolerations":               "Defines tolerations for the pods.",
+	"topologySpreadConstraints": "Defines a pod's topology spread constraints.",
+	"dedicatedServiceMonitors":  "OmitFromDoc: Defines dedicated service monitors.",
+}
+
+func (K8sPrometheusAdapter) SwaggerDoc() map[string]string {
+	return map_K8sPrometheusAdapter
+}
+
+var map_KubeStateMetricsConfig = map[string]string{
+	"":                          "The `KubeStateMetricsConfig` resource defines settings for the `kube-state-metrics` agent.",
+	"nodeSelector":              "Defines the nodes on which the pods are scheduled.",
+	"resources":                 "Defines resource requests and limits for the KubeStateMetrics container.",
+	"tolerations":               "Defines tolerations for the pods.",
+	"topologySpreadConstraints": "Defines a pod's topology spread constraints.",
+}
+
+func (KubeStateMetricsConfig) SwaggerDoc() map[string]string {
+	return map_KubeStateMetricsConfig
+}
+
+var map_MetricsServerConfig = map[string]string{
+	"":                          "The `MetricsServerConfig` resource defines settings for the Metrics Server component. Note that this setting only applies when the MetricsServer feature gate is enabled.",
+	"audit":                     "Defines the audit configuration used by the Metrics Server instance. Possible profile values are: `metadata`, `request`, `requestresponse`, and `none`. The default value is `metadata`.",
+	"nodeSelector":              "Defines the nodes on which the pods are scheduled.",
+	"tolerations":               "Defines tolerations for the pods.",
+	"resources":                 "Defines resource requests and limits for the Metrics Server container.",
+	"topologySpreadConstraints": "Defines a pod's topology spread constraints.",
+}
+
+func (MetricsServerConfig) SwaggerDoc() map[string]string {
+	return map_MetricsServerConfig
+}
+
+var map_MonitoringPluginConfig = map[string]string{
+	"":                          "The `MonitoringPluginConfig` resource defines settings for the Console Plugin component in the `openshift-monitoring` namespace.",
+	"nodeSelector":              "Defines the nodes on which the Pods are scheduled.",
+	"resources":                 "Defines resource requests and limits for the console-plugin container.",
+	"tolerations":               "Defines tolerations for the pods.",
+	"topologySpreadConstraints": "Defines a pod's topology spread constraints.",
+}
+
+func (MonitoringPluginConfig) SwaggerDoc() map[string]string {
+	return map_MonitoringPluginConfig
+}
+
+var map_NodeExporterCollectorBuddyInfoConfig = map[string]string{
+	"":        "The `NodeExporterCollectorBuddyInfoConfig` resource works as an on/off switch for the `buddyinfo` collector of the `node-exporter` agent. By default, the `buddyinfo` collector is disabled.",
+	"enabled": "A Boolean flag that enables or disables the `buddyinfo` collector.",
+}
+
+func (NodeExporterCollectorBuddyInfoConfig) SwaggerDoc() map[string]string {
+	return map_NodeExporterCollectorBuddyInfoConfig
+}
+
+var map_NodeExporterCollectorConfig = map[string]string{
+	"":           "The `NodeExporterCollectorConfig` resource defines settings for individual collectors of the `node-exporter` agent.",
+	"cpufreq":    "Defines the configuration of the `cpufreq` collector, which collects CPU frequency statistics. Disabled by default.",
+	"tcpstat":    "Defines the configuration of the `tcpstat` collector, which collects TCP connection statistics. Disabled by default.",
+	"netdev":     "Defines the configuration of the `netdev` collector, which collects network devices statistics. Enabled by default.",
+	"netclass":   "Defines the configuration of the `netclass` collector, which collects information about network devices. Enabled by default.",
+	"buddyinfo":  "Defines the configuration of the `buddyinfo` collector, which collects statistics about memory fragmentation from the `node_buddyinfo_blocks` metric. This metric collects data from `/proc/buddyinfo`. Disabled by default.",
+	"mountstats": "Defines the configuration of the `mountstats` collector, which collects statistics about NFS volume I/O activities. Disabled by default.",
+	"ksmd":       "Defines the configuration of the `ksmd` collector, which collects statistics from the kernel same-page merger daemon. Disabled by default.",
+	"processes":  "Defines the configuration of the `processes` collector, which collects statistics from processes and threads running in the system. Disabled by default.",
+	"systemd":    "Defines the configuration of the `systemd` collector, which collects statistics on the systemd daemon and its managed services. Disabled by default.",
+}
+
+func (NodeExporterCollectorConfig) SwaggerDoc() map[string]string {
+	return map_NodeExporterCollectorConfig
+}
+
+var map_NodeExporterCollectorCpufreqConfig = map[string]string{
+	"":        "The `NodeExporterCollectorCpufreqConfig` resource works as an on/off switch for the `cpufreq` collector of the `node-exporter` agent. By default, the `cpufreq` collector is disabled. Under certain circumstances, enabling the cpufreq collector increases CPU usage on machines with many cores. If you enable this collector and have machines with many cores, monitor your systems closely for excessive CPU usage. Please refer to https://github.com/prometheus/node_exporter/issues/1880 for more details. A related bug: https://bugzilla.redhat.com/show_bug.cgi?id=1972076",
+	"enabled": "A Boolean flag that enables or disables the `cpufreq` collector.",
+}
+
+func (NodeExporterCollectorCpufreqConfig) SwaggerDoc() map[string]string {
+	return map_NodeExporterCollectorCpufreqConfig
+}
+
+var map_NodeExporterCollectorKSMDConfig = map[string]string{
+	"":        "The `NodeExporterCollectorKSMDConfig` resource works as an on/off switch for the `ksmd` collector of the `node-exporter` agent. By default, the `ksmd` collector is disabled.",
+	"enabled": "A Boolean flag that enables or disables the `ksmd` collector.",
+}
+
+func (NodeExporterCollectorKSMDConfig) SwaggerDoc() map[string]string {
+	return map_NodeExporterCollectorKSMDConfig
+}
+
+var map_NodeExporterCollectorMountStatsConfig = map[string]string{
+	"":        "The `NodeExporterCollectorMountStatsConfig` resource works as an on/off switch for the `mountstats` collector of the `node-exporter` agent. By default, the `mountstats` collector is disabled. If enabled, these metrics become available:\n\n\t`node_mountstats_nfs_read_bytes_total`,\n\t`node_mountstats_nfs_write_bytes_total`,\n\t`node_mountstats_nfs_operations_requests_total`.\n\nPlease be aware that these metrics can have a high cardinality. If you enable this collector, closely monitor any increases in memory usage for the `prometheus-k8s` pods.",
+	"enabled": "A Boolean flag that enables or disables the `mountstats` collector.",
+}
+
+func (NodeExporterCollectorMountStatsConfig) SwaggerDoc() map[string]string {
+	return map_NodeExporterCollectorMountStatsConfig
+}
+
+var map_NodeExporterCollectorNetClassConfig = map[string]string{
+	"":           "The `NodeExporterCollectorNetClassConfig` resource works as an on/off switch for the `netclass` collector of the `node-exporter` agent. By default, the `netclass` collector is enabled. If disabled, these metrics become unavailable: `node_network_info`, `node_network_address_assign_type`, `node_network_carrier`, `node_network_carrier_changes_total`, `node_network_carrier_up_changes_total`, `node_network_carrier_down_changes_total`, `node_network_device_id`, `node_network_dormant`, `node_network_flags`, `node_network_iface_id`, `node_network_iface_link`, `node_network_iface_link_mode`, `node_network_mtu_bytes`, `node_network_name_assign_type`, `node_network_net_dev_group`, `node_network_speed_bytes`, `node_network_transmit_queue_length`, `node_network_protocol_type`.",
+	"enabled":    "A Boolean flag that enables or disables the `netclass` collector.",
+	"useNetlink": "A Boolean flag that activates the `netlink` implementation of the `netclass` collector. Its default value is `true`: activating the netlink mode. This implementation improves the performance of the `netclass` collector.",
+}
+
+func (NodeExporterCollectorNetClassConfig) SwaggerDoc() map[string]string {
+	return map_NodeExporterCollectorNetClassConfig
+}
+
+var map_NodeExporterCollectorNetDevConfig = map[string]string{
+	"":        "The `NodeExporterCollectorNetDevConfig` resource works as an on/off switch for the `netdev` collector of the `node-exporter` agent. By default, the `netdev` collector is enabled. If disabled, these metrics become unavailable: `node_network_receive_bytes_total`, `node_network_receive_compressed_total`, `node_network_receive_drop_total`, `node_network_receive_errs_total`, `node_network_receive_fifo_total`, `node_network_receive_frame_total`, `node_network_receive_multicast_total`, `node_network_receive_nohandler_total`, `node_network_receive_packets_total`, `node_network_transmit_bytes_total`, `node_network_transmit_carrier_total`, `node_network_transmit_colls_total`, `node_network_transmit_compressed_total`, `node_network_transmit_drop_total`, `node_network_transmit_errs_total`, `node_network_transmit_fifo_total`, `node_network_transmit_packets_total`.",
+	"enabled": "A Boolean flag that enables or disables the `netdev` collector.",
+}
+
+func (NodeExporterCollectorNetDevConfig) SwaggerDoc() map[string]string {
+	return map_NodeExporterCollectorNetDevConfig
+}
+
+var map_NodeExporterCollectorProcessesConfig = map[string]string{
+	"":        "The `NodeExporterCollectorProcessesConfig` resource works as an on/off switch for the `processes` collector of the `node-exporter` agent. If enabled, these metrics become available: `node_processes_max_processes`, `node_processes_pids`, `node_processes_state`, `node_processes_threads`, `node_processes_threads_state`. The metric `node_processes_state` and `node_processes_threads_state` can have up to 5 series each, depending on the state of the processes and threads. The possible states of a process or a thread are: 'D' (UNINTERRUPTABLE_SLEEP), 'R' (RUNNING & RUNNABLE), 'S' (INTERRRUPTABLE_SLEEP), 'T' (STOPPED), 'Z' (ZOMBIE). By default, the `processes` collector is disabled.",
+	"enabled": "A Boolean flag that enables or disables the `processes` collector.",
+}
+
+func (NodeExporterCollectorProcessesConfig) SwaggerDoc() map[string]string {
+	return map_NodeExporterCollectorProcessesConfig
+}
+
+var map_NodeExporterCollectorSystemdConfig = map[string]string{
+	"":        "The `NodeExporterCollectorSystemdConfig` resource works as an on/off switch for the `systemd` collector of the `node-exporter` agent. By default, the `systemd` collector is disabled. If enabled, the following metrics become available: `node_systemd_system_running`, `node_systemd_units`, `node_systemd_version`. If the unit uses a socket, it also generates these 3 metrics: `node_systemd_socket_accepted_connections_total`, `node_systemd_socket_current_connections`, `node_systemd_socket_refused_connections_total`. You can use the `units` parameter to select the systemd units to be included by the `systemd` collector. The selected units are used to generate the `node_systemd_unit_state` metric, which shows the state of each systemd unit. The timer units such as `logrotate.timer` generate one more metric `node_systemd_timer_last_trigger_seconds`. However, this metric's cardinality might be high (at least 5 series per unit per node). If you enable this collector with a long list of selected units, closely monitor the `prometheus-k8s` deployment for excessive memory usage.",
+	"enabled": "A Boolean flag that enables or disables the `systemd` collector.",
+	"units":   "A list of regular expression (regex) patterns that match systemd units to be included by the `systemd` collector. By default, the list is empty, so the collector exposes no metrics for systemd units.",
+}
+
+func (NodeExporterCollectorSystemdConfig) SwaggerDoc() map[string]string {
+	return map_NodeExporterCollectorSystemdConfig
+}
+
+var map_NodeExporterCollectorTcpStatConfig = map[string]string{
+	"":        "The `NodeExporterCollectorTcpStatConfig` resource works as an on/off switch for the `tcpstat` collector of the `node-exporter` agent. By default, the `tcpstat` collector is disabled.",
+	"enabled": "A Boolean flag that enables or disables the `tcpstat` collector.",
+}
+
+func (NodeExporterCollectorTcpStatConfig) SwaggerDoc() map[string]string {
+	return map_NodeExporterCollectorTcpStatConfig
+}
+
+var map_NodeExporterConfig = map[string]string{
+	"":                      "The `NodeExporterConfig` resource defines settings for the `node-exporter` agent.",
+	"collectors":            "Defines which collectors are enabled and their additional configuration parameters.",
+	"maxProcs":              "The target number of CPUs on which the Node Exporter's process will run. Use this setting to override the default value, which is set either to `4` or to the number of CPUs on the host, whichever is smaller. The default value is computed at runtime and set via the `GOMAXPROCS` environment variable before Node Exporter is launched. If a kernel deadlock occurs or if performance degrades when reading from `sysfs` concurrently, you can change this value to `1`, which limits Node Exporter to running on one CPU. For nodes with a high CPU count, setting the limit to a low number saves resources by preventing Go routines from being scheduled to run on all CPUs. However, I/O performance degrades if the `maxProcs` value is set too low, and there are many metrics to collect.",
+	"ignoredNetworkDevices": "A list of network devices, as regular expressions, to be excluded from the relevant collector configuration such as `netdev` and `netclass`. When not set, the Cluster Monitoring Operator uses a predefined list of devices to be excluded to minimize the impact on memory usage. When set as an empty list, no devices are excluded. If you modify this setting, monitor the `prometheus-k8s` deployment closely for excessive memory usage.",
+	"resources":             "Defines resource requests and limits for the NodeExporter container.",
+}
+
+func (NodeExporterConfig) SwaggerDoc() map[string]string {
+	return map_NodeExporterConfig
+}
+
+var map_OpenShiftStateMetricsConfig = map[string]string{
+	"":                          "The `OpenShiftStateMetricsConfig` resource defines settings for the `openshift-state-metrics` agent.",
+	"nodeSelector":              "Defines the nodes on which the pods are scheduled.",
+	"resources":                 "Defines resource requests and limits for the OpenShiftStateMetrics container.",
+	"tolerations":               "Defines tolerations for the pods.",
+	"topologySpreadConstraints": "Defines a pod's topology spread constraints.",
+}
+
+func (OpenShiftStateMetricsConfig) SwaggerDoc() map[string]string {
+	return map_OpenShiftStateMetricsConfig
+}
+
+var map_PrometheusK8sConfig = map[string]string{
+	"":                              "The `PrometheusK8sConfig` resource defines settings for the Prometheus component.",
+	"additionalAlertmanagerConfigs": "Configures additional Alertmanager instances that receive alerts from the Prometheus component. By default, no additional Alertmanager instances are configured.",
+	"enforcedBodySizeLimit":         "Enforces a body size limit for Prometheus scraped metrics. If a scraped target's body response is larger than the limit, the scrape will fail. The following values are valid: an empty value to specify no limit, a numeric value in Prometheus size format (such as `64MB`), or the string `automatic`, which indicates that the limit will be automatically calculated based on cluster capacity. The default value is empty, which indicates no limit.",
+	"externalLabels":                "Defines labels to be added to any time series or alerts when communicating with external systems such as federation, remote storage, and Alertmanager. By default, no labels are added.",
+	"logLevel":                      "Defines the log level setting for Prometheus. The possible values are: `error`, `warn`, `info`, and `debug`. The default value is `info`.",
+	"nodeSelector":                  "Defines the nodes on which the pods are scheduled.",
+	"queryLogFile":                  "Specifies the file to which PromQL queries are logged. This setting can be either a filename, in which case the queries are saved to an `emptyDir` volume at `/var/log/prometheus`, or a full path to a location where an `emptyDir` volume will be mounted and the queries saved. Writing to `/dev/stderr`, `/dev/stdout` or `/dev/null` is supported, but writing to any other `/dev/` path is not supported. Relative paths are also not supported. By default, PromQL queries are not logged.",
+	"remoteWrite":                   "Defines the remote write configuration, including URL, authentication, and relabeling settings.",
+	"resources":                     "Defines resource requests and limits for the Prometheus container.",
+	"retention":                     "Defines the duration for which Prometheus retains data. This definition must be specified using the following regular expression pattern: `[0-9]+(ms|s|m|h|d|w|y)` (ms = milliseconds, s= seconds,m = minutes, h = hours, d = days, w = weeks, y = years). The default value is `15d`.",
+	"retentionSize":                 "Defines the maximum amount of disk space used by data blocks plus the write-ahead log (WAL). Supported values are `B`, `KB`, `KiB`, `MB`, `MiB`, `GB`, `GiB`, `TB`, `TiB`, `PB`, `PiB`, `EB`, and `EiB`. By default, no limit is defined.",
+	"tolerations":                   "Defines tolerations for the pods.",
+	"topologySpreadConstraints":     "Defines the pod's topology spread constraints.",
+	"collectionProfile":             "Defines the metrics collection profile that Prometheus uses to collect metrics from the platform components. Supported values are `full` or `minimal`. In the `full` profile (default), Prometheus collects all metrics that are exposed by the platform components. In the `minimal` profile, Prometheus only collects metrics necessary for the default platform alerts, recording rules, telemetry and console dashboards.",
+	"volumeClaimTemplate":           "Defines persistent storage for Prometheus. Use this setting to configure the persistent volume claim, including storage class, volume size and name.",
+}
+
+func (PrometheusK8sConfig) SwaggerDoc() map[string]string {
+	return map_PrometheusK8sConfig
+}
+
+var map_PrometheusOperatorAdmissionWebhookConfig = map[string]string{
+	"":                          "The `PrometheusOperatorAdmissionWebhookConfig` resource defines settings for the Prometheus Operator's admission webhook workload.",
+	"resources":                 "Defines resource requests and limits for the prometheus-operator-admission-webhook container.",
+	"topologySpreadConstraints": "Defines a pod's topology spread constraints.",
+}
+
+func (PrometheusOperatorAdmissionWebhookConfig) SwaggerDoc() map[string]string {
+	return map_PrometheusOperatorAdmissionWebhookConfig
+}
+
+var map_PrometheusOperatorConfig = map[string]string{
+	"":                          "The `PrometheusOperatorConfig` resource defines settings for the Prometheus Operator component.",
+	"logLevel":                  "Defines the log level settings for Prometheus Operator. The possible values are `error`, `warn`, `info`, and `debug`. The default value is `info`.",
+	"nodeSelector":              "Defines the nodes on which the pods are scheduled.",
+	"resources":                 "Defines resource requests and limits for the PrometheusOperator container.",
+	"tolerations":               "Defines tolerations for the pods.",
+	"topologySpreadConstraints": "Defines a pod's topology spread constraints.",
+}
+
+func (PrometheusOperatorConfig) SwaggerDoc() map[string]string {
+	return map_PrometheusOperatorConfig
+}
+
+var map_PrometheusRestrictedConfig = map[string]string{
+	"":                              "The `PrometheusRestrictedConfig` resource defines the settings for the Prometheus component that monitors user-defined projects.",
+	"additionalAlertmanagerConfigs": "Configures additional Alertmanager instances that receive alerts from the Prometheus component. By default, no additional Alertmanager instances are configured.",
+	"enforcedLabelLimit":            "Specifies a per-scrape limit on the number of labels accepted for a sample. If the number of labels exceeds this limit after metric relabeling, the entire scrape is treated as failed. The default value is `0`, which means that no limit is set.",
+	"enforcedLabelNameLengthLimit":  "Specifies a per-scrape limit on the length of a label name for a sample. If the length of a label name exceeds this limit after metric relabeling, the entire scrape is treated as failed. The default value is `0`, which means that no limit is set.",
+	"enforcedLabelValueLengthLimit": "Specifies a per-scrape limit on the length of a label value for a sample. If the length of a label value exceeds this limit after metric relabeling, the entire scrape is treated as failed. The default value is `0`, which means that no limit is set.",
+	"enforcedSampleLimit":           "Specifies a global limit on the number of scraped samples that will be accepted. This setting overrides the `SampleLimit` value set in any user-defined `ServiceMonitor` or `PodMonitor` object if the value is greater than `enforcedTargetLimit`. Administrators can use this setting to keep the overall number of samples under control. The default value is `0`, which means that no limit is set.",
+	"enforcedTargetLimit":           "Specifies a global limit on the number of scraped targets. This setting overrides the `TargetLimit` value set in any user-defined `ServiceMonitor` or `PodMonitor` object if the value is greater than `enforcedSampleLimit`. Administrators can use this setting to keep the overall number of targets under control. The default value is `0`.",
+	"externalLabels":                "Defines labels to be added to any time series or alerts when communicating with external systems such as federation, remote storage, and Alertmanager. By default, no labels are added.",
+	"logLevel":                      "Defines the log level setting for Prometheus. The possible values are `error`, `warn`, `info`, and `debug`. The default setting is `info`.",
+	"nodeSelector":                  "Defines the nodes on which the pods are scheduled.",
+	"queryLogFile":                  "Specifies the file to which PromQL queries are logged. This setting can be either a filename, in which case the queries are saved to an `emptyDir` volume at `/var/log/prometheus`, or a full path to a location where an `emptyDir` volume will be mounted and the queries saved. Writing to `/dev/stderr`, `/dev/stdout` or `/dev/null` is supported, but writing to any other `/dev/` path is not supported. Relative paths are also not supported. By default, PromQL queries are not logged.",
+	"remoteWrite":                   "Defines the remote write configuration, including URL, authentication, and relabeling settings.",
+	"resources":                     "Defines resource requests and limits for the Prometheus container.",
+	"retention":                     "Defines the duration for which Prometheus retains data. This definition must be specified using the following regular expression pattern: `[0-9]+(ms|s|m|h|d|w|y)` (ms = milliseconds, s= seconds,m = minutes, h = hours, d = days, w = weeks, y = years). The default value is `15d`.",
+	"retentionSize":                 "Defines the maximum amount of disk space used by data blocks plus the write-ahead log (WAL). Supported values are `B`, `KB`, `KiB`, `MB`, `MiB`, `GB`, `GiB`, `TB`, `TiB`, `PB`, `PiB`, `EB`, and `EiB`. The default value is `nil`.",
+	"tolerations":                   "Defines tolerations for the pods.",
+	"topologySpreadConstraints":     "Defines a pod's topology spread constraints.",
+	"volumeClaimTemplate":           "Defines persistent storage for Prometheus. Use this setting to configure the storage class and size of a volume.",
+}
+
+func (PrometheusRestrictedConfig) SwaggerDoc() map[string]string {
+	return map_PrometheusRestrictedConfig
+}
+
+var map_RemoteWriteSpec = map[string]string{
+	"":                    "The `RemoteWriteSpec` resource defines the settings for remote write storage.",
+	"authorization":       "Defines the authorization settings for remote write storage.",
+	"basicAuth":           "Defines basic authentication settings for the remote write endpoint URL.",
+	"bearerTokenFile":     "Defines the file that contains the bearer token for the remote write endpoint. However, because you cannot mount secrets in a pod, in practice you can only reference the token of the service account.",
+	"headers":             "Specifies the custom HTTP headers to be sent along with each remote write request. Headers set by Prometheus cannot be overwritten.",
+	"metadataConfig":      "Defines settings for sending series metadata to remote write storage.",
+	"name":                "Defines the name of the remote write queue. This name is used in metrics and logging to differentiate queues. If specified, this name must be unique.",
+	"oauth2":              "Defines OAuth2 authentication settings for the remote write endpoint.",
+	"proxyUrl":            "Defines an optional proxy URL.",
+	"queueConfig":         "Allows tuning configuration for remote write queue parameters.",
+	"remoteTimeout":       "Defines the timeout value for requests to the remote write endpoint.",
+	"sendExemplars":       "Enables sending exemplars via remote write. When enabled, Prometheus is configured to store a maximum of 100,000 exemplars in memory. Note that this setting only applies to user-defined monitoring. It is not applicable to default in-cluster monitoring.",
+	"sigv4":               "Defines AWS Signature Version 4 authentication settings.",
+	"tlsConfig":           "Defines TLS authentication settings for the remote write endpoint.",
+	"url":                 "Defines the URL of the remote write endpoint to which samples will be sent.",
+	"writeRelabelConfigs": "Defines the list of remote write relabel configurations.",
+}
+
+func (RemoteWriteSpec) SwaggerDoc() map[string]string {
+	return map_RemoteWriteSpec
+}
+
+var map_TLSConfig = map[string]string{
+	"":                   "The `TLSConfig` resource configures the settings for TLS connections.",
+	"ca":                 "Defines the secret key reference containing the Certificate Authority (CA) to use for the remote host.",
+	"cert":               "Defines the secret key reference containing the public certificate to use for the remote host.",
+	"key":                "Defines the secret key reference containing the private key to use for the remote host.",
+	"serverName":         "Used to verify the hostname on the returned certificate.",
+	"insecureSkipVerify": "When set to `true`, disables the verification of the remote host's certificate and name.",
+}
+
+func (TLSConfig) SwaggerDoc() map[string]string {
+	return map_TLSConfig
+}
+
+var map_TelemeterClientConfig = map[string]string{
+	"":                          "`TelemeterClientConfig` defines settings for the Telemeter Client component.",
+	"clusterID":                 "OmitFromDoc",
+	"enabled":                   "OmitFromDoc",
+	"nodeSelector":              "Defines the nodes on which the pods are scheduled.",
+	"resources":                 "Defines resource requests and limits for the TelemeterClient container.",
+	"telemeterServerURL":        "OmitFromDoc",
+	"token":                     "OmitFromDoc",
+	"tolerations":               "Defines tolerations for the pods.",
+	"topologySpreadConstraints": "Defines a pod's topology spread constraints.",
+}
+
+func (TelemeterClientConfig) SwaggerDoc() map[string]string {
+	return map_TelemeterClientConfig
+}
+
+var map_ThanosQuerierConfig = map[string]string{
+	"":                          "The `ThanosQuerierConfig` resource defines settings for the Thanos Querier component.",
+	"enableRequestLogging":      "A Boolean flag that enables or disables request logging. The default value is `false`.",
+	"logLevel":                  "Defines the log level setting for Thanos Querier. The possible values are `error`, `warn`, `info`, and `debug`. The default value is `info`.",
+	"enableCORS":                "A Boolean flag that enables setting CORS headers. The headers would allow access from any origin. The default value is `false`.",
+	"nodeSelector":              "Defines the nodes on which the pods are scheduled.",
+	"resources":                 "Defines resource requests and limits for the Thanos Querier container.",
+	"tolerations":               "Defines tolerations for the pods.",
+	"topologySpreadConstraints": "Defines a pod's topology spread constraints.",
+}
+
+func (ThanosQuerierConfig) SwaggerDoc() map[string]string {
+	return map_ThanosQuerierConfig
+}
+
+var map_ThanosRulerConfig = map[string]string{
+	"":                              "The `ThanosRulerConfig` resource defines configuration for the Thanos Ruler instance for user-defined projects.",
+	"additionalAlertmanagerConfigs": "Configures how the Thanos Ruler component communicates with additional Alertmanager instances. The default value is `nil`.",
+	"logLevel":                      "Defines the log level setting for Thanos Ruler. The possible values are `error`, `warn`, `info`, and `debug`. The default value is `info`.",
+	"nodeSelector":                  "Defines the nodes on which the Pods are scheduled.",
+	"resources":                     "Defines resource requests and limits for the Thanos Ruler container.",
+	"retention":                     "Defines the duration for which Prometheus retains data. This definition must be specified using the following regular expression pattern: `[0-9]+(ms|s|m|h|d|w|y)` (ms = milliseconds, s= seconds,m = minutes, h = hours, d = days, w = weeks, y = years). The default value is `15d`.",
+	"tolerations":                   "Defines tolerations for the pods.",
+	"topologySpreadConstraints":     "Defines topology spread constraints for the pods.",
+	"volumeClaimTemplate":           "Defines persistent storage for Thanos Ruler. Use this setting to configure the storage class and size of a volume.",
+}
+
+func (ThanosRulerConfig) SwaggerDoc() map[string]string {
+	return map_ThanosRulerConfig
+}
+
+var map_UserWorkloadConfiguration = map[string]string{
+	"":                   "The `UserWorkloadConfiguration` resource defines the settings responsible for user-defined projects in the `user-workload-monitoring-config` config map  in the `openshift-user-workload-monitoring` namespace. You can only enable `UserWorkloadConfiguration` after you have set `enableUserWorkload` to `true` in the `cluster-monitoring-config` config map under the `openshift-monitoring` namespace.",
+	"alertmanager":       "Defines the settings for the Alertmanager component in user workload monitoring.",
+	"prometheus":         "Defines the settings for the Prometheus component in user workload monitoring.",
+	"prometheusOperator": "Defines the settings for the Prometheus Operator component in user workload monitoring.",
+	"thanosRuler":        "Defines the settings for the Thanos Ruler component in user workload monitoring.",
+}
+
+func (UserWorkloadConfiguration) SwaggerDoc() map[string]string {
+	return map_UserWorkloadConfiguration
+}
+
 // AUTO-GENERATED FUNCTIONS END HERE

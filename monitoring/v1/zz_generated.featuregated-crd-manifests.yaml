@@ -42,3 +42,45 @@ alertingrules.monitoring.openshift.io:
   TopLevelFeatureGates: []
   Version: v1
 
+cmo.monitoring.openshift.io:
+  Annotations: {}
+  ApprovedPRNumber: ""
+  CRDName: cmo.monitoring.openshift.io
+  Capability: ""
+  Category: ""
+  FeatureGates: []
+  FilenameOperatorName: ""
+  FilenameOperatorOrdering: ""
+  FilenameRunLevel: ""
+  GroupName: monitoring.openshift.io
+  HasStatus: true
+  KindName: ClusterMonitoringOperator
+  Labels: {}
+  PluralName: cmo
+  PrinterColumns: []
+  Scope: Cluster
+  ShortNames: null
+  TopLevelFeatureGates: []
+  Version: v1
+
+cmo.monitoring.openshift.io:
+  Annotations: {}
+  ApprovedPRNumber: ""
+  CRDName: cmo.monitoring.openshift.io
+  Capability: ""
+  Category: ""
+  FeatureGates: []
+  FilenameOperatorName: ""
+  FilenameOperatorOrdering: ""
+  FilenameRunLevel: ""
+  GroupName: monitoring.openshift.io
+  HasStatus: false
+  KindName: ClusterMonitoringOperatorList
+  Labels: {}
+  PluralName: cmo
+  PrinterColumns: []
+  Scope: Cluster
+  ShortNames: null
+  TopLevelFeatureGates: []
+  Version: v1
+

@@ -23008,6 +23008,49 @@
         }
       }
     },
+    "com.github.openshift.api.monitoring.v1.AdditionalAlertmanagerConfig": {
+      "description": "The `AdditionalAlertmanagerConfig` resource defines settings for how a component communicates with additional Alertmanager instances.",
+      "type": "object",
+      "required": [
+        "apiVersion"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "Defines the API version of Alertmanager. Possible values are `v1` or `v2`. The default is `v2`.",
+          "type": "string",
+          "default": ""
+        },
+        "bearerToken": {
+          "description": "Defines the secret key reference containing the bearer token to use when authenticating to Alertmanager.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.SecretKeySelector"
+        },
+        "pathPrefix": {
+          "description": "Defines the path prefix to add in front of the push endpoint path.",
+          "type": "string"
+        },
+        "scheme": {
+          "description": "Defines the URL scheme to use when communicating with Alertmanager instances. Possible values are `http` or `https`. The default value is `http`.",
+          "type": "string"
+        },
+        "staticConfigs": {
+          "description": "A list of statically configured Alertmanager endpoints in the form of `<hosts>:<port>`.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "timeout": {
+          "description": "Defines the timeout value used when sending alerts.",
+          "type": "string"
+        },
+        "tlsConfig": {
+          "description": "Defines the TLS settings to use for Alertmanager connections.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.TLSConfig"
+        }
+      }
+    },
     "com.github.openshift.api.monitoring.v1.AlertRelabelConfig": {
       "description": "AlertRelabelConfig defines a set of relabel configs for alerts.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
@@ -23199,6 +23242,896 @@
         }
       }
     },
+    "com.github.openshift.api.monitoring.v1.AlertmanagerMainConfig": {
+      "description": "The `AlertmanagerMainConfig` resource defines settings for the Alertmanager component in the `openshift-monitoring` namespace.",
+      "type": "object",
+      "properties": {
+        "enableUserAlertmanagerConfig": {
+          "description": "A Boolean flag that enables or disables user-defined namespaces to be selected for `AlertmanagerConfig` lookups. This setting only applies if the user workload monitoring instance of Alertmanager is not enabled. The default value is `false`.",
+          "type": "boolean"
+        },
+        "enabled": {
+          "description": "A Boolean flag that enables or disables the main Alertmanager instance in the `openshift-monitoring` namespace. The default value is `true`.",
+          "type": "boolean"
+        },
+        "logLevel": {
+          "description": "Defines the log level setting for Alertmanager. The possible values are: `error`, `warn`, `info`, `debug`. The default value is `info`.",
+          "type": "string"
+        },
+        "nodeSelector": {
+          "description": "Defines the nodes on which the Pods are scheduled.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "resources": {
+          "description": "Defines resource requests and limits for the Alertmanager container.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "secrets": {
+          "description": "Defines a list of secrets that need to be mounted into the Alertmanager. The secrets must reside within the same namespace as the Alertmanager object. They will be added as volumes named secret-<secret-name> and mounted at /etc/alertmanager/secrets/<secret-name> within the 'alertmanager' container of the Alertmanager Pods.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "tolerations": {
+          "description": "Defines tolerations for the pods.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.Toleration"
+          }
+        },
+        "topologySpreadConstraints": {
+          "description": "Defines a pod's topology spread constraints.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.TopologySpreadConstraint"
+          }
+        },
+        "volumeClaimTemplate": {
+          "description": "Defines persistent storage for Alertmanager. Use this setting to configure the persistent volume claim, including storage class, volume size, and name.",
+          "$ref": "#/definitions/com.github.prometheus-operator.prometheus-operator.pkg.apis.monitoring.v1.EmbeddedPersistentVolumeClaim"
+        }
+      }
+    },
+    "com.github.openshift.api.monitoring.v1.AlertmanagerUserWorkloadConfig": {
+      "description": "The `AlertmanagerUserWorkloadConfig` resource defines the settings for the Alertmanager instance used for user-defined projects.",
+      "type": "object",
+      "properties": {
+        "enableAlertmanagerConfig": {
+          "description": "A Boolean flag to enable or disable user-defined namespaces to be selected for `AlertmanagerConfig` lookup. The default value is `false`.",
+          "type": "boolean"
+        },
+        "enabled": {
+          "description": "A Boolean flag that enables or disables a dedicated instance of Alertmanager for user-defined alerts in the `openshift-user-workload-monitoring` namespace. The default value is `false`.",
+          "type": "boolean"
+        },
+        "logLevel": {
+          "description": "Defines the log level setting for Alertmanager for user workload monitoring. The possible values are `error`, `warn`, `info`, and `debug`. The default value is `info`.",
+          "type": "string"
+        },
+        "nodeSelector": {
+          "description": "Defines the nodes on which the pods are scheduled.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "resources": {
+          "description": "Defines resource requests and limits for the Alertmanager container.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "secrets": {
+          "description": "Defines a list of secrets that need to be mounted into the Alertmanager. The secrets must reside within the same namespace as the Alertmanager object. They will be added as volumes named secret-<secret-name> and mounted at /etc/alertmanager/secrets/<secret-name> within the 'alertmanager' container of the Alertmanager Pods.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "tolerations": {
+          "description": "Defines tolerations for the pods.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.Toleration"
+          }
+        },
+        "topologySpreadConstraints": {
+          "description": "Defines a pod's topology spread constraints.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.TopologySpreadConstraint"
+          }
+        },
+        "volumeClaimTemplate": {
+          "description": "Defines persistent storage for Alertmanager. Use this setting to configure the persistent volume claim, including storage class, volume size and name.",
+          "$ref": "#/definitions/com.github.prometheus-operator.prometheus-operator.pkg.apis.monitoring.v1.EmbeddedPersistentVolumeClaim"
+        }
+      }
+    },
+    "com.github.openshift.api.monitoring.v1.Audit": {
+      "description": "Audit profile configurations",
+      "type": "object",
+      "required": [
+        "profile"
+      ],
+      "properties": {
+        "profile": {
+          "description": "The Profile to set for audit logs. This currently matches the various audit log levels such as: \"metadata, request, requestresponse, none\". The default audit log level is \"metadata\"\n\nsee: https://kubernetes.io/docs/tasks/debug-application-cluster/audit/#audit-policy for more information about auditing and log levels.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.monitoring.v1.ClusterMonitoringOperator": {
+      "description": "ClusterMonitoringOperator is the Schema for the clustermonitoringoperators API",
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.ClusterMonitoringOperatorSpec"
+        },
+        "status": {
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.ClusterMonitoringOperatorStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.monitoring.v1.ClusterMonitoringOperatorList": {
+      "description": "ClusterMonitoringOperatorList contains a list of ClusterMonitoringOperator",
+      "type": "object",
+      "required": [
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.ClusterMonitoringOperator"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.monitoring.v1.ClusterMonitoringOperatorSpec": {
+      "description": "ClusterMonitoringOperatorSpec defines the desired state of ClusterMonitoringOperator",
+      "type": "object",
+      "properties": {
+        "alertmanagerMain": {
+          "description": "`AlertmanagerMainConfig` defines settings for the Alertmanager component in the `openshift-monitoring` namespace.",
+          "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.AlertmanagerMainConfig"
+        },
+        "enableUserWorkload": {
+          "description": "`UserWorkloadEnabled` is a Boolean flag that enables monitoring for user-defined projects.",
+          "type": "boolean"
+        },
+        "http": {
+          "description": "OmitFromDoc",
+          "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.HTTPConfig"
+        },
+        "k8sPrometheusAdapter": {
+          "description": "`K8sPrometheusAdapter` defines settings for the Prometheus Adapter component.",
+          "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.K8sPrometheusAdapter"
+        },
+        "kubeStateMetrics": {
+          "description": "`KubeStateMetricsConfig` defines settings for the `kube-state-metrics` agent.",
+          "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.KubeStateMetricsConfig"
+        },
+        "metricsServer": {
+          "description": "`MetricsServer` defines settings for the MetricsServer component.",
+          "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.MetricsServerConfig"
+        },
+        "monitoringPlugin": {
+          "description": "`MonitoringPluginConfig` defines settings for the monitoring `console-plugin`.",
+          "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.MonitoringPluginConfig"
+        },
+        "nodeExporter": {
+          "description": "`NodeExporterConfig` defines settings for the `node-exporter` agent.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.NodeExporterConfig"
+        },
+        "openshiftStateMetrics": {
+          "description": "`OpenShiftMetricsConfig` defines settings for the `openshift-state-metrics` agent.",
+          "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.OpenShiftStateMetricsConfig"
+        },
+        "prometheusK8s": {
+          "description": "`PrometheusK8sConfig` defines settings for the Prometheus component.",
+          "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.PrometheusK8sConfig"
+        },
+        "prometheusOperator": {
+          "description": "`PrometheusOperatorConfig` defines settings for the Prometheus Operator component.",
+          "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.PrometheusOperatorConfig"
+        },
+        "prometheusOperatorAdmissionWebhook": {
+          "description": "`PrometheusOperatorAdmissionWebhookConfig` defines settings for the Prometheus Operator's admission webhook component.",
+          "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.PrometheusOperatorAdmissionWebhookConfig"
+        },
+        "telemeterClient": {
+          "description": "`TelemeterClientConfig` defines settings for the Telemeter Client component.",
+          "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.TelemeterClientConfig"
+        },
+        "thanosQuerier": {
+          "description": "`ThanosQuerierConfig` defines settings for the Thanos Querier component.",
+          "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.ThanosQuerierConfig"
+        }
+      }
+    },
+    "com.github.openshift.api.monitoring.v1.ClusterMonitoringOperatorStatus": {
+      "description": "ClusterMonitoringOperatorStatus defines the observed state of ClusterMonitoringOperator",
+      "type": "object"
+    },
+    "com.github.openshift.api.monitoring.v1.DedicatedServiceMonitors": {
+      "description": "OmitFromDoc: This is deprecated and will be removed in a future version, setting it has no effect.",
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        }
+      }
+    },
+    "com.github.openshift.api.monitoring.v1.HTTPConfig": {
+      "type": "object",
+      "required": [
+        "httpProxy",
+        "httpsProxy",
+        "noProxy"
+      ],
+      "properties": {
+        "httpProxy": {
+          "type": "string",
+          "default": ""
+        },
+        "httpsProxy": {
+          "type": "string",
+          "default": ""
+        },
+        "noProxy": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.monitoring.v1.K8sPrometheusAdapter": {
+      "description": "The `K8sPrometheusAdapter` resource defines settings for the Prometheus Adapter component.",
+      "type": "object",
+      "properties": {
+        "audit": {
+          "description": "Defines the audit configuration used by the Prometheus Adapter instance. Possible profile values are: `metadata`, `request`, `requestresponse`, and `none`. The default value is `metadata`.",
+          "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.Audit"
+        },
+        "dedicatedServiceMonitors": {
+          "description": "OmitFromDoc: Defines dedicated service monitors.",
+          "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.DedicatedServiceMonitors"
+        },
+        "nodeSelector": {
+          "description": "Defines the nodes on which the pods are scheduled.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "resources": {
+          "description": "Defines resource requests and limits for the PrometheusAdapter container.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "tolerations": {
+          "description": "Defines tolerations for the pods.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.Toleration"
+          }
+        },
+        "topologySpreadConstraints": {
+          "description": "Defines a pod's topology spread constraints.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.TopologySpreadConstraint"
+          }
+        }
+      }
+    },
+    "com.github.openshift.api.monitoring.v1.KubeStateMetricsConfig": {
+      "description": "The `KubeStateMetricsConfig` resource defines settings for the `kube-state-metrics` agent.",
+      "type": "object",
+      "properties": {
+        "nodeSelector": {
+          "description": "Defines the nodes on which the pods are scheduled.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "resources": {
+          "description": "Defines resource requests and limits for the KubeStateMetrics container.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "tolerations": {
+          "description": "Defines tolerations for the pods.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.Toleration"
+          }
+        },
+        "topologySpreadConstraints": {
+          "description": "Defines a pod's topology spread constraints.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.TopologySpreadConstraint"
+          }
+        }
+      }
+    },
+    "com.github.openshift.api.monitoring.v1.MetricsServerConfig": {
+      "description": "The `MetricsServerConfig` resource defines settings for the Metrics Server component. Note that this setting only applies when the MetricsServer feature gate is enabled.",
+      "type": "object",
+      "properties": {
+        "audit": {
+          "description": "Defines the audit configuration used by the Metrics Server instance. Possible profile values are: `metadata`, `request`, `requestresponse`, and `none`. The default value is `metadata`.",
+          "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.Audit"
+        },
+        "nodeSelector": {
+          "description": "Defines the nodes on which the pods are scheduled.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "resources": {
+          "description": "Defines resource requests and limits for the Metrics Server container.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "tolerations": {
+          "description": "Defines tolerations for the pods.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.Toleration"
+          }
+        },
+        "topologySpreadConstraints": {
+          "description": "Defines a pod's topology spread constraints.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.TopologySpreadConstraint"
+          }
+        }
+      }
+    },
+    "com.github.openshift.api.monitoring.v1.MonitoringPluginConfig": {
+      "description": "The `MonitoringPluginConfig` resource defines settings for the Console Plugin component in the `openshift-monitoring` namespace.",
+      "type": "object",
+      "properties": {
+        "nodeSelector": {
+          "description": "Defines the nodes on which the Pods are scheduled.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "resources": {
+          "description": "Defines resource requests and limits for the console-plugin container.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "tolerations": {
+          "description": "Defines tolerations for the pods.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.Toleration"
+          }
+        },
+        "topologySpreadConstraints": {
+          "description": "Defines a pod's topology spread constraints.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.TopologySpreadConstraint"
+          }
+        }
+      }
+    },
+    "com.github.openshift.api.monitoring.v1.NodeExporterCollectorBuddyInfoConfig": {
+      "description": "The `NodeExporterCollectorBuddyInfoConfig` resource works as an on/off switch for the `buddyinfo` collector of the `node-exporter` agent. By default, the `buddyinfo` collector is disabled.",
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "description": "A Boolean flag that enables or disables the `buddyinfo` collector.",
+          "type": "boolean"
+        }
+      }
+    },
+    "com.github.openshift.api.monitoring.v1.NodeExporterCollectorConfig": {
+      "description": "The `NodeExporterCollectorConfig` resource defines settings for individual collectors of the `node-exporter` agent.",
+      "type": "object",
+      "properties": {
+        "buddyinfo": {
+          "description": "Defines the configuration of the `buddyinfo` collector, which collects statistics about memory fragmentation from the `node_buddyinfo_blocks` metric. This metric collects data from `/proc/buddyinfo`. Disabled by default.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.NodeExporterCollectorBuddyInfoConfig"
+        },
+        "cpufreq": {
+          "description": "Defines the configuration of the `cpufreq` collector, which collects CPU frequency statistics. Disabled by default.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.NodeExporterCollectorCpufreqConfig"
+        },
+        "ksmd": {
+          "description": "Defines the configuration of the `ksmd` collector, which collects statistics from the kernel same-page merger daemon. Disabled by default.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.NodeExporterCollectorKSMDConfig"
+        },
+        "mountstats": {
+          "description": "Defines the configuration of the `mountstats` collector, which collects statistics about NFS volume I/O activities. Disabled by default.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.NodeExporterCollectorMountStatsConfig"
+        },
+        "netclass": {
+          "description": "Defines the configuration of the `netclass` collector, which collects information about network devices. Enabled by default.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.NodeExporterCollectorNetClassConfig"
+        },
+        "netdev": {
+          "description": "Defines the configuration of the `netdev` collector, which collects network devices statistics. Enabled by default.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.NodeExporterCollectorNetDevConfig"
+        },
+        "processes": {
+          "description": "Defines the configuration of the `processes` collector, which collects statistics from processes and threads running in the system. Disabled by default.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.NodeExporterCollectorProcessesConfig"
+        },
+        "systemd": {
+          "description": "Defines the configuration of the `systemd` collector, which collects statistics on the systemd daemon and its managed services. Disabled by default.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.NodeExporterCollectorSystemdConfig"
+        },
+        "tcpstat": {
+          "description": "Defines the configuration of the `tcpstat` collector, which collects TCP connection statistics. Disabled by default.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.NodeExporterCollectorTcpStatConfig"
+        }
+      }
+    },
+    "com.github.openshift.api.monitoring.v1.NodeExporterCollectorCpufreqConfig": {
+      "description": "The `NodeExporterCollectorCpufreqConfig` resource works as an on/off switch for the `cpufreq` collector of the `node-exporter` agent. By default, the `cpufreq` collector is disabled. Under certain circumstances, enabling the cpufreq collector increases CPU usage on machines with many cores. If you enable this collector and have machines with many cores, monitor your systems closely for excessive CPU usage. Please refer to https://github.com/prometheus/node_exporter/issues/1880 for more details. A related bug: https://bugzilla.redhat.com/show_bug.cgi?id=1972076",
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "description": "A Boolean flag that enables or disables the `cpufreq` collector.",
+          "type": "boolean"
+        }
+      }
+    },
+    "com.github.openshift.api.monitoring.v1.NodeExporterCollectorKSMDConfig": {
+      "description": "The `NodeExporterCollectorKSMDConfig` resource works as an on/off switch for the `ksmd` collector of the `node-exporter` agent. By default, the `ksmd` collector is disabled.",
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "description": "A Boolean flag that enables or disables the `ksmd` collector.",
+          "type": "boolean"
+        }
+      }
+    },
+    "com.github.openshift.api.monitoring.v1.NodeExporterCollectorMountStatsConfig": {
+      "description": "The `NodeExporterCollectorMountStatsConfig` resource works as an on/off switch for the `mountstats` collector of the `node-exporter` agent. By default, the `mountstats` collector is disabled. If enabled, these metrics become available:\n\n\t`node_mountstats_nfs_read_bytes_total`,\n\t`node_mountstats_nfs_write_bytes_total`,\n\t`node_mountstats_nfs_operations_requests_total`.\n\nPlease be aware that these metrics can have a high cardinality. If you enable this collector, closely monitor any increases in memory usage for the `prometheus-k8s` pods.",
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "description": "A Boolean flag that enables or disables the `mountstats` collector.",
+          "type": "boolean"
+        }
+      }
+    },
+    "com.github.openshift.api.monitoring.v1.NodeExporterCollectorNetClassConfig": {
+      "description": "The `NodeExporterCollectorNetClassConfig` resource works as an on/off switch for the `netclass` collector of the `node-exporter` agent. By default, the `netclass` collector is enabled. If disabled, these metrics become unavailable: `node_network_info`, `node_network_address_assign_type`, `node_network_carrier`, `node_network_carrier_changes_total`, `node_network_carrier_up_changes_total`, `node_network_carrier_down_changes_total`, `node_network_device_id`, `node_network_dormant`, `node_network_flags`, `node_network_iface_id`, `node_network_iface_link`, `node_network_iface_link_mode`, `node_network_mtu_bytes`, `node_network_name_assign_type`, `node_network_net_dev_group`, `node_network_speed_bytes`, `node_network_transmit_queue_length`, `node_network_protocol_type`.",
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "description": "A Boolean flag that enables or disables the `netclass` collector.",
+          "type": "boolean"
+        },
+        "useNetlink": {
+          "description": "A Boolean flag that activates the `netlink` implementation of the `netclass` collector. Its default value is `true`: activating the netlink mode. This implementation improves the performance of the `netclass` collector.",
+          "type": "boolean"
+        }
+      }
+    },
+    "com.github.openshift.api.monitoring.v1.NodeExporterCollectorNetDevConfig": {
+      "description": "The `NodeExporterCollectorNetDevConfig` resource works as an on/off switch for the `netdev` collector of the `node-exporter` agent. By default, the `netdev` collector is enabled. If disabled, these metrics become unavailable: `node_network_receive_bytes_total`, `node_network_receive_compressed_total`, `node_network_receive_drop_total`, `node_network_receive_errs_total`, `node_network_receive_fifo_total`, `node_network_receive_frame_total`, `node_network_receive_multicast_total`, `node_network_receive_nohandler_total`, `node_network_receive_packets_total`, `node_network_transmit_bytes_total`, `node_network_transmit_carrier_total`, `node_network_transmit_colls_total`, `node_network_transmit_compressed_total`, `node_network_transmit_drop_total`, `node_network_transmit_errs_total`, `node_network_transmit_fifo_total`, `node_network_transmit_packets_total`.",
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "description": "A Boolean flag that enables or disables the `netdev` collector.",
+          "type": "boolean"
+        }
+      }
+    },
+    "com.github.openshift.api.monitoring.v1.NodeExporterCollectorProcessesConfig": {
+      "description": "The `NodeExporterCollectorProcessesConfig` resource works as an on/off switch for the `processes` collector of the `node-exporter` agent. If enabled, these metrics become available: `node_processes_max_processes`, `node_processes_pids`, `node_processes_state`, `node_processes_threads`, `node_processes_threads_state`. The metric `node_processes_state` and `node_processes_threads_state` can have up to 5 series each, depending on the state of the processes and threads. The possible states of a process or a thread are: 'D' (UNINTERRUPTABLE_SLEEP), 'R' (RUNNING & RUNNABLE), 'S' (INTERRRUPTABLE_SLEEP), 'T' (STOPPED), 'Z' (ZOMBIE). By default, the `processes` collector is disabled.",
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "description": "A Boolean flag that enables or disables the `processes` collector.",
+          "type": "boolean"
+        }
+      }
+    },
+    "com.github.openshift.api.monitoring.v1.NodeExporterCollectorSystemdConfig": {
+      "description": "The `NodeExporterCollectorSystemdConfig` resource works as an on/off switch for the `systemd` collector of the `node-exporter` agent. By default, the `systemd` collector is disabled. If enabled, the following metrics become available: `node_systemd_system_running`, `node_systemd_units`, `node_systemd_version`. If the unit uses a socket, it also generates these 3 metrics: `node_systemd_socket_accepted_connections_total`, `node_systemd_socket_current_connections`, `node_systemd_socket_refused_connections_total`. You can use the `units` parameter to select the systemd units to be included by the `systemd` collector. The selected units are used to generate the `node_systemd_unit_state` metric, which shows the state of each systemd unit. The timer units such as `logrotate.timer` generate one more metric `node_systemd_timer_last_trigger_seconds`. However, this metric's cardinality might be high (at least 5 series per unit per node). If you enable this collector with a long list of selected units, closely monitor the `prometheus-k8s` deployment for excessive memory usage.",
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "description": "A Boolean flag that enables or disables the `systemd` collector.",
+          "type": "boolean"
+        },
+        "units": {
+          "description": "A list of regular expression (regex) patterns that match systemd units to be included by the `systemd` collector. By default, the list is empty, so the collector exposes no metrics for systemd units.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        }
+      }
+    },
+    "com.github.openshift.api.monitoring.v1.NodeExporterCollectorTcpStatConfig": {
+      "description": "The `NodeExporterCollectorTcpStatConfig` resource works as an on/off switch for the `tcpstat` collector of the `node-exporter` agent. By default, the `tcpstat` collector is disabled.",
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "description": "A Boolean flag that enables or disables the `tcpstat` collector.",
+          "type": "boolean"
+        }
+      }
+    },
+    "com.github.openshift.api.monitoring.v1.NodeExporterConfig": {
+      "description": "The `NodeExporterConfig` resource defines settings for the `node-exporter` agent.",
+      "type": "object",
+      "properties": {
+        "collectors": {
+          "description": "Defines which collectors are enabled and their additional configuration parameters.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.NodeExporterCollectorConfig"
+        },
+        "ignoredNetworkDevices": {
+          "description": "A list of network devices, as regular expressions, to be excluded from the relevant collector configuration such as `netdev` and `netclass`. When not set, the Cluster Monitoring Operator uses a predefined list of devices to be excluded to minimize the impact on memory usage. When set as an empty list, no devices are excluded. If you modify this setting, monitor the `prometheus-k8s` deployment closely for excessive memory usage.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "maxProcs": {
+          "description": "The target number of CPUs on which the Node Exporter's process will run. Use this setting to override the default value, which is set either to `4` or to the number of CPUs on the host, whichever is smaller. The default value is computed at runtime and set via the `GOMAXPROCS` environment variable before Node Exporter is launched. If a kernel deadlock occurs or if performance degrades when reading from `sysfs` concurrently, you can change this value to `1`, which limits Node Exporter to running on one CPU. For nodes with a high CPU count, setting the limit to a low number saves resources by preventing Go routines from being scheduled to run on all CPUs. However, I/O performance degrades if the `maxProcs` value is set too low, and there are many metrics to collect.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "resources": {
+          "description": "Defines resource requests and limits for the NodeExporter container.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        }
+      }
+    },
+    "com.github.openshift.api.monitoring.v1.OpenShiftStateMetricsConfig": {
+      "description": "The `OpenShiftStateMetricsConfig` resource defines settings for the `openshift-state-metrics` agent.",
+      "type": "object",
+      "properties": {
+        "nodeSelector": {
+          "description": "Defines the nodes on which the pods are scheduled.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "resources": {
+          "description": "Defines resource requests and limits for the OpenShiftStateMetrics container.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "tolerations": {
+          "description": "Defines tolerations for the pods.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.Toleration"
+          }
+        },
+        "topologySpreadConstraints": {
+          "description": "Defines a pod's topology spread constraints.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.TopologySpreadConstraint"
+          }
+        }
+      }
+    },
+    "com.github.openshift.api.monitoring.v1.PrometheusK8sConfig": {
+      "description": "The `PrometheusK8sConfig` resource defines settings for the Prometheus component.",
+      "type": "object",
+      "properties": {
+        "additionalAlertmanagerConfigs": {
+          "description": "Configures additional Alertmanager instances that receive alerts from the Prometheus component. By default, no additional Alertmanager instances are configured.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.AdditionalAlertmanagerConfig"
+          }
+        },
+        "collectionProfile": {
+          "description": "Defines the metrics collection profile that Prometheus uses to collect metrics from the platform components. Supported values are `full` or `minimal`. In the `full` profile (default), Prometheus collects all metrics that are exposed by the platform components. In the `minimal` profile, Prometheus only collects metrics necessary for the default platform alerts, recording rules, telemetry and console dashboards.",
+          "type": "string"
+        },
+        "enforcedBodySizeLimit": {
+          "description": "Enforces a body size limit for Prometheus scraped metrics. If a scraped target's body response is larger than the limit, the scrape will fail. The following values are valid: an empty value to specify no limit, a numeric value in Prometheus size format (such as `64MB`), or the string `automatic`, which indicates that the limit will be automatically calculated based on cluster capacity. The default value is empty, which indicates no limit.",
+          "type": "string"
+        },
+        "externalLabels": {
+          "description": "Defines labels to be added to any time series or alerts when communicating with external systems such as federation, remote storage, and Alertmanager. By default, no labels are added.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "logLevel": {
+          "description": "Defines the log level setting for Prometheus. The possible values are: `error`, `warn`, `info`, and `debug`. The default value is `info`.",
+          "type": "string"
+        },
+        "nodeSelector": {
+          "description": "Defines the nodes on which the pods are scheduled.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "queryLogFile": {
+          "description": "Specifies the file to which PromQL queries are logged. This setting can be either a filename, in which case the queries are saved to an `emptyDir` volume at `/var/log/prometheus`, or a full path to a location where an `emptyDir` volume will be mounted and the queries saved. Writing to `/dev/stderr`, `/dev/stdout` or `/dev/null` is supported, but writing to any other `/dev/` path is not supported. Relative paths are also not supported. By default, PromQL queries are not logged.",
+          "type": "string"
+        },
+        "remoteWrite": {
+          "description": "Defines the remote write configuration, including URL, authentication, and relabeling settings.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.RemoteWriteSpec"
+          }
+        },
+        "resources": {
+          "description": "Defines resource requests and limits for the Prometheus container.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "retention": {
+          "description": "Defines the duration for which Prometheus retains data. This definition must be specified using the following regular expression pattern: `[0-9]+(ms|s|m|h|d|w|y)` (ms = milliseconds, s= seconds,m = minutes, h = hours, d = days, w = weeks, y = years). The default value is `15d`.",
+          "type": "string"
+        },
+        "retentionSize": {
+          "description": "Defines the maximum amount of disk space used by data blocks plus the write-ahead log (WAL). Supported values are `B`, `KB`, `KiB`, `MB`, `MiB`, `GB`, `GiB`, `TB`, `TiB`, `PB`, `PiB`, `EB`, and `EiB`. By default, no limit is defined.",
+          "type": "string"
+        },
+        "tolerations": {
+          "description": "Defines tolerations for the pods.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.Toleration"
+          }
+        },
+        "topologySpreadConstraints": {
+          "description": "Defines the pod's topology spread constraints.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.TopologySpreadConstraint"
+          }
+        },
+        "volumeClaimTemplate": {
+          "description": "Defines persistent storage for Prometheus. Use this setting to configure the persistent volume claim, including storage class, volume size and name.",
+          "$ref": "#/definitions/com.github.prometheus-operator.prometheus-operator.pkg.apis.monitoring.v1.EmbeddedPersistentVolumeClaim"
+        }
+      }
+    },
+    "com.github.openshift.api.monitoring.v1.PrometheusOperatorAdmissionWebhookConfig": {
+      "description": "The `PrometheusOperatorAdmissionWebhookConfig` resource defines settings for the Prometheus Operator's admission webhook workload.",
+      "type": "object",
+      "properties": {
+        "resources": {
+          "description": "Defines resource requests and limits for the prometheus-operator-admission-webhook container.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "topologySpreadConstraints": {
+          "description": "Defines a pod's topology spread constraints.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.TopologySpreadConstraint"
+          }
+        }
+      }
+    },
+    "com.github.openshift.api.monitoring.v1.PrometheusOperatorConfig": {
+      "description": "The `PrometheusOperatorConfig` resource defines settings for the Prometheus Operator component.",
+      "type": "object",
+      "properties": {
+        "logLevel": {
+          "description": "Defines the log level settings for Prometheus Operator. The possible values are `error`, `warn`, `info`, and `debug`. The default value is `info`.",
+          "type": "string"
+        },
+        "nodeSelector": {
+          "description": "Defines the nodes on which the pods are scheduled.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "resources": {
+          "description": "Defines resource requests and limits for the PrometheusOperator container.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "tolerations": {
+          "description": "Defines tolerations for the pods.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.Toleration"
+          }
+        },
+        "topologySpreadConstraints": {
+          "description": "Defines a pod's topology spread constraints.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.TopologySpreadConstraint"
+          }
+        }
+      }
+    },
+    "com.github.openshift.api.monitoring.v1.PrometheusRestrictedConfig": {
+      "description": "The `PrometheusRestrictedConfig` resource defines the settings for the Prometheus component that monitors user-defined projects.",
+      "type": "object",
+      "properties": {
+        "additionalAlertmanagerConfigs": {
+          "description": "Configures additional Alertmanager instances that receive alerts from the Prometheus component. By default, no additional Alertmanager instances are configured.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.AdditionalAlertmanagerConfig"
+          }
+        },
+        "enforcedLabelLimit": {
+          "description": "Specifies a per-scrape limit on the number of labels accepted for a sample. If the number of labels exceeds this limit after metric relabeling, the entire scrape is treated as failed. The default value is `0`, which means that no limit is set.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "enforcedLabelNameLengthLimit": {
+          "description": "Specifies a per-scrape limit on the length of a label name for a sample. If the length of a label name exceeds this limit after metric relabeling, the entire scrape is treated as failed. The default value is `0`, which means that no limit is set.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "enforcedLabelValueLengthLimit": {
+          "description": "Specifies a per-scrape limit on the length of a label value for a sample. If the length of a label value exceeds this limit after metric relabeling, the entire scrape is treated as failed. The default value is `0`, which means that no limit is set.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "enforcedSampleLimit": {
+          "description": "Specifies a global limit on the number of scraped samples that will be accepted. This setting overrides the `SampleLimit` value set in any user-defined `ServiceMonitor` or `PodMonitor` object if the value is greater than `enforcedTargetLimit`. Administrators can use this setting to keep the overall number of samples under control. The default value is `0`, which means that no limit is set.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "enforcedTargetLimit": {
+          "description": "Specifies a global limit on the number of scraped targets. This setting overrides the `TargetLimit` value set in any user-defined `ServiceMonitor` or `PodMonitor` object if the value is greater than `enforcedSampleLimit`. Administrators can use this setting to keep the overall number of targets under control. The default value is `0`.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "externalLabels": {
+          "description": "Defines labels to be added to any time series or alerts when communicating with external systems such as federation, remote storage, and Alertmanager. By default, no labels are added.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "logLevel": {
+          "description": "Defines the log level setting for Prometheus. The possible values are `error`, `warn`, `info`, and `debug`. The default setting is `info`.",
+          "type": "string"
+        },
+        "nodeSelector": {
+          "description": "Defines the nodes on which the pods are scheduled.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "queryLogFile": {
+          "description": "Specifies the file to which PromQL queries are logged. This setting can be either a filename, in which case the queries are saved to an `emptyDir` volume at `/var/log/prometheus`, or a full path to a location where an `emptyDir` volume will be mounted and the queries saved. Writing to `/dev/stderr`, `/dev/stdout` or `/dev/null` is supported, but writing to any other `/dev/` path is not supported. Relative paths are also not supported. By default, PromQL queries are not logged.",
+          "type": "string"
+        },
+        "remoteWrite": {
+          "description": "Defines the remote write configuration, including URL, authentication, and relabeling settings.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.RemoteWriteSpec"
+          }
+        },
+        "resources": {
+          "description": "Defines resource requests and limits for the Prometheus container.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "retention": {
+          "description": "Defines the duration for which Prometheus retains data. This definition must be specified using the following regular expression pattern: `[0-9]+(ms|s|m|h|d|w|y)` (ms = milliseconds, s= seconds,m = minutes, h = hours, d = days, w = weeks, y = years). The default value is `15d`.",
+          "type": "string"
+        },
+        "retentionSize": {
+          "description": "Defines the maximum amount of disk space used by data blocks plus the write-ahead log (WAL). Supported values are `B`, `KB`, `KiB`, `MB`, `MiB`, `GB`, `GiB`, `TB`, `TiB`, `PB`, `PiB`, `EB`, and `EiB`. The default value is `nil`.",
+          "type": "string"
+        },
+        "tolerations": {
+          "description": "Defines tolerations for the pods.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.Toleration"
+          }
+        },
+        "topologySpreadConstraints": {
+          "description": "Defines a pod's topology spread constraints.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.TopologySpreadConstraint"
+          }
+        },
+        "volumeClaimTemplate": {
+          "description": "Defines persistent storage for Prometheus. Use this setting to configure the storage class and size of a volume.",
+          "$ref": "#/definitions/com.github.prometheus-operator.prometheus-operator.pkg.apis.monitoring.v1.EmbeddedPersistentVolumeClaim"
+        }
+      }
+    },
     "com.github.openshift.api.monitoring.v1.PrometheusRuleRef": {
       "description": "PrometheusRuleRef is a reference to an existing PrometheusRule object.  Each AlertingRule instance results in a generated PrometheusRule object in the same namespace, which is always the openshift-monitoring namespace.  This is used to point to the generated PrometheusRule object in the AlertingRule status.",
       "type": "object",
@@ -23249,6 +24182,84 @@
         "targetLabel": {
           "description": "targetLabel to which the resulting value is written in a 'Replace' action. It is required for 'Replace' and 'HashMod' actions and forbidden for actions 'LabelKeep' and 'LabelDrop'. Regex capture groups are available.",
           "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.monitoring.v1.RemoteWriteSpec": {
+      "description": "The `RemoteWriteSpec` resource defines the settings for remote write storage.",
+      "type": "object",
+      "required": [
+        "url"
+      ],
+      "properties": {
+        "authorization": {
+          "description": "Defines the authorization settings for remote write storage.",
+          "$ref": "#/definitions/com.github.prometheus-operator.prometheus-operator.pkg.apis.monitoring.v1.SafeAuthorization"
+        },
+        "basicAuth": {
+          "description": "Defines basic authentication settings for the remote write endpoint URL.",
+          "$ref": "#/definitions/com.github.prometheus-operator.prometheus-operator.pkg.apis.monitoring.v1.BasicAuth"
+        },
+        "bearerTokenFile": {
+          "description": "Defines the file that contains the bearer token for the remote write endpoint. However, because you cannot mount secrets in a pod, in practice you can only reference the token of the service account.",
+          "type": "string"
+        },
+        "headers": {
+          "description": "Specifies the custom HTTP headers to be sent along with each remote write request. Headers set by Prometheus cannot be overwritten.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "metadataConfig": {
+          "description": "Defines settings for sending series metadata to remote write storage.",
+          "$ref": "#/definitions/com.github.prometheus-operator.prometheus-operator.pkg.apis.monitoring.v1.MetadataConfig"
+        },
+        "name": {
+          "description": "Defines the name of the remote write queue. This name is used in metrics and logging to differentiate queues. If specified, this name must be unique.",
+          "type": "string"
+        },
+        "oauth2": {
+          "description": "Defines OAuth2 authentication settings for the remote write endpoint.",
+          "$ref": "#/definitions/com.github.prometheus-operator.prometheus-operator.pkg.apis.monitoring.v1.OAuth2"
+        },
+        "proxyUrl": {
+          "description": "Defines an optional proxy URL.",
+          "type": "string"
+        },
+        "queueConfig": {
+          "description": "Allows tuning configuration for remote write queue parameters.",
+          "$ref": "#/definitions/com.github.prometheus-operator.prometheus-operator.pkg.apis.monitoring.v1.QueueConfig"
+        },
+        "remoteTimeout": {
+          "description": "Defines the timeout value for requests to the remote write endpoint.",
+          "type": "string"
+        },
+        "sendExemplars": {
+          "description": "Enables sending exemplars via remote write. When enabled, Prometheus is configured to store a maximum of 100,000 exemplars in memory. Note that this setting only applies to user-defined monitoring. It is not applicable to default in-cluster monitoring.",
+          "type": "boolean"
+        },
+        "sigv4": {
+          "description": "Defines AWS Signature Version 4 authentication settings.",
+          "$ref": "#/definitions/com.github.prometheus-operator.prometheus-operator.pkg.apis.monitoring.v1.Sigv4"
+        },
+        "tlsConfig": {
+          "description": "Defines TLS authentication settings for the remote write endpoint.",
+          "$ref": "#/definitions/com.github.prometheus-operator.prometheus-operator.pkg.apis.monitoring.v1.SafeTLSConfig"
+        },
+        "url": {
+          "description": "Defines the URL of the remote write endpoint to which samples will be sent.",
+          "type": "string",
+          "default": ""
+        },
+        "writeRelabelConfigs": {
+          "description": "Defines the list of remote write relabel configurations.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.prometheus-operator.prometheus-operator.pkg.apis.monitoring.v1.RelabelConfig"
+          }
         }
       }
     },
@@ -23316,6 +24327,212 @@
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.Rule"
           }
+        }
+      }
+    },
+    "com.github.openshift.api.monitoring.v1.TLSConfig": {
+      "description": "The `TLSConfig` resource configures the settings for TLS connections.",
+      "type": "object",
+      "required": [
+        "insecureSkipVerify"
+      ],
+      "properties": {
+        "ca": {
+          "description": "Defines the secret key reference containing the Certificate Authority (CA) to use for the remote host.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.SecretKeySelector"
+        },
+        "cert": {
+          "description": "Defines the secret key reference containing the public certificate to use for the remote host.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.SecretKeySelector"
+        },
+        "insecureSkipVerify": {
+          "description": "When set to `true`, disables the verification of the remote host's certificate and name.",
+          "type": "boolean",
+          "default": false
+        },
+        "key": {
+          "description": "Defines the secret key reference containing the private key to use for the remote host.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.SecretKeySelector"
+        },
+        "serverName": {
+          "description": "Used to verify the hostname on the returned certificate.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.monitoring.v1.TelemeterClientConfig": {
+      "description": "`TelemeterClientConfig` defines settings for the Telemeter Client component.",
+      "type": "object",
+      "required": [
+        "nodeSelector",
+        "tolerations"
+      ],
+      "properties": {
+        "clusterID": {
+          "description": "OmitFromDoc",
+          "type": "string"
+        },
+        "enabled": {
+          "description": "OmitFromDoc",
+          "type": "boolean"
+        },
+        "nodeSelector": {
+          "description": "Defines the nodes on which the pods are scheduled.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "resources": {
+          "description": "Defines resource requests and limits for the TelemeterClient container.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "telemeterServerURL": {
+          "description": "OmitFromDoc",
+          "type": "string"
+        },
+        "token": {
+          "description": "OmitFromDoc",
+          "type": "string"
+        },
+        "tolerations": {
+          "description": "Defines tolerations for the pods.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.Toleration"
+          }
+        },
+        "topologySpreadConstraints": {
+          "description": "Defines a pod's topology spread constraints.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.TopologySpreadConstraint"
+          }
+        }
+      }
+    },
+    "com.github.openshift.api.monitoring.v1.ThanosQuerierConfig": {
+      "description": "The `ThanosQuerierConfig` resource defines settings for the Thanos Querier component.",
+      "type": "object",
+      "properties": {
+        "enableCORS": {
+          "description": "A Boolean flag that enables setting CORS headers. The headers would allow access from any origin. The default value is `false`.",
+          "type": "boolean"
+        },
+        "enableRequestLogging": {
+          "description": "A Boolean flag that enables or disables request logging. The default value is `false`.",
+          "type": "boolean"
+        },
+        "logLevel": {
+          "description": "Defines the log level setting for Thanos Querier. The possible values are `error`, `warn`, `info`, and `debug`. The default value is `info`.",
+          "type": "string"
+        },
+        "nodeSelector": {
+          "description": "Defines the nodes on which the pods are scheduled.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "resources": {
+          "description": "Defines resource requests and limits for the Thanos Querier container.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "tolerations": {
+          "description": "Defines tolerations for the pods.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.Toleration"
+          }
+        },
+        "topologySpreadConstraints": {
+          "description": "Defines a pod's topology spread constraints.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.TopologySpreadConstraint"
+          }
+        }
+      }
+    },
+    "com.github.openshift.api.monitoring.v1.ThanosRulerConfig": {
+      "description": "The `ThanosRulerConfig` resource defines configuration for the Thanos Ruler instance for user-defined projects.",
+      "type": "object",
+      "properties": {
+        "additionalAlertmanagerConfigs": {
+          "description": "Configures how the Thanos Ruler component communicates with additional Alertmanager instances. The default value is `nil`.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.AdditionalAlertmanagerConfig"
+          }
+        },
+        "logLevel": {
+          "description": "Defines the log level setting for Thanos Ruler. The possible values are `error`, `warn`, `info`, and `debug`. The default value is `info`.",
+          "type": "string"
+        },
+        "nodeSelector": {
+          "description": "Defines the nodes on which the Pods are scheduled.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "resources": {
+          "description": "Defines resource requests and limits for the Thanos Ruler container.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "retention": {
+          "description": "Defines the duration for which Prometheus retains data. This definition must be specified using the following regular expression pattern: `[0-9]+(ms|s|m|h|d|w|y)` (ms = milliseconds, s= seconds,m = minutes, h = hours, d = days, w = weeks, y = years). The default value is `15d`.",
+          "type": "string"
+        },
+        "tolerations": {
+          "description": "Defines tolerations for the pods.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.Toleration"
+          }
+        },
+        "topologySpreadConstraints": {
+          "description": "Defines topology spread constraints for the pods.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.TopologySpreadConstraint"
+          }
+        },
+        "volumeClaimTemplate": {
+          "description": "Defines persistent storage for Thanos Ruler. Use this setting to configure the storage class and size of a volume.",
+          "$ref": "#/definitions/com.github.prometheus-operator.prometheus-operator.pkg.apis.monitoring.v1.EmbeddedPersistentVolumeClaim"
+        }
+      }
+    },
+    "com.github.openshift.api.monitoring.v1.UserWorkloadConfiguration": {
+      "description": "The `UserWorkloadConfiguration` resource defines the settings responsible for user-defined projects in the `user-workload-monitoring-config` config map  in the `openshift-user-workload-monitoring` namespace. You can only enable `UserWorkloadConfiguration` after you have set `enableUserWorkload` to `true` in the `cluster-monitoring-config` config map under the `openshift-monitoring` namespace.",
+      "type": "object",
+      "properties": {
+        "alertmanager": {
+          "description": "Defines the settings for the Alertmanager component in user workload monitoring.",
+          "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.AlertmanagerUserWorkloadConfig"
+        },
+        "prometheus": {
+          "description": "Defines the settings for the Prometheus component in user workload monitoring.",
+          "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.PrometheusRestrictedConfig"
+        },
+        "prometheusOperator": {
+          "description": "Defines the settings for the Prometheus Operator component in user workload monitoring.",
+          "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.PrometheusOperatorConfig"
+        },
+        "thanosRuler": {
+          "description": "Defines the settings for the Thanos Ruler component in user workload monitoring.",
+          "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.ThanosRulerConfig"
         }
       }
     },

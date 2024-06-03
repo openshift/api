@@ -35,6 +35,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&AlertingRuleList{},
 		&AlertRelabelConfig{},
 		&AlertRelabelConfigList{},
+		&ClusterMonitoringOperator{},
+		&ClusterMonitoringOperatorList{},
 	)
 	metav1.AddToGroupVersion(scheme, GroupVersion)
 	return nil

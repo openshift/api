@@ -119,6 +119,9 @@
                         "name": "OnClusterBuild"
                     },
                     {
+                        "name": "PersistentIPsForVirtualization"
+                    },
+                    {
                         "name": "PinnedImages"
                     },
                     {

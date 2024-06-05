@@ -247,6 +247,7 @@ spec:
                           type: string
                         nullable: true
                         type: array
+                        x-kubernetes-list-type: atomic
                       dnsManagementPolicy:
                         default: Managed
                         description: 'dnsManagementPolicy indicates if the lifecycle
@@ -879,6 +880,7 @@ spec:
                       type: string
                     nullable: true
                     type: array
+                    x-kubernetes-list-type: atomic
                   uniqueId:
                     description: "uniqueId describes configuration for a custom HTTP
                       header that the ingress controller should inject into incoming
@@ -1078,6 +1080,7 @@ spec:
                         maxItems: 1
                         nullable: true
                         type: array
+                        x-kubernetes-list-type: atomic
                       httpCaptureHeaders:
                         description: "httpCaptureHeaders defines HTTP headers that
                           should be captured in access logs.  If this field is empty,
@@ -1116,6 +1119,7 @@ spec:
                               type: object
                             nullable: true
                             type: array
+                            x-kubernetes-list-type: atomic
                           response:
                             description: "response specifies which HTTP response headers
                               to capture. \n If this field is empty, no response headers
@@ -1145,6 +1149,7 @@ spec:
                               type: object
                             nullable: true
                             type: array
+                            x-kubernetes-list-type: atomic
                         type: object
                       httpLogFormat:
                         description: "httpLogFormat specifies the format of the log
@@ -1334,6 +1339,7 @@ spec:
                           type: string
                       type: object
                     type: array
+                    x-kubernetes-list-type: atomic
                 type: object
               replicas:
                 description: "replicas is the desired number of ingress controller
@@ -1458,6 +1464,7 @@ spec:
                         items:
                           type: string
                         type: array
+                        x-kubernetes-list-type: atomic
                       minTLSVersion:
                         description: "minTLSVersion is used to specify the minimal
                           version of the TLS protocol that is negotiated during the
@@ -1767,6 +1774,9 @@ spec:
                   - type
                   type: object
                 type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
               domain:
                 description: domain is the actual domain in use.
                 type: string
@@ -1872,6 +1882,7 @@ spec:
                           type: string
                         nullable: true
                         type: array
+                        x-kubernetes-list-type: atomic
                       dnsManagementPolicy:
                         default: Managed
                         description: 'dnsManagementPolicy indicates if the lifecycle
@@ -2229,6 +2240,7 @@ spec:
                     items:
                       type: string
                     type: array
+                    x-kubernetes-list-type: atomic
                   minTLSVersion:
                     description: "minTLSVersion is used to specify the minimal version
                       of the TLS protocol that is negotiated during the TLS handshake.

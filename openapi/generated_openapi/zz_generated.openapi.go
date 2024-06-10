@@ -34882,6 +34882,13 @@ func schema_openshift_api_machine_v1beta1_AWSMachineProviderConfig(ref common.Re
 							Format:      "",
 						},
 					},
+					"placementGroupPartition": {
+						SchemaProps: spec.SchemaProps{
+							Description: "placementGroupPartition is the partition number within the placement group in which to launch the instance. This must be an integer value between 1 and 7. It is only valid if the placement group, referred in `PlacementGroupName` was created with strategy set to partition.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 				},
 				Required: []string{"ami", "instanceType", "deviceIndex", "subnet", "placement"},
 			},

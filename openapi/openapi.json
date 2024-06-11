@@ -7215,6 +7215,10 @@
             "default": ""
           }
         },
+        "imageStreamImportMode": {
+          "description": "imageStreamImportMode controls the import mode behaviour of imagestreams. It can be set to `Legacy` or `PreserveOriginal`. If this value is specified, this setting is applied to all newly created imagestreams which do not have the value set.",
+          "type": "string"
+        },
         "registrySources": {
           "description": "registrySources contains configuration that determines how the container runtime should treat individual registries when accessing images for builds+pods. (e.g. whether or not to allow insecure access).  It does not contain configuration for the internal cluster registry.",
           "default": {},
@@ -7232,6 +7236,10 @@
             "type": "string",
             "default": ""
           }
+        },
+        "imageStreamImportMode": {
+          "description": "imageStreamImportMode controls the import mode behaviour of imagestreams. It can be `Legacy` or `PreserveOriginal` depending on the payload type of the cluster or the `ImageStreamImportMode` setting in the spec. This value is set by the image registry operator.",
+          "type": "string"
         },
         "internalRegistryHostname": {
           "description": "internalRegistryHostname sets the hostname for the default internal image registry. The value must be in \"hostname[:port]\" format. This value is set by the image registry operator which controls the internal registry hostname.",
@@ -24801,6 +24809,10 @@
             "type": "string",
             "default": ""
           }
+        },
+        "imageStreamImportMode": {
+          "description": "imageStreamImportMode provides the import mode value for  imagestreams. It can be `Legacy` or `PreserveOriginal`. If this value is specified, this setting is applied to all newly created imagestreams which do not have the value set.",
+          "type": "string"
         },
         "internalRegistryHostname": {
           "description": "internalRegistryHostname sets the hostname for the default internal image registry. The value must be in \"hostname[:port]\" format.",

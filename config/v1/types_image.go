@@ -1,6 +1,7 @@
 package v1
 
 import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+import imagev1 "github.com/openshift/api/image/v1"
 
 // +genclient
 // +genclient:nonNamespaced
@@ -67,6 +68,14 @@ type ImageSpec struct {
 	// internal cluster registry.
 	// +optional
 	RegistrySources RegistrySources `json:"registrySources"`
+
+	// imageStreamImportMode controls the import mode behaviour of imagestreams.
+	// It can be set to `Legacy` or `PreserveOriginal`. If this value is specified,
+	// this setting is applied to all newly created imagestreams which do not have the
+	// value set.
+	// +openshift:enable:FeatureGate=ImageStreamImportMode
+	// +optional
+	ImageStreamImportMode imagev1.ImportModeType `json:"imageStreamImportMode,omitempty"`
 }
 
 type ImageStatus struct {
@@ -83,6 +92,14 @@ type ImageStatus struct {
 	// field in ImageStreams. The value must be in "hostname[:port]" format.
 	// +optional
 	ExternalRegistryHostnames []string `json:"externalRegistryHostnames,omitempty"`
+
+	// imageStreamImportMode controls the import mode behaviour of imagestreams. It can be
+	// `Legacy` or `PreserveOriginal` depending on the payload type of the cluster or the
+	// `ImageStreamImportMode` setting in the spec. This value is set by the image registry
+	// operator.
+	// +openshift:enable:FeatureGate=ImageStreamImportMode
+	// +optional
+	ImageStreamImportMode imagev1.ImportModeType `json:"imageStreamImportMode,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

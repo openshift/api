@@ -13703,6 +13703,13 @@ func schema_openshift_api_config_v1_ImageSpec(ref common.ReferenceCallback) comm
 							Ref:         ref("github.com/openshift/api/config/v1.RegistrySources"),
 						},
 					},
+					"imageStreamImportMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "imageStreamImportMode controls the import mode behaviour of imagestreams. It can be set to `Legacy` or `PreserveOriginal`. If this value is specified, this setting is applied to all newly created imagestreams which do not have the value set.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 			},
 		},
@@ -13737,6 +13744,13 @@ func schema_openshift_api_config_v1_ImageStatus(ref common.ReferenceCallback) co
 									},
 								},
 							},
+						},
+					},
+					"imageStreamImportMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "imageStreamImportMode controls the import mode behaviour of imagestreams. It can be `Legacy` or `PreserveOriginal` depending on the payload type of the cluster or the `ImageStreamImportMode` setting in the spec. This value is set by the image registry operator.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},
@@ -42780,6 +42794,13 @@ func schema_openshift_api_openshiftcontrolplane_v1_ImagePolicyConfig(ref common.
 						SchemaProps: spec.SchemaProps{
 							Description: "additionalTrustedCA is a path to a pem bundle file containing additional CAs that should be trusted during imagestream import.",
 							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"imageStreamImportMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "imageStreamImportMode provides the import mode value for  imagestreams. It can be `Legacy` or `PreserveOriginal`. If this value is specified, this setting is applied to all newly created imagestreams which do not have the value set.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

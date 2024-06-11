@@ -35,7 +35,7 @@ publish-kubebuilder-tools:
 	@# Make sure to update the `-version` to the full semver (x.y.z) of the Kube version that the release is based on (check o/k).
 	@# The payload should be any nightly or EC build published in the CI registry that matches the defined version.
 	@# Pull secret should be the standard pull secret used for spinning up OpenShift clusters, if you do not have one, follow https://docs.google.com/document/d/1ez2jrjiIQJChobfSu2ISJ5uM_-3HGouamL_xIa2_1W4/edit#heading=h.me93l6citmsq
-	go run ./publish-kubebuilder-tools/main.go -version 1.29.1 -output-dir /tmp/kubebuilder-tools -payload=registry.ci.openshift.org/ocp/release:4.16.0-0.ci-2024-02-20-022620 -pull-secret $(PULL_SECRET)
+	go run ./publish-kubebuilder-tools/main.go -version 1.30.1 -output-dir /tmp/kubebuilder-tools -payload=registry.ci.openshift.org/ocp/release:4.17.0-0.ci-2024-06-11-041713 -pull-secret $(PULL_SECRET)
 
 #############################################
 #

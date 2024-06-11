@@ -141,6 +141,9 @@
                         "name": "HardwareSpeed"
                     },
                     {
+                        "name": "ImageStreamImportMode"
+                    },
+                    {
                         "name": "IngressControllerLBSubnetsAWS"
                     },
                     {

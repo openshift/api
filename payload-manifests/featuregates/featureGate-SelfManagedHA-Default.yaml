@@ -65,6 +65,9 @@
                         "name": "GatewayAPI"
                     },
                     {
+                        "name": "ImageStreamImportMode"
+                    },
+                    {
                         "name": "InsightsConfig"
                     },
                     {

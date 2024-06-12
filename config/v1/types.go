@@ -401,7 +401,7 @@ const (
 
 // IBMCloudServiceName contains a value specifying the name of an IBM Cloud Service,
 // which are used by MAPI, CIRO, CIO, Installer, etc.
-// +kubebuilder:validation:Enum=CIS;COS;COSConfig;DNSServices;GlobalCatalog;GlobalSearch;GlobalTagging;HyperProtect;IAM;KeyProtect;ResourceController;ResourceManager;VPC
+// +kubebuilder:validation:Enum=CIS;COS;COSConfig;DNSServices;GlobalCatalog;GlobalSearch;GlobalTagging;HyperProtect;IAM;KeyProtect;Power;ResourceController;ResourceManager;VPC
 type IBMCloudServiceName string
 
 const (
@@ -425,6 +425,8 @@ const (
 	IBMCloudServiceIAM IBMCloudServiceName = "IAM"
 	// IBMCloudServiceKeyProtect is the name for IBM Cloud Key Protect.
 	IBMCloudServiceKeyProtect IBMCloudServiceName = "KeyProtect"
+	// IBMCloudServicePower is the name for IBM Cloud Power IAAS.
+	IBMCloudServicePower IBMCloudServiceName = "Power"
 	// IBMCloudServiceResourceController is the name for IBM Cloud Resource Controller.
 	IBMCloudServiceResourceController IBMCloudServiceName = "ResourceController"
 	// IBMCloudServiceResourceManager is the name for IBM Cloud Resource Manager.

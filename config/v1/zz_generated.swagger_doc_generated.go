@@ -571,6 +571,48 @@ func (ImageLabel) SwaggerDoc() map[string]string {
 	return map_ImageLabel
 }
 
+var map_ClusterMonitoring = map[string]string{
+	"":       "Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. ClusterMonitoring is the Schema for the clustermonitoringoperators API",
+	"spec":   "spec holds user settable values for configuration",
+	"status": "status holds observed values from the cluster. They may not be overridden.",
+}
+
+func (ClusterMonitoring) SwaggerDoc() map[string]string {
+	return map_ClusterMonitoring
+}
+
+var map_ClusterMonitoringList = map[string]string{
+	"": "Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+}
+
+func (ClusterMonitoringList) SwaggerDoc() map[string]string {
+	return map_ClusterMonitoringList
+}
+
+var map_ClusterMonitoringSpec = map[string]string{
+	"": "MonitoringOperatorSpec defines the desired state of MonitoringOperator",
+}
+
+func (ClusterMonitoringSpec) SwaggerDoc() map[string]string {
+	return map_ClusterMonitoringSpec
+}
+
+var map_ClusterMonitoringStatus = map[string]string{
+	"": "MonitoringOperatorStatus defines the observed state of MonitoringOperator",
+}
+
+func (ClusterMonitoringStatus) SwaggerDoc() map[string]string {
+	return map_ClusterMonitoringStatus
+}
+
+var map_UserDefinedMonitoring = map[string]string{
+	"": "UserDefinedMonitoring config for user-defined projects.",
+}
+
+func (UserDefinedMonitoring) SwaggerDoc() map[string]string {
+	return map_UserDefinedMonitoring
+}
+
 var map_ClusterOperator = map[string]string{
 	"":         "ClusterOperator is the Custom Resource object which holds the current state of an operator. This object is used by operators to convey their state to the rest of the cluster.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 	"metadata": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",

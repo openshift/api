@@ -20096,6 +20096,11 @@
           "description": "PlacementGroupName specifies the name of the placement group in which to launch the instance. The placement group must already be created and may use any placement strategy. When omitted, no placement group is used when creating the EC2 instance.",
           "type": "string"
         },
+        "placementGroupPartition": {
+          "description": "placementGroupPartition is the partition number within the placement group in which to launch the instance. This must be an integer value between 1 and 7. It is only valid if the placement group, referred in `PlacementGroupName` was created with strategy set to partition.",
+          "type": "integer",
+          "format": "int32"
+        },
         "publicIp": {
           "description": "PublicIP specifies whether the instance should get a public IP. If not present, it should use the default of its subnet.",
           "type": "boolean"

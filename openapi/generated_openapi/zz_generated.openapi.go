@@ -13705,9 +13705,10 @@ func schema_openshift_api_config_v1_ImageSpec(ref common.ReferenceCallback) comm
 					},
 					"imageStreamImportMode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "imageStreamImportMode controls the import mode behaviour of imagestreams. It can be set to `Legacy` or `PreserveOriginal`. If this value is specified, this setting is applied to all newly created imagestreams which do not have the value set.",
+							Description: "imageStreamImportMode controls the import mode behaviour of imagestreams. It can be set to `Legacy` or `PreserveOriginal`. If this value is specified, this setting is applied to all newly created imagestreams which do not have the value set.\n\nPossible enum values:\n - `\"Legacy\"` indicates that the legacy behaviour should be used. For manifest lists, the legacy behaviour will discard the manifest list and import a single sub-manifest. In this case, the platform is chosen in the following order of priority: 1. tag annotations; 2. control plane arch/os; 3. linux/amd64; 4. the first manifest in the list. This mode is the default.\n - `\"PreserveOriginal\"` indicates that the original manifest will be preserved. For manifest lists, the manifest list and all its sub-manifests will be imported.",
 							Type:        []string{"string"},
 							Format:      "",
+							Enum:        []interface{}{"Legacy", "PreserveOriginal"},
 						},
 					},
 				},
@@ -13748,9 +13749,10 @@ func schema_openshift_api_config_v1_ImageStatus(ref common.ReferenceCallback) co
 					},
 					"imageStreamImportMode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "imageStreamImportMode controls the import mode behaviour of imagestreams. It can be `Legacy` or `PreserveOriginal` depending on the payload type of the cluster or the `ImageStreamImportMode` setting in the spec. This value is set by the image registry operator.",
+							Description: "imageStreamImportMode controls the import mode behaviour of imagestreams. It can be `Legacy` or `PreserveOriginal` depending on the payload type of the cluster or the `ImageStreamImportMode` setting in the spec. This value is set by the image registry operator.\n\nPossible enum values:\n - `\"Legacy\"` indicates that the legacy behaviour should be used. For manifest lists, the legacy behaviour will discard the manifest list and import a single sub-manifest. In this case, the platform is chosen in the following order of priority: 1. tag annotations; 2. control plane arch/os; 3. linux/amd64; 4. the first manifest in the list. This mode is the default.\n - `\"PreserveOriginal\"` indicates that the original manifest will be preserved. For manifest lists, the manifest list and all its sub-manifests will be imported.",
 							Type:        []string{"string"},
 							Format:      "",
+							Enum:        []interface{}{"Legacy", "PreserveOriginal"},
 						},
 					},
 				},

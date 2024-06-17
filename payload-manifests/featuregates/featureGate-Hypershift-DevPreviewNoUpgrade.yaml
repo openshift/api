@@ -28,9 +28,6 @@
                         "name": "EventedPLEG"
                     },
                     {
-                        "name": "ImageStreamImportMode"
-                    },
-                    {
                         "name": "MachineAPIMigration"
                     },
                     {
@@ -130,6 +127,9 @@
                     },
                     {
                         "name": "ImagePolicy"
+                    },
+                    {
+                        "name": "ImageStreamImportMode"
                     },
                     {
                         "name": "InsightsConfig"

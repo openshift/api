@@ -97,6 +97,9 @@ spec:
                   of imagestreams. It can be set to `Legacy` or `PreserveOriginal`.
                   If this value is specified, this setting is applied to all newly
                   created imagestreams which do not have the value set.
+                enum:
+                - Legacy
+                - PreserveOriginal
                 type: string
               registrySources:
                 description: registrySources contains configuration that determines
@@ -159,6 +162,9 @@ spec:
                   of imagestreams. It can be `Legacy` or `PreserveOriginal` depending
                   on the payload type of the cluster or the `ImageStreamImportMode`
                   setting in the spec. This value is set by the image registry operator.
+                enum:
+                - Legacy
+                - PreserveOriginal
                 type: string
               internalRegistryHostname:
                 description: internalRegistryHostname sets the hostname for the default

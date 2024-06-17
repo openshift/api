@@ -552,6 +552,6 @@ var (
                                                 reportProblemsToJiraComponent("Multi-Arch").
                                                 contactPerson("psundara").
                                                 productScope(ocpSpecific).
-                                                enableIn(configv1.TechPreviewNoUpgrade).
+                                                enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
                                                 mustRegister()
 )

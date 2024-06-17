@@ -1,7 +1,6 @@
 package v1
 
 import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-import imagev1 "github.com/openshift/api/image/v1"
 
 // +genclient
 // +genclient:nonNamespaced
@@ -37,6 +36,23 @@ type Image struct {
 	// +optional
 	Status ImageStatus `json:"status"`
 }
+
+// ImportModeType describes how to import an image manifest.
+// +enum
+// +kubebuilder:validation:Enum:=Legacy;PreserveOriginal
+type ImportModeType string
+
+const (
+       // ImportModeLegacy indicates that the legacy behaviour should be used.
+       // For manifest lists, the legacy behaviour will discard the manifest list and import a single
+       // sub-manifest. In this case, the platform is chosen in the following order of priority:
+       // 1. tag annotations; 2. control plane arch/os; 3. linux/amd64; 4. the first manifest in the list.
+       // This mode is the default.
+       ImportModeLegacy ImportModeType = "Legacy"
+       // ImportModePreserveOriginal indicates that the original manifest will be preserved.
+       // For manifest lists, the manifest list and all its sub-manifests will be imported.
+       ImportModePreserveOriginal ImportModeType = "PreserveOriginal"
+)
 
 type ImageSpec struct {
 	// allowedRegistriesForImport limits the container image registries that normal users may import
@@ -75,7 +91,7 @@ type ImageSpec struct {
 	// value set.
 	// +openshift:enable:FeatureGate=ImageStreamImportMode
 	// +optional
-	ImageStreamImportMode imagev1.ImportModeType `json:"imageStreamImportMode,omitempty"`
+	ImageStreamImportMode ImportModeType `json:"imageStreamImportMode,omitempty"`
 }
 
 type ImageStatus struct {
@@ -99,7 +115,7 @@ type ImageStatus struct {
 	// operator.
 	// +openshift:enable:FeatureGate=ImageStreamImportMode
 	// +optional
-	ImageStreamImportMode imagev1.ImportModeType `json:"imageStreamImportMode,omitempty"`
+	ImageStreamImportMode ImportModeType `json:"imageStreamImportMode,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

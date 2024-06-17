@@ -42,3 +42,10 @@ tests:
         status:
           internalRegistryHostname: image-registry.openshift-image-registry.svc:5000
           imageStreamImportMode: PreserveOriginal
+   - name: Should not be able to configure imageStreamImportMode to a value other than Legacy or PreserveOriginal
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Image
+        spec:
+          imageStreamImportMode: InvalidValue
+      expectedError: "spec.imageStreamImportMode: Unsupported value: \"InvalidValue\": supported values: \"Legacy\", \"PreserveOriginal\""

@@ -10,7 +10,7 @@ To skip protobuf generation, set \$PROTO_OPTIONAL."
   exit 1
 fi
 
-if [[ "$(protoc --version)" != "libprotoc 23."* ]]; then
+if [[ "$(protoc --version)" != "libprotoc 3."* ]]; then
   echo "Generating protobuf requires protoc 23.x. Please download and
 install the platform appropriate Protobuf package for your OS:
 

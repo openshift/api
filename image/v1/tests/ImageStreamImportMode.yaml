@@ -12,8 +12,6 @@ tests:
         apiVersion: config.openshift.io/v1
         kind: Image
         spec: {}
-        status:
-          internalRegistryHostname: image-registry.openshift-image-registry.svc:5000
    - name: Should be able to configure imageStreamImportMode to Legacy
       initial: |
         apiVersion: config.openshift.io/v1
@@ -26,7 +24,6 @@ tests:
         spec:
           imageStreamImportMode: Legacy
         status:
-          internalRegistryHostname: image-registry.openshift-image-registry.svc:5000
           imageStreamImportMode: Legacy
    - name: Should be able to configure imageStreamImportMode to PreserveOriginal
       initial: |
@@ -40,7 +37,6 @@ tests:
         spec:
           imageStreamImportMode: PreserveOriginal
         status:
-          internalRegistryHostname: image-registry.openshift-image-registry.svc:5000
           imageStreamImportMode: PreserveOriginal
    - name: Should not be able to configure imageStreamImportMode to a value other than Legacy or PreserveOriginal
       initial: |

@@ -43,15 +43,15 @@ type Image struct {
 type ImportModeType string
 
 const (
-       // ImportModeLegacy indicates that the legacy behaviour should be used.
-       // For manifest lists, the legacy behaviour will discard the manifest list and import a single
-       // sub-manifest. In this case, the platform is chosen in the following order of priority:
-       // 1. tag annotations; 2. control plane arch/os; 3. linux/amd64; 4. the first manifest in the list.
-       // This mode is the default.
-       ImportModeLegacy ImportModeType = "Legacy"
-       // ImportModePreserveOriginal indicates that the original manifest will be preserved.
-       // For manifest lists, the manifest list and all its sub-manifests will be imported.
-       ImportModePreserveOriginal ImportModeType = "PreserveOriginal"
+	// ImportModeLegacy indicates that the legacy behaviour should be used.
+	// For manifest lists, the legacy behaviour will discard the manifest list and import a single
+	// sub-manifest. In this case, the platform is chosen in the following order of priority:
+	// 1. tag annotations; 2. control plane arch/os; 3. linux/amd64; 4. the first manifest in the list.
+	// This mode is the default.
+	ImportModeLegacy ImportModeType = "Legacy"
+	// ImportModePreserveOriginal indicates that the original manifest will be preserved.
+	// For manifest lists, the manifest list and all its sub-manifests will be imported.
+	ImportModePreserveOriginal ImportModeType = "PreserveOriginal"
 )
 
 type ImageSpec struct {
@@ -88,7 +88,12 @@ type ImageSpec struct {
 	// imageStreamImportMode controls the import mode behaviour of imagestreams.
 	// It can be set to `Legacy` or `PreserveOriginal`. If this value is specified,
 	// this setting is applied to all newly created imagestreams which do not have the
-	// value set.
+	// value set. ImportModeLegacy indicates that the legacy behaviour should be used.
+	// For manifest lists, the legacy behaviour will discard the manifest list and import a single
+	// sub-manifest. In this case, the platform is chosen in the following order of priority:
+	// 1. tag annotations; 2. control plane arch/os; 3. linux/amd64; 4. the first manifest in the list.
+	// This mode is the default. ImportModePreserveOriginal indicates that the original manifest
+	// will be preserved. For manifest lists, the manifest list and all its sub-manifests will be imported.
 	// +openshift:enable:FeatureGate=ImageStreamImportMode
 	// +optional
 	ImageStreamImportMode ImportModeType `json:"imageStreamImportMode,omitempty"`
@@ -112,7 +117,12 @@ type ImageStatus struct {
 	// imageStreamImportMode controls the import mode behaviour of imagestreams. It can be
 	// `Legacy` or `PreserveOriginal` depending on the payload type of the cluster or the
 	// `ImageStreamImportMode` setting in the spec. This value is set by the image registry
-	// operator.
+	// operator. ImportModeLegacy indicates that the legacy behaviour should be used.
+	// For manifest lists, the legacy behaviour will discard the manifest list and import a single
+	// sub-manifest. In this case, the platform is chosen in the following order of priority:
+	// 1. tag annotations; 2. control plane arch/os; 3. linux/amd64; 4. the first manifest in the list.
+	// This mode is the default. ImportModePreserveOriginal indicates that the original manifest
+	// will be preserved. For manifest lists, the manifest list and all its sub-manifests will be imported.
 	// +openshift:enable:FeatureGate=ImageStreamImportMode
 	// +optional
 	ImageStreamImportMode ImportModeType `json:"imageStreamImportMode,omitempty"`

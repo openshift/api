@@ -106,6 +106,7 @@ spec:
                   original manifest will be preserved. For manifest lists, the manifest
                   list and all its sub-manifests will be imported.'
                 enum:
+                - ""
                 - Legacy
                 - PreserveOriginal
                 type: string
@@ -179,6 +180,7 @@ spec:
                   indicates that the original manifest will be preserved. For manifest
                   lists, the manifest list and all its sub-manifests will be imported.'
                 enum:
+                - ""
                 - Legacy
                 - PreserveOriginal
                 type: string

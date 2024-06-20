@@ -39,7 +39,7 @@ type Image struct {
 
 // ImportModeType describes how to import an image manifest.
 // +enum
-// +kubebuilder:validation:Enum:=Legacy;PreserveOriginal
+// +kubebuilder:validation:Enum:="";Legacy;PreserveOriginal
 type ImportModeType string
 
 const (
@@ -96,7 +96,7 @@ type ImageSpec struct {
 	// will be preserved. For manifest lists, the manifest list and all its sub-manifests will be imported.
 	// +openshift:enable:FeatureGate=ImageStreamImportMode
 	// +optional
-	ImageStreamImportMode ImportModeType `json:"imageStreamImportMode,omitempty"`
+	ImageStreamImportMode ImportModeType `json:"imageStreamImportMode"`
 }
 
 type ImageStatus struct {

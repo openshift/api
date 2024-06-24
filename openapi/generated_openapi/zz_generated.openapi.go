@@ -651,10 +651,16 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/machine/v1.GCPFailureDomain":                                               schema_openshift_api_machine_v1_GCPFailureDomain(ref),
 		"github.com/openshift/api/machine/v1.LoadBalancerReference":                                          schema_openshift_api_machine_v1_LoadBalancerReference(ref),
 		"github.com/openshift/api/machine/v1.NutanixCategory":                                                schema_openshift_api_machine_v1_NutanixCategory(ref),
+		"github.com/openshift/api/machine/v1.NutanixDiskAddress":                                             schema_openshift_api_machine_v1_NutanixDiskAddress(ref),
 		"github.com/openshift/api/machine/v1.NutanixFailureDomainReference":                                  schema_openshift_api_machine_v1_NutanixFailureDomainReference(ref),
+		"github.com/openshift/api/machine/v1.NutanixGPU":                                                     schema_openshift_api_machine_v1_NutanixGPU(ref),
 		"github.com/openshift/api/machine/v1.NutanixMachineProviderConfig":                                   schema_openshift_api_machine_v1_NutanixMachineProviderConfig(ref),
 		"github.com/openshift/api/machine/v1.NutanixMachineProviderStatus":                                   schema_openshift_api_machine_v1_NutanixMachineProviderStatus(ref),
 		"github.com/openshift/api/machine/v1.NutanixResourceIdentifier":                                      schema_openshift_api_machine_v1_NutanixResourceIdentifier(ref),
+		"github.com/openshift/api/machine/v1.NutanixStorageContainerReference":                               schema_openshift_api_machine_v1_NutanixStorageContainerReference(ref),
+		"github.com/openshift/api/machine/v1.NutanixVMDisk":                                                  schema_openshift_api_machine_v1_NutanixVMDisk(ref),
+		"github.com/openshift/api/machine/v1.NutanixVMDiskDeviceProperties":                                  schema_openshift_api_machine_v1_NutanixVMDiskDeviceProperties(ref),
+		"github.com/openshift/api/machine/v1.NutanixVMStorageConfig":                                         schema_openshift_api_machine_v1_NutanixVMStorageConfig(ref),
 		"github.com/openshift/api/machine/v1.OpenShiftMachineV1Beta1MachineTemplate":                         schema_openshift_api_machine_v1_OpenShiftMachineV1Beta1MachineTemplate(ref),
 		"github.com/openshift/api/machine/v1.OpenStackFailureDomain":                                         schema_openshift_api_machine_v1_OpenStackFailureDomain(ref),
 		"github.com/openshift/api/machine/v1.PowerVSMachineProviderConfig":                                   schema_openshift_api_machine_v1_PowerVSMachineProviderConfig(ref),
@@ -32793,6 +32799,33 @@ func schema_openshift_api_machine_v1_NutanixCategory(ref common.ReferenceCallbac
 	}
 }
 
+func schema_openshift_api_machine_v1_NutanixDiskAddress(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NutanixDiskAddress specifies the disk address.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"adapterType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "adapterType is the adapter type of the disk address.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"deviceIndex": {
+						SchemaProps: spec.SchemaProps{
+							Description: "deviceIndex is the index of the disk address.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_machine_v1_NutanixFailureDomainReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -32810,6 +32843,55 @@ func schema_openshift_api_machine_v1_NutanixFailureDomainReference(ref common.Re
 					},
 				},
 				Required: []string{"name"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_machine_v1_NutanixGPU(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NutanixGPU holds the identity of a Nutanix GPU resource in the Prism Central",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type is the identifier type to use for this GPU resource.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"deviceID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "deviceID is the id of the GPU entity.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the GPU name",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"type"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "type",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"deviceID": "DeviceID",
+								"name":     "Name",
+							},
+						},
+					},
+				},
 			},
 		},
 	}
@@ -32938,6 +33020,47 @@ func schema_openshift_api_machine_v1_NutanixMachineProviderConfig(ref common.Ref
 							},
 						},
 					},
+					"gpus": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "gpus is a list of GPU devices to add to the machine's VM.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machine/v1.NutanixGPU"),
+									},
+								},
+							},
+						},
+					},
+					"dataDisks": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "dataDisks holds information of the data disks attached to the Machine's VM",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machine/v1.NutanixVMDisk"),
+									},
+								},
+							},
+						},
+					},
 					"userDataSecret": {
 						SchemaProps: spec.SchemaProps{
 							Description: "userDataSecret is a local reference to a secret that contains the UserData to apply to the VM",
@@ -32961,7 +33084,7 @@ func schema_openshift_api_machine_v1_NutanixMachineProviderConfig(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1.NutanixCategory", "github.com/openshift/api/machine/v1.NutanixFailureDomainReference", "github.com/openshift/api/machine/v1.NutanixResourceIdentifier", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/api/resource.Quantity", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"github.com/openshift/api/machine/v1.NutanixCategory", "github.com/openshift/api/machine/v1.NutanixFailureDomainReference", "github.com/openshift/api/machine/v1.NutanixGPU", "github.com/openshift/api/machine/v1.NutanixResourceIdentifier", "github.com/openshift/api/machine/v1.NutanixVMDisk", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/api/resource.Quantity", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -33061,6 +33184,163 @@ func schema_openshift_api_machine_v1_NutanixResourceIdentifier(ref common.Refere
 				},
 			},
 		},
+	}
+}
+
+func schema_openshift_api_machine_v1_NutanixStorageContainerReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NutanixStorageContainerReference references to a storage_container object.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type is the reference type for reference to the storage_container object.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"uuid": {
+						SchemaProps: spec.SchemaProps{
+							Description: "uuid is the UUID of the storage_container object. It cannot be empty if the type is UUID.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the name of the storage_container object. It cannot be empty if the type is Name.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"url": {
+						SchemaProps: spec.SchemaProps{
+							Description: "url is the source URL of the storage_container object. It cannot be empty if the type is URL.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"type"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "type",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"name": "Name",
+								"url":  "URL",
+								"uuid": "UUID",
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_machine_v1_NutanixVMDisk(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NutanixDataDisk specifies the VM data disk configuration parameters.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"diskSize": {
+						SchemaProps: spec.SchemaProps{
+							Description: "diskSize is size (in Quantity format) of the disk attached to the VM The minimum diskSize is 1Gi bytes",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+						},
+					},
+					"deviceProperties": {
+						SchemaProps: spec.SchemaProps{
+							Description: "deviceProperties are the properties of the disk device.",
+							Ref:         ref("github.com/openshift/api/machine/v1.NutanixVMDiskDeviceProperties"),
+						},
+					},
+					"storageConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "storageConfig are the storage configuration parameters of the VM disks.",
+							Ref:         ref("github.com/openshift/api/machine/v1.NutanixVMStorageConfig"),
+						},
+					},
+					"dataSource": {
+						SchemaProps: spec.SchemaProps{
+							Description: "dataSource refers to a data source image for the VM disk",
+							Ref:         ref("github.com/openshift/api/config/v1.NutanixResourceIdentifier"),
+						},
+					},
+				},
+				Required: []string{"diskSize"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.NutanixResourceIdentifier", "github.com/openshift/api/machine/v1.NutanixVMDiskDeviceProperties", "github.com/openshift/api/machine/v1.NutanixVMStorageConfig", "k8s.io/apimachinery/pkg/api/resource.Quantity"},
+	}
+}
+
+func schema_openshift_api_machine_v1_NutanixVMDiskDeviceProperties(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NutanixVMDiskDeviceProperties specifies the",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"deviceType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "deviceType is a disk type. The default is DISK.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"diskAddress": {
+						SchemaProps: spec.SchemaProps{
+							Description: "diskAddress is the address of disk to boot from.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/machine/v1.NutanixDiskAddress"),
+						},
+					},
+				},
+				Required: []string{"deviceType"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machine/v1.NutanixDiskAddress"},
+	}
+}
+
+func schema_openshift_api_machine_v1_NutanixVMStorageConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NutanixVMStorageConfig specifies the storage configuration parameters for VM disks.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"flashMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "flashMode specifies whether to pin the VM disk to the flash tier.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"storageContainer": {
+						SchemaProps: spec.SchemaProps{
+							Description: "storageContainer refers to the storage_container used by the VM disk.",
+							Ref:         ref("github.com/openshift/api/machine/v1.NutanixStorageContainerReference"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machine/v1.NutanixStorageContainerReference"},
 	}
 }
 

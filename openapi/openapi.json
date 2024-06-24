@@ -18904,6 +18904,38 @@
         }
       }
     },
+    "com.github.openshift.api.machine.v1.NutanixGPU": {
+      "description": "NutanixGPU holds the identity of a Nutanix GPU resource in the Prism Central",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "deviceID": {
+          "description": "deviceID is the GPU device ID with the integer value.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "description": "name is the GPU device name",
+          "type": "string"
+        },
+        "type": {
+          "description": "type is the identifier type of the GPU device. Valid values are Name and DeviceID.",
+          "type": "string",
+          "default": ""
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {
+            "deviceID": "DeviceID",
+            "name": "Name"
+          }
+        }
+      ]
+    },
     "com.github.openshift.api.machine.v1.NutanixMachineProviderConfig": {
       "description": "NutanixMachineProviderConfig is the Schema for the nutanixmachineproviderconfigs API Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
@@ -18948,9 +18980,27 @@
           "description": "credentialsSecret is a local reference to a secret that contains the credentials data to access Nutanix PC client",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
+        "dataDisks": {
+          "description": "dataDisks holds information of the data disks to attach to the Machine's VM",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machine.v1.NutanixVMDisk"
+          },
+          "x-kubernetes-list-type": "set"
+        },
         "failureDomain": {
           "description": "failureDomain refers to the name of the FailureDomain with which this Machine is associated. If this is configured, the Nutanix machine controller will use the prism_central endpoint and credentials defined in the referenced FailureDomain to communicate to the prism_central. It will also verify that the 'cluster' and subnets' configuration in the NutanixMachineProviderConfig is consistent with that in the referenced failureDomain.",
           "$ref": "#/definitions/com.github.openshift.api.machine.v1.NutanixFailureDomainReference"
+        },
+        "gpus": {
+          "description": "gpus is a list of GPU devices to attach to the machine's VM. The GPU devices should already exist in Prism Central and associated with one of the Prism Element's hosts and available for the VM to attach (in \"UNUSED\" status).",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machine.v1.NutanixGPU"
+          },
+          "x-kubernetes-list-type": "set"
         },
         "image": {
           "description": "image is to identify the rhcos image uploaded to the Prism Central (PC) The image identifier (uuid or name) can be obtained from the Prism Central console or using the prism_central API.",
@@ -19063,6 +19113,99 @@
           }
         }
       ]
+    },
+    "com.github.openshift.api.machine.v1.NutanixStorageResourceIdentifier": {
+      "description": "NutanixStorageResourceIdentifier holds the identity of a Nutanix storage resource (storage_container, etc.)",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "description": "type is the identifier type to use for this resource. The valid value is \"uuid\".",
+          "type": "string",
+          "default": ""
+        },
+        "uuid": {
+          "description": "uuid is the UUID of the storage resource in the PC.",
+          "type": "string"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {
+            "uuid": "UUID"
+          }
+        }
+      ]
+    },
+    "com.github.openshift.api.machine.v1.NutanixVMDisk": {
+      "description": "NutanixDataDisk specifies the VM data disk configuration parameters.",
+      "type": "object",
+      "required": [
+        "diskSize"
+      ],
+      "properties": {
+        "dataSource": {
+          "description": "dataSource refers to a data source image for the VM disk.",
+          "$ref": "#/definitions/com.github.openshift.api.machine.v1.NutanixResourceIdentifier"
+        },
+        "deviceProperties": {
+          "description": "deviceProperties are the properties of the disk device.",
+          "$ref": "#/definitions/com.github.openshift.api.machine.v1.NutanixVMDiskDeviceProperties"
+        },
+        "diskSize": {
+          "description": "diskSize is size (in Quantity format) of the disk attached to the VM. See https://pkg.go.dev/k8s.io/apimachinery/pkg/api/resource#Format for the Quantity format and example documentation. The minimum diskSize is 1GB.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        },
+        "storageConfig": {
+          "description": "storageConfig are the storage configuration parameters of the VM disks.",
+          "$ref": "#/definitions/com.github.openshift.api.machine.v1.NutanixVMStorageConfig"
+        }
+      }
+    },
+    "com.github.openshift.api.machine.v1.NutanixVMDiskDeviceProperties": {
+      "description": "NutanixVMDiskDeviceProperties specifies the disk device properties.",
+      "type": "object",
+      "required": [
+        "deviceType"
+      ],
+      "properties": {
+        "adapterType": {
+          "description": "adapterType is the adapter type of the disk address. If the deviceType is \"Disk\", the valid adapterType can be \"SCSI\", \"IDE\", \"PCI\", \"SATA\" or \"SPAPR\". If the deviceType is \"CDRom\", the valid adapterType can be \"IDE\" or \"SATA\".",
+          "type": "string"
+        },
+        "deviceIndex": {
+          "description": "deviceIndex is the index of the disk address. The valid values are non-negative integers, with the default value 0. For a Machine VM, the deviceIndex for the disks with the same deviceType.adapterType combination should start from 0 and increase consecutively afterwards. Note that for each Machine VM, the Disk.SCSI.0 and CDRom.IDE.0 are reserved to be used by the VM's system. So for dataDisks of Disk.SCSI and CDRom.IDE, the deviceIndex should start from 1.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "deviceType": {
+          "description": "deviceType specifies the disk device type. The valid values are \"Disk\" and \"CDRom\", and the default is \"Disk\".",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.machine.v1.NutanixVMStorageConfig": {
+      "description": "NutanixVMStorageConfig specifies the storage configuration parameters for VM disks.",
+      "type": "object",
+      "required": [
+        "diskMode"
+      ],
+      "properties": {
+        "diskMode": {
+          "description": "diskMode specifies the disk mode. The valid values are Standard and Flash, and the default is Standard.",
+          "type": "string",
+          "default": ""
+        },
+        "storageContainer": {
+          "description": "storageContainer refers to the storage_container used by the VM disk.",
+          "$ref": "#/definitions/com.github.openshift.api.machine.v1.NutanixStorageResourceIdentifier"
+        }
+      }
     },
     "com.github.openshift.api.machine.v1.OpenShiftMachineV1Beta1MachineTemplate": {
       "description": "OpenShiftMachineV1Beta1MachineTemplate is a template for the ControlPlaneMachineSet to create Machines from the v1beta1.machine.openshift.io API group.",

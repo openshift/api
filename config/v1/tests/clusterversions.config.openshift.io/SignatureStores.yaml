@@ -120,7 +120,7 @@ tests:
             additionalEnabledCapabilities:
             - baremetal
             - MachineAPI
-    - name: Should not be able to create a ClusterVersion with base capability None, and additional capabilities baremetal without MachineAPI
+    - name: Should be able to create a ClusterVersion with base capability None, and additional capabilities baremetal without MachineAPI
       initial: |
         apiVersion: config.openshift.io/v1
         kind: ClusterVersion
@@ -130,7 +130,15 @@ tests:
             baselineCapabilitySet: None
             additionalEnabledCapabilities:
             - baremetal
-      expectedError: the `baremetal` capability requires the `MachineAPI` capability, which is neither explicitly or implicitly enabled in this cluster, please enable the `MachineAPI` capability
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - baremetal
     - name: Should be able to create a ClusterVersion with base capability None, and additional capabilities marketplace and OperatorLifecycleManager
       initial: |
         apiVersion: config.openshift.io/v1
@@ -345,7 +353,7 @@ tests:
             additionalEnabledCapabilities:
             - baremetal
             - MachineAPI
-    - name: Should not be able to add the baremetal capability with a ClusterVersion with base capability None, and without MachineAPI
+    - name: Should be able to add the baremetal capability with a ClusterVersion with base capability None, and without MachineAPI
       initial: |
         apiVersion: config.openshift.io/v1
         kind: ClusterVersion
@@ -362,7 +370,15 @@ tests:
             baselineCapabilitySet: None
             additionalEnabledCapabilities:
             - baremetal
-      expectedError: the `baremetal` capability requires the `MachineAPI` capability, which is neither explicitly or implicitly enabled in this cluster, please enable the `MachineAPI` capability
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - baremetal
     - name: Should be able to add the marketplace capability with a ClusterVersion with base capability None, and implicitly enabled OperatorLifecycleManager
       initial: |
         apiVersion: config.openshift.io/v1

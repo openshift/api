@@ -7,6 +7,7 @@ metadata:
     capability.openshift.io/name: Ingress
     include.release.openshift.io/ibm-cloud-managed: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
+    release.openshift.io/feature-set: Default
   name: ingresscontrollers.operator.openshift.io
 spec:
   group: operator.openshift.io
@@ -308,6 +309,13 @@ spec:
                             required:
                             - type
                             type: object
+                            x-kubernetes-validations:
+                            - message: Network load balancer parameters are allowed
+                                only when load balancer type is NLB.
+                              rule: 'self.type == ''NLB'' ? true : !has(self.networkLoadBalancer)'
+                            - message: Classic load balancer parameters are allowed
+                                only when load balancer type is Classic.
+                              rule: 'self.type == ''Classic'' ? true : !has(self.classicLoadBalancer)'
                           gcp:
                             description: "gcp provides configuration settings that
                               are specific to GCP load balancers. \n If empty, defaults
@@ -394,6 +402,12 @@ spec:
                     - dnsManagementPolicy
                     - scope
                     type: object
+                    x-kubernetes-validations:
+                    - message: eipAllocations can't be provided when the scope is
+                        Internal.
+                      rule: '!has(self.scope) || self.scope != ''Internal'' || !has(self.providerParameters)
+                        || !has(self.providerParameters.aws) || !has(self.providerParameters.aws.networkLoadBalancer)
+                        || !has(self.providerParameters.aws.networkLoadBalancer.eipAllocations)'
                   nodePort:
                     description: nodePort holds parameters for the NodePortService
                       endpoint publishing strategy. Present only if type is NodePortService.
@@ -1951,6 +1965,13 @@ spec:
                             required:
                             - type
                             type: object
+                            x-kubernetes-validations:
+                            - message: Network load balancer parameters are allowed
+                                only when load balancer type is NLB.
+                              rule: 'self.type == ''NLB'' ? true : !has(self.networkLoadBalancer)'
+                            - message: Classic load balancer parameters are allowed
+                                only when load balancer type is Classic.
+                              rule: 'self.type == ''Classic'' ? true : !has(self.classicLoadBalancer)'
                           gcp:
                             description: "gcp provides configuration settings that
                               are specific to GCP load balancers. \n If empty, defaults
@@ -2037,6 +2058,12 @@ spec:
                     - dnsManagementPolicy
                     - scope
                     type: object
+                    x-kubernetes-validations:
+                    - message: eipAllocations can't be provided when the scope is
+                        Internal.
+                      rule: '!has(self.scope) || self.scope != ''Internal'' || !has(self.providerParameters)
+                        || !has(self.providerParameters.aws) || !has(self.providerParameters.aws.networkLoadBalancer)
+                        || !has(self.providerParameters.aws.networkLoadBalancer.eipAllocations)'
                   nodePort:
                     description: nodePort holds parameters for the NodePortService
                       endpoint publishing strategy. Present only if type is NodePortService.

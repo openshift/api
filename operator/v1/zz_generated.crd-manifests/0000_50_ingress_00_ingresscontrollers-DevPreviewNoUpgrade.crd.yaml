@@ -3,11 +3,11 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.openshift.io: https://github.com/openshift/api/pull/616
-    api.openshift.io/filename-cvo-runlevel: "0000_50"
-    api.openshift.io/filename-operator: ingress
-    api.openshift.io/filename-ordering: "00"
+    api.openshift.io/merged-by-featuregates: "true"
     capability.openshift.io/name: Ingress
-    feature-gate.release.openshift.io/: "true"
+    include.release.openshift.io/ibm-cloud-managed: "true"
+    include.release.openshift.io/self-managed-high-availability: "true"
+    release.openshift.io/feature-set: DevPreviewNoUpgrade
   name: ingresscontrollers.operator.openshift.io
 spec:
   group: operator.openshift.io
@@ -291,6 +291,55 @@ spec:
                                 description: networkLoadBalancerParameters holds configuration
                                   parameters for an AWS network load balancer. Present
                                   only if type is NLB.
+                                properties:
+                                  eipAllocations:
+                                    description: eipAllocations assign Elastic IP
+                                      addresses to the Network Load Balancer. The
+                                      number of Allocation IDs must match the number
+                                      of subnets that are used for the load balancer.
+                                      See https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html
+                                      for general information about configuration,
+                                      characteristics, and limitations of Elastic
+                                      IP addresses.
+                                    items:
+                                      description: 'EIPAllocation is a reference to
+                                        available eip allocations in AWS environment.
+                                        The pattern for an EIP allocation ID is: -
+                                        Starts with eipalloc- - Followed by an alphanumeric
+                                        string of exactly 17 characters Explanation
+                                        of the regex `^eipalloc-[0-9a-fA-F]{17}$`
+                                        for validating value of the EIPAllocation:
+                                        - ^eipalloc- ensures the string starts with
+                                        "eipalloc-". - [0-9a-fA-F]{17} matches exactly
+                                        17 hexadecimal characters (0-9, a-f, A-F).
+                                        - $ ensures the string ends after the 17 hexadecimal
+                                        characters. Example of Valid and Invalid values:
+                                        - eipalloc-1234567890abcdef1 is valid. - eipalloc-1234567890abcde
+                                        is not valid (too short). - eipalloc-1234567890abcdefg
+                                        is not valid (contains a non-hex character
+                                        ''g''). Max length is calculated as follows:
+                                        - eipalloc- = 9 chars and 17 hexadecimal chars
+                                        after `-` - So, total is 17 + 9 = 26 chars
+                                        required for value of an EIPAllocation.'
+                                      maxLength: 26
+                                      minLength: 26
+                                      type: string
+                                      x-kubernetes-validations:
+                                      - message: eipAllocations cannot contain a comma
+                                        rule: '!self.contains('','')'
+                                      - message: eipAllocations should start with
+                                          'eipalloc-'
+                                        rule: self.startsWith('eipalloc-')
+                                      - message: eipAllocations must be eipalloc-
+                                          followed by exactly 17 hexadecimal characters
+                                          (0-9, a-f, A-F)
+                                        rule: self.split("-", 2)[1].matches('[0-9a-fA-F]{17}$')
+                                    maxItems: 10
+                                    type: array
+                                    x-kubernetes-list-type: atomic
+                                    x-kubernetes-validations:
+                                    - message: eipAllocations cannot contain duplicates
+                                      rule: self.all(x, self.exists_one(y, x == y))
                                 type: object
                               type:
                                 description: "type is the type of AWS load balancer
@@ -955,6 +1004,13 @@ spec:
                           syslog:
                             description: syslog holds parameters for a syslog endpoint.  Present
                               only if type is Syslog.
+                            oneOf:
+                            - properties:
+                                address:
+                                  format: ipv4
+                            - properties:
+                                address:
+                                  format: ipv6
                             properties:
                               address:
                                 description: address is the IP address of the syslog
@@ -1539,6 +1595,17 @@ spec:
                     type: string
                 type: object
               tuningOptions:
+                anyOf:
+                - properties:
+                    maxConnections:
+                      enum:
+                      - -1
+                      - 0
+                - properties:
+                    maxConnections:
+                      format: int32
+                      maximum: 2000000
+                      minimum: 2000
                 description: "tuningOptions defines parameters for adjusting the performance
                   of ingress controller pods. All fields are optional and will use
                   their respective defaults if not set. See specific tuningOptions
@@ -1929,6 +1996,55 @@ spec:
                                 description: networkLoadBalancerParameters holds configuration
                                   parameters for an AWS network load balancer. Present
                                   only if type is NLB.
+                                properties:
+                                  eipAllocations:
+                                    description: eipAllocations assign Elastic IP
+                                      addresses to the Network Load Balancer. The
+                                      number of Allocation IDs must match the number
+                                      of subnets that are used for the load balancer.
+                                      See https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html
+                                      for general information about configuration,
+                                      characteristics, and limitations of Elastic
+                                      IP addresses.
+                                    items:
+                                      description: 'EIPAllocation is a reference to
+                                        available eip allocations in AWS environment.
+                                        The pattern for an EIP allocation ID is: -
+                                        Starts with eipalloc- - Followed by an alphanumeric
+                                        string of exactly 17 characters Explanation
+                                        of the regex `^eipalloc-[0-9a-fA-F]{17}$`
+                                        for validating value of the EIPAllocation:
+                                        - ^eipalloc- ensures the string starts with
+                                        "eipalloc-". - [0-9a-fA-F]{17} matches exactly
+                                        17 hexadecimal characters (0-9, a-f, A-F).
+                                        - $ ensures the string ends after the 17 hexadecimal
+                                        characters. Example of Valid and Invalid values:
+                                        - eipalloc-1234567890abcdef1 is valid. - eipalloc-1234567890abcde
+                                        is not valid (too short). - eipalloc-1234567890abcdefg
+                                        is not valid (contains a non-hex character
+                                        ''g''). Max length is calculated as follows:
+                                        - eipalloc- = 9 chars and 17 hexadecimal chars
+                                        after `-` - So, total is 17 + 9 = 26 chars
+                                        required for value of an EIPAllocation.'
+                                      maxLength: 26
+                                      minLength: 26
+                                      type: string
+                                      x-kubernetes-validations:
+                                      - message: eipAllocations cannot contain a comma
+                                        rule: '!self.contains('','')'
+                                      - message: eipAllocations should start with
+                                          'eipalloc-'
+                                        rule: self.startsWith('eipalloc-')
+                                      - message: eipAllocations must be eipalloc-
+                                          followed by exactly 17 hexadecimal characters
+                                          (0-9, a-f, A-F)
+                                        rule: self.split("-", 2)[1].matches('[0-9a-fA-F]{17}$')
+                                    maxItems: 10
+                                    type: array
+                                    x-kubernetes-list-type: atomic
+                                    x-kubernetes-validations:
+                                    - message: eipAllocations cannot contain duplicates
+                                      rule: self.all(x, self.exists_one(y, x == y))
                                 type: object
                               type:
                                 description: "type is the type of AWS load balancer
@@ -2273,4 +2389,8 @@ spec:
     served: true
     storage: true
     subresources:
+      scale:
+        labelSelectorPath: .status.selector
+        specReplicasPath: .spec.replicas
+        statusReplicasPath: .status.availableReplicas
       status: {}

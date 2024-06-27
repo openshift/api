@@ -52,6 +52,17 @@ tests:
         spec:
           featureSet: ""
       expectedError: "TechPreviewNoUpgrade may not be changed"
+    - name: TechPreview to Removed
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: FeatureGate
+        spec:
+          featureSet: TechPreviewNoUpgrade
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: FeatureGate
+        spec: {}
+      expectedError: ".spec.featureSet cannot be removed"
     - name: TechPreview to Custom
       initial: |
         apiVersion: config.openshift.io/v1

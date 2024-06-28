@@ -7,6 +7,7 @@ metadata:
     include.release.openshift.io/ibm-cloud-managed: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
     release.openshift.io/bootstrap-required: "true"
+    release.openshift.io/feature-set: DevPreviewNoUpgrade
   name: securitycontextconstraints.security.openshift.io
 spec:
   group: security.openshift.io
@@ -330,6 +331,19 @@ spec:
                   groups is used in the SecurityContext.
                 type: string
             type: object
+          userNamespaceLevel:
+            description: userNamespaceLevel determines if the policy allows host users
+              in containers. Valid values are "AllowHostLevel", "RequirePodLevel",
+              and omitted. When "AllowHostLevel" is set, a pod author may set `hostUsers`
+              to either `true` or `false`. When "RequirePodLevel" is set, a pod author
+              must set `hostUsers` to `false`. When omitted, this means no opinion
+              and the platform is left to choose a reasonable default, which is subject
+              to change over time. The current default is "AllowHostLevel".
+            enum:
+            - AllowHostLevel
+            - RequirePodLevel
+            - ""
+            type: string
           users:
             description: The users who have permissions to use this security context
               constraints

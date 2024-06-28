@@ -275,6 +275,18 @@ message SecurityContextConstraints {
   // AllowHostIPC determines if the policy allows host ipc in the containers.
   optional bool allowHostIPC = 12;
 
+  // userNamespaceLevel determines if the policy allows host users in containers.
+  // Valid values are "AllowHostLevel", "RequirePodLevel", and omitted.
+  // When "AllowHostLevel" is set, a pod author may set `hostUsers` to either `true` or `false`.
+  // When "RequirePodLevel" is set, a pod author must set `hostUsers` to `false`.
+  // When omitted, the default value is "AllowHostLevel".
+  // +openshift:enable:FeatureGate=UserNamespacesPodSecurityStandards
+  // +kubebuilder:validation:Enum="AllowHostLevel";"RequirePodLevel"
+  // +kubebuilder:default:="AllowHostLevel"
+  // +default="AllowHostLevel"
+  // +optional
+  optional string userNamespaceLevel = 26;
+
   // DefaultAllowPrivilegeEscalation controls the default setting for whether a
   // process can gain more privileges than its parent process.
   // +optional

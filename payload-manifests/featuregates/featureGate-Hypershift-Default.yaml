@@ -158,6 +158,12 @@
                         "name": "UpgradeStatus"
                     },
                     {
+                        "name": "UserNamespacesPodSecurityStandards"
+                    },
+                    {
+                        "name": "UserNamespacesSupport"
+                    },
+                    {
                         "name": "VSphereMultiVCenters"
                     },
                     {

@@ -589,4 +589,18 @@ var (
 						productScope(ocpSpecific).
 						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 						mustRegister()
+
+	FeatureGateUserNamespacesSupport = newFeatureGate("UserNamespacesSupport").
+						reportProblemsToJiraComponent("Node").
+						contactPerson("haircommander").
+						productScope(kubernetes).
+						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						mustRegister()
+
+	FeatureGateUserNamespacesPodSecurityStandards = newFeatureGate("UserNamespacesPodSecurityStandards").
+							reportProblemsToJiraComponent("Node").
+							contactPerson("haircommander").
+							productScope(kubernetes).
+							enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+							mustRegister()
 )

@@ -60052,6 +60052,14 @@ func schema_openshift_api_security_v1_SecurityContextConstraints(ref common.Refe
 							Format:      "",
 						},
 					},
+					"allowHostUsers": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AllowHostUsers determines if the policy allows host users in the containers.",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 					"defaultAllowPrivilegeEscalation": {
 						SchemaProps: spec.SchemaProps{
 							Description: "DefaultAllowPrivilegeEscalation controls the default setting for whether a process can gain more privileges than its parent process.",
@@ -60178,7 +60186,7 @@ func schema_openshift_api_security_v1_SecurityContextConstraints(ref common.Refe
 						},
 					},
 				},
-				Required: []string{"priority", "allowPrivilegedContainer", "defaultAddCapabilities", "requiredDropCapabilities", "allowedCapabilities", "allowHostDirVolumePlugin", "volumes", "allowHostNetwork", "allowHostPorts", "allowHostPID", "allowHostIPC", "readOnlyRootFilesystem"},
+				Required: []string{"priority", "allowPrivilegedContainer", "defaultAddCapabilities", "requiredDropCapabilities", "allowedCapabilities", "allowHostDirVolumePlugin", "volumes", "allowHostNetwork", "allowHostPorts", "allowHostPID", "allowHostIPC", "allowHostUsers", "readOnlyRootFilesystem"},
 			},
 		},
 		Dependencies: []string{

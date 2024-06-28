@@ -93,6 +93,17 @@ type SecurityContextConstraints struct {
 	AllowHostPID bool `json:"allowHostPID" protobuf:"varint,11,opt,name=allowHostPID"`
 	// AllowHostIPC determines if the policy allows host ipc in the containers.
 	AllowHostIPC bool `json:"allowHostIPC" protobuf:"varint,12,opt,name=allowHostIPC"`
+	// userNamespaceLevel determines if the policy allows host users in containers.
+	// Valid values are "AllowHostLevel", "RequirePodLevel", and omitted.
+	// When "AllowHostLevel" is set, a pod author may set `hostUsers` to either `true` or `false`.
+	// When "RequirePodLevel" is set, a pod author must set `hostUsers` to `false`.
+	// When omitted, the default value is "AllowHostLevel".
+	// +openshift:enable:FeatureGate=UserNamespacesPodSecurityStandards
+	// +kubebuilder:validation:Enum="AllowHostLevel";"RequirePodLevel"
+	// +kubebuilder:default:="AllowHostLevel"
+	// +default="AllowHostLevel"
+	// +optional
+	UserNamespaceLevel NamespaceLevelType `json:"userNamespaceLevel,omitempty" protobuf:"bytes,26,opt,name=userNamespaceLevel"`
 	// DefaultAllowPrivilegeEscalation controls the default setting for whether a
 	// process can gain more privileges than its parent process.
 	// +optional
@@ -253,6 +264,9 @@ type IDRange struct {
 	Max int64 `json:"max,omitempty" protobuf:"varint,2,opt,name=max"`
 }
 
+// NamespaceLevelType shows the allowable values for the UserNamespaceLevel field.
+type NamespaceLevelType string
+
 // SELinuxContextStrategyType denotes strategy types for generating SELinux options for a
 // SecurityContext
 type SELinuxContextStrategyType string
@@ -270,6 +284,11 @@ type SupplementalGroupsStrategyType string
 type FSGroupStrategyType string
 
 const (
+	// NamespaceLevelAllowHost allows a pod to set `hostUsers` field to either `true` or `false`
+	NamespaceLevelAllowHost NamespaceLevelType = "AllowHostLevel"
+	// NamespaceLevelRequirePod requires the `hostUsers` field be `false` in a pod.
+	NamespaceLevelRequirePod NamespaceLevelType = "RequirePodLevel"
+
 	// container must have SELinux labels of X applied.
 	SELinuxStrategyMustRunAs SELinuxContextStrategyType = "MustRunAs"
 	// container may make requests for any SELinux context labels.

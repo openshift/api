@@ -35588,6 +35588,11 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.security.v1.SupplementalGroupsStrategyOptions"
         },
+        "userNamespaceLevel": {
+          "description": "userNamespaceLevel determines if the policy allows host users in containers. Valid values are \"AllowHostLevel\", \"RequirePodLevel\", and omitted. When \"AllowHostLevel\" is set, a pod author may set `hostUsers` to either `true` or `false`. When \"RequirePodLevel\" is set, a pod author must set `hostUsers` to `false`. When omitted, the default value is \"AllowHostLevel\".",
+          "type": "string",
+          "default": "AllowHostLevel"
+        },
         "users": {
           "description": "The users who have permissions to use this security context constraints",
           "type": "array",

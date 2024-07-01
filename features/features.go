@@ -512,7 +512,7 @@ var (
 						reportProblemsToJiraComponent("Installer").
 						contactPerson("mjturek").
 						productScope(ocpSpecific).
-						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 						mustRegister()
 
 	FeatureGateClusterAPIInstallVSphere = newFeatureGate("ClusterAPIInstallVSphere").

@@ -35,9 +35,6 @@
                         "name": "ClusterAPIInstallIBMCloud"
                     },
                     {
-                        "name": "ClusterAPIInstallPowerVS"
-                    },
-                    {
                         "name": "DNSNameResolver"
                     },
                     {
@@ -179,6 +176,9 @@
                     },
                     {
                         "name": "ClusterAPIInstallOpenStack"
+                    },
+                    {
+                        "name": "ClusterAPIInstallPowerVS"
                     },
                     {
                         "name": "ClusterAPIInstallVSphere"

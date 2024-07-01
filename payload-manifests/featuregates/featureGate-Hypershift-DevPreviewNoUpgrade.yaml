@@ -171,6 +171,9 @@
                         "name": "NetworkLiveMigration"
                     },
                     {
+                        "name": "NetworkSegmentation"
+                    },
+                    {
                         "name": "NewOLM"
                     },
                     {

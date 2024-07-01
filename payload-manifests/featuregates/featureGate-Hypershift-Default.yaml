@@ -104,6 +104,9 @@
                         "name": "MixedCPUsAllocation"
                     },
                     {
+                        "name": "NetworkSegmentation"
+                    },
+                    {
                         "name": "NewOLM"
                     },
                     {

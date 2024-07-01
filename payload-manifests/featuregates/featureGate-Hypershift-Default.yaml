@@ -68,6 +68,9 @@
                         "name": "ImagePolicy"
                     },
                     {
+                        "name": "IngressControllerLBSubnetsAWS"
+                    },
+                    {
                         "name": "InsightsConfig"
                     },
                     {

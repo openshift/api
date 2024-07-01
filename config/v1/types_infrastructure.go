@@ -1473,7 +1473,7 @@ type VSpherePlatformStatus struct {
 // override existing defaults of IBM Cloud Services.
 type IBMCloudServiceEndpoint struct {
 	// name is the name of the IBM Cloud service.
-	// Possible values are: CIS, COS, COSConfig, DNSServices, GlobalCatalog, GlobalSearch, GlobalTagging, HyperProtect, IAM, KeyProtect, ResourceController, ResourceManager, or VPC.
+	// Possible values are: CIS, COS, COSConfig, DNSServices, GlobalCatalog, GlobalSearch, GlobalTagging, HyperProtect, IAM, KeyProtect, Power, ResourceController, ResourceManager, or VPC.
 	// For example, the IBM Cloud Private IAM service could be configured with the
 	// service `name` of `IAM` and `url` of `https://private.iam.cloud.ibm.com`
 	// Whereas the IBM Cloud Private VPC service for US South (Dallas) could be configured
@@ -1491,6 +1491,9 @@ type IBMCloudServiceEndpoint struct {
 	// +kubebuilder:validation:XValidation:rule="isURL(self)",message="url must be a valid absolute URL"
 	URL string `json:"url"`
 }
+
+// PowerVSServiceEndpoint is an IBMCloudServiceEndpoint used by Power VS
+type PowerVSServiceEndpoint IBMCloudServiceEndpoint
 
 // IBMCloudPlatformSpec holds the desired state of the IBMCloud infrastructure provider.
 // This only includes fields that can be modified in the cluster.
@@ -1556,30 +1559,6 @@ type EquinixMetalPlatformStatus struct {
 	// ingressIP is an external IP which routes to the default ingress controller.
 	// The IP is a suitable target of a wildcard DNS record used to resolve default route host names.
 	IngressIP string `json:"ingressIP,omitempty"`
-}
-
-// PowervsServiceEndpoint stores the configuration of a custom url to
-// override existing defaults of PowerVS Services.
-type PowerVSServiceEndpoint struct {
-	// name is the name of the Power VS service.
-	// Few of the services are
-	// IAM - https://cloud.ibm.com/apidocs/iam-identity-token-api
-	// ResourceController - https://cloud.ibm.com/apidocs/resource-controller/resource-controller
-	// Power Cloud - https://cloud.ibm.com/apidocs/power-cloud
-	//
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern=`^[a-z0-9-]+$`
-	Name string `json:"name"`
-
-	// url is fully qualified URI with scheme https, that overrides the default generated
-	// endpoint for a client.
-	// This must be provided and cannot be empty.
-	//
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Type=string
-	// +kubebuilder:validation:Format=uri
-	// +kubebuilder:validation:Pattern=`^https://`
-	URL string `json:"url"`
 }
 
 // PowerVSPlatformSpec holds the desired state of the IBM Power Systems Virtual Servers infrastructure provider.

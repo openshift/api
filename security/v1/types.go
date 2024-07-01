@@ -93,6 +93,9 @@ type SecurityContextConstraints struct {
 	AllowHostPID bool `json:"allowHostPID" protobuf:"varint,11,opt,name=allowHostPID"`
 	// AllowHostIPC determines if the policy allows host ipc in the containers.
 	AllowHostIPC bool `json:"allowHostIPC" protobuf:"varint,12,opt,name=allowHostIPC"`
+	// AllowHostUsers determines if the policy allows host users in the containers.
+	// +openshift:enable:FeatureGate=UserNamespacesSupport
+	AllowHostUsers bool `json:"allowHostUsers" protobuf:"varint,26,opt,name=allowHostUsers"`
 	// DefaultAllowPrivilegeEscalation controls the default setting for whether a
 	// process can gain more privileges than its parent process.
 	// +optional

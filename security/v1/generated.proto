@@ -275,6 +275,10 @@ message SecurityContextConstraints {
   // AllowHostIPC determines if the policy allows host ipc in the containers.
   optional bool allowHostIPC = 12;
 
+  // AllowHostUsers determines if the policy allows host users in the containers.
+  // +openshift:enable:FeatureGate=UserNamespacesSupport
+  optional bool allowHostUsers = 26;
+
   // DefaultAllowPrivilegeEscalation controls the default setting for whether a
   // process can gain more privileges than its parent process.
   // +optional

@@ -35106,6 +35106,7 @@
         "allowHostPorts",
         "allowHostPID",
         "allowHostIPC",
+        "allowHostUsers",
         "readOnlyRootFilesystem"
       ],
       "properties": {
@@ -35131,6 +35132,11 @@
         },
         "allowHostPorts": {
           "description": "AllowHostPorts determines if the policy allows host ports in the containers.",
+          "type": "boolean",
+          "default": false
+        },
+        "allowHostUsers": {
+          "description": "AllowHostUsers determines if the policy allows host users in the containers.",
           "type": "boolean",
           "default": false
         },

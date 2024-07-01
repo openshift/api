@@ -74,7 +74,7 @@ insightsdatagathers.config.openshift.io:
   Capability: ""
   Category: ""
   FeatureGates:
-  - InsightsConfig
+  - InsightsConfigAPI
   FilenameOperatorName: config-operator
   FilenameOperatorOrdering: "01"
   FilenameRunLevel: "0000_10"
@@ -87,6 +87,6 @@ insightsdatagathers.config.openshift.io:
   Scope: Cluster
   ShortNames: null
   TopLevelFeatureGates:
-  - InsightsConfig
+  - InsightsConfigAPI
   Version: v1alpha1
 

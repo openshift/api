@@ -20,9 +20,6 @@
                         "name": "CSIDriverSharedResource"
                     },
                     {
-                        "name": "ChunkSizeMiB"
-                    },
-                    {
                         "name": "ClusterAPIInstall"
                     },
                     {
@@ -185,6 +182,9 @@
                     },
                     {
                         "name": "BuildCSIVolumes"
+                    },
+                    {
+                        "name": "ChunkSizeMiB"
                     },
                     {
                         "name": "CloudDualStackNodeIPs"

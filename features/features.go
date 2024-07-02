@@ -527,7 +527,7 @@ var (
 				reportProblemsToJiraComponent("Image Registry").
 				contactPerson("flavianmissi").
 				productScope(ocpSpecific).
-				enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+				enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 				mustRegister()
 
 	FeatureGateMachineAPIMigration = newFeatureGate("MachineAPIMigration").

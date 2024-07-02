@@ -37,6 +37,23 @@ type Image struct {
 	Status ImageStatus `json:"status"`
 }
 
+// ImportModeType describes how to import an image manifest.
+// +enum
+// +kubebuilder:validation:Enum:="";Legacy;PreserveOriginal
+type ImportModeType string
+
+const (
+	// ImportModeLegacy indicates that the legacy behaviour should be used.
+	// For manifest lists, the legacy behaviour will discard the manifest list and import a single
+	// sub-manifest. In this case, the platform is chosen in the following order of priority:
+	// 1. tag annotations; 2. control plane arch/os; 3. linux/amd64; 4. the first manifest in the list.
+	// This mode is the default.
+	ImportModeLegacy ImportModeType = "Legacy"
+	// ImportModePreserveOriginal indicates that the original manifest will be preserved.
+	// For manifest lists, the manifest list and all its sub-manifests will be imported.
+	ImportModePreserveOriginal ImportModeType = "PreserveOriginal"
+)
+
 type ImageSpec struct {
 	// allowedRegistriesForImport limits the container image registries that normal users may import
 	// images from. Set this list to the registries that you trust to contain valid Docker
@@ -67,6 +84,19 @@ type ImageSpec struct {
 	// internal cluster registry.
 	// +optional
 	RegistrySources RegistrySources `json:"registrySources"`
+
+	// imageStreamImportMode controls the import mode behaviour of imagestreams.
+	// It can be set to `Legacy` or `PreserveOriginal`. If this value is specified,
+	// this setting is applied to all newly created imagestreams which do not have the
+	// value set. ImportModeLegacy indicates that the legacy behaviour should be used.
+	// For manifest lists, the legacy behaviour will discard the manifest list and import a single
+	// sub-manifest. In this case, the platform is chosen in the following order of priority:
+	// 1. tag annotations; 2. control plane arch/os; 3. linux/amd64; 4. the first manifest in the list.
+	// This mode is the default. ImportModePreserveOriginal indicates that the original manifest
+	// will be preserved. For manifest lists, the manifest list and all its sub-manifests will be imported.
+	// +openshift:enable:FeatureGate=ImageStreamImportMode
+	// +optional
+	ImageStreamImportMode ImportModeType `json:"imageStreamImportMode"`
 }
 
 type ImageStatus struct {
@@ -83,6 +113,19 @@ type ImageStatus struct {
 	// field in ImageStreams. The value must be in "hostname[:port]" format.
 	// +optional
 	ExternalRegistryHostnames []string `json:"externalRegistryHostnames,omitempty"`
+
+	// imageStreamImportMode controls the import mode behaviour of imagestreams. It can be
+	// `Legacy` or `PreserveOriginal` depending on the payload type of the cluster or the
+	// `ImageStreamImportMode` setting in the spec. This value is set by the image registry
+	// operator. ImportModeLegacy indicates that the legacy behaviour should be used.
+	// For manifest lists, the legacy behaviour will discard the manifest list and import a single
+	// sub-manifest. In this case, the platform is chosen in the following order of priority:
+	// 1. tag annotations; 2. control plane arch/os; 3. linux/amd64; 4. the first manifest in the list.
+	// This mode is the default. ImportModePreserveOriginal indicates that the original manifest
+	// will be preserved. For manifest lists, the manifest list and all its sub-manifests will be imported.
+	// +openshift:enable:FeatureGate=ImageStreamImportMode
+	// +optional
+	ImageStreamImportMode ImportModeType `json:"imageStreamImportMode,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

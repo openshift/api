@@ -6,6 +6,7 @@ import (
 
 	buildv1 "github.com/openshift/api/build/v1"
 	configv1 "github.com/openshift/api/config/v1"
+	imagev1 "github.com/openshift/api/image/v1"
 )
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -142,6 +143,13 @@ type ImagePolicyConfig struct {
 	// additionalTrustedCA is a path to a pem bundle file containing additional CAs that
 	// should be trusted during imagestream import.
 	AdditionalTrustedCA string `json:"additionalTrustedCA"`
+
+	// imageStreamImportMode provides the import mode value for  imagestreams.
+	// It can be `Legacy` or `PreserveOriginal`. If this value is specified,
+	// this setting is applied to all newly created imagestreams which do not have the
+	// value set.
+	// +optional
+	ImageStreamImportMode imagev1.ImportModeType `json:"imageStreamImportMode,omitempty"`
 }
 
 // AllowedRegistries represents a list of registries allowed for the image import.

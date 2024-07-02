@@ -98,6 +98,9 @@
                         "name": "ManagedBootImages"
                     },
                     {
+                        "name": "ManagedBootImagesAWS"
+                    },
+                    {
                         "name": "MaxUnavailableStatefulSet"
                     },
                     {

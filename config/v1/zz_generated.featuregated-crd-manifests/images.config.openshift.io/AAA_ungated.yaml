@@ -134,6 +134,11 @@ spec:
                       type: string
                     type: array
                 type: object
+                x-kubernetes-validations:
+                - message: Only one of BlockedRegistries or AllowedRegistries may
+                    be set
+                  rule: 'self.blockedRegistries.size() > 0 ? self.allowedRegistries.size()
+                    == 0 : true'
             type: object
           status:
             description: status holds observed values from the cluster. They may not

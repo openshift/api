@@ -2093,6 +2093,14 @@ func (NodeSpec) SwaggerDoc() map[string]string {
 	return map_NodeSpec
 }
 
+var map_NodeStatus = map[string]string{
+	"conditions": "conditions represent the observations of the current state.",
+}
+
+func (NodeStatus) SwaggerDoc() map[string]string {
+	return map_NodeStatus
+}
+
 var map_BasicAuthIdentityProvider = map[string]string{
 	"": "BasicAuthPasswordIdentityProvider provides identities for users authenticating using HTTP basic auth credentials",
 }

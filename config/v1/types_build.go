@@ -115,6 +115,7 @@ type BuildOverrides struct {
 	// true enables force pull for all builds,
 	// independently of what each build specifies itself
 	// +optional
+	// +nullable
 	ForcePull *bool `json:"forcePull,omitempty"`
 }
 

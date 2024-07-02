@@ -541,4 +541,11 @@ var (
 							productScope(ocpSpecific).
 							enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 							mustRegister()
+
+	FeatureGateClusterMonitoringConfig = newFeatureGate("ClusterMonitoringConfig").
+						reportProblemsToJiraComponent("Monitoring").
+						contactPerson("marioferh").
+						productScope(ocpSpecific).
+						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						mustRegister()
 )

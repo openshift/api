@@ -231,6 +231,20 @@ var (
 					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
 
+	FeatureGateAdditionalRoutingCapabilities = newFeatureGate("AdditionalRoutingCapabilities").
+							reportProblemsToJiraComponent("Networking/cluster-network-operator").
+							contactPerson("jcaamano").
+							productScope(ocpSpecific).
+							enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+							mustRegister()
+
+	FeatureGateRouteAdvertisements = newFeatureGate("RouteAdvertisements").
+					reportProblemsToJiraComponent("Networking/ovn-kubernetes").
+					contactPerson("jcaamano").
+					productScope(ocpSpecific).
+					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+					mustRegister()
+
 	FeatureGateNetworkLiveMigration = newFeatureGate("NetworkLiveMigration").
 					reportProblemsToJiraComponent("Networking/ovn-kubernetes").
 					contactPerson("pliu").

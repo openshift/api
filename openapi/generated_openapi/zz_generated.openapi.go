@@ -863,6 +863,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.AccessLogging":                                                 schema_openshift_api_operator_v1_AccessLogging(ref),
 		"github.com/openshift/api/operator/v1.AddPage":                                                       schema_openshift_api_operator_v1_AddPage(ref),
 		"github.com/openshift/api/operator/v1.AdditionalNetworkDefinition":                                   schema_openshift_api_operator_v1_AdditionalNetworkDefinition(ref),
+		"github.com/openshift/api/operator/v1.AdditionalRoutingCapabilities":                                 schema_openshift_api_operator_v1_AdditionalRoutingCapabilities(ref),
 		"github.com/openshift/api/operator/v1.Authentication":                                                schema_openshift_api_operator_v1_Authentication(ref),
 		"github.com/openshift/api/operator/v1.AuthenticationList":                                            schema_openshift_api_operator_v1_AuthenticationList(ref),
 		"github.com/openshift/api/operator/v1.AuthenticationSpec":                                            schema_openshift_api_operator_v1_AuthenticationSpec(ref),
@@ -44098,6 +44099,40 @@ func schema_openshift_api_operator_v1_AdditionalNetworkDefinition(ref common.Ref
 	}
 }
 
+func schema_openshift_api_operator_v1_AdditionalRoutingCapabilities(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "AdditionalRoutingCapabilities describes components and relevant configuration providing advanced routing capabilities.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"providers": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "providers is a set of enabled components that provide additional routing capabilities. Entries on this list must be unique. The  only valid value is currrently \"FRR\" which provides FRR routing capabilities through the deployment of FRR.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"providers"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_operator_v1_Authentication(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -51093,12 +51128,18 @@ func schema_openshift_api_operator_v1_NetworkSpec(ref common.ReferenceCallback) 
 							Ref:         ref("github.com/openshift/api/operator/v1.NetworkMigration"),
 						},
 					},
+					"additionalRoutingCapabilities": {
+						SchemaProps: spec.SchemaProps{
+							Description: "additionalRoutingCapabilities describes components and relevant configuration providing additional routing capabilities. When set, it enables such components and the usage of the routing capabilities they provide for the machine network. Upstream operators, like MetalLB operator, requiring these capabilities may rely on, or automatically set this attribute. Network plugins may leverage advanced routing capabilities acquired through the enablement of these components but may require specific configuration on their side to do so; refer to their respective documentation and configuration options.",
+							Ref:         ref("github.com/openshift/api/operator/v1.AdditionalRoutingCapabilities"),
+						},
+					},
 				},
 				Required: []string{"managementState", "clusterNetwork", "serviceNetwork", "defaultNetwork"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.AdditionalNetworkDefinition", "github.com/openshift/api/operator/v1.ClusterNetworkEntry", "github.com/openshift/api/operator/v1.DefaultNetworkDefinition", "github.com/openshift/api/operator/v1.ExportNetworkFlows", "github.com/openshift/api/operator/v1.NetworkMigration", "github.com/openshift/api/operator/v1.ProxyConfig", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
+			"github.com/openshift/api/operator/v1.AdditionalNetworkDefinition", "github.com/openshift/api/operator/v1.AdditionalRoutingCapabilities", "github.com/openshift/api/operator/v1.ClusterNetworkEntry", "github.com/openshift/api/operator/v1.DefaultNetworkDefinition", "github.com/openshift/api/operator/v1.ExportNetworkFlows", "github.com/openshift/api/operator/v1.NetworkMigration", "github.com/openshift/api/operator/v1.ProxyConfig", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -51921,6 +51962,13 @@ func schema_openshift_api_operator_v1_OVNKubernetesConfig(ref common.ReferenceCa
 						SchemaProps: spec.SchemaProps{
 							Description: "ipv6 allows users to configure IP settings for IPv6 connections. When ommitted, this means no opinions and the default configuration is used. Check individual fields within ipv4 for details of default values.",
 							Ref:         ref("github.com/openshift/api/operator/v1.IPv6OVNKubernetesConfig"),
+						},
+					},
+					"routeAdvertisements": {
+						SchemaProps: spec.SchemaProps{
+							Description: "routeAdvertisements determines if the functionality to advertise cluster network routes through a dynamic routing protocol, such as BGP, is enabled or not. This functionality is configured through the ovn-kubernetes RouteAdvertisements CRD. Requires the 'FRR' routing capability provider to be enabled as an additional routing capability. Allowed values are \"Enabled\", \"Disabled\" and ommited. When omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default is \"Disabled\".",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},

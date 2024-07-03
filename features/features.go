@@ -548,4 +548,22 @@ var (
 						productScope(ocpSpecific).
 						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 						mustRegister()
+
+	FeatureGateMultiArchInstallAWS = newFeatureGate("MultiArchInstallAWS").
+					reportProblemsToJiraComponent("Installer").
+					contactPerson("r4f4").
+					productScope(ocpSpecific).
+					mustRegister()
+
+	FeatureGateMultiArchInstallAzure = newFeatureGate("MultiArchInstallAzure").
+						reportProblemsToJiraComponent("Installer").
+						contactPerson("r4f4").
+						productScope(ocpSpecific).
+						mustRegister()
+
+	FeatureGateMultiArchInstallGCP = newFeatureGate("MultiArchInstallGCP").
+					reportProblemsToJiraComponent("Installer").
+					contactPerson("r4f4").
+					productScope(ocpSpecific).
+					mustRegister()
 )

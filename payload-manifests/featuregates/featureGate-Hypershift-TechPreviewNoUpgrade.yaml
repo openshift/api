@@ -35,6 +35,15 @@
                     },
                     {
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
+                    },
+                    {
+                        "name": "MultiArchInstallAWS"
+                    },
+                    {
+                        "name": "MultiArchInstallAzure"
+                    },
+                    {
+                        "name": "MultiArchInstallGCP"
                     }
                 ],
                 "enabled": [

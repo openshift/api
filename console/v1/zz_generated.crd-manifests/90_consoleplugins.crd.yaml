@@ -12,18 +12,6 @@ metadata:
     service.beta.openshift.io/inject-cabundle: "true"
   name: consoleplugins.console.openshift.io
 spec:
-  conversion:
-    strategy: Webhook
-    webhook:
-      clientConfig:
-        service:
-          name: webhook
-          namespace: openshift-console-operator
-          path: /crdconvert
-          port: 9443
-      conversionReviewVersions:
-      - v1
-      - v1alpha1
   group: console.openshift.io
   names:
     kind: ConsolePlugin

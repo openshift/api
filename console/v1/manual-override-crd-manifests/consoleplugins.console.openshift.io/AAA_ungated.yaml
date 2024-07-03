@@ -5,18 +5,6 @@ metadata:
     feature-gate.release.openshift.io/: "true"
   name: consoleplugins.console.openshift.io
 spec:
-  conversion:
-    strategy: Webhook
-    webhook:
-      clientConfig:
-        service:
-          name: webhook
-          namespace: openshift-console-operator
-          path: /crdconvert
-          port: 9443
-      conversionReviewVersions:
-      - v1
-      - v1alpha1
   versions:
   - name: v1alpha1
     schema:

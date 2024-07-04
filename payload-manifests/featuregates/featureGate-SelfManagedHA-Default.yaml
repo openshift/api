@@ -110,6 +110,15 @@
                         "name": "MixedCPUsAllocation"
                     },
                     {
+                        "name": "MultiArchInstallAWS"
+                    },
+                    {
+                        "name": "MultiArchInstallAzure"
+                    },
+                    {
+                        "name": "MultiArchInstallGCP"
+                    },
+                    {
                         "name": "NetworkSegmentation"
                     },
                     {

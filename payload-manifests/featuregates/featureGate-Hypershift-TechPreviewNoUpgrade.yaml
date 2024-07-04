@@ -72,25 +72,13 @@
                         "name": "CloudDualStackNodeIPs"
                     },
                     {
-                        "name": "ClusterAPIInstallAWS"
-                    },
-                    {
                         "name": "ClusterAPIInstallAzure"
                     },
                     {
                         "name": "ClusterAPIInstallGCP"
                     },
                     {
-                        "name": "ClusterAPIInstallNutanix"
-                    },
-                    {
-                        "name": "ClusterAPIInstallOpenStack"
-                    },
-                    {
                         "name": "ClusterAPIInstallPowerVS"
-                    },
-                    {
-                        "name": "ClusterAPIInstallVSphere"
                     },
                     {
                         "name": "ClusterMonitoringConfig"
@@ -148,9 +136,6 @@
                     },
                     {
                         "name": "InsightsOnDemandDataGather"
-                    },
-                    {
-                        "name": "InstallAlternateInfrastructureAWS"
                     },
                     {
                         "name": "KMSv1"

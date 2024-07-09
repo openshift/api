@@ -141,9 +141,6 @@
                         "name": "ImagePolicy"
                     },
                     {
-                        "name": "InsightsConfig"
-                    },
-                    {
                         "name": "InsightsConfigAPI"
                     },
                     {

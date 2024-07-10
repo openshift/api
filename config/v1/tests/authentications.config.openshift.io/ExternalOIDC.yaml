@@ -120,6 +120,72 @@ tests:
               username:
                 claim: "preferred_username"
                 prefixPolicy: NoPrefix
+    - name: Can set OIDC providers with uid claim and extra mappings
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              uid:
+                claim: claim
+              extra:
+              - key: key
+                valueExpression: "foobar"
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              uid:
+                claim: claim
+              extra:
+              - key: key
+                valueExpression: "foobar"
+    - name: Can set OIDC providers with uid expression and extra mappings
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              uid:
+                expression: "foobar"
+              extra:
+              - key: key
+                valueExpression: "foobar"
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              uid:
+                expression: "foobar"
+              extra:
+              - key: key
+                valueExpression: "foobar"
   onUpdate:
     - name: Updating OIDC provider with a client that's not in the status
       initial: &initConfig |

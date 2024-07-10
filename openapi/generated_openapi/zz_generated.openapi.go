@@ -868,6 +868,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.CSISnapshotControllerList":                                     schema_openshift_api_operator_v1_CSISnapshotControllerList(ref),
 		"github.com/openshift/api/operator/v1.CSISnapshotControllerSpec":                                     schema_openshift_api_operator_v1_CSISnapshotControllerSpec(ref),
 		"github.com/openshift/api/operator/v1.CSISnapshotControllerStatus":                                   schema_openshift_api_operator_v1_CSISnapshotControllerStatus(ref),
+		"github.com/openshift/api/operator/v1.Capability":                                                    schema_openshift_api_operator_v1_Capability(ref),
+		"github.com/openshift/api/operator/v1.CapabilityVisibility":                                          schema_openshift_api_operator_v1_CapabilityVisibility(ref),
 		"github.com/openshift/api/operator/v1.ClientTLS":                                                     schema_openshift_api_operator_v1_ClientTLS(ref),
 		"github.com/openshift/api/operator/v1.CloudCredential":                                               schema_openshift_api_operator_v1_CloudCredential(ref),
 		"github.com/openshift/api/operator/v1.CloudCredentialList":                                           schema_openshift_api_operator_v1_CloudCredentialList(ref),
@@ -44361,6 +44363,69 @@ func schema_openshift_api_operator_v1_CSISnapshotControllerStatus(ref common.Ref
 	}
 }
 
+func schema_openshift_api_operator_v1_Capability(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Capabilities contains set of UI capabilities and their state in the console UI.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the unique name of a capability. Available capabilities are LightspeedButton.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"visibility": {
+						SchemaProps: spec.SchemaProps{
+							Description: "visibility defines the visibility state of the capability.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1.CapabilityVisibility"),
+						},
+					},
+				},
+				Required: []string{"name", "visibility"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1.CapabilityVisibility"},
+	}
+}
+
+func schema_openshift_api_operator_v1_CapabilityVisibility(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CapabilityVisibility defines the criteria to enable/disable a capability.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"state": {
+						SchemaProps: spec.SchemaProps{
+							Description: "state defines the if the capability is enabled or disabled in the console UI. Enabling the capability in the console UI is represented by the \"Enable\" value. Disabling the capability in the console UI is represented by the \"Disabled\" value.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"state"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator":            "state",
+							"fields-to-discriminateBy": map[string]interface{}{},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_operator_v1_ClientTLS(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -45239,6 +45304,28 @@ func schema_openshift_api_operator_v1_ConsoleCustomization(ref common.ReferenceC
 				Description: "ConsoleCustomization defines a list of optional configuration for the console UI.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"capabilities": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "capabilities defines an array of capabilities that can be interacted with in the console UI. Each capability defines a visual state, by which it will get rendered. Available capabilities are LightspeedButton. Each of the available capabilities may appear only once in the list.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/operator/v1.Capability"),
+									},
+								},
+							},
+						},
+					},
 					"brand": {
 						SchemaProps: spec.SchemaProps{
 							Description: "brand is the default branding of the web console which can be overridden by providing the brand field.  There is a limited set of specific brand options. This field controls elements of the console such as the logo. Invalid value will prevent a console rollout.",
@@ -45321,7 +45408,7 @@ func schema_openshift_api_operator_v1_ConsoleCustomization(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ConfigMapFileReference", "github.com/openshift/api/operator/v1.AddPage", "github.com/openshift/api/operator/v1.DeveloperConsoleCatalogCustomization", "github.com/openshift/api/operator/v1.Perspective", "github.com/openshift/api/operator/v1.ProjectAccess", "github.com/openshift/api/operator/v1.QuickStarts"},
+			"github.com/openshift/api/config/v1.ConfigMapFileReference", "github.com/openshift/api/operator/v1.AddPage", "github.com/openshift/api/operator/v1.Capability", "github.com/openshift/api/operator/v1.DeveloperConsoleCatalogCustomization", "github.com/openshift/api/operator/v1.Perspective", "github.com/openshift/api/operator/v1.ProjectAccess", "github.com/openshift/api/operator/v1.QuickStarts"},
 	}
 }
 

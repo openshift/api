@@ -573,4 +573,11 @@ var (
 					contactPerson("r4f4").
 					productScope(ocpSpecific).
 					mustRegister()
+
+	FeatureGateIngressControllerLBSubnetsAWS = newFeatureGate("IngressControllerLBSubnetsAWS").
+					reportProblemsToJiraComponent("Routing").
+					contactPerson("miciah").
+					productScope(ocpSpecific).
+					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+					mustRegister()
 )

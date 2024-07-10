@@ -46285,6 +46285,13 @@ func schema_openshift_api_operator_v1_EgressIPConfig(ref common.ReferenceCallbac
 				Description: "EgressIPConfig defines the configuration knobs for egressip",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Mode allows administrators to enable or disable the EgressIP feature. The default is \"enabled\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"reachabilityTotalTimeoutSeconds": {
 						SchemaProps: spec.SchemaProps{
 							Description: "reachabilityTotalTimeout configures the EgressIP node reachability check total timeout in seconds. If the EgressIP node cannot be reached within this timeout, the node is declared down. Setting a large value may cause the EgressIP feature to react slowly to node changes. In particular, it may react slowly for EgressIP nodes that really have a genuine problem and are unreachable. When omitted, this means the user has no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is 1 second. A value of 0 disables the EgressIP node's reachability check.",

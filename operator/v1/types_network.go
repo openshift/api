@@ -705,6 +705,12 @@ type ProxyConfig struct {
 
 // EgressIPConfig defines the configuration knobs for egressip
 type EgressIPConfig struct {
+	// Mode allows administrators to enable or disable the EgressIP feature.
+	// The default is "enabled".
+	// +kubebuilder:default=enabled
+	// +kubebuilder:Enum=enabled;disabled;""
+	// +optional
+	Mode *string `json:"mode,omitempty"`
 	// reachabilityTotalTimeout configures the EgressIP node reachability check total timeout in seconds.
 	// If the EgressIP node cannot be reached within this timeout, the node is declared down.
 	// Setting a large value may cause the EgressIP feature to react slowly to node changes.

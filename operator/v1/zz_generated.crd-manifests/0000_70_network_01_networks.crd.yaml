@@ -221,6 +221,11 @@ spec:
                         description: egressIPConfig holds the configuration for EgressIP
                           options.
                         properties:
+                          mode:
+                            default: enabled
+                            description: Mode allows administrators to enable or disable
+                              the EgressIP feature. The default is "enabled".
+                            type: string
                           reachabilityTotalTimeoutSeconds:
                             description: reachabilityTotalTimeout configures the EgressIP
                               node reachability check total timeout in seconds. If

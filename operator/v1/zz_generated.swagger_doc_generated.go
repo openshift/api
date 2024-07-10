@@ -1518,6 +1518,7 @@ func (DefaultNetworkDefinition) SwaggerDoc() map[string]string {
 
 var map_EgressIPConfig = map[string]string{
 	"":                                "EgressIPConfig defines the configuration knobs for egressip",
+	"mode":                            "Mode allows administrators to enable or disable the EgressIP feature. The default is \"enabled\".",
 	"reachabilityTotalTimeoutSeconds": "reachabilityTotalTimeout configures the EgressIP node reachability check total timeout in seconds. If the EgressIP node cannot be reached within this timeout, the node is declared down. Setting a large value may cause the EgressIP feature to react slowly to node changes. In particular, it may react slowly for EgressIP nodes that really have a genuine problem and are unreachable. When omitted, this means the user has no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is 1 second. A value of 0 disables the EgressIP node's reachability check.",
 }
 

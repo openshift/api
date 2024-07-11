@@ -415,7 +415,7 @@ type RouterShard struct {
 // TLSConfig defines config used to secure a route and provide termination
 //
 // +kubebuilder:validation:XValidation:rule="has(self.termination) && has(self.insecureEdgeTerminationPolicy) ? !((self.termination=='passthrough') && (self.insecureEdgeTerminationPolicy=='Allow')) : true", message="cannot have both spec.tls.termination: passthrough and spec.tls.insecureEdgeTerminationPolicy: Allow"
-// +openshift:validation:FeatureGateAwareXValidation:featureGate=ExternalRouteCertificate,rule="!(has(self.certificate) && has(self.externalCertificate))", message="cannot have both spec.tls.certificate and spec.tls.externalCertificate"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=RouteExternalCertificate,rule="!(has(self.certificate) && has(self.externalCertificate))", message="cannot have both spec.tls.certificate and spec.tls.externalCertificate"
 type TLSConfig struct {
 	// termination indicates termination type.
 	//
@@ -464,7 +464,7 @@ type TLSConfig struct {
 	// be present in the same namespace as that of the Route.
 	// Forbidden when `certificate` is set.
 	//
-	// +openshift:enable:FeatureGate=ExternalRouteCertificate
+	// +openshift:enable:FeatureGate=RouteExternalCertificate
 	// +optional
 	ExternalCertificate *LocalObjectReference `json:"externalCertificate,omitempty" protobuf:"bytes,7,opt,name=externalCertificate"`
 }

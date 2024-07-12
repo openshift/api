@@ -312,6 +312,12 @@ type DockerPullSecretControllerConfig struct {
 	// registry. The value must be in "hostname[:port]" format.  Docker pull secrets
 	// will be generated for this registry.
 	InternalRegistryHostname string `json:"internalRegistryHostname"`
+
+	// serviceAccountSigningPublicKeyFile specifies the path to a file that contains the current public key of the
+	// service account token issuer. This field should be specified if the controller cannot automatically locate
+	// the service account token issuer key. The issuer signs issued ID tokens using the corresponding private key.
+	// +optional
+	ServiceAccountSigningPublicKeyFile string `json:"serviceAccountSigningPublicKeyFile,omitempty"`
 }
 
 type ImageImportControllerConfig struct {

@@ -561,7 +561,7 @@ const (
 // AWSSubnets contains a list of references to AWS subnets by
 // ID or name.
 // +kubebuilder:validation:XValidation:rule=`has(self.ids) && has(self.names) ? size(self.ids + self.names) <= 10 : true`,message="the total number of subnets cannot exceed 10"
-// +kubebuilder:validation:XValidation:rule=`has(self.ids) || has(self.names)`,message="must specify at least 1 subnet name or id"
+// +kubebuilder:validation:XValidation:rule=`has(self.ids) && self.ids.size() > 0 || has(self.names) && self.names.size() > 0`,message="must specify at least 1 subnet name or id"
 type AWSSubnets struct {
 	// ids specifies a list of AWS subnets by subnet ID.
 	// Subnet IDs must start with "subnet-", consist only

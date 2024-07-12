@@ -199,6 +199,8 @@ message RouteIngress {
   optional string routerName = 2;
 
   // Conditions is the state of the route, may be empty.
+  // +listType=map
+  // +listMapKey=type
   repeated RouteIngressCondition conditions = 3;
 
   // Wildcard policy is the wildcard policy that was allowed where this route is exposed.
@@ -331,6 +333,9 @@ message RouteSpec {
   // Use the weight field in RouteTargetReference object to specify relative preference.
   //
   // +kubebuilder:validation:MaxItems=3
+  // +listType=map
+  // +listMapKey=name
+  // +listMapKey=kind
   repeated RouteTargetReference alternateBackends = 4;
 
   // If specified, the port to be used by the router. Most routers will use all
@@ -360,6 +365,8 @@ message RouteStatus {
   // ingress describes the places where the route may be exposed. The list of
   // ingress points may contain duplicate Host or RouterName values. Routes
   // are considered live once they are `Ready`
+  // +listType=map
+  // +listMapKey=routerName
   repeated RouteIngress ingress = 1;
 }
 

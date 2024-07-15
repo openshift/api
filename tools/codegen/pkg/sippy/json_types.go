@@ -1,5 +1,7 @@
 package sippy
 
+import "fmt"
+
 type SippyQueryStruct struct {
 	Items        []SippyQueryItem `json:"items"`
 	LinkOperator string           `json:"linkOperator"`
@@ -52,25 +54,25 @@ func QueriesFor(cloud, architecture, topology, testPattern string) []*SippyQuery
 					ColumnField:   "variants",
 					Not:           false,
 					OperatorValue: "contains",
-					Value:         "techpreview",
+					Value:         "FeatureSet:techpreview",
 				},
 				{
 					ColumnField:   "variants",
 					Not:           false,
 					OperatorValue: "contains",
-					Value:         cloud,
+					Value:         fmt.Sprintf("Platform:%s", cloud),
 				},
 				{
 					ColumnField:   "variants",
 					Not:           false,
 					OperatorValue: "contains",
-					Value:         architecture,
+					Value:         fmt.Sprintf("Architecture:%s", architecture),
 				},
 				{
 					ColumnField:   "variants",
 					Not:           false,
 					OperatorValue: "contains",
-					Value:         topology,
+					Value:         fmt.Sprintf("Topology:%s", topology),
 				},
 				{
 					ColumnField:   "name",

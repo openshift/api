@@ -318,7 +318,7 @@ tests:
                       - subnet00000000000000010
                       - subnet00000000000000011
       expectedError: "spec.endpointPublishingStrategy.loadBalancer.providerParameters.aws.classicLoadBalancer.subnets.names: Too many: 11: must have at most 10 items"
-    - name: Should not be able to create ingresscontroller with spec.endpointPublishingStrategy.loadBalancer.providerParameters.aws.subnets specified, but no ids or names.
+    - name: Should not be able to create ingresscontroller with spec.endpointPublishingStrategy.loadBalancer.providerParameters.classicLoadBalancer.aws.subnets specified, but no ids or names.
       initial: |
         apiVersion: operator.openshift.io/v1
         kind: IngressController
@@ -333,6 +333,24 @@ tests:
                   type: Classic
                   classicLoadBalancer:
                     subnets: {}
+      expectedError: "must specify at least 1 subnet name or id"
+    - name: Should not be able to create ingresscontroller with spec.endpointPublishingStrategy.loadBalancer.providerParameters.aws.classicLoadBalancer.subnets specified, but empty ids and names.
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        spec:
+          endpointPublishingStrategy:
+            type: LoadBalancerService
+            loadBalancer:
+              scope: External
+              providerParameters:
+                type: AWS
+                aws:
+                  type: Classic
+                  classicLoadBalancer:
+                    subnets:
+                      ids: []
+                      names: []
       expectedError: "must specify at least 1 subnet name or id"
     - name: Should not be able to create ingresscontroller with subnet id less than 24 characters.
       initial: |

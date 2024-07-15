@@ -360,7 +360,8 @@ spec:
                                         + self.names) <= 10 : true'
                                     - message: must specify at least 1 subnet name
                                         or id
-                                      rule: has(self.ids) || has(self.names)
+                                      rule: has(self.ids) && self.ids.size() > 0 ||
+                                        has(self.names) && self.names.size() > 0
                                 type: object
                               networkLoadBalancer:
                                 description: networkLoadBalancerParameters holds configuration
@@ -440,7 +441,8 @@ spec:
                                         + self.names) <= 10 : true'
                                     - message: must specify at least 1 subnet name
                                         or id
-                                      rule: has(self.ids) || has(self.names)
+                                      rule: has(self.ids) && self.ids.size() > 0 ||
+                                        has(self.names) && self.names.size() > 0
                                 type: object
                               type:
                                 description: "type is the type of AWS load balancer
@@ -2144,7 +2146,8 @@ spec:
                                         + self.names) <= 10 : true'
                                     - message: must specify at least 1 subnet name
                                         or id
-                                      rule: has(self.ids) || has(self.names)
+                                      rule: has(self.ids) && self.ids.size() > 0 ||
+                                        has(self.names) && self.names.size() > 0
                                 type: object
                               networkLoadBalancer:
                                 description: networkLoadBalancerParameters holds configuration
@@ -2224,7 +2227,8 @@ spec:
                                         + self.names) <= 10 : true'
                                     - message: must specify at least 1 subnet name
                                         or id
-                                      rule: has(self.ids) || has(self.names)
+                                      rule: has(self.ids) && self.ids.size() > 0 ||
+                                        has(self.names) && self.names.size() > 0
                                 type: object
                               type:
                                 description: "type is the type of AWS load balancer

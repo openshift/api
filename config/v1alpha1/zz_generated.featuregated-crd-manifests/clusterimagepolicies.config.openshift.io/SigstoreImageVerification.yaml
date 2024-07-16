@@ -6,24 +6,24 @@ metadata:
     api.openshift.io/filename-cvo-runlevel: "0000_10"
     api.openshift.io/filename-operator: config-operator
     api.openshift.io/filename-ordering: "01"
-    feature-gate.release.openshift.io/ImagePolicy: "true"
-  name: imagepolicies.config.openshift.io
+    feature-gate.release.openshift.io/SigstoreImageVerification: "true"
+  name: clusterimagepolicies.config.openshift.io
 spec:
   group: config.openshift.io
   names:
-    kind: ImagePolicy
-    listKind: ImagePolicyList
-    plural: imagepolicies
-    singular: imagepolicy
-  scope: Namespaced
+    kind: ClusterImagePolicy
+    listKind: ClusterImagePolicyList
+    plural: clusterimagepolicies
+    singular: clusterimagepolicy
+  scope: Cluster
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: "ImagePolicy holds namespace-wide configuration for image signature
-          verification \n Compatibility level 4: No compatibility is provided, the
-          API can change at any point for any reason. These capabilities should not
-          be used by applications needing long term support."
+        description: "ClusterImagePolicy holds cluster-wide configuration for image
+          signature verification \n Compatibility level 4: No compatibility is provided,
+          the API can change at any point for any reason. These capabilities should
+          not be used by applications needing long term support."
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -38,7 +38,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: spec holds user settable values for configuration
+            description: spec contains the configuration for the cluster image policy.
             properties:
               policy:
                 description: policy contains configuration to allow scopes to be verified,

@@ -19965,7 +19965,7 @@
           "$ref": "#/definitions/com.github.openshift.api.machine.v1alpha1.Filter"
         },
         "fixedIp": {
-          "description": "A fixed IPv4 address for the NIC.",
+          "description": "A fixed IPv4 address for the NIC. Deprecated: fixedIP is silently ignored. Use subnets instead.",
           "type": "string"
         },
         "noAllowedAddressPairs": {
@@ -20097,7 +20097,7 @@
           }
         },
         "primarySubnet": {
-          "description": "The subnet that a set of machines will get ingress/egress traffic from",
+          "description": "The subnet that a set of machines will get ingress/egress traffic from Deprecated: primarySubnet is silently ignored. Use subnets instead.",
           "type": "string"
         },
         "rootVolume": {
@@ -20129,7 +20129,7 @@
           }
         },
         "sshUserName": {
-          "description": "The machine ssh username",
+          "description": "The machine ssh username Deprecated: sshUserName is silently ignored.",
           "type": "string"
         },
         "tags": {
@@ -20210,7 +20210,7 @@
           }
         },
         "projectID": {
-          "description": "projectID specifies the project ID of the created port. Note that this requires OpenShift to have administrative permissions, which is typically not the case. Use of this field is not recommended.",
+          "description": "projectID specifies the project ID of the created port. Note that this requires OpenShift to have administrative permissions, which is typically not the case. Use of this field is not recommended. Deprecated: projectID is silently ignored.",
           "type": "string"
         },
         "securityGroups": {
@@ -20230,7 +20230,7 @@
           }
         },
         "tenantID": {
-          "description": "tenantID specifies the tenant ID of the created port. Note that this requires OpenShift to have administrative permissions, which is typically not the case. Use of this field is not recommended. Deprecated: use projectID instead. It will be ignored if projectID is set.",
+          "description": "tenantID specifies the tenant ID of the created port. Note that this requires OpenShift to have administrative permissions, which is typically not the case. Use of this field is not recommended. Deprecated: tenantID is silently ignored.",
           "type": "string"
         },
         "trunk": {
@@ -20423,7 +20423,7 @@
           "type": "string"
         },
         "subnetpoolId": {
-          "description": "subnetpoolId filters subnets by subnet pool ID.",
+          "description": "subnetpoolId filters subnets by subnet pool ID. Deprecated: subnetpoolId is silently ignored.",
           "type": "string"
         },
         "tags": {
@@ -20449,7 +20449,7 @@
           "$ref": "#/definitions/com.github.openshift.api.machine.v1alpha1.SubnetFilter"
         },
         "portSecurity": {
-          "description": "portSecurity optionally enables or disables security on ports managed by OpenStack",
+          "description": "portSecurity optionally enables or disables security on ports managed by OpenStack Deprecated: portSecurity is silently ignored. Set portSecurity on the parent network instead.",
           "type": "boolean"
         },
         "portTags": {

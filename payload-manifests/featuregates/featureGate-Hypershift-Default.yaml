@@ -68,9 +68,6 @@
                         "name": "GatewayAPI"
                     },
                     {
-                        "name": "ImagePolicy"
-                    },
-                    {
                         "name": "IngressControllerLBSubnetsAWS"
                     },
                     {

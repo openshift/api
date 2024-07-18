@@ -524,8 +524,18 @@ spec:
                                 Few of the services are IAM - https://cloud.ibm.com/apidocs/iam-identity-token-api
                                 ResourceController - https://cloud.ibm.com/apidocs/resource-controller/resource-controller
                                 Power Cloud - https://cloud.ibm.com/apidocs/power-cloud
-                              pattern: ^[a-z0-9-]+$
+                              maxLength: 18
                               type: string
+                              x-kubernetes-validations:
+                              - message: serviceEndpoint name is not CIS, COS, COSConfig,
+                                  DNSServices, GlobalCatalog, GlobalSearch, GlobalTagging,
+                                  HyperProtect, IAM, KeyProtect, Power, ResourceController,
+                                  ResourceManager, or VPC
+                                rule: self == oldSelf || self in ['CIS', 'COS', 'COSConfig',
+                                  'DNSServices', 'GlobalCatalog', 'GlobalSearch',
+                                  'GlobalTagging', 'HyperProtect', 'IAM', 'KeyProtect',
+                                  'Power', 'ResourceController', 'ResourceManager',
+                                  'VPC']
                             url:
                               description: url is fully qualified URI with scheme
                                 https, that overrides the default generated endpoint
@@ -1819,8 +1829,18 @@ spec:
                                 Few of the services are IAM - https://cloud.ibm.com/apidocs/iam-identity-token-api
                                 ResourceController - https://cloud.ibm.com/apidocs/resource-controller/resource-controller
                                 Power Cloud - https://cloud.ibm.com/apidocs/power-cloud
-                              pattern: ^[a-z0-9-]+$
+                              maxLength: 18
                               type: string
+                              x-kubernetes-validations:
+                              - message: serviceEndpoint name is not CIS, COS, COSConfig,
+                                  DNSServices, GlobalCatalog, GlobalSearch, GlobalTagging,
+                                  HyperProtect, IAM, KeyProtect, Power, ResourceController,
+                                  ResourceManager, or VPC
+                                rule: self == oldSelf || self in ['CIS', 'COS', 'COSConfig',
+                                  'DNSServices', 'GlobalCatalog', 'GlobalSearch',
+                                  'GlobalTagging', 'HyperProtect', 'IAM', 'KeyProtect',
+                                  'Power', 'ResourceController', 'ResourceManager',
+                                  'VPC']
                             url:
                               description: url is fully qualified URI with scheme
                                 https, that overrides the default generated endpoint

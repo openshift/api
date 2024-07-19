@@ -143,6 +143,9 @@
                         "name": "PlatformOperators"
                     },
                     {
+                        "name": "ProcMountType"
+                    },
+                    {
                         "name": "RouteExternalCertificate"
                     },
                     {

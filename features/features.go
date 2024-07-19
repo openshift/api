@@ -587,4 +587,11 @@ var (
 							productScope(kubernetes).
 							enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 							mustRegister()
+
+	FeatureGateProcMountType = newFeatureGate("ProcMountType").
+					reportProblemsToJiraComponent("Node").
+					contactPerson("haircommander").
+					productScope(kubernetes).
+					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+					mustRegister()
 )

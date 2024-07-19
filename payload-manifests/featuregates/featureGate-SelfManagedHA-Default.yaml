@@ -140,6 +140,9 @@
                         "name": "PlatformOperators"
                     },
                     {
+                        "name": "ProcMountType"
+                    },
+                    {
                         "name": "RouteAdvertisements"
                     },
                     {

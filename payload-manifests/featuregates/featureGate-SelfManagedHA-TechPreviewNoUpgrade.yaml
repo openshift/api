@@ -225,6 +225,9 @@
                         "name": "PrivateHostedZoneAWS"
                     },
                     {
+                        "name": "ProcMountType"
+                    },
+                    {
                         "name": "RouteAdvertisements"
                     },
                     {

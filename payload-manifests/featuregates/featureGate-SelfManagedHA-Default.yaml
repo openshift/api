@@ -95,9 +95,6 @@
                         "name": "MachineAPIProviderOpenStack"
                     },
                     {
-                        "name": "MachineConfigNodes"
-                    },
-                    {
                         "name": "ManagedBootImages"
                     },
                     {
@@ -222,6 +219,9 @@
                     {
                         "name": "KMSv1"
                     },
+                    {
+                        "name": "MachineConfigNodes"
+                    },                    
                     {
                         "name": "MetricsServer"
                     },

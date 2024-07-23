@@ -57,6 +57,9 @@
                         "name": "BareMetalLoadBalancer"
                     },
                     {
+                        "name": "BootcNodeManagement"
+                    },
+                    {
                         "name": "BuildCSIVolumes"
                     },
                     {

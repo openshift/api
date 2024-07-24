@@ -155,6 +155,9 @@
                         "name": "ServiceAccountTokenNodeBinding"
                     },
                     {
+                        "name": "SetEIPForNLBIngressController"
+                    },
+                    {
                         "name": "SignatureStores"
                     },
                     {

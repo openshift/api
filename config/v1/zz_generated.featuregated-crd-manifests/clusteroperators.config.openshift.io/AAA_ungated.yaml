@@ -103,6 +103,9 @@ spec:
                   - type
                   type: object
                 type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
               extension:
                 description: extension contains any additional status information
                   specific to the operator which owns this status object.
@@ -160,6 +163,9 @@ spec:
                   - version
                   type: object
                 type: array
+                x-kubernetes-list-map-keys:
+                - name
+                x-kubernetes-list-type: map
             type: object
         required:
         - spec

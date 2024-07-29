@@ -86,6 +86,9 @@
                         "name": "InsightsOnDemandDataGather"
                     },
                     {
+                        "name": "InsightsRuntimeExtractor"
+                    },
+                    {
                         "name": "InstallAlternateInfrastructureAWS"
                     },
                     {

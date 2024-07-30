@@ -44403,7 +44403,7 @@ func schema_openshift_api_operator_v1_CapabilityVisibility(ref common.ReferenceC
 				Properties: map[string]spec.Schema{
 					"state": {
 						SchemaProps: spec.SchemaProps{
-							Description: "state defines the if the capability is enabled or disabled in the console UI. Enabling the capability in the console UI is represented by the \"Enable\" value. Disabling the capability in the console UI is represented by the \"Disabled\" value.",
+							Description: "state defines if the capability is enabled or disabled in the console UI. Enabling the capability in the console UI is represented by the \"Enabled\" value. Disabling the capability in the console UI is represented by the \"Disabled\" value.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -45314,7 +45314,7 @@ func schema_openshift_api_operator_v1_ConsoleCustomization(ref common.ReferenceC
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "capabilities defines an array of capabilities that can be interacted with in the console UI. Each capability defines a visual state, by which it will get rendered. Available capabilities are LightspeedButton. Each of the available capabilities may appear only once in the list.",
+							Description: "capabilities defines an array of capabilities that can be interacted with in the console UI. Each capability defines a visual state that can be interacted with the console to render in the UI. Available capabilities are LightspeedButton. Each of the available capabilities may appear only once in the list.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{

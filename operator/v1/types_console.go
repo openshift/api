@@ -120,8 +120,8 @@ const (
 // CapabilityVisibility defines the criteria to enable/disable a capability.
 // +union
 type CapabilityVisibility struct {
-	// state defines the if the capability is enabled or disabled in the console UI.
-	// Enabling the capability in the console UI is represented by the "Enable" value.
+	// state defines if the capability is enabled or disabled in the console UI.
+	// Enabling the capability in the console UI is represented by the "Enabled" value.
 	// Disabling the capability in the console UI is represented by the "Disabled" value.
 	// +unionDiscriminator
 	// +kubebuilder:validation:Enum:="Enabled";"Disabled"
@@ -144,7 +144,7 @@ type Capability struct {
 // ConsoleCustomization defines a list of optional configuration for the console UI.
 type ConsoleCustomization struct {
 	// capabilities defines an array of capabilities that can be interacted with in the console UI.
-	// Each capability defines a visual state, by which it will get rendered.
+	// Each capability defines a visual state that can be interacted with the console to render in the UI.
 	// Available capabilities are LightspeedButton.
 	// Each of the available capabilities may appear only once in the list.
 	// +kubebuilder:validation:MinItems=1

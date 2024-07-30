@@ -237,3 +237,62 @@ tests:
           ingress:
             clientDownloadsURL: "\ntestingress.com"
       expectedError: "spec.ingress.clientDownloadsURL: Invalid value: \"string\": client downloads url must be a valid absolute URL"
+    - name: Should be able to disable the LightspeedButton console capability
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          customization:
+            capabilities:
+            - name: LightspeedButton
+              visibility:
+                state: Disabled
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          customization:
+            capabilities:
+            - name: LightspeedButton
+              visibility:
+                state: Disabled
+    - name: Should throw an error for adding duplicate capability
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          customization:
+            capabilities:
+            - name: LightspeedButton
+              visibility:
+                state: Enabled
+            - name: LightspeedButton
+              visibility:
+                state: Enabled
+      expectedError: "Duplicate value: map[string]interface {}{\"name\":\"LightspeedButton\""
+    - name: Should throw an error for incorrect value of name in capabilities
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          customization:
+            capabilities:
+            - name: LightspeedBurton
+              visibility:
+                state: Enabled
+      expectedError: "spec.customization.capabilities[0].name: Unsupported value: \"LightspeedBurton\": supported values: \"LightspeedButton\""
+    - name: Should throw an error for incorrect value of state in capabilities
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          customization:
+            capabilities:
+            - name: LightspeedButton
+              visibility:
+                state: Enables
+      expectedError: "spec.customization.capabilities[0].visibility.state: Unsupported value: \"Enables\": supported values: \"Enabled\", \"Disabled\""

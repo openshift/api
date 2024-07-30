@@ -27702,7 +27702,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.ClusterNetworkEntry"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "hybridOverlayVXLANPort": {
           "description": "HybridOverlayVXLANPort defines the VXLAN port number to be used by the additional overlay network. Default is 4789",
@@ -27762,7 +27763,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -29630,7 +29632,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -29729,7 +29732,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.AdditionalNetworkDefinition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "additionalRoutingCapabilities": {
           "description": "additionalRoutingCapabilities describes components and relevant configuration providing additional routing capabilities. When set, it enables such components and the usage of the routing capabilities they provide for the machine network. Upstream operators, like MetalLB operator, requiring these capabilities may rely on, or automatically set this attribute. Network plugins may leverage advanced routing capabilities acquired through the enablement of these components but may require specific configuration on their side to do so; refer to their respective documentation and configuration options.",
@@ -29741,7 +29748,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.ClusterNetworkEntry"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "defaultNetwork": {
           "description": "defaultNetwork is the \"default\" network that all pods will receive",
@@ -29797,7 +29805,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "unsupportedConfigOverrides": {
           "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
@@ -30991,7 +31000,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -31501,7 +31511,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.StaticIPAMAddresses"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "dns": {
           "description": "DNS configures DNS for the interface",
@@ -31513,7 +31524,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.StaticIPAMRoutes"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -31531,7 +31543,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "search": {
           "description": "Search configures priority ordered search domains for short hostname lookups",
@@ -31539,7 +31552,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },

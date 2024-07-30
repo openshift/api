@@ -60,11 +60,13 @@ type NetworkSpec struct {
 	// clusterNetwork is the IP address pool to use for pod IPs.
 	// Some network providers, e.g. OpenShift SDN, support multiple ClusterNetworks.
 	// Others only support one. This is equivalent to the cluster-cidr.
+	// +listType=atomic
 	ClusterNetwork []ClusterNetworkEntry `json:"clusterNetwork"`
 
 	// serviceNetwork is the ip address pool to use for Service IPs
 	// Currently, all existing network providers only support a single value
 	// here, but this is an array to allow for growth.
+	// +listType=atomic
 	ServiceNetwork []string `json:"serviceNetwork"`
 
 	// defaultNetwork is the "default" network that all pods will receive
@@ -72,6 +74,8 @@ type NetworkSpec struct {
 
 	// additionalNetworks is a list of extra networks to make available to pods
 	// when multiple networks are enabled.
+	// +listType=map
+	// +listMapKey=name
 	AdditionalNetworks []AdditionalNetworkDefinition `json:"additionalNetworks,omitempty"`
 
 	// disableMultiNetwork specifies whether or not multiple pod network
@@ -301,12 +305,14 @@ type StaticIPAMRoutes struct {
 type StaticIPAMDNS struct {
 	// Nameservers points DNS servers for IP lookup
 	// +optional
+	// +listType=atomic
 	Nameservers []string `json:"nameservers,omitempty"`
 	// Domain configures the domainname the local domain used for short hostname lookups
 	// +optional
 	Domain string `json:"domain,omitempty"`
 	// Search configures priority ordered search domains for short hostname lookups
 	// +optional
+	// +listType=atomic
 	Search []string `json:"search,omitempty"`
 }
 
@@ -314,9 +320,11 @@ type StaticIPAMDNS struct {
 type StaticIPAMConfig struct {
 	// Addresses configures IP address for the interface
 	// +optional
+	// +listType=atomic
 	Addresses []StaticIPAMAddresses `json:"addresses,omitempty"`
 	// Routes configures IP routes for the interface
 	// +optional
+	// +listType=atomic
 	Routes []StaticIPAMRoutes `json:"routes,omitempty"`
 	// DNS configures DNS for the interface
 	// +optional
@@ -344,6 +352,7 @@ type AdditionalNetworkDefinition struct {
 
 	// name is the name of the network. This will be populated in the resulting CRD
 	// This must be unique.
+	// +kubebuilder:validation:Required
 	Name string `json:"name"`
 
 	// namespace is the namespace of the network. This will be populated in the resulting CRD
@@ -532,6 +541,7 @@ type IPv6OVNKubernetesConfig struct {
 
 type HybridOverlayConfig struct {
 	// HybridClusterNetwork defines a network space given to nodes on an additional overlay network.
+	// +listType=atomic
 	HybridClusterNetwork []ClusterNetworkEntry `json:"hybridClusterNetwork"`
 	// HybridOverlayVXLANPort defines the VXLAN port number to be used by the additional overlay network.
 	// Default is 4789
@@ -644,6 +654,7 @@ type NetFlowConfig struct {
 	// It is a list of strings formatted as ip:port with a maximum of ten items
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=10
+	// +listType=atomic
 	Collectors []IPPort `json:"collectors,omitempty"`
 }
 
@@ -651,6 +662,7 @@ type SFlowConfig struct {
 	// sFlowCollectors is list of strings formatted as ip:port with a maximum of ten items
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=10
+	// +listType=atomic
 	Collectors []IPPort `json:"collectors,omitempty"`
 }
 
@@ -658,6 +670,7 @@ type IPFIXConfig struct {
 	// ipfixCollectors is list of strings formatted as ip:port with a maximum of ten items
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=10
+	// +listType=atomic
 	Collectors []IPPort `json:"collectors,omitempty"`
 }
 
@@ -711,6 +724,7 @@ type PolicyAuditConfig struct {
 type NetworkType string
 
 // ProxyArgumentList is a list of arguments to pass to the kubeproxy process
+// +listType=atomic
 type ProxyArgumentList []string
 
 // ProxyConfig defines the configuration knobs for kubeproxy

@@ -91,6 +91,7 @@ spec:
                                         type: string
                                     type: object
                                   type: array
+                                  x-kubernetes-list-type: atomic
                                 dns:
                                   description: DNS configures DNS for the interface
                                   properties:
@@ -104,12 +105,14 @@ spec:
                                       items:
                                         type: string
                                       type: array
+                                      x-kubernetes-list-type: atomic
                                     search:
                                       description: Search configures priority ordered
                                         search domains for short hostname lookups
                                       items:
                                         type: string
                                       type: array
+                                      x-kubernetes-list-type: atomic
                                   type: object
                                 routes:
                                   description: Routes configures IP routes for the
@@ -129,6 +132,7 @@ spec:
                                         type: string
                                     type: object
                                   type: array
+                                  x-kubernetes-list-type: atomic
                               type: object
                             type:
                               description: Type is the type of IPAM module will be
@@ -156,8 +160,13 @@ spec:
                       description: type is the type of network The supported values
                         are NetworkTypeRaw, NetworkTypeSimpleMacvlan
                       type: string
+                  required:
+                  - name
                   type: object
                 type: array
+                x-kubernetes-list-map-keys:
+                - name
+                x-kubernetes-list-type: map
               additionalRoutingCapabilities:
                 description: additionalRoutingCapabilities describes components and
                   relevant configuration providing additional routing capabilities.
@@ -210,6 +219,7 @@ spec:
                       type: integer
                   type: object
                 type: array
+                x-kubernetes-list-type: atomic
               defaultNetwork:
                 description: defaultNetwork is the "default" network that all pods
                   will receive
@@ -394,6 +404,7 @@ spec:
                                   type: integer
                               type: object
                             type: array
+                            x-kubernetes-list-type: atomic
                           hybridOverlayVXLANPort:
                             description: HybridOverlayVXLANPort defines the VXLAN
                               port number to be used by the additional overlay network.
@@ -660,6 +671,7 @@ spec:
                         maxItems: 10
                         minItems: 1
                         type: array
+                        x-kubernetes-list-type: atomic
                     type: object
                   netFlow:
                     description: netFlow defines the NetFlow configuration.
@@ -674,6 +686,7 @@ spec:
                         maxItems: 10
                         minItems: 1
                         type: array
+                        x-kubernetes-list-type: atomic
                     type: object
                   sFlow:
                     description: sFlow defines the SFlow configuration.
@@ -687,6 +700,7 @@ spec:
                         maxItems: 10
                         minItems: 1
                         type: array
+                        x-kubernetes-list-type: atomic
                     type: object
                 type: object
               kubeProxyConfig:
@@ -712,6 +726,7 @@ spec:
                       items:
                         type: string
                       type: array
+                      x-kubernetes-list-type: atomic
                     description: Any additional arguments to pass to the kubeproxy
                       process
                     type: object
@@ -867,6 +882,7 @@ spec:
                 items:
                   type: string
                 type: array
+                x-kubernetes-list-type: atomic
               unsupportedConfigOverrides:
                 description: unsupportedConfigOverrides overrides the final configuration
                   that was computed by the operator. Red Hat does not support the

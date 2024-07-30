@@ -47589,6 +47589,11 @@ func schema_openshift_api_operator_v1_HybridOverlayConfig(ref common.ReferenceCa
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"hybridClusterNetwork": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "HybridClusterNetwork defines a network space given to nodes on an additional overlay network.",
 							Type:        []string{"array"},
@@ -47697,6 +47702,11 @@ func schema_openshift_api_operator_v1_IPFIXConfig(ref common.ReferenceCallback) 
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"collectors": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "ipfixCollectors is list of strings formatted as ip:port with a maximum of ten items",
 							Type:        []string{"array"},
@@ -50828,6 +50838,11 @@ func schema_openshift_api_operator_v1_NetFlowConfig(ref common.ReferenceCallback
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"collectors": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "netFlow defines the NetFlow collectors that will consume the flow data exported from OVS. It is a list of strings formatted as ip:port with a maximum of ten items",
 							Type:        []string{"array"},
@@ -51032,6 +51047,11 @@ func schema_openshift_api_operator_v1_NetworkSpec(ref common.ReferenceCallback) 
 						},
 					},
 					"clusterNetwork": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "clusterNetwork is the IP address pool to use for pod IPs. Some network providers, e.g. OpenShift SDN, support multiple ClusterNetworks. Others only support one. This is equivalent to the cluster-cidr.",
 							Type:        []string{"array"},
@@ -51046,6 +51066,11 @@ func schema_openshift_api_operator_v1_NetworkSpec(ref common.ReferenceCallback) 
 						},
 					},
 					"serviceNetwork": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "serviceNetwork is the ip address pool to use for Service IPs Currently, all existing network providers only support a single value here, but this is an array to allow for growth.",
 							Type:        []string{"array"},
@@ -51068,6 +51093,14 @@ func schema_openshift_api_operator_v1_NetworkSpec(ref common.ReferenceCallback) 
 						},
 					},
 					"additionalNetworks": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "additionalNetworks is a list of extra networks to make available to pods when multiple networks are enabled.",
 							Type:        []string{"array"},
@@ -53170,6 +53203,11 @@ func schema_openshift_api_operator_v1_SFlowConfig(ref common.ReferenceCallback) 
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"collectors": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "sFlowCollectors is list of strings formatted as ip:port with a maximum of ten items",
 							Type:        []string{"array"},
@@ -54032,6 +54070,11 @@ func schema_openshift_api_operator_v1_StaticIPAMConfig(ref common.ReferenceCallb
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"addresses": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "Addresses configures IP address for the interface",
 							Type:        []string{"array"},
@@ -54046,6 +54089,11 @@ func schema_openshift_api_operator_v1_StaticIPAMConfig(ref common.ReferenceCallb
 						},
 					},
 					"routes": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "Routes configures IP routes for the interface",
 							Type:        []string{"array"},
@@ -54081,6 +54129,11 @@ func schema_openshift_api_operator_v1_StaticIPAMDNS(ref common.ReferenceCallback
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"nameservers": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "Nameservers points DNS servers for IP lookup",
 							Type:        []string{"array"},
@@ -54103,6 +54156,11 @@ func schema_openshift_api_operator_v1_StaticIPAMDNS(ref common.ReferenceCallback
 						},
 					},
 					"search": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "Search configures priority ordered search domains for short hostname lookups",
 							Type:        []string{"array"},

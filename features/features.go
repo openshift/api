@@ -288,9 +288,9 @@ var (
 
 	FeatureGateMachineConfigNodes = newFeatureGate("MachineConfigNodes").
 					reportProblemsToJiraComponent("MachineConfigOperator").
-					contactPerson("cdoern").
+					contactPerson("dkhater").
 					productScope(ocpSpecific).
-					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+					enableIn(configv1.DevPreviewNoUpgrade).
 					mustRegister()
 
 	FeatureGateClusterAPIInstall = newFeatureGate("ClusterAPIInstall").

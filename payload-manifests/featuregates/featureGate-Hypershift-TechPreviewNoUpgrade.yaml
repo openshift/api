@@ -162,9 +162,6 @@
                         "name": "MachineAPIProviderOpenStack"
                     },
                     {
-                        "name": "MachineConfigNodes"
-                    },
-                    {
                         "name": "ManagedBootImages"
                     },
                     {

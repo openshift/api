@@ -34,13 +34,7 @@
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
                     },
                     {
-                        "name": "MultiArchInstallAWS"
-                    },
-                    {
                         "name": "MultiArchInstallAzure"
-                    },
-                    {
-                        "name": "MultiArchInstallGCP"
                     }
                 ],
                 "enabled": [
@@ -181,6 +175,12 @@
                     },
                     {
                         "name": "MixedCPUsAllocation"
+                    },
+                    {
+                        "name": "MultiArchInstallAWS"
+                    },
+                    {
+                        "name": "MultiArchInstallGCP"
                     },
                     {
                         "name": "NetworkDiagnosticsConfig"

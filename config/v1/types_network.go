@@ -55,11 +55,11 @@ type NetworkSpec struct {
 	// +listType=atomic
 	ServiceNetwork []string `json:"serviceNetwork"`
 
-	// NetworkType is the plugin that is to be deployed (e.g. OpenShiftSDN).
+	// NetworkType is the plugin that is to be deployed (e.g. OVNKubernetes).
 	// This should match a value that the cluster-network-operator understands,
 	// or else no networking will be installed.
 	// Currently supported values are:
-	// - OpenShiftSDN
+	// - OVNKubernetes
 	// This field is immutable after installation.
 	NetworkType string `json:"networkType"`
 
@@ -101,7 +101,7 @@ type NetworkStatus struct {
 	// +listType=atomic
 	ServiceNetwork []string `json:"serviceNetwork,omitempty"`
 
-	// NetworkType is the plugin that is deployed (e.g. OpenShiftSDN).
+	// NetworkType is the plugin that is deployed (e.g. OVNKubernetes).
 	NetworkType string `json:"networkType,omitempty"`
 
 	// ClusterNetworkMTU is the MTU for inter-pod networking.

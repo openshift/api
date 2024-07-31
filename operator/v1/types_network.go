@@ -58,7 +58,7 @@ type NetworkSpec struct {
 	OperatorSpec `json:",inline"`
 
 	// clusterNetwork is the IP address pool to use for pod IPs.
-	// Some network providers, e.g. OpenShift SDN, support multiple ClusterNetworks.
+	// Some network providers support multiple ClusterNetworks.
 	// Others only support one. This is equivalent to the cluster-cidr.
 	// +listType=atomic
 	ClusterNetwork []ClusterNetworkEntry `json:"clusterNetwork"`
@@ -96,8 +96,8 @@ type NetworkSpec struct {
 	// deployKubeProxy specifies whether or not a standalone kube-proxy should
 	// be deployed by the operator. Some network providers include kube-proxy
 	// or similar functionality. If unset, the plugin will attempt to select
-	// the correct value, which is false when OpenShift SDN and ovn-kubernetes are
-	// used and true otherwise.
+	// the correct value, which is false when ovn-kubernetes is used and true
+	// otherwise.
 	// +optional
 	DeployKubeProxy *bool `json:"deployKubeProxy,omitempty"`
 
@@ -109,9 +109,9 @@ type NetworkSpec struct {
 	// +kubebuilder:default:=false
 	DisableNetworkDiagnostics bool `json:"disableNetworkDiagnostics"`
 
-	// kubeProxyConfig lets us configure desired proxy configuration.
-	// If not specified, sensible defaults will be chosen by OpenShift directly.
-	// Not consumed by all network providers - currently only openshift-sdn.
+	// kubeProxyConfig lets us configure desired proxy configuration, if
+	// deployKubeProxy is true. If not specified, sensible defaults will be chosen by
+	// OpenShift directly.
 	KubeProxyConfig *ProxyConfig `json:"kubeProxyConfig,omitempty"`
 
 	// exportNetworkFlows enables and configures the export of network flow metadata from the pod network
@@ -249,7 +249,8 @@ type DefaultNetworkDefinition struct {
 	// All NetworkTypes are supported except for NetworkTypeRaw
 	Type NetworkType `json:"type"`
 
-	// openShiftSDNConfig configures the openshift-sdn plugin
+	// openShiftSDNConfig was previously used to configure the openshift-sdn plugin.
+	// DEPRECATED: OpenShift SDN is no longer supported.
 	// +optional
 	OpenShiftSDNConfig *OpenShiftSDNConfig `json:"openshiftSDNConfig,omitempty"`
 
@@ -367,7 +368,7 @@ type AdditionalNetworkDefinition struct {
 	SimpleMacvlanConfig *SimpleMacvlanConfig `json:"simpleMacvlanConfig,omitempty"`
 }
 
-// OpenShiftSDNConfig configures the three openshift-sdn plugins
+// OpenShiftSDNConfig was used to configure the OpenShift SDN plugin. It is no longer used.
 type OpenShiftSDNConfig struct {
 	// mode is one of "Multitenant", "Subnet", or "NetworkPolicy"
 	Mode SDNMode `json:"mode"`
@@ -386,7 +387,6 @@ type OpenShiftSDNConfig struct {
 	// useExternalOpenvswitch used to control whether the operator would deploy an OVS
 	// DaemonSet itself or expect someone else to start OVS. As of 4.6, OVS is always
 	// run as a system service, and this flag is ignored.
-	// DEPRECATED: non-functional as of 4.6
 	// +optional
 	UseExternalOpenvswitch *bool `json:"useExternalOpenvswitch,omitempty"`
 
@@ -759,11 +759,11 @@ type EgressIPConfig struct {
 }
 
 const (
-	// NetworkTypeOpenShiftSDN means the openshift-sdn plugin will be configured
+	// NetworkTypeOpenShiftSDN means the openshift-sdn plugin will be configured.
+	// DEPRECATED: OpenShift SDN is no longer supported
 	NetworkTypeOpenShiftSDN NetworkType = "OpenShiftSDN"
 
-	// NetworkTypeOVNKubernetes means the ovn-kubernetes project will be configured.
-	// This is currently not implemented.
+	// NetworkTypeOVNKubernetes means the ovn-kubernetes plugin will be configured.
 	NetworkTypeOVNKubernetes NetworkType = "OVNKubernetes"
 
 	// NetworkTypeRaw
@@ -773,19 +773,23 @@ const (
 	NetworkTypeSimpleMacvlan NetworkType = "SimpleMacvlan"
 )
 
-// SDNMode is the Mode the openshift-sdn plugin is in
+// SDNMode is the Mode the openshift-sdn plugin is in.
+// DEPRECATED: OpenShift SDN is no longer supported
 type SDNMode string
 
 const (
 	// SDNModeSubnet is a simple mode that offers no isolation between pods
+	// DEPRECATED: OpenShift SDN is no longer supported
 	SDNModeSubnet SDNMode = "Subnet"
 
 	// SDNModeMultitenant is a special "multitenant" mode that offers limited
 	// isolation configuration between namespaces
+	// DEPRECATED: OpenShift SDN is no longer supported
 	SDNModeMultitenant SDNMode = "Multitenant"
 
 	// SDNModeNetworkPolicy is a full NetworkPolicy implementation that allows
 	// for sophisticated network isolation and segmenting. This is the default.
+	// DEPRECATED: OpenShift SDN is no longer supported
 	SDNModeNetworkPolicy SDNMode = "NetworkPolicy"
 )
 

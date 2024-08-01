@@ -10066,7 +10066,7 @@ func schema_openshift_api_config_v1_ClusterMonitoring(ref common.ReferenceCallba
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. ClusterMonitoring is the Schema for the Cluster Monitoring Operators API",
+				Description: "ClusterMonitoring is the Custom Resource object which holds the current status of Cluster Monitoring Operator. CMO is a central component of the monitoring stack.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. ClusterMonitoring is the Schema for the Cluster Monitoring Operators API",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -10164,12 +10164,12 @@ func schema_openshift_api_config_v1_ClusterMonitoringSpec(ref common.ReferenceCa
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "MonitoringOperatorSpec defines the desired state of Cluster Monitoring Operator",
+				Description: "ClusterMonitoringSpec defines the desired state of Cluster Monitoring Operator",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"userDefined": {
 						SchemaProps: spec.SchemaProps{
-							Description: "`UserWorkload` set the deployment mode for user-defined monitoring.",
+							Description: "`UserWorkload` set the deployment mode for user-defined monitoring in addition to the default platform monitoring.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.UserDefinedMonitoring"),
 						},
@@ -19392,8 +19392,9 @@ func schema_openshift_api_config_v1_UserDefinedMonitoring(ref common.ReferenceCa
 				Properties: map[string]spec.Schema{
 					"mode": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "mode defines the different configurations of UserDefinedMontiring",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},

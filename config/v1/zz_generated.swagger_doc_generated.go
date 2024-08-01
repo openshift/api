@@ -572,7 +572,7 @@ func (ImageLabel) SwaggerDoc() map[string]string {
 }
 
 var map_ClusterMonitoring = map[string]string{
-	"":       "Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. ClusterMonitoring is the Schema for the Cluster Monitoring Operators API",
+	"":       "ClusterMonitoring is the Custom Resource object which holds the current status of Cluster Monitoring Operator. CMO is a central component of the monitoring stack.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. ClusterMonitoring is the Schema for the Cluster Monitoring Operators API",
 	"spec":   "spec holds user configuration for the Cluster Monitoring Operator",
 	"status": "status holds observed values from the cluster. They may not be overridden.",
 }
@@ -590,8 +590,8 @@ func (ClusterMonitoringList) SwaggerDoc() map[string]string {
 }
 
 var map_ClusterMonitoringSpec = map[string]string{
-	"":            "MonitoringOperatorSpec defines the desired state of Cluster Monitoring Operator",
-	"userDefined": "`UserWorkload` set the deployment mode for user-defined monitoring.",
+	"":            "ClusterMonitoringSpec defines the desired state of Cluster Monitoring Operator",
+	"userDefined": "`UserWorkload` set the deployment mode for user-defined monitoring in addition to the default platform monitoring.",
 }
 
 func (ClusterMonitoringSpec) SwaggerDoc() map[string]string {
@@ -607,7 +607,8 @@ func (ClusterMonitoringStatus) SwaggerDoc() map[string]string {
 }
 
 var map_UserDefinedMonitoring = map[string]string{
-	"": "UserDefinedMonitoring config for user-defined projects.",
+	"":     "UserDefinedMonitoring config for user-defined projects.",
+	"mode": "mode defines the different configurations of UserDefinedMontiring",
 }
 
 func (UserDefinedMonitoring) SwaggerDoc() map[string]string {

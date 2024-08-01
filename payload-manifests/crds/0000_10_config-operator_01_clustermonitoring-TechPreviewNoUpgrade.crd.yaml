@@ -22,10 +22,12 @@ spec:
   - name: v1
     schema:
       openAPIV3Schema:
-        description: 'Compatibility level 4: No compatibility is provided, the API
-          can change at any point for any reason. These capabilities should not be
-          used by applications needing long term support. ClusterMonitoring is the
-          Schema for the Cluster Monitoring Operators API'
+        description: "ClusterMonitoring is the Custom Resource object which holds
+          the current status of Cluster Monitoring Operator. CMO is a central component
+          of the monitoring stack. \n Compatibility level 4: No compatibility is provided,
+          the API can change at any point for any reason. These capabilities should
+          not be used by applications needing long term support. ClusterMonitoring
+          is the Schema for the Cluster Monitoring Operators API"
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -44,13 +46,11 @@ spec:
               Operator
             properties:
               userDefined:
-                default:
-                  mode: Disabled
                 description: '`UserWorkload` set the deployment mode for user-defined
-                  monitoring.'
+                  monitoring in addition to the default platform monitoring.'
                 properties:
                   mode:
-                    default: Disabled
+                    description: mode defines the different configurations of UserDefinedMontiring
                     enum:
                     - Disabled
                     - SingleNamespace

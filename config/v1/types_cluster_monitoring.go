@@ -24,6 +24,8 @@ import (
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
+// ClusterMonitoring is the Custom Resource object which holds the current status of Cluster Monitoring Operator. CMO is a central component of the monitoring stack.
+//
 // Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
 // +openshift:compatibility-gen:internal
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/1929
@@ -62,18 +64,16 @@ type ClusterMonitoringList struct {
 	Items           []ClusterMonitoring `json:"items"`
 }
 
-// MonitoringOperatorSpec defines the desired state of Cluster Monitoring Operator
+// ClusterMonitoringSpec defines the desired state of Cluster Monitoring Operator
 type ClusterMonitoringSpec struct {
-	// `UserWorkload` set the deployment mode for user-defined monitoring.
+	// `UserWorkload` set the deployment mode for user-defined monitoring in addition to the default platform monitoring.
 	// +optional
-	// +kubebuilder:default={"mode": "Disabled"}
 	UserDefined UserDefinedMonitoring `json:"userDefined,omitempty"`
 }
 
 // UserDefinedMonitoring config for user-defined projects.
 type UserDefinedMonitoring struct {
-	// +kubebuilder:default="Disabled"
-	// +default:="Disabled"
+	// mode defines the different configurations of UserDefinedMontiring
 	// +kubebuilder:validation:Enum:="Disabled";"SingleNamespace"
 	Mode UserDefinedMode `json:"mode,omitempty"`
 }

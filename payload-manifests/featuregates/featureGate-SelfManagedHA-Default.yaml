@@ -101,9 +101,6 @@
                         "name": "MachineConfigNodes"
                     },
                     {
-                        "name": "ManagedBootImages"
-                    },
-                    {
                         "name": "ManagedBootImagesAWS"
                     },
                     {
@@ -129,9 +126,6 @@
                     },
                     {
                         "name": "NewOLM"
-                    },
-                    {
-                        "name": "NodeDisruptionPolicy"
                     },
                     {
                         "name": "NodeSwap"
@@ -229,6 +223,9 @@
                         "name": "KMSv1"
                     },
                     {
+                        "name": "ManagedBootImages"
+                    },
+                    {
                         "name": "MetricsServer"
                     },
                     {
@@ -236,6 +233,9 @@
                     },
                     {
                         "name": "NetworkLiveMigration"
+                    },
+                    {
+                        "name": "NodeDisruptionPolicy"
                     },
                     {
                         "name": "OpenShiftPodSecurityAdmission"

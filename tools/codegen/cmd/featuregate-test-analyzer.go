@@ -495,6 +495,39 @@ func filterVariants(featureGate string, variantsList ...[]JobVariant) []JobVaria
 	return filteredVariants
 }
 
+// getLatestRelease returns the latest release from Sippy.
+func getLatestRelease() (string, error) {
+	releaseAPI := "https://sippy.dptools.openshift.org/api/releases"
+	resp, err := http.Get(releaseAPI)
+	if err != nil {
+		return "", fmt.Errorf("error fetching data from API: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("unexpected status code: %d", resp.StatusCode)
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", fmt.Errorf("error reading response body: %v", err)
+	}
+
+	var result struct {
+		Releases []string `json:"releases"`
+	}
+	err = json.Unmarshal(body, &result)
+	if err != nil {
+		return "", fmt.Errorf("error unmarshalling JSON: %v", err)
+	}
+
+	if len(result.Releases) == 0 {
+		return "", fmt.Errorf("no releases found")
+	}
+
+	return result.Releases[0], nil
+}
+
 func listTestResultForVariant(featureGate string, jobVariant JobVariant) (*TestingResults, error) {
 	// Substring here matches for both [OCPFeatureGate:...] and [FeatureGate:...]
 	testPattern := fmt.Sprintf("FeatureGate:%s]", featureGate)
@@ -531,9 +564,13 @@ func listTestResultForVariant(featureGate string, jobVariant JobVariant) (*Testi
 			Host:   "sippy.dptools.openshift.org",
 			Path:   "api/tests",
 		}
-		// TODO, this needs to be floating somehow as "latest"
+
+		latestRelease, err := getLatestRelease()
+		if err != nil {
+			return nil, fmt.Errorf("couldn't fetch latest release version: %w", err)
+		}
 		queryParams := currURL.Query()
-		queryParams.Add("release", "4.16")
+		queryParams.Add("release", latestRelease)
 		queryParams.Add("period", "default")
 		filterJSON, err := json.Marshal(currQuery)
 		if err != nil {

@@ -80,9 +80,6 @@
                         "name": "InsightsOnDemandDataGather"
                     },
                     {
-                        "name": "InstallAlternateInfrastructureAWS"
-                    },
-                    {
                         "name": "MachineAPIMigration"
                     },
                     {
@@ -182,18 +179,6 @@
                     },
                     {
                         "name": "CloudDualStackNodeIPs"
-                    },
-                    {
-                        "name": "ClusterAPIInstallAWS"
-                    },
-                    {
-                        "name": "ClusterAPIInstallNutanix"
-                    },
-                    {
-                        "name": "ClusterAPIInstallOpenStack"
-                    },
-                    {
-                        "name": "ClusterAPIInstallVSphere"
                     },
                     {
                         "name": "DisableKubeletCloudCredentialProviders"

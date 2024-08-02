@@ -10,8 +10,8 @@ import (
 )
 
 const (
-	// DefaultOutputFileBaseName is the default output file base name for the generated openapi functions.
-	DefaultOutputFileBaseName = "zz_generated.openapi"
+	// DefaultOutputFileName is the default output file name for the generated openapi functions.
+	DefaultOutputFileName = "zz_generated.openapi.go"
 )
 
 var (
@@ -37,10 +37,10 @@ type Options struct {
 	// When omitted, no header is added to the generated files.
 	HeaderFilePath string
 
-	// OutputFileBaseName is the base name of the output file.
-	// When omitted, DefaultOutputFileBaseName is used.
-	// The current value of DefaultOutputFileBaseName is "zz_generated.openapi".
-	OutputFileBaseName string
+	// OutputFileName is the name of the output file.
+	// When omitted, DefaultOutputFileName is used.
+	// The current value of DefaultOutputFileName is "zz_generated.openapi.go".
+	OutputFileName string
 
 	// OutputPackagePath is the package path where the generated golang files will be written.
 	OutputPackagePath string
@@ -53,17 +53,17 @@ type Options struct {
 // generator implements the generation.Generator interface.
 // It is designed to generate openapi function for a particular API group.
 type generator struct {
-	headerFilePath     string
-	outputBaseFileName string
-	outputPackagePath  string
-	verify             bool
+	headerFilePath    string
+	outputFileName    string
+	outputPackagePath string
+	verify            bool
 }
 
 // NewGenerator builds a new openapi generator.
 func NewGenerator(opts Options) generation.MultiGroupGenerator {
-	outputFileBaseName := DefaultOutputFileBaseName
-	if opts.OutputFileBaseName != "" {
-		outputFileBaseName = opts.OutputFileBaseName
+	outputFileBaseName := DefaultOutputFileName
+	if opts.OutputFileName != "" {
+		outputFileBaseName = opts.OutputFileName
 	}
 
 	outputPackagePath := DefaultOutputPackagePath
@@ -72,10 +72,10 @@ func NewGenerator(opts Options) generation.MultiGroupGenerator {
 	}
 
 	return &generator{
-		headerFilePath:     opts.HeaderFilePath,
-		outputBaseFileName: outputFileBaseName,
-		outputPackagePath:  outputPackagePath,
-		verify:             opts.Verify,
+		headerFilePath:    opts.HeaderFilePath,
+		outputFileName:    outputFileBaseName,
+		outputPackagePath: outputPackagePath,
+		verify:            opts.Verify,
 	}
 }
 
@@ -109,7 +109,7 @@ func (g *generator) GenGroups(groupCtxs []generation.APIGroupContext) error {
 		headerFilePath = tmpFile.Name()
 	}
 
-	if err := generateOpenAPIDefinitions(inputPaths, g.outputPackagePath, g.outputBaseFileName, headerFilePath, g.verify); err != nil {
+	if err := generateOpenAPIDefinitions(inputPaths, g.outputPackagePath, g.outputFileName, headerFilePath, g.verify); err != nil {
 		return fmt.Errorf("could not generate openapi definitions: %w", err)
 	}
 

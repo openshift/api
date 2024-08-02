@@ -9,9 +9,9 @@ import (
 )
 
 var (
-	openapiHeaderFilePath     string
-	openapiOutputFileBaseName string
-	openapiOutputPackagePath  string
+	openapiHeaderFilePath    string
+	openapiOutputFileName    string
+	openapiOutputPackagePath string
 )
 
 // openapiCmd represents the openapi command
@@ -37,16 +37,16 @@ func init() {
 	rootCmd.AddCommand(openapiCmd)
 
 	rootCmd.PersistentFlags().StringVar(&openapiHeaderFilePath, "openapi:header-file-path", "", "Path to file containing boilerplate header text. The string YEAR will be replaced with the current 4-digit year. When omitted, no header is added to the generated files.")
-	rootCmd.PersistentFlags().StringVar(&openapiOutputFileBaseName, "openapi:output-file-base-name", openapi.DefaultOutputFileBaseName, "Base name of the output file. When omitted, zz_generated.openapi is used.")
+	rootCmd.PersistentFlags().StringVar(&openapiOutputFileName, "openapi:output-file-name", openapi.DefaultOutputFileName, "Name of the output file. When omitted, zz_generated.openapi.go is used.")
 	rootCmd.PersistentFlags().StringVar(&openapiOutputPackagePath, "openapi:output-package-path", openapi.DefaultOutputPackagePath, "Package path where the generated golang files will be written.")
 }
 
 // newOpenAPIGenerator builds a new openapi generator.
 func newOpenAPIGenerator() generation.MultiGroupGenerator {
 	return openapi.NewGenerator(openapi.Options{
-		HeaderFilePath:     openapiHeaderFilePath,
-		OutputFileBaseName: openapiOutputFileBaseName,
-		OutputPackagePath:  openapiOutputPackagePath,
-		Verify:             verify,
+		HeaderFilePath:    openapiHeaderFilePath,
+		OutputFileName:    openapiOutputFileName,
+		OutputPackagePath: openapiOutputPackagePath,
+		Verify:            verify,
 	})
 }

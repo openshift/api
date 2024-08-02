@@ -12,8 +12,14 @@ func createEvaluateAllCommand() *cobra.Command {
 		Use:     "eval-all [expression] [yaml_file1]...",
 		Aliases: []string{"ea"},
 		Short:   "Loads _all_ yaml documents of _all_ yaml files and runs expression once",
+		ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+			if len(args) == 0 {
+				return nil, cobra.ShellCompDirectiveNoFileComp
+			}
+			return nil, cobra.ShellCompDirectiveDefault
+		},
 		Example: `
-# Merge f2.yml into f1.yml (inplace)
+# Merge f2.yml into f1.yml (in place)
 yq eval-all --inplace 'select(fileIndex == 0) * select(fileIndex == 1)' f1.yml f2.yml
 ## the same command and expression using shortened names:
 yq ea -i 'select(fi == 0) * select(fi == 1)' f1.yml f2.yml
@@ -26,7 +32,7 @@ yq ea '. as $item ireduce ({}; . * $item )' file1.yml file2.yml ...
 ## use '-' as a filename to pipe from STDIN
 cat file2.yml | yq ea '.a.b' file1.yml - file3.yml
 `,
-		Long: `yq is a portable command-line YAML processor (https://github.com/mikefarah/yq/) 
+		Long: `yq is a portable command-line data file processor (https://github.com/mikefarah/yq/) 
 See https://mikefarah.gitbook.io/yq/ for detailed documentation and examples.
 
 ## Evaluate All ##
@@ -70,7 +76,7 @@ func evaluateAll(cmd *cobra.Command, args []string) (cmdError error) {
 		}()
 	}
 
-	format, err := yqlib.OutputFormatFromString(outputFormat)
+	format, err := yqlib.FormatFromString(outputFormat)
 	if err != nil {
 		return err
 	}
@@ -84,9 +90,15 @@ func evaluateAll(cmd *cobra.Command, args []string) (cmdError error) {
 	if err != nil {
 		return err
 	}
-	encoder := configureEncoder(format)
+	encoder, err := configureEncoder()
+	if err != nil {
+		return err
+	}
 
 	printer := yqlib.NewPrinter(encoder, printerWriter)
+	if nulSepOutput {
+		printer.SetNulSepOutput(true)
+	}
 
 	if frontMatter != "" {
 		frontMatterHandler := yqlib.NewFrontMatterHandler(args[0])

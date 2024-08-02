@@ -566,7 +566,11 @@ func (f *File) String() string {
 	for _, doc := range f.Docs {
 		docs = append(docs, doc.String())
 	}
-	return strings.Join(docs, "\n")
+	if len(docs) > 0 {
+		return strings.Join(docs, "\n") + "\n"
+	} else {
+		return ""
+	}
 }
 
 // DocumentNode type of Document
@@ -651,7 +655,7 @@ func (n *NullNode) GetValue() interface{} {
 // String returns `null` text
 func (n *NullNode) String() string {
 	if n.Comment != nil {
-		return fmt.Sprintf("null %s", n.Comment.String())
+		return addCommentString("null", n.Comment)
 	}
 	return n.stringWithoutComment()
 }
@@ -1150,6 +1154,7 @@ type MappingNode struct {
 	End         *token.Token
 	IsFlowStyle bool
 	Values      []*MappingValueNode
+	FootComment *CommentGroupNode
 }
 
 func (n *MappingNode) startPos() *token.Position {
@@ -1315,9 +1320,10 @@ func (n *MappingKeyNode) MarshalYAML() ([]byte, error) {
 // MappingValueNode type of mapping value
 type MappingValueNode struct {
 	*BaseNode
-	Start *token.Token
-	Key   MapKeyNode
-	Value Node
+	Start       *token.Token
+	Key         MapKeyNode
+	Value       Node
+	FootComment *CommentGroupNode
 }
 
 // Replace replace value node.
@@ -1366,14 +1372,20 @@ func (n *MappingValueNode) SetIsFlowStyle(isFlow bool) {
 
 // String mapping value to text
 func (n *MappingValueNode) String() string {
+	var text string
 	if n.Comment != nil {
-		return fmt.Sprintf(
+		text = fmt.Sprintf(
 			"%s\n%s",
 			n.Comment.StringWithSpace(n.Key.GetToken().Position.Column-1),
 			n.toString(),
 		)
+	} else {
+		text = n.toString()
 	}
-	return n.toString()
+	if n.FootComment != nil {
+		text += fmt.Sprintf("\n%s", n.FootComment.StringWithSpace(n.Key.GetToken().Position.Column-1))
+	}
+	return text
 }
 
 func (n *MappingValueNode) toString() string {
@@ -1468,11 +1480,12 @@ func (m *ArrayNodeIter) Len() int {
 // SequenceNode type of sequence node
 type SequenceNode struct {
 	*BaseNode
-	Start         *token.Token
-	End           *token.Token
-	IsFlowStyle   bool
-	Values        []Node
-	ValueComments []*CommentGroupNode
+	Start             *token.Token
+	End               *token.Token
+	IsFlowStyle       bool
+	Values            []Node
+	ValueHeadComments []*CommentGroupNode
+	FootComment       *CommentGroupNode
 }
 
 // Replace replace value node.
@@ -1493,9 +1506,7 @@ func (n *SequenceNode) Replace(idx int, value Node) error {
 func (n *SequenceNode) Merge(target *SequenceNode) {
 	column := n.Start.Position.Column - target.Start.Position.Column
 	target.AddColumn(column)
-	for _, value := range target.Values {
-		n.Values = append(n.Values, value)
-	}
+	n.Values = append(n.Values, target.Values...)
 }
 
 // SetIsFlowStyle set value to IsFlowStyle field recursively.
@@ -1557,8 +1568,9 @@ func (n *SequenceNode) blockStyleString() string {
 		diffLength := len(splittedValues[0]) - len(trimmedFirstValue)
 		if len(splittedValues) > 1 && value.Type() == StringType || value.Type() == LiteralType {
 			// If multi-line string, the space characters for indent have already been added, so delete them.
+			prefix := space + "  "
 			for i := 1; i < len(splittedValues); i++ {
-				splittedValues[i] = strings.TrimLeft(splittedValues[i], " ")
+				splittedValues[i] = strings.TrimPrefix(splittedValues[i], prefix)
 			}
 		}
 		newValues := []string{trimmedFirstValue}
@@ -1572,10 +1584,13 @@ func (n *SequenceNode) blockStyleString() string {
 			newValues = append(newValues, fmt.Sprintf("%s  %s", space, trimmed))
 		}
 		newValue := strings.Join(newValues, "\n")
-		if len(n.ValueComments) == len(n.Values) && n.ValueComments[idx] != nil {
-			values = append(values, n.ValueComments[idx].StringWithSpace(n.Start.Position.Column-1))
+		if len(n.ValueHeadComments) == len(n.Values) && n.ValueHeadComments[idx] != nil {
+			values = append(values, n.ValueHeadComments[idx].StringWithSpace(n.Start.Position.Column-1))
 		}
 		values = append(values, fmt.Sprintf("%s- %s", space, newValue))
+	}
+	if n.FootComment != nil {
+		values = append(values, n.FootComment.StringWithSpace(n.Start.Position.Column-1))
 	}
 	return strings.Join(values, "\n")
 }
@@ -1862,8 +1877,8 @@ func (n *CommentGroupNode) String() string {
 }
 
 func (n *CommentGroupNode) StringWithSpace(col int) string {
-	space := strings.Repeat(" ", col)
 	values := []string{}
+	space := strings.Repeat(" ", col)
 	for _, comment := range n.Comments {
 		values = append(values, space+comment.String())
 	}

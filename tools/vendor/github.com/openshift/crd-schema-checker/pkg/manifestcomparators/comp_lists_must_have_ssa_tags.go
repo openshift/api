@@ -28,15 +28,16 @@ func (b listsMustHaveSSATags) Validate(crd *apiextensionsv1.CustomResourceDefini
 
 	for _, newVersion := range crd.Spec.Versions {
 		fieldsWithoutListType := []string{}
-		SchemaHas(newVersion.Schema.OpenAPIV3Schema, field.NewPath("^"), field.NewPath("^"), func(s *apiextensionsv1.JSONSchemaProps, fldPath, simpleLocation *field.Path) bool {
-			if s.Type != "array" {
+		SchemaHas(newVersion.Schema.OpenAPIV3Schema, field.NewPath("^"), field.NewPath("^"), nil,
+			func(s *apiextensionsv1.JSONSchemaProps, fldPath, simpleLocation *field.Path, _ []*apiextensionsv1.JSONSchemaProps) bool {
+				if s.Type != "array" {
+					return false
+				}
+				if s.XListType == nil || len(*s.XListType) == 0 {
+					fieldsWithoutListType = append(fieldsWithoutListType, simpleLocation.String())
+				}
 				return false
-			}
-			if s.XListType == nil || len(*s.XListType) == 0 {
-				fieldsWithoutListType = append(fieldsWithoutListType, simpleLocation.String())
-			}
-			return false
-		})
+			})
 
 		for _, newMapField := range fieldsWithoutListType {
 			errsToReport = append(errsToReport, fmt.Sprintf("crd/%v version/%v field/%v must set x-kubernetes-list-type", crd.Name, newVersion.Name, newMapField))

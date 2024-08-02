@@ -36,7 +36,7 @@ fi
 protoc_bin_dir=$(dirname "${PROTOC_GEN_GOGO}")
 
 PATH="$PATH:${protoc_bin_dir}" "${GO_TO_PROTOBUF}" \
-  --output-base="${GOPATH}/src" \
+  --output-dir="${GOPATH}/src" \
   --apimachinery-packages='-k8s.io/apimachinery/pkg/util/intstr,-k8s.io/apimachinery/pkg/api/resource,-k8s.io/apimachinery/pkg/runtime/schema,-k8s.io/apimachinery/pkg/runtime,-k8s.io/apimachinery/pkg/apis/meta/v1,-k8s.io/apimachinery/pkg/apis/meta/v1beta1,-k8s.io/api/core/v1,-k8s.io/api/rbac/v1' \
   --go-header-file=${SCRIPT_ROOT}/hack/empty.txt \
   --proto-import=${SCRIPT_ROOT}/third_party/protobuf \

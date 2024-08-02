@@ -32,9 +32,6 @@
                         "name": "ClusterAPIInstallAzure"
                     },
                     {
-                        "name": "ClusterAPIInstallGCP"
-                    },
-                    {
                         "name": "ClusterAPIInstallIBMCloud"
                     },
                     {
@@ -185,6 +182,9 @@
                     },
                     {
                         "name": "ClusterAPIInstallAWS"
+                    },
+                    {
+                        "name": "ClusterAPIInstallGCP"
                     },
                     {
                         "name": "ClusterAPIInstallNutanix"

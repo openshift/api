@@ -71,9 +71,6 @@
                         "name": "GatewayAPI"
                     },
                     {
-                        "name": "IngressControllerLBSubnetsAWS"
-                    },
-                    {
                         "name": "InsightsConfig"
                     },
                     {
@@ -218,6 +215,9 @@
                     },
                     {
                         "name": "HardwareSpeed"
+                    },
+                    {
+                        "name": "IngressControllerLBSubnetsAWS"
                     },
                     {
                         "name": "KMSv1"

@@ -588,6 +588,6 @@ var (
 							reportProblemsToJiraComponent("Routing").
 							contactPerson("miciah").
 							productScope(ocpSpecific).
-							enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+							enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 							mustRegister()
 )

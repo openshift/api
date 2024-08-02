@@ -12,5 +12,5 @@ const (
 	RequiredSCCAnnotation = "openshift.io/required-scc"
 
 	// MinimallySufficientPodSecurityStandard indicates the PodSecurityStandard that matched the SCCs available to the users of the namespace.
-	MinimallySufficientPodSecurityStandard = "security.openshift.io/psa"
+	MinimallySufficientPodSecurityStandard = "security.openshift.io/MinimallySufficientPodSecurityStandard"
 )

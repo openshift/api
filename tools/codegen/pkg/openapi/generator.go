@@ -24,7 +24,7 @@ var (
 		"k8s.io/apimachinery/pkg/runtime",
 		"k8s.io/apimachinery/pkg/util/intstr",
 		"k8s.io/apimachinery/pkg/api/resource",
-		"k8s.io/apimachinery/pkg/version",
+		"k8s.io/apimachinery/pkg/version/...", // Make version optional as it is not imported anywhere. It will be picked up if somebody starts using it in the future.
 		"k8s.io/api/core/v1",
 		"k8s.io/api/rbac/v1",
 		"k8s.io/api/authorization/v1",

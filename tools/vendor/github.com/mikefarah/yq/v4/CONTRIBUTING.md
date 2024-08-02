@@ -1,6 +1,6 @@
-# Development
+.# Development
 
-1. Install (golang)[https://golang.org/]
+1. Install (Golang)[https://golang.org/]
 1. Run  `scripts/devtools.sh` to install the required devtools
 2. Run `make [local] vendor` to install the vendor dependencies
 2. Run `make [local] test` to ensure you can run the existing tests
@@ -12,7 +12,7 @@
 
 # Documentation
 
-The documentation is a bit of a mixed bag (sorry in advanced, I do plan on simplifying it...) - with some parts automatically generated and stiched together and some statically defined.
+The documentation is a bit of a mixed bag (sorry in advance, I do plan on simplifying it...) - with some parts automatically generated and stiched together and some statically defined.
 
 Documentation is written in markdown, and is published in the 'gitbook' branch.
 
@@ -24,6 +24,8 @@ The pipeline will run the tests and automatically concatenate the files together
 ## How to contribute
 
 The first step is to find if what you want is automatically generated or not - start by looking in the master branch. 
+
+Note that PRs with small changes (e.g. minor typos) may not be merged (see https://joel.net/how-one-guy-ruined-hacktoberfest2020-drama).
 
 ### Updating dynamic documentation from master
 - Search for the documentation you want to update. If you find matches in a `*_test.go` file - update that, as that will automatically update the matching `*.md` file 

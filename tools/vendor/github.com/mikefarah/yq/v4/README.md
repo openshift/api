@@ -19,7 +19,7 @@ Pipe from STDIN:
 yq '.a.b[0].c' < file.yaml
 ```
 
-Update a yaml file, inplace
+Update a yaml file, in place
 ```bash
 yq -i '.a.b[0].c = "cool"' file.yaml
 ```
@@ -31,6 +31,10 @@ NAME=mike yq -i '.a.b[0].c = strenv(NAME)' file.yaml
 
 Merge multiple files
 ```bash
+# merge two files
+yq -n 'load("file1.yaml") * load("file2.yaml")'
+
+# merge using globs:
 # note the use of `ea` to evaluate all the files at once
 # instead of in sequence
 yq ea '. as $item ireduce ({}; . * $item )' path/to/*.yml
@@ -45,12 +49,17 @@ yq -i '
 ' file.yaml
 ```
 
-Convert JSON to YAML
+Find and update an item in an array:
 ```bash
-yq -P sample.json
+yq '(.[] | select(.name == "foo") | .address) = "12 cat st"'
 ```
 
-See the [documentation](https://mikefarah.gitbook.io/yq/) for more examples.
+Convert JSON to YAML
+```bash
+yq -Poy sample.json
+```
+
+See [recipes](https://mikefarah.gitbook.io/yq/recipes) for more examples and the [documentation](https://mikefarah.gitbook.io/yq/) for more information.
 
 Take a look at the discussions for [common questions](https://github.com/mikefarah/yq/discussions/categories/q-a), and [cool ideas](https://github.com/mikefarah/yq/discussions/categories/show-and-tell)
 
@@ -229,6 +238,8 @@ go install github.com/mikefarah/yq/v4@latest
 ## Community Supported Installation methods
 As these are supported by the community :heart: - however, they may be out of date with the officially supported releases.
 
+_Please note that the Debian package (previously supported by @rmescandon) is no longer maintained. Please use an alternative installation method._
+
 
 ### Nix
 
@@ -255,6 +266,9 @@ pacman -S go-yq
 ```
 
 ### Windows:
+
+Using [Chocolatey](https://chocolatey.org)
+
 [![Chocolatey](https://img.shields.io/chocolatey/v/yq.svg)](https://chocolatey.org/packages/yq)
 [![Chocolatey](https://img.shields.io/chocolatey/dt/yq.svg)](https://chocolatey.org/packages/yq)
 ```
@@ -262,12 +276,15 @@ choco install yq
 ```
 Supported by @chillum (https://chocolatey.org/packages/yq)
 
-and
+Using [scoop](https://scoop.sh/)
+```
+scoop install main/yq
+```
 
-### Winget
-winget install yq
-
-https://winget.run/pkg/MikeFarah/yq
+Using [winget](https://learn.microsoft.com/en-us/windows/package-manager/)
+```
+winget install --id MikeFarah.yq
+```
 
 ### Mac:
 Using [MacPorts](https://www.macports.org/)
@@ -278,22 +295,19 @@ sudo port install yq
 Supported by @herbygillot (https://ports.macports.org/maintainer/github/herbygillot)
 
 ### Alpine Linux
-- Enable edge/community repo by adding ```$MIRROR/alpine/edge/community``` to ```/etc/apk/repositories```
-- Update database index with ```apk update```
-- Install yq with ```apk add yq```
 
-Supported by Tuan Hoang
-https://pkgs.alpinelinux.org/package/edge/community/x86/yq
-
-
-### On Ubuntu 16.04 or higher from Debian package:
-```sh
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys CC86BB64
-sudo add-apt-repository ppa:rmescandon/yq
-sudo apt update
-sudo apt install yq -y
+Alpine Linux v3.20+ (and Edge):
 ```
-Supported by @rmescandon (https://launchpad.net/~rmescandon/+archive/ubuntu/yq)
+apk add yq-go
+```
+
+Alpine Linux up to v3.19:
+```
+apk add yq
+```
+
+Supported by Tuan Hoang (https://pkgs.alpinelinux.org/packages?name=yq-go)
+
 
 ## Features
 - [Detailed documentation with many examples](https://mikefarah.gitbook.io/yq/)
@@ -306,7 +320,7 @@ Supported by @rmescandon (https://launchpad.net/~rmescandon/+archive/ubuntu/yq)
 - [Deeply data structures](https://mikefarah.gitbook.io/yq/operators/traverse-read)
 - [Sort keys](https://mikefarah.gitbook.io/yq/operators/sort-keys)
 - Manipulate yaml [comments](https://mikefarah.gitbook.io/yq/operators/comment-operators), [styling](https://mikefarah.gitbook.io/yq/operators/style), [tags](https://mikefarah.gitbook.io/yq/operators/tag) and [anchors and aliases](https://mikefarah.gitbook.io/yq/operators/anchor-and-alias-operators).
-- [Update inplace](https://mikefarah.gitbook.io/yq/v/v4.x/commands/evaluate#flags)
+- [Update in place](https://mikefarah.gitbook.io/yq/v/v4.x/commands/evaluate#flags)
 - [Complex expressions to select and update](https://mikefarah.gitbook.io/yq/operators/select#select-and-update-matching-values-in-map)
 - Keeps yaml formatting and comments when updating (though there are issues with whitespace)
 - [Decode/Encode base64 data](https://mikefarah.gitbook.io/yq/operators/encode-decode)
@@ -333,7 +347,7 @@ Examples:
 # yq defaults to 'eval' command if no command is specified. See "yq eval --help" for more examples.
 yq '.stuff' < myfile.yml # outputs the data at the "stuff" node from "myfile.yml"
 
-yq -i '.stuff = "foo"' myfile.yml # update myfile.yml inplace
+yq -i '.stuff = "foo"' myfile.yml # update myfile.yml in place
 
 
 Available Commands:
@@ -341,7 +355,6 @@ Available Commands:
   eval             (default) Apply the expression to each document in each yaml file in sequence
   eval-all         Loads _all_ yaml documents of _all_ yaml files and runs expression once
   help             Help about any command
-  shell-completion Generate completion script
 
 Flags:
   -C, --colors                        force print with colors
@@ -350,7 +363,7 @@ Flags:
       --header-preprocess             Slurp any header comments and separators before processing expression. (default true)
   -h, --help                          help for yq
   -I, --indent int                    sets indent level for output (default 2)
-  -i, --inplace                       update the file inplace of first file given.
+  -i, --inplace                       update the file in place of first file given.
   -p, --input-format string           [yaml|y|xml|x] parse format for input. Note that json is a subset of yaml. (default "yaml")
   -M, --no-colors                     force print with no colors
   -N, --no-doc                        Don't print document separators (---)
@@ -369,5 +382,6 @@ Use "yq [command] --help" for more information about a command.
 ## Known Issues / Missing Features
 - `yq` attempts to preserve comment positions and whitespace as much as possible, but it does not handle all scenarios (see https://github.com/go-yaml/yaml/tree/v3 for details)
 - Powershell has its own...[opinions on quoting yq](https://mikefarah.gitbook.io/yq/usage/tips-and-tricks#quotes-in-windows-powershell)
+- "yes", "no" were dropped as boolean values in the yaml 1.2 standard - which is the standard yq assumes.
 
 See [tips and tricks](https://mikefarah.gitbook.io/yq/usage/tips-and-tricks) for more common problems and solutions.

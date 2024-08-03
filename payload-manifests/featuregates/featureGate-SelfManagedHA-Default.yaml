@@ -143,9 +143,6 @@
                         "name": "ServiceAccountTokenNodeBinding"
                     },
                     {
-                        "name": "SetEIPForNLBIngressController"
-                    },
-                    {
                         "name": "SignatureStores"
                     },
                     {
@@ -242,6 +239,9 @@
                     },
                     {
                         "name": "PrivateHostedZoneAWS"
+                    },
+                    {
+                        "name": "SetEIPForNLBIngressController"
                     },
                     {
                         "name": "VSphereControlPlaneMachineSet"

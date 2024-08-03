@@ -61,7 +61,7 @@ var (
 							reportProblemsToJiraComponent("Networking / router").
 							contactPerson("miheer").
 							productScope(ocpSpecific).
-							enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+							enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 							mustRegister()
 
 	FeatureGateOpenShiftPodSecurityAdmission = newFeatureGate("OpenShiftPodSecurityAdmission").

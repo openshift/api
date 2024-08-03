@@ -166,9 +166,6 @@
                         "name": "AdminNetworkPolicy"
                     },
                     {
-                        "name": "AlibabaPlatform"
-                    },
-                    {
                         "name": "AzureWorkloadIdentity"
                     },
                     {

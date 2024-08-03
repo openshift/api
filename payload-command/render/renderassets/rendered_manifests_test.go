@@ -113,7 +113,6 @@ status:
     - name: VSphereStaticIPs
     - name: ValidatingAdmissionPolicy
     enabled:
-    - name: AlibabaPlatform
     - name: AzureWorkloadIdentity
     - name: BuildCSIVolumes
     - name: CloudDualStackNodeIPs

@@ -182,13 +182,6 @@ var (
 					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
 
-	FeatureGateAlibabaPlatform = newFeatureGate("AlibabaPlatform").
-					reportProblemsToJiraComponent("cloud-provider").
-					contactPerson("jspeed").
-					productScope(ocpSpecific).
-					enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-					mustRegister()
-
 	FeatureGateCloudDualStackNodeIPs = newFeatureGate("CloudDualStackNodeIPs").
 						reportProblemsToJiraComponent("machine-config-operator/platform-baremetal").
 						contactPerson("mkowalsk").

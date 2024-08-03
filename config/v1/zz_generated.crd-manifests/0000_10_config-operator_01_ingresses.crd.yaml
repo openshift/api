@@ -158,10 +158,10 @@ spec:
                         description: type is the underlying infrastructure provider
                           for the cluster. Allowed values are "AWS", "Azure", "BareMetal",
                           "GCP", "Libvirt", "OpenStack", "VSphere", "oVirt", "KubeVirt",
-                          "EquinixMetal", "PowerVS", "AlibabaCloud", "Nutanix" and
-                          "None". Individual components may not support all platforms,
-                          and must handle unrecognized platforms as None if they do
-                          not support that platform.
+                          "EquinixMetal", "PowerVS", "Nutanix" and "None". Individual
+                          components may not support all platforms, and must handle
+                          unrecognized platforms as None if they do not support that
+                          platform.
                         enum:
                         - ""
                         - AWS

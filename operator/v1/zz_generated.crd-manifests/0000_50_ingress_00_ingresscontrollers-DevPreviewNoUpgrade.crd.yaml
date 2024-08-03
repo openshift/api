@@ -144,10 +144,9 @@ spec:
                   .status.platform: \n AWS:          LoadBalancerService (with External
                   scope) Azure:        LoadBalancerService (with External scope) GCP:
                   \         LoadBalancerService (with External scope) IBMCloud:     LoadBalancerService
-                  (with External scope) AlibabaCloud: LoadBalancerService (with External
-                  scope) Libvirt:      HostNetwork \n Any other platform types (including
-                  None) default to HostNetwork. \n endpointPublishingStrategy cannot
-                  be updated."
+                  (with External scope) Libvirt:      HostNetwork \n Any other platform
+                  types (including None) default to HostNetwork. \n endpointPublishingStrategy
+                  cannot be updated."
                 properties:
                   hostNetwork:
                     description: hostNetwork holds parameters for the HostNetwork

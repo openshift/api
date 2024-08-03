@@ -4284,60 +4284,6 @@
         }
       }
     },
-    "com.github.openshift.api.config.v1.AlibabaCloudPlatformSpec": {
-      "description": "AlibabaCloudPlatformSpec holds the desired state of the Alibaba Cloud infrastructure provider. This only includes fields that can be modified in the cluster.",
-      "type": "object"
-    },
-    "com.github.openshift.api.config.v1.AlibabaCloudPlatformStatus": {
-      "description": "AlibabaCloudPlatformStatus holds the current status of the Alibaba Cloud infrastructure provider.",
-      "type": "object",
-      "required": [
-        "region"
-      ],
-      "properties": {
-        "region": {
-          "description": "region specifies the region for Alibaba Cloud resources created for the cluster.",
-          "type": "string",
-          "default": ""
-        },
-        "resourceGroupID": {
-          "description": "resourceGroupID is the ID of the resource group for the cluster.",
-          "type": "string"
-        },
-        "resourceTags": {
-          "description": "resourceTags is a list of additional tags to apply to Alibaba Cloud resources created for the cluster.",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/com.github.openshift.api.config.v1.AlibabaCloudResourceTag"
-          },
-          "x-kubernetes-list-map-keys": [
-            "key"
-          ],
-          "x-kubernetes-list-type": "map"
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1.AlibabaCloudResourceTag": {
-      "description": "AlibabaCloudResourceTag is the set of tags to add to apply to resources.",
-      "type": "object",
-      "required": [
-        "key",
-        "value"
-      ],
-      "properties": {
-        "key": {
-          "description": "key is the key of the tag.",
-          "type": "string",
-          "default": ""
-        },
-        "value": {
-          "description": "value is the value of the tag.",
-          "type": "string",
-          "default": ""
-        }
-      }
-    },
     "com.github.openshift.api.config.v1.Audit": {
       "type": "object",
       "properties": {
@@ -9186,10 +9132,6 @@
         "type"
       ],
       "properties": {
-        "alibabaCloud": {
-          "description": "AlibabaCloud contains settings specific to the Alibaba Cloud infrastructure provider.",
-          "$ref": "#/definitions/com.github.openshift.api.config.v1.AlibabaCloudPlatformSpec"
-        },
         "aws": {
           "description": "AWS contains settings specific to the Amazon Web Services infrastructure provider.",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.AWSPlatformSpec"
@@ -9239,7 +9181,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1.PowerVSPlatformSpec"
         },
         "type": {
-          "description": "type is the underlying infrastructure provider for the cluster. This value controls whether infrastructure automation such as service load balancers, dynamic volume provisioning, machine creation and deletion, and other integrations are enabled. If None, no infrastructure automation is enabled. Allowed values are \"AWS\", \"Azure\", \"BareMetal\", \"GCP\", \"Libvirt\", \"OpenStack\", \"VSphere\", \"oVirt\", \"KubeVirt\", \"EquinixMetal\", \"PowerVS\", \"AlibabaCloud\", \"Nutanix\" and \"None\". Individual components may not support all platforms, and must handle unrecognized platforms as None if they do not support that platform.",
+          "description": "type is the underlying infrastructure provider for the cluster. This value controls whether infrastructure automation such as service load balancers, dynamic volume provisioning, machine creation and deletion, and other integrations are enabled. If None, no infrastructure automation is enabled. Allowed values are \"AWS\", \"Azure\", \"BareMetal\", \"GCP\", \"Libvirt\", \"OpenStack\", \"VSphere\", \"oVirt\", \"KubeVirt\", \"EquinixMetal\", \"PowerVS\", \"Nutanix\" and \"None\". Individual components may not support all platforms, and must handle unrecognized platforms as None if they do not support that platform.",
           "type": "string",
           "default": ""
         },
@@ -9256,10 +9198,6 @@
         "type"
       ],
       "properties": {
-        "alibabaCloud": {
-          "description": "AlibabaCloud contains settings specific to the Alibaba Cloud infrastructure provider.",
-          "$ref": "#/definitions/com.github.openshift.api.config.v1.AlibabaCloudPlatformStatus"
-        },
         "aws": {
           "description": "AWS contains settings specific to the Amazon Web Services infrastructure provider.",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.AWSPlatformStatus"
@@ -9309,7 +9247,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1.PowerVSPlatformStatus"
         },
         "type": {
-          "description": "type is the underlying infrastructure provider for the cluster. This value controls whether infrastructure automation such as service load balancers, dynamic volume provisioning, machine creation and deletion, and other integrations are enabled. If None, no infrastructure automation is enabled. Allowed values are \"AWS\", \"Azure\", \"BareMetal\", \"GCP\", \"Libvirt\", \"OpenStack\", \"VSphere\", \"oVirt\", \"EquinixMetal\", \"PowerVS\", \"AlibabaCloud\", \"Nutanix\" and \"None\". Individual components may not support all platforms, and must handle unrecognized platforms as None if they do not support that platform.\n\nThis value will be synced with to the `status.platform` and `status.platformStatus.type`. Currently this value cannot be changed once set.",
+          "description": "type is the underlying infrastructure provider for the cluster. This value controls whether infrastructure automation such as service load balancers, dynamic volume provisioning, machine creation and deletion, and other integrations are enabled. If None, no infrastructure automation is enabled. Allowed values are \"AWS\", \"Azure\", \"BareMetal\", \"GCP\", \"Libvirt\", \"OpenStack\", \"VSphere\", \"oVirt\", \"EquinixMetal\", \"PowerVS\", \"Nutanix\" and \"None\". Individual components may not support all platforms, and must handle unrecognized platforms as None if they do not support that platform.\n\nThis value will be synced with to the `status.platform` and `status.platformStatus.type`. Currently this value cannot be changed once set.",
           "type": "string",
           "default": ""
         },

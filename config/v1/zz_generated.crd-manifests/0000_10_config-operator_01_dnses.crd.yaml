@@ -84,7 +84,6 @@ spec:
                     - KubeVirt
                     - EquinixMetal
                     - PowerVS
-                    - AlibabaCloud
                     - Nutanix
                     - External
                     type: string

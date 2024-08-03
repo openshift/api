@@ -67,10 +67,6 @@ spec:
                 description: platformSpec holds desired information specific to the
                   underlying infrastructure provider.
                 properties:
-                  alibabaCloud:
-                    description: AlibabaCloud contains settings specific to the Alibaba
-                      Cloud infrastructure provider.
-                    type: object
                   aws:
                     description: AWS contains settings specific to the Amazon Web
                       Services infrastructure provider.
@@ -550,10 +546,10 @@ spec:
                       machine creation and deletion, and other integrations are enabled.
                       If None, no infrastructure automation is enabled. Allowed values
                       are "AWS", "Azure", "BareMetal", "GCP", "Libvirt", "OpenStack",
-                      "VSphere", "oVirt", "KubeVirt", "EquinixMetal", "PowerVS", "AlibabaCloud",
-                      "Nutanix" and "None". Individual components may not support
-                      all platforms, and must handle unrecognized platforms as None
-                      if they do not support that platform.
+                      "VSphere", "oVirt", "KubeVirt", "EquinixMetal", "PowerVS", "Nutanix"
+                      and "None". Individual components may not support all platforms,
+                      and must handle unrecognized platforms as None if they do not
+                      support that platform.
                     enum:
                     - ""
                     - AWS
@@ -569,7 +565,6 @@ spec:
                     - KubeVirt
                     - EquinixMetal
                     - PowerVS
-                    - AlibabaCloud
                     - Nutanix
                     - External
                     type: string
@@ -988,7 +983,6 @@ spec:
                 - KubeVirt
                 - EquinixMetal
                 - PowerVS
-                - AlibabaCloud
                 - Nutanix
                 - External
                 type: string
@@ -996,49 +990,6 @@ spec:
                 description: platformStatus holds status information specific to the
                   underlying infrastructure provider.
                 properties:
-                  alibabaCloud:
-                    description: AlibabaCloud contains settings specific to the Alibaba
-                      Cloud infrastructure provider.
-                    properties:
-                      region:
-                        description: region specifies the region for Alibaba Cloud
-                          resources created for the cluster.
-                        pattern: ^[0-9A-Za-z-]+$
-                        type: string
-                      resourceGroupID:
-                        description: resourceGroupID is the ID of the resource group
-                          for the cluster.
-                        pattern: ^(rg-[0-9A-Za-z]+)?$
-                        type: string
-                      resourceTags:
-                        description: resourceTags is a list of additional tags to
-                          apply to Alibaba Cloud resources created for the cluster.
-                        items:
-                          description: AlibabaCloudResourceTag is the set of tags
-                            to add to apply to resources.
-                          properties:
-                            key:
-                              description: key is the key of the tag.
-                              maxLength: 128
-                              minLength: 1
-                              type: string
-                            value:
-                              description: value is the value of the tag.
-                              maxLength: 128
-                              minLength: 1
-                              type: string
-                          required:
-                          - key
-                          - value
-                          type: object
-                        maxItems: 20
-                        type: array
-                        x-kubernetes-list-map-keys:
-                        - key
-                        x-kubernetes-list-type: map
-                    required:
-                    - region
-                    type: object
                   aws:
                     description: AWS contains settings specific to the Amazon Web
                       Services infrastructure provider.
@@ -1753,10 +1704,10 @@ spec:
                       If None, no infrastructure automation is enabled. Allowed values
                       are \"AWS\", \"Azure\", \"BareMetal\", \"GCP\", \"Libvirt\",
                       \"OpenStack\", \"VSphere\", \"oVirt\", \"EquinixMetal\", \"PowerVS\",
-                      \"AlibabaCloud\", \"Nutanix\" and \"None\". Individual components
-                      may not support all platforms, and must handle unrecognized
-                      platforms as None if they do not support that platform. \n This
-                      value will be synced with to the `status.platform` and `status.platformStatus.type`.
+                      \"Nutanix\" and \"None\". Individual components may not support
+                      all platforms, and must handle unrecognized platforms as None
+                      if they do not support that platform. \n This value will be
+                      synced with to the `status.platform` and `status.platformStatus.type`.
                       Currently this value cannot be changed once set."
                     enum:
                     - ""
@@ -1773,7 +1724,6 @@ spec:
                     - KubeVirt
                     - EquinixMetal
                     - PowerVS
-                    - AlibabaCloud
                     - Nutanix
                     - External
                     type: string

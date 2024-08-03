@@ -85,7 +85,6 @@ const (
 	OvirtCSIDriver           CSIDriverName = "csi.ovirt.org"
 	KubevirtCSIDriver        CSIDriverName = "csi.kubevirt.io"
 	SharedResourcesCSIDriver CSIDriverName = "csi.sharedresource.openshift.io"
-	AlibabaDiskCSIDriver     CSIDriverName = "diskplugin.csi.alibabacloud.com"
 	IBMVPCBlockCSIDriver     CSIDriverName = "vpc.block.csi.ibm.io"
 	IBMPowerVSBlockCSIDriver CSIDriverName = "powervs.csi.ibm.com"
 	SecretsStoreCSIDriver    CSIDriverName = "secrets-store.csi.k8s.io"

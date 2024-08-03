@@ -108,7 +108,6 @@ type IngressControllerSpec struct {
 	//   Azure:        LoadBalancerService (with External scope)
 	//   GCP:          LoadBalancerService (with External scope)
 	//   IBMCloud:     LoadBalancerService (with External scope)
-	//   AlibabaCloud: LoadBalancerService (with External scope)
 	//   Libvirt:      HostNetwork
 	//
 	// Any other platform types (including None) default to HostNetwork.
@@ -502,15 +501,14 @@ type ProviderLoadBalancerParameters struct {
 type LoadBalancerProviderType string
 
 const (
-	AWSLoadBalancerProvider          LoadBalancerProviderType = "AWS"
-	AzureLoadBalancerProvider        LoadBalancerProviderType = "Azure"
-	GCPLoadBalancerProvider          LoadBalancerProviderType = "GCP"
-	OpenStackLoadBalancerProvider    LoadBalancerProviderType = "OpenStack"
-	VSphereLoadBalancerProvider      LoadBalancerProviderType = "VSphere"
-	IBMLoadBalancerProvider          LoadBalancerProviderType = "IBM"
-	BareMetalLoadBalancerProvider    LoadBalancerProviderType = "BareMetal"
-	AlibabaCloudLoadBalancerProvider LoadBalancerProviderType = "AlibabaCloud"
-	NutanixLoadBalancerProvider      LoadBalancerProviderType = "Nutanix"
+	AWSLoadBalancerProvider       LoadBalancerProviderType = "AWS"
+	AzureLoadBalancerProvider     LoadBalancerProviderType = "Azure"
+	GCPLoadBalancerProvider       LoadBalancerProviderType = "GCP"
+	OpenStackLoadBalancerProvider LoadBalancerProviderType = "OpenStack"
+	VSphereLoadBalancerProvider   LoadBalancerProviderType = "VSphere"
+	IBMLoadBalancerProvider       LoadBalancerProviderType = "IBM"
+	BareMetalLoadBalancerProvider LoadBalancerProviderType = "BareMetal"
+	NutanixLoadBalancerProvider   LoadBalancerProviderType = "Nutanix"
 )
 
 // AWSLoadBalancerParameters provides configuration settings that are

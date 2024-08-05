@@ -161,6 +161,7 @@ type NetworkParam struct {
 	// The UUID of the network. Required if you omit the port attribute.
 	UUID string `json:"uuid,omitempty"`
 	// A fixed IPv4 address for the NIC.
+	// Deprecated: fixedIP is silently ignored. Use subnets instead.
 	FixedIp string `json:"fixedIp,omitempty"`
 	// Filters for optional network query
 	Filter Filter `json:"filter,omitempty"`
@@ -233,6 +234,7 @@ type SubnetParam struct {
 	PortTags []string `json:"portTags,omitempty"`
 
 	// PortSecurity optionally enables or disables security on ports managed by OpenStack
+	// Deprecated: portSecurity is silently ignored. Set portSecurity on the parent network instead.
 	PortSecurity *bool `json:"portSecurity,omitempty"`
 }
 

@@ -35,9 +35,6 @@
                         "name": "ClusterAPIInstallIBMCloud"
                     },
                     {
-                        "name": "ClusterAPIInstallPowerVS"
-                    },
-                    {
                         "name": "ClusterMonitoringConfig"
                     },
                     {
@@ -200,6 +197,9 @@
                     },
                     {
                         "name": "ClusterAPIInstallOpenStack"
+                    },
+                    {
+                        "name": "ClusterAPIInstallPowerVS"
                     },
                     {
                         "name": "ClusterAPIInstallVSphere"

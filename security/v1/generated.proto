@@ -46,7 +46,7 @@ message IDRange {
 message PodSecurityPolicyReview {
   // metadata is the standard object's metadata.
   // More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
-  optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 3;
+  optional .k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 3;
 
   // spec is the PodSecurityPolicy to check.
   optional PodSecurityPolicyReviewSpec spec = 1;
@@ -83,7 +83,7 @@ message PodSecurityPolicyReviewStatus {
 message PodSecurityPolicySelfSubjectReview {
   // metadata is the standard object's metadata.
   // More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
-  optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 3;
+  optional .k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 3;
 
   // spec defines specification the PodSecurityPolicySelfSubjectReview.
   optional PodSecurityPolicySelfSubjectReviewSpec spec = 1;
@@ -105,7 +105,7 @@ message PodSecurityPolicySelfSubjectReviewSpec {
 message PodSecurityPolicySubjectReview {
   // metadata is the standard object's metadata.
   // More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
-  optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 3;
+  optional .k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 3;
 
   // spec defines specification for the PodSecurityPolicySubjectReview.
   optional PodSecurityPolicySubjectReviewSpec spec = 1;

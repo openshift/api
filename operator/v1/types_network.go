@@ -120,8 +120,8 @@ type NetworkSpec struct {
 	// +optional
 	ExportNetworkFlows *ExportNetworkFlows `json:"exportNetworkFlows,omitempty"`
 
-	// migration enables and configures the cluster network migration. The
-	// migration procedure allows to change the network type and the MTU.
+	// migration enables and configures cluster network migration, for network changes
+	// that cannot be made instantly.
 	// +optional
 	Migration *NetworkMigration `json:"migration,omitempty"`
 
@@ -141,71 +141,70 @@ type NetworkSpec struct {
 
 // NetworkMigrationMode is an enumeration of the possible mode of the network migration
 // Valid values are "Live", "Offline" and omitted.
+// DEPRECATED: network type migration is no longer supported.
 // +kubebuilder:validation:Enum:=Live;Offline;""
 type NetworkMigrationMode string
 
 const (
 	// A "Live" migration operation will not cause service interruption by migrating the CNI of each node one by one. The cluster network will work as normal during the network migration.
+	// DEPRECATED: network type migration is no longer supported.
 	LiveNetworkMigrationMode NetworkMigrationMode = "Live"
 	// An "Offline" migration operation will cause service interruption. During an "Offline" migration, two rounds of node reboots are required. The cluster network will be malfunctioning during the network migration.
+	// DEPRECATED: network type migration is no longer supported.
 	OfflineNetworkMigrationMode NetworkMigrationMode = "Offline"
 )
 
-// NetworkMigration represents the cluster network configuration.
+// NetworkMigration represents the cluster network migration configuration.
 // +openshift:validation:FeatureGateAwareXValidation:featureGate=NetworkLiveMigration,rule="!has(self.mtu) || !has(self.networkType) || self.networkType == \"\" || has(self.mode) && self.mode == 'Live'",message="networkType migration in mode other than 'Live' may not be configured at the same time as mtu migration"
 type NetworkMigration struct {
-	// networkType is the target type of network migration. Set this to the
-	// target network type to allow changing the default network. If unset, the
-	// operation of changing cluster default network plugin will be rejected.
-	// The supported values are OpenShiftSDN, OVNKubernetes
-	// +optional
-	NetworkType string `json:"networkType,omitempty"`
-
 	// mtu contains the MTU migration configuration. Set this to allow changing
 	// the MTU values for the default network. If unset, the operation of
 	// changing the MTU for the default network will be rejected.
 	// +optional
 	MTU *MTUMigration `json:"mtu,omitempty"`
 
-	// features contains the features migration configuration. Set this to migrate
-	// feature configuration when changing the cluster default network provider.
-	// if unset, the default operation is to migrate all the configuration of
-	// supported features.
+	// networkType was previously used when changing the default network type.
+	// DEPRECATED: network type migration is no longer supported, and setting
+	// this to a non-empty value will result in the network operator rejecting
+	// the configuration.
+	// +optional
+	NetworkType string `json:"networkType,omitempty"`
+
+	// features was previously used to configure which network plugin features
+	// would be migrated in a network type migration.
+	// DEPRECATED: network type migration is no longer supported, and setting
+	// this to a non-empty value will result in the network operator rejecting
+	// the configuration.
 	// +optional
 	Features *FeaturesMigration `json:"features,omitempty"`
 
-	// mode indicates the mode of network migration.
-	// The supported values are "Live", "Offline" and omitted.
-	// A "Live" migration operation will not cause service interruption by migrating the CNI of each node one by one. The cluster network will work as normal during the network migration.
-	// An "Offline" migration operation will cause service interruption. During an "Offline" migration, two rounds of node reboots are required. The cluster network will be malfunctioning during the network migration.
-	// When omitted, this means no opinion and the platform is left to choose a reasonable default which is subject to change over time.
-	// The current default value is "Offline".
+	// mode indicates the mode of network type migration.
+	// DEPRECATED: network type migration is no longer supported, and setting
+	// this to a non-empty value will result in the network operator rejecting
+	// the configuration.
 	// +optional
-	Mode NetworkMigrationMode `json:"mode"`
+	Mode NetworkMigrationMode `json:"mode,omitempty"`
 }
 
 type FeaturesMigration struct {
-	// egressIP specifies whether or not the Egress IP configuration is migrated
-	// automatically when changing the cluster default network provider.
-	// If unset, this property defaults to 'true' and Egress IP configure is migrated.
+	// egressIP specified whether or not the Egress IP configuration was migrated.
+	// DEPRECATED: network type migration is no longer supported.
 	// +optional
 	// +kubebuilder:default:=true
 	EgressIP bool `json:"egressIP,omitempty"`
-	// egressFirewall specifies whether or not the Egress Firewall configuration is migrated
-	// automatically when changing the cluster default network provider.
-	// If unset, this property defaults to 'true' and Egress Firewall configure is migrated.
+	// egressFirewall specified whether or not the Egress Firewall configuration was migrated.
+	// DEPRECATED: network type migration is no longer supported.
 	// +optional
 	// +kubebuilder:default:=true
 	EgressFirewall bool `json:"egressFirewall,omitempty"`
-	// multicast specifies whether or not the multicast configuration is migrated
-	// automatically when changing the cluster default network provider.
-	// If unset, this property defaults to 'true' and multicast configure is migrated.
+	// multicast specified whether or not the multicast configuration was migrated.
+	// DEPRECATED: network type migration is no longer supported.
 	// +optional
 	// +kubebuilder:default:=true
 	Multicast bool `json:"multicast,omitempty"`
 }
 
-// MTUMigration MTU contains infomation about MTU migration.
+// MTUMigration contains infomation about MTU migration.
 type MTUMigration struct {
 	// network contains information about MTU migration for the default network.
 	// Migrations are only allowed to MTU values lower than the machine's uplink

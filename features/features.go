@@ -175,6 +175,12 @@ var (
 						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 						mustRegister()
 
+	FeatureGateImageContentPolicy = newFeatureGate("ImageContentPolicy").
+					reportProblemsToJiraComponent("node").
+					contactPerson("qwang").
+					productScope(ocpSpecific).
+					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+					mustRegister()
 	FeatureGateGCPLabelsTags = newFeatureGate("GCPLabelsTags").
 					reportProblemsToJiraComponent("Installer").
 					contactPerson("bhb").

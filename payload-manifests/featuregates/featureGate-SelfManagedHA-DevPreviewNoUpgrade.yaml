@@ -135,6 +135,9 @@
                         "name": "HardwareSpeed"
                     },
                     {
+                        "name": "ImageContentPolicy"
+                    },
+                    {
                         "name": "IngressControllerLBSubnetsAWS"
                     },
                     {

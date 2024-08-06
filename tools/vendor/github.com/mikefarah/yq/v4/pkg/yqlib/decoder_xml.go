@@ -1,3 +1,5 @@
+//go:build !yq_noxml
+
 package yqlib
 
 import (
@@ -5,11 +7,11 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"regexp"
 	"strings"
 	"unicode"
 
 	"golang.org/x/net/html/charset"
-	yaml "gopkg.in/yaml.v3"
 )
 
 type xmlDecoder struct {
@@ -33,52 +35,61 @@ func (dec *xmlDecoder) Init(reader io.Reader) error {
 	return nil
 }
 
-func (dec *xmlDecoder) createSequence(nodes []*xmlNode) (*yaml.Node, error) {
-	yamlNode := &yaml.Node{Kind: yaml.SequenceNode, Tag: "!!seq"}
+func (dec *xmlDecoder) createSequence(nodes []*xmlNode) (*CandidateNode, error) {
+	yamlNode := &CandidateNode{Kind: SequenceNode, Tag: "!!seq"}
 	for _, child := range nodes {
 		yamlChild, err := dec.convertToYamlNode(child)
 		if err != nil {
 			return nil, err
 		}
-		yamlNode.Content = append(yamlNode.Content, yamlChild)
+		yamlNode.AddChild(yamlChild)
 	}
 
 	return yamlNode, nil
 }
 
+var decoderCommentPrefix = regexp.MustCompile(`(^|\n)([[:alpha:]])`)
+
 func (dec *xmlDecoder) processComment(c string) string {
 	if c == "" {
 		return ""
 	}
-	return "#" + strings.TrimRight(c, " ")
+	//need to replace "cat " with "# cat"
+	// "\ncat\n" with "\n cat\n"
+	// ensure non-empty comments starting with newline have a space in front
+
+	replacement := decoderCommentPrefix.ReplaceAllString(c, "$1 $2")
+	replacement = "#" + strings.ReplaceAll(strings.TrimRight(replacement, " "), "\n", "\n#")
+	return replacement
 }
 
-func (dec *xmlDecoder) createMap(n *xmlNode) (*yaml.Node, error) {
+func (dec *xmlDecoder) createMap(n *xmlNode) (*CandidateNode, error) {
 	log.Debug("createMap: headC: %v, lineC: %v, footC: %v", n.HeadComment, n.LineComment, n.FootComment)
-	yamlNode := &yaml.Node{Kind: yaml.MappingNode, Tag: "!!map"}
+	yamlNode := &CandidateNode{Kind: MappingNode, Tag: "!!map"}
 
 	if len(n.Data) > 0 {
-		log.Debug("creating content node for map")
+		log.Debugf("creating content node for map: %v", dec.prefs.ContentName)
 		label := dec.prefs.ContentName
 		labelNode := createScalarNode(label, label)
 		labelNode.HeadComment = dec.processComment(n.HeadComment)
 		labelNode.LineComment = dec.processComment(n.LineComment)
 		labelNode.FootComment = dec.processComment(n.FootComment)
-		yamlNode.Content = append(yamlNode.Content, labelNode, dec.createValueNodeFromData(n.Data))
+		yamlNode.AddKeyValueChild(labelNode, dec.createValueNodeFromData(n.Data))
 	}
 
 	for i, keyValuePair := range n.Children {
 		label := keyValuePair.K
 		children := keyValuePair.V
 		labelNode := createScalarNode(label, label)
-		var valueNode *yaml.Node
+		var valueNode *CandidateNode
 		var err error
 
 		if i == 0 {
+			log.Debugf("head comment here")
 			labelNode.HeadComment = dec.processComment(n.HeadComment)
 
 		}
-
+		log.Debugf("label=%v, i=%v, keyValuePair.FootComment: %v", label, i, keyValuePair.FootComment)
 		labelNode.FootComment = dec.processComment(keyValuePair.FootComment)
 
 		log.Debug("len of children in %v is %v", label, len(children))
@@ -108,32 +119,32 @@ func (dec *xmlDecoder) createMap(n *xmlNode) (*yaml.Node, error) {
 				return nil, err
 			}
 		}
-		yamlNode.Content = append(yamlNode.Content, labelNode, valueNode)
+		yamlNode.AddKeyValueChild(labelNode, valueNode)
 	}
 
 	return yamlNode, nil
 }
 
-func (dec *xmlDecoder) createValueNodeFromData(values []string) *yaml.Node {
+func (dec *xmlDecoder) createValueNodeFromData(values []string) *CandidateNode {
 	switch len(values) {
 	case 0:
 		return createScalarNode(nil, "")
 	case 1:
 		return createScalarNode(values[0], values[0])
 	default:
-		content := make([]*yaml.Node, 0)
+		content := make([]*CandidateNode, 0)
 		for _, value := range values {
 			content = append(content, createScalarNode(value, value))
 		}
-		return &yaml.Node{
-			Kind:    yaml.SequenceNode,
+		return &CandidateNode{
+			Kind:    SequenceNode,
 			Tag:     "!!seq",
 			Content: content,
 		}
 	}
 }
 
-func (dec *xmlDecoder) convertToYamlNode(n *xmlNode) (*yaml.Node, error) {
+func (dec *xmlDecoder) convertToYamlNode(n *xmlNode) (*CandidateNode, error) {
 	if len(n.Children) > 0 {
 		return dec.createMap(n)
 	}
@@ -177,12 +188,7 @@ func (dec *xmlDecoder) Decode() (*CandidateNode, error) {
 	dec.readAnything = true
 	dec.finished = true
 
-	return &CandidateNode{
-		Node: &yaml.Node{
-			Kind:    yaml.DocumentNode,
-			Content: []*yaml.Node{firstNode},
-		},
-	}, nil
+	return firstNode, nil
 }
 
 type xmlNode struct {
@@ -293,6 +299,10 @@ func (dec *xmlDecoder) decodeXML(root *xmlNode) error {
 				log.Debug("chardata [%v] for %v", elem.n.Data, elem.label)
 			}
 		case xml.EndElement:
+			if elem == nil {
+				log.Debug("no element, probably bad xml")
+				continue
+			}
 			log.Debug("end element %v", elem.label)
 			elem.state = "finished"
 			// And add it to its parent list
@@ -337,8 +347,14 @@ func applyFootComment(elem *element, commentStr string) {
 	if len(elem.n.Children) > 0 {
 		lastChildIndex := len(elem.n.Children) - 1
 		childKv := elem.n.Children[lastChildIndex]
-		log.Debug("got a foot comment for %v: [%v]", childKv.K, commentStr)
-		childKv.FootComment = joinComments([]string{elem.n.FootComment, commentStr}, " ")
+		log.Debug("got a foot comment, putting on last child for %v: [%v]", childKv.K, commentStr)
+		// if it's an array of scalars, put the foot comment on the scalar itself
+		if len(childKv.V) > 0 && len(childKv.V[0].Children) == 0 {
+			nodeToUpdate := childKv.V[len(childKv.V)-1]
+			nodeToUpdate.FootComment = joinComments([]string{nodeToUpdate.FootComment, commentStr}, " ")
+		} else {
+			childKv.FootComment = joinComments([]string{elem.n.FootComment, commentStr}, " ")
+		}
 	} else {
 		log.Debug("got a foot comment for %v: [%v]", elem.label, commentStr)
 		elem.n.FootComment = joinComments([]string{elem.n.FootComment, commentStr}, " ")

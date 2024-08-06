@@ -42,34 +42,40 @@ spec:
     name: v1
     schema:
       openAPIV3Schema:
-        description: "HostSubnet describes the container subnet network on a node.
-          The HostSubnet object must have the same name as the Node object it corresponds
-          to. \n Compatibility level 1: Stable within a major release for a minimum
-          of 12 months or 3 minor releases (whichever is longer)."
+        description: |-
+          HostSubnet describes the container subnet network on a node. The HostSubnet object must have the
+          same name as the Node object it corresponds to.
+
+          Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           egressCIDRs:
-            description: EgressCIDRs is the list of CIDR ranges available for automatically
-              assigning egress IPs to this node from. If this field is set then EgressIPs
-              should be treated as read-only.
+            description: |-
+              EgressCIDRs is the list of CIDR ranges available for automatically assigning
+              egress IPs to this node from. If this field is set then EgressIPs should be
+              treated as read-only.
             items:
-              description: HostSubnetEgressCIDR represents one egress CIDR from which
-                to assign IP addresses for this node represented by the HostSubnet
+              description: |-
+                HostSubnetEgressCIDR represents one egress CIDR from which to assign IP addresses for this node
+                represented by the HostSubnet
               pattern: ^(([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/([0-9]|[12][0-9]|3[0-2])$
               type: string
             type: array
           egressIPs:
-            description: EgressIPs is the list of automatic egress IP addresses currently
-              hosted by this node. If EgressCIDRs is empty, this can be set by hand;
-              if EgressCIDRs is set then the master will overwrite the value here
-              with its own allocation of egress IPs.
+            description: |-
+              EgressIPs is the list of automatic egress IP addresses currently hosted by this node.
+              If EgressCIDRs is empty, this can be set by hand; if EgressCIDRs is set then the
+              master will overwrite the value here with its own allocation of egress IPs.
             items:
-              description: HostSubnetEgressIP represents one egress IP address currently
-                hosted on the node represented by HostSubnet
+              description: |-
+                HostSubnetEgressIP represents one egress IP address currently hosted on the node represented by
+                HostSubnet
               pattern: ^(([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$
               type: string
             type: array
@@ -84,9 +90,12 @@ spec:
             pattern: ^(([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object

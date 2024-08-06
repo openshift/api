@@ -137,6 +137,9 @@
                         "name": "PlatformOperators"
                     },
                     {
+                        "name": "ProcMountType"
+                    },
+                    {
                         "name": "RouteExternalCertificate"
                     },
                     {
@@ -153,6 +156,12 @@
                     },
                     {
                         "name": "UpgradeStatus"
+                    },
+                    {
+                        "name": "UserNamespacesPodSecurityStandards"
+                    },
+                    {
+                        "name": "UserNamespacesSupport"
                     },
                     {
                         "name": "VSphereMultiVCenters"

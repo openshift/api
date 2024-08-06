@@ -105,6 +105,9 @@ type ConsoleCapabilityName string
 const (
 	// lightspeedButton is the name for the Lightspeed button HTML element.
 	LightspeedButton ConsoleCapabilityName = "LightspeedButton"
+
+	// gettingStartedState defines the state of getting started resources in the console UI.
+	GettingStartedBannerState ConsoleCapabilityName = "GettingStartedBannerState"
 )
 
 // CapabilityState defines the state of the capability in the console UI.
@@ -132,8 +135,8 @@ type CapabilityVisibility struct {
 // Capabilities contains set of UI capabilities and their state in the console UI.
 type Capability struct {
 	// name is the unique name of a capability.
-	// Available capabilities are LightspeedButton.
-	// +kubebuilder:validation:Enum:="LightspeedButton";
+	// Available capabilities are LightspeedButton and GettingStartedBannerState.
+	// +kubebuilder:validation:Enum:="LightspeedButton";"GettingStartedBannerState"
 	// +kubebuilder:validation:Required
 	Name ConsoleCapabilityName `json:"name"`
 	// visibility defines the visibility state of the capability.
@@ -148,7 +151,7 @@ type ConsoleCustomization struct {
 	// Available capabilities are LightspeedButton.
 	// Each of the available capabilities may appear only once in the list.
 	// +kubebuilder:validation:MinItems=1
-	// +kubebuilder:validation:MaxItems=1
+	// +kubebuilder:validation:MaxItems=2
 	// +listType=map
 	// +listMapKey=name
 	// +optional

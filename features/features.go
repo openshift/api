@@ -493,7 +493,7 @@ var (
 						reportProblemsToJiraComponent("Installer").
 						contactPerson("jhixson74").
 						productScope(ocpSpecific).
-						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 						mustRegister()
 
 	FeatureGateClusterAPIInstallGCP = newFeatureGate("ClusterAPIInstallGCP").

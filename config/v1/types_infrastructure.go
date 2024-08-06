@@ -1568,7 +1568,8 @@ type PowerVSServiceEndpoint struct {
 	// Power Cloud - https://cloud.ibm.com/apidocs/power-cloud
 	//
 	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern=`^[a-z0-9-]+$`
+	// +kubebuilder:validation:MaxLength=18
+	// +kubebuilder:validation:XValidation:rule="self == oldSelf || self in ['CIS', 'COS', 'COSConfig', 'DNSServices', 'GlobalCatalog', 'GlobalSearch', 'GlobalTagging', 'HyperProtect', 'IAM', 'KeyProtect', 'Power', 'ResourceController', 'ResourceManager', 'VPC']",message="serviceEndpoint name is not CIS, COS, COSConfig, DNSServices, GlobalCatalog, GlobalSearch, GlobalTagging, HyperProtect, IAM, KeyProtect, Power, ResourceController, ResourceManager, or VPC"
 	Name string `json:"name"`
 
 	// url is fully qualified URI with scheme https, that overrides the default generated

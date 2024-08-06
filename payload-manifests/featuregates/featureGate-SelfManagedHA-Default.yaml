@@ -122,6 +122,9 @@
                         "name": "NodeSwap"
                     },
                     {
+                        "name": "OVNObservability"
+                    },
+                    {
                         "name": "OnClusterBuild"
                     },
                     {

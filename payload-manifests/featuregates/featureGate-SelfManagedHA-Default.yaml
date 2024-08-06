@@ -104,13 +104,7 @@
                         "name": "MixedCPUsAllocation"
                     },
                     {
-                        "name": "MultiArchInstallAWS"
-                    },
-                    {
                         "name": "MultiArchInstallAzure"
-                    },
-                    {
-                        "name": "MultiArchInstallGCP"
                     },
                     {
                         "name": "NetworkSegmentation"
@@ -230,6 +224,12 @@
                     },
                     {
                         "name": "MetricsServer"
+                    },
+                    {
+                        "name": "MultiArchInstallAWS"
+                    },
+                    {
+                        "name": "MultiArchInstallGCP"
                     },
                     {
                         "name": "NetworkDiagnosticsConfig"

@@ -25987,7 +25987,7 @@
       ],
       "properties": {
         "name": {
-          "description": "name is the unique name of a capability. Available capabilities are LightspeedButton.",
+          "description": "name is the unique name of a capability. Available capabilities are LightspeedButton and GettingStartedBanner.",
           "type": "string",
           "default": ""
         },
@@ -26551,7 +26551,7 @@
           "type": "string"
         },
         "capabilities": {
-          "description": "capabilities defines an array of capabilities that can be interacted with in the console UI. Each capability defines a visual state that can be interacted with the console to render in the UI. Available capabilities are LightspeedButton. Each of the available capabilities may appear only once in the list.",
+          "description": "capabilities defines an array of capabilities that can be interacted with in the console UI. Each capability defines a visual state that can be interacted with the console to render in the UI. Available capabilities are LightspeedButton and GettingStartedBanner. Each of the available capabilities may appear only once in the list.",
           "type": "array",
           "items": {
             "default": {},

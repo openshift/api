@@ -857,6 +857,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/openshiftcontrolplane/v1.SourceStrategyDefaultsConfig":                     schema_openshift_api_openshiftcontrolplane_v1_SourceStrategyDefaultsConfig(ref),
 		"github.com/openshift/api/operator/v1.AWSCSIDriverConfigSpec":                                        schema_openshift_api_operator_v1_AWSCSIDriverConfigSpec(ref),
 		"github.com/openshift/api/operator/v1.AWSClassicLoadBalancerParameters":                              schema_openshift_api_operator_v1_AWSClassicLoadBalancerParameters(ref),
+		"github.com/openshift/api/operator/v1.AWSEFSVolumeMetrics":                                           schema_openshift_api_operator_v1_AWSEFSVolumeMetrics(ref),
+		"github.com/openshift/api/operator/v1.AWSEFSVolumeMetricsRecursiveWalkConfig":                        schema_openshift_api_operator_v1_AWSEFSVolumeMetricsRecursiveWalkConfig(ref),
 		"github.com/openshift/api/operator/v1.AWSLoadBalancerParameters":                                     schema_openshift_api_operator_v1_AWSLoadBalancerParameters(ref),
 		"github.com/openshift/api/operator/v1.AWSNetworkLoadBalancerParameters":                              schema_openshift_api_operator_v1_AWSNetworkLoadBalancerParameters(ref),
 		"github.com/openshift/api/operator/v1.AWSSubnets":                                                    schema_openshift_api_operator_v1_AWSSubnets(ref),
@@ -43780,9 +43782,17 @@ func schema_openshift_api_operator_v1_AWSCSIDriverConfigSpec(ref common.Referenc
 							Format:      "",
 						},
 					},
+					"efsVolumeMetrics": {
+						SchemaProps: spec.SchemaProps{
+							Description: "efsVolumeMetrics sets the configuration for collecting metrics from EFS volumes used by the EFS CSI Driver.",
+							Ref:         ref("github.com/openshift/api/operator/v1.AWSEFSVolumeMetrics"),
+						},
+					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1.AWSEFSVolumeMetrics"},
 	}
 }
 
@@ -43810,6 +43820,75 @@ func schema_openshift_api_operator_v1_AWSClassicLoadBalancerParameters(ref commo
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/operator/v1.AWSSubnets", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+	}
+}
+
+func schema_openshift_api_operator_v1_AWSEFSVolumeMetrics(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "AWSEFSVolumeMetrics defines the configuration for volume metrics in the EFS CSI Driver.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"state": {
+						SchemaProps: spec.SchemaProps{
+							Description: "state defines the state of metric collection in the AWS EFS CSI Driver. This field is required and must be set to one of the following values: Disabled or RecursiveWalk. Disabled means no metrics collection will be performed. This is the default value. RecursiveWalk means the AWS EFS CSI Driver will recursively scan volumes to collect metrics. This process may result in high CPU and memory usage, depending on the volume size.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"recursiveWalk": {
+						SchemaProps: spec.SchemaProps{
+							Description: "recursiveWalk provides additional configuration for collecting volume metrics in the AWS EFS CSI Driver when the state is set to RecursiveWalk.",
+							Ref:         ref("github.com/openshift/api/operator/v1.AWSEFSVolumeMetricsRecursiveWalkConfig"),
+						},
+					},
+				},
+				Required: []string{"state"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "state",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"recursiveWalk": "RecursiveWalk",
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1.AWSEFSVolumeMetricsRecursiveWalkConfig"},
+	}
+}
+
+func schema_openshift_api_operator_v1_AWSEFSVolumeMetricsRecursiveWalkConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "AWSEFSVolumeMetricsRecursiveWalkConfig defines options for volume metrics in the EFS CSI Driver.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"refreshPeriodMinutes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "refreshPeriodMinutes specifies the frequency, in minutes, at which volume metrics are refreshed. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is 240. The valid range is from 1 to 43200 minutes (30 days).",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"fsRateLimit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "fsRateLimit defines the rate limit, in goroutines per file system, for processing volume metrics. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is 5. The valid range is from 1 to 100 goroutines.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
 	}
 }
 

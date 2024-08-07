@@ -421,12 +421,33 @@ func (StatuspageProvider) SwaggerDoc() map[string]string {
 }
 
 var map_AWSCSIDriverConfigSpec = map[string]string{
-	"":          "AWSCSIDriverConfigSpec defines properties that can be configured for the AWS CSI driver.",
-	"kmsKeyARN": "kmsKeyARN sets the cluster default storage class to encrypt volumes with a user-defined KMS key, rather than the default KMS key used by AWS. The value may be either the ARN or Alias ARN of a KMS key.",
+	"":                 "AWSCSIDriverConfigSpec defines properties that can be configured for the AWS CSI driver.",
+	"kmsKeyARN":        "kmsKeyARN sets the cluster default storage class to encrypt volumes with a user-defined KMS key, rather than the default KMS key used by AWS. The value may be either the ARN or Alias ARN of a KMS key.",
+	"efsVolumeMetrics": "efsVolumeMetrics sets the configuration for collecting metrics from EFS volumes used by the EFS CSI Driver.",
 }
 
 func (AWSCSIDriverConfigSpec) SwaggerDoc() map[string]string {
 	return map_AWSCSIDriverConfigSpec
+}
+
+var map_AWSEFSVolumeMetrics = map[string]string{
+	"":              "AWSEFSVolumeMetrics defines the configuration for volume metrics in the EFS CSI Driver.",
+	"state":         "state defines the state of metric collection in the AWS EFS CSI Driver. This field is required and must be set to one of the following values: Disabled or RecursiveWalk. Disabled means no metrics collection will be performed. This is the default value. RecursiveWalk means the AWS EFS CSI Driver will recursively scan volumes to collect metrics. This process may result in high CPU and memory usage, depending on the volume size.",
+	"recursiveWalk": "recursiveWalk provides additional configuration for collecting volume metrics in the AWS EFS CSI Driver when the state is set to RecursiveWalk.",
+}
+
+func (AWSEFSVolumeMetrics) SwaggerDoc() map[string]string {
+	return map_AWSEFSVolumeMetrics
+}
+
+var map_AWSEFSVolumeMetricsRecursiveWalkConfig = map[string]string{
+	"":                     "AWSEFSVolumeMetricsRecursiveWalkConfig defines options for volume metrics in the EFS CSI Driver.",
+	"refreshPeriodMinutes": "refreshPeriodMinutes specifies the frequency, in minutes, at which volume metrics are refreshed. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is 240. The valid range is from 1 to 43200 minutes (30 days).",
+	"fsRateLimit":          "fsRateLimit defines the rate limit, in goroutines per file system, for processing volume metrics. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is 5. The valid range is from 1 to 100 goroutines.",
+}
+
+func (AWSEFSVolumeMetricsRecursiveWalkConfig) SwaggerDoc() map[string]string {
+	return map_AWSEFSVolumeMetricsRecursiveWalkConfig
 }
 
 var map_AzureCSIDriverConfigSpec = map[string]string{

@@ -36,6 +36,9 @@
                 ],
                 "enabled": [
                     {
+                        "name": "AdditionalRoutingCapabilities"
+                    },
+                    {
                         "name": "AdminNetworkPolicy"
                     },
                     {
@@ -220,6 +223,9 @@
                     },
                     {
                         "name": "PrivateHostedZoneAWS"
+                    },
+                    {
+                        "name": "RouteAdvertisements"
                     },
                     {
                         "name": "RouteExternalCertificate"

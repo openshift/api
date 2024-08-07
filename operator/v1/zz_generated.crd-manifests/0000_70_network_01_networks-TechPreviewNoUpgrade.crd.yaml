@@ -3,10 +3,10 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.openshift.io: https://github.com/openshift/api/pull/475
-    api.openshift.io/filename-cvo-runlevel: "0000_70"
-    api.openshift.io/filename-operator: network
-    api.openshift.io/filename-ordering: "01"
-    feature-gate.release.openshift.io/NetworkLiveMigration: "true"
+    api.openshift.io/merged-by-featuregates: "true"
+    include.release.openshift.io/ibm-cloud-managed: "true"
+    include.release.openshift.io/self-managed-high-availability: "true"
+    release.openshift.io/feature-set: TechPreviewNoUpgrade
   name: networks.operator.openshift.io
 spec:
   group: operator.openshift.io
@@ -167,6 +167,38 @@ spec:
                 x-kubernetes-list-map-keys:
                 - name
                 x-kubernetes-list-type: map
+              additionalRoutingCapabilities:
+                description: additionalRoutingCapabilities describes components and
+                  relevant configuration providing additional routing capabilities.
+                  When set, it enables such components and the usage of the routing
+                  capabilities they provide for the machine network. Upstream operators,
+                  like MetalLB operator, requiring these capabilities may rely on,
+                  or automatically set this attribute. Network plugins may leverage
+                  advanced routing capabilities acquired through the enablement of
+                  these components but may require specific configuration on their
+                  side to do so; refer to their respective documentation and configuration
+                  options.
+                properties:
+                  providers:
+                    description: providers is a set of enabled components that provide
+                      additional routing capabilities. Entries on this list must be
+                      unique. The  only valid value is currrently "FRR" which provides
+                      FRR routing capabilities through the deployment of FRR.
+                    items:
+                      description: RoutingCapabilitiesProvider is a component providing
+                        routing capabilities.
+                      enum:
+                      - FRR
+                      type: string
+                    maxItems: 1
+                    minItems: 1
+                    type: array
+                    x-kubernetes-list-type: atomic
+                    x-kubernetes-validations:
+                    - rule: self.all(x, self.exists_one(y, x == y))
+                required:
+                - providers
+                type: object
               clusterNetwork:
                 description: clusterNetwork is the IP address pool to use for pod
                   IPs. Some network providers, e.g. OpenShift SDN, support multiple
@@ -561,6 +593,22 @@ spec:
                               messages, e.g. "kern". Default is "local0"
                             type: string
                         type: object
+                      routeAdvertisements:
+                        description: routeAdvertisements determines if the functionality
+                          to advertise cluster network routes through a dynamic routing
+                          protocol, such as BGP, is enabled or not. This functionality
+                          is configured through the ovn-kubernetes RouteAdvertisements
+                          CRD. Requires the 'FRR' routing capability provider to be
+                          enabled as an additional routing capability. Allowed values
+                          are "Enabled", "Disabled" and ommited. When omitted, this
+                          means the user has no opinion and the platform is left to
+                          choose reasonable defaults. These defaults are subject to
+                          change over time. The current default is "Disabled".
+                        enum:
+                        - ""
+                        - Enabled
+                        - Disabled
+                        type: string
                       v4InternalSubnet:
                         description: v4InternalSubnet is a v4 subnet used internally
                           by ovn-kubernetes in case the default one is being already
@@ -859,6 +907,13 @@ spec:
                 type: boolean
             type: object
             x-kubernetes-validations:
+            - message: Route advertisements cannot be Enabled if 'FRR' routing capability
+                provider is not available
+              rule: (has(self.additionalRoutingCapabilities) && ('FRR' in self.additionalRoutingCapabilities.providers))
+                || !has(self.defaultNetwork) || !has(self.defaultNetwork.ovnKubernetesConfig)
+                || !has(self.defaultNetwork.ovnKubernetesConfig.routeAdvertisements)
+                || self.defaultNetwork.ovnKubernetesConfig.routeAdvertisements !=
+                'Enabled'
             - message: invalid value for IPForwarding, valid values are 'Restricted'
                 or 'Global'
               rule: '!has(self.defaultNetwork) || !has(self.defaultNetwork.ovnKubernetesConfig)

@@ -6,7 +6,7 @@ metadata:
     api.openshift.io/filename-cvo-runlevel: "0000_70"
     api.openshift.io/filename-operator: network
     api.openshift.io/filename-ordering: "01"
-    feature-gate.release.openshift.io/NetworkLiveMigration: "true"
+    feature-gate.release.openshift.io/RouteAdvertisements: "true"
   name: networks.operator.openshift.io
 spec:
   group: operator.openshift.io
@@ -561,6 +561,22 @@ spec:
                               messages, e.g. "kern". Default is "local0"
                             type: string
                         type: object
+                      routeAdvertisements:
+                        description: routeAdvertisements determines if the functionality
+                          to advertise cluster network routes through a dynamic routing
+                          protocol, such as BGP, is enabled or not. This functionality
+                          is configured through the ovn-kubernetes RouteAdvertisements
+                          CRD. Requires the 'FRR' routing capability provider to be
+                          enabled as an additional routing capability. Allowed values
+                          are "Enabled", "Disabled" and ommited. When omitted, this
+                          means the user has no opinion and the platform is left to
+                          choose reasonable defaults. These defaults are subject to
+                          change over time. The current default is "Disabled".
+                        enum:
+                        - ""
+                        - Enabled
+                        - Disabled
+                        type: string
                       v4InternalSubnet:
                         description: v4InternalSubnet is a v4 subnet used internally
                           by ovn-kubernetes in case the default one is being already
@@ -801,11 +817,6 @@ spec:
                       OVNKubernetes
                     type: string
                 type: object
-                x-kubernetes-validations:
-                - message: networkType migration in mode other than 'Live' may not
-                    be configured at the same time as mtu migration
-                  rule: '!has(self.mtu) || !has(self.networkType) || self.networkType
-                    == "" || has(self.mode) && self.mode == ''Live'''
               observedConfig:
                 description: observedConfig holds a sparse config that controller
                   has observed from the cluster state.  It exists in spec because

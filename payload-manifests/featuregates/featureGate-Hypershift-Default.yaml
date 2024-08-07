@@ -14,6 +14,9 @@
             {
                 "disabled": [
                     {
+                        "name": "AdditionalRoutingCapabilities"
+                    },
+                    {
                         "name": "AutomatedEtcdBackup"
                     },
                     {
@@ -132,6 +135,9 @@
                     },
                     {
                         "name": "PlatformOperators"
+                    },
+                    {
+                        "name": "RouteAdvertisements"
                     },
                     {
                         "name": "RouteExternalCertificate"

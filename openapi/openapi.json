@@ -25621,6 +25621,24 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1.AdditionalRoutingCapabilities": {
+      "description": "AdditionalRoutingCapabilities describes components and relevant configuration providing advanced routing capabilities.",
+      "type": "object",
+      "required": [
+        "providers"
+      ],
+      "properties": {
+        "providers": {
+          "description": "providers is a set of enabled components that provide additional routing capabilities. Entries on this list must be unique. The  only valid value is currrently \"FRR\" which provides FRR routing capabilities through the deployment of FRR.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "atomic"
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1.Authentication": {
       "description": "Authentication provides information to configure an operator to manage authentication.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
@@ -27684,7 +27702,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.ClusterNetworkEntry"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "hybridOverlayVXLANPort": {
           "description": "HybridOverlayVXLANPort defines the VXLAN port number to be used by the additional overlay network. Default is 4789",
@@ -27744,7 +27763,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -29612,7 +29632,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -29711,7 +29732,15 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.AdditionalNetworkDefinition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "additionalRoutingCapabilities": {
+          "description": "additionalRoutingCapabilities describes components and relevant configuration providing additional routing capabilities. When set, it enables such components and the usage of the routing capabilities they provide for the machine network. Upstream operators, like MetalLB operator, requiring these capabilities may rely on, or automatically set this attribute. Network plugins may leverage advanced routing capabilities acquired through the enablement of these components but may require specific configuration on their side to do so; refer to their respective documentation and configuration options.",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.AdditionalRoutingCapabilities"
         },
         "clusterNetwork": {
           "description": "clusterNetwork is the IP address pool to use for pod IPs. Some network providers, e.g. OpenShift SDN, support multiple ClusterNetworks. Others only support one. This is equivalent to the cluster-cidr.",
@@ -29719,7 +29748,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.ClusterNetworkEntry"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "defaultNetwork": {
           "description": "defaultNetwork is the \"default\" network that all pods will receive",
@@ -29775,7 +29805,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "unsupportedConfigOverrides": {
           "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
@@ -30247,6 +30278,10 @@
         "policyAuditConfig": {
           "description": "policyAuditConfig is the configuration for network policy audit events. If unset, reported defaults are used.",
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.PolicyAuditConfig"
+        },
+        "routeAdvertisements": {
+          "description": "routeAdvertisements determines if the functionality to advertise cluster network routes through a dynamic routing protocol, such as BGP, is enabled or not. This functionality is configured through the ovn-kubernetes RouteAdvertisements CRD. Requires the 'FRR' routing capability provider to be enabled as an additional routing capability. Allowed values are \"Enabled\", \"Disabled\" and ommited. When omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default is \"Disabled\".",
+          "type": "string"
         },
         "v4InternalSubnet": {
           "description": "v4InternalSubnet is a v4 subnet used internally by ovn-kubernetes in case the default one is being already used by something else. It must not overlap with any other subnet being used by OpenShift or by the node network. The size of the subnet must be larger than the number of nodes. The value cannot be changed after installation. Default is 100.64.0.0/16",
@@ -30965,7 +31000,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -31475,7 +31511,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.StaticIPAMAddresses"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "dns": {
           "description": "DNS configures DNS for the interface",
@@ -31487,7 +31524,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.StaticIPAMRoutes"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -31505,7 +31543,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "search": {
           "description": "Search configures priority ordered search domains for short hostname lookups",
@@ -31513,7 +31552,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },

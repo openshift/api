@@ -165,9 +165,6 @@
                         "name": "MetricsCollectionProfiles"
                     },
                     {
-                        "name": "MetricsServer"
-                    },
-                    {
                         "name": "MixedCPUsAllocation"
                     },
                     {

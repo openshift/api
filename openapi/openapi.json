@@ -25445,6 +25445,10 @@
       "description": "AWSCSIDriverConfigSpec defines properties that can be configured for the AWS CSI driver.",
       "type": "object",
       "properties": {
+        "efsVolumeMetrics": {
+          "description": "efsVolumeMetrics sets the configuration for collecting metrics from EFS volumes used by the EFS CSI Driver.",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.AWSEFSVolumeMetrics"
+        },
         "kmsKeyARN": {
           "description": "kmsKeyARN sets the cluster default storage class to encrypt volumes with a user-defined KMS key, rather than the default KMS key used by AWS. The value may be either the ARN or Alias ARN of a KMS key.",
           "type": "string"
@@ -25462,6 +25466,48 @@
         "subnets": {
           "description": "subnets specifies the subnets to which the load balancer will attach. The subnets may be specified by either their ID or name. The total number of subnets is limited to 10.\n\nIn order for the load balancer to be provisioned with subnets, each subnet must exist, each subnet must be from a different availability zone, and the load balancer service must be recreated to pick up new values.\n\nWhen omitted from the spec, the subnets will be auto-discovered for each availability zone. Auto-discovered subnets are not reported in the status of the IngressController object.",
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.AWSSubnets"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.AWSEFSVolumeMetrics": {
+      "description": "AWSEFSVolumeMetrics defines the configuration for volume metrics in the EFS CSI Driver.",
+      "type": "object",
+      "required": [
+        "state"
+      ],
+      "properties": {
+        "recursiveWalk": {
+          "description": "recursiveWalk provides additional configuration for collecting volume metrics in the AWS EFS CSI Driver when the state is set to RecursiveWalk.",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.AWSEFSVolumeMetricsRecursiveWalkConfig"
+        },
+        "state": {
+          "description": "state defines the state of metric collection in the AWS EFS CSI Driver. This field is required and must be set to one of the following values: Disabled or RecursiveWalk. Disabled means no metrics collection will be performed. This is the default value. RecursiveWalk means the AWS EFS CSI Driver will recursively scan volumes to collect metrics. This process may result in high CPU and memory usage, depending on the volume size.",
+          "type": "string",
+          "default": ""
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "state",
+          "fields-to-discriminateBy": {
+            "recursiveWalk": "RecursiveWalk"
+          }
+        }
+      ]
+    },
+    "com.github.openshift.api.operator.v1.AWSEFSVolumeMetricsRecursiveWalkConfig": {
+      "description": "AWSEFSVolumeMetricsRecursiveWalkConfig defines options for volume metrics in the EFS CSI Driver.",
+      "type": "object",
+      "properties": {
+        "fsRateLimit": {
+          "description": "fsRateLimit defines the rate limit, in goroutines per file system, for processing volume metrics. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is 5. The valid range is from 1 to 100 goroutines.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "refreshPeriodMinutes": {
+          "description": "refreshPeriodMinutes specifies the frequency, in minutes, at which volume metrics are refreshed. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is 240. The valid range is from 1 to 43200 minutes (30 days).",
+          "type": "integer",
+          "format": "int32"
         }
       }
     },

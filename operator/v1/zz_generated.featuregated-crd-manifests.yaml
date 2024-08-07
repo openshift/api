@@ -69,6 +69,7 @@ clustercsidrivers.operator.openshift.io:
   Capability: ""
   Category: ""
   FeatureGates:
+  - AWSEFSDriverVolumeMetrics
   - VSphereDriverConfiguration
   FilenameOperatorName: csi-driver
   FilenameOperatorOrdering: "01"

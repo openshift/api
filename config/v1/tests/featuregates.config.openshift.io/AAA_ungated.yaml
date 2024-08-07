@@ -23,6 +23,13 @@ tests:
         kind: FeatureGate
         spec:
           featureSet: TechPreviewNoUpgrade
+    - name: Must reject unsupported value of a FeatureGate
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: FeatureGate
+        spec:
+          featureSet: bar
+      expectedError: "spec.featureSet: Unsupported value: \"bar\": supported values: \"CustomNoUpgrade\", \"DevPreviewNoUpgrade\", \"TechPreviewNoUpgrade\", \"\""
   onUpdate:
     - name: Default to TechPreview
       initial: |
@@ -103,3 +110,15 @@ tests:
         spec:
           featureSet: ""
       expectedError: "CustomNoUpgrade may not be changed"
+    - name: Must reject an update if unsupported value of a FeatureGate is provided
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: FeatureGate
+        spec:
+          featureSet: ""
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: FeatureGate
+        spec:
+          featureSet: "bar"
+      expectedError: "spec.featureSet: Unsupported value: \"bar\": supported values: \"CustomNoUpgrade\", \"DevPreviewNoUpgrade\", \"TechPreviewNoUpgrade\", \"\""

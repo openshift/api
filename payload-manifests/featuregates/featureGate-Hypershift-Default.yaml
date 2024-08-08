@@ -235,9 +235,6 @@
                         "name": "ManagedBootImages"
                     },
                     {
-                        "name": "MetricsServer"
-                    },
-                    {
                         "name": "NetworkDiagnosticsConfig"
                     },
                     {

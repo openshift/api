@@ -240,7 +240,8 @@ imagecontentpolicies.config.openshift.io:
   CRDName: imagecontentpolicies.config.openshift.io
   Capability: ""
   Category: ""
-  FeatureGates: []
+  FeatureGates:
+  - ImageContentPolicy
   FilenameOperatorName: config-operator
   FilenameOperatorOrdering: "01"
   FilenameRunLevel: "0000_10"
@@ -252,7 +253,8 @@ imagecontentpolicies.config.openshift.io:
   PrinterColumns: []
   Scope: Cluster
   ShortNames: null
-  TopLevelFeatureGates: []
+  TopLevelFeatureGates:
+  - ImageContentPolicy
   Version: v1
 
 imagedigestmirrorsets.config.openshift.io:

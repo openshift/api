@@ -60196,6 +60196,14 @@ func schema_openshift_api_security_v1_SecurityContextConstraints(ref common.Refe
 							Format:      "",
 						},
 					},
+					"userNamespaceLevel": {
+						SchemaProps: spec.SchemaProps{
+							Description: "userNamespaceLevel determines if the policy allows host users in containers. Valid values are \"AllowHostLevel\", \"RequirePodLevel\", and omitted. When \"AllowHostLevel\" is set, a pod author may set `hostUsers` to either `true` or `false`. When \"RequirePodLevel\" is set, a pod author must set `hostUsers` to `false`. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is \"AllowHostLevel\".",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"defaultAllowPrivilegeEscalation": {
 						SchemaProps: spec.SchemaProps{
 							Description: "DefaultAllowPrivilegeEscalation controls the default setting for whether a process can gain more privileges than its parent process.",

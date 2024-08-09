@@ -20184,6 +20184,11 @@
             "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.BlockDeviceMappingSpec"
           }
         },
+        "capacityReservationId": {
+          "description": "capacityReservationId specifies the target Capacity Reservation into which the instance should be launched. The field size should be greater than 0 and the field input must start with cr-***",
+          "type": "string",
+          "default": ""
+        },
         "credentialsSecret": {
           "description": "CredentialsSecret is a reference to the secret with AWS credentials. Otherwise, defaults to permissions provided by attached IAM role where the actuator is running.",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"

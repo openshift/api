@@ -159,6 +159,9 @@
                         "name": "KMSv1"
                     },
                     {
+                        "name": "KubeletSeparateDiskGC"
+                    },
+                    {
                         "name": "MachineAPIProviderOpenStack"
                     },
                     {

@@ -80,6 +80,9 @@
                         "name": "InstallAlternateInfrastructureAWS"
                     },
                     {
+                        "name": "KubeletSeparateDiskGC"
+                    },
+                    {
                         "name": "MachineAPIMigration"
                     },
                     {

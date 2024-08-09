@@ -180,6 +180,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.BuildOverrides":                                                  schema_openshift_api_config_v1_BuildOverrides(ref),
 		"github.com/openshift/api/config/v1.BuildSpec":                                                       schema_openshift_api_config_v1_BuildSpec(ref),
 		"github.com/openshift/api/config/v1.CertInfo":                                                        schema_openshift_api_config_v1_CertInfo(ref),
+		"github.com/openshift/api/config/v1.ClaimOrExpression":                                               schema_openshift_api_config_v1_ClaimOrExpression(ref),
 		"github.com/openshift/api/config/v1.ClientConnectionOverrides":                                       schema_openshift_api_config_v1_ClientConnectionOverrides(ref),
 		"github.com/openshift/api/config/v1.CloudControllerManagerStatus":                                    schema_openshift_api_config_v1_CloudControllerManagerStatus(ref),
 		"github.com/openshift/api/config/v1.CloudLoadBalancerConfig":                                         schema_openshift_api_config_v1_CloudLoadBalancerConfig(ref),
@@ -228,6 +229,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.ExternalIPPolicy":                                                schema_openshift_api_config_v1_ExternalIPPolicy(ref),
 		"github.com/openshift/api/config/v1.ExternalPlatformSpec":                                            schema_openshift_api_config_v1_ExternalPlatformSpec(ref),
 		"github.com/openshift/api/config/v1.ExternalPlatformStatus":                                          schema_openshift_api_config_v1_ExternalPlatformStatus(ref),
+		"github.com/openshift/api/config/v1.ExtraMapping":                                                    schema_openshift_api_config_v1_ExtraMapping(ref),
 		"github.com/openshift/api/config/v1.FeatureGate":                                                     schema_openshift_api_config_v1_FeatureGate(ref),
 		"github.com/openshift/api/config/v1.FeatureGateAttributes":                                           schema_openshift_api_config_v1_FeatureGateAttributes(ref),
 		"github.com/openshift/api/config/v1.FeatureGateDetails":                                              schema_openshift_api_config_v1_FeatureGateDetails(ref),
@@ -9857,6 +9859,34 @@ func schema_openshift_api_config_v1_CertInfo(ref common.ReferenceCallback) commo
 	}
 }
 
+func schema_openshift_api_config_v1_ClaimOrExpression(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"claim": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Claim is the JWT claim to use. Mutually exclusive with expression.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"expression": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Expression respresents a CEL expression. Mutually exclusive with claim.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_config_v1_ClientConnectionOverrides(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -11963,6 +11993,35 @@ func schema_openshift_api_config_v1_ExternalPlatformStatus(ref common.ReferenceC
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/config/v1.CloudControllerManagerStatus"},
+	}
+}
+
+func schema_openshift_api_config_v1_ExtraMapping(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"key": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Key is a string to use as the extra attribute key key must be lowercase and unique",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"valueExpression": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ValueExpression is a CEL expression to extract extra attribute value",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"key", "valueExpression"},
+			},
+		},
 	}
 }
 
@@ -18993,11 +19052,40 @@ func schema_openshift_api_config_v1_TokenClaimMappings(ref common.ReferenceCallb
 							Ref:         ref("github.com/openshift/api/config/v1.PrefixedClaimMapping"),
 						},
 					},
+					"uid": {
+						SchemaProps: spec.SchemaProps{
+							Description: "UID reqresents an option for the uid attribute.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.ClaimOrExpression"),
+						},
+					},
+					"extra": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"key",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "Extra represents an option for the extra attribute",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.ExtraMapping"),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.PrefixedClaimMapping", "github.com/openshift/api/config/v1.UsernameClaimMapping"},
+			"github.com/openshift/api/config/v1.ClaimOrExpression", "github.com/openshift/api/config/v1.ExtraMapping", "github.com/openshift/api/config/v1.PrefixedClaimMapping", "github.com/openshift/api/config/v1.UsernameClaimMapping"},
 	}
 }
 

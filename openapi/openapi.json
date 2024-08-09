@@ -4940,6 +4940,21 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.ClaimOrExpression": {
+      "type": "object",
+      "properties": {
+        "claim": {
+          "description": "Claim is the JWT claim to use. Mutually exclusive with expression.",
+          "type": "string",
+          "default": ""
+        },
+        "expression": {
+          "description": "Expression respresents a CEL expression. Mutually exclusive with claim.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.ClientConnectionOverrides": {
       "type": "object",
       "required": [
@@ -6157,6 +6172,25 @@
           "description": "cloudControllerManager contains settings specific to the external Cloud Controller Manager (a.k.a. CCM or CPI). When omitted, new nodes will be not tainted and no extra initialization from the cloud controller manager is expected.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.CloudControllerManagerStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.ExtraMapping": {
+      "type": "object",
+      "required": [
+        "key",
+        "valueExpression"
+      ],
+      "properties": {
+        "key": {
+          "description": "Key is a string to use as the extra attribute key key must be lowercase and unique",
+          "type": "string",
+          "default": ""
+        },
+        "valueExpression": {
+          "description": "ValueExpression is a CEL expression to extract extra attribute value",
+          "type": "string",
+          "default": ""
         }
       }
     },
@@ -10292,10 +10326,27 @@
     "com.github.openshift.api.config.v1.TokenClaimMappings": {
       "type": "object",
       "properties": {
+        "extra": {
+          "description": "Extra represents an option for the extra attribute",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.ExtraMapping"
+          },
+          "x-kubernetes-list-map-keys": [
+            "key"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
         "groups": {
           "description": "Groups is a name of the claim that should be used to construct groups for the cluster identity. The referenced claim must use array of strings values.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.PrefixedClaimMapping"
+        },
+        "uid": {
+          "description": "UID reqresents an option for the uid attribute.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.ClaimOrExpression"
         },
         "username": {
           "description": "Username is a name of the claim that should be used to construct usernames for the cluster identity.\n\nDefault value: \"sub\"",

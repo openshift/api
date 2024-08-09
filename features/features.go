@@ -454,13 +454,6 @@ var (
 				enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 				mustRegister()
 
-	FeatureGateExternalRouteCertificate = newFeatureGate("ExternalRouteCertificate").
-						reportProblemsToJiraComponent("network-edge").
-						contactPerson("miciah").
-						productScope(ocpSpecific).
-						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-						mustRegister()
-
 	FeatureGateInsightsOnDemandDataGather = newFeatureGate("InsightsOnDemandDataGather").
 						reportProblemsToJiraComponent("insights").
 						contactPerson("tremes").

@@ -137,6 +137,9 @@
                         "name": "ServiceAccountTokenNodeBinding"
                     },
                     {
+                        "name": "ShortCertRotation"
+                    },
+                    {
                         "name": "SignatureStores"
                     },
                     {

@@ -59,9 +59,6 @@
                         "name": "GCPClusterHostedDNS"
                     },
                     {
-                        "name": "GCPLabelsTags"
-                    },
-                    {
                         "name": "GatewayAPI"
                     },
                     {
@@ -215,6 +212,9 @@
                     },
                     {
                         "name": "ExternalOIDC"
+                    },
+                    {
+                        "name": "GCPLabelsTags"
                     },
                     {
                         "name": "HardwareSpeed"

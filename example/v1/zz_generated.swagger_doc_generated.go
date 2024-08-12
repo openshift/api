@@ -60,6 +60,7 @@ var map_StableConfigTypeSpec = map[string]string{
 	"celUnion":               "celUnion demonstrates how to validate a discrminated union using CEL",
 	"nonZeroDefault":         "nonZeroDefault is a demonstration of creating an integer field that has a non zero default. It required two default tags (one for CRD generation, one for client generation) and must have `omitempty` and be optional. A minimum value is added to demonstrate that a zero value would not be accepted.",
 	"evolvingCollection":     "evolvingCollection demonstrates how to have a collection where the maximum number of items varies on cluster type. For default clusters, this will be \"1\" but on TechPreview clusters, this value will be \"3\".",
+	"set":                    "set demonstrates how to define and validate set of strings",
 }
 
 func (StableConfigTypeSpec) SwaggerDoc() map[string]string {

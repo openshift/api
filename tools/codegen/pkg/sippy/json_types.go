@@ -46,8 +46,8 @@ type SippyTestInfo struct {
 	OpenBugs                  int         `json:"open_bugs"`
 }
 
-func QueriesFor(cloud, architecture, topology, testPattern string) []*SippyQueryStruct {
-	return []*SippyQueryStruct{
+func QueriesFor(cloud, architecture, topology, networkStack, testPattern string) []*SippyQueryStruct {
+	queries := []*SippyQueryStruct{
 		{
 			Items: []SippyQueryItem{
 				{
@@ -85,4 +85,17 @@ func QueriesFor(cloud, architecture, topology, testPattern string) []*SippyQuery
 		},
 	}
 
+	if networkStack != "" {
+		queries[0].Items = append(queries[0].Items,
+			SippyQueryItem{
+				ColumnField:   "variants",
+				Not:           false,
+				OperatorValue: "contains",
+				Value:         fmt.Sprintf("NetworkStack:%s", networkStack),
+			},
+		)
+
+	}
+
+	return queries
 }

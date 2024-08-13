@@ -228,7 +228,7 @@ var (
 					reportProblemsToJiraComponent("Networking/ovn-kubernetes").
 					contactPerson("tssurya").
 					productScope(ocpSpecific).
-					enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
 
 	FeatureGateAdditionalRoutingCapabilities = newFeatureGate("AdditionalRoutingCapabilities").

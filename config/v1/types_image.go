@@ -62,6 +62,7 @@ type ImageSpec struct {
 	// this policy - typically only administrators or system integrations will have those
 	// permissions.
 	// +optional
+	// +listType=atomic
 	AllowedRegistriesForImport []RegistryLocation `json:"allowedRegistriesForImport,omitempty"`
 
 	// externalRegistryHostnames provides the hostnames for the default external image
@@ -69,6 +70,7 @@ type ImageSpec struct {
 	// is exposed externally. The first value is used in 'publicDockerImageRepository'
 	// field in ImageStreams. The value must be in "hostname[:port]" format.
 	// +optional
+	// +listType=atomic
 	ExternalRegistryHostnames []string `json:"externalRegistryHostnames,omitempty"`
 
 	// additionalTrustedCA is a reference to a ConfigMap containing additional CAs that
@@ -114,6 +116,7 @@ type ImageStatus struct {
 	// is exposed externally. The first value is used in 'publicDockerImageRepository'
 	// field in ImageStreams. The value must be in "hostname[:port]" format.
 	// +optional
+	// +listType=atomic
 	ExternalRegistryHostnames []string `json:"externalRegistryHostnames,omitempty"`
 
 	// imageStreamImportMode controls the import mode behaviour of imagestreams. It can be
@@ -162,16 +165,19 @@ type RegistryLocation struct {
 type RegistrySources struct {
 	// insecureRegistries are registries which do not have a valid TLS certificates or only support HTTP connections.
 	// +optional
+	// +listType=atomic
 	InsecureRegistries []string `json:"insecureRegistries,omitempty"`
 	// blockedRegistries cannot be used for image pull and push actions. All other registries are permitted.
 	//
 	// Only one of BlockedRegistries or AllowedRegistries may be set.
 	// +optional
+	// +listType=atomic
 	BlockedRegistries []string `json:"blockedRegistries,omitempty"`
 	// allowedRegistries are the only registries permitted for image pull and push actions. All other registries are denied.
 	//
 	// Only one of BlockedRegistries or AllowedRegistries may be set.
 	// +optional
+	// +listType=atomic
 	AllowedRegistries []string `json:"allowedRegistries,omitempty"`
 	// containerRuntimeSearchRegistries are registries that will be searched when pulling images that do not have fully qualified
 	// domains in their pull specs. Registries will be searched in the order provided in the list.

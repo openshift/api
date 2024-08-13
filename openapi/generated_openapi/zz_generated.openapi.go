@@ -13677,6 +13677,11 @@ func schema_openshift_api_config_v1_ImageSpec(ref common.ReferenceCallback) comm
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"allowedRegistriesForImport": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "allowedRegistriesForImport limits the container image registries that normal users may import images from. Set this list to the registries that you trust to contain valid Docker images and that you want applications to be able to import from. Users with permission to create Images or ImageStreamMappings via the API are not affected by this policy - typically only administrators or system integrations will have those permissions.",
 							Type:        []string{"array"},
@@ -13691,6 +13696,11 @@ func schema_openshift_api_config_v1_ImageSpec(ref common.ReferenceCallback) comm
 						},
 					},
 					"externalRegistryHostnames": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "externalRegistryHostnames provides the hostnames for the default external image registry. The external hostname should be set only when the image registry is exposed externally. The first value is used in 'publicDockerImageRepository' field in ImageStreams. The value must be in \"hostname[:port]\" format.",
 							Type:        []string{"array"},
@@ -13750,6 +13760,11 @@ func schema_openshift_api_config_v1_ImageStatus(ref common.ReferenceCallback) co
 						},
 					},
 					"externalRegistryHostnames": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "externalRegistryHostnames provides the hostnames for the default external image registry. The external hostname should be set only when the image registry is exposed externally. The first value is used in 'publicDockerImageRepository' field in ImageStreams. The value must be in \"hostname[:port]\" format.",
 							Type:        []string{"array"},
@@ -17943,6 +17958,11 @@ func schema_openshift_api_config_v1_RegistrySources(ref common.ReferenceCallback
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"insecureRegistries": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "insecureRegistries are registries which do not have a valid TLS certificates or only support HTTP connections.",
 							Type:        []string{"array"},
@@ -17958,6 +17978,11 @@ func schema_openshift_api_config_v1_RegistrySources(ref common.ReferenceCallback
 						},
 					},
 					"blockedRegistries": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "blockedRegistries cannot be used for image pull and push actions. All other registries are permitted.\n\nOnly one of BlockedRegistries or AllowedRegistries may be set.",
 							Type:        []string{"array"},
@@ -17973,6 +17998,11 @@ func schema_openshift_api_config_v1_RegistrySources(ref common.ReferenceCallback
 						},
 					},
 					"allowedRegistries": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "allowedRegistries are the only registries permitted for image pull and push actions. All other registries are denied.\n\nOnly one of BlockedRegistries or AllowedRegistries may be set.",
 							Type:        []string{"array"},

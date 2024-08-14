@@ -342,7 +342,7 @@ var (
 			Topology:     "ha",
 		},
 		{
-			Cloud:        "vsphere-ipi",
+			Cloud:        "vsphere",
 			Architecture: "amd64",
 			Topology:     "ha",
 		},

@@ -218,7 +218,8 @@ images.config.openshift.io:
   CRDName: images.config.openshift.io
   Capability: ""
   Category: ""
-  FeatureGates: []
+  FeatureGates:
+  - ImageStreamImportMode
   FilenameOperatorName: config-operator
   FilenameOperatorOrdering: "01"
   FilenameRunLevel: "0000_10"

@@ -13677,6 +13677,11 @@ func schema_openshift_api_config_v1_ImageSpec(ref common.ReferenceCallback) comm
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"allowedRegistriesForImport": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "allowedRegistriesForImport limits the container image registries that normal users may import images from. Set this list to the registries that you trust to contain valid Docker images and that you want applications to be able to import from. Users with permission to create Images or ImageStreamMappings via the API are not affected by this policy - typically only administrators or system integrations will have those permissions.",
 							Type:        []string{"array"},
@@ -13691,6 +13696,11 @@ func schema_openshift_api_config_v1_ImageSpec(ref common.ReferenceCallback) comm
 						},
 					},
 					"externalRegistryHostnames": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "externalRegistryHostnames provides the hostnames for the default external image registry. The external hostname should be set only when the image registry is exposed externally. The first value is used in 'publicDockerImageRepository' field in ImageStreams. The value must be in \"hostname[:port]\" format.",
 							Type:        []string{"array"},
@@ -13719,6 +13729,15 @@ func schema_openshift_api_config_v1_ImageSpec(ref common.ReferenceCallback) comm
 							Ref:         ref("github.com/openshift/api/config/v1.RegistrySources"),
 						},
 					},
+					"imageStreamImportMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "imageStreamImportMode controls the import mode behaviour of imagestreams. It can be set to `Legacy` or `PreserveOriginal` or the empty string. If this value is specified, this setting is applied to all newly created imagestreams which do not have the value set. `Legacy` indicates that the legacy behaviour should be used. For manifest lists, the legacy behaviour will discard the manifest list and import a single sub-manifest. In this case, the platform is chosen in the following order of priority: 1. tag annotations; 2. control plane arch/os; 3. linux/amd64; 4. the first manifest in the list. `PreserveOriginal` indicates that the original manifest will be preserved. For manifest lists, the manifest list and all its sub-manifests will be imported. When empty, the behaviour will be decided based on the payload type advertised by the ClusterVersion status, i.e single arch payload implies the import mode is Legacy and multi payload implies PreserveOriginal.\n\nPossible enum values:\n - `\"Legacy\"` indicates that the legacy behaviour should be used. For manifest lists, the legacy behaviour will discard the manifest list and import a single sub-manifest. In this case, the platform is chosen in the following order of priority: 1. tag annotations; 2. control plane arch/os; 3. linux/amd64; 4. the first manifest in the list. This mode is the default.\n - `\"PreserveOriginal\"` indicates that the original manifest will be preserved. For manifest lists, the manifest list and all its sub-manifests will be imported.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"Legacy", "PreserveOriginal"},
+						},
+					},
 				},
 			},
 		},
@@ -13741,6 +13760,11 @@ func schema_openshift_api_config_v1_ImageStatus(ref common.ReferenceCallback) co
 						},
 					},
 					"externalRegistryHostnames": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "externalRegistryHostnames provides the hostnames for the default external image registry. The external hostname should be set only when the image registry is exposed externally. The first value is used in 'publicDockerImageRepository' field in ImageStreams. The value must be in \"hostname[:port]\" format.",
 							Type:        []string{"array"},
@@ -13753,6 +13777,14 @@ func schema_openshift_api_config_v1_ImageStatus(ref common.ReferenceCallback) co
 									},
 								},
 							},
+						},
+					},
+					"imageStreamImportMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "imageStreamImportMode controls the import mode behaviour of imagestreams. It can be `Legacy` or `PreserveOriginal`. `Legacy` indicates that the legacy behaviour should be used. For manifest lists, the legacy behaviour will discard the manifest list and import a single sub-manifest. In this case, the platform is chosen in the following order of priority: 1. tag annotations; 2. control plane arch/os; 3. linux/amd64; 4. the first manifest in the list. `PreserveOriginal` indicates that the original manifest will be preserved. For manifest lists, the manifest list and all its sub-manifests will be imported. This value will be reconciled based on either the spec value or if no spec value is specified, the image registry operator would look at the ClusterVersion status to determine the payload type and set the import mode accordingly, i.e single arch payload implies the import mode is Legacy and multi payload implies PreserveOriginal.\n\nPossible enum values:\n - `\"Legacy\"` indicates that the legacy behaviour should be used. For manifest lists, the legacy behaviour will discard the manifest list and import a single sub-manifest. In this case, the platform is chosen in the following order of priority: 1. tag annotations; 2. control plane arch/os; 3. linux/amd64; 4. the first manifest in the list. This mode is the default.\n - `\"PreserveOriginal\"` indicates that the original manifest will be preserved. For manifest lists, the manifest list and all its sub-manifests will be imported.",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"Legacy", "PreserveOriginal"},
 						},
 					},
 				},
@@ -17926,6 +17958,11 @@ func schema_openshift_api_config_v1_RegistrySources(ref common.ReferenceCallback
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"insecureRegistries": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "insecureRegistries are registries which do not have a valid TLS certificates or only support HTTP connections.",
 							Type:        []string{"array"},
@@ -17941,6 +17978,11 @@ func schema_openshift_api_config_v1_RegistrySources(ref common.ReferenceCallback
 						},
 					},
 					"blockedRegistries": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "blockedRegistries cannot be used for image pull and push actions. All other registries are permitted.\n\nOnly one of BlockedRegistries or AllowedRegistries may be set.",
 							Type:        []string{"array"},
@@ -17956,6 +17998,11 @@ func schema_openshift_api_config_v1_RegistrySources(ref common.ReferenceCallback
 						},
 					},
 					"allowedRegistries": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "allowedRegistries are the only registries permitted for image pull and push actions. All other registries are denied.\n\nOnly one of BlockedRegistries or AllowedRegistries may be set.",
 							Type:        []string{"array"},
@@ -43068,6 +43115,15 @@ func schema_openshift_api_openshiftcontrolplane_v1_ImagePolicyConfig(ref common.
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
+						},
+					},
+					"imageStreamImportMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "imageStreamImportMode provides the import mode value for  imagestreams. It can be `Legacy` or `PreserveOriginal`. `Legacy` indicates that the legacy behaviour should be used. For manifest lists, the legacy behaviour will discard the manifest list and import a single sub-manifest. In this case, the platform is chosen in the following order of priority: 1. tag annotations; 2. control plane arch/os; 3. linux/amd64; 4. the first manifest in the list. `PreserveOriginal` indicates that the original manifest will be preserved. For manifest lists, the manifest list and all its sub-manifests will be imported.If this value is specified, this setting is applied to all newly created imagestreams which do not have the value set.\n\nPossible enum values:\n - `\"Legacy\"` indicates that the legacy behaviour should be used. For manifest lists, the legacy behaviour will discard the manifest list and import a single sub-manifest. In this case, the platform is chosen in the following order of priority: 1. tag annotations; 2. control plane arch/os; 3. linux/amd64; 4. the first manifest in the list. This mode is the default.\n - `\"PreserveOriginal\"` indicates that the original manifest will be preserved. For manifest lists, the manifest list and all its sub-manifests will be imported.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"Legacy", "PreserveOriginal"},
 						},
 					},
 				},

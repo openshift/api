@@ -618,4 +618,10 @@ var (
 						productScope(ocpSpecific).
 						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 						mustRegister()
+	FeatureGateImageStreamImportMode = newFeatureGate("ImageStreamImportMode").
+                                          reportProblemsToJiraComponent("Multi-Arch").
+                                          contactPerson("psundara").
+                                          productScope(ocpSpecific).
+                                          enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+                                          mustRegister()
 )

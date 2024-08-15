@@ -346,17 +346,30 @@ var (
 			Architecture: "amd64",
 			Topology:     "ha",
 		},
+		{
+			Cloud:        "metal-ipi",
+			Architecture: "amd64",
+			Topology:     "ha",
+			NetworkStack: "ipv4",
+		},
+		{
+			Cloud:        "metal-ipi",
+			Architecture: "amd64",
+			Topology:     "ha",
+			NetworkStack: "ipv6",
+		},
+		{
+			Cloud:        "metal-ipi",
+			Architecture: "amd64",
+			Topology:     "ha",
+			NetworkStack: "dual",
+		},
 
 		// TODO restore these once we run TechPreview jobs that contain them
 		//{
 		//	Cloud:        "aws",
 		//	Architecture: "amd64",
 		//	Topology:     "single-node",
-		//},
-		//{
-		//	Cloud:        "metal-ipi",
-		//	Architecture: "amd64",
-		//	Topology:     "ha",
 		//},
 		//{
 		//	Cloud:        "metal-ipi",
@@ -394,6 +407,7 @@ type JobVariant struct {
 	Cloud        string
 	Architecture string
 	Topology     string
+	NetworkStack string
 }
 
 type OrderedJobVariants []JobVariant
@@ -557,7 +571,7 @@ func listTestResultForVariant(featureGate string, jobVariant JobVariant) (*Testi
 	}
 
 	testNameToResults := map[string]*TestResults{}
-	queries := sippy.QueriesFor(jobVariant.Cloud, jobVariant.Architecture, jobVariant.Topology, testPattern)
+	queries := sippy.QueriesFor(jobVariant.Cloud, jobVariant.Architecture, jobVariant.Topology, jobVariant.NetworkStack, testPattern)
 	for _, currQuery := range queries {
 		currURL := &url.URL{
 			Scheme: "https",

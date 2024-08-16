@@ -353,8 +353,7 @@ type RouteStatus struct {
 	// ingress describes the places where the route may be exposed. The list of
 	// ingress points may contain duplicate Host or RouterName values. Routes
 	// are considered live once they are `Ready`
-	// +listType=map
-	// +listMapKey=routerName
+	// +listType=atomic
 	Ingress []RouteIngress `json:"ingress,omitempty" protobuf:"bytes,1,rep,name=ingress"`
 }
 

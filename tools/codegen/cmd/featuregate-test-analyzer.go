@@ -275,7 +275,11 @@ func writeTestingMarkDown(testingResults map[JobVariant]*TestingResults, md *uti
 	md.Exact("Test ")
 	for _, jobVariant := range jobVariants {
 		md.NextTableColumn()
-		md.Exact(fmt.Sprintf("%v <br/> %v <br/> %v ", jobVariant.Topology, jobVariant.Cloud, jobVariant.Architecture))
+		columnHeader := fmt.Sprintf("%v <br/> %v <br/> %v ", jobVariant.Topology, jobVariant.Cloud, jobVariant.Architecture)
+		if jobVariant.NetworkStack != "" {
+			columnHeader = columnHeader + fmt.Sprintf("<br/> %v ", jobVariant.NetworkStack)
+		}
+		md.Exact(columnHeader)
 	}
 	md.EndTableRow()
 	md.NextTableColumn()

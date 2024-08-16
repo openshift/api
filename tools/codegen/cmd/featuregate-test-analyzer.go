@@ -347,19 +347,19 @@ var (
 			Topology:     "ha",
 		},
 		{
-			Cloud:        "metal-ipi",
+			Cloud:        "metal",
 			Architecture: "amd64",
 			Topology:     "ha",
 			NetworkStack: "ipv4",
 		},
 		{
-			Cloud:        "metal-ipi",
+			Cloud:        "metal",
 			Architecture: "amd64",
 			Topology:     "ha",
 			NetworkStack: "ipv6",
 		},
 		{
-			Cloud:        "metal-ipi",
+			Cloud:        "metal",
 			Architecture: "amd64",
 			Topology:     "ha",
 			NetworkStack: "dual",

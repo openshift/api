@@ -663,9 +663,7 @@ spec:
                       type: string
                   type: object
                 type: array
-                x-kubernetes-list-map-keys:
-                - routerName
-                x-kubernetes-list-type: map
+                x-kubernetes-list-type: atomic
             type: object
         required:
         - spec

@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"compress/gzip"
 	"context"
+	"crypto/sha512"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
@@ -18,6 +19,7 @@ import (
 	"strings"
 
 	"cloud.google.com/go/storage"
+	"gopkg.in/yaml.v3"
 )
 
 func main() {
@@ -26,6 +28,7 @@ func main() {
 	outputDir := flag.String("output-dir", "", "The output directory to write the kubebuilder tools to")
 	payload := flag.String("payload", "", "The payload to use for building the kubebuilder tools archives. This should be in the format registry.ci.openshift.org/ocp/release:<version>")
 	skipUpload := flag.Bool("skip-upload", false, "Skip uploading the artifacts created to the openshift-gce-devel/openshift-kubebuilder-tools bucket")
+	indexFile := flag.String("index-file", "envtest-releases.yaml", "The index file to use for the kubebuilder tools")
 
 	flag.Parse()
 
@@ -70,8 +73,8 @@ func main() {
 		panic(err)
 	}
 
-	// Build the kubebuilder tools archives for each os and arch combination
-	if err := buildKubebuilderTars(*outputDir, *version); err != nil {
+	// Build the envtest archives for each os and arch combination
+	if err := buildEnvtestTars(*outputDir, *version); err != nil {
 		panic(err)
 	}
 
@@ -82,6 +85,11 @@ func main() {
 
 	// Upload the tars created earlier to the public GCS bucket for general consumption
 	if err := uploadArchives(*outputDir, *version); err != nil {
+		panic(err)
+	}
+
+	// Update the index file with the new version
+	if err := updateIndexFile(*outputDir, *version, *indexFile); err != nil {
 		panic(err)
 	}
 
@@ -348,10 +356,10 @@ func getImageStreamAndDigest(image string) (string, string) {
 	return parts[0], parts[1]
 }
 
-func buildKubebuilderTars(dir string, version string) error {
+func buildEnvtestTars(dir string, version string) error {
 	for _, goos := range []string{"darwin", "linux"} {
 		for _, arch := range []string{"amd64", "arm64"} {
-			out, err := os.Create(filepath.Join(dir, fmt.Sprintf("kubebuilder-tools-%s-%s-%s.tar.gz", version, goos, arch)))
+			out, err := os.Create(filepath.Join(dir, fmt.Sprintf("envtest-%s-%s-%s.tar.gz", version, goos, arch)))
 			if err != nil {
 				return err
 			}
@@ -416,7 +424,7 @@ func uploadArchives(dir string, version string) error {
 
 	for _, goos := range []string{"darwin", "linux"} {
 		for _, arch := range []string{"amd64", "arm64"} {
-			archivePath := filepath.Join(dir, fmt.Sprintf("kubebuilder-tools-%s-%s-%s.tar.gz", version, goos, arch))
+			archivePath := filepath.Join(dir, fmt.Sprintf("envtest-%s-%s-%s.tar.gz", version, goos, arch))
 			if err := uploadArchive(gcsClient, archivePath); err != nil {
 				return err
 			}
@@ -442,4 +450,75 @@ func uploadArchive(gcsClient *storage.Client, archivePath string) error {
 	}
 
 	return nil
+}
+
+type indexFile struct {
+	Hash     string `yaml:"hash"`
+	SelfLink string `yaml:"selfLink"`
+}
+
+// updateIndexFile adds the new version to the existing index file.
+// The index file is used by the setup-envtest tool to find the download links for the envtest archives.
+func updateIndexFile(dir, version, indexFileName string) error {
+	indexFileRaw, err := os.ReadFile(indexFileName)
+	if err != nil && !os.IsNotExist(err) {
+		return fmt.Errorf("failed to read index file: %w", err)
+	}
+
+	index := struct {
+		Releases map[string]map[string]indexFile `json:"releases"`
+	}{}
+
+	if indexFileRaw != nil {
+		if err := yaml.Unmarshal(indexFileRaw, &index); err != nil {
+			return fmt.Errorf("failed to unmarshal index file: %w", err)
+		}
+	} else {
+		index.Releases = make(map[string]map[string]indexFile)
+	}
+
+	releaseIndexes := make(map[string]indexFile)
+	for _, goos := range []string{"darwin", "linux"} {
+		for _, arch := range []string{"amd64", "arm64"} {
+			name := fmt.Sprintf("envtest-%s-%s-%s.tar.gz", version, goos, arch)
+
+			archive, err := os.Open(filepath.Join(dir, name))
+			if err != nil {
+				return fmt.Errorf("failed to open archive %s: %w", name, err)
+			}
+			defer archive.Close()
+
+			hash, err := hashFile(archive)
+			if err != nil {
+				return fmt.Errorf("failed to hash archive %s: %w", name, err)
+			}
+
+			releaseIndexes[name] = indexFile{
+				Hash:     hash,
+				SelfLink: fmt.Sprintf("https://storage.googleapis.com/openshift-kubebuilder-tools/%s", name),
+			}
+		}
+	}
+
+	index.Releases[version] = releaseIndexes
+
+	indexRaw, err := yaml.Marshal(index)
+	if err != nil {
+		return fmt.Errorf("failed to marshal index file: %w", err)
+	}
+
+	if err := os.WriteFile(indexFileName, indexRaw, 0644); err != nil {
+		return fmt.Errorf("failed to write index file: %w", err)
+	}
+
+	return nil
+}
+
+func hashFile(f *os.File) (string, error) {
+	h := sha512.New()
+	if _, err := io.Copy(h, f); err != nil {
+		return "", fmt.Errorf("failed to copy file: %w", err)
+	}
+
+	return fmt.Sprintf("%x", h.Sum(nil)), nil
 }

@@ -58861,10 +58861,7 @@ func schema_openshift_api_route_v1_RouteStatus(ref common.ReferenceCallback) com
 					"ingress": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-map-keys": []interface{}{
-									"routerName",
-								},
-								"x-kubernetes-list-type": "map",
+								"x-kubernetes-list-type": "atomic",
 							},
 						},
 						SchemaProps: spec.SchemaProps{

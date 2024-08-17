@@ -71,34 +71,6 @@ var (
 							enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 							mustRegister()
 
-	FeatureGateExternalCloudProvider = newFeatureGate("ExternalCloudProvider").
-						reportProblemsToJiraComponent("cloud-provider").
-						contactPerson("jspeed").
-						productScope(ocpSpecific).
-						enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-						mustRegister()
-
-	FeatureGateExternalCloudProviderAzure = newFeatureGate("ExternalCloudProviderAzure").
-						reportProblemsToJiraComponent("cloud-provider").
-						contactPerson("jspeed").
-						productScope(ocpSpecific).
-						enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-						mustRegister()
-
-	FeatureGateExternalCloudProviderGCP = newFeatureGate("ExternalCloudProviderGCP").
-						reportProblemsToJiraComponent("cloud-provider").
-						contactPerson("jspeed").
-						productScope(ocpSpecific).
-						enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-						mustRegister()
-
-	FeatureGateExternalCloudProviderExternal = newFeatureGate("ExternalCloudProviderExternal").
-							reportProblemsToJiraComponent("cloud-provider").
-							contactPerson("elmiko").
-							productScope(ocpSpecific).
-							enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-							mustRegister()
-
 	FeatureGateCSIDriverSharedResource = newFeatureGate("CSIDriverSharedResource").
 						reportProblemsToJiraComponent("builds").
 						contactPerson("adkaplan").
@@ -612,9 +584,9 @@ var (
 						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 						mustRegister()
 	FeatureGateImageStreamImportMode = newFeatureGate("ImageStreamImportMode").
-                                          reportProblemsToJiraComponent("Multi-Arch").
-                                          contactPerson("psundara").
-                                          productScope(ocpSpecific).
-                                          enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-                                          mustRegister()
+						reportProblemsToJiraComponent("Multi-Arch").
+						contactPerson("psundara").
+						productScope(ocpSpecific).
+						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						mustRegister()
 )

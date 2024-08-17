@@ -199,18 +199,6 @@
                         "name": "DisableKubeletCloudCredentialProviders"
                     },
                     {
-                        "name": "ExternalCloudProvider"
-                    },
-                    {
-                        "name": "ExternalCloudProviderAzure"
-                    },
-                    {
-                        "name": "ExternalCloudProviderExternal"
-                    },
-                    {
-                        "name": "ExternalCloudProviderGCP"
-                    },
-                    {
                         "name": "ExternalOIDC"
                     },
                     {

@@ -8072,15 +8072,15 @@
       }
     },
     "com.github.openshift.api.config.v1.NetworkMigration": {
-      "description": "NetworkMigration represents the cluster network configuration.",
+      "description": "NetworkMigration represents the network migration status.",
       "type": "object",
       "properties": {
         "mtu": {
-          "description": "MTU contains the MTU migration configuration.",
+          "description": "MTU is the MTU configuration that is being deployed.",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.MTUMigration"
         },
         "networkType": {
-          "description": "NetworkType is the target plugin that is to be deployed. Currently supported values are: OpenShiftSDN, OVNKubernetes",
+          "description": "NetworkType is the target plugin that is being deployed. DEPRECATED: network type migration is no longer supported, so this should always be unset.",
           "type": "string"
         }
       }
@@ -8113,7 +8113,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1.NetworkDiagnostics"
         },
         "networkType": {
-          "description": "NetworkType is the plugin that is to be deployed (e.g. OpenShiftSDN). This should match a value that the cluster-network-operator understands, or else no networking will be installed. Currently supported values are: - OpenShiftSDN This field is immutable after installation.",
+          "description": "NetworkType is the plugin that is to be deployed (e.g. OVNKubernetes). This should match a value that the cluster-network-operator understands, or else no networking will be installed. Currently supported values are: - OVNKubernetes This field is immutable after installation.",
           "type": "string",
           "default": ""
         },
@@ -8151,7 +8151,7 @@
           "format": "int32"
         },
         "conditions": {
-          "description": "conditions represents the observations of a network.config current state. Known .status.conditions.type are: \"NetworkTypeMigrationInProgress\", \"NetworkTypeMigrationMTUReady\", \"NetworkTypeMigrationTargetCNIAvailable\", \"NetworkTypeMigrationTargetCNIInUse\", \"NetworkTypeMigrationOriginalCNIPurged\" and \"NetworkDiagnosticsAvailable\"",
+          "description": "conditions represents the observations of a network.config current state. Known .status.conditions.type are: \"NetworkDiagnosticsAvailable\"",
           "type": "array",
           "items": {
             "default": {},
@@ -8169,7 +8169,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1.NetworkMigration"
         },
         "networkType": {
-          "description": "NetworkType is the plugin that is deployed (e.g. OpenShiftSDN).",
+          "description": "NetworkType is the plugin that is deployed (e.g. OVNKubernetes).",
           "type": "string"
         },
         "serviceNetwork": {
@@ -23506,7 +23506,7 @@
       }
     },
     "com.github.openshift.api.network.v1.ClusterNetwork": {
-      "description": "ClusterNetwork describes the cluster network. There is normally only one object of this type, named \"default\", which is created by the SDN network plugin based on the master configuration when the cluster is brought up for the first time.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+      "description": "ClusterNetwork was used by OpenShift SDN. DEPRECATED: OpenShift SDN is no longer supported and this object is no longer used in any way by OpenShift.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
       "required": [
         "serviceNetwork",
@@ -23616,7 +23616,7 @@
       }
     },
     "com.github.openshift.api.network.v1.EgressNetworkPolicy": {
-      "description": "EgressNetworkPolicy describes the current egress network policy for a Namespace. When using the 'redhat/openshift-ovs-multitenant' network plugin, traffic from a pod to an IP address outside the cluster will be checked against each EgressNetworkPolicyRule in the pod's namespace's EgressNetworkPolicy, in order. If no rule matches (or no EgressNetworkPolicy is present) then the traffic will be allowed by default.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+      "description": "EgressNetworkPolicy was used by OpenShift SDN. DEPRECATED: OpenShift SDN is no longer supported and this object is no longer used in any way by OpenShift.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
       "required": [
         "spec"
@@ -23724,7 +23724,7 @@
       }
     },
     "com.github.openshift.api.network.v1.HostSubnet": {
-      "description": "HostSubnet describes the container subnet network on a node. The HostSubnet object must have the same name as the Node object it corresponds to.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+      "description": "HostSubnet was used by OpenShift SDN. DEPRECATED: OpenShift SDN is no longer supported and this object is no longer used in any way by OpenShift.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
       "required": [
         "host",
@@ -23809,7 +23809,7 @@
       }
     },
     "com.github.openshift.api.network.v1.NetNamespace": {
-      "description": "NetNamespace describes a single isolated network. When using the redhat/openshift-ovs-multitenant plugin, every Namespace will have a corresponding NetNamespace object with the same name. (When using redhat/openshift-ovs-subnet, NetNamespaces are not used.)\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+      "description": "NetNamespace was used by OpenShift SDN. DEPRECATED: OpenShift SDN is no longer supported and this object is no longer used in any way by OpenShift.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
       "required": [
         "netname",
@@ -27084,7 +27084,7 @@
       ],
       "properties": {
         "openshiftSDNConfig": {
-          "description": "openShiftSDNConfig configures the openshift-sdn plugin",
+          "description": "openShiftSDNConfig was previously used to configure the openshift-sdn plugin. DEPRECATED: OpenShift SDN is no longer supported.",
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.OpenShiftSDNConfig"
         },
         "ovnKubernetesConfig": {
@@ -27491,15 +27491,15 @@
       "type": "object",
       "properties": {
         "egressFirewall": {
-          "description": "egressFirewall specifies whether or not the Egress Firewall configuration is migrated automatically when changing the cluster default network provider. If unset, this property defaults to 'true' and Egress Firewall configure is migrated.",
+          "description": "egressFirewall specified whether or not the Egress Firewall configuration was migrated. DEPRECATED: network type migration is no longer supported.",
           "type": "boolean"
         },
         "egressIP": {
-          "description": "egressIP specifies whether or not the Egress IP configuration is migrated automatically when changing the cluster default network provider. If unset, this property defaults to 'true' and Egress IP configure is migrated.",
+          "description": "egressIP specified whether or not the Egress IP configuration was migrated. DEPRECATED: network type migration is no longer supported.",
           "type": "boolean"
         },
         "multicast": {
-          "description": "multicast specifies whether or not the multicast configuration is migrated automatically when changing the cluster default network provider. If unset, this property defaults to 'true' and multicast configure is migrated.",
+          "description": "multicast specified whether or not the multicast configuration was migrated. DEPRECATED: network type migration is no longer supported.",
           "type": "boolean"
         }
       }
@@ -29356,7 +29356,7 @@
       ]
     },
     "com.github.openshift.api.operator.v1.MTUMigration": {
-      "description": "MTUMigration MTU contains infomation about MTU migration.",
+      "description": "MTUMigration contains infomation about MTU migration.",
       "type": "object",
       "properties": {
         "machine": {
@@ -29785,24 +29785,23 @@
       }
     },
     "com.github.openshift.api.operator.v1.NetworkMigration": {
-      "description": "NetworkMigration represents the cluster network configuration.",
+      "description": "NetworkMigration represents the cluster network migration configuration.",
       "type": "object",
       "properties": {
         "features": {
-          "description": "features contains the features migration configuration. Set this to migrate feature configuration when changing the cluster default network provider. if unset, the default operation is to migrate all the configuration of supported features.",
+          "description": "features was previously used to configure which network plugin features would be migrated in a network type migration. DEPRECATED: network type migration is no longer supported, and setting this to a non-empty value will result in the network operator rejecting the configuration.",
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.FeaturesMigration"
         },
         "mode": {
-          "description": "mode indicates the mode of network migration. The supported values are \"Live\", \"Offline\" and omitted. A \"Live\" migration operation will not cause service interruption by migrating the CNI of each node one by one. The cluster network will work as normal during the network migration. An \"Offline\" migration operation will cause service interruption. During an \"Offline\" migration, two rounds of node reboots are required. The cluster network will be malfunctioning during the network migration. When omitted, this means no opinion and the platform is left to choose a reasonable default which is subject to change over time. The current default value is \"Offline\".",
-          "type": "string",
-          "default": ""
+          "description": "mode indicates the mode of network type migration. DEPRECATED: network type migration is no longer supported, and setting this to a non-empty value will result in the network operator rejecting the configuration.",
+          "type": "string"
         },
         "mtu": {
           "description": "mtu contains the MTU migration configuration. Set this to allow changing the MTU values for the default network. If unset, the operation of changing the MTU for the default network will be rejected.",
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.MTUMigration"
         },
         "networkType": {
-          "description": "networkType is the target type of network migration. Set this to the target network type to allow changing the default network. If unset, the operation of changing cluster default network plugin will be rejected. The supported values are OpenShiftSDN, OVNKubernetes",
+          "description": "networkType was previously used when changing the default network type. DEPRECATED: network type migration is no longer supported, and setting this to a non-empty value will result in the network operator rejecting the configuration.",
           "type": "string"
         }
       }
@@ -29834,7 +29833,7 @@
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.AdditionalRoutingCapabilities"
         },
         "clusterNetwork": {
-          "description": "clusterNetwork is the IP address pool to use for pod IPs. Some network providers, e.g. OpenShift SDN, support multiple ClusterNetworks. Others only support one. This is equivalent to the cluster-cidr.",
+          "description": "clusterNetwork is the IP address pool to use for pod IPs. Some network providers support multiple ClusterNetworks. Others only support one. This is equivalent to the cluster-cidr.",
           "type": "array",
           "items": {
             "default": {},
@@ -29848,7 +29847,7 @@
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.DefaultNetworkDefinition"
         },
         "deployKubeProxy": {
-          "description": "deployKubeProxy specifies whether or not a standalone kube-proxy should be deployed by the operator. Some network providers include kube-proxy or similar functionality. If unset, the plugin will attempt to select the correct value, which is false when OpenShift SDN and ovn-kubernetes are used and true otherwise.",
+          "description": "deployKubeProxy specifies whether or not a standalone kube-proxy should be deployed by the operator. Some network providers include kube-proxy or similar functionality. If unset, the plugin will attempt to select the correct value, which is false when ovn-kubernetes is used and true otherwise.",
           "type": "boolean"
         },
         "disableMultiNetwork": {
@@ -29865,7 +29864,7 @@
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.ExportNetworkFlows"
         },
         "kubeProxyConfig": {
-          "description": "kubeProxyConfig lets us configure desired proxy configuration. If not specified, sensible defaults will be chosen by OpenShift directly. Not consumed by all network providers - currently only openshift-sdn.",
+          "description": "kubeProxyConfig lets us configure desired proxy configuration, if deployKubeProxy is true. If not specified, sensible defaults will be chosen by OpenShift directly.",
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.ProxyConfig"
         },
         "logLevel": {
@@ -29878,7 +29877,7 @@
           "default": ""
         },
         "migration": {
-          "description": "migration enables and configures the cluster network migration. The migration procedure allows to change the network type and the MTU.",
+          "description": "migration enables and configures cluster network migration, for network changes that cannot be made instantly.",
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.NetworkMigration"
         },
         "observedConfig": {
@@ -30666,7 +30665,7 @@
       }
     },
     "com.github.openshift.api.operator.v1.OpenShiftSDNConfig": {
-      "description": "OpenShiftSDNConfig configures the three openshift-sdn plugins",
+      "description": "OpenShiftSDNConfig was used to configure the OpenShift SDN plugin. It is no longer used.",
       "type": "object",
       "required": [
         "mode"
@@ -30687,7 +30686,7 @@
           "format": "int64"
         },
         "useExternalOpenvswitch": {
-          "description": "useExternalOpenvswitch used to control whether the operator would deploy an OVS DaemonSet itself or expect someone else to start OVS. As of 4.6, OVS is always run as a system service, and this flag is ignored. DEPRECATED: non-functional as of 4.6",
+          "description": "useExternalOpenvswitch used to control whether the operator would deploy an OVS DaemonSet itself or expect someone else to start OVS. As of 4.6, OVS is always run as a system service, and this flag is ignored.",
           "type": "boolean"
         },
         "vxlanPort": {

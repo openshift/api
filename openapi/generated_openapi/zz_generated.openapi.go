@@ -15189,19 +15189,19 @@ func schema_openshift_api_config_v1_NetworkMigration(ref common.ReferenceCallbac
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "NetworkMigration represents the cluster network configuration.",
+				Description: "NetworkMigration represents the network migration status.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"networkType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "NetworkType is the target plugin that is to be deployed. Currently supported values are: OpenShiftSDN, OVNKubernetes",
+							Description: "NetworkType is the target plugin that is being deployed. DEPRECATED: network type migration is no longer supported, so this should always be unset.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"mtu": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MTU contains the MTU migration configuration.",
+							Description: "MTU is the MTU configuration that is being deployed.",
 							Ref:         ref("github.com/openshift/api/config/v1.MTUMigration"),
 						},
 					},
@@ -15261,7 +15261,7 @@ func schema_openshift_api_config_v1_NetworkSpec(ref common.ReferenceCallback) co
 					},
 					"networkType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "NetworkType is the plugin that is to be deployed (e.g. OpenShiftSDN). This should match a value that the cluster-network-operator understands, or else no networking will be installed. Currently supported values are: - OpenShiftSDN This field is immutable after installation.",
+							Description: "NetworkType is the plugin that is to be deployed (e.g. OVNKubernetes). This should match a value that the cluster-network-operator understands, or else no networking will be installed. Currently supported values are: - OVNKubernetes This field is immutable after installation.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -15344,7 +15344,7 @@ func schema_openshift_api_config_v1_NetworkStatus(ref common.ReferenceCallback) 
 					},
 					"networkType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "NetworkType is the plugin that is deployed (e.g. OpenShiftSDN).",
+							Description: "NetworkType is the plugin that is deployed (e.g. OVNKubernetes).",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -15374,7 +15374,7 @@ func schema_openshift_api_config_v1_NetworkStatus(ref common.ReferenceCallback) 
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "conditions represents the observations of a network.config current state. Known .status.conditions.type are: \"NetworkTypeMigrationInProgress\", \"NetworkTypeMigrationMTUReady\", \"NetworkTypeMigrationTargetCNIAvailable\", \"NetworkTypeMigrationTargetCNIInUse\", \"NetworkTypeMigrationOriginalCNIPurged\" and \"NetworkDiagnosticsAvailable\"",
+							Description: "conditions represents the observations of a network.config current state. Known .status.conditions.type are: \"NetworkDiagnosticsAvailable\"",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -40607,7 +40607,7 @@ func schema_openshift_api_network_v1_ClusterNetwork(ref common.ReferenceCallback
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "ClusterNetwork describes the cluster network. There is normally only one object of this type, named \"default\", which is created by the SDN network plugin based on the master configuration when the cluster is brought up for the first time.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Description: "ClusterNetwork was used by OpenShift SDN. DEPRECATED: OpenShift SDN is no longer supported and this object is no longer used in any way by OpenShift.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -40782,7 +40782,7 @@ func schema_openshift_api_network_v1_EgressNetworkPolicy(ref common.ReferenceCal
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "EgressNetworkPolicy describes the current egress network policy for a Namespace. When using the 'redhat/openshift-ovs-multitenant' network plugin, traffic from a pod to an IP address outside the cluster will be checked against each EgressNetworkPolicyRule in the pod's namespace's EgressNetworkPolicy, in order. If no rule matches (or no EgressNetworkPolicy is present) then the traffic will be allowed by default.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Description: "EgressNetworkPolicy was used by OpenShift SDN. DEPRECATED: OpenShift SDN is no longer supported and this object is no longer used in any way by OpenShift.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -40965,7 +40965,7 @@ func schema_openshift_api_network_v1_HostSubnet(ref common.ReferenceCallback) co
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "HostSubnet describes the container subnet network on a node. The HostSubnet object must have the same name as the Node object it corresponds to.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Description: "HostSubnet was used by OpenShift SDN. DEPRECATED: OpenShift SDN is no longer supported and this object is no longer used in any way by OpenShift.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -41107,7 +41107,7 @@ func schema_openshift_api_network_v1_NetNamespace(ref common.ReferenceCallback) 
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "NetNamespace describes a single isolated network. When using the redhat/openshift-ovs-multitenant plugin, every Namespace will have a corresponding NetNamespace object with the same name. (When using redhat/openshift-ovs-subnet, NetNamespaces are not used.)\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Description: "NetNamespace was used by OpenShift SDN. DEPRECATED: OpenShift SDN is no longer supported and this object is no longer used in any way by OpenShift.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -46583,7 +46583,7 @@ func schema_openshift_api_operator_v1_DefaultNetworkDefinition(ref common.Refere
 					},
 					"openshiftSDNConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "openShiftSDNConfig configures the openshift-sdn plugin",
+							Description: "openShiftSDNConfig was previously used to configure the openshift-sdn plugin. DEPRECATED: OpenShift SDN is no longer supported.",
 							Ref:         ref("github.com/openshift/api/operator/v1.OpenShiftSDNConfig"),
 						},
 					},
@@ -47254,21 +47254,21 @@ func schema_openshift_api_operator_v1_FeaturesMigration(ref common.ReferenceCall
 				Properties: map[string]spec.Schema{
 					"egressIP": {
 						SchemaProps: spec.SchemaProps{
-							Description: "egressIP specifies whether or not the Egress IP configuration is migrated automatically when changing the cluster default network provider. If unset, this property defaults to 'true' and Egress IP configure is migrated.",
+							Description: "egressIP specified whether or not the Egress IP configuration was migrated. DEPRECATED: network type migration is no longer supported.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
 					},
 					"egressFirewall": {
 						SchemaProps: spec.SchemaProps{
-							Description: "egressFirewall specifies whether or not the Egress Firewall configuration is migrated automatically when changing the cluster default network provider. If unset, this property defaults to 'true' and Egress Firewall configure is migrated.",
+							Description: "egressFirewall specified whether or not the Egress Firewall configuration was migrated. DEPRECATED: network type migration is no longer supported.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
 					},
 					"multicast": {
 						SchemaProps: spec.SchemaProps{
-							Description: "multicast specifies whether or not the multicast configuration is migrated automatically when changing the cluster default network provider. If unset, this property defaults to 'true' and multicast configure is migrated.",
+							Description: "multicast specified whether or not the multicast configuration was migrated. DEPRECATED: network type migration is no longer supported.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -50402,7 +50402,7 @@ func schema_openshift_api_operator_v1_MTUMigration(ref common.ReferenceCallback)
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "MTUMigration MTU contains infomation about MTU migration.",
+				Description: "MTUMigration contains infomation about MTU migration.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"network": {
@@ -51123,32 +51123,31 @@ func schema_openshift_api_operator_v1_NetworkMigration(ref common.ReferenceCallb
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "NetworkMigration represents the cluster network configuration.",
+				Description: "NetworkMigration represents the cluster network migration configuration.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"networkType": {
-						SchemaProps: spec.SchemaProps{
-							Description: "networkType is the target type of network migration. Set this to the target network type to allow changing the default network. If unset, the operation of changing cluster default network plugin will be rejected. The supported values are OpenShiftSDN, OVNKubernetes",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 					"mtu": {
 						SchemaProps: spec.SchemaProps{
 							Description: "mtu contains the MTU migration configuration. Set this to allow changing the MTU values for the default network. If unset, the operation of changing the MTU for the default network will be rejected.",
 							Ref:         ref("github.com/openshift/api/operator/v1.MTUMigration"),
 						},
 					},
+					"networkType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "networkType was previously used when changing the default network type. DEPRECATED: network type migration is no longer supported, and setting this to a non-empty value will result in the network operator rejecting the configuration.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"features": {
 						SchemaProps: spec.SchemaProps{
-							Description: "features contains the features migration configuration. Set this to migrate feature configuration when changing the cluster default network provider. if unset, the default operation is to migrate all the configuration of supported features.",
+							Description: "features was previously used to configure which network plugin features would be migrated in a network type migration. DEPRECATED: network type migration is no longer supported, and setting this to a non-empty value will result in the network operator rejecting the configuration.",
 							Ref:         ref("github.com/openshift/api/operator/v1.FeaturesMigration"),
 						},
 					},
 					"mode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "mode indicates the mode of network migration. The supported values are \"Live\", \"Offline\" and omitted. A \"Live\" migration operation will not cause service interruption by migrating the CNI of each node one by one. The cluster network will work as normal during the network migration. An \"Offline\" migration operation will cause service interruption. During an \"Offline\" migration, two rounds of node reboots are required. The cluster network will be malfunctioning during the network migration. When omitted, this means no opinion and the platform is left to choose a reasonable default which is subject to change over time. The current default value is \"Offline\".",
-							Default:     "",
+							Description: "mode indicates the mode of network type migration. DEPRECATED: network type migration is no longer supported, and setting this to a non-empty value will result in the network operator rejecting the configuration.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -51211,7 +51210,7 @@ func schema_openshift_api_operator_v1_NetworkSpec(ref common.ReferenceCallback) 
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "clusterNetwork is the IP address pool to use for pod IPs. Some network providers, e.g. OpenShift SDN, support multiple ClusterNetworks. Others only support one. This is equivalent to the cluster-cidr.",
+							Description: "clusterNetwork is the IP address pool to use for pod IPs. Some network providers support multiple ClusterNetworks. Others only support one. This is equivalent to the cluster-cidr.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -51288,7 +51287,7 @@ func schema_openshift_api_operator_v1_NetworkSpec(ref common.ReferenceCallback) 
 					},
 					"deployKubeProxy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "deployKubeProxy specifies whether or not a standalone kube-proxy should be deployed by the operator. Some network providers include kube-proxy or similar functionality. If unset, the plugin will attempt to select the correct value, which is false when OpenShift SDN and ovn-kubernetes are used and true otherwise.",
+							Description: "deployKubeProxy specifies whether or not a standalone kube-proxy should be deployed by the operator. Some network providers include kube-proxy or similar functionality. If unset, the plugin will attempt to select the correct value, which is false when ovn-kubernetes is used and true otherwise.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -51303,7 +51302,7 @@ func schema_openshift_api_operator_v1_NetworkSpec(ref common.ReferenceCallback) 
 					},
 					"kubeProxyConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "kubeProxyConfig lets us configure desired proxy configuration. If not specified, sensible defaults will be chosen by OpenShift directly. Not consumed by all network providers - currently only openshift-sdn.",
+							Description: "kubeProxyConfig lets us configure desired proxy configuration, if deployKubeProxy is true. If not specified, sensible defaults will be chosen by OpenShift directly.",
 							Ref:         ref("github.com/openshift/api/operator/v1.ProxyConfig"),
 						},
 					},
@@ -51315,7 +51314,7 @@ func schema_openshift_api_operator_v1_NetworkSpec(ref common.ReferenceCallback) 
 					},
 					"migration": {
 						SchemaProps: spec.SchemaProps{
-							Description: "migration enables and configures the cluster network migration. The migration procedure allows to change the network type and the MTU.",
+							Description: "migration enables and configures cluster network migration, for network changes that cannot be made instantly.",
 							Ref:         ref("github.com/openshift/api/operator/v1.NetworkMigration"),
 						},
 					},
@@ -52641,7 +52640,7 @@ func schema_openshift_api_operator_v1_OpenShiftSDNConfig(ref common.ReferenceCal
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "OpenShiftSDNConfig configures the three openshift-sdn plugins",
+				Description: "OpenShiftSDNConfig was used to configure the OpenShift SDN plugin. It is no longer used.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"mode": {
@@ -52668,7 +52667,7 @@ func schema_openshift_api_operator_v1_OpenShiftSDNConfig(ref common.ReferenceCal
 					},
 					"useExternalOpenvswitch": {
 						SchemaProps: spec.SchemaProps{
-							Description: "useExternalOpenvswitch used to control whether the operator would deploy an OVS DaemonSet itself or expect someone else to start OVS. As of 4.6, OVS is always run as a system service, and this flag is ignored. DEPRECATED: non-functional as of 4.6",
+							Description: "useExternalOpenvswitch used to control whether the operator would deploy an OVS DaemonSet itself or expect someone else to start OVS. As of 4.6, OVS is always run as a system service, and this flag is ignored.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},

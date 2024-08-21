@@ -35120,7 +35120,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.security.v1.IDRange"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "type": {
           "description": "Type is the strategy that will dictate what FSGroup is used in the SecurityContext.",
@@ -35483,7 +35484,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "allowedFlexVolumes": {
           "description": "AllowedFlexVolumes is a whitelist of allowed Flexvolumes.  Empty or nil indicates that all Flexvolumes may be used.  This parameter is effective only when the usage of the Flexvolumes is allowed in the \"Volumes\" field.",
@@ -35491,7 +35493,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.security.v1.AllowedFlexVolume"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "allowedUnsafeSysctls": {
           "description": "AllowedUnsafeSysctls is a list of explicitly allowed unsafe sysctls, defaults to none. Each entry is either a plain sysctl name or ends in \"*\" in which case it is considered as a prefix of allowed sysctls. Single * means all unsafe sysctls are allowed. Kubelet has to whitelist all allowed unsafe sysctls explicitly to avoid rejection.\n\nExamples: e.g. \"foo/*\" allows \"foo/bar\", \"foo/baz\", etc. e.g. \"foo.*\" allows \"foo.bar\", \"foo.baz\", etc.",
@@ -35499,7 +35502,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "apiVersion": {
           "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
@@ -35511,7 +35515,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "defaultAllowPrivilegeEscalation": {
           "description": "DefaultAllowPrivilegeEscalation controls the default setting for whether a process can gain more privileges than its parent process.",
@@ -35523,7 +35528,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "fsGroup": {
           "description": "FSGroup is the strategy that will dictate what fs group is used by the SecurityContext.",
@@ -35536,7 +35542,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "kind": {
           "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
@@ -35563,7 +35570,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "runAsUser": {
           "description": "RunAsUser is the strategy that will dictate what RunAsUser is used in the SecurityContext.",
@@ -35581,7 +35589,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "supplementalGroups": {
           "description": "SupplementalGroups is the strategy that will dictate what supplemental groups are used by the SecurityContext.",
@@ -35599,7 +35608,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "volumes": {
           "description": "Volumes is a white list of allowed volume plugins.  FSType corresponds directly with the field names of a VolumeSource (azureFile, configMap, emptyDir).  To allow all volumes you may use \"*\". To allow no volumes, set to [\"none\"].",
@@ -35607,7 +35617,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -35678,7 +35689,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.security.v1.IDRange"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "type": {
           "description": "Type is the strategy that will dictate what supplemental groups is used in the SecurityContext.",

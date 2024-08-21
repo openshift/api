@@ -60044,6 +60044,11 @@ func schema_openshift_api_security_v1_FSGroupStrategyOptions(ref common.Referenc
 						},
 					},
 					"ranges": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "Ranges are the allowed ranges of fs groups.  If you would like to force a single fs group then supply a single range with the same start and end.",
 							Type:        []string{"array"},
@@ -60611,6 +60616,11 @@ func schema_openshift_api_security_v1_SecurityContextConstraints(ref common.Refe
 						},
 					},
 					"defaultAddCapabilities": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "DefaultAddCapabilities is the default set of capabilities that will be added to the container unless the pod spec specifically drops the capability.  You may not list a capabiility in both DefaultAddCapabilities and RequiredDropCapabilities.",
 							Type:        []string{"array"},
@@ -60626,6 +60636,11 @@ func schema_openshift_api_security_v1_SecurityContextConstraints(ref common.Refe
 						},
 					},
 					"requiredDropCapabilities": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "RequiredDropCapabilities are the capabilities that will be dropped from the container.  These are required to be dropped and cannot be added.",
 							Type:        []string{"array"},
@@ -60641,6 +60656,11 @@ func schema_openshift_api_security_v1_SecurityContextConstraints(ref common.Refe
 						},
 					},
 					"allowedCapabilities": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "AllowedCapabilities is a list of capabilities that can be requested to add to the container. Capabilities in this field maybe added at the pod author's discretion. You must not list a capability in both AllowedCapabilities and RequiredDropCapabilities. To allow all capabilities you may use '*'.",
 							Type:        []string{"array"},
@@ -60664,6 +60684,11 @@ func schema_openshift_api_security_v1_SecurityContextConstraints(ref common.Refe
 						},
 					},
 					"volumes": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "Volumes is a white list of allowed volume plugins.  FSType corresponds directly with the field names of a VolumeSource (azureFile, configMap, emptyDir).  To allow all volumes you may use \"*\". To allow no volumes, set to [\"none\"].",
 							Type:        []string{"array"},
@@ -60679,6 +60704,11 @@ func schema_openshift_api_security_v1_SecurityContextConstraints(ref common.Refe
 						},
 					},
 					"allowedFlexVolumes": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "AllowedFlexVolumes is a whitelist of allowed Flexvolumes.  Empty or nil indicates that all Flexvolumes may be used.  This parameter is effective only when the usage of the Flexvolumes is allowed in the \"Volumes\" field.",
 							Type:        []string{"array"},
@@ -60783,6 +60813,11 @@ func schema_openshift_api_security_v1_SecurityContextConstraints(ref common.Refe
 						},
 					},
 					"users": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "The users who have permissions to use this security context constraints",
 							Type:        []string{"array"},
@@ -60798,6 +60833,11 @@ func schema_openshift_api_security_v1_SecurityContextConstraints(ref common.Refe
 						},
 					},
 					"groups": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "The groups that have permission to use this security context constraints",
 							Type:        []string{"array"},
@@ -60813,6 +60853,11 @@ func schema_openshift_api_security_v1_SecurityContextConstraints(ref common.Refe
 						},
 					},
 					"seccompProfiles": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "SeccompProfiles lists the allowed profiles that may be set for the pod or container's seccomp annotations.  An unset (nil) or empty value means that no profiles may be specifid by the pod or container.\tThe wildcard '*' may be used to allow all profiles.  When used to generate a value for a pod the first non-wildcard profile will be used as the default.",
 							Type:        []string{"array"},
@@ -60828,6 +60873,11 @@ func schema_openshift_api_security_v1_SecurityContextConstraints(ref common.Refe
 						},
 					},
 					"allowedUnsafeSysctls": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "AllowedUnsafeSysctls is a list of explicitly allowed unsafe sysctls, defaults to none. Each entry is either a plain sysctl name or ends in \"*\" in which case it is considered as a prefix of allowed sysctls. Single * means all unsafe sysctls are allowed. Kubelet has to whitelist all allowed unsafe sysctls explicitly to avoid rejection.\n\nExamples: e.g. \"foo/*\" allows \"foo/bar\", \"foo/baz\", etc. e.g. \"foo.*\" allows \"foo.bar\", \"foo.baz\", etc.",
 							Type:        []string{"array"},
@@ -60843,6 +60893,11 @@ func schema_openshift_api_security_v1_SecurityContextConstraints(ref common.Refe
 						},
 					},
 					"forbiddenSysctls": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "ForbiddenSysctls is a list of explicitly forbidden sysctls, defaults to none. Each entry is either a plain sysctl name or ends in \"*\" in which case it is considered as a prefix of forbidden sysctls. Single * means all sysctls are forbidden.\n\nExamples: e.g. \"foo/*\" forbids \"foo/bar\", \"foo/baz\", etc. e.g. \"foo.*\" forbids \"foo.bar\", \"foo.baz\", etc.",
 							Type:        []string{"array"},
@@ -60976,6 +61031,11 @@ func schema_openshift_api_security_v1_SupplementalGroupsStrategyOptions(ref comm
 						},
 					},
 					"ranges": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "Ranges are the allowed ranges of supplemental groups.  If you would like to force a single supplemental group then supply a single range with the same start and end.",
 							Type:        []string{"array"},

@@ -3,7 +3,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.openshift.io: https://github.com/openshift/api/pull/1228
-    feature-gate.release.openshift.io/ExternalRouteCertificate: "true"
+    feature-gate.release.openshift.io/RouteExternalCertificate: "true"
   name: routes.route.openshift.io
 spec:
   group: route.openshift.io
@@ -106,6 +106,10 @@ spec:
                   type: object
                 maxItems: 3
                 type: array
+                x-kubernetes-list-map-keys:
+                - name
+                - kind
+                x-kubernetes-list-type: map
               host:
                 description: host is an alias/DNS that points to the service. Optional.
                   If not specified a route name will typically be automatically chosen.
@@ -591,6 +595,9 @@ spec:
                         - type
                         type: object
                       type: array
+                      x-kubernetes-list-map-keys:
+                      - type
+                      x-kubernetes-list-type: map
                     host:
                       description: Host is the host string under which the route is
                         exposed; this value is required
@@ -611,6 +618,7 @@ spec:
                       type: string
                   type: object
                 type: array
+                x-kubernetes-list-type: atomic
             type: object
         required:
         - spec

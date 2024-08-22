@@ -3545,6 +3545,13 @@ func schema_openshift_api_authorization_v1_LocalResourceAccessReview(ref common.
 							Format:      "",
 						},
 					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
 					"namespace": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Namespace is the namespace of the action being requested.  Currently, there is no distinction between no namespace and all namespaces",
@@ -3620,7 +3627,7 @@ func schema_openshift_api_authorization_v1_LocalResourceAccessReview(ref common.
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -3643,6 +3650,13 @@ func schema_openshift_api_authorization_v1_LocalSubjectAccessReview(ref common.R
 							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
 							Type:        []string{"string"},
 							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
 						},
 					},
 					"namespace": {
@@ -3758,7 +3772,7 @@ func schema_openshift_api_authorization_v1_LocalSubjectAccessReview(ref common.R
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -4004,6 +4018,13 @@ func schema_openshift_api_authorization_v1_ResourceAccessReview(ref common.Refer
 							Format:      "",
 						},
 					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
 					"namespace": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Namespace is the namespace of the action being requested.  Currently, there is no distinction between no namespace and all namespaces",
@@ -4079,7 +4100,7 @@ func schema_openshift_api_authorization_v1_ResourceAccessReview(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -4547,6 +4568,13 @@ func schema_openshift_api_authorization_v1_SelfSubjectRulesReview(ref common.Ref
 							Format:      "",
 						},
 					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Spec adds information about how to conduct the check",
@@ -4566,7 +4594,7 @@ func schema_openshift_api_authorization_v1_SelfSubjectRulesReview(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/authorization/v1.SelfSubjectRulesReviewSpec", "github.com/openshift/api/authorization/v1.SubjectRulesReviewStatus"},
+			"github.com/openshift/api/authorization/v1.SelfSubjectRulesReviewSpec", "github.com/openshift/api/authorization/v1.SubjectRulesReviewStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -4695,6 +4723,13 @@ func schema_openshift_api_authorization_v1_SubjectAccessReview(ref common.Refere
 							Format:      "",
 						},
 					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
 					"namespace": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Namespace is the namespace of the action being requested.  Currently, there is no distinction between no namespace and all namespaces",
@@ -4808,7 +4843,7 @@ func schema_openshift_api_authorization_v1_SubjectAccessReview(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 

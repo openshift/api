@@ -156,7 +156,7 @@ type SelfSubjectRulesReview struct {
 
 	// metadata is the standard object's metadata.
 	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
-	metav1.ObjectMeta `json:"metadata,omitempty"`
+	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,3,opt,name=metadata"`
 
 	// Spec adds information about how to conduct the check
 	Spec SelfSubjectRulesReviewSpec `json:"spec" protobuf:"bytes,1,opt,name=spec"`
@@ -250,7 +250,7 @@ type ResourceAccessReview struct {
 
 	// metadata is the standard object's metadata.
 	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
-	metav1.ObjectMeta `json:"metadata,omitempty"`
+	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,2,opt,name=metadata"`
 
 	// Action describes the action being tested.
 	Action `json:",inline" protobuf:"bytes,1,opt,name=Action"`
@@ -301,7 +301,7 @@ type SubjectAccessReview struct {
 
 	// metadata is the standard object's metadata.
 	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
-	metav1.ObjectMeta `json:"metadata,omitempty"`
+	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,5,opt,name=metadata"`
 
 	// Action describes the action being tested.
 	Action `json:",inline" protobuf:"bytes,1,opt,name=Action"`
@@ -331,7 +331,7 @@ type LocalResourceAccessReview struct {
 
 	// metadata is the standard object's metadata.
 	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
-	metav1.ObjectMeta `json:"metadata,omitempty"`
+	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,2,opt,name=metadata"`
 
 	// Action describes the action being tested.  The Namespace element is FORCED to the current namespace.
 	Action `json:",inline" protobuf:"bytes,1,opt,name=Action"`
@@ -351,7 +351,7 @@ type LocalSubjectAccessReview struct {
 
 	// metadata is the standard object's metadata.
 	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
-	metav1.ObjectMeta `json:"metadata,omitempty"`
+	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,5,opt,name=metadata"`
 
 	// Action describes the action being tested.  The Namespace element is FORCED to the current namespace.
 	Action `json:",inline" protobuf:"bytes,1,opt,name=Action"`

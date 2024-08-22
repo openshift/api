@@ -30,7 +30,7 @@ const (
 	requiredNumberOfTests = 5
 
 	// all variant should run at least this many times
-	requiredNumberOfTestRunsPerVariantInTwoWeeks = 14
+	requiredNumberOfTestRunsPerVariant = 14
 
 	// required pass rate.
 	// nearly all current tests pass 99% of the time, but in a two week window we lack enough data to say.
@@ -248,8 +248,8 @@ func checkIfTestingIsSufficient(featureGate string, testingResults map[JobVarian
 			errs = append(errs, fmt.Errorf("error: only %d tests found, need at least %d for %q on %v", len(testedVariant.TestResults), requiredNumberOfTests, featureGate, jobVariant))
 		}
 		for _, testResults := range testedVariant.TestResults {
-			if testResults.TotalRuns < requiredNumberOfTestRunsPerVariantInTwoWeeks {
-				errs = append(errs, fmt.Errorf("error: %q only has %d runs, need at least %d runs for %q on %v", testResults.TestName, testResults.TotalRuns, requiredNumberOfTestRunsPerVariantInTwoWeeks, featureGate, jobVariant))
+			if testResults.TotalRuns < requiredNumberOfTestRunsPerVariant {
+				errs = append(errs, fmt.Errorf("error: %q only has %d runs, need at least %d runs for %q on %v", testResults.TestName, testResults.TotalRuns, requiredNumberOfTestRunsPerVariant, featureGate, jobVariant))
 			}
 			if testResults.TotalRuns == 0 {
 				continue
@@ -312,7 +312,7 @@ func writeTestingMarkDown(testingResults map[JobVariant]*TestingResults, md *uti
 			failString := ""
 			passPercent := float32(testResults.SuccessfulRuns) / float32(testResults.TotalRuns)
 			switch {
-			case testResults.TotalRuns < requiredNumberOfTestRunsPerVariantInTwoWeeks:
+			case testResults.TotalRuns < requiredNumberOfTestRunsPerVariant:
 				failString = "FAIL <br/> "
 			case passPercent < requiredPassRateOfTestsPerVariant:
 				failString = "FAIL <br/> "
@@ -628,10 +628,20 @@ func listTestResultForVariant(featureGate string, jobVariant JobVariant) (*Testi
 				}
 			}
 
-			testResults.TotalRuns += currTest.CurrentRuns + currTest.PreviousRuns
-			testResults.SuccessfulRuns += currTest.CurrentSuccesses + currTest.PreviousSuccesses
-			testResults.FailedRuns += currTest.CurrentFailures + currTest.PreviousFailures
-			testResults.FlakedRuns += currTest.CurrentFlakes + currTest.PreviousFlakes
+			// Try to find enough test results in the last week, but if we have to we can extend
+			// the window to two weeks.
+			if currTest.CurrentRuns >= requiredNumberOfTestRunsPerVariant {
+				testResults.TotalRuns = currTest.CurrentRuns
+				testResults.SuccessfulRuns = currTest.CurrentSuccesses
+				testResults.FailedRuns = currTest.CurrentFailures
+				testResults.FlakedRuns = currTest.CurrentFlakes
+			} else {
+				fmt.Printf("Insufficient results in last 7 days, increasing lookback to 2 weeks...")
+				testResults.TotalRuns += currTest.CurrentRuns + currTest.PreviousRuns
+				testResults.SuccessfulRuns += currTest.CurrentSuccesses + currTest.PreviousSuccesses
+				testResults.FailedRuns += currTest.CurrentFailures + currTest.PreviousFailures
+				testResults.FlakedRuns += currTest.CurrentFlakes + currTest.PreviousFlakes
+			}
 			testNameToResults[currTest.Name] = testResults
 		}
 	}

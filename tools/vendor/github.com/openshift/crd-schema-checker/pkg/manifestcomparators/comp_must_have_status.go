@@ -32,13 +32,14 @@ func (b mustHaveStatus) Validate(crd *apiextensionsv1.CustomResourceDefinition) 
 		}
 
 		hasStatus := false
-		SchemaHas(newVersion.Schema.OpenAPIV3Schema, field.NewPath("^"), field.NewPath("^"), func(s *apiextensionsv1.JSONSchemaProps, fldPath, simpleLocation *field.Path) bool {
-			if simpleLocation.String() == statusField {
-				hasStatus = true
-				return true
-			}
-			return false
-		})
+		SchemaHas(newVersion.Schema.OpenAPIV3Schema, field.NewPath("^"), field.NewPath("^"), nil,
+			func(s *apiextensionsv1.JSONSchemaProps, fldPath, simpleLocation *field.Path, _ []*apiextensionsv1.JSONSchemaProps) bool {
+				if simpleLocation.String() == statusField {
+					hasStatus = true
+					return true
+				}
+				return false
+			})
 
 		if hasStatus {
 			errsToReport = append(errsToReport, fmt.Sprintf("crd/%v version/%v field/%v must have a status subresource in .spec.version[name=%v].subresources.status to match its schema.", crd.Name, newVersion.Name, statusField, newVersion.Name))

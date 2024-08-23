@@ -20,20 +20,25 @@ spec:
   - name: v1
     schema:
       openAPIV3Schema:
-        description: "MachineConfiguration provides information to configure an operator
-          to manage Machine Configuration. \n Compatibility level 1: Stable within
-          a major release for a minimum of 12 months or 3 minor releases (whichever
-          is longer)."
+        description: |-
+          MachineConfiguration provides information to configure an operator to manage Machine Configuration.
+
+          Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -42,25 +47,25 @@ spec:
               Machine Config Operator
             properties:
               failedRevisionLimit:
-                description: failedRevisionLimit is the number of failed static pod
-                  installer revisions to keep on disk and in the api -1 = unlimited,
-                  0 or unset = 5 (default)
+                description: |-
+                  failedRevisionLimit is the number of failed static pod installer revisions to keep on disk and in the api
+                  -1 = unlimited, 0 or unset = 5 (default)
                 format: int32
                 type: integer
               forceRedeploymentReason:
-                description: forceRedeploymentReason can be used to force the redeployment
-                  of the operand by providing a unique string. This provides a mechanism
-                  to kick a previously failed deployment and provide a reason why
-                  you think it will work this time instead of failing again on the
-                  same config.
+                description: |-
+                  forceRedeploymentReason can be used to force the redeployment of the operand by providing a unique string.
+                  This provides a mechanism to kick a previously failed deployment and provide a reason why you think it will work
+                  this time instead of failing again on the same config.
                 type: string
               logLevel:
                 default: Normal
-                description: "logLevel is an intent based logging for an overall component.
-                  \ It does not give fine grained control, but it is a simple way
-                  to manage coarse grained logging choices that operators have to
-                  interpret for their operands. \n Valid values are: \"Normal\", \"Debug\",
-                  \"Trace\", \"TraceAll\". Defaults to \"Normal\"."
+                description: |-
+                  logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a
+                  simple way to manage coarse grained logging choices that operators have to interpret for their operands.
+
+                  Valid values are: "Normal", "Debug", "Trace", "TraceAll".
+                  Defaults to "Normal".
                 enum:
                 - ""
                 - Normal
@@ -74,32 +79,29 @@ spec:
                 pattern: ^(Managed|Unmanaged|Force|Removed)$
                 type: string
               nodeDisruptionPolicy:
-                description: nodeDisruptionPolicy allows an admin to set granular
-                  node disruption actions for MachineConfig-based updates, such as
-                  drains, service reloads, etc. Specifying this will allow for less
-                  downtime when doing small configuration updates to the cluster.
-                  This configuration has no effect on cluster upgrades which will
-                  still incur node disruption where required.
+                description: |-
+                  nodeDisruptionPolicy allows an admin to set granular node disruption actions for
+                  MachineConfig-based updates, such as drains, service reloads, etc. Specifying this will allow
+                  for less downtime when doing small configuration updates to the cluster. This configuration
+                  has no effect on cluster upgrades which will still incur node disruption where required.
                 properties:
                   files:
-                    description: files is a list of MachineConfig file definitions
-                      and actions to take to changes on those paths This list supports
-                      a maximum of 50 entries.
+                    description: |-
+                      files is a list of MachineConfig file definitions and actions to take to changes on those paths
+                      This list supports a maximum of 50 entries.
                     items:
                       description: NodeDisruptionPolicySpecFile is a file entry and
                         corresponding actions to take and is used in the NodeDisruptionPolicyConfig
                         object
                       properties:
                         actions:
-                          description: actions represents the series of commands to
-                            be executed on changes to the file at the corresponding
-                            file path. Actions will be applied in the order that they
-                            are set in this list. If there are other incoming changes
-                            to other MachineConfig entries in the same update that
-                            require a reboot, the reboot will supercede these actions.
-                            Valid actions are Reboot, Drain, Reload, DaemonReload
-                            and None. The Reboot action and the None action cannot
-                            be used in conjunction with any of the other actions.
+                          description: |-
+                            actions represents the series of commands to be executed on changes to the file at
+                            the corresponding file path. Actions will be applied in the order that
+                            they are set in this list. If there are other incoming changes to other MachineConfig
+                            entries in the same update that require a reboot, the reboot will supercede these actions.
+                            Valid actions are Reboot, Drain, Reload, DaemonReload and None.
+                            The Reboot action and the None action cannot be used in conjunction with any of the other actions.
                             This list supports a maximum of 10 entries.
                           items:
                             properties:
@@ -108,16 +110,11 @@ spec:
                                   only valid if type is reload
                                 properties:
                                   serviceName:
-                                    description: serviceName is the full name (e.g.
-                                      crio.service) of the service to be reloaded
-                                      Service names should be of the format ${NAME}${SERVICETYPE}
-                                      and can up to 255 characters long. ${NAME} must
-                                      be atleast 1 character long and can only consist
-                                      of alphabets, digits, ":", "-", "_", ".", and
-                                      "\". ${SERVICETYPE} must be one of ".service",
-                                      ".socket", ".device", ".mount", ".automount",
-                                      ".swap", ".target", ".path", ".timer", ".snapshot",
-                                      ".slice" or ".scope".
+                                    description: |-
+                                      serviceName is the full name (e.g. crio.service) of the service to be reloaded
+                                      Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long.
+                                      ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, ":", "-", "_", ".", and "\".
+                                      ${SERVICETYPE} must be one of ".service", ".socket", ".device", ".mount", ".automount", ".swap", ".target", ".path", ".timer", ".snapshot", ".slice" or ".scope".
                                     maxLength: 255
                                     type: string
                                     x-kubernetes-validations:
@@ -142,16 +139,11 @@ spec:
                                   only valid if type is restart
                                 properties:
                                   serviceName:
-                                    description: serviceName is the full name (e.g.
-                                      crio.service) of the service to be restarted
-                                      Service names should be of the format ${NAME}${SERVICETYPE}
-                                      and can up to 255 characters long. ${NAME} must
-                                      be atleast 1 character long and can only consist
-                                      of alphabets, digits, ":", "-", "_", ".", and
-                                      "\". ${SERVICETYPE} must be one of ".service",
-                                      ".socket", ".device", ".mount", ".automount",
-                                      ".swap", ".target", ".path", ".timer", ".snapshot",
-                                      ".slice" or ".scope".
+                                    description: |-
+                                      serviceName is the full name (e.g. crio.service) of the service to be restarted
+                                      Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long.
+                                      ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, ":", "-", "_", ".", and "\".
+                                      ${SERVICETYPE} must be one of ".service", ".socket", ".device", ".mount", ".automount", ".swap", ".target", ".path", ".timer", ".snapshot", ".slice" or ".scope".
                                     maxLength: 255
                                     type: string
                                     x-kubernetes-validations:
@@ -172,13 +164,11 @@ spec:
                                 - serviceName
                                 type: object
                               type:
-                                description: type represents the commands that will
-                                  be carried out if this NodeDisruptionPolicySpecActionType
-                                  is executed Valid values are Reboot, Drain, Reload,
-                                  Restart, DaemonReload and None. reload/restart requires
-                                  a corresponding service target specified in the
-                                  reload/restart field. Other values require no further
-                                  configuration
+                                description: |-
+                                  type represents the commands that will be carried out if this NodeDisruptionPolicySpecActionType is executed
+                                  Valid values are Reboot, Drain, Reload, Restart, DaemonReload and None.
+                                  reload/restart requires a corresponding service target specified in the reload/restart field.
+                                  Other values require no further configuration
                                 enum:
                                 - Reboot
                                 - Drain
@@ -212,9 +202,9 @@ spec:
                             rule: 'self.exists(x, x.type==''None'') ? size(self) ==
                               1 : true'
                         path:
-                          description: path is the location of a file being managed
-                            through a MachineConfig. The Actions in the policy will
-                            apply to changes to the file at this path.
+                          description: |-
+                            path is the location of a file being managed through a MachineConfig.
+                            The Actions in the policy will apply to changes to the file at this path.
                           type: string
                       required:
                       - actions
@@ -226,21 +216,19 @@ spec:
                     - path
                     x-kubernetes-list-type: map
                   sshkey:
-                    description: sshkey maps to the ignition.sshkeys field in the
-                      MachineConfig object, definition an action for this will apply
-                      to all sshkey changes in the cluster
+                    description: |-
+                      sshkey maps to the ignition.sshkeys field in the MachineConfig object, definition an action for this
+                      will apply to all sshkey changes in the cluster
                     properties:
                       actions:
-                        description: actions represents the series of commands to
-                          be executed on changes to the file at the corresponding
-                          file path. Actions will be applied in the order that they
-                          are set in this list. If there are other incoming changes
-                          to other MachineConfig entries in the same update that require
-                          a reboot, the reboot will supercede these actions. Valid
-                          actions are Reboot, Drain, Reload, DaemonReload and None.
-                          The Reboot action and the None action cannot be used in
-                          conjunction with any of the other actions. This list supports
-                          a maximum of 10 entries.
+                        description: |-
+                          actions represents the series of commands to be executed on changes to the file at
+                          the corresponding file path. Actions will be applied in the order that
+                          they are set in this list. If there are other incoming changes to other MachineConfig
+                          entries in the same update that require a reboot, the reboot will supercede these actions.
+                          Valid actions are Reboot, Drain, Reload, DaemonReload and None.
+                          The Reboot action and the None action cannot be used in conjunction with any of the other actions.
+                          This list supports a maximum of 10 entries.
                         items:
                           properties:
                             reload:
@@ -248,16 +236,11 @@ spec:
                                 only valid if type is reload
                               properties:
                                 serviceName:
-                                  description: serviceName is the full name (e.g.
-                                    crio.service) of the service to be reloaded Service
-                                    names should be of the format ${NAME}${SERVICETYPE}
-                                    and can up to 255 characters long. ${NAME} must
-                                    be atleast 1 character long and can only consist
-                                    of alphabets, digits, ":", "-", "_", ".", and
-                                    "\". ${SERVICETYPE} must be one of ".service",
-                                    ".socket", ".device", ".mount", ".automount",
-                                    ".swap", ".target", ".path", ".timer", ".snapshot",
-                                    ".slice" or ".scope".
+                                  description: |-
+                                    serviceName is the full name (e.g. crio.service) of the service to be reloaded
+                                    Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long.
+                                    ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, ":", "-", "_", ".", and "\".
+                                    ${SERVICETYPE} must be one of ".service", ".socket", ".device", ".mount", ".automount", ".swap", ".target", ".path", ".timer", ".snapshot", ".slice" or ".scope".
                                   maxLength: 255
                                   type: string
                                   x-kubernetes-validations:
@@ -282,16 +265,11 @@ spec:
                                 only valid if type is restart
                               properties:
                                 serviceName:
-                                  description: serviceName is the full name (e.g.
-                                    crio.service) of the service to be restarted Service
-                                    names should be of the format ${NAME}${SERVICETYPE}
-                                    and can up to 255 characters long. ${NAME} must
-                                    be atleast 1 character long and can only consist
-                                    of alphabets, digits, ":", "-", "_", ".", and
-                                    "\". ${SERVICETYPE} must be one of ".service",
-                                    ".socket", ".device", ".mount", ".automount",
-                                    ".swap", ".target", ".path", ".timer", ".snapshot",
-                                    ".slice" or ".scope".
+                                  description: |-
+                                    serviceName is the full name (e.g. crio.service) of the service to be restarted
+                                    Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long.
+                                    ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, ":", "-", "_", ".", and "\".
+                                    ${SERVICETYPE} must be one of ".service", ".socket", ".device", ".mount", ".automount", ".swap", ".target", ".path", ".timer", ".snapshot", ".slice" or ".scope".
                                   maxLength: 255
                                   type: string
                                   x-kubernetes-validations:
@@ -312,12 +290,11 @@ spec:
                               - serviceName
                               type: object
                             type:
-                              description: type represents the commands that will
-                                be carried out if this NodeDisruptionPolicySpecActionType
-                                is executed Valid values are Reboot, Drain, Reload,
-                                Restart, DaemonReload and None. reload/restart requires
-                                a corresponding service target specified in the reload/restart
-                                field. Other values require no further configuration
+                              description: |-
+                                type represents the commands that will be carried out if this NodeDisruptionPolicySpecActionType is executed
+                                Valid values are Reboot, Drain, Reload, Restart, DaemonReload and None.
+                                reload/restart requires a corresponding service target specified in the reload/restart field.
+                                Other values require no further configuration
                               enum:
                               - Reboot
                               - Drain
@@ -354,24 +331,22 @@ spec:
                     - actions
                     type: object
                   units:
-                    description: units is a list MachineConfig unit definitions and
-                      actions to take on changes to those services This list supports
-                      a maximum of 50 entries.
+                    description: |-
+                      units is a list MachineConfig unit definitions and actions to take on changes to those services
+                      This list supports a maximum of 50 entries.
                     items:
                       description: NodeDisruptionPolicySpecUnit is a systemd unit
                         name and corresponding actions to take and is used in the
                         NodeDisruptionPolicyConfig object
                       properties:
                         actions:
-                          description: actions represents the series of commands to
-                            be executed on changes to the file at the corresponding
-                            file path. Actions will be applied in the order that they
-                            are set in this list. If there are other incoming changes
-                            to other MachineConfig entries in the same update that
-                            require a reboot, the reboot will supercede these actions.
-                            Valid actions are Reboot, Drain, Reload, DaemonReload
-                            and None. The Reboot action and the None action cannot
-                            be used in conjunction with any of the other actions.
+                          description: |-
+                            actions represents the series of commands to be executed on changes to the file at
+                            the corresponding file path. Actions will be applied in the order that
+                            they are set in this list. If there are other incoming changes to other MachineConfig
+                            entries in the same update that require a reboot, the reboot will supercede these actions.
+                            Valid actions are Reboot, Drain, Reload, DaemonReload and None.
+                            The Reboot action and the None action cannot be used in conjunction with any of the other actions.
                             This list supports a maximum of 10 entries.
                           items:
                             properties:
@@ -380,16 +355,11 @@ spec:
                                   only valid if type is reload
                                 properties:
                                   serviceName:
-                                    description: serviceName is the full name (e.g.
-                                      crio.service) of the service to be reloaded
-                                      Service names should be of the format ${NAME}${SERVICETYPE}
-                                      and can up to 255 characters long. ${NAME} must
-                                      be atleast 1 character long and can only consist
-                                      of alphabets, digits, ":", "-", "_", ".", and
-                                      "\". ${SERVICETYPE} must be one of ".service",
-                                      ".socket", ".device", ".mount", ".automount",
-                                      ".swap", ".target", ".path", ".timer", ".snapshot",
-                                      ".slice" or ".scope".
+                                    description: |-
+                                      serviceName is the full name (e.g. crio.service) of the service to be reloaded
+                                      Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long.
+                                      ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, ":", "-", "_", ".", and "\".
+                                      ${SERVICETYPE} must be one of ".service", ".socket", ".device", ".mount", ".automount", ".swap", ".target", ".path", ".timer", ".snapshot", ".slice" or ".scope".
                                     maxLength: 255
                                     type: string
                                     x-kubernetes-validations:
@@ -414,16 +384,11 @@ spec:
                                   only valid if type is restart
                                 properties:
                                   serviceName:
-                                    description: serviceName is the full name (e.g.
-                                      crio.service) of the service to be restarted
-                                      Service names should be of the format ${NAME}${SERVICETYPE}
-                                      and can up to 255 characters long. ${NAME} must
-                                      be atleast 1 character long and can only consist
-                                      of alphabets, digits, ":", "-", "_", ".", and
-                                      "\". ${SERVICETYPE} must be one of ".service",
-                                      ".socket", ".device", ".mount", ".automount",
-                                      ".swap", ".target", ".path", ".timer", ".snapshot",
-                                      ".slice" or ".scope".
+                                    description: |-
+                                      serviceName is the full name (e.g. crio.service) of the service to be restarted
+                                      Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long.
+                                      ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, ":", "-", "_", ".", and "\".
+                                      ${SERVICETYPE} must be one of ".service", ".socket", ".device", ".mount", ".automount", ".swap", ".target", ".path", ".timer", ".snapshot", ".slice" or ".scope".
                                     maxLength: 255
                                     type: string
                                     x-kubernetes-validations:
@@ -444,13 +409,11 @@ spec:
                                 - serviceName
                                 type: object
                               type:
-                                description: type represents the commands that will
-                                  be carried out if this NodeDisruptionPolicySpecActionType
-                                  is executed Valid values are Reboot, Drain, Reload,
-                                  Restart, DaemonReload and None. reload/restart requires
-                                  a corresponding service target specified in the
-                                  reload/restart field. Other values require no further
-                                  configuration
+                                description: |-
+                                  type represents the commands that will be carried out if this NodeDisruptionPolicySpecActionType is executed
+                                  Valid values are Reboot, Drain, Reload, Restart, DaemonReload and None.
+                                  reload/restart requires a corresponding service target specified in the reload/restart field.
+                                  Other values require no further configuration
                                 enum:
                                 - Reboot
                                 - Drain
@@ -484,16 +447,12 @@ spec:
                             rule: 'self.exists(x, x.type==''None'') ? size(self) ==
                               1 : true'
                         name:
-                          description: name represents the service name of a systemd
-                            service managed through a MachineConfig Actions specified
-                            will be applied for changes to the named service. Service
-                            names should be of the format ${NAME}${SERVICETYPE} and
-                            can up to 255 characters long. ${NAME} must be atleast
-                            1 character long and can only consist of alphabets, digits,
-                            ":", "-", "_", ".", and "\". ${SERVICETYPE} must be one
-                            of ".service", ".socket", ".device", ".mount", ".automount",
-                            ".swap", ".target", ".path", ".timer", ".snapshot", ".slice"
-                            or ".scope".
+                          description: |-
+                            name represents the service name of a systemd service managed through a MachineConfig
+                            Actions specified will be applied for changes to the named service.
+                            Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long.
+                            ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, ":", "-", "_", ".", and "\".
+                            ${SERVICETYPE} must be one of ".service", ".socket", ".device", ".mount", ".automount", ".swap", ".target", ".path", ".timer", ".snapshot", ".slice" or ".scope".
                           maxLength: 255
                           type: string
                           x-kubernetes-validations:
@@ -519,19 +478,20 @@ spec:
                     x-kubernetes-list-type: map
                 type: object
               observedConfig:
-                description: observedConfig holds a sparse config that controller
-                  has observed from the cluster state.  It exists in spec because
+                description: |-
+                  observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because
                   it is an input to the level for the operator
                 nullable: true
                 type: object
                 x-kubernetes-preserve-unknown-fields: true
               operatorLogLevel:
                 default: Normal
-                description: "operatorLogLevel is an intent based logging for the
-                  operator itself.  It does not give fine grained control, but it
-                  is a simple way to manage coarse grained logging choices that operators
-                  have to interpret for themselves. \n Valid values are: \"Normal\",
-                  \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\"."
+                description: |-
+                  operatorLogLevel is an intent based logging for the operator itself.  It does not give fine grained control, but it is a
+                  simple way to manage coarse grained logging choices that operators have to interpret for themselves.
+
+                  Valid values are: "Normal", "Debug", "Trace", "TraceAll".
+                  Defaults to "Normal".
                 enum:
                 - ""
                 - Normal
@@ -540,19 +500,18 @@ spec:
                 - TraceAll
                 type: string
               succeededRevisionLimit:
-                description: succeededRevisionLimit is the number of successful static
-                  pod installer revisions to keep on disk and in the api -1 = unlimited,
-                  0 or unset = 5 (default)
+                description: |-
+                  succeededRevisionLimit is the number of successful static pod installer revisions to keep on disk and in the api
+                  -1 = unlimited, 0 or unset = 5 (default)
                 format: int32
                 type: integer
               unsupportedConfigOverrides:
-                description: unsupportedConfigOverrides overrides the final configuration
-                  that was computed by the operator. Red Hat does not support the
-                  use of this field. Misuse of this field could lead to unexpected
-                  behavior or conflict with other configuration options. Seek guidance
-                  from the Red Hat support before using this field. Use of this property
-                  blocks cluster upgrades, it must be removed before upgrading your
-                  cluster.
+                description: |-
+                  unsupportedConfigOverrides overrides the final configuration that was computed by the operator.
+                  Red Hat does not support the use of this field.
+                  Misuse of this field could lead to unexpected behavior or conflict with other configuration options.
+                  Seek guidance from the Red Hat support before using this field.
+                  Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.
                 nullable: true
                 type: object
                 x-kubernetes-preserve-unknown-fields: true
@@ -564,43 +523,35 @@ spec:
               conditions:
                 description: conditions is a list of conditions and their status
                 items:
-                  description: "Condition contains details for one aspect of the current
-                    state of this API Resource. --- This struct is intended for direct
-                    use as an array at the field path .status.conditions.  For example,
-                    \n type FooStatus struct{ // Represents the observations of a
-                    foo's current state. // Known .status.conditions.type are: \"Available\",
-                    \"Progressing\", and \"Degraded\" // +patchMergeKey=type // +patchStrategy=merge
-                    // +listType=map // +listMapKey=type Conditions []metav1.Condition
-                    `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\"
-                    protobuf:\"bytes,1,rep,name=conditions\"` \n // other fields }"
+                  description: Condition contains details for one aspect of the current
+                    state of this API Resource.
                   properties:
                     lastTransitionTime:
-                      description: lastTransitionTime is the last time the condition
-                        transitioned from one status to another. This should be when
-                        the underlying condition changed.  If that is not known, then
-                        using the time when the API field changed is acceptable.
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
                       format: date-time
                       type: string
                     message:
-                      description: message is a human readable message indicating
-                        details about the transition. This may be an empty string.
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
                       maxLength: 32768
                       type: string
                     observedGeneration:
-                      description: observedGeneration represents the .metadata.generation
-                        that the condition was set based upon. For instance, if .metadata.generation
-                        is currently 12, but the .status.conditions[x].observedGeneration
-                        is 9, the condition is out of date with respect to the current
-                        state of the instance.
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
                       format: int64
                       minimum: 0
                       type: integer
                     reason:
-                      description: reason contains a programmatic identifier indicating
-                        the reason for the condition's last transition. Producers
-                        of specific condition types may define expected values and
-                        meanings for this field, and whether the values are considered
-                        a guaranteed API. The value should be a CamelCase string.
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
                         This field may not be empty.
                       maxLength: 1024
                       minLength: 1
@@ -615,10 +566,6 @@ spec:
                       type: string
                     type:
                       description: type of condition in CamelCase or in foo.example.com/CamelCase.
-                        --- Many .condition.type values are consistent across resources
-                        like Available, but because arbitrary conditions can be useful
-                        (see .node.status.conditions), the ability to deconflict is
-                        important. The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
                       maxLength: 316
                       pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
                       type: string
@@ -634,9 +581,9 @@ spec:
                 - type
                 x-kubernetes-list-type: map
               nodeDisruptionPolicyStatus:
-                description: nodeDisruptionPolicyStatus status reflects what the latest
-                  cluster-validated policies are, and will be used by the Machine
-                  Config Daemon during future node updates.
+                description: |-
+                  nodeDisruptionPolicyStatus status reflects what the latest cluster-validated policies are,
+                  and will be used by the Machine Config Daemon during future node updates.
                 properties:
                   clusterPolicies:
                     description: clusterPolicies is a merge of cluster default and
@@ -651,17 +598,14 @@ spec:
                             object
                           properties:
                             actions:
-                              description: actions represents the series of commands
-                                to be executed on changes to the file at the corresponding
-                                file path. Actions will be applied in the order that
-                                they are set in this list. If there are other incoming
-                                changes to other MachineConfig entries in the same
-                                update that require a reboot, the reboot will supercede
-                                these actions. Valid actions are Reboot, Drain, Reload,
-                                DaemonReload and None. The Reboot action and the None
-                                action cannot be used in conjunction with any of the
-                                other actions. This list supports a maximum of 10
-                                entries.
+                              description: |-
+                                actions represents the series of commands to be executed on changes to the file at
+                                the corresponding file path. Actions will be applied in the order that
+                                they are set in this list. If there are other incoming changes to other MachineConfig
+                                entries in the same update that require a reboot, the reboot will supercede these actions.
+                                Valid actions are Reboot, Drain, Reload, DaemonReload and None.
+                                The Reboot action and the None action cannot be used in conjunction with any of the other actions.
+                                This list supports a maximum of 10 entries.
                               items:
                                 properties:
                                   reload:
@@ -669,17 +613,11 @@ spec:
                                       only valid if type is reload
                                     properties:
                                       serviceName:
-                                        description: serviceName is the full name
-                                          (e.g. crio.service) of the service to be
-                                          reloaded Service names should be of the
-                                          format ${NAME}${SERVICETYPE} and can up
-                                          to 255 characters long. ${NAME} must be
-                                          atleast 1 character long and can only consist
-                                          of alphabets, digits, ":", "-", "_", ".",
-                                          and "\". ${SERVICETYPE} must be one of ".service",
-                                          ".socket", ".device", ".mount", ".automount",
-                                          ".swap", ".target", ".path", ".timer", ".snapshot",
-                                          ".slice" or ".scope".
+                                        description: |-
+                                          serviceName is the full name (e.g. crio.service) of the service to be reloaded
+                                          Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long.
+                                          ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, ":", "-", "_", ".", and "\".
+                                          ${SERVICETYPE} must be one of ".service", ".socket", ".device", ".mount", ".automount", ".swap", ".target", ".path", ".timer", ".snapshot", ".slice" or ".scope".
                                         maxLength: 255
                                         type: string
                                         x-kubernetes-validations:
@@ -704,17 +642,11 @@ spec:
                                       restart, only valid if type is restart
                                     properties:
                                       serviceName:
-                                        description: serviceName is the full name
-                                          (e.g. crio.service) of the service to be
-                                          restarted Service names should be of the
-                                          format ${NAME}${SERVICETYPE} and can up
-                                          to 255 characters long. ${NAME} must be
-                                          atleast 1 character long and can only consist
-                                          of alphabets, digits, ":", "-", "_", ".",
-                                          and "\". ${SERVICETYPE} must be one of ".service",
-                                          ".socket", ".device", ".mount", ".automount",
-                                          ".swap", ".target", ".path", ".timer", ".snapshot",
-                                          ".slice" or ".scope".
+                                        description: |-
+                                          serviceName is the full name (e.g. crio.service) of the service to be restarted
+                                          Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long.
+                                          ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, ":", "-", "_", ".", and "\".
+                                          ${SERVICETYPE} must be one of ".service", ".socket", ".device", ".mount", ".automount", ".swap", ".target", ".path", ".timer", ".snapshot", ".slice" or ".scope".
                                         maxLength: 255
                                         type: string
                                         x-kubernetes-validations:
@@ -735,12 +667,10 @@ spec:
                                     - serviceName
                                     type: object
                                   type:
-                                    description: type represents the commands that
-                                      will be carried out if this NodeDisruptionPolicyStatusActionType
-                                      is executed Valid values are Reboot, Drain,
-                                      Reload, Restart, DaemonReload, None and Special.
-                                      reload/restart requires a corresponding service
-                                      target specified in the reload/restart field.
+                                    description: |-
+                                      type represents the commands that will be carried out if this NodeDisruptionPolicyStatusActionType is executed
+                                      Valid values are Reboot, Drain, Reload, Restart, DaemonReload, None and Special.
+                                      reload/restart requires a corresponding service target specified in the reload/restart field.
                                       Other values require no further configuration
                                     enum:
                                     - Reboot
@@ -776,9 +706,9 @@ spec:
                                 rule: 'self.exists(x, x.type==''None'') ? size(self)
                                   == 1 : true'
                             path:
-                              description: path is the location of a file being managed
-                                through a MachineConfig. The Actions in the policy
-                                will apply to changes to the file at this path.
+                              description: |-
+                                path is the location of a file being managed through a MachineConfig.
+                                The Actions in the policy will apply to changes to the file at this path.
                               type: string
                           required:
                           - actions
@@ -793,15 +723,13 @@ spec:
                         description: sshkey is the overall sshkey MachineConfig definition
                         properties:
                           actions:
-                            description: actions represents the series of commands
-                              to be executed on changes to the file at the corresponding
-                              file path. Actions will be applied in the order that
-                              they are set in this list. If there are other incoming
-                              changes to other MachineConfig entries in the same update
-                              that require a reboot, the reboot will supercede these
-                              actions. Valid actions are Reboot, Drain, Reload, DaemonReload
-                              and None. The Reboot action and the None action cannot
-                              be used in conjunction with any of the other actions.
+                            description: |-
+                              actions represents the series of commands to be executed on changes to the file at
+                              the corresponding file path. Actions will be applied in the order that
+                              they are set in this list. If there are other incoming changes to other MachineConfig
+                              entries in the same update that require a reboot, the reboot will supercede these actions.
+                              Valid actions are Reboot, Drain, Reload, DaemonReload and None.
+                              The Reboot action and the None action cannot be used in conjunction with any of the other actions.
                               This list supports a maximum of 10 entries.
                             items:
                               properties:
@@ -810,16 +738,11 @@ spec:
                                     only valid if type is reload
                                   properties:
                                     serviceName:
-                                      description: serviceName is the full name (e.g.
-                                        crio.service) of the service to be reloaded
-                                        Service names should be of the format ${NAME}${SERVICETYPE}
-                                        and can up to 255 characters long. ${NAME}
-                                        must be atleast 1 character long and can only
-                                        consist of alphabets, digits, ":", "-", "_",
-                                        ".", and "\". ${SERVICETYPE} must be one of
-                                        ".service", ".socket", ".device", ".mount",
-                                        ".automount", ".swap", ".target", ".path",
-                                        ".timer", ".snapshot", ".slice" or ".scope".
+                                      description: |-
+                                        serviceName is the full name (e.g. crio.service) of the service to be reloaded
+                                        Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long.
+                                        ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, ":", "-", "_", ".", and "\".
+                                        ${SERVICETYPE} must be one of ".service", ".socket", ".device", ".mount", ".automount", ".swap", ".target", ".path", ".timer", ".snapshot", ".slice" or ".scope".
                                       maxLength: 255
                                       type: string
                                       x-kubernetes-validations:
@@ -844,16 +767,11 @@ spec:
                                     only valid if type is restart
                                   properties:
                                     serviceName:
-                                      description: serviceName is the full name (e.g.
-                                        crio.service) of the service to be restarted
-                                        Service names should be of the format ${NAME}${SERVICETYPE}
-                                        and can up to 255 characters long. ${NAME}
-                                        must be atleast 1 character long and can only
-                                        consist of alphabets, digits, ":", "-", "_",
-                                        ".", and "\". ${SERVICETYPE} must be one of
-                                        ".service", ".socket", ".device", ".mount",
-                                        ".automount", ".swap", ".target", ".path",
-                                        ".timer", ".snapshot", ".slice" or ".scope".
+                                      description: |-
+                                        serviceName is the full name (e.g. crio.service) of the service to be restarted
+                                        Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long.
+                                        ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, ":", "-", "_", ".", and "\".
+                                        ${SERVICETYPE} must be one of ".service", ".socket", ".device", ".mount", ".automount", ".swap", ".target", ".path", ".timer", ".snapshot", ".slice" or ".scope".
                                       maxLength: 255
                                       type: string
                                       x-kubernetes-validations:
@@ -874,13 +792,11 @@ spec:
                                   - serviceName
                                   type: object
                                 type:
-                                  description: type represents the commands that will
-                                    be carried out if this NodeDisruptionPolicyStatusActionType
-                                    is executed Valid values are Reboot, Drain, Reload,
-                                    Restart, DaemonReload, None and Special. reload/restart
-                                    requires a corresponding service target specified
-                                    in the reload/restart field. Other values require
-                                    no further configuration
+                                  description: |-
+                                    type represents the commands that will be carried out if this NodeDisruptionPolicyStatusActionType is executed
+                                    Valid values are Reboot, Drain, Reload, Restart, DaemonReload, None and Special.
+                                    reload/restart requires a corresponding service target specified in the reload/restart field.
+                                    Other values require no further configuration
                                   enum:
                                   - Reboot
                                   - Drain
@@ -926,17 +842,14 @@ spec:
                             in the NodeDisruptionPolicyClusterStatus object
                           properties:
                             actions:
-                              description: actions represents the series of commands
-                                to be executed on changes to the file at the corresponding
-                                file path. Actions will be applied in the order that
-                                they are set in this list. If there are other incoming
-                                changes to other MachineConfig entries in the same
-                                update that require a reboot, the reboot will supercede
-                                these actions. Valid actions are Reboot, Drain, Reload,
-                                DaemonReload and None. The Reboot action and the None
-                                action cannot be used in conjunction with any of the
-                                other actions. This list supports a maximum of 10
-                                entries.
+                              description: |-
+                                actions represents the series of commands to be executed on changes to the file at
+                                the corresponding file path. Actions will be applied in the order that
+                                they are set in this list. If there are other incoming changes to other MachineConfig
+                                entries in the same update that require a reboot, the reboot will supercede these actions.
+                                Valid actions are Reboot, Drain, Reload, DaemonReload and None.
+                                The Reboot action and the None action cannot be used in conjunction with any of the other actions.
+                                This list supports a maximum of 10 entries.
                               items:
                                 properties:
                                   reload:
@@ -944,17 +857,11 @@ spec:
                                       only valid if type is reload
                                     properties:
                                       serviceName:
-                                        description: serviceName is the full name
-                                          (e.g. crio.service) of the service to be
-                                          reloaded Service names should be of the
-                                          format ${NAME}${SERVICETYPE} and can up
-                                          to 255 characters long. ${NAME} must be
-                                          atleast 1 character long and can only consist
-                                          of alphabets, digits, ":", "-", "_", ".",
-                                          and "\". ${SERVICETYPE} must be one of ".service",
-                                          ".socket", ".device", ".mount", ".automount",
-                                          ".swap", ".target", ".path", ".timer", ".snapshot",
-                                          ".slice" or ".scope".
+                                        description: |-
+                                          serviceName is the full name (e.g. crio.service) of the service to be reloaded
+                                          Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long.
+                                          ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, ":", "-", "_", ".", and "\".
+                                          ${SERVICETYPE} must be one of ".service", ".socket", ".device", ".mount", ".automount", ".swap", ".target", ".path", ".timer", ".snapshot", ".slice" or ".scope".
                                         maxLength: 255
                                         type: string
                                         x-kubernetes-validations:
@@ -979,17 +886,11 @@ spec:
                                       restart, only valid if type is restart
                                     properties:
                                       serviceName:
-                                        description: serviceName is the full name
-                                          (e.g. crio.service) of the service to be
-                                          restarted Service names should be of the
-                                          format ${NAME}${SERVICETYPE} and can up
-                                          to 255 characters long. ${NAME} must be
-                                          atleast 1 character long and can only consist
-                                          of alphabets, digits, ":", "-", "_", ".",
-                                          and "\". ${SERVICETYPE} must be one of ".service",
-                                          ".socket", ".device", ".mount", ".automount",
-                                          ".swap", ".target", ".path", ".timer", ".snapshot",
-                                          ".slice" or ".scope".
+                                        description: |-
+                                          serviceName is the full name (e.g. crio.service) of the service to be restarted
+                                          Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long.
+                                          ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, ":", "-", "_", ".", and "\".
+                                          ${SERVICETYPE} must be one of ".service", ".socket", ".device", ".mount", ".automount", ".swap", ".target", ".path", ".timer", ".snapshot", ".slice" or ".scope".
                                         maxLength: 255
                                         type: string
                                         x-kubernetes-validations:
@@ -1010,12 +911,10 @@ spec:
                                     - serviceName
                                     type: object
                                   type:
-                                    description: type represents the commands that
-                                      will be carried out if this NodeDisruptionPolicyStatusActionType
-                                      is executed Valid values are Reboot, Drain,
-                                      Reload, Restart, DaemonReload, None and Special.
-                                      reload/restart requires a corresponding service
-                                      target specified in the reload/restart field.
+                                    description: |-
+                                      type represents the commands that will be carried out if this NodeDisruptionPolicyStatusActionType is executed
+                                      Valid values are Reboot, Drain, Reload, Restart, DaemonReload, None and Special.
+                                      reload/restart requires a corresponding service target specified in the reload/restart field.
                                       Other values require no further configuration
                                     enum:
                                     - Reboot
@@ -1051,16 +950,12 @@ spec:
                                 rule: 'self.exists(x, x.type==''None'') ? size(self)
                                   == 1 : true'
                             name:
-                              description: name represents the service name of a systemd
-                                service managed through a MachineConfig Actions specified
-                                will be applied for changes to the named service.
-                                Service names should be of the format ${NAME}${SERVICETYPE}
-                                and can up to 255 characters long. ${NAME} must be
-                                atleast 1 character long and can only consist of alphabets,
-                                digits, ":", "-", "_", ".", and "\". ${SERVICETYPE}
-                                must be one of ".service", ".socket", ".device", ".mount",
-                                ".automount", ".swap", ".target", ".path", ".timer",
-                                ".snapshot", ".slice" or ".scope".
+                              description: |-
+                                name represents the service name of a systemd service managed through a MachineConfig
+                                Actions specified will be applied for changes to the named service.
+                                Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long.
+                                ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, ":", "-", "_", ".", and "\".
+                                ${SERVICETYPE} must be one of ".service", ".socket", ".device", ".mount", ".automount", ".swap", ".target", ".path", ".timer", ".snapshot", ".slice" or ".scope".
                               maxLength: 255
                               type: string
                               x-kubernetes-validations:

@@ -6,7 +6,7 @@ metadata:
     api.openshift.io/filename-cvo-runlevel: "0000_03"
     api.openshift.io/filename-operator: config-operator
     api.openshift.io/filename-ordering: "01"
-    feature-gate.release.openshift.io/: "true"
+    feature-gate.release.openshift.io/UserNamespacesPodSecurityStandards: "true"
     release.openshift.io/bootstrap-required: "true"
   name: securitycontextconstraints.security.openshift.io
 spec:
@@ -341,6 +341,18 @@ spec:
                   groups is used in the SecurityContext.
                 type: string
             type: object
+          userNamespaceLevel:
+            default: AllowHostLevel
+            description: userNamespaceLevel determines if the policy allows host users
+              in containers. Valid values are "AllowHostLevel", "RequirePodLevel",
+              and omitted. When "AllowHostLevel" is set, a pod author may set `hostUsers`
+              to either `true` or `false`. When "RequirePodLevel" is set, a pod author
+              must set `hostUsers` to `false`. When omitted, the default value is
+              "AllowHostLevel".
+            enum:
+            - AllowHostLevel
+            - RequirePodLevel
+            type: string
           users:
             description: The users who have permissions to use this security context
               constraints

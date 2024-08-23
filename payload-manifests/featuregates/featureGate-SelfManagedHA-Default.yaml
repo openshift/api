@@ -128,6 +128,9 @@
                         "name": "PlatformOperators"
                     },
                     {
+                        "name": "ProcMountType"
+                    },
+                    {
                         "name": "RouteAdvertisements"
                     },
                     {
@@ -147,6 +150,12 @@
                     },
                     {
                         "name": "UpgradeStatus"
+                    },
+                    {
+                        "name": "UserNamespacesPodSecurityStandards"
+                    },
+                    {
+                        "name": "UserNamespacesSupport"
                     },
                     {
                         "name": "VSphereMultiVCenters"

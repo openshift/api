@@ -216,6 +216,9 @@
                         "name": "PrivateHostedZoneAWS"
                     },
                     {
+                        "name": "ProcMountType"
+                    },
+                    {
                         "name": "RouteAdvertisements"
                     },
                     {
@@ -238,6 +241,12 @@
                     },
                     {
                         "name": "UpgradeStatus"
+                    },
+                    {
+                        "name": "UserNamespacesPodSecurityStandards"
+                    },
+                    {
+                        "name": "UserNamespacesSupport"
                     },
                     {
                         "name": "VSphereControlPlaneMachineSet"

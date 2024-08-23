@@ -7,6 +7,7 @@ metadata:
     include.release.openshift.io/ibm-cloud-managed: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
     release.openshift.io/bootstrap-required: "true"
+    release.openshift.io/feature-set: DevPreviewNoUpgrade
   name: securitycontextconstraints.security.openshift.io
 spec:
   group: security.openshift.io
@@ -106,6 +107,7 @@ spec:
               type: string
             nullable: true
             type: array
+            x-kubernetes-list-type: atomic
           allowedFlexVolumes:
             description: AllowedFlexVolumes is a whitelist of allowed Flexvolumes.  Empty
               or nil indicates that all Flexvolumes may be used.  This parameter is
@@ -123,6 +125,7 @@ spec:
               type: object
             nullable: true
             type: array
+            x-kubernetes-list-type: atomic
           allowedUnsafeSysctls:
             description: "AllowedUnsafeSysctls is a list of explicitly allowed unsafe
               sysctls, defaults to none. Each entry is either a plain sysctl name
@@ -135,6 +138,7 @@ spec:
               type: string
             nullable: true
             type: array
+            x-kubernetes-list-type: atomic
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
               of an object. Servers should convert recognized schemas to the latest
@@ -150,6 +154,7 @@ spec:
               type: string
             nullable: true
             type: array
+            x-kubernetes-list-type: atomic
           defaultAllowPrivilegeEscalation:
             description: DefaultAllowPrivilegeEscalation controls the default setting
               for whether a process can gain more privileges than its parent process.
@@ -166,6 +171,7 @@ spec:
               type: string
             nullable: true
             type: array
+            x-kubernetes-list-type: atomic
           fsGroup:
             description: FSGroup is the strategy that will dictate what fs group is
               used by the SecurityContext.
@@ -189,6 +195,7 @@ spec:
                       type: integer
                   type: object
                 type: array
+                x-kubernetes-list-type: atomic
               type:
                 description: Type is the strategy that will dictate what FSGroup is
                   used in the SecurityContext.
@@ -201,6 +208,7 @@ spec:
               type: string
             nullable: true
             type: array
+            x-kubernetes-list-type: atomic
           kind:
             description: 'Kind is a string value representing the REST resource this
               object represents. Servers may infer this from the endpoint the client
@@ -235,6 +243,7 @@ spec:
               type: string
             nullable: true
             type: array
+            x-kubernetes-list-type: atomic
           runAsUser:
             description: RunAsUser is the strategy that will dictate what RunAsUser
               is used in the SecurityContext.
@@ -302,6 +311,7 @@ spec:
               type: string
             nullable: true
             type: array
+            x-kubernetes-list-type: atomic
           supplementalGroups:
             description: SupplementalGroups is the strategy that will dictate what
               supplemental groups are used by the SecurityContext.
@@ -325,11 +335,24 @@ spec:
                       type: integer
                   type: object
                 type: array
+                x-kubernetes-list-type: atomic
               type:
                 description: Type is the strategy that will dictate what supplemental
                   groups is used in the SecurityContext.
                 type: string
             type: object
+          userNamespaceLevel:
+            default: AllowHostLevel
+            description: userNamespaceLevel determines if the policy allows host users
+              in containers. Valid values are "AllowHostLevel", "RequirePodLevel",
+              and omitted. When "AllowHostLevel" is set, a pod author may set `hostUsers`
+              to either `true` or `false`. When "RequirePodLevel" is set, a pod author
+              must set `hostUsers` to `false`. When omitted, the default value is
+              "AllowHostLevel".
+            enum:
+            - AllowHostLevel
+            - RequirePodLevel
+            type: string
           users:
             description: The users who have permissions to use this security context
               constraints
@@ -337,6 +360,7 @@ spec:
               type: string
             nullable: true
             type: array
+            x-kubernetes-list-type: atomic
           volumes:
             description: Volumes is a white list of allowed volume plugins.  FSType
               corresponds directly with the field names of a VolumeSource (azureFile,
@@ -348,6 +372,7 @@ spec:
               type: string
             nullable: true
             type: array
+            x-kubernetes-list-type: atomic
         required:
         - allowHostDirVolumePlugin
         - allowHostIPC

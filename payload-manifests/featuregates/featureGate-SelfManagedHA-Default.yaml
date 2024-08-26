@@ -125,6 +125,9 @@
                         "name": "PlatformOperators"
                     },
                     {
+                        "name": "ProcMountType"
+                    },
+                    {
                         "name": "RouteAdvertisements"
                     },
                     {
@@ -144,6 +147,9 @@
                     },
                     {
                         "name": "UpgradeStatus"
+                    },
+                    {
+                        "name": "UserNamespacesSupport"
                     },
                     {
                         "name": "VSphereMultiVCenters"

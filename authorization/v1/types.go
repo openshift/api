@@ -240,7 +240,7 @@ type ResourceAccessReviewResponse struct {
 
 // +genclient
 // +genclient:nonNamespaced
-// +genclient:skipVerbs=apply,get,list,create,update,patch,delete,deleteCollection,watch
+// +genclient:skipVerbs=apply,applyStatus,get,list,create,update,updateStatus,patch,delete,deleteCollection,watch
 // +genclient:method=Create,verb=create,result=ResourceAccessReviewResponse
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
@@ -292,7 +292,7 @@ func (t OptionalScopes) String() string {
 
 // +genclient
 // +genclient:nonNamespaced
-// +genclient:skipVerbs=apply,get,list,create,update,patch,delete,deleteCollection,watch
+// +genclient:skipVerbs=apply,applyStatus,get,list,create,update,updateStatus,patch,delete,deleteCollection,watch
 // +genclient:method=Create,verb=create,result=SubjectAccessReviewResponse
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
@@ -322,7 +322,7 @@ type SubjectAccessReview struct {
 }
 
 // +genclient
-// +genclient:skipVerbs=apply,get,list,create,update,patch,delete,deleteCollection,watch
+// +genclient:skipVerbs=apply,applyStatus,get,list,create,update,updateStatus,patch,delete,deleteCollection,watch
 // +genclient:method=Create,verb=create,result=ResourceAccessReviewResponse
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
@@ -342,7 +342,7 @@ type LocalResourceAccessReview struct {
 }
 
 // +genclient
-// +genclient:skipVerbs=apply,get,list,create,update,patch,delete,deleteCollection,watch
+// +genclient:skipVerbs=apply,applyStatus,get,list,create,update,updateStatus,patch,delete,deleteCollection,watch
 // +genclient:method=Create,verb=create,result=SubjectAccessReviewResponse
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 

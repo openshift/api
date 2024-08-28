@@ -92,6 +92,13 @@ var (
 				enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 				mustRegister()
 
+	FeatureGateKubeletSeparateDiskGC = newFeatureGate("KubeletSeparateDiskGC").
+						reportProblemsToJiraComponent("node").
+						contactPerson("kannon92").
+						productScope(kubernetes).
+						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						mustRegister()
+
 	FeatureGateMachineAPIProviderOpenStack = newFeatureGate("MachineAPIProviderOpenStack").
 						reportProblemsToJiraComponent("openstack").
 						contactPerson("egarcia").

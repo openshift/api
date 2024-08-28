@@ -204,6 +204,9 @@ type PoolUpdateStatus struct {
 	Informers []UpdateInformer `json:"informers,omitempty"`
 
 	// Conditions provide details about the pool
+	// +listType=map
+	// +listMapKey=type
+	Conditions []metav1.Condition `json:"conditions,omitempty"`
 }
 
 type PoolUpdateAssessment string

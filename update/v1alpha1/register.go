@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	GroupName     = "config.openshift.io"
+	GroupName     = "update.openshift.io"
 	GroupVersion  = schema.GroupVersion{Group: GroupName, Version: "v1alpha1"}
 	schemeBuilder = runtime.NewSchemeBuilder(addKnownTypes)
 	// Install is a function which adds this version to a scheme
@@ -30,16 +30,8 @@ func Resource(resource string) schema.GroupResource {
 // Adds the list of known types to api.Scheme.
 func addKnownTypes(scheme *runtime.Scheme) error {
 	scheme.AddKnownTypes(GroupVersion,
-		&ClusterMonitoring{},
-		&ClusterMonitoringList{},
-		&InsightsDataGather{},
-		&InsightsDataGatherList{},
-		&Backup{},
-		&BackupList{},
-		&ImagePolicy{},
-		&ImagePolicyList{},
-		&ClusterImagePolicy{},
-		&ClusterImagePolicyList{},
+		&UpdateStatus{},
+		&UpdateStatusList{},
 	)
 	metav1.AddToGroupVersion(scheme, GroupVersion)
 	return nil

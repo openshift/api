@@ -343,17 +343,17 @@ type UpdateInsight struct {
 	// ClusterVersionStatusInsight is a status insight about the state of a control plane update, where
 	// the control plane is represented by a ClusterVersion resource usually managed by CVO
 	// +optional
-	ClusterVersionStatusInsight *ClusterVersionStatusInsight `json:"cv,omitempty"`
+	ClusterVersionStatusInsight *ClusterVersionStatusInsight `json:"clusterVersion,omitempty"`
 
 	// ClusterOperatorStatusInsight is a status insight about the state of a control plane cluster operator update
 	// represented by a ClusterOperator resource
 	// +optional
-	ClusterOperatorStatusInsight *ClusterOperatorStatusInsight `json:"co,omitempty"`
+	ClusterOperatorStatusInsight *ClusterOperatorStatusInsight `json:"clusterOperator,omitempty"`
 
 	// MachineConfigPoolStatusInsight is a status insight about the state of a worker pool update, where the worker pool
 	// is represented by a MachineConfigPool resource
 	// +optional
-	MachineConfigPoolStatusInsight *MachineConfigPoolStatusInsight `json:"mcp,omitempty"`
+	MachineConfigPoolStatusInsight *MachineConfigPoolStatusInsight `json:"machineConfigPool,omitempty"`
 
 	// NodeStatusInsight is a status insight about the state of a worker node update, where the worker node is represented
 	// by a Node resource

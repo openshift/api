@@ -3,7 +3,6 @@ package v1alpha1
 import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 // +genclient
-// +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // UpdateStatus is the API about in-progress updates, kept populated by Update Status Controller by
@@ -11,7 +10,7 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 //
 // Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:path=updatestatuses,scope=Cluster
+// +kubebuilder:resource:path=updatestatuses,scope=Namespaced
 // +kubebuilder:subresource:status
 // +openshift:api-approved.openshift.io=TODO
 // +openshift:file-pattern=cvoRunLevel=0000_00,operatorName=cluster-version-operator,operatorOrdering=02

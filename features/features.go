@@ -110,8 +110,18 @@ var (
 						reportProblemsToJiraComponent("scheduling").
 						contactPerson("jchaloup").
 						productScope(kubernetes).
-						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-						mustRegister()
+		// TODO: Rebase 1.31: disable in order to upgrade to resource.k8s.io/v1alpha3 first
+		//enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+		mustRegister()
+
+	// TODO: Rebase 1.31: temporarily introduce this FG to keep the DRA profileCustomizations in the schedulers.config.openshift.io
+	// remove this FG once DynamicResourceAllocation is enabled again and update it in the SchedulerSpec
+	FeatureGateDynamicResourceAllocationSchedulersConfigOnly = newFeatureGate("DynamicResourceAllocationSchedulersConfigOnly").
+									reportProblemsToJiraComponent("scheduling").
+									contactPerson("jchaloup").
+									productScope(kubernetes).
+									enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+									mustRegister()
 
 	FeatureGateAzureWorkloadIdentity = newFeatureGate("AzureWorkloadIdentity").
 						reportProblemsToJiraComponent("cloud-credential-operator").

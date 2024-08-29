@@ -49,7 +49,7 @@ type SchedulerSpec struct {
 	// +optional
 	Profile SchedulerProfile `json:"profile,omitempty"`
 	// profileCustomizations contains configuration for modifying the default behavior of existing scheduler profiles.
-	// +openshift:enable:FeatureGate=DynamicResourceAllocation
+	// +openshift:enable:FeatureGate=DynamicResourceAllocationSchedulersConfigOnly
 	// +optional
 	ProfileCustomizations ProfileCustomizations `json:"profileCustomizations"`
 	// defaultNodeSelector helps set the cluster-wide default node selector to

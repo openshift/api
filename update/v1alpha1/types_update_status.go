@@ -64,6 +64,10 @@ const (
 
 // ControlPlaneUpdateStatus contains a summary and insights related to the control plane update
 type ControlPlaneUpdateStatus struct {
+	// Resource is the resource that represents the control plane. It will typically be a ClusterVersion resource
+	// in standalone OpenShift and HostedCluster in HCP.
+	Resource PoolResourceRef `json:"resource"`
+
 	// Informers is a list of insight producers, each carries a list of insights
 	// +listType=map
 	// +listMapKey=name

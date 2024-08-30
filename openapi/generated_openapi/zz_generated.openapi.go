@@ -44923,7 +44923,7 @@ func schema_openshift_api_operator_v1_Capability(ref common.ReferenceCallback) c
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name is the unique name of a capability. Available capabilities are LightspeedButton.",
+							Description: "name is the unique name of a capability. Available capabilities are LightspeedButton and GettingStartedBanner.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -45865,7 +45865,7 @@ func schema_openshift_api_operator_v1_ConsoleCustomization(ref common.ReferenceC
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "capabilities defines an array of capabilities that can be interacted with in the console UI. Each capability defines a visual state that can be interacted with the console to render in the UI. Available capabilities are LightspeedButton. Each of the available capabilities may appear only once in the list.",
+							Description: "capabilities defines an array of capabilities that can be interacted with in the console UI. Each capability defines a visual state that can be interacted with the console to render in the UI. Available capabilities are LightspeedButton and GettingStartedBanner. Each of the available capabilities may appear only once in the list.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{

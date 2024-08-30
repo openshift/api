@@ -6,7 +6,7 @@ metadata:
     api.openshift.io/filename-cvo-runlevel: "0000_10"
     api.openshift.io/filename-operator: config-operator
     api.openshift.io/filename-ordering: "01"
-    feature-gate.release.openshift.io/DynamicResourceAllocation: "true"
+    feature-gate.release.openshift.io/DynamicResourceAllocationSchedulersConfigOnly: "true"
     release.openshift.io/bootstrap-required: "true"
   name: schedulers.config.openshift.io
 spec:

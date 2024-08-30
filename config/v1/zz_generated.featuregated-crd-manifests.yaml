@@ -491,7 +491,7 @@ schedulers.config.openshift.io:
   Capability: ""
   Category: ""
   FeatureGates:
-  - DynamicResourceAllocation
+  - DynamicResourceAllocationSchedulersConfigOnly
   FilenameOperatorName: config-operator
   FilenameOperatorOrdering: "01"
   FilenameRunLevel: "0000_10"

@@ -44,6 +44,9 @@
                         "name": "DynamicResourceAllocation"
                     },
                     {
+                        "name": "DynamicResourceAllocationSchedulersConfigOnly"
+                    },
+                    {
                         "name": "EtcdBackendQuota"
                     },
                     {

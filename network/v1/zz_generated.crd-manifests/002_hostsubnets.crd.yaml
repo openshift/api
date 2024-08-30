@@ -42,10 +42,10 @@ spec:
     name: v1
     schema:
       openAPIV3Schema:
-        description: "HostSubnet describes the container subnet network on a node.
-          The HostSubnet object must have the same name as the Node object it corresponds
-          to. \n Compatibility level 1: Stable within a major release for a minimum
-          of 12 months or 3 minor releases (whichever is longer)."
+        description: "HostSubnet was used by OpenShift SDN. DEPRECATED: OpenShift
+          SDN is no longer supported and this object is no longer used in any way
+          by OpenShift. \n Compatibility level 1: Stable within a major release for
+          a minimum of 12 months or 3 minor releases (whichever is longer)."
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation

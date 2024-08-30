@@ -34396,7 +34396,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.route.v1.RouteIngressCondition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "host": {
           "description": "Host is the host string under which the route is exposed; this value is required",
@@ -34519,7 +34523,12 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.route.v1.RouteTargetReference"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "name",
+            "kind"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "host": {
           "description": "host is an alias/DNS that points to the service. Optional. If not specified a route name will typically be automatically chosen. Must follow DNS952 subdomain conventions.",
@@ -34566,7 +34575,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.route.v1.RouteIngress"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },

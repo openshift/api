@@ -108,9 +108,6 @@
                         "name": "ExternalOIDC"
                     },
                     {
-                        "name": "ExternalRouteCertificate"
-                    },
-                    {
                         "name": "GCPClusterHostedDNS"
                     },
                     {

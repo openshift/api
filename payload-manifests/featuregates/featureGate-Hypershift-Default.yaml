@@ -14,9 +14,6 @@
             {
                 "disabled": [
                     {
-                        "name": "AWSEFSDriverVolumeMetrics"
-                    },
-                    {
                         "name": "AdditionalRoutingCapabilities"
                     },
                     {
@@ -156,6 +153,9 @@
                     }
                 ],
                 "enabled": [
+                    {
+                        "name": "AWSEFSDriverVolumeMetrics"
+                    },
                     {
                         "name": "AdminNetworkPolicy"
                     },

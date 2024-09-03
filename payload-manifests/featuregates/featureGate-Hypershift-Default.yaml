@@ -149,6 +149,9 @@
                         "name": "UserNamespacesSupport"
                     },
                     {
+                        "name": "VSphereMultiNetworks"
+                    },
+                    {
                         "name": "VSphereMultiVCenters"
                     },
                     {

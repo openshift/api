@@ -231,6 +231,9 @@
                         "name": "VSphereDriverConfiguration"
                     },
                     {
+                        "name": "VSphereMultiNetworks"
+                    },
+                    {
                         "name": "VSphereMultiVCenters"
                     },
                     {

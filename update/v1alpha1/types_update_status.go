@@ -110,20 +110,59 @@ const (
 	ClusterVersionStatusInsightUpdatingReasonNoProgressing ClusterVersionStatusInsightUpdatingReason = "MissingProgressingCondition"
 )
 
+type VersionMetadataType string
+
+const (
+	VersionMetadataTypeString VersionMetadataType = "string"
+	VersionMetadataTypeBool   VersionMetadataType = "bool"
+	VersionMetadataTypeInt    VersionMetadataType = "int"
+)
+
+type VersionMetadataKey string
+
+const (
+	// InstallationMetadataKey denotes a boolean that indicates the update was initiated as an installation
+	InstallationMetadataKey VersionMetadataKey = "installation"
+	// PartialMetadataKey denotes a boolean that indicates the update was initiated in a state where the previous upgrade
+	// (to the original version) was not fully completed
+	PartialMetadataKey VersionMetadataKey = "partial"
+	// ArchitectureMetadataKey denotes a string that indicates the architecture of the payload image of the version,
+	// when relevant
+	ArchitectureMetadataKey VersionMetadataKey = "architecture"
+)
+
+type VersionMetadata struct {
+	// +required
+	Key VersionMetadataKey `json:"key"`
+
+	// +unionDiscriminator
+	// +required
+	Type VersionMetadataType `json:"type"`
+
+	// +optional
+	String string `json:"string,omitempty"`
+
+	// +optional
+	Bool bool `json:"bool,omitempty"`
+}
+
+type UpdateEdgeVersion struct {
+	// Version is the version of the edge
+	Version string `json:"version,omitempty"`
+
+	// Metadata is a list of metadata associated with the version
+	// +listType=map
+	// +listMapKey=key
+	Metadata []VersionMetadata `json:"metadata,omitempty"`
+}
+
 // ControlPlaneUpdateVersions contains the original and target versions of the upgrade
 type ControlPlaneUpdateVersions struct {
 	// Previous is the version of the control plane before the update
-	Previous string `json:"previous,omitempty"`
-
-	// IsPreviousPartial is true if the update was initiated in a state where the previous upgrade (to the original version)
-	// was not fully completed
-	IsPreviousPartial bool `json:"previousPartial,omitempty"`
+	Previous UpdateEdgeVersion `json:"previous,omitempty"`
 
 	// Target is the version of the control plane after the update
-	Target string `json:"target"`
-
-	// IsTargetInstall is true if the current (or last completed) work is an installation, not an upgrade
-	IsTargetInstall bool `json:"targetInstall,omitempty"`
+	Target UpdateEdgeVersion `json:"target"`
 }
 
 type ClusterVersionStatusInsight struct {

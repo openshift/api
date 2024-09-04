@@ -22389,6 +22389,25 @@
         }
       }
     },
+    "com.github.openshift.api.machine.v1beta1.VSphereDisk": {
+      "description": "VSphereDisk describes additional disks for vSphere.",
+      "type": "object",
+      "required": [
+        "sizeGiB"
+      ],
+      "properties": {
+        "name": {
+          "description": "Name is used to identify the disk definition. Name is required needs to be unique so that it can be used to clearly identify purpose of the disk.",
+          "type": "string"
+        },
+        "sizeGiB": {
+          "description": "SizeGiB is the size of the disk in GiB.",
+          "type": "integer",
+          "format": "int32",
+          "default": 0
+        }
+      }
+    },
     "com.github.openshift.api.machine.v1beta1.VSphereMachineProviderSpec": {
       "description": "VSphereMachineProviderSpec is the type that will be embedded in a Machine.Spec.ProviderSpec field for an VSphere virtual machine. It is used by the vSphere machine actuator to create a single Machine. Compatibility level 2: Stable within a major release for a minimum of 9 months or 3 minor releases (whichever is longer).",
       "type": "object",
@@ -22408,6 +22427,18 @@
         "credentialsSecret": {
           "description": "CredentialsSecret is a reference to the secret with vSphere credentials.",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "dataDisks": {
+          "description": "dataDisks is a list of non OS disks to be created and attached to the VM.  The max number of disk allowed to be attached is currently 15.  This limitation is being applied to allow no more than 16 disks on the default scsi controller for the VM. The first disk on that SCSI controller will be the OS disk from the template.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.VSphereDisk"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "diskGiB": {
           "description": "DiskGiB is the size of a virtual machine's disk, in GiB. Defaults to the analogue property value in the template from which this machine is cloned. This parameter will be ignored if 'LinkedClone' CloneMode is set.",

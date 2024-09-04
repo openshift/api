@@ -22510,6 +22510,27 @@
         }
       }
     },
+    "com.github.openshift.api.machine.v1beta1.VSphereDisk": {
+      "description": "VSphereDisk describes additional disks for vSphere.",
+      "type": "object",
+      "required": [
+        "name",
+        "sizeGiB"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is used to identify the disk definition. name is required needs to be unique so that it can be used to clearly identify purpose of the disk. It must be at most 80 characters in length and must consist only of alphanumeric characters, hyphens and underscores, and must start and end with an alphanumeric character.",
+          "type": "string",
+          "default": ""
+        },
+        "sizeGiB": {
+          "description": "sizeGiB is the size of the disk in GiB. The maximum supported size is 57742 GiB.",
+          "type": "integer",
+          "format": "int32",
+          "default": 0
+        }
+      }
+    },
     "com.github.openshift.api.machine.v1beta1.VSphereMachineProviderSpec": {
       "description": "VSphereMachineProviderSpec is the type that will be embedded in a Machine.Spec.ProviderSpec field for an VSphere virtual machine. It is used by the vSphere machine actuator to create a single Machine. Compatibility level 2: Stable within a major release for a minimum of 9 months or 3 minor releases (whichever is longer).",
       "type": "object",
@@ -22529,6 +22550,18 @@
         "credentialsSecret": {
           "description": "credentialsSecret is a reference to the secret with vSphere credentials.",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "dataDisks": {
+          "description": "dataDisks is a list of non OS disks to be created and attached to the VM.  The max number of disk allowed to be attached is currently 29.  The max number of disks for any controller is 30, but VM template will always have OS disk so that will leave 29 disks on any controller type.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.VSphereDisk"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "diskGiB": {
           "description": "diskGiB is the size of a virtual machine's disk, in GiB. Defaults to the analogue property value in the template from which this machine is cloned. This parameter will be ignored if 'LinkedClone' CloneMode is set.",

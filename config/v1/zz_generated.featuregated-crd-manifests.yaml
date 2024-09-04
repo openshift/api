@@ -314,6 +314,7 @@ infrastructures.config.openshift.io:
   - GCPClusterHostedDNS
   - GCPLabelsTags
   - VSphereControlPlaneMachineSet
+  - VSphereMultiNetworks
   - VSphereMultiVCenters
   FilenameOperatorName: config-operator
   FilenameOperatorOrdering: "01"

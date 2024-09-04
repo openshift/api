@@ -555,4 +555,11 @@ var (
 					productScope(kubernetes).
 					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
+
+	FeatureGateVSphereMultiNetworks = newFeatureGate("VSphereMultiNetworks").
+					reportProblemsToJiraComponent("SPLAT").
+					contactPerson("rvanderp").
+					productScope(ocpSpecific).
+					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+					mustRegister()
 )

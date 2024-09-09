@@ -71,6 +71,9 @@
                         "name": "InsightsOnDemandDataGather"
                     },
                     {
+                        "name": "InsightsRuntimeExtractor"
+                    },
+                    {
                         "name": "MachineAPIMigration"
                     },
                     {

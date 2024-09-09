@@ -120,6 +120,9 @@
                         "name": "InsightsOnDemandDataGather"
                     },
                     {
+                        "name": "InsightsRuntimeExtractor"
+                    },
+                    {
                         "name": "KMSv1"
                     },
                     {

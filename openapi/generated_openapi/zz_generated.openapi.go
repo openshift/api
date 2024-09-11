@@ -18128,6 +18128,13 @@ func schema_openshift_api_config_v1_Release(ref common.ReferenceCallback) common
 				Description: "Release represents an OpenShift release image and associated metadata.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"architecture": {
+						SchemaProps: spec.SchemaProps{
+							Description: "architecture is an optional field that indicates the value of the cluster architecture. In this context cluster architecture means either a single architecture or a multi architecture. Valid values are 'Multi' and empty.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"version": {
 						SchemaProps: spec.SchemaProps{
 							Description: "version is a semantic version identifying the update version. When this field is part of spec, version is optional if image is specified.",

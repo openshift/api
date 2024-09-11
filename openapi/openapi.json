@@ -9765,6 +9765,10 @@
         "image"
       ],
       "properties": {
+        "architecture": {
+          "description": "architecture is an optional field that indicates the value of the cluster architecture. In this context cluster architecture means either a single architecture or a multi architecture. Valid values are 'Multi' and empty.",
+          "type": "string"
+        },
         "channels": {
           "description": "channels is the set of Cincinnati channels to which the release currently belongs.",
           "type": "array",

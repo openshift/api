@@ -1741,6 +1741,7 @@ var map_VSpherePlatformFailureDomainSpec = map[string]string{
 	"region":   "region defines the name of a region tag that will be attached to a vCenter datacenter. The tag category in vCenter must be named openshift-region.",
 	"zone":     "zone defines the name of a zone tag that will be attached to a vCenter cluster. The tag category in vCenter must be named openshift-zone.",
 	"server":   "server is the fully-qualified domain name or the IP address of the vCenter server.",
+	"tagIDs":   "tagIDs is an optional set of tags to add to an instance. Specified tagIDs must use URN-notation instead of display names. A maximum of 10 tag IDs may be specified.",
 	"topology": "Topology describes a given failure domain using vSphere constructs",
 }
 

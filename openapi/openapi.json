@@ -10592,6 +10592,15 @@
           "type": "string",
           "default": ""
         },
+        "tagIDs": {
+          "description": "tagIDs is an optional set of tags to add to an instance. Specified tagIDs must use URN-notation instead of display names. A maximum of 10 tag IDs may be specified.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        },
         "topology": {
           "description": "Topology describes a given failure domain using vSphere constructs",
           "default": {},

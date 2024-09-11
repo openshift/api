@@ -19469,6 +19469,26 @@ func schema_openshift_api_config_v1_VSpherePlatformFailureDomainSpec(ref common.
 							Format:      "",
 						},
 					},
+					"tagIDs": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "tagIDs is an optional set of tags to add to an instance. Specified tagIDs must use URN-notation instead of display names. A maximum of 10 tag IDs may be specified.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
 					"topology": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Topology describes a given failure domain using vSphere constructs",

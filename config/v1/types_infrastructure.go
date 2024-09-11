@@ -1182,6 +1182,12 @@ type VSpherePlatformFailureDomainSpec struct {
 	// + Validation is applied via a patch, we validate the format as either ipv4, ipv6 or hostname
 	Server string `json:"server"`
 
+	// tagIDs is an optional set of tags to add to an instance. Specified tagIDs
+	// must use URN-notation instead of display names. A maximum of 10 tag IDs may be specified.
+	// +kubebuilder:example=urn:vmomi:InventoryServiceTag:5736bf56-49f5-4667-b38c-b97e09dc9578:GLOBAL
+	// +optional
+	TagIDs []string `json:"tagIDs,omitempty"`
+
 	// Topology describes a given failure domain using vSphere constructs
 	// +kubebuilder:validation:Required
 	Topology VSpherePlatformTopology `json:"topology"`

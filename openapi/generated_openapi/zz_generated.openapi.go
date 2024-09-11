@@ -37525,6 +37525,7 @@ func schema_openshift_api_machine_v1beta1_MachineSetSpec(ref common.ReferenceCal
 					"authoritativeAPI": {
 						SchemaProps: spec.SchemaProps{
 							Description: "authoritativeAPI is the API that is authoritative for this resource. Valid values are MachineAPI and ClusterAPI. When set to MachineAPI, writes to the spec of the machine.openshift.io copy of this resource will be reflected into the cluster.x-k8s.io copy. When set to ClusterAPI, writes to the spec of the cluster.x-k8s.io copy of this resource will be reflected into the machine.openshift.io copy. Updates to the status will be reflected in both copies of the resource, based on the controller implementing the functionality of the API. Currently the authoritative API determines which controller will manage the resource, this will change in a future release. To ensure the change has been accepted, please verify that the `status.authoritativeAPI` field has been updated to the desired value and that the `Synchronized` condition is present and set to `True`.",
+							Default:     "MachineAPI",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -37696,6 +37697,7 @@ func schema_openshift_api_machine_v1beta1_MachineSpec(ref common.ReferenceCallba
 					"authoritativeAPI": {
 						SchemaProps: spec.SchemaProps{
 							Description: "authoritativeAPI is the API that is authoritative for this resource. Valid values are MachineAPI and ClusterAPI. When set to MachineAPI, writes to the spec of the machine.openshift.io copy of this resource will be reflected into the cluster.x-k8s.io copy. When set to ClusterAPI, writes to the spec of the cluster.x-k8s.io copy of this resource will be reflected into the machine.openshift.io copy. Updates to the status will be reflected in both copies of the resource, based on the controller implementing the functionality of the API. Currently the authoritative API determines which controller will manage the resource, this will change in a future release. To ensure the change has been accepted, please verify that the `status.authoritativeAPI` field has been updated to the desired value and that the `Synchronized` condition is present and set to `True`.",
+							Default:     "MachineAPI",
 							Type:        []string{"string"},
 							Format:      "",
 						},

@@ -18,19 +18,25 @@ spec:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: "PodNetworkConnectivityCheck \n Compatibility level 4: No compatibility
-          is provided, the API can change at any point for any reason. These capabilities
-          should not be used by applications needing long term support."
+        description: |-
+          PodNetworkConnectivityCheck
+
+          Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -43,19 +49,19 @@ spec:
                 pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
                 type: string
               targetEndpoint:
-                description: EndpointAddress to check. A TCP address of the form host:port.
-                  Note that if host is a DNS name, then the check would fail if the
-                  DNS name cannot be resolved. Specify an IP address for host to bypass
-                  DNS name lookup.
+                description: |-
+                  EndpointAddress to check. A TCP address of the form host:port. Note that
+                  if host is a DNS name, then the check would fail if the DNS name cannot
+                  be resolved. Specify an IP address for host to bypass DNS name lookup.
                 pattern: ^\S+:\d*$
                 type: string
               tlsClientCert:
-                description: TLSClientCert, if specified, references a kubernetes.io/tls
-                  type secret with 'tls.crt' and 'tls.key' entries containing an optional
-                  TLS client certificate and key to be used when checking endpoints
-                  that require a client certificate in order to gracefully preform
-                  the scan without causing excessive logging in the endpoint process.
-                  The secret must exist in the same namespace as this resource.
+                description: |-
+                  TLSClientCert, if specified, references a kubernetes.io/tls type secret with 'tls.crt' and
+                  'tls.key' entries containing an optional TLS client certificate and key to be used when
+                  checking endpoints that require a client certificate in order to gracefully preform the
+                  scan without causing excessive logging in the endpoint process. The secret must exist in
+                  the same namespace as this resource.
                 properties:
                   name:
                     description: name is the metadata.name of the referenced secret
@@ -143,10 +149,9 @@ spec:
                       nullable: true
                       type: string
                     endLogs:
-                      description: EndLogs contains log entries related to the end
-                        of this outage. Should contain the success entry that resolved
-                        the outage and possibly a few of the failure log entries that
-                        preceded it.
+                      description: |-
+                        EndLogs contains log entries related to the end of this outage. Should contain the success
+                        entry that resolved the outage and possibly a few of the failure log entries that preceded it.
                       items:
                         description: LogEntry records events
                         properties:
@@ -186,9 +191,9 @@ spec:
                       nullable: true
                       type: string
                     startLogs:
-                      description: StartLogs contains log entries related to the start
-                        of this outage. Should contain the original failure, any entries
-                        where the failure mode changed.
+                      description: |-
+                        StartLogs contains log entries related to the start of this outage. Should contain
+                        the original failure, any entries where the failure mode changed.
                       items:
                         description: LogEntry records events
                         properties:

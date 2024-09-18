@@ -25889,7 +25889,13 @@
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-map-keys": [
+            "group",
+            "resource",
+            "namespace",
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "oauthAPIServer": {
           "description": "OAuthAPIServer holds status specific only to oauth-apiserver",
@@ -26114,7 +26120,13 @@
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-map-keys": [
+            "group",
+            "resource",
+            "namespace",
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -26324,7 +26336,13 @@
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-map-keys": [
+            "group",
+            "resource",
+            "namespace",
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -26471,7 +26489,13 @@
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-map-keys": [
+            "group",
+            "resource",
+            "namespace",
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -26627,7 +26651,13 @@
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-map-keys": [
+            "group",
+            "resource",
+            "namespace",
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -26886,7 +26916,13 @@
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-map-keys": [
+            "group",
+            "resource",
+            "namespace",
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -27476,7 +27512,13 @@
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-map-keys": [
+            "group",
+            "resource",
+            "namespace",
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "latestAvailableRevision": {
           "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
@@ -28615,7 +28657,13 @@
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-map-keys": [
+            "group",
+            "resource",
+            "namespace",
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "insightsReport": {
           "description": "insightsReport provides general Insights analysis results. When omitted, this means no data gathering has taken place yet.",
@@ -28795,7 +28843,13 @@
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-map-keys": [
+            "group",
+            "resource",
+            "namespace",
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "latestAvailableRevision": {
           "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
@@ -28985,7 +29039,13 @@
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-map-keys": [
+            "group",
+            "resource",
+            "namespace",
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "latestAvailableRevision": {
           "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
@@ -29161,7 +29221,13 @@
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-map-keys": [
+            "group",
+            "resource",
+            "namespace",
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "latestAvailableRevision": {
           "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
@@ -29319,7 +29385,13 @@
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-map-keys": [
+            "group",
+            "resource",
+            "namespace",
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -29741,7 +29813,13 @@
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-map-keys": [
+            "group",
+            "resource",
+            "namespace",
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -29981,7 +30059,13 @@
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-map-keys": [
+            "group",
+            "resource",
+            "namespace",
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -30549,7 +30633,13 @@
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-map-keys": [
+            "group",
+            "resource",
+            "namespace",
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "latestAvailableRevision": {
           "description": "latestAvailableRevision is the latest revision used as suffix of revisioned secrets like encryption-config. A new revision causes a new deployment of pods.",
@@ -30691,7 +30781,13 @@
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-map-keys": [
+            "group",
+            "resource",
+            "namespace",
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -30827,7 +30923,13 @@
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-map-keys": [
+            "group",
+            "resource",
+            "namespace",
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -31307,7 +31409,13 @@
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-map-keys": [
+            "group",
+            "resource",
+            "namespace",
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -31443,7 +31551,13 @@
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-map-keys": [
+            "group",
+            "resource",
+            "namespace",
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -31580,7 +31694,13 @@
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-map-keys": [
+            "group",
+            "resource",
+            "namespace",
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -31785,7 +31905,13 @@
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-map-keys": [
+            "group",
+            "resource",
+            "namespace",
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "latestAvailableRevision": {
           "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
@@ -31963,7 +32089,13 @@
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-map-keys": [
+            "group",
+            "resource",
+            "namespace",
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -32558,7 +32690,13 @@
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-map-keys": [
+            "group",
+            "resource",
+            "namespace",
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -35984,7 +36122,13 @@
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-map-keys": [
+            "group",
+            "resource",
+            "namespace",
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",

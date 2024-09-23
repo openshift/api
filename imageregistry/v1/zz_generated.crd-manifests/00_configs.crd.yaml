@@ -1953,6 +1953,7 @@ spec:
                   required:
                   - type
                   type: object
+                  x-kubernetes-map-type: atomic
                 type: array
                 x-kubernetes-list-map-keys:
                 - type

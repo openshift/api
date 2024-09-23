@@ -30864,7 +30864,8 @@
           "type": "string",
           "default": ""
         }
-      }
+      },
+      "x-kubernetes-map-type": "atomic"
     },
     "com.github.openshift.api.operator.v1.OperatorSpec": {
       "description": "OperatorSpec contains common fields operators need.  It is intended to be anonymous included inside of the Spec struct for your particular operator.",

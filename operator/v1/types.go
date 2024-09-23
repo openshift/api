@@ -172,6 +172,7 @@ var (
 )
 
 // OperatorCondition is just the standard condition fields.
+// +structType=atomic
 type OperatorCondition struct {
 	// +kubebuilder:validation:Required
 	Type               string          `json:"type"`

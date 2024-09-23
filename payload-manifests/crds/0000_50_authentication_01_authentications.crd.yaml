@@ -156,6 +156,14 @@ spec:
                 - namespace
                 - name
                 x-kubernetes-list-type: map
+              latestAvailableRevision:
+                description: latestAvailableRevision is the deploymentID of the most
+                  recent deployment
+                format: int32
+                type: integer
+                x-kubernetes-validations:
+                - message: must only increase
+                  rule: self >= oldSelf
               oauthAPIServer:
                 description: OAuthAPIServer holds status specific only to oauth-apiserver
                 properties:

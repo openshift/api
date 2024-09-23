@@ -44567,6 +44567,13 @@ func schema_openshift_api_operator_v1_AuthenticationStatus(ref common.ReferenceC
 							Format:      "int32",
 						},
 					},
+					"latestAvailableRevision": {
+						SchemaProps: spec.SchemaProps{
+							Description: "latestAvailableRevision is the deploymentID of the most recent deployment",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 					"generations": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
@@ -44934,6 +44941,13 @@ func schema_openshift_api_operator_v1_CSISnapshotControllerStatus(ref common.Ref
 							Format:      "int32",
 						},
 					},
+					"latestAvailableRevision": {
+						SchemaProps: spec.SchemaProps{
+							Description: "latestAvailableRevision is the deploymentID of the most recent deployment",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 					"generations": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
@@ -45291,6 +45305,13 @@ func schema_openshift_api_operator_v1_CloudCredentialStatus(ref common.Reference
 							Format:      "int32",
 						},
 					},
+					"latestAvailableRevision": {
+						SchemaProps: spec.SchemaProps{
+							Description: "latestAvailableRevision is the deploymentID of the most recent deployment",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 					"generations": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
@@ -45539,6 +45560,13 @@ func schema_openshift_api_operator_v1_ClusterCSIDriverStatus(ref common.Referenc
 						SchemaProps: spec.SchemaProps{
 							Description: "readyReplicas indicates how many replicas are ready and at the desired state",
 							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"latestAvailableRevision": {
+						SchemaProps: spec.SchemaProps{
+							Description: "latestAvailableRevision is the deploymentID of the most recent deployment",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -45803,6 +45831,13 @@ func schema_openshift_api_operator_v1_ConfigStatus(ref common.ReferenceCallback)
 						SchemaProps: spec.SchemaProps{
 							Description: "readyReplicas indicates how many replicas are ready and at the desired state",
 							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"latestAvailableRevision": {
+						SchemaProps: spec.SchemaProps{
+							Description: "latestAvailableRevision is the deploymentID of the most recent deployment",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -46248,6 +46283,13 @@ func schema_openshift_api_operator_v1_ConsoleStatus(ref common.ReferenceCallback
 						SchemaProps: spec.SchemaProps{
 							Description: "readyReplicas indicates how many replicas are ready and at the desired state",
 							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"latestAvailableRevision": {
+						SchemaProps: spec.SchemaProps{
+							Description: "latestAvailableRevision is the deploymentID of the most recent deployment",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -47247,6 +47289,13 @@ func schema_openshift_api_operator_v1_EtcdStatus(ref common.ReferenceCallback) c
 							Format:      "int32",
 						},
 					},
+					"latestAvailableRevision": {
+						SchemaProps: spec.SchemaProps{
+							Description: "latestAvailableRevision is the deploymentID of the most recent deployment",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 					"generations": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
@@ -47270,13 +47319,6 @@ func schema_openshift_api_operator_v1_EtcdStatus(ref common.ReferenceCallback) c
 									},
 								},
 							},
-						},
-					},
-					"latestAvailableRevision": {
-						SchemaProps: spec.SchemaProps{
-							Description: "latestAvailableRevision is the deploymentID of the most recent deployment",
-							Type:        []string{"integer"},
-							Format:      "int32",
 						},
 					},
 					"latestAvailableRevisionReason": {
@@ -49202,6 +49244,13 @@ func schema_openshift_api_operator_v1_InsightsOperatorStatus(ref common.Referenc
 							Format:      "int32",
 						},
 					},
+					"latestAvailableRevision": {
+						SchemaProps: spec.SchemaProps{
+							Description: "latestAvailableRevision is the deploymentID of the most recent deployment",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 					"generations": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
@@ -49516,6 +49565,13 @@ func schema_openshift_api_operator_v1_KubeAPIServerStatus(ref common.ReferenceCa
 							Format:      "int32",
 						},
 					},
+					"latestAvailableRevision": {
+						SchemaProps: spec.SchemaProps{
+							Description: "latestAvailableRevision is the deploymentID of the most recent deployment",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 					"generations": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
@@ -49539,13 +49595,6 @@ func schema_openshift_api_operator_v1_KubeAPIServerStatus(ref common.ReferenceCa
 									},
 								},
 							},
-						},
-					},
-					"latestAvailableRevision": {
-						SchemaProps: spec.SchemaProps{
-							Description: "latestAvailableRevision is the deploymentID of the most recent deployment",
-							Type:        []string{"integer"},
-							Format:      "int32",
 						},
 					},
 					"latestAvailableRevisionReason": {
@@ -49833,6 +49882,13 @@ func schema_openshift_api_operator_v1_KubeControllerManagerStatus(ref common.Ref
 							Format:      "int32",
 						},
 					},
+					"latestAvailableRevision": {
+						SchemaProps: spec.SchemaProps{
+							Description: "latestAvailableRevision is the deploymentID of the most recent deployment",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 					"generations": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
@@ -49856,13 +49912,6 @@ func schema_openshift_api_operator_v1_KubeControllerManagerStatus(ref common.Ref
 									},
 								},
 							},
-						},
-					},
-					"latestAvailableRevision": {
-						SchemaProps: spec.SchemaProps{
-							Description: "latestAvailableRevision is the deploymentID of the most recent deployment",
-							Type:        []string{"integer"},
-							Format:      "int32",
 						},
 					},
 					"latestAvailableRevisionReason": {
@@ -50128,6 +50177,13 @@ func schema_openshift_api_operator_v1_KubeSchedulerStatus(ref common.ReferenceCa
 							Format:      "int32",
 						},
 					},
+					"latestAvailableRevision": {
+						SchemaProps: spec.SchemaProps{
+							Description: "latestAvailableRevision is the deploymentID of the most recent deployment",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 					"generations": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
@@ -50151,13 +50207,6 @@ func schema_openshift_api_operator_v1_KubeSchedulerStatus(ref common.ReferenceCa
 									},
 								},
 							},
-						},
-					},
-					"latestAvailableRevision": {
-						SchemaProps: spec.SchemaProps{
-							Description: "latestAvailableRevision is the deploymentID of the most recent deployment",
-							Type:        []string{"integer"},
-							Format:      "int32",
 						},
 					},
 					"latestAvailableRevisionReason": {
@@ -50395,6 +50444,13 @@ func schema_openshift_api_operator_v1_KubeStorageVersionMigratorStatus(ref commo
 						SchemaProps: spec.SchemaProps{
 							Description: "readyReplicas indicates how many replicas are ready and at the desired state",
 							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"latestAvailableRevision": {
+						SchemaProps: spec.SchemaProps{
+							Description: "latestAvailableRevision is the deploymentID of the most recent deployment",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -51103,6 +51159,13 @@ func schema_openshift_api_operator_v1_MyOperatorResourceStatus(ref common.Refere
 							Format:      "int32",
 						},
 					},
+					"latestAvailableRevision": {
+						SchemaProps: spec.SchemaProps{
+							Description: "latestAvailableRevision is the deploymentID of the most recent deployment",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 					"generations": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
@@ -51528,6 +51591,13 @@ func schema_openshift_api_operator_v1_NetworkStatus(ref common.ReferenceCallback
 						SchemaProps: spec.SchemaProps{
 							Description: "readyReplicas indicates how many replicas are ready and at the desired state",
 							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"latestAvailableRevision": {
+						SchemaProps: spec.SchemaProps{
+							Description: "latestAvailableRevision is the deploymentID of the most recent deployment",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -52526,6 +52596,13 @@ func schema_openshift_api_operator_v1_OpenShiftAPIServerStatus(ref common.Refere
 							Format:      "int32",
 						},
 					},
+					"latestAvailableRevision": {
+						SchemaProps: spec.SchemaProps{
+							Description: "latestAvailableRevision is the deploymentID of the most recent deployment",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 					"generations": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
@@ -52549,13 +52626,6 @@ func schema_openshift_api_operator_v1_OpenShiftAPIServerStatus(ref common.Refere
 									},
 								},
 							},
-						},
-					},
-					"latestAvailableRevision": {
-						SchemaProps: spec.SchemaProps{
-							Description: "latestAvailableRevision is the latest revision used as suffix of revisioned secrets like encryption-config. A new revision causes a new deployment of pods.",
-							Type:        []string{"integer"},
-							Format:      "int32",
 						},
 					},
 				},
@@ -52764,6 +52834,13 @@ func schema_openshift_api_operator_v1_OpenShiftControllerManagerStatus(ref commo
 						SchemaProps: spec.SchemaProps{
 							Description: "readyReplicas indicates how many replicas are ready and at the desired state",
 							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"latestAvailableRevision": {
+						SchemaProps: spec.SchemaProps{
+							Description: "latestAvailableRevision is the deploymentID of the most recent deployment",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -52998,6 +53075,13 @@ func schema_openshift_api_operator_v1_OperatorStatus(ref common.ReferenceCallbac
 						SchemaProps: spec.SchemaProps{
 							Description: "readyReplicas indicates how many replicas are ready and at the desired state",
 							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"latestAvailableRevision": {
+						SchemaProps: spec.SchemaProps{
+							Description: "latestAvailableRevision is the deploymentID of the most recent deployment",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -53835,6 +53919,13 @@ func schema_openshift_api_operator_v1_ServiceCAStatus(ref common.ReferenceCallba
 							Format:      "int32",
 						},
 					},
+					"latestAvailableRevision": {
+						SchemaProps: spec.SchemaProps{
+							Description: "latestAvailableRevision is the deploymentID of the most recent deployment",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 					"generations": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
@@ -54070,6 +54161,13 @@ func schema_openshift_api_operator_v1_ServiceCatalogAPIServerStatus(ref common.R
 							Format:      "int32",
 						},
 					},
+					"latestAvailableRevision": {
+						SchemaProps: spec.SchemaProps{
+							Description: "latestAvailableRevision is the deploymentID of the most recent deployment",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 					"generations": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
@@ -54301,6 +54399,13 @@ func schema_openshift_api_operator_v1_ServiceCatalogControllerManagerStatus(ref 
 						SchemaProps: spec.SchemaProps{
 							Description: "readyReplicas indicates how many replicas are ready and at the desired state",
 							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"latestAvailableRevision": {
+						SchemaProps: spec.SchemaProps{
+							Description: "latestAvailableRevision is the deploymentID of the most recent deployment",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -54682,6 +54787,13 @@ func schema_openshift_api_operator_v1_StaticPodOperatorStatus(ref common.Referen
 							Format:      "int32",
 						},
 					},
+					"latestAvailableRevision": {
+						SchemaProps: spec.SchemaProps{
+							Description: "latestAvailableRevision is the deploymentID of the most recent deployment",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 					"generations": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
@@ -54705,13 +54817,6 @@ func schema_openshift_api_operator_v1_StaticPodOperatorStatus(ref common.Referen
 									},
 								},
 							},
-						},
-					},
-					"latestAvailableRevision": {
-						SchemaProps: spec.SchemaProps{
-							Description: "latestAvailableRevision is the deploymentID of the most recent deployment",
-							Type:        []string{"integer"},
-							Format:      "int32",
 						},
 					},
 					"latestAvailableRevisionReason": {
@@ -54982,6 +55087,13 @@ func schema_openshift_api_operator_v1_StorageStatus(ref common.ReferenceCallback
 						SchemaProps: spec.SchemaProps{
 							Description: "readyReplicas indicates how many replicas are ready and at the desired state",
 							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"latestAvailableRevision": {
+						SchemaProps: spec.SchemaProps{
+							Description: "latestAvailableRevision is the deploymentID of the most recent deployment",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -55963,6 +56075,13 @@ func schema_openshift_api_operator_v1alpha1_OLMStatus(ref common.ReferenceCallba
 						SchemaProps: spec.SchemaProps{
 							Description: "readyReplicas indicates how many replicas are ready and at the desired state",
 							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"latestAvailableRevision": {
+						SchemaProps: spec.SchemaProps{
+							Description: "latestAvailableRevision is the deploymentID of the most recent deployment",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -61664,6 +61783,13 @@ func schema_openshift_api_servicecertsigner_v1alpha1_ServiceCertSignerOperatorCo
 						SchemaProps: spec.SchemaProps{
 							Description: "readyReplicas indicates how many replicas are ready and at the desired state",
 							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"latestAvailableRevision": {
+						SchemaProps: spec.SchemaProps{
+							Description: "latestAvailableRevision is the deploymentID of the most recent deployment",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},

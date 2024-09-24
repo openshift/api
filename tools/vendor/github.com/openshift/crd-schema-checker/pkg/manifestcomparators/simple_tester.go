@@ -56,6 +56,25 @@ func AllTestsInDirForComparator(comparator CRDComparator, directory string) ([]*
 	return AllTestsInDirForRegistry(registry, directory)
 }
 
+func AllTestsInDirForComparators(comparators []CRDComparator, directory string) ([]*simpleComparatorTest, error) {
+	registry := NewRegistry()
+	for _, c := range comparators {
+		registry.AddComparator(c)
+	}
+	return AllTestsInDirForRegistry(registry, directory)
+}
+
+func RunAllTestsInDirForComparators(t *testing.T, comparators []CRDComparator, directory string) {
+	tests, err := AllTestsInDirForComparators(comparators, directory)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	for _, test := range tests {
+		t.Run(test.ComparatorTest.Name, test.Test)
+	}
+}
+
 func RunAllTestsInDirForComparator(t *testing.T, comparator CRDComparator, directory string) {
 	tests, err := AllTestsInDirForComparator(comparator, directory)
 	if err != nil {

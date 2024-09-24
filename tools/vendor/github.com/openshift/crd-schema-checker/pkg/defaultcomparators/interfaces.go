@@ -11,10 +11,15 @@ func must(err error) {
 func NewDefaultComparators() manifestcomparators.CRDComparatorRegistry {
 	ret := manifestcomparators.NewRegistry()
 	must(ret.AddComparator(manifestcomparators.NoBools()))
+	must(ret.AddComparator(manifestcomparators.NoFloats()))
+	must(ret.AddComparator(manifestcomparators.NoUints()))
 	must(ret.AddComparator(manifestcomparators.NoFieldRemoval()))
+	must(ret.AddComparator(manifestcomparators.NoEnumRemoval()))
 	must(ret.AddComparator(manifestcomparators.NoMaps()))
 	must(ret.AddComparator(manifestcomparators.MustHaveStatus()))
 	must(ret.AddComparator(manifestcomparators.ListsMustHaveSSATags()))
+	must(ret.AddComparator(manifestcomparators.ConditionsMustHaveProperSSATags()))
+	must(ret.AddComparator(manifestcomparators.NoNewRequiredFields()))
 
 	/*
 		other useful comparators

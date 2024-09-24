@@ -114,6 +114,7 @@ tests:
         kind: StableConfigType
         spec:
           celUnion:
+            type: OptionalMember
             requiredMember: foo
           immutableField: foo
       expectedError: "Invalid value: \"object\": requiredMember is required when type is RequiredMember, and forbidden otherwise"
@@ -168,6 +169,7 @@ tests:
         kind: StableConfigType
         spec:
           celUnion:
+            type: RequiredMember
             optionalMember: foo
           immutableField: foo
       expectedError: "Invalid value: \"object\": optionalMember is forbidden when type is not OptionalMember"

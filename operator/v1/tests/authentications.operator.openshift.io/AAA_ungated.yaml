@@ -14,3 +14,117 @@ tests:
         spec:
           logLevel: Normal
           operatorLogLevel: Normal
+  onUpdate:
+    - name: Can add latest revision after creation
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+         name: cluster
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          latestAvailableRevision: 0
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+         name: cluster
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          latestAvailableRevision: 0
+    - name: Can update latestRevision to the same value
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          latestAvailableRevision: 6
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+         name: cluster
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          latestAvailableRevision: 6
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+         name: cluster
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          latestAvailableRevision: 6
+    - name: Can increase latestRevision
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          latestAvailableRevision: 6
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+         name: cluster
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          latestAvailableRevision: 16
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+         name: cluster
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          latestAvailableRevision: 16
+    - name: Cannot decrease latestRevision
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          latestAvailableRevision: 6
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+         name: cluster
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          latestAvailableRevision: 5
+      expectedStatusError: must only increase

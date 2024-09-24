@@ -25897,6 +25897,11 @@
           ],
           "x-kubernetes-list-type": "map"
         },
+        "latestAvailableRevision": {
+          "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
+          "type": "integer",
+          "format": "int32"
+        },
         "oauthAPIServer": {
           "description": "OAuthAPIServer holds status specific only to oauth-apiserver",
           "default": {},
@@ -26128,6 +26133,11 @@
           ],
           "x-kubernetes-list-type": "map"
         },
+        "latestAvailableRevision": {
+          "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
+          "type": "integer",
+          "format": "int32"
+        },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
           "type": "integer",
@@ -26344,6 +26354,11 @@
           ],
           "x-kubernetes-list-type": "map"
         },
+        "latestAvailableRevision": {
+          "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
+          "type": "integer",
+          "format": "int32"
+        },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
           "type": "integer",
@@ -26496,6 +26511,11 @@
             "name"
           ],
           "x-kubernetes-list-type": "map"
+        },
+        "latestAvailableRevision": {
+          "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
+          "type": "integer",
+          "format": "int32"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -26658,6 +26678,11 @@
             "name"
           ],
           "x-kubernetes-list-type": "map"
+        },
+        "latestAvailableRevision": {
+          "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
+          "type": "integer",
+          "format": "int32"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -26923,6 +26948,11 @@
             "name"
           ],
           "x-kubernetes-list-type": "map"
+        },
+        "latestAvailableRevision": {
+          "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
+          "type": "integer",
+          "format": "int32"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -28670,6 +28700,11 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.InsightsReport"
         },
+        "latestAvailableRevision": {
+          "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
+          "type": "integer",
+          "format": "int32"
+        },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
           "type": "integer",
@@ -29393,6 +29428,11 @@
           ],
           "x-kubernetes-list-type": "map"
         },
+        "latestAvailableRevision": {
+          "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
+          "type": "integer",
+          "format": "int32"
+        },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
           "type": "integer",
@@ -29821,6 +29861,11 @@
           ],
           "x-kubernetes-list-type": "map"
         },
+        "latestAvailableRevision": {
+          "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
+          "type": "integer",
+          "format": "int32"
+        },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
           "type": "integer",
@@ -30066,6 +30111,11 @@
             "name"
           ],
           "x-kubernetes-list-type": "map"
+        },
+        "latestAvailableRevision": {
+          "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
+          "type": "integer",
+          "format": "int32"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -30642,7 +30692,7 @@
           "x-kubernetes-list-type": "map"
         },
         "latestAvailableRevision": {
-          "description": "latestAvailableRevision is the latest revision used as suffix of revisioned secrets like encryption-config. A new revision causes a new deployment of pods.",
+          "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
           "type": "integer",
           "format": "int32"
         },
@@ -30789,6 +30839,11 @@
           ],
           "x-kubernetes-list-type": "map"
         },
+        "latestAvailableRevision": {
+          "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
+          "type": "integer",
+          "format": "int32"
+        },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
           "type": "integer",
@@ -30930,6 +30985,11 @@
             "name"
           ],
           "x-kubernetes-list-type": "map"
+        },
+        "latestAvailableRevision": {
+          "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
+          "type": "integer",
+          "format": "int32"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -31417,6 +31477,11 @@
           ],
           "x-kubernetes-list-type": "map"
         },
+        "latestAvailableRevision": {
+          "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
+          "type": "integer",
+          "format": "int32"
+        },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
           "type": "integer",
@@ -31558,6 +31623,11 @@
             "name"
           ],
           "x-kubernetes-list-type": "map"
+        },
+        "latestAvailableRevision": {
+          "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
+          "type": "integer",
+          "format": "int32"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -31701,6 +31771,11 @@
             "name"
           ],
           "x-kubernetes-list-type": "map"
+        },
+        "latestAvailableRevision": {
+          "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
+          "type": "integer",
+          "format": "int32"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -32096,6 +32171,11 @@
             "name"
           ],
           "x-kubernetes-list-type": "map"
+        },
+        "latestAvailableRevision": {
+          "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
+          "type": "integer",
+          "format": "int32"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -32697,6 +32777,11 @@
             "name"
           ],
           "x-kubernetes-list-type": "map"
+        },
+        "latestAvailableRevision": {
+          "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
+          "type": "integer",
+          "format": "int32"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",
@@ -36129,6 +36214,11 @@
             "name"
           ],
           "x-kubernetes-list-type": "map"
+        },
+        "latestAvailableRevision": {
+          "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
+          "type": "integer",
+          "format": "int32"
         },
         "observedGeneration": {
           "description": "observedGeneration is the last generation change you've dealt with",

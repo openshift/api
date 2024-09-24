@@ -197,6 +197,9 @@ spec:
                   recent deployment
                 format: int32
                 type: integer
+                x-kubernetes-validations:
+                - message: must only increase
+                  rule: self >= oldSelf
               latestAvailableRevisionReason:
                 description: latestAvailableRevisionReason describe the detailed reason
                   for the most recent deployment

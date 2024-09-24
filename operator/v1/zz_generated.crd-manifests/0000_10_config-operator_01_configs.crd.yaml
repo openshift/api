@@ -165,6 +165,14 @@ spec:
                 - namespace
                 - name
                 x-kubernetes-list-type: map
+              latestAvailableRevision:
+                description: latestAvailableRevision is the deploymentID of the most
+                  recent deployment
+                format: int32
+                type: integer
+                x-kubernetes-validations:
+                - message: must only increase
+                  rule: self >= oldSelf
               observedGeneration:
                 description: observedGeneration is the last generation change you've
                   dealt with

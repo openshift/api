@@ -126,6 +126,9 @@
                         "name": "KMSv1"
                     },
                     {
+                        "name": "KMSv2"
+                    },
+                    {
                         "name": "MachineAPIProviderOpenStack"
                     },
                     {

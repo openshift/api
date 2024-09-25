@@ -369,6 +369,13 @@ var (
 				enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 				mustRegister()
 
+	FeatureGateKMSv2 = newFeatureGate("KMSv2").
+				reportProblemsToJiraComponent("kube-apiserver").
+				contactPerson("swghosh").
+				productScope(kubernetes).
+				enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+				mustRegister()
+
 	FeatureGatePinnedImages = newFeatureGate("PinnedImages").
 				reportProblemsToJiraComponent("MachineConfigOperator").
 				contactPerson("jhernand").

@@ -48,6 +48,84 @@ type ConsolePluginSpec struct {
 	// i18n is the configuration of plugin's localization resources.
 	// +optional
 	I18n ConsolePluginI18n `json:"i18n"`
+	// contentSecurityPolicy is a list of Content Security Policy directives for the plugin.
+	// Each directive specifies a list of values that indicate server origins and script endpoints
+	// from which the plugin's assets can be loaded.
+	// This helps guard against cross-site scripting (XSS) attacks.
+	// Available directive types are default-src, script-src, img-src, style-src and font-src.
+	// Each of the available CSP directive may be defined only once in the list.
+	// For more information about the CSP directives, see:
+	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
+	//
+	// The OpenShift web console server aggregates the CSP directives and values across
+	// all enabled ConsolePlugin CRs, merging them to set a unified CSP header.
+	//
+	// Example:
+	//   ConsolePlugin A directives:
+	//     script-src: https://script1.com/ https://script2.com/
+	//     font-src: https://font1.com/
+	//
+	//   ConsolePlugin B directives:
+	//     script-src: https://script2.com/ https://script3.com/
+	//     font-src: https://font2.com/
+	//     img-src: https://img1.com/
+	//
+	//   OpenShift web console server CSP response header:
+	//     script-src: https://script1.com/ https://script2.com/ https://script3.com/
+	//     font-src: https://font1.com/ https://font2.com/
+	//     img-src: https://img1.com/
+	//
+	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:MaxItems=5
+	// +listType=map
+	// +listMapKey=name
+	// +optional
+	ContentSecurityPolicy []ConsolePluginCSP `json:"contentSecurityPolicy,omitempty"`
+}
+
+// DirectiveType is an enumeration of OpenShift web console supported CSP directives.
+// LoadType is an enumeration of i18n loading types.
+// +kubebuilder:validation:Enum:=default-src;script-src;img-src;style-src;font-src
+type DirectiveType string
+
+const (
+	// default-src directive serves as a fallback for the other CSP fetch directives.
+	// For more information about the default-src directive, see:
+	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/default-src
+	DefaultSrc DirectiveType = "default-src"
+	// script-src directive specifies valid sources for JavaScript.
+	// For more information about the script-src directive, see:
+	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src
+	ScriptSrc DirectiveType = "script-src"
+	// img-src directive specifies a valid sources of images and favicons.
+	// For more information about the img-src directive, see:
+	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/img-src
+	ImgSrc DirectiveType = "img-src"
+	// style-src directive specifies valid sources for stylesheets.
+	// For more information about the style-src directive, see:
+	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/style-src
+	StyleSrc DirectiveType = "style-src"
+	// font-src directive specifies valid sources for fonts loaded using @font-face.
+	// For more information about the font-src directive, see:
+	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/font-src
+	FontSrc DirectiveType = "font-src"
+)
+
+// ConsolePluginCSP holds configuration for a specific CSP directive
+type ConsolePluginCSP struct {
+	// directive is a type of CSP directive.
+	// Available directive types are default-src, script-src, img-src, style-src and font-src.
+	// +kubebuilder:validation:Enum:="default-src";"script-src";"img-src";"style-src";"font-src"
+	// +kubebuilder:validation:Required
+	Directive DirectiveType `json:"directive"`
+	// values defines an array of source values mostly specifying server origins
+	// and script endpoints.
+	// Each ConsolePlugin may define their own directives with their values.
+	// These will be set by the OpenShift web console's backend, as part of
+	// its CSP header.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinItems=1
+	Values []string `json:"values"`
 }
 
 // LoadType is an enumeration of i18n loading types

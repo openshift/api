@@ -1,0 +1,256 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "Ingress"
+crdName: ingresses.config.openshift.io
+featureGate: InstallEIPForDefaultNLBIngressController
+tests:
+  onCreate:
+    - name: Should not allow to set NLB parameters when LBType is Classic.
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        metadata:
+          name: cluster
+        spec:
+          loadBalancer:
+            platform:
+              type: AWS
+              aws:
+                type: Classic
+                networkLoadBalancerParameters:
+                  eipAllocations:
+                  - eipalloc-12345
+                  - eipalloc-12346
+      expectedError: "networkLoadBalancerParameters are forbidden when type is not NLB."
+    - name: Should allow to set NLB parameters when LBType is NLB.
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        metadata:
+          name: cluster
+        spec:
+          loadBalancer:
+            platform:
+              type: AWS
+              aws:
+                type: NLB
+                networkLoadBalancerParameters:
+                  eipAllocations:
+                  - eipalloc-1234567891011abcd
+                  - eipalloc-1234695789abcdefa
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        metadata:
+          name: cluster
+        spec:
+          loadBalancer:
+            platform:
+                type: AWS
+                aws:
+                  type: NLB
+                  networkLoadBalancerParameters:
+                    eipAllocations:
+                    - eipalloc-1234567891011abcd
+                    - eipalloc-1234695789abcdefa
+    - name: Should not be able to create an ingress config in which the value of eipAllocations is not unique.
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        metadata:
+          name: cluster
+        spec:
+          loadBalancer:
+            platform:
+              type: AWS
+              aws:
+                type: NLB
+                networkLoadBalancerParameters:
+                  eipAllocations:
+                  - eipalloc-12345
+                  - eipalloc-12345
+      expectedError: "eipAllocations: Invalid value: \"array\": eipAllocations cannot contain duplicates"
+    - name: Should not be able to create an ingress config in which the value of eipAllocations is more than 26 characters.
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        metadata:
+          name: cluster
+        spec:
+          loadBalancer:
+            platform:
+              type: AWS
+              aws:
+                type: NLB
+                networkLoadBalancerParameters:
+                  eipAllocations:
+                  - eipalloc-123450000000000000000000000000000
+      expectedError: "[spec.loadBalancer.platform.aws.networkLoadBalancerParameters.eipAllocations[0]: Too long: may not be longer than 26"
+    - name: Should not be able to create an ingress config in which the value of eipAllocations is less than 26 characters.
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        metadata:
+          name: cluster
+        spec:
+          loadBalancer:
+            platform:
+              type: AWS
+              aws:
+                type: NLB
+                networkLoadBalancerParameters:
+                  eipAllocations:
+                  - eipalloc-12345
+      expectedError: "spec.loadBalancer.platform.aws.networkLoadBalancerParameters.eipAllocations[0]: Invalid value: \"eipalloc-12345\": spec.loadBalancer.platform.aws.networkLoadBalancerParameters.eipAllocations[0] in body should be at least 26 chars long"
+    - name:  Should not allow to set eip allocations with an empty value.
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        metadata:
+          name: cluster
+        spec:
+          loadBalancer:
+            platform:
+              type: AWS
+              aws:
+                type: NLB
+                networkLoadBalancerParameters:
+                  eipAllocations:
+                  - ""
+      expectedError: "Invalid value: \"\": spec.loadBalancer.platform.aws.networkLoadBalancerParameters.eipAllocations[0] in body should be at least 26 chars long"
+    - name:  Should not be able to create an ingress config in which the value of the number of eipAllocations is more than 10.
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        metadata:
+          name: cluster
+        spec:
+          loadBalancer:
+            platform:
+              type: AWS
+              aws:
+                type: NLB
+                networkLoadBalancerParameters:
+                  eipAllocations:
+                  - eipalloc-12345
+                  - eipalloc-12346
+                  - eipalloc-12347
+                  - eipalloc-12348
+                  - eipalloc-12349
+                  - eipalloc-12341
+                  - eiplloac-12342
+                  - eipalloc-12343
+                  - eipalloc-12344
+                  - eipalloc-12340
+                  - eipalloc-12350
+      expectedError: "Too many: 11: must have at most 10 items"
+    - name: Should not be able to create an ingress config in which the value of the eipAllocations does not follow regex rules.
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        metadata:
+          name: cluster
+        spec:
+          loadBalancer:
+            platform:
+              type: AWS
+              aws:
+                type: NLB
+                networkLoadBalancerParameters:
+                  eipAllocations:
+                  - "12345"
+      expectedError: "eipAllocations must be 'eipalloc-' followed by exactly 17 hexadecimal characters (0-9, a-f, A-F)"
+    - name: Should not be able to create an ingress config in which the value of the eipAllocations contains a comma.
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        metadata:
+          name: cluster
+        spec:
+          loadBalancer:
+            platform:
+              type: AWS
+              aws:
+                type: NLB
+                networkLoadBalancerParameters:
+                  eipAllocations:
+                  - "eipalloc-1,34567891011abcd"
+      expectedError: "eipAllocations must be 'eipalloc-' followed by exactly 17 hexadecimal characters (0-9, a-f, A-F)"
+    - name: Should not be able to create an ingress config in which the value of eipAllocations has a valid hexadecimal part followed by an extra hexadecimal part.
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        metadata:
+          name: cluster
+        spec:
+          loadBalancer:
+            platform:
+              type: AWS
+              aws:
+                type: NLB
+                networkLoadBalancerParameters:
+                  eipAllocations:
+                  - eipalloc-0123456789abcdef0-0123456
+      expectedError: "[spec.loadBalancer.platform.aws.networkLoadBalancerParameters.eipAllocations[0]: Too long: may not be longer than 26"
+    - name: Should not be able to create an ingress config in which the value of eipAllocations has a short hexadecimal part followed by an extra hexadecimal part.
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        metadata:
+          name: cluster
+        spec:
+          loadBalancer:
+            platform:
+              type: AWS
+              aws:
+                type: NLB
+                networkLoadBalancerParameters:
+                  eipAllocations:
+                  - eipalloc-012345678-0123456
+      expectedError: "eipAllocations must be 'eipalloc-' followed by exactly 17 hexadecimal characters (0-9, a-f, A-F)"
+  onUpdate:
+    - name: EIPAllocations should be mutable.
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        metadata:
+          name: cluster
+        spec:
+          loadBalancer:
+            platform:
+              type: AWS
+              aws:
+                type: NLB
+                networkLoadBalancerParameters:
+                  eipAllocations:
+                  - eipalloc-1234567891011abcd
+                  - eipalloc-1234567891011abce
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        metadata:
+          name: cluster
+        spec:
+          loadBalancer:
+            platform:
+              type: AWS
+              aws:
+                type: NLB
+                networkLoadBalancerParameters:
+                  eipAllocations:
+                  - eipalloc-1234567891011abcd
+                  - eipalloc-1234567891011abcf
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        metadata:
+          name: cluster
+        spec:
+          loadBalancer:
+            platform:
+              type: AWS
+              aws:
+                type: NLB
+                networkLoadBalancerParameters:
+                  eipAllocations:
+                  - eipalloc-1234567891011abcd
+                  - eipalloc-1234567891011abcf

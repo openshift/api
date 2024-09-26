@@ -150,6 +150,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.APIServerStatus":                                                 schema_openshift_api_config_v1_APIServerStatus(ref),
 		"github.com/openshift/api/config/v1.AWSDNSSpec":                                                      schema_openshift_api_config_v1_AWSDNSSpec(ref),
 		"github.com/openshift/api/config/v1.AWSIngressSpec":                                                  schema_openshift_api_config_v1_AWSIngressSpec(ref),
+		"github.com/openshift/api/config/v1.AWSNetworkLoadBalancerParameters":                                schema_openshift_api_config_v1_AWSNetworkLoadBalancerParameters(ref),
 		"github.com/openshift/api/config/v1.AWSPlatformSpec":                                                 schema_openshift_api_config_v1_AWSPlatformSpec(ref),
 		"github.com/openshift/api/config/v1.AWSPlatformStatus":                                               schema_openshift_api_config_v1_AWSPlatformStatus(ref),
 		"github.com/openshift/api/config/v1.AWSResourceTag":                                                  schema_openshift_api_config_v1_AWSResourceTag(ref),
@@ -8499,14 +8500,57 @@ func schema_openshift_api_config_v1_AWSIngressSpec(ref common.ReferenceCallback)
 							Format:      "",
 						},
 					},
+					"networkLoadBalancerParameters": {
+						SchemaProps: spec.SchemaProps{
+							Description: "networkLoadBalancerParameters holds configuration parameters for an AWS network load balancer. Present only if type is NLB.",
+							Ref:         ref("github.com/openshift/api/config/v1.AWSNetworkLoadBalancerParameters"),
+						},
+					},
 				},
 			},
 			VendorExtensible: spec.VendorExtensible{
 				Extensions: spec.Extensions{
 					"x-kubernetes-unions": []interface{}{
 						map[string]interface{}{
-							"discriminator":            "type",
-							"fields-to-discriminateBy": map[string]interface{}{},
+							"discriminator": "type",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"networkLoadBalancerParameters": "NetworkLoadBalancerParameters",
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.AWSNetworkLoadBalancerParameters"},
+	}
+}
+
+func schema_openshift_api_config_v1_AWSNetworkLoadBalancerParameters(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "AWSNetworkLoadBalancerParameters holds configuration parameters for an AWS Network load balancer. For Example: Setting AWS EIPs https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"eipAllocations": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "eipAllocations is a list of IDs for Elastic IP (EIP) addresses that are assigned to the Network Load Balancer. Each EIP may only be allocated to a single IngressController. The number of EIP allocations must match the number of subnets that are used for the load balancer. Each EIP allocation must be unique. A maximum of 10 EIP allocations are permitted. Each EIP allocation must be of the form 'eipalloc-' followed by exactly 17 hexadecimal characters (0-9, a-f, A-F). See https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html for general information about configuration, characteristics, and limitations of Elastic IP addresses.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
 						},
 					},
 				},

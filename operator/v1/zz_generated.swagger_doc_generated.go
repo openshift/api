@@ -52,10 +52,7 @@ func (NodeStatus) SwaggerDoc() map[string]string {
 }
 
 var map_OperatorCondition = map[string]string{
-	"":                   "OperatorCondition is just the standard condition fields.",
-	"type":               "type of condition in CamelCase or in foo.example.com/CamelCase.",
-	"status":             "status of the condition, one of True, False, Unknown.",
-	"lastTransitionTime": "lastTransitionTime is the last time the condition transitioned from one status to another. This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.",
+	"": "OperatorCondition is just the standard condition fields.",
 }
 
 func (OperatorCondition) SwaggerDoc() map[string]string {

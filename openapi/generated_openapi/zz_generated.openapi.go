@@ -140,6 +140,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/build/v1.StepInfo":                                                         schema_openshift_api_build_v1_StepInfo(ref),
 		"github.com/openshift/api/build/v1.WebHookTrigger":                                                   schema_openshift_api_build_v1_WebHookTrigger(ref),
 		"github.com/openshift/api/cloudnetwork/v1.CloudPrivateIPConfig":                                      schema_openshift_api_cloudnetwork_v1_CloudPrivateIPConfig(ref),
+		"github.com/openshift/api/cloudnetwork/v1.CloudPrivateIPConfigList":                                  schema_openshift_api_cloudnetwork_v1_CloudPrivateIPConfigList(ref),
 		"github.com/openshift/api/cloudnetwork/v1.CloudPrivateIPConfigSpec":                                  schema_openshift_api_cloudnetwork_v1_CloudPrivateIPConfigSpec(ref),
 		"github.com/openshift/api/cloudnetwork/v1.CloudPrivateIPConfigStatus":                                schema_openshift_api_cloudnetwork_v1_CloudPrivateIPConfigStatus(ref),
 		"github.com/openshift/api/config/v1.APIServer":                                                       schema_openshift_api_config_v1_APIServer(ref),
@@ -526,6 +527,33 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/image/v1.TagImportPolicy":                                                  schema_openshift_api_image_v1_TagImportPolicy(ref),
 		"github.com/openshift/api/image/v1.TagReference":                                                     schema_openshift_api_image_v1_TagReference(ref),
 		"github.com/openshift/api/image/v1.TagReferencePolicy":                                               schema_openshift_api_image_v1_TagReferencePolicy(ref),
+		"github.com/openshift/api/imageregistry/v1.AzureNetworkAccess":                                       schema_openshift_api_imageregistry_v1_AzureNetworkAccess(ref),
+		"github.com/openshift/api/imageregistry/v1.AzureNetworkAccessInternal":                               schema_openshift_api_imageregistry_v1_AzureNetworkAccessInternal(ref),
+		"github.com/openshift/api/imageregistry/v1.Config":                                                   schema_openshift_api_imageregistry_v1_Config(ref),
+		"github.com/openshift/api/imageregistry/v1.ConfigList":                                               schema_openshift_api_imageregistry_v1_ConfigList(ref),
+		"github.com/openshift/api/imageregistry/v1.EncryptionAlibaba":                                        schema_openshift_api_imageregistry_v1_EncryptionAlibaba(ref),
+		"github.com/openshift/api/imageregistry/v1.ImagePruner":                                              schema_openshift_api_imageregistry_v1_ImagePruner(ref),
+		"github.com/openshift/api/imageregistry/v1.ImagePrunerList":                                          schema_openshift_api_imageregistry_v1_ImagePrunerList(ref),
+		"github.com/openshift/api/imageregistry/v1.ImagePrunerSpec":                                          schema_openshift_api_imageregistry_v1_ImagePrunerSpec(ref),
+		"github.com/openshift/api/imageregistry/v1.ImagePrunerStatus":                                        schema_openshift_api_imageregistry_v1_ImagePrunerStatus(ref),
+		"github.com/openshift/api/imageregistry/v1.ImageRegistryConfigProxy":                                 schema_openshift_api_imageregistry_v1_ImageRegistryConfigProxy(ref),
+		"github.com/openshift/api/imageregistry/v1.ImageRegistryConfigRequests":                              schema_openshift_api_imageregistry_v1_ImageRegistryConfigRequests(ref),
+		"github.com/openshift/api/imageregistry/v1.ImageRegistryConfigRequestsLimits":                        schema_openshift_api_imageregistry_v1_ImageRegistryConfigRequestsLimits(ref),
+		"github.com/openshift/api/imageregistry/v1.ImageRegistryConfigRoute":                                 schema_openshift_api_imageregistry_v1_ImageRegistryConfigRoute(ref),
+		"github.com/openshift/api/imageregistry/v1.ImageRegistryConfigStorage":                               schema_openshift_api_imageregistry_v1_ImageRegistryConfigStorage(ref),
+		"github.com/openshift/api/imageregistry/v1.ImageRegistryConfigStorageAlibabaOSS":                     schema_openshift_api_imageregistry_v1_ImageRegistryConfigStorageAlibabaOSS(ref),
+		"github.com/openshift/api/imageregistry/v1.ImageRegistryConfigStorageAzure":                          schema_openshift_api_imageregistry_v1_ImageRegistryConfigStorageAzure(ref),
+		"github.com/openshift/api/imageregistry/v1.ImageRegistryConfigStorageEmptyDir":                       schema_openshift_api_imageregistry_v1_ImageRegistryConfigStorageEmptyDir(ref),
+		"github.com/openshift/api/imageregistry/v1.ImageRegistryConfigStorageGCS":                            schema_openshift_api_imageregistry_v1_ImageRegistryConfigStorageGCS(ref),
+		"github.com/openshift/api/imageregistry/v1.ImageRegistryConfigStorageIBMCOS":                         schema_openshift_api_imageregistry_v1_ImageRegistryConfigStorageIBMCOS(ref),
+		"github.com/openshift/api/imageregistry/v1.ImageRegistryConfigStoragePVC":                            schema_openshift_api_imageregistry_v1_ImageRegistryConfigStoragePVC(ref),
+		"github.com/openshift/api/imageregistry/v1.ImageRegistryConfigStorageS3":                             schema_openshift_api_imageregistry_v1_ImageRegistryConfigStorageS3(ref),
+		"github.com/openshift/api/imageregistry/v1.ImageRegistryConfigStorageS3CloudFront":                   schema_openshift_api_imageregistry_v1_ImageRegistryConfigStorageS3CloudFront(ref),
+		"github.com/openshift/api/imageregistry/v1.ImageRegistryConfigStorageSwift":                          schema_openshift_api_imageregistry_v1_ImageRegistryConfigStorageSwift(ref),
+		"github.com/openshift/api/imageregistry/v1.ImageRegistrySpec":                                        schema_openshift_api_imageregistry_v1_ImageRegistrySpec(ref),
+		"github.com/openshift/api/imageregistry/v1.ImageRegistryStatus":                                      schema_openshift_api_imageregistry_v1_ImageRegistryStatus(ref),
+		"github.com/openshift/api/imageregistry/v1.KMSEncryptionAlibaba":                                     schema_openshift_api_imageregistry_v1_KMSEncryptionAlibaba(ref),
+		"github.com/openshift/api/imageregistry/v1.S3TrustedCASource":                                        schema_openshift_api_imageregistry_v1_S3TrustedCASource(ref),
 		"github.com/openshift/api/insights/v1alpha1.DataGather":                                              schema_openshift_api_insights_v1alpha1_DataGather(ref),
 		"github.com/openshift/api/insights/v1alpha1.DataGatherList":                                          schema_openshift_api_insights_v1alpha1_DataGatherList(ref),
 		"github.com/openshift/api/insights/v1alpha1.DataGatherSpec":                                          schema_openshift_api_insights_v1alpha1_DataGatherSpec(ref),
@@ -752,6 +780,37 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/machine/v1beta1.VSphereMachineProviderSpec":                                schema_openshift_api_machine_v1beta1_VSphereMachineProviderSpec(ref),
 		"github.com/openshift/api/machine/v1beta1.VSphereMachineProviderStatus":                              schema_openshift_api_machine_v1beta1_VSphereMachineProviderStatus(ref),
 		"github.com/openshift/api/machine/v1beta1.Workspace":                                                 schema_openshift_api_machine_v1beta1_Workspace(ref),
+		"github.com/openshift/api/machineconfiguration/v1.CertExpiry":                                        schema_openshift_api_machineconfiguration_v1_CertExpiry(ref),
+		"github.com/openshift/api/machineconfiguration/v1.ContainerRuntimeConfig":                            schema_openshift_api_machineconfiguration_v1_ContainerRuntimeConfig(ref),
+		"github.com/openshift/api/machineconfiguration/v1.ContainerRuntimeConfigCondition":                   schema_openshift_api_machineconfiguration_v1_ContainerRuntimeConfigCondition(ref),
+		"github.com/openshift/api/machineconfiguration/v1.ContainerRuntimeConfigList":                        schema_openshift_api_machineconfiguration_v1_ContainerRuntimeConfigList(ref),
+		"github.com/openshift/api/machineconfiguration/v1.ContainerRuntimeConfigSpec":                        schema_openshift_api_machineconfiguration_v1_ContainerRuntimeConfigSpec(ref),
+		"github.com/openshift/api/machineconfiguration/v1.ContainerRuntimeConfigStatus":                      schema_openshift_api_machineconfiguration_v1_ContainerRuntimeConfigStatus(ref),
+		"github.com/openshift/api/machineconfiguration/v1.ContainerRuntimeConfiguration":                     schema_openshift_api_machineconfiguration_v1_ContainerRuntimeConfiguration(ref),
+		"github.com/openshift/api/machineconfiguration/v1.ControllerCertificate":                             schema_openshift_api_machineconfiguration_v1_ControllerCertificate(ref),
+		"github.com/openshift/api/machineconfiguration/v1.ControllerConfig":                                  schema_openshift_api_machineconfiguration_v1_ControllerConfig(ref),
+		"github.com/openshift/api/machineconfiguration/v1.ControllerConfigList":                              schema_openshift_api_machineconfiguration_v1_ControllerConfigList(ref),
+		"github.com/openshift/api/machineconfiguration/v1.ControllerConfigSpec":                              schema_openshift_api_machineconfiguration_v1_ControllerConfigSpec(ref),
+		"github.com/openshift/api/machineconfiguration/v1.ControllerConfigStatus":                            schema_openshift_api_machineconfiguration_v1_ControllerConfigStatus(ref),
+		"github.com/openshift/api/machineconfiguration/v1.ControllerConfigStatusCondition":                   schema_openshift_api_machineconfiguration_v1_ControllerConfigStatusCondition(ref),
+		"github.com/openshift/api/machineconfiguration/v1.ImageRegistryBundle":                               schema_openshift_api_machineconfiguration_v1_ImageRegistryBundle(ref),
+		"github.com/openshift/api/machineconfiguration/v1.KubeletConfig":                                     schema_openshift_api_machineconfiguration_v1_KubeletConfig(ref),
+		"github.com/openshift/api/machineconfiguration/v1.KubeletConfigCondition":                            schema_openshift_api_machineconfiguration_v1_KubeletConfigCondition(ref),
+		"github.com/openshift/api/machineconfiguration/v1.KubeletConfigList":                                 schema_openshift_api_machineconfiguration_v1_KubeletConfigList(ref),
+		"github.com/openshift/api/machineconfiguration/v1.KubeletConfigSpec":                                 schema_openshift_api_machineconfiguration_v1_KubeletConfigSpec(ref),
+		"github.com/openshift/api/machineconfiguration/v1.KubeletConfigStatus":                               schema_openshift_api_machineconfiguration_v1_KubeletConfigStatus(ref),
+		"github.com/openshift/api/machineconfiguration/v1.MachineConfig":                                     schema_openshift_api_machineconfiguration_v1_MachineConfig(ref),
+		"github.com/openshift/api/machineconfiguration/v1.MachineConfigList":                                 schema_openshift_api_machineconfiguration_v1_MachineConfigList(ref),
+		"github.com/openshift/api/machineconfiguration/v1.MachineConfigPool":                                 schema_openshift_api_machineconfiguration_v1_MachineConfigPool(ref),
+		"github.com/openshift/api/machineconfiguration/v1.MachineConfigPoolCondition":                        schema_openshift_api_machineconfiguration_v1_MachineConfigPoolCondition(ref),
+		"github.com/openshift/api/machineconfiguration/v1.MachineConfigPoolList":                             schema_openshift_api_machineconfiguration_v1_MachineConfigPoolList(ref),
+		"github.com/openshift/api/machineconfiguration/v1.MachineConfigPoolSpec":                             schema_openshift_api_machineconfiguration_v1_MachineConfigPoolSpec(ref),
+		"github.com/openshift/api/machineconfiguration/v1.MachineConfigPoolStatus":                           schema_openshift_api_machineconfiguration_v1_MachineConfigPoolStatus(ref),
+		"github.com/openshift/api/machineconfiguration/v1.MachineConfigPoolStatusConfiguration":              schema_openshift_api_machineconfiguration_v1_MachineConfigPoolStatusConfiguration(ref),
+		"github.com/openshift/api/machineconfiguration/v1.MachineConfigSpec":                                 schema_openshift_api_machineconfiguration_v1_MachineConfigSpec(ref),
+		"github.com/openshift/api/machineconfiguration/v1.NetworkInfo":                                       schema_openshift_api_machineconfiguration_v1_NetworkInfo(ref),
+		"github.com/openshift/api/machineconfiguration/v1.PinnedImageSetRef":                                 schema_openshift_api_machineconfiguration_v1_PinnedImageSetRef(ref),
+		"github.com/openshift/api/machineconfiguration/v1.PoolSynchronizerStatus":                            schema_openshift_api_machineconfiguration_v1_PoolSynchronizerStatus(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.BuildInputs":                                 schema_openshift_api_machineconfiguration_v1alpha1_BuildInputs(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.BuildOutputs":                                schema_openshift_api_machineconfiguration_v1alpha1_BuildOutputs(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.ImageSecretObjectReference":                  schema_openshift_api_machineconfiguration_v1alpha1_ImageSecretObjectReference(ref),
@@ -815,7 +874,15 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/network/v1alpha1.DNSNameResolverSpec":                                      schema_openshift_api_network_v1alpha1_DNSNameResolverSpec(ref),
 		"github.com/openshift/api/network/v1alpha1.DNSNameResolverStatus":                                    schema_openshift_api_network_v1alpha1_DNSNameResolverStatus(ref),
 		"github.com/openshift/api/networkoperator/v1.EgressRouter":                                           schema_openshift_api_networkoperator_v1_EgressRouter(ref),
+		"github.com/openshift/api/networkoperator/v1.EgressRouterAddress":                                    schema_openshift_api_networkoperator_v1_EgressRouterAddress(ref),
+		"github.com/openshift/api/networkoperator/v1.EgressRouterInterface":                                  schema_openshift_api_networkoperator_v1_EgressRouterInterface(ref),
+		"github.com/openshift/api/networkoperator/v1.EgressRouterList":                                       schema_openshift_api_networkoperator_v1_EgressRouterList(ref),
 		"github.com/openshift/api/networkoperator/v1.EgressRouterSpec":                                       schema_openshift_api_networkoperator_v1_EgressRouterSpec(ref),
+		"github.com/openshift/api/networkoperator/v1.EgressRouterStatus":                                     schema_openshift_api_networkoperator_v1_EgressRouterStatus(ref),
+		"github.com/openshift/api/networkoperator/v1.EgressRouterStatusCondition":                            schema_openshift_api_networkoperator_v1_EgressRouterStatusCondition(ref),
+		"github.com/openshift/api/networkoperator/v1.L4RedirectRule":                                         schema_openshift_api_networkoperator_v1_L4RedirectRule(ref),
+		"github.com/openshift/api/networkoperator/v1.MacvlanConfig":                                          schema_openshift_api_networkoperator_v1_MacvlanConfig(ref),
+		"github.com/openshift/api/networkoperator/v1.RedirectConfig":                                         schema_openshift_api_networkoperator_v1_RedirectConfig(ref),
 		"github.com/openshift/api/oauth/v1.ClusterRoleScopeRestriction":                                      schema_openshift_api_oauth_v1_ClusterRoleScopeRestriction(ref),
 		"github.com/openshift/api/oauth/v1.OAuthAccessToken":                                                 schema_openshift_api_oauth_v1_OAuthAccessToken(ref),
 		"github.com/openshift/api/oauth/v1.OAuthAccessTokenList":                                             schema_openshift_api_oauth_v1_OAuthAccessTokenList(ref),
@@ -8148,6 +8215,57 @@ func schema_openshift_api_cloudnetwork_v1_CloudPrivateIPConfig(ref common.Refere
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/cloudnetwork/v1.CloudPrivateIPConfigSpec", "github.com/openshift/api/cloudnetwork/v1.CloudPrivateIPConfigStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_openshift_api_cloudnetwork_v1_CloudPrivateIPConfigList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer). CloudPrivateIPConfigList is the list of CloudPrivateIPConfigList.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "List of CloudPrivateIPConfig.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/cloudnetwork/v1.CloudPrivateIPConfig"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/cloudnetwork/v1.CloudPrivateIPConfig", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -25837,6 +25955,1436 @@ func schema_openshift_api_image_v1_TagReferencePolicy(ref common.ReferenceCallba
 	}
 }
 
+func schema_openshift_api_imageregistry_v1_AzureNetworkAccess(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "AzureNetworkAccess defines the network access properties for the storage account.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type is the network access level to be used for the storage account. type: Internal means the storage account will be private, type: External means the storage account will be publicly accessible. Internal storage accounts are only exposed within the cluster's vnet. External storage accounts are publicly exposed on the internet. When type: Internal is used, a vnetName, subNetName and privateEndpointName may optionally be specified. If unspecificed, the image registry operator will discover vnet and subnet names, and generate a privateEndpointName. Defaults to \"External\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"internal": {
+						SchemaProps: spec.SchemaProps{
+							Description: "internal defines the vnet and subnet names to configure a private endpoint and connect it to the storage account in order to make it private. when type: Internal and internal is unset, the image registry operator will discover vnet and subnet names, and generate a private endpoint name.",
+							Ref:         ref("github.com/openshift/api/imageregistry/v1.AzureNetworkAccessInternal"),
+						},
+					},
+				},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "type",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"internal": "Internal",
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/imageregistry/v1.AzureNetworkAccessInternal"},
+	}
+}
+
+func schema_openshift_api_imageregistry_v1_AzureNetworkAccessInternal(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"networkResourceGroupName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "networkResourceGroupName is the resource group name where the cluster's vnet and subnet are. When omitted, the registry operator will use the cluster resource group (from in the infrastructure status). If you set a networkResourceGroupName on your install-config.yaml, that value will be used automatically (for clusters configured with publish:Internal). Note that both vnet and subnet must be in the same resource group. It must be between 1 and 90 characters in length and must consist only of alphanumeric characters, hyphens (-), periods (.) and underscores (_), and not end with a period.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"vnetName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "vnetName is the name of the vnet the registry operates in. When omitted, the registry operator will discover and set this by using the `kubernetes.io_cluster.<cluster-id>` tag in the vnet resource. This tag is set automatically by the installer. Commonly, this will be the same vnet as the cluster. Advanced cluster network configurations should ensure the provided vnetName is the vnet of the nodes where the image registry pods are running from. It must be between 2 and 64 characters in length and must consist only of alphanumeric characters, hyphens (-), periods (.) and underscores (_). It must start with an alphanumeric character and end with an alphanumeric character or an underscore.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"subnetName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "subnetName is the name of the subnet the registry operates in. When omitted, the registry operator will discover and set this by using the `kubernetes.io_cluster.<cluster-id>` tag in the vnet resource, then using one of listed subnets. Advanced cluster network configurations that use network security groups to protect subnets should ensure the provided subnetName has access to Azure Storage service. It must be between 1 and 80 characters in length and must consist only of alphanumeric characters, hyphens (-), periods (.) and underscores (_).",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"privateEndpointName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "privateEndpointName is the name of the private endpoint for the registry. When provided, the registry will use it as the name of the private endpoint it will create for the storage account. When omitted, the registry will generate one. It must be between 2 and 64 characters in length and must consist only of alphanumeric characters, hyphens (-), periods (.) and underscores (_). It must start with an alphanumeric character and end with an alphanumeric character or an underscore.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_imageregistry_v1_Config(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Config is the configuration object for a registry instance managed by the registry operator\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/openshift/api/imageregistry/v1.ImageRegistrySpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/openshift/api/imageregistry/v1.ImageRegistryStatus"),
+						},
+					},
+				},
+				Required: []string{"metadata", "spec"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/imageregistry/v1.ImageRegistrySpec", "github.com/openshift/api/imageregistry/v1.ImageRegistryStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_openshift_api_imageregistry_v1_ConfigList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ConfigList is a slice of Config objects.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/imageregistry/v1.Config"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/imageregistry/v1.Config", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_openshift_api_imageregistry_v1_EncryptionAlibaba(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "EncryptionAlibaba this a union type in kube parlance.  Depending on the value for the AlibabaEncryptionMethod, different pointers may be used",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"method": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Method defines the different encrytion modes available Empty value means no opinion and the platform chooses the a default, which is subject to change over time. Currently the default is `AES256`.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"kms": {
+						SchemaProps: spec.SchemaProps{
+							Description: "KMS (key management service) is an encryption type that holds the struct for KMS KeyID",
+							Ref:         ref("github.com/openshift/api/imageregistry/v1.KMSEncryptionAlibaba"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/imageregistry/v1.KMSEncryptionAlibaba"},
+	}
+}
+
+func schema_openshift_api_imageregistry_v1_ImagePruner(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ImagePruner is the configuration object for an image registry pruner managed by the registry operator.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/openshift/api/imageregistry/v1.ImagePrunerSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/openshift/api/imageregistry/v1.ImagePrunerStatus"),
+						},
+					},
+				},
+				Required: []string{"metadata", "spec"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/imageregistry/v1.ImagePrunerSpec", "github.com/openshift/api/imageregistry/v1.ImagePrunerStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_openshift_api_imageregistry_v1_ImagePrunerList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ImagePrunerList is a slice of ImagePruner objects.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/imageregistry/v1.ImagePruner"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/imageregistry/v1.ImagePruner", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_openshift_api_imageregistry_v1_ImagePrunerSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ImagePrunerSpec defines the specs for the running image pruner.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"schedule": {
+						SchemaProps: spec.SchemaProps{
+							Description: "schedule specifies when to execute the job using standard cronjob syntax: https://wikipedia.org/wiki/Cron. Defaults to `0 0 * * *`.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"suspend": {
+						SchemaProps: spec.SchemaProps{
+							Description: "suspend specifies whether or not to suspend subsequent executions of this cronjob. Defaults to false.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"keepTagRevisions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "keepTagRevisions specifies the number of image revisions for a tag in an image stream that will be preserved. Defaults to 3.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"keepYoungerThan": {
+						SchemaProps: spec.SchemaProps{
+							Description: "keepYoungerThan specifies the minimum age in nanoseconds of an image and its referrers for it to be considered a candidate for pruning. DEPRECATED: This field is deprecated in favor of keepYoungerThanDuration. If both are set, this field is ignored and keepYoungerThanDuration takes precedence.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"keepYoungerThanDuration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "keepYoungerThanDuration specifies the minimum age of an image and its referrers for it to be considered a candidate for pruning. Defaults to 60m (60 minutes).",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"resources": {
+						SchemaProps: spec.SchemaProps{
+							Description: "resources defines the resource requests and limits for the image pruner pod.",
+							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
+					"affinity": {
+						SchemaProps: spec.SchemaProps{
+							Description: "affinity is a group of node affinity scheduling rules for the image pruner pod.",
+							Ref:         ref("k8s.io/api/core/v1.Affinity"),
+						},
+					},
+					"nodeSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "nodeSelector defines the node selection constraints for the image pruner pod.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"tolerations": {
+						SchemaProps: spec.SchemaProps{
+							Description: "tolerations defines the node tolerations for the image pruner pod.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.Toleration"),
+									},
+								},
+							},
+						},
+					},
+					"successfulJobsHistoryLimit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "successfulJobsHistoryLimit specifies how many successful image pruner jobs to retain. Defaults to 3 if not set.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"failedJobsHistoryLimit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "failedJobsHistoryLimit specifies how many failed image pruner jobs to retain. Defaults to 3 if not set.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"ignoreInvalidImageReferences": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ignoreInvalidImageReferences indicates whether the pruner can ignore errors while parsing image references.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"logLevel": {
+						SchemaProps: spec.SchemaProps{
+							Description: "logLevel sets the level of log output for the pruner job.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+	}
+}
+
+func schema_openshift_api_imageregistry_v1_ImagePrunerStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ImagePrunerStatus reports image pruner operational status.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"observedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedGeneration is the last generation change that has been applied.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"conditions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions is a list of conditions and their status.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/operator/v1.OperatorCondition"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1.OperatorCondition"},
+	}
+}
+
+func schema_openshift_api_imageregistry_v1_ImageRegistryConfigProxy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ImageRegistryConfigProxy defines proxy configuration to be used by registry.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"http": {
+						SchemaProps: spec.SchemaProps{
+							Description: "http defines the proxy to be used by the image registry when accessing HTTP endpoints.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"https": {
+						SchemaProps: spec.SchemaProps{
+							Description: "https defines the proxy to be used by the image registry when accessing HTTPS endpoints.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"noProxy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "noProxy defines a comma-separated list of host names that shouldn't go through any proxy.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_imageregistry_v1_ImageRegistryConfigRequests(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ImageRegistryConfigRequests defines registry limits on requests read and write.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"read": {
+						SchemaProps: spec.SchemaProps{
+							Description: "read defines limits for image registry's reads.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/imageregistry/v1.ImageRegistryConfigRequestsLimits"),
+						},
+					},
+					"write": {
+						SchemaProps: spec.SchemaProps{
+							Description: "write defines limits for image registry's writes.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/imageregistry/v1.ImageRegistryConfigRequestsLimits"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/imageregistry/v1.ImageRegistryConfigRequestsLimits"},
+	}
+}
+
+func schema_openshift_api_imageregistry_v1_ImageRegistryConfigRequestsLimits(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ImageRegistryConfigRequestsLimits holds configuration on the max, enqueued and waiting registry's API requests.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"maxRunning": {
+						SchemaProps: spec.SchemaProps{
+							Description: "maxRunning sets the maximum in flight api requests to the registry.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"maxInQueue": {
+						SchemaProps: spec.SchemaProps{
+							Description: "maxInQueue sets the maximum queued api requests to the registry.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"maxWaitInQueue": {
+						SchemaProps: spec.SchemaProps{
+							Description: "maxWaitInQueue sets the maximum time a request can wait in the queue before being rejected.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+	}
+}
+
+func schema_openshift_api_imageregistry_v1_ImageRegistryConfigRoute(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ImageRegistryConfigRoute holds information on external route access to image registry.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name of the route to be created.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"hostname": {
+						SchemaProps: spec.SchemaProps{
+							Description: "hostname for the route.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"secretName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "secretName points to secret containing the certificates to be used by the route.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_imageregistry_v1_ImageRegistryConfigStorage(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ImageRegistryConfigStorage describes how the storage should be configured for the image registry.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"emptyDir": {
+						SchemaProps: spec.SchemaProps{
+							Description: "emptyDir represents ephemeral storage on the pod's host node. WARNING: this storage cannot be used with more than 1 replica and is not suitable for production use. When the pod is removed from a node for any reason, the data in the emptyDir is deleted forever.",
+							Ref:         ref("github.com/openshift/api/imageregistry/v1.ImageRegistryConfigStorageEmptyDir"),
+						},
+					},
+					"s3": {
+						SchemaProps: spec.SchemaProps{
+							Description: "s3 represents configuration that uses Amazon Simple Storage Service.",
+							Ref:         ref("github.com/openshift/api/imageregistry/v1.ImageRegistryConfigStorageS3"),
+						},
+					},
+					"gcs": {
+						SchemaProps: spec.SchemaProps{
+							Description: "gcs represents configuration that uses Google Cloud Storage.",
+							Ref:         ref("github.com/openshift/api/imageregistry/v1.ImageRegistryConfigStorageGCS"),
+						},
+					},
+					"swift": {
+						SchemaProps: spec.SchemaProps{
+							Description: "swift represents configuration that uses OpenStack Object Storage.",
+							Ref:         ref("github.com/openshift/api/imageregistry/v1.ImageRegistryConfigStorageSwift"),
+						},
+					},
+					"pvc": {
+						SchemaProps: spec.SchemaProps{
+							Description: "pvc represents configuration that uses a PersistentVolumeClaim.",
+							Ref:         ref("github.com/openshift/api/imageregistry/v1.ImageRegistryConfigStoragePVC"),
+						},
+					},
+					"azure": {
+						SchemaProps: spec.SchemaProps{
+							Description: "azure represents configuration that uses Azure Blob Storage.",
+							Ref:         ref("github.com/openshift/api/imageregistry/v1.ImageRegistryConfigStorageAzure"),
+						},
+					},
+					"ibmcos": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ibmcos represents configuration that uses IBM Cloud Object Storage.",
+							Ref:         ref("github.com/openshift/api/imageregistry/v1.ImageRegistryConfigStorageIBMCOS"),
+						},
+					},
+					"oss": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Oss represents configuration that uses Alibaba Cloud Object Storage Service.",
+							Ref:         ref("github.com/openshift/api/imageregistry/v1.ImageRegistryConfigStorageAlibabaOSS"),
+						},
+					},
+					"managementState": {
+						SchemaProps: spec.SchemaProps{
+							Description: "managementState indicates if the operator manages the underlying storage unit. If Managed the operator will remove the storage when this operator gets Removed.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/imageregistry/v1.ImageRegistryConfigStorageAlibabaOSS", "github.com/openshift/api/imageregistry/v1.ImageRegistryConfigStorageAzure", "github.com/openshift/api/imageregistry/v1.ImageRegistryConfigStorageEmptyDir", "github.com/openshift/api/imageregistry/v1.ImageRegistryConfigStorageGCS", "github.com/openshift/api/imageregistry/v1.ImageRegistryConfigStorageIBMCOS", "github.com/openshift/api/imageregistry/v1.ImageRegistryConfigStoragePVC", "github.com/openshift/api/imageregistry/v1.ImageRegistryConfigStorageS3", "github.com/openshift/api/imageregistry/v1.ImageRegistryConfigStorageSwift"},
+	}
+}
+
+func schema_openshift_api_imageregistry_v1_ImageRegistryConfigStorageAlibabaOSS(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ImageRegistryConfigStorageAlibabaOSS holds Alibaba Cloud OSS configuration. Configures the registry to use Alibaba Cloud Object Storage Service for backend storage. More about oss, you can look at the [official documentation](https://www.alibabacloud.com/help/product/31815.htm)",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"bucket": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Bucket is the bucket name in which you want to store the registry's data. About Bucket naming, more details you can look at the [official documentation](https://www.alibabacloud.com/help/doc-detail/257087.htm) Empty value means no opinion and the platform chooses the a default, which is subject to change over time. Currently the default will be autogenerated in the form of <clusterid>-image-registry-<region>-<random string 27 chars>",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"region": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Region is the Alibaba Cloud Region in which your bucket exists. For a list of regions, you can look at the [official documentation](https://www.alibabacloud.com/help/doc-detail/31837.html). Empty value means no opinion and the platform chooses the a default, which is subject to change over time. Currently the default will be based on the installed Alibaba Cloud Region.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"endpointAccessibility": {
+						SchemaProps: spec.SchemaProps{
+							Description: "EndpointAccessibility specifies whether the registry use the OSS VPC internal endpoint Empty value means no opinion and the platform chooses the a default, which is subject to change over time. Currently the default is `Internal`.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"encryption": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Encryption specifies whether you would like your data encrypted on the server side. More details, you can look cat the [official documentation](https://www.alibabacloud.com/help/doc-detail/117914.htm)",
+							Ref:         ref("github.com/openshift/api/imageregistry/v1.EncryptionAlibaba"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/imageregistry/v1.EncryptionAlibaba"},
+	}
+}
+
+func schema_openshift_api_imageregistry_v1_ImageRegistryConfigStorageAzure(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ImageRegistryConfigStorageAzure holds the information to configure the registry to use Azure Blob Storage for backend storage.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"accountName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "accountName defines the account to be used by the registry.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"container": {
+						SchemaProps: spec.SchemaProps{
+							Description: "container defines Azure's container to be used by registry.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"cloudName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "cloudName is the name of the Azure cloud environment to be used by the registry. If empty, the operator will set it based on the infrastructure object.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"networkAccess": {
+						SchemaProps: spec.SchemaProps{
+							Description: "networkAccess defines the network access properties for the storage account. Defaults to type: External.",
+							Ref:         ref("github.com/openshift/api/imageregistry/v1.AzureNetworkAccess"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/imageregistry/v1.AzureNetworkAccess"},
+	}
+}
+
+func schema_openshift_api_imageregistry_v1_ImageRegistryConfigStorageEmptyDir(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ImageRegistryConfigStorageEmptyDir is an place holder to be used when when registry is leveraging ephemeral storage.",
+				Type:        []string{"object"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_imageregistry_v1_ImageRegistryConfigStorageGCS(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ImageRegistryConfigStorageGCS holds GCS configuration.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"bucket": {
+						SchemaProps: spec.SchemaProps{
+							Description: "bucket is the bucket name in which you want to store the registry's data. Optional, will be generated if not provided.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"region": {
+						SchemaProps: spec.SchemaProps{
+							Description: "region is the GCS location in which your bucket exists. Optional, will be set based on the installed GCS Region.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"projectID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "projectID is the Project ID of the GCP project that this bucket should be associated with.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"keyID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "keyID is the KMS key ID to use for encryption. Optional, buckets are encrypted by default on GCP. This allows for the use of a custom encryption key.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_imageregistry_v1_ImageRegistryConfigStorageIBMCOS(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ImageRegistryConfigStorageIBMCOS holds the information to configure the registry to use IBM Cloud Object Storage for backend storage.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"bucket": {
+						SchemaProps: spec.SchemaProps{
+							Description: "bucket is the bucket name in which you want to store the registry's data. Optional, will be generated if not provided.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"location": {
+						SchemaProps: spec.SchemaProps{
+							Description: "location is the IBM Cloud location in which your bucket exists. Optional, will be set based on the installed IBM Cloud location.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"resourceGroupName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "resourceGroupName is the name of the IBM Cloud resource group that this bucket and its service instance is associated with. Optional, will be set based on the installed IBM Cloud resource group.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"resourceKeyCRN": {
+						SchemaProps: spec.SchemaProps{
+							Description: "resourceKeyCRN is the CRN of the IBM Cloud resource key that is created for the service instance. Commonly referred as a service credential and must contain HMAC type credentials. Optional, will be computed if not provided.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"serviceInstanceCRN": {
+						SchemaProps: spec.SchemaProps{
+							Description: "serviceInstanceCRN is the CRN of the IBM Cloud Object Storage service instance that this bucket is associated with. Optional, will be computed if not provided.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_imageregistry_v1_ImageRegistryConfigStoragePVC(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ImageRegistryConfigStoragePVC holds Persistent Volume Claims data to be used by the registry.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"claim": {
+						SchemaProps: spec.SchemaProps{
+							Description: "claim defines the Persisent Volume Claim's name to be used.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_imageregistry_v1_ImageRegistryConfigStorageS3(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ImageRegistryConfigStorageS3 holds the information to configure the registry to use the AWS S3 service for backend storage https://docs.docker.com/registry/storage-drivers/s3/",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"bucket": {
+						SchemaProps: spec.SchemaProps{
+							Description: "bucket is the bucket name in which you want to store the registry's data. Optional, will be generated if not provided.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"region": {
+						SchemaProps: spec.SchemaProps{
+							Description: "region is the AWS region in which your bucket exists. Optional, will be set based on the installed AWS Region.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"regionEndpoint": {
+						SchemaProps: spec.SchemaProps{
+							Description: "regionEndpoint is the endpoint for S3 compatible storage services. It should be a valid URL with scheme, e.g. https://s3.example.com. Optional, defaults based on the Region that is provided.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"chunkSizeMiB": {
+						SchemaProps: spec.SchemaProps{
+							Description: "chunkSizeMiB defines the size of the multipart upload chunks of the S3 API. The S3 API requires multipart upload chunks to be at least 5MiB. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default value is 10 MiB. The value is an integer number of MiB. The minimum value is 5 and the maximum value is 5120 (5 GiB).",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"encrypt": {
+						SchemaProps: spec.SchemaProps{
+							Description: "encrypt specifies whether the registry stores the image in encrypted format or not. Optional, defaults to false.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"keyID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "keyID is the KMS key ID to use for encryption. Optional, Encrypt must be true, or this parameter is ignored.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"cloudFront": {
+						SchemaProps: spec.SchemaProps{
+							Description: "cloudFront configures Amazon Cloudfront as the storage middleware in a registry.",
+							Ref:         ref("github.com/openshift/api/imageregistry/v1.ImageRegistryConfigStorageS3CloudFront"),
+						},
+					},
+					"virtualHostedStyle": {
+						SchemaProps: spec.SchemaProps{
+							Description: "virtualHostedStyle enables using S3 virtual hosted style bucket paths with a custom RegionEndpoint Optional, defaults to false.",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"trustedCA": {
+						SchemaProps: spec.SchemaProps{
+							Description: "trustedCA is a reference to a config map containing a CA bundle. The image registry and its operator use certificates from this bundle to verify S3 server certificates.\n\nThe namespace for the config map referenced by trustedCA is \"openshift-config\". The key for the bundle in the config map is \"ca-bundle.crt\".",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/imageregistry/v1.S3TrustedCASource"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/imageregistry/v1.ImageRegistryConfigStorageS3CloudFront", "github.com/openshift/api/imageregistry/v1.S3TrustedCASource"},
+	}
+}
+
+func schema_openshift_api_imageregistry_v1_ImageRegistryConfigStorageS3CloudFront(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ImageRegistryConfigStorageS3CloudFront holds the configuration to use Amazon Cloudfront as the storage middleware in a registry. https://docs.docker.com/registry/configuration/#cloudfront",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"baseURL": {
+						SchemaProps: spec.SchemaProps{
+							Description: "baseURL contains the SCHEME://HOST[/PATH] at which Cloudfront is served.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"privateKey": {
+						SchemaProps: spec.SchemaProps{
+							Description: "privateKey points to secret containing the private key, provided by AWS.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/api/core/v1.SecretKeySelector"),
+						},
+					},
+					"keypairID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "keypairID is key pair ID provided by AWS.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"duration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "duration is the duration of the Cloudfront session.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+				},
+				Required: []string{"baseURL", "privateKey", "keypairID"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.SecretKeySelector", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+	}
+}
+
+func schema_openshift_api_imageregistry_v1_ImageRegistryConfigStorageSwift(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ImageRegistryConfigStorageSwift holds the information to configure the registry to use the OpenStack Swift service for backend storage https://docs.docker.com/registry/storage-drivers/swift/",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"authURL": {
+						SchemaProps: spec.SchemaProps{
+							Description: "authURL defines the URL for obtaining an authentication token.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"authVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "authVersion specifies the OpenStack Auth's version.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"container": {
+						SchemaProps: spec.SchemaProps{
+							Description: "container defines the name of Swift container where to store the registry's data.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"domain": {
+						SchemaProps: spec.SchemaProps{
+							Description: "domain specifies Openstack's domain name for Identity v3 API.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"domainID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "domainID specifies Openstack's domain id for Identity v3 API.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"tenant": {
+						SchemaProps: spec.SchemaProps{
+							Description: "tenant defines Openstack tenant name to be used by registry.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"tenantID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "tenant defines Openstack tenant id to be used by registry.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"regionName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "regionName defines Openstack's region in which container exists.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_imageregistry_v1_ImageRegistrySpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ImageRegistrySpec defines the specs for the running registry.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"managementState": {
+						SchemaProps: spec.SchemaProps{
+							Description: "managementState indicates whether and how the operator should manage the component",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"logLevel": {
+						SchemaProps: spec.SchemaProps{
+							Description: "logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for their operands.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"operatorLogLevel": {
+						SchemaProps: spec.SchemaProps{
+							Description: "operatorLogLevel is an intent based logging for the operator itself.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for themselves.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"unsupportedConfigOverrides": {
+						SchemaProps: spec.SchemaProps{
+							Description: "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
+						},
+					},
+					"observedConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because it is an input to the level for the operator",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
+						},
+					},
+					"httpSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "httpSecret is the value needed by the registry to secure uploads, generated by default.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"proxy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "proxy defines the proxy to be used when calling master api, upstream registries, etc.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/imageregistry/v1.ImageRegistryConfigProxy"),
+						},
+					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "storage details for configuring registry storage, e.g. S3 bucket coordinates.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/imageregistry/v1.ImageRegistryConfigStorage"),
+						},
+					},
+					"readOnly": {
+						SchemaProps: spec.SchemaProps{
+							Description: "readOnly indicates whether the registry instance should reject attempts to push new images or delete existing ones.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"disableRedirect": {
+						SchemaProps: spec.SchemaProps{
+							Description: "disableRedirect controls whether to route all data through the Registry, rather than redirecting to the backend.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"requests": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-map-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "requests controls how many parallel requests a given registry instance will handle before queuing additional requests.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/imageregistry/v1.ImageRegistryConfigRequests"),
+						},
+					},
+					"defaultRoute": {
+						SchemaProps: spec.SchemaProps{
+							Description: "defaultRoute indicates whether an external facing route for the registry should be created using the default generated hostname.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"routes": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "routes defines additional external facing routes which should be created for the registry.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/imageregistry/v1.ImageRegistryConfigRoute"),
+									},
+								},
+							},
+						},
+					},
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "replicas determines the number of registry instances to run.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"logging": {
+						SchemaProps: spec.SchemaProps{
+							Description: "logging is deprecated, use logLevel instead.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"resources": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-map-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "resources defines the resource requests+limits for the registry pod.",
+							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
+					"nodeSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "nodeSelector defines the node selection constraints for the registry pod.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"tolerations": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "tolerations defines the tolerations for the registry pod.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.Toleration"),
+									},
+								},
+							},
+						},
+					},
+					"rolloutStrategy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "rolloutStrategy defines rollout strategy for the image registry deployment.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"affinity": {
+						SchemaProps: spec.SchemaProps{
+							Description: "affinity is a group of node affinity scheduling rules for the image registry pod(s).",
+							Ref:         ref("k8s.io/api/core/v1.Affinity"),
+						},
+					},
+					"topologySpreadConstraints": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "topologySpreadConstraints specify how to spread matching pods among the given topology.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.TopologySpreadConstraint"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"managementState", "replicas"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/imageregistry/v1.ImageRegistryConfigProxy", "github.com/openshift/api/imageregistry/v1.ImageRegistryConfigRequests", "github.com/openshift/api/imageregistry/v1.ImageRegistryConfigRoute", "github.com/openshift/api/imageregistry/v1.ImageRegistryConfigStorage", "k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
+	}
+}
+
+func schema_openshift_api_imageregistry_v1_ImageRegistryStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ImageRegistryStatus reports image registry operational status.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"observedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedGeneration is the last generation change you've dealt with",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions is a list of conditions and their status",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/operator/v1.OperatorCondition"),
+									},
+								},
+							},
+						},
+					},
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Description: "version is the level this availability applies to",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"readyReplicas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "readyReplicas indicates how many replicas are ready and at the desired state",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"latestAvailableRevision": {
+						SchemaProps: spec.SchemaProps{
+							Description: "latestAvailableRevision is the deploymentID of the most recent deployment",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"generations": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"group",
+									"resource",
+									"namespace",
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/operator/v1.GenerationStatus"),
+									},
+								},
+							},
+						},
+					},
+					"storageManaged": {
+						SchemaProps: spec.SchemaProps{
+							Description: "storageManaged is deprecated, please refer to Storage.managementState",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "storage indicates the current applied storage configuration of the registry.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/imageregistry/v1.ImageRegistryConfigStorage"),
+						},
+					},
+				},
+				Required: []string{"readyReplicas", "storageManaged", "storage"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/imageregistry/v1.ImageRegistryConfigStorage", "github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
+	}
+}
+
+func schema_openshift_api_imageregistry_v1_KMSEncryptionAlibaba(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"keyID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "KeyID holds the KMS encryption key ID",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"keyID"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_imageregistry_v1_S3TrustedCASource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "S3TrustedCASource references a config map with a CA certificate bundle in the \"openshift-config\" namespace. The key for the bundle in the config map is \"ca-bundle.crt\".",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the metadata.name of the referenced config map. This field must adhere to standard config map naming restrictions. The name must consist solely of alphanumeric characters, hyphens (-) and periods (.). It has a maximum length of 253 characters. If this field is not specified or is empty string, the default trust bundle will be used.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_insights_v1alpha1_DataGather(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -38784,6 +40332,1769 @@ func schema_openshift_api_machine_v1beta1_Workspace(ref common.ReferenceCallback
 	}
 }
 
+func schema_openshift_api_machineconfiguration_v1_CertExpiry(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ceryExpiry contains the bundle name and the expiry date",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"bundle": {
+						SchemaProps: spec.SchemaProps{
+							Description: "bundle is the name of the bundle in which the subject certificate resides",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"subject": {
+						SchemaProps: spec.SchemaProps{
+							Description: "subject is the subject of the certificate",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"expiry": {
+						SchemaProps: spec.SchemaProps{
+							Description: "expiry is the date after which the certificate will no longer be valid",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+				},
+				Required: []string{"bundle", "subject"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1_ContainerRuntimeConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ContainerRuntimeConfig describes a customized Container Runtime configuration.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/openshift/api/machineconfiguration/v1.ContainerRuntimeConfigSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/openshift/api/machineconfiguration/v1.ContainerRuntimeConfigStatus"),
+						},
+					},
+				},
+				Required: []string{"spec"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machineconfiguration/v1.ContainerRuntimeConfigSpec", "github.com/openshift/api/machineconfiguration/v1.ContainerRuntimeConfigStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1_ContainerRuntimeConfigCondition(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ContainerRuntimeConfigCondition defines the state of the ContainerRuntimeConfig",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type specifies the state of the operator's reconciliation functionality.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status of the condition, one of True, False, Unknown.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"lastTransitionTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "lastTransitionTime is the time of the last update to the current status object.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"reason": {
+						SchemaProps: spec.SchemaProps{
+							Description: "reason is the reason for the condition's last transition.  Reasons are PascalCase",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"message": {
+						SchemaProps: spec.SchemaProps{
+							Description: "message provides additional information about the current condition. This is only to be consumed by humans.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1_ContainerRuntimeConfigList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ContainerRuntimeConfigList is a list of ContainerRuntimeConfig resources\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machineconfiguration/v1.ContainerRuntimeConfig"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machineconfiguration/v1.ContainerRuntimeConfig", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1_ContainerRuntimeConfigSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ContainerRuntimeConfigSpec defines the desired state of ContainerRuntimeConfig",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"machineConfigPoolSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MachineConfigPoolSelector selects which pools the ContainerRuntimeConfig shoud apply to. A nil selector will result in no pools being selected.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"),
+						},
+					},
+					"containerRuntimeConfig": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("github.com/openshift/api/machineconfiguration/v1.ContainerRuntimeConfiguration"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machineconfiguration/v1.ContainerRuntimeConfiguration", "k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1_ContainerRuntimeConfigStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ContainerRuntimeConfigStatus defines the observed state of a ContainerRuntimeConfig",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"observedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedGeneration represents the generation observed by the controller.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions represents the latest available observations of current state.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machineconfiguration/v1.ContainerRuntimeConfigCondition"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machineconfiguration/v1.ContainerRuntimeConfigCondition"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1_ContainerRuntimeConfiguration(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ContainerRuntimeConfiguration defines the tuneables of the container runtime",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"pidsLimit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "pidsLimit specifies the maximum number of processes allowed in a container",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"logLevel": {
+						SchemaProps: spec.SchemaProps{
+							Description: "logLevel specifies the verbosity of the logs based on the level it is set to. Options are fatal, panic, error, warn, info, and debug.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"logSizeMax": {
+						SchemaProps: spec.SchemaProps{
+							Description: "logSizeMax specifies the Maximum size allowed for the container log file. Negative numbers indicate that no size limit is imposed. If it is positive, it must be >= 8192 to match/exceed conmon's read buffer.",
+							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+						},
+					},
+					"overlaySize": {
+						SchemaProps: spec.SchemaProps{
+							Description: "overlaySize specifies the maximum size of a container image. This flag can be used to set quota on the size of container images. (default: 10GB)",
+							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+						},
+					},
+					"defaultRuntime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "defaultRuntime is the name of the OCI runtime to be used as the default.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1_ControllerCertificate(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ControllerCertificate contains info about a specific cert.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"subject": {
+						SchemaProps: spec.SchemaProps{
+							Description: "subject is the cert subject",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"signer": {
+						SchemaProps: spec.SchemaProps{
+							Description: "signer is the  cert Issuer",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"notBefore": {
+						SchemaProps: spec.SchemaProps{
+							Description: "notBefore is the lower boundary for validity",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"notAfter": {
+						SchemaProps: spec.SchemaProps{
+							Description: "notAfter is the upper boundary for validity",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"bundleFile": {
+						SchemaProps: spec.SchemaProps{
+							Description: "bundleFile is the larger bundle a cert comes from",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"subject", "signer", "bundleFile"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1_ControllerConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ControllerConfig describes configuration for MachineConfigController. This is currently only used to drive the MachineConfig objects generated by the TemplateController.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/openshift/api/machineconfiguration/v1.ControllerConfigSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/openshift/api/machineconfiguration/v1.ControllerConfigStatus"),
+						},
+					},
+				},
+				Required: []string{"spec"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machineconfiguration/v1.ControllerConfigSpec", "github.com/openshift/api/machineconfiguration/v1.ControllerConfigStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1_ControllerConfigList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ControllerConfigList is a list of ControllerConfig resources\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machineconfiguration/v1.ControllerConfig"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machineconfiguration/v1.ControllerConfig", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1_ControllerConfigSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ControllerConfigSpec is the spec for ControllerConfig resource.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"clusterDNSIP": {
+						SchemaProps: spec.SchemaProps{
+							Description: "clusterDNSIP is the cluster DNS IP address",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"cloudProviderConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "cloudProviderConfig is the configuration for the given cloud provider",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"platform": {
+						SchemaProps: spec.SchemaProps{
+							Description: "platform is deprecated, use Infra.Status.PlatformStatus.Type instead",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"etcdDiscoveryDomain": {
+						SchemaProps: spec.SchemaProps{
+							Description: "etcdDiscoveryDomain is deprecated, use Infra.Status.EtcdDiscoveryDomain instead",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"kubeAPIServerServingCAData": {
+						SchemaProps: spec.SchemaProps{
+							Description: "kubeAPIServerServingCAData managed Kubelet to API Server Cert... Rotated automatically",
+							Type:        []string{"string"},
+							Format:      "byte",
+						},
+					},
+					"rootCAData": {
+						SchemaProps: spec.SchemaProps{
+							Description: "rootCAData specifies the root CA data",
+							Type:        []string{"string"},
+							Format:      "byte",
+						},
+					},
+					"cloudProviderCAData": {
+						SchemaProps: spec.SchemaProps{
+							Description: "cloudProvider specifies the cloud provider CA data",
+							Type:        []string{"string"},
+							Format:      "byte",
+						},
+					},
+					"additionalTrustBundle": {
+						SchemaProps: spec.SchemaProps{
+							Description: "additionalTrustBundle is a certificate bundle that will be added to the nodes trusted certificate store.",
+							Type:        []string{"string"},
+							Format:      "byte",
+						},
+					},
+					"imageRegistryBundleUserData": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "imageRegistryBundleUserData is Image Registry Data provided by the user",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machineconfiguration/v1.ImageRegistryBundle"),
+									},
+								},
+							},
+						},
+					},
+					"imageRegistryBundleData": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "imageRegistryBundleData is the ImageRegistryData",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machineconfiguration/v1.ImageRegistryBundle"),
+									},
+								},
+							},
+						},
+					},
+					"pullSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "pullSecret is the default pull secret that needs to be installed on all machines.",
+							Ref:         ref("k8s.io/api/core/v1.ObjectReference"),
+						},
+					},
+					"internalRegistryPullSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "internalRegistryPullSecret is the pull secret for the internal registry, used by rpm-ostree to pull images from the internal registry if present",
+							Type:        []string{"string"},
+							Format:      "byte",
+						},
+					},
+					"images": {
+						SchemaProps: spec.SchemaProps{
+							Description: "images is map of images that are used by the controller to render templates under ./templates/",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"baseOSContainerImage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "BaseOSContainerImage is the new-format container image for operating system updates.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"baseOSExtensionsContainerImage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "BaseOSExtensionsContainerImage is the matching extensions container for the new-format container",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"osImageURL": {
+						SchemaProps: spec.SchemaProps{
+							Description: "OSImageURL is the old-format container image that contains the OS update payload.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"releaseImage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "releaseImage is the image used when installing the cluster",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"proxy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "proxy holds the current proxy configuration for the nodes",
+							Ref:         ref("github.com/openshift/api/config/v1.ProxyStatus"),
+						},
+					},
+					"infra": {
+						SchemaProps: spec.SchemaProps{
+							Description: "infra holds the infrastructure details",
+							Ref:         ref("github.com/openshift/api/config/v1.Infrastructure"),
+						},
+					},
+					"dns": {
+						SchemaProps: spec.SchemaProps{
+							Description: "dns holds the cluster dns details",
+							Ref:         ref("github.com/openshift/api/config/v1.DNS"),
+						},
+					},
+					"ipFamilies": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ipFamilies indicates the IP families in use by the cluster network",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"networkType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "networkType holds the type of network the cluster is using XXX: this is temporary and will be dropped as soon as possible in favor of a better support to start network related services the proper way. Nobody is also changing this once the cluster is up and running the first time, so, disallow regeneration if this changes.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"network": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Network contains additional network related information",
+							Ref:         ref("github.com/openshift/api/machineconfiguration/v1.NetworkInfo"),
+						},
+					},
+				},
+				Required: []string{"clusterDNSIP", "cloudProviderConfig", "kubeAPIServerServingCAData", "rootCAData", "cloudProviderCAData", "additionalTrustBundle", "images", "baseOSContainerImage", "releaseImage", "proxy", "infra", "dns", "ipFamilies", "network"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.DNS", "github.com/openshift/api/config/v1.Infrastructure", "github.com/openshift/api/config/v1.ProxyStatus", "github.com/openshift/api/machineconfiguration/v1.ImageRegistryBundle", "github.com/openshift/api/machineconfiguration/v1.NetworkInfo", "k8s.io/api/core/v1.ObjectReference"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1_ControllerConfigStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ControllerConfigStatus is the status for ControllerConfig",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"observedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedGeneration represents the generation observed by the controller.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions represents the latest available observations of current state.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machineconfiguration/v1.ControllerConfigStatusCondition"),
+									},
+								},
+							},
+						},
+					},
+					"controllerCertificates": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "controllerCertificates represents the latest available observations of the automatically rotating certificates in the MCO.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machineconfiguration/v1.ControllerCertificate"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machineconfiguration/v1.ControllerCertificate", "github.com/openshift/api/machineconfiguration/v1.ControllerConfigStatusCondition"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1_ControllerConfigStatusCondition(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ControllerConfigStatusCondition contains condition information for ControllerConfigStatus",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type specifies the state of the operator's reconciliation functionality.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status of the condition, one of True, False, Unknown.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"lastTransitionTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "lastTransitionTime is the time of the last update to the current status object.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"reason": {
+						SchemaProps: spec.SchemaProps{
+							Description: "reason is the reason for the condition's last transition.  Reasons are PascalCase",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"message": {
+						SchemaProps: spec.SchemaProps{
+							Description: "message provides additional information about the current condition. This is only to be consumed by humans.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"type", "status", "lastTransitionTime"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1_ImageRegistryBundle(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ImageRegistryBundle contains information for writing image registry certificates",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"file": {
+						SchemaProps: spec.SchemaProps{
+							Description: "file holds the name of the file where the bundle will be written to disk",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"data": {
+						SchemaProps: spec.SchemaProps{
+							Description: "data holds the contents of the bundle that will be written to the file location",
+							Type:        []string{"string"},
+							Format:      "byte",
+						},
+					},
+				},
+				Required: []string{"file", "data"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1_KubeletConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "KubeletConfig describes a customized Kubelet configuration.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/openshift/api/machineconfiguration/v1.KubeletConfigSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/openshift/api/machineconfiguration/v1.KubeletConfigStatus"),
+						},
+					},
+				},
+				Required: []string{"spec"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machineconfiguration/v1.KubeletConfigSpec", "github.com/openshift/api/machineconfiguration/v1.KubeletConfigStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1_KubeletConfigCondition(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "KubeletConfigCondition defines the state of the KubeletConfig",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type specifies the state of the operator's reconciliation functionality.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status of the condition, one of True, False, Unknown.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"lastTransitionTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "lastTransitionTime is the time of the last update to the current status object.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"reason": {
+						SchemaProps: spec.SchemaProps{
+							Description: "reason is the reason for the condition's last transition.  Reasons are PascalCase",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"message": {
+						SchemaProps: spec.SchemaProps{
+							Description: "message provides additional information about the current condition. This is only to be consumed by humans.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1_KubeletConfigList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "KubeletConfigList is a list of KubeletConfig resources\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machineconfiguration/v1.KubeletConfig"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machineconfiguration/v1.KubeletConfig", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1_KubeletConfigSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "KubeletConfigSpec defines the desired state of KubeletConfig",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"autoSizingReserved": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+					"logLevel": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"machineConfigPoolSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MachineConfigPoolSelector selects which pools the KubeletConfig shoud apply to. A nil selector will result in no pools being selected.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"),
+						},
+					},
+					"kubeletConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "kubeletConfig fields are defined in kubernetes upstream. Please refer to the types defined in the version/commit used by OpenShift of the upstream kubernetes. It's important to note that, since the fields of the kubelet configuration are directly fetched from upstream the validation of those values is handled directly by the kubelet. Please refer to the upstream version of the relevant kubernetes for the valid values of these fields. Invalid values of the kubelet configuration fields may render cluster nodes unusable.",
+							Ref:         ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
+						},
+					},
+					"tlsSecurityProfile": {
+						SchemaProps: spec.SchemaProps{
+							Description: "If unset, the default is based on the apiservers.config.openshift.io/cluster resource. Note that only Old and Intermediate profiles are currently supported, and the maximum available minTLSVersion is VersionTLS12.",
+							Ref:         ref("github.com/openshift/api/config/v1.TLSSecurityProfile"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.TLSSecurityProfile", "k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1_KubeletConfigStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "KubeletConfigStatus defines the observed state of a KubeletConfig",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"observedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedGeneration represents the generation observed by the controller.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"conditions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions represents the latest available observations of current state.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machineconfiguration/v1.KubeletConfigCondition"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machineconfiguration/v1.KubeletConfigCondition"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1_MachineConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MachineConfig defines the configuration for a machine\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/openshift/api/machineconfiguration/v1.MachineConfigSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machineconfiguration/v1.MachineConfigSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1_MachineConfigList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MachineConfigList is a list of MachineConfig resources\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machineconfiguration/v1.MachineConfig"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machineconfiguration/v1.MachineConfig", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1_MachineConfigPool(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MachineConfigPool describes a pool of MachineConfigs.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/openshift/api/machineconfiguration/v1.MachineConfigPoolSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/openshift/api/machineconfiguration/v1.MachineConfigPoolStatus"),
+						},
+					},
+				},
+				Required: []string{"spec"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machineconfiguration/v1.MachineConfigPoolSpec", "github.com/openshift/api/machineconfiguration/v1.MachineConfigPoolStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1_MachineConfigPoolCondition(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MachineConfigPoolCondition contains condition information for an MachineConfigPool.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type of the condition, currently ('Done', 'Updating', 'Failed').",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status of the condition, one of ('True', 'False', 'Unknown').",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"lastTransitionTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "lastTransitionTime is the timestamp corresponding to the last status change of this condition.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"reason": {
+						SchemaProps: spec.SchemaProps{
+							Description: "reason is a brief machine readable explanation for the condition's last transition.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"message": {
+						SchemaProps: spec.SchemaProps{
+							Description: "message is a human readable description of the details of the last transition, complementing reason.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1_MachineConfigPoolList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MachineConfigPoolList is a list of MachineConfigPool resources\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machineconfiguration/v1.MachineConfigPool"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machineconfiguration/v1.MachineConfigPool", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1_MachineConfigPoolSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MachineConfigPoolSpec is the spec for MachineConfigPool resource.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"machineConfigSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "machineConfigSelector specifies a label selector for MachineConfigs. Refer https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/ on how label and selectors work.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"),
+						},
+					},
+					"nodeSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "nodeSelector specifies a label selector for Machines",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"),
+						},
+					},
+					"paused": {
+						SchemaProps: spec.SchemaProps{
+							Description: "paused specifies whether or not changes to this machine config pool should be stopped. This includes generating new desiredMachineConfig and update of machines.",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"maxUnavailable": {
+						SchemaProps: spec.SchemaProps{
+							Description: "maxUnavailable defines either an integer number or percentage of nodes in the pool that can go Unavailable during an update. This includes nodes Unavailable for any reason, including user initiated cordons, failing nodes, etc. The default value is 1.\n\nA value larger than 1 will mean multiple nodes going unavailable during the update, which may affect your workload stress on the remaining nodes. You cannot set this value to 0 to stop updates (it will default back to 1); to stop updates, use the 'paused' property instead. Drain will respect Pod Disruption Budgets (PDBs) such as etcd quorum guards, even if maxUnavailable is greater than one.",
+							Ref:         ref("k8s.io/apimachinery/pkg/util/intstr.IntOrString"),
+						},
+					},
+					"configuration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The targeted MachineConfig object for the machine config pool.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/machineconfiguration/v1.MachineConfigPoolStatusConfiguration"),
+						},
+					},
+					"pinnedImageSets": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "pinnedImageSets specifies a sequence of PinnedImageSetRef objects for the pool. Nodes within this pool will preload and pin images defined in the PinnedImageSet. Before pulling images the MachineConfigDaemon will ensure the total uncompressed size of all the images does not exceed available resources. If the total size of the images exceeds the available resources the controller will report a Degraded status to the MachineConfigPool and not attempt to pull any images. Also to help ensure the kubelet can mitigate storage risk, the pinned_image configuration and subsequent service reload will happen only after all of the images have been pulled for each set. Images from multiple PinnedImageSets are loaded and pinned sequentially as listed. Duplicate and existing images will be skipped.\n\nAny failure to prefetch or pin images will result in a Degraded pool. Resolving these failures is the responsibility of the user. The admin should be proactive in ensuring adequate storage and proper image authentication exists in advance.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machineconfiguration/v1.PinnedImageSetRef"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machineconfiguration/v1.MachineConfigPoolStatusConfiguration", "github.com/openshift/api/machineconfiguration/v1.PinnedImageSetRef", "k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector", "k8s.io/apimachinery/pkg/util/intstr.IntOrString"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1_MachineConfigPoolStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MachineConfigPoolStatus is the status for MachineConfigPool resource.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"observedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedGeneration represents the generation observed by the controller.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"configuration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "configuration represents the current MachineConfig object for the machine config pool.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/machineconfiguration/v1.MachineConfigPoolStatusConfiguration"),
+						},
+					},
+					"machineCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "machineCount represents the total number of machines in the machine config pool.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"updatedMachineCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "updatedMachineCount represents the total number of machines targeted by the pool that have the CurrentMachineConfig as their config.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"readyMachineCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "readyMachineCount represents the total number of ready machines targeted by the pool.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"unavailableMachineCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "unavailableMachineCount represents the total number of unavailable (non-ready) machines targeted by the pool. A node is marked unavailable if it is in updating state or NodeReady condition is false.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"degradedMachineCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "degradedMachineCount represents the total number of machines marked degraded (or unreconcilable). A node is marked degraded if applying a configuration failed..",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions represents the latest available observations of current state.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machineconfiguration/v1.MachineConfigPoolCondition"),
+									},
+								},
+							},
+						},
+					},
+					"certExpirys": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "certExpirys keeps track of important certificate expiration data",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machineconfiguration/v1.CertExpiry"),
+									},
+								},
+							},
+						},
+					},
+					"poolSynchronizersStatus": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"poolSynchronizerType",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "poolSynchronizersStatus is the status of the machines managed by the pool synchronizers.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machineconfiguration/v1.PoolSynchronizerStatus"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machineconfiguration/v1.CertExpiry", "github.com/openshift/api/machineconfiguration/v1.MachineConfigPoolCondition", "github.com/openshift/api/machineconfiguration/v1.MachineConfigPoolStatusConfiguration", "github.com/openshift/api/machineconfiguration/v1.PoolSynchronizerStatus"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1_MachineConfigPoolStatusConfiguration(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MachineConfigPoolStatusConfiguration stores the current configuration for the pool, and optionally also stores the list of MachineConfig objects used to generate the configuration.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind of the referent. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"namespace": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"uid": {
+						SchemaProps: spec.SchemaProps{
+							Description: "UID of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "API version of the referent.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"resourceVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specific resourceVersion to which this reference is made, if any. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"fieldPath": {
+						SchemaProps: spec.SchemaProps{
+							Description: "If referring to a piece of an object instead of an entire object, this string should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2]. For example, if the object reference is to a container within a pod, this would take on a value like: \"spec.containers{name}\" (where \"name\" refers to the name of the container that triggered the event) or if no container name is specified \"spec.containers[2]\" (container with index 2 in this pod). This syntax is chosen only to have some well-defined way of referencing a part of an object.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"source": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "source is the list of MachineConfig objects that were used to generate the single MachineConfig object specified in `content`.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.ObjectReference"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.ObjectReference"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1_MachineConfigSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MachineConfigSpec is the spec for MachineConfig",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"osImageURL": {
+						SchemaProps: spec.SchemaProps{
+							Description: "OSImageURL specifies the remote location that will be used to fetch the OS.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"baseOSExtensionsContainerImage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "BaseOSExtensionsContainerImage specifies the remote location that will be used to fetch the extensions container matching a new-format OS image",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"config": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Config is a Ignition Config object.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
+						},
+					},
+					"kernelArguments": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "kernelArguments contains a list of kernel arguments to be added",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"extensions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "extensions contains a list of additional features that can be enabled on host",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"fips": {
+						SchemaProps: spec.SchemaProps{
+							Description: "fips controls FIPS mode",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"kernelType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "kernelType contains which kernel we want to be running like default (traditional), realtime, 64k-pages (aarch64 only).",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1_NetworkInfo(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Network contains network related configuration",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"mtuMigration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MTUMigration contains the MTU migration configuration.",
+							Ref:         ref("github.com/openshift/api/config/v1.MTUMigration"),
+						},
+					},
+				},
+				Required: []string{"mtuMigration"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.MTUMigration"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1_PinnedImageSetRef(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is a reference to the name of a PinnedImageSet.  Must adhere to RFC-1123 (https://tools.ietf.org/html/rfc1123). Made up of one of more period-separated (.) segments, where each segment consists of alphanumeric characters and hyphens (-), must begin and end with an alphanumeric character, and is at most 63 characters in length. The total length of the name must not exceed 253 characters.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1_PoolSynchronizerStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"poolSynchronizerType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "poolSynchronizerType describes the type of the pool synchronizer.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"machineCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "machineCount is the number of machines that are managed by the node synchronizer.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"updatedMachineCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "updatedMachineCount is the number of machines that have been updated by the node synchronizer.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"readyMachineCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "readyMachineCount is the number of machines managed by the node synchronizer that are in a ready state.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"availableMachineCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "availableMachineCount is the number of machines managed by the node synchronizer which are available.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"unavailableMachineCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "unavailableMachineCount is the number of machines managed by the node synchronizer but are unavailable.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"observedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedGeneration is the last generation change that has been applied.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+				},
+				Required: []string{"poolSynchronizerType", "machineCount", "updatedMachineCount", "readyMachineCount", "availableMachineCount", "unavailableMachineCount"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_machineconfiguration_v1alpha1_BuildInputs(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -41619,6 +44930,108 @@ func schema_openshift_api_networkoperator_v1_EgressRouter(ref common.ReferenceCa
 	}
 }
 
+func schema_openshift_api_networkoperator_v1_EgressRouterAddress(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "EgressRouterAddress contains a pair of IP CIDR and gateway to be configured on the router's interface",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"ip": {
+						SchemaProps: spec.SchemaProps{
+							Description: "IP is the address to configure on the router's interface. Can be IPv4 or IPv6.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"gateway": {
+						SchemaProps: spec.SchemaProps{
+							Description: "IP address of the next-hop gateway, if it cannot be automatically determined. Can be IPv4 or IPv6.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"ip"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_networkoperator_v1_EgressRouterInterface(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "EgressRouterInterface contains the configuration of interface to create/use.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"macvlan": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Arguments specific to the interfaceType macvlan",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/networkoperator/v1.MacvlanConfig"),
+						},
+					},
+				},
+				Required: []string{"macvlan"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/networkoperator/v1.MacvlanConfig"},
+	}
+}
+
+func schema_openshift_api_networkoperator_v1_EgressRouterList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "EgressRouterList is the list of egress router pods requested.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/networkoperator/v1.EgressRouter"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/networkoperator/v1.EgressRouter", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
 func schema_openshift_api_networkoperator_v1_EgressRouterSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -41667,6 +45080,198 @@ func schema_openshift_api_networkoperator_v1_EgressRouterSpec(ref common.Referen
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/networkoperator/v1.EgressRouterAddress", "github.com/openshift/api/networkoperator/v1.EgressRouterInterface", "github.com/openshift/api/networkoperator/v1.RedirectConfig"},
+	}
+}
+
+func schema_openshift_api_networkoperator_v1_EgressRouterStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "EgressRouterStatus contains the observed status of EgressRouter. Read-only.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"conditions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Observed status of the egress router",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/networkoperator/v1.EgressRouterStatusCondition"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/networkoperator/v1.EgressRouterStatusCondition"},
+	}
+}
+
+func schema_openshift_api_networkoperator_v1_EgressRouterStatusCondition(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "EgressRouterStatusCondition represents the state of the egress router's managed and monitored components.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Type specifies the aspect reported by this condition; one of Available, Progressing, Degraded",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Status of the condition, one of True, False, Unknown.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"lastTransitionTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LastTransitionTime is the time of the last update to the current status property.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"reason": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Reason is the CamelCase reason for the condition's current status.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"message": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Message provides additional information about the current condition. This is only to be consumed by humans.  It may contain Line Feed characters (U+000A), which should be rendered as new lines.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"type", "status", "lastTransitionTime"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
+func schema_openshift_api_networkoperator_v1_L4RedirectRule(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "L4RedirectRule defines a DNAT redirection from a given port to a destination IP and port.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"destinationIP": {
+						SchemaProps: spec.SchemaProps{
+							Description: "IP specifies the remote destination's IP address. Can be IPv4 or IPv6.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"port": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Port is the port number to which clients should send traffic to be redirected.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"protocol": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Protocol can be TCP, SCTP or UDP.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"targetPort": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TargetPort allows specifying the port number on the remote destination to which the traffic gets redirected to. If unspecified, the value from \"Port\" is used.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+				Required: []string{"destinationIP", "port", "protocol"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_networkoperator_v1_MacvlanConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MacvlanConfig consists of arguments specific to the macvlan EgressRouterInterfaceType",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Mode depicts the mode that is used for the macvlan interface; one of Bridge|Private|VEPA|Passthru. The default mode is \"Bridge\".",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"master": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name of the master interface. Need not be specified if it can be inferred from the IP address.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"mode"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_networkoperator_v1_RedirectConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "RedirectConfig represents the configuration parameters specific to redirect mode.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"redirectRules": {
+						SchemaProps: spec.SchemaProps{
+							Description: "List of L4RedirectRules that define the DNAT redirection from the pod to the destination in redirect mode.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/networkoperator/v1.L4RedirectRule"),
+									},
+								},
+							},
+						},
+					},
+					"fallbackIP": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FallbackIP specifies the remote destination's IP address. Can be IPv4 or IPv6. If no redirect rules are specified, all traffic from the router are redirected to this IP. If redirect rules are specified, then any connections on any other port (undefined in the rules) on the router will be redirected to this IP. If redirect rules are specified and no fallback IP is provided, connections on other ports will simply be rejected.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/networkoperator/v1.L4RedirectRule"},
 	}
 }
 

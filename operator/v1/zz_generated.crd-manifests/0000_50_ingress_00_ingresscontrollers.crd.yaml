@@ -574,6 +574,24 @@ spec:
                                 - PROXY
                                 type: string
                             type: object
+                          openstack:
+                            description: "openstack provides configuration settings
+                              that are specific to OpenStack load balancers. \n If
+                              empty, defaults will be applied. See specific openstack
+                              fields for details about their defaults."
+                            properties:
+                              loadBalancerIP:
+                                description: loadBalancerIP specifies the floating
+                                  IP address that the load balancer will use. When
+                                  not specified, an IP address will be assigned randomly
+                                  by the OpenStack cloud provider. This value must
+                                  be a valid IPv4 or IPv6 address.
+                                type: string
+                                x-kubernetes-validations:
+                                - message: loadBalancerIP must be a valid IPv4 or
+                                    IPv6 address
+                                  rule: isIP(self)
+                            type: object
                           type:
                             description: type is the underlying infrastructure provider
                               for the load balancer. Allowed values are "AWS", "Azure",
@@ -592,6 +610,10 @@ spec:
                         required:
                         - type
                         type: object
+                        x-kubernetes-validations:
+                        - message: openstack is not permitted when type is not OpenStack
+                          rule: 'has(self.type) && self.type == ''OpenStack'' ? true
+                            : !has(self.openstack)'
                       scope:
                         description: scope indicates the scope at which the load balancer
                           is exposed. Possible values are "External" and "Internal".
@@ -2440,6 +2462,24 @@ spec:
                                 - PROXY
                                 type: string
                             type: object
+                          openstack:
+                            description: "openstack provides configuration settings
+                              that are specific to OpenStack load balancers. \n If
+                              empty, defaults will be applied. See specific openstack
+                              fields for details about their defaults."
+                            properties:
+                              loadBalancerIP:
+                                description: loadBalancerIP specifies the floating
+                                  IP address that the load balancer will use. When
+                                  not specified, an IP address will be assigned randomly
+                                  by the OpenStack cloud provider. This value must
+                                  be a valid IPv4 or IPv6 address.
+                                type: string
+                                x-kubernetes-validations:
+                                - message: loadBalancerIP must be a valid IPv4 or
+                                    IPv6 address
+                                  rule: isIP(self)
+                            type: object
                           type:
                             description: type is the underlying infrastructure provider
                               for the load balancer. Allowed values are "AWS", "Azure",
@@ -2458,6 +2498,10 @@ spec:
                         required:
                         - type
                         type: object
+                        x-kubernetes-validations:
+                        - message: openstack is not permitted when type is not OpenStack
+                          rule: 'has(self.type) && self.type == ''OpenStack'' ? true
+                            : !has(self.openstack)'
                       scope:
                         description: scope indicates the scope at which the load balancer
                           is exposed. Possible values are "External" and "Internal".

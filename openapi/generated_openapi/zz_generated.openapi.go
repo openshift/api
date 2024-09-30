@@ -1026,6 +1026,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.OpenShiftControllerManagerSpec":                                schema_openshift_api_operator_v1_OpenShiftControllerManagerSpec(ref),
 		"github.com/openshift/api/operator/v1.OpenShiftControllerManagerStatus":                              schema_openshift_api_operator_v1_OpenShiftControllerManagerStatus(ref),
 		"github.com/openshift/api/operator/v1.OpenShiftSDNConfig":                                            schema_openshift_api_operator_v1_OpenShiftSDNConfig(ref),
+		"github.com/openshift/api/operator/v1.OpenStackLoadBalancerParameters":                               schema_openshift_api_operator_v1_OpenStackLoadBalancerParameters(ref),
 		"github.com/openshift/api/operator/v1.OperatorCondition":                                             schema_openshift_api_operator_v1_OperatorCondition(ref),
 		"github.com/openshift/api/operator/v1.OperatorSpec":                                                  schema_openshift_api_operator_v1_OperatorSpec(ref),
 		"github.com/openshift/api/operator/v1.OperatorStatus":                                                schema_openshift_api_operator_v1_OperatorStatus(ref),
@@ -52929,6 +52930,26 @@ func schema_openshift_api_operator_v1_OpenShiftSDNConfig(ref common.ReferenceCal
 	}
 }
 
+func schema_openshift_api_operator_v1_OpenStackLoadBalancerParameters(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "OpenStackLoadBalancerParameters provides configuration settings that are specific to OpenStack load balancers.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"loadBalancerIP": {
+						SchemaProps: spec.SchemaProps{
+							Description: "loadBalancerIP specifies the floating IP address that the load balancer will use. When not specified, an IP address will be assigned randomly by the OpenStack cloud provider. This value must be a valid IPv4 or IPv6 address.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_operator_v1_OperatorCondition(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -53394,6 +53415,12 @@ func schema_openshift_api_operator_v1_ProviderLoadBalancerParameters(ref common.
 							Ref:         ref("github.com/openshift/api/operator/v1.IBMLoadBalancerParameters"),
 						},
 					},
+					"openstack": {
+						SchemaProps: spec.SchemaProps{
+							Description: "openstack provides configuration settings that are specific to OpenStack load balancers.\n\nIf empty, defaults will be applied. See specific openstack fields for details about their defaults.",
+							Ref:         ref("github.com/openshift/api/operator/v1.OpenStackLoadBalancerParameters"),
+						},
+					},
 				},
 				Required: []string{"type"},
 			},
@@ -53403,9 +53430,10 @@ func schema_openshift_api_operator_v1_ProviderLoadBalancerParameters(ref common.
 						map[string]interface{}{
 							"discriminator": "type",
 							"fields-to-discriminateBy": map[string]interface{}{
-								"aws": "AWS",
-								"gcp": "GCP",
-								"ibm": "IBM",
+								"aws":       "AWS",
+								"gcp":       "GCP",
+								"ibm":       "IBM",
+								"openstack": "OpenStack",
 							},
 						},
 					},
@@ -53413,7 +53441,7 @@ func schema_openshift_api_operator_v1_ProviderLoadBalancerParameters(ref common.
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.AWSLoadBalancerParameters", "github.com/openshift/api/operator/v1.GCPLoadBalancerParameters", "github.com/openshift/api/operator/v1.IBMLoadBalancerParameters"},
+			"github.com/openshift/api/operator/v1.AWSLoadBalancerParameters", "github.com/openshift/api/operator/v1.GCPLoadBalancerParameters", "github.com/openshift/api/operator/v1.IBMLoadBalancerParameters", "github.com/openshift/api/operator/v1.OpenStackLoadBalancerParameters"},
 	}
 }
 

@@ -30893,6 +30893,16 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1.OpenStackLoadBalancerParameters": {
+      "description": "OpenStackLoadBalancerParameters provides configuration settings that are specific to OpenStack load balancers.",
+      "type": "object",
+      "properties": {
+        "loadBalancerIP": {
+          "description": "loadBalancerIP specifies the floating IP address that the load balancer will use. When not specified, an IP address will be assigned randomly by the OpenStack cloud provider. This value must be a valid IPv4 or IPv6 address.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1.OperatorCondition": {
       "description": "OperatorCondition is just the standard condition fields.",
       "type": "object",
@@ -31169,6 +31179,10 @@
           "description": "ibm provides configuration settings that are specific to IBM Cloud load balancers.\n\nIf empty, defaults will be applied. See specific ibm fields for details about their defaults.",
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.IBMLoadBalancerParameters"
         },
+        "openstack": {
+          "description": "openstack provides configuration settings that are specific to OpenStack load balancers.\n\nIf empty, defaults will be applied. See specific openstack fields for details about their defaults.",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.OpenStackLoadBalancerParameters"
+        },
         "type": {
           "description": "type is the underlying infrastructure provider for the load balancer. Allowed values are \"AWS\", \"Azure\", \"BareMetal\", \"GCP\", \"IBM\", \"Nutanix\", \"OpenStack\", and \"VSphere\".",
           "type": "string",
@@ -31181,7 +31195,8 @@
           "fields-to-discriminateBy": {
             "aws": "AWS",
             "gcp": "GCP",
-            "ibm": "IBM"
+            "ibm": "IBM",
+            "openstack": "OpenStack"
           }
         }
       ]

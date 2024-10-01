@@ -23,9 +23,6 @@
                         "name": "BootcNodeManagement"
                     },
                     {
-                        "name": "CSIDriverSharedResource"
-                    },
-                    {
                         "name": "ClusterAPIInstall"
                     },
                     {

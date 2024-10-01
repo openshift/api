@@ -193,7 +193,8 @@ type APIServerEncryption struct {
 	Type EncryptionType `json:"type,omitempty"`
 }
 
-// +kubebuilder:validation:Enum="";identity;aescbc;aesgcm
+// +openshift:validation:FeatureSetAwareEnum:featureSet=Default,enum="";identity;aescbc;aesgcm
+// +openshift:validation:FeatureSetAwareEnum:featureSet=TechPreviewNoUpgrade,enum="";identity;aescbc;aesgcm;kms
 type EncryptionType string
 
 const (
@@ -208,6 +209,11 @@ const (
 	// aesgcm refers to a type where AES-GCM with random nonce and a 32-byte key
 	// is used to perform encryption at the datastore layer.
 	EncryptionTypeAESGCM EncryptionType = "aesgcm"
+
+	// kms refers to a type of encryption where the encryption keys are managed
+	// outside the control plane in a Key Management Service instance,
+	// encryption is still performed at the datastore layer.
+	EncrytptionTypeKMS EncryptionType = "kms"
 )
 
 type APIServerStatus struct {

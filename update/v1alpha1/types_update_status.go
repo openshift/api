@@ -93,6 +93,7 @@ type UpdateInformer struct {
 type ControlPlaneUpdateAssessment string
 
 const (
+	ControlPlaneUpdateAssessmentUnknown     ControlPlaneUpdateAssessment = "Unknown"
 	ControlPlaneUpdateAssessmentProgressing ControlPlaneUpdateAssessment = "Progressing"
 	ControlPlaneUpdateAssessmentCompleted   ControlPlaneUpdateAssessment = "Completed"
 	ControlPlaneUpdateAssessmentDegraded    ControlPlaneUpdateAssessment = "Degraded"
@@ -107,7 +108,9 @@ const (
 type ClusterVersionStatusInsightUpdatingReason string
 
 const (
-	ClusterVersionStatusInsightUpdatingReasonNoProgressing ClusterVersionStatusInsightUpdatingReason = "MissingProgressingCondition"
+	ClusterVersionStatusInsightUpdatingReasonCannotDetermineUpdating ClusterVersionStatusInsightUpdatingReason = "CannotDetermineUpdating"
+	ClusterVersionStatusInsightUpdatingReasonProgressing             ClusterVersionStatusInsightUpdatingReason = "ClusterVersionProgressing"
+	ClusterVersionStatusInsightUpdatingReasonNotProgressing          ClusterVersionStatusInsightUpdatingReason = "ClusterVersionNotProgressing"
 )
 
 type VersionMetadataType string
@@ -176,7 +179,7 @@ type ClusterVersionStatusInsight struct {
 	Versions ControlPlaneUpdateVersions `json:"versions"`
 
 	// Completion is a percentage of the update completion (0-100)
-	Completion int32 `json:"completion"`
+	Completion uint8 `json:"completion"`
 
 	// StartedAt is the time when the update started
 	StartedAt metav1.Time `json:"startedAt"`

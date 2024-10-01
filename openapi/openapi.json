@@ -299,12 +299,10 @@
       "properties": {
         "lastTransitionTime": {
           "description": "The last time the condition transitioned from one status to another.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "lastUpdateTime": {
           "description": "The last time this condition was updated.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "message": {
@@ -981,7 +979,6 @@
       "properties": {
         "content": {
           "description": "Content is the actual content of the request for create and update",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "isNonResourceURL": {
@@ -1232,7 +1229,6 @@
         },
         "content": {
           "description": "Content is the actual content of the request for create and update",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "isNonResourceURL": {
@@ -1309,7 +1305,6 @@
         },
         "content": {
           "description": "Content is the actual content of the request for create and update",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "groups": {
@@ -1482,7 +1477,6 @@
         },
         "attributeRestrictions": {
           "description": "AttributeRestrictions will vary depending on what the Authorizer/AuthorizationAttributeBuilder pair supports. If the Authorizer does not recognize how to handle the AttributeRestrictions, the Authorizer should report an error.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "nonResourceURLs": {
@@ -1539,7 +1533,6 @@
         },
         "content": {
           "description": "Content is the actual content of the request for create and update",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "isNonResourceURL": {
@@ -1978,7 +1971,6 @@
         },
         "content": {
           "description": "Content is the actual content of the request for create and update",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "groups": {
@@ -2317,12 +2309,10 @@
       "properties": {
         "lastTransitionTime": {
           "description": "The last time the condition transitioned from one status to another.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "lastUpdateTime": {
           "description": "The last time this condition was updated.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "message": {
@@ -3594,7 +3584,6 @@
         },
         "lastTriggerTime": {
           "description": "lastTriggerTime is the last time this particular ImageStreamTag triggered a Build to start. This field is only updated when this trigger specifically started a Build.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "lastTriggeredImageID": {
@@ -3890,7 +3879,6 @@
         },
         "startTime": {
           "description": "startTime is a timestamp representing the server time when this Stage started. It is represented in RFC3339 form and is in UTC.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "steps": {
@@ -3918,7 +3906,6 @@
         },
         "startTime": {
           "description": "startTime is a timestamp representing the server time when this Step started. it is represented in RFC3339 form and is in UTC.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         }
       }
@@ -4304,7 +4291,6 @@
       "properties": {
         "configuration": {
           "description": "Configuration is an embedded configuration object to be used as the plugin's configuration. If present, it will be used instead of the path to the configuration file.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "location": {
@@ -4440,7 +4426,6 @@
         },
         "policyConfiguration": {
           "description": "PolicyConfiguration is an embedded policy configuration object to be used as the audit policy configuration. If present, it will be used instead of the path to the policy file.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "policyFile": {
@@ -4464,7 +4449,8 @@
       "description": "AuditCustomRule describes a custom rule for an audit profile that takes precedence over the top-level profile.",
       "type": "object",
       "required": [
-        "group"
+        "group",
+        "profile"
       ],
       "properties": {
         "group": {
@@ -5190,7 +5176,6 @@
         },
         "extension": {
           "description": "extension contains any additional status information specific to the operator which owns this status object.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "relatedObjects": {
@@ -5222,7 +5207,6 @@
       "properties": {
         "lastTransitionTime": {
           "description": "lastTransitionTime is the time of the last update to the current status property.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "message": {
@@ -7859,7 +7843,6 @@
         },
         "leaseDuration": {
           "description": "leaseDuration is the duration that non-leader candidates will wait after observing a leadership renewal until attempting to acquire leadership of a led but unrenewed leader slot. This is effectively the maximum duration that a leader can be stopped before it is replaced by another candidate. This is only applicable if leader election is enabled.",
-          "default": 0,
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
         },
         "name": {
@@ -7872,12 +7855,10 @@
         },
         "renewDeadline": {
           "description": "renewDeadline is the interval between attempts by the acting master to renew a leadership slot before it stops leading. This must be less than or equal to the lease duration. This is only applicable if leader election is enabled.",
-          "default": 0,
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
         },
         "retryPeriod": {
           "description": "retryPeriod is the duration the clients should wait between attempting acquisition and renewal of a leadership. This is only applicable if leader election is enabled.",
-          "default": 0,
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
         }
       }
@@ -10511,7 +10492,6 @@
         },
         "startedTime": {
           "description": "startedTime is the time at which the update was started.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "state": {
@@ -11454,6 +11434,9 @@
     "com.github.openshift.api.config.v1alpha1.RetentionNumberConfig": {
       "description": "RetentionNumberConfig specifies the configuration of the retention policy on the number of backups",
       "type": "object",
+      "required": [
+        "maxNumberOfBackups"
+      ],
       "properties": {
         "maxNumberOfBackups": {
           "description": "MaxNumberOfBackups defines the maximum number of backups to retain. If the existing number of backups saved is equal to MaxNumberOfBackups then the oldest backup will be removed before a new backup is initiated.",
@@ -11500,6 +11483,9 @@
     "com.github.openshift.api.config.v1alpha1.RetentionSizeConfig": {
       "description": "RetentionSizeConfig specifies the configuration of the retention policy on the total size of backups",
       "type": "object",
+      "required": [
+        "maxSizeOfBackupsGb"
+      ],
       "properties": {
         "maxSizeOfBackupsGb": {
           "description": "MaxSizeOfBackupsGb defines the total size in GB of backups to retain. If the current total size backups exceeds MaxSizeOfBackupsGb then the oldest backup will be removed before a new backup is initiated.",
@@ -13283,7 +13269,6 @@
         },
         "dockerImageMetadata": {
           "description": "DockerImageMetadata contains metadata about this image",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension",
           "x-kubernetes-patch-strategy": "replace"
         },
@@ -14185,12 +14170,10 @@
       "properties": {
         "lastProbeTime": {
           "description": "Last time the condition was checked.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "lastTransitionTime": {
           "description": "Last time the condition transit from one status to another.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "message": {
@@ -14275,7 +14258,6 @@
       "properties": {
         "created": {
           "description": "Created holds the time the TagEvent was created",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "dockerImageReference": {
@@ -14313,7 +14295,6 @@
         },
         "lastTransitionTime": {
           "description": "LastTransitionTIme is the time the condition transitioned from one status to another.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "message": {
@@ -14519,7 +14500,6 @@
         },
         "finishTime": {
           "description": "finishTime is the time when Insights data gathering finished.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "gatherers": {
@@ -14553,7 +14533,6 @@
         },
         "startTime": {
           "description": "startTime is the time when Insights data gathering started.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         }
       }
@@ -14602,7 +14581,6 @@
         },
         "lastGatherDuration": {
           "description": "lastGatherDuration represents the time spent gathering.",
-          "default": 0,
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
         },
         "name": {
@@ -14651,7 +14629,6 @@
       "properties": {
         "downloadedAt": {
           "description": "downloadedAt is the time when the last Insights report was downloaded. An empty value means that there has not been any Insights report downloaded yet and it usually appears in disconnected clusters (or clusters when the Insights data gathering is disabled).",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "healthChecks": {
@@ -15229,7 +15206,6 @@
       "properties": {
         "configuration": {
           "description": "Configuration is an embedded configuration object to be used as the plugin's configuration. If present, it will be used instead of the path to the configuration file.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "location": {
@@ -15318,7 +15294,6 @@
         },
         "policyConfiguration": {
           "description": "PolicyConfiguration is an embedded policy configuration object to be used as the audit policy configuration. If present, it will be used instead of the path to the policy file.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "policyFile": {
@@ -15902,7 +15877,6 @@
         },
         "clientSecret": {
           "description": "ClientSecret is the oauth client secret",
-          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.legacyconfig.v1.StringSource"
         },
         "hostname": {
@@ -15958,7 +15932,6 @@
         },
         "clientSecret": {
           "description": "ClientSecret is the oauth client secret",
-          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.legacyconfig.v1.StringSource"
         },
         "kind": {
@@ -15996,7 +15969,6 @@
         },
         "clientSecret": {
           "description": "ClientSecret is the oauth client secret",
-          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.legacyconfig.v1.StringSource"
         },
         "hostedDomain": {
@@ -16178,7 +16150,6 @@
         },
         "provider": {
           "description": "Provider contains the information about how to set up a specific identity provider",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
       }
@@ -16563,7 +16534,6 @@
         },
         "bindPassword": {
           "description": "BindPassword is an optional password to bind with during the search phase.",
-          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.legacyconfig.v1.StringSource"
         },
         "ca": {
@@ -16664,7 +16634,6 @@
         },
         "bindPassword": {
           "description": "BindPassword is an optional password to bind with during the search phase.",
-          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.legacyconfig.v1.StringSource"
         },
         "ca": {
@@ -17444,7 +17413,6 @@
         },
         "clientSecret": {
           "description": "ClientSecret is the oauth client secret",
-          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.legacyconfig.v1.StringSource"
         },
         "extraAuthorizeParameters": {
@@ -19090,7 +19058,6 @@
         },
         "memorySize": {
           "description": "memorySize is the memory size (in Quantity format) of the VM The minimum memorySize is 2Gi bytes",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         },
         "metadata": {
@@ -19113,7 +19080,6 @@
         },
         "systemDiskSize": {
           "description": "systemDiskSize is size (in Quantity format) of the system disk of the VM The minimum systemDiskSize is 20Gi bytes",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         },
         "userDataSecret": {
@@ -19234,7 +19200,6 @@
         },
         "diskSize": {
           "description": "diskSize is size (in Quantity format) of the disk attached to the VM. See https://pkg.go.dev/k8s.io/apimachinery/pkg/api/resource#Format for the Quantity format and example documentation. The minimum diskSize is 1GB.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         },
         "storageConfig": {
@@ -19382,7 +19347,6 @@
         },
         "processors": {
           "description": "processors is the number of virtual processors in a virtual machine. when the processorType is selected as Dedicated the processors value cannot be fractional. maximum value for the Processors depends on the selected SystemType. when SystemType is set to e880 or e980 maximum Processors value is 143. when SystemType is set to s922 maximum Processors value is 15. minimum value for Processors depends on the selected ProcessorType. when ProcessorType is set as Shared or Capped, The minimum processors is 0.5. when ProcessorType is set as Dedicated, The minimum processors is 1. When omitted, this means that the user has no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default is set based on the selected ProcessorType. when ProcessorType selected as Dedicated, the default is set to 1. when ProcessorType selected as Shared or Capped, the default is set to 0.5.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.util.intstr.IntOrString"
         },
         "serviceInstance": {
@@ -20734,12 +20698,12 @@
       "type": "object",
       "required": [
         "type",
-        "status"
+        "status",
+        "lastTransitionTime"
       ],
       "properties": {
         "lastTransitionTime": {
           "description": "Last time the condition transitioned from one status to another. This should be when the underlying condition changed. If that is not known, then using the time when the API field changed is acceptable.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "message": {
@@ -21686,7 +21650,8 @@
       "properties": {
         "authoritativeAPI": {
           "description": "authoritativeAPI is the API that is authoritative for this resource. Valid values are MachineAPI and ClusterAPI. When set to MachineAPI, writes to the spec of the machine.openshift.io copy of this resource will be reflected into the cluster.x-k8s.io copy. When set to ClusterAPI, writes to the spec of the cluster.x-k8s.io copy of this resource will be reflected into the machine.openshift.io copy. Updates to the status will be reflected in both copies of the resource, based on the controller implementing the functionality of the API. Currently the authoritative API determines which controller will manage the resource, this will change in a future release. To ensure the change has been accepted, please verify that the `status.authoritativeAPI` field has been updated to the desired value and that the `Synchronized` condition is present and set to `True`.",
-          "type": "string"
+          "type": "string",
+          "default": "MachineAPI"
         },
         "deletePolicy": {
           "description": "DeletePolicy defines the policy used to identify nodes to delete when downscaling. Defaults to \"Random\".  Valid values are \"Random, \"Newest\", \"Oldest\"",
@@ -21783,7 +21748,8 @@
       "properties": {
         "authoritativeAPI": {
           "description": "authoritativeAPI is the API that is authoritative for this resource. Valid values are MachineAPI and ClusterAPI. When set to MachineAPI, writes to the spec of the machine.openshift.io copy of this resource will be reflected into the cluster.x-k8s.io copy. When set to ClusterAPI, writes to the spec of the cluster.x-k8s.io copy of this resource will be reflected into the machine.openshift.io copy. Updates to the status will be reflected in both copies of the resource, based on the controller implementing the functionality of the API. Currently the authoritative API determines which controller will manage the resource, this will change in a future release. To ensure the change has been accepted, please verify that the `status.authoritativeAPI` field has been updated to the desired value and that the `Synchronized` condition is present and set to `True`.",
-          "type": "string"
+          "type": "string",
+          "default": "MachineAPI"
         },
         "lifecycleHooks": {
           "description": "LifecycleHooks allow users to pause operations on the machine at certain predefined points within the machine lifecycle.",
@@ -22242,7 +22208,6 @@
         },
         "timeout": {
           "description": "Expects an unsigned duration string of decimal numbers each with optional fraction and a unit suffix, eg \"300ms\", \"1.5h\" or \"2h45m\". Valid time units are \"ns\", \"us\" (or \"µs\"), \"ms\", \"s\", \"m\", \"h\".",
-          "default": 0,
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
         },
         "type": {
@@ -23507,7 +23472,6 @@
         },
         "expr": {
           "description": "expr is the PromQL expression to evaluate. Every evaluation cycle this is evaluated at the current time, and all resultant time series become pending or firing alerts.  This is most often a string representing a PromQL expression, e.g.: mapi_current_pending_csr > mapi_max_pending_csr In rare cases this could be a simple integer, e.g. a simple \"1\" if the intent is to create an alert that is always firing.  This is sometimes used to create an always-firing \"Watchdog\" alert in order to ensure the alerting pipeline is functional.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.util.intstr.IntOrString"
         },
         "for": {
@@ -25443,11 +25407,9 @@
           "default": 0
         },
         "minResyncPeriod": {
-          "default": 0,
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
         },
         "syncPeriod": {
-          "default": 0,
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
         }
       }
@@ -25779,6 +25741,9 @@
     "com.github.openshift.api.operator.v1.Authentication": {
       "description": "Authentication provides information to configure an operator to manage authentication.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
+      "required": [
+        "spec"
+      ],
       "properties": {
         "apiVersion": {
           "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
@@ -25850,7 +25815,6 @@
         },
         "observedConfig": {
           "description": "observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because it is an input to the level for the operator",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "operatorLogLevel": {
@@ -25859,7 +25823,6 @@
         },
         "unsupportedConfigOverrides": {
           "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
       }
@@ -26085,7 +26048,6 @@
         },
         "observedConfig": {
           "description": "observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because it is an input to the level for the operator",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "operatorLogLevel": {
@@ -26094,7 +26056,6 @@
         },
         "unsupportedConfigOverrides": {
           "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
       }
@@ -26306,7 +26267,6 @@
         },
         "observedConfig": {
           "description": "observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because it is an input to the level for the operator",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "operatorLogLevel": {
@@ -26315,7 +26275,6 @@
         },
         "unsupportedConfigOverrides": {
           "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
       }
@@ -26460,7 +26419,6 @@
         },
         "observedConfig": {
           "description": "observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because it is an input to the level for the operator",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "operatorLogLevel": {
@@ -26473,7 +26431,6 @@
         },
         "unsupportedConfigOverrides": {
           "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
       }
@@ -26632,7 +26589,6 @@
         },
         "observedConfig": {
           "description": "observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because it is an input to the level for the operator",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "operatorLogLevel": {
@@ -26641,7 +26597,6 @@
         },
         "unsupportedConfigOverrides": {
           "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
       }
@@ -26704,6 +26659,9 @@
     "com.github.openshift.api.operator.v1.Console": {
       "description": "Console provides a means to configure an operator to manage the console.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
+      "required": [
+        "spec"
+      ],
       "properties": {
         "apiVersion": {
           "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
@@ -26883,7 +26841,6 @@
         },
         "observedConfig": {
           "description": "observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because it is an input to the level for the operator",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "operatorLogLevel": {
@@ -26910,7 +26867,6 @@
         },
         "unsupportedConfigOverrides": {
           "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
       }
@@ -27488,7 +27444,6 @@
         },
         "observedConfig": {
           "description": "observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because it is an input to the level for the operator",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "operatorLogLevel": {
@@ -27502,7 +27457,6 @@
         },
         "unsupportedConfigOverrides": {
           "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
       }
@@ -27746,7 +27700,6 @@
         },
         "lastGatherTime": {
           "description": "lastGatherTime is the last time when Insights data gathering finished. An empty value means that no data has been gathered yet.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         }
       }
@@ -27771,7 +27724,6 @@
         },
         "lastGatherDuration": {
           "description": "lastGatherDuration represents the time spent gathering.",
-          "default": 0,
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
         },
         "name": {
@@ -28081,6 +28033,7 @@
       "description": "IngressControllerCaptureHTTPCookie describes an HTTP cookie that should be captured.",
       "type": "object",
       "required": [
+        "matchType",
         "maxLength"
       ],
       "properties": {
@@ -28118,6 +28071,9 @@
     "com.github.openshift.api.operator.v1.IngressControllerCaptureHTTPCookieUnion": {
       "description": "IngressControllerCaptureHTTPCookieUnion describes optional fields of an HTTP cookie that should be captured.",
       "type": "object",
+      "required": [
+        "matchType"
+      ],
       "properties": {
         "matchType": {
           "description": "matchType specifies the type of match to be performed on the cookie name.  Allowed values are \"Exact\" for an exact string match and \"Prefix\" for a string prefix match.  If \"Exact\" is specified, a name must be specified in the name field.  If \"Prefix\" is provided, a prefix must be specified in the namePrefix field.  For example, specifying matchType \"Prefix\" and namePrefix \"foo\" will capture a cookie named \"foo\" or \"foobar\" but not one named \"bar\".  The first matching cookie is captured.",
@@ -28436,7 +28392,6 @@
         },
         "unsupportedConfigOverrides": {
           "description": "unsupportedConfigOverrides allows specifying unsupported configuration options.  Its use is unsupported.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
       }
@@ -28643,7 +28598,6 @@
         },
         "observedConfig": {
           "description": "observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because it is an input to the level for the operator",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "operatorLogLevel": {
@@ -28652,7 +28606,6 @@
         },
         "unsupportedConfigOverrides": {
           "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
       }
@@ -28728,7 +28681,6 @@
       "properties": {
         "downloadedAt": {
           "description": "downloadedAt is the time when the last Insights report was downloaded. An empty value means that there has not been any Insights report downloaded yet and it usually appears in disconnected clusters (or clusters when the Insights data gathering is disabled).",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "healthChecks": {
@@ -28834,7 +28786,6 @@
         },
         "observedConfig": {
           "description": "observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because it is an input to the level for the operator",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "operatorLogLevel": {
@@ -28848,7 +28799,6 @@
         },
         "unsupportedConfigOverrides": {
           "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
       }
@@ -29025,7 +28975,6 @@
         },
         "observedConfig": {
           "description": "observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because it is an input to the level for the operator",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "operatorLogLevel": {
@@ -29039,7 +28988,6 @@
         },
         "unsupportedConfigOverrides": {
           "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "useMoreSecureServiceCA": {
@@ -29212,7 +29160,6 @@
         },
         "observedConfig": {
           "description": "observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because it is an input to the level for the operator",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "operatorLogLevel": {
@@ -29226,7 +29173,6 @@
         },
         "unsupportedConfigOverrides": {
           "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
       }
@@ -29381,7 +29327,6 @@
         },
         "observedConfig": {
           "description": "observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because it is an input to the level for the operator",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "operatorLogLevel": {
@@ -29390,7 +29335,6 @@
         },
         "unsupportedConfigOverrides": {
           "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
       }
@@ -29648,7 +29592,6 @@
         },
         "observedConfig": {
           "description": "observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because it is an input to the level for the operator",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "operatorLogLevel": {
@@ -29662,7 +29605,6 @@
         },
         "unsupportedConfigOverrides": {
           "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
       }
@@ -29814,7 +29756,6 @@
         },
         "observedConfig": {
           "description": "observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because it is an input to the level for the operator",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "operatorLogLevel": {
@@ -29823,7 +29764,6 @@
         },
         "unsupportedConfigOverrides": {
           "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
       }
@@ -30051,7 +29991,6 @@
         },
         "observedConfig": {
           "description": "observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because it is an input to the level for the operator",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "operatorLogLevel": {
@@ -30069,7 +30008,6 @@
         },
         "unsupportedConfigOverrides": {
           "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "useMultiNetworkPolicy": {
@@ -30644,7 +30582,6 @@
         },
         "observedConfig": {
           "description": "observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because it is an input to the level for the operator",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "operatorLogLevel": {
@@ -30653,7 +30590,6 @@
         },
         "unsupportedConfigOverrides": {
           "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
       }
@@ -30792,7 +30728,6 @@
         },
         "observedConfig": {
           "description": "observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because it is an input to the level for the operator",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "operatorLogLevel": {
@@ -30801,7 +30736,6 @@
         },
         "unsupportedConfigOverrides": {
           "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
       }
@@ -30912,7 +30846,6 @@
       ],
       "properties": {
         "lastTransitionTime": {
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "message": {
@@ -30949,7 +30882,6 @@
         },
         "observedConfig": {
           "description": "observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because it is an input to the level for the operator",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "operatorLogLevel": {
@@ -30958,7 +30890,6 @@
         },
         "unsupportedConfigOverrides": {
           "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
       }
@@ -31445,7 +31376,6 @@
         },
         "observedConfig": {
           "description": "observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because it is an input to the level for the operator",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "operatorLogLevel": {
@@ -31454,7 +31384,6 @@
         },
         "unsupportedConfigOverrides": {
           "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
       }
@@ -31592,7 +31521,6 @@
         },
         "observedConfig": {
           "description": "observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because it is an input to the level for the operator",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "operatorLogLevel": {
@@ -31601,7 +31529,6 @@
         },
         "unsupportedConfigOverrides": {
           "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
       }
@@ -31740,7 +31667,6 @@
         },
         "observedConfig": {
           "description": "observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because it is an input to the level for the operator",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "operatorLogLevel": {
@@ -31749,7 +31675,6 @@
         },
         "unsupportedConfigOverrides": {
           "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
       }
@@ -31950,7 +31875,6 @@
         },
         "observedConfig": {
           "description": "observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because it is an input to the level for the operator",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "operatorLogLevel": {
@@ -31964,7 +31888,6 @@
         },
         "unsupportedConfigOverrides": {
           "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
       }
@@ -32134,7 +32057,6 @@
         },
         "observedConfig": {
           "description": "observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because it is an input to the level for the operator",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "operatorLogLevel": {
@@ -32143,7 +32065,6 @@
         },
         "unsupportedConfigOverrides": {
           "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "vsphereStorageDriver": {
@@ -32746,7 +32667,6 @@
         },
         "observedConfig": {
           "description": "observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because it is an input to the level for the operator",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "operatorLogLevel": {
@@ -32755,7 +32675,6 @@
         },
         "unsupportedConfigOverrides": {
           "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
       }
@@ -32824,7 +32743,6 @@
       ],
       "properties": {
         "lastTransitionTime": {
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "message": {
@@ -33063,7 +32981,6 @@
         },
         "time": {
           "description": "Start time of check action.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         }
       }
@@ -33077,7 +32994,6 @@
       "properties": {
         "end": {
           "description": "End of outage detected",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "endLogs": {
@@ -33094,7 +33010,6 @@
         },
         "start": {
           "description": "Start of outage detected",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "startLogs": {
@@ -33151,7 +33066,6 @@
       "properties": {
         "lastTransitionTime": {
           "description": "Last time the condition transitioned from one status to another.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "message": {
@@ -33399,7 +33313,6 @@
       ],
       "properties": {
         "lastTransitionTime": {
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "message": {
@@ -33536,7 +33449,6 @@
         },
         "clientSecret": {
           "description": "clientSecret is the oauth client secret",
-          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.StringSource"
         },
         "hostname": {
@@ -33592,7 +33504,6 @@
         },
         "clientSecret": {
           "description": "clientSecret is the oauth client secret",
-          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.StringSource"
         },
         "kind": {
@@ -33630,7 +33541,6 @@
         },
         "clientSecret": {
           "description": "clientSecret is the oauth client secret",
-          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.StringSource"
         },
         "hostedDomain": {
@@ -33719,7 +33629,6 @@
         },
         "provider": {
           "description": "provider contains the information about how to set up a specific identity provider",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
       }
@@ -33848,7 +33757,6 @@
         },
         "bindPassword": {
           "description": "bindPassword is an optional password to bind with during the search phase.",
-          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.StringSource"
         },
         "ca": {
@@ -34059,7 +33967,6 @@
         },
         "clientSecret": {
           "description": "clientSecret is the oauth client secret",
-          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.StringSource"
         },
         "extraAuthorizeParameters": {
@@ -35042,7 +34949,6 @@
       "properties": {
         "targetPort": {
           "description": "The target port on pods selected by the service this route points to. If this is a string, it will be looked up as a named port in the target endpoints port list. Required",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.util.intstr.IntOrString"
         }
       }
@@ -35255,12 +35161,10 @@
       "properties": {
         "lastTransitionTime": {
           "description": "lastTransitionTime is the last time the condition transitioned from one status to another.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "lastUpdateTime": {
           "description": "lastUpdateTime is the last time this condition was updated.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "message": {
@@ -36183,7 +36087,6 @@
         },
         "observedConfig": {
           "description": "observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because it is an input to the level for the operator",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "operatorLogLevel": {
@@ -36192,7 +36095,6 @@
         },
         "unsupportedConfigOverrides": {
           "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
       }
@@ -36635,7 +36537,6 @@
           "description": "objects is an array of resources to include in this template. If a namespace value is hardcoded in the object, it will be removed during template instantiation, however if the namespace value is, or contains, a ${PARAMETER_REFERENCE}, the resolved value after parameter substitution will be respected and the object will be created in that namespace.",
           "type": "array",
           "items": {
-            "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
           }
         },
@@ -36694,7 +36595,6 @@
       "properties": {
         "lastTransitionTime": {
           "description": "LastTransitionTime is the last time a condition status transitioned from one state to another.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "message": {
@@ -37105,6 +37005,44 @@
         }
       }
     },
+    "io.k8s.api.authorization.v1.FieldSelectorAttributes": {
+      "description": "FieldSelectorAttributes indicates a field limited access. Webhook authors are encouraged to * ensure rawSelector and requirements are not both set * consider the requirements field if set * not try to parse or consider the rawSelector field if set. This is to avoid another CVE-2022-2880 (i.e. getting different systems to agree on how exactly to parse a query is not something we want), see https://www.oxeye.io/resources/golang-parameter-smuggling-attack for more details. For the *SubjectAccessReview endpoints of the kube-apiserver: * If rawSelector is empty and requirements are empty, the request is not limited. * If rawSelector is present and requirements are empty, the rawSelector will be parsed and limited if the parsing succeeds. * If rawSelector is empty and requirements are present, the requirements should be honored * If rawSelector is present and requirements are present, the request is invalid.",
+      "type": "object",
+      "properties": {
+        "rawSelector": {
+          "description": "rawSelector is the serialization of a field selector that would be included in a query parameter. Webhook implementations are encouraged to ignore rawSelector. The kube-apiserver's *SubjectAccessReview will parse the rawSelector as long as the requirements are not present.",
+          "type": "string"
+        },
+        "requirements": {
+          "description": "requirements is the parsed interpretation of a field selector. All requirements must be met for a resource instance to match the selector. Webhook implementations should handle requirements, but how to handle them is up to the webhook. Since requirements can only limit the request, it is safe to authorize as unlimited request if the requirements are not understood.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.FieldSelectorRequirement"
+          },
+          "x-kubernetes-list-type": "atomic"
+        }
+      }
+    },
+    "io.k8s.api.authorization.v1.LabelSelectorAttributes": {
+      "description": "LabelSelectorAttributes indicates a label limited access. Webhook authors are encouraged to * ensure rawSelector and requirements are not both set * consider the requirements field if set * not try to parse or consider the rawSelector field if set. This is to avoid another CVE-2022-2880 (i.e. getting different systems to agree on how exactly to parse a query is not something we want), see https://www.oxeye.io/resources/golang-parameter-smuggling-attack for more details. For the *SubjectAccessReview endpoints of the kube-apiserver: * If rawSelector is empty and requirements are empty, the request is not limited. * If rawSelector is present and requirements are empty, the rawSelector will be parsed and limited if the parsing succeeds. * If rawSelector is empty and requirements are present, the requirements should be honored * If rawSelector is present and requirements are present, the request is invalid.",
+      "type": "object",
+      "properties": {
+        "rawSelector": {
+          "description": "rawSelector is the serialization of a field selector that would be included in a query parameter. Webhook implementations are encouraged to ignore rawSelector. The kube-apiserver's *SubjectAccessReview will parse the rawSelector as long as the requirements are not present.",
+          "type": "string"
+        },
+        "requirements": {
+          "description": "requirements is the parsed interpretation of a label selector. All requirements must be met for a resource instance to match the selector. Webhook implementations should handle requirements, but how to handle them is up to the webhook. Since requirements can only limit the request, it is safe to authorize as unlimited request if the requirements are not understood.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelectorRequirement"
+          },
+          "x-kubernetes-list-type": "atomic"
+        }
+      }
+    },
     "io.k8s.api.authorization.v1.LocalSubjectAccessReview": {
       "description": "LocalSubjectAccessReview checks whether or not a user or group can perform an action in a given namespace. Having a namespace scoped resource makes it much easier to grant namespace scoped policy that includes permissions checking.",
       "type": "object",
@@ -37182,9 +37120,17 @@
       "description": "ResourceAttributes includes the authorization attributes available for resource requests to the Authorizer interface",
       "type": "object",
       "properties": {
+        "fieldSelector": {
+          "description": "fieldSelector describes the limitation on access based on field.  It can only limit access, not broaden it.\n\nThis field  is alpha-level. To use this field, you must enable the `AuthorizeWithSelectors` feature gate (disabled by default).",
+          "$ref": "#/definitions/io.k8s.api.authorization.v1.FieldSelectorAttributes"
+        },
         "group": {
           "description": "Group is the API Group of the Resource.  \"*\" means all.",
           "type": "string"
+        },
+        "labelSelector": {
+          "description": "labelSelector describes the limitation on access based on labels.  It can only limit access, not broaden it.\n\nThis field  is alpha-level. To use this field, you must enable the `AuthorizeWithSelectors` feature gate (disabled by default).",
+          "$ref": "#/definitions/io.k8s.api.authorization.v1.LabelSelectorAttributes"
         },
         "name": {
           "description": "Name is the name of the resource being requested for a \"get\" or deleted for a \"delete\". \"\" (empty) means all.",
@@ -37605,6 +37551,7 @@
         "cachingMode": {
           "description": "cachingMode is the Host Caching mode: None, Read Only, Read Write.\n\nPossible enum values:\n - `\"None\"`\n - `\"ReadOnly\"`\n - `\"ReadWrite\"`",
           "type": "string",
+          "default": "ReadWrite",
           "enum": [
             "None",
             "ReadOnly",
@@ -37623,11 +37570,13 @@
         },
         "fsType": {
           "description": "fsType is Filesystem type to mount. Must be a filesystem type supported by the host operating system. Ex. \"ext4\", \"xfs\", \"ntfs\". Implicitly inferred to be \"ext4\" if unspecified.",
-          "type": "string"
+          "type": "string",
+          "default": "ext4"
         },
         "kind": {
           "description": "kind expected values are Shared: multiple blob disks per storage account  Dedicated: single blob disk per storage account  Managed: azure managed data disk (only in managed availability set). defaults to shared\n\nPossible enum values:\n - `\"Dedicated\"`\n - `\"Managed\"`\n - `\"Shared\"`",
           "type": "string",
+          "default": "Shared",
           "enum": [
             "Dedicated",
             "Managed",
@@ -37636,7 +37585,8 @@
         },
         "readOnly": {
           "description": "readOnly Defaults to false (read/write). ReadOnly here will force the ReadOnly setting in VolumeMounts.",
-          "type": "boolean"
+          "type": "boolean",
+          "default": false
         }
       }
     },
@@ -37958,20 +37908,6 @@
           "description": "volumeID used to identify the volume in cinder. More info: https://examples.k8s.io/mysql-cinder-pd/README.md",
           "type": "string",
           "default": ""
-        }
-      }
-    },
-    "io.k8s.api.core.v1.ClaimSource": {
-      "description": "ClaimSource describes a reference to a ResourceClaim.\n\nExactly one of these fields should be set.  Consumers of this type must treat an empty object as if it has an unknown value.",
-      "type": "object",
-      "properties": {
-        "resourceClaimName": {
-          "description": "ResourceClaimName is the name of a ResourceClaim object in the same namespace as this pod.",
-          "type": "string"
-        },
-        "resourceClaimTemplateName": {
-          "description": "ResourceClaimTemplateName is the name of a ResourceClaimTemplate object in the same namespace as this pod.\n\nThe template will be used to create a new ResourceClaim, which will be bound to this pod. When this pod is deleted, the ResourceClaim will also be deleted. The pod name and resource name, along with a generated component, will be used to form a unique name for the ResourceClaim, which will be recorded in pod.status.resourceClaimStatuses.\n\nThis field is immutable and no changes will be made to the corresponding ResourceClaim by the control plane after creating the ResourceClaim.",
-          "type": "string"
         }
       }
     },
@@ -38581,7 +38517,6 @@
       "properties": {
         "startedAt": {
           "description": "Time at which the container was last (re-)started",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         }
       }
@@ -38605,7 +38540,6 @@
         },
         "finishedAt": {
           "description": "Time at which the container last terminated",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "message": {
@@ -38623,7 +38557,6 @@
         },
         "startedAt": {
           "description": "Time at which previous execution of the container started",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         }
       }
@@ -38657,9 +38590,22 @@
           "description": "AllocatedResources represents the compute resources allocated for this container by the node. Kubelet sets this value to Container.Resources.Requests upon successful pod admission and after successfully admitting desired pod resize.",
           "type": "object",
           "additionalProperties": {
-            "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
           }
+        },
+        "allocatedResourcesStatus": {
+          "description": "AllocatedResourcesStatus represents the status of various resources allocated for this Pod.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.ResourceStatus"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "name",
+          "x-kubernetes-patch-strategy": "merge"
         },
         "containerID": {
           "description": "ContainerID is the ID of the container in the format '<type>://<container_id>'. Where type is a container runtime identifier, returned from Version call of CRI API (for example \"containerd\").",
@@ -38709,6 +38655,10 @@
           "default": {},
           "$ref": "#/definitions/io.k8s.api.core.v1.ContainerState"
         },
+        "user": {
+          "description": "User represents user identity information initially attached to the first process of the container",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ContainerUser"
+        },
         "volumeMounts": {
           "description": "Status of volume mounts.",
           "type": "array",
@@ -38722,6 +38672,16 @@
           "x-kubernetes-list-type": "map",
           "x-kubernetes-patch-merge-key": "mountPath",
           "x-kubernetes-patch-strategy": "merge"
+        }
+      }
+    },
+    "io.k8s.api.core.v1.ContainerUser": {
+      "description": "ContainerUser represents user identity information",
+      "type": "object",
+      "properties": {
+        "linux": {
+          "description": "Linux holds user identity information initially attached to the first process of the containers in Linux. Note that the actual running identity can be changed if the process has enough privilege to do so.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LinuxContainerUser"
         }
       }
     },
@@ -39420,12 +39380,10 @@
         },
         "eventTime": {
           "description": "Time when this Event was first observed.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.MicroTime"
         },
         "firstTimestamp": {
           "description": "The time at which the event was first recorded. (Time of server receipt is in TypeMeta.)",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "involvedObject": {
@@ -39439,7 +39397,6 @@
         },
         "lastTimestamp": {
           "description": "The time at which the most recent occurrence of this event was recorded.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "message": {
@@ -39525,7 +39482,6 @@
         },
         "lastObservedTime": {
           "description": "Time of the last occurrence observed",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.MicroTime"
         }
       }
@@ -39824,7 +39780,6 @@
         },
         "port": {
           "description": "Name or number of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.util.intstr.IntOrString"
         },
         "scheme": {
@@ -39883,10 +39838,14 @@
     "io.k8s.api.core.v1.HostIP": {
       "description": "HostIP represents a single IP address allocated to the host.",
       "type": "object",
+      "required": [
+        "ip"
+      ],
       "properties": {
         "ip": {
           "description": "IP is the IP address assigned to the host",
-          "type": "string"
+          "type": "string",
+          "default": ""
         }
       }
     },
@@ -39950,7 +39909,8 @@
         },
         "iscsiInterface": {
           "description": "iscsiInterface is the interface Name that uses an iSCSI transport. Defaults to 'default' (tcp).",
-          "type": "string"
+          "type": "string",
+          "default": "default"
         },
         "lun": {
           "description": "lun is iSCSI Target Lun number.",
@@ -40014,7 +39974,8 @@
         },
         "iscsiInterface": {
           "description": "iscsiInterface is the interface Name that uses an iSCSI transport. Defaults to 'default' (tcp).",
-          "type": "string"
+          "type": "string",
+          "default": "default"
         },
         "lun": {
           "description": "lun represents iSCSI Target Lun number.",
@@ -40043,6 +40004,25 @@
           "description": "targetPortal is iSCSI Target Portal. The Portal is either an IP or ip_addr:port if the port is other than default (typically TCP ports 860 and 3260).",
           "type": "string",
           "default": ""
+        }
+      }
+    },
+    "io.k8s.api.core.v1.ImageVolumeSource": {
+      "description": "ImageVolumeSource represents a image volume resource.",
+      "type": "object",
+      "properties": {
+        "pullPolicy": {
+          "description": "Policy for pulling OCI objects. Possible values are: Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails. Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present. IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails. Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.\n\nPossible enum values:\n - `\"Always\"` means that kubelet always attempts to pull the latest image. Container will fail If the pull fails.\n - `\"IfNotPresent\"` means that kubelet pulls if the image isn't present on disk. Container will fail if the image isn't present and the pull fails.\n - `\"Never\"` means that kubelet never pulls an image, but only uses a local image. Container will fail if the image isn't present",
+          "type": "string",
+          "enum": [
+            "Always",
+            "IfNotPresent",
+            "Never"
+          ]
+        },
+        "reference": {
+          "description": "Required: Image or artifact reference to be used. Behaves in the same way as pod.spec.containers[*].image. Pull secrets will be assembled in the same way as for the container image by looking up node credentials, SA image pull secrets, and pod spec image pull secrets. More info: https://kubernetes.io/docs/concepts/containers/images This field is optional to allow higher level config management to default or override container images in workload controllers like Deployments and StatefulSets.",
+          "type": "string"
         }
       }
     },
@@ -40142,7 +40122,6 @@
           "description": "Default resource requirement limit value by resource name if resource limit is omitted.",
           "type": "object",
           "additionalProperties": {
-            "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
           }
         },
@@ -40150,7 +40129,6 @@
           "description": "DefaultRequest is the default resource requirement request value by resource name if resource request is omitted.",
           "type": "object",
           "additionalProperties": {
-            "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
           }
         },
@@ -40158,7 +40136,6 @@
           "description": "Max usage constraints on this kind by resource name.",
           "type": "object",
           "additionalProperties": {
-            "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
           }
         },
@@ -40166,7 +40143,6 @@
           "description": "MaxLimitRequestRatio if specified, the named resource must have a request and limit that are both non-zero where limit divided by request is less than or equal to the enumerated value; this represents the max burst for the named resource.",
           "type": "object",
           "additionalProperties": {
-            "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
           }
         },
@@ -40174,7 +40150,6 @@
           "description": "Min usage constraints on this kind by resource name.",
           "type": "object",
           "additionalProperties": {
-            "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
           }
         },
@@ -40233,6 +40208,38 @@
         }
       }
     },
+    "io.k8s.api.core.v1.LinuxContainerUser": {
+      "description": "LinuxContainerUser represents user identity information in Linux containers",
+      "type": "object",
+      "required": [
+        "uid",
+        "gid"
+      ],
+      "properties": {
+        "gid": {
+          "description": "GID is the primary gid initially attached to the first process in the container",
+          "type": "integer",
+          "format": "int64",
+          "default": 0
+        },
+        "supplementalGroups": {
+          "description": "SupplementalGroups are the supplemental groups initially attached to the first process in the container",
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int64",
+            "default": 0
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "uid": {
+          "description": "UID is the primary uid initially attached to the first process in the container",
+          "type": "integer",
+          "format": "int64",
+          "default": 0
+        }
+      }
+    },
     "io.k8s.api.core.v1.List": {
       "description": "List holds a list of objects, which may not be known by the server.",
       "type": "object",
@@ -40248,7 +40255,6 @@
           "description": "List of objects",
           "type": "array",
           "items": {
-            "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
           }
         },
@@ -40420,7 +40426,6 @@
       ],
       "properties": {
         "lastTransitionTime": {
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "message": {
@@ -40592,12 +40597,10 @@
       "properties": {
         "lastHeartbeatTime": {
           "description": "Last time we got an update on a given condition.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "lastTransitionTime": {
           "description": "Last time the condition transit from one status to another.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "message": {
@@ -40660,6 +40663,16 @@
           "description": "Endpoint on which Kubelet is listening.",
           "default": {},
           "$ref": "#/definitions/io.k8s.api.core.v1.DaemonEndpoint"
+        }
+      }
+    },
+    "io.k8s.api.core.v1.NodeFeatures": {
+      "description": "NodeFeatures describes the set of features implemented by the CRI implementation. The features contained in the NodeFeatures should depend only on the cri implementation independent of runtime handlers.",
+      "type": "object",
+      "properties": {
+        "supplementalGroupsPolicy": {
+          "description": "SupplementalGroupsPolicy is set to true if the runtime supports SupplementalGroupsPolicy and ContainerUser.",
+          "type": "boolean"
         }
       }
     },
@@ -40727,11 +40740,15 @@
       }
     },
     "io.k8s.api.core.v1.NodeRuntimeHandlerFeatures": {
-      "description": "NodeRuntimeHandlerFeatures is a set of runtime features.",
+      "description": "NodeRuntimeHandlerFeatures is a set of features implemented by the runtime handler.",
       "type": "object",
       "properties": {
         "recursiveReadOnlyMounts": {
           "description": "RecursiveReadOnlyMounts is set to true if the runtime handler supports RecursiveReadOnlyMounts.",
+          "type": "boolean"
+        },
+        "userNamespaces": {
+          "description": "UserNamespaces is set to true if the runtime handler supports UserNamespaces, including for volumes.",
           "type": "boolean"
         }
       }
@@ -40884,15 +40901,13 @@
           "description": "Allocatable represents the resources of a node that are available for scheduling. Defaults to Capacity.",
           "type": "object",
           "additionalProperties": {
-            "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
           }
         },
         "capacity": {
-          "description": "Capacity represents the total resources of a node. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#capacity",
+          "description": "Capacity represents the total resources of a node. More info: https://kubernetes.io/docs/reference/node/node-status/#capacity",
           "type": "object",
           "additionalProperties": {
-            "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
           }
         },
@@ -40918,6 +40933,10 @@
           "description": "Endpoints of daemons running on the Node.",
           "default": {},
           "$ref": "#/definitions/io.k8s.api.core.v1.NodeDaemonEndpoints"
+        },
+        "features": {
+          "description": "Features describes the set of features implemented by the CRI implementation.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.NodeFeatures"
         },
         "images": {
           "description": "List of container images on this node",
@@ -41008,7 +41027,7 @@
           "default": ""
         },
         "kubeProxyVersion": {
-          "description": "KubeProxy Version reported by the node.",
+          "description": "Deprecated: KubeProxy Version reported by the node.",
           "type": "string",
           "default": ""
         },
@@ -41161,12 +41180,10 @@
       "properties": {
         "lastProbeTime": {
           "description": "lastProbeTime is the time we probed the condition.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "lastTransitionTime": {
           "description": "lastTransitionTime is the time the condition transitioned from one status to another.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "message": {
@@ -41226,7 +41243,13 @@
           "type": "array",
           "items": {
             "type": "string",
-            "default": ""
+            "default": "",
+            "enum": [
+              "ReadOnlyMany",
+              "ReadWriteMany",
+              "ReadWriteOnce",
+              "ReadWriteOncePod"
+            ]
           },
           "x-kubernetes-list-type": "atomic"
         },
@@ -41252,7 +41275,7 @@
           "type": "string"
         },
         "volumeAttributesClassName": {
-          "description": "volumeAttributesClassName may be used to set the VolumeAttributesClass used by this claim. If specified, the CSI driver will create or update the volume with the attributes defined in the corresponding VolumeAttributesClass. This has a different purpose than storageClassName, it can be changed after the claim is created. An empty string value means that no VolumeAttributesClass will be applied to the claim but it's not allowed to reset this field to empty string once it is set. If unspecified and the PersistentVolumeClaim is unbound, the default VolumeAttributesClass will be set by the persistentvolume controller if it exists. If the resource referred to by volumeAttributesClass does not exist, this PersistentVolumeClaim will be set to a Pending state, as reflected by the modifyVolumeStatus field, until such as a resource exists. More info: https://kubernetes.io/docs/concepts/storage/volume-attributes-classes/ (Alpha) Using this field requires the VolumeAttributesClass feature gate to be enabled.",
+          "description": "volumeAttributesClassName may be used to set the VolumeAttributesClass used by this claim. If specified, the CSI driver will create or update the volume with the attributes defined in the corresponding VolumeAttributesClass. This has a different purpose than storageClassName, it can be changed after the claim is created. An empty string value means that no VolumeAttributesClass will be applied to the claim but it's not allowed to reset this field to empty string once it is set. If unspecified and the PersistentVolumeClaim is unbound, the default VolumeAttributesClass will be set by the persistentvolume controller if it exists. If the resource referred to by volumeAttributesClass does not exist, this PersistentVolumeClaim will be set to a Pending state, as reflected by the modifyVolumeStatus field, until such as a resource exists. More info: https://kubernetes.io/docs/concepts/storage/volume-attributes-classes/ (Beta) Using this field requires the VolumeAttributesClass feature gate to be enabled (off by default).",
           "type": "string"
         },
         "volumeMode": {
@@ -41278,7 +41301,13 @@
           "type": "array",
           "items": {
             "type": "string",
-            "default": ""
+            "default": "",
+            "enum": [
+              "ReadOnlyMany",
+              "ReadWriteMany",
+              "ReadWriteOnce",
+              "ReadWriteOncePod"
+            ]
           },
           "x-kubernetes-list-type": "atomic"
         },
@@ -41287,7 +41316,14 @@
           "type": "object",
           "additionalProperties": {
             "type": "string",
-            "default": ""
+            "default": "",
+            "enum": [
+              "ControllerResizeInProgress",
+              "ControllerResizeInfeasible",
+              "NodeResizeInProgress",
+              "NodeResizeInfeasible",
+              "NodeResizePending"
+            ]
           },
           "x-kubernetes-map-type": "granular"
         },
@@ -41295,7 +41331,6 @@
           "description": "allocatedResources tracks the resources allocated to a PVC including its capacity. Key names follow standard Kubernetes label syntax. Valid values are either:\n\t* Un-prefixed keys:\n\t\t- storage - the capacity of the volume.\n\t* Custom resources must use implementation-defined prefixed names such as \"example.com/my-custom-resource\"\nApart from above values - keys that are unprefixed or have kubernetes.io prefix are considered reserved and hence may not be used.\n\nCapacity reported here may be larger than the actual capacity when a volume expansion operation is requested. For storage quota, the larger value from allocatedResources and PVC.spec.resources is used. If allocatedResources is not set, PVC.spec.resources alone is used for quota calculation. If a volume expansion capacity request is lowered, allocatedResources is only lowered if there are no expansion operations in progress and if the actual volume capacity is equal or lower than the requested capacity.\n\nA controller that receives PVC update with previously unknown resourceName should ignore the update for the purpose it was designed. For example - a controller that only is responsible for resizing capacity of the volume, should ignore PVC updates that change other valid resources associated with PVC.\n\nThis is an alpha field and requires enabling RecoverVolumeExpansionFailure feature.",
           "type": "object",
           "additionalProperties": {
-            "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
           }
         },
@@ -41303,7 +41338,6 @@
           "description": "capacity represents the actual resources of the underlying volume.",
           "type": "object",
           "additionalProperties": {
-            "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
           }
         },
@@ -41322,11 +41356,11 @@
           "x-kubernetes-patch-strategy": "merge"
         },
         "currentVolumeAttributesClassName": {
-          "description": "currentVolumeAttributesClassName is the current name of the VolumeAttributesClass the PVC is using. When unset, there is no VolumeAttributeClass applied to this PersistentVolumeClaim This is an alpha field and requires enabling VolumeAttributesClass feature.",
+          "description": "currentVolumeAttributesClassName is the current name of the VolumeAttributesClass the PVC is using. When unset, there is no VolumeAttributeClass applied to this PersistentVolumeClaim This is a beta field and requires enabling VolumeAttributesClass feature (off by default).",
           "type": "string"
         },
         "modifyVolumeStatus": {
-          "description": "ModifyVolumeStatus represents the status object of ControllerModifyVolume operation. When this is unset, there is no ModifyVolume operation being attempted. This is an alpha field and requires enabling VolumeAttributesClass feature.",
+          "description": "ModifyVolumeStatus represents the status object of ControllerModifyVolume operation. When this is unset, there is no ModifyVolume operation being attempted. This is a beta field and requires enabling VolumeAttributesClass feature (off by default).",
           "$ref": "#/definitions/io.k8s.api.core.v1.ModifyVolumeStatus"
         },
         "phase": {
@@ -41510,7 +41544,13 @@
           "type": "array",
           "items": {
             "type": "string",
-            "default": ""
+            "default": "",
+            "enum": [
+              "ReadOnlyMany",
+              "ReadWriteMany",
+              "ReadWriteOnce",
+              "ReadWriteOncePod"
+            ]
           },
           "x-kubernetes-list-type": "atomic"
         },
@@ -41530,7 +41570,6 @@
           "description": "capacity is the description of the persistent volume's resources and capacity. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#capacity",
           "type": "object",
           "additionalProperties": {
-            "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
           }
         },
@@ -41638,7 +41677,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.StorageOSPersistentVolumeSource"
         },
         "volumeAttributesClassName": {
-          "description": "Name of VolumeAttributesClass to which this persistent volume belongs. Empty value is not allowed. When this field is not set, it indicates that this volume does not belong to any VolumeAttributesClass. This field is mutable and can be changed by the CSI driver after a volume has been updated successfully to a new class. For an unbound PersistentVolume, the volumeAttributesClassName will be matched with unbound PersistentVolumeClaims during the binding process. This is an alpha field and requires enabling VolumeAttributesClass feature.",
+          "description": "Name of VolumeAttributesClass to which this persistent volume belongs. Empty value is not allowed. When this field is not set, it indicates that this volume does not belong to any VolumeAttributesClass. This field is mutable and can be changed by the CSI driver after a volume has been updated successfully to a new class. For an unbound PersistentVolume, the volumeAttributesClassName will be matched with unbound PersistentVolumeClaims during the binding process. This is a beta field and requires enabling VolumeAttributesClass feature (off by default).",
           "type": "string"
         },
         "volumeMode": {
@@ -41660,7 +41699,7 @@
       "type": "object",
       "properties": {
         "lastPhaseTransitionTime": {
-          "description": "lastPhaseTransitionTime is the time the phase transitioned from one to another and automatically resets to current time everytime a volume phase transitions. This is a beta field and requires the PersistentVolumeLastPhaseTransitionTime feature to be enabled (enabled by default).",
+          "description": "lastPhaseTransitionTime is the time the phase transitioned from one to another and automatically resets to current time everytime a volume phase transitions.",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "message": {
@@ -41767,7 +41806,7 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector"
         },
         "matchLabelKeys": {
-          "description": "MatchLabelKeys is a set of pod label keys to select which pods will be taken into consideration. The keys are used to lookup values from the incoming pod labels, those key-value labels are merged with `labelSelector` as `key in (value)` to select the group of existing pods which pods will be taken into consideration for the incoming pod's pod (anti) affinity. Keys that don't exist in the incoming pod labels will be ignored. The default value is empty. The same key is forbidden to exist in both matchLabelKeys and labelSelector. Also, matchLabelKeys cannot be set when labelSelector isn't set. This is an alpha field and requires enabling MatchLabelKeysInPodAffinity feature gate.",
+          "description": "MatchLabelKeys is a set of pod label keys to select which pods will be taken into consideration. The keys are used to lookup values from the incoming pod labels, those key-value labels are merged with `labelSelector` as `key in (value)` to select the group of existing pods which pods will be taken into consideration for the incoming pod's pod (anti) affinity. Keys that don't exist in the incoming pod labels will be ignored. The default value is empty. The same key is forbidden to exist in both matchLabelKeys and labelSelector. Also, matchLabelKeys cannot be set when labelSelector isn't set. This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).",
           "type": "array",
           "items": {
             "type": "string",
@@ -41776,7 +41815,7 @@
           "x-kubernetes-list-type": "atomic"
         },
         "mismatchLabelKeys": {
-          "description": "MismatchLabelKeys is a set of pod label keys to select which pods will be taken into consideration. The keys are used to lookup values from the incoming pod labels, those key-value labels are merged with `labelSelector` as `key notin (value)` to select the group of existing pods which pods will be taken into consideration for the incoming pod's pod (anti) affinity. Keys that don't exist in the incoming pod labels will be ignored. The default value is empty. The same key is forbidden to exist in both mismatchLabelKeys and labelSelector. Also, mismatchLabelKeys cannot be set when labelSelector isn't set. This is an alpha field and requires enabling MatchLabelKeysInPodAffinity feature gate.",
+          "description": "MismatchLabelKeys is a set of pod label keys to select which pods will be taken into consideration. The keys are used to lookup values from the incoming pod labels, those key-value labels are merged with `labelSelector` as `key notin (value)` to select the group of existing pods which pods will be taken into consideration for the incoming pod's pod (anti) affinity. Keys that don't exist in the incoming pod labels will be ignored. The default value is empty. The same key is forbidden to exist in both mismatchLabelKeys and labelSelector. Also, mismatchLabelKeys cannot be set when labelSelector isn't set. This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).",
           "type": "array",
           "items": {
             "type": "string",
@@ -41872,12 +41911,10 @@
       "properties": {
         "lastProbeTime": {
           "description": "Last time we probed the condition.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "lastTransitionTime": {
           "description": "Last time the condition transitioned from one status to another.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "message": {
@@ -41995,10 +42032,14 @@
     "io.k8s.api.core.v1.PodIP": {
       "description": "PodIP represents a single IP address allocated to the pod.",
       "type": "object",
+      "required": [
+        "ip"
+      ],
       "properties": {
         "ip": {
           "description": "IP is the IP address assigned to the pod",
-          "type": "string"
+          "type": "string",
+          "default": ""
         }
       }
     },
@@ -42156,7 +42197,7 @@
       }
     },
     "io.k8s.api.core.v1.PodResourceClaim": {
-      "description": "PodResourceClaim references exactly one ResourceClaim through a ClaimSource. It adds a name to it that uniquely identifies the ResourceClaim inside the Pod. Containers that need access to the ResourceClaim reference it with this name.",
+      "description": "PodResourceClaim references exactly one ResourceClaim, either directly or by naming a ResourceClaimTemplate which is then turned into a ResourceClaim for the pod.\n\nIt adds a name to it that uniquely identifies the ResourceClaim inside the Pod. Containers that need access to the ResourceClaim reference it with this name.",
       "type": "object",
       "required": [
         "name"
@@ -42167,10 +42208,13 @@
           "type": "string",
           "default": ""
         },
-        "source": {
-          "description": "Source describes where to find the ResourceClaim.",
-          "default": {},
-          "$ref": "#/definitions/io.k8s.api.core.v1.ClaimSource"
+        "resourceClaimName": {
+          "description": "ResourceClaimName is the name of a ResourceClaim object in the same namespace as this pod.\n\nExactly one of ResourceClaimName and ResourceClaimTemplateName must be set.",
+          "type": "string"
+        },
+        "resourceClaimTemplateName": {
+          "description": "ResourceClaimTemplateName is the name of a ResourceClaimTemplate object in the same namespace as this pod.\n\nThe template will be used to create a new ResourceClaim, which will be bound to this pod. When this pod is deleted, the ResourceClaim will also be deleted. The pod name and resource name, along with a generated component, will be used to form a unique name for the ResourceClaim, which will be recorded in pod.status.resourceClaimStatuses.\n\nThis field is immutable and no changes will be made to the corresponding ResourceClaim by the control plane after creating the ResourceClaim.\n\nExactly one of ResourceClaimName and ResourceClaimTemplateName must be set.",
+          "type": "string"
         }
       }
     },
@@ -42187,7 +42231,7 @@
           "default": ""
         },
         "resourceClaimName": {
-          "description": "ResourceClaimName is the name of the ResourceClaim that was generated for the Pod in the namespace of the Pod. It this is unset, then generating a ResourceClaim was not necessary. The pod.spec.resourceClaims entry can be ignored in this case.",
+          "description": "ResourceClaimName is the name of the ResourceClaim that was generated for the Pod in the namespace of the Pod. If this is unset, then generating a ResourceClaim was not necessary. The pod.spec.resourceClaims entry can be ignored in this case.",
           "type": "string"
         }
       }
@@ -42250,7 +42294,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.SeccompProfile"
         },
         "supplementalGroups": {
-          "description": "A list of groups applied to the first process run in each container, in addition to the container's primary GID, the fsGroup (if specified), and group memberships defined in the container image for the uid of the container process. If unspecified, no additional groups are added to any container. Note that group memberships defined in the container image for the uid of the container process are still effective, even if they are not included in this list. Note that this field cannot be set when spec.os.name is windows.",
+          "description": "A list of groups applied to the first process run in each container, in addition to the container's primary GID and fsGroup (if specified).  If the SupplementalGroupsPolicy feature is enabled, the supplementalGroupsPolicy field determines whether these are in addition to or instead of any group memberships defined in the container image. If unspecified, no additional groups are added, though group memberships defined in the container image may still be used, depending on the supplementalGroupsPolicy field. Note that this field cannot be set when spec.os.name is windows.",
           "type": "array",
           "items": {
             "type": "integer",
@@ -42258,6 +42302,14 @@
             "default": 0
           },
           "x-kubernetes-list-type": "atomic"
+        },
+        "supplementalGroupsPolicy": {
+          "description": "Defines how supplemental groups of the first container processes are calculated. Valid values are \"Merge\" and \"Strict\". If not specified, \"Merge\" is used. (Alpha) Using the field requires the SupplementalGroupsPolicy feature gate to be enabled and the container runtime must implement support for this feature. Note that this field cannot be set when spec.os.name is windows.\n\nPossible enum values:\n - `\"Merge\"` means that the container's provided SupplementalGroups and FsGroup (specified in SecurityContext) will be merged with the primary user's groups as defined in the container image (in /etc/group).\n - `\"Strict\"` means that the container's provided SupplementalGroups and FsGroup (specified in SecurityContext) will be used instead of any groups defined in the container image.",
+          "type": "string",
+          "enum": [
+            "Merge",
+            "Strict"
+          ]
         },
         "sysctls": {
           "description": "Sysctls hold a list of namespaced sysctls used for the pod. Pods with unsupported sysctls (by the container runtime) might fail to launch. Note that this field cannot be set when spec.os.name is windows.",
@@ -42413,7 +42465,7 @@
           "x-kubernetes-patch-strategy": "merge"
         },
         "nodeName": {
-          "description": "NodeName is a request to schedule this pod onto a specific node. If it is non-empty, the scheduler simply schedules this pod onto that node, assuming that it fits resource requirements.",
+          "description": "NodeName indicates in which node this pod is scheduled. If empty, this pod is a candidate for scheduling by the scheduler defined in schedulerName. Once this field is set, the kubelet for this node becomes responsible for the lifecycle of this pod. This field should not be used to express a desire for the pod to be scheduled on a specific node. https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodename",
           "type": "string"
         },
         "nodeSelector": {
@@ -42426,14 +42478,13 @@
           "x-kubernetes-map-type": "atomic"
         },
         "os": {
-          "description": "Specifies the OS of the containers in the pod. Some pod and container fields are restricted if this is set.\n\nIf the OS field is set to linux, the following fields must be unset: -securityContext.windowsOptions\n\nIf the OS field is set to windows, following fields must be unset: - spec.hostPID - spec.hostIPC - spec.hostUsers - spec.securityContext.appArmorProfile - spec.securityContext.seLinuxOptions - spec.securityContext.seccompProfile - spec.securityContext.fsGroup - spec.securityContext.fsGroupChangePolicy - spec.securityContext.sysctls - spec.shareProcessNamespace - spec.securityContext.runAsUser - spec.securityContext.runAsGroup - spec.securityContext.supplementalGroups - spec.containers[*].securityContext.appArmorProfile - spec.containers[*].securityContext.seLinuxOptions - spec.containers[*].securityContext.seccompProfile - spec.containers[*].securityContext.capabilities - spec.containers[*].securityContext.readOnlyRootFilesystem - spec.containers[*].securityContext.privileged - spec.containers[*].securityContext.allowPrivilegeEscalation - spec.containers[*].securityContext.procMount - spec.containers[*].securityContext.runAsUser - spec.containers[*].securityContext.runAsGroup",
+          "description": "Specifies the OS of the containers in the pod. Some pod and container fields are restricted if this is set.\n\nIf the OS field is set to linux, the following fields must be unset: -securityContext.windowsOptions\n\nIf the OS field is set to windows, following fields must be unset: - spec.hostPID - spec.hostIPC - spec.hostUsers - spec.securityContext.appArmorProfile - spec.securityContext.seLinuxOptions - spec.securityContext.seccompProfile - spec.securityContext.fsGroup - spec.securityContext.fsGroupChangePolicy - spec.securityContext.sysctls - spec.shareProcessNamespace - spec.securityContext.runAsUser - spec.securityContext.runAsGroup - spec.securityContext.supplementalGroups - spec.securityContext.supplementalGroupsPolicy - spec.containers[*].securityContext.appArmorProfile - spec.containers[*].securityContext.seLinuxOptions - spec.containers[*].securityContext.seccompProfile - spec.containers[*].securityContext.capabilities - spec.containers[*].securityContext.readOnlyRootFilesystem - spec.containers[*].securityContext.privileged - spec.containers[*].securityContext.allowPrivilegeEscalation - spec.containers[*].securityContext.procMount - spec.containers[*].securityContext.runAsUser - spec.containers[*].securityContext.runAsGroup",
           "$ref": "#/definitions/io.k8s.api.core.v1.PodOS"
         },
         "overhead": {
           "description": "Overhead represents the resource overhead associated with running a pod for a given RuntimeClass. This field will be autopopulated at admission time by the RuntimeClass admission controller. If the RuntimeClass admission controller is enabled, overhead must not be set in Pod create requests. The RuntimeClass admission controller will reject Pod create requests which have the overhead already set. If RuntimeClass is configured and selected in the PodSpec, Overhead will be set to the value defined in the corresponding RuntimeClass, otherwise it will remain unset and treated as zero. More info: https://git.k8s.io/enhancements/keps/sig-node/688-pod-overhead/README.md",
           "type": "object",
           "additionalProperties": {
-            "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
           }
         },
@@ -42865,7 +42916,6 @@
       "properties": {
         "evictionTime": {
           "description": "Time at which this entry was added to the list.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "message": {
@@ -42988,7 +43038,7 @@
           "format": "int32"
         },
         "sources": {
-          "description": "sources is the list of volume projections",
+          "description": "sources is the list of volume projections. Each entry in this list handles one source.",
           "type": "array",
           "items": {
             "default": {},
@@ -43053,7 +43103,8 @@
         },
         "keyring": {
           "description": "keyring is the path to key ring for RBDUser. Default is /etc/ceph/keyring. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it",
-          "type": "string"
+          "type": "string",
+          "default": "/etc/ceph/keyring"
         },
         "monitors": {
           "description": "monitors is a collection of Ceph monitors. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it",
@@ -43066,7 +43117,8 @@
         },
         "pool": {
           "description": "pool is the rados pool name. Default is rbd. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it",
-          "type": "string"
+          "type": "string",
+          "default": "rbd"
         },
         "readOnly": {
           "description": "readOnly here will force the ReadOnly setting in VolumeMounts. Defaults to false. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it",
@@ -43078,7 +43130,8 @@
         },
         "user": {
           "description": "user is the rados user name. Default is admin. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it",
-          "type": "string"
+          "type": "string",
+          "default": "admin"
         }
       }
     },
@@ -43101,7 +43154,8 @@
         },
         "keyring": {
           "description": "keyring is the path to key ring for RBDUser. Default is /etc/ceph/keyring. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it",
-          "type": "string"
+          "type": "string",
+          "default": "/etc/ceph/keyring"
         },
         "monitors": {
           "description": "monitors is a collection of Ceph monitors. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it",
@@ -43114,7 +43168,8 @@
         },
         "pool": {
           "description": "pool is the rados pool name. Default is rbd. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it",
-          "type": "string"
+          "type": "string",
+          "default": "rbd"
         },
         "readOnly": {
           "description": "readOnly here will force the ReadOnly setting in VolumeMounts. Defaults to false. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it",
@@ -43126,7 +43181,8 @@
         },
         "user": {
           "description": "user is the rados user name. Default is admin. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it",
-          "type": "string"
+          "type": "string",
+          "default": "admin"
         }
       }
     },
@@ -43202,7 +43258,6 @@
       "properties": {
         "lastTransitionTime": {
           "description": "The last time the condition transitioned from one status to another.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "message": {
@@ -43344,6 +43399,10 @@
           "description": "Name must match the name of one entry in pod.spec.resourceClaims of the Pod where this field is used. It makes that resource available inside a container.",
           "type": "string",
           "default": ""
+        },
+        "request": {
+          "description": "Request is the name chosen for a request in the referenced claim. If empty, everything from the claim is made available, otherwise only the result of this request.",
+          "type": "string"
         }
       }
     },
@@ -43360,7 +43419,6 @@
         },
         "divisor": {
           "description": "Specifies the output format of the exposed resources, defaults to \"1\"",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         },
         "resource": {
@@ -43370,6 +43428,24 @@
         }
       },
       "x-kubernetes-map-type": "atomic"
+    },
+    "io.k8s.api.core.v1.ResourceHealth": {
+      "description": "ResourceHealth represents the health of a resource. It has the latest device health information. This is a part of KEP https://kep.k8s.io/4680 and historical health changes are planned to be added in future iterations of a KEP.",
+      "type": "object",
+      "required": [
+        "resourceID"
+      ],
+      "properties": {
+        "health": {
+          "description": "Health of the resource. can be one of:\n - Healthy: operates as normal\n - Unhealthy: reported unhealthy. We consider this a temporary health issue\n              since we do not have a mechanism today to distinguish\n              temporary and permanent issues.\n - Unknown: The status cannot be determined.\n            For example, Device Plugin got unregistered and hasn't been re-registered since.\n\nIn future we may want to introduce the PermanentlyUnhealthy Status.",
+          "type": "string"
+        },
+        "resourceID": {
+          "description": "ResourceID is the unique identifier of the resource. See the ResourceID type for more information.",
+          "type": "string",
+          "default": ""
+        }
+      }
     },
     "io.k8s.api.core.v1.ResourceQuota": {
       "description": "ResourceQuota sets aggregate quota restrictions enforced per namespace",
@@ -43438,7 +43514,6 @@
           "description": "hard is the set of desired hard limits for each named resource. More info: https://kubernetes.io/docs/concepts/policy/resource-quotas/",
           "type": "object",
           "additionalProperties": {
-            "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
           }
         },
@@ -43451,7 +43526,15 @@
           "type": "array",
           "items": {
             "type": "string",
-            "default": ""
+            "default": "",
+            "enum": [
+              "BestEffort",
+              "CrossNamespacePodAffinity",
+              "NotBestEffort",
+              "NotTerminating",
+              "PriorityClass",
+              "Terminating"
+            ]
           },
           "x-kubernetes-list-type": "atomic"
         }
@@ -43465,7 +43548,6 @@
           "description": "Hard is the set of enforced hard limits for each named resource. More info: https://kubernetes.io/docs/concepts/policy/resource-quotas/",
           "type": "object",
           "additionalProperties": {
-            "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
           }
         },
@@ -43473,7 +43555,6 @@
           "description": "Used is the current observed total usage of the resource in the namespace.",
           "type": "object",
           "additionalProperties": {
-            "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
           }
         }
@@ -43499,7 +43580,6 @@
           "description": "Limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
           "type": "object",
           "additionalProperties": {
-            "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
           }
         },
@@ -43507,9 +43587,33 @@
           "description": "Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. Requests cannot exceed Limits. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
           "type": "object",
           "additionalProperties": {
-            "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
           }
+        }
+      }
+    },
+    "io.k8s.api.core.v1.ResourceStatus": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "Name of the resource. Must be unique within the pod and match one of the resources from the pod spec.",
+          "type": "string",
+          "default": ""
+        },
+        "resources": {
+          "description": "List of unique Resources health. Each element in the list contains an unique resource ID and resource health. At a minimum, ResourceID must uniquely identify the Resource allocated to the Pod on the Node for the lifetime of a Pod. See ResourceID type for it's definition.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.ResourceHealth"
+          },
+          "x-kubernetes-list-map-keys": [
+            "resourceID"
+          ],
+          "x-kubernetes-list-type": "map"
         }
       }
     },
@@ -43546,7 +43650,8 @@
       "properties": {
         "fsType": {
           "description": "fsType is the filesystem type to mount. Must be a filesystem type supported by the host operating system. Ex. \"ext4\", \"xfs\", \"ntfs\". Default is \"xfs\"",
-          "type": "string"
+          "type": "string",
+          "default": "xfs"
         },
         "gateway": {
           "description": "gateway is the host address of the ScaleIO API Gateway.",
@@ -43571,7 +43676,8 @@
         },
         "storageMode": {
           "description": "storageMode indicates whether the storage for a volume should be ThickProvisioned or ThinProvisioned. Default is ThinProvisioned.",
-          "type": "string"
+          "type": "string",
+          "default": "ThinProvisioned"
         },
         "storagePool": {
           "description": "storagePool is the ScaleIO Storage Pool associated with the protection domain.",
@@ -43599,7 +43705,8 @@
       "properties": {
         "fsType": {
           "description": "fsType is the filesystem type to mount. Must be a filesystem type supported by the host operating system. Ex. \"ext4\", \"xfs\", \"ntfs\". Default is \"xfs\".",
-          "type": "string"
+          "type": "string",
+          "default": "xfs"
         },
         "gateway": {
           "description": "gateway is the host address of the ScaleIO API Gateway.",
@@ -43624,7 +43731,8 @@
         },
         "storageMode": {
           "description": "storageMode indicates whether the storage for a volume should be ThickProvisioned or ThinProvisioned. Default is ThinProvisioned.",
-          "type": "string"
+          "type": "string",
+          "default": "ThinProvisioned"
         },
         "storagePool": {
           "description": "storagePool is the ScaleIO Storage Pool associated with the protection domain.",
@@ -43931,7 +44039,7 @@
           "type": "boolean"
         },
         "procMount": {
-          "description": "procMount denotes the type of proc mount to use for the containers. The default is DefaultProcMount which uses the container runtime defaults for readonly paths and masked paths. This requires the ProcMountType feature flag to be enabled. Note that this field cannot be set when spec.os.name is windows.\n\nPossible enum values:\n - `\"Default\"` uses the container runtime defaults for readonly and masked paths for /proc. Most container runtimes mask certain paths in /proc to avoid accidental security exposure of special devices or information.\n - `\"Unmasked\"` bypasses the default masking behavior of the container runtime and ensures the newly created /proc the container stays in tact with no modifications.",
+          "description": "procMount denotes the type of proc mount to use for the containers. The default value is Default which uses the container runtime defaults for readonly paths and masked paths. This requires the ProcMountType feature flag to be enabled. Note that this field cannot be set when spec.os.name is windows.\n\nPossible enum values:\n - `\"Default\"` uses the container runtime defaults for readonly and masked paths for /proc. Most container runtimes mask certain paths in /proc to avoid accidental security exposure of special devices or information.\n - `\"Unmasked\"` bypasses the default masking behavior of the container runtime and ensures the newly created /proc the container stays in tact with no modifications.",
           "type": "string",
           "enum": [
             "Default",
@@ -44185,7 +44293,6 @@
         },
         "targetPort": {
           "description": "Number or name of the port to access on the pods targeted by the service. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME. If this is a string, it will be looked up as a named port in the target Pod's container ports. If this is not specified, the value of the 'port' field is used (an identity map). This field is ignored for services with clusterIP=None, and should be omitted or set equal to the 'port' field. More info: https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.util.intstr.IntOrString"
         }
       }
@@ -44243,12 +44350,10 @@
           "type": "string"
         },
         "externalTrafficPolicy": {
-          "description": "externalTrafficPolicy describes how nodes distribute service traffic they receive on one of the Service's \"externally-facing\" addresses (NodePorts, ExternalIPs, and LoadBalancer IPs). If set to \"Local\", the proxy will configure the service in a way that assumes that external load balancers will take care of balancing the service traffic between nodes, and so each node will deliver traffic only to the node-local endpoints of the service, without masquerading the client source IP. (Traffic mistakenly sent to a node with no endpoints will be dropped.) The default value, \"Cluster\", uses the standard behavior of routing to all endpoints evenly (possibly modified by topology and other features). Note that traffic sent to an External IP or LoadBalancer IP from within the cluster will always get \"Cluster\" semantics, but clients sending to a NodePort from within the cluster may need to take traffic policy into account when picking a node.\n\nPossible enum values:\n - `\"Cluster\"`\n - `\"Cluster\"` routes traffic to all endpoints.\n - `\"Local\"`\n - `\"Local\"` preserves the source IP of the traffic by routing only to endpoints on the same node as the traffic was received on (dropping the traffic if there are no local endpoints).",
+          "description": "externalTrafficPolicy describes how nodes distribute service traffic they receive on one of the Service's \"externally-facing\" addresses (NodePorts, ExternalIPs, and LoadBalancer IPs). If set to \"Local\", the proxy will configure the service in a way that assumes that external load balancers will take care of balancing the service traffic between nodes, and so each node will deliver traffic only to the node-local endpoints of the service, without masquerading the client source IP. (Traffic mistakenly sent to a node with no endpoints will be dropped.) The default value, \"Cluster\", uses the standard behavior of routing to all endpoints evenly (possibly modified by topology and other features). Note that traffic sent to an External IP or LoadBalancer IP from within the cluster will always get \"Cluster\" semantics, but clients sending to a NodePort from within the cluster may need to take traffic policy into account when picking a node.\n\nPossible enum values:\n - `\"Cluster\"` routes traffic to all endpoints.\n - `\"Local\"` preserves the source IP of the traffic by routing only to endpoints on the same node as the traffic was received on (dropping the traffic if there are no local endpoints).",
           "type": "string",
           "enum": [
             "Cluster",
-            "Cluster",
-            "Local",
             "Local"
           ]
         },
@@ -44270,7 +44375,12 @@
           "type": "array",
           "items": {
             "type": "string",
-            "default": ""
+            "default": "",
+            "enum": [
+              "",
+              "IPv4",
+              "IPv6"
+            ]
           },
           "x-kubernetes-list-type": "atomic"
         },
@@ -44491,7 +44601,6 @@
         },
         "port": {
           "description": "Number or name of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.util.intstr.IntOrString"
         }
       }
@@ -44797,6 +44906,10 @@
           "description": "hostPath represents a pre-existing file or directory on the host machine that is directly exposed to the container. This is generally used for system agents or other privileged things that are allowed to see the host machine. Most containers will NOT need this. More info: https://kubernetes.io/docs/concepts/storage/volumes#hostpath",
           "$ref": "#/definitions/io.k8s.api.core.v1.HostPathVolumeSource"
         },
+        "image": {
+          "description": "image represents an OCI object (a container image or artifact) pulled and mounted on the kubelet's host machine. The volume is resolved at pod startup depending on which PullPolicy value is provided:\n\n- Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails. - Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present. - IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.\n\nThe volume gets re-resolved if the pod gets deleted and recreated, which means that new remote content will become available on pod recreation. A failure to resolve or pull the image during pod startup will block containers from starting and may add significant latency. Failures will be retried using normal volume backoff and will be reported on the pod reason and message. The types of objects that may be mounted by this volume are defined by the container runtime implementation on a host machine and at minimum must include all valid types supported by the container image field. The OCI object gets mounted in a single directory (spec.containers[*].volumeMounts.mountPath) by merging the manifest layers in the same way as for container images. The volume will be mounted read-only (ro) and non-executable files (noexec). Sub path mounts for containers are not supported (spec.containers[*].volumeMounts.subpath). The field spec.securityContext.fsGroupChangePolicy has no effect on this volume type.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ImageVolumeSource"
+        },
         "iscsi": {
           "description": "iscsi represents an ISCSI Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://examples.k8s.io/volumes/iscsi/README.md",
           "$ref": "#/definitions/io.k8s.api.core.v1.ISCSIVolumeSource"
@@ -44956,7 +45069,7 @@
       }
     },
     "io.k8s.api.core.v1.VolumeProjection": {
-      "description": "Projection that may be projected along with other supported volume types",
+      "description": "Projection that may be projected along with other supported volume types. Exactly one of these fields must be set.",
       "type": "object",
       "properties": {
         "clusterTrustBundle": {
@@ -44989,7 +45102,6 @@
           "description": "Limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
           "type": "object",
           "additionalProperties": {
-            "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
           }
         },
@@ -44997,7 +45109,6 @@
           "description": "Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. Requests cannot exceed Limits. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
           "type": "object",
           "additionalProperties": {
-            "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
           }
         }
@@ -45074,6 +45185,10 @@
         "hostPath": {
           "description": "hostPath represents a pre-existing file or directory on the host machine that is directly exposed to the container. This is generally used for system agents or other privileged things that are allowed to see the host machine. Most containers will NOT need this. More info: https://kubernetes.io/docs/concepts/storage/volumes#hostpath",
           "$ref": "#/definitions/io.k8s.api.core.v1.HostPathVolumeSource"
+        },
+        "image": {
+          "description": "image represents an OCI object (a container image or artifact) pulled and mounted on the kubelet's host machine. The volume is resolved at pod startup depending on which PullPolicy value is provided:\n\n- Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails. - Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present. - IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.\n\nThe volume gets re-resolved if the pod gets deleted and recreated, which means that new remote content will become available on pod recreation. A failure to resolve or pull the image during pod startup will block containers from starting and may add significant latency. Failures will be retried using normal volume backoff and will be reported on the pod reason and message. The types of objects that may be mounted by this volume are defined by the container runtime implementation on a host machine and at minimum must include all valid types supported by the container image field. The OCI object gets mounted in a single directory (spec.containers[*].volumeMounts.mountPath) by merging the manifest layers in the same way as for container images. The volume will be mounted read-only (ro) and non-executable files (noexec). Sub path mounts for containers are not supported (spec.containers[*].volumeMounts.subpath). The field spec.securityContext.fsGroupChangePolicy has no effect on this volume type.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ImageVolumeSource"
         },
         "iscsi": {
           "description": "iscsi represents an ISCSI Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://examples.k8s.io/volumes/iscsi/README.md",
@@ -45856,7 +45971,6 @@
       "properties": {
         "lastTransitionTime": {
           "description": "lastTransitionTime is the last time the condition transitioned from one status to another. This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "message": {
@@ -45960,6 +46074,35 @@
     "io.k8s.apimachinery.pkg.apis.meta.v1.Duration": {
       "description": "Duration is a wrapper around time.Duration which supports correct marshaling to YAML and JSON. In particular, it marshals into strings, which can be used as map keys in json.",
       "type": "string"
+    },
+    "io.k8s.apimachinery.pkg.apis.meta.v1.FieldSelectorRequirement": {
+      "description": "FieldSelectorRequirement is a selector that contains values, a key, and an operator that relates the key and values.",
+      "type": "object",
+      "required": [
+        "key",
+        "operator"
+      ],
+      "properties": {
+        "key": {
+          "description": "key is the field selector key that the requirement applies to.",
+          "type": "string",
+          "default": ""
+        },
+        "operator": {
+          "description": "operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists, DoesNotExist. The list of operators may grow in the future.",
+          "type": "string",
+          "default": ""
+        },
+        "values": {
+          "description": "values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "atomic"
+        }
+      }
     },
     "io.k8s.apimachinery.pkg.apis.meta.v1.FieldsV1": {
       "description": "FieldsV1 stores a set of fields in a data structure like a Trie, in JSON format.\n\nEach key is either a '.' representing the field itself, and will always map to an empty set, or a string representing a sub-field or item. The string will follow one of these four formats: 'f:<name>', where <name> is the name of a field in a struct, or key in a map 'v:<value>', where <value> is the exact json formatted value of a list item 'i:<index>', where <index> is position of a item in a list 'k:<keys>', where <keys> is a map of  a list item's key fields to their unique values If a key maps to an empty Fields value, the field that key represents is part of the set.\n\nThe exact format is defined in sigs.k8s.io/structured-merge-diff",
@@ -46189,7 +46332,6 @@
           "description": "List of objects",
           "type": "array",
           "items": {
-            "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
           }
         },
@@ -46336,7 +46478,6 @@
         },
         "creationTimestamp": {
           "description": "CreationTimestamp is a timestamp representing the server time when this object was created. It is not guaranteed to be set in happens-before order across separate operations. Clients may not set this value. It is represented in RFC3339 form and is in UTC.\n\nPopulated by the system. Read-only. Null for lists. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "deletionGracePeriodSeconds": {
@@ -46820,7 +46961,6 @@
         },
         "object": {
           "description": "This field contains the requested additional information about each object based on the includeObject policy when requesting the Table. If \"None\", this field is empty, if \"Object\" this will be the default serialization of the object for the current API version, and if \"Metadata\" (the default) will contain the object metadata. Check the returned kind and apiVersion of the object before parsing. The media type of the object will always match the enclosing list - if this as a JSON table, these will be JSON encoded objects.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
       }
@@ -46935,7 +47075,6 @@
       "properties": {
         "object": {
           "description": "Object is:\n * If Type is Added or Modified: the new state of the object.\n * If Type is Deleted: the state of the object immediately before deletion.\n * If Type is Error: *Status is recommended; other types may make sense\n   depending on context.",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
         "type": {

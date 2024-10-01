@@ -26,26 +26,36 @@ spec:
     name: v1
     schema:
       openAPIV3Schema:
-        description: "EgressRouter is a feature allowing the user to define an egress
-          router that acts as a bridge between pods and external systems. The egress
-          router runs a service that redirects egress traffic originating from a pod
-          or a group of pods to a remote external system or multiple destinations
-          as per configuration. \n It is consumed by the cluster-network-operator.
-          More specifically, given an EgressRouter CR with <name>, the CNO will create
-          and manage: - A service called <name> - An egress pod called <name> - A
-          NAD called <name> \n Compatibility level 1: Stable within a major release
-          for a minimum of 12 months or 3 minor releases (whichever is longer). \n
-          EgressRouter is a single egressrouter pod configuration object."
+        description: |-
+          EgressRouter is a feature allowing the user to define an egress router
+          that acts as a bridge between pods and external systems. The egress router runs
+          a service that redirects egress traffic originating from a pod or a group of
+          pods to a remote external system or multiple destinations as per configuration.
+
+          It is consumed by the cluster-network-operator.
+          More specifically, given an EgressRouter CR with <name>, the CNO will create and manage:
+          - A service called <name>
+          - An egress pod called <name>
+          - A NAD called <name>
+
+          Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+
+          EgressRouter is a single egressrouter pod configuration object.
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -92,8 +102,9 @@ spec:
                 default:
                   macvlan:
                     mode: Bridge
-                description: Specification of interface to create/use. The default
-                  is macvlan. Currently only macvlan is supported.
+                description: |-
+                  Specification of interface to create/use. The default is macvlan.
+                  Currently only macvlan is supported.
                 oneOf:
                 - required:
                   - macvlan
@@ -130,13 +141,11 @@ spec:
                     anyOf:
                     - format: ipv4
                     - format: ipv6
-                    description: FallbackIP specifies the remote destination's IP
-                      address. Can be IPv4 or IPv6. If no redirect rules are specified,
-                      all traffic from the router are redirected to this IP. If redirect
-                      rules are specified, then any connections on any other port
-                      (undefined in the rules) on the router will be redirected to
-                      this IP. If redirect rules are specified and no fallback IP
-                      is provided, connections on other ports will simply be rejected.
+                    description: |-
+                      FallbackIP specifies the remote destination's IP address. Can be IPv4 or IPv6.
+                      If no redirect rules are specified, all traffic from the router are redirected to this IP.
+                      If redirect rules are specified, then any connections on any other port (undefined in the rules) on the router will be redirected to this IP.
+                      If redirect rules are specified and no fallback IP is provided, connections on other ports will simply be rejected.
                     type: string
                   redirectRules:
                     description: List of L4RedirectRules that define the DNAT redirection
@@ -167,9 +176,9 @@ spec:
                           - SCTP
                           type: string
                         targetPort:
-                          description: TargetPort allows specifying the port number
-                            on the remote destination to which the traffic gets redirected
-                            to. If unspecified, the value from "Port" is used.
+                          description: |-
+                            TargetPort allows specifying the port number on the remote destination to which the traffic gets redirected to.
+                            If unspecified, the value from "Port" is used.
                           format: int32
                           maximum: 65535
                           minimum: 1
@@ -192,8 +201,9 @@ spec:
               conditions:
                 description: Observed status of the egress router
                 items:
-                  description: EgressRouterStatusCondition represents the state of
-                    the egress router's managed and monitored components.
+                  description: |-
+                    EgressRouterStatusCondition represents the state of the egress router's
+                    managed and monitored components.
                   properties:
                     lastTransitionTime:
                       description: LastTransitionTime is the time of the last update
@@ -202,10 +212,10 @@ spec:
                       nullable: true
                       type: string
                     message:
-                      description: Message provides additional information about the
-                        current condition. This is only to be consumed by humans.  It
-                        may contain Line Feed characters (U+000A), which should be
-                        rendered as new lines.
+                      description: |-
+                        Message provides additional information about the current condition.
+                        This is only to be consumed by humans.  It may contain Line Feed
+                        characters (U+000A), which should be rendered as new lines.
                       type: string
                     reason:
                       description: Reason is the CamelCase reason for the condition's

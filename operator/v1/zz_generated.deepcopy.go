@@ -4478,12 +4478,16 @@ func (in *ResourceAttributesAccessReview) DeepCopyInto(out *ResourceAttributesAc
 	if in.Required != nil {
 		in, out := &in.Required, &out.Required
 		*out = make([]authorizationv1.ResourceAttributes, len(*in))
-		copy(*out, *in)
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
 	}
 	if in.Missing != nil {
 		in, out := &in.Missing, &out.Missing
 		*out = make([]authorizationv1.ResourceAttributes, len(*in))
-		copy(*out, *in)
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
 	}
 	return
 }

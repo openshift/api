@@ -1,6 +1,7 @@
 apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
-name: "ControlPlaneMachineSet"
+name: "ControlPlaneMachineSet (+MachineAPIMigration)"
 crdName: controlplanemachinesets.machine.openshift.io
+featureGate: MachineAPIMigration
 tests:
   onCreate:
     - name: Should reject an VSphere platform failure domain without any VSphere config
@@ -89,6 +90,7 @@ tests:
                   machine.openshift.io/cluster-api-cluster: cluster
               spec:
                 providerSpec: {}
+                authoritativeAPI: MachineAPI
     - name: Should reject a missing machineType
       initial: |
         apiVersion: machine.openshift.io/v1
@@ -259,6 +261,7 @@ tests:
                   machine.openshift.io/cluster-api-cluster: cluster
               spec:
                 providerSpec: {}
+                authoritativeAPI: MachineAPI
   onUpdate:
     - name: Replicas should be immutable
       initial: |
@@ -418,6 +421,7 @@ tests:
                   machine.openshift.io/cluster-api-cluster: cluster
               spec:
                 providerSpec: {}
+                authoritativeAPI: MachineAPI
     - name: Should allow the state to change to Active
       initial: |
         apiVersion: machine.openshift.io/v1
@@ -485,6 +489,7 @@ tests:
                   machine.openshift.io/cluster-api-cluster: cluster
               spec:
                 providerSpec: {}
+                authoritativeAPI: MachineAPI
     - name: Should not allow the state to change from Active
       initial: |
         apiVersion: machine.openshift.io/v1
@@ -531,4 +536,3 @@ tests:
               spec:
                 providerSpec: {}
       expectedError: "spec.state: Invalid value: \"string\": state cannot be changed once Active"
-

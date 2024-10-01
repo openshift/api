@@ -21,20 +21,25 @@ spec:
   - name: v1
     schema:
       openAPIV3Schema:
-        description: "OpenShiftAPIServer provides information to configure an operator
-          to manage openshift-apiserver. \n Compatibility level 1: Stable within a
-          major release for a minimum of 12 months or 3 minor releases (whichever
-          is longer)."
+        description: |-
+          OpenShiftAPIServer provides information to configure an operator to manage openshift-apiserver.
+
+          Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -44,11 +49,12 @@ spec:
             properties:
               logLevel:
                 default: Normal
-                description: "logLevel is an intent based logging for an overall component.
-                  \ It does not give fine grained control, but it is a simple way
-                  to manage coarse grained logging choices that operators have to
-                  interpret for their operands. \n Valid values are: \"Normal\", \"Debug\",
-                  \"Trace\", \"TraceAll\". Defaults to \"Normal\"."
+                description: |-
+                  logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a
+                  simple way to manage coarse grained logging choices that operators have to interpret for their operands.
+
+                  Valid values are: "Normal", "Debug", "Trace", "TraceAll".
+                  Defaults to "Normal".
                 enum:
                 - ""
                 - Normal
@@ -62,19 +68,20 @@ spec:
                 pattern: ^(Managed|Unmanaged|Force|Removed)$
                 type: string
               observedConfig:
-                description: observedConfig holds a sparse config that controller
-                  has observed from the cluster state.  It exists in spec because
+                description: |-
+                  observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because
                   it is an input to the level for the operator
                 nullable: true
                 type: object
                 x-kubernetes-preserve-unknown-fields: true
               operatorLogLevel:
                 default: Normal
-                description: "operatorLogLevel is an intent based logging for the
-                  operator itself.  It does not give fine grained control, but it
-                  is a simple way to manage coarse grained logging choices that operators
-                  have to interpret for themselves. \n Valid values are: \"Normal\",
-                  \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\"."
+                description: |-
+                  operatorLogLevel is an intent based logging for the operator itself.  It does not give fine grained control, but it is a
+                  simple way to manage coarse grained logging choices that operators have to interpret for themselves.
+
+                  Valid values are: "Normal", "Debug", "Trace", "TraceAll".
+                  Defaults to "Normal".
                 enum:
                 - ""
                 - Normal
@@ -83,13 +90,12 @@ spec:
                 - TraceAll
                 type: string
               unsupportedConfigOverrides:
-                description: unsupportedConfigOverrides overrides the final configuration
-                  that was computed by the operator. Red Hat does not support the
-                  use of this field. Misuse of this field could lead to unexpected
-                  behavior or conflict with other configuration options. Seek guidance
-                  from the Red Hat support before using this field. Use of this property
-                  blocks cluster upgrades, it must be removed before upgrading your
-                  cluster.
+                description: |-
+                  unsupportedConfigOverrides overrides the final configuration that was computed by the operator.
+                  Red Hat does not support the use of this field.
+                  Misuse of this field could lead to unexpected behavior or conflict with other configuration options.
+                  Seek guidance from the Red Hat support before using this field.
+                  Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.
                 nullable: true
                 type: object
                 x-kubernetes-preserve-unknown-fields: true

@@ -50,15 +50,21 @@ type ConsolePluginSpec struct {
 	I18n ConsolePluginI18n `json:"i18n"`
 	// contentSecurityPolicy is a list of Content Security Policy directives for the plugin.
 	// Each directive specifies a list of values that indicate server origins and script endpoints
-	// from which the plugin's assets can be loaded.
-	// This helps guard against cross-site scripting (XSS) attacks.
-	// Available directive types are default-src, script-src, img-src, style-src and font-src.
+	// from which the plugin's assets can be loaded. This helps guard against cross-site
+	// scripting (XSS) attacks by enforcing strict security policies for asset loading.
+	// Dynamic plugins should to specify this field if they are loading assets form outside
+	// the cluster or if violation reports are observed.
+	// CSP violation reports can be viewed in browser's console during development and testing
+	//  of the plugin in the OpenShift web console.
+	// Available directives are default-src, script-src, img-src, style-src and font-src.
 	// Each of the available CSP directive may be defined only once in the list.
+	// By default the console server adds the value 'self'to all the various 'src' directives.
 	// For more information about the CSP directives, see:
 	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
 	//
 	// The OpenShift web console server aggregates the CSP directives and values across
-	// all enabled ConsolePlugin CRs, merging them to set a unified CSP header.
+	// its own default values and all enabled ConsolePlugin CRs, merging them to set a unified
+	// CSP header.
 	//
 	// Example:
 	//   ConsolePlugin A directives:
@@ -71,9 +77,9 @@ type ConsolePluginSpec struct {
 	//     img-src: https://img1.com/
 	//
 	//   OpenShift web console server CSP response header:
-	//     script-src: https://script1.com/ https://script2.com/ https://script3.com/
-	//     font-src: https://font1.com/ https://font2.com/
-	//     img-src: https://img1.com/
+	//     script-src: self https://script1.com/ https://script2.com/ https://script3.com/
+	//     font-src: self https://font1.com/ https://font2.com/
+	//     img-src: self https://img1.com/
 	//
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=5
@@ -113,13 +119,13 @@ const (
 
 // ConsolePluginCSP holds configuration for a specific CSP directive
 type ConsolePluginCSP struct {
-	// directive is a type of CSP directive.
+	// directive specifies which Content-Security-Policy directive to configure.
 	// Available directive types are default-src, script-src, img-src, style-src and font-src.
 	// +kubebuilder:validation:Enum:="default-src";"script-src";"img-src";"style-src";"font-src"
 	// +kubebuilder:validation:Required
 	Directive DirectiveType `json:"directive"`
-	// values defines an array of source values mostly specifying server origins
-	// and script endpoints.
+	// values defines an array of additional values to append to the console
+	// defaults for this directive.
 	// Each ConsolePlugin may define their own directives with their values.
 	// These will be set by the OpenShift web console's backend, as part of
 	// its CSP header.

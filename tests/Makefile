@@ -3,7 +3,7 @@
 # DO NOT UPDATE THIS until you have published downstream builds for the kubebuilder tools, and checked
 # that there is an equivalent upstream version as well. Check upstream at https://storage.googleapis.com/kubebuilder-tools.
 # Publish downstream with `make -C tools publish-kubebuilder-tools`, see help text there for updating flags before publshing.
-ENVTEST_K8S_VERSION = 1.29.1
+ENVTEST_K8S_VERSION = 1.31.1
 
 # In case of emergency, use these to provide separate upstream/downstream K8s versions for testing.
 ENVTEST_K8S_DOWNSTREAM_VERSION = ${ENVTEST_K8S_VERSION}
@@ -24,9 +24,8 @@ test-upstream: ## Run only the tests. Use upstream Kubebuilder artifacts. Note, 
 
 .PHONY: test-downstream
 test-downstream: ## Run only the tests. Use downstream Kubebuilder artifacts published in a GCS bucket in openshift-gce-devel.
-	@# This should be the same as upstream, except it uses the --remote-bucket option to set to our public bucket, not upstream's.
-	@# Ref: https://github.com/kubernetes-sigs/controller-runtime/blob/1382d7d6774050cd844b7f0c3cd63d5258c1b714/tools/setup-envtest/main.go#L52 and https://github.com/kubernetes-sigs/controller-runtime/tree/main/tools/setup-envtest#what-if-i-dont-want-to-talk-to-the-internet
-	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_DOWNSTREAM_VERSION) -p path --bin-dir $(PROJECT_DIR)/bin --remote-bucket openshift-kubebuilder-tools)" ./hack/test.sh
+	@# This should be the same as upstream, except it uses the --index option to set to our build index, not upstream's.
+	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_DOWNSTREAM_VERSION) -p path --bin-dir $(PROJECT_DIR)/bin --index https://raw.githubusercontent.com/openshift/api/master/envtest-releases.yaml)" ./hack/test.sh
 
 .PHONY: vendor
 vendor:

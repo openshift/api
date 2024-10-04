@@ -639,15 +639,20 @@ spec:
                               If empty, defaults will be applied. See specific openstack fields for
                               details about their defaults.
                             properties:
-                              loadBalancerIP:
+                              floatingIP:
                                 description: |-
-                                  loadBalancerIP specifies the floating IP address that the load balancer will use.
+                                  floatingIP specifies the IP address that the load balancer will use.
                                   When not specified, an IP address will be assigned randomly by the OpenStack cloud provider.
+                                  When specified, the floating IP has to be pre-created.  If the
+                                  specified value is not a floating IP or is already claimed, the
+                                  OpenStack cloud provider won't be able to provision the load
+                                  balancer.
+                                  This field may only be used if the IngressController has External scope.
                                   This value must be a valid IPv4 or IPv6 address.
                                 type: string
                                 x-kubernetes-validations:
-                                - message: loadBalancerIP must be a valid IPv4 or
-                                    IPv6 address
+                                - message: floatingIP must be a valid IPv4 or IPv6
+                                    address
                                   rule: isIP(self)
                             type: object
                           type:
@@ -689,6 +694,10 @@ spec:
                       rule: '!has(self.scope) || self.scope != ''Internal'' || !has(self.providerParameters)
                         || !has(self.providerParameters.aws) || !has(self.providerParameters.aws.networkLoadBalancer)
                         || !has(self.providerParameters.aws.networkLoadBalancer.eipAllocations)'
+                    - message: cannot specify a floating ip when scope is internal
+                      rule: '!has(self.scope) || self.scope != ''Internal'' || !has(self.providerParameters)
+                        || !has(self.providerParameters.openstack) || !has(self.providerParameters.openstack.floatingIP)
+                        || self.providerParameters.openstack.floatingIP == ""'
                   nodePort:
                     description: |-
                       nodePort holds parameters for the NodePortService endpoint publishing strategy.
@@ -2828,15 +2837,20 @@ spec:
                               If empty, defaults will be applied. See specific openstack fields for
                               details about their defaults.
                             properties:
-                              loadBalancerIP:
+                              floatingIP:
                                 description: |-
-                                  loadBalancerIP specifies the floating IP address that the load balancer will use.
+                                  floatingIP specifies the IP address that the load balancer will use.
                                   When not specified, an IP address will be assigned randomly by the OpenStack cloud provider.
+                                  When specified, the floating IP has to be pre-created.  If the
+                                  specified value is not a floating IP or is already claimed, the
+                                  OpenStack cloud provider won't be able to provision the load
+                                  balancer.
+                                  This field may only be used if the IngressController has External scope.
                                   This value must be a valid IPv4 or IPv6 address.
                                 type: string
                                 x-kubernetes-validations:
-                                - message: loadBalancerIP must be a valid IPv4 or
-                                    IPv6 address
+                                - message: floatingIP must be a valid IPv4 or IPv6
+                                    address
                                   rule: isIP(self)
                             type: object
                           type:
@@ -2878,6 +2892,10 @@ spec:
                       rule: '!has(self.scope) || self.scope != ''Internal'' || !has(self.providerParameters)
                         || !has(self.providerParameters.aws) || !has(self.providerParameters.aws.networkLoadBalancer)
                         || !has(self.providerParameters.aws.networkLoadBalancer.eipAllocations)'
+                    - message: cannot specify a floating ip when scope is internal
+                      rule: '!has(self.scope) || self.scope != ''Internal'' || !has(self.providerParameters)
+                        || !has(self.providerParameters.openstack) || !has(self.providerParameters.openstack.floatingIP)
+                        || self.providerParameters.openstack.floatingIP == ""'
                   nodePort:
                     description: |-
                       nodePort holds parameters for the NodePortService endpoint publishing strategy.

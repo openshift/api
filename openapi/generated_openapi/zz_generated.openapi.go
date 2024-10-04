@@ -52865,9 +52865,9 @@ func schema_openshift_api_operator_v1_OpenStackLoadBalancerParameters(ref common
 				Description: "OpenStackLoadBalancerParameters provides configuration settings that are specific to OpenStack load balancers.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"loadBalancerIP": {
+					"floatingIP": {
 						SchemaProps: spec.SchemaProps{
-							Description: "loadBalancerIP specifies the floating IP address that the load balancer will use. When not specified, an IP address will be assigned randomly by the OpenStack cloud provider. This value must be a valid IPv4 or IPv6 address.",
+							Description: "floatingIP specifies the IP address that the load balancer will use. When not specified, an IP address will be assigned randomly by the OpenStack cloud provider. When specified, the floating IP has to be pre-created.  If the specified value is not a floating IP or is already claimed, the OpenStack cloud provider won't be able to provision the load balancer. This field may only be used if the IngressController has External scope. This value must be a valid IPv4 or IPv6 address.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

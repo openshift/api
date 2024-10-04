@@ -57,8 +57,8 @@ type ConsolePluginSpec struct {
 	// CSP violation reports can be viewed in browser's console during development and testing
 	//  of the plugin in the OpenShift web console.
 	// Available directives are default-src, script-src, img-src, style-src and font-src.
-	// Each of the available CSP directive may be defined only once in the list.
-	// By default the console server adds the value 'self'to all the various 'src' directives.
+	// Each of the available directives may be defined only once in the list.
+	// By default the console server adds the value 'self 'to all the various '*-src' directives.
 	// For more information about the CSP directives, see:
 	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
 	//
@@ -68,67 +68,68 @@ type ConsolePluginSpec struct {
 	//
 	// Example:
 	//   ConsolePlugin A directives:
-	//     script-src: https://script1.com/ https://script2.com/
+	//     script-src: https://script1.com/, https://script2.com/
 	//     font-src: https://font1.com/
 	//
 	//   ConsolePlugin B directives:
-	//     script-src: https://script2.com/ https://script3.com/
+	//     script-src: https://script2.com/, https://script3.com/
 	//     font-src: https://font2.com/
 	//     img-src: https://img1.com/
 	//
+	//   Unified set of CSP directives, passed to the OpenShift web console server:
+	//     script-src: https://script1.com/, https://script2.com/, https://script3.com/
+	//     font-src: https://font1.com/, https://font2.com/
+	//     img-src: https://img1.com/
+	//
 	//   OpenShift web console server CSP response header:
-	//     script-src: self https://script1.com/ https://script2.com/ https://script3.com/
-	//     font-src: self https://font1.com/ https://font2.com/
-	//     img-src: self https://img1.com/
+	//     Content-Security-Policy: default-src 'self'; base-uri 'self'; script-src 'self' https://script1.com/ https://script2.com/ https://script3.com/; font-src 'self' https://font1.com/ https://font2.com/; img-src 'self' https://img1.com/; style-src 'self'; frame-src 'none'; object-src 'none'
 	//
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=5
 	// +listType=map
-	// +listMapKey=name
+	// +listMapKey=directive
 	// +optional
-	ContentSecurityPolicy []ConsolePluginCSP `json:"contentSecurityPolicy,omitempty"`
+	ContentSecurityPolicy []ConsolePluginCSP `json:"contentSecurityPolicy"`
 }
 
 // DirectiveType is an enumeration of OpenShift web console supported CSP directives.
 // LoadType is an enumeration of i18n loading types.
-// +kubebuilder:validation:Enum:=default-src;script-src;img-src;style-src;font-src
+// +kubebuilder:validation:Enum:="DefaultSrc";"ScriptSrc";"ImgSrc";"StyleSrc";"FontSrc"
 type DirectiveType string
 
 const (
-	// default-src directive serves as a fallback for the other CSP fetch directives.
+	// DefaultSrc directive serves as a fallback for the other CSP fetch directives.
 	// For more information about the default-src directive, see:
 	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/default-src
-	DefaultSrc DirectiveType = "default-src"
-	// script-src directive specifies valid sources for JavaScript.
+	DefaultSrc DirectiveType = "DefaultSrc"
+	// ScriptSrc directive specifies valid sources for JavaScript.
 	// For more information about the script-src directive, see:
 	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src
-	ScriptSrc DirectiveType = "script-src"
-	// img-src directive specifies a valid sources of images and favicons.
+	ScriptSrc DirectiveType = "ScriptSrc"
+	// ImgSrc directive specifies a valid sources of images and favicons.
 	// For more information about the img-src directive, see:
 	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/img-src
-	ImgSrc DirectiveType = "img-src"
-	// style-src directive specifies valid sources for stylesheets.
+	ImgSrc DirectiveType = "ImgSrc"
+	// StyleSrc directive specifies valid sources for stylesheets.
 	// For more information about the style-src directive, see:
 	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/style-src
-	StyleSrc DirectiveType = "style-src"
-	// font-src directive specifies valid sources for fonts loaded using @font-face.
+	StyleSrc DirectiveType = "StyleSrc"
+	// FontSrc directive specifies valid sources for fonts loaded using @font-face.
 	// For more information about the font-src directive, see:
 	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/font-src
-	FontSrc DirectiveType = "font-src"
+	FontSrc DirectiveType = "FontSrc"
 )
 
 // ConsolePluginCSP holds configuration for a specific CSP directive
 type ConsolePluginCSP struct {
 	// directive specifies which Content-Security-Policy directive to configure.
-	// Available directive types are default-src, script-src, img-src, style-src and font-src.
-	// +kubebuilder:validation:Enum:="default-src";"script-src";"img-src";"style-src";"font-src"
+	// Available directive types are DefaultSrc, ScriptSrc, ImgSrc, StyleSrc and FontSrc.
 	// +kubebuilder:validation:Required
 	Directive DirectiveType `json:"directive"`
-	// values defines an array of additional values to append to the console
-	// defaults for this directive.
+	// values defines an array of values to append to the console defaults for this directive.
 	// Each ConsolePlugin may define their own directives with their values.
 	// These will be set by the OpenShift web console's backend, as part of
-	// its CSP header.
+	// its Content Security Policy header.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinItems=1
 	Values []string `json:"values"`

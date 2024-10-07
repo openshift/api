@@ -36,6 +36,9 @@
                 ],
                 "enabled": [
                     {
+                        "name": "AWSClusterHostedDNS"
+                    },
+                    {
                         "name": "AWSEFSDriverVolumeMetrics"
                     },
                     {

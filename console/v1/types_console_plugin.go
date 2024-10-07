@@ -55,7 +55,7 @@ type ConsolePluginSpec struct {
 	// Dynamic plugins should to specify this field if they are loading assets form outside
 	// the cluster or if violation reports are observed.
 	// CSP violation reports can be viewed in browser's console during development and testing
-	//  of the plugin in the OpenShift web console.
+	// of the plugin in the OpenShift web console.
 	// Available directives are default-src, script-src, img-src, style-src and font-src.
 	// Each of the available directives may be defined only once in the list.
 	// By default the console server adds the value 'self 'to all the various '*-src' directives.
@@ -132,6 +132,11 @@ type ConsolePluginCSP struct {
 	// its Content Security Policy header.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:MaxItems=32
+	// +kubebuilder:validation:MaxLength=1024
+	// +kubebuilder:validation:UniqueItems=true
+	// +kubebuilder:validation:XValidation:rule=`!self.contains(',')`,message="CSP directive value cannot contain a comma"
+	// +kubebuilder:validation:XValidation:rule=`!self.contains(';')`,message="CSP directive value cannot contain a semicolon"
 	Values []string `json:"values"`
 }
 

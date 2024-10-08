@@ -441,6 +441,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/console/v1.ConsoleNotificationSpec":                                        schema_openshift_api_console_v1_ConsoleNotificationSpec(ref),
 		"github.com/openshift/api/console/v1.ConsolePlugin":                                                  schema_openshift_api_console_v1_ConsolePlugin(ref),
 		"github.com/openshift/api/console/v1.ConsolePluginBackend":                                           schema_openshift_api_console_v1_ConsolePluginBackend(ref),
+		"github.com/openshift/api/console/v1.ConsolePluginCSP":                                               schema_openshift_api_console_v1_ConsolePluginCSP(ref),
 		"github.com/openshift/api/console/v1.ConsolePluginI18n":                                              schema_openshift_api_console_v1_ConsolePluginI18n(ref),
 		"github.com/openshift/api/console/v1.ConsolePluginList":                                              schema_openshift_api_console_v1_ConsolePluginList(ref),
 		"github.com/openshift/api/console/v1.ConsolePluginProxy":                                             schema_openshift_api_console_v1_ConsolePluginProxy(ref),
@@ -21749,6 +21750,43 @@ func schema_openshift_api_console_v1_ConsolePluginBackend(ref common.ReferenceCa
 	}
 }
 
+func schema_openshift_api_console_v1_ConsolePluginCSP(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ConsolePluginCSP holds configuration for a specific CSP directive",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"directive": {
+						SchemaProps: spec.SchemaProps{
+							Description: "directive specifies which Content-Security-Policy directive to configure. Available directive types are DefaultSrc, ScriptSrc, ImgSrc, StyleSrc and FontSrc. DefaultSrc directive serves as a fallback for the other CSP fetch directives. For more information about the DefaultSrc directive, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/default-src ScriptSrc directive specifies valid sources for JavaScript. For more information about the ScriptSrc directive, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src ImgSrc directive specifies a valid sources of images and favicons. For more information about the ImgSrc directive, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/img-src StyleSrc directive specifies valid sources for stylesheets. For more information about the StyleSrc directive, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/style-src FontSrc directive specifies valid sources for fonts loaded using @font-face. For more information about the FontSrc directive, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/font-src",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"values": {
+						SchemaProps: spec.SchemaProps{
+							Description: "values defines an array of values to append to the console defaults for this directive. Each ConsolePlugin may define their own directives with their values. These will be set by the OpenShift web console's backend, as part of its Content-Security-Policy header. The array can contain at most 32 items.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"directive", "values"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_console_v1_ConsolePluginI18n(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -22035,12 +22073,34 @@ func schema_openshift_api_console_v1_ConsolePluginSpec(ref common.ReferenceCallb
 							Ref:         ref("github.com/openshift/api/console/v1.ConsolePluginI18n"),
 						},
 					},
+					"contentSecurityPolicy": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"directive",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "contentSecurityPolicy is a list of Content-Security-Policy directives for the plugin. Each directive specifies a list of values that indicate server origins and script endpoints from which the plugin's assets can be loaded. This helps guard against cross-site scripting (XSS) attacks by enforcing strict security policies for asset loading. Dynamic plugins should specify this field if they are loading assets from outside the cluster or if violation reports are observed. CSP violation reports can be viewed in browser's console during development and testing of the plugin in the OpenShift web console. Available directive types are DefaultSrc, ScriptSrc, ImgSrc, StyleSrc and FontSrc. Each of the available directives may be defined only once in the list. The value 'self' will be prepended to all source type directives. For more information about the CSP directives, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy\n\nThe OpenShift web console server aggregates the CSP directives and values across its own default values and all enabled ConsolePlugin CRs, merging them to set a unified CSP header.\n\nExample:\n  ConsolePlugin A directives:\n    script-src: https://script1.com/, https://script2.com/\n    font-src: https://font1.com/\n\n  ConsolePlugin B directives:\n    script-src: https://script2.com/, https://script3.com/\n    font-src: https://font2.com/\n    img-src: https://img1.com/\n\n  Unified set of CSP directives, passed to the OpenShift web console server:\n    script-src: https://script1.com/, https://script2.com/, https://script3.com/\n    font-src: https://font1.com/, https://font2.com/\n    img-src: https://img1.com/\n\n  OpenShift web console server CSP response header:\n    Content-Security-Policy: default-src 'self'; base-uri 'self'; script-src 'self' https://script1.com/ https://script2.com/ https://script3.com/; font-src 'self' https://font1.com/ https://font2.com/; img-src 'self' https://img1.com/; style-src 'self'; frame-src 'none'; object-src 'none'",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/console/v1.ConsolePluginCSP"),
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"displayName", "backend"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/console/v1.ConsolePluginBackend", "github.com/openshift/api/console/v1.ConsolePluginI18n", "github.com/openshift/api/console/v1.ConsolePluginProxy"},
+			"github.com/openshift/api/console/v1.ConsolePluginBackend", "github.com/openshift/api/console/v1.ConsolePluginCSP", "github.com/openshift/api/console/v1.ConsolePluginI18n", "github.com/openshift/api/console/v1.ConsolePluginProxy"},
 	}
 }
 

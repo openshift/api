@@ -5,8 +5,7 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // +genclient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// UpdateStatus is the API about in-progress updates, kept populated by Update Status Controller by
-// aggregating and summarizing UpdateInsights produced by update informers
+// UpdateStatus reports status for in-progress cluster version updates
 //
 // Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
 // +openshift:compatibility-gen:level=4
@@ -14,7 +13,7 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // +kubebuilder:subresource:status
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +kubebuilder:resource:path=updatestatuses,scope=Namespaced
-// +openshift:api-approved.openshift.io=TODO
+// +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/2012
 // +openshift:file-pattern=cvoRunLevel=0000_00,operatorName=cluster-version-operator,operatorOrdering=02
 // +openshift:enable:FeatureGate=UpgradeStatus
 // +kubebuilder:metadata:annotations="description=Provides health and status information about OpenShift cluster updates."
@@ -81,12 +80,12 @@ const (
 // ControlPlaneUpdateStatus contains a summary and insights related to the control plane update
 type ControlPlaneUpdateStatus struct {
 	// resource is the resource that represents the control plane. It will typically be a ClusterVersion resource
-	// in standalone OpenShift and HostedCluster in HCP.
+	// in standalone OpenShift and HostedCluster in Hosted Control Planes.
 	// +required
 	Resource ResourceRef `json:"resource"`
 
 	// poolResource is the resource that represents control plane node pool, typically a MachineConfigPool. This field
-	// is optional because some form factors (like HCP) do not have dedicated control plane node pools.
+	// is optional because some form factors (like Hosted Control Planes) do not have dedicated control plane node pools.
 	// +optional
 	PoolResource PoolResourceRef `json:"poolResource,omitempty"`
 
@@ -156,7 +155,6 @@ type VersionMetadataType string
 const (
 	StringVersionMetadata VersionMetadataType = "string"
 	BoolVersionMetadata   VersionMetadataType = "bool"
-	IntVersionMetadata    VersionMetadataType = "int"
 )
 
 type VersionMetadataKey string
@@ -183,7 +181,7 @@ type VersionMetadata struct {
 type VersionMetadataValue struct {
 	// +unionDiscriminator
 	// +required
-	// +kubebuilder:validation:Enum:string;bool;int
+	// +kubebuilder:validation:Enum:string;bool
 	Type VersionMetadataType `json:"type"`
 
 	// +optional
@@ -195,11 +193,6 @@ type VersionMetadataValue struct {
 	// +kubebuilder:validation:Type=bool
 	// +unionMember
 	Bool bool `json:"bool,omitempty"`
-
-	// +optional
-	// +kubebuilder:validation:Type=int
-	// +unionMember
-	Integer int `json:"integer,omitempty"`
 }
 
 // Version describes a version involved in an update, typically on one side of an update edge

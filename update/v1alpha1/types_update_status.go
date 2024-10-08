@@ -43,6 +43,8 @@ type UpdateStatusStatus struct {
 	ControlPlane ControlPlaneUpdateStatus `json:"controlPlane"`
 
 	// workerPools contains summaries and insights related to the worker pools update
+	// +listType=map
+	// +listMapKey=name
 	// +optional
 	WorkerPools []PoolUpdateStatus `json:"workerPools,omitempty"`
 
@@ -113,6 +115,8 @@ type UpdateInformer struct {
 
 	// Insights is a list of insights produced by this producer
 	// +optional
+	// +listType=map
+	// +listMapKey=uid
 	Insights []UpdateInsight `json:"insights,omitempty"`
 }
 
@@ -629,6 +633,7 @@ type UpdateInsightScope struct {
 
 	// resources is a list of resources involved in the insight
 	// +optional
+	// +listType=set
 	Resources []ResourceRef `json:"resources,omitempty"`
 }
 

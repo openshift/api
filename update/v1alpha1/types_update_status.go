@@ -26,7 +26,7 @@ type UpdateStatus struct {
 	// +required
 	Spec UpdateStatusSpec `json:"spec"`
 	// +optional
-	Status UpdateStatusStatus `json:"status,omitempty"`
+	Status UpdateStatusStatus `json:"status"`
 }
 
 // UpdateStatusSpec is empty for now, can possibly hold configuration for Update Status Controller in the future
@@ -39,10 +39,12 @@ type UpdateStatusSpec struct {
 // aggregating and summarizing UpdateInsights produced by update informers
 type UpdateStatusStatus struct {
 	// controlPlane contains a summary and insights related to the control plane update
+	// +required
 	ControlPlane ControlPlaneUpdateStatus `json:"controlPlane"`
 
 	// workerPools contains summaries and insights related to the worker pools update
-	WorkerPools []PoolUpdateStatus `json:"workerPools"`
+	// +optional
+	WorkerPools []PoolUpdateStatus `json:"workerPools,omitempty"`
 
 	// conditions provide details about Update Status Controller operational matters
 	// +listType=map
@@ -87,7 +89,7 @@ type ControlPlaneUpdateStatus struct {
 	// poolResource is the resource that represents control plane node pool, typically a MachineConfigPool. This field
 	// is optional because some form factors (like Hosted Control Planes) do not have dedicated control plane node pools.
 	// +optional
-	PoolResource PoolResourceRef `json:"poolResource,omitempty"`
+	PoolResource *PoolResourceRef `json:"poolResource,omitempty"`
 
 	// informers is a list of insight producers, each carries a list of insights relevant for control plane
 	// +listType=map
@@ -197,7 +199,8 @@ type VersionMetadataValue struct {
 
 // Version describes a version involved in an update, typically on one side of an update edge
 type Version struct {
-	// version is a semantic version string
+	// version is a semantic version string, or a placeholder '<none>' for the special case where this
+	// is a "previous" version in a new installation
 	// +required
 	Version string `json:"version,omitempty"`
 
@@ -210,9 +213,11 @@ type Version struct {
 
 // ControlPlaneUpdateVersions contains the original and target versions of the upgrade
 type ControlPlaneUpdateVersions struct {
-	// previous is the version of the control plane before the update
-	// +optional
-	Previous Version `json:"previous,omitempty"`
+	// previous is the version of the control plane before the update. When the cluster is being installed
+	// for the first time, the version will have a placeholder value like '<none>' and the target version
+	// will have a boolean installation=true metadata
+	// +required
+	Previous Version `json:"previous"`
 
 	// target is the version of the control plane after the update
 	// +required
@@ -250,13 +255,13 @@ type ClusterVersionStatusInsight struct {
 	// +optional
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:Format=date-time
-	CompletedAt metav1.Time `json:"completedAt,omitempty"`
+	CompletedAt *metav1.Time `json:"completedAt,omitempty"`
 
 	// estimatedCompletedAt is the estimated time when the update will complete
 	// +optional
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:Format=date-time
-	EstimatedCompletedAt metav1.Time `json:"estimatedCompletedAt,omitempty"`
+	EstimatedCompletedAt *metav1.Time `json:"estimatedCompletedAt,omitempty"`
 
 	// Conditions provides details about the control plane update
 	// +listType=map
@@ -491,7 +496,7 @@ type NodeStatusInsight struct {
 	// estToComplete is the estimated time to complete the update, when known
 	// +optional
 	// +kubebuilder:validation:Type=string
-	EstToComplete metav1.Duration `json:"estToComplete,omitempty"`
+	EstToComplete *metav1.Duration `json:"estToComplete,omitempty"`
 
 	// message is a short human-readable message about the node update status
 	// +optional
@@ -706,7 +711,7 @@ type UpdateInsightImpact struct {
 	// description is a human-oriented, possibly longer-form description of the condition reported by the insight
 	// +optional
 	// +kubebuilder:validation:Type=string
-	Description string `json:"description"`
+	Description string `json:"description,omitempty"`
 }
 
 // UpdateInsightRemediation contains information about how to resolve or prevent the reported condition
@@ -721,7 +726,7 @@ type UpdateInsightRemediation struct {
 	// +optional
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:Format=date-time
-	EstimatedFinish metav1.Time `json:"estimatedFinish"`
+	EstimatedFinish *metav1.Time `json:"estimatedFinish,omitempty"`
 }
 
 // PoolResourceRef is a reference to a kubernetes resource that represents a node pool

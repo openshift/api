@@ -87,3 +87,75 @@ tests:
           i18n:
             loadType: Invalid
       expectedError: "Unsupported value: \"Invalid\""
+    - name: Should be able to create a ConsolePlugin with valid CSP configuration
+      initial: |
+        apiVersion: console.openshift.io/v1
+        kind: ConsolePlugin
+        spec:
+          displayName: foo
+          backend:
+            type: Service
+          contentSecurityPolicy:
+          - directive: ScriptSrc
+            values:
+            - https://script1.com/
+          - directive: ImgSrc
+            values:
+            - https://img1.com/
+      expected: |
+        apiVersion: console.openshift.io/v1
+        kind: ConsolePlugin
+        spec:
+          displayName: foo
+          backend:
+            type: Service
+          contentSecurityPolicy:
+          - directive: ScriptSrc
+            values:
+            - https://script1.com/
+          - directive: ImgSrc
+            values:
+            - https://img1.com/
+    - name: Should throw an error for duplicate CSP directive entries
+      initial: |
+        apiVersion: console.openshift.io/v1
+        kind: ConsolePlugin
+        spec:
+          displayName: foo
+          backend:
+            type: Service
+          contentSecurityPolicy:
+          - directive: ScriptSrc
+            values:
+            - https://script1.com/
+          - directive: ScriptSrc
+            values:
+            - https://script1.com/
+      expectedError: "Duplicate value: map[string]interface {}{\"directive\":\"ScriptSrc\""
+    - name: Should throw an error for duplicate CSP directive values
+      initial: |
+        apiVersion: console.openshift.io/v1
+        kind: ConsolePlugin
+        spec:
+          displayName: foo
+          backend:
+            type: Service
+          contentSecurityPolicy:
+          - directive: ScriptSrc
+            values:
+            - https://script1.com/
+            - https://script1.com/
+      expectedError: "spec.contentSecurityPolicy[0].values: Invalid value: \"array\": each CSP directive value must be unique"
+    - name: Should throw an error for incorrect directive type
+      initial: |
+        apiVersion: console.openshift.io/v1
+        kind: ConsolePlugin
+        spec:
+          displayName: foo
+          backend:
+            type: Service
+          contentSecurityPolicy:
+          - directive: TestSrc
+            values:
+            - https://script1.com/
+      expectedError: "spec.contentSecurityPolicy[0].directive: Unsupported value: \"TestSrc\": supported values: \"DefaultSrc\", \"ScriptSrc\", \"ImgSrc\", \"StyleSrc\", \"FontSrc\""

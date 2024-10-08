@@ -48,17 +48,17 @@ type ConsolePluginSpec struct {
 	// i18n is the configuration of plugin's localization resources.
 	// +optional
 	I18n ConsolePluginI18n `json:"i18n"`
-	// contentSecurityPolicy is a list of Content Security Policy directives for the plugin.
+	// contentSecurityPolicy is a list of Content-Security-Policy directives for the plugin.
 	// Each directive specifies a list of values that indicate server origins and script endpoints
 	// from which the plugin's assets can be loaded. This helps guard against cross-site
 	// scripting (XSS) attacks by enforcing strict security policies for asset loading.
-	// Dynamic plugins should to specify this field if they are loading assets form outside
+	// Dynamic plugins should specify this field if they are loading assets from outside
 	// the cluster or if violation reports are observed.
 	// CSP violation reports can be viewed in browser's console during development and testing
 	// of the plugin in the OpenShift web console.
-	// Available directives are default-src, script-src, img-src, style-src and font-src.
+	// Available directive types are DefaultSrc, ScriptSrc, ImgSrc, StyleSrc and FontSrc.
 	// Each of the available directives may be defined only once in the list.
-	// By default the console server adds the value 'self 'to all the various '*-src' directives.
+	// The value 'self' will be prepended to all source type directives.
 	// For more information about the CSP directives, see:
 	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
 	//
@@ -84,7 +84,6 @@ type ConsolePluginSpec struct {
 	//   OpenShift web console server CSP response header:
 	//     Content-Security-Policy: default-src 'self'; base-uri 'self'; script-src 'self' https://script1.com/ https://script2.com/ https://script3.com/; font-src 'self' https://font1.com/ https://font2.com/; img-src 'self' https://img1.com/; style-src 'self'; frame-src 'none'; object-src 'none'
 	//
-	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=5
 	// +listType=map
 	// +listMapKey=directive
@@ -99,45 +98,68 @@ type DirectiveType string
 
 const (
 	// DefaultSrc directive serves as a fallback for the other CSP fetch directives.
-	// For more information about the default-src directive, see:
+	// For more information about the DefaultSrc directive, see:
 	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/default-src
 	DefaultSrc DirectiveType = "DefaultSrc"
 	// ScriptSrc directive specifies valid sources for JavaScript.
-	// For more information about the script-src directive, see:
+	// For more information about the ScriptSrc directive, see:
 	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src
 	ScriptSrc DirectiveType = "ScriptSrc"
 	// ImgSrc directive specifies a valid sources of images and favicons.
-	// For more information about the img-src directive, see:
+	// For more information about the ImgSrc directive, see:
 	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/img-src
 	ImgSrc DirectiveType = "ImgSrc"
 	// StyleSrc directive specifies valid sources for stylesheets.
-	// For more information about the style-src directive, see:
+	// For more information about the StyleSrc directive, see:
 	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/style-src
 	StyleSrc DirectiveType = "StyleSrc"
 	// FontSrc directive specifies valid sources for fonts loaded using @font-face.
-	// For more information about the font-src directive, see:
+	// For more information about the FontSrcdirective, see:
 	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/font-src
 	FontSrc DirectiveType = "FontSrc"
 )
+
+// CSPDirectiveValue is single value for a Content-Security-Policy directive.
+// Each directive value must have a maximum length of 1024 characters and must not contain
+// whitespace, commas, or semicolons.
+// +kubebuilder:validation:MinLength=1
+// +kubebuilder:validation:MaxLength=1024
+// +kubebuilder:validation:XValidation:rule="!self.contains(' ')",message="CSP directive value cannot contain a whitespace"
+// +kubebuilder:validation:XValidation:rule="!self.contains(',')",message="CSP directive value cannot contain a comma"
+// +kubebuilder:validation:XValidation:rule="!self.contains(';')",message="CSP directive value cannot contain a semi-colon"
+type CSPDirectiveValue string
 
 // ConsolePluginCSP holds configuration for a specific CSP directive
 type ConsolePluginCSP struct {
 	// directive specifies which Content-Security-Policy directive to configure.
 	// Available directive types are DefaultSrc, ScriptSrc, ImgSrc, StyleSrc and FontSrc.
+	// DefaultSrc directive serves as a fallback for the other CSP fetch directives.
+	// For more information about the DefaultSrc directive, see:
+	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/default-src
+	// ScriptSrc directive specifies valid sources for JavaScript.
+	// For more information about the ScriptSrc directive, see:
+	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src
+	// ImgSrc directive specifies a valid sources of images and favicons.
+	// For more information about the ImgSrc directive, see:
+	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/img-src
+	// StyleSrc directive specifies valid sources for stylesheets.
+	// For more information about the StyleSrc directive, see:
+	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/style-src
+	// FontSrc directive specifies valid sources for fonts loaded using @font-face.
+	// For more information about the FontSrc directive, see:
+	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/font-src
 	// +kubebuilder:validation:Required
 	Directive DirectiveType `json:"directive"`
 	// values defines an array of values to append to the console defaults for this directive.
-	// Each ConsolePlugin may define their own directives with their values.
-	// These will be set by the OpenShift web console's backend, as part of
-	// its Content Security Policy header.
+	// Each ConsolePlugin may define their own directives with their values. These will be set
+	// by the OpenShift web console's backend, as part of its Content-Security-Policy header.
+	// The array can contain at most 32 items.
+	//
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=32
-	// +kubebuilder:validation:MaxLength=1024
-	// +kubebuilder:validation:UniqueItems=true
-	// +kubebuilder:validation:XValidation:rule=`!self.contains(',')`,message="CSP directive value cannot contain a comma"
-	// +kubebuilder:validation:XValidation:rule=`!self.contains(';')`,message="CSP directive value cannot contain a semicolon"
-	Values []string `json:"values"`
+	// +kubebuilder:validation:XValidation:rule="self.all(x, self.exists_one(y, x == y))",message="each CSP directive value must be unique"
+	Values []CSPDirectiveValue `json:"values"`
 }
 
 // LoadType is an enumeration of i18n loading types

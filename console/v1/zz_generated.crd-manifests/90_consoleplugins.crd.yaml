@@ -185,15 +185,18 @@ spec:
                         minLength: 1
                         type: string
                         x-kubernetes-validations:
+                        - message: CSP directive value cannot be a wildcard
+                          rule: 'self != ''*'''
                         - message: CSP directive value cannot contain a whitespace
-                          rule: '!self.matches(''\s'')'
+                          rule: '!self.matches(''\\s'')'
                         - message: CSP directive value cannot contain a comma
                           rule: '!self.contains('','')'
                         - message: CSP directive value cannot contain a semi-colon
                           rule: '!self.contains('';'')'
-                      maxItems: 32
+                      maxItems: 8
                       minItems: 1
                       type: array
+                      x-kubernetes-list-type: set
                       x-kubernetes-validations:
                       - message: each CSP directive value must be unique
                         rule: self.all(x, self.exists_one(y, x == y))

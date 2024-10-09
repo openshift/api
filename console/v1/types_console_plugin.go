@@ -124,10 +124,11 @@ const (
 // Each directive value must have a maximum length of 1024 characters and must not contain
 // whitespace, commas, or semicolons.
 // +kubebuilder:validation:MinLength=1
-// +kubebuilder:validation:MaxLength=256
-// +kubebuilder:validation:XValidation:rule="!self.matches('\\s')",message="CSP directive value cannot contain a whitespace"
+// +kubebuilder:validation:MaxLength=1024
+// +kubebuilder:validation:XValidation:rule="!self.matches('\\\\s')",message="CSP directive value cannot contain a whitespace"
 // +kubebuilder:validation:XValidation:rule="!self.contains(',')",message="CSP directive value cannot contain a comma"
 // +kubebuilder:validation:XValidation:rule="!self.contains(';')",message="CSP directive value cannot contain a semi-colon"
+// +kubebuilder:validation:XValidation:rule="self != '*'",message="CSP directive value cannot be a wildcard"
 type CSPDirectiveValue string
 
 // ConsolePluginCSP holds configuration for a specific CSP directive
@@ -159,7 +160,7 @@ type ConsolePluginCSP struct {
 	//
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinItems=1
-	// +kubebuilder:validation:MaxItems=4
+	// +kubebuilder:validation:MaxItems=8
 	// +kubebuilder:validation:XValidation:rule="self.all(x, self.exists_one(y, x == y))",message="each CSP directive value must be unique"
 	// +listType=set
 	Values []CSPDirectiveValue `json:"values"`

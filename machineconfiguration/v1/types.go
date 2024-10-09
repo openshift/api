@@ -842,7 +842,7 @@ const (
 	ContainerRuntimeDefaultRuntimeEmpty   = ""
 	ContainerRuntimeDefaultRuntimeRunc    = "runc"
 	ContainerRuntimeDefaultRuntimeCrun    = "crun"
-	ContainerRuntimeDefaultRuntimeDefault = ContainerRuntimeDefaultRuntimeRunc
+	ContainerRuntimeDefaultRuntimeDefault = ContainerRuntimeDefaultRuntimeCrun
 )
 
 // ContainerRuntimeConfigStatus defines the observed state of a ContainerRuntimeConfig

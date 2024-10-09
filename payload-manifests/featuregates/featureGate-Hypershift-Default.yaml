@@ -116,9 +116,6 @@
                         "name": "OnClusterBuild"
                     },
                     {
-                        "name": "PersistentIPsForVirtualization"
-                    },
-                    {
                         "name": "PinnedImages"
                     },
                     {
@@ -230,6 +227,9 @@
                     },
                     {
                         "name": "OpenShiftPodSecurityAdmission"
+                    },
+                    {
+                        "name": "PersistentIPsForVirtualization"
                     },
                     {
                         "name": "PrivateHostedZoneAWS"

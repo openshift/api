@@ -173,7 +173,8 @@ spec:
                         values defines an array of values to append to the console defaults for this directive.
                         Each ConsolePlugin may define their own directives with their values. These will be set
                         by the OpenShift web console's backend, as part of its Content-Security-Policy header.
-                        The array can contain at most 32 items.
+                        The array can contain at most 32 values. Each directive value must have a maximum length
+                        of 1024 characters and must not contain whitespace, commas, or semicolons.
                       items:
                         description: |-
                           CSPDirectiveValue is single value for a Content-Security-Policy directive.
@@ -184,7 +185,7 @@ spec:
                         type: string
                         x-kubernetes-validations:
                         - message: CSP directive value cannot contain a whitespace
-                          rule: '!self.contains('' '')'
+                          rule: '!self.matches(''\s'')'
                         - message: CSP directive value cannot contain a comma
                           rule: '!self.contains('','')'
                         - message: CSP directive value cannot contain a semi-colon
@@ -204,6 +205,8 @@ spec:
                 x-kubernetes-list-map-keys:
                 - directive
                 x-kubernetes-list-type: map
+                x-kubernetes-validations:
+                - rule: self.map(x, x.values.map(y, y.size()).sum()).sum() < 8192
               displayName:
                 description: |-
                   displayName is the display name of the plugin.

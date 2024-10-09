@@ -85,6 +85,7 @@ type ConsolePluginSpec struct {
 	//     Content-Security-Policy: default-src 'self'; base-uri 'self'; script-src 'self' https://script1.com/ https://script2.com/ https://script3.com/; font-src 'self' https://font1.com/ https://font2.com/; img-src 'self' https://img1.com/; style-src 'self'; frame-src 'none'; object-src 'none'
 	//
 	// +kubebuilder:validation:MaxItems=5
+	// +kubebuilder:validation:XValidation:rule="self.map(x, x.values.map(y, y.size()).sum()).sum() < 8192"
 	// +listType=map
 	// +listMapKey=directive
 	// +optional
@@ -123,8 +124,8 @@ const (
 // Each directive value must have a maximum length of 1024 characters and must not contain
 // whitespace, commas, or semicolons.
 // +kubebuilder:validation:MinLength=1
-// +kubebuilder:validation:MaxLength=1024
-// +kubebuilder:validation:XValidation:rule="!self.contains(' ')",message="CSP directive value cannot contain a whitespace"
+// +kubebuilder:validation:MaxLength=256
+// +kubebuilder:validation:XValidation:rule="!self.matches('\\s')",message="CSP directive value cannot contain a whitespace"
 // +kubebuilder:validation:XValidation:rule="!self.contains(',')",message="CSP directive value cannot contain a comma"
 // +kubebuilder:validation:XValidation:rule="!self.contains(';')",message="CSP directive value cannot contain a semi-colon"
 type CSPDirectiveValue string
@@ -153,12 +154,14 @@ type ConsolePluginCSP struct {
 	// values defines an array of values to append to the console defaults for this directive.
 	// Each ConsolePlugin may define their own directives with their values. These will be set
 	// by the OpenShift web console's backend, as part of its Content-Security-Policy header.
-	// The array can contain at most 32 items.
+	// The array can contain at most 32 values. Each directive value must have a maximum length
+	// of 1024 characters and must not contain whitespace, commas, or semicolons.
 	//
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinItems=1
-	// +kubebuilder:validation:MaxItems=32
+	// +kubebuilder:validation:MaxItems=4
 	// +kubebuilder:validation:XValidation:rule="self.all(x, self.exists_one(y, x == y))",message="each CSP directive value must be unique"
+	// +listType=set
 	Values []CSPDirectiveValue `json:"values"`
 }
 

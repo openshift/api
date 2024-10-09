@@ -159,3 +159,29 @@ tests:
             values:
             - https://script1.com/
       expectedError: "spec.contentSecurityPolicy[0].directive: Unsupported value: \"TestSrc\": supported values: \"DefaultSrc\", \"ScriptSrc\", \"ImgSrc\", \"StyleSrc\", \"FontSrc\""
+    - name: Should throw an error for invalid CSP directive values with whitespace, using space
+      initial: |
+        apiVersion: console.openshift.io/v1
+        kind: ConsolePlugin
+        spec:
+          displayName: foo
+          backend:
+            type: Service
+          contentSecurityPolicy:
+          - directive: ScriptSrc
+            values:
+            - https://scr ipt1.com/
+      expectedError: "spec.contentSecurityPolicy[0].values[0]: Invalid value: \"string\": CSP directive value cannot contain a whitespace"
+    - name: Should throw an error for invalid CSP directive values with whitespace, using tab
+      initial: |
+        apiVersion: console.openshift.io/v1
+        kind: ConsolePlugin
+        spec:
+          displayName: foo
+          backend:
+            type: Service
+          contentSecurityPolicy:
+          - directive: ScriptSrc
+            values:
+            - https://scri    pt1.com/
+      expectedError: "spec.contentSecurityPolicy[0].values[0]: Invalid value: \"string\": CSP directive value cannot contain a whitespace"

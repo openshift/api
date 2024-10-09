@@ -38667,7 +38667,7 @@ func schema_openshift_api_machine_v1beta1_VSphereMachineProviderSpec(ref common.
 							Format:      "",
 						},
 					},
-					"disks": {
+					"dataDisks": {
 						SchemaProps: spec.SchemaProps{
 							Description: "disks is a list of non OS disks to be created and attached to the VM.  The max number of disk allowed to be attached is currently 15.  This limitation is being applied to allow no more than 16 disks on the default scsi controller for the VM. The first disk on that SCSI controller will be the OS disk from the template.",
 							Type:        []string{"array"},

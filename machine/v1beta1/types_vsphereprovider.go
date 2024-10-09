@@ -75,7 +75,7 @@ type VSphereMachineProviderSpec struct {
 	// The first disk on that SCSI controller will be the OS disk from the template.
 	// +openshift:enable:FeatureGate=VSphereMultiDisk
 	// +optional
-	Disks []VSphereDisk `json:"disks,omitempty"`
+	DataDisks []VSphereDisk `json:"dataDisks,omitempty"`
 }
 
 // CloneMode is the type of clone operation used to clone a VM from a template.

@@ -22277,18 +22277,18 @@
           "description": "CredentialsSecret is a reference to the secret with vSphere credentials.",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
-        "diskGiB": {
-          "description": "DiskGiB is the size of a virtual machine's disk, in GiB. Defaults to the analogue property value in the template from which this machine is cloned. This parameter will be ignored if 'LinkedClone' CloneMode is set.",
-          "type": "integer",
-          "format": "int32"
-        },
-        "disks": {
+        "dataDisks": {
           "description": "disks is a list of non OS disks to be created and attached to the VM.  The max number of disk allowed to be attached is currently 15.  This limitation is being applied to allow no more than 16 disks on the default scsi controller for the VM. The first disk on that SCSI controller will be the OS disk from the template.",
           "type": "array",
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.VSphereDisk"
           }
+        },
+        "diskGiB": {
+          "description": "DiskGiB is the size of a virtual machine's disk, in GiB. Defaults to the analogue property value in the template from which this machine is cloned. This parameter will be ignored if 'LinkedClone' CloneMode is set.",
+          "type": "integer",
+          "format": "int32"
         },
         "kind": {
           "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",

@@ -807,7 +807,7 @@ var map_VSphereMachineProviderSpec = map[string]string{
 	"tagIDs":            "tagIDs is an optional set of tags to add to an instance. Specified tagIDs must use URN-notation instead of display names. A maximum of 10 tag IDs may be specified.",
 	"snapshot":          "Snapshot is the name of the snapshot from which the VM was cloned",
 	"cloneMode":         "CloneMode specifies the type of clone operation. The LinkedClone mode is only support for templates that have at least one snapshot. If the template has no snapshots, then CloneMode defaults to FullClone. When LinkedClone mode is enabled the DiskGiB field is ignored as it is not possible to expand disks of linked clones. Defaults to FullClone. When using LinkedClone, if no snapshots exist for the source template, falls back to FullClone.",
-	"disks":             "disks is a list of non OS disks to be created and attached to the VM.  The max number of disk allowed to be attached is currently 15.  This limitation is being applied to allow no more than 16 disks on the default scsi controller for the VM. The first disk on that SCSI controller will be the OS disk from the template.",
+	"dataDisks":         "disks is a list of non OS disks to be created and attached to the VM.  The max number of disk allowed to be attached is currently 15.  This limitation is being applied to allow no more than 16 disks on the default scsi controller for the VM. The first disk on that SCSI controller will be the OS disk from the template.",
 }
 
 func (VSphereMachineProviderSpec) SwaggerDoc() map[string]string {

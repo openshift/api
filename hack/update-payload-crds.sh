@@ -25,6 +25,7 @@ crd_globs="\
     machineconfiguration/v1alpha1/zz_generated.crd-manifests/*.crd.yaml
     operator/v1/zz_generated.crd-manifests/0000_80_machine-config_01_machineconfigurations*.crd.yaml
     config/v1alpha1/zz_generated.crd-manifests/0000_10_config-operator_01_clusterimagepolicies*.crd.yaml
+    config/v1alpha1/zz_generated.crd-manifests/0000_10_config-operator_01_imagepolicies*.crd.yaml
     operator/v1/zz_generated.crd-manifests/0000_50_storage_01_storages*.crd.yaml
     operator/v1/zz_generated.crd-manifests/0000_90_csi-driver_01_clustercsidrivers*.crd.yaml
     "

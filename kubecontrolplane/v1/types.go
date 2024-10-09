@@ -62,6 +62,11 @@ type KubeAPIServerConfig struct {
 
 	// TODO this needs to be removed.
 	APIServerArguments map[string]Arguments `json:"apiServerArguments"`
+
+	// MinimumKubeletVersion is the lowest version of a kubelet that can join the cluster.
+	// Specifically, the apiserver will deny any authorization requests of kubelets that are older
+	// than the specified version.
+	MinimumKubeletVersion string `json:"minimumKubeletVersion,omitempty"`
 }
 
 // Arguments masks the value so protobuf can generate

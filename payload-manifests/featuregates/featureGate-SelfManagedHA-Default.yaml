@@ -65,6 +65,9 @@
                         "name": "ImageStreamImportMode"
                     },
                     {
+                        "name": "IngressControllerDynamicConfigurationManager"
+                    },
+                    {
                         "name": "InsightsConfig"
                     },
                     {

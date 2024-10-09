@@ -14786,6 +14786,10 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.kubecontrolplane.v1.KubeletConnectionInfo"
         },
+        "minimumKubeletVersion": {
+          "description": "MinimumKubeletVersion is the lowest version of a kubelet that can meaningfully join the cluster. Specifically, the apiserver will deny most authorization requests of kubelets that are older than the specified version, only allowing the kubelet to get and update its node object, and perform subjectaccessreviews.",
+          "type": "string"
+        },
         "oauthConfig": {
           "description": "oauthConfig, if present start the /oauth endpoint in this process",
           "$ref": "#/definitions/com.github.openshift.api.osin.v1.OAuthConfig"

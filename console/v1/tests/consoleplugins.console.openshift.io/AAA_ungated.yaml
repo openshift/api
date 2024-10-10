@@ -170,8 +170,31 @@ tests:
           contentSecurityPolicy:
           - directive: ScriptSrc
             values:
-            - '*'
+            - "*"
       expectedError: "Invalid value: \"string\": CSP directive value cannot be a wildcard"
+    - name: Should be able to create a ConsolePlugin with valid CSP value, using domain with wildcard prefix
+      initial: |
+        apiVersion: console.openshift.io/v1
+        kind: ConsolePlugin
+        spec:
+          displayName: foo
+          backend:
+            type: Service
+          contentSecurityPolicy:
+          - directive: ScriptSrc
+            values:
+            - "*.example.com"
+      expected: |
+        apiVersion: console.openshift.io/v1
+        kind: ConsolePlugin
+        spec:
+          displayName: foo
+          backend:
+            type: Service
+          contentSecurityPolicy:
+          - directive: ScriptSrc
+            values:
+            - "*.example.com"
     - name: Should throw an error for invalid CSP directive values with whitespace, using space
       initial: |
         apiVersion: console.openshift.io/v1

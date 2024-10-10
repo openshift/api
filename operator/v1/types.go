@@ -177,6 +177,7 @@ var (
 )
 
 // OperatorCondition is just the standard condition fields.
+// +structType=atomic
 type OperatorCondition struct {
 	// type of condition in CamelCase or in foo.example.com/CamelCase.
 	// ---

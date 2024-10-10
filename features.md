@@ -2,6 +2,7 @@
 | ------ | --- | --- | --- | --- | --- | ---  |
 | ClusterAPIInstall| | | | | |  |
 | ClusterAPIInstallIBMCloud| | | | | |  |
+| DyanmicServiceEndpointIBMCloud| | | | | |  |
 | EventedPLEG| | | | | |  |
 | MachineAPIMigration| | | | | |  |
 | MachineAPIOperatorDisableMachineHealthCheckController| | | | | |  |

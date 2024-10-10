@@ -6,7 +6,7 @@ metadata:
     api.openshift.io/filename-cvo-runlevel: "0000_10"
     api.openshift.io/filename-operator: config-operator
     api.openshift.io/filename-ordering: "01"
-    feature-gate.release.openshift.io/: "true"
+    feature-gate.release.openshift.io/DyanmicServiceEndpointIBMCloud: "true"
     release.openshift.io/bootstrap-required: "true"
   name: infrastructures.config.openshift.io
 spec:
@@ -223,6 +223,68 @@ spec:
                   ibmcloud:
                     description: ibmcloud contains settings specific to the IBMCloud
                       infrastructure provider.
+                    properties:
+                      serviceEndpoints:
+                        description: |-
+                          serviceEndpoints is a list of custom endpoints which will override the default
+                          service endpoints of an IBM service. These endpoints are used by components
+                          within the cluster when trying to reach the IBM Cloud Services that have been
+                          overriden. The CCCMO reads in the IBMCloudPlatformSpec and validates each
+                          endpoint is resolvable. Once validated, the cloud config and IBMCloudPlatformStatus
+                          are updated to reflect the same custom endpoints.
+                          A maximum of 13 service endpoints overrides are supported.
+                        items:
+                          description: |-
+                            IBMCloudServiceEndpoint stores the configuration of a custom url to
+                            override existing defaults of IBM Cloud Services.
+                          properties:
+                            name:
+                              description: |-
+                                name is the name of the IBM Cloud service.
+                                Possible values are: CIS, COS, COSConfig, DNSServices, GlobalCatalog, GlobalSearch, GlobalTagging, HyperProtect, IAM, KeyProtect, ResourceController, ResourceManager, or VPC.
+                                For example, the IBM Cloud Private IAM service could be configured with the
+                                service `name` of `IAM` and `url` of `https://private.iam.cloud.ibm.com`
+                                Whereas the IBM Cloud Private VPC service for US South (Dallas) could be configured
+                                with the service `name` of `VPC` and `url` of `https://us.south.private.iaas.cloud.ibm.com`
+                              enum:
+                              - CIS
+                              - COS
+                              - COSConfig
+                              - DNSServices
+                              - GlobalCatalog
+                              - GlobalSearch
+                              - GlobalTagging
+                              - HyperProtect
+                              - IAM
+                              - KeyProtect
+                              - ResourceController
+                              - ResourceManager
+                              - VPC
+                              type: string
+                            url:
+                              description: |-
+                                url is fully qualified URI with scheme https, that overrides the default generated
+                                endpoint for a client.
+                                This must be provided and cannot be empty. The path must follow the pattern
+                                /v[0,9]+ or /api/v[0,9]+
+                              maxLength: 300
+                              type: string
+                              x-kubernetes-validations:
+                              - message: url must use https scheme
+                                rule: url(self).getScheme() == "https"
+                              - message: url path must match /v[0,9]+ or /api/v[0,9]+
+                                rule: matches((url(self).getEscapedPath()), '^/(api/)?v[0-9]+/{0,1}$')
+                              - message: url must be a valid absolute URL
+                                rule: isURL(self)
+                          required:
+                          - name
+                          - url
+                          type: object
+                        maxItems: 13
+                        type: array
+                        x-kubernetes-list-map-keys:
+                        - name
+                        x-kubernetes-list-type: map
                     type: object
                   kubevirt:
                     description: kubevirt contains settings specific to the kubevirt
@@ -324,7 +386,6 @@ spec:
                                     is Name, and forbidden otherwise
                                   rule: 'has(self.type) && self.type == ''Name'' ?  has(self.name)
                                     : !has(self.name)'
-                              maxItems: 1
                               minItems: 1
                               type: array
                               x-kubernetes-list-type: atomic
@@ -714,7 +775,6 @@ spec:
                                     /<datacenter>/network/<portgroup>.
                                   items:
                                     type: string
-                                  maxItems: 1
                                   minItems: 1
                                   type: array
                                   x-kubernetes-list-type: atomic
@@ -973,7 +1033,6 @@ spec:
                           - datacenters
                           - server
                           type: object
-                        maxItems: 1
                         minItems: 0
                         type: array
                         x-kubernetes-list-type: atomic
@@ -1022,10 +1081,6 @@ spec:
                   and the operators should not configure the operand for highly-available operation
                   The 'External' mode indicates that the control plane is hosted externally to the cluster and that
                   its components are not visible within the cluster.
-                enum:
-                - HighlyAvailable
-                - SingleReplica
-                - External
                 type: string
               cpuPartitioning:
                 default: None
@@ -1518,12 +1573,17 @@ spec:
                               maxLength: 300
                               type: string
                               x-kubernetes-validations:
+                              - message: url must use https scheme
+                                rule: url(self).getScheme() == "https"
+                              - message: url path must match /v[0,9]+ or /api/v[0,9]+
+                                rule: matches((url(self).getEscapedPath()), '^/(api/)?v[0-9]+/{0,1}$')
                               - message: url must be a valid absolute URL
                                 rule: isURL(self)
                           required:
                           - name
                           - url
                           type: object
+                        maxItems: 13
                         type: array
                         x-kubernetes-list-map-keys:
                         - name

@@ -1314,7 +1314,7 @@ tests:
               serviceEndpoints:
               - name: COS
                 url: " "
-      expectedStatusError: " status.platformStatus.ibmcloud.serviceEndpoints[0].url: Invalid value: \"string\": url must be a valid absolute URL"
+      expectedStatusError: "status.platformStatus.ibmcloud.serviceEndpoints[0].url: Invalid value: \"string\": url must be a valid absolute URL"
     - name: Should not be able to add invalid (URL) ServiceEndpoints to IBMCloud PlatformStatus
       initial: |
         apiVersion: config.openshift.io/v1

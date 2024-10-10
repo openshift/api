@@ -131,7 +131,7 @@ tests:
           - directive: ScriptSrc
             values:
             - https://script1.com/
-      expectedError: "Duplicate value: map[string]interface {}{\"directive\":\"ScriptSrc\""
+      expectedError: "spec.contentSecurityPolicy[1]: Duplicate value: map[string]interface {}{\"directive\":\"ScriptSrc\""
     - name: Should throw an error for duplicate CSP directive values
       initial: |
         apiVersion: console.openshift.io/v1
@@ -171,7 +171,7 @@ tests:
           - directive: ScriptSrc
             values:
             - "*"
-      expectedError: "Invalid value: \"string\": CSP directive value cannot be a wildcard"
+      expectedError: "spec.contentSecurityPolicy[0].values[0]: Invalid value: \"string\": CSP directive value cannot be a wildcard"
     - name: Should be able to create a ConsolePlugin with valid CSP value, using domain with wildcard prefix
       initial: |
         apiVersion: console.openshift.io/v1

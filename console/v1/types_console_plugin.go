@@ -85,7 +85,7 @@ type ConsolePluginSpec struct {
 	//     Content-Security-Policy: default-src 'self'; base-uri 'self'; script-src 'self' https://script1.com/ https://script2.com/ https://script3.com/; font-src 'self' https://font1.com/ https://font2.com/; img-src 'self' https://img1.com/; style-src 'self'; frame-src 'none'; object-src 'none'
 	//
 	// +kubebuilder:validation:MaxItems=5
-	// +kubebuilder:validation:XValidation:rule="self.map(x, x.values.map(y, y.size()).sum()).sum() < 8192"
+	// +kubebuilder:validation:XValidation:rule="self.map(x, x.values.map(y, y.size()).sum()).sum() < 8192",message="the total combined size of values of all directives must not exceed 8192 (8kb)"
 	// +listType=map
 	// +listMapKey=directive
 	// +optional
@@ -122,7 +122,7 @@ const (
 
 // CSPDirectiveValue is single value for a Content-Security-Policy directive.
 // Each directive value must have a maximum length of 1024 characters and must not contain
-// whitespace, commas, or semicolons.
+// whitespace, commas, or semicolons. The value '*' is not permitted.
 // +kubebuilder:validation:MinLength=1
 // +kubebuilder:validation:MaxLength=1024
 // +kubebuilder:validation:XValidation:rule="!self.matches('\\\\s')",message="CSP directive value cannot contain a whitespace"
@@ -155,8 +155,9 @@ type ConsolePluginCSP struct {
 	// values defines an array of values to append to the console defaults for this directive.
 	// Each ConsolePlugin may define their own directives with their values. These will be set
 	// by the OpenShift web console's backend, as part of its Content-Security-Policy header.
-	// The array can contain at most 32 values. Each directive value must have a maximum length
-	// of 1024 characters and must not contain whitespace, commas, or semicolons.
+	// The array can contain at most 8 values. Each directive value must have a maximum length
+	// of 1024 characters and must not contain whitespace, commas, semicolons. The value '*'is
+	// not permitted. Each value in the array must be unique.
 	//
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinItems=1

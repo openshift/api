@@ -21772,7 +21772,7 @@ func schema_openshift_api_console_v1_ConsolePluginCSP(ref common.ReferenceCallba
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "values defines an array of values to append to the console defaults for this directive. Each ConsolePlugin may define their own directives with their values. These will be set by the OpenShift web console's backend, as part of its Content-Security-Policy header. The array can contain at most 32 values. Each directive value must have a maximum length of 1024 characters and must not contain whitespace, commas, or semicolons.",
+							Description: "values defines an array of values to append to the console defaults for this directive. Each ConsolePlugin may define their own directives with their values. These will be set by the OpenShift web console's backend, as part of its Content-Security-Policy header. The array can contain at most 8 values. Each directive value must have a maximum length of 1024 characters and must not contain whitespace, commas, semicolons. The value '*'is not permitted. Each value in the array must be unique.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{

@@ -180,11 +180,6 @@ type NetworkDeviceSpec struct {
 
 // VSphereDisk describes additional disks for vSphere.
 type VSphereDisk struct {
-	// deviceName is a name to be used to identify the disk definition. If deviceName is not specified,
-	// the disk will still be created.  The deviceName should be unique so that it can be used to clearly
-	// identify purpose of the disk, but is not required to be unique.
-	// +optional
-	DeviceName string `json:"deviceName,omitempty"`
 	// sizeGiB is the size of the disk (in GiB).
 	// +kubebuilder:validation:Required
 	SizeGiB int64 `json:"sizeGiB"`

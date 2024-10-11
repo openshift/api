@@ -38527,13 +38527,6 @@ func schema_openshift_api_machine_v1beta1_VSphereDisk(ref common.ReferenceCallba
 				Description: "VSphereDisk describes additional disks for vSphere.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"deviceName": {
-						SchemaProps: spec.SchemaProps{
-							Description: "deviceName is a name to be used to identify the disk definition. If deviceName is not specified, the disk will still be created.  The deviceName should be unique so that it can be used to clearly identify purpose of the disk, but is not required to be unique.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 					"sizeGiB": {
 						SchemaProps: spec.SchemaProps{
 							Description: "sizeGiB is the size of the disk (in GiB).",

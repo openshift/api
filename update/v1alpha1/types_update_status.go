@@ -674,7 +674,7 @@ type UpdateInsightScope struct {
 
 	// resources is a list of resources involved in the insight, of any group/kind
 	// +optional
-	// +listType=set
+	// +listType=atomic
 	Resources []ResourceRef `json:"resources,omitempty"`
 }
 

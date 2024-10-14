@@ -164,52 +164,31 @@ const (
 	ClusterVersionNotProgressing ClusterVersionStatusInsightUpdatingReason = "ClusterVersionNotProgressing"
 )
 
-// VersionMetadataType is the type of the metadata value
-// +kubebuilder:validation:Enum=String;Bool
-type VersionMetadataType string
-
-const (
-	StringVersionMetadata VersionMetadataType = "String"
-	BoolVersionMetadata   VersionMetadataType = "Bool"
-)
-
+// VersionMetadataKey is a key for a metadata value associated with a version
+// +kubebuilder:validation:Enum=Installation;Partial;Architecture
 type VersionMetadataKey string
 
 const (
-	// installation denotes a boolean that indicates the update was initiated as an installation
-	InstallationMetadata VersionMetadataKey = "installation"
-	// partial denotes a boolean that indicates the update was initiated in a state where the previous upgrade
+	// Installation denotes a boolean that indicates the update was initiated as an installation
+	InstallationMetadata VersionMetadataKey = "Installation"
+	// Partial denotes a boolean that indicates the update was initiated in a state where the previous upgrade
 	// (to the original version) was not fully completed
-	PartialMetadata VersionMetadataKey = "partial"
-	// architecture denotes a string that indicates the architecture of the payload image of the version,
+	PartialMetadata VersionMetadataKey = "Partial"
+	// Architecture denotes a string that indicates the architecture of the payload image of the version,
 	// when relevant
-	ArchitectureMetadata VersionMetadataKey = "architecture"
+	ArchitectureMetadata VersionMetadataKey = "Architecture"
 )
 
 type VersionMetadata struct {
 	// key is the name of this metadata value
 	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Enum=installation;partial;architecture
 	Key VersionMetadataKey `json:"key"`
-
-	// +kubebuilder:validation:Required
-	VersionMetadataValue `json:",inline"`
-}
-
-type VersionMetadataValue struct {
-	// +unionDiscriminator
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Enum:String;Bool
-	Type VersionMetadataType `json:"type"`
 
 	// +optional
 	// +kubebuilder:validation:Type=string
-	// +unionMember
-	String string `json:"string,omitempty"`
-
-	// +optional
-	// +kubebuilder:validation:Type=boolean
-	// +unionMember
-	Bool bool `json:"bool,omitempty"`
+	// +kubebuilder:validation:MaxLength=32
+	Value string `json:"value,omitempty"`
 }
 
 // Version describes a version involved in an update, typically on one side of an update edge
@@ -217,9 +196,12 @@ type Version struct {
 	// version is a semantic version string, or a placeholder '<none>' for the special case where this
 	// is a "previous" version in a new installation
 	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:MaxLength=64
 	Version string `json:"version,omitempty"`
 
-	// metadata is a list of metadata associated with the version
+	// metadata is a list of metadata associated with the version. It is a list of key-value pairs. The value is optional
+	// and when not provided, the metadata item has boolean semantics (presence indicates true)
 	// +listType=map
 	// +listMapKey=key
 	// +optional

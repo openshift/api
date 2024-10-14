@@ -22,24 +22,26 @@ type UpdateStatus struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
+	// spec is empty for now, UpdateStatus is purely status-reporting API. In the future spec may be used to hold
+	// configuration to drive what information is surfaced and how
 	// +kubebuilder:validation:Required
-	// +required
 	Spec UpdateStatusSpec `json:"spec"`
 	// +optional
 	Status UpdateStatusStatus `json:"status"`
 }
 
-// UpdateStatusSpec is empty for now, can possibly hold configuration for Update Status Controller in the future
+// UpdateStatusSpec is empty for now, UpdateStatus is purely status-reporting API. In the future spec may be used
+// to hold configuration to drive what information is surfaced and how
 type UpdateStatusSpec struct {
 }
 
 // +k8s:deepcopy-gen=true
 
-// UpdateStatusStatus is the API about in-progress updates, kept populated by Update Status Controller by
-// aggregating and summarizing UpdateInsights produced by update informers
+// UpdateStatusStatus is the API about in-progress updates. It aggregates and summarizes UpdateInsights produced by
+// update informers
 type UpdateStatusStatus struct {
 	// controlPlane contains a summary and insights related to the control plane update
-	// +required
+	// +kubebuilder:validation:Required
 	ControlPlane ControlPlaneUpdateStatus `json:"controlPlane"`
 
 	// workerPools contains summaries and insights related to the worker pools update
@@ -48,7 +50,7 @@ type UpdateStatusStatus struct {
 	// +optional
 	WorkerPools []PoolUpdateStatus `json:"workerPools,omitempty"`
 
-	// conditions provide details about Update Status Controller operational matters
+	// conditions provide details about the controller operational matters
 	// +listType=map
 	// +listMapKey=type
 	// +optional
@@ -59,8 +61,7 @@ type UpdateStatusStatus struct {
 type ControlPlaneConditionType string
 
 const (
-	// ControlPlaneUpdating is the condition type that communicate whether the whole control plane is updating
-	// or not
+	// Updating is the condition type that communicate whether the whole control plane is updating or not
 	ControlPlaneUpdating ControlPlaneConditionType = "Updating"
 )
 
@@ -69,13 +70,13 @@ const (
 type ControlPlaneUpdatingReason string
 
 const (
-	// ReasonClusterVersionProgressing is used for Updating=True set because we observed a ClusterVersion resource to
+	// ClusterVersionProgressing is used for Updating=True set because we observed a ClusterVersion resource to
 	// have Progressing=True condition
 	ReasonClusterVersionProgressing ControlPlaneUpdatingReason = "ClusterVersionProgressing"
-	// ReasonClusterVersionNotProgressing is used for Updating=False set because we observed a ClusterVersion resource to
+	// ClusterVersionNotProgressing is used for Updating=False set because we observed a ClusterVersion resource to
 	// have Progressing=False condition
 	ReasonClusterVersionNotProgressing ControlPlaneUpdatingReason = "ClusterVersionNotProgressing"
-	// ReasonClusterVersionCannotDetermine is used for Updating=Unknown. This covers many different actual reasons such as
+	// CannotDetermineUpdating is used with Updating=Unknown. This covers many different actual reasons such as
 	// missing or Unknown Progressing condition on ClusterVersion, but it does not seem useful to track the individual
 	// reasons to that granularity for Updating=Unknown
 	ReasonClusterVersionCannotDetermine ControlPlaneUpdatingReason = "CannotDetermineUpdating"
@@ -85,7 +86,7 @@ const (
 type ControlPlaneUpdateStatus struct {
 	// resource is the resource that represents the control plane. It will typically be a ClusterVersion resource
 	// in standalone OpenShift and HostedCluster in Hosted Control Planes.
-	// +required
+	// +kubebuilder:validation:Required
 	Resource ResourceRef `json:"resource"`
 
 	// poolResource is the resource that represents control plane node pool, typically a MachineConfigPool. This field
@@ -108,12 +109,11 @@ type ControlPlaneUpdateStatus struct {
 
 // UpdateInformer is an insight producer identified by a name, carrying a list of insights it produced
 type UpdateInformer struct {
-	// Name is the name of the insight producer
-	// +required
+	// name is the name of the insight producer
 	// +kubebuilder:validation:Required
 	Name string `json:"name"`
 
-	// Insights is a list of insights produced by this producer
+	// insights is a list of insights produced by this producer
 	// +optional
 	// +listType=map
 	// +listMapKey=uid
@@ -155,12 +155,12 @@ const (
 )
 
 // VersionMetadataType is the type of the metadata value
-// +kubebuilder:validation:Enum=string;bool;int
+// +kubebuilder:validation:Enum=String;Bool
 type VersionMetadataType string
 
 const (
-	StringVersionMetadata VersionMetadataType = "string"
-	BoolVersionMetadata   VersionMetadataType = "bool"
+	StringVersionMetadata VersionMetadataType = "String"
+	BoolVersionMetadata   VersionMetadataType = "Bool"
 )
 
 type VersionMetadataKey string
@@ -177,17 +177,18 @@ const (
 )
 
 type VersionMetadata struct {
-	// +required
+	// key is the name of this metadata value
+	// +kubebuilder:validation:Required
 	Key VersionMetadataKey `json:"key"`
 
-	// +required
+	// +kubebuilder:validation:Required
 	VersionMetadataValue `json:",inline"`
 }
 
 type VersionMetadataValue struct {
 	// +unionDiscriminator
-	// +required
-	// +kubebuilder:validation:Enum:string;bool
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Enum:String;Bool
 	Type VersionMetadataType `json:"type"`
 
 	// +optional
@@ -205,7 +206,7 @@ type VersionMetadataValue struct {
 type Version struct {
 	// version is a semantic version string, or a placeholder '<none>' for the special case where this
 	// is a "previous" version in a new installation
-	// +required
+	// +kubebuilder:validation:Required
 	Version string `json:"version,omitempty"`
 
 	// metadata is a list of metadata associated with the version
@@ -220,11 +221,11 @@ type ControlPlaneUpdateVersions struct {
 	// previous is the version of the control plane before the update. When the cluster is being installed
 	// for the first time, the version will have a placeholder value like '<none>' and the target version
 	// will have a boolean installation=true metadata
-	// +required
+	// +kubebuilder:validation:Required
 	Previous Version `json:"previous"`
 
 	// target is the version of the control plane after the update
-	// +required
+	// +kubebuilder:validation:Required
 	Target Version `json:"target"`
 }
 
@@ -232,25 +233,25 @@ type ControlPlaneUpdateVersions struct {
 // update in standalone clusters), during the update.
 type ClusterVersionStatusInsight struct {
 	// resource is the ClusterVersion resource that represents the control plane
-	// +required
+	// +kubebuilder:validation:Required
 	Resource ResourceRef `json:"resource"`
 
 	// assessment is the assessment of the control plane update process
-	// +required
+	// +kubebuilder:validation:Required
 	Assessment ControlPlaneAssessment `json:"assessment"`
 
 	// versions contains the original and target versions of the upgrade
-	// +required
+	// +kubebuilder:validation:Required
 	Versions ControlPlaneUpdateVersions `json:"versions"`
 
 	// completion is a percentage of the update completion (0-100)
-	// +required
+	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=100
-	Completion uint8 `json:"completion"`
+	Completion int32 `json:"completion"`
 
 	// startedAt is the time when the update started
-	// +required
+	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:Format=date-time
 	StartedAt metav1.Time `json:"startedAt"`
@@ -267,7 +268,7 @@ type ClusterVersionStatusInsight struct {
 	// +kubebuilder:validation:Format=date-time
 	EstimatedCompletedAt *metav1.Time `json:"estimatedCompletedAt,omitempty"`
 
-	// Conditions provides details about the control plane update
+	// conditions provides detailed observed conditions about ClusterVersion
 	// +listType=map
 	// +listMapKey=type
 	// +optional
@@ -316,11 +317,11 @@ const (
 // component update in standalone clusters), during the update
 type ClusterOperatorStatusInsight struct {
 	// name is the name of the operator
-	// +required
+	// +kubebuilder:validation:Required
 	Name string `json:"name"`
 
 	// resource is the ClusterOperator resource that represents the operator
-	// +required
+	// +kubebuilder:validation:Required
 	Resource ResourceRef `json:"resource"`
 
 	// conditions provide details about the operator
@@ -333,11 +334,11 @@ type ClusterOperatorStatusInsight struct {
 // PoolUpdateStatus contains a summary and insights related to a node pool update
 type PoolUpdateStatus struct {
 	// name is the name of the pool
-	// +required
+	// +kubebuilder:validation:Required
 	Name string `json:"name"`
 
 	// resource is the resource that represents the pool
-	// +required
+	// +kubebuilder:validation:Required
 	Resource PoolResourceRef `json:"resource"`
 
 	// informers is a list of insight producers, each carries a list of insights
@@ -396,40 +397,40 @@ const (
 // NodeSummary is a count of nodes matching certain criteria (e.g. updated, degraded, etc.)
 type NodeSummary struct {
 	// type is the type of the summary
-	// +required
+	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Enum=Total;Available;Progressing;Outdated;Draining;Excluded;Degraded
 	Type NodeSummaryType `json:"type"`
 
 	// count is the number of nodes matching the criteria
-	// +required
+	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Minimum=0
-	Count uint8 `json:"count"`
+	Count int32 `json:"count"`
 }
 
 // ClusterVersionStatusInsight reports the state of a MachineConfigPool resource during the update
 type MachineConfigPoolStatusInsight struct {
 	// name is the name of the machine config pool
-	// +required
+	// +kubebuilder:validation:Required
 	Name string `json:"name"`
 
 	// resource is the MachineConfigPool resource that represents the pool
-	// +required
+	// +kubebuilder:validation:Required
 	Resource PoolResourceRef `json:"resource"`
 
 	// scopeType describes whether the pool is a control plane or a worker pool
-	// +required
+	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Enum=ControlPlane;WorkerPool
 	Scope ScopeType `json:"scopeType"`
 
 	// assessment is the assessment of the machine config pool update process
-	// +required
+	// +kubebuilder:validation:Required
 	Assessment PoolUpdateAssessment `json:"assessment"`
 
 	// completion is a percentage of the update completion (0-100)
-	// +required
+	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=100
-	Completion uint8 `json:"completion"`
+	Completion int32 `json:"completion"`
 
 	// summaries is a list of counts of nodes matching certain criteria (e.g. updated, degraded, etc.)
 	// +listType=map
@@ -444,7 +445,7 @@ type MachineConfigPoolStatusInsight struct {
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
 }
 
-// ClusterOperatorStatusInsightConditionType are types of conditions that can be reported on Node status insights
+// NodeStatusInsightConditionType are types of conditions that can be reported on Node status insights
 type NodeStatusInsightConditionType string
 
 const (
@@ -456,7 +457,7 @@ const (
 	NodeStatusInsightAvailable NodeStatusInsightConditionType = "Available"
 )
 
-// NodeStatusInsightUpdatingReason are well-known reasons for the Updating condition on Node status insights
+// NodeUpdatingReason are well-known reasons for the Updating condition on Node status insights
 type NodeUpdatingReason string
 
 const (
@@ -481,15 +482,15 @@ const (
 // NodeStatusInsight reports the state of a Node during the update
 type NodeStatusInsight struct {
 	// name is the name of the node
-	// +required
+	// +kubebuilder:validation:Required
 	Name string `json:"name"`
 
 	// resource is the Node resource that represents the node
-	// +required
+	// +kubebuilder:validation:Required
 	Resource ResourceRef `json:"resource"`
 
 	// poolResource is the resource that represents the pool the node is a member of
-	// +required
+	// +kubebuilder:validation:Required
 	PoolResource PoolResourceRef `json:"poolResource"`
 
 	// version is the version of the node, when known
@@ -541,12 +542,12 @@ const (
 
 type UpdateInsight struct {
 	// uid identifies the insight over time
-	// +required
+	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Type=string
 	UID string `json:"uid"`
 
 	// acquiredAt is the time when the data was acquired by the producer
-	// +required
+	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:Format=date-time
 	AcquiredAt metav1.Time `json:"acquiredAt"`
@@ -557,7 +558,7 @@ type UpdateInsight struct {
 type UpdateInsightUnion struct {
 	// type identifies the type of the update insight
 	// +unionDiscriminator
-	// +required
+	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Enum=ClusterVersion;ClusterOperator;MachineConfigPool;Node;UpdateHealth
 	Type UpdateInsightType `json:"type"`
 
@@ -596,17 +597,17 @@ type UpdateInsightUnion struct {
 // of the cluster or an update
 type UpdateHealthInsight struct {
 	// startedAt is the time when the condition reported by the insight started
-	// +required
+	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:Format=date-time
 	StartedAt metav1.Time `json:"startedAt"`
 
 	// scope is list of objects involved in the insight
-	// +required
+	// +kubebuilder:validation:Required
 	Scope UpdateInsightScope `json:"scope"`
 
 	// impact describes the impact the reported condition has on the cluster or update
-	// +required
+	// +kubebuilder:validation:Required
 	Impact UpdateInsightImpact `json:"impact"`
 
 	// remediation contains information about how to resolve or prevent the reported condition
@@ -627,7 +628,7 @@ const (
 // UpdateInsightScope is a list of resources involved in the insight
 type UpdateInsightScope struct {
 	// type is either ControlPlane or WorkerPool
-	// +required
+	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Enum=ControlPlane;WorkerPool
 	Type ScopeType `json:"type"`
 
@@ -640,7 +641,7 @@ type UpdateInsightScope struct {
 // ResourceRef is a reference to a kubernetes resource, typically involved in an insight
 type ResourceRef struct {
 	// kind of object being referenced
-	// +required
+	// +kubebuilder:validation:Required
 	Kind string `json:"kind"`
 
 	// APIGroup of the object being referenced, if any
@@ -648,7 +649,7 @@ type ResourceRef struct {
 	APIGroup string `json:"apiGroup,omitempty"`
 
 	// Name of the object being referenced
-	// +required
+	// +kubebuilder:validation:Required
 	Name string `json:"name"`
 
 	// Namespace of the object being referenced, if any
@@ -657,27 +658,27 @@ type ResourceRef struct {
 }
 
 // InsightImpactLevel describes the severity of the impact the reported condition has on the cluster or update
-// +kubebuilder:validation:Enum=unknown;info;warning;error;critical
+// +kubebuilder:validation:Enum=Unknown;Info;Warning;Error;Critical
 type InsightImpactLevel string
 
 const (
 	// UnknownImpactLevel is used when the impact level is not known
-	UnknownImpactLevel InsightImpactLevel = "unknown"
+	UnknownImpactLevel InsightImpactLevel = "Unknown"
 	// info should be used for insights that are strictly informational or even positive (things go well or
 	// something recently healed)
-	InfoImpactLevel InsightImpactLevel = "info"
+	InfoImpactLevel InsightImpactLevel = "Info"
 	// warning should be used for insights that explain a minor or transient problem. Anything that requires
 	// admin attention or manual action should not be a warning but at least an error.
-	WarningImpactLevel InsightImpactLevel = "warning"
+	WarningImpactLevel InsightImpactLevel = "Warning"
 	// error should be used for insights that inform about a problem that requires admin attention. Insights of
 	// level error and higher should be as actionable as possible, and should be accompanied by links to documentation,
 	// KB articles or other resources that help the admin to resolve the problem.
-	ErrorImpactLevel InsightImpactLevel = "error"
+	ErrorImpactLevel InsightImpactLevel = "Error"
 	// critical should be used rarely, for insights that inform about a severe problem, threatening with data
 	// loss, destroyed cluster or other catastrophic consequences. Insights of this level should be accompanied by
 	// links to documentation, KB articles or other resources that help the admin to resolve the problem, or at least
 	// prevent the severe consequences from happening.
-	CriticalInfoLevel InsightImpactLevel = "critical"
+	CriticalInfoLevel InsightImpactLevel = "Critical"
 )
 
 // InsightImpactType describes the type of the impact the reported condition has on the cluster or update
@@ -699,17 +700,17 @@ const (
 // UpdateInsightImpact describes the impact the reported condition has on the cluster or update
 type UpdateInsightImpact struct {
 	// level is the severity of the impact
-	// +required
-	// +kubebuilder:validation:Enum=unknown;info;warning;error;critical
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Enum=Unknown;Info;Warning;Error;Critical
 	Level InsightImpactLevel `json:"level"`
 
 	// type is the type of the impact
-	// +required
+	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Enum=None;Unknown;API Availability;Cluster Capacity;Application Availability;Application Outage;Data Loss;Update Speed;Update Stalled
 	Type InsightImpactType `json:"type"`
 
 	// summary is a short summary of the impact
-	// +required
+	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Type=string
 	Summary string `json:"summary"`
 
@@ -722,7 +723,7 @@ type UpdateInsightImpact struct {
 // UpdateInsightRemediation contains information about how to resolve or prevent the reported condition
 type UpdateInsightRemediation struct {
 	// reference is a URL where administrators can find information to resolve or prevent the reported condition
-	// +required
+	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:Format=uri
 	Reference string `json:"reference"`

@@ -207,7 +207,7 @@ type VersionMetadataValue struct {
 	String string `json:"string,omitempty"`
 
 	// +optional
-	// +kubebuilder:validation:Type=bool
+	// +kubebuilder:validation:Type=boolean
 	// +unionMember
 	Bool bool `json:"bool,omitempty"`
 }

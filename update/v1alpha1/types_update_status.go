@@ -86,11 +86,21 @@ const (
 type ControlPlaneUpdateStatus struct {
 	// resource is the resource that represents the control plane. It will typically be a ClusterVersion resource
 	// in standalone OpenShift and HostedCluster in Hosted Control Planes.
+	//
+	// Note: By OpenShift API conventions, in isolation this should probably be a specialized reference type that allows
+	// only the "correct" resource types to be referenced (here, ClusterVersion and HostedCluster). However, because we
+	// use resource references in many places and this API is intended to be consumed by clients, not produced, consistency
+	// seems to be more valuable than type safety for producers.
 	// +kubebuilder:validation:Required
 	Resource ResourceRef `json:"resource"`
 
 	// poolResource is the resource that represents control plane node pool, typically a MachineConfigPool. This field
 	// is optional because some form factors (like Hosted Control Planes) do not have dedicated control plane node pools.
+	//
+	// Note: By OpenShift API conventions, in isolation this should probably be a specialized reference type that allows
+	// only the "correct" resource types to be referenced (here, MachineConfigPool). However, because we use resource
+	// references in many places and this API is intended to be consumed by clients, not produced, consistency seems to be
+	// more valuable than type safety for producers.
 	// +optional
 	PoolResource *PoolResourceRef `json:"poolResource,omitempty"`
 
@@ -233,6 +243,11 @@ type ControlPlaneUpdateVersions struct {
 // update in standalone clusters), during the update.
 type ClusterVersionStatusInsight struct {
 	// resource is the ClusterVersion resource that represents the control plane
+	//
+	// Note: By OpenShift API conventions, in isolation this should be a specialized reference that refers just to
+	// resource name (because the rest is implied by status insight type). However, because we use resource references in
+	// many places and this API is intended to be consumed by clients, not produced, consistency seems to be more valuable
+	// than type safety for producers.
 	// +kubebuilder:validation:Required
 	Resource ResourceRef `json:"resource"`
 
@@ -321,6 +336,11 @@ type ClusterOperatorStatusInsight struct {
 	Name string `json:"name"`
 
 	// resource is the ClusterOperator resource that represents the operator
+	//
+	// Note: By OpenShift API conventions, in isolation this should be a specialized reference that refers just to
+	// resource name (because the rest is implied by status insight type). However, because we use resource references in
+	// many places and this API is intended to be consumed by clients, not produced, consistency seems to be more valuable
+	// than type safety for producers.
 	// +kubebuilder:validation:Required
 	Resource ResourceRef `json:"resource"`
 
@@ -338,6 +358,11 @@ type PoolUpdateStatus struct {
 	Name string `json:"name"`
 
 	// resource is the resource that represents the pool
+	//
+	// Note: By OpenShift API conventions, in isolation this should probably be a specialized reference type that allows
+	// only the "correct" resource types to be referenced (here, MachineConfigPool or NodePool). However, because we use
+	// resource references in many places and this API is intended to be consumed by clients, not produced, consistency
+	// seems to be more valuable than type safety for producers.
 	// +kubebuilder:validation:Required
 	Resource PoolResourceRef `json:"resource"`
 
@@ -414,6 +439,11 @@ type MachineConfigPoolStatusInsight struct {
 	Name string `json:"name"`
 
 	// resource is the MachineConfigPool resource that represents the pool
+	//
+	// Note: By OpenShift API conventions, in isolation this should be a specialized reference that refers just to
+	// resource name (because the rest is implied by status insight type). However, because we use resource references in
+	// many places and this API is intended to be consumed by clients, not produced, consistency seems to be more valuable
+	// than type safety for producers.
 	// +kubebuilder:validation:Required
 	Resource PoolResourceRef `json:"resource"`
 
@@ -486,10 +516,20 @@ type NodeStatusInsight struct {
 	Name string `json:"name"`
 
 	// resource is the Node resource that represents the node
+	//
+	// Note: By OpenShift API conventions, in isolation this should be a specialized reference that refers just to
+	// resource name (because the rest is implied by status insight type). However, because we use resource references in
+	// many places and this API is intended to be consumed by clients, not produced, consistency seems to be more valuable
+	// than type safety for producers.
 	// +kubebuilder:validation:Required
 	Resource ResourceRef `json:"resource"`
 
 	// poolResource is the resource that represents the pool the node is a member of
+	//
+	// Note: By OpenShift API conventions, in isolation this should probably be a specialized reference type that allows
+	// only the "correct" resource types to be referenced (here, MachineConfigPool or NodePool). However, because we use
+	// resource references in many places and this API is intended to be consumed by clients, not produced, consistency
+	// seems to be more valuable than type safety for producers.
 	// +kubebuilder:validation:Required
 	PoolResource PoolResourceRef `json:"poolResource"`
 
@@ -632,7 +672,7 @@ type UpdateInsightScope struct {
 	// +kubebuilder:validation:Enum=ControlPlane;WorkerPool
 	Type ScopeType `json:"type"`
 
-	// resources is a list of resources involved in the insight
+	// resources is a list of resources involved in the insight, of any group/kind
 	// +optional
 	// +listType=set
 	Resources []ResourceRef `json:"resources,omitempty"`
@@ -640,19 +680,19 @@ type UpdateInsightScope struct {
 
 // ResourceRef is a reference to a kubernetes resource, typically involved in an insight
 type ResourceRef struct {
-	// kind of object being referenced
-	// +kubebuilder:validation:Required
-	Kind string `json:"kind"`
-
-	// APIGroup of the object being referenced, if any
+	// group of the object being referenced, if any
 	// +optional
-	APIGroup string `json:"apiGroup,omitempty"`
+	Group string `json:"group,omitempty"`
 
-	// Name of the object being referenced
+	// resource of object being referenced
+	// +kubebuilder:validation:Required
+	Resource string `json:"resource"`
+
+	// name of the object being referenced
 	// +kubebuilder:validation:Required
 	Name string `json:"name"`
 
-	// Namespace of the object being referenced, if any
+	// namespace of the object being referenced, if any
 	// +optional
 	Namespace string `json:"namespace,omitempty"`
 }

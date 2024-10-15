@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/openshift/api/tools/codegen/pkg/generation"
 	"github.com/openshift/api/tools/codegen/pkg/manifestmerge"
 	"github.com/spf13/cobra"
@@ -40,6 +41,7 @@ func init() {
 // newSchemaPatchGenerator builds a new schemapatch generator.
 func newCRDManifestMerger() generation.Generator {
 	return manifestmerge.NewGenerator(manifestmerge.Options{
-		Verify: verify,
+		PayloadFeatureGatePath: manifestMergePayloadManifestPath,
+		Verify:                 verify,
 	})
 }

@@ -87,7 +87,7 @@ type Version struct {
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:MaxLength=64
-	Version string `json:"version,omitempty"`
+	Version string `json:"version"`
 
 	// metadata is a list of metadata associated with the version. It is a list of key-value pairs. The value is optional
 	// and when not provided, the metadata item has boolean semantics (presence indicates true)
@@ -100,7 +100,7 @@ type Version struct {
 type VersionMetadata struct {
 	// key is the name of this metadata value
 	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Enum=installation;partial;architecture
+	// +kubebuilder:validation:Enum=Installation;Partial;Architecture
 	Key VersionMetadataKey `json:"key"`
 
 	// +optional
@@ -324,6 +324,11 @@ type NodeStatusInsight struct {
 	// seems to be more valuable than type safety for producers.
 	// +kubebuilder:validation:Required
 	PoolResource PoolResourceRef `json:"poolResource"`
+
+	// scopeType describes whether the node belongs to control plane or a worker pool
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Enum=ControlPlane;WorkerPool
+	Scope ScopeType `json:"scopeType"`
 
 	// version is the version of the node, when known
 	// +optional

@@ -576,4 +576,11 @@ var (
 					productScope(ocpSpecific).
 					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
+
+	FeatureGateCVOConfiguration = newFeatureGate("ClusterVersionOperatorConfiguration").
+					reportProblemsToJiraComponent("Cluster Version Operator").
+					contactPerson("dhurta").
+					productScope(ocpSpecific).
+					enableIn(configv1.DevPreviewNoUpgrade).
+					mustRegister()
 )

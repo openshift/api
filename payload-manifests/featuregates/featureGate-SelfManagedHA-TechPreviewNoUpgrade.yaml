@@ -111,6 +111,9 @@
                         "name": "ImageStreamImportMode"
                     },
                     {
+                        "name": "IngressControllerDynamicConfigurationManager"
+                    },
+                    {
                         "name": "IngressControllerLBSubnetsAWS"
                     },
                     {

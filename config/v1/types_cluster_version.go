@@ -379,9 +379,13 @@ const (
 	// allows to distribute Docker images
 	ClusterVersionCapabilityImageRegistry ClusterVersionCapability = "ImageRegistry"
 
-	// ClusterVersionCapabilityOperatorLifecycleManager manages the Operator Lifecycle Manager
+	// ClusterVersionCapabilityOperatorLifecycleManager manages the Operator Lifecycle Manager (legacy)
 	// which itself manages the lifecycle of operators
 	ClusterVersionCapabilityOperatorLifecycleManager ClusterVersionCapability = "OperatorLifecycleManager"
+
+	// ClusterVersionCapabilityOperatorLifecycleManagerV1 manages the Operator Lifecycle Manager (v1)
+	// which itself manages the lifecycle of operators
+	ClusterVersionCapabilityOperatorLifecycleManagerV1 ClusterVersionCapability = "OperatorLifecycleManagerV1"
 
 	// ClusterVersionCapabilityCloudCredential manages credentials for cloud providers
 	// in openshift cluster
@@ -422,6 +426,7 @@ var KnownClusterVersionCapabilities = []ClusterVersionCapability{
 	ClusterVersionCapabilityDeploymentConfig,
 	ClusterVersionCapabilityImageRegistry,
 	ClusterVersionCapabilityOperatorLifecycleManager,
+	ClusterVersionCapabilityOperatorLifecycleManagerV1,
 	ClusterVersionCapabilityCloudCredential,
 	ClusterVersionCapabilityIngress,
 	ClusterVersionCapabilityCloudControllerManager,
@@ -600,6 +605,7 @@ var ClusterVersionCapabilitySets = map[ClusterVersionCapabilitySet][]ClusterVers
 		ClusterVersionCapabilityDeploymentConfig,
 		ClusterVersionCapabilityImageRegistry,
 		ClusterVersionCapabilityOperatorLifecycleManager,
+		ClusterVersionCapabilityOperatorLifecycleManagerV1,
 		ClusterVersionCapabilityCloudCredential,
 		ClusterVersionCapabilityIngress,
 		ClusterVersionCapabilityCloudControllerManager,
@@ -618,6 +624,7 @@ var ClusterVersionCapabilitySets = map[ClusterVersionCapabilitySet][]ClusterVers
 		ClusterVersionCapabilityDeploymentConfig,
 		ClusterVersionCapabilityImageRegistry,
 		ClusterVersionCapabilityOperatorLifecycleManager,
+		ClusterVersionCapabilityOperatorLifecycleManagerV1,
 		ClusterVersionCapabilityCloudCredential,
 		ClusterVersionCapabilityIngress,
 		ClusterVersionCapabilityCloudControllerManager,
@@ -694,8 +701,8 @@ type ComponentOverride struct {
 type URL string
 
 // Update represents an administrator update request.
-// +kubebuilder:validation:XValidation:rule="has(self.architecture) && has(self.image) ? (self.architecture == '' || self.image == '') : true",message="cannot set both Architecture and Image"
-// +kubebuilder:validation:XValidation:rule="has(self.architecture) && self.architecture != '' ? self.version != '' : true",message="Version must be set if Architecture is set"
+// +kubebuilder:validation:XValidation:rule="has(self.architecture) && has(self.image) ? (self.architecture == ” || self.image == ”) : true",message="cannot set both Architecture and Image"
+// +kubebuilder:validation:XValidation:rule="has(self.architecture) && self.architecture != ” ? self.version != ” : true",message="Version must be set if Architecture is set"
 // +k8s:deepcopy-gen=true
 type Update struct {
 	// architecture is an optional field that indicates the desired

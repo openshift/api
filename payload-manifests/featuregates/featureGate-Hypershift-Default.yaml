@@ -101,6 +101,9 @@
                         "name": "MixedCPUsAllocation"
                     },
                     {
+                        "name": "ModernTLSConfiguration"
+                    },
+                    {
                         "name": "MultiArchInstallAzure"
                     },
                     {

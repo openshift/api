@@ -193,10 +193,10 @@ spec:
                 x-kubernetes-validations:
                 - message: cannot set both Architecture and Image
                   rule: 'has(self.architecture) && has(self.image) ? (self.architecture
-                    == '''' || self.image == '''') : true'
+                    == ” || self.image == ”) : true'
                 - message: Version must be set if Architecture is set
-                  rule: 'has(self.architecture) && self.architecture != '''' ? self.version
-                    != '''' : true'
+                  rule: 'has(self.architecture) && self.architecture != ” ? self.version
+                    != ” : true'
               overrides:
                 description: |-
                   overrides is list of overides for components that are managed by

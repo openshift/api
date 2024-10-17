@@ -100,7 +100,7 @@ type ImageSpec struct {
 	// implies the import mode is Legacy and multi payload implies PreserveOriginal.
 	// +openshift:enable:FeatureGate=ImageStreamImportMode
 	// +optional
-	ImageStreamImportMode ImportModeType `json:"imageStreamImportMode"`
+	ImageStreamImportMode ImportModeType `json:"imageStreamImportMode,omitempty"`
 }
 
 type ImageStatus struct {

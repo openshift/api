@@ -498,7 +498,7 @@ var (
 							reportProblemsToJiraComponent("CNV Network").
 							contactPerson("mduarted").
 							productScope(ocpSpecific).
-							enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+							enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 							mustRegister()
 
 	FeatureGateClusterMonitoringConfig = newFeatureGate("ClusterMonitoringConfig").

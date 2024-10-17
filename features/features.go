@@ -179,7 +179,7 @@ var (
 					reportProblemsToJiraComponent("splat").
 					contactPerson("vr4manta").
 					productScope(ocpSpecific).
-					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+					enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
 
 	FeatureGateVSphereStaticIPs = newFeatureGate("VSphereStaticIPs").

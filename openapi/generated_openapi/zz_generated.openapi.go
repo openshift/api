@@ -15552,6 +15552,13 @@ func schema_openshift_api_config_v1_NodeSpec(ref common.ReferenceCallback) commo
 							Format:      "",
 						},
 					},
+					"minimumKubeletVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MinimumKubeletVersion is the lowest version of a kubelet that can join the cluster. Specifically, the apiserver will deny any authorization requests of kubelets that are older than the specified version.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 			},
 		},
@@ -26497,6 +26504,13 @@ func schema_openshift_api_kubecontrolplane_v1_KubeAPIServerConfig(ref common.Ref
 									},
 								},
 							},
+						},
+					},
+					"minimumKubeletVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MinimumKubeletVersion is the lowest version of a kubelet that can join the cluster. Specifically, the apiserver will deny any authorization requests of kubelets that are older than the specified version.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},

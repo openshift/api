@@ -387,6 +387,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.UpdateHistory":                                                   schema_openshift_api_config_v1_UpdateHistory(ref),
 		"github.com/openshift/api/config/v1.UsernameClaimMapping":                                            schema_openshift_api_config_v1_UsernameClaimMapping(ref),
 		"github.com/openshift/api/config/v1.UsernamePrefix":                                                  schema_openshift_api_config_v1_UsernamePrefix(ref),
+		"github.com/openshift/api/config/v1.VSphereFailureDomainAffinity":                                    schema_openshift_api_config_v1_VSphereFailureDomainAffinity(ref),
 		"github.com/openshift/api/config/v1.VSpherePlatformFailureDomainSpec":                                schema_openshift_api_config_v1_VSpherePlatformFailureDomainSpec(ref),
 		"github.com/openshift/api/config/v1.VSpherePlatformLoadBalancer":                                     schema_openshift_api_config_v1_VSpherePlatformLoadBalancer(ref),
 		"github.com/openshift/api/config/v1.VSpherePlatformNodeNetworking":                                   schema_openshift_api_config_v1_VSpherePlatformNodeNetworking(ref),
@@ -19424,6 +19425,63 @@ func schema_openshift_api_config_v1_UsernamePrefix(ref common.ReferenceCallback)
 	}
 }
 
+func schema_openshift_api_config_v1_VSphereFailureDomainAffinity(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VSphereFailureDomainAffinity contains the vCenter cluster vm-host group (virtual machine and host types) and the vm-host affinity rule that together creates a affinity configuration for vm-host based zonal. This configuration within vCenter creates the required association between a failure domain, virtual machines and ESXi hosts to create a vm-host based zone.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type is the string representation of the VSphereFailureDomainType with available options of Datacenter, ComputeCluster and HostGroup.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"vmGroup": {
+						SchemaProps: spec.SchemaProps{
+							Description: "vmGroup is the name of the vm-host group of type virtual machine within vCenter for this failure domain. vmGroup is limited to 80 characters. This field is required when the VSphereFailureDomain ZoneType is HostGroup",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"hostGroup": {
+						SchemaProps: spec.SchemaProps{
+							Description: "hostGroup is the name of the vm-host group of type host within vCenter for this failure domain. hostGroup is limited to 80 characters. This field is required when the VSphereFailureDomain ZoneType is HostGroup",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"vmHostRule": {
+						SchemaProps: spec.SchemaProps{
+							Description: "vmHostRule is the name of the affinity vm-host rule within vCenter for this failure domain. vmHostRule is limited to 80 characters. This field is required when the VSphereFailureDomain ZoneType is HostGroup",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"type"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "type",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"hostGroup":  "HostGroup",
+								"vmGroup":    "VMGroup",
+								"vmHostRule": "VMHostRule",
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_config_v1_VSpherePlatformFailureDomainSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -19455,6 +19513,20 @@ func schema_openshift_api_config_v1_VSpherePlatformFailureDomainSpec(ref common.
 							Format:      "",
 						},
 					},
+					"regionAffinity": {
+						SchemaProps: spec.SchemaProps{
+							Description: "affinity holds the VMGroup and the HostGroup names in vCenter corresponds to a vm-host group of type Virtual Machine and Host respectively. Is also contains the VMHostRule which is an affinity vm-host rule in vCenter.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.VSphereFailureDomainAffinity"),
+						},
+					},
+					"zoneAffinity": {
+						SchemaProps: spec.SchemaProps{
+							Description: "affinity holds the VMGroup and the HostGroup names in vCenter corresponds to a vm-host group of type Virtual Machine and Host respectively. Is also contains the VMHostRule which is an affinity vm-host rule in vCenter.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.VSphereFailureDomainAffinity"),
+						},
+					},
 					"server": {
 						SchemaProps: spec.SchemaProps{
 							Description: "server is the fully-qualified domain name or the IP address of the vCenter server.",
@@ -19475,7 +19547,7 @@ func schema_openshift_api_config_v1_VSpherePlatformFailureDomainSpec(ref common.
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.VSpherePlatformTopology"},
+			"github.com/openshift/api/config/v1.VSphereFailureDomainAffinity", "github.com/openshift/api/config/v1.VSpherePlatformTopology"},
 	}
 }
 
@@ -38748,6 +38820,13 @@ func schema_openshift_api_machine_v1beta1_Workspace(ref common.ReferenceCallback
 					"resourcePool": {
 						SchemaProps: spec.SchemaProps{
 							Description: "ResourcePool is the resource pool in which VMs are created/located.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"vmGroup": {
+						SchemaProps: spec.SchemaProps{
+							Description: "VMGroup is the cluster vm group in which virtual machines will be added for vm host group based zonal.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

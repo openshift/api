@@ -608,9 +608,9 @@ spec:
                           failureDomains contains the definition of region, zone and the vCenter topology.
                           If this is omitted failure domains (regions and zones) will not be used.
                         items:
-                          description: |-
-                            VSpherePlatformFailureDomainSpec holds the region and zone failure domain and
-                            the vCenter topology of that failure domain.
+                          description: VSpherePlatformFailureDomainSpec holds the
+                            region and zone failure domain and the vCenter topology
+                            of that failure domain.
                           properties:
                             name:
                               description: |-
@@ -627,6 +627,56 @@ spec:
                               maxLength: 80
                               minLength: 1
                               type: string
+                            regionAffinity:
+                              description: |-
+                                affinity holds the VMGroup and the HostGroup names in vCenter corresponds to
+                                a vm-host group of type Virtual Machine and Host respectively. Is also
+                                contains the VMHostRule which is an affinity vm-host rule in vCenter.
+                              properties:
+                                hostGroup:
+                                  description: |-
+                                    hostGroup is the name of the vm-host group of type host within vCenter for this failure domain.
+                                    hostGroup is limited to 80 characters.
+                                    This field is required when the VSphereFailureDomain ZoneType is HostGroup
+                                  maxLength: 80
+                                  type: string
+                                type:
+                                  description: |-
+                                    type is the string representation of the VSphereFailureDomainType with available options of
+                                    Datacenter, ComputeCluster and HostGroup.
+                                  enum:
+                                  - HostGroup
+                                  - ComputeCluster
+                                  - Datacenter
+                                  type: string
+                                vmGroup:
+                                  description: |-
+                                    vmGroup is the name of the vm-host group of type virtual machine within vCenter for this failure domain.
+                                    vmGroup is limited to 80 characters.
+                                    This field is required when the VSphereFailureDomain ZoneType is HostGroup
+                                  maxLength: 80
+                                  type: string
+                                vmHostRule:
+                                  description: |-
+                                    vmHostRule is the name of the affinity vm-host rule within vCenter for this failure domain.
+                                    vmHostRule is limited to 80 characters.
+                                    This field is required when the VSphereFailureDomain ZoneType is HostGroup
+                                  maxLength: 80
+                                  type: string
+                              type: object
+                              x-kubernetes-validations:
+                              - message: hostGroup is required when type is HostGroup,
+                                  and forbidden otherwise
+                                rule: 'has(self.type) && self.type == ''HostGroup''
+                                  ?  has(self.hostGroup) : !has(self.hostGroup)'
+                              - message: vmGroup is required when type is HostGroup,
+                                  and forbidden otherwise
+                                rule: 'has(self.type) && self.type == ''HostGroup''
+                                  ?  has(self.vmGroup) : !has(self.vmGroup)'
+                              - message: vmHostRule is required when type is HostGroup,
+                                  and forbidden otherwise
+                                rule: 'has(self.type) && self.type == ''HostGroup''
+                                  ?  has(self.vmHostRule) : !has(self.vmHostRule)'
                             server:
                               anyOf:
                               - format: ipv4
@@ -727,6 +777,56 @@ spec:
                               maxLength: 80
                               minLength: 1
                               type: string
+                            zoneAffinity:
+                              description: |-
+                                affinity holds the VMGroup and the HostGroup names in vCenter corresponds to
+                                a vm-host group of type Virtual Machine and Host respectively. Is also
+                                contains the VMHostRule which is an affinity vm-host rule in vCenter.
+                              properties:
+                                hostGroup:
+                                  description: |-
+                                    hostGroup is the name of the vm-host group of type host within vCenter for this failure domain.
+                                    hostGroup is limited to 80 characters.
+                                    This field is required when the VSphereFailureDomain ZoneType is HostGroup
+                                  maxLength: 80
+                                  type: string
+                                type:
+                                  description: |-
+                                    type is the string representation of the VSphereFailureDomainType with available options of
+                                    Datacenter, ComputeCluster and HostGroup.
+                                  enum:
+                                  - HostGroup
+                                  - ComputeCluster
+                                  - Datacenter
+                                  type: string
+                                vmGroup:
+                                  description: |-
+                                    vmGroup is the name of the vm-host group of type virtual machine within vCenter for this failure domain.
+                                    vmGroup is limited to 80 characters.
+                                    This field is required when the VSphereFailureDomain ZoneType is HostGroup
+                                  maxLength: 80
+                                  type: string
+                                vmHostRule:
+                                  description: |-
+                                    vmHostRule is the name of the affinity vm-host rule within vCenter for this failure domain.
+                                    vmHostRule is limited to 80 characters.
+                                    This field is required when the VSphereFailureDomain ZoneType is HostGroup
+                                  maxLength: 80
+                                  type: string
+                              type: object
+                              x-kubernetes-validations:
+                              - message: hostGroup is required when type is HostGroup,
+                                  and forbidden otherwise
+                                rule: 'has(self.type) && self.type == ''HostGroup''
+                                  ?  has(self.hostGroup) : !has(self.hostGroup)'
+                              - message: vmGroup is required when type is HostGroup,
+                                  and forbidden otherwise
+                                rule: 'has(self.type) && self.type == ''HostGroup''
+                                  ?  has(self.vmGroup) : !has(self.vmGroup)'
+                              - message: vmHostRule is required when type is HostGroup,
+                                  and forbidden otherwise
+                                rule: 'has(self.type) && self.type == ''HostGroup''
+                                  ?  has(self.vmHostRule) : !has(self.vmHostRule)'
                           required:
                           - name
                           - region
@@ -734,6 +834,17 @@ spec:
                           - topology
                           - zone
                           type: object
+                          x-kubernetes-validations:
+                          - message: when zoneAffinity type is HostGroup, regionAffinity
+                              type must be ComputeCluster
+                            rule: 'has(self.zoneAffinity) && self.zoneAffinity.type
+                              == ''HostGroup'' ?  has(self.regionAffinity) && self.regionAffinity.type
+                              == ''ComputeCluster'' : true'
+                          - message: when zoneAffinity type is ComputeCluster, regionAffinity
+                              type must be Datacenter
+                            rule: 'has(self.zoneAffinity) && self.zoneAffinity.type
+                              == ''ComputeCluster'' ?  has(self.regionAffinity) &&
+                              self.regionAffinity.type == ''Datacenter'' : true'
                         type: array
                         x-kubernetes-list-map-keys:
                         - name

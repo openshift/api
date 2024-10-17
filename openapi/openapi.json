@@ -10553,6 +10553,42 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.VSphereFailureDomainAffinity": {
+      "description": "VSphereFailureDomainAffinity contains the vCenter cluster vm-host group (virtual machine and host types) and the vm-host affinity rule that together creates a affinity configuration for vm-host based zonal. This configuration within vCenter creates the required association between a failure domain, virtual machines and ESXi hosts to create a vm-host based zone.",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "hostGroup": {
+          "description": "hostGroup is the name of the vm-host group of type host within vCenter for this failure domain. hostGroup is limited to 80 characters. This field is required when the VSphereFailureDomain ZoneType is HostGroup",
+          "type": "string"
+        },
+        "type": {
+          "description": "type is the string representation of the VSphereFailureDomainType with available options of Datacenter, ComputeCluster and HostGroup.",
+          "type": "string",
+          "default": ""
+        },
+        "vmGroup": {
+          "description": "vmGroup is the name of the vm-host group of type virtual machine within vCenter for this failure domain. vmGroup is limited to 80 characters. This field is required when the VSphereFailureDomain ZoneType is HostGroup",
+          "type": "string"
+        },
+        "vmHostRule": {
+          "description": "vmHostRule is the name of the affinity vm-host rule within vCenter for this failure domain. vmHostRule is limited to 80 characters. This field is required when the VSphereFailureDomain ZoneType is HostGroup",
+          "type": "string"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {
+            "hostGroup": "HostGroup",
+            "vmGroup": "VMGroup",
+            "vmHostRule": "VMHostRule"
+          }
+        }
+      ]
+    },
     "com.github.openshift.api.config.v1.VSpherePlatformFailureDomainSpec": {
       "description": "VSpherePlatformFailureDomainSpec holds the region and zone failure domain and the vCenter topology of that failure domain.",
       "type": "object",
@@ -10574,6 +10610,11 @@
           "type": "string",
           "default": ""
         },
+        "regionAffinity": {
+          "description": "affinity holds the VMGroup and the HostGroup names in vCenter corresponds to a vm-host group of type Virtual Machine and Host respectively. Is also contains the VMHostRule which is an affinity vm-host rule in vCenter.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.VSphereFailureDomainAffinity"
+        },
         "server": {
           "description": "server is the fully-qualified domain name or the IP address of the vCenter server.",
           "type": "string",
@@ -10588,6 +10629,11 @@
           "description": "zone defines the name of a zone tag that will be attached to a vCenter cluster. The tag category in vCenter must be named openshift-zone.",
           "type": "string",
           "default": ""
+        },
+        "zoneAffinity": {
+          "description": "affinity holds the VMGroup and the HostGroup names in vCenter corresponds to a vm-host group of type Virtual Machine and Host respectively. Is also contains the VMHostRule which is an affinity vm-host rule in vCenter.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.VSphereFailureDomainAffinity"
         }
       }
     },
@@ -22375,6 +22421,10 @@
         },
         "server": {
           "description": "Server is the IP address or FQDN of the vSphere endpoint.",
+          "type": "string"
+        },
+        "vmGroup": {
+          "description": "VMGroup is the cluster vm group in which virtual machines will be added for vm host group based zonal.",
           "type": "string"
         }
       }

@@ -96,6 +96,7 @@ spec:
                       - CloudCredential
                       - Ingress
                       - CloudControllerManager
+                      - OperatorLifecycleManagerV1
                       type: string
                     type: array
                     x-kubernetes-list-type: atomic
@@ -329,6 +330,7 @@ spec:
                       - CloudCredential
                       - Ingress
                       - CloudControllerManager
+                      - OperatorLifecycleManagerV1
                       type: string
                     type: array
                     x-kubernetes-list-type: atomic
@@ -355,6 +357,7 @@ spec:
                       - CloudCredential
                       - Ingress
                       - CloudControllerManager
+                      - OperatorLifecycleManagerV1
                       type: string
                     type: array
                     x-kubernetes-list-type: atomic

@@ -139,6 +139,46 @@ tests:
             baselineCapabilitySet: None
             additionalEnabledCapabilities:
             - baremetal
+    - name: Should be able to create a ClusterVersion with base capability None, and additional capability OperatorLifecycleManagerV1
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - OperatorLifecycleManagerV1
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - OperatorLifecycleManagerV1
+    - name: Should be able to create a ClusterVersion with base capability None, and additional capabilities OperatorLifecycleManager and OperatorLifecycleManagerV1
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - OperatorLifecycleManager
+            - OperatorLifecycleManagerV1
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - OperatorLifecycleManager
+            - OperatorLifecycleManagerV1
     - name: Should be able to create a ClusterVersion with base capability None, and additional capabilities marketplace and OperatorLifecycleManager
       initial: |
         apiVersion: config.openshift.io/v1

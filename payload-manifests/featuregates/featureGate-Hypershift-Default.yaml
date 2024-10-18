@@ -161,9 +161,6 @@
                         "name": "VSphereMultiNetworks"
                     },
                     {
-                        "name": "VSphereMultiVCenters"
-                    },
-                    {
                         "name": "VolumeGroupSnapshot"
                     }
                 ],
@@ -245,6 +242,9 @@
                     },
                     {
                         "name": "VSphereDriverConfiguration"
+                    },
+                    {
+                        "name": "VSphereMultiVCenters"
                     },
                     {
                         "name": "VSphereStaticIPs"

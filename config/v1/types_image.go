@@ -162,6 +162,8 @@ type RegistryLocation struct {
 }
 
 // RegistrySources holds cluster-wide information about how to handle the registries config.
+//
+// +kubebuilder:validation:XValidation:rule="self.blockedRegistries.size() == 0 || self.allowedRegistries.size() == 0",message="Only one of BlockedRegistries or AllowedRegistries may be set"
 type RegistrySources struct {
 	// insecureRegistries are registries which do not have a valid TLS certificates or only support HTTP connections.
 	// +optional

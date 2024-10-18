@@ -201,6 +201,7 @@ var defaultFeatures = &FeatureGateEnabledDisabled{
 	},
 	Disabled: []FeatureGateDescription{
 		retroactiveDefaultStorageClass,
+		sdnLiveMigration,
 	},
 }
 

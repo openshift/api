@@ -748,6 +748,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/machine/v1beta1.UEFISettings":                                              schema_openshift_api_machine_v1beta1_UEFISettings(ref),
 		"github.com/openshift/api/machine/v1beta1.UnhealthyCondition":                                        schema_openshift_api_machine_v1beta1_UnhealthyCondition(ref),
 		"github.com/openshift/api/machine/v1beta1.VMDiskSecurityProfile":                                     schema_openshift_api_machine_v1beta1_VMDiskSecurityProfile(ref),
+		"github.com/openshift/api/machine/v1beta1.VSphereDisk":                                               schema_openshift_api_machine_v1beta1_VSphereDisk(ref),
 		"github.com/openshift/api/machine/v1beta1.VSphereMachineProviderSpec":                                schema_openshift_api_machine_v1beta1_VSphereMachineProviderSpec(ref),
 		"github.com/openshift/api/machine/v1beta1.VSphereMachineProviderStatus":                              schema_openshift_api_machine_v1beta1_VSphereMachineProviderStatus(ref),
 		"github.com/openshift/api/machine/v1beta1.Workspace":                                                 schema_openshift_api_machine_v1beta1_Workspace(ref),
@@ -38519,6 +38520,28 @@ func schema_openshift_api_machine_v1beta1_VMDiskSecurityProfile(ref common.Refer
 	}
 }
 
+func schema_openshift_api_machine_v1beta1_VSphereDisk(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VSphereDisk describes additional disks for vSphere.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"sizeGiB": {
+						SchemaProps: spec.SchemaProps{
+							Description: "sizeGiB is the size of the disk (in GiB).",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+				},
+				Required: []string{"sizeGiB"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_machine_v1beta1_VSphereMachineProviderSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -38637,12 +38660,26 @@ func schema_openshift_api_machine_v1beta1_VSphereMachineProviderSpec(ref common.
 							Format:      "",
 						},
 					},
+					"dataDisks": {
+						SchemaProps: spec.SchemaProps{
+							Description: "disks is a list of non OS disks to be created and attached to the VM.  The max number of disk allowed to be attached is currently 15.  This limitation is being applied to allow no more than 16 disks on the default scsi controller for the VM. The first disk on that SCSI controller will be the OS disk from the template.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machine/v1beta1.VSphereDisk"),
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"template", "network"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.NetworkSpec", "github.com/openshift/api/machine/v1beta1.Workspace", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"github.com/openshift/api/machine/v1beta1.NetworkSpec", "github.com/openshift/api/machine/v1beta1.VSphereDisk", "github.com/openshift/api/machine/v1beta1.Workspace", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 

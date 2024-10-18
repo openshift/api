@@ -218,25 +218,4 @@ func (RepositoryDigestMirrors) SwaggerDoc() map[string]string {
 	return map_RepositoryDigestMirrors
 }
 
-var map_OLM = map[string]string{
-	"":         "OLM provides information to configure an operator to manage the OLM controllers\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
-	"metadata": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
-	"spec":     "spec holds user settable values for configuration",
-	"status":   "status holds observed values from the cluster. They may not be overridden.",
-}
-
-func (OLM) SwaggerDoc() map[string]string {
-	return map_OLM
-}
-
-var map_OLMList = map[string]string{
-	"":         "OLMList is a collection of items\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
-	"metadata": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
-	"items":    "Items contains the items",
-}
-
-func (OLMList) SwaggerDoc() map[string]string {
-	return map_OLMList
-}
-
 // AUTO-GENERATED FUNCTIONS END HERE

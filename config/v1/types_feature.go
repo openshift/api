@@ -198,10 +198,10 @@ var defaultFeatures = &FeatureGateEnabledDisabled{
 		externalCloudProviderExternal,
 		privateHostedZoneAWS,
 		buildCSIVolumes,
-		sdnLiveMigration,
 	},
 	Disabled: []FeatureGateDescription{
 		retroactiveDefaultStorageClass,
+		sdnLiveMigration,
 	},
 }
 

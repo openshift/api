@@ -71,13 +71,6 @@ var (
 							enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 							mustRegister()
 
-	FeatureGateCSIDriverSharedResource = newFeatureGate("CSIDriverSharedResource").
-						reportProblemsToJiraComponent("builds").
-						contactPerson("adkaplan").
-						productScope(ocpSpecific).
-						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-						mustRegister()
-
 	FeatureGateBuildCSIVolumes = newFeatureGate("BuildCSIVolumes").
 					reportProblemsToJiraComponent("builds").
 					contactPerson("adkaplan").

@@ -133,15 +133,19 @@ type ClusterCatalogStatus struct {
 	ResolvedSource *ResolvedCatalogSource `json:"resolvedSource,omitempty"`
 	// urls contains the URLs that can be used to access the catalog.
 	// +optional
-	URLs *CatalogURLs `json:"urls,omitempty"`
+	URLs *ClusterCatalogURLs `json:"urls,omitempty"`
 	// lastUnpacked represents the time when the
 	// ClusterCatalog object was last unpacked successfully.
 	// +optional
 	LastUnpacked metav1.Time `json:"lastUnpacked,omitempty"`
 }
 
-type CatalogURLs struct {
-	// base is a required cluster-internal URL from which on-cluster components can access the API endpoint for this catalog
+// ClusterCatalogURLs contains the URLs that can be used to access the catalog.
+type ClusterCatalogURLs struct {
+	// base is a required cluster-internal URL which provides API access for this ClusterCatalog.
+	// A suffix API access path can be added to retrieve catalog data for the ClusterCatalog.
+	// Currently, a 'v1' API access provides complete FBC retrival via the path "/api/v1/all", with the general form `{base}/api/v1/all`.
+	// +kubebuilder:validation:Required
 	Base string `json:"base"`
 }
 

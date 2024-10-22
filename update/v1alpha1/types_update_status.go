@@ -107,14 +107,14 @@ type ControlPlaneUpdatingReason string
 const (
 	// ClusterVersionProgressing is used for Updating=True set because we observed a ClusterVersion resource to
 	// have Progressing=True condition
-	ReasonClusterVersionProgressing ControlPlaneUpdatingReason = "ClusterVersionProgressing"
+	ControlPlaneClusterVersionProgressing ControlPlaneUpdatingReason = "ClusterVersionProgressing"
 	// ClusterVersionNotProgressing is used for Updating=False set because we observed a ClusterVersion resource to
 	// have Progressing=False condition
-	ReasonClusterVersionNotProgressing ControlPlaneUpdatingReason = "ClusterVersionNotProgressing"
+	ControlPlaneClusterVersionNotProgressing ControlPlaneUpdatingReason = "ClusterVersionNotProgressing"
 	// CannotDetermineUpdating is used with Updating=Unknown. This covers many different actual reasons such as
 	// missing or Unknown Progressing condition on ClusterVersion, but it does not seem useful to track the individual
 	// reasons to that granularity for Updating=Unknown
-	ReasonClusterVersionCannotDetermine ControlPlaneUpdatingReason = "CannotDetermineUpdating"
+	ControlPlaneCannotDetermineUpdating ControlPlaneUpdatingReason = "CannotDetermineUpdating"
 )
 
 // Pool contains a summary and insights related to a node pool update

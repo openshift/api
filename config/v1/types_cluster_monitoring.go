@@ -71,9 +71,9 @@ type ClusterMonitoringSpec struct {
 // UserDefinedMonitoring config for user-defined projects.
 type UserDefinedMonitoring struct {
 	// mode defines the different configurations of UserDefinedMonitoring
-	// Valid values are UserDefinedDisabled and UserDefinedNamespaceIsolation
-	// UserDefinedDisabled disables monitoring for user-defined projects. This restricts the default monitoring stack, installed in the openshift-monitoring project, to monitor only platform namespaces, which prevents any custom monitoring configurations or resources from being applied to user-defined namespaces.
-	// UserDefinedNamespaceIsolation enables monitoring for user-defined projects with namespace-scoped tenancy. This ensures that metrics, alerts, and monitoring data are isolated at the namespace level.
+	// Valid values are Disabled and NamespaceIsolation
+	// Disabled disables monitoring for user-defined projects. This restricts the default monitoring stack, installed in the openshift-monitoring project, to monitor only platform namespaces, which prevents any custom monitoring configurations or resources from being applied to user-defined namespaces.
+	// NamespaceIsolation enables monitoring for user-defined projects with namespace-scoped tenancy. This ensures that metrics, alerts, and monitoring data are isolated at the namespace level.
 	// +kubebuilder:validation:Enum:="Disabled";"NamespaceIsolation"
 	Mode UserDefinedMode `json:"mode,omitempty"`
 }

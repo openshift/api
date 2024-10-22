@@ -101,6 +101,9 @@
                         "name": "MetricsCollectionProfiles"
                     },
                     {
+                        "name": "MinimumKubeletVersion"
+                    },
+                    {
                         "name": "MixedCPUsAllocation"
                     },
                     {

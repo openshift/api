@@ -67,6 +67,7 @@ type KubeAPIServerConfig struct {
 	// Specifically, the apiserver will deny most authorization requests of kubelets that are older
 	// than the specified version, only allowing the kubelet to get and update its node object, and perform
 	// subjectaccessreviews.
+	// +openshift:enable:FeatureGate=MinimumKubeletVersion
 	MinimumKubeletVersion string `json:"minimumKubeletVersion,omitempty"`
 }
 

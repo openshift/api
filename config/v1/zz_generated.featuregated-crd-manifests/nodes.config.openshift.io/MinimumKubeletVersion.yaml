@@ -6,7 +6,7 @@ metadata:
     api.openshift.io/filename-cvo-runlevel: "0000_10"
     api.openshift.io/filename-operator: config-operator
     api.openshift.io/filename-ordering: "01"
-    feature-gate.release.openshift.io/: "true"
+    feature-gate.release.openshift.io/MinimumKubeletVersion: "true"
     release.openshift.io/bootstrap-required: "true"
   name: nodes.config.openshift.io
 spec:
@@ -52,6 +52,14 @@ spec:
                 - v1
                 - v2
                 - ""
+                type: string
+              minimumKubeletVersion:
+                description: |-
+                  MinimumKubeletVersion is the lowest version of a kubelet that can meaningfully join the cluster.
+                  Specifically, the apiserver will deny most authorization requests of kubelets that are older
+                  than the specified version, only allowing the kubelet to get and update its node object, and perform
+                  subjectaccessreviews.
+                pattern: ^[0-9]*\.[0-9]*\.[0-9]*$
                 type: string
               workerLatencyProfile:
                 description: |-

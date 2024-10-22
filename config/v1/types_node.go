@@ -52,6 +52,7 @@ type NodeSpec struct {
 	// than the specified version, only allowing the kubelet to get and update its node object, and perform
 	// subjectaccessreviews.
 	// +kubebuilder:validation:Pattern=`^[0-9]*\.[0-9]*\.[0-9]*$`
+	// +openshift:enable:FeatureGate=MinimumKubeletVersion
 	// +optional
 	MinimumKubeletVersion string `json:"minimumKubeletVersion,omitempty"`
 }

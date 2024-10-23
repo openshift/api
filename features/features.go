@@ -662,4 +662,11 @@ var (
 								enhancementPR(legacyFeatureGateWithoutEnhancement).
 								enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 								mustRegister()
+
+	FeatureGateModernTLSConfiguration = newFeatureGate("ModernTLSConfiguration").
+						reportProblemsToJiraComponent("kube-apiserver").
+						contactPerson("lusanche").
+						productScope(ocpSpecific).
+						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						mustRegister()
 )

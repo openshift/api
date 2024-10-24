@@ -94,7 +94,6 @@ status:
   - disabled:
     - name: AdminNetworkPolicy
     - name: AutomatedEtcdBackup
-    - name: CSIDriverSharedResource
     - name: DNSNameResolver
     - name: DynamicResourceAllocation
     - name: EventedPLEG

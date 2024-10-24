@@ -208,6 +208,9 @@
                         "name": "IngressControllerLBSubnetsAWS"
                     },
                     {
+                        "name": "InstallEIPForDefaultNLBIngressController"
+                    },
+                    {
                         "name": "KMSv1"
                     },
                     {

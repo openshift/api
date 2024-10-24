@@ -145,6 +145,43 @@ spec:
                         description: aws contains settings specific to the Amazon
                           Web Services infrastructure provider.
                         properties:
+                          networkLoadBalancerParameters:
+                            description: |-
+                              networkLoadBalancerParameters holds configuration parameters for an AWS
+                              network load balancer. Present only if type is NLB.
+                            properties:
+                              eipAllocations:
+                                description: |-
+                                  eipAllocations is a list of IDs for Elastic IP (EIP) addresses that
+                                  are assigned to the Network Load Balancer.
+                                  Each EIP may only be allocated to a single IngressController.
+                                  The number of EIP allocations must match the number of subnets that are used for the load balancer.
+                                  Each EIP allocation must be unique.
+                                  A maximum of 10 EIP allocations are permitted.
+                                  Each EIP allocation must be of the form 'eipalloc-' followed by exactly 17 hexadecimal characters (0-9, a-f, A-F).
+                                  See https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html for general
+                                  information about configuration, characteristics, and limitations of Elastic IP addresses.
+                                items:
+                                  description: |-
+                                    EIPAllocation is an ID for an Elastic IP (EIP) address that can be allocated to an ELB in the AWS environment.
+                                    Values must begin with `eipalloc-` followed by exactly 17 hexadecimal (`[0-9a-fA-F]`) characters.
+                                  maxLength: 26
+                                  minLength: 26
+                                  type: string
+                                  x-kubernetes-validations:
+                                  - message: eipAllocations must be 'eipalloc-' followed
+                                      by exactly 17 hexadecimal characters (0-9, a-f,
+                                      A-F)
+                                    rule: self.split("-", 2)[1].matches('[0-9a-fA-F]{17}$')
+                                  - message: eipAllocations should start with 'eipalloc-'
+                                    rule: self.startsWith('eipalloc-')
+                                maxItems: 10
+                                type: array
+                                x-kubernetes-list-type: atomic
+                                x-kubernetes-validations:
+                                - message: eipAllocations cannot contain duplicates
+                                  rule: self.all(x, self.exists_one(y, x == y))
+                            type: object
                           type:
                             description: |-
                               type allows user to set a load balancer type.
@@ -169,6 +206,10 @@ spec:
                         required:
                         - type
                         type: object
+                        x-kubernetes-validations:
+                        - message: networkLoadBalancerParameters are forbidden when
+                            type is not NLB.
+                          rule: 'self.type == ''NLB'' ? true : !has(self.networkLoadBalancerParameters)'
                       type:
                         description: |-
                           type is the underlying infrastructure provider for the cluster.

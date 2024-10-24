@@ -1835,12 +1835,22 @@ func (VSpherePlatformVCenterSpec) SwaggerDoc() map[string]string {
 }
 
 var map_AWSIngressSpec = map[string]string{
-	"":     "AWSIngressSpec holds the desired state of the Ingress for Amazon Web Services infrastructure provider. This only includes fields that can be modified in the cluster.",
-	"type": "type allows user to set a load balancer type. When this field is set the default ingresscontroller will get created using the specified LBType. If this field is not set then the default ingress controller of LBType Classic will be created. Valid values are:\n\n* \"Classic\": A Classic Load Balancer that makes routing decisions at either\n  the transport layer (TCP/SSL) or the application layer (HTTP/HTTPS). See\n  the following for additional details:\n\n    https://docs.aws.amazon.com/AmazonECS/latest/developerguide/load-balancer-types.html#clb\n\n* \"NLB\": A Network Load Balancer that makes routing decisions at the\n  transport layer (TCP/SSL). See the following for additional details:\n\n    https://docs.aws.amazon.com/AmazonECS/latest/developerguide/load-balancer-types.html#nlb",
+	"":                              "AWSIngressSpec holds the desired state of the Ingress for Amazon Web Services infrastructure provider. This only includes fields that can be modified in the cluster.",
+	"type":                          "type allows user to set a load balancer type. When this field is set the default ingresscontroller will get created using the specified LBType. If this field is not set then the default ingress controller of LBType Classic will be created. Valid values are:\n\n* \"Classic\": A Classic Load Balancer that makes routing decisions at either\n  the transport layer (TCP/SSL) or the application layer (HTTP/HTTPS). See\n  the following for additional details:\n\n    https://docs.aws.amazon.com/AmazonECS/latest/developerguide/load-balancer-types.html#clb\n\n* \"NLB\": A Network Load Balancer that makes routing decisions at the\n  transport layer (TCP/SSL). See the following for additional details:\n\n    https://docs.aws.amazon.com/AmazonECS/latest/developerguide/load-balancer-types.html#nlb",
+	"networkLoadBalancerParameters": "networkLoadBalancerParameters holds configuration parameters for an AWS network load balancer. Present only if type is NLB.",
 }
 
 func (AWSIngressSpec) SwaggerDoc() map[string]string {
 	return map_AWSIngressSpec
+}
+
+var map_AWSNetworkLoadBalancerParameters = map[string]string{
+	"":               "AWSNetworkLoadBalancerParameters holds configuration parameters for an AWS Network load balancer. For Example: Setting AWS EIPs https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html",
+	"eipAllocations": "eipAllocations is a list of IDs for Elastic IP (EIP) addresses that are assigned to the Network Load Balancer. Each EIP may only be allocated to a single IngressController. The number of EIP allocations must match the number of subnets that are used for the load balancer. Each EIP allocation must be unique. A maximum of 10 EIP allocations are permitted. Each EIP allocation must be of the form 'eipalloc-' followed by exactly 17 hexadecimal characters (0-9, a-f, A-F). See https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html for general information about configuration, characteristics, and limitations of Elastic IP addresses.",
+}
+
+func (AWSNetworkLoadBalancerParameters) SwaggerDoc() map[string]string {
+	return map_AWSNetworkLoadBalancerParameters
 }
 
 var map_ComponentRouteSpec = map[string]string{

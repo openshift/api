@@ -214,9 +214,6 @@
                         "name": "ManagedBootImages"
                     },
                     {
-                        "name": "MetricsServer"
-                    },
-                    {
                         "name": "MultiArchInstallAWS"
                     },
                     {

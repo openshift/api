@@ -81,6 +81,9 @@
                         "name": "ClusterMonitoringConfig"
                     },
                     {
+                        "name": "ConsolePluginCSP"
+                    },
+                    {
                         "name": "DNSNameResolver"
                     },
                     {

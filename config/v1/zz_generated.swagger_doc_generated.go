@@ -385,6 +385,15 @@ func (AuthenticationStatus) SwaggerDoc() map[string]string {
 	return map_AuthenticationStatus
 }
 
+var map_ClaimOrExpression = map[string]string{
+	"claim":      "Claim is the JWT claim to use. Mutually exclusive with expression.",
+	"expression": "Expression respresents a CEL expression. Mutually exclusive with claim.",
+}
+
+func (ClaimOrExpression) SwaggerDoc() map[string]string {
+	return map_ClaimOrExpression
+}
+
 var map_DeprecatedWebhookTokenAuthenticator = map[string]string{
 	"":           "deprecatedWebhookTokenAuthenticator holds the necessary configuration options for a remote token authenticator. It's the same as WebhookTokenAuthenticator but it's missing the 'required' validation on KubeConfig field.",
 	"kubeConfig": "kubeConfig contains kube config file data which describes how to access the remote webhook service. For further details, see: https://kubernetes.io/docs/reference/access-authn-authz/authentication/#webhook-token-authentication The key \"kubeConfig\" is used to locate the data. If the secret or expected key is not found, the webhook is not honored. If the specified kube config data is not valid, the webhook is not honored. The namespace for this secret is determined by the point of use.",
@@ -392,6 +401,15 @@ var map_DeprecatedWebhookTokenAuthenticator = map[string]string{
 
 func (DeprecatedWebhookTokenAuthenticator) SwaggerDoc() map[string]string {
 	return map_DeprecatedWebhookTokenAuthenticator
+}
+
+var map_ExtraMapping = map[string]string{
+	"key":             "Key is a string to use as the extra attribute key key must be lowercase and unique",
+	"valueExpression": "ValueExpression is a CEL expression to extract extra attribute value",
+}
+
+func (ExtraMapping) SwaggerDoc() map[string]string {
+	return map_ExtraMapping
 }
 
 var map_OIDCClientConfig = map[string]string{
@@ -459,6 +477,8 @@ func (TokenClaimMapping) SwaggerDoc() map[string]string {
 var map_TokenClaimMappings = map[string]string{
 	"username": "Username is a name of the claim that should be used to construct usernames for the cluster identity.\n\nDefault value: \"sub\"",
 	"groups":   "Groups is a name of the claim that should be used to construct groups for the cluster identity. The referenced claim must use array of strings values.",
+	"uid":      "UID reqresents an option for the uid attribute.",
+	"extra":    "Extra represents an option for the extra attribute",
 }
 
 func (TokenClaimMappings) SwaggerDoc() map[string]string {

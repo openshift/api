@@ -173,6 +173,9 @@ type APIServerNamedServingCert struct {
 	ServingCertificate SecretNameReference `json:"servingCertificate"`
 }
 
+// APIServerEncryption is used to encrypt sensitive resources on the cluster.
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'KMS' ?  has(self.kms) : !has(self.kms)",message="kms config is required when encryption type is KMS, and forbidden otherwise"
+// +union
 type APIServerEncryption struct {
 	// type defines what encryption type should be used to encrypt resources at the datastore layer.
 	// When this field is unset (i.e. when it is set to the empty string), identity is implied.
@@ -191,9 +194,23 @@ type APIServerEncryption struct {
 	// +unionDiscriminator
 	// +optional
 	Type EncryptionType `json:"type,omitempty"`
+
+	// kms defines the configuration for the external KMS instance that manages the encryption keys,
+	// when KMS encryption is enabled sensitive resources will be encrypted using keys managed by an
+	// externally configured KMS instance.
+	//
+	// The Key Management Service (KMS) instance provides symmetric encryption and is responsible for
+	// managing the lifecyle of the encryption keys outside of the control plane.
+	// This allows integration with an external provider to manage the data encryption keys securely.
+	//
+	// +openshift:enable:FeatureGate=KMSEncryptionProvider
+	// +unionMember
+	// +optional
+	KMS *KMSConfig `json:"kms,omitempty"`
 }
 
-// +kubebuilder:validation:Enum="";identity;aescbc;aesgcm
+// +openshift:validation:FeatureGateAwareEnum:featureGate="",enum="";identity;aescbc;aesgcm
+// +openshift:validation:FeatureGateAwareEnum:featureGate=KMSEncryptionProvider,enum="";identity;aescbc;aesgcm;KMS
 type EncryptionType string
 
 const (
@@ -208,6 +225,11 @@ const (
 	// aesgcm refers to a type where AES-GCM with random nonce and a 32-byte key
 	// is used to perform encryption at the datastore layer.
 	EncryptionTypeAESGCM EncryptionType = "aesgcm"
+
+	// kms refers to a type of encryption where the encryption keys are managed
+	// outside the control plane in a Key Management Service instance,
+	// encryption is still performed at the datastore layer.
+	EncryptionTypeKMS EncryptionType = "KMS"
 )
 
 type APIServerStatus struct {

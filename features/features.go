@@ -662,4 +662,12 @@ var (
 								enhancementPR(legacyFeatureGateWithoutEnhancement).
 								enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 								mustRegister()
+
+	FeatureGateMinimumKubeletVersion = newFeatureGate("MinimumKubeletVersion").
+						reportProblemsToJiraComponent("Node").
+						contactPerson("haircommander").
+						productScope(ocpSpecific).
+						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						enhancementPR("https://github.com/kubernetes/enhancements/issues/4265").
+						mustRegister()
 )

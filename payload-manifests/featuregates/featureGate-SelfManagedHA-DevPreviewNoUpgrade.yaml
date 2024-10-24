@@ -153,6 +153,9 @@
                         "name": "MetricsServer"
                     },
                     {
+                        "name": "MinimumKubeletVersion"
+                    },
+                    {
                         "name": "MixedCPUsAllocation"
                     },
                     {

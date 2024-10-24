@@ -1,0 +1,297 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.16.1
+  name: clustercatalogs.olm.operatorframework.io
+spec:
+  group: olm.operatorframework.io
+  names:
+    kind: ClusterCatalog
+    listKind: ClusterCatalogList
+    plural: clustercatalogs
+    singular: clustercatalog
+  scope: Cluster
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.lastUnpacked
+      name: LastUnpacked
+      type: date
+    - jsonPath: .status.conditions[?(@.type=="Serving")].status
+      name: Serving
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          ClusterCatalog enables users to make File-Based Catalog (FBC) catalog data available to the cluster.
+          For more information on FBC, see https://olm.operatorframework.io/docs/reference/file-based-catalogs/#docs
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ClusterCatalogSpec defines the desired state of ClusterCatalog
+            properties:
+              availability:
+                default: Enabled
+                description: |-
+                  Availability is an optional field that allows users to define whether the ClusterCatalog is utilized by the operator-controller.
+
+                  Allowed values are : ["Enabled", "Disabled"].
+                  If set to "Enabled", the catalog will be used for updates, serving contents, and package installations.
+
+                  If set to "Disabled", catalogd will stop serving the catalog and the cached data will be removed.
+
+                  If unspecified, the default value is "Enabled"
+                enum:
+                - Disabled
+                - Enabled
+                type: string
+              priority:
+                default: 0
+                description: |-
+                  priority is an optional field that allows the user to define a priority for a ClusterCatalog.
+                  A ClusterCatalog's priority is used by clients as a tie-breaker between ClusterCatalogs that meet the client's requirements.
+                  For example, in the case where multiple ClusterCatalogs provide the same bundle.
+                  A higher number means higher priority. Negative numbers are also accepted.
+                  When omitted, the default priority is 0.
+                format: int32
+                type: integer
+              source:
+                description: |-
+                  source is a required field that allows the user to define the source of a Catalog that contains catalog metadata in the File-Based Catalog (FBC) format.
+
+                  Below is a minimal example of a ClusterCatalogSpec that sources a catalog from an image:
+
+                   source:
+                     type: Image
+                     image:
+                       ref: quay.io/operatorhubio/catalog:latest
+
+                  For more information on FBC, see https://olm.operatorframework.io/docs/reference/file-based-catalogs/#docs
+                properties:
+                  image:
+                    description: image is used to configure how catalog contents are
+                      sourced from an OCI image. This field must be set when type
+                      is set to "Image" and must be the only field defined for this
+                      type.
+                    properties:
+                      pollInterval:
+                        description: |-
+                          pollInterval is an optional field that allows the user to set the interval at which the image source should be polled for new content.
+                          It must be specified as a duration.
+                          It must not be specified for a catalog image referenced by a sha256 digest.
+                          Examples:
+                            pollInterval: 1h # poll the image source every hour
+                            pollInterval: 30m # poll the image source every 30 minutes
+                            pollInterval: 1h30m # poll the image source every 1 hour and 30 minutes
+
+                          When omitted, the image will not be polled for new content.
+                        format: duration
+                        type: string
+                      ref:
+                        description: |-
+                          ref is a required field that allows the user to define the reference to a container image containing Catalog contents.
+                          Examples:
+                            ref: quay.io/operatorhubio/catalog:latest # image reference
+                            ref: quay.io/operatorhubio/catalog@sha256:c7392b4be033da629f9d665fec30f6901de51ce3adebeff0af579f311ee5cf1b # image reference with sha256 digest
+                        type: string
+                    required:
+                    - ref
+                    type: object
+                  type:
+                    description: |-
+                      type is a required reference to the type of source the catalog is sourced from.
+
+                      Allowed values are ["Image"]
+
+                      When this field is set to "Image", the ClusterCatalog content will be sourced from an OCI image.
+                      When using an image source, the image field must be set and must be the only field defined for this type.
+                    enum:
+                    - Image
+                    type: string
+                required:
+                - type
+                type: object
+                x-kubernetes-validations:
+                - message: source type 'Image' requires image field
+                  rule: self.type == 'Image' && has(self.image)
+            required:
+            - source
+            type: object
+            x-kubernetes-validations:
+            - message: cannot specify PollInterval while using digest-based image
+              rule: '!has(self.source.image.pollInterval) || (self.source.image.ref.find(''@sha256:'')
+                == "")'
+          status:
+            description: ClusterCatalogStatus defines the observed state of ClusterCatalog
+            properties:
+              conditions:
+                description: |-
+                  conditions is a representation of the current state for this ClusterCatalog.
+                  The status is represented by a set of "conditions".
+
+                  Each condition is generally structured in the following format:
+                    - Type: a string representation of the condition type. More or less the condition "name".
+                    - Status: a string representation of the state of the condition. Can be one of ["True", "False", "Unknown"].
+                    - Reason: a string representation of the reason for the current state of the condition. Typically useful for building automation around particular Type+Reason combinations.
+                    - Message: a human-readable message that further elaborates on the state of the condition.
+
+                  The current set of condition types are:
+                    - "Serving", which represents whether or not the contents of the catalog are being served via the HTTP(S) web server.
+                    - "Progressing", which represents whether or not the ClusterCatalog is progressing towards a new state.
+
+                  The current set of reasons are:
+                    - "Succeeded", this reason is set on the "Progressing" condition when progressing to a new state is successful.
+                    - "Blocked", this reason is set on the "Progressing" condition when the ClusterCatalog controller has encountered an error that requires manual intervention for recovery.
+                    - "Retrying", this reason is set on the "Progressing" condition when the ClusterCatalog controller has encountered an error that might be resolvable on subsequent reconciliation attempts.
+                    - "Available", this reason is set on the "Serving" condition when the contents of the ClusterCatalog are being served via an endpoint on the HTTP(S) web server.
+                    - "Unavailable", this reason is set on the "Serving" condition when there is not an endpoint on the HTTP(S) web server that is serving the contents of the ClusterCatalog.
+                items:
+                  description: Condition contains details for one aspect of the current
+                    state of this API Resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              lastUnpacked:
+                description: |-
+                  lastUnpacked represents the time when the
+                  ClusterCatalog object was last unpacked successfully.
+                format: date-time
+                type: string
+              resolvedSource:
+                description: |-
+                  resolvedSource contains information about the resolved source based on the source type.
+
+                  Below is an example of a resolved source for an image source:
+                  resolvedSource:
+
+                   image:
+                     lastSuccessfulPollAttempt: "2024-09-10T12:22:13Z"
+                     ref: quay.io/operatorhubio/catalog@sha256:c7392b4be033da629f9d665fec30f6901de51ce3adebeff0af579f311ee5cf1b
+                   type: Image
+                properties:
+                  image:
+                    description: image is a field containing resolution information
+                      for a catalog sourced from an image.
+                    properties:
+                      lastSuccessfulPollAttempt:
+                        description: lastSuccessfulPollAttempt is the time when the
+                          resolved source was last successfully polled for new content.
+                        format: date-time
+                        type: string
+                      ref:
+                        description: ref contains the resolved sha256 image ref containing
+                          Catalog contents.
+                        type: string
+                    required:
+                    - lastSuccessfulPollAttempt
+                    - ref
+                    type: object
+                  type:
+                    description: |-
+                      type is a reference to the type of source the catalog is sourced from.
+
+                      It will be set to one of the following values: ["Image"].
+
+                      When this field is set to "Image", information about the resolved image source will be set in the 'image' field.
+                    enum:
+                    - Image
+                    type: string
+                required:
+                - image
+                - type
+                type: object
+                x-kubernetes-validations:
+                - message: source type 'Image' requires image field
+                  rule: self.type == 'Image' && has(self.image)
+              urls:
+                description: urls contains the URLs that can be used to access the
+                  catalog.
+                properties:
+                  base:
+                    description: |-
+                      base is a required cluster-internal URL which provides API access for this ClusterCatalog.
+                      A suffix API access path can be added to retrieve catalog data for the ClusterCatalog.
+                      Currently, a 'v1' API access provides complete FBC retrival via the path "/api/v1/all", with the general form `{base}/api/v1/all`.
+                    type: string
+                required:
+                - base
+                type: object
+            type: object
+        required:
+        - metadata
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

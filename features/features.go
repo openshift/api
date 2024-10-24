@@ -654,4 +654,12 @@ var (
 								enhancementPR(legacyFeatureGateWithoutEnhancement).
 								enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 								mustRegister()
+
+	FeatureGateKMSv2 = newFeatureGate("KMSEncryptionProvider").
+				reportProblemsToJiraComponent("kube-apiserver").
+				contactPerson("swghosh").
+				productScope(ocpSpecific).
+				enhancementPR("https://github.com/openshift/enhancements/pull/1682").
+				enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+				mustRegister()
 )

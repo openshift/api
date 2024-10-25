@@ -153,6 +153,9 @@
                         "name": "MixedCPUsAllocation"
                     },
                     {
+                        "name": "ModernTLSConfiguration"
+                    },
+                    {
                         "name": "MultiArchInstallAWS"
                     },
                     {

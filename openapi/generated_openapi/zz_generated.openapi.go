@@ -52929,6 +52929,11 @@ func schema_openshift_api_operator_v1_OperatorCondition(ref common.ReferenceCall
 				},
 				Required: []string{"type", "status", "lastTransitionTime"},
 			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-map-type": "atomic",
+				},
+			},
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},

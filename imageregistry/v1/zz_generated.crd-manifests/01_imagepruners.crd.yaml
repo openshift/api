@@ -1166,6 +1166,7 @@ spec:
                   - status
                   - type
                   type: object
+                  x-kubernetes-map-type: atomic
                 type: array
               observedGeneration:
                 description: observedGeneration is the last generation change that

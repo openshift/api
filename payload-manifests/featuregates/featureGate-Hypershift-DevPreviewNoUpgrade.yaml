@@ -114,6 +114,9 @@
                         "name": "ImageStreamImportMode"
                     },
                     {
+                        "name": "IngressControllerDynamicConfigurationManager"
+                    },
+                    {
                         "name": "IngressControllerLBSubnetsAWS"
                     },
                     {
@@ -148,9 +151,6 @@
                     },
                     {
                         "name": "MetricsCollectionProfiles"
-                    },
-                    {
-                        "name": "MetricsServer"
                     },
                     {
                         "name": "MixedCPUsAllocation"

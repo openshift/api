@@ -65,6 +65,9 @@
                         "name": "ImageStreamImportMode"
                     },
                     {
+                        "name": "IngressControllerDynamicConfigurationManager"
+                    },
+                    {
                         "name": "InsightsConfig"
                     },
                     {
@@ -212,9 +215,6 @@
                     },
                     {
                         "name": "ManagedBootImages"
-                    },
-                    {
-                        "name": "MetricsServer"
                     },
                     {
                         "name": "MultiArchInstallAWS"

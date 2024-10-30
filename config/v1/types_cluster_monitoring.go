@@ -71,10 +71,10 @@ type ClusterMonitoringSpec struct {
 // UserDefinedMonitoring config for user-defined projects.
 type UserDefinedMonitoring struct {
 	// mode defines the different configurations of UserDefinedMonitoring
-	// Valid values are Disabled and NamespaceIsolation
+	// Valid values are Disabled and NamespaceIsolated
 	// Disabled disables monitoring for user-defined projects. This restricts the default monitoring stack, installed in the openshift-monitoring project, to monitor only platform namespaces, which prevents any custom monitoring configurations or resources from being applied to user-defined namespaces.
-	// NamespaceIsolation enables monitoring for user-defined projects with namespace-scoped tenancy. This ensures that metrics, alerts, and monitoring data are isolated at the namespace level.
-	// +kubebuilder:validation:Enum:="Disabled";"NamespaceIsolation"
+	// NamespaceIsolated enables monitoring for user-defined projects with namespace-scoped tenancy. This ensures that metrics, alerts, and monitoring data are isolated at the namespace level.
+	// +kubebuilder:validation:Enum:="Disabled";"NamespaceIsolated"
 	Mode UserDefinedMode `json:"mode,omitempty"`
 }
 
@@ -83,6 +83,6 @@ type UserDefinedMode string
 const (
 	// UserDefinedDisabled disables monitoring for user-defined projects. This restricts the default monitoring stack, installed in the openshift-monitoring project, to monitor only platform namespaces, which prevents any custom monitoring configurations or resources from being applied to user-defined namespaces.
 	UserDefinedDisabled UserDefinedMode = "Disabled"
-	// UserDefinedNamespaceIsolation enables monitoring for user-defined projects with namespace-scoped tenancy. This ensures that metrics, alerts, and monitoring data are isolated at the namespace level.
-	UserDefinedNamespaceIsolation UserDefinedMode = "NamespaceIsolation"
+	// UserDefinedNamespaceIsolated enables monitoring for user-defined projects with namespace-scoped tenancy. This ensures that metrics, alerts, and monitoring data are isolated at the namespace level.
+	UserDefinedNamespaceIsolated UserDefinedMode = "NamespaceIsolated"
 )

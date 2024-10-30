@@ -608,7 +608,7 @@ func (ClusterMonitoringStatus) SwaggerDoc() map[string]string {
 
 var map_UserDefinedMonitoring = map[string]string{
 	"":     "UserDefinedMonitoring config for user-defined projects.",
-	"mode": "mode defines the different configurations of UserDefinedMonitoring Valid values are UserDefinedDisabled and UserDefinedNamespaceIsolation UserDefinedDisabled disables monitoring for user-defined projects. This restricts the default monitoring stack, installed in the openshift-monitoring project, to monitor only platform namespaces, which prevents any custom monitoring configurations or resources from being applied to user-defined namespaces. UserDefinedNamespaceIsolation enables monitoring for user-defined projects with namespace-scoped tenancy. This ensures that metrics, alerts, and monitoring data are isolated at the namespace level.",
+	"mode": "mode defines the different configurations of UserDefinedMonitoring Valid values are Disabled and NamespaceIsolated Disabled disables monitoring for user-defined projects. This restricts the default monitoring stack, installed in the openshift-monitoring project, to monitor only platform namespaces, which prevents any custom monitoring configurations or resources from being applied to user-defined namespaces. NamespaceIsolated enables monitoring for user-defined projects with namespace-scoped tenancy. This ensures that metrics, alerts, and monitoring data are isolated at the namespace level.",
 }
 
 func (UserDefinedMonitoring) SwaggerDoc() map[string]string {

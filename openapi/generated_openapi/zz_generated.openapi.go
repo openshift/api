@@ -14700,11 +14700,35 @@ func schema_openshift_api_config_v1_NetworkStatus(ref common.ReferenceCallback) 
 							Ref:         ref("github.com/openshift/api/config/v1.NetworkMigration"),
 						},
 					},
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type":       "map",
+								"x-kubernetes-patch-merge-key": "type",
+								"x-kubernetes-patch-strategy":  "merge",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions represents the observations of a network.config current state. Known .status.conditions.type are: \"NetworkTypeMigrationInProgress\", \"NetworkTypeMigrationMTUReady\", \"NetworkTypeMigrationTargetCNIAvailable\", \"NetworkTypeMigrationTargetCNIInUse\" and \"NetworkTypeMigrationOriginalCNIPurged\"",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ClusterNetworkEntry", "github.com/openshift/api/config/v1.NetworkMigration"},
+			"github.com/openshift/api/config/v1.ClusterNetworkEntry", "github.com/openshift/api/config/v1.NetworkMigration", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -46334,6 +46358,14 @@ func schema_openshift_api_operator_v1_NetworkMigration(ref common.ReferenceCallb
 						SchemaProps: spec.SchemaProps{
 							Description: "features contains the features migration configuration. Set this to migrate feature configuration when changing the cluster default network provider. if unset, the default operation is to migrate all the configuration of supported features.",
 							Ref:         ref("github.com/openshift/api/operator/v1.FeaturesMigration"),
+						},
+					},
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "mode indicates the mode of network migration. The supported values are \"Live\", \"Offline\" and omitted. A \"Live\" migration operation will not cause service interruption by migrating the CNI of each node one by one. The cluster network will work as normal during the network migration. An \"Offline\" migration operation will cause service interruption. During an \"Offline\" migration, two rounds of node reboots are required. The cluster network will be malfunctioning during the network migration. When omitted, this means no opinion and the platform is left to choose a reasonable default which is subject to change over time. The current default value is \"Offline\".",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},

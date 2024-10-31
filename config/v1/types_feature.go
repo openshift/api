@@ -184,6 +184,7 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		without(machineAPIOperatorDisableMachineHealthCheckController).
 		with(adminNetworkPolicy).
 		with(openShiftPodSecurityAdmission).
+		with(sdnLiveMigration).
 		toFeatures(defaultFeatures),
 	LatencySensitive: newDefaultFeatures().
 		toFeatures(defaultFeatures),

@@ -7892,6 +7892,20 @@
           "type": "integer",
           "format": "int32"
         },
+        "conditions": {
+          "description": "conditions represents the observations of a network.config current state. Known .status.conditions.type are: \"NetworkTypeMigrationInProgress\", \"NetworkTypeMigrationMTUReady\", \"NetworkTypeMigrationTargetCNIAvailable\", \"NetworkTypeMigrationTargetCNIInUse\" and \"NetworkTypeMigrationOriginalCNIPurged\"",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "type",
+          "x-kubernetes-patch-strategy": "merge"
+        },
         "migration": {
           "description": "Migration contains the cluster network migration configuration.",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.NetworkMigration"
@@ -27154,6 +27168,11 @@
         "features": {
           "description": "features contains the features migration configuration. Set this to migrate feature configuration when changing the cluster default network provider. if unset, the default operation is to migrate all the configuration of supported features.",
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.FeaturesMigration"
+        },
+        "mode": {
+          "description": "mode indicates the mode of network migration. The supported values are \"Live\", \"Offline\" and omitted. A \"Live\" migration operation will not cause service interruption by migrating the CNI of each node one by one. The cluster network will work as normal during the network migration. An \"Offline\" migration operation will cause service interruption. During an \"Offline\" migration, two rounds of node reboots are required. The cluster network will be malfunctioning during the network migration. When omitted, this means no opinion and the platform is left to choose a reasonable default which is subject to change over time. The current default value is \"Offline\".",
+          "type": "string",
+          "default": ""
         },
         "mtu": {
           "description": "mtu contains the MTU migration configuration. Set this to allow changing the MTU values for the default network. If unset, the operation of changing the MTU for the default network will be rejected.",

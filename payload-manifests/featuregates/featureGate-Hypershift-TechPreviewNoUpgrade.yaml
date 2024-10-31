@@ -25,9 +25,6 @@
                         "name": "EventedPLEG"
                     },
                     {
-                        "name": "GatewayAPI"
-                    },
-                    {
                         "name": "MachineAPIMigration"
                     },
                     {
@@ -103,6 +100,9 @@
                     },
                     {
                         "name": "GCPLabelsTags"
+                    },
+                    {
+                        "name": "GatewayAPI"
                     },
                     {
                         "name": "HardwareSpeed"

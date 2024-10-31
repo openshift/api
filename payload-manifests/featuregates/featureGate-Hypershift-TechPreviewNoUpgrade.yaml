@@ -249,6 +249,9 @@
                         "name": "ValidatingAdmissionPolicy"
                     },
                     {
+                        "name": "VolumeAttributesClass"
+                    },
+                    {
                         "name": "VolumeGroupSnapshot"
                     }
                 ],

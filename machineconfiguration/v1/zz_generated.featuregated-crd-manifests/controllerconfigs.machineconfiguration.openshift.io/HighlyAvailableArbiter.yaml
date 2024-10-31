@@ -6,7 +6,7 @@ metadata:
     api.openshift.io/filename-cvo-runlevel: "0000_80"
     api.openshift.io/filename-operator: machine-config
     api.openshift.io/filename-ordering: "01"
-    feature-gate.release.openshift.io/VSphereMultiVCenters: "true"
+    feature-gate.release.openshift.io/HighlyAvailableArbiter: "true"
   labels:
     openshift.io/operator-managed: ""
   name: controllerconfigs.machineconfiguration.openshift.io
@@ -1180,7 +1180,6 @@ spec:
                                   - datacenters
                                   - server
                                   type: object
-                                maxItems: 3
                                 minItems: 0
                                 type: array
                                 x-kubernetes-list-type: atomic
@@ -1233,6 +1232,11 @@ spec:
                           and the operators should not configure the operand for highly-available operation
                           The 'External' mode indicates that the control plane is hosted externally to the cluster and that
                           its components are not visible within the cluster.
+                        enum:
+                        - HighlyAvailable
+                        - HighlyAvailableArbiter
+                        - SingleReplica
+                        - External
                         type: string
                       cpuPartitioning:
                         default: None

@@ -702,4 +702,12 @@ var (
 						enhancementPR("https://github.com/openshift/enhancements/pull/1682").
 						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 						mustRegister()
+
+	FeatureGateHighlyAvailableArbiter = newFeatureGate("HighlyAvailableArbiter").
+						reportProblemsToJiraComponent("TwoNode / Arbiter").
+						contactPerson("eggfoobar").
+						productScope(ocpSpecific).
+						enhancementPR("https://github.com/openshift/enhancements/pull/1674").
+						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						mustRegister()
 )

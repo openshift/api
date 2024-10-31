@@ -114,6 +114,9 @@
                         "name": "HardwareSpeed"
                     },
                     {
+                        "name": "HighlyAvailableArbiter"
+                    },
+                    {
                         "name": "ImageStreamImportMode"
                     },
                     {

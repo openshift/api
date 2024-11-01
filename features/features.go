@@ -441,6 +441,14 @@ var (
 								enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 								mustRegister()
 
+	FeatureGateVolumeAttributesClass = newFeatureGate("VolumeAttributesClass").
+					reportProblemsToJiraComponent("Storage / Kubernetes External Components").
+					contactPerson("dfajmon").
+					productScope(kubernetes).
+					enhancementPR("https://github.com/kubernetes/enhancements/issues/3751").
+					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+					mustRegister()
+
 	FeatureGateVolumeGroupSnapshot = newFeatureGate("VolumeGroupSnapshot").
 					reportProblemsToJiraComponent("Storage / Kubernetes External Components").
 					contactPerson("fbertina").

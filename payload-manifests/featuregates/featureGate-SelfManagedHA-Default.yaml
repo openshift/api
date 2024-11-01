@@ -167,6 +167,9 @@
                         "name": "VSphereMultiVCenters"
                     },
                     {
+                        "name": "VolumeAttributesClass"
+                    },
+                    {
                         "name": "VolumeGroupSnapshot"
                     }
                 ],

@@ -101,6 +101,9 @@
                         "name": "MetricsCollectionProfiles"
                     },
                     {
+                        "name": "MinimumKubeletVersion"
+                    },
+                    {
                         "name": "MixedCPUsAllocation"
                     },
                     {
@@ -165,6 +168,9 @@
                     },
                     {
                         "name": "VSphereMultiVCenters"
+                    },
+                    {
+                        "name": "VolumeAttributesClass"
                     },
                     {
                         "name": "VolumeGroupSnapshot"

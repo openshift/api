@@ -441,6 +441,14 @@ var (
 								enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 								mustRegister()
 
+	FeatureGateVolumeAttributesClass = newFeatureGate("VolumeAttributesClass").
+						reportProblemsToJiraComponent("Storage / Kubernetes External Components").
+						contactPerson("dfajmon").
+						productScope(kubernetes).
+						enhancementPR("https://github.com/kubernetes/enhancements/issues/3751").
+						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						mustRegister()
+
 	FeatureGateVolumeGroupSnapshot = newFeatureGate("VolumeGroupSnapshot").
 					reportProblemsToJiraComponent("Storage / Kubernetes External Components").
 					contactPerson("fbertina").
@@ -654,6 +662,14 @@ var (
 								enhancementPR(legacyFeatureGateWithoutEnhancement).
 								enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 								mustRegister()
+
+	FeatureGateMinimumKubeletVersion = newFeatureGate("MinimumKubeletVersion").
+						reportProblemsToJiraComponent("Node").
+						contactPerson("haircommander").
+						productScope(ocpSpecific).
+						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						enhancementPR("https://github.com/openshift/enhancements/pull/1697").
+						mustRegister()
 
 	FeatureGateDyanmicServiceEndpointIBMCloud = newFeatureGate("DyanmicServiceEndpointIBMCloud").
 							reportProblemsToJiraComponent("Cloud Compute / IBM Provider").

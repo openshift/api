@@ -153,6 +153,9 @@
                         "name": "MetricsCollectionProfiles"
                     },
                     {
+                        "name": "MinimumKubeletVersion"
+                    },
+                    {
                         "name": "MixedCPUsAllocation"
                     },
                     {
@@ -250,6 +253,9 @@
                     },
                     {
                         "name": "ValidatingAdmissionPolicy"
+                    },
+                    {
+                        "name": "VolumeAttributesClass"
                     },
                     {
                         "name": "VolumeGroupSnapshot"

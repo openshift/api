@@ -62,7 +62,7 @@ func init() {
 			WithHelp(markers.SimpleHelp("OpenShift", "specifies the FeatureGate that is required to generate this field.")),
 	)
 	ValidationMarkers = append(ValidationMarkers,
-		must(markers.MakeDefinition(OpenShiftFeatureGateAwareXValidationMarkerName, markers.DescribesType, FeatureGateXValidation{})).
+		must(markers.MakeDefinition(OpenShiftFeatureGateAwareXValidationMarkerName, markers.DescribesField, FeatureGateXValidation{})).
 			WithHelp(markers.SimpleHelp("OpenShift", "specifies the FeatureGate that is required to generate this XValidation rule.")),
 	)
 }
@@ -122,12 +122,23 @@ func (m FeatureSetXValidation) ApplyToSchema(schema *apiext.JSONSchemaProps) err
 func (m FeatureSetXValidation) ApplyFirst() {}
 
 type FeatureGateEnum struct {
+	// FeatureGateNames represents the optional feature gates that can enable this field.
+	// If any of the feature gates are enabled, the field will be enabled.
 	FeatureGateNames []string `marker:"featureGate"`
-	EnumValues       []string `marker:"enum"`
+	// RequiredFeatureGateNames represents the required feature gates that must be enabled to enable this field.
+	// If any of the required feature gates are not enabled, the field will not be enabled.
+	RequiredFeatureGateNames []string `marker:"requiredFeatureGate,optional"`
+	EnumValues               []string `marker:"enum"`
 }
 
 func (m FeatureGateEnum) ApplyToSchema(schema *apiext.JSONSchemaProps) error {
-	if !FeatureGatesForCurrentFile.HasAny(m.FeatureGateNames...) {
+	if !FeatureGatesForCurrentFile.HasAny(append(m.FeatureGateNames, m.RequiredFeatureGateNames...)...) {
+		// No required or optional feature gates are enabled, so we don't need to apply this marker
+		return nil
+	}
+
+	if !FeatureGatesForCurrentFile.HasAll(m.RequiredFeatureGateNames...) {
+		// Not all required feature gates are enabled, so we don't need to apply this marker
 		return nil
 	}
 
@@ -150,12 +161,23 @@ func (m FeatureGateEnum) ApplyToSchema(schema *apiext.JSONSchemaProps) error {
 }
 
 type FeatureGateMaxItems struct {
+	// FeatureGateNames represents the optional feature gates that can enable this field.
+	// If any of the feature gates are enabled, the field will be enabled.
 	FeatureGateNames []string `marker:"featureGate"`
-	MaxItems         int      `marker:"maxItems"`
+	// RequiredFeatureGateNames represents the required feature gates that must be enabled to enable this field.
+	// If any of the required feature gates are not enabled, the field will not be enabled.
+	RequiredFeatureGateNames []string `marker:"requiredFeatureGate,optional"`
+	MaxItems                 int      `marker:"maxItems"`
 }
 
 func (m FeatureGateMaxItems) ApplyToSchema(schema *apiext.JSONSchemaProps) error {
-	if !FeatureGatesForCurrentFile.HasAny(m.FeatureGateNames...) {
+	if !FeatureGatesForCurrentFile.HasAny(append(m.FeatureGateNames, m.RequiredFeatureGateNames...)...) {
+		// No required or optional feature gates are enabled, so we don't need to apply this marker
+		return nil
+	}
+
+	if !FeatureGatesForCurrentFile.HasAll(m.RequiredFeatureGateNames...) {
+		// Not all required feature gates are enabled, so we don't need to apply this marker
 		return nil
 	}
 
@@ -168,13 +190,24 @@ func (m FeatureGateMaxItems) ApplyToSchema(schema *apiext.JSONSchemaProps) error
 }
 
 type FeatureGateXValidation struct {
+	// FeatureGateNames represents the optional feature gates that can enable this field.
+	// If any of the feature gates are enabled, the field will be enabled.
 	FeatureGateNames []string `marker:"featureGate"`
-	Rule             string
-	Message          string `marker:",optional"`
+	// RequiredFeatureGateNames represents the required feature gates that must be enabled to enable this field.
+	// If any of the required feature gates are not enabled, the field will not be enabled.
+	RequiredFeatureGateNames []string `marker:"requiredFeatureGate,optional"`
+	Rule                     string
+	Message                  string `marker:",optional"`
 }
 
 func (m FeatureGateXValidation) ApplyToSchema(schema *apiext.JSONSchemaProps) error {
-	if !FeatureGatesForCurrentFile.HasAny(m.FeatureGateNames...) {
+	if !FeatureGatesForCurrentFile.HasAny(append(m.FeatureGateNames, m.RequiredFeatureGateNames...)...) {
+		// No required or optional feature gates are enabled, so we don't need to apply this marker
+		return nil
+	}
+
+	if !FeatureGatesForCurrentFile.HasAll(m.RequiredFeatureGateNames...) {
+		// Not all required feature gates are enabled, so we don't need to apply this marker
 		return nil
 	}
 

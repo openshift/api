@@ -89,9 +89,6 @@
                         "name": "MachineConfigNodes"
                     },
                     {
-                        "name": "ManagedBootImagesAWS"
-                    },
-                    {
                         "name": "MaxUnavailableStatefulSet"
                     },
                     {
@@ -218,6 +215,9 @@
                     },
                     {
                         "name": "ManagedBootImages"
+                    },
+                    {
+                        "name": "ManagedBootImagesAWS"
                     },
                     {
                         "name": "MultiArchInstallAWS"

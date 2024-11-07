@@ -18,9 +18,9 @@ const (
 	TypeServing     = "Serving"
 
 	// Serving reasons
-	ReasonAvailable        = "Available"
-	ReasonUnavailable      = "Unavailable"
-	ReasonMarkedUnavailabe = "MarkedUnavailable"
+	ReasonAvailable                = "Available"
+	ReasonUnavailable              = "Unavailable"
+	ReasonUserSpecifiedUnavailable = "UserSpecifiedUnavailable"
 
 	// Progressing reasons
 	ReasonSucceeded = "Succeeded"
@@ -106,9 +106,10 @@ type ClusterCatalogSpec struct {
 	// priority is optional.
 	//
 	// A ClusterCatalog's priority is used by clients as a tie-breaker between ClusterCatalogs that meet the client's requirements.
-	// It is up to clients to decide how to handle scenarios where multiple ClusterCatalogs with the same priority meet their requirements.
-	// For example, in the case where multiple ClusterCatalogs provide the same bundle.
 	// A higher number means higher priority.
+	//
+	// It is up to clients to decide how to handle scenarios where multiple ClusterCatalogs with the same priority meet their requirements.
+	// When deciding how to break the tie in this scenario, it is recommended that clients prompt their users for additional input.
 	//
 	// When omitted, the default priority is 0 because that is the zero value of integers.
 	//
@@ -116,11 +117,11 @@ type ClusterCatalogSpec struct {
 	// Positive numbers can be used to specify a priority higher than the default.
 	//
 	// The lowest possible value is -2147483648.
-	// The highest possible value is 214748647.
+	// The highest possible value is 2147483647.
 	//
 	// +kubebuilder:default:=0
 	// +kubebuilder:validation:minimum:=-2147483648
-	// +kubebuilder:validation:maximum:=214748647
+	// +kubebuilder:validation:maximum:=2147483647
 	// +optional
 	Priority int32 `json:"priority"`
 
@@ -155,11 +156,11 @@ type ClusterCatalogStatus struct {
 	// The Serving condition is used to represent whether or not the contents of the catalog is being served via the HTTP(S) web server.
 	// When it has a status of True and a reason of Available, the contents of the catalog are being served.
 	// When it has a status of False and a reason of Unavailable, the contents of the catalog are not being served because the contents are not yet available.
-	// When it has a status of False and a reason of MarkedUnavailable, the contents of the catalog are not being served because the catalog has been intentionally marked as unavailable.
+	// When it has a status of False and a reason of UserSpecifiedUnavailable, the contents of the catalog are not being served because the catalog has been intentionally marked as unavailable.
 	//
-	// The Progressing condition is used to represent whether or not the ClusterCatalog is progressing towards a new state.
+	// The Progressing condition is used to represent whether or not the ClusterCatalog is progressing or is ready to progress towards a new state.
 	// When it has a status of True and a reason of Retrying, there was an error in the progression of the ClusterCatalog that may be resolved on subsequent reconciliation attempts.
-	// When it has a status of False and a reason of Succeeded, the ClusterCatalog has successfully progressed to a new state and is ready to continue progressing.
+	// When it has a status of True and a reason of Succeeded, the ClusterCatalog has successfully progressed to a new state and is ready to continue progressing.
 	// When it has a status of False and a reason of Blocked, there was an error in the progression of the ClusterCatalog that requires manual intervention for recovery.
 	//
 	// In the case that the Serving condition is True with reason Available and Progressing is True with reason Retrying, the previously fetched
@@ -187,27 +188,25 @@ type ClusterCatalogStatus struct {
 }
 
 // ClusterCatalogURLs contains the URLs that can be used to access the catalog.
-// +kubebuilder:validation:XValidation:rule="isURL(self.base)",message="base must be a valid URL"
-// +kubebuilder:validation:XValidation:rule="url(self.base).getScheme() == \"http\" || url(self.base).getScheme == \"https\"",message="base is invalid, scheme must be one of [http, https]"
 type ClusterCatalogURLs struct {
-	// base is a cluster-internal URL that provides REST API endpoints for
+	// base is a cluster-internal URL that provides endpoints for
 	// accessing the content of the catalog.
 	//
-	// It is expected that users append the path for the REST API endpoint they wish
-	// to access. The general format expected for a request to a REST API endpoint is
-	// {base}/api/{version}/{endpoint}
+	// It is expected that clients append the path for the endpoint they wish
+	// to access.
 	//
-	// Currently, only a single version of the REST API is served and is accessible at the path
+	// Currently, only a single endpoint is served and is accessible at the path
 	// /api/v1.
 	//
-	// The endpoints served for v1 of the REST API are:
+	// The endpoints served for the v1 API are:
 	//   - /all - this endpoint returns the entirety of the catalog contents in the FBC format
 	//
-	// As the needs of users and clients of the REST API evolve, new versions of the
-	// REST API may be added.
+	// As the needs of users and clients of the evolve, new endpoints may be added.
 	//
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MaxLength:=525
+	// +kubebuilder:validation:XValidation:rule="isURL(self)",message="must be a valid URL"
+	// +kubebuilder:validation:XValidation:rule="isURL(self) ? (url(self).getScheme() == \"http\" || url(self).getScheme() == \"https\") : true",message="scheme must be either http or https"
 	Base string `json:"base"`
 }
 
@@ -256,24 +255,26 @@ type ResolvedCatalogSource struct {
 }
 
 // ResolvedImageSource provides information about the resolved source of a Catalog sourced from an image.
-// +kubebuilder:validation:XValidation:rule="self.ref.matches('^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9])((\\\\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]))+)?(:[0-9]+)?\\\\b')",message="ref is invalid, it must start with a valid domain"
-// +kubebuilder:validation:XValidation:rule="self.ref.find('(\\\\/[a-z0-9]+((([._]|__|[-]*)[a-z0-9]+)+)?((\\\\/[a-z0-9]+((([._]|__|[-]*)[a-z0-9]+)+)?)+)?)') != \"\"",message="ref is invalid, a valid name is required"
-// +kubebuilder:validation:XValidation:rule="self.ref.matches('(@[A-Za-z][A-Za-z0-9]*([-_+.][A-Za-z][A-Za-z0-9]*)*[:][0-9A-Fa-f]{32,})')",message="ref is invalid, digest is invalid"
 type ResolvedImageSource struct {
 	// ref contains the resolved image digest-based reference.
 	// The digest format is used so users can use other tooling to fetch the exact
 	// OCI manifests that were used to extract the catalog contents.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MaxLength:=1000
+	// +kubebuilder:validation:XValidation:rule="self.matches('^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9])((\\\\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]))+)?(:[0-9]+)?\\\\b')",message="must start with a valid domain. valid domains must be alphanumeric characters (lowercase and uppercase) separated by the \".\" character."
+	// +kubebuilder:validation:XValidation:rule="self.find('(\\\\/[a-z0-9]+((([._]|__|[-]*)[a-z0-9]+)+)?((\\\\/[a-z0-9]+((([._]|__|[-]*)[a-z0-9]+)+)?)+)?)') != \"\"",message="a valid name is required. valid names must contain lowercase alphanumeric characters separated only by the \".\", \"_\", \"__\", \"-\" characters."
+	// +kubebuilder:validation:XValidation:rule="self.find('(@.*:)') != \"\"",message="must end with a digest"
+	// +kubebuilder:validation:XValidation:rule="self.find('(@.*:)') != \"\" ? self.find('(@.*:)').matches('(@[A-Za-z][A-Za-z0-9]*([-_+.][A-Za-z][A-Za-z0-9]*)*[:])') : true",message="digest algorithm is not valid. valid algorithms must start with an uppercase or lowercase alpha character followed by alphanumeric characters and may contain the \"-\", \"_\", \"+\", and \".\" characters."
+	// +kubebuilder:validation:XValidation:rule="self.find('(@.*:)') != \"\" ? self.find(':.*$').substring(1).size() >= 32 : true",message="digest is not valid. the encoded string must be at least 32 characters"
+	// +kubebuilder:validation:XValidation:rule="self.find('(@.*:)') != \"\" ? self.find(':.*$').matches(':[0-9A-Fa-f]*$') : true",message="digest is not valid. the encoded string must only contain hex characters (A-F, a-f, 0-9)"
 	Ref string `json:"ref"`
 }
 
 // ImageSource enables users to define the information required for sourcing a Catalog from an OCI image
-// +kubebuilder:validation:XValidation:rule="!has(self.pollIntervalMinutes) || (self.ref.contains('@'))",message="cannot specify pollIntervalMinutes while using digest-based image"
-// +kubebuilder:validation:XValidation:rule="self.ref.matches('^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9])((\\\\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]))+)?(:[0-9]+)?\\\\b')",message="ref is invalid, it must start with a valid domain"
-// +kubebuilder:validation:XValidation:rule="self.ref.find('(\\\\/[a-z0-9]+((([._]|__|[-]*)[a-z0-9]+)+)?((\\\\/[a-z0-9]+((([._]|__|[-]*)[a-z0-9]+)+)?)+)?)') != \"\"",message="ref is invalid, a valid name is required"
-// +kubebuilder:validation:XValidation:rule="self.ref.contains('@') || self.ref.find(':[\\\\w][\\\\w.-]{0,127}$') != \"\"",message="ref is invalid, must end with a digest or a tag"
-// +kubebuilder:validation:XValidation:rule="self.ref.contains('@') ? self.ref.matches('(@[A-Za-z][A-Za-z0-9]*([-_+.][A-Za-z][A-Za-z0-9]*)*[:][0-9A-Fa-f]{32,})') : self.ref.substring(self.ref.lastIndexOf(\":\")+1).matches('[\\\\w][\\\\w.-]{0,127}')",message="ref is invalid, tag or digest is invalid"
+//
+// If we see that there is a possibly valid digest-based image reference AND pollIntervalMinutes is specified,
+// reject the resource since there is no use in polling a digest-based image reference.
+// +kubebuilder:validation:XValidation:rule="self.ref.find('(@.*:)') != \"\" ? !has(self.pollIntervalMinutes) : true",message="cannot specify pollIntervalMinutes while using digest-based image"
 type ImageSource struct {
 	// ref allows users to define the reference to a container image containing Catalog contents.
 	// ref is required.
@@ -305,7 +306,7 @@ type ImageSource struct {
 	// The algorithm reference must be followed by the ":" character and an encoded string.
 	// The algorithm must start with an uppercase or lowercase alpha character followed by alphanumeric characters and may contain the "-", "_", "+", and "." characters.
 	// Some examples of valid algorithm values are "sha256", "sha256+b64u", "multihash+base58".
-	// The encoded string following the algorithm must be hex digits and must be a minimum of 32 characters.
+	// The encoded string following the algorithm must be hex digits (a-f, A-F, 0-9) and must be a minimum of 32 characters.
 	//
 	// Tag-based references must begin with a word character (alphanumeric + "_") followed by word characters or ".", and "-" characters.
 	// The tag must not be longer than 127 characters.
@@ -315,6 +316,14 @@ type ImageSource struct {
 	//
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MaxLength:=1000
+	// +kubebuilder:validation:XValidation:rule="self.matches('^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9])((\\\\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]))+)?(:[0-9]+)?\\\\b')",message="must start with a valid domain. valid domains must be alphanumeric characters (lowercase and uppercase) separated by the \".\" character."
+	// +kubebuilder:validation:XValidation:rule="self.find('(\\\\/[a-z0-9]+((([._]|__|[-]*)[a-z0-9]+)+)?((\\\\/[a-z0-9]+((([._]|__|[-]*)[a-z0-9]+)+)?)+)?)') != \"\"",message="a valid name is required. valid names must contain lowercase alphanumeric characters separated only by the \".\", \"_\", \"__\", \"-\" characters."
+	// +kubebuilder:validation:XValidation:rule="self.find('(@.*:)') != \"\" || self.find(':.*$') != \"\"",message="must end with a digest or a tag"
+	// +kubebuilder:validation:XValidation:rule="self.find('(@.*:)') == \"\" ? (self.find(':.*$') != \"\" ? self.find(':.*$').substring(1).size() <= 127 : true) : true",message="tag is invalid. the tag must not be more than 127 characters"
+	// +kubebuilder:validation:XValidation:rule="self.find('(@.*:)') == \"\" ? (self.find(':.*$') != \"\" ? self.find(':.*$').matches(':[\\\\w][\\\\w.-]*$') : true) : true",message="tag is invalid. valid tags must begin with a word character (alphanumeric + \"_\") followed by word characters or \".\", and \"-\" characters"
+	// +kubebuilder:validation:XValidation:rule="self.find('(@.*:)') != \"\" ? self.find('(@.*:)').matches('(@[A-Za-z][A-Za-z0-9]*([-_+.][A-Za-z][A-Za-z0-9]*)*[:])') : true",message="digest algorithm is not valid. valid algorithms must start with an uppercase or lowercase alpha character followed by alphanumeric characters and may contain the \"-\", \"_\", \"+\", and \".\" characters."
+	// +kubebuilder:validation:XValidation:rule="self.find('(@.*:)') != \"\" ? self.find(':.*$').substring(1).size() >= 32 : true",message="digest is not valid. the encoded string must be at least 32 characters"
+	// +kubebuilder:validation:XValidation:rule="self.find('(@.*:)') != \"\" ? self.find(':.*$').matches(':[0-9A-Fa-f]*$') : true",message="digest is not valid. the encoded string must only contain hex characters (A-F, a-f, 0-9)"
 	Ref string `json:"ref"`
 
 	// pollIntervalMinutes allows the user to set the interval, in minutes, at which the image source should be polled for new content.

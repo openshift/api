@@ -84,9 +84,10 @@ spec:
                   priority is optional.
 
                   A ClusterCatalog's priority is used by clients as a tie-breaker between ClusterCatalogs that meet the client's requirements.
-                  It is up to clients to decide how to handle scenarios where multiple ClusterCatalogs with the same priority meet their requirements.
-                  For example, in the case where multiple ClusterCatalogs provide the same bundle.
                   A higher number means higher priority.
+
+                  It is up to clients to decide how to handle scenarios where multiple ClusterCatalogs with the same priority meet their requirements.
+                  When deciding how to break the tie in this scenario, it is recommended that clients prompt their users for additional input.
 
                   When omitted, the default priority is 0 because that is the zero value of integers.
 
@@ -94,7 +95,7 @@ spec:
                   Positive numbers can be used to specify a priority higher than the default.
 
                   The lowest possible value is -2147483648.
-                  The highest possible value is 214748647.
+                  The highest possible value is 2147483647.
                 format: int32
                 type: integer
               source:
@@ -162,7 +163,7 @@ spec:
                           The algorithm reference must be followed by the ":" character and an encoded string.
                           The algorithm must start with an uppercase or lowercase alpha character followed by alphanumeric characters and may contain the "-", "_", "+", and "." characters.
                           Some examples of valid algorithm values are "sha256", "sha256+b64u", "multihash+base58".
-                          The encoded string following the algorithm must be hex digits and must be a minimum of 32 characters.
+                          The encoded string following the algorithm must be hex digits (a-f, A-F, 0-9) and must be a minimum of 32 characters.
 
                           Tag-based references must begin with a word character (alphanumeric + "_") followed by word characters or ".", and "-" characters.
                           The tag must not be longer than 127 characters.
@@ -171,24 +172,52 @@ spec:
                           An example of a valid tag-based image reference is "quay.io/operatorhubio/catalog:latest"
                         maxLength: 1000
                         type: string
+                        x-kubernetes-validations:
+                        - message: must start with a valid domain. valid domains must
+                            be alphanumeric characters (lowercase and uppercase) separated
+                            by the "." character.
+                          rule: self.matches('^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9])((\\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]))+)?(:[0-9]+)?\\b')
+                        - message: a valid name is required. valid names must contain
+                            lowercase alphanumeric characters separated only by the
+                            ".", "_", "__", "-" characters.
+                          rule: self.find('(\\/[a-z0-9]+((([._]|__|[-]*)[a-z0-9]+)+)?((\\/[a-z0-9]+((([._]|__|[-]*)[a-z0-9]+)+)?)+)?)')
+                            != ""
+                        - message: must end with a digest or a tag
+                          rule: self.find('(@.*:)') != "" || self.find(':.*$') !=
+                            ""
+                        - message: tag is invalid. the tag must not be more than 127
+                            characters
+                          rule: 'self.find(''(@.*:)'') == "" ? (self.find('':.*$'')
+                            != "" ? self.find('':.*$'').substring(1).size() <= 127
+                            : true) : true'
+                        - message: tag is invalid. valid tags must begin with a word
+                            character (alphanumeric + "_") followed by word characters
+                            or ".", and "-" characters
+                          rule: 'self.find(''(@.*:)'') == "" ? (self.find('':.*$'')
+                            != "" ? self.find('':.*$'').matches('':[\\w][\\w.-]*$'')
+                            : true) : true'
+                        - message: digest algorithm is not valid. valid algorithms
+                            must start with an uppercase or lowercase alpha character
+                            followed by alphanumeric characters and may contain the
+                            "-", "_", "+", and "." characters.
+                          rule: 'self.find(''(@.*:)'') != "" ? self.find(''(@.*:)'').matches(''(@[A-Za-z][A-Za-z0-9]*([-_+.][A-Za-z][A-Za-z0-9]*)*[:])'')
+                            : true'
+                        - message: digest is not valid. the encoded string must be
+                            at least 32 characters
+                          rule: 'self.find(''(@.*:)'') != "" ? self.find('':.*$'').substring(1).size()
+                            >= 32 : true'
+                        - message: digest is not valid. the encoded string must only
+                            contain hex characters (A-F, a-f, 0-9)
+                          rule: 'self.find(''(@.*:)'') != "" ? self.find('':.*$'').matches('':[0-9A-Fa-f]*$'')
+                            : true'
                     required:
                     - ref
                     type: object
                     x-kubernetes-validations:
                     - message: cannot specify pollIntervalMinutes while using digest-based
                         image
-                      rule: '!has(self.pollIntervalMinutes) || (self.ref.contains(''@''))'
-                    - message: ref is invalid, it must start with a valid domain
-                      rule: self.ref.matches('^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9])((\\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]))+)?(:[0-9]+)?\\b')
-                    - message: ref is invalid, a valid name is required
-                      rule: self.ref.find('(\\/[a-z0-9]+((([._]|__|[-]*)[a-z0-9]+)+)?((\\/[a-z0-9]+((([._]|__|[-]*)[a-z0-9]+)+)?)+)?)')
-                        != ""
-                    - message: ref is invalid, must end with a digest or a tag
-                      rule: self.ref.contains('@') || self.ref.find(':[\\w][\\w.-]{0,127}$')
-                        != ""
-                    - message: ref is invalid, tag or digest is invalid
-                      rule: 'self.ref.contains(''@'') ? self.ref.matches(''(@[A-Za-z][A-Za-z0-9]*([-_+.][A-Za-z][A-Za-z0-9]*)*[:][0-9A-Fa-f]{32,})'')
-                        : self.ref.substring(self.ref.lastIndexOf(":")+1).matches(''[\\w][\\w.-]{0,127}'')'
+                      rule: 'self.ref.find(''(@.*:)'') != "" ? !has(self.pollIntervalMinutes)
+                        : true'
                   type:
                     description: |-
                       type is a reference to the type of source the catalog is sourced from.
@@ -228,11 +257,11 @@ spec:
                   The Serving condition is used to represent whether or not the contents of the catalog is being served via the HTTP(S) web server.
                   When it has a status of True and a reason of Available, the contents of the catalog are being served.
                   When it has a status of False and a reason of Unavailable, the contents of the catalog are not being served because the contents are not yet available.
-                  When it has a status of False and a reason of MarkedUnavailable, the contents of the catalog are not being served because the catalog has been intentionally marked as unavailable.
+                  When it has a status of False and a reason of UserSpecifiedUnavailable, the contents of the catalog are not being served because the catalog has been intentionally marked as unavailable.
 
-                  The Progressing condition is used to represent whether or not the ClusterCatalog is progressing towards a new state.
+                  The Progressing condition is used to represent whether or not the ClusterCatalog is progressing or is ready to progress towards a new state.
                   When it has a status of True and a reason of Retrying, there was an error in the progression of the ClusterCatalog that may be resolved on subsequent reconciliation attempts.
-                  When it has a status of False and a reason of Succeeded, the ClusterCatalog has successfully progressed to a new state and is ready to continue progressing.
+                  When it has a status of True and a reason of Succeeded, the ClusterCatalog has successfully progressed to a new state and is ready to continue progressing.
                   When it has a status of False and a reason of Blocked, there was an error in the progression of the ClusterCatalog that requires manual intervention for recovery.
 
                   In the case that the Serving condition is True with reason Available and Progressing is True with reason Retrying, the previously fetched
@@ -299,7 +328,7 @@ spec:
                 x-kubernetes-list-type: map
               lastUnpacked:
                 description: |-
-                  lastUnpacked represents the time when the contents of the
+                  lastUnpacked represents the last time the contents of the
                   catalog were extracted from their source format. As an example,
                   when using an Image source, the OCI image will be pulled and the
                   image layers written to a file-system backed cache. We refer to the
@@ -322,17 +351,35 @@ spec:
                           OCI manifests that were used to extract the catalog contents.
                         maxLength: 1000
                         type: string
+                        x-kubernetes-validations:
+                        - message: must start with a valid domain. valid domains must
+                            be alphanumeric characters (lowercase and uppercase) separated
+                            by the "." character.
+                          rule: self.matches('^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9])((\\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]))+)?(:[0-9]+)?\\b')
+                        - message: a valid name is required. valid names must contain
+                            lowercase alphanumeric characters separated only by the
+                            ".", "_", "__", "-" characters.
+                          rule: self.find('(\\/[a-z0-9]+((([._]|__|[-]*)[a-z0-9]+)+)?((\\/[a-z0-9]+((([._]|__|[-]*)[a-z0-9]+)+)?)+)?)')
+                            != ""
+                        - message: must end with a digest
+                          rule: self.find('(@.*:)') != ""
+                        - message: digest algorithm is not valid. valid algorithms
+                            must start with an uppercase or lowercase alpha character
+                            followed by alphanumeric characters and may contain the
+                            "-", "_", "+", and "." characters.
+                          rule: 'self.find(''(@.*:)'') != "" ? self.find(''(@.*:)'').matches(''(@[A-Za-z][A-Za-z0-9]*([-_+.][A-Za-z][A-Za-z0-9]*)*[:])'')
+                            : true'
+                        - message: digest is not valid. the encoded string must be
+                            at least 32 characters
+                          rule: 'self.find(''(@.*:)'') != "" ? self.find('':.*$'').substring(1).size()
+                            >= 32 : true'
+                        - message: digest is not valid. the encoded string must only
+                            contain hex characters (A-F, a-f, 0-9)
+                          rule: 'self.find(''(@.*:)'') != "" ? self.find('':.*$'').matches('':[0-9A-Fa-f]*$'')
+                            : true'
                     required:
                     - ref
                     type: object
-                    x-kubernetes-validations:
-                    - message: ref is invalid, it must start with a valid domain
-                      rule: self.ref.matches('^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9])((\\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]))+)?(:[0-9]+)?\\b')
-                    - message: ref is invalid, a valid name is required
-                      rule: self.ref.find('(\\/[a-z0-9]+((([._]|__|[-]*)[a-z0-9]+)+)?((\\/[a-z0-9]+((([._]|__|[-]*)[a-z0-9]+)+)?)+)?)')
-                        != ""
-                    - message: ref is invalid, digest is invalid
-                      rule: self.ref.matches('(@[A-Za-z][A-Za-z0-9]*([-_+.][A-Za-z][A-Za-z0-9]*)*[:][0-9A-Fa-f]{32,})')
                   type:
                     description: |-
                       type is a reference to the type of source the catalog is sourced from.
@@ -359,32 +406,30 @@ spec:
                 properties:
                   base:
                     description: |-
-                      base is a cluster-internal URL that provides REST API endpoints for
+                      base is a cluster-internal URL that provides endpoints for
                       accessing the content of the catalog.
 
-                      It is expected that users append the path for the REST API endpoint they wish
-                      to access. The general format expected for a request to a REST API endpoint is
-                      {base}/api/{version}/{endpoint}
+                      It is expected that clients append the path for the endpoint they wish
+                      to access.
 
-                      Currently, only a single version of the REST API is served and is accessible at the path
+                      Currently, only a single endpoint is served and is accessible at the path
                       /api/v1.
 
-                      The endpoints served for v1 of the REST API are:
+                      The endpoints served for the v1 API are:
                         - /all - this endpoint returns the entirety of the catalog contents in the FBC format
 
-                      As the needs of users and clients of the REST API evolve, new versions of the
-                      REST API may be added.
+                      As the needs of users and clients of the evolve, new endpoints may be added.
                     maxLength: 525
                     type: string
+                    x-kubernetes-validations:
+                    - message: must be a valid URL
+                      rule: isURL(self)
+                    - message: scheme must be either http or https
+                      rule: 'isURL(self) ? (url(self).getScheme() == "http" || url(self).getScheme()
+                        == "https") : true'
                 required:
                 - base
                 type: object
-                x-kubernetes-validations:
-                - message: base must be a valid URL
-                  rule: isURL(self.base)
-                - message: base is invalid, scheme must be one of [http, https]
-                  rule: url(self.base).getScheme() == "http" || url(self.base).getScheme
-                    == "https"
             type: object
         required:
         - metadata

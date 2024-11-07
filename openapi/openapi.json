@@ -22564,14 +22564,13 @@
       "description": "BuildInputs holds all of the information needed to trigger a build",
       "type": "object",
       "required": [
-        "baseImagePullSecret",
         "imageBuilder",
         "renderedImagePushSecret",
         "renderedImagePushspec"
       ],
       "properties": {
         "baseImagePullSecret": {
-          "description": "baseImagePullSecret is the secret used to pull the base image. must live in the openshift-machine-config-operator namespace",
+          "description": "baseImagePullSecret is the secret used to pull the base image. must live in the openshift-machine-config-operator namespace if provided. defaults to using the cluster-wide pull secret if not specified.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.ImageSecretObjectReference"
         },

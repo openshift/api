@@ -39038,7 +39038,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_BuildInputs(ref common.R
 					},
 					"baseImagePullSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "baseImagePullSecret is the secret used to pull the base image. must live in the openshift-machine-config-operator namespace",
+							Description: "baseImagePullSecret is the secret used to pull the base image. must live in the openshift-machine-config-operator namespace if provided. defaults to using the cluster-wide pull secret if not specified.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/machineconfiguration/v1alpha1.ImageSecretObjectReference"),
 						},
@@ -39096,7 +39096,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_BuildInputs(ref common.R
 						},
 					},
 				},
-				Required: []string{"baseImagePullSecret", "imageBuilder", "renderedImagePushSecret", "renderedImagePushspec"},
+				Required: []string{"imageBuilder", "renderedImagePushSecret", "renderedImagePushspec"},
 			},
 		},
 		Dependencies: []string{

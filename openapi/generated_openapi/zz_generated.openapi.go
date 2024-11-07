@@ -423,6 +423,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1alpha1.InsightsDataGatherList":                                    schema_openshift_api_config_v1alpha1_InsightsDataGatherList(ref),
 		"github.com/openshift/api/config/v1alpha1.InsightsDataGatherSpec":                                    schema_openshift_api_config_v1alpha1_InsightsDataGatherSpec(ref),
 		"github.com/openshift/api/config/v1alpha1.InsightsDataGatherStatus":                                  schema_openshift_api_config_v1alpha1_InsightsDataGatherStatus(ref),
+		"github.com/openshift/api/config/v1alpha1.PKI":                                                       schema_openshift_api_config_v1alpha1_PKI(ref),
+		"github.com/openshift/api/config/v1alpha1.PKICertificateSubject":                                     schema_openshift_api_config_v1alpha1_PKICertificateSubject(ref),
 		"github.com/openshift/api/config/v1alpha1.Policy":                                                    schema_openshift_api_config_v1alpha1_Policy(ref),
 		"github.com/openshift/api/config/v1alpha1.PolicyFulcioSubject":                                       schema_openshift_api_config_v1alpha1_PolicyFulcioSubject(ref),
 		"github.com/openshift/api/config/v1alpha1.PolicyIdentity":                                            schema_openshift_api_config_v1alpha1_PolicyIdentity(ref),
@@ -21070,6 +21072,70 @@ func schema_openshift_api_config_v1alpha1_InsightsDataGatherStatus(ref common.Re
 	}
 }
 
+func schema_openshift_api_config_v1alpha1_PKI(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PKI defines the root of trust based on Root CA(s) and corresponding intermediate certificates.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"caRootsData": {
+						SchemaProps: spec.SchemaProps{
+							Description: "caRootsData contains base64-encoded data of a certificate bundle PEM file, which contains one or more CA roots in the PEM format. The total length of the data must not exceed 8192 characters.",
+							Type:        []string{"string"},
+							Format:      "byte",
+						},
+					},
+					"caIntermediatesData": {
+						SchemaProps: spec.SchemaProps{
+							Description: "caIntermediatesData contains base64-encoded data of a certificate bundle PEM file, which contains one or more intermediate certificates in the PEM format. The total length of the data must not exceed 8192 characters. caIntermediatesData requires caRootsData to be set.",
+							Type:        []string{"string"},
+							Format:      "byte",
+						},
+					},
+					"pkiCertificateSubject": {
+						SchemaProps: spec.SchemaProps{
+							Description: "pkiCertificateSubject defines the requirements imposed on the subject to which the certificate was issued.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.PKICertificateSubject"),
+						},
+					},
+				},
+				Required: []string{"caRootsData", "pkiCertificateSubject"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha1.PKICertificateSubject"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_PKICertificateSubject(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PKICertificateSubject defines the requirements imposed on the subject to which the certificate was issued.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"email": {
+						SchemaProps: spec.SchemaProps{
+							Description: "email specifies the expected email address imposed on the subject to which the certificate was issued, and must match the email address listed in the Subject Alternative Name (SAN) field of the certificate. The email should be a valid email address and at most 320 characters in length.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"hostname": {
+						SchemaProps: spec.SchemaProps{
+							Description: "hostname specifies the expected hostname imposed on the subject to which the certificate was issued, and it must match the hostname listed in the Subject Alternative Name (SAN) DNS field of the certificate. The hostname should be a valid dns 1123 subdomain name, optionally prefixed by '*.', and at most 253 characters in length. It should consist only of lowercase alphanumeric characters, hyphens, periods and the optional preceding asterisk.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_config_v1alpha1_Policy(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -21238,7 +21304,7 @@ func schema_openshift_api_config_v1alpha1_PolicyRootOfTrust(ref common.Reference
 				Properties: map[string]spec.Schema{
 					"policyType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "policyType serves as the union's discriminator. Users are required to assign a value to this field, choosing one of the policy types that define the root of trust. \"PublicKey\" indicates that the policy relies on a sigstore publicKey and may optionally use a Rekor verification. \"FulcioCAWithRekor\" indicates that the policy is based on the Fulcio certification and incorporates a Rekor verification.",
+							Description: "policyType serves as the union's discriminator. Users are required to assign a value to this field, choosing one of the policy types that define the root of trust. \"PublicKey\" indicates that the policy relies on a sigstore publicKey and may optionally use a Rekor verification. \"FulcioCAWithRekor\" indicates that the policy is based on the Fulcio certification and incorporates a Rekor verification. \"PKI\" is a DevPreview feature that indicates that the policy is based on the certificates from Bring Your Own Public Key Infrastructure (BYOPKI). This value is enabled by turning on the SigstoreImageVerificationPKI feature gate.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -21256,6 +21322,12 @@ func schema_openshift_api_config_v1alpha1_PolicyRootOfTrust(ref common.Reference
 							Ref:         ref("github.com/openshift/api/config/v1alpha1.FulcioCAWithRekor"),
 						},
 					},
+					"pki": {
+						SchemaProps: spec.SchemaProps{
+							Description: "pki defines the root of trust based on Bring Your Own Public Key Infrastructure (BYOPKI) Root CA(s) and corresponding intermediate certificates.",
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.PKI"),
+						},
+					},
 				},
 				Required: []string{"policyType"},
 			},
@@ -21266,6 +21338,7 @@ func schema_openshift_api_config_v1alpha1_PolicyRootOfTrust(ref common.Reference
 							"discriminator": "policyType",
 							"fields-to-discriminateBy": map[string]interface{}{
 								"fulcioCAWithRekor": "FulcioCAWithRekor",
+								"pki":               "PKI",
 								"publicKey":         "PublicKey",
 							},
 						},
@@ -21274,7 +21347,7 @@ func schema_openshift_api_config_v1alpha1_PolicyRootOfTrust(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.FulcioCAWithRekor", "github.com/openshift/api/config/v1alpha1.PublicKey"},
+			"github.com/openshift/api/config/v1alpha1.FulcioCAWithRekor", "github.com/openshift/api/config/v1alpha1.PKI", "github.com/openshift/api/config/v1alpha1.PublicKey"},
 	}
 }
 

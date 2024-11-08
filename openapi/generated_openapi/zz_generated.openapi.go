@@ -51495,6 +51495,14 @@ func schema_openshift_api_operator_v1_NetworkSpec(ref common.ReferenceCallback) 
 							Ref:         ref("github.com/openshift/api/operator/v1.AdditionalRoutingCapabilities"),
 						},
 					},
+					"ovnObservability": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ovnObservability enables OVNObservability feature with 100% sampling rate for all available features. More granular configuration will be available later with a separate CRD. OVNObservability feature gate should be enabled to use this feature. It only works with ovn-kubernetes.",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 				},
 				Required: []string{"managementState", "clusterNetwork", "serviceNetwork", "defaultNetwork"},
 			},

@@ -809,6 +809,13 @@ spec:
                 - Trace
                 - TraceAll
                 type: string
+              ovnObservability:
+                default: false
+                description: |-
+                  ovnObservability enables OVNObservability feature with 100% sampling rate for all available features.
+                  More granular configuration will be available later with a separate CRD.
+                  OVNObservability feature gate should be enabled to use this feature. It only works with ovn-kubernetes.
+                type: boolean
               serviceNetwork:
                 description: |-
                   serviceNetwork is the ip address pool to use for Service IPs

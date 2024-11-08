@@ -30014,6 +30014,11 @@
           "description": "operatorLogLevel is an intent based logging for the operator itself.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for themselves.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
           "type": "string"
         },
+        "ovnObservability": {
+          "description": "ovnObservability enables OVNObservability feature with 100% sampling rate for all available features. More granular configuration will be available later with a separate CRD. OVNObservability feature gate should be enabled to use this feature. It only works with ovn-kubernetes.",
+          "type": "boolean",
+          "default": false
+        },
         "serviceNetwork": {
           "description": "serviceNetwork is the ip address pool to use for Service IPs Currently, all existing network providers only support a single value here, but this is an array to allow for growth.",
           "type": "array",

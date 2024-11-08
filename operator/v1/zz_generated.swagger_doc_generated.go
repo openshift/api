@@ -1764,6 +1764,7 @@ var map_NetworkSpec = map[string]string{
 	"exportNetworkFlows":            "exportNetworkFlows enables and configures the export of network flow metadata from the pod network by using protocols NetFlow, SFlow or IPFIX. Currently only supported on OVN-Kubernetes plugin. If unset, flows will not be exported to any collector.",
 	"migration":                     "migration enables and configures cluster network migration, for network changes that cannot be made instantly.",
 	"additionalRoutingCapabilities": "additionalRoutingCapabilities describes components and relevant configuration providing additional routing capabilities. When set, it enables such components and the usage of the routing capabilities they provide for the machine network. Upstream operators, like MetalLB operator, requiring these capabilities may rely on, or automatically set this attribute. Network plugins may leverage advanced routing capabilities acquired through the enablement of these components but may require specific configuration on their side to do so; refer to their respective documentation and configuration options.",
+	"ovnObservability":              "ovnObservability enables OVNObservability feature with 100% sampling rate for all available features. More granular configuration will be available later with a separate CRD. OVNObservability feature gate should be enabled to use this feature. It only works with ovn-kubernetes.",
 }
 
 func (NetworkSpec) SwaggerDoc() map[string]string {

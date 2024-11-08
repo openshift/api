@@ -138,6 +138,13 @@ type NetworkSpec struct {
 	// +openshift:enable:FeatureGate=AdditionalRoutingCapabilities
 	// +optional
 	AdditionalRoutingCapabilities *AdditionalRoutingCapabilities `json:"additionalRoutingCapabilities,omitempty"`
+
+	// ovnObservability enables OVNObservability feature with 100% sampling rate for all available features.
+	// More granular configuration will be available later with a separate CRD.
+	// OVNObservability feature gate should be enabled to use this feature. It only works with ovn-kubernetes.
+	// +optional
+	// +kubebuilder:default:=false
+	OVNObservability bool `json:"ovnObservability"`
 }
 
 // NetworkMigrationMode is an enumeration of the possible mode of the network migration

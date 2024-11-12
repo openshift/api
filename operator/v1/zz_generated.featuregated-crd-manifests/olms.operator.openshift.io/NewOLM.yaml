@@ -6,6 +6,7 @@ metadata:
     api.openshift.io/filename-cvo-runlevel: "0000_10"
     api.openshift.io/filename-operator: operator-lifecycle-manager
     api.openshift.io/filename-ordering: "01"
+    capability.openshift.io/name: OperatorLifecycleManagerV1
     feature-gate.release.openshift.io/NewOLM: "true"
   name: olms.operator.openshift.io
 spec:

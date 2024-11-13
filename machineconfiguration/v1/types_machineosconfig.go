@@ -28,7 +28,7 @@ type MachineOSConfig struct {
 
 	// status describes the status of the machineosconfig
 	// +optional
-	Status MachineOSConfigStatus `json:"status,omitempty"`
+	Status *MachineOSConfigStatus `json:"status,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -52,9 +52,9 @@ type MachineOSConfigSpec struct {
 	// buildInputs is where user input options for the build live
 	// +kubebuilder:validation:Required
 	BuildInputs BuildInputs `json:"buildInputs"`
-	// buildOutputs is where user input options for the build live
+	// buildOutputs holds all information needed to handle booting the image after a build
 	// +optional
-	BuildOutputs BuildOutputs `json:"buildOutputs,omitempty"`
+	BuildOutputs *BuildOutputs `json:"buildOutputs,omitempty"`
 }
 
 // MachineOSConfigStatus describes the status this config object and relates it to the builds associated with this MachineOSConfig
@@ -66,11 +66,13 @@ type MachineOSConfigStatus struct {
 	// +listMapKey=type
 	// +optional
 	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
-	// observedGeneration represents the generation observed by the controller.
-	// this field is updated when the user changes the configuration in BuildSettings or the MCP this object is associated with.
+	// observedGeneration represents the generation observed by the Machine Config Operator's build controller.
 	// +kubebuilder:validation:Required
 	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 	// currentImagePullspec is the fully qualified image pull spec used by the MCO to pull down the new OSImage. This must include sha256.
+	// The format of the image pullspec is:
+	// host[:port][/namespace]/name@sha256:<digest>
+	// The digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=447
 	// +kubebuilder:validation:XValidation:rule=`(self.split('@').size() == 2 && self.split('@')[1].matches('^sha256:[a-f0-9]{64}$'))`,message="the OCI Image reference must end with a valid '@sha256:<digest>' suffix, where '<digest>' is 64 characters long"
@@ -86,6 +88,7 @@ type BuildInputs struct {
 	// if you wish to use a mirror or any other settings specific to registries.conf, please specify those in the cluster wide registries.conf.
 	// The format of the image pullspec is:
 	// host[:port][/namespace]/name@sha256:<digest>
+	// The digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=447
 	// +kubebuilder:validation:XValidation:rule=`(self.split('@').size() == 2 && self.split('@')[1].matches('^sha256:[a-f0-9]{64}$'))`,message="the OCI Image reference must end with a valid '@sha256:<digest>' suffix, where '<digest>' is 64 characters long"
@@ -97,6 +100,7 @@ type BuildInputs struct {
 	// if you wish to use a mirror or any other settings specific to registries.conf, please specify those in the cluster wide registries.conf.
 	// The format of the image pullspec is:
 	// host[:port][/namespace]/name@sha256:<digest>
+	// The digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=447
 	// +kubebuilder:validation:XValidation:rule=`(self.split('@').size() == 2 && self.split('@')[1].matches('^sha256:[a-f0-9]{64}$'))`,message="the OCI Image reference must end with a valid '@sha256:<digest>' suffix, where '<digest>' is 64 characters long"
@@ -107,7 +111,7 @@ type BuildInputs struct {
 	// must live in the openshift-machine-config-operator namespace if provided.
 	// defaults to using the cluster-wide pull secret if not specified.
 	// +optional
-	BaseImagePullSecret ImageSecretObjectReference `json:"baseImagePullSecret,omitempty"`
+	BaseImagePullSecret *ImageSecretObjectReference `json:"baseImagePullSecret,omitempty"`
 	// machineOSImageBuilder describes which image builder will be used in each build triggered by this MachineOSConfig
 	// +kubebuilder:validation:Required
 	ImageBuilder *MachineOSImageBuilder `json:"imageBuilder"`
@@ -126,18 +130,20 @@ type BuildInputs struct {
 	// host[:port][/namespace]/name:<tag> or svc_name.namespace.svc[:port]/repository/name:<tag>
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=447
-	// +kubebuilder:validation:XValidation:rule=`((self.split(':').size() == 2 && self.split(':')[1].matches('^([a-zA-Z0-9-./:])+$')) || self.matches('^[^.]+\\.[^.]+\\.svc:\\d+\\/[^\\/]+\\/[^\\/]+:[^\\/]+$'))`,message="the OCI Image reference must end with a valid :<tag>, where '<digest>' is 64 characters long and '<tag>' is any valid string  Or it must be a valid .svc followed by a port, repository, image name, and tag."
-	// +kubebuilder:validation:XValidation:rule=`((self.split(':').size() == 2 && self.split(':')[0].matches('^([a-zA-Z0-9-]+\\.)+[a-zA-Z0-9-]+(:[0-9]{2,5})?/([a-zA-Z0-9-_]{0,61}/)?[a-zA-Z0-9-_.]*?$')) || self.matches('^[^.]+\\.[^.]+\\.svc:\\d+\\/[^\\/]+\\/[^\\/]+:[^\\/]+$'))`,message="the OCI Image name should follow the host[:port][/namespace]/name format, resembling a valid URL without the scheme. Or it must be a valid .svc followed by a port, repository, image name, and tag."
+	// +kubebuilder:validation:XValidation:rule=`self.matches('^([a-zA-Z0-9-]+\\.)+[a-zA-Z0-9-]+(:[0-9]{2,5})?(/[a-zA-Z0-9-_]{1,61})*/[a-zA-Z0-9-_.]+:[a-zA-Z0-9._-]+$') || self.matches('^[^.]+\\.[^.]+\\.svc:\\d+\\/[^\\/]+\\/[^\\/]+:[^\\/]+$')`,message="the OCI Image name should follow the host[:port][/namespace]/name format, resembling a valid URL without the scheme. Or it must be a valid .svc followed by a port, repository, image name, and tag."
 	// +kubebuilder:validation:Required
 	RenderedImagePushspec string `json:"renderedImagePushspec"`
-	// releaseVersion is associated with the base OS Image. This is the version of Openshift that the Base Image is associated with.
+	// releaseVersion is an Openshift release version which the base OS image is associated with.
 	// This field is populated from the machine-config-osimageurl configmap in the openshift-machine-config-operator namespace.
 	// It will come in the format: 4.16.0-0.nightly-2024-04-03-065948 or any valid release. The MachineOSBuilder populates this field and validates that this is a valid stream.
 	// This is used as a label in the dockerfile that builds the OS image.
+	// +kubebuilder:validation:MaxLength:=253
+	// +kubebuilder:validation:Pattern=`^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9]))*$`
 	// +optional
 	ReleaseVersion string `json:"releaseVersion,omitempty"`
 	// containerFile describes the custom data the user has specified to build into the image.
 	// this is also commonly called a Dockerfile and you can treat it as such. The content is the content of your Dockerfile.
+	// you can specify up to 7 containerFiles
 	// +patchMergeKey=containerfileArch
 	// +patchStrategy=merge
 	// +listType=map
@@ -163,7 +169,6 @@ type BuildOutputs struct {
 
 type MachineOSImageBuilder struct {
 	// imageBuilderType specifies the backend to be used to build the image.
-	// +kubebuilder:default:=PodImageBuilder
 	// +kubebuilder:validation:Enum:=PodImageBuilder
 	// Valid options are: PodImageBuilder
 	ImageBuilderType MachineOSImageBuilderType `json:"imageBuilderType"`
@@ -178,7 +183,11 @@ type MachineOSContainerfile struct {
 	// +kubebuilder:default:=noarch
 	// +optional
 	ContainerfileArch ContainerfileArch `json:"containerfileArch"`
-	// content is the custom content to be built
+	// content is an embedded Containerfile/Dockerfile that defines the contents to be built into your image.
+	// for example, this would add the tree package to your hosts:
+	//   FROM configs AS final
+	//   RUN rpm-ostree install tree && \
+	//     ostree container commit
 	// +kubebuilder:validation:Required
 	Content string `json:"content"`
 }
@@ -216,6 +225,8 @@ type MachineConfigPoolReference struct {
 type ImageSecretObjectReference struct {
 	// name is the name of the secret used to push or pull this MachineOSConfig object.
 	// this secret must be in the openshift-machine-config-operator namespace.
+	// +kubebuilder:validation:MaxLength:=253
+	// +kubebuilder:validation:Pattern=`^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9]))*$`
 	// +kubebuilder:validation:Required
 	Name string `json:"name"`
 }

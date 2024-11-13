@@ -52,27 +52,18 @@ type MachineOSBuildList struct {
 
 // MachineOSBuildSpec describes information about a build process primarily populated from a MachineOSConfig object.
 type MachineOSBuildSpec struct {
-	// configGeneration tracks which version of MachineOSConfig this build is based off of
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Required
-	ConfigGeneration int64 `json:"configGeneration"`
 	// desiredConfig is the desired config we want to build an image for.
 	// +kubebuilder:validation:Required
 	DesiredConfig RenderedMachineConfigReference `json:"desiredConfig"`
 	// machineOSConfig is the config object which the build is based off of
 	// +kubebuilder:validation:Required
 	MachineOSConfig MachineOSConfigReference `json:"machineOSConfig"`
-	// version tracks the newest MachineOSBuild for each MachineOSConfig
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Required
-	Version int64 `json:"version"`
 	// renderedImagePushspec is set from the MachineOSConfig
 	// The format of the image pullspec is:
 	// host[:port][/namespace]/name:<tag> or svc_name.namespace.svc[:port]/repository/name:<tag>
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=447
-	// +kubebuilder:validation:XValidation:rule=`((self.split(':').size() == 2 && self.split(':')[1].matches('^([a-zA-Z0-9-./:])+$')) || self.matches('^[^.]+\\.[^.]+\\.svc:\\d+\\/[^\\/]+\\/[^\\/]+:[^\\/]+$'))`,message="the OCI Image reference must end with a valid :<tag>, where '<digest>' is 64 characters long and '<tag>' is any valid string  Or it must be a valid .svc followed by a port, repository, image name, and tag."
-	// +kubebuilder:validation:XValidation:rule=`((self.split(':').size() == 2 && self.split(':')[0].matches('^([a-zA-Z0-9-]+\\.)+[a-zA-Z0-9-]+(:[0-9]{2,5})?/([a-zA-Z0-9-_]{0,61}/)?[a-zA-Z0-9-_.]*?$')) || self.matches('^[^.]+\\.[^.]+\\.svc:\\d+\\/[^\\/]+\\/[^\\/]+:[^\\/]+$'))`,message="the OCI Image name should follow the host[:port][/namespace]/name format, resembling a valid URL without the scheme. Or it must be a valid .svc followed by a port, repository, image name, and tag."
+	// +kubebuilder:validation:XValidation:rule=`self.matches('^([a-zA-Z0-9-]+\\.)+[a-zA-Z0-9-]+(:[0-9]{2,5})?(/[a-zA-Z0-9-_]{1,61})*/[a-zA-Z0-9-_.]+:[a-zA-Z0-9._-]+$') || self.matches('^[^.]+\\.[^.]+\\.svc:\\d+\\/[^\\/]+\\/[^\\/]+:[^\\/]+$')`,message="the OCI Image name should follow the host[:port][/namespace]/name format, resembling a valid URL without the scheme. Or it must be a valid .svc followed by a port, repository, image name, and tag."
 	// +kubebuilder:validation:Required
 	RenderedImagePushspec string `json:"renderedImagePushspec"`
 }
@@ -88,35 +79,40 @@ type MachineOSBuildStatus struct {
 	// +listMapKey=type
 	// +optional
 	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
-	// ImageBuilderType describes the image builder set in the MachineOSConfig
+	// BuilderReference describes which ImageBuilder backend to use for this build
 	// +optional
 	BuilderReference *MachineOSBuilderReference `json:"builderReference"`
 	// relatedObjects is a list of objects that are related to the build process.
+	// +kubebuilder:validation:MaxItems=10
+	// +listType=map
+	// +listMapKey=name
+	// +listMapKey=resource
 	RelatedObjects []ObjectReference `json:"relatedObjects,omitempty"`
 	// buildStart describes when the build started.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="buildStart is immutable once set"
 	// +kubebuilder:validation:Required
-	BuildStart *metav1.Time `json:"buildStart"`
+	BuildStart metav1.Time `json:"buildStart"`
 	// buildEnd describes when the build ended.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="buildEnd is immutable once set"
-	//+optional
+	// +optional
 	BuildEnd *metav1.Time `json:"buildEnd,omitempty"`
-	// finalImagePushSpec describes the fully qualified pushspec produced by this build that the final image can be. Must be in sha format.
-	// +kubebuilder:validation:XValidation:rule=`((self.split('@').size() == 2 && self.split('@')[1].matches('^sha256:[a-f0-9]{64}$')))`,message="the OCI Image reference must end with a valid '@sha256:<digest>' suffix, where '<digest>' is 64 characters long"
+	// finalImagePushSpec describes the fully qualified pushspec produced by this build that the final image can be. Must end with a valid '@sha256:<digest>' suffix, where '<digest>' is 64 hexadecimal characters long
+	// +kubebuilder:validation:XValidation:rule=`((self.split('@').size() == 2 && self.split('@')[1].matches('^sha256:[a-f0-9]{64}$')))`,message="the OCI Image reference must end with a valid '@sha256:<digest>' suffix, where '<digest>' is 64 hexadecimal characters long"
 	// +optional
 	FinalImagePushspec string `json:"finalImagePullspec,omitempty"`
 }
 
-// MachineOSBuilderReference describes which ImageBuilder backend to use for this build/
+// MachineOSBuilderReference describes which ImageBuilder backend to use for this build
 // +union
-// +kubebuilder:validation:XValidation:rule="has(self.imageBuilderType) && self.imageBuilderType == 'PodImageBuilder' ?  true : !has(self.buildPod)",message="buildPod is required when imageBuilderType is PodImageBuilder, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.imageBuilderType) && self.imageBuilderType == 'PodImageBuilder' ?  has(self.buildPod) : !has(self.buildPod)",message="buildPod is required when imageBuilderType is PodImageBuilder, and forbidden otherwise"
 type MachineOSBuilderReference struct {
 	// ImageBuilderType describes the image builder set in the MachineOSConfig
 	// +unionDiscriminator
 	ImageBuilderType MachineOSImageBuilderType `json:"imageBuilderType"`
 
 	// relatedObjects is a list of objects that are related to the build process.
-	// +unionMember,optional
+	// +unionMember
+	// +optional
 	PodImageBuilder *ObjectReference `json:"buildPod,omitempty"`
 }
 
@@ -150,16 +146,28 @@ type RenderedMachineConfigReference struct {
 // ObjectReference contains enough information to let you inspect or modify the referred object.
 type ObjectReference struct {
 	// group of the referent.
+	// This value should consist of only lowercase alphanumeric characters, hyphens and periods.
+	// Example: "", "apps", "build.openshift.io", etc.
+	// +kubebuilder:validation:Pattern:="^$|^[a-z0-9]([-a-z0-9]*[a-z0-9])?(.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$"
 	// +kubebuilder:validation:Required
 	Group string `json:"group"`
 	// resource of the referent.
+	// This value should consist of only lowercase alphanumeric characters and hyphens.
+	// Example: "deployments", "deploymentconfigs", "pods", etc.
 	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern:="^[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
 	Resource string `json:"resource"`
 	// namespace of the referent.
+	// +kubebuilder:validation:Pattern:="^[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=63
 	// +optional
 	Namespace string `json:"namespace,omitempty"`
 	// name of the referent.
 	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern:="^[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=256
 	Name string `json:"name"`
 }
 
@@ -167,5 +175,8 @@ type ObjectReference struct {
 type MachineOSConfigReference struct {
 	// name of the MachineOSConfig
 	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern:="^[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=256
 	Name string `json:"name"`
 }

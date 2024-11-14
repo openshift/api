@@ -35,6 +35,9 @@
                     },
                     {
                         "name": "MultiArchInstallAzure"
+                    },
+                    {
+                        "name": "NewOLM"
                     }
                 ],
                 "enabled": [
@@ -172,9 +175,6 @@
                     },
                     {
                         "name": "NetworkSegmentation"
-                    },
-                    {
-                        "name": "NewOLM"
                     },
                     {
                         "name": "NodeDisruptionPolicy"

@@ -35,12 +35,12 @@ spec:
     - jsonPath: .status.conditions[?(@.type=="Failed")].status
       name: Failed
       type: string
-    name: v1alpha1
+    name: v1
     schema:
       openAPIV3Schema:
         description: |-
           MachineOSBuild describes a build process managed and deployed by the MCO
-          Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+          Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
         properties:
           apiVersion:
             description: |-
@@ -62,12 +62,6 @@ spec:
           spec:
             description: spec describes the configuration of the machine os build
             properties:
-              configGeneration:
-                description: configGeneration tracks which version of MachineOSConfig
-                  this build is based off of
-                format: int64
-                minimum: 1
-                type: integer
               desiredConfig:
                 description: desiredConfig is the desired config we want to build
                   an image for.
@@ -86,6 +80,9 @@ spec:
                 properties:
                   name:
                     description: name of the MachineOSConfig
+                    maxLength: 256
+                    minLength: 1
+                    pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
                     type: string
                 required:
                 - name
@@ -99,29 +96,16 @@ spec:
                 minLength: 1
                 type: string
                 x-kubernetes-validations:
-                - message: the OCI Image reference must end with a valid :<tag>, where
-                    '<digest>' is 64 characters long and '<tag>' is any valid string  Or
-                    it must be a valid .svc followed by a port, repository, image
-                    name, and tag.
-                  rule: ((self.split(':').size() == 2 && self.split(':')[1].matches('^([a-zA-Z0-9-./:])+$'))
-                    || self.matches('^[^.]+\\.[^.]+\\.svc:\\d+\\/[^\\/]+\\/[^\\/]+:[^\\/]+$'))
                 - message: the OCI Image name should follow the host[:port][/namespace]/name
                     format, resembling a valid URL without the scheme. Or it must
                     be a valid .svc followed by a port, repository, image name, and
                     tag.
-                  rule: ((self.split(':').size() == 2 && self.split(':')[0].matches('^([a-zA-Z0-9-]+\\.)+[a-zA-Z0-9-]+(:[0-9]{2,5})?/([a-zA-Z0-9-_]{0,61}/)?[a-zA-Z0-9-_.]*?$'))
-                    || self.matches('^[^.]+\\.[^.]+\\.svc:\\d+\\/[^\\/]+\\/[^\\/]+:[^\\/]+$'))
-              version:
-                description: version tracks the newest MachineOSBuild for each MachineOSConfig
-                format: int64
-                minimum: 1
-                type: integer
+                  rule: self.matches('^([a-zA-Z0-9-]+\\.)+[a-zA-Z0-9-]+(:[0-9]{2,5})?(/[a-zA-Z0-9-_]{1,61})*/[a-zA-Z0-9-_.]+:[a-zA-Z0-9._-]+$')
+                    || self.matches('^[^.]+\\.[^.]+\\.svc:\\d+\\/[^\\/]+\\/[^\\/]+:[^\\/]+$')
             required:
-            - configGeneration
             - desiredConfig
             - machineOSConfig
             - renderedImagePushspec
-            - version
             type: object
             x-kubernetes-validations:
             - message: machineOSBuildSpec is immutable once set
@@ -145,24 +129,38 @@ spec:
                 - message: buildStart is immutable once set
                   rule: self == oldSelf
               builderReference:
-                description: ImageBuilderType describes the image builder set in the
-                  MachineOSConfig
+                description: BuilderReference describes which ImageBuilder backend
+                  to use for this build
                 properties:
                   buildPod:
                     description: relatedObjects is a list of objects that are related
                       to the build process.
                     properties:
                       group:
-                        description: group of the referent.
+                        description: |-
+                          group of the referent.
+                          This value should consist of only lowercase alphanumeric characters, hyphens and periods.
+                          Example: "", "apps", "build.openshift.io", etc.
+                        pattern: ^$|^[a-z0-9]([-a-z0-9]*[a-z0-9])?(.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
                         type: string
                       name:
                         description: name of the referent.
+                        maxLength: 256
+                        minLength: 1
+                        pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
                         type: string
                       namespace:
                         description: namespace of the referent.
+                        maxLength: 63
+                        minLength: 1
+                        pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
                         type: string
                       resource:
-                        description: resource of the referent.
+                        description: |-
+                          resource of the referent.
+                          This value should consist of only lowercase alphanumeric characters and hyphens.
+                          Example: "deployments", "deploymentconfigs", "pods", etc.
+                        pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
                         type: string
                     required:
                     - group
@@ -173,14 +171,12 @@ spec:
                     description: ImageBuilderType describes the image builder set
                       in the MachineOSConfig
                     type: string
-                required:
-                - imageBuilderType
                 type: object
                 x-kubernetes-validations:
                 - message: buildPod is required when imageBuilderType is PodImageBuilder,
                     and forbidden otherwise
                   rule: 'has(self.imageBuilderType) && self.imageBuilderType == ''PodImageBuilder''
-                    ?  true : !has(self.buildPod)'
+                    ?  has(self.buildPod) : !has(self.buildPod)'
               conditions:
                 description: |-
                   conditions are state related conditions for the build. Valid types are:
@@ -246,12 +242,13 @@ spec:
                 x-kubernetes-list-type: map
               finalImagePullspec:
                 description: finalImagePushSpec describes the fully qualified pushspec
-                  produced by this build that the final image can be. Must be in sha
-                  format.
+                  produced by this build that the final image can be. Must end with
+                  a valid '@sha256:<digest>' suffix, where '<digest>' is 64 hexadecimal
+                  characters long
                 type: string
                 x-kubernetes-validations:
                 - message: the OCI Image reference must end with a valid '@sha256:<digest>'
-                    suffix, where '<digest>' is 64 characters long
+                    suffix, where '<digest>' is 64 hexadecimal characters long
                   rule: ((self.split('@').size() == 2 && self.split('@')[1].matches('^sha256:[a-f0-9]{64}$')))
               relatedObjects:
                 description: relatedObjects is a list of objects that are related
@@ -261,23 +258,42 @@ spec:
                     you inspect or modify the referred object.
                   properties:
                     group:
-                      description: group of the referent.
+                      description: |-
+                        group of the referent.
+                        This value should consist of only lowercase alphanumeric characters, hyphens and periods.
+                        Example: "", "apps", "build.openshift.io", etc.
+                      pattern: ^$|^[a-z0-9]([-a-z0-9]*[a-z0-9])?(.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
                       type: string
                     name:
                       description: name of the referent.
+                      maxLength: 256
+                      minLength: 1
+                      pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
                       type: string
                     namespace:
                       description: namespace of the referent.
+                      maxLength: 63
+                      minLength: 1
+                      pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
                       type: string
                     resource:
-                      description: resource of the referent.
+                      description: |-
+                        resource of the referent.
+                        This value should consist of only lowercase alphanumeric characters and hyphens.
+                        Example: "deployments", "deploymentconfigs", "pods", etc.
+                      pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
                       type: string
                   required:
                   - group
                   - name
                   - resource
                   type: object
+                maxItems: 10
                 type: array
+                x-kubernetes-list-map-keys:
+                - name
+                - resource
+                x-kubernetes-list-type: map
             required:
             - buildStart
             type: object

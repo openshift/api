@@ -1626,10 +1626,11 @@ type IBMCloudServiceEndpoint struct {
 // IBMCloudPlatformSpec holds the desired state of the IBMCloud infrastructure provider.
 // This only includes fields that can be modified in the cluster.
 type IBMCloudPlatformSpec struct {
-	// ServiceEndpoints contains custom endpoints designated to
-	// override existing defaults of IBM Cloud Services.
-	// +listType=atomic
-	// +openshift:enable:FeatureGate=DyanmicServiceEndpointIBMCloud
+	// serviceEndpoints is a list of custom endpoints which will override the default
+	// service endpoints of an IBM Cloud service. These endpoints are consumed by
+	// components within the cluster to reach the respective IBM Cloud Services.
+	// +listType=map
+	// +listMapKey=name
 	// +optional
 	ServiceEndpoints []IBMCloudServiceEndpoint `json:"serviceEndpoints,omitempty"`
 }

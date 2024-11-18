@@ -7,7 +7,6 @@ metadata:
     capability.openshift.io/name: OperatorLifecycleManagerV1
     include.release.openshift.io/ibm-cloud-managed: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
-    release.openshift.io/feature-set: CustomNoUpgrade
   name: olms.operator.openshift.io
 spec:
   group: operator.openshift.io

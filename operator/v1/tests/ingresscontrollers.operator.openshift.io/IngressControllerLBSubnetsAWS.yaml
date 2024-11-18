@@ -29,6 +29,7 @@ tests:
         kind: IngressController
         spec:
           httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Deferred
           endpointPublishingStrategy:
             type: LoadBalancerService
             loadBalancer:
@@ -70,6 +71,7 @@ tests:
         kind: IngressController
         spec:
           httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Deferred
           endpointPublishingStrategy:
             type: LoadBalancerService
             loadBalancer:
@@ -183,6 +185,7 @@ tests:
         kind: IngressController
         spec:
           httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Deferred
           endpointPublishingStrategy:
             type: LoadBalancerService
             loadBalancer:
@@ -473,6 +476,7 @@ tests:
         kind: IngressController
         spec:
           httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Deferred
           endpointPublishingStrategy:
             type: LoadBalancerService
             loadBalancer:
@@ -530,6 +534,7 @@ tests:
         kind: IngressController
         spec:
           httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Deferred
           endpointPublishingStrategy:
             type: LoadBalancerService
             loadBalancer:
@@ -579,6 +584,7 @@ tests:
         kind: IngressController
         spec:
           httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Deferred
           endpointPublishingStrategy:
             type: LoadBalancerService
             loadBalancer:

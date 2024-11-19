@@ -6782,7 +6782,18 @@
     },
     "com.github.openshift.api.config.v1.IBMCloudPlatformSpec": {
       "description": "IBMCloudPlatformSpec holds the desired state of the IBMCloud infrastructure provider. This only includes fields that can be modified in the cluster.",
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "serviceEndpoints": {
+          "description": "ServiceEndpoints contains custom endpoints designated to override existing defaults of IBM Cloud Services.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.IBMCloudServiceEndpoint"
+          },
+          "x-kubernetes-list-type": "atomic"
+        }
+      }
     },
     "com.github.openshift.api.config.v1.IBMCloudPlatformStatus": {
       "description": "IBMCloudPlatformStatus holds the current status of the IBMCloud infrastructure provider.",

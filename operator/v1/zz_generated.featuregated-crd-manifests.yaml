@@ -73,7 +73,7 @@ clustercsidrivers.operator.openshift.io:
   - VSphereDriverConfiguration
   FilenameOperatorName: csi-driver
   FilenameOperatorOrdering: "01"
-  FilenameRunLevel: "0000_90"
+  FilenameRunLevel: "0000_50"
   GroupName: operator.openshift.io
   HasStatus: true
   KindName: ClusterCSIDriver

@@ -33,6 +33,7 @@ crd_globs="\
 # To allow the crd_globs to be sourced in the verify script,
 # wrap the copy action to prevent it running when sourced.
 if [ "$0" = "$BASH_SOURCE" ] ; then
+    rm -rf "${SCRIPT_ROOT}/payload-manifests/crds/"*
     for f in ${crd_globs}; do
         cp "$f" "${SCRIPT_ROOT}/payload-manifests/crds/"
     done

@@ -315,6 +315,7 @@ infrastructures.config.openshift.io:
   - BareMetalLoadBalancer
   - GCPClusterHostedDNS
   - GCPLabelsTags
+  - NutanixMultiSubnets
   - VSphereControlPlaneMachineSet
   - VSphereMultiNetworks
   - VSphereMultiVCenters

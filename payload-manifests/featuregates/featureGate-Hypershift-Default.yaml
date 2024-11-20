@@ -116,6 +116,9 @@
                         "name": "NodeSwap"
                     },
                     {
+                        "name": "NutanixMultiSubnets"
+                    },
+                    {
                         "name": "OVNObservability"
                     },
                     {

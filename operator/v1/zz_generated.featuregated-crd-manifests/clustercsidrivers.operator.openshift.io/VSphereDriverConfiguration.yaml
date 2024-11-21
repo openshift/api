@@ -3,7 +3,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.openshift.io: https://github.com/openshift/api/pull/701
-    api.openshift.io/filename-cvo-runlevel: "0000_90"
+    api.openshift.io/filename-cvo-runlevel: "0000_50"
     api.openshift.io/filename-operator: csi-driver
     api.openshift.io/filename-ordering: "01"
     feature-gate.release.openshift.io/VSphereDriverConfiguration: "true"

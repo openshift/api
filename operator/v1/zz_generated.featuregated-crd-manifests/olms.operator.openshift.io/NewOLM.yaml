@@ -8,6 +8,8 @@ metadata:
     api.openshift.io/filename-ordering: "01"
     capability.openshift.io/name: OperatorLifecycleManagerV1
     feature-gate.release.openshift.io/NewOLM: "true"
+    include.release.openshift.io/ibm-cloud-managed: "false"
+    include.release.openshift.io/self-managed-high-availability: "true"
   name: olms.operator.openshift.io
 spec:
   group: operator.openshift.io

@@ -113,9 +113,6 @@
                         "name": "NetworkSegmentation"
                     },
                     {
-                        "name": "NewOLM"
-                    },
-                    {
                         "name": "NodeSwap"
                     },
                     {
@@ -236,6 +233,9 @@
                     },
                     {
                         "name": "NetworkLiveMigration"
+                    },
+                    {
+                        "name": "NewOLM"
                     },
                     {
                         "name": "NodeDisruptionPolicy"

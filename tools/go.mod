@@ -12,7 +12,7 @@ require (
 	github.com/gogo/protobuf v1.3.2
 	github.com/google/go-cmp v0.6.0
 	github.com/mikefarah/yq/v4 v4.44.2
-	github.com/openshift/crd-schema-checker v0.0.0-20241014171011-8425fdfe9988
+	github.com/openshift/crd-schema-checker v0.0.0-20241113192003-573763d3107a
 	github.com/russross/blackfriday v2.0.0+incompatible
 	github.com/sergi/go-diff v1.3.2-0.20230802210424-5b0b94c5c0d3
 	github.com/spf13/cobra v1.8.1

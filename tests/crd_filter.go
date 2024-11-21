@@ -2,13 +2,14 @@ package tests
 
 import (
 	"fmt"
-	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-	"k8s.io/apimachinery/pkg/util/sets"
 	"os"
 	"path"
 	"path/filepath"
-	kyaml "sigs.k8s.io/yaml"
 	"strings"
+
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/apimachinery/pkg/util/sets"
+	kyaml "sigs.k8s.io/yaml"
 )
 
 var (
@@ -19,9 +20,7 @@ var (
 	}
 )
 
-func perTestRuntimeInfo(suitePath, crdName, featureGate string) (*PerTestRuntimeInfo, error) {
-	requiresFeatureGateDisabled := strings.HasPrefix(featureGate, "-")
-
+func perTestRuntimeInfo(suitePath, crdName string, featureGates []string) (*PerTestRuntimeInfo, error) {
 	crdFilesToCheck := []string{}
 
 	// account for the generated file move.
@@ -46,7 +45,7 @@ func perTestRuntimeInfo(suitePath, crdName, featureGate string) (*PerTestRuntime
 		if currCRD.Name != crdName {
 			continue
 		}
-		if len(featureGate) == 0 {
+		if len(featureGates) == 0 {
 			// test is ungated, check everything
 			crdFilesToCheck = append(crdFilesToCheck, filename)
 			continue
@@ -55,7 +54,7 @@ func perTestRuntimeInfo(suitePath, crdName, featureGate string) (*PerTestRuntime
 		featureSet := currCRD.Annotations["release.openshift.io/feature-set"]
 		if featureSet == "CustomNoUpgrade" {
 			// CustomNoUpgrade includes every field
-			if requiresFeatureGateDisabled {
+			if anyRequireDisabledFeatureGate(featureGates) {
 				continue
 			}
 			crdFilesToCheck = append(crdFilesToCheck, filename)
@@ -76,35 +75,57 @@ func perTestRuntimeInfo(suitePath, crdName, featureGate string) (*PerTestRuntime
 			return nil, fmt.Errorf("unable to find featureGates to check for %v: %w", filename, err)
 		}
 
-		switch {
-		case requiresFeatureGateDisabled:
-			disabledFeatureGate := strings.TrimPrefix(featureGate, "-")
-			enabled, found := featureGateStatus[disabledFeatureGate]
-			if !found {
-				return nil, fmt.Errorf("unable to find featureGate/%v to check for %v", featureGate, filename)
-			}
-			if !enabled {
-				crdFilesToCheck = append(crdFilesToCheck, filename)
-				continue
-			}
+		keep := true
+		for _, featureGate := range featureGates {
+			requiresFeatureGateDisabled := strings.HasPrefix(featureGate, "-")
 
-		default:
-			enabled, found := featureGateStatus[featureGate]
-			if !found {
-				return nil, fmt.Errorf("unable to find featureGate/%v to check for %v", featureGate, filename)
-			}
-			if enabled {
-				crdFilesToCheck = append(crdFilesToCheck, filename)
-			}
+			var enabled, found bool
+			switch {
+			case requiresFeatureGateDisabled:
+				disabledFeatureGate := strings.TrimPrefix(featureGate, "-")
+				enabled, found = featureGateStatus[disabledFeatureGate]
+				if !found {
+					return nil, fmt.Errorf("unable to find featureGate/%v to check for %v", featureGate, filename)
+				}
 
+				// do not include this CRD as the required FeatureGate was enabled
+				// we're looking to test only if the FeatureGate is in disabled
+				if enabled {
+					keep = false
+				}
+
+			default:
+				enabled, found = featureGateStatus[featureGate]
+				if !found {
+					return nil, fmt.Errorf("unable to find featureGate/%v to check for %v", featureGate, filename)
+				}
+
+				// similarly, if expecting an enabled FeatureGate but found disabled
+				// skip it
+				if !enabled {
+					keep = false
+				}
+			}
 		}
 
+		if keep {
+			crdFilesToCheck = append(crdFilesToCheck, filename)
+		}
 	}
 
 	ret := &PerTestRuntimeInfo{
 		CRDFilenames: crdFilesToCheck,
 	}
 	return ret, nil
+}
+
+func anyRequireDisabledFeatureGate(featureGates []string) bool {
+	for _, fg := range featureGates {
+		if strings.HasPrefix(fg, "-") {
+			return true
+		}
+	}
+	return false
 }
 
 func clusterProfilesFrom(annotations map[string]string) sets.String {

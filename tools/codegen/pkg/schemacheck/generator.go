@@ -152,15 +152,20 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 
 		for _, comparisonResult := range comparisonResults {
 			for _, msg := range comparisonResult.Errors {
-				manifestErrs = append(manifestErrs, errors.New(msg))
-				result.Errors = append(result.Errors, errors.New(msg))
+				err := fmt.Errorf("%s: %w", comparisonResult.Name, errors.New(msg))
+				manifestErrs = append(manifestErrs, err)
+				result.Errors = append(result.Errors, err)
 			}
 		}
 		for _, comparisonResult := range comparisonResults {
-			result.Warnings = append(result.Warnings, comparisonResult.Warnings...)
+			for _, warning := range comparisonResult.Warnings {
+				result.Warnings = append(result.Warnings, fmt.Sprintf("%s: %s", comparisonResult.Name, warning))
+			}
 		}
 		for _, comparisonResult := range comparisonResults {
-			result.Info = append(result.Info, comparisonResult.Infos...)
+			for _, info := range comparisonResult.Infos {
+				result.Info = append(result.Info, fmt.Sprintf("%s: %s", comparisonResult.Name, info))
+			}
 		}
 
 		results = append(results, result)

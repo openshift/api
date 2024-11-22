@@ -116,9 +116,6 @@
                         "name": "MultiArchInstallAzure"
                     },
                     {
-                        "name": "NetworkSegmentation"
-                    },
-                    {
                         "name": "NodeSwap"
                     },
                     {
@@ -242,6 +239,9 @@
                     },
                     {
                         "name": "NetworkLiveMigration"
+                    },
+                    {
+                        "name": "NetworkSegmentation"
                     },
                     {
                         "name": "NewOLM"

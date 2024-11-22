@@ -7,10 +7,11 @@ type SuiteSpec struct {
 
 	CRDName string `json:"crdName"`
 
-	// featureGate is the featureGate that must be enabled for this test to be run.
+	// featureGates is the list of featureGates that must be enabled/disabled for this test to be run.
+	// Disabled feature gates can use a "-" prefix.
 	// As the gate progresses from DevPreview to TechPreview to Default, this won't need changing.
 	// When it eventually goes unconditional, this should to be removed.
-	FeatureGate string `json:"featureGate"`
+	FeatureGates []string `json:"featureGates"`
 
 	// Version is the version of the CRD under test in this file.
 	// When omitted, if there is a single version in the CRD, this is assumed to be the correct version.

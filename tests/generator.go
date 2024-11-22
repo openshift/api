@@ -71,7 +71,7 @@ func loadSuiteFile(path string) (SuiteSpec, error) {
 		return SuiteSpec{}, fmt.Errorf("test suite spec %q is invalid: missing required field `crdName`", path)
 	}
 
-	s.PerTestRuntimeInfo, err = perTestRuntimeInfo(filepath.Dir(path), s.CRDName, s.FeatureGate)
+	s.PerTestRuntimeInfo, err = perTestRuntimeInfo(filepath.Dir(path), s.CRDName, s.FeatureGates)
 	if err != nil {
 		return SuiteSpec{}, fmt.Errorf("unable to determine which CRD files to use: %w", err)
 	}
@@ -421,7 +421,7 @@ func generateSuiteName(suiteSpec SuiteSpec, crdFilename string) (string, error) 
 		gvr.String(),
 		strings.Join(clusterProfiles.List(), ","),
 		featureSet,
-		suiteSpec.FeatureGate,
+		strings.Join(suiteSpec.FeatureGates, ","),
 		filename,
 		suiteSpec.Name,
 	), nil

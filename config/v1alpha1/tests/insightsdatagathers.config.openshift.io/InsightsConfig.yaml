@@ -1,7 +1,8 @@
 apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
 name: "[TechPreview] InsightsDataGather"
 crdName: insightsdatagathers.config.openshift.io
-featureGate: InsightsConfig
+featureGates:
+- InsightsConfig
 tests:
   onCreate:
     - name: Should be able to create a minimal InsightsDataGather

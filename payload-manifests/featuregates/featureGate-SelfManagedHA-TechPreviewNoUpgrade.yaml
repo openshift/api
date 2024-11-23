@@ -19,9 +19,6 @@
                         "name": "ClusterAPIInstall"
                     },
                     {
-                        "name": "ClusterAPIInstallIBMCloud"
-                    },
-                    {
                         "name": "EventedPLEG"
                     },
                     {
@@ -76,6 +73,9 @@
                     },
                     {
                         "name": "CloudDualStackNodeIPs"
+                    },
+                    {
+                        "name": "ClusterAPIInstallIBMCloud"
                     },
                     {
                         "name": "ClusterMonitoringConfig"

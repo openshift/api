@@ -167,9 +167,6 @@
                         "name": "VSphereMultiNetworks"
                     },
                     {
-                        "name": "VSphereMultiVCenters"
-                    },
-                    {
                         "name": "VolumeAttributesClass"
                     },
                     {
@@ -254,6 +251,9 @@
                     },
                     {
                         "name": "VSphereDriverConfiguration"
+                    },
+                    {
+                        "name": "VSphereMultiVCenters"
                     },
                     {
                         "name": "VSphereStaticIPs"

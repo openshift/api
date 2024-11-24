@@ -920,7 +920,7 @@ spec:
                           - datacenters
                           - server
                           type: object
-                        maxItems: 1
+                        maxItems: 3
                         minItems: 0
                         type: array
                         x-kubernetes-list-type: atomic

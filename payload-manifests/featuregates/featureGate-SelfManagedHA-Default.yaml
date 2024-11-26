@@ -26,6 +26,9 @@
                         "name": "BootcNodeManagement"
                     },
                     {
+                        "name": "CMPSMachineNamePrefix"
+                    },
+                    {
                         "name": "ClusterAPIInstall"
                     },
                     {

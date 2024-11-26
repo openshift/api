@@ -66,6 +66,9 @@
                         "name": "BuildCSIVolumes"
                     },
                     {
+                        "name": "CMPSMachineNamePrefix"
+                    },
+                    {
                         "name": "ChunkSizeMiB"
                     },
                     {

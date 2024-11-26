@@ -88,6 +88,14 @@ type StableConfigTypeSpec struct {
 	// set demonstrates how to define and validate set of strings
 	// +optional
 	Set StringSet `json:"set,omitempty"`
+
+	// subdomainNameField represents a kubenetes name field.
+	// The intention is that it validates the name in the same way metadata.Name is validated.
+	// That is, it is a DNS-1123 subdomain.
+	// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
+	// +kubebuilder:validation:MaxLength:=253
+	// +optional
+	SubdomainNameField string `json:"subdomainNameField,omitempty"`
 }
 
 // SetValue defines the types allowed in string set type

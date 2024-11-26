@@ -12891,6 +12891,10 @@
           "description": "stableField is a field that is present on default clusters and on tech preview clusters\n\nIf empty, the platform will choose a good default, which may change over time without notice.",
           "type": "string",
           "default": ""
+        },
+        "subdomainNameField": {
+          "description": "subdomainNameField represents a kubenetes name field. The intention is that it validates the name in the same way metadata.Name is validated. That is, it is a DNS-1123 subdomain.",
+          "type": "string"
         }
       }
     },

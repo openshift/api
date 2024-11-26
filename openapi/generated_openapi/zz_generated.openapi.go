@@ -23312,6 +23312,13 @@ func schema_openshift_api_example_v1_StableConfigTypeSpec(ref common.ReferenceCa
 							},
 						},
 					},
+					"subdomainNameField": {
+						SchemaProps: spec.SchemaProps{
+							Description: "subdomainNameField represents a kubenetes name field. The intention is that it validates the name in the same way metadata.Name is validated. That is, it is a DNS-1123 subdomain.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 				Required: []string{"immutableField"},
 			},

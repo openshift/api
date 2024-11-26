@@ -22431,6 +22431,10 @@
         "server": {
           "description": "Server is the IP address or FQDN of the vSphere endpoint.",
           "type": "string"
+        },
+        "vmGroup": {
+          "description": "vmGroup is the cluster vm group in which virtual machines will be added for vm host group based zonal.",
+          "type": "string"
         }
       }
     },

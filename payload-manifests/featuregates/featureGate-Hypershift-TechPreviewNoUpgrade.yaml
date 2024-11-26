@@ -72,9 +72,6 @@
                         "name": "BuildCSIVolumes"
                     },
                     {
-                        "name": "CSIDriverSharedResource"
-                    },
-                    {
                         "name": "ChunkSizeMiB"
                     },
                     {

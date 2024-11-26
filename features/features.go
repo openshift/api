@@ -84,14 +84,6 @@ var (
 							enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 							mustRegister()
 
-	FeatureGateCSIDriverSharedResource = newFeatureGate("CSIDriverSharedResource").
-						reportProblemsToJiraComponent("builds").
-						contactPerson("adkaplan").
-						productScope(ocpSpecific).
-						enhancementPR("https://github.com/openshift/enhancements/pull/1056").
-						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-						mustRegister()
-
 	FeatureGateBuildCSIVolumes = newFeatureGate("BuildCSIVolumes").
 					reportProblemsToJiraComponent("builds").
 					contactPerson("adkaplan").

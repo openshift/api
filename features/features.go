@@ -219,7 +219,7 @@ var (
 						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 						mustRegister()
 
-	FeatureGateCMPSMachineNamePrefix = newFeatureGate("CMPSMachineNamePrefix").
+	FeatureGateCPMSMachineNamePrefix = newFeatureGate("CPMSMachineNamePrefix").
 						reportProblemsToJiraComponent("Cloud Compute / ControlPlaneMachineSet").
 						contactPerson("chiragkyal").
 						productScope(ocpSpecific).

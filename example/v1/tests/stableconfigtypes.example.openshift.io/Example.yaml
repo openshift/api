@@ -81,6 +81,28 @@ tests:
             type: TechPreviewOnlyValue
           immutableField: foo
           nonZeroDefault: 8
+    - name: Should persist a valid DNS 1123 subdomain
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          subdomainNameField: foo.bar-baz.qux
+      expected: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          subdomainNameField: foo.bar-baz.qux
+          nonZeroDefault: 8
+    - name: Should not allow an invalid DNS 1123 subdomain
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          subdomainNameField: foo.-bar.baz
+      expectedError: "spec.subdomainNameField: Invalid value: \"string\": a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
   onUpdate:
     - name: Should not allow removal of a tech preview field
       initial: |

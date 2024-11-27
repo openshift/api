@@ -145,6 +145,18 @@ spec:
 
                   If empty, the platform will choose a good default, which may change over time without notice.
                 type: string
+              subdomainNameField:
+                description: |-
+                  subdomainNameField represents a kubenetes name field.
+                  The intention is that it validates the name in the same way metadata.Name is validated.
+                  That is, it is a DNS-1123 subdomain.
+                maxLength: 253
+                type: string
+                x-kubernetes-validations:
+                - message: a lowercase RFC 1123 subdomain must consist of lower case
+                    alphanumeric characters, '-' or '.', and must start and end with
+                    an alphanumeric character.
+                  rule: '!format.dns1123Subdomain().validate(self).hasValue()'
             required:
             - immutableField
             type: object

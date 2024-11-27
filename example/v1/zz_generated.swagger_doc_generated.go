@@ -61,6 +61,7 @@ var map_StableConfigTypeSpec = map[string]string{
 	"nonZeroDefault":         "nonZeroDefault is a demonstration of creating an integer field that has a non zero default. It required two default tags (one for CRD generation, one for client generation) and must have `omitempty` and be optional. A minimum value is added to demonstrate that a zero value would not be accepted.",
 	"evolvingCollection":     "evolvingCollection demonstrates how to have a collection where the maximum number of items varies on cluster type. For default clusters, this will be \"1\" but on TechPreview clusters, this value will be \"3\".",
 	"set":                    "set demonstrates how to define and validate set of strings",
+	"subdomainNameField":     "subdomainNameField represents a kubenetes name field. The intention is that it validates the name in the same way metadata.Name is validated. That is, it is a DNS-1123 subdomain.",
 }
 
 func (StableConfigTypeSpec) SwaggerDoc() map[string]string {

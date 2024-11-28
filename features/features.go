@@ -686,4 +686,11 @@ var (
 					enhancementPR("https://github.com/openshift/enhancements/pull/1711").
 					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
+
+	FeatureGateResilientWatchCacheInitialization = newFeatureGate("ResilientWatchCacheInitialization").
+							reportProblemsToJiraComponent("kube-apiserver").
+							contactPerson("p0lyn0mial").
+							productScope(kubernetes).
+							enhancementPR("https://github.com/kubernetes/enhancements/issues/4568").
+							mustRegister()
 )

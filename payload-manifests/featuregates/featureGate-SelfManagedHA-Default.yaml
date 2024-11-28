@@ -137,6 +137,9 @@
                         "name": "ProcMountType"
                     },
                     {
+                        "name": "ResilientWatchCacheInitialization"
+                    },
+                    {
                         "name": "RouteAdvertisements"
                     },
                     {

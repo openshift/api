@@ -249,6 +249,9 @@
                         "name": "VSphereDriverConfiguration"
                     },
                     {
+                        "name": "VSphereHostVMGroupZonal"
+                    },
+                    {
                         "name": "VSphereMultiNetworks"
                     },
                     {

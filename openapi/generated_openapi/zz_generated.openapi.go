@@ -387,6 +387,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.UpdateHistory":                                                   schema_openshift_api_config_v1_UpdateHistory(ref),
 		"github.com/openshift/api/config/v1.UsernameClaimMapping":                                            schema_openshift_api_config_v1_UsernameClaimMapping(ref),
 		"github.com/openshift/api/config/v1.UsernamePrefix":                                                  schema_openshift_api_config_v1_UsernamePrefix(ref),
+		"github.com/openshift/api/config/v1.VSphereFailureDomainHostGroup":                                   schema_openshift_api_config_v1_VSphereFailureDomainHostGroup(ref),
+		"github.com/openshift/api/config/v1.VSphereFailureDomainRegionAffinity":                              schema_openshift_api_config_v1_VSphereFailureDomainRegionAffinity(ref),
+		"github.com/openshift/api/config/v1.VSphereFailureDomainZoneAffinity":                                schema_openshift_api_config_v1_VSphereFailureDomainZoneAffinity(ref),
 		"github.com/openshift/api/config/v1.VSpherePlatformFailureDomainSpec":                                schema_openshift_api_config_v1_VSpherePlatformFailureDomainSpec(ref),
 		"github.com/openshift/api/config/v1.VSpherePlatformLoadBalancer":                                     schema_openshift_api_config_v1_VSpherePlatformLoadBalancer(ref),
 		"github.com/openshift/api/config/v1.VSpherePlatformNodeNetworking":                                   schema_openshift_api_config_v1_VSpherePlatformNodeNetworking(ref),
@@ -19441,6 +19444,120 @@ func schema_openshift_api_config_v1_UsernamePrefix(ref common.ReferenceCallback)
 	}
 }
 
+func schema_openshift_api_config_v1_VSphereFailureDomainHostGroup(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VSphereFailureDomainHostGroup holds the vmGroup and the hostGroup names in vCenter corresponds to a vm-host group of type Virtual Machine and Host respectively. Is also contains the vmHostRule which is an affinity vm-host rule in vCenter.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"vmGroup": {
+						SchemaProps: spec.SchemaProps{
+							Description: "vmGroup is the name of the vm-host group of type virtual machine within vCenter for this failure domain. vmGroup is limited to 80 characters. This field is required when the VSphereFailureDomain ZoneType is HostGroup",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"hostGroup": {
+						SchemaProps: spec.SchemaProps{
+							Description: "hostGroup is the name of the vm-host group of type host within vCenter for this failure domain. hostGroup is limited to 80 characters. This field is required when the VSphereFailureDomain ZoneType is HostGroup",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"vmHostRule": {
+						SchemaProps: spec.SchemaProps{
+							Description: "vmHostRule is the name of the affinity vm-host rule within vCenter for this failure domain. vmHostRule is limited to 80 characters. This field is required when the VSphereFailureDomain ZoneType is HostGroup",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"vmGroup", "hostGroup", "vmHostRule"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1_VSphereFailureDomainRegionAffinity(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VSphereFailureDomainRegionAffinity contains the region type which is the string representation of the VSphereFailureDomainRegionType with available options of Datacenter and ComputeCluster.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type determines the vSphere object type for a region within this failure domain. Available types are Datacenter and ComputeCluster. When set to Datacenter, this means the vCenter Datacenter defined is the region. When set to ComputeCluster, this means the vCenter cluster defined is the region.\n\nPossible enum values:\n - `\"ComputeCluster\"` is a failure domain region for a vCenter compute cluster.\n - `\"Datacenter\"` is a failure domain region for a vCenter datacenter.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"ComputeCluster", "Datacenter"},
+						},
+					},
+				},
+				Required: []string{"type"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator":            "type",
+							"fields-to-discriminateBy": map[string]interface{}{},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1_VSphereFailureDomainZoneAffinity(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VSphereFailureDomainZoneAffinity contains the vCenter cluster vm-host group (virtual machine and host types) and the vm-host affinity rule that together creates an affinity configuration for vm-host based zonal. This configuration within vCenter creates the required association between a failure domain, virtual machines and ESXi hosts to create a vm-host based zone.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type determines the vSphere object type for a zone within this failure domain. Available types are ComputeCluster and HostGroup. When set to ComputeCluster, this means the vCenter cluster defined is the zone. When set to HostGroup, hostGroup must be configured with hostGroup, vmGroup and vmHostRule and this means the zone is defined by the grouping of those fields.\n\nPossible enum values:\n - `\"ComputeCluster\"` is a failure domain zone for a vCenter compute cluster.\n - `\"HostGroup\"` is a failure domain zone for a vCenter vm-host group.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"ComputeCluster", "HostGroup"},
+						},
+					},
+					"hostGroup": {
+						SchemaProps: spec.SchemaProps{
+							Description: "hostGroup holds the vmGroup and the hostGroup names in vCenter corresponds to a vm-host group of type Virtual Machine and Host respectively. Is also contains the vmHostRule which is an affinity vm-host rule in vCenter.",
+							Ref:         ref("github.com/openshift/api/config/v1.VSphereFailureDomainHostGroup"),
+						},
+					},
+				},
+				Required: []string{"type"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "type",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"hostGroup": "HostGroup",
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.VSphereFailureDomainHostGroup"},
+	}
+}
+
 func schema_openshift_api_config_v1_VSpherePlatformFailureDomainSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -19472,6 +19589,18 @@ func schema_openshift_api_config_v1_VSpherePlatformFailureDomainSpec(ref common.
 							Format:      "",
 						},
 					},
+					"regionAffinity": {
+						SchemaProps: spec.SchemaProps{
+							Description: "regionAffinity holds the type of region, Datacenter or ComputeCluster. When set to Datacenter, this means the region is a vCenter Datacenter as defined in topology. When set to ComputeCluster, this means the region is a vCenter Cluster as defined in topology.",
+							Ref:         ref("github.com/openshift/api/config/v1.VSphereFailureDomainRegionAffinity"),
+						},
+					},
+					"zoneAffinity": {
+						SchemaProps: spec.SchemaProps{
+							Description: "zoneAffinity holds the type of the zone and the hostGroup which vmGroup and the hostGroup names in vCenter corresponds to a vm-host group of type Virtual Machine and Host respectively. Is also contains the vmHostRule which is an affinity vm-host rule in vCenter.",
+							Ref:         ref("github.com/openshift/api/config/v1.VSphereFailureDomainZoneAffinity"),
+						},
+					},
 					"server": {
 						SchemaProps: spec.SchemaProps{
 							Description: "server is the fully-qualified domain name or the IP address of the vCenter server.",
@@ -19492,7 +19621,7 @@ func schema_openshift_api_config_v1_VSpherePlatformFailureDomainSpec(ref common.
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.VSpherePlatformTopology"},
+			"github.com/openshift/api/config/v1.VSphereFailureDomainRegionAffinity", "github.com/openshift/api/config/v1.VSphereFailureDomainZoneAffinity", "github.com/openshift/api/config/v1.VSpherePlatformTopology"},
 	}
 }
 

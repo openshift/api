@@ -114,22 +114,4 @@ tests:
         buildOutputs:
           currentImagePullSecret:
             name: foo
-    expected: |
-      apiVersion: machineconfiguration.openshift.io/v1alpha1
-      kind: MachineOSConfig
-      metadata:
-         name: foobar
-      spec:
-        machineConfigPool:
-          name: worker
-        buildInputs:
-          imageBuilder: 
-            imageBuilderType: PodImageBuilder
-          baseOSImagePullspec: example.io/my-project/image-v1.0_23@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
-          baseOSExtensionsImagePullspec: example.io/my-project/image-v1.0_23@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
-          renderedImagePushSecret:
-            name: foo
-          renderedImagePushspec: quay.io/cdoern/renderedImg:latest
-        buildOutputs:
-          currentImagePullSecret:
-            name: foo
+    expectedError: "Invalid value: \"null\": some validation rules were not checked because the object was invalid; correct the existing errors to complete validation"

@@ -75,6 +75,26 @@ spec:
             description: ControlPlaneMachineSet represents the configuration of the
               ControlPlaneMachineSet.
             properties:
+              machineNamePrefix:
+                description: |-
+                  machineNamePrefix is the prefix used when creating machine names.
+                  Each machine name will consist of this prefix, followed by
+                  a randomly generated string of 5 characters, and the index of the machine.
+                  It must be a lowercase RFC 1123 subdomain, consisting of lowercase
+                  alphanumeric characters, '-', or '.', and must start and end
+                  with an alphanumeric character.
+                  The prefix must be between 1 and 245 characters in length.
+                  For example, if machineNamePrefix is set to 'control-plane',
+                  and three machines are created, their names might be:
+                  control-plane-abcde-0, control-plane-fghij-1, control-plane-klmno-2
+                maxLength: 245
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: a lowercase RFC 1123 subdomain must consist of lower case
+                    alphanumeric characters, '-' or '.', and must start and end with
+                    an alphanumeric character.
+                  rule: '!format.dns1123Subdomain().validate(self).hasValue()'
               replicas:
                 default: 3
                 description: |-

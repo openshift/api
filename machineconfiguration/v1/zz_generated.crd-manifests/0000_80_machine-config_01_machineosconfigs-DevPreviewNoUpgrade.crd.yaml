@@ -53,24 +53,29 @@ spec:
                   baseImagePullSecret:
                     description: |-
                       baseImagePullSecret is the secret used to pull the base image.
-                      must live in the openshift-machine-config-operator namespace if provided.
-                      defaults to using the cluster-wide pull secret if not specified.
+                      Must live in the openshift-machine-config-operator namespace if provided.
+                      Defaults to using the cluster-wide pull secret if not specified. This is provided during install time of the cluster, and lives in the openshift-config namespace as a secret.
                     properties:
                       name:
                         description: |-
                           name is the name of the secret used to push or pull this MachineOSConfig object.
-                          this secret must be in the openshift-machine-config-operator namespace.
+                          Must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character.
+                          This secret must be in the openshift-machine-config-operator namespace.
                         maxLength: 253
-                        pattern: ^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9]))*$
                         type: string
+                        x-kubernetes-validations:
+                        - message: a lowercase RFC 1123 subdomain must consist of
+                            lower case alphanumeric characters, '-' or '.', and must
+                            start and end with an alphanumeric character.
+                          rule: '!format.dns1123Subdomain().validate(self).hasValue()'
                     required:
                     - name
                     type: object
                   baseOSExtensionsImagePullspec:
                     description: |-
                       baseOSExtensionsImagePullspec is the base Extensions image used in the build process
-                      the MachineOSConfig object will use the in cluster image registry configuration.
-                      if you wish to use a mirror or any other settings specific to registries.conf, please specify those in the cluster wide registries.conf.
+                      The MachineOSConfig object will use the in cluster image registry configuration.
+                      If you wish to use a mirror or any other settings specific to registries.conf, please specify those in the cluster wide registries.conf.
                       The format of the image pullspec is:
                       host[:port][/namespace]/name@sha256:<digest>
                       The digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9.
@@ -87,8 +92,8 @@ spec:
                   baseOSImagePullspec:
                     description: |-
                       baseOSImagePullspec is the base OSImage we use to build our custom image.
-                      the MachineOSConfig object will use the in cluster image registry configuration.
-                      if you wish to use a mirror or any other settings specific to registries.conf, please specify those in the cluster wide registries.conf.
+                      The MachineOSConfig object will use the in cluster image registry configuration.
+                      If you wish to use a mirror or any other settings specific to registries.conf, please specify those in the cluster wide registries.conf.
                       The format of the image pullspec is:
                       host[:port][/namespace]/name@sha256:<digest>
                       The digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9.
@@ -105,34 +110,37 @@ spec:
                   containerFile:
                     description: |-
                       containerFile describes the custom data the user has specified to build into the image.
-                      this is also commonly called a Dockerfile and you can treat it as such. The content is the content of your Dockerfile.
+                      This is also commonly called a Dockerfile and you can treat it as such. The content is the content of your Dockerfile.
+                      See https://github.com/containers/common/blob/main/docs/Containerfile.5.md for the spec reference.
                       you can specify up to 7 containerFiles
                     items:
                       description: MachineOSContainerfile contains all custom content
                         the user wants built into the image
                       properties:
                         containerfileArch:
-                          default: noarch
+                          default: NoArch
                           description: |-
-                            containerfileArch describes the architecture this containerfile is to be built for
-                            this arch is optional. If the user does not specify an architecture, it is assumed
+                            containerfileArch describes the architecture this containerfile is to be built for.
+                            This arch is optional. If the user does not specify an architecture, it is assumed
                             that the content can be applied to all architectures, or in a single arch cluster: the only architecture.
                           enum:
-                          - arm64
-                          - amd64
-                          - ppc64le
-                          - s390x
-                          - aarch64
+                          - ARM64
+                          - AMD64
+                          - PPC64LE
+                          - S390X
+                          - AArch64
                           - x86_64
-                          - noarch
+                          - NoArch
                           type: string
                         content:
                           description: |-
                             content is an embedded Containerfile/Dockerfile that defines the contents to be built into your image.
+                            See https://github.com/containers/common/blob/main/docs/Containerfile.5.md for the spec reference.
                             for example, this would add the tree package to your hosts:
                               FROM configs AS final
                               RUN rpm-ostree install tree && \
                                 ostree container commit
+                          maxLength: 4096
                           type: string
                       required:
                       - content
@@ -144,50 +152,61 @@ spec:
                     - containerfileArch
                     x-kubernetes-list-type: map
                   imageBuilder:
-                    description: machineOSImageBuilder describes which image builder
-                      will be used in each build triggered by this MachineOSConfig
+                    description: |-
+                      machineOSImageBuilder describes which image builder will be used in each build triggered by this MachineOSConfig.
+                      Currently supported type(s): JobImageBuilder
                     properties:
                       imageBuilderType:
                         description: |-
                           imageBuilderType specifies the backend to be used to build the image.
-                          Valid options are: PodImageBuilder
+                          Valid options are: JobImageBuilder
                         enum:
-                        - PodImageBuilder
+                        - JobImageBuilder
                         type: string
+                    required:
+                    - imageBuilderType
                     type: object
                   releaseVersion:
                     description: |-
                       releaseVersion is an Openshift release version which the base OS image is associated with.
                       This field is populated from the machine-config-osimageurl configmap in the openshift-machine-config-operator namespace.
                       It will come in the format: 4.16.0-0.nightly-2024-04-03-065948 or any valid release. The MachineOSBuilder populates this field and validates that this is a valid stream.
-                      This is used as a label in the dockerfile that builds the OS image.
+                      This is used as a label in the Containerfile that builds the OS image.
                     maxLength: 253
-                    pattern: ^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9]))*$
                     type: string
+                    x-kubernetes-validations:
+                    - message: a lowercase RFC 1123 subdomain must consist of lower
+                        case alphanumeric characters, '-' or '.', and must start and
+                        end with an alphanumeric character.
+                      rule: '!format.dns1123Subdomain().validate(self).hasValue()'
                   renderedImagePushSecret:
                     description: |-
                       renderedImagePushSecret is the secret used to connect to a user registry.
-                      the final image push and pull secrets should be separate for security concerns. If the final image push secret is somehow exfiltrated,
-                      that gives someone the power to push images to the image repository. By comparison, if the final image pull secret gets exfiltrated,
-                      that only gives someone to pull images from the image repository. It's basically the principle of least permissions.
-                      this push secret will be used only by the MachineConfigController pod to push the image to the final destination. Not all nodes will need to push this image, most of them
-                      will only need to pull the image in order to use it.
+                      The final image push and pull secrets should be separate and assume the principal of least privilege.
+                      The push secret with write privilege is only required to be present on the node hosting the MachineConfigController pod.
+                      The pull secret with read only privileges is required on all nodes.
+                      By separating the two secrets, the risk of write credentials becoming compromised is reduced.
                     properties:
                       name:
                         description: |-
                           name is the name of the secret used to push or pull this MachineOSConfig object.
-                          this secret must be in the openshift-machine-config-operator namespace.
+                          Must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character.
+                          This secret must be in the openshift-machine-config-operator namespace.
                         maxLength: 253
-                        pattern: ^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9]))*$
                         type: string
+                        x-kubernetes-validations:
+                        - message: a lowercase RFC 1123 subdomain must consist of
+                            lower case alphanumeric characters, '-' or '.', and must
+                            start and end with an alphanumeric character.
+                          rule: '!format.dns1123Subdomain().validate(self).hasValue()'
                     required:
                     - name
                     type: object
-                  renderedImagePushspec:
+                  renderedImagePushSpec:
                     description: |-
-                      renderedImagePushspec describes the location of the final image.
-                      the MachineOSConfig object will use the in cluster image registry configuration.
-                      if you wish to use a mirror or any other settings specific to registries.conf, please specify those in the cluster wide registries.conf.
+                      renderedImagePushSpec describes the location of the final image.
+                      The MachineOSConfig object will use the in cluster image registry configuration.
+                      If you wish to use a mirror or any other settings specific to registries.conf, please specify those in the cluster wide registries.conf via the cluster image.config, ImageContentSourcePolicies, ImageDigestMirrorSet, or ImageTagMirrorSet objects.
                       The format of the image pushspec is:
                       host[:port][/namespace]/name:<tag> or svc_name.namespace.svc[:port]/repository/name:<tag>
                     maxLength: 447
@@ -203,28 +222,35 @@ spec:
                 required:
                 - imageBuilder
                 - renderedImagePushSecret
-                - renderedImagePushspec
+                - renderedImagePushSpec
                 type: object
               buildOutputs:
-                description: buildOutputs holds all information needed to handle booting
-                  the image after a build
+                description: |-
+                  buildOutputs holds all information needed to handle booting the image after a build
+                  This currently contains a currentImagePullSecret field, which should be provided if the final pull secret used to pull the image to nodes from the registry
+                  is different than the one used for pushing the image to the registry during the build.
                 properties:
                   currentImagePullSecret:
                     description: |-
                       currentImagePullSecret is the secret used to pull the final produced image.
-                      must live in the openshift-machine-config-operator namespace
+                      Must live in the openshift-machine-config-operator namespace,
                       the final image push and pull secrets should be separate for security concerns. If the final image push secret is somehow exfiltrated,
                       that gives someone the power to push images to the image repository. By comparison, if the final image pull secret gets exfiltrated,
                       that only gives someone to pull images from the image repository. It's basically the principle of least permissions.
-                      this pull secret will be used on all nodes in the pool. These nodes will need to pull the final OS image and boot into it using rpm-ostree or bootc.
+                      This pull secret will be used on all nodes in the pool. These nodes will need to pull the final OS image and boot into it using rpm-ostree or bootc.
                     properties:
                       name:
                         description: |-
                           name is the name of the secret used to push or pull this MachineOSConfig object.
-                          this secret must be in the openshift-machine-config-operator namespace.
+                          Must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character.
+                          This secret must be in the openshift-machine-config-operator namespace.
                         maxLength: 253
-                        pattern: ^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9]))*$
                         type: string
+                        x-kubernetes-validations:
+                        - message: a lowercase RFC 1123 subdomain must consist of
+                            lower case alphanumeric characters, '-' or '.', and must
+                            start and end with an alphanumeric character.
+                          rule: '!format.dns1123Subdomain().validate(self).hasValue()'
                     required:
                     - name
                     type: object
@@ -233,10 +259,16 @@ spec:
                 description: machineConfigPool is the pool which the build is for
                 properties:
                   name:
-                    description: name of the MachineConfigPool object.
+                    description: |-
+                      name of the MachineConfigPool object.
+                      Must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character.
                     maxLength: 253
-                    pattern: ^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9]))*$
                     type: string
+                    x-kubernetes-validations:
+                    - message: a lowercase RFC 1123 subdomain must consist of lower
+                        case alphanumeric characters, '-' or '.', and must start and
+                        end with an alphanumeric character.
+                      rule: '!format.dns1123Subdomain().validate(self).hasValue()'
                 required:
                 - name
                 type: object
@@ -247,66 +279,6 @@ spec:
           status:
             description: status describes the status of the machineosconfig
             properties:
-              conditions:
-                description: conditions are state related conditions for the config.
-                items:
-                  description: Condition contains details for one aspect of the current
-                    state of this API Resource.
-                  properties:
-                    lastTransitionTime:
-                      description: |-
-                        lastTransitionTime is the last time the condition transitioned from one status to another.
-                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
-                      format: date-time
-                      type: string
-                    message:
-                      description: |-
-                        message is a human readable message indicating details about the transition.
-                        This may be an empty string.
-                      maxLength: 32768
-                      type: string
-                    observedGeneration:
-                      description: |-
-                        observedGeneration represents the .metadata.generation that the condition was set based upon.
-                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
-                        with respect to the current state of the instance.
-                      format: int64
-                      minimum: 0
-                      type: integer
-                    reason:
-                      description: |-
-                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
-                        Producers of specific condition types may define expected values and meanings for this field,
-                        and whether the values are considered a guaranteed API.
-                        The value should be a CamelCase string.
-                        This field may not be empty.
-                      maxLength: 1024
-                      minLength: 1
-                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
-                      type: string
-                    status:
-                      description: status of the condition, one of True, False, Unknown.
-                      enum:
-                      - "True"
-                      - "False"
-                      - Unknown
-                      type: string
-                    type:
-                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
-                      maxLength: 316
-                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
-                      type: string
-                  required:
-                  - lastTransitionTime
-                  - message
-                  - reason
-                  - status
-                  - type
-                  type: object
-                type: array
-                x-kubernetes-list-map-keys:
-                - type
-                x-kubernetes-list-type: map
               currentImagePullspec:
                 description: |-
                   currentImagePullspec is the fully qualified image pull spec used by the MCO to pull down the new OSImage. This must include sha256.
@@ -323,11 +295,71 @@ spec:
                 - message: the OCI Image name should follow the host[:port][/namespace]/name
                     format, resembling a valid URL without the scheme
                   rule: (self.split('@')[0].matches('^([a-zA-Z0-9-]+\\.)+[a-zA-Z0-9-]+(:[0-9]{2,5})?/([a-zA-Z0-9-_]{0,61}/)?[a-zA-Z0-9-_.]*?$'))
+              machineOSBuild:
+                description: machineOSBuild is a reference to the MachineOSBuild object
+                  for this MachineOSConfig, which contains the status for the image
+                  build
+                properties:
+                  group:
+                    description: |-
+                      group of the referent.
+                      The name must contain only lowercase alphanumeric characters, '-' or '.' and start/end with an alphanumeric character
+                      Example: "", "apps", "build.openshift.io", etc.
+                    maxLength: 253
+                    type: string
+                    x-kubernetes-validations:
+                    - message: a lowercase RFC 1123 subdomain must consist of lower
+                        case alphanumeric characters, '-' or '.', and must start and
+                        end with an alphanumeric character.
+                      rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                  name:
+                    description: |-
+                      name of the referent.
+                      This value should consist of only lowercase alphanumeric characters and hyphens.
+                    maxLength: 256
+                    minLength: 1
+                    type: string
+                    x-kubernetes-validations:
+                    - message: the value must consist of only lowercase alphanumeric
+                        characters and hyphens
+                      rule: self.matches('^[a-z0-9]([-a-z0-9]*[a-z0-9])?$')
+                  namespace:
+                    description: |-
+                      namespace of the referent.
+                      This value should consist of only lowercase alphanumeric characters and hyphens.
+                    maxLength: 63
+                    minLength: 1
+                    type: string
+                    x-kubernetes-validations:
+                    - message: the value must consist of only lowercase alphanumeric
+                        characters and hyphens
+                      rule: self.matches('^[a-z0-9]([-a-z0-9]*[a-z0-9])?$')
+                  resource:
+                    description: |-
+                      resource of the referent.
+                      This value should consist of only lowercase alphanumeric characters and hyphens.
+                      Example: "deployments", "deploymentconfigs", "pods", etc.
+                    maxLength: 63
+                    minLength: 1
+                    type: string
+                    x-kubernetes-validations:
+                    - message: the value must consist of only lowercase alphanumeric
+                        characters and hyphens
+                      rule: self.matches('^[a-z0-9]([-a-z0-9]*[a-z0-9])?$')
+                required:
+                - group
+                - name
+                - resource
+                type: object
               observedGeneration:
-                description: observedGeneration represents the generation observed
-                  by the Machine Config Operator's build controller.
+                description: observedGeneration represents the generation of the MachineOSConfig
+                  object observed by the Machine Config Operator's build controller.
                 format: int64
+                minimum: 0
                 type: integer
+                x-kubernetes-validations:
+                - message: observedGeneration must not move backwards except to zero
+                  rule: self >= oldSelf || (self == 0 && oldSelf > 0)
             required:
             - observedGeneration
             type: object

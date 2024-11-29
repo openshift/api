@@ -15,7 +15,7 @@ tests:
           name: rendered-worker-abcd
         machineOSConfig:
           name: worker
-        renderedImagePushspec: quay.io/cdoern/mco:latest
+        renderedImagePushspec: quay.io/mco/renderedImage:latest
     expected: |
       apiVersion: machineconfiguration.openshift.io/v1
       kind: MachineOSBuild
@@ -26,5 +26,22 @@ tests:
           name: rendered-worker-abcd
         machineOSConfig:
           name: worker
-        renderedImagePushspec: quay.io/cdoern/mco:latest
+        renderedImagePushspec: quay.io/mco/renderedImage:latest
+  onCreate:
+  - name: Fail on invalid buildEnd time
+    initial: |
+      apiVersion: machineconfiguration.openshift.io/v1
+      kind: MachineOSBuild
+      metadata:
+         name: foobar
+      spec:
+        desiredConfig:
+          name: rendered-worker-abcd
+        machineOSConfig:
+          name: worker
+        renderedImagePushspec: quay.io/mco/renderedImage:latest
+      status:
+        buildStart: 2024-11-28T10:00:00Z
+        buildEnd: 2024-11-28T09:00:00Z
+    expectedError: "Invalid value: \"string\": buildEnd must be after buildStart"
 

@@ -67,10 +67,16 @@ spec:
                   an image for.
                 properties:
                   name:
-                    description: name is the name of the rendered MachineConfig object.
+                    description: |-
+                      name is the name of the rendered MachineConfig object.
+                      The name must contain only lowercase alphanumeric characters, '-' or '.' and start/end with an alphanumeric character
                     maxLength: 253
-                    pattern: ^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9]))*$
                     type: string
+                    x-kubernetes-validations:
+                    - message: a lowercase RFC 1123 subdomain must consist of lower
+                        case alphanumeric characters, '-' or '.', and must start and
+                        end with an alphanumeric character.
+                      rule: '!format.dns1123Subdomain().validate(self).hasValue()'
                 required:
                 - name
                 type: object
@@ -79,11 +85,16 @@ spec:
                   is based off of
                 properties:
                   name:
-                    description: name of the MachineOSConfig
+                    description: |-
+                      name of the MachineOSConfig.
+                      This value should consist of only lowercase alphanumeric characters and hyphens.
                     maxLength: 256
                     minLength: 1
-                    pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
                     type: string
+                    x-kubernetes-validations:
+                    - message: the value must consist of only lowercase alphanumeric
+                        characters and hyphens
+                      rule: self.matches('^[a-z0-9]([-a-z0-9]*[a-z0-9])?$')
                 required:
                 - name
                 type: object
@@ -115,7 +126,10 @@ spec:
               build
             properties:
               buildEnd:
-                description: buildEnd describes when the build ended.
+                description: |-
+                  buildEnd describes when the build ended.
+                  When omitted the build has either not been started, or is in progress.
+                  It will be populated once the build completes, fails or is interrupted.
                 format: date-time
                 type: string
                 x-kubernetes-validations:
@@ -132,56 +146,75 @@ spec:
                 description: BuilderReference describes which ImageBuilder backend
                   to use for this build
                 properties:
-                  buildPod:
-                    description: relatedObjects is a list of objects that are related
-                      to the build process.
+                  ImageBuilderRef:
+                    description: |-
+                      ImageBuilderRef is a reference to the object that is managing the image build
+                      For example, if the imageBuilderType is JobImageBuilder, this will be a reference to the Job object managing the build
                     properties:
                       group:
                         description: |-
                           group of the referent.
-                          This value should consist of only lowercase alphanumeric characters, hyphens and periods.
+                          The name must contain only lowercase alphanumeric characters, '-' or '.' and start/end with an alphanumeric character
                           Example: "", "apps", "build.openshift.io", etc.
-                        pattern: ^$|^[a-z0-9]([-a-z0-9]*[a-z0-9])?(.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                        maxLength: 253
                         type: string
+                        x-kubernetes-validations:
+                        - message: a lowercase RFC 1123 subdomain must consist of
+                            lower case alphanumeric characters, '-' or '.', and must
+                            start and end with an alphanumeric character.
+                          rule: '!format.dns1123Subdomain().validate(self).hasValue()'
                       name:
-                        description: name of the referent.
+                        description: |-
+                          name of the referent.
+                          This value should consist of only lowercase alphanumeric characters and hyphens.
                         maxLength: 256
                         minLength: 1
-                        pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
                         type: string
+                        x-kubernetes-validations:
+                        - message: the value must consist of only lowercase alphanumeric
+                            characters and hyphens
+                          rule: self.matches('^[a-z0-9]([-a-z0-9]*[a-z0-9])?$')
                       namespace:
-                        description: namespace of the referent.
+                        description: |-
+                          namespace of the referent.
+                          This value should consist of only lowercase alphanumeric characters and hyphens.
                         maxLength: 63
                         minLength: 1
-                        pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
                         type: string
+                        x-kubernetes-validations:
+                        - message: the value must consist of only lowercase alphanumeric
+                            characters and hyphens
+                          rule: self.matches('^[a-z0-9]([-a-z0-9]*[a-z0-9])?$')
                       resource:
                         description: |-
                           resource of the referent.
                           This value should consist of only lowercase alphanumeric characters and hyphens.
                           Example: "deployments", "deploymentconfigs", "pods", etc.
-                        pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                        maxLength: 63
+                        minLength: 1
                         type: string
+                        x-kubernetes-validations:
+                        - message: the value must consist of only lowercase alphanumeric
+                            characters and hyphens
+                          rule: self.matches('^[a-z0-9]([-a-z0-9]*[a-z0-9])?$')
                     required:
                     - group
                     - name
                     - resource
                     type: object
                   imageBuilderType:
-                    description: ImageBuilderType describes the image builder set
-                      in the MachineOSConfig
+                    description: |-
+                      ImageBuilderType describes the image builder set in the MachineOSConfig, which in turn describes the builder that the cluster will attempt the build with.
+                      Currently only JobImageBuilder is supported, which will spin up a custom pod builder that uses buildah to build the specified image.
                     type: string
+                required:
+                - imageBuilderType
                 type: object
-                x-kubernetes-validations:
-                - message: buildPod is required when imageBuilderType is PodImageBuilder,
-                    and forbidden otherwise
-                  rule: 'has(self.imageBuilderType) && self.imageBuilderType == ''PodImageBuilder''
-                    ?  has(self.buildPod) : !has(self.buildPod)'
               conditions:
                 description: |-
                   conditions are state related conditions for the build. Valid types are:
-                  Prepared, Building, Failed, Interrupted, and Succeeded
-                  once a Build is marked as Failed, no future conditions can be set. This is enforced by the MCO.
+                  Prepared, Building, Failed, Interrupted, and Succeeded.
+                  Once a Build is marked as Failed or Interrupted, no future conditions can be set.
                 items:
                   description: Condition contains details for one aspect of the current
                     state of this API Resource.
@@ -236,11 +269,19 @@ spec:
                   - status
                   - type
                   type: object
+                maxItems: 8
                 type: array
                 x-kubernetes-list-map-keys:
                 - type
                 x-kubernetes-list-type: map
-              finalImagePullspec:
+                x-kubernetes-validations:
+                - message: once a Failed condition is set, conditions are immutable
+                  rule: 'self.exists(x, x.type == ''Failed'') ? self == oldSelf :
+                    true'
+                - message: once an Interrupted condition is set, conditions are immutable
+                  rule: 'self.exists(x, x.type == ''Interrupted'') ? self == oldSelf
+                    : true'
+              finalImagePushspec:
                 description: finalImagePushSpec describes the fully qualified pushspec
                   produced by this build that the final image can be. Must end with
                   a valid '@sha256:<digest>' suffix, where '<digest>' is 64 hexadecimal
@@ -251,8 +292,10 @@ spec:
                     suffix, where '<digest>' is 64 hexadecimal characters long
                   rule: ((self.split('@').size() == 2 && self.split('@')[1].matches('^sha256:[a-f0-9]{64}$')))
               relatedObjects:
-                description: relatedObjects is a list of objects that are related
-                  to the build process.
+                description: |-
+                  relatedObjects is a list of references to ephemeral objects such as ConfigMaps or Secrets that are meant to be consumed while the build process runs.
+                  After a successful build or when this MachineOSBuild is deleted, these ephemeral objects should be deleted.
+                  However, in the event of a failed build, the objects will not be deleted to allow for inspection and debugging of the failed build process.
                 items:
                   description: ObjectReference contains enough information to let
                     you inspect or modify the referred object.
@@ -260,29 +303,49 @@ spec:
                     group:
                       description: |-
                         group of the referent.
-                        This value should consist of only lowercase alphanumeric characters, hyphens and periods.
+                        The name must contain only lowercase alphanumeric characters, '-' or '.' and start/end with an alphanumeric character
                         Example: "", "apps", "build.openshift.io", etc.
-                      pattern: ^$|^[a-z0-9]([-a-z0-9]*[a-z0-9])?(.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                      maxLength: 253
                       type: string
+                      x-kubernetes-validations:
+                      - message: a lowercase RFC 1123 subdomain must consist of lower
+                          case alphanumeric characters, '-' or '.', and must start
+                          and end with an alphanumeric character.
+                        rule: '!format.dns1123Subdomain().validate(self).hasValue()'
                     name:
-                      description: name of the referent.
+                      description: |-
+                        name of the referent.
+                        This value should consist of only lowercase alphanumeric characters and hyphens.
                       maxLength: 256
                       minLength: 1
-                      pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
                       type: string
+                      x-kubernetes-validations:
+                      - message: the value must consist of only lowercase alphanumeric
+                          characters and hyphens
+                        rule: self.matches('^[a-z0-9]([-a-z0-9]*[a-z0-9])?$')
                     namespace:
-                      description: namespace of the referent.
+                      description: |-
+                        namespace of the referent.
+                        This value should consist of only lowercase alphanumeric characters and hyphens.
                       maxLength: 63
                       minLength: 1
-                      pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
                       type: string
+                      x-kubernetes-validations:
+                      - message: the value must consist of only lowercase alphanumeric
+                          characters and hyphens
+                        rule: self.matches('^[a-z0-9]([-a-z0-9]*[a-z0-9])?$')
                     resource:
                       description: |-
                         resource of the referent.
                         This value should consist of only lowercase alphanumeric characters and hyphens.
                         Example: "deployments", "deploymentconfigs", "pods", etc.
-                      pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                      maxLength: 63
+                      minLength: 1
                       type: string
+                      x-kubernetes-validations:
+                      - message: the value must consist of only lowercase alphanumeric
+                          characters and hyphens
+                        rule: self.matches('^[a-z0-9]([-a-z0-9]*[a-z0-9])?$')
                   required:
                   - group
                   - name
@@ -297,6 +360,10 @@ spec:
             required:
             - buildStart
             type: object
+            x-kubernetes-validations:
+            - message: buildEnd must be after buildStart
+              rule: self.buildStart != null && self.buildEnd != null && timestamp(self.buildStart)
+                > timestamp(self.buildEnd)
         required:
         - spec
         type: object

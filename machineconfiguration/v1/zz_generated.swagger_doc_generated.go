@@ -379,7 +379,8 @@ func (MachineOSBuild) SwaggerDoc() map[string]string {
 }
 
 var map_MachineOSBuildList = map[string]string{
-	"": "MachineOSBuildList describes all of the Builds on the system\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"":      "MachineOSBuildList describes all of the Builds on the system\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"items": "items contains a collection of MachineOSBuild resources.",
 }
 
 func (MachineOSBuildList) SwaggerDoc() map[string]string {
@@ -399,12 +400,12 @@ func (MachineOSBuildSpec) SwaggerDoc() map[string]string {
 
 var map_MachineOSBuildStatus = map[string]string{
 	"":                   "MachineOSBuildStatus describes the state of a build and other helpful information.",
-	"conditions":         "conditions are state related conditions for the build. Valid types are: Prepared, Building, Failed, Interrupted, and Succeeded once a Build is marked as Failed, no future conditions can be set. This is enforced by the MCO.",
+	"conditions":         "conditions are state related conditions for the build. Valid types are: Prepared, Building, Failed, Interrupted, and Succeeded. Once a Build is marked as Failed or Interrupted, no future conditions can be set.",
 	"builderReference":   "BuilderReference describes which ImageBuilder backend to use for this build",
-	"relatedObjects":     "relatedObjects is a list of objects that are related to the build process.",
+	"relatedObjects":     "relatedObjects is a list of references to ephemeral objects such as ConfigMaps or Secrets that are meant to be consumed while the build process runs. After a successful build or when this MachineOSBuild is deleted, these ephemeral objects should be deleted. However, in the event of a failed build, the objects will not be deleted to allow for inspection and debugging of the failed build process.",
 	"buildStart":         "buildStart describes when the build started.",
-	"buildEnd":           "buildEnd describes when the build ended.",
-	"finalImagePullspec": "finalImagePushSpec describes the fully qualified pushspec produced by this build that the final image can be. Must end with a valid '@sha256:<digest>' suffix, where '<digest>' is 64 hexadecimal characters long",
+	"buildEnd":           "buildEnd describes when the build ended. When omitted the build has either not been started, or is in progress. It will be populated once the build completes, fails or is interrupted.",
+	"finalImagePushspec": "finalImagePushSpec describes the fully qualified pushspec produced by this build that the final image can be. Must end with a valid '@sha256:<digest>' suffix, where '<digest>' is 64 hexadecimal characters long",
 }
 
 func (MachineOSBuildStatus) SwaggerDoc() map[string]string {
@@ -413,8 +414,8 @@ func (MachineOSBuildStatus) SwaggerDoc() map[string]string {
 
 var map_MachineOSBuilderReference = map[string]string{
 	"":                 "MachineOSBuilderReference describes which ImageBuilder backend to use for this build",
-	"imageBuilderType": "ImageBuilderType describes the image builder set in the MachineOSConfig",
-	"buildPod":         "relatedObjects is a list of objects that are related to the build process.",
+	"imageBuilderType": "ImageBuilderType describes the image builder set in the MachineOSConfig, which in turn describes the builder that the cluster will attempt the build with. Currently only JobImageBuilder is supported, which will spin up a custom pod builder that uses buildah to build the specified image.",
+	"ImageBuilderRef":  "ImageBuilderRef is a reference to the object that is managing the image build For example, if the imageBuilderType is JobImageBuilder, this will be a reference to the Job object managing the build",
 }
 
 func (MachineOSBuilderReference) SwaggerDoc() map[string]string {
@@ -423,7 +424,7 @@ func (MachineOSBuilderReference) SwaggerDoc() map[string]string {
 
 var map_MachineOSConfigReference = map[string]string{
 	"":     "MachineOSConfigReference refers to the MachineOSConfig this build is based off of",
-	"name": "name of the MachineOSConfig",
+	"name": "name of the MachineOSConfig. This value should consist of only lowercase alphanumeric characters and hyphens.",
 }
 
 func (MachineOSConfigReference) SwaggerDoc() map[string]string {
@@ -432,10 +433,10 @@ func (MachineOSConfigReference) SwaggerDoc() map[string]string {
 
 var map_ObjectReference = map[string]string{
 	"":          "ObjectReference contains enough information to let you inspect or modify the referred object.",
-	"group":     "group of the referent. This value should consist of only lowercase alphanumeric characters, hyphens and periods. Example: \"\", \"apps\", \"build.openshift.io\", etc.",
+	"group":     "group of the referent. The name must contain only lowercase alphanumeric characters, '-' or '.' and start/end with an alphanumeric character Example: \"\", \"apps\", \"build.openshift.io\", etc.",
 	"resource":  "resource of the referent. This value should consist of only lowercase alphanumeric characters and hyphens. Example: \"deployments\", \"deploymentconfigs\", \"pods\", etc.",
-	"namespace": "namespace of the referent.",
-	"name":      "name of the referent.",
+	"namespace": "namespace of the referent. This value should consist of only lowercase alphanumeric characters and hyphens.",
+	"name":      "name of the referent. This value should consist of only lowercase alphanumeric characters and hyphens.",
 }
 
 func (ObjectReference) SwaggerDoc() map[string]string {
@@ -444,7 +445,7 @@ func (ObjectReference) SwaggerDoc() map[string]string {
 
 var map_RenderedMachineConfigReference = map[string]string{
 	"":     "Refers to the name of a rendered MachineConfig (e.g., \"rendered-worker-ec40d2965ff81bce7cd7a7e82a680739\", etc.): the build targets this MachineConfig, this is often used to tell us whether we need an update.",
-	"name": "name is the name of the rendered MachineConfig object.",
+	"name": "name is the name of the rendered MachineConfig object. The name must contain only lowercase alphanumeric characters, '-' or '.' and start/end with an alphanumeric character",
 }
 
 func (RenderedMachineConfigReference) SwaggerDoc() map[string]string {
@@ -453,14 +454,14 @@ func (RenderedMachineConfigReference) SwaggerDoc() map[string]string {
 
 var map_BuildInputs = map[string]string{
 	"":                              "BuildInputs holds all of the information needed to trigger a build",
-	"baseOSExtensionsImagePullspec": "baseOSExtensionsImagePullspec is the base Extensions image used in the build process the MachineOSConfig object will use the in cluster image registry configuration. if you wish to use a mirror or any other settings specific to registries.conf, please specify those in the cluster wide registries.conf. The format of the image pullspec is: host[:port][/namespace]/name@sha256:<digest> The digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9.",
-	"baseOSImagePullspec":           "baseOSImagePullspec is the base OSImage we use to build our custom image. the MachineOSConfig object will use the in cluster image registry configuration. if you wish to use a mirror or any other settings specific to registries.conf, please specify those in the cluster wide registries.conf. The format of the image pullspec is: host[:port][/namespace]/name@sha256:<digest> The digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9.",
-	"baseImagePullSecret":           "baseImagePullSecret is the secret used to pull the base image. must live in the openshift-machine-config-operator namespace if provided. defaults to using the cluster-wide pull secret if not specified.",
-	"imageBuilder":                  "machineOSImageBuilder describes which image builder will be used in each build triggered by this MachineOSConfig",
-	"renderedImagePushSecret":       "renderedImagePushSecret is the secret used to connect to a user registry. the final image push and pull secrets should be separate for security concerns. If the final image push secret is somehow exfiltrated, that gives someone the power to push images to the image repository. By comparison, if the final image pull secret gets exfiltrated, that only gives someone to pull images from the image repository. It's basically the principle of least permissions. this push secret will be used only by the MachineConfigController pod to push the image to the final destination. Not all nodes will need to push this image, most of them will only need to pull the image in order to use it.",
-	"renderedImagePushspec":         "renderedImagePushspec describes the location of the final image. the MachineOSConfig object will use the in cluster image registry configuration. if you wish to use a mirror or any other settings specific to registries.conf, please specify those in the cluster wide registries.conf. The format of the image pushspec is: host[:port][/namespace]/name:<tag> or svc_name.namespace.svc[:port]/repository/name:<tag>",
-	"releaseVersion":                "releaseVersion is an Openshift release version which the base OS image is associated with. This field is populated from the machine-config-osimageurl configmap in the openshift-machine-config-operator namespace. It will come in the format: 4.16.0-0.nightly-2024-04-03-065948 or any valid release. The MachineOSBuilder populates this field and validates that this is a valid stream. This is used as a label in the dockerfile that builds the OS image.",
-	"containerFile":                 "containerFile describes the custom data the user has specified to build into the image. this is also commonly called a Dockerfile and you can treat it as such. The content is the content of your Dockerfile. you can specify up to 7 containerFiles",
+	"baseOSExtensionsImagePullspec": "baseOSExtensionsImagePullspec is the base Extensions image used in the build process The MachineOSConfig object will use the in cluster image registry configuration. If you wish to use a mirror or any other settings specific to registries.conf, please specify those in the cluster wide registries.conf. The format of the image pullspec is: host[:port][/namespace]/name@sha256:<digest> The digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9.",
+	"baseOSImagePullspec":           "baseOSImagePullspec is the base OSImage we use to build our custom image. The MachineOSConfig object will use the in cluster image registry configuration. If you wish to use a mirror or any other settings specific to registries.conf, please specify those in the cluster wide registries.conf. The format of the image pullspec is: host[:port][/namespace]/name@sha256:<digest> The digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9.",
+	"baseImagePullSecret":           "baseImagePullSecret is the secret used to pull the base image. Must live in the openshift-machine-config-operator namespace if provided. Defaults to using the cluster-wide pull secret if not specified. This is provided during install time of the cluster, and lives in the openshift-config namespace as a secret.",
+	"imageBuilder":                  "machineOSImageBuilder describes which image builder will be used in each build triggered by this MachineOSConfig. Currently supported type(s): JobImageBuilder",
+	"renderedImagePushSecret":       "renderedImagePushSecret is the secret used to connect to a user registry. The final image push and pull secrets should be separate and assume the principal of least privilege. The push secret with write privilege is only required to be present on the node hosting the MachineConfigController pod. The pull secret with read only privileges is required on all nodes. By separating the two secrets, the risk of write credentials becoming compromised is reduced.",
+	"renderedImagePushSpec":         "renderedImagePushSpec describes the location of the final image. The MachineOSConfig object will use the in cluster image registry configuration. If you wish to use a mirror or any other settings specific to registries.conf, please specify those in the cluster wide registries.conf via the cluster image.config, ImageContentSourcePolicies, ImageDigestMirrorSet, or ImageTagMirrorSet objects. The format of the image pushspec is: host[:port][/namespace]/name:<tag> or svc_name.namespace.svc[:port]/repository/name:<tag>",
+	"releaseVersion":                "releaseVersion is an Openshift release version which the base OS image is associated with. This field is populated from the machine-config-osimageurl configmap in the openshift-machine-config-operator namespace. It will come in the format: 4.16.0-0.nightly-2024-04-03-065948 or any valid release. The MachineOSBuilder populates this field and validates that this is a valid stream. This is used as a label in the Containerfile that builds the OS image.",
+	"containerFile":                 "containerFile describes the custom data the user has specified to build into the image. This is also commonly called a Dockerfile and you can treat it as such. The content is the content of your Dockerfile. See https://github.com/containers/common/blob/main/docs/Containerfile.5.md for the spec reference. you can specify up to 7 containerFiles",
 }
 
 func (BuildInputs) SwaggerDoc() map[string]string {
@@ -469,7 +470,7 @@ func (BuildInputs) SwaggerDoc() map[string]string {
 
 var map_BuildOutputs = map[string]string{
 	"":                       "BuildOutputs holds all information needed to handle booting the image after a build",
-	"currentImagePullSecret": "currentImagePullSecret is the secret used to pull the final produced image. must live in the openshift-machine-config-operator namespace the final image push and pull secrets should be separate for security concerns. If the final image push secret is somehow exfiltrated, that gives someone the power to push images to the image repository. By comparison, if the final image pull secret gets exfiltrated, that only gives someone to pull images from the image repository. It's basically the principle of least permissions. this pull secret will be used on all nodes in the pool. These nodes will need to pull the final OS image and boot into it using rpm-ostree or bootc.",
+	"currentImagePullSecret": "currentImagePullSecret is the secret used to pull the final produced image. Must live in the openshift-machine-config-operator namespace, the final image push and pull secrets should be separate for security concerns. If the final image push secret is somehow exfiltrated, that gives someone the power to push images to the image repository. By comparison, if the final image pull secret gets exfiltrated, that only gives someone to pull images from the image repository. It's basically the principle of least permissions. This pull secret will be used on all nodes in the pool. These nodes will need to pull the final OS image and boot into it using rpm-ostree or bootc.",
 }
 
 func (BuildOutputs) SwaggerDoc() map[string]string {
@@ -478,7 +479,7 @@ func (BuildOutputs) SwaggerDoc() map[string]string {
 
 var map_ImageSecretObjectReference = map[string]string{
 	"":     "Refers to the name of an image registry push/pull secret needed in the build process.",
-	"name": "name is the name of the secret used to push or pull this MachineOSConfig object. this secret must be in the openshift-machine-config-operator namespace.",
+	"name": "name is the name of the secret used to push or pull this MachineOSConfig object. Must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character. This secret must be in the openshift-machine-config-operator namespace.",
 }
 
 func (ImageSecretObjectReference) SwaggerDoc() map[string]string {
@@ -487,7 +488,7 @@ func (ImageSecretObjectReference) SwaggerDoc() map[string]string {
 
 var map_MachineConfigPoolReference = map[string]string{
 	"":     "Refers to the name of a MachineConfigPool (e.g., \"worker\", \"infra\", etc.): the MachineOSBuilder pod validates that the user has provided a valid pool",
-	"name": "name of the MachineConfigPool object.",
+	"name": "name of the MachineConfigPool object. Must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character.",
 }
 
 func (MachineConfigPoolReference) SwaggerDoc() map[string]string {
@@ -505,7 +506,8 @@ func (MachineOSConfig) SwaggerDoc() map[string]string {
 }
 
 var map_MachineOSConfigList = map[string]string{
-	"": "MachineOSConfigList describes all configurations for image builds on the system\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"":      "MachineOSConfigList describes all configurations for image builds on the system\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"items": "items contains a collection of MachineOSConfig resources.",
 }
 
 func (MachineOSConfigList) SwaggerDoc() map[string]string {
@@ -516,7 +518,7 @@ var map_MachineOSConfigSpec = map[string]string{
 	"":                  "MachineOSConfigSpec describes user-configurable options as well as information about a build process.",
 	"machineConfigPool": "machineConfigPool is the pool which the build is for",
 	"buildInputs":       "buildInputs is where user input options for the build live",
-	"buildOutputs":      "buildOutputs holds all information needed to handle booting the image after a build",
+	"buildOutputs":      "buildOutputs holds all information needed to handle booting the image after a build This currently contains a currentImagePullSecret field, which should be provided if the final pull secret used to pull the image to nodes from the registry is different than the one used for pushing the image to the registry during the build.",
 }
 
 func (MachineOSConfigSpec) SwaggerDoc() map[string]string {
@@ -525,9 +527,9 @@ func (MachineOSConfigSpec) SwaggerDoc() map[string]string {
 
 var map_MachineOSConfigStatus = map[string]string{
 	"":                     "MachineOSConfigStatus describes the status this config object and relates it to the builds associated with this MachineOSConfig",
-	"conditions":           "conditions are state related conditions for the config.",
-	"observedGeneration":   "observedGeneration represents the generation observed by the Machine Config Operator's build controller.",
+	"observedGeneration":   "observedGeneration represents the generation of the MachineOSConfig object observed by the Machine Config Operator's build controller.",
 	"currentImagePullspec": "currentImagePullspec is the fully qualified image pull spec used by the MCO to pull down the new OSImage. This must include sha256. The format of the image pullspec is: host[:port][/namespace]/name@sha256:<digest> The digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9.",
+	"machineOSBuild":       "machineOSBuild is a reference to the MachineOSBuild object for this MachineOSConfig, which contains the status for the image build",
 }
 
 func (MachineOSConfigStatus) SwaggerDoc() map[string]string {
@@ -536,8 +538,8 @@ func (MachineOSConfigStatus) SwaggerDoc() map[string]string {
 
 var map_MachineOSContainerfile = map[string]string{
 	"":                  "MachineOSContainerfile contains all custom content the user wants built into the image",
-	"containerfileArch": "containerfileArch describes the architecture this containerfile is to be built for this arch is optional. If the user does not specify an architecture, it is assumed that the content can be applied to all architectures, or in a single arch cluster: the only architecture.",
-	"content":           "content is an embedded Containerfile/Dockerfile that defines the contents to be built into your image. for example, this would add the tree package to your hosts:\n  FROM configs AS final\n  RUN rpm-ostree install tree && \\n    ostree container commit",
+	"containerfileArch": "containerfileArch describes the architecture this containerfile is to be built for. This arch is optional. If the user does not specify an architecture, it is assumed that the content can be applied to all architectures, or in a single arch cluster: the only architecture.",
+	"content":           "content is an embedded Containerfile/Dockerfile that defines the contents to be built into your image. See https://github.com/containers/common/blob/main/docs/Containerfile.5.md for the spec reference. for example, this would add the tree package to your hosts:\n  FROM configs AS final\n  RUN rpm-ostree install tree && \\n    ostree container commit",
 }
 
 func (MachineOSContainerfile) SwaggerDoc() map[string]string {
@@ -545,7 +547,7 @@ func (MachineOSContainerfile) SwaggerDoc() map[string]string {
 }
 
 var map_MachineOSImageBuilder = map[string]string{
-	"imageBuilderType": "imageBuilderType specifies the backend to be used to build the image. Valid options are: PodImageBuilder",
+	"imageBuilderType": "imageBuilderType specifies the backend to be used to build the image. Valid options are: JobImageBuilder",
 }
 
 func (MachineOSImageBuilder) SwaggerDoc() map[string]string {

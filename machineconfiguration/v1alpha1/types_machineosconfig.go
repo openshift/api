@@ -104,10 +104,9 @@ type BuildInputs struct {
 	// +optional
 	BaseOSImagePullspec string `json:"baseOSImagePullspec,omitempty"`
 	// baseImagePullSecret is the secret used to pull the base image.
-	// must live in the openshift-machine-config-operator namespace if provided.
-	// defaults to using the cluster-wide pull secret if not specified.
-	// +optional
-	BaseImagePullSecret ImageSecretObjectReference `json:"baseImagePullSecret,omitempty"`
+	// must live in the openshift-machine-config-operator namespace
+	// +kubebuilder:validation:Required
+	BaseImagePullSecret ImageSecretObjectReference `json:"baseImagePullSecret"`
 	// machineOSImageBuilder describes which image builder will be used in each build triggered by this MachineOSConfig
 	// +required
 	ImageBuilder *MachineOSImageBuilder `json:"imageBuilder"`

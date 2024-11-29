@@ -33,6 +33,7 @@ type MachineOSBuild struct {
 	Spec MachineOSBuildSpec `json:"spec"`
 
 	// status describes the lst observed state of this machine os build
+	// +kubebuilder:validation:XValidation:rule="self.buildStart != null && self.buildEnd != null && timestamp(self.buildStart) > timestamp(self.buildEnd)",message="buildEnd must be after buildStart"
 	// +optional
 	Status MachineOSBuildStatus `json:"status"`
 }
@@ -47,6 +48,7 @@ type MachineOSBuildList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata"`
 
+	// items contains a collection of MachineOSBuild resources.
 	Items []MachineOSBuild `json:"items"`
 }
 
@@ -71,18 +73,23 @@ type MachineOSBuildSpec struct {
 // MachineOSBuildStatus describes the state of a build and other helpful information.
 type MachineOSBuildStatus struct {
 	// conditions are state related conditions for the build. Valid types are:
-	// Prepared, Building, Failed, Interrupted, and Succeeded
-	// once a Build is marked as Failed, no future conditions can be set. This is enforced by the MCO.
+	// Prepared, Building, Failed, Interrupted, and Succeeded.
+	// Once a Build is marked as Failed or Interrupted, no future conditions can be set.
 	// +patchMergeKey=type
 	// +patchStrategy=merge
 	// +listType=map
 	// +listMapKey=type
+	// +kubebuilder:validation:MaxItems=8
+	// +kubebuilder:validation:XValidation:rule="self.exists(x, x.type == 'Failed') ? self == oldSelf : true",message="once a Failed condition is set, conditions are immutable"
+	// +kubebuilder:validation:XValidation:rule="self.exists(x, x.type == 'Interrupted') ? self == oldSelf : true",message="once an Interrupted condition is set, conditions are immutable"
 	// +optional
 	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 	// BuilderReference describes which ImageBuilder backend to use for this build
 	// +optional
 	BuilderReference *MachineOSBuilderReference `json:"builderReference"`
-	// relatedObjects is a list of objects that are related to the build process.
+	// relatedObjects is a list of references to ephemeral objects such as ConfigMaps or Secrets that are meant to be consumed while the build process runs.
+	// After a successful build or when this MachineOSBuild is deleted, these ephemeral objects should be deleted.
+	// However, in the event of a failed build, the objects will not be deleted to allow for inspection and debugging of the failed build process.
 	// +kubebuilder:validation:MaxItems=10
 	// +listType=map
 	// +listMapKey=name
@@ -93,27 +100,28 @@ type MachineOSBuildStatus struct {
 	// +kubebuilder:validation:Required
 	BuildStart metav1.Time `json:"buildStart"`
 	// buildEnd describes when the build ended.
+	// When omitted the build has either not been started, or is in progress.
+	// It will be populated once the build completes, fails or is interrupted.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="buildEnd is immutable once set"
 	// +optional
 	BuildEnd *metav1.Time `json:"buildEnd,omitempty"`
 	// finalImagePushSpec describes the fully qualified pushspec produced by this build that the final image can be. Must end with a valid '@sha256:<digest>' suffix, where '<digest>' is 64 hexadecimal characters long
 	// +kubebuilder:validation:XValidation:rule=`((self.split('@').size() == 2 && self.split('@')[1].matches('^sha256:[a-f0-9]{64}$')))`,message="the OCI Image reference must end with a valid '@sha256:<digest>' suffix, where '<digest>' is 64 hexadecimal characters long"
 	// +optional
-	FinalImagePushspec string `json:"finalImagePullspec,omitempty"`
+	FinalImagePushspec string `json:"finalImagePushspec,omitempty"`
 }
 
 // MachineOSBuilderReference describes which ImageBuilder backend to use for this build
-// +union
-// +kubebuilder:validation:XValidation:rule="has(self.imageBuilderType) && self.imageBuilderType == 'PodImageBuilder' ?  has(self.buildPod) : !has(self.buildPod)",message="buildPod is required when imageBuilderType is PodImageBuilder, and forbidden otherwise"
 type MachineOSBuilderReference struct {
-	// ImageBuilderType describes the image builder set in the MachineOSConfig
-	// +unionDiscriminator
+	// ImageBuilderType describes the image builder set in the MachineOSConfig, which in turn describes the builder that the cluster will attempt the build with.
+	// Currently only JobImageBuilder is supported, which will spin up a custom pod builder that uses buildah to build the specified image.
+	// +kubebuilder:validation:Required
 	ImageBuilderType MachineOSImageBuilderType `json:"imageBuilderType"`
 
-	// relatedObjects is a list of objects that are related to the build process.
-	// +unionMember
+	// ImageBuilderRef is a reference to the object that is managing the image build
+	// For example, if the imageBuilderType is JobImageBuilder, this will be a reference to the Job object managing the build
 	// +optional
-	PodImageBuilder *ObjectReference `json:"buildPod,omitempty"`
+	ImageBuilderRef *ObjectReference `json:"ImageBuilderRef,omitempty"`
 }
 
 // BuildProgess highlights some of the key phases of a build to be tracked in Conditions.
@@ -137,8 +145,10 @@ const (
 // the build targets this MachineConfig, this is often used to tell us whether we need an update.
 type RenderedMachineConfigReference struct {
 	// name is the name of the rendered MachineConfig object.
+	// The name must contain only lowercase alphanumeric characters, '-' or '.' and start/end with an alphanumeric character
+	// +kubebuilder:validation:MaxLength:=10
 	// +kubebuilder:validation:MaxLength:=253
-	// +kubebuilder:validation:Pattern=`^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9]))*$`
+	// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
 	// +kubebuilder:validation:Required
 	Name string `json:"name"`
 }
@@ -146,37 +156,43 @@ type RenderedMachineConfigReference struct {
 // ObjectReference contains enough information to let you inspect or modify the referred object.
 type ObjectReference struct {
 	// group of the referent.
-	// This value should consist of only lowercase alphanumeric characters, hyphens and periods.
+	// The name must contain only lowercase alphanumeric characters, '-' or '.' and start/end with an alphanumeric character
 	// Example: "", "apps", "build.openshift.io", etc.
-	// +kubebuilder:validation:Pattern:="^$|^[a-z0-9]([-a-z0-9]*[a-z0-9])?(.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$"
+	// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
+	// +kubebuilder:validation:MaxLength:=253
 	// +kubebuilder:validation:Required
 	Group string `json:"group"`
 	// resource of the referent.
 	// This value should consist of only lowercase alphanumeric characters and hyphens.
 	// Example: "deployments", "deploymentconfigs", "pods", etc.
 	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern:="^[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
+	// +kubebuilder:validation:XValidation:rule=`self.matches('^[a-z0-9]([-a-z0-9]*[a-z0-9])?$')`,message="the value must consist of only lowercase alphanumeric characters and hyphens"
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=63
 	Resource string `json:"resource"`
 	// namespace of the referent.
-	// +kubebuilder:validation:Pattern:="^[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
+	// This value should consist of only lowercase alphanumeric characters and hyphens.
+	// +kubebuilder:validation:XValidation:rule=`self.matches('^[a-z0-9]([-a-z0-9]*[a-z0-9])?$')`,message="the value must consist of only lowercase alphanumeric characters and hyphens"
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=63
 	// +optional
 	Namespace string `json:"namespace,omitempty"`
 	// name of the referent.
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern:="^[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
+	// This value should consist of only lowercase alphanumeric characters and hyphens.
+	// +kubebuilder:validation:XValidation:rule=`self.matches('^[a-z0-9]([-a-z0-9]*[a-z0-9])?$')`,message="the value must consist of only lowercase alphanumeric characters and hyphens"
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=256
+	// +kubebuilder:validation:Required
 	Name string `json:"name"`
 }
 
 // MachineOSConfigReference refers to the MachineOSConfig this build is based off of
 type MachineOSConfigReference struct {
-	// name of the MachineOSConfig
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern:="^[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
+	// name of the MachineOSConfig.
+	// This value should consist of only lowercase alphanumeric characters and hyphens.
+	// +kubebuilder:validation:XValidation:rule=`self.matches('^[a-z0-9]([-a-z0-9]*[a-z0-9])?$')`,message="the value must consist of only lowercase alphanumeric characters and hyphens"
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=256
+	// +kubebuilder:validation:Required
 	Name string `json:"name"`
 }

@@ -15,14 +15,14 @@ tests:
           name: worker
         buildInputs:
           imageBuilder: 
-            imageBuilderType: PodImageBuilder
+            imageBuilderType: JobImageBuilder
           baseOSImagePullspec: example.io/my-project/image-v1.0_23@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
           baseImagePullSecret:
             name: foo
           baseOSExtensionsImagePullspec: example.io/my-project/image-v1.0_23@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
           renderedImagePushSecret:
             name: foo
-          renderedImagePushspec: quay.io/cdoern/renderedImg:latest
+          renderedImagePushspec: quay.io/mco/renderedImg:latest
         buildOutputs:
           currentImagePullSecret:
             name: foo
@@ -36,14 +36,14 @@ tests:
           name: worker
         buildInputs:
           imageBuilder: 
-            imageBuilderType: PodImageBuilder
+            imageBuilderType: JobImageBuilder
           baseOSImagePullspec: example.io/my-project/image-v1.0_23@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
           baseImagePullSecret:
             name: foo
           baseOSExtensionsImagePullspec: example.io/my-project/image-v1.0_23@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
           renderedImagePushSecret:
             name: foo
-          renderedImagePushspec: quay.io/cdoern/renderedImg:latest
+          renderedImagePushspec: quay.io/mco/renderedImg:latest
         buildOutputs:
           currentImagePullSecret:
             name: foo
@@ -59,7 +59,7 @@ tests:
           name: worker
         buildInputs:
           imageBuilder: 
-            imageBuilderType: PodImageBuilder
+            imageBuilderType: JobImageBuilder
           baseOSImagePullspec: example.io/my-project/image-v1.0_23@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
           baseImagePullSecret:
             name: foo
@@ -80,7 +80,7 @@ tests:
           name: worker
         buildInputs:
           imageBuilder: 
-            imageBuilderType: PodImageBuilder
+            imageBuilderType: JobImageBuilder
           baseOSImagePullspec: example.io/my-project/image-v1.0_23@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
           baseImagePullSecret:
             name: foo
@@ -102,7 +102,7 @@ tests:
           name: worker
         buildInputs:
           imageBuilder: 
-            imageBuilderType: PodImageBuilder
+            imageBuilderType: JobImageBuilder
           baseOSImagePullspec: example.io/my-project/image-v1.0_23@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
           baseImagePullSecret:
             name: foo
@@ -125,14 +125,14 @@ tests:
           name: worker
         buildInputs:
           imageBuilder: 
-            imageBuilderType: PodImageBuilder
+            imageBuilderType: JobImageBuilder
           baseOSImagePullspec: foo.bar
           baseImagePullSecret:
             name: foo
           baseOSExtensionsImagePullspec: example.io/my-project/image-v1.0_23@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
           renderedImagePushSecret:
             name: foo
-          renderedImagePushspec: quay.io/cdoern/renderedImg:latest
+          renderedImagePushspec: quay.io/mco/renderedImg:latest
         buildOutputs:
           currentImagePullSecret:
             name: foo
@@ -148,12 +148,12 @@ tests:
           name: worker
         buildInputs:
           imageBuilder: 
-            imageBuilderType: PodImageBuilder
+            imageBuilderType: JobImageBuilder
           baseOSImagePullspec: example.io/my-project/image-v1.0_23@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
           baseOSExtensionsImagePullspec: example.io/my-project/image-v1.0_23@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
           renderedImagePushSecret:
             name: foo
-          renderedImagePushspec: quay.io/cdoern/renderedImg:latest
+          renderedImagePushspec: quay.io/mco/renderedImg:latest
         buildOutputs:
           currentImagePullSecret:
             name: foo
@@ -167,12 +167,12 @@ tests:
           name: worker
         buildInputs:
           imageBuilder: 
-            imageBuilderType: PodImageBuilder
+            imageBuilderType: JobImageBuilder
           baseOSImagePullspec: example.io/my-project/image-v1.0_23@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
           baseOSExtensionsImagePullspec: example.io/my-project/image-v1.0_23@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
           renderedImagePushSecret:
             name: foo
-          renderedImagePushspec: quay.io/cdoern/renderedImg:latest
+          renderedImagePushspec: quay.io/mco/renderedImg:latest
         buildOutputs:
           currentImagePullSecret:
             name: foo

@@ -47,15 +47,15 @@ spec:
           metadata:
             type: object
           spec:
-            description: Spec defines the matcher.
+            description: spec defines the matcher.
             properties:
               grouprestriction:
-                description: GroupRestriction matches against group subjects.
+                description: grouprestriction matches against group subjects.
                 nullable: true
                 properties:
                   groups:
                     description: |-
-                      Groups is a list of groups used to match against an individual user's
+                      groups is a list of groups used to match against an individual user's
                       groups. If the user is a member of one of the whitelisted groups, the user
                       is allowed to be bound to a role.
                     items:
@@ -118,18 +118,18 @@ spec:
                     type: array
                 type: object
               serviceaccountrestriction:
-                description: ServiceAccountRestriction matches against service-account
+                description: serviceaccountrestriction matches against service-account
                   subjects.
                 nullable: true
                 properties:
                   namespaces:
-                    description: Namespaces specifies a list of literal namespace
+                    description: namespaces specifies a list of literal namespace
                       names.
                     items:
                       type: string
                     type: array
                   serviceaccounts:
-                    description: ServiceAccounts specifies a list of literal service-account
+                    description: serviceaccounts specifies a list of literal service-account
                       names.
                     items:
                       description: |-
@@ -137,11 +137,11 @@ spec:
                         names.
                       properties:
                         name:
-                          description: Name is the name of the service account.
+                          description: name is the name of the service account.
                           type: string
                         namespace:
                           description: |-
-                            Namespace is the namespace of the service account.  Service accounts from
+                            namespace is the namespace of the service account.  Service accounts from
                             inside the whitelisted namespaces are allowed to be bound to roles.  If
                             Namespace is empty, then the namespace of the RoleBindingRestriction in
                             which the ServiceAccountReference is embedded is used.
@@ -150,11 +150,11 @@ spec:
                     type: array
                 type: object
               userrestriction:
-                description: UserRestriction matches against user subjects.
+                description: userrestriction matches against user subjects.
                 nullable: true
                 properties:
                   groups:
-                    description: Groups specifies a list of literal group names.
+                    description: groups specifies a list of literal group names.
                     items:
                       type: string
                     nullable: true
@@ -214,7 +214,7 @@ spec:
                     nullable: true
                     type: array
                   users:
-                    description: Users specifies a list of literal user names.
+                    description: users specifies a list of literal user names.
                     items:
                       type: string
                     type: array

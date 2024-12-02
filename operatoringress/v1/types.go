@@ -43,25 +43,21 @@ type DNSRecord struct {
 type DNSRecordSpec struct {
 	// dnsName is the hostname of the DNS record
 	//
-	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=1
 	// +required
 	DNSName string `json:"dnsName"`
 	// targets are record targets.
 	//
-	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinItems=1
 	// +required
 	Targets []string `json:"targets"`
 	// recordType is the DNS record type. For example, "A" or "CNAME".
-	// +kubebuilder:validation:Required
 	// +required
 	RecordType DNSRecordType `json:"recordType"`
 	// recordTTL is the record TTL in seconds. If zero, the default is 30.
 	// RecordTTL will not be used in AWS regions Alias targets, but
 	// will be used in CNAME targets, per AWS API contract.
 	//
-	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Minimum=0
 	// +required
 	RecordTTL int64 `json:"recordTTL"`
@@ -77,7 +73,7 @@ type DNSRecordSpec struct {
 	// "Unmanaged".
 	//
 	// +kubebuilder:default:="Managed"
-	// +kubebuilder:validation:Required
+	// +required
 	// +default="Managed"
 	DNSManagementPolicy DNSManagementPolicy `json:"dnsManagementPolicy,omitempty"`
 }
@@ -120,11 +116,9 @@ var (
 
 // DNSZoneCondition is just the standard condition fields.
 type DNSZoneCondition struct {
-	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=1
 	// +required
 	Type string `json:"type"`
-	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=1
 	// +required
 	Status             string      `json:"status"`

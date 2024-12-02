@@ -84,7 +84,7 @@ spec:
                         be automatically determined. Can be IPv4 or IPv6.
                       type: string
                     ip:
-                      description: IP is the address to configure on the router's
+                      description: ip is the address to configure on the router's
                         interface. Can be IPv4 or IPv6.
                       type: string
                   required:
@@ -93,7 +93,7 @@ spec:
                 type: array
               mode:
                 default: Redirect
-                description: Mode depicts the mode that is used for the egress router.
+                description: mode depicts the mode that is used for the egress router.
                   The default mode is "Redirect" and is the only supported mode currently.
                 enum:
                 - Redirect
@@ -120,7 +120,7 @@ spec:
                         type: string
                       mode:
                         default: Bridge
-                        description: Mode depicts the mode that is used for the macvlan
+                        description: mode depicts the mode that is used for the macvlan
                           interface; one of Bridge|Private|VEPA|Passthru. The default
                           mode is "Bridge".
                         enum:
@@ -134,7 +134,7 @@ spec:
                     type: object
                 type: object
               redirect:
-                description: Redirect represents the configuration parameters specific
+                description: redirect represents the configuration parameters specific
                   to redirect mode.
                 properties:
                   fallbackIP:
@@ -142,7 +142,7 @@ spec:
                     - format: ipv4
                     - format: ipv6
                     description: |-
-                      FallbackIP specifies the remote destination's IP address. Can be IPv4 or IPv6.
+                      fallbackIP specifies the remote destination's IP address. Can be IPv4 or IPv6.
                       If no redirect rules are specified, all traffic from the router are redirected to this IP.
                       If redirect rules are specified, then any connections on any other port (undefined in the rules) on the router will be redirected to this IP.
                       If redirect rules are specified and no fallback IP is provided, connections on other ports will simply be rejected.
@@ -162,14 +162,14 @@ spec:
                             Can be IPv4 or IPv6.
                           type: string
                         port:
-                          description: Port is the port number to which clients should
+                          description: port is the port number to which clients should
                             send traffic to be redirected.
                           format: int32
                           maximum: 65535
                           minimum: 1
                           type: integer
                         protocol:
-                          description: Protocol can be TCP, SCTP or UDP.
+                          description: protocol can be TCP, SCTP or UDP.
                           enum:
                           - TCP
                           - UDP
@@ -177,7 +177,7 @@ spec:
                           type: string
                         targetPort:
                           description: |-
-                            TargetPort allows specifying the port number on the remote destination to which the traffic gets redirected to.
+                            targetPort allows specifying the port number on the remote destination to which the traffic gets redirected to.
                             If unspecified, the value from "Port" is used.
                           format: int32
                           maximum: 65535
@@ -206,30 +206,30 @@ spec:
                     managed and monitored components.
                   properties:
                     lastTransitionTime:
-                      description: LastTransitionTime is the time of the last update
+                      description: lastTransitionTime is the time of the last update
                         to the current status property.
                       format: date-time
                       nullable: true
                       type: string
                     message:
                       description: |-
-                        Message provides additional information about the current condition.
+                        message provides additional information about the current condition.
                         This is only to be consumed by humans.  It may contain Line Feed
                         characters (U+000A), which should be rendered as new lines.
                       type: string
                     reason:
-                      description: Reason is the CamelCase reason for the condition's
+                      description: reason is the CamelCase reason for the condition's
                         current status.
                       type: string
                     status:
-                      description: Status of the condition, one of True, False, Unknown.
+                      description: status of the condition, one of True, False, Unknown.
                       enum:
                       - "True"
                       - "False"
                       - Unknown
                       type: string
                     type:
-                      description: Type specifies the aspect reported by this condition;
+                      description: type specifies the aspect reported by this condition;
                         one of Available, Progressing, Degraded
                       enum:
                       - Available

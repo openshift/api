@@ -34,7 +34,7 @@ type NotStableConfigType struct {
 type NotStableConfigTypeSpec struct {
 	// newField is a field that is tech preview, but because the entire type is gated, there is no marker on the field.
 	//
-	// +kubebuilder:validation:Required
+	// +required
 	NewField string `json:"newField"`
 }
 

@@ -36,7 +36,6 @@ type StableConfigType struct {
 type StableConfigTypeSpec struct {
 	// coolNewField is a field that is for tech preview only.  On normal clusters this shouldn't be present
 	//
-	// +kubebuilder:validation:Optional
 	// +openshift:enable:FeatureGate=Example
 	// +optional
 	CoolNewField string `json:"coolNewField"`
@@ -51,7 +50,7 @@ type StableConfigTypeSpec struct {
 	// immutableField is a field that is immutable once the object has been created.
 	// It is required at all times.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="immutableField is immutable"
-	// +kubebuilder:validation:Required
+	// +required
 	ImmutableField string `json:"immutableField"`
 
 	// optionalImmutableField is a field that is immutable once set.
@@ -110,7 +109,7 @@ type StringSet []SetValue
 
 type EvolvingUnion struct {
 	// type is the discriminator. It has different values for Default and for TechPreviewNoUpgrade
-	// +kubebuilder:validation:Required
+	// +required
 	Type EvolvingDiscriminator `json:"type,omitempty"`
 }
 
@@ -133,7 +132,7 @@ const (
 // +union
 type CELUnion struct {
 	// type determines which of the union members should be populated.
-	// +kubebuilder:validation:Required
+	// +required
 	// +unionDiscriminator
 	Type CELUnionDiscriminator `json:"type,omitempty"`
 

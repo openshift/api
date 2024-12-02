@@ -88,7 +88,7 @@ spec:
                 type: object
               machineConfigPoolSelector:
                 description: |-
-                  MachineConfigPoolSelector selects which pools the ContainerRuntimeConfig shoud apply to.
+                  machineConfigPoolSelector selects which pools the ContainerRuntimeConfig shoud apply to.
                   A nil selector will result in no pools being selected.
                 properties:
                   matchExpressions:

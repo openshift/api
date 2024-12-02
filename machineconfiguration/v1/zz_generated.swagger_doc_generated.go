@@ -53,7 +53,7 @@ func (ContainerRuntimeConfigList) SwaggerDoc() map[string]string {
 
 var map_ContainerRuntimeConfigSpec = map[string]string{
 	"":                          "ContainerRuntimeConfigSpec defines the desired state of ContainerRuntimeConfig",
-	"machineConfigPoolSelector": "MachineConfigPoolSelector selects which pools the ContainerRuntimeConfig shoud apply to. A nil selector will result in no pools being selected.",
+	"machineConfigPoolSelector": "machineConfigPoolSelector selects which pools the ContainerRuntimeConfig shoud apply to. A nil selector will result in no pools being selected.",
 }
 
 func (ContainerRuntimeConfigSpec) SwaggerDoc() map[string]string {
@@ -127,16 +127,16 @@ var map_ControllerConfigSpec = map[string]string{
 	"pullSecret":                     "pullSecret is the default pull secret that needs to be installed on all machines.",
 	"internalRegistryPullSecret":     "internalRegistryPullSecret is the pull secret for the internal registry, used by rpm-ostree to pull images from the internal registry if present",
 	"images":                         "images is map of images that are used by the controller to render templates under ./templates/",
-	"baseOSContainerImage":           "BaseOSContainerImage is the new-format container image for operating system updates.",
-	"baseOSExtensionsContainerImage": "BaseOSExtensionsContainerImage is the matching extensions container for the new-format container",
-	"osImageURL":                     "OSImageURL is the old-format container image that contains the OS update payload.",
+	"baseOSContainerImage":           "baseOSContainerImage is the new-format container image for operating system updates.",
+	"baseOSExtensionsContainerImage": "baseOSExtensionsContainerImage is the matching extensions container for the new-format container",
+	"osImageURL":                     "osImageURL is the old-format container image that contains the OS update payload.",
 	"releaseImage":                   "releaseImage is the image used when installing the cluster",
 	"proxy":                          "proxy holds the current proxy configuration for the nodes",
 	"infra":                          "infra holds the infrastructure details",
 	"dns":                            "dns holds the cluster dns details",
 	"ipFamilies":                     "ipFamilies indicates the IP families in use by the cluster network",
 	"networkType":                    "networkType holds the type of network the cluster is using XXX: this is temporary and will be dropped as soon as possible in favor of a better support to start network related services the proper way. Nobody is also changing this once the cluster is up and running the first time, so, disallow regeneration if this changes.",
-	"network":                        "Network contains additional network related information",
+	"network":                        "network contains additional network related information",
 }
 
 func (ControllerConfigSpec) SwaggerDoc() map[string]string {
@@ -208,7 +208,7 @@ func (KubeletConfigList) SwaggerDoc() map[string]string {
 
 var map_KubeletConfigSpec = map[string]string{
 	"":                          "KubeletConfigSpec defines the desired state of KubeletConfig",
-	"machineConfigPoolSelector": "MachineConfigPoolSelector selects which pools the KubeletConfig shoud apply to. A nil selector will result in no pools being selected.",
+	"machineConfigPoolSelector": "machineConfigPoolSelector selects which pools the KubeletConfig shoud apply to. A nil selector will result in no pools being selected.",
 	"kubeletConfig":             "kubeletConfig fields are defined in kubernetes upstream. Please refer to the types defined in the version/commit used by OpenShift of the upstream kubernetes. It's important to note that, since the fields of the kubelet configuration are directly fetched from upstream the validation of those values is handled directly by the kubelet. Please refer to the upstream version of the relevant kubernetes for the valid values of these fields. Invalid values of the kubelet configuration fields may render cluster nodes unusable.",
 	"tlsSecurityProfile":        "If unset, the default is based on the apiservers.config.openshift.io/cluster resource. Note that only Old and Intermediate profiles are currently supported, and the maximum available minTLSVersion is VersionTLS12.",
 }
@@ -315,9 +315,9 @@ func (MachineConfigPoolStatusConfiguration) SwaggerDoc() map[string]string {
 
 var map_MachineConfigSpec = map[string]string{
 	"":                               "MachineConfigSpec is the spec for MachineConfig",
-	"osImageURL":                     "OSImageURL specifies the remote location that will be used to fetch the OS.",
-	"baseOSExtensionsContainerImage": "BaseOSExtensionsContainerImage specifies the remote location that will be used to fetch the extensions container matching a new-format OS image",
-	"config":                         "Config is a Ignition Config object.",
+	"osImageURL":                     "osImageURL specifies the remote location that will be used to fetch the OS.",
+	"baseOSExtensionsContainerImage": "baseOSExtensionsContainerImage specifies the remote location that will be used to fetch the extensions container matching a new-format OS image",
+	"config":                         "config is a Ignition Config object.",
 	"kernelArguments":                "kernelArguments contains a list of kernel arguments to be added",
 	"extensions":                     "extensions contains a list of additional features that can be enabled on host",
 	"fips":                           "fips controls FIPS mode",
@@ -330,7 +330,7 @@ func (MachineConfigSpec) SwaggerDoc() map[string]string {
 
 var map_NetworkInfo = map[string]string{
 	"":             "Network contains network related configuration",
-	"mtuMigration": "MTUMigration contains the MTU migration configuration.",
+	"mtuMigration": "mtuMigration contains the MTU migration configuration.",
 }
 
 func (NetworkInfo) SwaggerDoc() map[string]string {

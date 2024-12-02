@@ -84,6 +84,7 @@ github.com/GaijinEntertainment/go-exhaustruct/v3/internal/structure
 # github.com/JoelSpeed/kal v0.0.0-20241203114946-bdb342a271f6
 ## explicit; go 1.22.1
 github.com/JoelSpeed/kal
+github.com/JoelSpeed/kal/cmd/kal
 github.com/JoelSpeed/kal/pkg/analysis
 github.com/JoelSpeed/kal/pkg/analysis/commentstart
 github.com/JoelSpeed/kal/pkg/analysis/helpers/extractjsontags
@@ -1442,6 +1443,9 @@ golang.org/x/time/rate
 ## explicit; go 1.22.0
 golang.org/x/tools/cmd/stringer
 golang.org/x/tools/go/analysis
+golang.org/x/tools/go/analysis/internal/analysisflags
+golang.org/x/tools/go/analysis/internal/checker
+golang.org/x/tools/go/analysis/multichecker
 golang.org/x/tools/go/analysis/passes/appends
 golang.org/x/tools/go/analysis/passes/asmdecl
 golang.org/x/tools/go/analysis/passes/assign
@@ -1488,6 +1492,7 @@ golang.org/x/tools/go/analysis/passes/unreachable
 golang.org/x/tools/go/analysis/passes/unsafeptr
 golang.org/x/tools/go/analysis/passes/unusedresult
 golang.org/x/tools/go/analysis/passes/unusedwrite
+golang.org/x/tools/go/analysis/unitchecker
 golang.org/x/tools/go/ast/astutil
 golang.org/x/tools/go/ast/inspector
 golang.org/x/tools/go/buildutil
@@ -1503,16 +1508,20 @@ golang.org/x/tools/go/types/typeutil
 golang.org/x/tools/imports
 golang.org/x/tools/internal/aliases
 golang.org/x/tools/internal/analysisinternal
+golang.org/x/tools/internal/diff
+golang.org/x/tools/internal/diff/lcs
 golang.org/x/tools/internal/event
 golang.org/x/tools/internal/event/core
 golang.org/x/tools/internal/event/keys
 golang.org/x/tools/internal/event/label
+golang.org/x/tools/internal/facts
 golang.org/x/tools/internal/gcimporter
 golang.org/x/tools/internal/gocommand
 golang.org/x/tools/internal/gopathwalk
 golang.org/x/tools/internal/imports
 golang.org/x/tools/internal/packagesinternal
 golang.org/x/tools/internal/pkgbits
+golang.org/x/tools/internal/robustio
 golang.org/x/tools/internal/stdlib
 golang.org/x/tools/internal/typeparams
 golang.org/x/tools/internal/typesinternal

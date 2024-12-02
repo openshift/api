@@ -46,9 +46,6 @@ publish-kubebuilder-tools:
 .PHONY:codegen
 codegen: $(OUTPUT_DIR)/codegen
 
-.PHONY:prerelease-lifecycle-gen
-prerelease-lifecycle-gen: $(OUTPUT_DIR)/prerelease-lifecycle-gen
-
 .PHONY:controller-gen
 controller-gen: $(OUTPUT_DIR)/controller-gen
 
@@ -61,8 +58,14 @@ go-to-protobuf: $(OUTPUT_DIR)/go-to-protobuf
 .PHONY:golangci-kal
 golangci-kal: $(OUTPUT_DIR)/golangci-kal
 
+.PHONY:kal
+kal: $(OUTPUT_DIR)/kal
+
 .PHONY:openapi-gen
 openapi-gen: $(OUTPUT_DIR)/openapi-gen
+
+.PHONY:prerelease-lifecycle-gen
+prerelease-lifecycle-gen: $(OUTPUT_DIR)/prerelease-lifecycle-gen
 
 .PHONY:protoc-gen-gogo
 protoc-gen-gogo: $(OUTPUT_DIR)/protoc-gen-gogo
@@ -110,6 +113,9 @@ $(OUTPUT_DIR)/golangci-kal: $(OUTPUT_DIR)/vendor-version $(OUTPUT_DIR)/golangci-
 	GOFLAGS=-mod=readonly $(OUTPUT_DIR)/golangci-lint custom
 	@ mv bin/golangci-kal $(OUTPUT_DIR)/golangci-kal
 	@ rmdir bin
+
+$(OUTPUT_DIR)/kal: $(OUTPUT_DIR)/vendor-version
+	go build -mod=vendor -o $(OUTPUT_DIR)/kal ./vendor/github.com/JoelSpeed/kal/cmd/kal
 
 $(OUTPUT_DIR)/openapi-gen: $(OUTPUT_DIR)/vendor-version
 	go build -mod=vendor -o $(OUTPUT_DIR)/openapi-gen ./vendor/k8s.io/code-generator/cmd/openapi-gen

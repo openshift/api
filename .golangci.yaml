@@ -9,3 +9,8 @@ linters:
   disable-all: true
   enable:
     - kal
+issues:
+  # We have a lot of existing issues.
+  # Want to make sure that those adding new fields have an
+  # opportunity to fix them when running the linter locally.
+  max-issues-per-linter: 1000

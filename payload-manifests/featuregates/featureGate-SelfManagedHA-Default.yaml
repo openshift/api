@@ -83,6 +83,9 @@
                         "name": "InsightsRuntimeExtractor"
                     },
                     {
+                        "name": "KMSEncryptionProvider"
+                    },
+                    {
                         "name": "MachineAPIMigration"
                     },
                     {

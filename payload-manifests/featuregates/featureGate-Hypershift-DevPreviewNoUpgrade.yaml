@@ -138,6 +138,9 @@
                         "name": "InsightsRuntimeExtractor"
                     },
                     {
+                        "name": "KMSEncryptionProvider"
+                    },
+                    {
                         "name": "KMSv1"
                     },
                     {

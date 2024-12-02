@@ -701,4 +701,12 @@ var (
 							productScope(kubernetes).
 							enhancementPR("https://github.com/kubernetes/enhancements/issues/4568").
 							mustRegister()
+
+	FeatureGateKMSEncryptionProvider = newFeatureGate("KMSEncryptionProvider").
+						reportProblemsToJiraComponent("kube-apiserver").
+						contactPerson("swghosh").
+						productScope(ocpSpecific).
+						enhancementPR("https://github.com/openshift/enhancements/pull/1682").
+						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						mustRegister()
 )

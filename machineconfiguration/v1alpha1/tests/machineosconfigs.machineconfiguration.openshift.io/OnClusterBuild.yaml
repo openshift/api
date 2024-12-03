@@ -94,7 +94,7 @@ tests:
           currentImagePullSecret:
             name: foo
     expectedError: "Invalid value: \"string\": the OCI Image name should follow the host[:port][/namespace]/name format, resembling a valid URL without the scheme"
-  - name: Allows for an empty pull secret
+  - name: Fail on no pull secret
     initial: |
       apiVersion: machineconfiguration.openshift.io/v1alpha1
       kind: MachineOSConfig

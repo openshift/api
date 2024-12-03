@@ -920,7 +920,11 @@ func (in *MachineOSBuild) DeepCopyInto(out *MachineOSBuild) {
 	out.TypeMeta = in.TypeMeta
 	in.ObjectMeta.DeepCopyInto(&out.ObjectMeta)
 	out.Spec = in.Spec
-	in.Status.DeepCopyInto(&out.Status)
+	if in.Status != nil {
+		in, out := &in.Status, &out.Status
+		*out = new(MachineOSBuildStatus)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 
@@ -1003,11 +1007,7 @@ func (in *MachineOSBuildStatus) DeepCopyInto(out *MachineOSBuildStatus) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
-	if in.BuilderReference != nil {
-		in, out := &in.BuilderReference, &out.BuilderReference
-		*out = new(MachineOSBuilderReference)
-		(*in).DeepCopyInto(*out)
-	}
+	in.Builder.DeepCopyInto(&out.Builder)
 	if in.RelatedObjects != nil {
 		in, out := &in.RelatedObjects, &out.RelatedObjects
 		*out = make([]ObjectReference, len(*in))

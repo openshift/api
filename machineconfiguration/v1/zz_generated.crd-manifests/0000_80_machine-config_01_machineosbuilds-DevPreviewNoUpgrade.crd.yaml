@@ -2,7 +2,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    api-approved.openshift.io: https://github.com/openshift/api/pull/1773
+    api-approved.openshift.io: https://github.com/openshift/api/pull/2090
     api.openshift.io/merged-by-featuregates: "true"
     include.release.openshift.io/ibm-cloud-managed: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
@@ -35,6 +35,9 @@ spec:
     - jsonPath: .status.conditions[?(@.type=="Failed")].status
       name: Failed
       type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
     name: v1
     schema:
       openAPIV3Schema:
@@ -60,10 +63,12 @@ spec:
           metadata:
             type: object
           spec:
-            description: spec describes the configuration of the machine os build
+            description: |-
+              spec describes the configuration of the machine os build.
+              It is immutable once set.
             properties:
-              desiredConfig:
-                description: desiredConfig points to the rendered MachineConfig resource
+              machineConfig:
+                description: machineConfig points to the rendered MachineConfig resource
                   to be included in this image build.
                 properties:
                   name:
@@ -105,8 +110,8 @@ spec:
                 description: |-
                   renderedImagePushSpec is set by the Machine Config Operator from the MachineOSConfig object this build is attached to.
                   This field describes the location of the final image, which will be pushed by the build once complete.
-                  The format of the image pullspec is:
-                  host[:port][/namespace]/name:<tag> or svc_name.namespace.svc[:port]/repository/name:<tag>
+                  The format of the image push spec is: host[:port][/namespace]/name:<tag> or svc_name.namespace.svc[:port]/repository/name:<tag>.
+                  The length of the push spec must be between 1 to 447 characters.
                 maxLength: 447
                 minLength: 1
                 type: string
@@ -118,7 +123,7 @@ spec:
                   rule: self.matches('^([a-zA-Z0-9-]+\\.)+[a-zA-Z0-9-]+(:[0-9]{2,5})?(/[a-zA-Z0-9-_]{1,61})*/[a-zA-Z0-9-_.]+:[a-zA-Z0-9._-]+$')
                     || self.matches('^[^.]+\\.[^.]+\\.svc:\\d+\\/[^\\/]+\\/[^\\/]+:[^\\/]+$')
             required:
-            - desiredConfig
+            - machineConfig
             - machineOSConfig
             - renderedImagePushSpec
             type: object
@@ -127,7 +132,7 @@ spec:
               rule: self == oldSelf
           status:
             description: status describes the last observed state of this machine
-              os build
+              os build.
             properties:
               buildEnd:
                 description: |-
@@ -151,10 +156,16 @@ spec:
                 description: builder describes the image builder backend used for
                   this build.
                 properties:
-                  ImageBuilderRef:
+                  imageBuilderType:
                     description: |-
-                      ImageBuilderRef is a reference to the object that is managing the image build
-                      For example, if the imageBuilderType is Job, this will be a reference to the Job object managing the build
+                      imageBuilderType describes the type of image builder used to build this image.
+                      Valid values are Job only.
+                      When set to Job, a pod based builder, using buildah, is launched to build the specified image.
+                    type: string
+                  job:
+                    description: |-
+                      job is a reference to the job object that is managing the image build.
+                      This is required if the imageBuilderType is Job, and forbidden otherwise.
                     properties:
                       group:
                         description: |-
@@ -210,20 +221,19 @@ spec:
                     - name
                     - resource
                     type: object
-                  imageBuilderType:
-                    description: |-
-                      imageBuilderType describes the type of image builder used to build this image.
-                      Valid values are Job only.
-                      When set to Job, a pod based builder, using buildah, is launched to build the specified image.
-                    type: string
                 required:
                 - imageBuilderType
                 type: object
+                x-kubernetes-validations:
+                - message: job is required when imageBuilderType is Job, and forbidden
+                    otherwise
+                  rule: 'has(self.imageBuilderType) && self.imageBuilderType == ''Job''
+                    ?  has(self.job) : !has(self.job)'
               conditions:
                 description: |-
                   conditions are state related conditions for the build. Valid types are:
                   Prepared, Building, Failed, Interrupted, and Succeeded.
-                  Once a Build is marked as Failed or Interrupted, no future conditions can be set.
+                  Once a Build is marked as Failed, Interrupted or Succeeded, no future conditions can be set.
                 items:
                   description: Condition contains details for one aspect of the current
                     state of this API Resource.
@@ -285,15 +295,19 @@ spec:
                 x-kubernetes-list-type: map
                 x-kubernetes-validations:
                 - message: once a Failed condition is set, conditions are immutable
-                  rule: 'self.exists(x, x.type == ''Failed'') ? self == oldSelf :
-                    true'
+                  rule: 'oldSelf.exists(x, x.type==''Failed'') ? self==oldSelf : true'
                 - message: once an Interrupted condition is set, conditions are immutable
-                  rule: 'self.exists(x, x.type == ''Interrupted'') ? self == oldSelf
+                  rule: 'oldSelf.exists(x, x.type==''Interrupted'') ? self==oldSelf
                     : true'
-              finalImagePushSpec:
+                - message: once an Succeeded condition is set, conditions are immutable
+                  rule: 'oldSelf.exists(x, x.type==''Succeeded'') ? self==oldSelf
+                    : true'
+              digestedImagePushSpec:
                 description: |-
-                  finalImagePushSpec describes the fully qualified pushspec produced by this build that the final image can be.
-                  Must end with a valid '@sha256:<digest>' suffix, where '<digest>' is 64 hexadecimal characters long.
+                  digestedImagePushSpec describes the fully qualified push spec produced by this build.
+                  The format of the push spec is: host[:port][/namespace]/name@sha256:<digest>,
+                  where the digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9.
+                  The length of the whole spec must be between 1 to 447 characters.
                 maxLength: 447
                 minLength: 1
                 type: string
@@ -307,8 +321,8 @@ spec:
               relatedObjects:
                 description: |-
                   relatedObjects is a list of references to ephemeral objects such as ConfigMaps or Secrets that are meant to be consumed while the build process runs.
-                  After a successful build or when this MachineOSBuild is deleted, these ephemeral objects should be deleted.
-                  However, in the event of a failed build, the objects will not be deleted to allow for inspection and debugging of the failed build process.
+                  After a successful build or when this MachineOSBuild is deleted, these ephemeral objects will be removed.
+                  In the event of a failed build, the objects will remain until the build is removed to allow for inspection.
                 items:
                   description: ObjectReference contains enough information to let
                     you inspect or modify the referred object.
@@ -373,14 +387,11 @@ spec:
                 - name
                 - resource
                 x-kubernetes-list-type: map
-            required:
-            - buildStart
-            - builder
             type: object
             x-kubernetes-validations:
             - message: buildEnd must be after buildStart
-              rule: has(self.buildStart) && has(self.buildEnd) && timestamp(self.buildStart)
-                > timestamp(self.buildEnd)
+              rule: 'has(self.buildEnd) ? has(self.buildStart) && timestamp(self.buildStart)
+                < timestamp(self.buildEnd) : true'
         required:
         - spec
         type: object

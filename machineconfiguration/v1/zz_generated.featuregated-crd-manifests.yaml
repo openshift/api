@@ -173,7 +173,7 @@ machineconfigpools.machineconfiguration.openshift.io:
 
 machineosbuilds.machineconfiguration.openshift.io:
   Annotations: {}
-  ApprovedPRNumber: https://github.com/openshift/api/pull/1773
+  ApprovedPRNumber: https://github.com/openshift/api/pull/2090
   CRDName: machineosbuilds.machineconfiguration.openshift.io
   Capability: ""
   Category: ""
@@ -204,6 +204,9 @@ machineosbuilds.machineconfiguration.openshift.io:
   - jsonPath: .status.conditions[?(@.type=="Failed")].status
     name: Failed
     type: string
+  - jsonPath: .metadata.creationTimestamp
+    name: Age
+    type: date
   Scope: Cluster
   ShortNames: null
   TopLevelFeatureGates:
@@ -212,7 +215,7 @@ machineosbuilds.machineconfiguration.openshift.io:
 
 machineosconfigs.machineconfiguration.openshift.io:
   Annotations: {}
-  ApprovedPRNumber: https://github.com/openshift/api/pull/1773
+  ApprovedPRNumber: https://github.com/openshift/api/pull/2090
   CRDName: machineosconfigs.machineconfiguration.openshift.io
   Capability: ""
   Category: ""

@@ -11,7 +11,7 @@ tests:
         metadata:
           name: foobar
         spec:
-          desiredConfig: 
+          machineConfig: 
             name: rendered-worker-abcd
           machineOSConfig:
             name: worker
@@ -22,11 +22,110 @@ tests:
         metadata:
           name: foobar
         spec:
-          desiredConfig: 
+          machineConfig: 
             name: rendered-worker-abcd
           machineOSConfig:
             name: worker
           renderedImagePushSpec: quay.io/mco/renderedImage:latest
+  onUpdate:
+    - name: Job imagebuilder type must have job reference
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: MachineOSBuild
+        metadata:
+          name: foobar
+        spec:
+          machineConfig:
+            name: rendered-worker-abcd
+          machineOSConfig:
+            name: worker
+          renderedImagePushSpec: quay.io/mco/renderedImage:latest
+        status:
+          builder:
+            imageBuilderType: Job
+            job:
+              group: batch
+              resource: jobs
+              namespace: openshift-machine-config-operator
+              name: buildjob
+      updated: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: MachineOSBuild
+        metadata:
+          name: foobar
+        spec:
+          machineConfig:
+            name: rendered-worker-abcd
+          machineOSConfig:
+            name: worker
+          renderedImagePushSpec: quay.io/mco/renderedImage:latest
+        status:
+          builder:
+            imageBuilderType: Job
+      expectedStatusError: "status.builder: Invalid value: \"object\": job is required when imageBuilderType is Job, and forbidden otherwise"
+    - name: Successfully set buildEnd
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: MachineOSBuild
+        metadata:
+          name: foobar
+        spec:
+          machineConfig:
+            name: rendered-worker-abcd
+          machineOSConfig:
+            name: worker
+          renderedImagePushSpec: quay.io/mco/renderedImage:latest
+        status:
+          builder:
+            imageBuilderType: Job
+            job:
+              group: batch
+              resource: jobs
+              namespace: openshift-machine-config-operator
+              name: buildjob
+          buildStart: 2024-11-28T10:00:00Z
+      updated: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: MachineOSBuild
+        metadata:
+          name: foobar
+        spec:
+          machineConfig:
+            name: rendered-worker-abcd
+          machineOSConfig:
+            name: worker
+          renderedImagePushSpec: quay.io/mco/renderedImage:latest
+        status:
+          builder:
+            imageBuilderType: Job
+            job:
+              group: batch
+              resource: jobs
+              namespace: openshift-machine-config-operator
+              name: buildjob
+          buildStart: 2024-11-28T10:00:00Z
+          buildEnd: 2024-11-28T11:00:00Z
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: MachineOSBuild
+        metadata:
+          name: foobar
+        spec:
+          machineConfig:
+            name: rendered-worker-abcd
+          machineOSConfig:
+            name: worker
+          renderedImagePushSpec: quay.io/mco/renderedImage:latest
+        status:
+          builder:
+            imageBuilderType: Job
+            job:
+              group: batch
+              resource: jobs
+              namespace: openshift-machine-config-operator
+              name: buildjob
+          buildStart: 2024-11-28T10:00:00Z
+          buildEnd: 2024-11-28T11:00:00Z
     - name: Fail on invalid buildEnd time
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1
@@ -34,18 +133,42 @@ tests:
         metadata:
           name: foobar
         spec:
-          desiredConfig:
+          machineConfig:
             name: rendered-worker-abcd
           machineOSConfig:
             name: worker
           renderedImagePushSpec: quay.io/mco/renderedImage:latest
         status:
-          builder: 
+          builder:
             imageBuilderType: Job
+            job:
+              group: batch
+              resource: jobs
+              namespace: openshift-machine-config-operator
+              name: buildjob
+          buildStart: 2024-11-28T10:00:00Z
+      updated: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: MachineOSBuild
+        metadata:
+          name: foobar
+        spec:
+          machineConfig:
+            name: rendered-worker-abcd
+          machineOSConfig:
+            name: worker
+          renderedImagePushSpec: quay.io/mco/renderedImage:latest
+        status:
+          builder:
+            imageBuilderType: Job
+            job:
+              group: batch
+              resource: jobs
+              namespace: openshift-machine-config-operator
+              name: buildjob
           buildStart: 2024-11-28T10:00:00Z
           buildEnd: 2024-11-28T09:00:00Z
-      expectedError: "status.BuildEnd: Invalid value: \"string\": buildEnd must be after buildStart"
-  onUpdate:
+      expectedStatusError: "status: Invalid value: \"object\": buildEnd must be after buildStart"
     - name: Failed builds cannot change status
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1
@@ -53,41 +176,51 @@ tests:
         metadata:
           name: foobar
         spec:
-          desiredConfig:
+          machineConfig:
             name: rendered-worker-abcd
           machineOSConfig:
             name: worker
           renderedImagePushSpec: quay.io/mco/renderedImage:latest
         status:
-            builder: 
-              imageBuilderType: Job
-            conditions:
-              - type: Failed
-                status: "True"
-                reason: "Reason"
-                message: "Message"
-                lastTransitionTime: "2024-11-28T10:00:00Z"
+          builder: 
+            imageBuilderType: Job
+            job:
+              group: batch
+              resource: jobs
+              namespace: openshift-machine-config-operator
+              name: buildjob
+          conditions:
+            - type: Failed
+              status: "True"
+              reason: "Reason"
+              message: "Message"
+              lastTransitionTime: "2024-11-28T10:00:00Z"
       updated: |
         apiVersion: machineconfiguration.openshift.io/v1
         kind: MachineOSBuild
         metadata:
           name: foobar
         spec:
-          desiredConfig:
+          machineConfig:
             name: rendered-worker-abcd
           machineOSConfig:
             name: worker
           renderedImagePushSpec: quay.io/mco/renderedImage:latest
         status:
-            builder: 
-              imageBuilderType: Job
-            conditions:
-              - type: Failed
-                status: "False"
-                reason: "Reason"
-                message: "Message"
-                lastTransitionTime: "2024-11-28T10:00:00Z"
-      expectedError: "status.conditions[0].status: Invalid value: \"string\": once a Failed condition is set, conditions are immutable"
+          builder:
+            imageBuilderType: Job
+            job:
+              group: batch
+              resource: jobs
+              namespace: openshift-machine-config-operator
+              name: buildjob
+          conditions:
+            - type: Failed
+              status: "False"
+              reason: "Reason"
+              message: "Message"
+              lastTransitionTime: "2024-11-28T10:00:00Z"
+      expectedStatusError: "status.conditions: Invalid value: \"array\": once a Failed condition is set, conditions are immutable"
     - name: Interrupted builds cannot change status
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1
@@ -95,38 +228,48 @@ tests:
         metadata:
           name: foobar
         spec:
-          desiredConfig:
+          machineConfig:
             name: rendered-worker-abcd
           machineOSConfig:
             name: worker
           renderedImagePushSpec: quay.io/mco/renderedImage:latest
         status:
-            builder: 
-              imageBuilderType: Job
-            conditions:
-              - type: Interrupted
-                status: "True"
-                reason: "Reason"
-                message: "Message"
-                lastTransitionTime: "2024-11-28T10:00:00Z"
+          builder: 
+            imageBuilderType: Job
+            job:
+              group: batch
+              resource: jobs
+              namespace: openshift-machine-config-operator
+              name: buildjob
+          conditions:
+            - type: Interrupted
+              status: "True"
+              reason: "Reason"
+              message: "Message"
+              lastTransitionTime: "2024-11-28T10:00:00Z"
       updated: |
         apiVersion: machineconfiguration.openshift.io/v1
         kind: MachineOSBuild
         metadata:
           name: foobar
         spec:
-          desiredConfig:
+          machineConfig:
             name: rendered-worker-abcd
           machineOSConfig:
             name: worker
           renderedImagePushSpec: quay.io/mco/renderedImage:latest
         status:
-            builder: 
-              imageBuilderType: Job
-            conditions:
-              - type: Succeeded
-                status: "True"
-                reason: "Reason"
-                message: "Message"
-                lastTransitionTime: "2024-11-28T10:00:00Z"
-      expectedError: "status.conditions[0].status: Invalid value: \"string\": once an Interrupted condition is set, conditions are immutable"
+          builder: 
+            imageBuilderType: Job
+            job:
+              group: batch
+              resource: jobs
+              namespace: openshift-machine-config-operator
+              name: buildjob
+          conditions:
+            - type: Succeeded
+              status: "True"
+              reason: "Reason"
+              message: "Message"
+              lastTransitionTime: "2024-11-28T10:00:00Z"
+      expectedStatusError: "status.conditions: Invalid value: \"array\": once an Interrupted condition is set, conditions are immutable"

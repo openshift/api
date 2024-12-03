@@ -13,19 +13,13 @@ tests:
         spec:
           machineConfigPool:
             name: worker
-          buildInputs:
-            imageBuilder: 
-              imageBuilderType: Job
-            baseOSImagePullSpec: example.io/my-project/image-v1.0_23@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
-            baseImagePullSecret:
-              name: foo
-            baseOSExtensionsImagePullSpec: example.io/my-project/image-v1.0_23@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
-            renderedImagePushSecret:
-              name: foo
-            renderedImagePushSpec: quay.io/mco/renderedImg:latest
-          buildOutputs:
-            currentImagePullSecret:
-              name: foo
+          imageBuilder: 
+            imageBuilderType: Job
+          baseImagePullSecret:
+            name: foo
+          renderedImagePushSecret:
+            name: foo
+          renderedImagePushSpec: quay.io/mco/renderedImg:latest
       expected: |
         apiVersion: machineconfiguration.openshift.io/v1
         kind: MachineOSConfig
@@ -34,19 +28,13 @@ tests:
         spec:
           machineConfigPool:
             name: worker
-          buildInputs:
-            imageBuilder: 
-              imageBuilderType: Job
-            baseOSImagePullSpec: example.io/my-project/image-v1.0_23@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
-            baseImagePullSecret:
-              name: foo
-            baseOSExtensionsImagePullSpec: example.io/my-project/image-v1.0_23@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
-            renderedImagePushSecret:
-              name: foo
-            renderedImagePushSpec: quay.io/mco/renderedImg:latest
-          buildOutputs:
-            currentImagePullSecret:
-              name: foo
+          imageBuilder: 
+            imageBuilderType: Job
+          baseImagePullSecret:
+            name: foo
+          renderedImagePushSecret:
+            name: foo
+          renderedImagePushSpec: quay.io/mco/renderedImg:latest
     - name: Should be able to create a MachineOSConfig with a renderedImagePushSpec that contains a port
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1
@@ -56,19 +44,13 @@ tests:
         spec:
           machineConfigPool:
             name: worker
-          buildInputs:
-            imageBuilder: 
-              imageBuilderType: Job
-            baseOSImagePullSpec: example.io/my-project/image-v1.0_23@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
-            baseImagePullSecret:
-              name: foo
-            baseOSExtensionsImagePullSpec: example.io/my-project/image-v1.0_23@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
-            renderedImagePushSecret:
-              name: foo
-            renderedImagePushSpec: registry.test.example.local:5000/test/custom-os-image:v0.1
-          buildOutputs:
-            currentImagePullSecret:
-              name: foo
+          imageBuilder: 
+            imageBuilderType: Job
+          baseImagePullSecret:
+            name: foo
+          renderedImagePushSecret:
+            name: foo
+          renderedImagePushSpec: registry.test.example.local:5000/test/custom-os-image:v0.1
       expected: |
         apiVersion: machineconfiguration.openshift.io/v1
         kind: MachineOSConfig
@@ -77,20 +59,14 @@ tests:
         spec:
           machineConfigPool:
             name: worker
-          buildInputs:
-            imageBuilder: 
-              imageBuilderType: Job
-            baseOSImagePullSpec: example.io/my-project/image-v1.0_23@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
-            baseImagePullSecret:
-              name: foo
-            baseOSExtensionsImagePullSpec: example.io/my-project/image-v1.0_23@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
-            renderedImagePushSecret:
-              name: foo
-            renderedImagePushSpec: registry.test.example.local:5000/test/custom-os-image:v0.1
-          buildOutputs:
-            currentImagePullSecret:
-              name: foo
-    - name: Fail on invalid rendered image pushspec
+          imageBuilder: 
+            imageBuilderType: Job
+          baseImagePullSecret:
+            name: foo
+          renderedImagePushSecret:
+            name: foo
+          renderedImagePushSpec: registry.test.example.local:5000/test/custom-os-image:v0.1
+    - name: Fail on invalid rendered image push spec
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1
         kind: MachineOSConfig
@@ -99,43 +75,14 @@ tests:
         spec:
           machineConfigPool:
             name: worker
-          buildInputs:
-            imageBuilder: 
-              imageBuilderType: Job
-            baseOSImagePullSpec: example.io/my-project/image-v1.0_23@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
-            baseImagePullSecret:
-              name: foo
-            baseOSExtensionsImagePullSpec: example.io/my-project/image-v1.0_23@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
-            renderedImagePushSecret:
-              name: foo
-            renderedImagePushSpec: foo.bar
-          buildOutputs:
-            currentImagePullSecret:
-              name: foo
-      expectedError: "spec.buildInputs.renderedImagePushSpec: Invalid value: \"string\": the OCI Image name should follow the host[:port][/namespace]/name format, resembling a valid URL without the scheme"
-    - name: Fail on invalid base image pullspec
-      initial: |
-        apiVersion: machineconfiguration.openshift.io/v1
-        kind: MachineOSConfig
-        metadata:
-          name: foobar
-        spec:
-          machineConfigPool:
-            name: worker
-          buildInputs:
-            imageBuilder: 
-              imageBuilderType: Job
-            baseOSImagePullSpec: foo.bar
-            baseImagePullSecret:
-              name: foo
-            baseOSExtensionsImagePullSpec: example.io/my-project/image-v1.0_23@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
-            renderedImagePushSecret:
-              name: foo
-            renderedImagePushSpec: quay.io/mco/renderedImg:latest
-          buildOutputs:
-            currentImagePullSecret:
-              name: foo
-      expectedError: "spec.buildInputs.baseOSImagePullSpec: Invalid value: \"string\": the OCI Image name should follow the host[:port][/namespace]/name format, resembling a valid URL without the scheme"
+          imageBuilder: 
+            imageBuilderType: Job
+          baseImagePullSecret:
+            name: foo
+          renderedImagePushSecret:
+            name: foo
+          renderedImagePushSpec: foo.bar
+      expectedError: "spec.renderedImagePushSpec: Invalid value: \"string\": the OCI Image name should follow the host[:port][/namespace]/name format, resembling a valid URL without the scheme. Or it must be a valid .svc followed by a port, repository, image name, and tag."
     - name: Allows for an empty pull secret
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1
@@ -145,17 +92,11 @@ tests:
         spec:
           machineConfigPool:
             name: worker
-          buildInputs:
-            imageBuilder: 
-              imageBuilderType: Job
-            baseOSImagePullSpec: example.io/my-project/image-v1.0_23@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
-            baseOSExtensionsImagePullSpec: example.io/my-project/image-v1.0_23@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
-            renderedImagePushSecret:
-              name: foo
-            renderedImagePushSpec: quay.io/mco/renderedImg:latest
-          buildOutputs:
-            currentImagePullSecret:
-              name: foo
+          imageBuilder: 
+            imageBuilderType: Job
+          renderedImagePushSecret:
+            name: foo
+          renderedImagePushSpec: quay.io/mco/renderedImg:latest
       expected: |
         apiVersion: machineconfiguration.openshift.io/v1
         kind: MachineOSConfig
@@ -164,14 +105,8 @@ tests:
         spec:
           machineConfigPool:
             name: worker
-          buildInputs:
-            imageBuilder: 
-              imageBuilderType: Job
-            baseOSImagePullSpec: example.io/my-project/image-v1.0_23@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
-            baseOSExtensionsImagePullSpec: example.io/my-project/image-v1.0_23@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
-            renderedImagePushSecret:
-              name: foo
-            renderedImagePushSpec: quay.io/mco/renderedImg:latest
-          buildOutputs:
-            currentImagePullSecret:
-              name: foo
+          imageBuilder: 
+            imageBuilderType: Job
+          renderedImagePushSecret:
+            name: foo
+          renderedImagePushSpec: quay.io/mco/renderedImg:latest

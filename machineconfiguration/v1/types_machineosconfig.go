@@ -67,16 +67,12 @@ type MachineOSConfigStatus struct {
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Required
 	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
-	// currentImagePullspec is the fully qualified image pull spec used by the MCO to pull down the new OSImage. This must include sha256.
+	// currentImagePullSpec is the fully qualified image pull spec used by the MCO to pull down the new OSImage. This includes the sha256 image digest.
 	// The format of the image pullspec is:
 	// host[:port][/namespace]/name@sha256:<digest>
 	// The digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9.
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=447
-	// +kubebuilder:validation:XValidation:rule=`(self.split('@').size() == 2 && self.split('@')[1].matches('^sha256:[a-f0-9]{64}$'))`,message="the OCI Image reference must end with a valid '@sha256:<digest>' suffix, where '<digest>' is 64 characters long"
-	// +kubebuilder:validation:XValidation:rule=`(self.split('@')[0].matches('^([a-zA-Z0-9-]+\\.)+[a-zA-Z0-9-]+(:[0-9]{2,5})?/([a-zA-Z0-9-_]{0,61}/)?[a-zA-Z0-9-_.]*?$'))`,message="the OCI Image name should follow the host[:port][/namespace]/name format, resembling a valid URL without the scheme"
 	// +optional
-	CurrentImagePullspec string `json:"currentImagePullspec,omitempty"`
+	CurrentImagePullSpec ImageDigestFormat `json:"currentImagePullSpec,omitempty"`
 	// machineOSBuild is a reference to the MachineOSBuild object for this MachineOSConfig, which contains the status for the image build
 	// +optional
 	MachineOSBuild *ObjectReference `json:"machineOSBuild,omitempty"`
@@ -84,37 +80,29 @@ type MachineOSConfigStatus struct {
 
 // BuildInputs holds all of the information needed to trigger a build
 type BuildInputs struct {
-	// baseOSExtensionsImagePullspec is the base Extensions image used in the build process
+	// baseOSExtensionsImagePullSpec is the base Extensions image used in the build process
 	// The MachineOSConfig object will use the in cluster image registry configuration.
 	// If you wish to use a mirror or any other settings specific to registries.conf, please specify those in the cluster wide registries.conf.
 	// The format of the image pullspec is:
 	// host[:port][/namespace]/name@sha256:<digest>
 	// The digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9.
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=447
-	// +kubebuilder:validation:XValidation:rule=`(self.split('@').size() == 2 && self.split('@')[1].matches('^sha256:[a-f0-9]{64}$'))`,message="the OCI Image reference must end with a valid '@sha256:<digest>' suffix, where '<digest>' is 64 characters long"
-	// +kubebuilder:validation:XValidation:rule=`(self.split('@')[0].matches('^([a-zA-Z0-9-]+\\.)+[a-zA-Z0-9-]+(:[0-9]{2,5})?/([a-zA-Z0-9-_]{0,61}/)?[a-zA-Z0-9-_.]*?$'))`,message="the OCI Image name should follow the host[:port][/namespace]/name format, resembling a valid URL without the scheme"
 	// +optional
-	BaseOSExtensionsImagePullspec string `json:"baseOSExtensionsImagePullspec,omitempty"`
-	// baseOSImagePullspec is the base OSImage we use to build our custom image.
+	BaseOSExtensionsImagePullSpec ImageDigestFormat `json:"baseOSExtensionsImagePullSpec,omitempty"`
+	// baseOSImagePullSpec is the base OSImage we use to build our custom image.
 	// The MachineOSConfig object will use the in cluster image registry configuration.
 	// If you wish to use a mirror or any other settings specific to registries.conf, please specify those in the cluster wide registries.conf.
 	// The format of the image pullspec is:
 	// host[:port][/namespace]/name@sha256:<digest>
 	// The digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9.
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=447
-	// +kubebuilder:validation:XValidation:rule=`(self.split('@').size() == 2 && self.split('@')[1].matches('^sha256:[a-f0-9]{64}$'))`,message="the OCI Image reference must end with a valid '@sha256:<digest>' suffix, where '<digest>' is 64 characters long"
-	// +kubebuilder:validation:XValidation:rule=`(self.split('@')[0].matches('^([a-zA-Z0-9-]+\\.)+[a-zA-Z0-9-]+(:[0-9]{2,5})?/([a-zA-Z0-9-_]{0,61}/)?[a-zA-Z0-9-_.]*?$'))`,message="the OCI Image name should follow the host[:port][/namespace]/name format, resembling a valid URL without the scheme"
 	// +optional
-	BaseOSImagePullspec string `json:"baseOSImagePullspec,omitempty"`
+	BaseOSImagePullSpec ImageDigestFormat `json:"baseOSImagePullSpec,omitempty"`
 	// baseImagePullSecret is the secret used to pull the base image.
 	// Must live in the openshift-machine-config-operator namespace if provided.
 	// Defaults to using the cluster-wide pull secret if not specified. This is provided during install time of the cluster, and lives in the openshift-config namespace as a secret.
 	// +optional
 	BaseImagePullSecret *ImageSecretObjectReference `json:"baseImagePullSecret,omitempty"`
 	// machineOSImageBuilder describes which image builder will be used in each build triggered by this MachineOSConfig.
-	// Currently supported type(s): JobImageBuilder
+	// Currently supported type(s): Job
 	// +kubebuilder:validation:Required
 	ImageBuilder MachineOSImageBuilder `json:"imageBuilder"`
 	// renderedImagePushSecret is the secret used to connect to a user registry.
@@ -129,11 +117,8 @@ type BuildInputs struct {
 	// If you wish to use a mirror or any other settings specific to registries.conf, please specify those in the cluster wide registries.conf via the cluster image.config, ImageContentSourcePolicies, ImageDigestMirrorSet, or ImageTagMirrorSet objects.
 	// The format of the image pushspec is:
 	// host[:port][/namespace]/name:<tag> or svc_name.namespace.svc[:port]/repository/name:<tag>
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=447
-	// +kubebuilder:validation:XValidation:rule=`self.matches('^([a-zA-Z0-9-]+\\.)+[a-zA-Z0-9-]+(:[0-9]{2,5})?(/[a-zA-Z0-9-_]{1,61})*/[a-zA-Z0-9-_.]+:[a-zA-Z0-9._-]+$') || self.matches('^[^.]+\\.[^.]+\\.svc:\\d+\\/[^\\/]+\\/[^\\/]+:[^\\/]+$')`,message="the OCI Image name should follow the host[:port][/namespace]/name format, resembling a valid URL without the scheme. Or it must be a valid .svc followed by a port, repository, image name, and tag."
 	// +kubebuilder:validation:Required
-	RenderedImagePushSpec string `json:"renderedImagePushSpec"`
+	RenderedImagePushSpec ImageTagFormat `json:"renderedImagePushSpec"`
 	// releaseVersion is an Openshift release version which the base OS image is associated with.
 	// This field is populated from the machine-config-osimageurl configmap in the openshift-machine-config-operator namespace.
 	// It will come in the format: 4.16.0-0.nightly-2024-04-03-065948 or any valid release. The MachineOSBuilder populates this field and validates that this is a valid stream.
@@ -170,8 +155,8 @@ type BuildOutputs struct {
 
 type MachineOSImageBuilder struct {
 	// imageBuilderType specifies the backend to be used to build the image.
-	// +kubebuilder:validation:Enum:=JobImageBuilder
-	// Valid options are: JobImageBuilder
+	// +kubebuilder:validation:Enum:=Job
+	// Valid options are: Job
 	// +required
 	ImageBuilderType MachineOSImageBuilderType `json:"imageBuilderType"`
 }
@@ -220,7 +205,8 @@ const (
 // the MachineOSBuilder pod validates that the user has provided a valid pool
 type MachineConfigPoolReference struct {
 	// name of the MachineConfigPool object.
-	// Must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character.
+	// This value should be at most 253 characters, and must contain only lowercase
+	// alphanumeric characters, hyphens and periods, and should start and end with an alphanumeric character.
 	// +kubebuilder:validation:MaxLength:=253
 	// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
 	// +kubebuilder:validation:Required
@@ -238,10 +224,24 @@ type ImageSecretObjectReference struct {
 	Name string `json:"name"`
 }
 
+// ImageTagFormat is a type that conforms to the format host[:port][/namespace]/name:<tag> or svc_name.namespace.svc[:port]/repository/name:<tag>
+// +kubebuilder:validation:MinLength=1
+// +kubebuilder:validation:MaxLength=447
+// +kubebuilder:validation:XValidation:rule=`self.matches('^([a-zA-Z0-9-]+\\.)+[a-zA-Z0-9-]+(:[0-9]{2,5})?(/[a-zA-Z0-9-_]{1,61})*/[a-zA-Z0-9-_.]+:[a-zA-Z0-9._-]+$') || self.matches('^[^.]+\\.[^.]+\\.svc:\\d+\\/[^\\/]+\\/[^\\/]+:[^\\/]+$')`,message="the OCI Image name should follow the host[:port][/namespace]/name format, resembling a valid URL without the scheme. Or it must be a valid .svc followed by a port, repository, image name, and tag."
+type ImageTagFormat string
+
+// ImageDigestFormat is a type that conforms to the format host[:port][/namespace]/name@sha256:<digest>
+// The digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9.
+// +kubebuilder:validation:MinLength=1
+// +kubebuilder:validation:MaxLength=447
+// +kubebuilder:validation:XValidation:rule=`(self.split('@').size() == 2 && self.split('@')[1].matches('^sha256:[a-f0-9]{64}$'))`,message="the OCI Image reference must end with a valid '@sha256:<digest>' suffix, where '<digest>' is 64 characters long"
+// +kubebuilder:validation:XValidation:rule=`(self.split('@')[0].matches('^([a-zA-Z0-9-]+\\.)+[a-zA-Z0-9-]+(:[0-9]{2,5})?/([a-zA-Z0-9-_]{0,61}/)?[a-zA-Z0-9-_.]*?$'))`,message="the OCI Image name should follow the host[:port][/namespace]/name format, resembling a valid URL without the scheme"
+type ImageDigestFormat string
+
 // +enum
 type MachineOSImageBuilderType string
 
 const (
 	// describes that the machine-os-builder will use a Job to spin up a custom pod builder that uses buildah
-	JobBuilder MachineOSImageBuilderType = "JobImageBuilder"
+	JobBuilder MachineOSImageBuilderType = "Job"
 )

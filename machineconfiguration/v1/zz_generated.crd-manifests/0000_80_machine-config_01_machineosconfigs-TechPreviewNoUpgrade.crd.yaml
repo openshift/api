@@ -71,9 +71,9 @@ spec:
                     required:
                     - name
                     type: object
-                  baseOSExtensionsImagePullspec:
+                  baseOSExtensionsImagePullSpec:
                     description: |-
-                      baseOSExtensionsImagePullspec is the base Extensions image used in the build process
+                      baseOSExtensionsImagePullSpec is the base Extensions image used in the build process
                       The MachineOSConfig object will use the in cluster image registry configuration.
                       If you wish to use a mirror or any other settings specific to registries.conf, please specify those in the cluster wide registries.conf.
                       The format of the image pullspec is:
@@ -89,9 +89,9 @@ spec:
                     - message: the OCI Image name should follow the host[:port][/namespace]/name
                         format, resembling a valid URL without the scheme
                       rule: (self.split('@')[0].matches('^([a-zA-Z0-9-]+\\.)+[a-zA-Z0-9-]+(:[0-9]{2,5})?/([a-zA-Z0-9-_]{0,61}/)?[a-zA-Z0-9-_.]*?$'))
-                  baseOSImagePullspec:
+                  baseOSImagePullSpec:
                     description: |-
-                      baseOSImagePullspec is the base OSImage we use to build our custom image.
+                      baseOSImagePullSpec is the base OSImage we use to build our custom image.
                       The MachineOSConfig object will use the in cluster image registry configuration.
                       If you wish to use a mirror or any other settings specific to registries.conf, please specify those in the cluster wide registries.conf.
                       The format of the image pullspec is:
@@ -154,14 +154,14 @@ spec:
                   imageBuilder:
                     description: |-
                       machineOSImageBuilder describes which image builder will be used in each build triggered by this MachineOSConfig.
-                      Currently supported type(s): JobImageBuilder
+                      Currently supported type(s): Job
                     properties:
                       imageBuilderType:
                         description: |-
                           imageBuilderType specifies the backend to be used to build the image.
-                          Valid options are: JobImageBuilder
+                          Valid options are: Job
                         enum:
-                        - JobImageBuilder
+                        - Job
                         type: string
                     required:
                     - imageBuilderType
@@ -261,7 +261,8 @@ spec:
                   name:
                     description: |-
                       name of the MachineConfigPool object.
-                      Must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character.
+                      This value should be at most 253 characters, and must contain only lowercase
+                      alphanumeric characters, hyphens and periods, and should start and end with an alphanumeric character.
                     maxLength: 253
                     type: string
                     x-kubernetes-validations:
@@ -279,9 +280,9 @@ spec:
           status:
             description: status describes the status of the machineosconfig
             properties:
-              currentImagePullspec:
+              currentImagePullSpec:
                 description: |-
-                  currentImagePullspec is the fully qualified image pull spec used by the MCO to pull down the new OSImage. This must include sha256.
+                  currentImagePullSpec is the fully qualified image pull spec used by the MCO to pull down the new OSImage. This includes the sha256 image digest.
                   The format of the image pullspec is:
                   host[:port][/namespace]/name@sha256:<digest>
                   The digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9.
@@ -303,7 +304,7 @@ spec:
                   group:
                     description: |-
                       group of the referent.
-                      The name must contain only lowercase alphanumeric characters, '-' or '.' and start/end with an alphanumeric character
+                      The name must contain only lowercase alphanumeric characters, '-' or '.' and start/end with an alphanumeric character.
                       Example: "", "apps", "build.openshift.io", etc.
                     maxLength: 253
                     type: string
@@ -315,29 +316,32 @@ spec:
                   name:
                     description: |-
                       name of the referent.
-                      This value should consist of only lowercase alphanumeric characters and hyphens.
-                    maxLength: 256
+                      The name must contain only lowercase alphanumeric characters, '-' or '.' and start/end with an alphanumeric character.
+                    maxLength: 253
                     minLength: 1
                     type: string
                     x-kubernetes-validations:
-                    - message: the value must consist of only lowercase alphanumeric
-                        characters and hyphens
-                      rule: self.matches('^[a-z0-9]([-a-z0-9]*[a-z0-9])?$')
+                    - message: a lowercase RFC 1123 subdomain must consist of lower
+                        case alphanumeric characters, '-' or '.', and must start and
+                        end with an alphanumeric character.
+                      rule: '!format.dns1123Subdomain().validate(self).hasValue()'
                   namespace:
                     description: |-
                       namespace of the referent.
-                      This value should consist of only lowercase alphanumeric characters and hyphens.
+                      This value should consist of at most 63 characters, and of only lowercase alphanumeric characters and hyphens,
+                      and should start and end with an alphanumeric character.
                     maxLength: 63
                     minLength: 1
                     type: string
                     x-kubernetes-validations:
                     - message: the value must consist of only lowercase alphanumeric
                         characters and hyphens
-                      rule: self.matches('^[a-z0-9]([-a-z0-9]*[a-z0-9])?$')
+                      rule: '!format.dns1123Label().validate(self).hasValue()'
                   resource:
                     description: |-
                       resource of the referent.
-                      This value should consist of only lowercase alphanumeric characters and hyphens.
+                      This value should consist of at most 63 characters, and of only lowercase alphanumeric characters and hyphens,
+                      and should start and end with an alphanumeric character.
                       Example: "deployments", "deploymentconfigs", "pods", etc.
                     maxLength: 63
                     minLength: 1
@@ -345,7 +349,7 @@ spec:
                     x-kubernetes-validations:
                     - message: the value must consist of only lowercase alphanumeric
                         characters and hyphens
-                      rule: self.matches('^[a-z0-9]([-a-z0-9]*[a-z0-9])?$')
+                      rule: '!format.dns1123Label().validate(self).hasValue()'
                 required:
                 - group
                 - name

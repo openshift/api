@@ -38,9 +38,6 @@
                     },
                     {
                         "name": "NewOLM"
-                    },
-                    {
-                        "name": "ResilientWatchCacheInitialization"
                     }
                 ],
                 "enabled": [

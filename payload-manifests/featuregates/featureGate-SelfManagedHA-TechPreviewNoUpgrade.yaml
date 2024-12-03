@@ -35,9 +35,6 @@
                     },
                     {
                         "name": "MultiArchInstallAzure"
-                    },
-                    {
-                        "name": "ResilientWatchCacheInitialization"
                     }
                 ],
                 "enabled": [

@@ -268,6 +268,17 @@ type TokenClaimMappings struct {
 	// groups for the cluster identity.
 	// The referenced claim must use array of strings values.
 	Groups PrefixedClaimMapping `json:"groups,omitempty"`
+
+	// UID reqresents an option for the uid attribute.
+	// +optional
+	UID ClaimOrExpression `json:"uid"`
+
+	// Extra represents an option for the extra attribute
+	//
+	// +optional
+	// +listType=map
+	// +listMapKey=key
+	Extra []ExtraMapping `json:"extra"`
 }
 
 type TokenClaimMapping struct {
@@ -480,4 +491,31 @@ type TokenRequiredClaim struct {
 	// +kubebuilder:validation:Required
 	// +required
 	RequiredValue string `json:"requiredValue"`
+}
+
+type ClaimOrExpression struct {
+	// Claim is the JWT claim to use.
+	// Mutually exclusive with expression.
+	// +optional
+	Claim string `json:"claim"`
+
+	// Expression respresents a CEL expression.
+	// Mutually exclusive with claim.
+	// +optional
+	Expression string `json:"expression"`
+}
+
+type ExtraMapping struct {
+	// Key is a string to use as the extra attribute key
+	// key must be lowercase and unique
+	//
+	// +kubebuilder:validation:Required
+	// +required
+	Key string `json:"key"`
+
+	// ValueExpression is a CEL expression to extract extra attribute value
+	//
+	// +kubebuilder:validation:Required
+	// +required
+	ValueExpression string `json:"valueExpression"`
 }

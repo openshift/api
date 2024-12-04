@@ -65,6 +65,9 @@
                         "name": "GatewayAPI"
                     },
                     {
+                        "name": "HighlyAvailableArbiter"
+                    },
+                    {
                         "name": "ImageStreamImportMode"
                     },
                     {

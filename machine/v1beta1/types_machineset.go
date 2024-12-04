@@ -112,6 +112,7 @@ type MachineTemplateSpec struct {
 
 // MachineSetStatus defines the observed state of MachineSet
 // +openshift:validation:FeatureGateAwareXValidation:featureGate=MachineAPIMigration,rule="!has(oldSelf.synchronizedGeneration) || (has(self.synchronizedGeneration) && self.synchronizedGeneration >= oldSelf.synchronizedGeneration) || (oldSelf.authoritativeAPI == 'Migrating' && self.authoritativeAPI != 'Migrating')",message="synchronizedGeneration must not decrease unless authoritativeAPI is transitioning from Migrating to another value"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=MachineAPIMigration,rule="self.authoritativeAPI != ” || oldSelf.authoritativeAPI == ”",message="authoritativeAPI cannot be unset once it has been set"
 type MachineSetStatus struct {
 	// Replicas is the most recently observed number of replicas.
 	Replicas int32 `json:"replicas"`

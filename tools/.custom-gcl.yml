@@ -1,0 +1,6 @@
+version:  v1.62.0
+name: golangci-kal
+destination: ./bin
+plugins:
+- module: 'github.com/JoelSpeed/kal'
+  version: v0.0.0-20241203114946-bdb342a271f6

@@ -21841,8 +21841,9 @@ func schema_openshift_api_console_v1_ConsolePlugin(ref common.ReferenceCallback)
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("github.com/openshift/api/console/v1.ConsolePluginSpec"),
+							Description: "spec contains the desired configuration for the console plugin.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/console/v1.ConsolePluginSpec"),
 						},
 					},
 				},

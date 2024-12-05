@@ -38,8 +38,11 @@ type ControllerConfig struct {
 	// TODO(jkyros): inconsistent historical generation resulted in the controllerconfig CRD being
 	// generated with all fields required, while everything else was generated with optional
 
+	// spec contains the desired controller config configuration.
 	// +required
 	Spec ControllerConfigSpec `json:"spec"`
+
+	// status contains observed information about the controller config.
 	// +optional
 	Status ControllerConfigStatus `json:"status"`
 }
@@ -72,7 +75,7 @@ type ControllerConfigSpec struct {
 	// +required
 	RootCAData []byte `json:"rootCAData"`
 
-	// cloudProvider specifies the cloud provider CA data
+	// cloudProviderCAData specifies the cloud provider CA data
 	// +required
 	// +nullable
 	CloudProviderCAData []byte `json:"cloudProviderCAData"`
@@ -383,8 +386,11 @@ type MachineConfigPool struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
+	// spec contains the desired machine config pool configuration.
 	// +required
 	Spec MachineConfigPoolSpec `json:"spec"`
+
+	// status contains observed information about the machine config pool.
 	// +optional
 	Status MachineConfigPoolStatus `json:"status"`
 }
@@ -683,8 +689,11 @@ type KubeletConfig struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
+	// spec contains the desired kubelet configuration.
 	// +required
 	Spec KubeletConfigSpec `json:"spec"`
+
+	// status contains observed information about the kubelet configuration.
 	// +optional
 	Status KubeletConfigStatus `json:"status"`
 }
@@ -792,8 +801,11 @@ type ContainerRuntimeConfig struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
+	// spec contains the desired container runtime configuration.
 	// +required
 	Spec ContainerRuntimeConfigSpec `json:"spec"`
+
+	// status contains observed information about the container runtime configuration.
 	// +optional
 	Status ContainerRuntimeConfigStatus `json:"status"`
 }
@@ -805,6 +817,7 @@ type ContainerRuntimeConfigSpec struct {
 	// +optional
 	MachineConfigPoolSelector *metav1.LabelSelector `json:"machineConfigPoolSelector,omitempty"`
 
+	// containerRuntimeConfig defines the tuneables of the container runtime.
 	// +required
 	ContainerRuntimeConfig *ContainerRuntimeConfiguration `json:"containerRuntimeConfig,omitempty"`
 }

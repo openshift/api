@@ -171,6 +171,7 @@ func (ConsoleNotificationSpec) SwaggerDoc() map[string]string {
 var map_ConsolePlugin = map[string]string{
 	"":         "ConsolePlugin is an extension for customizing OpenShift web console by dynamically loading code from another service running on the cluster.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 	"metadata": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+	"spec":     "spec contains the desired configuration for the console plugin.",
 }
 
 func (ConsolePlugin) SwaggerDoc() map[string]string {

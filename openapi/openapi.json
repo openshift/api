@@ -11998,6 +11998,7 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
         "spec": {
+          "description": "spec contains the desired configuration for the console plugin.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.console.v1.ConsolePluginSpec"
         }

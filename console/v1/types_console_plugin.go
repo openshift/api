@@ -26,6 +26,7 @@ type ConsolePlugin struct {
 	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
 	metav1.ObjectMeta `json:"metadata"`
 
+	// spec contains the desired configuration for the console plugin.
 	// +required
 	Spec ConsolePluginSpec `json:"spec"`
 }

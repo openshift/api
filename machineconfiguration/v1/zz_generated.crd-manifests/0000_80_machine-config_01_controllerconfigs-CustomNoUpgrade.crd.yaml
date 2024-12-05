@@ -46,7 +46,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: ControllerConfigSpec is the spec for ControllerConfig resource.
+            description: spec contains the desired controller config configuration.
             properties:
               additionalTrustBundle:
                 description: |-
@@ -64,7 +64,7 @@ spec:
                   container for the new-format container
                 type: string
               cloudProviderCAData:
-                description: cloudProvider specifies the cloud provider CA data
+                description: cloudProviderCAData specifies the cloud provider CA data
                 format: byte
                 nullable: true
                 type: string
@@ -2872,7 +2872,8 @@ spec:
             - rootCAData
             type: object
           status:
-            description: ControllerConfigStatus is the status for ControllerConfig
+            description: status contains observed information about the controller
+              config.
             properties:
               conditions:
                 description: conditions represents the latest available observations

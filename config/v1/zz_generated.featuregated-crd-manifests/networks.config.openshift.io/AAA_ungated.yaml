@@ -180,12 +180,12 @@ spec:
                           for the machine's uplink.
                         properties:
                           from:
-                            description: From is the MTU to migrate from.
+                            description: from is the MTU to migrate from.
                             format: int32
                             minimum: 0
                             type: integer
                           to:
-                            description: To is the MTU to migrate to.
+                            description: to is the MTU to migrate to.
                             format: int32
                             minimum: 0
                             type: integer
@@ -195,12 +195,12 @@ spec:
                           for the default network.
                         properties:
                           from:
-                            description: From is the MTU to migrate from.
+                            description: from is the MTU to migrate from.
                             format: int32
                             minimum: 0
                             type: integer
                           to:
-                            description: To is the MTU to migrate to.
+                            description: to is the MTU to migrate to.
                             format: int32
                             minimum: 0
                             type: integer

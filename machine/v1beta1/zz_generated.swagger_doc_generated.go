@@ -252,8 +252,8 @@ func (DataDisk) SwaggerDoc() map[string]string {
 
 var map_DataDiskManagedDiskParameters = map[string]string{
 	"":                   "DataDiskManagedDiskParameters is the parameters of a DataDisk managed disk.",
-	"storageAccountType": "StorageAccountType is the storage account type to use. Possible values include \"Standard_LRS\", \"Premium_LRS\" and \"UltraSSD_LRS\".",
-	"diskEncryptionSet":  "DiskEncryptionSet is the disk encryption set properties. Empty value means no opinion and the platform chooses a default, which is subject to change over time. Currently the default is a DiskEncryptionSet with id: \"Default\".",
+	"storageAccountType": "storageAccountType is the storage account type to use. Possible values include \"Standard_LRS\", \"Premium_LRS\" and \"UltraSSD_LRS\".",
+	"diskEncryptionSet":  "diskEncryptionSet is the disk encryption set properties. Empty value means no opinion and the platform chooses a default, which is subject to change over time. Currently the default is a DiskEncryptionSet with id: \"Default\".",
 }
 
 func (DataDiskManagedDiskParameters) SwaggerDoc() map[string]string {
@@ -262,7 +262,7 @@ func (DataDiskManagedDiskParameters) SwaggerDoc() map[string]string {
 
 var map_DiskEncryptionSetParameters = map[string]string{
 	"":   "DiskEncryptionSetParameters is the disk encryption set properties",
-	"id": "ID is the disk encryption set ID Empty value means no opinion and the platform chooses a default, which is subject to change over time. Currently the default is: \"Default\".",
+	"id": "id is the disk encryption set ID Empty value means no opinion and the platform chooses a default, which is subject to change over time. Currently the default is: \"Default\".",
 }
 
 func (DiskEncryptionSetParameters) SwaggerDoc() map[string]string {
@@ -271,7 +271,7 @@ func (DiskEncryptionSetParameters) SwaggerDoc() map[string]string {
 
 var map_DiskSettings = map[string]string{
 	"":                         "DiskSettings describe ephemeral disk settings for the os disk.",
-	"ephemeralStorageLocation": "EphemeralStorageLocation enables ephemeral OS when set to 'Local'. Possible values include: 'Local'. See https://docs.microsoft.com/en-us/azure/virtual-machines/ephemeral-os-disks for full details. Empty value means no opinion and the platform chooses a default, which is subject to change over time. Currently the default is that disks are saved to remote Azure storage.",
+	"ephemeralStorageLocation": "ephemeralStorageLocation enables ephemeral OS when set to 'Local'. Possible values include: 'Local'. See https://docs.microsoft.com/en-us/azure/virtual-machines/ephemeral-os-disks for full details. Empty value means no opinion and the platform chooses a default, which is subject to change over time. Currently the default is that disks are saved to remote Azure storage.",
 }
 
 func (DiskSettings) SwaggerDoc() map[string]string {
@@ -306,8 +306,8 @@ func (OSDisk) SwaggerDoc() map[string]string {
 
 var map_OSDiskManagedDiskParameters = map[string]string{
 	"":                   "OSDiskManagedDiskParameters is the parameters of a OSDisk managed disk.",
-	"storageAccountType": "StorageAccountType is the storage account type to use. Possible values include \"Standard_LRS\", \"Premium_LRS\".",
-	"diskEncryptionSet":  "DiskEncryptionSet is the disk encryption set properties",
+	"storageAccountType": "storageAccountType is the storage account type to use. Possible values include \"Standard_LRS\", \"Premium_LRS\".",
+	"diskEncryptionSet":  "diskEncryptionSet is the disk encryption set properties",
 	"securityProfile":    "securityProfile specifies the security profile for the managed disk.",
 }
 
@@ -497,9 +497,9 @@ func (GCPServiceAccount) SwaggerDoc() map[string]string {
 
 var map_GCPShieldedInstanceConfig = map[string]string{
 	"":                                 "GCPShieldedInstanceConfig describes the shielded VM configuration of the instance on GCP. Shielded VM configuration allow users to enable and disable Secure Boot, vTPM, and Integrity Monitoring.",
-	"secureBoot":                       "SecureBoot Defines whether the instance should have secure boot enabled. Secure Boot verify the digital signature of all boot components, and halting the boot process if signature verification fails. If omitted, the platform chooses a default, which is subject to change over time, currently that default is Disabled.",
-	"virtualizedTrustedPlatformModule": "VirtualizedTrustedPlatformModule enable virtualized trusted platform module measurements to create a known good boot integrity policy baseline. The integrity policy baseline is used for comparison with measurements from subsequent VM boots to determine if anything has changed. This is required to be set to \"Enabled\" if IntegrityMonitoring is enabled. If omitted, the platform chooses a default, which is subject to change over time, currently that default is Enabled.",
-	"integrityMonitoring":              "IntegrityMonitoring determines whether the instance should have integrity monitoring that verify the runtime boot integrity. Compares the most recent boot measurements to the integrity policy baseline and return a pair of pass/fail results depending on whether they match or not. If omitted, the platform chooses a default, which is subject to change over time, currently that default is Enabled.",
+	"secureBoot":                       "secureBoot Defines whether the instance should have secure boot enabled. Secure Boot verify the digital signature of all boot components, and halting the boot process if signature verification fails. If omitted, the platform chooses a default, which is subject to change over time, currently that default is Disabled.",
+	"virtualizedTrustedPlatformModule": "virtualizedTrustedPlatformModule enable virtualized trusted platform module measurements to create a known good boot integrity policy baseline. The integrity policy baseline is used for comparison with measurements from subsequent VM boots to determine if anything has changed. This is required to be set to \"Enabled\" if IntegrityMonitoring is enabled. If omitted, the platform chooses a default, which is subject to change over time, currently that default is Enabled.",
+	"integrityMonitoring":              "integrityMonitoring determines whether the instance should have integrity monitoring that verify the runtime boot integrity. Compares the most recent boot measurements to the integrity policy baseline and return a pair of pass/fail results depending on whether they match or not. If omitted, the platform chooses a default, which is subject to change over time, currently that default is Enabled.",
 }
 
 func (GCPShieldedInstanceConfig) SwaggerDoc() map[string]string {
@@ -521,8 +521,8 @@ var map_LastOperation = map[string]string{
 	"":            "LastOperation represents the detail of the last performed operation on the MachineObject.",
 	"description": "description is the human-readable description of the last operation.",
 	"lastUpdated": "lastUpdated is the timestamp at which LastOperation API was last-updated.",
-	"state":       "State is the current status of the last performed operation. E.g. Processing, Failed, Successful etc",
-	"type":        "Type is the type of operation which was last performed. E.g. Create, Delete, Update etc",
+	"state":       "state is the current status of the last performed operation. E.g. Processing, Failed, Successful etc",
+	"type":        "type is the type of operation which was last performed. E.g. Create, Delete, Update etc",
 }
 
 func (LastOperation) SwaggerDoc() map[string]string {
@@ -806,9 +806,9 @@ func (VSphereMachineProviderSpec) SwaggerDoc() map[string]string {
 var map_VSphereMachineProviderStatus = map[string]string{
 	"":              "VSphereMachineProviderStatus is the type that will be embedded in a Machine.Status.ProviderStatus field. It contains VSphere-specific status information. Compatibility level 2: Stable within a major release for a minimum of 9 months or 3 minor releases (whichever is longer).",
 	"instanceId":    "instanceId is the ID of the instance in VSphere",
-	"instanceState": "InstanceState is the provisioning state of the VSphere Instance.",
-	"conditions":    "Conditions is a set of conditions associated with the Machine to indicate errors or other status",
-	"taskRef":       "TaskRef is a managed object reference to a Task related to the machine. This value is set automatically at runtime and should not be set or modified by users.",
+	"instanceState": "instanceState is the provisioning state of the VSphere Instance.",
+	"conditions":    "conditions is a set of conditions associated with the Machine to indicate errors or other status",
+	"taskRef":       "taskRef is a managed object reference to a Task related to the machine. This value is set automatically at runtime and should not be set or modified by users.",
 }
 
 func (VSphereMachineProviderStatus) SwaggerDoc() map[string]string {

@@ -206,13 +206,13 @@ type VSphereMachineProviderStatus struct {
 	// instanceId is the ID of the instance in VSphere
 	// +optional
 	InstanceID *string `json:"instanceId,omitempty"`
-	// InstanceState is the provisioning state of the VSphere Instance.
+	// instanceState is the provisioning state of the VSphere Instance.
 	// +optional
 	InstanceState *string `json:"instanceState,omitempty"`
-	// Conditions is a set of conditions associated with the Machine to indicate
+	// conditions is a set of conditions associated with the Machine to indicate
 	// errors or other status
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
-	// TaskRef is a managed object reference to a Task related to the machine.
+	// taskRef is a managed object reference to a Task related to the machine.
 	// This value is set automatically at runtime and should not be set or
 	// modified by users.
 	// +optional

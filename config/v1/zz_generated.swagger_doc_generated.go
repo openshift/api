@@ -107,8 +107,8 @@ func (DelegatedAuthorization) SwaggerDoc() map[string]string {
 
 var map_EtcdConnectionInfo = map[string]string{
 	"":     "EtcdConnectionInfo holds information necessary for connecting to an etcd server",
-	"urls": "URLs are the URLs for etcd",
-	"ca":   "CA is a file containing trusted roots for the etcd server certificates",
+	"urls": "urls are the URLs for etcd",
+	"ca":   "ca is a file containing trusted roots for the etcd server certificates",
 }
 
 func (EtcdConnectionInfo) SwaggerDoc() map[string]string {
@@ -116,7 +116,7 @@ func (EtcdConnectionInfo) SwaggerDoc() map[string]string {
 }
 
 var map_EtcdStorageConfig = map[string]string{
-	"storagePrefix": "StoragePrefix is the path within etcd that the OpenShift resources will be rooted under. This value, if changed, will mean existing objects in etcd will no longer be located.",
+	"storagePrefix": "storagePrefix is the path within etcd that the OpenShift resources will be rooted under. This value, if changed, will mean existing objects in etcd will no longer be located.",
 }
 
 func (EtcdStorageConfig) SwaggerDoc() map[string]string {
@@ -138,7 +138,7 @@ func (GenericAPIServerConfig) SwaggerDoc() map[string]string {
 
 var map_GenericControllerConfig = map[string]string{
 	"":               "GenericControllerConfig provides information to configure a controller",
-	"servingInfo":    "ServingInfo is the HTTP serving information for the controller's endpoints",
+	"servingInfo":    "servingInfo is the HTTP serving information for the controller's endpoints",
 	"leaderElection": "leaderElection provides information to elect a leader. Only override this if you have a specific need",
 	"authentication": "authentication allows configuration of authentication for the endpoints",
 	"authorization":  "authorization allows configuration of authentication for the endpoints",
@@ -544,8 +544,8 @@ func (BuildList) SwaggerDoc() map[string]string {
 var map_BuildOverrides = map[string]string{
 	"imageLabels":  "imageLabels is a list of docker labels that are applied to the resulting image. If user provided a label in their Build/BuildConfig with the same name as one in this list, the user's label will be overwritten.",
 	"nodeSelector": "nodeSelector is a selector which must be true for the build pod to fit on a node",
-	"tolerations":  "Tolerations is a list of Tolerations that will override any existing tolerations set on a build pod.",
-	"forcePull":    "ForcePull overrides, if set, the equivalent value in the builds, i.e. false disables force pull for all builds, true enables force pull for all builds, independently of what each build specifies itself",
+	"tolerations":  "tolerations is a list of Tolerations that will override any existing tolerations set on a build pod.",
+	"forcePull":    "forcePull overrides, if set, the equivalent value in the builds, i.e. false disables force pull for all builds, true enables force pull for all builds, independently of what each build specifies itself",
 }
 
 func (BuildOverrides) SwaggerDoc() map[string]string {
@@ -2004,8 +2004,8 @@ func (MTUMigration) SwaggerDoc() map[string]string {
 
 var map_MTUMigrationValues = map[string]string{
 	"":     "MTUMigrationValues contains the values for a MTU migration.",
-	"to":   "To is the MTU to migrate to.",
-	"from": "From is the MTU to migrate from.",
+	"to":   "to is the MTU to migrate to.",
+	"from": "from is the MTU to migrate from.",
 }
 
 func (MTUMigrationValues) SwaggerDoc() map[string]string {

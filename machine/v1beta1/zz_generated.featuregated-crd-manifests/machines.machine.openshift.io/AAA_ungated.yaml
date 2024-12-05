@@ -470,12 +470,12 @@ spec:
                     type: string
                   state:
                     description: |-
-                      State is the current status of the last performed operation.
+                      state is the current status of the last performed operation.
                       E.g. Processing, Failed, Successful etc
                     type: string
                   type:
                     description: |-
-                      Type is the type of operation which was last performed.
+                      type is the type of operation which was last performed.
                       E.g. Create, Delete, Update etc
                     type: string
                 type: object

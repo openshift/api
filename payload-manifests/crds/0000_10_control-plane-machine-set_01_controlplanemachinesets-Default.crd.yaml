@@ -244,7 +244,7 @@ spec:
                                               names are case-sensitive.
                                             type: string
                                           values:
-                                            description: Values includes one or more
+                                            description: values includes one or more
                                               filter values. Filter values are case-sensitive.
                                             items:
                                               type: string

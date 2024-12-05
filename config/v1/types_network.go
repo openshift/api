@@ -208,11 +208,11 @@ type MTUMigration struct {
 
 // MTUMigrationValues contains the values for a MTU migration.
 type MTUMigrationValues struct {
-	// To is the MTU to migrate to.
+	// to is the MTU to migrate to.
 	// +kubebuilder:validation:Minimum=0
 	To *uint32 `json:"to"`
 
-	// From is the MTU to migrate from.
+	// from is the MTU to migrate from.
 	// +kubebuilder:validation:Minimum=0
 	// +optional
 	From *uint32 `json:"from,omitempty"`

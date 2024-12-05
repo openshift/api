@@ -30,7 +30,7 @@ var map_OutageEntry = map[string]string{
 	"end":       "end of outage detected",
 	"startLogs": "startLogs contains log entries related to the start of this outage. Should contain the original failure, any entries where the failure mode changed.",
 	"endLogs":   "endLogs contains log entries related to the end of this outage. Should contain the success entry that resolved the outage and possibly a few of the failure log entries that preceded it.",
-	"message":   "Message summarizes outage details in a human readable format.",
+	"message":   "message summarizes outage details in a human readable format.",
 }
 
 func (OutageEntry) SwaggerDoc() map[string]string {
@@ -50,10 +50,10 @@ func (PodNetworkConnectivityCheck) SwaggerDoc() map[string]string {
 
 var map_PodNetworkConnectivityCheckCondition = map[string]string{
 	"":                   "PodNetworkConnectivityCheckCondition represents the overall status of the pod network connectivity.",
-	"type":               "Type of the condition",
-	"status":             "Status of the condition",
-	"reason":             "Reason for the condition's last status transition in a machine readable format.",
-	"message":            "Message indicating details about last transition in a human readable format.",
+	"type":               "type of the condition",
+	"status":             "status of the condition",
+	"reason":             "reason for the condition's last status transition in a machine readable format.",
+	"message":            "message indicating details about last transition in a human readable format.",
 	"lastTransitionTime": "Last time the condition transitioned from one status to another.",
 }
 
@@ -64,7 +64,7 @@ func (PodNetworkConnectivityCheckCondition) SwaggerDoc() map[string]string {
 var map_PodNetworkConnectivityCheckList = map[string]string{
 	"":         "PodNetworkConnectivityCheckList is a collection of PodNetworkConnectivityCheck\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 	"metadata": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
-	"items":    "Items contains the items",
+	"items":    "items contains the items",
 }
 
 func (PodNetworkConnectivityCheckList) SwaggerDoc() map[string]string {

@@ -4897,7 +4897,7 @@
       "type": "object",
       "properties": {
         "forcePull": {
-          "description": "ForcePull overrides, if set, the equivalent value in the builds, i.e. false disables force pull for all builds, true enables force pull for all builds, independently of what each build specifies itself",
+          "description": "forcePull overrides, if set, the equivalent value in the builds, i.e. false disables force pull for all builds, true enables force pull for all builds, independently of what each build specifies itself",
           "type": "boolean"
         },
         "imageLabels": {
@@ -4917,7 +4917,7 @@
           }
         },
         "tolerations": {
-          "description": "Tolerations is a list of Tolerations that will override any existing tolerations set on a build pod.",
+          "description": "tolerations is a list of Tolerations that will override any existing tolerations set on a build pod.",
           "type": "array",
           "items": {
             "default": {},
@@ -6056,7 +6056,7 @@
       ],
       "properties": {
         "ca": {
-          "description": "CA is a file containing trusted roots for the etcd server certificates",
+          "description": "ca is a file containing trusted roots for the etcd server certificates",
           "type": "string",
           "default": ""
         },
@@ -6071,7 +6071,7 @@
           "default": ""
         },
         "urls": {
-          "description": "URLs are the URLs for etcd",
+          "description": "urls are the URLs for etcd",
           "type": "array",
           "items": {
             "type": "string",
@@ -6090,7 +6090,7 @@
       ],
       "properties": {
         "ca": {
-          "description": "CA is a file containing trusted roots for the etcd server certificates",
+          "description": "ca is a file containing trusted roots for the etcd server certificates",
           "type": "string",
           "default": ""
         },
@@ -6105,12 +6105,12 @@
           "default": ""
         },
         "storagePrefix": {
-          "description": "StoragePrefix is the path within etcd that the OpenShift resources will be rooted under. This value, if changed, will mean existing objects in etcd will no longer be located.",
+          "description": "storagePrefix is the path within etcd that the OpenShift resources will be rooted under. This value, if changed, will mean existing objects in etcd will no longer be located.",
           "type": "string",
           "default": ""
         },
         "urls": {
-          "description": "URLs are the URLs for etcd",
+          "description": "urls are the URLs for etcd",
           "type": "array",
           "items": {
             "type": "string",
@@ -6557,7 +6557,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1.LeaderElection"
         },
         "servingInfo": {
-          "description": "ServingInfo is the HTTP serving information for the controller's endpoints",
+          "description": "servingInfo is the HTTP serving information for the controller's endpoints",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.HTTPServingInfo"
         }
@@ -7905,12 +7905,12 @@
       ],
       "properties": {
         "from": {
-          "description": "From is the MTU to migrate from.",
+          "description": "from is the MTU to migrate from.",
           "type": "integer",
           "format": "int64"
         },
         "to": {
-          "description": "To is the MTU to migrate to.",
+          "description": "to is the MTU to migrate to.",
           "type": "integer",
           "format": "int64"
         }
@@ -18425,7 +18425,7 @@
           "default": ""
         },
         "values": {
-          "description": "Values includes one or more filter values. Filter values are case-sensitive.",
+          "description": "values includes one or more filter values. Filter values are case-sensitive.",
           "type": "array",
           "items": {
             "type": "string",
@@ -20968,11 +20968,11 @@
       ],
       "properties": {
         "diskEncryptionSet": {
-          "description": "DiskEncryptionSet is the disk encryption set properties. Empty value means no opinion and the platform chooses a default, which is subject to change over time. Currently the default is a DiskEncryptionSet with id: \"Default\".",
+          "description": "diskEncryptionSet is the disk encryption set properties. Empty value means no opinion and the platform chooses a default, which is subject to change over time. Currently the default is a DiskEncryptionSet with id: \"Default\".",
           "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.DiskEncryptionSetParameters"
         },
         "storageAccountType": {
-          "description": "StorageAccountType is the storage account type to use. Possible values include \"Standard_LRS\", \"Premium_LRS\" and \"UltraSSD_LRS\".",
+          "description": "storageAccountType is the storage account type to use. Possible values include \"Standard_LRS\", \"Premium_LRS\" and \"UltraSSD_LRS\".",
           "type": "string",
           "default": ""
         }
@@ -20983,7 +20983,7 @@
       "type": "object",
       "properties": {
         "id": {
-          "description": "ID is the disk encryption set ID Empty value means no opinion and the platform chooses a default, which is subject to change over time. Currently the default is: \"Default\".",
+          "description": "id is the disk encryption set ID Empty value means no opinion and the platform chooses a default, which is subject to change over time. Currently the default is: \"Default\".",
           "type": "string"
         }
       }
@@ -20993,7 +20993,7 @@
       "type": "object",
       "properties": {
         "ephemeralStorageLocation": {
-          "description": "EphemeralStorageLocation enables ephemeral OS when set to 'Local'. Possible values include: 'Local'. See https://docs.microsoft.com/en-us/azure/virtual-machines/ephemeral-os-disks for full details. Empty value means no opinion and the platform chooses a default, which is subject to change over time. Currently the default is that disks are saved to remote Azure storage.",
+          "description": "ephemeralStorageLocation enables ephemeral OS when set to 'Local'. Possible values include: 'Local'. See https://docs.microsoft.com/en-us/azure/virtual-machines/ephemeral-os-disks for full details. Empty value means no opinion and the platform chooses a default, which is subject to change over time. Currently the default is that disks are saved to remote Azure storage.",
           "type": "string"
         }
       }
@@ -21431,15 +21431,15 @@
       "type": "object",
       "properties": {
         "integrityMonitoring": {
-          "description": "IntegrityMonitoring determines whether the instance should have integrity monitoring that verify the runtime boot integrity. Compares the most recent boot measurements to the integrity policy baseline and return a pair of pass/fail results depending on whether they match or not. If omitted, the platform chooses a default, which is subject to change over time, currently that default is Enabled.",
+          "description": "integrityMonitoring determines whether the instance should have integrity monitoring that verify the runtime boot integrity. Compares the most recent boot measurements to the integrity policy baseline and return a pair of pass/fail results depending on whether they match or not. If omitted, the platform chooses a default, which is subject to change over time, currently that default is Enabled.",
           "type": "string"
         },
         "secureBoot": {
-          "description": "SecureBoot Defines whether the instance should have secure boot enabled. Secure Boot verify the digital signature of all boot components, and halting the boot process if signature verification fails. If omitted, the platform chooses a default, which is subject to change over time, currently that default is Disabled.",
+          "description": "secureBoot Defines whether the instance should have secure boot enabled. Secure Boot verify the digital signature of all boot components, and halting the boot process if signature verification fails. If omitted, the platform chooses a default, which is subject to change over time, currently that default is Disabled.",
           "type": "string"
         },
         "virtualizedTrustedPlatformModule": {
-          "description": "VirtualizedTrustedPlatformModule enable virtualized trusted platform module measurements to create a known good boot integrity policy baseline. The integrity policy baseline is used for comparison with measurements from subsequent VM boots to determine if anything has changed. This is required to be set to \"Enabled\" if IntegrityMonitoring is enabled. If omitted, the platform chooses a default, which is subject to change over time, currently that default is Enabled.",
+          "description": "virtualizedTrustedPlatformModule enable virtualized trusted platform module measurements to create a known good boot integrity policy baseline. The integrity policy baseline is used for comparison with measurements from subsequent VM boots to determine if anything has changed. This is required to be set to \"Enabled\" if IntegrityMonitoring is enabled. If omitted, the platform chooses a default, which is subject to change over time, currently that default is Enabled.",
           "type": "string"
         }
       }
@@ -21499,11 +21499,11 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "state": {
-          "description": "State is the current status of the last performed operation. E.g. Processing, Failed, Successful etc",
+          "description": "state is the current status of the last performed operation. E.g. Processing, Failed, Successful etc",
           "type": "string"
         },
         "type": {
-          "description": "Type is the type of operation which was last performed. E.g. Create, Delete, Update etc",
+          "description": "type is the type of operation which was last performed. E.g. Create, Delete, Update etc",
           "type": "string"
         }
       }
@@ -22147,7 +22147,7 @@
       ],
       "properties": {
         "diskEncryptionSet": {
-          "description": "DiskEncryptionSet is the disk encryption set properties",
+          "description": "diskEncryptionSet is the disk encryption set properties",
           "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.DiskEncryptionSetParameters"
         },
         "securityProfile": {
@@ -22156,7 +22156,7 @@
           "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.VMDiskSecurityProfile"
         },
         "storageAccountType": {
-          "description": "StorageAccountType is the storage account type to use. Possible values include \"Standard_LRS\", \"Premium_LRS\".",
+          "description": "storageAccountType is the storage account type to use. Possible values include \"Standard_LRS\", \"Premium_LRS\".",
           "type": "string",
           "default": ""
         }
@@ -22505,7 +22505,7 @@
           "type": "string"
         },
         "conditions": {
-          "description": "Conditions is a set of conditions associated with the Machine to indicate errors or other status",
+          "description": "conditions is a set of conditions associated with the Machine to indicate errors or other status",
           "type": "array",
           "items": {
             "default": {},
@@ -22517,7 +22517,7 @@
           "type": "string"
         },
         "instanceState": {
-          "description": "InstanceState is the provisioning state of the VSphere Instance.",
+          "description": "instanceState is the provisioning state of the VSphere Instance.",
           "type": "string"
         },
         "kind": {
@@ -22525,7 +22525,7 @@
           "type": "string"
         },
         "taskRef": {
-          "description": "TaskRef is a managed object reference to a Task related to the machine. This value is set automatically at runtime and should not be set or modified by users.",
+          "description": "taskRef is a managed object reference to a Task related to the machine. This value is set automatically at runtime and should not be set or modified by users.",
           "type": "string"
         }
       }
@@ -27857,7 +27857,7 @@
       "type": "object",
       "properties": {
         "ipForwarding": {
-          "description": "IPForwarding controls IP forwarding for all traffic on OVN-Kubernetes managed interfaces (such as br-ex). By default this is set to Restricted, and Kubernetes related traffic is still forwarded appropriately, but other IP traffic will not be routed by the OCP node. If there is a desire to allow the host to forward traffic across OVN-Kubernetes managed interfaces, then set this field to \"Global\". The supported values are \"Restricted\" and \"Global\".",
+          "description": "ipForwarding controls IP forwarding for all traffic on OVN-Kubernetes managed interfaces (such as br-ex). By default this is set to Restricted, and Kubernetes related traffic is still forwarded appropriately, but other IP traffic will not be routed by the OCP node. If there is a desire to allow the host to forward traffic across OVN-Kubernetes managed interfaces, then set this field to \"Global\". The supported values are \"Restricted\" and \"Global\".",
           "type": "string"
         },
         "ipv4": {
@@ -33353,7 +33353,7 @@
           }
         },
         "message": {
-          "description": "Message summarizes outage details in a human readable format.",
+          "description": "message summarizes outage details in a human readable format.",
           "type": "string"
         },
         "start": {
@@ -33417,20 +33417,20 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "message": {
-          "description": "Message indicating details about last transition in a human readable format.",
+          "description": "message indicating details about last transition in a human readable format.",
           "type": "string"
         },
         "reason": {
-          "description": "Reason for the condition's last status transition in a machine readable format.",
+          "description": "reason for the condition's last status transition in a machine readable format.",
           "type": "string"
         },
         "status": {
-          "description": "Status of the condition",
+          "description": "status of the condition",
           "type": "string",
           "default": ""
         },
         "type": {
-          "description": "Type of the condition",
+          "description": "type of the condition",
           "type": "string",
           "default": ""
         }
@@ -33449,7 +33449,7 @@
           "type": "string"
         },
         "items": {
-          "description": "Items contains the items",
+          "description": "items contains the items",
           "type": "array",
           "items": {
             "default": {},

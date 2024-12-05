@@ -395,7 +395,7 @@ spec:
                 properties:
                   forcePull:
                     description: |-
-                      ForcePull overrides, if set, the equivalent value in the builds,
+                      forcePull overrides, if set, the equivalent value in the builds,
                       i.e. false disables force pull for all builds,
                       true enables force pull for all builds,
                       independently of what each build specifies itself
@@ -424,7 +424,7 @@ spec:
                     type: object
                   tolerations:
                     description: |-
-                      Tolerations is a list of Tolerations that will override any existing
+                      tolerations is a list of Tolerations that will override any existing
                       tolerations set on a build pod.
                     items:
                       description: |-

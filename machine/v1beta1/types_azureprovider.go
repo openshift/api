@@ -408,7 +408,7 @@ const (
 
 // DiskSettings describe ephemeral disk settings for the os disk.
 type DiskSettings struct {
-	// EphemeralStorageLocation enables ephemeral OS when set to 'Local'.
+	// ephemeralStorageLocation enables ephemeral OS when set to 'Local'.
 	// Possible values include: 'Local'.
 	// See https://docs.microsoft.com/en-us/azure/virtual-machines/ephemeral-os-disks for full details.
 	// Empty value means no opinion and the platform chooses a default, which is subject to change over
@@ -420,10 +420,10 @@ type DiskSettings struct {
 
 // OSDiskManagedDiskParameters is the parameters of a OSDisk managed disk.
 type OSDiskManagedDiskParameters struct {
-	// StorageAccountType is the storage account type to use.
+	// storageAccountType is the storage account type to use.
 	// Possible values include "Standard_LRS", "Premium_LRS".
 	StorageAccountType string `json:"storageAccountType"`
-	// DiskEncryptionSet is the disk encryption set properties
+	// diskEncryptionSet is the disk encryption set properties
 	// +optional
 	DiskEncryptionSet *DiskEncryptionSetParameters `json:"diskEncryptionSet,omitempty"`
 	// securityProfile specifies the security profile for the managed disk.
@@ -460,11 +460,11 @@ type VMDiskSecurityProfile struct {
 
 // DataDiskManagedDiskParameters is the parameters of a DataDisk managed disk.
 type DataDiskManagedDiskParameters struct {
-	// StorageAccountType is the storage account type to use.
+	// storageAccountType is the storage account type to use.
 	// Possible values include "Standard_LRS", "Premium_LRS" and "UltraSSD_LRS".
 	// +kubebuilder:validation:Enum=Standard_LRS;Premium_LRS;UltraSSD_LRS
 	StorageAccountType StorageAccountType `json:"storageAccountType"`
-	// DiskEncryptionSet is the disk encryption set properties.
+	// diskEncryptionSet is the disk encryption set properties.
 	// Empty value means no opinion and the platform chooses a default, which is subject to change over time.
 	// Currently the default is a DiskEncryptionSet with id: "Default".
 	// +optional
@@ -486,7 +486,7 @@ const (
 
 // DiskEncryptionSetParameters is the disk encryption set properties
 type DiskEncryptionSetParameters struct {
-	// ID is the disk encryption set ID
+	// id is the disk encryption set ID
 	// Empty value means no opinion and the platform chooses a default, which is subject to change over time.
 	// Currently the default is: "Default".
 	// +optional

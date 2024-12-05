@@ -584,7 +584,7 @@ type GatewayConfig struct {
 	// +kubebuilder:default:=false
 	// +optional
 	RoutingViaHost bool `json:"routingViaHost,omitempty"`
-	// IPForwarding controls IP forwarding for all traffic on OVN-Kubernetes managed interfaces (such as br-ex).
+	// ipForwarding controls IP forwarding for all traffic on OVN-Kubernetes managed interfaces (such as br-ex).
 	// By default this is set to Restricted, and Kubernetes related traffic is still forwarded appropriately, but other
 	// IP traffic will not be routed by the OCP node. If there is a desire to allow the host to forward traffic across
 	// OVN-Kubernetes managed interfaces, then set this field to "Global".

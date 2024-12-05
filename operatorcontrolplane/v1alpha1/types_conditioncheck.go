@@ -126,7 +126,7 @@ type OutageEntry struct {
 	// +optional
 	EndLogs []LogEntry `json:"endLogs,omitempty"`
 
-	// Message summarizes outage details in a human readable format.
+	// message summarizes outage details in a human readable format.
 	// +optional
 	Message string `json:"message,omitempty"`
 }
@@ -135,19 +135,19 @@ type OutageEntry struct {
 // +k8s:deepcopy-gen=true
 type PodNetworkConnectivityCheckCondition struct {
 
-	// Type of the condition
+	// type of the condition
 	// +required
 	Type PodNetworkConnectivityCheckConditionType `json:"type"`
 
-	// Status of the condition
+	// status of the condition
 	// +required
 	Status metav1.ConditionStatus `json:"status"`
 
-	// Reason for the condition's last status transition in a machine readable format.
+	// reason for the condition's last status transition in a machine readable format.
 	// +optional
 	Reason string `json:"reason,omitempty"`
 
-	// Message indicating details about last transition in a human readable format.
+	// message indicating details about last transition in a human readable format.
 	// +optional
 	Message string `json:"message,omitempty"`
 
@@ -184,6 +184,6 @@ type PodNetworkConnectivityCheckList struct {
 	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
 	metav1.ListMeta `json:"metadata"`
 
-	// Items contains the items
+	// items contains the items
 	Items []PodNetworkConnectivityCheck `json:"items"`
 }

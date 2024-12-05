@@ -1324,7 +1324,7 @@ type VSphereFailureDomainZoneAffinity struct {
 	// When set to HostGroup, hostGroup must be configured with hostGroup, vmGroup and vmHostRule and
 	// this means the zone is defined by the grouping of those fields.
 	// +kubebuilder:validation:Enum:=HostGroup;ComputeCluster
-	// +kubebuilder:validation:Required
+	// +required
 	// +unionDiscriminator
 	Type VSphereFailureDomainZoneType `json:"type"`
 
@@ -1345,7 +1345,7 @@ type VSphereFailureDomainRegionAffinity struct {
 	// When set to Datacenter, this means the vCenter Datacenter defined is the region.
 	// When set to ComputeCluster, this means the vCenter cluster defined is the region.
 	// +kubebuilder:validation:Enum:=ComputeCluster;Datacenter
-	// +kubebuilder:validation:Required
+	// +required
 	// +unionDiscriminator
 	Type VSphereFailureDomainRegionType `json:"type"`
 }
@@ -1359,7 +1359,7 @@ type VSphereFailureDomainHostGroup struct {
 	// This field is required when the VSphereFailureDomain ZoneType is HostGroup
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=80
-	// +kubebuilder:validation:Required
+	// +required
 	VMGroup string `json:"vmGroup"`
 
 	// hostGroup is the name of the vm-host group of type host within vCenter for this failure domain.
@@ -1367,7 +1367,7 @@ type VSphereFailureDomainHostGroup struct {
 	// This field is required when the VSphereFailureDomain ZoneType is HostGroup
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=80
-	// +kubebuilder:validation:Required
+	// +required
 	HostGroup string `json:"hostGroup"`
 
 	// vmHostRule is the name of the affinity vm-host rule within vCenter for this failure domain.
@@ -1375,7 +1375,7 @@ type VSphereFailureDomainHostGroup struct {
 	// This field is required when the VSphereFailureDomain ZoneType is HostGroup
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=80
-	// +kubebuilder:validation:Required
+	// +required
 	VMHostRule string `json:"vmHostRule"`
 }
 

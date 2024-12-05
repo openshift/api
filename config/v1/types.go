@@ -223,9 +223,9 @@ type AuditConfig struct {
 
 // EtcdConnectionInfo holds information necessary for connecting to an etcd server
 type EtcdConnectionInfo struct {
-	// URLs are the URLs for etcd
+	// urls are the URLs for etcd
 	URLs []string `json:"urls,omitempty"`
-	// CA is a file containing trusted roots for the etcd server certificates
+	// ca is a file containing trusted roots for the etcd server certificates
 	CA string `json:"ca"`
 	// CertInfo is the TLS client cert information for securing communication to etcd
 	// this is anonymous so that we can inline it for serialization
@@ -235,7 +235,7 @@ type EtcdConnectionInfo struct {
 type EtcdStorageConfig struct {
 	EtcdConnectionInfo `json:",inline"`
 
-	// StoragePrefix is the path within etcd that the OpenShift resources will
+	// storagePrefix is the path within etcd that the OpenShift resources will
 	// be rooted under. This value, if changed, will mean existing objects in etcd will
 	// no longer be located.
 	StoragePrefix string `json:"storagePrefix"`
@@ -285,7 +285,7 @@ type ClientConnectionOverrides struct {
 
 // GenericControllerConfig provides information to configure a controller
 type GenericControllerConfig struct {
-	// ServingInfo is the HTTP serving information for the controller's endpoints
+	// servingInfo is the HTTP serving information for the controller's endpoints
 	ServingInfo HTTPServingInfo `json:"servingInfo"`
 
 	// leaderElection provides information to elect a leader. Only override this if you have a specific need

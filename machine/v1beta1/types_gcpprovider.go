@@ -302,14 +302,14 @@ type GCPMachineProviderStatus struct {
 // GCPShieldedInstanceConfig describes the shielded VM configuration of the instance on GCP.
 // Shielded VM configuration allow users to enable and disable Secure Boot, vTPM, and Integrity Monitoring.
 type GCPShieldedInstanceConfig struct {
-	// SecureBoot Defines whether the instance should have secure boot enabled.
+	// secureBoot Defines whether the instance should have secure boot enabled.
 	// Secure Boot verify the digital signature of all boot components, and halting the boot process if signature verification fails.
 	// If omitted, the platform chooses a default, which is subject to change over time, currently that default is Disabled.
 	// +kubebuilder:validation:Enum=Enabled;Disabled
 	//+optional
 	SecureBoot SecureBootPolicy `json:"secureBoot,omitempty"`
 
-	// VirtualizedTrustedPlatformModule enable virtualized trusted platform module measurements to create a known good boot integrity policy baseline.
+	// virtualizedTrustedPlatformModule enable virtualized trusted platform module measurements to create a known good boot integrity policy baseline.
 	// The integrity policy baseline is used for comparison with measurements from subsequent VM boots to determine if anything has changed.
 	// This is required to be set to "Enabled" if IntegrityMonitoring is enabled.
 	// If omitted, the platform chooses a default, which is subject to change over time, currently that default is Enabled.
@@ -317,7 +317,7 @@ type GCPShieldedInstanceConfig struct {
 	// +optional
 	VirtualizedTrustedPlatformModule VirtualizedTrustedPlatformModulePolicy `json:"virtualizedTrustedPlatformModule,omitempty"`
 
-	// IntegrityMonitoring determines whether the instance should have integrity monitoring that verify the runtime boot integrity.
+	// integrityMonitoring determines whether the instance should have integrity monitoring that verify the runtime boot integrity.
 	// Compares the most recent boot measurements to the integrity policy baseline and return
 	// a pair of pass/fail results depending on whether they match or not.
 	// If omitted, the platform chooses a default, which is subject to change over time, currently that default is Enabled.

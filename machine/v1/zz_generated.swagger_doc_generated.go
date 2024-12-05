@@ -120,7 +120,7 @@ func (Tag) SwaggerDoc() map[string]string {
 var map_AWSResourceFilter = map[string]string{
 	"":       "AWSResourceFilter is a filter used to identify an AWS resource",
 	"name":   "name of the filter. Filter names are case-sensitive.",
-	"values": "Values includes one or more filter values. Filter values are case-sensitive.",
+	"values": "values includes one or more filter values. Filter values are case-sensitive.",
 }
 
 func (AWSResourceFilter) SwaggerDoc() map[string]string {

@@ -89,18 +89,18 @@ spec:
                       nullable: true
                       type: string
                     message:
-                      description: Message indicating details about last transition
+                      description: message indicating details about last transition
                         in a human readable format.
                       type: string
                     reason:
-                      description: Reason for the condition's last status transition
+                      description: reason for the condition's last status transition
                         in a machine readable format.
                       type: string
                     status:
-                      description: Status of the condition
+                      description: status of the condition
                       type: string
                     type:
-                      description: Type of the condition
+                      description: type of the condition
                       type: string
                   required:
                   - lastTransitionTime
@@ -182,7 +182,7 @@ spec:
                         type: object
                       type: array
                     message:
-                      description: Message summarizes outage details in a human readable
+                      description: message summarizes outage details in a human readable
                         format.
                       type: string
                     start:

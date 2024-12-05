@@ -104,12 +104,12 @@ type BuildOverrides struct {
 	// +optional
 	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
 
-	// Tolerations is a list of Tolerations that will override any existing
+	// tolerations is a list of Tolerations that will override any existing
 	// tolerations set on a build pod.
 	// +optional
 	Tolerations []corev1.Toleration `json:"tolerations,omitempty"`
 
-	// ForcePull overrides, if set, the equivalent value in the builds,
+	// forcePull overrides, if set, the equivalent value in the builds,
 	// i.e. false disables force pull for all builds,
 	// true enables force pull for all builds,
 	// independently of what each build specifies itself

@@ -421,11 +421,11 @@ type LastOperation struct {
 	// lastUpdated is the timestamp at which LastOperation API was last-updated.
 	LastUpdated *metav1.Time `json:"lastUpdated,omitempty"`
 
-	// State is the current status of the last performed operation.
+	// state is the current status of the last performed operation.
 	// E.g. Processing, Failed, Successful etc
 	State *string `json:"state,omitempty"`
 
-	// Type is the type of operation which was last performed.
+	// type is the type of operation which was last performed.
 	// E.g. Create, Delete, Update etc
 	Type *string `json:"type,omitempty"`
 }

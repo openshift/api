@@ -44,7 +44,7 @@ type AWSResourceFilter struct {
 	// name of the filter. Filter names are case-sensitive.
 	// +required
 	Name string `json:"name"`
-	// Values includes one or more filter values. Filter values are case-sensitive.
+	// values includes one or more filter values. Filter values are case-sensitive.
 	// +optional
 	// +listType=atomic
 	Values []string `json:"values,omitempty"`

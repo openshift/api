@@ -9816,7 +9816,7 @@ func schema_openshift_api_config_v1_BuildOverrides(ref common.ReferenceCallback)
 					},
 					"tolerations": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Tolerations is a list of Tolerations that will override any existing tolerations set on a build pod.",
+							Description: "tolerations is a list of Tolerations that will override any existing tolerations set on a build pod.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -9830,7 +9830,7 @@ func schema_openshift_api_config_v1_BuildOverrides(ref common.ReferenceCallback)
 					},
 					"forcePull": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ForcePull overrides, if set, the equivalent value in the builds, i.e. false disables force pull for all builds, true enables force pull for all builds, independently of what each build specifies itself",
+							Description: "forcePull overrides, if set, the equivalent value in the builds, i.e. false disables force pull for all builds, true enables force pull for all builds, independently of what each build specifies itself",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -11774,7 +11774,7 @@ func schema_openshift_api_config_v1_EtcdConnectionInfo(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"urls": {
 						SchemaProps: spec.SchemaProps{
-							Description: "URLs are the URLs for etcd",
+							Description: "urls are the URLs for etcd",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -11789,7 +11789,7 @@ func schema_openshift_api_config_v1_EtcdConnectionInfo(ref common.ReferenceCallb
 					},
 					"ca": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CA is a file containing trusted roots for the etcd server certificates",
+							Description: "ca is a file containing trusted roots for the etcd server certificates",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -11826,7 +11826,7 @@ func schema_openshift_api_config_v1_EtcdStorageConfig(ref common.ReferenceCallba
 				Properties: map[string]spec.Schema{
 					"urls": {
 						SchemaProps: spec.SchemaProps{
-							Description: "URLs are the URLs for etcd",
+							Description: "urls are the URLs for etcd",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -11841,7 +11841,7 @@ func schema_openshift_api_config_v1_EtcdStorageConfig(ref common.ReferenceCallba
 					},
 					"ca": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CA is a file containing trusted roots for the etcd server certificates",
+							Description: "ca is a file containing trusted roots for the etcd server certificates",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -11865,7 +11865,7 @@ func schema_openshift_api_config_v1_EtcdStorageConfig(ref common.ReferenceCallba
 					},
 					"storagePrefix": {
 						SchemaProps: spec.SchemaProps{
-							Description: "StoragePrefix is the path within etcd that the OpenShift resources will be rooted under. This value, if changed, will mean existing objects in etcd will no longer be located.",
+							Description: "storagePrefix is the path within etcd that the OpenShift resources will be rooted under. This value, if changed, will mean existing objects in etcd will no longer be located.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -12598,7 +12598,7 @@ func schema_openshift_api_config_v1_GenericControllerConfig(ref common.Reference
 				Properties: map[string]spec.Schema{
 					"servingInfo": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ServingInfo is the HTTP serving information for the controller's endpoints",
+							Description: "servingInfo is the HTTP serving information for the controller's endpoints",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.HTTPServingInfo"),
 						},
@@ -14892,14 +14892,14 @@ func schema_openshift_api_config_v1_MTUMigrationValues(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"to": {
 						SchemaProps: spec.SchemaProps{
-							Description: "To is the MTU to migrate to.",
+							Description: "to is the MTU to migrate to.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
 					},
 					"from": {
 						SchemaProps: spec.SchemaProps{
-							Description: "From is the MTU to migrate from.",
+							Description: "from is the MTU to migrate from.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
@@ -32012,7 +32012,7 @@ func schema_openshift_api_machine_v1_AWSResourceFilter(ref common.ReferenceCallb
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "Values includes one or more filter values. Filter values are case-sensitive.",
+							Description: "values includes one or more filter values. Filter values are case-sensitive.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -36294,7 +36294,7 @@ func schema_openshift_api_machine_v1beta1_DataDiskManagedDiskParameters(ref comm
 				Properties: map[string]spec.Schema{
 					"storageAccountType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "StorageAccountType is the storage account type to use. Possible values include \"Standard_LRS\", \"Premium_LRS\" and \"UltraSSD_LRS\".",
+							Description: "storageAccountType is the storage account type to use. Possible values include \"Standard_LRS\", \"Premium_LRS\" and \"UltraSSD_LRS\".",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -36302,7 +36302,7 @@ func schema_openshift_api_machine_v1beta1_DataDiskManagedDiskParameters(ref comm
 					},
 					"diskEncryptionSet": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DiskEncryptionSet is the disk encryption set properties. Empty value means no opinion and the platform chooses a default, which is subject to change over time. Currently the default is a DiskEncryptionSet with id: \"Default\".",
+							Description: "diskEncryptionSet is the disk encryption set properties. Empty value means no opinion and the platform chooses a default, which is subject to change over time. Currently the default is a DiskEncryptionSet with id: \"Default\".",
 							Ref:         ref("github.com/openshift/api/machine/v1beta1.DiskEncryptionSetParameters"),
 						},
 					},
@@ -36324,7 +36324,7 @@ func schema_openshift_api_machine_v1beta1_DiskEncryptionSetParameters(ref common
 				Properties: map[string]spec.Schema{
 					"id": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ID is the disk encryption set ID Empty value means no opinion and the platform chooses a default, which is subject to change over time. Currently the default is: \"Default\".",
+							Description: "id is the disk encryption set ID Empty value means no opinion and the platform chooses a default, which is subject to change over time. Currently the default is: \"Default\".",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -36344,7 +36344,7 @@ func schema_openshift_api_machine_v1beta1_DiskSettings(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"ephemeralStorageLocation": {
 						SchemaProps: spec.SchemaProps{
-							Description: "EphemeralStorageLocation enables ephemeral OS when set to 'Local'. Possible values include: 'Local'. See https://docs.microsoft.com/en-us/azure/virtual-machines/ephemeral-os-disks for full details. Empty value means no opinion and the platform chooses a default, which is subject to change over time. Currently the default is that disks are saved to remote Azure storage.",
+							Description: "ephemeralStorageLocation enables ephemeral OS when set to 'Local'. Possible values include: 'Local'. See https://docs.microsoft.com/en-us/azure/virtual-machines/ephemeral-os-disks for full details. Empty value means no opinion and the platform chooses a default, which is subject to change over time. Currently the default is that disks are saved to remote Azure storage.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -37075,21 +37075,21 @@ func schema_openshift_api_machine_v1beta1_GCPShieldedInstanceConfig(ref common.R
 				Properties: map[string]spec.Schema{
 					"secureBoot": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SecureBoot Defines whether the instance should have secure boot enabled. Secure Boot verify the digital signature of all boot components, and halting the boot process if signature verification fails. If omitted, the platform chooses a default, which is subject to change over time, currently that default is Disabled.",
+							Description: "secureBoot Defines whether the instance should have secure boot enabled. Secure Boot verify the digital signature of all boot components, and halting the boot process if signature verification fails. If omitted, the platform chooses a default, which is subject to change over time, currently that default is Disabled.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"virtualizedTrustedPlatformModule": {
 						SchemaProps: spec.SchemaProps{
-							Description: "VirtualizedTrustedPlatformModule enable virtualized trusted platform module measurements to create a known good boot integrity policy baseline. The integrity policy baseline is used for comparison with measurements from subsequent VM boots to determine if anything has changed. This is required to be set to \"Enabled\" if IntegrityMonitoring is enabled. If omitted, the platform chooses a default, which is subject to change over time, currently that default is Enabled.",
+							Description: "virtualizedTrustedPlatformModule enable virtualized trusted platform module measurements to create a known good boot integrity policy baseline. The integrity policy baseline is used for comparison with measurements from subsequent VM boots to determine if anything has changed. This is required to be set to \"Enabled\" if IntegrityMonitoring is enabled. If omitted, the platform chooses a default, which is subject to change over time, currently that default is Enabled.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"integrityMonitoring": {
 						SchemaProps: spec.SchemaProps{
-							Description: "IntegrityMonitoring determines whether the instance should have integrity monitoring that verify the runtime boot integrity. Compares the most recent boot measurements to the integrity policy baseline and return a pair of pass/fail results depending on whether they match or not. If omitted, the platform chooses a default, which is subject to change over time, currently that default is Enabled.",
+							Description: "integrityMonitoring determines whether the instance should have integrity monitoring that verify the runtime boot integrity. Compares the most recent boot measurements to the integrity policy baseline and return a pair of pass/fail results depending on whether they match or not. If omitted, the platform chooses a default, which is subject to change over time, currently that default is Enabled.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -37183,14 +37183,14 @@ func schema_openshift_api_machine_v1beta1_LastOperation(ref common.ReferenceCall
 					},
 					"state": {
 						SchemaProps: spec.SchemaProps{
-							Description: "State is the current status of the last performed operation. E.g. Processing, Failed, Successful etc",
+							Description: "state is the current status of the last performed operation. E.g. Processing, Failed, Successful etc",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Type is the type of operation which was last performed. E.g. Create, Delete, Update etc",
+							Description: "type is the type of operation which was last performed. E.g. Create, Delete, Update etc",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -38289,7 +38289,7 @@ func schema_openshift_api_machine_v1beta1_OSDiskManagedDiskParameters(ref common
 				Properties: map[string]spec.Schema{
 					"storageAccountType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "StorageAccountType is the storage account type to use. Possible values include \"Standard_LRS\", \"Premium_LRS\".",
+							Description: "storageAccountType is the storage account type to use. Possible values include \"Standard_LRS\", \"Premium_LRS\".",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -38297,7 +38297,7 @@ func schema_openshift_api_machine_v1beta1_OSDiskManagedDiskParameters(ref common
 					},
 					"diskEncryptionSet": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DiskEncryptionSet is the disk encryption set properties",
+							Description: "diskEncryptionSet is the disk encryption set properties",
 							Ref:         ref("github.com/openshift/api/machine/v1beta1.DiskEncryptionSetParameters"),
 						},
 					},
@@ -38922,14 +38922,14 @@ func schema_openshift_api_machine_v1beta1_VSphereMachineProviderStatus(ref commo
 					},
 					"instanceState": {
 						SchemaProps: spec.SchemaProps{
-							Description: "InstanceState is the provisioning state of the VSphere Instance.",
+							Description: "instanceState is the provisioning state of the VSphere Instance.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"conditions": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Conditions is a set of conditions associated with the Machine to indicate errors or other status",
+							Description: "conditions is a set of conditions associated with the Machine to indicate errors or other status",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -38943,7 +38943,7 @@ func schema_openshift_api_machine_v1beta1_VSphereMachineProviderStatus(ref commo
 					},
 					"taskRef": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TaskRef is a managed object reference to a Task related to the machine. This value is set automatically at runtime and should not be set or modified by users.",
+							Description: "taskRef is a managed object reference to a Task related to the machine. This value is set automatically at runtime and should not be set or modified by users.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -47802,7 +47802,7 @@ func schema_openshift_api_operator_v1_GatewayConfig(ref common.ReferenceCallback
 					},
 					"ipForwarding": {
 						SchemaProps: spec.SchemaProps{
-							Description: "IPForwarding controls IP forwarding for all traffic on OVN-Kubernetes managed interfaces (such as br-ex). By default this is set to Restricted, and Kubernetes related traffic is still forwarded appropriately, but other IP traffic will not be routed by the OCP node. If there is a desire to allow the host to forward traffic across OVN-Kubernetes managed interfaces, then set this field to \"Global\". The supported values are \"Restricted\" and \"Global\".",
+							Description: "ipForwarding controls IP forwarding for all traffic on OVN-Kubernetes managed interfaces (such as br-ex). By default this is set to Restricted, and Kubernetes related traffic is still forwarded appropriately, but other IP traffic will not be routed by the OCP node. If there is a desire to allow the host to forward traffic across OVN-Kubernetes managed interfaces, then set this field to \"Global\". The supported values are \"Restricted\" and \"Global\".",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -57022,7 +57022,7 @@ func schema_openshift_api_operatorcontrolplane_v1alpha1_OutageEntry(ref common.R
 					},
 					"message": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Message summarizes outage details in a human readable format.",
+							Description: "message summarizes outage details in a human readable format.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -57096,7 +57096,7 @@ func schema_openshift_api_operatorcontrolplane_v1alpha1_PodNetworkConnectivityCh
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Type of the condition",
+							Description: "type of the condition",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -57104,7 +57104,7 @@ func schema_openshift_api_operatorcontrolplane_v1alpha1_PodNetworkConnectivityCh
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Status of the condition",
+							Description: "status of the condition",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -57112,14 +57112,14 @@ func schema_openshift_api_operatorcontrolplane_v1alpha1_PodNetworkConnectivityCh
 					},
 					"reason": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Reason for the condition's last status transition in a machine readable format.",
+							Description: "reason for the condition's last status transition in a machine readable format.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"message": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Message indicating details about last transition in a human readable format.",
+							Description: "message indicating details about last transition in a human readable format.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -57169,7 +57169,7 @@ func schema_openshift_api_operatorcontrolplane_v1alpha1_PodNetworkConnectivityCh
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items contains the items",
+							Description: "items contains the items",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{

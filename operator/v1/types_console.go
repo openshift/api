@@ -55,14 +55,21 @@ type ConsoleSpec struct {
 	// +optional
 	Route ConsoleConfigRoute `json:"route"`
 	// plugins defines a list of enabled console plugin names.
+	// +listType=atomic
+	// +kubebuilder:validation:MaxItems=64
+	// +kubebuilder:validation:XValidation:rule="self.all(x, self.exists_one(y, x == y))",message="each plugin name must be unique"
 	// +optional
-	Plugins []string `json:"plugins,omitempty"`
+	Plugins []PluginName `json:"plugins,omitempty"`
 	// ingress allows to configure the alternative ingress for the console.
 	// This field is intended for clusters without ingress capability,
 	// where access to routes is not possible.
 	// +optional
 	Ingress Ingress `json:"ingress"`
 }
+
+// +kubebuilder:validation:MaxLength=128
+// +kubebuilder:validation:Pattern=^[a-zA-Z0-9-]+$
+type PluginName string
 
 // ConsoleConfigRoute holds information on external route access to console.
 // DEPRECATED

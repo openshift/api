@@ -296,3 +296,29 @@ tests:
               visibility:
                 state: Enables
       expectedError: "spec.customization.capabilities[0].visibility.state: Unsupported value: \"Enables\": supported values: \"Enabled\", \"Disabled\""
+    - name: Should be able to create a Console with multiple plugins
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          plugins:
+          - test-plugin-1
+          - test-plugin-2
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          plugins:
+          - test-plugin-1
+          - test-plugin-2
+    - name: Should throw an error for duplicate plugin name
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          plugins:
+          - test-plugin-1
+          - test-plugin-1
+      expectedError: "spec.plugins: Invalid value: \"array\": each plugin name must be unique"

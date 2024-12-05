@@ -46412,6 +46412,11 @@ func schema_openshift_api_operator_v1_ConsoleSpec(ref common.ReferenceCallback) 
 						},
 					},
 					"plugins": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "plugins defines a list of enabled console plugin names.",
 							Type:        []string{"array"},

@@ -779,8 +779,15 @@ spec:
               plugins:
                 description: plugins defines a list of enabled console plugin names.
                 items:
+                  maxLength: 128
+                  pattern: ^[a-zA-Z0-9-]+$
                   type: string
+                maxItems: 64
                 type: array
+                x-kubernetes-list-type: atomic
+                x-kubernetes-validations:
+                - message: each plugin name must be unique
+                  rule: self.all(x, self.exists_one(y, x == y))
               providers:
                 description: providers contains configuration for using specific service
                   providers.

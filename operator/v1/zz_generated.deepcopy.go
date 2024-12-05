@@ -1024,7 +1024,7 @@ func (in *ConsoleSpec) DeepCopyInto(out *ConsoleSpec) {
 	out.Route = in.Route
 	if in.Plugins != nil {
 		in, out := &in.Plugins, &out.Plugins
-		*out = make([]string, len(*in))
+		*out = make([]PluginName, len(*in))
 		copy(*out, *in)
 	}
 	out.Ingress = in.Ingress

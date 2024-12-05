@@ -27015,7 +27015,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "providers": {
           "description": "providers contains configuration for using specific service providers.",

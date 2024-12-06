@@ -178,6 +178,39 @@ spec:
                 x-kubernetes-list-map-keys:
                 - name
                 x-kubernetes-list-type: map
+              additionalRoutingCapabilities:
+                description: |-
+                  additionalRoutingCapabilities describes components and relevant
+                  configuration providing additional routing capabilities. When set, it
+                  enables such components and the usage of the routing capabilities they
+                  provide for the machine network. Upstream operators, like MetalLB
+                  operator, requiring these capabilities may rely on, or automatically set
+                  this attribute. Network plugins may leverage advanced routing
+                  capabilities acquired through the enablement of these components but may
+                  require specific configuration on their side to do so; refer to their
+                  respective documentation and configuration options.
+                properties:
+                  providers:
+                    description: |-
+                      providers is a set of enabled components that provide additional routing
+                      capabilities. Entries on this list must be unique. The  only valid value
+                      is currrently "FRR" which provides FRR routing capabilities through the
+                      deployment of FRR.
+                    items:
+                      description: RoutingCapabilitiesProvider is a component providing
+                        routing capabilities.
+                      enum:
+                      - FRR
+                      type: string
+                    maxItems: 1
+                    minItems: 1
+                    type: array
+                    x-kubernetes-list-type: atomic
+                    x-kubernetes-validations:
+                    - rule: self.all(x, self.exists_one(y, x == y))
+                required:
+                - providers
+                type: object
               clusterNetwork:
                 description: |-
                   clusterNetwork is the IP address pool to use for pod IPs.

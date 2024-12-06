@@ -17,9 +17,6 @@
                         "name": "AWSClusterHostedDNS"
                     },
                     {
-                        "name": "AdditionalRoutingCapabilities"
-                    },
-                    {
                         "name": "AutomatedEtcdBackup"
                     },
                     {
@@ -176,6 +173,9 @@
                 "enabled": [
                     {
                         "name": "AWSEFSDriverVolumeMetrics"
+                    },
+                    {
+                        "name": "AdditionalRoutingCapabilities"
                     },
                     {
                         "name": "AdminNetworkPolicy"

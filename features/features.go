@@ -694,4 +694,12 @@ var (
 					enhancementPR("https://github.com/openshift/enhancements/pull/1711").
 					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
+
+	CPUManagerPolicyAlphaOptions = newFeatureGate("CPUManagerPolicyAlphaOptions").
+					reportProblemsToJiraComponent("node").
+					contactPerson("ffromani").
+					productScope(kubernetes).
+					enhancementPR("https://github.com/openshift/enhancements/pull/1724").
+					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+					mustRegister()
 )

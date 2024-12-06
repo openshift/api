@@ -46,7 +46,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: ControllerConfigSpec is the spec for ControllerConfig resource.
+            description: spec contains the desired controller config configuration.
             properties:
               additionalTrustBundle:
                 description: |-
@@ -56,15 +56,15 @@ spec:
                 nullable: true
                 type: string
               baseOSContainerImage:
-                description: BaseOSContainerImage is the new-format container image
+                description: baseOSContainerImage is the new-format container image
                   for operating system updates.
                 type: string
               baseOSExtensionsContainerImage:
-                description: BaseOSExtensionsContainerImage is the matching extensions
+                description: baseOSExtensionsContainerImage is the matching extensions
                   container for the new-format container
                 type: string
               cloudProviderCAData:
-                description: cloudProvider specifies the cloud provider CA data
+                description: cloudProviderCAData specifies the cloud provider CA data
                 format: byte
                 nullable: true
                 type: string
@@ -337,7 +337,7 @@ spec:
                           All the clients are expected to use the generated ConfigMap only.
                         properties:
                           key:
-                            description: Key allows pointing to a specific key/value
+                            description: key allows pointing to a specific key/value
                               inside of the configmap.  This is useful for logical
                               file references.
                             type: string
@@ -350,11 +350,11 @@ spec:
                           infrastructure provider.
                         properties:
                           alibabaCloud:
-                            description: AlibabaCloud contains settings specific to
+                            description: alibabaCloud contains settings specific to
                               the Alibaba Cloud infrastructure provider.
                             type: object
                           aws:
-                            description: AWS contains settings specific to the Amazon
+                            description: aws contains settings specific to the Amazon
                               Web Services infrastructure provider.
                             properties:
                               serviceEndpoints:
@@ -386,11 +386,11 @@ spec:
                                 x-kubernetes-list-type: atomic
                             type: object
                           azure:
-                            description: Azure contains settings specific to the Azure
+                            description: azure contains settings specific to the Azure
                               infrastructure provider.
                             type: object
                           baremetal:
-                            description: BareMetal contains settings specific to the
+                            description: baremetal contains settings specific to the
                               BareMetal platform.
                             properties:
                               apiServerInternalIPs:
@@ -477,7 +477,7 @@ spec:
                             - message: ingressIPs list is required once set
                               rule: '!has(oldSelf.ingressIPs) || has(self.ingressIPs)'
                           equinixMetal:
-                            description: EquinixMetal contains settings specific to
+                            description: equinixMetal contains settings specific to
                               the Equinix Metal infrastructure provider.
                             type: object
                           external:
@@ -488,7 +488,7 @@ spec:
                               platformName:
                                 default: Unknown
                                 description: |-
-                                  PlatformName holds the arbitrary string representing the infrastructure provider name, expected to be set at the installation time.
+                                  platformName holds the arbitrary string representing the infrastructure provider name, expected to be set at the installation time.
                                   This field is solely for informational and reporting purposes and is not expected to be used for decision-making.
                                 type: string
                                 x-kubernetes-validations:
@@ -496,19 +496,19 @@ spec:
                                   rule: oldSelf == 'Unknown' || self == oldSelf
                             type: object
                           gcp:
-                            description: GCP contains settings specific to the Google
+                            description: gcp contains settings specific to the Google
                               Cloud Platform infrastructure provider.
                             type: object
                           ibmcloud:
-                            description: IBMCloud contains settings specific to the
+                            description: ibmcloud contains settings specific to the
                               IBMCloud infrastructure provider.
                             type: object
                           kubevirt:
-                            description: Kubevirt contains settings specific to the
+                            description: kubevirt contains settings specific to the
                               kubevirt infrastructure provider.
                             type: object
                           nutanix:
-                            description: Nutanix contains settings specific to the
+                            description: nutanix contains settings specific to the
                               Nutanix infrastructure provider.
                             properties:
                               failureDomains:
@@ -703,7 +703,7 @@ spec:
                             - prismElements
                             type: object
                           openstack:
-                            description: OpenStack contains settings specific to the
+                            description: openstack contains settings specific to the
                               OpenStack infrastructure provider.
                             properties:
                               apiServerInternalIPs:
@@ -790,11 +790,11 @@ spec:
                             - message: ingressIPs list is required once set
                               rule: '!has(oldSelf.ingressIPs) || has(self.ingressIPs)'
                           ovirt:
-                            description: Ovirt contains settings specific to the oVirt
+                            description: ovirt contains settings specific to the oVirt
                               infrastructure provider.
                             type: object
                           powervs:
-                            description: PowerVS contains settings specific to the
+                            description: powervs contains settings specific to the
                               IBM Power Systems Virtual Servers infrastructure provider.
                             properties:
                               serviceEndpoints:
@@ -876,7 +876,7 @@ spec:
                             - External
                             type: string
                           vsphere:
-                            description: VSphere contains settings specific to the
+                            description: vsphere contains settings specific to the
                               VSphere infrastructure provider.
                             properties:
                               apiServerInternalIPs:
@@ -958,7 +958,7 @@ spec:
                                       minLength: 1
                                       type: string
                                     topology:
-                                      description: Topology describes a given failure
+                                      description: topology describes a given failure
                                         domain using vSphere constructs
                                       properties:
                                         computeCluster:
@@ -1393,7 +1393,7 @@ spec:
                           infrastructure provider.
                         properties:
                           alibabaCloud:
-                            description: AlibabaCloud contains settings specific to
+                            description: alibabaCloud contains settings specific to
                               the Alibaba Cloud infrastructure provider.
                             properties:
                               region:
@@ -1437,7 +1437,7 @@ spec:
                             - region
                             type: object
                           aws:
-                            description: AWS contains settings specific to the Amazon
+                            description: aws contains settings specific to the Amazon
                               Web Services infrastructure provider.
                             properties:
                               region:
@@ -1478,7 +1478,7 @@ spec:
                                 x-kubernetes-list-type: atomic
                               serviceEndpoints:
                                 description: |-
-                                  ServiceEndpoints list contains custom endpoints which will override default
+                                  serviceEndpoints list contains custom endpoints which will override default
                                   service endpoint of AWS Services.
                                   There must be only one ServiceEndpoint for a service.
                                 items:
@@ -1505,7 +1505,7 @@ spec:
                                 x-kubernetes-list-type: atomic
                             type: object
                           azure:
-                            description: Azure contains settings specific to the Azure
+                            description: azure contains settings specific to the Azure
                               infrastructure provider.
                             properties:
                               armEndpoint:
@@ -1581,7 +1581,7 @@ spec:
                               rule: '!has(oldSelf.resourceTags) && !has(self.resourceTags)
                                 || has(oldSelf.resourceTags) && has(self.resourceTags)'
                           baremetal:
-                            description: BareMetal contains settings specific to the
+                            description: baremetal contains settings specific to the
                               BareMetal platform.
                             properties:
                               apiServerInternalIP:
@@ -1665,7 +1665,7 @@ spec:
                                 type: string
                             type: object
                           equinixMetal:
-                            description: EquinixMetal contains settings specific to
+                            description: equinixMetal contains settings specific to
                               the Equinix Metal infrastructure provider.
                             properties:
                               apiServerInternalIP:
@@ -1682,7 +1682,7 @@ spec:
                                 type: string
                             type: object
                           external:
-                            description: External contains settings specific to the
+                            description: external contains settings specific to the
                               generic External infrastructure provider.
                             properties:
                               cloudControllerManager:
@@ -1722,7 +1722,7 @@ spec:
                                 removed once set
                               rule: has(self.cloudControllerManager) == has(oldSelf.cloudControllerManager)
                           gcp:
-                            description: GCP contains settings specific to the Google
+                            description: gcp contains settings specific to the Google
                               Cloud Platform infrastructure provider.
                             properties:
                               projectID:
@@ -1735,29 +1735,29 @@ spec:
                                 type: string
                             type: object
                           ibmcloud:
-                            description: IBMCloud contains settings specific to the
+                            description: ibmcloud contains settings specific to the
                               IBMCloud infrastructure provider.
                             properties:
                               cisInstanceCRN:
                                 description: |-
-                                  CISInstanceCRN is the CRN of the Cloud Internet Services instance managing
+                                  cisInstanceCRN is the CRN of the Cloud Internet Services instance managing
                                   the DNS zone for the cluster's base domain
                                 type: string
                               dnsInstanceCRN:
                                 description: |-
-                                  DNSInstanceCRN is the CRN of the DNS Services instance managing the DNS zone
+                                  dnsInstanceCRN is the CRN of the DNS Services instance managing the DNS zone
                                   for the cluster's base domain
                                 type: string
                               location:
-                                description: Location is where the cluster has been
+                                description: location is where the cluster has been
                                   deployed
                                 type: string
                               providerType:
-                                description: ProviderType indicates the type of cluster
+                                description: providerType indicates the type of cluster
                                   that was created
                                 type: string
                               resourceGroupName:
-                                description: ResourceGroupName is the Resource Group
+                                description: resourceGroupName is the Resource Group
                                   for new IBMCloud resources created for the cluster.
                                 type: string
                               serviceEndpoints:
@@ -1812,7 +1812,7 @@ spec:
                                 x-kubernetes-list-type: map
                             type: object
                           kubevirt:
-                            description: Kubevirt contains settings specific to the
+                            description: kubevirt contains settings specific to the
                               kubevirt infrastructure provider.
                             properties:
                               apiServerInternalIP:
@@ -1829,7 +1829,7 @@ spec:
                                 type: string
                             type: object
                           nutanix:
-                            description: Nutanix contains settings specific to the
+                            description: nutanix contains settings specific to the
                               Nutanix infrastructure provider.
                             properties:
                               apiServerInternalIP:
@@ -1887,7 +1887,7 @@ spec:
                                     : true)'
                             type: object
                           openstack:
-                            description: OpenStack contains settings specific to the
+                            description: openstack contains settings specific to the
                               OpenStack infrastructure provider.
                             properties:
                               apiServerInternalIP:
@@ -2002,7 +2002,7 @@ spec:
                                 type: string
                             type: object
                           ovirt:
-                            description: Ovirt contains settings specific to the oVirt
+                            description: ovirt contains settings specific to the oVirt
                               infrastructure provider.
                             properties:
                               apiServerInternalIP:
@@ -2065,17 +2065,17 @@ spec:
                                 type: string
                             type: object
                           powervs:
-                            description: PowerVS contains settings specific to the
+                            description: powervs contains settings specific to the
                               Power Systems Virtual Servers infrastructure provider.
                             properties:
                               cisInstanceCRN:
                                 description: |-
-                                  CISInstanceCRN is the CRN of the Cloud Internet Services instance managing
+                                  cisInstanceCRN is the CRN of the Cloud Internet Services instance managing
                                   the DNS zone for the cluster's base domain
                                 type: string
                               dnsInstanceCRN:
                                 description: |-
-                                  DNSInstanceCRN is the CRN of the DNS Services instance managing the DNS zone
+                                  dnsInstanceCRN is the CRN of the DNS Services instance managing the DNS zone
                                   for the cluster's base domain
                                 type: string
                               region:
@@ -2185,7 +2185,7 @@ spec:
                             - External
                             type: string
                           vsphere:
-                            description: VSphere contains settings specific to the
+                            description: vsphere contains settings specific to the
                               VSphere infrastructure provider.
                             properties:
                               apiServerInternalIP:
@@ -2291,39 +2291,39 @@ spec:
                 format: byte
                 type: string
               network:
-                description: Network contains additional network related information
+                description: network contains additional network related information
                 nullable: true
                 properties:
                   mtuMigration:
-                    description: MTUMigration contains the MTU migration configuration.
+                    description: mtuMigration contains the MTU migration configuration.
                     nullable: true
                     properties:
                       machine:
-                        description: Machine contains MTU migration configuration
+                        description: machine contains MTU migration configuration
                           for the machine's uplink.
                         properties:
                           from:
-                            description: From is the MTU to migrate from.
+                            description: from is the MTU to migrate from.
                             format: int32
                             minimum: 0
                             type: integer
                           to:
-                            description: To is the MTU to migrate to.
+                            description: to is the MTU to migrate to.
                             format: int32
                             minimum: 0
                             type: integer
                         type: object
                       network:
-                        description: Network contains MTU migration configuration
+                        description: network contains MTU migration configuration
                           for the default network.
                         properties:
                           from:
-                            description: From is the MTU to migrate from.
+                            description: from is the MTU to migrate from.
                             format: int32
                             minimum: 0
                             type: integer
                           to:
-                            description: To is the MTU to migrate to.
+                            description: to is the MTU to migrate to.
                             format: int32
                             minimum: 0
                             type: integer
@@ -2341,7 +2341,7 @@ spec:
                   regeneration if this changes.
                 type: string
               osImageURL:
-                description: OSImageURL is the old-format container image that contains
+                description: osImageURL is the old-format container image that contains
                   the OS update payload.
                 type: string
               platform:
@@ -2432,7 +2432,8 @@ spec:
             - rootCAData
             type: object
           status:
-            description: ControllerConfigStatus is the status for ControllerConfig
+            description: status contains observed information about the controller
+              config.
             properties:
               conditions:
                 description: conditions represents the latest available observations

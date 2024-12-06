@@ -48,7 +48,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: ConsolePluginSpec is the desired plugin configuration.
+            description: spec contains the desired configuration for the console plugin.
             properties:
               backend:
                 description: backend holds the configuration of backend which is serving

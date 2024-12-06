@@ -12,7 +12,7 @@ type Package struct {
 	// This configured package will be managed with the cluster's lifecycle. In
 	// the current implementation, it will be retrieving this name from a list of
 	// supported operators out of the catalogs included with OpenShift.
-	// +kubebuilder:validation:Required
+	// +required
 	//
 	// +kubebuilder:validation:Pattern:=[a-z0-9]([-a-z0-9]*[a-z0-9])?
 	// +kubebuilder:validation:MaxLength:=56
@@ -27,14 +27,14 @@ type Package struct {
 type PlatformOperatorSpec struct {
 	// package contains the desired package and its configuration for this
 	// PlatformOperator.
-	// +kubebuilder:validation:Required
+	// +required
 	Package Package `json:"package"`
 }
 
 // ActiveBundleDeployment references a BundleDeployment resource.
 type ActiveBundleDeployment struct {
 	// name is the metadata.name of the referenced BundleDeployment object.
-	// +kubebuilder:validation:Required
+	// +required
 	Name string `json:"name"`
 }
 

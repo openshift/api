@@ -187,7 +187,7 @@ spec:
                                 maxLength: 1024
                                 type: string
                               username:
-                                description: userName that made the request.
+                                description: username that made the request.
                                 maxLength: 512
                                 type: string
                             required:
@@ -283,7 +283,7 @@ spec:
                                   maxLength: 1024
                                   type: string
                                 username:
-                                  description: userName that made the request.
+                                  description: username that made the request.
                                   maxLength: 512
                                   type: string
                               required:

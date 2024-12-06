@@ -98,7 +98,7 @@ spec:
               replicas:
                 default: 3
                 description: |-
-                  Replicas defines how many Control Plane Machines should be
+                  replicas defines how many Control Plane Machines should be
                   created by this ControlPlaneMachineSet.
                   This field is immutable and cannot be changed after cluster
                   installation.
@@ -168,7 +168,7 @@ spec:
               state:
                 default: Inactive
                 description: |-
-                  State defines whether the ControlPlaneMachineSet is Active or Inactive.
+                  state defines whether the ControlPlaneMachineSet is Active or Inactive.
                   When Inactive, the ControlPlaneMachineSet will not take any action on the
                   state of the Machines within the cluster.
                   When Active, the ControlPlaneMachineSet will reconcile the Machines and
@@ -186,13 +186,13 @@ spec:
                 default:
                   type: RollingUpdate
                 description: |-
-                  Strategy defines how the ControlPlaneMachineSet will update
+                  strategy defines how the ControlPlaneMachineSet will update
                   Machines when it detects a change to the ProviderSpec.
                 properties:
                   type:
                     default: RollingUpdate
                     description: |-
-                      Type defines the type of update strategy that should be
+                      type defines the type of update strategy that should be
                       used when updating Machines owned by the ControlPlaneMachineSet.
                       Valid values are "RollingUpdate" and "OnDelete".
                       The current default value is "RollingUpdate".
@@ -203,12 +203,12 @@ spec:
                 type: object
               template:
                 description: |-
-                  Template describes the Control Plane Machines that will be created
+                  template describes the Control Plane Machines that will be created
                   by this ControlPlaneMachineSet.
                 properties:
                   machineType:
                     description: |-
-                      MachineType determines the type of Machines that should be managed by the ControlPlaneMachineSet.
+                      machineType determines the type of Machines that should be managed by the ControlPlaneMachineSet.
                       Currently, the only valid value is machines_v1beta1_machine_openshift_io.
                     enum:
                     - machines_v1beta1_machine_openshift_io
@@ -220,14 +220,14 @@ spec:
                     properties:
                       failureDomains:
                         description: |-
-                          FailureDomains is the list of failure domains (sometimes called
+                          failureDomains is the list of failure domains (sometimes called
                           availability zones) in which the ControlPlaneMachineSet should balance
                           the Control Plane Machines.
                           This will be merged into the ProviderSpec given in the template.
                           This field is optional on platforms that do not require placement information.
                         properties:
                           aws:
-                            description: AWS configures failure domain information
+                            description: aws configures failure domain information
                               for the AWS platform.
                             items:
                               description: AWSFailureDomain configures failure domain
@@ -235,36 +235,36 @@ spec:
                               minProperties: 1
                               properties:
                                 placement:
-                                  description: Placement configures the placement
+                                  description: placement configures the placement
                                     information for this instance.
                                   properties:
                                     availabilityZone:
-                                      description: AvailabilityZone is the availability
+                                      description: availabilityZone is the availability
                                         zone of the instance.
                                       type: string
                                   required:
                                   - availabilityZone
                                   type: object
                                 subnet:
-                                  description: Subnet is a reference to the subnet
+                                  description: subnet is a reference to the subnet
                                     to use for this instance.
                                   properties:
                                     arn:
-                                      description: ARN of resource.
+                                      description: arn of resource.
                                       type: string
                                     filters:
-                                      description: Filters is a set of filters used
+                                      description: filters is a set of filters used
                                         to identify a resource.
                                       items:
                                         description: AWSResourceFilter is a filter
                                           used to identify an AWS resource
                                         properties:
                                           name:
-                                            description: Name of the filter. Filter
+                                            description: name of the filter. Filter
                                               names are case-sensitive.
                                             type: string
                                           values:
-                                            description: Values includes one or more
+                                            description: values includes one or more
                                               filter values. Filter values are case-sensitive.
                                             items:
                                               type: string
@@ -276,10 +276,10 @@ spec:
                                       type: array
                                       x-kubernetes-list-type: atomic
                                     id:
-                                      description: ID of resource.
+                                      description: id of resource.
                                       type: string
                                     type:
-                                      description: Type determines how the reference
+                                      description: type determines how the reference
                                         will fetch the AWS resource.
                                       enum:
                                       - ID
@@ -306,7 +306,7 @@ spec:
                             type: array
                             x-kubernetes-list-type: atomic
                           azure:
-                            description: Azure configures failure domain information
+                            description: azure configures failure domain information
                               for the Azure platform.
                             items:
                               description: AzureFailureDomain configures failure domain
@@ -330,14 +330,14 @@ spec:
                             type: array
                             x-kubernetes-list-type: atomic
                           gcp:
-                            description: GCP configures failure domain information
+                            description: gcp configures failure domain information
                               for the GCP platform.
                             items:
                               description: GCPFailureDomain configures failure domain
                                 information for the GCP platform
                               properties:
                                 zone:
-                                  description: Zone is the zone in which the GCP machine
+                                  description: zone is the zone in which the GCP machine
                                     provider will create the VM.
                                   type: string
                               required:
@@ -368,7 +368,7 @@ spec:
                             - name
                             x-kubernetes-list-type: map
                           openstack:
-                            description: OpenStack configures failure domain information
+                            description: openstack configures failure domain information
                               for the OpenStack platform.
                             items:
                               description: OpenStackFailureDomain configures failure
@@ -427,7 +427,7 @@ spec:
                             x-kubernetes-list-type: atomic
                           platform:
                             description: |-
-                              Platform identifies the platform for which the FailureDomain represents.
+                              platform identifies the platform for which the FailureDomain represents.
                               Currently supported values are AWS, Azure, GCP, OpenStack, VSphere and Nutanix.
                             enum:
                             - ""
@@ -507,7 +507,7 @@ spec:
                             additionalProperties:
                               type: string
                             description: |-
-                              Annotations is an unstructured key value map stored with a resource that may be
+                              annotations is an unstructured key value map stored with a resource that may be
                               set by external tools to store and retrieve arbitrary metadata. They are not
                               queryable and should be preserved when modifying objects.
                               More info: http://kubernetes.io/docs/user-guide/annotations
@@ -543,7 +543,7 @@ spec:
                         type: object
                       spec:
                         description: |-
-                          Spec contains the desired configuration of the Control Plane Machines.
+                          spec contains the desired configuration of the Control Plane Machines.
                           The ProviderSpec within contains platform specific details
                           for creating the Control Plane Machines.
                           The ProviderSe should be complete apart from the platform specific
@@ -566,12 +566,12 @@ spec:
                             type: string
                           lifecycleHooks:
                             description: |-
-                              LifecycleHooks allow users to pause operations on the machine at
+                              lifecycleHooks allow users to pause operations on the machine at
                               certain predefined points within the machine lifecycle.
                             properties:
                               preDrain:
                                 description: |-
-                                  PreDrain hooks prevent the machine from being drained.
+                                  preDrain hooks prevent the machine from being drained.
                                   This also blocks further lifecycle events, such as termination.
                                 items:
                                   description: LifecycleHook represents a single instance
@@ -579,7 +579,7 @@ spec:
                                   properties:
                                     name:
                                       description: |-
-                                        Name defines a unique name for the lifcycle hook.
+                                        name defines a unique name for the lifcycle hook.
                                         The name should be unique and descriptive, ideally 1-3 words, in CamelCase or
                                         it may be namespaced, eg. foo.example.com/CamelCase.
                                         Names must be unique and should only be managed by a single entity.
@@ -589,7 +589,7 @@ spec:
                                       type: string
                                     owner:
                                       description: |-
-                                        Owner defines the owner of the lifecycle hook.
+                                        owner defines the owner of the lifecycle hook.
                                         This should be descriptive enough so that users can identify
                                         who/what is responsible for blocking the lifecycle.
                                         This could be the name of a controller (e.g. clusteroperator/etcd)
@@ -607,7 +607,7 @@ spec:
                                 x-kubernetes-list-type: map
                               preTerminate:
                                 description: |-
-                                  PreTerminate hooks prevent the machine from being terminated.
+                                  preTerminate hooks prevent the machine from being terminated.
                                   PreTerminate hooks be actioned after the Machine has been drained.
                                 items:
                                   description: LifecycleHook represents a single instance
@@ -615,7 +615,7 @@ spec:
                                   properties:
                                     name:
                                       description: |-
-                                        Name defines a unique name for the lifcycle hook.
+                                        name defines a unique name for the lifcycle hook.
                                         The name should be unique and descriptive, ideally 1-3 words, in CamelCase or
                                         it may be namespaced, eg. foo.example.com/CamelCase.
                                         Names must be unique and should only be managed by a single entity.
@@ -625,7 +625,7 @@ spec:
                                       type: string
                                     owner:
                                       description: |-
-                                        Owner defines the owner of the lifecycle hook.
+                                        owner defines the owner of the lifecycle hook.
                                         This should be descriptive enough so that users can identify
                                         who/what is responsible for blocking the lifecycle.
                                         This could be the name of a controller (e.g. clusteroperator/etcd)
@@ -652,14 +652,14 @@ spec:
                                 additionalProperties:
                                   type: string
                                 description: |-
-                                  Annotations is an unstructured key value map stored with a resource that may be
+                                  annotations is an unstructured key value map stored with a resource that may be
                                   set by external tools to store and retrieve arbitrary metadata. They are not
                                   queryable and should be preserved when modifying objects.
                                   More info: http://kubernetes.io/docs/user-guide/annotations
                                 type: object
                               generateName:
                                 description: |-
-                                  GenerateName is an optional prefix, used by the server, to generate a unique
+                                  generateName is an optional prefix, used by the server, to generate a unique
                                   name ONLY IF the Name field has not been provided.
                                   If this field is used, the name returned to the client will be different
                                   than the name passed. This value will also be combined with a unique suffix.
@@ -686,7 +686,7 @@ spec:
                                 type: object
                               name:
                                 description: |-
-                                  Name must be unique within a namespace. Is required when creating resources, although
+                                  name must be unique within a namespace. Is required when creating resources, although
                                   some resources may allow a client to request the generation of an appropriate name
                                   automatically. Name is primarily intended for creation idempotence and configuration
                                   definition.
@@ -695,7 +695,7 @@ spec:
                                 type: string
                               namespace:
                                 description: |-
-                                  Namespace defines the space within each name must be unique. An empty namespace is
+                                  namespace defines the space within each name must be unique. An empty namespace is
                                   equivalent to the "default" namespace, but "default" is the canonical representation.
                                   Not all objects are required to be scoped to a namespace - the value of this field for
                                   those objects will be empty.
@@ -763,7 +763,7 @@ spec:
                             type: object
                           providerID:
                             description: |-
-                              ProviderID is the identification ID of the machine provided by the provider.
+                              providerID is the identification ID of the machine provided by the provider.
                               This field must match the provider ID as seen on the node object corresponding to this machine.
                               This field is required by higher level consumers of cluster-api. Example use case is cluster autoscaler
                               with cluster-api as provider. Clean-up logic in the autoscaler compares machines to nodes to find out
@@ -775,12 +775,12 @@ spec:
                               be interfacing with cluster-api as generic provider.
                             type: string
                           providerSpec:
-                            description: ProviderSpec details Provider-specific configuration
+                            description: providerSpec details Provider-specific configuration
                               to use during node creation.
                             properties:
                               value:
                                 description: |-
-                                  Value is an inlined, serialized representation of the resource
+                                  value is an inlined, serialized representation of the resource
                                   configuration. It is recommended that providers maintain their own
                                   versioned API types that should be serialized/deserialized from this
                                   field, akin to component config.
@@ -851,7 +851,7 @@ spec:
             properties:
               conditions:
                 description: |-
-                  Conditions represents the observations of the ControlPlaneMachineSet's current state.
+                  conditions represents the observations of the ControlPlaneMachineSet's current state.
                   Known .status.conditions.type are: Available, Degraded and Progressing.
                 items:
                   description: Condition contains details for one aspect of the current
@@ -913,14 +913,14 @@ spec:
                 x-kubernetes-list-type: map
               observedGeneration:
                 description: |-
-                  ObservedGeneration is the most recent generation observed for this
+                  observedGeneration is the most recent generation observed for this
                   ControlPlaneMachineSet. It corresponds to the ControlPlaneMachineSets's generation,
                   which is updated on mutation by the API Server.
                 format: int64
                 type: integer
               readyReplicas:
                 description: |-
-                  ReadyReplicas is the number of Control Plane Machines created by the
+                  readyReplicas is the number of Control Plane Machines created by the
                   ControlPlaneMachineSet controller which are ready.
                   Note that this value may be higher than the desired number of replicas
                   while rolling updates are in-progress.
@@ -928,7 +928,7 @@ spec:
                 type: integer
               replicas:
                 description: |-
-                  Replicas is the number of Control Plane Machines created by the
+                  replicas is the number of Control Plane Machines created by the
                   ControlPlaneMachineSet controller.
                   Note that during update operations this value may differ from the
                   desired replica count.
@@ -936,7 +936,7 @@ spec:
                 type: integer
               unavailableReplicas:
                 description: |-
-                  UnavailableReplicas is the number of Control Plane Machines that are
+                  unavailableReplicas is the number of Control Plane Machines that are
                   still required before the ControlPlaneMachineSet reaches the desired
                   available capacity. When this value is non-zero, the number of
                   ReadyReplicas is less than the desired Replicas.
@@ -944,7 +944,7 @@ spec:
                 type: integer
               updatedReplicas:
                 description: |-
-                  UpdatedReplicas is the number of non-terminated Control Plane Machines
+                  updatedReplicas is the number of non-terminated Control Plane Machines
                   created by the ControlPlaneMachineSet controller that have the desired
                   provider spec and are ready.
                   This value is set to 0 when a change is detected to the desired spec.

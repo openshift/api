@@ -44,7 +44,7 @@ spec:
             type: string
           egressIPs:
             description: |-
-              EgressIPs is a list of reserved IPs that will be used as the source for external traffic coming from pods in this namespace.
+              egressIPs is a list of reserved IPs that will be used as the source for external traffic coming from pods in this namespace.
               (If empty, external traffic will be masqueraded to Node IPs.)
             items:
               description: |-
@@ -64,7 +64,7 @@ spec:
           metadata:
             type: object
           netid:
-            description: NetID is the network identifier of the network namespace
+            description: netid is the network identifier of the network namespace
               assigned to each overlay network packet. This can be manipulated with
               the "oc adm pod-network" commands.
             format: int32
@@ -72,7 +72,7 @@ spec:
             minimum: 0
             type: integer
           netname:
-            description: NetName is the name of the network namespace. (This is the
+            description: netname is the name of the network namespace. (This is the
               same as the object's name, but both fields must be set.)
             pattern: ^[a-z0-9.-]+$
             type: string

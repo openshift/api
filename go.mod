@@ -7,8 +7,8 @@ toolchain go1.23.3
 require (
 	github.com/gogo/protobuf v1.3.2
 	golang.org/x/tools v0.26.0
-	k8s.io/api v0.32.0-rc.1
-	k8s.io/apimachinery v0.32.0-rc.1
+	k8s.io/api v0.32.0-rc.2
+	k8s.io/apimachinery v0.32.0-rc.2
 	k8s.io/klog/v2 v2.130.1
 	k8s.io/kube-openapi v0.0.0-20241105132330-32ad38e42d3f
 	sigs.k8s.io/yaml v1.4.0

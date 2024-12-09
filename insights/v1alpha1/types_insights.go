@@ -168,7 +168,7 @@ type GathererStatus struct {
 	// lastGatherDuration represents the time spent gathering.
 	// +required
 	// +kubebuilder:validation:Type=string
-	// +kubebuilder:validation:Pattern="^([1-9][0-9]*(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$"
+	// +kubebuilder:validation:Pattern="^(([0-9]+(?:\\.[0-9]+)?(ns|us|µs|μs|ms|s|m|h))+)$"
 	LastGatherDuration metav1.Duration `json:"lastGatherDuration"`
 }
 

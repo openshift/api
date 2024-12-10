@@ -6,6 +6,7 @@
 | MachineAPIMigration| | | | | |  |
 | MachineAPIOperatorDisableMachineHealthCheckController| | | | | |  |
 | MultiArchInstallAzure| | | | | |  |
+| DynamicResourceAllocation| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | |  |
 | GatewayAPI| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | |  |
 | NewOLM| | <span style="background-color: #519450">Enabled</span> | | <span style="background-color: #519450">Enabled</span> | | <span style="background-color: #519450">Enabled</span>  |
 | AWSClusterHostedDNS| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
@@ -15,7 +16,6 @@
 | ClusterMonitoringConfig| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | ConsolePluginContentSecurityPolicy| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | DNSNameResolver| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
-| DynamicResourceAllocation| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | EtcdBackendQuota| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | Example| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | GCPClusterHostedDNS| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |

@@ -22,6 +22,9 @@
                         "name": "ClusterAPIInstallIBMCloud"
                     },
                     {
+                        "name": "DynamicResourceAllocation"
+                    },
+                    {
                         "name": "EventedPLEG"
                     },
                     {
@@ -91,9 +94,6 @@
                     },
                     {
                         "name": "DisableKubeletCloudCredentialProviders"
-                    },
-                    {
-                        "name": "DynamicResourceAllocation"
                     },
                     {
                         "name": "EtcdBackendQuota"

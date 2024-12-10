@@ -125,6 +125,9 @@
                         "name": "OnClusterBuild"
                     },
                     {
+                        "name": "OpenShiftPodSecurityAdmission"
+                    },
+                    {
                         "name": "PersistentIPsForVirtualization"
                     },
                     {
@@ -236,9 +239,6 @@
                     },
                     {
                         "name": "NodeDisruptionPolicy"
-                    },
-                    {
-                        "name": "OpenShiftPodSecurityAdmission"
                     },
                     {
                         "name": "PrivateHostedZoneAWS"

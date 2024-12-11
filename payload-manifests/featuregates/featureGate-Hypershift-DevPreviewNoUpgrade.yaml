@@ -81,6 +81,9 @@
                         "name": "ClusterMonitoringConfig"
                     },
                     {
+                        "name": "ClusterVersionOperatorConfiguration"
+                    },
+                    {
                         "name": "ConsolePluginContentSecurityPolicy"
                     },
                     {

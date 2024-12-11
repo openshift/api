@@ -550,6 +550,8 @@ type HybridOverlayConfig struct {
 }
 
 // +kubebuilder:validation:XValidation:rule="self == oldSelf || has(self.mode)",message="ipsecConfig.mode is required"
+// +kubebuilder:validation:XValidation:rule="has(self.mode) && self.mode == 'Full' ?  true : !has(self.full)",message="full is forbidden when mode is not Full"
+// +union
 type IPsecConfig struct {
 	// mode defines the behaviour of the ipsec configuration within the platform.
 	// Valid values are `Disabled`, `External` and `Full`.
@@ -561,7 +563,35 @@ type IPsecConfig struct {
 	// this is left to the user to configure.
 	// +kubebuilder:validation:Enum=Disabled;External;Full
 	// +optional
+	// +unionDiscriminator
 	Mode IPsecMode `json:"mode,omitempty"`
+
+	// full defines configuration parameters for the IPsec `Full` mode.
+	// This is permitted only when mode is configured with `Full`,
+	// and forbidden otherwise.
+	// +unionMember,optional
+	// +optional
+	Full *IPsecFullModeConfig `json:"full,omitempty"`
+}
+
+type Encapsulation string
+
+const (
+	// ForceEncapsulation forces UDP encapsulation regardless of whether NAT is detected.
+	ForceEncapsulation = "Force"
+	// DisableEncapsulation disables UDP encapsulation even if NAT is present.
+	DisableEncapsulation = "Disable"
+	// AutoEncapsulation determines use of UDP encapsulation based on the detection of NAT.
+	AutoEncapsulation = "Auto"
+)
+
+type IPsecFullModeConfig struct {
+	// encapsulation option to configure libreswan on how inter-pod traffic across nodes
+	// are encapsulated to handle NAT traversal. When configured it uses UDP port 4500
+	// for the encapsulation.
+	// +kubebuilder:validation:Enum:=Force;Disable;Auto;""
+	// +optional
+	Encap Encapsulation `json:"encapsulation,omitempty"`
 }
 
 type IPForwardingMode string

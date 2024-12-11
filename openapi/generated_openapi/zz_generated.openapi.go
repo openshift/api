@@ -40451,14 +40451,14 @@ func schema_openshift_api_monitoring_v1_AlertRelabelConfigList(ref common.Refere
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("github.com/openshift/api/monitoring/v1.AlertRelabelConfig"),
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/monitoring/v1.AlertRelabelConfig"),
 									},
 								},
 							},
 						},
 					},
 				},
-				Required: []string{"items"},
 			},
 		},
 		Dependencies: []string{
@@ -40619,7 +40619,6 @@ func schema_openshift_api_monitoring_v1_AlertingRuleList(ref common.ReferenceCal
 						},
 					},
 				},
-				Required: []string{"items"},
 			},
 		},
 		Dependencies: []string{

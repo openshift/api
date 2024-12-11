@@ -23432,9 +23432,6 @@
     "com.github.openshift.api.monitoring.v1.AlertRelabelConfigList": {
       "description": "AlertRelabelConfigList is a list of AlertRelabelConfigs.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
-      "required": [
-        "items"
-      ],
       "properties": {
         "apiVersion": {
           "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
@@ -23444,6 +23441,7 @@
           "description": "items is a list of AlertRelabelConfigs.",
           "type": "array",
           "items": {
+            "default": {},
             "$ref": "#/definitions/com.github.openshift.api.monitoring.v1.AlertRelabelConfig"
           }
         },
@@ -23524,9 +23522,6 @@
     "com.github.openshift.api.monitoring.v1.AlertingRuleList": {
       "description": "AlertingRuleList is a list of AlertingRule objects.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
-      "required": [
-        "items"
-      ],
       "properties": {
         "apiVersion": {
           "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",

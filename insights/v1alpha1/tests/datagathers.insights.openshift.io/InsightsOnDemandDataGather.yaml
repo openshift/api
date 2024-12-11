@@ -258,3 +258,142 @@ tests:
         status: 
           dataGatherState: Running
       expectedStatusError: "status.dataGatherState: Invalid value: \"string\": dataGatherState cannot transition from Failed to Running"
+    - name: lastGatherDuration can be updated with a trailing zero value
+      initial: |
+        apiVersion: insights.openshift.io/v1alpha1
+        kind: DataGather
+        spec: {} # No spec is required for a DataGather
+      updated: |
+        apiVersion: insights.openshift.io/v1alpha1
+        kind: DataGather
+        spec: {} # No spec is required for a DataGather
+        status:
+          gatherers:
+          - name: testGatherer
+            lastGatherDuration: 1m0s
+            conditions:
+            - type: Gathered
+              status: "True"
+              reason: OK
+              message: "test message"
+              lastTransitionTime: "2024-12-01T08:04:21Z"
+      expected: |
+        apiVersion: insights.openshift.io/v1alpha1
+        kind: DataGather
+        spec: {} # No spec is required for a DataGather
+        status:
+          gatherers:
+          - name: testGatherer
+            lastGatherDuration: 1m0s
+            conditions:
+            - type: Gathered
+              status: "True"
+              reason: OK
+              message: "test message"
+              lastTransitionTime: "2024-12-01T08:04:21Z"
+    - name: lastGatherDuration can be updated with a leading zero value
+      initial: |
+        apiVersion: insights.openshift.io/v1alpha1
+        kind: DataGather
+        spec: {} # No spec is required for a DataGather
+      updated: |
+        apiVersion: insights.openshift.io/v1alpha1
+        kind: DataGather
+        spec: {} # No spec is required for a DataGather
+        status:
+          gatherers:
+          - name: testGatherer
+            lastGatherDuration: 0m11s
+            conditions:
+            - type: Gathered
+              status: "True"
+              reason: OK
+              message: "test message"
+              lastTransitionTime: "2024-12-01T08:04:21Z"
+      expected: |
+        apiVersion: insights.openshift.io/v1alpha1
+        kind: DataGather
+        spec: {} # No spec is required for a DataGather
+        status:
+          gatherers:
+          - name: testGatherer
+            lastGatherDuration: 0m11s
+            conditions:
+            - type: Gathered
+              status: "True"
+              reason: OK
+              message: "test message"
+              lastTransitionTime: "2024-12-01T08:04:21Z"
+    - name: lastGatherDuration can be updated with a decimal number value 
+      initial: |
+        apiVersion: insights.openshift.io/v1alpha1
+        kind: DataGather
+        spec: {} # No spec is required for a DataGather
+      updated: |
+        apiVersion: insights.openshift.io/v1alpha1
+        kind: DataGather
+        spec: {} # No spec is required for a DataGather
+        status:
+          gatherers:
+          - name: testGatherer
+            lastGatherDuration: 1m0.77s
+            conditions:
+            - type: Gathered
+              status: "True"
+              reason: OK
+              message: "test message"
+              lastTransitionTime: "2024-12-01T08:04:21Z"
+      expected: |
+        apiVersion: insights.openshift.io/v1alpha1
+        kind: DataGather
+        spec: {} # No spec is required for a DataGather
+        status:
+          gatherers:
+          - name: testGatherer
+            lastGatherDuration: 1m0.77s
+            conditions:
+            - type: Gathered
+              status: "True"
+              reason: OK
+              message: "test message"
+              lastTransitionTime: "2024-12-01T08:04:21Z"
+    - name: lastGatherDuration cannot be updated with an invalid value 
+      initial: |
+        apiVersion: insights.openshift.io/v1alpha1
+        kind: DataGather
+        spec: {} # No spec is required for a DataGather
+      updated: |
+        apiVersion: insights.openshift.io/v1alpha1
+        kind: DataGather
+        spec: {} # No spec is required for a DataGather
+        status:
+          gatherers:
+          - name: testGatherer
+            lastGatherDuration: 1d2h
+            conditions:
+            - type: Gathered
+              status: "True"
+              reason: OK
+              message: "test message"
+              lastTransitionTime: "2024-12-01T08:04:21Z"
+      expectedStatusError: "Invalid value: \"1d2h\": gatherers[0].lastGatherDuration in body should match '^(([0-9]+(?:\\.[0-9]+)?(ns|us|µs|μs|ms|s|m|h))+)$'"
+    - name: lastGatherDuration cannot be updated with a negative value 
+      initial: |
+        apiVersion: insights.openshift.io/v1alpha1
+        kind: DataGather
+        spec: {} # No spec is required for a DataGather
+      updated: |
+        apiVersion: insights.openshift.io/v1alpha1
+        kind: DataGather
+        spec: {} # No spec is required for a DataGather
+        status:
+          gatherers:
+          - name: testGatherer
+            lastGatherDuration: -0m5s
+            conditions:
+            - type: Gathered
+              status: "True"
+              reason: OK
+              message: "test message"
+              lastTransitionTime: "2024-12-01T08:04:21Z"
+      expectedStatusError: "Invalid value: \"-0m5s\": gatherers[0].lastGatherDuration in body should match '^(([0-9]+(?:\\.[0-9]+)?(ns|us|µs|μs|ms|s|m|h))+)$'"

@@ -531,7 +531,7 @@ type AWSResourceTag struct {
 	// key is the key of the tag
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=128
-	// +kubebuilder:validation:Pattern=`^[0-9A-Za-z_.:/=+-@]+$`
+	// +kubebuilder:validation:Pattern=`^([\p{L}\p{Z}\p{N}_.:/=+\-@]*)$`
 	// +required
 	Key string `json:"key"`
 	// value is the value of the tag.
@@ -539,7 +539,7 @@ type AWSResourceTag struct {
 	// length of the tag value must meet the requirements of all services.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=256
-	// +kubebuilder:validation:Pattern=`^[0-9A-Za-z_.:/=+-@]+$`
+	// +kubebuilder:validation:Pattern=`^([\p{L}\p{Z}\p{N}_.:/=+\-@]*)$`
 	// +required
 	Value string `json:"value"`
 }

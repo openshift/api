@@ -4,8 +4,13 @@ import (
 	"fmt"
 
 	"github.com/JoelSpeed/kal/pkg/analysis/commentstart"
+	"github.com/JoelSpeed/kal/pkg/analysis/conditions"
+	"github.com/JoelSpeed/kal/pkg/analysis/integers"
 	"github.com/JoelSpeed/kal/pkg/analysis/jsontags"
+	"github.com/JoelSpeed/kal/pkg/analysis/nobools"
+	"github.com/JoelSpeed/kal/pkg/analysis/nophase"
 	"github.com/JoelSpeed/kal/pkg/analysis/optionalorrequired"
+	"github.com/JoelSpeed/kal/pkg/analysis/requiredfields"
 	"github.com/JoelSpeed/kal/pkg/config"
 	"golang.org/x/tools/go/analysis"
 
@@ -27,6 +32,7 @@ type AnalyzerInitializer interface {
 	Default() bool
 }
 
+// Registry is used to fetch and initialize analyzers.
 type Registry interface {
 	// DefaultLinters returns the names of linters that are enabled by default.
 	DefaultLinters() sets.Set[string]
@@ -47,9 +53,14 @@ type registry struct {
 func NewRegistry() Registry {
 	return &registry{
 		initializers: []AnalyzerInitializer{
+			conditions.Initializer(),
 			commentstart.Initializer(),
+			integers.Initializer(),
 			jsontags.Initializer(),
+			nobools.Initializer(),
+			nophase.Initializer(),
 			optionalorrequired.Initializer(),
+			requiredfields.Initializer(),
 		},
 	}
 }

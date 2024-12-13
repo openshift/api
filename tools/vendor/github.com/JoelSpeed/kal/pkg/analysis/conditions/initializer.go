@@ -1,4 +1,4 @@
-package optionalorrequired
+package conditions
 
 import (
 	"github.com/JoelSpeed/kal/pkg/config"
@@ -21,7 +21,7 @@ func (initializer) Name() string {
 
 // Init returns the intialized Analyzer.
 func (initializer) Init(cfg config.LintersConfig) (*analysis.Analyzer, error) {
-	return newAnalyzer(cfg.OptionalOrRequired), nil
+	return newAnalyzer(cfg.Conditions), nil
 }
 
 // Default determines whether this Analyzer is on by default, or not.

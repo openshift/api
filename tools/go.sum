@@ -38,8 +38,8 @@ github.com/Djarvur/go-err113 v0.0.0-20210108212216-aea10b59be24 h1:sHglBQTwgx+rW
 github.com/Djarvur/go-err113 v0.0.0-20210108212216-aea10b59be24/go.mod h1:4UJr5HIiMZrwgkSPdsjy2uOQExX/WEILpIrO9UPGuXs=
 github.com/GaijinEntertainment/go-exhaustruct/v3 v3.3.0 h1:/fTUt5vmbkAcMBt4YQiuC23cV0kEsN1MVMNqeOW43cU=
 github.com/GaijinEntertainment/go-exhaustruct/v3 v3.3.0/go.mod h1:ONJg5sxcbsdQQ4pOW8TGdTidT2TMAUy/2Xhr8mrYaao=
-github.com/JoelSpeed/kal v0.0.0-20241203114946-bdb342a271f6 h1:XmVgkoR/UHWkda9B5HxVkGc/Pm2S+5/OMHz6UYSOk5w=
-github.com/JoelSpeed/kal v0.0.0-20241203114946-bdb342a271f6/go.mod h1:zptAqBcJGHljQfJR7oQXVKS/E6KVUFZDkE7OJDQeKOw=
+github.com/JoelSpeed/kal v0.0.0-20241215115308-238fddd4bda0 h1:0FiMbmgFHEPTkVHP+3cduDQWMz4s7R5M+UEoOOHcQus=
+github.com/JoelSpeed/kal v0.0.0-20241215115308-238fddd4bda0/go.mod h1:zptAqBcJGHljQfJR7oQXVKS/E6KVUFZDkE7OJDQeKOw=
 github.com/Masterminds/semver/v3 v3.3.0 h1:B8LGeaivUe71a5qox1ICM/JLl0NqZSW5CHyL+hmvYS0=
 github.com/Masterminds/semver/v3 v3.3.0/go.mod h1:4V+yj/TJE1HU9XfppCwVMZq3I84lprf4nC11bSS5beM=
 github.com/Microsoft/go-winio v0.5.2/go.mod h1:WpS1mjBmmwHBEWmogvA2mj8546UReBk4v8QkMxJ6pZY=

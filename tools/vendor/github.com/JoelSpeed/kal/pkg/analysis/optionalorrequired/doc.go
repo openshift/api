@@ -1,6 +1,6 @@
 /*
 optionalorrequired is a linter to ensure that all fields are marked as either optional or required.
-By default, it searchs for the `+optional` and `+required` markers, and ensures that all fields are marked
+By default, it searches for the `+optional` and `+required` markers, and ensures that all fields are marked
 with at least one of these markers.
 
 The linter can be configured to use different markers, by setting the `PreferredOptionalMarker` and `PreferredRequiredMarker`.

@@ -1,6 +1,7 @@
 package commentstart
 
 import (
+	"errors"
 	"fmt"
 	"go/ast"
 	"go/token"
@@ -14,6 +15,11 @@ import (
 
 const name = "commentstart"
 
+var (
+	errCouldNotGetInspector = errors.New("could not get inspector")
+	errCouldNotGetJSONTags  = errors.New("could not get json tags")
+)
+
 // Analyzer is the analyzer for the commentstart package.
 // It checks that all struct fields in an API have a godoc, and that the godoc starts with the serialised field name.
 var Analyzer = &analysis.Analyzer{
@@ -24,8 +30,15 @@ var Analyzer = &analysis.Analyzer{
 }
 
 func run(pass *analysis.Pass) (interface{}, error) {
-	inspect := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
-	jsonTags := pass.ResultOf[extractjsontags.Analyzer].(extractjsontags.StructFieldTags)
+	inspect, ok := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
+	if !ok {
+		return nil, errCouldNotGetInspector
+	}
+
+	jsonTags, ok := pass.ResultOf[extractjsontags.Analyzer].(extractjsontags.StructFieldTags)
+	if !ok {
+		return nil, errCouldNotGetJSONTags
+	}
 
 	// Filter to structs so that we can iterate over fields in a struct.
 	nodeFilter := []ast.Node{
@@ -47,7 +60,7 @@ func run(pass *analysis.Pass) (interface{}, error) {
 		}
 	})
 
-	return nil, nil
+	return nil, nil //nolint:nilnil
 }
 
 func checkField(pass *analysis.Pass, sTyp *ast.StructType, field *ast.Field, jsonTags extractjsontags.StructFieldTags) {

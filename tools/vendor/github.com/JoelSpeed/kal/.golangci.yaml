@@ -91,4 +91,6 @@ issues:
         - gochecknoglobals
         - goerr113
     - path: testdata
+      linters:
+        - all
       

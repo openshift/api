@@ -1,6 +1,7 @@
 package markers
 
 import (
+	"errors"
 	"go/ast"
 	"go/token"
 	"reflect"
@@ -9,6 +10,11 @@ import (
 	"golang.org/x/tools/go/analysis"
 	"golang.org/x/tools/go/analysis/passes/inspect"
 	"golang.org/x/tools/go/ast/inspector"
+)
+
+var (
+	errCouldNotGetInspector  = errors.New("could not get inspector")
+	errCouldNotCreateMarkers = errors.New("could not create markers")
 )
 
 // Markers allows access to markers extracted from the
@@ -28,7 +34,7 @@ func newMarkers() Markers {
 	}
 }
 
-// markers implements the storage for the implementation of the Markers interface
+// markers implements the storage for the implementation of the Markers interface.
 type markers struct {
 	structMarkers      map[*ast.StructType]MarkerSet
 	structFieldMarkers map[*ast.StructType]map[string]MarkerSet
@@ -84,14 +90,20 @@ var Analyzer = &analysis.Analyzer{
 }
 
 func run(pass *analysis.Pass) (interface{}, error) {
-	inspect := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
+	inspect, ok := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
+	if !ok {
+		return nil, errCouldNotGetInspector
+	}
 
 	// Filter to declarations so that we can look at all types in the package.
 	declFilter := []ast.Node{
 		(*ast.GenDecl)(nil),
 	}
 
-	results := newMarkers().(*markers)
+	results, ok := newMarkers().(*markers)
+	if !ok {
+		return nil, errCouldNotCreateMarkers
+	}
 
 	inspect.Preorder(declFilter, func(n ast.Node) {
 		decl, ok := n.(*ast.GenDecl)
@@ -105,9 +117,14 @@ func run(pass *analysis.Pass) (interface{}, error) {
 				continue
 			}
 
-			switch typeSpec.Type.(type) {
+			// TODO: Add support for other types and remove nolint.
+			switch typeSpec.Type.(type) { //nolint:gocritic
 			case *ast.StructType:
-				sTyp := typeSpec.Type.(*ast.StructType)
+				sTyp, ok := typeSpec.Type.(*ast.StructType)
+				if !ok {
+					continue
+				}
+
 				extractStructMarkers(decl, sTyp, results)
 			}
 		}
@@ -139,6 +156,7 @@ func extractStructMarkers(decl *ast.GenDecl, sTyp *ast.StructType, results *mark
 		}
 
 		fieldMarkers := NewMarkerSet()
+
 		for _, comment := range field.Doc.List {
 			if marker := extractMarker(comment); marker.Value != "" {
 				fieldMarkers.Insert(marker)
@@ -148,8 +166,6 @@ func extractStructMarkers(decl *ast.GenDecl, sTyp *ast.StructType, results *mark
 		fieldName := field.Names[0].Name
 		results.insertStructFieldMarkers(sTyp, fieldName, fieldMarkers)
 	}
-
-	return
 }
 
 func extractMarker(comment *ast.Comment) Marker {
@@ -165,6 +181,7 @@ func extractMarker(comment *ast.Comment) Marker {
 	}
 }
 
+// Marker represents a marker extracted from a comment on a declaration.
 type Marker struct {
 	// Value is the value of the marker once the leading comment and '+' are trimmed.
 	Value string

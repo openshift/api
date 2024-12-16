@@ -1,6 +1,7 @@
 package optionalorrequired
 
 import (
+	"errors"
 	"fmt"
 	"go/ast"
 
@@ -27,6 +28,11 @@ const (
 	KubebuilderRequiredMarker = "kubebuilder:validation:Required"
 )
 
+var (
+	errCouldNotGetInspector = errors.New("could not get inspector")
+	errCouldNotGetMarkers   = errors.New("could not get markers")
+)
+
 type analyzer struct {
 	primaryOptionalMarker   string
 	secondaryOptionalMarker string
@@ -36,7 +42,7 @@ type analyzer struct {
 }
 
 // newAnalyzer creates a new analyzer with the given configuration.
-func newAnalyzer(cfg config.OptionalOrRequiredConfig) (*analysis.Analyzer, error) {
+func newAnalyzer(cfg config.OptionalOrRequiredConfig) *analysis.Analyzer {
 	defaultConfig(&cfg)
 
 	a := &analyzer{}
@@ -64,12 +70,19 @@ func newAnalyzer(cfg config.OptionalOrRequiredConfig) (*analysis.Analyzer, error
 		Doc:      "Checks that all struct fields are marked either with the optional or required markers.",
 		Run:      a.run,
 		Requires: []*analysis.Analyzer{inspect.Analyzer, markers.Analyzer},
-	}, nil
+	}
 }
 
 func (a *analyzer) run(pass *analysis.Pass) (interface{}, error) {
-	inspect := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
-	markersAccess := pass.ResultOf[markers.Analyzer].(markers.Markers)
+	inspect, ok := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
+	if !ok {
+		return nil, errCouldNotGetInspector
+	}
+
+	markersAccess, ok := pass.ResultOf[markers.Analyzer].(markers.Markers)
+	if !ok {
+		return nil, errCouldNotGetMarkers
+	}
 
 	// Filter to structs so that we can iterate over fields in a struct.
 	nodeFilter := []ast.Node{
@@ -98,9 +111,10 @@ func (a *analyzer) run(pass *analysis.Pass) (interface{}, error) {
 		}
 	})
 
-	return nil, nil
+	return nil, nil //nolint:nilnil
 }
 
+//nolint:cyclop
 func (a *analyzer) checkField(pass *analysis.Pass, field *ast.Field, fieldMarkers markers.MarkerSet) {
 	if field == nil || len(field.Names) == 0 {
 		return

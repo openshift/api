@@ -1,4 +1,4 @@
-package optionalorrequired
+package nobools
 
 import (
 	"github.com/JoelSpeed/kal/pkg/config"
@@ -21,10 +21,12 @@ func (initializer) Name() string {
 
 // Init returns the intialized Analyzer.
 func (initializer) Init(cfg config.LintersConfig) (*analysis.Analyzer, error) {
-	return newAnalyzer(cfg.OptionalOrRequired), nil
+	return Analyzer, nil
 }
 
 // Default determines whether this Analyzer is on by default, or not.
 func (initializer) Default() bool {
-	return true
+	// Bools avoidance in the Kube conventions is not a must.
+	// Make this opt in depending on the projects own preference.
+	return false
 }

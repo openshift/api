@@ -12,6 +12,8 @@ import (
 )
 
 // ValidateLinters is used to validate the configuration in the config.Linters struct.
+//
+//nolint:cyclop
 func ValidateLinters(l config.Linters, fldPath *field.Path) field.ErrorList {
 	fieldErrors := field.ErrorList{}
 

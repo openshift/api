@@ -41,7 +41,12 @@ func (f *GolangCIPlugin) BuildAnalyzers() ([]*analysis.Analyzer, error) {
 
 	registry := kalanalysis.NewRegistry()
 
-	return registry.InitializeLinters(f.config.Linters, f.config.LintersConfig)
+	analyzers, err := registry.InitializeLinters(f.config.Linters, f.config.LintersConfig)
+	if err != nil {
+		return nil, fmt.Errorf("error initializing analyzers: %w", err)
+	}
+
+	return analyzers, nil
 }
 
 // GetLoadMode implements the golangci-lint plugin interface.

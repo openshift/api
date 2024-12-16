@@ -1,6 +1,8 @@
 package jsontags
 
 import (
+	"errors"
+	"fmt"
 	"go/ast"
 	"go/types"
 	"regexp"
@@ -20,6 +22,11 @@ const (
 	name = "jsontags"
 )
 
+var (
+	errCouldNotGetInspector = errors.New("could not get inspector")
+	errCouldNotGetJSONTags  = errors.New("could not get json tags")
+)
+
 type analyzer struct {
 	jsonTagRegex *regexp.Regexp
 }
@@ -30,7 +37,7 @@ func newAnalyzer(cfg config.JSONTagsConfig) (*analysis.Analyzer, error) {
 
 	jsonTagRegex, err := regexp.Compile(cfg.JSONTagRegex)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("could not compile json tag regex: %w", err)
 	}
 
 	a := &analyzer{
@@ -46,8 +53,15 @@ func newAnalyzer(cfg config.JSONTagsConfig) (*analysis.Analyzer, error) {
 }
 
 func (a *analyzer) run(pass *analysis.Pass) (interface{}, error) {
-	inspect := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
-	jsonTags := pass.ResultOf[extractjsontags.Analyzer].(extractjsontags.StructFieldTags)
+	inspect, ok := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
+	if !ok {
+		return nil, errCouldNotGetInspector
+	}
+
+	jsonTags, ok := pass.ResultOf[extractjsontags.Analyzer].(extractjsontags.StructFieldTags)
+	if !ok {
+		return nil, errCouldNotGetJSONTags
+	}
 
 	// Filter to structs so that we can iterate over fields in a struct.
 	nodeFilter := []ast.Node{
@@ -55,7 +69,11 @@ func (a *analyzer) run(pass *analysis.Pass) (interface{}, error) {
 	}
 
 	inspect.Preorder(nodeFilter, func(n ast.Node) {
-		s := n.(*ast.StructType)
+		s, ok := n.(*ast.StructType)
+		if !ok {
+			return
+		}
+
 		styp, ok := pass.TypesInfo.Types[s].Type.(*types.Struct)
 		// Type information may be incomplete.
 		if !ok {
@@ -69,7 +87,7 @@ func (a *analyzer) run(pass *analysis.Pass) (interface{}, error) {
 		}
 	})
 
-	return nil, nil
+	return nil, nil //nolint:nilnil
 }
 
 func (a *analyzer) checkField(pass *analysis.Pass, sTyp *ast.StructType, field *types.Var, jsonTags extractjsontags.StructFieldTags) {

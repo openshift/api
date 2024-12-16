@@ -46,6 +46,10 @@ lint: ## Run golangci-lint over the codebase.
 .PHONY: test
 test: fmt vet unit ## Run tests.
 
+.PHONY: unit
+unit: ## Run unit tests.
+	go test ./...
+
 ##@ Build
 
 .PHONY: build
@@ -55,3 +59,8 @@ build: fmt vet ## Build KAL binary.
 .PHONY: build-golangci
 build-golangci: ## Run golangci-lint over the codebase.
 	${GOLANGCI_LINT} custom
+
+.PHONY: verify-%
+verify-%:
+	make $*
+	git diff --exit-code

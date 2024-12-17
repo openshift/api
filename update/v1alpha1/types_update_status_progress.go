@@ -205,7 +205,7 @@ const (
 	ClusterOperatorHealthyReasonCannotDetermine ClusterOperatorHealthyReason = "CannotDetermine"
 )
 
-// ClusterVersionStatusInsight reports the state of a MachineConfigPool resource during the update
+// MachineConfigPoolStatusInsight reports the state of a MachineConfigPool resource during the update
 type MachineConfigPoolStatusInsight struct {
 	// name is the name of the machine config pool
 	// +kubebuilder:validation:Required

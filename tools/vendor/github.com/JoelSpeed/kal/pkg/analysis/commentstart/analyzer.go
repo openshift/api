@@ -56,21 +56,21 @@ func run(pass *analysis.Pass) (interface{}, error) {
 		}
 
 		for _, field := range sTyp.Fields.List {
-			checkField(pass, sTyp, field, jsonTags)
+			checkField(pass, field, jsonTags)
 		}
 	})
 
 	return nil, nil //nolint:nilnil
 }
 
-func checkField(pass *analysis.Pass, sTyp *ast.StructType, field *ast.Field, jsonTags extractjsontags.StructFieldTags) {
+func checkField(pass *analysis.Pass, field *ast.Field, jsonTags extractjsontags.StructFieldTags) {
 	if field == nil || len(field.Names) == 0 {
 		return
 	}
 
 	fieldName := field.Names[0].Name
 
-	tagInfo := jsonTags.FieldTags(sTyp, fieldName)
+	tagInfo := jsonTags.FieldTags(field)
 
 	if tagInfo.Name == "" {
 		return

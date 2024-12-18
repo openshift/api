@@ -10,6 +10,12 @@ To skip protobuf generation, set \$PROTO_OPTIONAL."
   exit 1
 fi
 
+if [[ "${GOPATH}/src/github.com/openshift/api" != "${SCRIPT_ROOT}" ]]; then
+  echo "Generating protobuf requires the repository to be checked out within the GOPATH."
+  echo "The repository must be checked out at ${GOPATH}/src/github.com/openshift/api."
+  exit 1
+fi
+
 if [[ "$(protoc --version)" != "libprotoc 23."* ]]; then
   echo "Generating protobuf requires protoc 23.x. Please download and
 install the platform appropriate Protobuf package for your OS:

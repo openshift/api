@@ -6,7 +6,7 @@ toolchain go1.23.0
 
 require (
 	cloud.google.com/go/storage v1.43.0
-	github.com/JoelSpeed/kal v0.0.0-20241215115308-238fddd4bda0
+	github.com/JoelSpeed/kal v0.0.0-20241217211810-b52f67ed8ff3
 	github.com/dave/dst v0.27.3
 	github.com/ghodss/yaml v1.0.0
 	github.com/go-git/go-git/v5 v5.12.0

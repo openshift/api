@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"go/ast"
-	"go/types"
 	"regexp"
 
 	"github.com/JoelSpeed/kal/pkg/analysis/helpers/extractjsontags"
@@ -63,38 +62,41 @@ func (a *analyzer) run(pass *analysis.Pass) (interface{}, error) {
 		return nil, errCouldNotGetJSONTags
 	}
 
-	// Filter to structs so that we can iterate over fields in a struct.
+	// Filter to fields so that we can iterate over fields in a struct.
 	nodeFilter := []ast.Node{
 		(*ast.StructType)(nil),
 	}
 
 	inspect.Preorder(nodeFilter, func(n ast.Node) {
-		s, ok := n.(*ast.StructType)
+		sTyp, ok := n.(*ast.StructType)
 		if !ok {
 			return
 		}
 
-		styp, ok := pass.TypesInfo.Types[s].Type.(*types.Struct)
-		// Type information may be incomplete.
-		if !ok {
+		if sTyp.Fields == nil {
 			return
 		}
 
-		for i := 0; i < styp.NumFields(); i++ {
-			field := styp.Field(i)
-
-			a.checkField(pass, s, field, jsonTags)
+		for _, field := range sTyp.Fields.List {
+			a.checkField(pass, field, jsonTags)
 		}
 	})
 
 	return nil, nil //nolint:nilnil
 }
 
-func (a *analyzer) checkField(pass *analysis.Pass, sTyp *ast.StructType, field *types.Var, jsonTags extractjsontags.StructFieldTags) {
-	tagInfo := jsonTags.FieldTags(sTyp, field.Name())
+func (a *analyzer) checkField(pass *analysis.Pass, field *ast.Field, jsonTags extractjsontags.StructFieldTags) {
+	tagInfo := jsonTags.FieldTags(field)
+
+	var prefix string
+	if len(field.Names) > 0 && field.Names[0] != nil {
+		prefix = fmt.Sprintf("field %s", field.Names[0].Name)
+	} else if ident, ok := field.Type.(*ast.Ident); ok {
+		prefix = fmt.Sprintf("embedded field %s", ident.Name)
+	}
 
 	if tagInfo.Missing {
-		pass.Reportf(field.Pos(), "field %s is missing json tag", field.Name())
+		pass.Reportf(field.Pos(), "%s is missing json tag", prefix)
 		return
 	}
 
@@ -103,13 +105,13 @@ func (a *analyzer) checkField(pass *analysis.Pass, sTyp *ast.StructType, field *
 	}
 
 	if tagInfo.Name == "" {
-		pass.Reportf(field.Pos(), "field %s has empty json tag", field.Name())
+		pass.Reportf(field.Pos(), "%s has empty json tag", prefix)
 		return
 	}
 
 	matched := a.jsonTagRegex.Match([]byte(tagInfo.Name))
 	if !matched {
-		pass.Reportf(field.Pos(), "field %s json tag does not match pattern %q: %s", field.Name(), a.jsonTagRegex.String(), tagInfo.Name)
+		pass.Reportf(field.Pos(), "%s json tag does not match pattern %q: %s", prefix, a.jsonTagRegex.String(), tagInfo.Name)
 	}
 }
 

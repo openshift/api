@@ -81,7 +81,7 @@ github.com/GaijinEntertainment/go-exhaustruct/v3/analyzer
 github.com/GaijinEntertainment/go-exhaustruct/v3/internal/comment
 github.com/GaijinEntertainment/go-exhaustruct/v3/internal/pattern
 github.com/GaijinEntertainment/go-exhaustruct/v3/internal/structure
-# github.com/JoelSpeed/kal v0.0.0-20241215115308-238fddd4bda0
+# github.com/JoelSpeed/kal v0.0.0-20241217211810-b52f67ed8ff3
 ## explicit; go 1.22.1
 github.com/JoelSpeed/kal
 github.com/JoelSpeed/kal/cmd/kal

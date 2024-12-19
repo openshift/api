@@ -12,7 +12,7 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-// +kubebuilder:resource:path=updatestatuses,scope=Namespaced
+// +kubebuilder:resource:path=updatestatuses,scope=Cluster
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/2012
 // +openshift:file-pattern=cvoRunLevel=0000_00,operatorName=cluster-version-operator,operatorOrdering=02
 // +openshift:enable:FeatureGate=UpgradeStatus

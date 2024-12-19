@@ -184,6 +184,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.CloudLoadBalancerConfig":                                         schema_openshift_api_config_v1_CloudLoadBalancerConfig(ref),
 		"github.com/openshift/api/config/v1.CloudLoadBalancerIPs":                                            schema_openshift_api_config_v1_CloudLoadBalancerIPs(ref),
 		"github.com/openshift/api/config/v1.ClusterCondition":                                                schema_openshift_api_config_v1_ClusterCondition(ref),
+		"github.com/openshift/api/config/v1.ClusterMonitoring":                                               schema_openshift_api_config_v1_ClusterMonitoring(ref),
+		"github.com/openshift/api/config/v1.ClusterMonitoringList":                                           schema_openshift_api_config_v1_ClusterMonitoringList(ref),
+		"github.com/openshift/api/config/v1.ClusterMonitoringSpec":                                           schema_openshift_api_config_v1_ClusterMonitoringSpec(ref),
+		"github.com/openshift/api/config/v1.ClusterMonitoringStatus":                                         schema_openshift_api_config_v1_ClusterMonitoringStatus(ref),
 		"github.com/openshift/api/config/v1.ClusterNetworkEntry":                                             schema_openshift_api_config_v1_ClusterNetworkEntry(ref),
 		"github.com/openshift/api/config/v1.ClusterOperator":                                                 schema_openshift_api_config_v1_ClusterOperator(ref),
 		"github.com/openshift/api/config/v1.ClusterOperatorList":                                             schema_openshift_api_config_v1_ClusterOperatorList(ref),
@@ -385,6 +389,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.TokenRequiredClaim":                                              schema_openshift_api_config_v1_TokenRequiredClaim(ref),
 		"github.com/openshift/api/config/v1.Update":                                                          schema_openshift_api_config_v1_Update(ref),
 		"github.com/openshift/api/config/v1.UpdateHistory":                                                   schema_openshift_api_config_v1_UpdateHistory(ref),
+		"github.com/openshift/api/config/v1.UserDefinedMonitoring":                                           schema_openshift_api_config_v1_UserDefinedMonitoring(ref),
 		"github.com/openshift/api/config/v1.UsernameClaimMapping":                                            schema_openshift_api_config_v1_UsernameClaimMapping(ref),
 		"github.com/openshift/api/config/v1.UsernamePrefix":                                                  schema_openshift_api_config_v1_UsernamePrefix(ref),
 		"github.com/openshift/api/config/v1.VSphereFailureDomainHostGroup":                                   schema_openshift_api_config_v1_VSphereFailureDomainHostGroup(ref),
@@ -10123,6 +10128,141 @@ func schema_openshift_api_config_v1_ClusterCondition(ref common.ReferenceCallbac
 	}
 }
 
+func schema_openshift_api_config_v1_ClusterMonitoring(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClusterMonitoring is the Custom Resource object which holds the current status of Cluster Monitoring Operator. CMO is a central component of the monitoring stack.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. ClusterMonitoring is the Schema for the Cluster Monitoring Operators API",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard object metadata.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec holds user configuration for the Cluster Monitoring Operator",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.ClusterMonitoringSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status holds observed values from the cluster. They may not be overridden.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.ClusterMonitoringStatus"),
+						},
+					},
+				},
+				Required: []string{"spec"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.ClusterMonitoringSpec", "github.com/openshift/api/config/v1.ClusterMonitoringStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_openshift_api_config_v1_ClusterMonitoringList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard list metadata.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "items is a list of ClusterMonitoring",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.ClusterMonitoring"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.ClusterMonitoring", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_openshift_api_config_v1_ClusterMonitoringSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClusterMonitoringSpec defines the desired state of Cluster Monitoring Operator",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"userDefined": {
+						SchemaProps: spec.SchemaProps{
+							Description: "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.UserDefinedMonitoring"),
+						},
+					},
+				},
+				Required: []string{"userDefined"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.UserDefinedMonitoring"},
+	}
+}
+
+func schema_openshift_api_config_v1_ClusterMonitoringStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MonitoringOperatorStatus defines the observed state of MonitoringOperator",
+				Type:        []string{"object"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_config_v1_ClusterNetworkEntry(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -19391,6 +19531,29 @@ func schema_openshift_api_config_v1_UpdateHistory(ref common.ReferenceCallback) 
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
+func schema_openshift_api_config_v1_UserDefinedMonitoring(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "UserDefinedMonitoring config for user-defined projects.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "mode defines the different configurations of UserDefinedMonitoring Valid values are Disabled and NamespaceIsolated Disabled disables monitoring for user-defined projects. This restricts the default monitoring stack, installed in the openshift-monitoring project, to monitor only platform namespaces, which prevents any custom monitoring configurations or resources from being applied to user-defined namespaces. NamespaceIsolated enables monitoring for user-defined projects with namespace-scoped tenancy. This ensures that metrics, alerts, and monitoring data are isolated at the namespace level.\n\nPossible enum values:\n - `\"Disabled\"` disables monitoring for user-defined projects. This restricts the default monitoring stack, installed in the openshift-monitoring project, to monitor only platform namespaces, which prevents any custom monitoring configurations or resources from being applied to user-defined namespaces.\n - `\"NamespaceIsolated\"` enables monitoring for user-defined projects with namespace-scoped tenancy. This ensures that metrics, alerts, and monitoring data are isolated at the namespace level.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"Disabled", "NamespaceIsolated"},
+						},
+					},
+				},
+				Required: []string{"mode"},
+			},
+		},
 	}
 }
 

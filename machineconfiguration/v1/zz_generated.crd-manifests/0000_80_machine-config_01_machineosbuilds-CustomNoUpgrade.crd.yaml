@@ -295,13 +295,14 @@ spec:
                 x-kubernetes-list-type: map
                 x-kubernetes-validations:
                 - message: once a Failed condition is set, conditions are immutable
-                  rule: 'oldSelf.exists(x, x.type==''Failed'') ? self==oldSelf : true'
+                  rule: 'oldSelf.exists(x, x.type==''Failed'' && x.status==''True'')
+                    ? self==oldSelf : true'
                 - message: once an Interrupted condition is set, conditions are immutable
-                  rule: 'oldSelf.exists(x, x.type==''Interrupted'') ? self==oldSelf
-                    : true'
+                  rule: 'oldSelf.exists(x, x.type==''Interrupted'' && x.status==''True'')
+                    ? self==oldSelf : true'
                 - message: once an Succeeded condition is set, conditions are immutable
-                  rule: 'oldSelf.exists(x, x.type==''Succeeded'') ? self==oldSelf
-                    : true'
+                  rule: 'oldSelf.exists(x, x.type==''Succeeded'' && x.status==''True'')
+                    ? self==oldSelf : true'
               digestedImagePushSpec:
                 description: |-
                   digestedImagePushSpec describes the fully qualified push spec produced by this build.

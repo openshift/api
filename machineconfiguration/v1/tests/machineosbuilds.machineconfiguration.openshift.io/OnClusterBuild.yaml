@@ -169,6 +169,82 @@ tests:
           buildStart: 2024-11-28T10:00:00Z
           buildEnd: 2024-11-28T09:00:00Z
       expectedStatusError: "status: Invalid value: \"object\": buildEnd must be after buildStart"
+    - name: Should be able to set a condition
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: MachineOSBuild
+        metadata:
+          name: foobar
+        spec:
+          machineConfig:
+            name: rendered-worker-abcd
+          machineOSConfig:
+            name: worker
+          renderedImagePushSpec: quay.io/mco/renderedImage:latest
+        status:
+          builder: 
+            imageBuilderType: Job
+            job:
+              group: batch
+              resource: jobs
+              namespace: openshift-machine-config-operator
+              name: buildjob
+          conditions:
+            - type: Succeeded
+              status: "False"
+              reason: "Reason"
+              message: "Message"
+              lastTransitionTime: "2024-11-28T10:00:00Z"
+      updated: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: MachineOSBuild
+        metadata:
+          name: foobar
+        spec:
+          machineConfig:
+            name: rendered-worker-abcd
+          machineOSConfig:
+            name: worker
+          renderedImagePushSpec: quay.io/mco/renderedImage:latest
+        status:
+          builder:
+            imageBuilderType: Job
+            job:
+              group: batch
+              resource: jobs
+              namespace: openshift-machine-config-operator
+              name: buildjob
+          conditions:
+            - type: Succeeded
+              status: "True"
+              reason: "Reason"
+              message: "Message"
+              lastTransitionTime: "2024-11-28T11:00:00Z"
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: MachineOSBuild
+        metadata:
+          name: foobar
+        spec:
+          machineConfig:
+            name: rendered-worker-abcd
+          machineOSConfig:
+            name: worker
+          renderedImagePushSpec: quay.io/mco/renderedImage:latest
+        status:
+          builder:
+            imageBuilderType: Job
+            job:
+              group: batch
+              resource: jobs
+              namespace: openshift-machine-config-operator
+              name: buildjob
+          conditions:
+            - type: Succeeded
+              status: "True"
+              reason: "Reason"
+              message: "Message"
+              lastTransitionTime: "2024-11-28T11:00:00Z"
     - name: Failed builds cannot change status
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1

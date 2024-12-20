@@ -87,9 +87,9 @@ type MachineOSBuildStatus struct {
 	// +listType=map
 	// +listMapKey=type
 	// +kubebuilder:validation:MaxItems=8
-	// +kubebuilder:validation:XValidation:rule="oldSelf.exists(x, x.type=='Failed') ? self==oldSelf : true",message="once a Failed condition is set, conditions are immutable"
-	// +kubebuilder:validation:XValidation:rule="oldSelf.exists(x, x.type=='Interrupted') ? self==oldSelf : true",message="once an Interrupted condition is set, conditions are immutable"
-	// +kubebuilder:validation:XValidation:rule="oldSelf.exists(x, x.type=='Succeeded') ? self==oldSelf : true",message="once an Succeeded condition is set, conditions are immutable"
+	// +kubebuilder:validation:XValidation:rule="oldSelf.exists(x, x.type=='Failed' && x.status=='True') ? self==oldSelf : true",message="once a Failed condition is set, conditions are immutable"
+	// +kubebuilder:validation:XValidation:rule="oldSelf.exists(x, x.type=='Interrupted' && x.status=='True') ? self==oldSelf : true",message="once an Interrupted condition is set, conditions are immutable"
+	// +kubebuilder:validation:XValidation:rule="oldSelf.exists(x, x.type=='Succeeded' && x.status=='True') ? self==oldSelf : true",message="once an Succeeded condition is set, conditions are immutable"
 	// +optional
 	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 	// builder describes the image builder backend used for this build.

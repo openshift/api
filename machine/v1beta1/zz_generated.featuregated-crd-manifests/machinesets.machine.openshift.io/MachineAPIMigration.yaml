@@ -692,6 +692,8 @@ spec:
                 && self.synchronizedGeneration >= oldSelf.synchronizedGeneration)
                 || (oldSelf.authoritativeAPI == ''Migrating'' && self.authoritativeAPI
                 != ''Migrating'')'
+            - message: authoritativeAPI cannot be unset once it has been set
+              rule: self.authoritativeAPI != ” || oldSelf.authoritativeAPI == ”
         type: object
     served: true
     storage: true

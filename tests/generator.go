@@ -1,6 +1,7 @@
 package tests
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -8,6 +9,7 @@ import (
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+	yamlpatch "github.com/vmware-archive/yaml-patch"
 
 	"github.com/ghodss/yaml"
 
@@ -139,7 +141,7 @@ func GenerateTestSuite(suiteSpec SuiteSpec) {
 			})
 
 			generateOnCreateTable(suiteSpec.Tests.OnCreate)
-			generateOnUpdateTable(suiteSpec.Tests.OnUpdate)
+			generateOnUpdateTable(suiteSpec.Tests.OnUpdate, crdFilename)
 		})
 	}
 }
@@ -200,9 +202,10 @@ func generateOnCreateTable(onCreateTests []OnCreateTestSpec) {
 
 // generateOnUpdateTable generates a table of tests from the defined OnUpdate tests
 // within the test suite test spec.
-func generateOnUpdateTable(onUpdateTests []OnUpdateTestSpec) {
+func generateOnUpdateTable(onUpdateTests []OnUpdateTestSpec, crdFileName string) {
 	type onUpdateTableInput struct {
 		featureGate         string
+		crdPatches          []Patch
 		initial             []byte
 		updated             []byte
 		expected            []byte
@@ -211,6 +214,24 @@ func generateOnUpdateTable(onUpdateTests []OnUpdateTestSpec) {
 	}
 
 	var assertOnUpdate interface{} = func(in onUpdateTableInput) {
+		var originalCRDObjectKey client.ObjectKey
+		var originalCRDSpec apiextensionsv1.CustomResourceDefinitionSpec
+
+		if len(in.crdPatches) > 0 {
+			patchedCRD, err := getPatchedCRD(crdFileName, in.crdPatches)
+			Expect(err).ToNot(HaveOccurred(), "could not load patched crd")
+
+			originalCRDObjectKey = objectKey(patchedCRD)
+
+			originalCRD := &apiextensionsv1.CustomResourceDefinition{}
+			Expect(k8sClient.Get(ctx, originalCRDObjectKey, originalCRD))
+
+			originalCRDSpec = *originalCRD.Spec.DeepCopy()
+			originalCRD.Spec = patchedCRD.Spec
+
+			Expect(k8sClient.Update(ctx, originalCRD)).To(Succeed(), "failed updating patched CRD schema")
+		}
+
 		initialObj, err := newUnstructuredFrom(in.initial)
 		Expect(err).ToNot(HaveOccurred(), "initial data should be a valid Kubernetes YAML resource")
 
@@ -225,6 +246,15 @@ func generateOnUpdateTable(onUpdateTests []OnUpdateTestSpec) {
 		if initialStatus != nil {
 			Expect(unstructured.SetNestedField(initialObj.Object, initialStatus, "status")).To(Succeed(), "should be able to restore initial status")
 			Expect(k8sClient.Status().Update(ctx, initialObj)).ToNot(HaveOccurred(), "initial object status should update successfully")
+		}
+
+		if len(in.crdPatches) > 0 {
+			originalCRD := &apiextensionsv1.CustomResourceDefinition{}
+			Expect(k8sClient.Get(ctx, originalCRDObjectKey, originalCRD))
+
+			originalCRD.Spec = originalCRDSpec
+
+			Expect(k8sClient.Update(ctx, originalCRD)).To(Succeed())
 		}
 
 		// Fetch the object we just created from the API.
@@ -250,7 +280,7 @@ func generateOnUpdateTable(onUpdateTests []OnUpdateTestSpec) {
 			Expect(err).To(MatchError(ContainSubstring(in.expectedError)))
 			return
 		}
-		Expect(err).ToNot(HaveOccurred())
+		Expect(err).ToNot(HaveOccurred(), "unexpected error updating spec")
 
 		if updatedObjStatus != nil {
 			Expect(unstructured.SetNestedField(updatedObj.Object, updatedObjStatus, "status")).To(Succeed(), "should be able to restore updated status")
@@ -260,7 +290,7 @@ func generateOnUpdateTable(onUpdateTests []OnUpdateTestSpec) {
 				Expect(err).To(MatchError(ContainSubstring(in.expectedStatusError)))
 				return
 			}
-			Expect(err).ToNot(HaveOccurred())
+			Expect(err).ToNot(HaveOccurred(), "unexpected error updating status")
 		}
 
 		Expect(k8sClient.Get(ctx, objectKey(initialObj), gotObj))
@@ -282,6 +312,7 @@ func generateOnUpdateTable(onUpdateTests []OnUpdateTestSpec) {
 	// Convert the test specs into table entries
 	for _, testEntry := range onUpdateTests {
 		tableEntries = append(tableEntries, Entry(testEntry.Name, onUpdateTableInput{
+			crdPatches:          testEntry.InitialCRDPatches,
 			initial:             []byte(testEntry.Initial),
 			updated:             []byte(testEntry.Updated),
 			expected:            []byte(testEntry.Expected),
@@ -452,4 +483,36 @@ func getSuiteSpecTestVersion(suiteSpec SuiteSpec) (string, error) {
 	}
 
 	return version, nil
+}
+
+func getPatchedCRD(crdFileName string, patches []Patch) (*apiextensionsv1.CustomResourceDefinition, error) {
+	patch := yamlpatch.Patch{}
+
+	for _, p := range patches {
+		patch = append(patch, yamlpatch.Operation{
+			Op:    yamlpatch.Op(p.Op),
+			Path:  yamlpatch.OpPath(p.Path),
+			Value: yamlpatch.NewNode(p.Value),
+		})
+	}
+
+	baseDoc, err := os.ReadFile(crdFileName)
+	if err != nil {
+		return nil, fmt.Errorf("could not read file %q: %w", crdFileName, err)
+	}
+
+	patchedDoc, err := patch.Apply(baseDoc)
+	if err != nil {
+		return nil, fmt.Errorf("could not apply patch: %w", err)
+	}
+
+	placeholderWrapper := yamlpatch.NewPlaceholderWrapper("{{", "}}")
+	patchedData := bytes.NewBuffer(placeholderWrapper.Unwrap(patchedDoc))
+
+	crd := &apiextensionsv1.CustomResourceDefinition{}
+	if err := yaml.Unmarshal(patchedData.Bytes(), crd); err != nil {
+		return nil, fmt.Errorf("could not unmarshal CRD: %w", err)
+	}
+
+	return crd, nil
 }

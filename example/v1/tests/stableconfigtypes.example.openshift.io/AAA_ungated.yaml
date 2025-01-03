@@ -255,3 +255,66 @@ tests:
         status:
           immutableField: bar
       expectedStatusError: "status.immutableField: Invalid value: \"string\": immutableField is immutable"
+    - name: Should allow changing other fields when a persisted value is no longer valid
+      initialCRDPatches:
+      - op: remove
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/nonZeroDefault/minimum # Minimum is normally 8
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          nonZeroDefault: 1
+          immutableField: foo
+      updated: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          nonZeroDefault: 1
+          immutableField: foo
+          optionalImmutableField: foo
+      expected: | 
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          nonZeroDefault: 1
+          immutableField: foo
+          optionalImmutableField: foo
+    - name: Should allow updating a persisted value that is no longer valid to a valid value
+      initialCRDPatches:
+      - op: remove
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/nonZeroDefault/minimum # Minimum is normally 8
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          nonZeroDefault: 1
+          immutableField: foo
+      updated: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          nonZeroDefault: 8
+          immutableField: foo
+      expected: | 
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          nonZeroDefault: 8
+          immutableField: foo
+    - name: Should not allow updating a persisted value that is no longer valid to a still invalid value
+      initialCRDPatches:
+      - op: remove
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/nonZeroDefault/minimum # Minimum is normally 8
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          nonZeroDefault: 1
+          immutableField: foo
+      updated: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          nonZeroDefault: 2
+          immutableField: foo
+      expectedError: "spec.nonZeroDefault: Invalid value: 2: spec.nonZeroDefault in body should be greater than or equal to 8"

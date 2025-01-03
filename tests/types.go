@@ -67,6 +67,13 @@ type OnUpdateTestSpec struct {
 	// Name is the name of this test case.
 	Name string `json:"name"`
 
+	// InitialCRDPatches is a list of YAML patches to apply to the CRD before applying
+	// the initial version of the resource.
+	// Once the initial version has been applied, the CRD will be restored to its
+	// original state before the updated object is applied.
+	// This can be used to test ratcheting validation of CRD schema changes over time.
+	InitialCRDPatches []Patch `json:"initialCRDPatches"`
+
 	// Initial is a literal string containing the initial YAML content from which to
 	// create the resource.
 	// Note `apiVersion` and `kind` fields are required though `metadata` can be omitted.
@@ -92,4 +99,19 @@ type OnUpdateTestSpec struct {
 	// Note `apiVersion` and `kind` fields are required though `metadata` can be omitted.
 	// Typically this will vary in `spec` only test to test.
 	Expected string `json:"expected"`
+}
+
+// Patch represents a single operation to be applied to a YAML document.
+// It follows the JSON Patch format as defined in RFC 6902.
+// Each patch operation is atomic and can be used to modify the structure
+// or content of a YAML document.
+type Patch struct {
+	// Op is the operation to be performed. Common operations include "add", "remove", "replace", "move", "copy", and "test".
+	Op string `json:"op"`
+
+	// Path is a JSON Pointer that indicates the location in the YAML document where the operation is to be performed.
+	Path string `json:"path"`
+
+	// Value is the value to be used within the operation. This field is required for operations like "add" and "replace".
+	Value *interface{} `json:"value"`
 }

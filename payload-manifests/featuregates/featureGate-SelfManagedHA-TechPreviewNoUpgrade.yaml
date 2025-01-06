@@ -28,6 +28,9 @@
                         "name": "EventedPLEG"
                     },
                     {
+                        "name": "Example2"
+                    },
+                    {
                         "name": "GatewayAPI"
                     },
                     {

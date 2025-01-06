@@ -99,6 +99,9 @@
                         "name": "Example"
                     },
                     {
+                        "name": "Example2"
+                    },
+                    {
                         "name": "ExternalOIDC"
                     },
                     {

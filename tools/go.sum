@@ -456,8 +456,8 @@ github.com/onsi/ginkgo/v2 v2.20.2 h1:7NVCeyIWROIAheY21RLS+3j2bb52W0W82tkberYytp4
 github.com/onsi/ginkgo/v2 v2.20.2/go.mod h1:K9gyxPIlb+aIvnZ8bd9Ak+YP18w3APlR+5coaZoE2ag=
 github.com/onsi/gomega v1.34.2 h1:pNCwDkzrsv7MS9kpaQvVb1aVLahQXyJ/Tv5oAZMI3i8=
 github.com/onsi/gomega v1.34.2/go.mod h1:v1xfxRgk0KIsG+QOdm7p8UosrOzPYRo60fd3B/1Dukc=
-github.com/openshift/controller-tools v0.12.1-0.20241105174925-ead1ef573704 h1:sdLkU07gS60g16e0VEHwF+KDX4ROZJS5QgnloWyUG30=
-github.com/openshift/controller-tools v0.12.1-0.20241105174925-ead1ef573704/go.mod h1:80xsUppuf2iNgiThH2bzDIN5204p5E93z+YtNnAJlHA=
+github.com/openshift/controller-tools v0.12.1-0.20250108094724-6eb6da5d6efd h1:+tHtYnbIIT0NZurG+MpoyHArg27ysMUzViFhbM3/Erw=
+github.com/openshift/controller-tools v0.12.1-0.20250108094724-6eb6da5d6efd/go.mod h1:80xsUppuf2iNgiThH2bzDIN5204p5E93z+YtNnAJlHA=
 github.com/openshift/crd-schema-checker v0.0.0-20241113192003-573763d3107a h1:gBheMF1vVwxfnuGHJ82f/nmUATdtewq60/yhbBqD4+M=
 github.com/openshift/crd-schema-checker v0.0.0-20241113192003-573763d3107a/go.mod h1:sTxJ4ZFW9r9fEdbW2v0yMRi6NcyTbx0fII4p83IQ+L8=
 github.com/openshift/kubernetes/staging/src/k8s.io/apiserver v0.0.0-20241125210059-e3abfef0b992 h1:UHSO67L/pCyCcqZphO4PiX638s6QrpJN8OBYMkFIeYE=

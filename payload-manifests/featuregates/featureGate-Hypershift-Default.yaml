@@ -217,6 +217,9 @@
                         "name": "ExternalOIDC"
                     },
                     {
+                        "name": "GCPDualStackEnablement"
+                    },
+                    {
                         "name": "GCPLabelsTags"
                     },
                     {

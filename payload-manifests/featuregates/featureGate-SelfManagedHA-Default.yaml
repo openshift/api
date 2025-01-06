@@ -214,6 +214,9 @@
                         "name": "DisableKubeletCloudCredentialProviders"
                     },
                     {
+                        "name": "GCPDualStackEnablement"
+                    },
+                    {
                         "name": "GCPLabelsTags"
                     },
                     {

@@ -22,7 +22,8 @@ crd_globs="\
     config/v1/zz_generated.crd-manifests/0000_10_openshift-controller-manager_01_builds*.crd.yaml
     operator/v1/zz_generated.crd-manifests/0000_50_openshift-controller-manager_02_openshiftcontrollermanagers*.crd.yaml
     machineconfiguration/v1/zz_generated.crd-manifests/*.crd.yaml
-    machineconfiguration/v1alpha1/zz_generated.crd-manifests/*.crd.yaml
+    machineconfiguration/v1alpha1/zz_generated.crd-manifests/0000_80_machine-config_01_machineconfignodes*.crd.yaml
+    machineconfiguration/v1alpha1/zz_generated.crd-manifests/0000_80_machine-config_01_pinnedimagesets*.crd.yaml
     operator/v1/zz_generated.crd-manifests/0000_80_machine-config_01_machineconfigurations*.crd.yaml
     config/v1alpha1/zz_generated.crd-manifests/0000_10_config-operator_01_clusterimagepolicies*.crd.yaml
     config/v1alpha1/zz_generated.crd-manifests/0000_10_config-operator_01_imagepolicies*.crd.yaml

@@ -118,6 +118,13 @@ type AuthenticationStatus struct {
 	// +kubebuilder:validation:MaxItems=20
 	// +openshift:enable:FeatureGate=ExternalOIDC
 	OIDCClients []OIDCClientStatus `json:"oidcClients"`
+
+	// oidcConfig is where components responsible for rolling out the
+	// provided OIDC configuration report the state of the OIDC configuration
+	// they observe.
+	//
+	// +openshift:enable:FeatureGate=ExternalOIDC
+	OIDCConfig *OIDCConfigStatus `json:"oidcConfig,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -462,4 +469,16 @@ type TokenRequiredClaim struct {
 	// +kubebuilder:validation:MinLength=1
 	// +required
 	RequiredValue string `json:"requiredValue"`
+}
+
+type OIDCConfigStatus struct {
+	// conditions represents the current state of the OIDC configuration.
+	//
+	// Known status condition types are TBD.
+	//
+	// +patchMergeKey=type
+	// +patchStrategy=merge
+	// +listType=map
+	// +listMapKey=type
+	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,1,rep,name=conditions"`
 }

@@ -13136,11 +13136,14 @@ func schema_openshift_api_config_v1_IBMCloudPlatformSpec(ref common.ReferenceCal
 					"serviceEndpoints": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "atomic",
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "ServiceEndpoints contains custom endpoints designated to override existing defaults of IBM Cloud Services.",
+							Description: "serviceEndpoints is a list of custom endpoints which will override the default service endpoints of an IBM Cloud service. These endpoints are consumed by components within the cluster to reach the respective IBM Cloud Services. Once admitted, the CCCMO will furthger validate the endpoint exists by pinging it before processing using the provided endpoints to updates the platform status as well as the cloud config.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -13212,7 +13215,7 @@ func schema_openshift_api_config_v1_IBMCloudPlatformStatus(ref common.ReferenceC
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "serviceEndpoints is a list of custom endpoints which will override the default service endpoints of an IBM Cloud service. These endpoints are consumed by components within the cluster to reach the respective IBM Cloud Services.",
+							Description: "serviceEndpoints is a list of custom endpoints which will override the default service endpoints of an IBM Cloud service. These endpoints are consumed by components within the cluster to reach the respective IBM Cloud Services. Once admitted, the CCCMO will furthger validate the endpoint exists by pinging it before processing using the provided endpoints to updates the platform status as well as the cloud config. platform status as well as the cloud config.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -13249,7 +13252,7 @@ func schema_openshift_api_config_v1_IBMCloudServiceEndpoint(ref common.Reference
 					},
 					"url": {
 						SchemaProps: spec.SchemaProps{
-							Description: "url is fully qualified URI with scheme https, that overrides the default generated endpoint for a client. This must be provided and cannot be empty.",
+							Description: "url is fully qualified URI with scheme https, that overrides the default generated endpoint for a client. This must be provided and cannot be empty. The path must follow the pattern /v[0,9]+ or /api/v[0,9]+",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",

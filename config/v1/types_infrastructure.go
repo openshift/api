@@ -1631,8 +1631,9 @@ type IBMCloudPlatformSpec struct {
 	// serviceEndpoints is a list of custom endpoints which will override the default
 	// service endpoints of an IBM Cloud service. These endpoints are consumed by
 	// components within the cluster to reach the respective IBM Cloud Services.
-	// Once admitted, the CCCMO validates each endpoint exists and updates the
-	// platform status as well as the cloud config.
+	// Once admitted, the CCCMO will furthger validate the endpoint exists by pinging it
+	// before processing using the provided endpoints to updates the platform status
+	// as well as the cloud config.
 	// +listType=map
 	// +listMapKey=name
 	// +optional
@@ -1661,7 +1662,9 @@ type IBMCloudPlatformStatus struct {
 	// serviceEndpoints is a list of custom endpoints which will override the default
 	// service endpoints of an IBM Cloud service. These endpoints are consumed by
 	// components within the cluster to reach the respective IBM Cloud Services.
-	// Once admitted, the CCCMO validates each endpoint exists and updates the
+	// Once admitted, the CCCMO will furthger validate the endpoint exists by pinging it
+	// before processing using the provided endpoints to updates the platform status
+	// as well as the cloud config.
 	// platform status as well as the cloud config.
 	// +listType=map
 	// +listMapKey=name

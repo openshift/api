@@ -1,0 +1,6 @@
+{
+    "go.lintTool": "golangci-lint",
+    "go.alternateTools": {
+        "golangci-lint": "${workspaceFolder}/hack/golangci-lint.sh",
+    }
+}

@@ -1615,11 +1615,13 @@ type IBMCloudServiceEndpoint struct {
 
 	// url is fully qualified URI with scheme https, that overrides the default generated
 	// endpoint for a client.
-	// This must be provided and cannot be empty.
+	// This must be provided and cannot be empty. The path must follow the pattern
+	// /v[0,9]+ or /api/v[0,9]+
 	//
 	// +required
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:XValidation:rule="isURL(self)",message="url must be a valid absolute URL"
+	// +kubebuilder:validation:Pattern:=`https:\/\/.*(?:\/(api\/)?v\d+\/{0,1})$`
 	URL string `json:"url"`
 }
 
@@ -1629,6 +1631,8 @@ type IBMCloudPlatformSpec struct {
 	// serviceEndpoints is a list of custom endpoints which will override the default
 	// service endpoints of an IBM Cloud service. These endpoints are consumed by
 	// components within the cluster to reach the respective IBM Cloud Services.
+	// Once admitted, the CCCMO validates each endpoint exists and updates the
+	// platform status as well as the cloud config.
 	// +listType=map
 	// +listMapKey=name
 	// +optional
@@ -1657,6 +1661,8 @@ type IBMCloudPlatformStatus struct {
 	// serviceEndpoints is a list of custom endpoints which will override the default
 	// service endpoints of an IBM Cloud service. These endpoints are consumed by
 	// components within the cluster to reach the respective IBM Cloud Services.
+	// Once admitted, the CCCMO validates each endpoint exists and updates the
+	// platform status as well as the cloud config.
 	// +listType=map
 	// +listMapKey=name
 	// +optional

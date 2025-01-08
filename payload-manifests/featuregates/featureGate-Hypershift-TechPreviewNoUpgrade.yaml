@@ -258,6 +258,9 @@
                         "name": "VSphereHostVMGroupZonal"
                     },
                     {
+                        "name": "VSphereMultiDisk"
+                    },
+                    {
                         "name": "VSphereMultiNetworks"
                     },
                     {

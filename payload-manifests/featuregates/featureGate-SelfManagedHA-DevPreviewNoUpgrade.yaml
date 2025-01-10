@@ -144,6 +144,9 @@
                         "name": "KMSv1"
                     },
                     {
+                        "name": "KubeletConfigDropInDir"
+                    },
+                    {
                         "name": "MachineAPIProviderOpenStack"
                     },
                     {

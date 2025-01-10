@@ -695,6 +695,14 @@ var (
 						enhancementPR("https://github.com/openshift/enhancements/pull/1697").
 						mustRegister()
 
+	FeatureGateKubeletConfigDropInDir = newFeatureGate("KubeletConfigDropInDir").
+						reportProblemsToJiraComponent("Node").
+						contactPerson("sohankunkerkar").
+						productScope(ocpSpecific).
+						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						enhancementPR("https://github.com/kubernetes/enhancements/issues/3983").
+						mustRegister()
+
 	FeatureGateNutanixMultiSubnets = newFeatureGate("NutanixMultiSubnets").
 					reportProblemsToJiraComponent("Cloud Compute / Nutanix Provider").
 					contactPerson("yanhli").

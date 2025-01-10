@@ -86,6 +86,9 @@
                         "name": "KMSEncryptionProvider"
                     },
                     {
+                        "name": "KubeletConfigDropInDir"
+                    },
+                    {
                         "name": "MachineAPIMigration"
                     },
                     {

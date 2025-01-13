@@ -1621,7 +1621,8 @@ type IBMCloudServiceEndpoint struct {
 	// +required
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:XValidation:rule="isURL(self)",message="url must be a valid absolute URL"
-	// +kubebuilder:validation:Pattern:=`https:\/\/.*(?:\/(api\/)?v\d+\/{0,1})$`
+	// +kubebuilder:validation:XValidation:rule=`self.matches('https:\/\/.*(?:\/(api\/)?v\d+\/{0,1})$')`,message="Invalid URL pattern for IBM service overrides"
+	// +kubebuilder:validation:MaxLength=300
 	URL string `json:"url"`
 }
 
@@ -1668,6 +1669,7 @@ type IBMCloudPlatformStatus struct {
 	// platform status as well as the cloud config.
 	// +listType=map
 	// +listMapKey=name
+	// +kubebuilder:validation:MaxItems:=25
 	// +optional
 	ServiceEndpoints []IBMCloudServiceEndpoint `json:"serviceEndpoints,omitempty"`
 }

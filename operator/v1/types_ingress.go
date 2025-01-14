@@ -265,7 +265,7 @@ type IngressControllerSpec struct {
 	// (router reload).
 	//
 	// Allowed values for this field are "Immediate" and
-	// "Deferred". The default value is "Immediate".
+	// "Deferred". The default value is "Deferred".
 	//
 	// When set to "Immediate", idle connections are closed
 	// immediately during router reloads. This ensures immediate
@@ -324,8 +324,8 @@ type IngressControllerSpec struct {
 	//     frequent reloads to prevent resource exhaustion.
 	//
 	// +optional
-	// +kubebuilder:default:="Immediate"
-	// +default="Immediate"
+	// +kubebuilder:default:="Deferred"
+	// +default="Deferred"
 	IdleConnectionTerminationPolicy IngressControllerConnectionTerminationPolicy `json:"idleConnectionTerminationPolicy,omitempty"`
 }
 

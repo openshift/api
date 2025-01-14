@@ -15,7 +15,7 @@ tests:
         kind: IngressController
         spec:
           httpEmptyRequestsPolicy: Respond
-          idleConnectionTerminationPolicy: Immediate
+          idleConnectionTerminationPolicy: Deferred
     - name: Should allow to set NLB parameters when LBType is NLB.
       initial: |
         apiVersion: operator.openshift.io/v1
@@ -44,7 +44,7 @@ tests:
           namespace: openshift-ingress-operator
         spec:
           httpEmptyRequestsPolicy: Respond
-          idleConnectionTerminationPolicy: Immediate
+          idleConnectionTerminationPolicy: Deferred
           endpointPublishingStrategy:
             loadBalancer:
               dnsManagementPolicy: Managed
@@ -381,7 +381,7 @@ tests:
           namespace: openshift-ingress-operator
         spec:
           httpEmptyRequestsPolicy: Respond
-          idleConnectionTerminationPolicy: Immediate
+          idleConnectionTerminationPolicy: Deferred
           endpointPublishingStrategy:
             loadBalancer:
               dnsManagementPolicy: Managed
@@ -436,7 +436,7 @@ tests:
           namespace: openshift-ingress-operator
         spec:
           httpEmptyRequestsPolicy: Respond
-          idleConnectionTerminationPolicy: Immediate
+          idleConnectionTerminationPolicy: Deferred
           endpointPublishingStrategy:
             loadBalancer:
               dnsManagementPolicy: Managed
@@ -490,7 +490,7 @@ tests:
           namespace: openshift-ingress-operator
         spec:
           httpEmptyRequestsPolicy: Respond
-          idleConnectionTerminationPolicy: Immediate
+          idleConnectionTerminationPolicy: Deferred
           endpointPublishingStrategy:
             loadBalancer:
               dnsManagementPolicy: Managed
@@ -539,7 +539,7 @@ tests:
           namespace: openshift-ingress-operator
         spec:
           httpEmptyRequestsPolicy: Respond
-          idleConnectionTerminationPolicy: Immediate
+          idleConnectionTerminationPolicy: Deferred
           endpointPublishingStrategy:
             loadBalancer:
               dnsManagementPolicy: Managed
@@ -561,7 +561,7 @@ tests:
           namespace: openshift-ingress-operator
         spec:
           httpEmptyRequestsPolicy: Respond
-          idleConnectionTerminationPolicy: Immediate
+          idleConnectionTerminationPolicy: Deferred
           endpointPublishingStrategy:
             loadBalancer:
               dnsManagementPolicy: Managed

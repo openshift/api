@@ -134,9 +134,6 @@
                         "name": "OnClusterBuild"
                     },
                     {
-                        "name": "PersistentIPsForVirtualization"
-                    },
-                    {
                         "name": "PinnedImages"
                     },
                     {
@@ -174,6 +171,9 @@
                     },
                     {
                         "name": "VSphereHostVMGroupZonal"
+                    },
+                    {
+                        "name": "VSphereMultiDisk"
                     },
                     {
                         "name": "VSphereMultiNetworks"
@@ -254,6 +254,9 @@
                     },
                     {
                         "name": "OpenShiftPodSecurityAdmission"
+                    },
+                    {
+                        "name": "PersistentIPsForVirtualization"
                     },
                     {
                         "name": "PrivateHostedZoneAWS"

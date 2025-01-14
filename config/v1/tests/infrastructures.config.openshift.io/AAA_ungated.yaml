@@ -1365,3 +1365,313 @@ tests:
               - name: BadService
                 url: https://bad-service.com
       expectedStatusError: "platformStatus.ibmcloud.serviceEndpoints[1].name: Unsupported value: \"BadService\": supported values: \"CIS\", \"COS\", \"COSConfig\", \"DNSServices\", \"GlobalCatalog\", \"GlobalSearch\", \"GlobalTagging\", \"HyperProtect\", \"IAM\", \"KeyProtect\", \"ResourceController\", \"ResourceManager\", \"VPC\""
+    - name: Should allow updating other fields with an invalid persisted PowerVS service endpoint name in spec
+      initialCRDPatches:
+      - op: replace
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/platformSpec/properties/powervs/properties/serviceEndpoints/items/properties/name
+        value:
+          pattern: "^[a-z0-9-]+$"
+          type: string
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: PowerVS
+            powervs:
+              serviceEndpoints:
+              - name: dnsservices
+                url: https://abc
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig: {}
+          platformSpec:
+            type: PowerVS
+            powervs:
+              serviceEndpoints:
+              - name: dnsservices
+                url: https://abc
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig: {}
+          platformSpec:
+            type: PowerVS
+            powervs:
+              serviceEndpoints:
+              - name: dnsservices
+                url: https://abc
+    - name: Should allow updating adding another slice entry with an invalid persisted PowerVS service endpoint name in spec
+      initialCRDPatches:
+      - op: replace
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/platformSpec/properties/powervs/properties/serviceEndpoints/items/properties/name
+        value:
+          pattern: "^[a-z0-9-]+$"
+          type: string
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: PowerVS
+            powervs:
+              serviceEndpoints:
+              - name: dnsservices
+                url: https://abc
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: PowerVS
+            powervs:
+              serviceEndpoints:
+              - name: dnsservices
+                url: https://abc
+              - name: DNSServices
+                url: https://abc
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: PowerVS
+            powervs:
+              serviceEndpoints:
+              - name: dnsservices
+                url: https://abc
+              - name: DNSServices
+                url: https://abc
+    - name: Should not allow updating adding an invalid value to a still invalid value for a PowerVS service endpoint name in spec
+      initialCRDPatches:
+      - op: replace
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/platformSpec/properties/powervs/properties/serviceEndpoints/items/properties/name
+        value:
+          pattern: "^[a-z0-9-]+$"
+          type: string
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: PowerVS
+            powervs:
+              serviceEndpoints:
+              - name: dnsservices
+                url: https://abc
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: PowerVS
+            powervs:
+              serviceEndpoints:
+              - name: dnsservices2
+                url: https://abc
+      expectedError: 'spec.platformSpec.powervs.serviceEndpoints[0].name: Unsupported value: "dnsservices2": supported values: "CIS", "COS", "COSConfig", "DNSServices", "GlobalCatalog", "GlobalSearch", "GlobalTagging", "HyperProtect", "IAM", "KeyProtect", "Power", "ResourceController", "ResourceManager", "VPC"'
+    - name: Should allow updating adding updating an invalid value to a valid value for PowerVS service endpoint name in spec
+      initialCRDPatches:
+      - op: replace
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/platformSpec/properties/powervs/properties/serviceEndpoints/items/properties/name
+        value:
+          pattern: "^[a-z0-9-]+$"
+          type: string
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: PowerVS
+            powervs:
+              serviceEndpoints:
+              - name: dnsservices
+                url: https://abc
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: PowerVS
+            powervs:
+              serviceEndpoints:
+              - name: DNSServices
+                url: https://abc
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: PowerVS
+            powervs:
+              serviceEndpoints:
+              - name: DNSServices
+                url: https://abc
+    - name: Should allow updating other fields with an invalid persisted PowerVS service endpoint name in status
+      initialCRDPatches:
+      - op: replace
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/status/properties/platformStatus/properties/powervs/properties/serviceEndpoints/items/properties/name
+        value:
+          pattern: "^[a-z0-9-]+$"
+          type: string
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          platformStatus:
+            type: PowerVS
+            powervs:
+              serviceEndpoints:
+              - name: dnsservices
+                url: https://abc
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          platformStatus:
+            type: PowerVS
+            powervs:
+              region: Foo
+              serviceEndpoints:
+              - name: dnsservices
+                url: https://abc
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: HighlyAvailable
+          cpuPartitioning: None
+          infrastructureTopology: HighlyAvailable
+          platformStatus:
+            type: PowerVS
+            powervs:
+              region: Foo
+              serviceEndpoints:
+              - name: dnsservices
+                url: https://abc
+    - name: Should allow updating adding another slice entry with an invalid persisted PowerVS service endpoint name in status
+      initialCRDPatches:
+      - op: replace
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/status/properties/platformStatus/properties/powervs/properties/serviceEndpoints/items/properties/name
+        value:
+          pattern: "^[a-z0-9-]+$"
+          type: string
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          platformStatus:
+            type: PowerVS
+            powervs:
+              serviceEndpoints:
+              - name: dnsservices
+                url: https://abc
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          platformStatus:
+            type: PowerVS
+            powervs:
+              serviceEndpoints:
+              - name: dnsservices
+                url: https://abc
+              - name: DNSServices
+                url: https://abc
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: HighlyAvailable
+          cpuPartitioning: None
+          infrastructureTopology: HighlyAvailable
+          platformStatus:
+            type: PowerVS
+            powervs:
+              serviceEndpoints:
+              - name: dnsservices
+                url: https://abc
+              - name: DNSServices
+                url: https://abc
+    - name: Should not allow updating adding an invalid value to a still invalid value for a PowerVS service endpoint name in status
+      initialCRDPatches:
+      - op: replace
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/status/properties/platformStatus/properties/powervs/properties/serviceEndpoints/items/properties/name
+        value:
+          pattern: "^[a-z0-9-]+$"
+          type: string
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          platformStatus:
+            type: PowerVS
+            powervs:
+              serviceEndpoints:
+              - name: dnsservices
+                url: https://abc
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          platformStatus:
+            type: PowerVS
+            powervs:
+              serviceEndpoints:
+              - name: dnsservices2
+                url: https://abc
+      expectedStatusError: 'status.platformStatus.powervs.serviceEndpoints[0].name: Unsupported value: "dnsservices2": supported values: "CIS", "COS", "COSConfig", "DNSServices", "GlobalCatalog", "GlobalSearch", "GlobalTagging", "HyperProtect", "IAM", "KeyProtect", "Power", "ResourceController", "ResourceManager", "VPC"'
+    - name: Should allow updating adding updating an invalid value to a valid value for PowerVS service endpoint name in status
+      initialCRDPatches:
+      - op: replace
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/status/properties/platformStatus/properties/powervs/properties/serviceEndpoints/items/properties/name
+        value:
+          pattern: "^[a-z0-9-]+$"
+          type: string
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          platformStatus:
+            type: PowerVS
+            powervs:
+              serviceEndpoints:
+              - name: dnsservices
+                url: https://abc
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          platformStatus:
+            type: PowerVS
+            powervs:
+              serviceEndpoints:
+              - name: DNSServices
+                url: https://abc
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: HighlyAvailable
+          cpuPartitioning: None
+          infrastructureTopology: HighlyAvailable
+          platformStatus:
+            type: PowerVS
+            powervs:
+              serviceEndpoints:
+              - name: DNSServices
+                url: https://abc

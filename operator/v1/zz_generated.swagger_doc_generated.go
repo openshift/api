@@ -1265,6 +1265,22 @@ func (IPFIXConfig) SwaggerDoc() map[string]string {
 	return map_IPFIXConfig
 }
 
+var map_IPv4OVNKubernetesConfig = map[string]string{
+	"internalTransitSwitchSubnet": "internalTransitSwitchSubnet is a v4 subnet in IPV4 CIDR format used internally by OVN-Kubernetes for the distributed transit switch in the OVN Interconnect architecture that connects the cluster routers on each node together to enable east west traffic. The subnet chosen should not overlap with other networks specified for OVN-Kubernetes as well as other networks used on the host. The value can be changed after installation. When ommitted, this means no opinion and the platform is left to choose a reasonable default which is subject to change over time. The current default subnet is 100.88.0.0/16 The subnet must be large enough to accomadate one IP per node in your cluster The value must be in proper IPV4 CIDR format",
+}
+
+func (IPv4OVNKubernetesConfig) SwaggerDoc() map[string]string {
+	return map_IPv4OVNKubernetesConfig
+}
+
+var map_IPv6OVNKubernetesConfig = map[string]string{
+	"internalTransitSwitchSubnet": "internalTransitSwitchSubnet is a v4 subnet in IPV4 CIDR format used internally by OVN-Kubernetes for the distributed transit switch in the OVN Interconnect architecture that connects the cluster routers on each node together to enable east west traffic. The subnet chosen should not overlap with other networks specified for OVN-Kubernetes as well as other networks used on the host. The value can be changed after installation. When ommitted, this means no opinion and the platform is left to choose a reasonable default which is subject to change over time. The subnet must be large enough to accomadate one IP per node in your cluster The current default subnet is fd97::/64 The value must be in proper IPV6 CIDR format Note that IPV6 dual addresses are not permitted",
+}
+
+func (IPv6OVNKubernetesConfig) SwaggerDoc() map[string]string {
+	return map_IPv6OVNKubernetesConfig
+}
+
 var map_KuryrConfig = map[string]string{
 	"":                             "KuryrConfig configures the Kuryr-Kubernetes SDN",
 	"daemonProbesPort":             "The port kuryr-daemon will listen for readiness and liveness requests.",
@@ -1374,6 +1390,8 @@ var map_OVNKubernetesConfig = map[string]string{
 	"v4InternalSubnet":    "v4InternalSubnet is a v4 subnet used internally by ovn-kubernetes in case the default one is being already used by something else. It must not overlap with any other subnet being used by OpenShift or by the node network. The size of the subnet must be larger than the number of nodes. The value cannot be changed after installation. Default is 100.64.0.0/16",
 	"v6InternalSubnet":    "v6InternalSubnet is a v6 subnet used internally by ovn-kubernetes in case the default one is being already used by something else. It must not overlap with any other subnet being used by OpenShift or by the node network. The size of the subnet must be larger than the number of nodes. The value cannot be changed after installation. Default is fd98::/48",
 	"egressIPConfig":      "egressIPConfig holds the configuration for EgressIP options.",
+	"ipv4":                "ipv4 allows users to configure IP settings for IPv4 connections. When ommitted, this means no opinions and the default configuration is used. Check individual fields within ipv4 for details of default values.",
+	"ipv6":                "ipv6 allows users to configure IP settings for IPv6 connections. When ommitted, this means no opinions and the default configuration is used. Check individual fields within ipv4 for details of default values.",
 }
 
 func (OVNKubernetesConfig) SwaggerDoc() map[string]string {

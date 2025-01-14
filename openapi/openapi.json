@@ -23826,6 +23826,24 @@
     "com.github.openshift.api.operator.v1.IPsecConfig": {
       "type": "object"
     },
+    "com.github.openshift.api.operator.v1.IPv4OVNKubernetesConfig": {
+      "type": "object",
+      "properties": {
+        "internalTransitSwitchSubnet": {
+          "description": "internalTransitSwitchSubnet is a v4 subnet in IPV4 CIDR format used internally by OVN-Kubernetes for the distributed transit switch in the OVN Interconnect architecture that connects the cluster routers on each node together to enable east west traffic. The subnet chosen should not overlap with other networks specified for OVN-Kubernetes as well as other networks used on the host. The value can be changed after installation. When ommitted, this means no opinion and the platform is left to choose a reasonable default which is subject to change over time. The current default subnet is 100.88.0.0/16 The subnet must be large enough to accomadate one IP per node in your cluster The value must be in proper IPV4 CIDR format",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.IPv6OVNKubernetesConfig": {
+      "type": "object",
+      "properties": {
+        "internalTransitSwitchSubnet": {
+          "description": "internalTransitSwitchSubnet is a v4 subnet in IPV4 CIDR format used internally by OVN-Kubernetes for the distributed transit switch in the OVN Interconnect architecture that connects the cluster routers on each node together to enable east west traffic. The subnet chosen should not overlap with other networks specified for OVN-Kubernetes as well as other networks used on the host. The value can be changed after installation. When ommitted, this means no opinion and the platform is left to choose a reasonable default which is subject to change over time. The subnet must be large enough to accomadate one IP per node in your cluster The current default subnet is fd97::/64 The value must be in proper IPV6 CIDR format Note that IPV6 dual addresses are not permitted",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1.IngressController": {
       "description": "IngressController describes a managed ingress controller for the cluster. The controller can service OpenShift Route and Kubernetes Ingress resources.\n\nWhen an IngressController is created, a new ingress controller deployment is created to allow external traffic to reach the services that expose Ingress or Route resources. Updating this resource may lead to disruption for public facing network connections as a new ingress controller revision may be rolled out.\n\nhttps://kubernetes.io/docs/concepts/services-networking/ingress-controllers\n\nWhenever possible, sensible defaults for the platform are used. See each field for more details.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
@@ -25617,6 +25635,14 @@
         "ipsecConfig": {
           "description": "ipsecConfig enables and configures IPsec for pods on the pod network within the cluster.",
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.IPsecConfig"
+        },
+        "ipv4": {
+          "description": "ipv4 allows users to configure IP settings for IPv4 connections. When ommitted, this means no opinions and the default configuration is used. Check individual fields within ipv4 for details of default values.",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.IPv4OVNKubernetesConfig"
+        },
+        "ipv6": {
+          "description": "ipv6 allows users to configure IP settings for IPv6 connections. When ommitted, this means no opinions and the default configuration is used. Check individual fields within ipv4 for details of default values.",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.IPv6OVNKubernetesConfig"
         },
         "mtu": {
           "description": "mtu is the MTU to use for the tunnel interface. This must be 100 bytes smaller than the uplink mtu. Default is 1400",

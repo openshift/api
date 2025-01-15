@@ -328,9 +328,7 @@ spec:
                         characters and hyphens
                       rule: '!format.dns1123Label().validate(self).hasValue()'
                 required:
-                - group
                 - name
-                - resource
                 type: object
               observedGeneration:
                 description: observedGeneration represents the generation of the MachineOSConfig

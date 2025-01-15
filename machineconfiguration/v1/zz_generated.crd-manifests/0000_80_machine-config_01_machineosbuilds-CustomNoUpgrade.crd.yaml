@@ -217,9 +217,7 @@ spec:
                             characters and hyphens
                           rule: '!format.dns1123Label().validate(self).hasValue()'
                     required:
-                    - group
                     - name
-                    - resource
                     type: object
                 required:
                 - imageBuilderType
@@ -378,9 +376,7 @@ spec:
                           characters and hyphens
                         rule: '!format.dns1123Label().validate(self).hasValue()'
                   required:
-                  - group
                   - name
-                  - resource
                   type: object
                 maxItems: 10
                 type: array

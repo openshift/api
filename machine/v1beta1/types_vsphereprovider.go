@@ -193,11 +193,17 @@ type VSphereDisk struct {
 	// +required
 	Name string `json:"name"`
 	// sizeGiB is the size of the disk in GiB.
-	// The maximum supported size is 57742 GiB.
+	// The maximum supported size is 16384 GiB.
 	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=57742
+	// +kubebuilder:validation:Maximum=16384
 	// +required
 	SizeGiB int32 `json:"sizeGiB"`
+	// thinProvisioned flag to indicate whether the virtual disk backing
+	// file should be allocated lazily (using thin provisioning) or be
+	// fully allocated (standard provisioning).
+	// If not set, the setting will be provided by the default storage policy.
+	// +optional
+	ThinProvisioned bool `json:"thinProvisioned,omitempty"`
 }
 
 // WorkspaceConfig defines a workspace configuration for the vSphere cloud

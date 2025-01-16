@@ -257,7 +257,7 @@ type StaticPodOperatorStatus struct {
 }
 
 // NodeStatus provides information about the current state of a particular node managed by this operator.
-// +kubebuilder:validation:XValidation:rule="has(self.currentRevision) || !has(oldSelf.currentRevision)",message="cannot be unset once set",fieldPath=".currentRevision"
+// +kubebuilder:validation:XValidation:rule="has(self.currentRevision) || !has(oldSelf.currentRevision)",message="cannot be unset once set"
 type NodeStatus struct {
 	// nodeName is the name of the node
 	// +required

@@ -278,8 +278,7 @@ spec:
                   - nodeName
                   type: object
                   x-kubernetes-validations:
-                  - fieldPath: .currentRevision
-                    message: cannot be unset once set
+                  - message: cannot be unset once set
                     rule: has(self.currentRevision) || !has(oldSelf.currentRevision)
                 type: array
                 x-kubernetes-list-map-keys:

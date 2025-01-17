@@ -198,13 +198,23 @@ type VSphereDisk struct {
 	// +kubebuilder:validation:Maximum=16384
 	// +required
 	SizeGiB int32 `json:"sizeGiB"`
-	// thinProvisioned flag to indicate whether the virtual disk backing
+	// provisionType flag to indicate whether the virtual disk backing
 	// file should be allocated lazily (using thin provisioning) or be
 	// fully allocated (standard provisioning).
 	// If not set, the setting will be provided by the default storage policy.
 	// +optional
-	ThinProvisioned bool `json:"thinProvisioned,omitempty"`
+	ProvisionType ProvisionType `json:"provisionType,omitempty"`
 }
+
+type ProvisionType string
+
+var (
+	// Thin is used to configure disk to be thin provisioned
+	Thin ProvisionType = "Thin"
+
+	// Standard is used to configure disk to be fully provisioned
+	Standard ProvisionType = "Standard"
+)
 
 // WorkspaceConfig defines a workspace configuration for the vSphere cloud
 // provider.

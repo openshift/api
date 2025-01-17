@@ -37093,7 +37093,7 @@ func schema_openshift_api_machine_v1beta1_GCPMachineProviderSpec(ref common.Refe
 					},
 					"confidentialCompute": {
 						SchemaProps: spec.SchemaProps{
-							Description: "confidentialCompute Defines whether the instance should have confidential compute enabled. If enabled OnHostMaintenance is required to be set to \"Terminate\". If omitted, the platform chooses a default, which is subject to change over time, currently that default is false.",
+							Description: "ConfidentialCompute Defines whether the instance should have confidential compute enabled or not, and the confidential computing technology of choice. If Disabled, the machine will not be configured to be a confidential computing instance. If Enabled, confidential computing will be configured and AMD Secure Encrypted Virtualization will be configured by default. That is subject to change over time. If using AMD Secure Encrypted Virtualization is vital, use AMDEncryptedVirtualization explicitly instead. If AMDEncryptedVirtualization, it will configure AMD Secure Encrypted Virtualization (AMD SEV) as the confidential computing technology. If AMDEncryptedVirtualizationNestedPaging, it will configure AMD Secure Encrypted Virtualization Secure Nested Paging (AMD SEV-SNP) as the confidential computing technology. If enabled (any value other than Disabled) OnHostMaintenance is required to be set to \"Terminate\". If omitted, the platform chooses a default, which is subject to change over time, currently that default is false.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

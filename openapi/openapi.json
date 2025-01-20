@@ -4310,6 +4310,71 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.AlertmanagerMainConfig": {
+      "description": "The `AlertmanagerMainConfig` resource defines settings for the Alertmanager component in the `openshift-monitoring` namespace.",
+      "type": "object",
+      "required": [
+        "mode",
+        "userMode"
+      ],
+      "properties": {
+        "logLevel": {
+          "description": "logLevel Defines the log level setting for Alertmanager. The possible values are: `Error`, `Warn`, `Info`, `Debug`. The default value is `Info`.",
+          "type": "string"
+        },
+        "mode": {
+          "description": "mode enables or disables the main Alertmanager instance. in the `openshift-monitoring` namespace Allowed values are \"Enabled\", \"Disabled\".",
+          "type": "string",
+          "default": ""
+        },
+        "nodeSelector": {
+          "description": "nodeSelector Defines the nodes on which the Pods are scheduled.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "resources": {
+          "description": "resources Defines resource requests and limits for the Alertmanager container.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "secrets": {
+          "description": "secrets Defines a list of secrets that need to be mounted into the Alertmanager. The secrets must reside within the same namespace as the Alertmanager object. They will be added as volumes named secret-<secret-name> and mounted at /etc/alertmanager/secrets/<secret-name> within the 'alertmanager' container of the Alertmanager Pods.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "tolerations": {
+          "description": "tolerations Defines tolerations for the pods.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.Toleration"
+          }
+        },
+        "topologySpreadConstraints": {
+          "description": "topologySpreadConstraints Defines a pod's topology spread constraints.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.TopologySpreadConstraint"
+          }
+        },
+        "userMode": {
+          "description": "userMode enables or disables user-defined namespaces to be selected for `AlertmanagerConfig` lookups. This setting only applies if the user workload monitoring instance of Alertmanager is not enabled.",
+          "type": "string",
+          "default": ""
+        },
+        "volumeClaimTemplate": {
+          "description": "volumeClaimTemplate Defines persistent storage for Alertmanager. Use this setting to configure the persistent volume claim, including storage class, volume size, and name.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaim"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.AlibabaCloudPlatformSpec": {
       "description": "AlibabaCloudPlatformSpec holds the desired state of the Alibaba Cloud infrastructure provider. This only includes fields that can be modified in the cluster.",
       "type": "object"
@@ -5147,9 +5212,15 @@
       "description": "ClusterMonitoringSpec defines the desired state of Cluster Monitoring Operator",
       "type": "object",
       "required": [
-        "userDefined"
+        "userDefined",
+        "alertmanagerMainConfig"
       ],
       "properties": {
+        "alertmanagerMainConfig": {
+          "description": "alertmanagerMainConfig defines settings for the Alertmanager component in the `openshift-monitoring` namespace.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.AlertmanagerMainConfig"
+        },
         "userDefined": {
           "description": "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring.",
           "default": {},

@@ -156,6 +156,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.AWSServiceEndpoint":                                              schema_openshift_api_config_v1_AWSServiceEndpoint(ref),
 		"github.com/openshift/api/config/v1.AdmissionConfig":                                                 schema_openshift_api_config_v1_AdmissionConfig(ref),
 		"github.com/openshift/api/config/v1.AdmissionPluginConfig":                                           schema_openshift_api_config_v1_AdmissionPluginConfig(ref),
+		"github.com/openshift/api/config/v1.AlertmanagerMainConfig":                                          schema_openshift_api_config_v1_AlertmanagerMainConfig(ref),
 		"github.com/openshift/api/config/v1.AlibabaCloudPlatformSpec":                                        schema_openshift_api_config_v1_AlibabaCloudPlatformSpec(ref),
 		"github.com/openshift/api/config/v1.AlibabaCloudPlatformStatus":                                      schema_openshift_api_config_v1_AlibabaCloudPlatformStatus(ref),
 		"github.com/openshift/api/config/v1.AlibabaCloudResourceTag":                                         schema_openshift_api_config_v1_AlibabaCloudResourceTag(ref),
@@ -8786,6 +8787,117 @@ func schema_openshift_api_config_v1_AdmissionPluginConfig(ref common.ReferenceCa
 	}
 }
 
+func schema_openshift_api_config_v1_AlertmanagerMainConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "The `AlertmanagerMainConfig` resource defines settings for the Alertmanager component in the `openshift-monitoring` namespace.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "mode enables or disables the main Alertmanager instance. in the `openshift-monitoring` namespace Allowed values are \"Enabled\", \"Disabled\".",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"userMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "userMode enables or disables user-defined namespaces to be selected for `AlertmanagerConfig` lookups. This setting only applies if the user workload monitoring instance of Alertmanager is not enabled.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"logLevel": {
+						SchemaProps: spec.SchemaProps{
+							Description: "logLevel Defines the log level setting for Alertmanager. The possible values are: `Error`, `Warn`, `Info`, `Debug`. The default value is `Info`.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"nodeSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "nodeSelector Defines the nodes on which the Pods are scheduled.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"resources": {
+						SchemaProps: spec.SchemaProps{
+							Description: "resources Defines resource requests and limits for the Alertmanager container.",
+							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
+					"secrets": {
+						SchemaProps: spec.SchemaProps{
+							Description: "secrets Defines a list of secrets that need to be mounted into the Alertmanager. The secrets must reside within the same namespace as the Alertmanager object. They will be added as volumes named secret-<secret-name> and mounted at /etc/alertmanager/secrets/<secret-name> within the 'alertmanager' container of the Alertmanager Pods.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"tolerations": {
+						SchemaProps: spec.SchemaProps{
+							Description: "tolerations Defines tolerations for the pods.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.Toleration"),
+									},
+								},
+							},
+						},
+					},
+					"topologySpreadConstraints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "topologySpreadConstraints Defines a pod's topology spread constraints.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.TopologySpreadConstraint"),
+									},
+								},
+							},
+						},
+					},
+					"volumeClaimTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "volumeClaimTemplate Defines persistent storage for Alertmanager. Use this setting to configure the persistent volume claim, including storage class, volume size, and name.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaim"),
+						},
+					},
+				},
+				Required: []string{"mode", "userMode"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.PersistentVolumeClaim", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint"},
+	}
+}
+
 func schema_openshift_api_config_v1_AlibabaCloudPlatformSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -10244,12 +10356,19 @@ func schema_openshift_api_config_v1_ClusterMonitoringSpec(ref common.ReferenceCa
 							Ref:         ref("github.com/openshift/api/config/v1.UserDefinedMonitoring"),
 						},
 					},
+					"alertmanagerMainConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "alertmanagerMainConfig defines settings for the Alertmanager component in the `openshift-monitoring` namespace.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.AlertmanagerMainConfig"),
+						},
+					},
 				},
-				Required: []string{"userDefined"},
+				Required: []string{"userDefined", "alertmanagerMainConfig"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.UserDefinedMonitoring"},
+			"github.com/openshift/api/config/v1.AlertmanagerMainConfig", "github.com/openshift/api/config/v1.UserDefinedMonitoring"},
 	}
 }
 

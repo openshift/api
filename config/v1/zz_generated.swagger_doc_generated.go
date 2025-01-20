@@ -571,6 +571,23 @@ func (ImageLabel) SwaggerDoc() map[string]string {
 	return map_ImageLabel
 }
 
+var map_AlertmanagerMainConfig = map[string]string{
+	"":                          "The `AlertmanagerMainConfig` resource defines settings for the Alertmanager component in the `openshift-monitoring` namespace.",
+	"mode":                      "mode enables or disables the main Alertmanager instance. in the `openshift-monitoring` namespace Allowed values are \"Enabled\", \"Disabled\".",
+	"userMode":                  "userMode enables or disables user-defined namespaces to be selected for `AlertmanagerConfig` lookups. This setting only applies if the user workload monitoring instance of Alertmanager is not enabled.",
+	"logLevel":                  "logLevel Defines the log level setting for Alertmanager. The possible values are: `Error`, `Warn`, `Info`, `Debug`. The default value is `Info`.",
+	"nodeSelector":              "nodeSelector Defines the nodes on which the Pods are scheduled.",
+	"resources":                 "resources Defines resource requests and limits for the Alertmanager container.",
+	"secrets":                   "secrets Defines a list of secrets that need to be mounted into the Alertmanager. The secrets must reside within the same namespace as the Alertmanager object. They will be added as volumes named secret-<secret-name> and mounted at /etc/alertmanager/secrets/<secret-name> within the 'alertmanager' container of the Alertmanager Pods.",
+	"tolerations":               "tolerations Defines tolerations for the pods.",
+	"topologySpreadConstraints": "topologySpreadConstraints Defines a pod's topology spread constraints.",
+	"volumeClaimTemplate":       "volumeClaimTemplate Defines persistent storage for Alertmanager. Use this setting to configure the persistent volume claim, including storage class, volume size, and name.",
+}
+
+func (AlertmanagerMainConfig) SwaggerDoc() map[string]string {
+	return map_AlertmanagerMainConfig
+}
+
 var map_ClusterMonitoring = map[string]string{
 	"":         "ClusterMonitoring is the Custom Resource object which holds the current status of Cluster Monitoring Operator. CMO is a central component of the monitoring stack.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. ClusterMonitoring is the Schema for the Cluster Monitoring Operators API",
 	"metadata": "metadata is the standard object metadata.",
@@ -593,8 +610,9 @@ func (ClusterMonitoringList) SwaggerDoc() map[string]string {
 }
 
 var map_ClusterMonitoringSpec = map[string]string{
-	"":            "ClusterMonitoringSpec defines the desired state of Cluster Monitoring Operator",
-	"userDefined": "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring.",
+	"":                       "ClusterMonitoringSpec defines the desired state of Cluster Monitoring Operator",
+	"userDefined":            "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring.",
+	"alertmanagerMainConfig": "alertmanagerMainConfig defines settings for the Alertmanager component in the `openshift-monitoring` namespace.",
 }
 
 func (ClusterMonitoringSpec) SwaggerDoc() map[string]string {

@@ -6,17 +6,17 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // of the cluster or an update
 type HealthInsight struct {
 	// startedAt is the time when the condition reported by the insight started
-	// +kubebuilder:validation:Required
+	// +required
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:Format=date-time
 	StartedAt metav1.Time `json:"startedAt"`
 
 	// scope is list of objects involved in the insight
-	// +kubebuilder:validation:Required
+	// +required
 	Scope InsightScope `json:"scope"`
 
 	// impact describes the impact the reported condition has on the cluster or update
-	// +kubebuilder:validation:Required
+	// +required
 	Impact InsightImpact `json:"impact"`
 
 	// remediation contains information about how to resolve or prevent the reported condition
@@ -26,7 +26,7 @@ type HealthInsight struct {
 // InsightScope is a list of resources involved in the insight
 type InsightScope struct {
 	// type is either ControlPlane or WorkerPool
-	// +kubebuilder:validation:Required
+	// +required
 	// +kubebuilder:validation:Enum=ControlPlane;WorkerPool
 	Type ScopeType `json:"type"`
 
@@ -50,17 +50,17 @@ const (
 // InsightImpact describes the impact the reported condition has on the cluster or update
 type InsightImpact struct {
 	// level is the severity of the impact
-	// +kubebuilder:validation:Required
+	// +required
 	// +kubebuilder:validation:Enum=Unknown;Info;Warning;Error;Critical
 	Level InsightImpactLevel `json:"level"`
 
 	// type is the type of the impact
-	// +kubebuilder:validation:Required
+	// +required
 	// +kubebuilder:validation:Enum=None;Unknown;API Availability;Cluster Capacity;Application Availability;Application Outage;Data Loss;Update Speed;Update Stalled
 	Type InsightImpactType `json:"type"`
 
 	// summary is a short summary of the impact
-	// +kubebuilder:validation:Required
+	// +required
 	// +kubebuilder:validation:Type=string
 	Summary string `json:"summary"`
 
@@ -113,7 +113,7 @@ const (
 // InsightRemediation contains information about how to resolve or prevent the reported condition
 type InsightRemediation struct {
 	// reference is a URL where administrators can find information to resolve or prevent the reported condition
-	// +kubebuilder:validation:Required
+	// +required
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:Format=uri
 	Reference string `json:"reference"`

@@ -19,13 +19,16 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // +kubebuilder:metadata:annotations="description=Provides health and status information about OpenShift cluster updates."
 // +kubebuilder:metadata:annotations="displayName=UpdateStatuses"
 type UpdateStatus struct {
-	metav1.TypeMeta   `json:",inline"`
+	metav1.TypeMeta `json:",inline"`
+
+	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	// spec is empty for now, UpdateStatus is purely status-reporting API. In the future spec may be used to hold
 	// configuration to drive what information is surfaced and how
 	// +required
 	Spec UpdateStatusSpec `json:"spec"`
+	// status exposes the health and status of the ongoing cluster update
 	// +optional
 	Status UpdateStatusStatus `json:"status"`
 }
@@ -40,6 +43,14 @@ type UpdateStatusSpec struct {
 // UpdateStatusStatus is the API about in-progress updates. It aggregates and summarizes UpdateInsights produced by
 // update informers
 type UpdateStatusStatus struct {
+	// conditions provide details about the controller operational matters
+	// +listType=map
+	// +listMapKey=type
+	// +patchStrategy=merge
+	// +patchMergeKey=type
+	// +optional
+	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
+
 	// controlPlane contains a summary and insights related to the control plane update
 	// +required
 	ControlPlane ControlPlane `json:"controlPlane"`
@@ -47,20 +58,22 @@ type UpdateStatusStatus struct {
 	// workerPools contains summaries and insights related to the worker pools update
 	// +listType=map
 	// +listMapKey=name
-	// +optional
-	WorkerPools []Pool `json:"workerPools,omitempty"`
-
-	// conditions provide details about the controller operational matters
-	// +listType=map
-	// +listMapKey=type
-	// +optional
 	// +patchStrategy=merge
-	// +patchMergeKey=type
-	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
+	// +patchMergeKey=name
+	// +optional
+	WorkerPools []Pool `json:"workerPools,omitempty" patchStrategy:"merge" patchMergeKey:"name"`
 }
 
 // ControlPlane contains a summary and insights related to the control plane update
 type ControlPlane struct {
+	// conditions provides details about the control plane update
+	// +listType=map
+	// +listMapKey=type
+	// +patchStrategy=merge
+	// +patchMergeKey=type
+	// +optional
+	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
+
 	// resource is the resource that represents the control plane. It will typically be a ClusterVersion resource
 	// in standalone OpenShift and HostedCluster in Hosted Control Planes.
 	//
@@ -84,16 +97,10 @@ type ControlPlane struct {
 	// informers is a list of insight producers, each carries a list of insights relevant for control plane
 	// +listType=map
 	// +listMapKey=name
-	// +optional
-	Informers []Informer `json:"informers,omitempty"`
-
-	// conditions provides details about the control plane update
-	// +listType=map
-	// +listMapKey=type
-	// +optional
 	// +patchStrategy=merge
-	// +patchMergeKey=type
-	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
+	// +patchMergeKey=name
+	// +optional
+	Informers []Informer `json:"informers,omitempty" patchStrategy:"merge" patchMergeKey:"name"`
 }
 
 // ControlPlaneConditionType are types of conditions that can be reported on control plane level
@@ -123,6 +130,14 @@ const (
 
 // Pool contains a summary and insights related to a node pool update
 type Pool struct {
+	// conditions provide details about the pool
+	// +listType=map
+	// +listMapKey=type
+	// +patchStrategy=merge
+	// +patchMergeKey=type
+	// +optional
+	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
+
 	// name is the name of the pool
 	// +required
 	Name string `json:"name"`
@@ -139,16 +154,10 @@ type Pool struct {
 	// informers is a list of insight producers, each carries a list of insights
 	// +listType=map
 	// +listMapKey=name
-	// +optional
-	Informers []Informer `json:"informers,omitempty"`
-
-	// conditions provide details about the pool
-	// +listType=map
-	// +listMapKey=type
-	// +optional
 	// +patchStrategy=merge
-	// +patchMergeKey=type
-	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
+	// +patchMergeKey=name
+	// +optional
+	Informers []Informer `json:"informers,omitempty" patchStrategy:"merge" patchMergeKey:"name"`
 }
 
 // Informer is an insight producer identified by a name, carrying a list of insights it produced
@@ -158,10 +167,12 @@ type Informer struct {
 	Name string `json:"name"`
 
 	// insights is a list of insights produced by this producer
-	// +optional
 	// +listType=map
 	// +listMapKey=uid
-	Insights []Insight `json:"insights,omitempty"`
+	// +patchStrategy=merge
+	// +patchMergeKey=uid
+	// +optional
+	Insights []Insight `json:"insights,omitempty" patchStrategy:"merge" patchMergeKey:"uid"`
 }
 
 // Insight is a unique piece of either status/progress or update health information produced by update informer
@@ -277,7 +288,10 @@ type PoolResourceRef struct {
 // +openshift:compatibility-gen:level=4
 type UpdateStatusList struct {
 	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ListMeta `json:"metadata"`
 
+	// items is a  list of UpdateStatus resources
+	// +optional
 	Items []UpdateStatus `json:"items"`
 }

@@ -20,6 +20,7 @@ type HealthInsight struct {
 	Impact InsightImpact `json:"impact"`
 
 	// remediation contains information about how to resolve or prevent the reported condition
+	// +required
 	Remediation InsightRemediation `json:"remediation"`
 }
 

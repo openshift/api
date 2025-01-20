@@ -5,6 +5,14 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // ClusterVersionStatusInsight reports the state of a ClusterVersion resource (which represents a control plane
 // update in standalone clusters), during the update.
 type ClusterVersionStatusInsight struct {
+	// conditions provides detailed observed conditions about ClusterVersion
+	// +listType=map
+	// +listMapKey=type
+	// +patchStrategy=merge
+	// +patchMergeKey=type
+	// +optional
+	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
+
 	// resource is the ClusterVersion resource that represents the control plane
 	//
 	// Note: By OpenShift API conventions, in isolation this should be a specialized reference that refers just to
@@ -45,14 +53,6 @@ type ClusterVersionStatusInsight struct {
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:Format=date-time
 	EstimatedCompletedAt *metav1.Time `json:"estimatedCompletedAt,omitempty"`
-
-	// conditions provides detailed observed conditions about ClusterVersion
-	// +listType=map
-	// +listMapKey=type
-	// +optional
-	// +patchStrategy=merge
-	// +patchMergeKey=type
-	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 }
 
 // ControlPlaneAssessment is the assessment of the control plane update process
@@ -95,16 +95,21 @@ type Version struct {
 	// and when not provided, the metadata item has boolean semantics (presence indicates true)
 	// +listType=map
 	// +listMapKey=key
+	// +patchStrategy=merge
+	// +patchMergeKey=key
 	// +optional
-	Metadata []VersionMetadata `json:"metadata,omitempty"`
+	Metadata []VersionMetadata `json:"metadata,omitempty" patchStrategy:"merge" patchMergeKey:"key"`
 }
 
+// VersionMetadata is a key:value item assigned to version involved in the update. Value can be empty, then the metadata
+// have boolean semantics (true when present, false when absent)
 type VersionMetadata struct {
 	// key is the name of this metadata value
 	// +required
 	// +kubebuilder:validation:Enum=Installation;Partial;Architecture
 	Key VersionMetadataKey `json:"key"`
 
+	// value is the value for the metadata
 	// +optional
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:MaxLength=32
@@ -149,6 +154,14 @@ const (
 // ClusterOperatorStatusInsight reports the state of a ClusterOperator resource (which represents a control plane
 // component update in standalone clusters), during the update
 type ClusterOperatorStatusInsight struct {
+	// conditions provide details about the operator
+	// +listType=map
+	// +listMapKey=type
+	// +patchStrategy=merge
+	// +patchMergeKey=type
+	// +optional
+	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
+
 	// name is the name of the operator
 	// +required
 	Name string `json:"name"`
@@ -161,14 +174,6 @@ type ClusterOperatorStatusInsight struct {
 	// than type safety for producers.
 	// +required
 	Resource ResourceRef `json:"resource"`
-
-	// conditions provide details about the operator
-	// +listType=map
-	// +listMapKey=type
-	// +optional
-	// +patchStrategy=merge
-	// +patchMergeKey=type
-	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 }
 
 // ClusterOperatorStatusInsightConditionType are types of conditions that can be reported on ClusterOperator status insights
@@ -211,6 +216,14 @@ const (
 
 // MachineConfigPoolStatusInsight reports the state of a MachineConfigPool resource during the update
 type MachineConfigPoolStatusInsight struct {
+	// conditions provide details about the machine config pool update
+	// +listType=map
+	// +listMapKey=type
+	// +patchStrategy=merge
+	// +patchMergeKey=type
+	// +optional
+	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
+
 	// name is the name of the machine config pool
 	// +required
 	Name string `json:"name"`
@@ -242,16 +255,10 @@ type MachineConfigPoolStatusInsight struct {
 	// summaries is a list of counts of nodes matching certain criteria (e.g. updated, degraded, etc.)
 	// +listType=map
 	// +listMapKey=type
-	// +optional
-	Summaries []NodeSummary `json:"summaries,omitempty"`
-
-	// conditions provide details about the machine config pool update
-	// +listType=map
-	// +listMapKey=type
-	// +optional
 	// +patchStrategy=merge
 	// +patchMergeKey=type
-	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
+	// +optional
+	Summaries []NodeSummary `json:"summaries,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 }
 
 // PoolAssessment is the assessment of the node pool update process
@@ -309,6 +316,14 @@ const (
 
 // NodeStatusInsight reports the state of a Node during the update
 type NodeStatusInsight struct {
+	// conditions provides details about the control plane update
+	// +listType=map
+	// +listMapKey=type
+	// +patchStrategy=merge
+	// +patchMergeKey=type
+	// +optional
+	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
+
 	// name is the name of the node
 	// +required
 	Name string `json:"name"`
@@ -349,14 +364,6 @@ type NodeStatusInsight struct {
 	// message is a short human-readable message about the node update status
 	// +optional
 	Message string `json:"message,omitempty"`
-
-	// conditions provides details about the control plane update
-	// +listType=map
-	// +listMapKey=type
-	// +optional
-	// +patchStrategy=merge
-	// +patchMergeKey=type
-	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 }
 
 // NodeStatusInsightConditionType are types of conditions that can be reported on Node status insights

@@ -37593,6 +37593,849 @@
         }
       }
     },
+    "com.github.openshift.api.update.v1alpha1.ClusterOperatorStatusInsight": {
+      "description": "ClusterOperatorStatusInsight reports the state of a ClusterOperator resource (which represents a control plane component update in standalone clusters), during the update",
+      "type": "object",
+      "required": [
+        "name",
+        "resource"
+      ],
+      "properties": {
+        "conditions": {
+          "description": "conditions provide details about the operator. It contains at most 10 items. Known conditions are: - Updating: whether the operator is updating; When Updating=False, the reason field can be Pending or Updated - Healthy: whether the operator is considered healthy; When Healthy=False, the reason field can be Unavailable or Degraded, and Unavailable is \"stronger\" than Degraded",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "type",
+          "x-kubernetes-patch-strategy": "merge"
+        },
+        "name": {
+          "description": "name is the name of the operator",
+          "type": "string",
+          "default": ""
+        },
+        "resource": {
+          "description": "resource is the ClusterOperator resource that represents the operator",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.ResourceRef"
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.ClusterVersionStatusInsight": {
+      "description": "ClusterVersionStatusInsight reports the state of a ClusterVersion resource (which represents a control plane update in standalone clusters), during the update.",
+      "type": "object",
+      "required": [
+        "resource",
+        "assessment",
+        "versions",
+        "completion",
+        "startedAt"
+      ],
+      "properties": {
+        "assessment": {
+          "description": "assessment is the assessment of the control plane update process. Valid values are: Unknown, Progressing, Completed, Degraded",
+          "type": "string",
+          "default": ""
+        },
+        "completedAt": {
+          "description": "completedAt is the time when the update completed",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "completion": {
+          "description": "completion is a percentage of the update completion (0-100)",
+          "type": "integer",
+          "format": "int32",
+          "default": 0
+        },
+        "conditions": {
+          "description": "conditions provides detailed observed conditions about ClusterVersion. It contains at most 10 items. Known conditions are: - Updating: whether the control plane (represented by this ClusterVersion) is updating",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "type",
+          "x-kubernetes-patch-strategy": "merge"
+        },
+        "estimatedCompletedAt": {
+          "description": "estimatedCompletedAt is the estimated time when the update will complete",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "resource": {
+          "description": "resource is the ClusterVersion resource that represents the control plane",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.ResourceRef"
+        },
+        "startedAt": {
+          "description": "startedAt is the time when the update started",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "versions": {
+          "description": "versions contains the original and target versions of the upgrade",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.ControlPlaneUpdateVersions"
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.ControlPlane": {
+      "description": "ControlPlane contains a summary and insights related to the control plane update.",
+      "type": "object",
+      "properties": {
+        "conditions": {
+          "description": "conditions provides details about the control plane update. This is a high-level status of an abstract control plane concept, and will typically be the controller's interpretation / summarization of the insights it received (that will be placed in .informers[].insights for clients that want to perform further analysis of the data). Known condition types are: * \"Updating\": Whether the cluster control plane is currently updating or not",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "type",
+          "x-kubernetes-patch-strategy": "merge"
+        },
+        "informers": {
+          "description": "informers is a list of insight producers. An informer is a system, internal or external to the cluster, that produces units of information relevant to the update process, either about its progress or its health. Each informer in the list is identified by a name, and contains a list of insights it contributed to the Update Status API, relevant to the control plane update. Contains at most 16 items.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.ControlPlaneInformer"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "name",
+          "x-kubernetes-patch-strategy": "merge"
+        },
+        "poolResource": {
+          "description": "poolResource is the resource that represents control plane node pool, typically a MachineConfigPool. This field is optional because some form factors (like Hosted Control Planes) do not have dedicated control plane node pools, and also because the information may be unknown temporarily.",
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.PoolResourceRef"
+        },
+        "resource": {
+          "description": "resource is the resource that represents the control plane. It will typically be a ClusterVersion resource in standalone OpenShift and HostedCluster in Hosted Control Planes. This field is optional because the information may be unknown temporarily.",
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.ResourceRef"
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.ControlPlaneInformer": {
+      "description": "ControlPlaneInformer represents a system, internal or external to the cluster, that  produces units of information relevant to the update process, either about its progress or its health. Each informer is identified by a name, and contains a list of insights it contributed to the Update Status API, relevant to the control plane update.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "insights": {
+          "description": "insights is a list of insights produced by this producer. Insights are units of information relevant to an update progress or health information. There are two types of update insights: status insights and health insights. The first type are directly tied to the update process, regardless of whether it is proceeding smoothly or not.\n\nStatus Insights expose the state of a single resource that is directly involved in the update process, usually a resource that either has a notion of \"being updated,\" (such as a Node or ClusterOperator) or represents a higher-level abstraction (such as a ClusterVersion resource tahat represents the control plane or MachineConfigPool that represents a pool of nodes).\n\nHealth Insights report a state or condition in the cluster that is abnormal or negative and either affects or is affected by the update. Ideally, none would be generated in a standard healthy update. Health insights communicate a condition that warrants attention by the cluster administrator.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.ControlPlaneInsight"
+          },
+          "x-kubernetes-list-map-keys": [
+            "uid"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "uid",
+          "x-kubernetes-patch-strategy": "merge"
+        },
+        "name": {
+          "description": "name is the name of the insight producer",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.ControlPlaneInsight": {
+      "description": "ControlPlaneInsight is a unique piece of either status/progress or update health information produced by update informer",
+      "type": "object",
+      "required": [
+        "uid",
+        "acquiredAt",
+        "insight"
+      ],
+      "properties": {
+        "acquiredAt": {
+          "description": "acquiredAt is the time when the data was acquired by the producer",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "insight": {
+          "description": "insight is a discriminated union of all insights types that can be reported for the control plane",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.ControlPlaneInsightUnion"
+        },
+        "uid": {
+          "description": "uid identifies the insight over time",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.ControlPlaneInsightUnion": {
+      "description": "ControlPlaneInsightUnion is the discriminated union of all insights types that can be reported for the control plane, identified by type field",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "clusterOperator": {
+          "description": "clusterOperator is a status insight about the state of a control plane cluster operator update represented by a ClusterOperator resource",
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.ClusterOperatorStatusInsight"
+        },
+        "clusterVersion": {
+          "description": "clusterVersion is a status insight about the state of a control plane update, where the control plane is represented by a ClusterVersion resource usually managed by CVO",
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.ClusterVersionStatusInsight"
+        },
+        "health": {
+          "description": "health is a generic health insight about the update. It does not represent a status of any specific resource but surfaces actionable information about the health of the cluster or an update",
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.HealthInsight"
+        },
+        "machineConfigPool": {
+          "description": "machineConfigPool is a status insight about the state of a worker pool update, where the worker pool is represented by a MachineConfigPool resource",
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.MachineConfigPoolStatusInsight"
+        },
+        "node": {
+          "description": "node is a status insight about the state of a worker node update, where the worker node is represented by a Node resource",
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.NodeStatusInsight"
+        },
+        "type": {
+          "description": "type identifies the type of the update insight, one of: ClusterVersion, ClusterOperator, MachineConfigPool, Node, Health ClusterVersion, ClusterOperator, MachineConfigPool, Node types are progress insights about a resource directly involved in the update process Health insights report a state or condition in the cluster that is abnormal or negative and either affects or is affected by the update.",
+          "type": "string",
+          "default": ""
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {
+            "clusterOperator": "ClusterOperatorStatusInsight",
+            "clusterVersion": "ClusterVersionStatusInsight",
+            "health": "HealthInsight",
+            "machineConfigPool": "MachineConfigPoolStatusInsight",
+            "node": "NodeStatusInsight"
+          }
+        }
+      ]
+    },
+    "com.github.openshift.api.update.v1alpha1.ControlPlaneUpdateVersions": {
+      "description": "ControlPlaneUpdateVersions contains the original and target versions of the upgrade",
+      "type": "object",
+      "required": [
+        "previous",
+        "target"
+      ],
+      "properties": {
+        "previous": {
+          "description": "previous is the version of the control plane before the update. When the cluster is being installed for the first time, the version will have a placeholder value '<none>' and carry 'Installation' metadata",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.Version"
+        },
+        "target": {
+          "description": "target is the version of the control plane after the update. It may never be '<none>' or have `Installation` metadata",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.Version"
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.HealthInsight": {
+      "description": "HealthInsight is a piece of actionable information produced by an insight producer about the health of the cluster or an update",
+      "type": "object",
+      "required": [
+        "startedAt",
+        "scope",
+        "impact",
+        "remediation"
+      ],
+      "properties": {
+        "impact": {
+          "description": "impact describes the impact the reported condition has on the cluster or update",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.InsightImpact"
+        },
+        "remediation": {
+          "description": "remediation contains information about how to resolve or prevent the reported condition",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.InsightRemediation"
+        },
+        "scope": {
+          "description": "scope is list of objects involved in the insight",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.InsightScope"
+        },
+        "startedAt": {
+          "description": "startedAt is the time when the condition reported by the insight started",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.InsightImpact": {
+      "description": "InsightImpact describes the impact the reported condition has on the cluster or update",
+      "type": "object",
+      "required": [
+        "level",
+        "type",
+        "summary"
+      ],
+      "properties": {
+        "description": {
+          "description": "description is a human-oriented, possibly longer-form description of the condition reported by the insight It must be shorter than 4096 characters.",
+          "type": "string"
+        },
+        "level": {
+          "description": "level is the severity of the impact. Valid values are Unknown, Info, Warning, Error, Critical.",
+          "type": "string",
+          "default": ""
+        },
+        "summary": {
+          "description": "summary is a short summary of the impact. It must not be empty and must be shorter than 256 characters.",
+          "type": "string",
+          "default": ""
+        },
+        "type": {
+          "description": "type is the type of the impact. Valid values are None, Unknown, API Availability, Cluster Capacity, Application Availability, Application Outage, Data Loss, Update Speed, Update Stalled.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.InsightRemediation": {
+      "description": "InsightRemediation contains information about how to resolve or prevent the reported condition",
+      "type": "object",
+      "required": [
+        "reference"
+      ],
+      "properties": {
+        "estimatedFinish": {
+          "description": "estimatedFinish is the estimated time when the informer expects the condition to be resolved, if applicable.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "reference": {
+          "description": "reference is a URL where administrators can find information to resolve or prevent the reported condition",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.InsightScope": {
+      "description": "InsightScope is a list of resources involved in the insight",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "resources": {
+          "description": "resources is a list of resources involved in the insight, of any group/kind. Maximum 16 resources can be listed.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.ResourceRef"
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "type": {
+          "description": "type is either ControlPlane or WorkerPool",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.MachineConfigPoolStatusInsight": {
+      "description": "MachineConfigPoolStatusInsight reports the state of a MachineConfigPool resource during the update",
+      "type": "object",
+      "required": [
+        "name",
+        "resource",
+        "scopeType",
+        "assessment",
+        "completion"
+      ],
+      "properties": {
+        "assessment": {
+          "description": "assessment is the assessment of the machine config pool update process. Valid values are: Pending, Completed, Degraded, Excluded, Progressing",
+          "type": "string",
+          "default": ""
+        },
+        "completion": {
+          "description": "completion is a percentage of the update completion (0-100)",
+          "type": "integer",
+          "format": "int32",
+          "default": 0
+        },
+        "conditions": {
+          "description": "conditions provide details about the machine config pool update. It contains at most 10 items. Known conditions are: - Updating: whether the pool is updating; When Updating=False, the reason field can be Pending, Updated or Excluded",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "type",
+          "x-kubernetes-patch-strategy": "merge"
+        },
+        "name": {
+          "description": "name is the name of the machine config pool",
+          "type": "string",
+          "default": ""
+        },
+        "resource": {
+          "description": "resource is the MachineConfigPool resource that represents the pool\n\nNote: By OpenShift API conventions, in isolation this should be a specialized reference that refers just to resource name (because the rest is implied by status insight type). However, because we use resource references in many places and this API is intended to be consumed by clients, not produced, consistency seems to be more valuable than type safety for producers.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.PoolResourceRef"
+        },
+        "scopeType": {
+          "description": "scopeType describes whether the pool is a control plane or a worker pool",
+          "type": "string",
+          "default": ""
+        },
+        "summaries": {
+          "description": "summaries is a list of counts of nodes matching certain criteria (e.g. updated, degraded, etc.). Maximum 16 items can be listed.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.NodeSummary"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "type",
+          "x-kubernetes-patch-strategy": "merge"
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.NodeStatusInsight": {
+      "description": "NodeStatusInsight reports the state of a Node during the update",
+      "type": "object",
+      "required": [
+        "name",
+        "resource",
+        "poolResource",
+        "scopeType"
+      ],
+      "properties": {
+        "conditions": {
+          "description": "conditions provides details about the control plane update. Known conditions are: - Updating: whether the Node is updating; When Updating=False, the reason field can be Updated, Pending, or Paused. When Updating=True, the reason field can be Draining, Updating, or Rebooting - Available: whether the Node is available (accepting workloads) - Degraded: whether the Node is degraded (problem observed)",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "type",
+          "x-kubernetes-patch-strategy": "merge"
+        },
+        "estimatedToComplete": {
+          "description": "estimatedToComplete is the estimated time to complete the update, when known",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        },
+        "message": {
+          "description": "message is a short human-readable message about the node update status. It must be shorter than 100 characters.",
+          "type": "string"
+        },
+        "name": {
+          "description": "name is the name of the node",
+          "type": "string",
+          "default": ""
+        },
+        "poolResource": {
+          "description": "poolResource is the resource that represents the pool the node is a member of\n\nNote: By OpenShift API conventions, in isolation this should probably be a specialized reference type that allows only the \"correct\" resource types to be referenced (here, MachineConfigPool or NodePool). However, because we use resource references in many places and this API is intended to be consumed by clients, not produced, consistency seems to be more valuable than type safety for producers.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.PoolResourceRef"
+        },
+        "resource": {
+          "description": "resource is the Node resource that represents the node\n\nNote: By OpenShift API conventions, in isolation this should be a specialized reference that refers just to resource name (because the rest is implied by status insight type). However, because we use resource references in many places and this API is intended to be consumed by clients, not produced, consistency seems to be more valuable than type safety for producers.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.ResourceRef"
+        },
+        "scopeType": {
+          "description": "scopeType describes whether the node belongs to control plane or a worker pool",
+          "type": "string",
+          "default": ""
+        },
+        "version": {
+          "description": "version is the version of the node, when known",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.NodeSummary": {
+      "description": "NodeSummary is a count of nodes matching certain criteria (e.g. updated, degraded, etc.)",
+      "type": "object",
+      "required": [
+        "type",
+        "count"
+      ],
+      "properties": {
+        "count": {
+          "description": "count is the number of nodes matching the criteria",
+          "type": "integer",
+          "format": "int32",
+          "default": 0
+        },
+        "type": {
+          "description": "type is the type of the summary. Valid values are: Total, Available, Progressing, Outdated, Draining, Excluded, Degraded The summaries are not exclusive, a single node may be counted in multiple summaries.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.Pool": {
+      "description": "Pool contains a summary and insights related to a node pool update",
+      "type": "object",
+      "required": [
+        "name",
+        "resource"
+      ],
+      "properties": {
+        "conditions": {
+          "description": "conditions provides details about the node pool update. This is a high-level status of an abstract \"pool of nodes\" concept, and will typically be the controller's interpretation / summarization of the insights it received (that will be placed in .informers[].insights for clients that want to perform further analysis of the data). Known condition types are: * \"Updating\": Whether the pool of nodes is currently updating or not",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "type",
+          "x-kubernetes-patch-strategy": "merge"
+        },
+        "informers": {
+          "description": "informers is a list of insight producers. An informer is a system, internal or external to the cluster, that produces units of information relevant to the update process, either about its progress or its health. Each informer in the list is identified by a name, and contains a list of insights it contributed to the Update Status API, relevant to the process of updating this pool of nodes.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.WorkerPoolInformer"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "name",
+          "x-kubernetes-patch-strategy": "merge"
+        },
+        "name": {
+          "description": "name is the name of the pool, follows the same rules as a Kubernetes resource name (RFC-1123 subdomain)",
+          "type": "string",
+          "default": ""
+        },
+        "resource": {
+          "description": "resource is the resource that represents the pool, either a MachineConfigPool in Standalone OpenShift or a NodePool in Hosted Control Planes.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.PoolResourceRef"
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.PoolResourceRef": {
+      "description": "PoolResourceRef is a reference to a kubernetes resource that represents a node pool",
+      "type": "object",
+      "required": [
+        "resource",
+        "name"
+      ],
+      "properties": {
+        "group": {
+          "description": "group of the object being referenced, if any",
+          "type": "string"
+        },
+        "name": {
+          "description": "name of the object being referenced",
+          "type": "string",
+          "default": ""
+        },
+        "namespace": {
+          "description": "namespace of the object being referenced, if any",
+          "type": "string"
+        },
+        "resource": {
+          "description": "resource of object being referenced",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.ResourceRef": {
+      "description": "ResourceRef is a reference to a kubernetes resource, typically involved in an insight",
+      "type": "object",
+      "required": [
+        "resource",
+        "name"
+      ],
+      "properties": {
+        "group": {
+          "description": "group of the object being referenced, if any",
+          "type": "string"
+        },
+        "name": {
+          "description": "name of the object being referenced",
+          "type": "string",
+          "default": ""
+        },
+        "namespace": {
+          "description": "namespace of the object being referenced, if any",
+          "type": "string"
+        },
+        "resource": {
+          "description": "resource of object being referenced",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.UpdateStatus": {
+      "description": "UpdateStatus reports status for in-progress cluster version updates\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is standard Kubernetes object metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec is empty for now, UpdateStatus is purely status-reporting API. In the future spec may be used to hold configuration to drive what information is surfaced and how",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.UpdateStatusSpec"
+        },
+        "status": {
+          "description": "status exposes the health and status of the ongoing cluster update",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.UpdateStatusStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.UpdateStatusList": {
+      "description": "UpdateStatusList is a list of UpdateStatus resources\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "description": "items is a  list of UpdateStatus resources",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.UpdateStatus"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is standard Kubernetes object metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.UpdateStatusSpec": {
+      "description": "UpdateStatusSpec is empty for now, UpdateStatus is purely status-reporting API. In the future spec may be used to hold configuration to drive what information is surfaced and how",
+      "type": "object"
+    },
+    "com.github.openshift.api.update.v1alpha1.UpdateStatusStatus": {
+      "description": "UpdateStatusStatus is the API about in-progress updates. It aggregates and summarizes UpdateInsights produced by update informers",
+      "type": "object",
+      "properties": {
+        "conditions": {
+          "description": "conditions provide details about the controller operational matters, exposing whether the controller managing this UpdateStatus is functioning well, receives insights from individual informers, and is able to interpret them and relay them through this UpdateStatus. These condition do not communicate anything about the state of the update itself but may indicate whether the UpdateStatus content is reliable or not.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "type",
+          "x-kubernetes-patch-strategy": "merge"
+        },
+        "controlPlane": {
+          "description": "controlPlane contains a summary and insights related to the control plane update",
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.ControlPlane"
+        },
+        "workerPools": {
+          "description": "workerPools contains summaries and insights related to the worker pools update. Each item in the list represents a single worker pool and carries all insights reported for it by informers. It has at most 32 items.\n                    so hundreds, and hypothetically more empty ones.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.Pool"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "name",
+          "x-kubernetes-patch-strategy": "merge"
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.Version": {
+      "description": "Version describes a version involved in an update, typically on one side of an update edge",
+      "type": "object",
+      "required": [
+        "version"
+      ],
+      "properties": {
+        "metadata": {
+          "description": "metadata is a list of metadata associated with the version. It is a list of key-value pairs. The value is optional and when not provided, the metadata item has boolean semantics (presence indicates true). For example, 'Partial' metadata on a previous version indicates that the previous update was never fully completed. Can contain at most 5 items.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.VersionMetadata"
+          },
+          "x-kubernetes-list-map-keys": [
+            "key"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "key",
+          "x-kubernetes-patch-strategy": "merge"
+        },
+        "version": {
+          "description": "version is a semantic version string, or a placeholder '<none>' for the special case where this is a \"previous\" version in a new installation, in which case the metadata must contain an item with key 'Installation'",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.VersionMetadata": {
+      "description": "VersionMetadata is a key:value item assigned to version involved in the update. Value can be empty, then the metadata have boolean semantics (true when present, false when absent)",
+      "type": "object",
+      "required": [
+        "key"
+      ],
+      "properties": {
+        "key": {
+          "description": "key is the name of this metadata value. Valid values are: Installation, Partial, Architecture",
+          "type": "string",
+          "default": ""
+        },
+        "value": {
+          "description": "value is the value for the metadata, at most 32 characters long. It is not expected to be provided for Installation and Partial metadata. For Architecture metadata, it is expected to be a string that indicates the architecture of the payload image of the version involved in the upgrade, when relevant.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.WorkerPoolInformer": {
+      "description": "WorkerPoolInformer represents a system, internal or external to the cluster, that  produces units of information relevant to the update process, either about its progress or its health. Each informer is identified by a name, and contains a list of insights it contributed to the Update Status API, relevant to a specific worker pool.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "insights": {
+          "description": "insights is a list of insights produced by this producer. Insights are units of information relevant to an update progress or health information. There are two types of update insights: status insights and health insights. The first type are directly tied to the update process, regardless of whether it is proceeding smoothly or not.\n\nStatus Insights expose the state of a single resource that is directly involved in the update process, usually a resource that either has a notion of \"being updated,\" (such as a Node or ClusterOperator) or represents a higher-level abstraction (such as a ClusterVersion resource tahat represents the control plane or MachineConfigPool that represents a pool of nodes).\n\nHealth Insights report a state or condition in the cluster that is abnormal or negative and either affects or is affected by the update. Ideally, none would be generated in a standard healthy update. Health insights communicate a condition that warrants attention by the cluster administrator.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.WorkerPoolInsight"
+          },
+          "x-kubernetes-list-map-keys": [
+            "uid"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "uid",
+          "x-kubernetes-patch-strategy": "merge"
+        },
+        "name": {
+          "description": "name is the name of the insight producer",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.WorkerPoolInsight": {
+      "description": "WorkerPoolInsight is a unique piece of either status/progress or update health information produced by update informer",
+      "type": "object",
+      "required": [
+        "uid",
+        "acquiredAt",
+        "insight"
+      ],
+      "properties": {
+        "acquiredAt": {
+          "description": "acquiredAt is the time when the data was acquired by the producer",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "insight": {
+          "description": "insight is a discriminated union of all insights types that can be reported for a worker pool",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.WorkerPoolInsightUnion"
+        },
+        "uid": {
+          "description": "uid identifies the insight over time",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.WorkerPoolInsightUnion": {
+      "description": "WorkerPoolInsightUnion is the discriminated union of insights types that can be reported for a worker pool, identified by type field",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "health": {
+          "description": "health is a generic health insight about the update. It does not represent a status of any specific resource but surfaces actionable information about the health of the cluster or an update",
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.HealthInsight"
+        },
+        "machineConfigPool": {
+          "description": "machineConfigPool is a status insight about the state of a worker pool update, where the worker pool is represented by a MachineConfigPool resource",
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.MachineConfigPoolStatusInsight"
+        },
+        "node": {
+          "description": "node is a status insight about the state of a worker node update, where the worker node is represented by a Node resource",
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.NodeStatusInsight"
+        },
+        "type": {
+          "description": "type identifies the type of the update insight, one of: MachineConfigPool, Node, Health MachineConfigPool, Node types are progress insights about a resource directly involved in the update process Health insights report a state or condition in the cluster that is abnormal or negative and either affects or is affected by the update.",
+          "type": "string",
+          "default": ""
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {
+            "health": "HealthInsight",
+            "machineConfigPool": "MachineConfigPoolStatusInsight",
+            "node": "NodeStatusInsight"
+          }
+        }
+      ]
+    },
     "com.github.openshift.api.user.v1.Group": {
       "description": "Group represents a referenceable set of Users\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",

@@ -34586,7 +34586,7 @@ func schema_openshift_api_machine_v1alpha1_NetworkParam(ref common.ReferenceCall
 					},
 					"fixedIp": {
 						SchemaProps: spec.SchemaProps{
-							Description: "A fixed IPv4 address for the NIC.",
+							Description: "A fixed IPv4 address for the NIC. Deprecated: fixedIP is silently ignored. Use subnets instead.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -34739,7 +34739,7 @@ func schema_openshift_api_machine_v1alpha1_OpenstackProviderSpec(ref common.Refe
 					},
 					"sshUserName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "The machine ssh username",
+							Description: "The machine ssh username Deprecated: sshUserName is silently ignored.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -34895,7 +34895,7 @@ func schema_openshift_api_machine_v1alpha1_OpenstackProviderSpec(ref common.Refe
 					},
 					"primarySubnet": {
 						SchemaProps: spec.SchemaProps{
-							Description: "The subnet that a set of machines will get ingress/egress traffic from",
+							Description: "The subnet that a set of machines will get ingress/egress traffic from Deprecated: primarySubnet is silently ignored. Use subnets instead.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -34967,14 +34967,14 @@ func schema_openshift_api_machine_v1alpha1_PortOpts(ref common.ReferenceCallback
 					},
 					"tenantID": {
 						SchemaProps: spec.SchemaProps{
-							Description: "tenantID specifies the tenant ID of the created port. Note that this requires OpenShift to have administrative permissions, which is typically not the case. Use of this field is not recommended. Deprecated: use projectID instead. It will be ignored if projectID is set.",
+							Description: "tenantID specifies the tenant ID of the created port. Note that this requires OpenShift to have administrative permissions, which is typically not the case. Use of this field is not recommended. Deprecated: tenantID is silently ignored.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"projectID": {
 						SchemaProps: spec.SchemaProps{
-							Description: "projectID specifies the project ID of the created port. Note that this requires OpenShift to have administrative permissions, which is typically not the case. Use of this field is not recommended.",
+							Description: "projectID specifies the project ID of the created port. Note that this requires OpenShift to have administrative permissions, which is typically not the case. Use of this field is not recommended. Deprecated: projectID is silently ignored.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -35353,7 +35353,7 @@ func schema_openshift_api_machine_v1alpha1_SubnetFilter(ref common.ReferenceCall
 					},
 					"subnetpoolId": {
 						SchemaProps: spec.SchemaProps{
-							Description: "subnetpoolId filters subnets by subnet pool ID.",
+							Description: "subnetpoolId filters subnets by subnet pool ID. Deprecated: subnetpoolId is silently ignored.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -35464,7 +35464,7 @@ func schema_openshift_api_machine_v1alpha1_SubnetParam(ref common.ReferenceCallb
 					},
 					"portSecurity": {
 						SchemaProps: spec.SchemaProps{
-							Description: "portSecurity optionally enables or disables security on ports managed by OpenStack",
+							Description: "portSecurity optionally enables or disables security on ports managed by OpenStack Deprecated: portSecurity is silently ignored. Set portSecurity on the parent network instead.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},

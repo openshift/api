@@ -11,25 +11,25 @@ type ClusterVersionStatusInsight struct {
 	// resource name (because the rest is implied by status insight type). However, because we use resource references in
 	// many places and this API is intended to be consumed by clients, not produced, consistency seems to be more valuable
 	// than type safety for producers.
-	// +kubebuilder:validation:Required
+	// +required
 	Resource ResourceRef `json:"resource"`
 
 	// assessment is the assessment of the control plane update process
-	// +kubebuilder:validation:Required
+	// +required
 	Assessment ControlPlaneAssessment `json:"assessment"`
 
 	// versions contains the original and target versions of the upgrade
-	// +kubebuilder:validation:Required
+	// +required
 	Versions ControlPlaneUpdateVersions `json:"versions"`
 
 	// completion is a percentage of the update completion (0-100)
-	// +kubebuilder:validation:Required
+	// +required
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=100
 	Completion int32 `json:"completion"`
 
 	// startedAt is the time when the update started
-	// +kubebuilder:validation:Required
+	// +required
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:Format=date-time
 	StartedAt metav1.Time `json:"startedAt"`
@@ -50,7 +50,9 @@ type ClusterVersionStatusInsight struct {
 	// +listType=map
 	// +listMapKey=type
 	// +optional
-	Conditions []metav1.Condition `json:"conditions,omitempty"`
+	// +patchStrategy=merge
+	// +patchMergeKey=type
+	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 }
 
 // ControlPlaneAssessment is the assessment of the control plane update process
@@ -72,11 +74,11 @@ type ControlPlaneUpdateVersions struct {
 	// previous is the version of the control plane before the update. When the cluster is being installed
 	// for the first time, the version will have a placeholder value like '<none>' and the target version
 	// will have a boolean installation=true metadata
-	// +kubebuilder:validation:Required
+	// +required
 	Previous Version `json:"previous"`
 
 	// target is the version of the control plane after the update
-	// +kubebuilder:validation:Required
+	// +required
 	Target Version `json:"target"`
 }
 
@@ -84,7 +86,7 @@ type ControlPlaneUpdateVersions struct {
 type Version struct {
 	// version is a semantic version string, or a placeholder '<none>' for the special case where this
 	// is a "previous" version in a new installation
-	// +kubebuilder:validation:Required
+	// +required
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:MaxLength=64
 	Version string `json:"version"`
@@ -99,7 +101,7 @@ type Version struct {
 
 type VersionMetadata struct {
 	// key is the name of this metadata value
-	// +kubebuilder:validation:Required
+	// +required
 	// +kubebuilder:validation:Enum=Installation;Partial;Architecture
 	Key VersionMetadataKey `json:"key"`
 
@@ -148,7 +150,7 @@ const (
 // component update in standalone clusters), during the update
 type ClusterOperatorStatusInsight struct {
 	// name is the name of the operator
-	// +kubebuilder:validation:Required
+	// +required
 	Name string `json:"name"`
 
 	// resource is the ClusterOperator resource that represents the operator
@@ -157,14 +159,16 @@ type ClusterOperatorStatusInsight struct {
 	// resource name (because the rest is implied by status insight type). However, because we use resource references in
 	// many places and this API is intended to be consumed by clients, not produced, consistency seems to be more valuable
 	// than type safety for producers.
-	// +kubebuilder:validation:Required
+	// +required
 	Resource ResourceRef `json:"resource"`
 
 	// conditions provide details about the operator
 	// +listType=map
 	// +listMapKey=type
 	// +optional
-	Conditions []metav1.Condition `json:"conditions,omitempty"`
+	// +patchStrategy=merge
+	// +patchMergeKey=type
+	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 }
 
 // ClusterOperatorStatusInsightConditionType are types of conditions that can be reported on ClusterOperator status insights
@@ -208,7 +212,7 @@ const (
 // MachineConfigPoolStatusInsight reports the state of a MachineConfigPool resource during the update
 type MachineConfigPoolStatusInsight struct {
 	// name is the name of the machine config pool
-	// +kubebuilder:validation:Required
+	// +required
 	Name string `json:"name"`
 
 	// resource is the MachineConfigPool resource that represents the pool
@@ -217,20 +221,20 @@ type MachineConfigPoolStatusInsight struct {
 	// resource name (because the rest is implied by status insight type). However, because we use resource references in
 	// many places and this API is intended to be consumed by clients, not produced, consistency seems to be more valuable
 	// than type safety for producers.
-	// +kubebuilder:validation:Required
+	// +required
 	Resource PoolResourceRef `json:"resource"`
 
 	// scopeType describes whether the pool is a control plane or a worker pool
-	// +kubebuilder:validation:Required
+	// +required
 	// +kubebuilder:validation:Enum=ControlPlane;WorkerPool
 	Scope ScopeType `json:"scopeType"`
 
 	// assessment is the assessment of the machine config pool update process
-	// +kubebuilder:validation:Required
+	// +required
 	Assessment PoolAssessment `json:"assessment"`
 
 	// completion is a percentage of the update completion (0-100)
-	// +kubebuilder:validation:Required
+	// +required
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=100
 	Completion int32 `json:"completion"`
@@ -245,7 +249,9 @@ type MachineConfigPoolStatusInsight struct {
 	// +listType=map
 	// +listMapKey=type
 	// +optional
-	Conditions []metav1.Condition `json:"conditions,omitempty"`
+	// +patchStrategy=merge
+	// +patchMergeKey=type
+	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 }
 
 // PoolAssessment is the assessment of the node pool update process
@@ -268,12 +274,12 @@ const (
 // NodeSummary is a count of nodes matching certain criteria (e.g. updated, degraded, etc.)
 type NodeSummary struct {
 	// type is the type of the summary
-	// +kubebuilder:validation:Required
+	// +required
 	// +kubebuilder:validation:Enum=Total;Available;Progressing;Outdated;Draining;Excluded;Degraded
 	Type NodeSummaryType `json:"type"`
 
 	// count is the number of nodes matching the criteria
-	// +kubebuilder:validation:Required
+	// +required
 	// +kubebuilder:validation:Minimum=0
 	Count int32 `json:"count"`
 }
@@ -304,7 +310,7 @@ const (
 // NodeStatusInsight reports the state of a Node during the update
 type NodeStatusInsight struct {
 	// name is the name of the node
-	// +kubebuilder:validation:Required
+	// +required
 	Name string `json:"name"`
 
 	// resource is the Node resource that represents the node
@@ -313,7 +319,7 @@ type NodeStatusInsight struct {
 	// resource name (because the rest is implied by status insight type). However, because we use resource references in
 	// many places and this API is intended to be consumed by clients, not produced, consistency seems to be more valuable
 	// than type safety for producers.
-	// +kubebuilder:validation:Required
+	// +required
 	Resource ResourceRef `json:"resource"`
 
 	// poolResource is the resource that represents the pool the node is a member of
@@ -322,11 +328,11 @@ type NodeStatusInsight struct {
 	// only the "correct" resource types to be referenced (here, MachineConfigPool or NodePool). However, because we use
 	// resource references in many places and this API is intended to be consumed by clients, not produced, consistency
 	// seems to be more valuable than type safety for producers.
-	// +kubebuilder:validation:Required
+	// +required
 	PoolResource PoolResourceRef `json:"poolResource"`
 
 	// scopeType describes whether the node belongs to control plane or a worker pool
-	// +kubebuilder:validation:Required
+	// +required
 	// +kubebuilder:validation:Enum=ControlPlane;WorkerPool
 	Scope ScopeType `json:"scopeType"`
 
@@ -348,7 +354,9 @@ type NodeStatusInsight struct {
 	// +listType=map
 	// +listMapKey=type
 	// +optional
-	Conditions []metav1.Condition `json:"conditions,omitempty"`
+	// +patchStrategy=merge
+	// +patchMergeKey=type
+	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 }
 
 // NodeStatusInsightConditionType are types of conditions that can be reported on Node status insights

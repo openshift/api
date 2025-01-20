@@ -24,7 +24,7 @@ type UpdateStatus struct {
 
 	// spec is empty for now, UpdateStatus is purely status-reporting API. In the future spec may be used to hold
 	// configuration to drive what information is surfaced and how
-	// +kubebuilder:validation:Required
+	// +required
 	Spec UpdateStatusSpec `json:"spec"`
 	// +optional
 	Status UpdateStatusStatus `json:"status"`
@@ -41,7 +41,7 @@ type UpdateStatusSpec struct {
 // update informers
 type UpdateStatusStatus struct {
 	// controlPlane contains a summary and insights related to the control plane update
-	// +kubebuilder:validation:Required
+	// +required
 	ControlPlane ControlPlane `json:"controlPlane"`
 
 	// workerPools contains summaries and insights related to the worker pools update
@@ -54,7 +54,9 @@ type UpdateStatusStatus struct {
 	// +listType=map
 	// +listMapKey=type
 	// +optional
-	Conditions []metav1.Condition `json:"conditions,omitempty"`
+	// +patchStrategy=merge
+	// +patchMergeKey=type
+	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 }
 
 // ControlPlane contains a summary and insights related to the control plane update
@@ -66,7 +68,7 @@ type ControlPlane struct {
 	// only the "correct" resource types to be referenced (here, ClusterVersion and HostedCluster). However, because we
 	// use resource references in many places and this API is intended to be consumed by clients, not produced, consistency
 	// seems to be more valuable than type safety for producers.
-	// +kubebuilder:validation:Required
+	// +required
 	Resource ResourceRef `json:"resource"`
 
 	// poolResource is the resource that represents control plane node pool, typically a MachineConfigPool. This field
@@ -89,7 +91,9 @@ type ControlPlane struct {
 	// +listType=map
 	// +listMapKey=type
 	// +optional
-	Conditions []metav1.Condition `json:"conditions,omitempty"`
+	// +patchStrategy=merge
+	// +patchMergeKey=type
+	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 }
 
 // ControlPlaneConditionType are types of conditions that can be reported on control plane level
@@ -120,7 +124,7 @@ const (
 // Pool contains a summary and insights related to a node pool update
 type Pool struct {
 	// name is the name of the pool
-	// +kubebuilder:validation:Required
+	// +required
 	Name string `json:"name"`
 
 	// resource is the resource that represents the pool
@@ -129,7 +133,7 @@ type Pool struct {
 	// only the "correct" resource types to be referenced (here, MachineConfigPool or NodePool). However, because we use
 	// resource references in many places and this API is intended to be consumed by clients, not produced, consistency
 	// seems to be more valuable than type safety for producers.
-	// +kubebuilder:validation:Required
+	// +required
 	Resource PoolResourceRef `json:"resource"`
 
 	// informers is a list of insight producers, each carries a list of insights
@@ -142,13 +146,15 @@ type Pool struct {
 	// +listType=map
 	// +listMapKey=type
 	// +optional
-	Conditions []metav1.Condition `json:"conditions,omitempty"`
+	// +patchStrategy=merge
+	// +patchMergeKey=type
+	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 }
 
 // Informer is an insight producer identified by a name, carrying a list of insights it produced
 type Informer struct {
 	// name is the name of the insight producer
-	// +kubebuilder:validation:Required
+	// +required
 	Name string `json:"name"`
 
 	// insights is a list of insights produced by this producer
@@ -161,12 +167,12 @@ type Informer struct {
 // Insight is a unique piece of either status/progress or update health information produced by update informer
 type Insight struct {
 	// uid identifies the insight over time
-	// +kubebuilder:validation:Required
+	// +required
 	// +kubebuilder:validation:Type=string
 	UID string `json:"uid"`
 
 	// acquiredAt is the time when the data was acquired by the producer
-	// +kubebuilder:validation:Required
+	// +required
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:Format=date-time
 	AcquiredAt metav1.Time `json:"acquiredAt"`
@@ -178,7 +184,7 @@ type Insight struct {
 type InsightUnion struct {
 	// type identifies the type of the update insight
 	// +unionDiscriminator
-	// +kubebuilder:validation:Required
+	// +required
 	// +kubebuilder:validation:Enum=ClusterVersion;ClusterOperator;MachineConfigPool;Node;Health
 	Type InsightType `json:"type"`
 
@@ -246,11 +252,11 @@ type ResourceRef struct {
 	Group string `json:"group,omitempty"`
 
 	// resource of object being referenced
-	// +kubebuilder:validation:Required
+	// +required
 	Resource string `json:"resource"`
 
 	// name of the object being referenced
-	// +kubebuilder:validation:Required
+	// +required
 	Name string `json:"name"`
 
 	// namespace of the object being referenced, if any

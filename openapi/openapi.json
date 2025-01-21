@@ -5084,83 +5084,6 @@
         }
       }
     },
-    "com.github.openshift.api.config.v1.ClusterMonitoring": {
-      "description": "ClusterMonitoring is the Custom Resource object which holds the current status of Cluster Monitoring Operator. CMO is a central component of the monitoring stack.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. ClusterMonitoring is the Schema for the Cluster Monitoring Operators API",
-      "type": "object",
-      "required": [
-        "spec"
-      ],
-      "properties": {
-        "apiVersion": {
-          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-          "type": "string"
-        },
-        "kind": {
-          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-          "type": "string"
-        },
-        "metadata": {
-          "description": "metadata is the standard object metadata.",
-          "default": {},
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
-        },
-        "spec": {
-          "description": "spec holds user configuration for the Cluster Monitoring Operator",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1.ClusterMonitoringSpec"
-        },
-        "status": {
-          "description": "status holds observed values from the cluster. They may not be overridden.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1.ClusterMonitoringStatus"
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1.ClusterMonitoringList": {
-      "description": "Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
-      "type": "object",
-      "properties": {
-        "apiVersion": {
-          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-          "type": "string"
-        },
-        "items": {
-          "description": "items is a list of ClusterMonitoring",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/com.github.openshift.api.config.v1.ClusterMonitoring"
-          }
-        },
-        "kind": {
-          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-          "type": "string"
-        },
-        "metadata": {
-          "description": "metadata is the standard list metadata.",
-          "default": {},
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1.ClusterMonitoringSpec": {
-      "description": "ClusterMonitoringSpec defines the desired state of Cluster Monitoring Operator",
-      "type": "object",
-      "required": [
-        "userDefined"
-      ],
-      "properties": {
-        "userDefined": {
-          "description": "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1.UserDefinedMonitoring"
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1.ClusterMonitoringStatus": {
-      "description": "MonitoringOperatorStatus defines the observed state of MonitoringOperator",
-      "type": "object"
-    },
     "com.github.openshift.api.config.v1.ClusterNetworkEntry": {
       "description": "ClusterNetworkEntry is a contiguous block of IP addresses from which pod IPs are allocated.",
       "type": "object",
@@ -10604,24 +10527,6 @@
         }
       }
     },
-    "com.github.openshift.api.config.v1.UserDefinedMonitoring": {
-      "description": "UserDefinedMonitoring config for user-defined projects.",
-      "type": "object",
-      "required": [
-        "mode"
-      ],
-      "properties": {
-        "mode": {
-          "description": "mode defines the different configurations of UserDefinedMonitoring Valid values are Disabled and NamespaceIsolated Disabled disables monitoring for user-defined projects. This restricts the default monitoring stack, installed in the openshift-monitoring project, to monitor only platform namespaces, which prevents any custom monitoring configurations or resources from being applied to user-defined namespaces. NamespaceIsolated enables monitoring for user-defined projects with namespace-scoped tenancy. This ensures that metrics, alerts, and monitoring data are isolated at the namespace level.\n\nPossible enum values:\n - `\"Disabled\"` disables monitoring for user-defined projects. This restricts the default monitoring stack, installed in the openshift-monitoring project, to monitor only platform namespaces, which prevents any custom monitoring configurations or resources from being applied to user-defined namespaces.\n - `\"NamespaceIsolated\"` enables monitoring for user-defined projects with namespace-scoped tenancy. This ensures that metrics, alerts, and monitoring data are isolated at the namespace level.",
-          "type": "string",
-          "default": "",
-          "enum": [
-            "Disabled",
-            "NamespaceIsolated"
-          ]
-        }
-      }
-    },
     "com.github.openshift.api.config.v1.UsernameClaimMapping": {
       "type": "object",
       "required": [
@@ -11231,6 +11136,83 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1alpha1.ClusterMonitoring": {
+      "description": "ClusterMonitoring is the Custom Resource object which holds the current status of Cluster Monitoring Operator. CMO is a central component of the monitoring stack.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. ClusterMonitoring is the Schema for the Cluster Monitoring Operators API",
+      "type": "object",
+      "required": [
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard object metadata.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec holds user configuration for the Cluster Monitoring Operator",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ClusterMonitoringSpec"
+        },
+        "status": {
+          "description": "status holds observed values from the cluster. They may not be overridden.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ClusterMonitoringStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.ClusterMonitoringList": {
+      "description": "Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "description": "items is a list of ClusterMonitoring",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ClusterMonitoring"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard list metadata.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.ClusterMonitoringSpec": {
+      "description": "ClusterMonitoringSpec defines the desired state of Cluster Monitoring Operator",
+      "type": "object",
+      "required": [
+        "userDefined"
+      ],
+      "properties": {
+        "userDefined": {
+          "description": "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.UserDefinedMonitoring"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.ClusterMonitoringStatus": {
+      "description": "MonitoringOperatorStatus defines the observed state of MonitoringOperator",
+      "type": "object"
+    },
     "com.github.openshift.api.config.v1alpha1.EtcdBackupSpec": {
       "description": "EtcdBackupSpec provides configuration for automated etcd backups to the cluster-etcd-operator",
       "type": "object",
@@ -11691,6 +11673,24 @@
           "description": "maxSizeOfBackupsGb defines the total size in GB of backups to retain. If the current total size backups exceeds MaxSizeOfBackupsGb then the oldest backup will be removed before a new backup is initiated.",
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.UserDefinedMonitoring": {
+      "description": "UserDefinedMonitoring config for user-defined projects.",
+      "type": "object",
+      "required": [
+        "mode"
+      ],
+      "properties": {
+        "mode": {
+          "description": "mode defines the different configurations of UserDefinedMonitoring Valid values are Disabled and NamespaceIsolated Disabled disables monitoring for user-defined projects. This restricts the default monitoring stack, installed in the openshift-monitoring project, to monitor only platform namespaces, which prevents any custom monitoring configurations or resources from being applied to user-defined namespaces. NamespaceIsolated enables monitoring for user-defined projects with namespace-scoped tenancy. This ensures that metrics, alerts, and monitoring data are isolated at the namespace level.\n\nPossible enum values:\n - `\"Disabled\"` disables monitoring for user-defined projects. This restricts the default monitoring stack, installed in the openshift-monitoring project, to monitor only platform namespaces, which prevents any custom monitoring configurations or resources from being applied to user-defined namespaces.\n - `\"NamespaceIsolated\"` enables monitoring for user-defined projects with namespace-scoped tenancy. This ensures that metrics, alerts, and monitoring data are isolated at the namespace level.",
+          "type": "string",
+          "default": "",
+          "enum": [
+            "Disabled",
+            "NamespaceIsolated"
+          ]
         }
       }
     },

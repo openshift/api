@@ -49,6 +49,7 @@ type UpdateStatusStatus struct {
 	// +patchStrategy=merge
 	// +patchMergeKey=type
 	// +optional
+	// +kubebuilder:validation:maxItems=10
 	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 
 	// controlPlane contains a summary and insights related to the control plane update
@@ -61,6 +62,7 @@ type UpdateStatusStatus struct {
 	// +patchStrategy=merge
 	// +patchMergeKey=name
 	// +optional
+	// +kubebuilder:validation:maxItems=64
 	WorkerPools []Pool `json:"workerPools,omitempty" patchStrategy:"merge" patchMergeKey:"name"`
 }
 
@@ -100,6 +102,7 @@ type ControlPlane struct {
 	// +patchStrategy=merge
 	// +patchMergeKey=name
 	// +optional
+	// +kubebuilder:validation:maxItems=32
 	Informers []Informer `json:"informers,omitempty" patchStrategy:"merge" patchMergeKey:"name"`
 }
 
@@ -140,6 +143,10 @@ type Pool struct {
 
 	// name is the name of the pool
 	// +required
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=63
+	// +kubebuilder:validation:Pattern=`^[a-z0-9]([-a-z0-9]*[a-z0-9])?$`
 	Name string `json:"name"`
 
 	// resource is the resource that represents the pool
@@ -157,6 +164,7 @@ type Pool struct {
 	// +patchStrategy=merge
 	// +patchMergeKey=name
 	// +optional
+	// +kubebuilder:validation:maxItems=32
 	Informers []Informer `json:"informers,omitempty" patchStrategy:"merge" patchMergeKey:"name"`
 }
 
@@ -164,6 +172,10 @@ type Pool struct {
 type Informer struct {
 	// name is the name of the insight producer
 	// +required
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=63
+	// +kubebuilder:validation:Pattern=`^[a-z0-9]([-a-z0-9]*[a-z0-9])?$`
 	Name string `json:"name"`
 
 	// insights is a list of insights produced by this producer
@@ -172,6 +184,7 @@ type Informer struct {
 	// +patchStrategy=merge
 	// +patchMergeKey=uid
 	// +optional
+	// +kubebuilder:validation:maxItems=4096
 	Insights []Insight `json:"insights,omitempty" patchStrategy:"merge" patchMergeKey:"uid"`
 }
 
@@ -180,6 +193,9 @@ type Insight struct {
 	// uid identifies the insight over time
 	// +required
 	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=63
+	// +kubebuilder:validation:Pattern=`^[a-z0-9]([-a-z0-9]*[a-z0-9])?$`
 	UID string `json:"uid"`
 
 	// acquiredAt is the time when the data was acquired by the producer
@@ -260,18 +276,29 @@ const (
 type ResourceRef struct {
 	// group of the object being referenced, if any
 	// +optional
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:MaxLength=253
 	Group string `json:"group,omitempty"`
 
 	// resource of object being referenced
 	// +required
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:MaxLength=253
+	// +kubebuilder:validation:MinLength=1
 	Resource string `json:"resource"`
 
 	// name of the object being referenced
 	// +required
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:MaxLength=253
+	// +kubebuilder:validation:MinLength=1
 	Name string `json:"name"`
 
 	// namespace of the object being referenced, if any
 	// +optional
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:MaxLength=253
+	// +kubebuilder:validation:Pattern=`^[a-z0-9]([-a-z0-9]*[a-z0-9])?$`
 	Namespace string `json:"namespace,omitempty"`
 }
 
@@ -293,5 +320,6 @@ type UpdateStatusList struct {
 
 	// items is a  list of UpdateStatus resources
 	// +optional
+	// +kubebuilder:validation:MaxItems=32
 	Items []UpdateStatus `json:"items"`
 }

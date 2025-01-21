@@ -198,22 +198,27 @@ type VSphereDisk struct {
 	// +kubebuilder:validation:Maximum=16384
 	// +required
 	SizeGiB int32 `json:"sizeGiB"`
-	// provisionType flag to indicate whether the virtual disk backing
-	// file should be allocated lazily (using thin provisioning) or be
-	// fully allocated (standard provisioning).
+	// provisioningType specifies the provisioning type to be used by default for VirtualMachine volumes exclusively
+	// owned by this VirtualMachine. This does not apply to PersistentVolumeClaim volumes that are created and managed externally.
 	// If not set, the setting will be provided by the default storage policy.
 	// +optional
-	ProvisionType ProvisionType `json:"provisionType,omitempty"`
+	ProvisioningType ProvisioningType `json:"provisioningType,omitempty"`
 }
 
-type ProvisionType string
+type ProvisioningType string
 
 var (
-	// Thin is used to configure disk to be thin provisioned
-	Thin ProvisionType = "Thin"
+	// ThinProvisioned creates the disk using thin provisioning. This means a sparse (allocate on demand) format
+	// with additional space optimizations.
+	ThinProvisioned ProvisioningType = "ThinProvisioned"
 
-	// Standard is used to configure disk to be fully provisioned
-	Standard ProvisionType = "Standard"
+	// ThickProvisioned creates the disk with all space allocated.
+	ThickProvisioned ProvisioningType = "ThickProvisioned"
+
+	// EagerlyZeroed creates the disk using eager zero provisioning. An eager zeroed thick disk
+	// has all space allocated and wiped clean of any previous contents on the physical media at
+	// creation time. Such disks may take longer time during creation compared to other disk formats.
+	EagerlyZeroed ProvisioningType = "EagerlyZeroed"
 )
 
 // WorkspaceConfig defines a workspace configuration for the vSphere cloud

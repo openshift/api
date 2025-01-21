@@ -38957,9 +38957,9 @@ func schema_openshift_api_machine_v1beta1_VSphereDisk(ref common.ReferenceCallba
 							Format:      "int32",
 						},
 					},
-					"provisionType": {
+					"provisioningType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "provisionType flag to indicate whether the virtual disk backing file should be allocated lazily (using thin provisioning) or be fully allocated (standard provisioning). If not set, the setting will be provided by the default storage policy.",
+							Description: "provisioningType specifies the provisioning type to be used by default for VirtualMachine volumes exclusively owned by this VirtualMachine. This does not apply to PersistentVolumeClaim volumes that are created and managed externally. If not set, the setting will be provided by the default storage policy.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

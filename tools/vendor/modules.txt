@@ -81,7 +81,7 @@ github.com/GaijinEntertainment/go-exhaustruct/v3/analyzer
 github.com/GaijinEntertainment/go-exhaustruct/v3/internal/comment
 github.com/GaijinEntertainment/go-exhaustruct/v3/internal/pattern
 github.com/GaijinEntertainment/go-exhaustruct/v3/internal/structure
-# github.com/JoelSpeed/kal v0.0.0-20250106180308-e8da2ea1f7d6
+# github.com/JoelSpeed/kal v0.0.0-20250121143106-304c215e474e
 ## explicit; go 1.22.1
 github.com/JoelSpeed/kal
 github.com/JoelSpeed/kal/cmd/kal
@@ -92,10 +92,12 @@ github.com/JoelSpeed/kal/pkg/analysis/helpers/extractjsontags
 github.com/JoelSpeed/kal/pkg/analysis/helpers/markers
 github.com/JoelSpeed/kal/pkg/analysis/integers
 github.com/JoelSpeed/kal/pkg/analysis/jsontags
+github.com/JoelSpeed/kal/pkg/analysis/maxlength
 github.com/JoelSpeed/kal/pkg/analysis/nobools
 github.com/JoelSpeed/kal/pkg/analysis/nophase
 github.com/JoelSpeed/kal/pkg/analysis/optionalorrequired
 github.com/JoelSpeed/kal/pkg/analysis/requiredfields
+github.com/JoelSpeed/kal/pkg/analysis/statussubresource
 github.com/JoelSpeed/kal/pkg/analysis/utils
 github.com/JoelSpeed/kal/pkg/config
 github.com/JoelSpeed/kal/pkg/validation

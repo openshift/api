@@ -86,6 +86,13 @@ linters:
   disable-all: true
   enable:
     - kal
+
+# To only run KAL on specific path
+issues:
+  exclude-rules:
+    - path-except: "api/*"
+      linters:
+        - kal
 ```
 
 The settings for KAL are based on the [GolangCIConfig][golangci-config-struct] struct and allow for finer control over the linter rules.
@@ -179,7 +186,7 @@ When the `json` tag is present, and matches the first word of the field comment 
 The `integers` linter checks for usage of unsupported integer types.
 Only `int32` and `int64` types should be used in APIs, and other integer types, including unsigned integers are forbidden.
 
-## JSONTags
+## JSONTags
 
 The `jsontags` linter checks that all fields in the API types have a `json` tag, and that those tags are correctly formatted.
 The `json` tag for a field within a Kubernetes API type should use a camel case version of the field name.
@@ -193,6 +200,20 @@ lintersConfig:
   jsonTags:
     jsonTagRegex: "^[a-z][a-z0-9]*(?:[A-Z][a-z0-9]*)*$" # Provide a custom regex, which the json tag must match.
 ```
+
+## MaxLength
+
+The `maxlength` linter checks that string and array fields in the API are bounded by a maximum length.
+
+For strings, this means they have a `+kubebuilder:validation:MaxLength` marker.
+
+For arrays, this means they have a `+kubebuilder:validation:MaxItems` marker.
+
+For arrays of strings, the array element should also have a `+kubebuilder:validation:MaxLength` marker if the array element is a type alias,
+or `+kubebuilder:validation:items:MaxLenth` if the array is an element of the built-in string type.
+
+Adding maximum lengths to strings and arrays not only ensures that the API is not abused (used to store overly large data, reduces DDOS etc.),
+but also allows CEL validation cost estimations to be kept within reasonable bounds.
 
 ## NoBools
 
@@ -251,6 +272,20 @@ It will suggest to remove the pointer from the field, and update the `json` tag 
 
 If you prefer not to suggest fixes for pointers in required fields, you can change the `pointerPolicy` to `Warn`.
 The linter will then only suggest to remove the `omitempty` value from the `json` tag.
+
+## StatusSubresource
+
+The `statussubresource` linter checks that the status subresource is configured correctly for
+structs marked with the `kubebuilder:object:root:=true` marker. Correct configuration is that
+when there is a status field the `kubebuilder:subresource:status` marker is present on the struct
+OR when the `kubebuilder:subresource:status` marker is present on the struct there is a status field.
+
+This linter is not enabled by default as it is only applicable to CustomResourceDefinitions.
+
+### Fixes (via standalone binary only)
+
+In the case where there is a status field present but no `kubebuilder:subresource:status` marker, the
+linter will suggest adding the comment `// +kubebuilder:subresource:status` above the struct.
 
 # Contributing
 

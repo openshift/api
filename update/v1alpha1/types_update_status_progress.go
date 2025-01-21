@@ -24,6 +24,7 @@ type ClusterVersionStatusInsight struct {
 
 	// assessment is the assessment of the control plane update process
 	// +required
+	// +kubebuilder:validation:Enum=Unknown;Progressing;Completed;Degraded
 	Assessment ControlPlaneAssessment `json:"assessment"`
 
 	// versions contains the original and target versions of the upgrade
@@ -101,6 +102,7 @@ type Version struct {
 	// +patchStrategy=merge
 	// +patchMergeKey=key
 	// +optional
+	// +kubebuilder:validation:MaxItems=10
 	Metadata []VersionMetadata `json:"metadata,omitempty" patchStrategy:"merge" patchMergeKey:"key"`
 }
 
@@ -163,10 +165,15 @@ type ClusterOperatorStatusInsight struct {
 	// +patchStrategy=merge
 	// +patchMergeKey=type
 	// +optional
+	// +kubebuilder:validation:MaxItems=10
 	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 
 	// name is the name of the operator
 	// +required
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=64
+	// +kubebuilder:validation:Pattern=`^[a-z0-9-]+$`
 	Name string `json:"name"`
 
 	// resource is the ClusterOperator resource that represents the operator
@@ -225,10 +232,15 @@ type MachineConfigPoolStatusInsight struct {
 	// +patchStrategy=merge
 	// +patchMergeKey=type
 	// +optional
+	// +kubebuilder:validation:MaxItems=10
 	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 
 	// name is the name of the machine config pool
 	// +required
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=64
+	// +kubebuilder:validation:Pattern=`^[a-z0-9-]+$`
 	Name string `json:"name"`
 
 	// resource is the MachineConfigPool resource that represents the pool
@@ -247,6 +259,7 @@ type MachineConfigPoolStatusInsight struct {
 
 	// assessment is the assessment of the machine config pool update process
 	// +required
+	// +kubebuilder:validation:Enum=Pending;Completed;Degraded;Excluded;Progressing
 	Assessment PoolAssessment `json:"assessment"`
 
 	// completion is a percentage of the update completion (0-100)
@@ -261,6 +274,7 @@ type MachineConfigPoolStatusInsight struct {
 	// +patchStrategy=merge
 	// +patchMergeKey=type
 	// +optional
+	// +kubebuilder:validation:MaxItems=16
 	Summaries []NodeSummary `json:"summaries,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 }
 
@@ -291,6 +305,7 @@ type NodeSummary struct {
 	// count is the number of nodes matching the criteria
 	// +required
 	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=4096
 	Count int32 `json:"count"`
 }
 
@@ -325,10 +340,14 @@ type NodeStatusInsight struct {
 	// +patchStrategy=merge
 	// +patchMergeKey=type
 	// +optional
+	// +kubebuilder:validation:MaxItems=10
 	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 
 	// name is the name of the node
 	// +required
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=253
 	Name string `json:"name"`
 
 	// resource is the Node resource that represents the node
@@ -357,15 +376,19 @@ type NodeStatusInsight struct {
 	// version is the version of the node, when known
 	// +optional
 	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:MaxLength=64
 	Version string `json:"version,omitempty"`
 
 	// estToComplete is the estimated time to complete the update, when known
 	// +optional
 	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:Format=duration
 	EstToComplete *metav1.Duration `json:"estToComplete,omitempty"`
 
 	// message is a short human-readable message about the node update status
 	// +optional
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:MaxLength=100
 	Message string `json:"message,omitempty"`
 }
 

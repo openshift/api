@@ -193,12 +193,33 @@ type VSphereDisk struct {
 	// +required
 	Name string `json:"name"`
 	// sizeGiB is the size of the disk in GiB.
-	// The maximum supported size is 57742 GiB.
+	// The maximum supported size is 16384 GiB.
 	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=57742
+	// +kubebuilder:validation:Maximum=16384
 	// +required
 	SizeGiB int32 `json:"sizeGiB"`
+	// provisioningType specifies the provisioning type to be used by default for VirtualMachine volumes exclusively
+	// owned by this VirtualMachine. This does not apply to PersistentVolumeClaim volumes that are created and managed externally.
+	// If not set, the setting will be provided by the default storage policy.
+	// +optional
+	ProvisioningType ProvisioningType `json:"provisioningType,omitempty"`
 }
+
+type ProvisioningType string
+
+var (
+	// ThinProvisioned creates the disk using thin provisioning. This means a sparse (allocate on demand) format
+	// with additional space optimizations.
+	ThinProvisioned ProvisioningType = "ThinProvisioned"
+
+	// ThickProvisioned creates the disk with all space allocated.
+	ThickProvisioned ProvisioningType = "ThickProvisioned"
+
+	// EagerlyZeroed creates the disk using eager zero provisioning. An eager zeroed thick disk
+	// has all space allocated and wiped clean of any previous contents on the physical media at
+	// creation time. Such disks may take longer time during creation compared to other disk formats.
+	EagerlyZeroed ProvisioningType = "EagerlyZeroed"
+)
 
 // WorkspaceConfig defines a workspace configuration for the vSphere cloud
 // provider.

@@ -22523,8 +22523,12 @@
           "type": "string",
           "default": ""
         },
+        "provisioningType": {
+          "description": "provisioningType specifies the provisioning type to be used by default for VirtualMachine volumes exclusively owned by this VirtualMachine. This does not apply to PersistentVolumeClaim volumes that are created and managed externally. If not set, the setting will be provided by the default storage policy.",
+          "type": "string"
+        },
         "sizeGiB": {
-          "description": "sizeGiB is the size of the disk in GiB. The maximum supported size is 57742 GiB.",
+          "description": "sizeGiB is the size of the disk in GiB. The maximum supported size is 16384 GiB.",
           "type": "integer",
           "format": "int32",
           "default": 0

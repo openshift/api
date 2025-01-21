@@ -102,7 +102,7 @@ type Version struct {
 	// +patchStrategy=merge
 	// +patchMergeKey=key
 	// +optional
-	// +kubebuilder:validation:MaxItems=10
+	// +kubebuilder:validation:MaxItems=5
 	Metadata []VersionMetadata `json:"metadata,omitempty" patchStrategy:"merge" patchMergeKey:"key"`
 }
 

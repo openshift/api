@@ -34,6 +34,7 @@ type InsightScope struct {
 	// resources is a list of resources involved in the insight, of any group/kind
 	// +optional
 	// +listType=atomic
+	// +kubebuilder:validation:maxItems=64
 	Resources []ResourceRef `json:"resources,omitempty"`
 }
 
@@ -63,11 +64,14 @@ type InsightImpact struct {
 	// summary is a short summary of the impact
 	// +required
 	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:MaxLength=256
+	// +kubebuilder:validation:MinLength=1
 	Summary string `json:"summary"`
 
 	// description is a human-oriented, possibly longer-form description of the condition reported by the insight
 	// +optional
 	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:MaxLength=4096
 	Description string `json:"description,omitempty"`
 }
 
@@ -117,6 +121,7 @@ type InsightRemediation struct {
 	// +required
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:Format=uri
+	// +kubebuilder:validation:MaxLength=512
 	Reference string `json:"reference"`
 
 	// estimatedFinish is the estimated time when the informer expects the condition to be resolved, if applicable.

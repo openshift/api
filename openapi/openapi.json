@@ -22524,7 +22524,7 @@
           "default": ""
         },
         "sizeGiB": {
-          "description": "sizeGiB is the size of the disk in GiB. The maximum supported size is 57742 GiB.",
+          "description": "sizeGiB is the size of the disk in GiB. The maximum supported size 16384 GiB.",
           "type": "integer",
           "format": "int32",
           "default": 0

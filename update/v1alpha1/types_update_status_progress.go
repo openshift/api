@@ -11,6 +11,7 @@ type ClusterVersionStatusInsight struct {
 	// +patchStrategy=merge
 	// +patchMergeKey=type
 	// +optional
+	// +kubebuilder:validation:MaxItems=10
 	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 
 	// resource is the ClusterVersion resource that represents the control plane

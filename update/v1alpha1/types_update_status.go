@@ -49,7 +49,7 @@ type UpdateStatusStatus struct {
 	// +patchStrategy=merge
 	// +patchMergeKey=type
 	// +optional
-	// +kubebuilder:validation:maxItems=10
+	// +kubebuilder:validation:MaxItems=10
 	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 
 	// controlPlane contains a summary and insights related to the control plane update
@@ -62,7 +62,7 @@ type UpdateStatusStatus struct {
 	// +patchStrategy=merge
 	// +patchMergeKey=name
 	// +optional
-	// +kubebuilder:validation:maxItems=64
+	// +kubebuilder:validation:MaxItems=32
 	WorkerPools []Pool `json:"workerPools,omitempty" patchStrategy:"merge" patchMergeKey:"name"`
 }
 
@@ -74,6 +74,7 @@ type ControlPlane struct {
 	// +patchStrategy=merge
 	// +patchMergeKey=type
 	// +optional
+	// +kubebuilder:validation:MaxItems=10
 	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 
 	// resource is the resource that represents the control plane. It will typically be a ClusterVersion resource
@@ -102,8 +103,8 @@ type ControlPlane struct {
 	// +patchStrategy=merge
 	// +patchMergeKey=name
 	// +optional
-	// +kubebuilder:validation:maxItems=32
-	Informers []Informer `json:"informers,omitempty" patchStrategy:"merge" patchMergeKey:"name"`
+	// +kubebuilder:validation:MaxItems=16
+	Informers []ControlPlaneInformer `json:"informers,omitempty" patchStrategy:"merge" patchMergeKey:"name"`
 }
 
 // ControlPlaneConditionType are types of conditions that can be reported on control plane level
@@ -139,6 +140,7 @@ type Pool struct {
 	// +patchStrategy=merge
 	// +patchMergeKey=type
 	// +optional
+	// +kubebuilder:validation:MaxItems=10
 	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 
 	// name is the name of the pool
@@ -164,12 +166,12 @@ type Pool struct {
 	// +patchStrategy=merge
 	// +patchMergeKey=name
 	// +optional
-	// +kubebuilder:validation:maxItems=32
-	Informers []Informer `json:"informers,omitempty" patchStrategy:"merge" patchMergeKey:"name"`
+	// +kubebuilder:validation:MaxItems=16
+	Informers []WorkerPoolInformer `json:"informers,omitempty" patchStrategy:"merge" patchMergeKey:"name"`
 }
 
-// Informer is an insight producer identified by a name, carrying a list of insights it produced
-type Informer struct {
+// ControlPlaneInformer is an insight producer identified by a name, carrying a list of insights it produced
+type ControlPlaneInformer struct {
 	// name is the name of the insight producer
 	// +required
 	// +kubebuilder:validation:Type=string
@@ -184,12 +186,32 @@ type Informer struct {
 	// +patchStrategy=merge
 	// +patchMergeKey=uid
 	// +optional
-	// +kubebuilder:validation:maxItems=4096
-	Insights []Insight `json:"insights,omitempty" patchStrategy:"merge" patchMergeKey:"uid"`
+	// +kubebuilder:validation:MaxItems=128
+	Insights []ControlPlaneInsight `json:"insights,omitempty" patchStrategy:"merge" patchMergeKey:"uid"`
 }
 
-// Insight is a unique piece of either status/progress or update health information produced by update informer
-type Insight struct {
+// WorkerPoolInformer is an insight producer identified by a name, carrying a list of insights it produced
+type WorkerPoolInformer struct {
+	// name is the name of the insight producer
+	// +required
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=63
+	// +kubebuilder:validation:Pattern=`^[a-z0-9]([-a-z0-9]*[a-z0-9])?$`
+	Name string `json:"name"`
+
+	// insights is a list of insights produced by this producer
+	// +listType=map
+	// +listMapKey=uid
+	// +patchStrategy=merge
+	// +patchMergeKey=uid
+	// +optional
+	// +kubebuilder:validation:MaxItems=1024
+	Insights []WorkerPoolInsight `json:"insights,omitempty" patchStrategy:"merge" patchMergeKey:"uid"`
+}
+
+// ControlPlaneInsight is a unique piece of either status/progress or update health information produced by update informer
+type ControlPlaneInsight struct {
 	// uid identifies the insight over time
 	// +required
 	// +kubebuilder:validation:Type=string
@@ -204,14 +226,35 @@ type Insight struct {
 	// +kubebuilder:validation:Format=date-time
 	AcquiredAt metav1.Time `json:"acquiredAt"`
 
-	InsightUnion `json:",inline"`
+	ControlPlaneInsightUnion `json:",inline"`
 }
 
-// InsightUnion is the discriminated union of all insights types, identified by type field
-type InsightUnion struct {
+// WorkerPoolInsight is a unique piece of either status/progress or update health information produced by update informer
+type WorkerPoolInsight struct {
+	// uid identifies the insight over time
+	// +required
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=63
+	// +kubebuilder:validation:Pattern=`^[a-z0-9]([-a-z0-9]*[a-z0-9])?$`
+	UID string `json:"uid"`
+
+	// acquiredAt is the time when the data was acquired by the producer
+	// +required
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:Format=date-time
+	AcquiredAt metav1.Time `json:"acquiredAt"`
+
+	WorkerPoolInsightUnion `json:",inline"`
+}
+
+// ControlPlaneInsightUnion is the discriminated union of all insights types that can be reported for the control plane,
+// identified by type field
+type ControlPlaneInsightUnion struct {
 	// type identifies the type of the update insight
 	// +unionDiscriminator
 	// +required
+	// +kubebuilder:validation:Enum=ClusterVersion;ClusterOperator;MachineConfigPool;Node;Health
 	Type InsightType `json:"type"`
 
 	// clusterVersion is a status insight about the state of a control plane update, where
@@ -245,9 +288,36 @@ type InsightUnion struct {
 	HealthInsight *HealthInsight `json:"health,omitempty"`
 }
 
+// WorkerPoolInsightUnion is the discriminated union of insights types that can be reported for a worker pool,
+// identified by type field
+type WorkerPoolInsightUnion struct {
+	// type identifies the type of the update insight
+	// +unionDiscriminator
+	// +required
+	// +kubebuilder:validation:Enum=MachineConfigPool;Node;Health
+	Type InsightType `json:"type"`
+
+	// machineConfigPool is a status insight about the state of a worker pool update, where the worker pool
+	// is represented by a MachineConfigPool resource
+	// +optional
+	// +unionMember
+	MachineConfigPoolStatusInsight *MachineConfigPoolStatusInsight `json:"machineConfigPool,omitempty"`
+
+	// node is a status insight about the state of a worker node update, where the worker node is represented
+	// by a Node resource
+	// +optional
+	// +unionMember
+	NodeStatusInsight *NodeStatusInsight `json:"node,omitempty"`
+
+	// health is a generic health insight about the update. It does not represent a status of any specific
+	// resource but surfaces actionable information about the health of the cluster or an update
+	// +optional
+	// +unionMember
+	HealthInsight *HealthInsight `json:"health,omitempty"`
+}
+
 // InsightType identifies the type of the update insight as either one of the resource-specific status insight,
 // or a generic health insight
-// +kubebuilder:validation:Enum=ClusterVersion;ClusterOperator;MachineConfigPool;Node;Health
 type InsightType string
 
 const (

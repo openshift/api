@@ -35098,7 +35098,7 @@ func schema_openshift_api_machine_v1alpha1_RootVolume(ref common.ReferenceCallba
 					},
 					"diskSize": {
 						SchemaProps: spec.SchemaProps{
-							Description: "diskSize specifies the size, in GB, of the created root volume.",
+							Description: "diskSize specifies the size, in GiB, of the created root volume.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},

@@ -20257,7 +20257,7 @@
           "type": "string"
         },
         "diskSize": {
-          "description": "diskSize specifies the size, in GB, of the created root volume.",
+          "description": "diskSize specifies the size, in GiB, of the created root volume.",
           "type": "integer",
           "format": "int32"
         },

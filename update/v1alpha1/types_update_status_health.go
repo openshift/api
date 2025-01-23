@@ -28,7 +28,6 @@ type HealthInsight struct {
 type InsightScope struct {
 	// type is either ControlPlane or WorkerPool
 	// +required
-	// +kubebuilder:validation:Enum=ControlPlane;WorkerPool
 	Type ScopeType `json:"type"`
 
 	// resources is a list of resources involved in the insight, of any group/kind
@@ -53,12 +52,10 @@ const (
 type InsightImpact struct {
 	// level is the severity of the impact
 	// +required
-	// +kubebuilder:validation:Enum=Unknown;Info;Warning;Error;Critical
 	Level InsightImpactLevel `json:"level"`
 
 	// type is the type of the impact
 	// +required
-	// +kubebuilder:validation:Enum=None;Unknown;API Availability;Cluster Capacity;Application Availability;Application Outage;Data Loss;Update Speed;Update Stalled
 	Type InsightImpactType `json:"type"`
 
 	// summary is a short summary of the impact

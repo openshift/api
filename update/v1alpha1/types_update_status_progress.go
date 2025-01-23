@@ -24,7 +24,6 @@ type ClusterVersionStatusInsight struct {
 
 	// assessment is the assessment of the control plane update process
 	// +required
-	// +kubebuilder:validation:Enum=Unknown;Progressing;Completed;Degraded
 	Assessment ControlPlaneAssessment `json:"assessment"`
 
 	// versions contains the original and target versions of the upgrade
@@ -57,6 +56,7 @@ type ClusterVersionStatusInsight struct {
 }
 
 // ControlPlaneAssessment is the assessment of the control plane update process
+// +kubebuilder:validation:Enum=Unknown;Progressing;Completed;Degraded
 type ControlPlaneAssessment string
 
 const (
@@ -111,7 +111,6 @@ type Version struct {
 type VersionMetadata struct {
 	// key is the name of this metadata value
 	// +required
-	// +kubebuilder:validation:Enum=Installation;Partial;Architecture
 	Key VersionMetadataKey `json:"key"`
 
 	// value is the value for the metadata
@@ -254,12 +253,10 @@ type MachineConfigPoolStatusInsight struct {
 
 	// scopeType describes whether the pool is a control plane or a worker pool
 	// +required
-	// +kubebuilder:validation:Enum=ControlPlane;WorkerPool
 	Scope ScopeType `json:"scopeType"`
 
 	// assessment is the assessment of the machine config pool update process
 	// +required
-	// +kubebuilder:validation:Enum=Pending;Completed;Degraded;Excluded;Progressing
 	Assessment PoolAssessment `json:"assessment"`
 
 	// completion is a percentage of the update completion (0-100)
@@ -279,6 +276,7 @@ type MachineConfigPoolStatusInsight struct {
 }
 
 // PoolAssessment is the assessment of the node pool update process
+// +kubebuilder:validation:Enum=Pending;Completed;Degraded;Excluded;Progressing
 type PoolAssessment string
 
 const (
@@ -299,7 +297,6 @@ const (
 type NodeSummary struct {
 	// type is the type of the summary
 	// +required
-	// +kubebuilder:validation:Enum=Total;Available;Progressing;Outdated;Draining;Excluded;Degraded
 	Type NodeSummaryType `json:"type"`
 
 	// count is the number of nodes matching the criteria
@@ -370,7 +367,6 @@ type NodeStatusInsight struct {
 
 	// scopeType describes whether the node belongs to control plane or a worker pool
 	// +required
-	// +kubebuilder:validation:Enum=ControlPlane;WorkerPool
 	Scope ScopeType `json:"scopeType"`
 
 	// version is the version of the node, when known

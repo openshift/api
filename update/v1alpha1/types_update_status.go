@@ -212,7 +212,6 @@ type InsightUnion struct {
 	// type identifies the type of the update insight
 	// +unionDiscriminator
 	// +required
-	// +kubebuilder:validation:Enum=ClusterVersion;ClusterOperator;MachineConfigPool;Node;Health
 	Type InsightType `json:"type"`
 
 	// clusterVersion is a status insight about the state of a control plane update, where

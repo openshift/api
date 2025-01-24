@@ -51,6 +51,12 @@ func QueriesFor(cloud, architecture, topology, networkStack, testPattern string)
 		{
 			Items: []SippyQueryItem{
 				{
+					ColumnField:   "current_runs",
+					Not:           false,
+					OperatorValue: ">",
+					Value:         "0",
+				},
+				{
 					ColumnField:   "variants",
 					Not:           false,
 					OperatorValue: "contains",

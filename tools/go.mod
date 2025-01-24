@@ -34,7 +34,7 @@ require (
 	sigs.k8s.io/yaml v1.4.0
 )
 
-replace sigs.k8s.io/controller-tools => github.com/openshift/controller-tools v0.12.1-0.20241105174925-ead1ef573704
+replace sigs.k8s.io/controller-tools => github.com/openshift/controller-tools v0.12.1-0.20250108094724-6eb6da5d6efd
 
 // Temporary until we rebase to 1.32.0 or higher deps. To enable the format library early.
 replace k8s.io/apiserver => github.com/openshift/kubernetes/staging/src/k8s.io/apiserver v0.0.0-20241125210059-e3abfef0b992

@@ -10,7 +10,7 @@ import (
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=machineconfignodes,scope=Cluster
 // +kubebuilder:subresource:status
-// +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/XXXX //TODO: Update once PR is opened
+// +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/2171
 // +openshift:file-pattern=cvoRunLevel=0000_80,operatorName=machine-config,operatorOrdering=01
 // +openshift:enable:FeatureGate=MachineConfigNodes
 // +kubebuilder:printcolumn:name="PoolName",type="string",JSONPath=.spec.pool.name,priority=0
@@ -78,11 +78,11 @@ type MachineConfigNodeSpec struct {
 	// pool contains a reference to the machine config pool that this machine config node's
 	// referenced node belongs to.
 	// +required
-	Pool MCOObjectReference `json:"pool"` //TODO: Check this
+	Pool MCOObjectReference `json:"pool"`
 
 	// configVersion holds the desired config version for the node targeted by this machine config node resource.
 	// The desired version represents the machine config the node will attempt to update to. This gets set before the machine config operator validates
-	// the new machine config against the current machine config. //TODO: check this is only the desired config version
+	// the new machine config against the current machine config.
 	// +required
 	ConfigVersion MachineConfigNodeSpecMachineConfigVersion `json:"configVersion"`
 
@@ -127,8 +127,8 @@ type MachineConfigNodeStatus struct {
 	// +required
 	ConfigVersion MachineConfigNodeStatusMachineConfigVersion `json:"configVersion"`
 	// pinnedImageSets describes the current and desired pinned image sets for this node.
-	// The current version is the generation of the pinned image set that has most recently been successfully pulled and pinned on this node. //TODO: see if 'version' should be 'pinned image set'
-	// The desired version is the generation of the pinned image set that is targeted to be pulled and pinned on this node. //TODO: see if 'version' should be 'pinned image set'
+	// The current version is the generation of the pinned image set that has most recently been successfully pulled and pinned on this node.
+	// The desired version is the generation of the pinned image set that is targeted to be pulled and pinned on this node.
 	// +listType=map
 	// +listMapKey=name
 	// +kubebuilder:validation:MaxItems=100
@@ -136,7 +136,7 @@ type MachineConfigNodeStatus struct {
 	PinnedImageSets []MachineConfigNodeStatusPinnedImageSet `json:"pinnedImageSets,omitempty"`
 }
 
-// TODO: Add description of struct
+// MachineConfigNodeStatusPinnedImageSet holds information about the current and desired pinned image sets for the current observed machine config node.
 // +kubebuilder:validation:XValidation:rule="has(self.desiredGeneration) && has(self.currentGeneration) ? self.desiredGeneration >= self.currentGeneration : true",message="desired generation must be greater than or equal to the current generation"
 // +kubebuilder:validation:XValidation:rule="has(self.lastFailedGeneration) && has(self.desiredGeneration) ? self.desiredGeneration >= self.lastFailedGeneration : true",message="desired generation must be greater than last failed generation"
 // +kubebuilder:validation:XValidation:rule="has(self.lastFailedGeneration) ? has(self.desiredGeneration): true",message="desired generation must be defined if last failed generation is defined"
@@ -169,8 +169,8 @@ type MachineConfigNodeStatusPinnedImageSet struct {
 // MachineConfigNodeStatusMachineConfigVersion holds the current and desired config versions as last updated in the MCN status.
 // When the current and desired versions are not matched, the machine config pool is processing an upgrade and the machine config node will
 // monitor the upgrade process.
-// When the current and desired versions do not match, //TODO: check if this is meant to be a repeat of the previous line
-// the machine config node will ignore these events given that certain operations happen both during the MCO's upgrade mode and the daily operations mode.
+// When the current and desired versions do not match, the machine config node will ignore these events given that certain operations
+// happen both during the MCO's upgrade mode and the daily operations mode.
 type MachineConfigNodeStatusMachineConfigVersion struct {
 	// current is the name of the machine config currently in use on the node.
 	// This value is updated once the machine config daemon has completed the update of the configuration for the node.
@@ -212,7 +212,8 @@ type MachineConfigNodeSpecMachineConfigVersion struct {
 	Desired string `json:"desired"`
 }
 
-// TODO: Add description of struct
+// MachineConfigNodeSpecPinnedImageSet holds information on the desired pinned image sets that the current observed machine config node
+// should pin and pull.
 type MachineConfigNodeSpecPinnedImageSet struct {
 	// name is the name of the pinned image set.
 	// Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123)
@@ -226,7 +227,6 @@ type MachineConfigNodeSpecPinnedImageSet struct {
 
 // StateProgress is each possible state for each possible MachineConfigNodeType
 // UpgradeProgression Kind will only use the "MachinConfigPoolUpdate..." types for example
-// Please note: These conditions are subject to change. Both additions and deletions may be made. //TODO: Make sure this can be removed
 type StateProgress string
 
 const (
@@ -241,7 +241,7 @@ const (
 	// MachineConfigNodeUpdated describes a machine that has a matching desired and current config after executing an update
 	MachineConfigNodeUpdated StateProgress = "Updated"
 	// MachineConfigNodeUpdateResumed describes a machine that has resumed normal processes
-	MachineConfigNodeResumed StateProgress = "Resumed" //TDOD: Check if this should be MachineConfigNodeUpdateResumed
+	MachineConfigNodeUpdateResumed StateProgress = "Resumed"
 	// MachineConfigNodeUpdateCompatible the part of the preparing phase where the mco decides whether it can update
 	MachineConfigNodeUpdateCompatible StateProgress = "UpdateCompatible"
 	// MachineConfigNodeUpdateDrained describes the part of the inprogress phase where the node drains

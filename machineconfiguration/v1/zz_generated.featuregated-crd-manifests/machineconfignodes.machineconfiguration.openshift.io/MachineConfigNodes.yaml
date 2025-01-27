@@ -2,8 +2,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    api-approved.openshift.io: 'https://github.com/openshift/api/pull/XXXX //TODO:
-      Update once PR is opened'
+    api-approved.openshift.io: https://github.com/openshift/api/pull/2171
     api.openshift.io/filename-cvo-runlevel: "0000_80"
     api.openshift.io/filename-operator: machine-config
     api.openshift.io/filename-ordering: "01"
@@ -112,7 +111,7 @@ spec:
                 description: |-
                   configVersion holds the desired config version for the node targeted by this machine config node resource.
                   The desired version represents the machine config the node will attempt to update to. This gets set before the machine config operator validates
-                  the new machine config against the current machine config. //TODO: check this is only the desired config version
+                  the new machine config against the current machine config.
                 properties:
                   desired:
                     description: |-
@@ -149,6 +148,9 @@ spec:
                 description: pinnedImageSets holds the desired pinned image sets that
                   this node should pin and pull.
                 items:
+                  description: |-
+                    MachineConfigNodeSpecPinnedImageSet holds information on the desired pinned image sets that the current observed machine config node
+                    should pin and pull.
                   properties:
                     name:
                       description: |-
@@ -295,9 +297,12 @@ spec:
               pinnedImageSets:
                 description: |-
                   pinnedImageSets describes the current and desired pinned image sets for this node.
-                  The current version is the generation of the pinned image set that has most recently been successfully pulled and pinned on this node. //TODO: see if 'version' should be 'pinned image set'
-                  The desired version is the generation of the pinned image set that is targeted to be pulled and pinned on this node. //TODO: see if 'version' should be 'pinned image set'
+                  The current version is the generation of the pinned image set that has most recently been successfully pulled and pinned on this node.
+                  The desired version is the generation of the pinned image set that is targeted to be pulled and pinned on this node.
                 items:
+                  description: MachineConfigNodeStatusPinnedImageSet holds information
+                    about the current and desired pinned image sets for the current
+                    observed machine config node.
                   properties:
                     currentGeneration:
                       description: currentGeneration is the generation of the pinned

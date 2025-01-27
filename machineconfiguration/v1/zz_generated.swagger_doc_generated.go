@@ -402,7 +402,7 @@ var map_MachineConfigNodeSpec = map[string]string{
 	"":                "MachineConfigNodeSpec describes the MachineConfigNode we are managing.",
 	"node":            "node contains a reference to the node for this machine config node.",
 	"pool":            "pool contains a reference to the machine config pool that this machine config node's referenced node belongs to.",
-	"configVersion":   "configVersion holds the desired config version for the node targeted by this machine config node resource. The desired version represents the machine config the node will attempt to update to. This gets set before the machine config operator validates the new machine config against the current machine config. //TODO: check this is only the desired config version",
+	"configVersion":   "configVersion holds the desired config version for the node targeted by this machine config node resource. The desired version represents the machine config the node will attempt to update to. This gets set before the machine config operator validates the new machine config against the current machine config.",
 	"pinnedImageSets": "pinnedImageSets holds the desired pinned image sets that this node should pin and pull.",
 }
 
@@ -420,6 +420,7 @@ func (MachineConfigNodeSpecMachineConfigVersion) SwaggerDoc() map[string]string 
 }
 
 var map_MachineConfigNodeSpecPinnedImageSet = map[string]string{
+	"":     "MachineConfigNodeSpecPinnedImageSet holds information on the desired pinned image sets that the current observed machine config node should pin and pull.",
 	"name": "name is the name of the pinned image set. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
 }
 
@@ -432,7 +433,7 @@ var map_MachineConfigNodeStatus = map[string]string{
 	"conditions":         "conditions represent the observations of a machine config node's current state.",
 	"observedGeneration": "observedGeneration represents the generation observed by the controller. This field is updated when the controller observes a change to the desiredConfig in the configVersion of the machine config node spec.",
 	"configVersion":      "configVersion describes the current and desired machine config for this node. The current version represents the current machine config for the node and is updated after a successful update. The desired version represents the machine config the node will attempt to update to. This desired machine config has been compared to the current machine config and has been validated by the machine config operator as one that is valid and that exists.",
-	"pinnedImageSets":    "pinnedImageSets describes the current and desired pinned image sets for this node. The current version is the generation of the pinned image set that has most recently been successfully pulled and pinned on this node. //TODO: see if 'version' should be 'pinned image set' The desired version is the generation of the pinned image set that is targeted to be pulled and pinned on this node. //TODO: see if 'version' should be 'pinned image set'",
+	"pinnedImageSets":    "pinnedImageSets describes the current and desired pinned image sets for this node. The current version is the generation of the pinned image set that has most recently been successfully pulled and pinned on this node. The desired version is the generation of the pinned image set that is targeted to be pulled and pinned on this node.",
 }
 
 func (MachineConfigNodeStatus) SwaggerDoc() map[string]string {
@@ -440,7 +441,7 @@ func (MachineConfigNodeStatus) SwaggerDoc() map[string]string {
 }
 
 var map_MachineConfigNodeStatusMachineConfigVersion = map[string]string{
-	"":        "MachineConfigNodeStatusMachineConfigVersion holds the current and desired config versions as last updated in the MCN status. When the current and desired versions are not matched, the machine config pool is processing an upgrade and the machine config node will monitor the upgrade process. When the current and desired versions do not match, //TODO: check if this is meant to be a repeat of the previous line the machine config node will ignore these events given that certain operations happen both during the MCO's upgrade mode and the daily operations mode.",
+	"":        "MachineConfigNodeStatusMachineConfigVersion holds the current and desired config versions as last updated in the MCN status. When the current and desired versions are not matched, the machine config pool is processing an upgrade and the machine config node will monitor the upgrade process. When the current and desired versions do not match, the machine config node will ignore these events given that certain operations happen both during the MCO's upgrade mode and the daily operations mode.",
 	"current": "current is the name of the machine config currently in use on the node. This value is updated once the machine config daemon has completed the update of the configuration for the node. This value should match the desired version unless an upgrade is in progress. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
 	"desired": "desired is the MachineConfig the node wants to upgrade to. This value gets set in the machine config node status once the machine config has been validated against the current machine config. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
 }
@@ -450,6 +451,7 @@ func (MachineConfigNodeStatusMachineConfigVersion) SwaggerDoc() map[string]strin
 }
 
 var map_MachineConfigNodeStatusPinnedImageSet = map[string]string{
+	"":                           "MachineConfigNodeStatusPinnedImageSet holds information about the current and desired pinned image sets for the current observed machine config node.",
 	"name":                       "name is the name of the pinned image set. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
 	"currentGeneration":          "currentGeneration is the generation of the pinned image set that has most recently been successfully pulled and pinned on this node.",
 	"desiredGeneration":          "desiredGeneration is the generation of the pinned image set that is targeted to be pulled and pinned on this node.",

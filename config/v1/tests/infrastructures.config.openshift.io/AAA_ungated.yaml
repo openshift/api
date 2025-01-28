@@ -1365,3 +1365,121 @@ tests:
               - name: BadService
                 url: https://bad-service.com
       expectedStatusError: "platformStatus.ibmcloud.serviceEndpoints[1].name: Unsupported value: \"BadService\": supported values: \"CIS\", \"COS\", \"COSConfig\", \"DNSServices\", \"GlobalCatalog\", \"GlobalSearch\", \"GlobalTagging\", \"HyperProtect\", \"IAM\", \"KeyProtect\", \"ResourceController\", \"ResourceManager\", \"VPC\""
+    - name: Should allow updating other fields with an invalid persisted IBMCloud service endpoint url that isnt https in status
+      initialCRDPatches:
+      - op: remove
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/status/properties/platformStatus/properties/ibmcloud/properties/serviceEndpoints/items/url/XValidation
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        status:
+          platformStatus:
+            type: IBMCloud
+            ibmcloud:
+              cisInstanceCRN: oldCRN
+              serviceEndpoints:
+              - name: IAM
+                url: http://foobar/v1
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        status:
+          cloudConfig: {}
+          platformStatus:
+            type: IBMCloud
+            ibmcloud:
+              cisInstanceCRN: newCRN
+              serviceEndpoints:
+              - name: IAM
+                url: https://foobar/v1
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        status:
+          cloudConfig: {}
+          platformStatus:
+            type: IBMCloud
+            ibmcloud:
+              cisInstanceCRN: newCRN
+              serviceEndpoints:
+              - name: IAM
+                url: https://foobar/v1
+    - name: Should allow updating other fields with an invalid persisted IBMCloud service endpoint url that doesnt match regex pattern in status
+      initialCRDPatches:
+      - op: remove
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/status/properties/platformStatus/properties/ibmcloud/properties/serviceEndpoints/items/url/XValidation
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        status:
+          platformStatus:
+            type: IBMCloud
+            ibmcloud:
+              cisInstanceCRN: oldCRN
+              serviceEndpoints:
+              - name: IAM
+                url: https://foobar/wrong1
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        status:
+          cloudConfig: {}
+          platformStatus:
+            type: IBMCloud
+            ibmcloud:
+              cisInstanceCRN: newCRN
+              serviceEndpoints:
+              - name: IAM
+                url: https://foobar/wrong1
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        status:
+          cloudConfig: {}
+          platformStatus:
+            type: IBMCloud
+            ibmcloud:
+              cisInstanceCRN: newCRN
+              serviceEndpoints:
+              - name: IAM
+                url: https://foobar/wrong1
+    - name: Should allow updating other fields with an invalid persisted IBMCloud service endpoint url of length > 300 in status
+      initialCRDPatches:
+      - op: remove
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/status/properties/platformStatus/properties/ibmcloud/properties/serviceEndpoints/items/url/maxlength
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        status:
+          platformStatus:
+            type: IBMCloud
+            ibmcloud:
+              cisInstanceCRN: oldCRN
+              serviceEndpoints:
+              - name: IAM
+                url: https://foobarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobar/api/v1
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        status:
+          cloudConfig: {}
+          platformStatus:
+            type: IBMCloud
+            ibmcloud:
+              cisInstanceCRN: newCRN
+              serviceEndpoints:
+              - name: IAM
+                url: https://foobarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobar/api/v1
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        status:
+          cloudConfig: {}
+          platformStatus:
+            type: IBMCloud
+            ibmcloud:
+              cisInstanceCRN: newCRN
+              serviceEndpoints:
+              - name: IAM
+                url: https://foobarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobar/api/v1
+      

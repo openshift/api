@@ -98,11 +98,11 @@ type MachineConfigNodeSpec struct {
 // or modifies in some way
 type MCOObjectReference struct {
 	// name is the object name.
-	// Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123)
-	// It may consist of only alphanumeric characters, hyphens (-) and periods (.)
-	// and must be at most 253 characters in length.
+	// Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) consisting
+	// of only lowercase alphanumeric characters, hyphens (-), and periods (.), start and end
+	// with an alphanumeric character, and be at most 253 characters in length.
 	// +kubebuilder:validation:MaxLength:=253
-	// +kubebuilder:validation:Pattern=`^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9]))*$`
+	// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
 	// +required
 	Name string `json:"name"`
 }
@@ -142,11 +142,11 @@ type MachineConfigNodeStatus struct {
 // +kubebuilder:validation:XValidation:rule="has(self.lastFailedGeneration) ? has(self.desiredGeneration): true",message="desired generation must be defined if last failed generation is defined"
 type MachineConfigNodeStatusPinnedImageSet struct {
 	// name is the name of the pinned image set.
-	// Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123)
-	// It may consist of only alphanumeric characters, hyphens (-) and periods (.)
-	// and must be at most 253 characters in length.
+	// Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) consisting
+	// of only lowercase alphanumeric characters, hyphens (-), and periods (.), start and end
+	// with an alphanumeric character, and be at most 253 characters in length.
 	// +kubebuilder:validation:MaxLength:=253
-	// +kubebuilder:validation:Pattern=`^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9]))*$`
+	// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
 	// +required
 	Name string `json:"name"`
 	// currentGeneration is the generation of the pinned image set that has most recently been successfully pulled and pinned on this node.
@@ -175,21 +175,22 @@ type MachineConfigNodeStatusMachineConfigVersion struct {
 	// current is the name of the machine config currently in use on the node.
 	// This value is updated once the machine config daemon has completed the update of the configuration for the node.
 	// This value should match the desired version unless an upgrade is in progress.
-	// Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123)
-	// It may consist of only alphanumeric characters, hyphens (-) and periods (.)
-	// and must be at most 253 characters in length.
-	// +kubebuilder:validation:MaxLength=253
-	// +kubebuilder:validation:Pattern=`^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9]))*$`
+	// Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) consisting
+	// of only lowercase alphanumeric characters, hyphens (-), and periods (.), start and end
+	// with an alphanumeric character, and be at most 253 characters in length.
+	// +kubebuilder:validation:MaxLength:=253
+	// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
 	// +optional
 	Current string `json:"current"`
 	// desired is the MachineConfig the node wants to upgrade to.
 	// This value gets set in the machine config node status once the machine config has been validated
 	// against the current machine config.
-	// Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123)
-	// It may consist of only alphanumeric characters, hyphens (-) and periods (.)
-	// and must be at most 253 characters in length.
-	// +kubebuilder:validation:MaxLength=253
-	// +kubebuilder:validation:Pattern=`^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9]))*$`
+	// This value should match the desired version unless an upgrade is in progress.
+	// Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) consisting
+	// of only lowercase alphanumeric characters, hyphens (-), and periods (.), start and end
+	// with an alphanumeric character, and be at most 253 characters in length.
+	// +kubebuilder:validation:MaxLength:=253
+	// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
 	// +required
 	Desired string `json:"desired"`
 }
@@ -203,11 +204,12 @@ type MachineConfigNodeSpecMachineConfigVersion struct {
 	// This value is set when the machine config pool generates a new version of its rendered configuration.
 	// When this value is changed, the machine config daemon starts the node upgrade process.
 	// This value gets set in the machine config node spec once the machine config has been targeted for upgrade and before it is validated.
-	// Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123)
-	// It may consist of only alphanumeric characters, hyphens (-) and periods (.)
-	// and must be at most 253 characters in length.
-	// +kubebuilder:validation:MaxLength=253
-	// +kubebuilder:validation:Pattern=`^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9]))*$`
+	// This value should match the desired version unless an upgrade is in progress.
+	// Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) consisting
+	// of only lowercase alphanumeric characters, hyphens (-), and periods (.), start and end
+	// with an alphanumeric character, and be at most 253 characters in length.
+	// +kubebuilder:validation:MaxLength:=253
+	// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
 	// +required
 	Desired string `json:"desired"`
 }
@@ -216,11 +218,12 @@ type MachineConfigNodeSpecMachineConfigVersion struct {
 // should pin and pull.
 type MachineConfigNodeSpecPinnedImageSet struct {
 	// name is the name of the pinned image set.
-	// Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123)
-	// It may consist of only alphanumeric characters, hyphens (-) and periods (.)
-	// and must be at most 253 characters in length.
+	// This value should match the desired version unless an upgrade is in progress.
+	// Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) consisting
+	// of only lowercase alphanumeric characters, hyphens (-), and periods (.), start and end
+	// with an alphanumeric character, and be at most 253 characters in length.
 	// +kubebuilder:validation:MaxLength:=253
-	// +kubebuilder:validation:Pattern=`^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9]))*$`
+	// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
 	// +required
 	Name string `json:"name"`
 }

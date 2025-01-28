@@ -84,6 +84,10 @@ verify-codegen-crds:
 verify-crd-schema:
 	bash -x hack/verify-crd-schema-checker.sh
 
+.PHONY: verify-feature-promotion
+verify-feature-promotion:
+	hack/verify-promoted-features-pass-tests.sh
+
 .PHONY: verify-%
 verify-%:
 	make $*

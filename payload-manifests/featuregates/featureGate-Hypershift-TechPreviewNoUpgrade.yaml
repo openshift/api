@@ -44,6 +44,9 @@
                     },
                     {
                         "name": "NewOLM"
+                    },
+                    {
+                        "name": "SigstoreImageVerificationPKI"
                     }
                 ],
                 "enabled": [

@@ -114,6 +114,9 @@
                         "name": "GCPClusterHostedDNS"
                     },
                     {
+                        "name": "GCPDualStackEnablement"
+                    },
+                    {
                         "name": "GCPLabelsTags"
                     },
                     {

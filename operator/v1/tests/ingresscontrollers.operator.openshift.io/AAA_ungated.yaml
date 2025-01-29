@@ -15,6 +15,7 @@ tests:
         kind: IngressController
         spec:
           httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Deferred
     - name: Should be able to create an IngressController with valid Actions
       initial: |
         apiVersion: operator.openshift.io/v1
@@ -75,6 +76,7 @@ tests:
         kind: IngressController
         spec:
           httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Deferred
           httpHeaders:
             actions:
               response:
@@ -496,6 +498,7 @@ tests:
           namespace: openshift-ingress-operator
         spec:
           httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Deferred
           tuningOptions:
             connectTimeout: 10s
     - name: Should be able to create an IngressController with valid composite connect timeout
@@ -516,6 +519,7 @@ tests:
           namespace: openshift-ingress-operator
         spec:
           httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Deferred
           tuningOptions:
             connectTimeout: 100ms300μs
     - name: Should be able to create an IngressController with valid fraction connect timeout
@@ -536,6 +540,7 @@ tests:
           namespace: openshift-ingress-operator
         spec:
           httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Deferred
           tuningOptions:
             connectTimeout: 1.5m
     - name: Should not be able to create an IngressController with invalid unit connect timeout

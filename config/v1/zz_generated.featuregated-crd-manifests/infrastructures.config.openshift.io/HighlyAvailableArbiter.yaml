@@ -521,21 +521,7 @@ spec:
                                 IAM - https://cloud.ibm.com/apidocs/iam-identity-token-api
                                 ResourceController - https://cloud.ibm.com/apidocs/resource-controller/resource-controller
                                 Power Cloud - https://cloud.ibm.com/apidocs/power-cloud
-                              enum:
-                              - CIS
-                              - COS
-                              - COSConfig
-                              - DNSServices
-                              - GlobalCatalog
-                              - GlobalSearch
-                              - GlobalTagging
-                              - HyperProtect
-                              - IAM
-                              - KeyProtect
-                              - Power
-                              - ResourceController
-                              - ResourceManager
-                              - VPC
+                              pattern: ^[A-z0-9-]+$
                               type: string
                             url:
                               description: |-
@@ -1806,21 +1792,7 @@ spec:
                                 IAM - https://cloud.ibm.com/apidocs/iam-identity-token-api
                                 ResourceController - https://cloud.ibm.com/apidocs/resource-controller/resource-controller
                                 Power Cloud - https://cloud.ibm.com/apidocs/power-cloud
-                              enum:
-                              - CIS
-                              - COS
-                              - COSConfig
-                              - DNSServices
-                              - GlobalCatalog
-                              - GlobalSearch
-                              - GlobalTagging
-                              - HyperProtect
-                              - IAM
-                              - KeyProtect
-                              - Power
-                              - ResourceController
-                              - ResourceManager
-                              - VPC
+                              pattern: ^[A-z0-9-]+$
                               type: string
                             url:
                               description: |-

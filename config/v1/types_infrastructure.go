@@ -1699,7 +1699,7 @@ type PowerVSServiceEndpoint struct {
 	// Power Cloud - https://cloud.ibm.com/apidocs/power-cloud
 	//
 	// +required
-	// +kubebuilder:validation:Enum=CIS;COS;COSConfig;DNSServices;GlobalCatalog;GlobalSearch;GlobalTagging;HyperProtect;IAM;KeyProtect;Power;ResourceController;ResourceManager;VPC
+	// +kubebuilder:validation:Pattern=`^[A-z0-9-]+$`
 	Name string `json:"name"`
 
 	// url is fully qualified URI with scheme https, that overrides the default generated

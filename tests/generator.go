@@ -241,7 +241,11 @@ func generateOnUpdateTable(onUpdateTests []OnUpdateTestSpec, crdFileName string)
 			Expect(initialStatus).ToNot(BeNil())
 		}
 
-		Expect(k8sClient.Create(ctx, initialObj)).ToNot(HaveOccurred(), "initial object should create successfully")
+		// Use an eventually here, so that any modification to the CRD
+		// has time to be reflected in the CRD storage.
+		Eventually(func() error {
+			return k8sClient.Create(ctx, initialObj)
+		}).Should(Succeed(), "initial object should create successfully")
 
 		if initialStatus != nil {
 			Expect(unstructured.SetNestedField(initialObj.Object, initialStatus, "status")).To(Succeed(), "should be able to restore initial status")

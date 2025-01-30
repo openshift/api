@@ -96,6 +96,9 @@
                         "name": "DisableKubeletCloudCredentialProviders"
                     },
                     {
+                        "name": "DyanmicServiceEndpointIBMCloud"
+                    },
+                    {
                         "name": "DynamicResourceAllocation"
                     },
                     {

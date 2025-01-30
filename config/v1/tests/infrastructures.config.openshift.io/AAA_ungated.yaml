@@ -1365,3 +1365,309 @@ tests:
               - name: BadService
                 url: https://bad-service.com
       expectedStatusError: "platformStatus.ibmcloud.serviceEndpoints[1].name: Unsupported value: \"BadService\": supported values: \"CIS\", \"COS\", \"COSConfig\", \"DNSServices\", \"GlobalCatalog\", \"GlobalSearch\", \"GlobalTagging\", \"HyperProtect\", \"IAM\", \"KeyProtect\", \"ResourceController\", \"ResourceManager\", \"VPC\""
+    - name: Should allow updating other fields with an invalid persisted IBMCloud service endpoint url that isnt https in status
+      initialCRDPatches:
+      - op: remove
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/status/properties/platformStatus/properties/ibmcloud/properties/serviceEndpoints/items/url/XValidation
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        status:
+          platformStatus:
+            type: IBMCloud
+            ibmcloud:
+              cisInstanceCRN: oldCRN
+              serviceEndpoints:
+              - name: IAM
+                url: http://foobar/v1
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        status:
+          cloudConfig: {}
+          platformStatus:
+            type: IBMCloud
+            ibmcloud:
+              cisInstanceCRN: newCRN
+              serviceEndpoints:
+              - name: IAM
+                url: https://foobar/v1
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        status:
+          cloudConfig: {}
+          platformStatus:
+            type: IBMCloud
+            ibmcloud:
+              cisInstanceCRN: newCRN
+              serviceEndpoints:
+              - name: IAM
+                url: https://foobar/v1
+    - name: Should allow updating other fields with an invalid persisted IBMCloud service endpoint url that doesnt match regex pattern in status
+      initialCRDPatches:
+      - op: remove
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/status/properties/platformStatus/properties/ibmcloud/properties/serviceEndpoints/items/url/XValidation
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        status:
+          platformStatus:
+            type: IBMCloud
+            ibmcloud:
+              cisInstanceCRN: oldCRN
+              serviceEndpoints:
+              - name: IAM
+                url: https://foobar/wrong1
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        status:
+          cloudConfig: {}
+          platformStatus:
+            type: IBMCloud
+            ibmcloud:
+              cisInstanceCRN: newCRN
+              serviceEndpoints:
+              - name: IAM
+                url: https://foobar/wrong1
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        status:
+          cloudConfig: {}
+          platformStatus:
+            type: IBMCloud
+            ibmcloud:
+              cisInstanceCRN: newCRN
+              serviceEndpoints:
+              - name: IAM
+                url: https://foobar/wrong1
+    - name: Should allow updating other fields with an invalid persisted IBMCloud service endpoint url of length > 300 in status
+      initialCRDPatches:
+      - op: remove
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/status/properties/platformStatus/properties/ibmcloud/properties/serviceEndpoints/items/url/maxlength
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        status:
+          platformStatus:
+            type: IBMCloud
+            ibmcloud:
+              cisInstanceCRN: oldCRN
+              serviceEndpoints:
+              - name: IAM
+                url: https://foobarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobar/api/v1
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        status:
+          cloudConfig: {}
+          platformStatus:
+            type: IBMCloud
+            ibmcloud:
+              cisInstanceCRN: newCRN
+              serviceEndpoints:
+              - name: IAM
+                url: https://foobarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobar/api/v1
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        status:
+          cloudConfig: {}
+          platformStatus:
+            type: IBMCloud
+            ibmcloud:
+              cisInstanceCRN: newCRN
+              serviceEndpoints:
+              - name: IAM
+                url: https://foobarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobar/api/v1
+    - name: Should allow updating other fields with an invalid persisted IBMCloud service endpoint list that exceeds the max amount of items in status
+      initialCRDPatches:
+      - op: remove
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/status/properties/platformStatus/properties/ibmcloud/properties/serviceEndpoints/MaxItems
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        status:
+          platformStatus:
+            type: IBMCloud
+            ibmcloud:
+              cisInstanceCRN: oldCRN
+              serviceEndpoints:
+              - name: IAM
+                url: https://foobar/v1
+              - name: IAM2
+                url: https://foobar/v1
+              - name: IAM3
+                url: https://foobar/v1
+              - name: IAM4
+                url: https://foobar/v1
+              - name: IAM5
+                url: https://foobar/v1
+              - name: IAM6
+                url: https://foobar/v1
+              - name: IAM7
+                url: https://foobar/v1
+              - name: IAM8
+                url: https://foobar/v1
+              - name: IAM9
+                url: https://foobar/v1
+              - name: IAM10
+                url: https://foobar/v1
+              - name: IAM11
+                url: https://foobar/v1
+              - name: IAM12
+                url: https://foobar/v1
+              - name: IAM13
+                url: https://foobar/v1
+              - name: IAM14
+                url: https://foobar/v1
+              - name: IAM15
+                url: https://foobar/v1
+              - name: IAM16
+                url: https://foobar/v1
+              - name: IAM17
+                url: https://foobar/v1
+              - name: IAM18
+                url: https://foobar/v1
+              - name: IAM19
+                url: https://foobar/v1
+              - name: IAM20
+                url: https://foobar/v1
+              - name: IAM21
+                url: https://foobar/v1
+              - name: IAM22
+                url: https://foobar/v1
+              - name: IAM23
+                url: https://foobar/v1
+              - name: IAM24
+                url: https://foobar/v1
+              - name: IAM25
+                url: https://foobar/v1
+              - name: IAM26
+                url: https://foobar/v1
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        status:
+          cloudConfig: {}
+          platformStatus:
+            type: IBMCloud
+            ibmcloud:
+              cisInstanceCRN: newCRN
+              serviceEndpoints:
+              - name: IAM
+                url: https://foobar/v1
+              - name: IAM2
+                url: https://foobar/v1
+              - name: IAM3
+                url: https://foobar/v1
+              - name: IAM4
+                url: https://foobar/v1
+              - name: IAM5
+                url: https://foobar/v1
+              - name: IAM6
+                url: https://foobar/v1
+              - name: IAM7
+                url: https://foobar/v1
+              - name: IAM8
+                url: https://foobar/v1
+              - name: IAM9
+                url: https://foobar/v1
+              - name: IAM10
+                url: https://foobar/v1
+              - name: IAM11
+                url: https://foobar/v1
+              - name: IAM12
+                url: https://foobar/v1
+              - name: IAM13
+                url: https://foobar/v1
+              - name: IAM14
+                url: https://foobar/v1
+              - name: IAM15
+                url: https://foobar/v1
+              - name: IAM16
+                url: https://foobar/v1
+              - name: IAM17
+                url: https://foobar/v1
+              - name: IAM18
+                url: https://foobar/v1
+              - name: IAM19
+                url: https://foobar/v1
+              - name: IAM20
+                url: https://foobar/v1
+              - name: IAM21
+                url: https://foobar/v1
+              - name: IAM22
+                url: https://foobar/v1
+              - name: IAM23
+                url: https://foobar/v1
+              - name: IAM24
+                url: https://foobar/v1
+              - name: IAM25
+                url: https://foobar/v1
+              - name: IAM26
+                url: https://foobar/v1
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        status:
+          cloudConfig: {}
+          platformStatus:
+            type: IBMCloud
+            ibmcloud:
+              cisInstanceCRN: newCRN
+              serviceEndpoints:
+              - name: IAM
+                url: https://foobar/v1
+              - name: IAM2
+                url: https://foobar/v1
+              - name: IAM3
+                url: https://foobar/v1
+              - name: IAM4
+                url: https://foobar/v1
+              - name: IAM5
+                url: https://foobar/v1
+              - name: IAM6
+                url: https://foobar/v1
+              - name: IAM7
+                url: https://foobar/v1
+              - name: IAM8
+                url: https://foobar/v1
+              - name: IAM9
+                url: https://foobar/v1
+              - name: IAM10
+                url: https://foobar/v1
+              - name: IAM11
+                url: https://foobar/v1
+              - name: IAM12
+                url: https://foobar/v1
+              - name: IAM13
+                url: https://foobar/v1
+              - name: IAM14
+                url: https://foobar/v1
+              - name: IAM15
+                url: https://foobar/v1
+              - name: IAM16
+                url: https://foobar/v1
+              - name: IAM17
+                url: https://foobar/v1
+              - name: IAM18
+                url: https://foobar/v1
+              - name: IAM19
+                url: https://foobar/v1
+              - name: IAM20
+                url: https://foobar/v1
+              - name: IAM21
+                url: https://foobar/v1
+              - name: IAM22
+                url: https://foobar/v1
+              - name: IAM23
+                url: https://foobar/v1
+              - name: IAM24
+                url: https://foobar/v1
+              - name: IAM25
+                url: https://foobar/v1
+              - name: IAM26
+                url: https://foobar/v1

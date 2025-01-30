@@ -1,0 +1,102 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "ConsoleCustomization"
+crdName: consolecustomizations.console.openshift.io
+tests:
+  onCreate:
+    - name: Should be able to create a minimal ConsoleCustomization
+      initial: |
+        apiVersion: console.openshift.io/v1
+        kind: ConsoleCustomization
+        spec: {} # No spec is required for a minimal ConsoleCustomization
+      expected: |
+        apiVersion: console.openshift.io/v1
+        kind: ConsoleCustomization
+        spec: {}
+    - name: Should allow creating ConsoleCustomization with custom logos for Dark and Light themes
+      initial: |
+        apiVersion: console.openshift.io/v1
+        kind: ConsoleCustomization
+        spec:
+          customLogos:
+            - type: Masthead
+              themes:
+                - type: Dark
+                  file:
+                    name: custom-logos-config
+                    key: maskhead-dark-logo.svg
+                - type: Light
+                  file:
+                    name: custom-logos-config
+                    key: maskhead-light-logo.svg
+      expected: |
+        apiVersion: console.openshift.io/v1
+        kind: ConsoleCustomization
+        spec:
+          customLogos:
+            - type: Masthead
+              themes:
+                - type: Dark
+                  file:
+                    name: custom-logos-config
+                    key: maskhead-dark-logo.svg
+                - type: Light
+                  file:
+                    name: custom-logos-config
+                    key: maskhead-light-logo.svg
+    - name: Should allow creating ConsoleCustomization with a custom logo for All themes
+      initial: |
+        apiVersion: console.openshift.io/v1
+        kind: ConsoleCustomization
+        spec:
+          customLogos:
+            - type: Masthead
+              themes:
+                - type: All
+                  file:
+                    name: custom-logos-config
+                    key: maskhead-all-logo.svg
+      expected: |
+        apiVersion: console.openshift.io/v1
+        kind: ConsoleCustomization
+        spec:
+          customLogos:
+            - type: Masthead
+              themes:
+                - type: All
+                  file:
+                    name: custom-logos-config
+                    key: maskhead-all-logo.svg
+    - name: Should not allow creating ConsoleCustomization with custom logos for All and Dark themes
+      initial: |
+        apiVersion: console.openshift.io/v1
+        kind: ConsoleCustomization
+        spec:
+          customLogos:
+            - type: Masthead
+              themes:
+                - type: All
+                  file:
+                    name: custom-logos-config
+                    key: maskhead-all-logo.svg
+                - type: Dark
+                  file:
+                    name: custom-logos-config
+                    key: maskhead-dark-logo.svg
+      expectedError: "If 'All' is specified, no other themes can be added."
+    - name: Should not allow creating ConsoleCustomization with custom logos for All and Light themes
+      initial: |
+        apiVersion: console.openshift.io/v1
+        kind: ConsoleCustomization
+        spec:
+          customLogos:
+            - type: Masthead
+              themes:
+                - type: All
+                  file:
+                    name: custom-logos-config
+                    key: maskhead-all-logo.svg
+                - type: Light
+                  file:
+                    name: custom-logos-config
+                    key: maskhead-light-logo.svg
+      expectedError: "If 'All' is specified, no other themes can be added."

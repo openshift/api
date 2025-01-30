@@ -27048,9 +27048,21 @@
           "x-kubernetes-list-type": "map"
         },
         "customLogoFile": {
-          "description": "customLogoFile replaces the default OpenShift logo in the masthead and about dialog. It is a reference to a ConfigMap in the openshift-config namespace. This can be created with a command like 'oc create configmap custom-logo --from-file=/path/to/file -n openshift-config'. Image size must be less than 1 MB due to constraints on the ConfigMap size. The ConfigMap key should include a file extension so that the console serves the file with the correct MIME type. Recommended logo specifications: Dimensions: Max height of 68px and max width of 200px SVG format preferred",
+          "description": "customLogoFile replaces the default OpenShift logo in the masthead and about dialog. It is a reference to a ConfigMap in the openshift-config namespace. This can be created with a command like 'oc create configmap custom-logo --from-file=/path/to/file -n openshift-config'. Image size must be less than 1 MB due to constraints on the ConfigMap size. The ConfigMap key should include a file extension so that the console serves the file with the correct MIME type. Recommended logo specifications: Dimensions: Max height of 60px and max width of 200px SVG format preferred Deprecated: Use CustomLogos instead.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.ConfigMapFileReference"
+        },
+        "customLogos": {
+          "description": "customLogos is an optional field that can be used to replace the OpenShift Masthead and Favicon logos in the console UI with custom logos. Each entry must have a unique logo type. When specified, there must be at least one entry and must not have greater than 2 entries. Each item in the list must have a unique Type.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.CustomLogo"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "customProductName": {
           "description": "customProductName is the name that will be displayed in page titles, logo alt text, and the about dialog instead of the normal OpenShift product name.",
@@ -27252,6 +27264,33 @@
           "description": "maxLength is the maximum length of the log message.\n\nValid values are integers in the range 480 to 8192, inclusive.\n\nWhen omitted, the default value is 1024.",
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.CustomLogo": {
+      "description": "CustomLogo defines a configuration based on theme types for the console UI logo.",
+      "type": "object",
+      "required": [
+        "type",
+        "themes"
+      ],
+      "properties": {
+        "themes": {
+          "description": "themes is a required field that specifies the themes for the console UI logo. This field is a list of themes, each with a Type. Each theme determines whether the logo is for the dark or light theme of the console UI. The valid values for the Type field are \"Dark\" and \"Light\". Each item in the list must have a unique Type. When specified, there must be at least one entry and must not have greater than 2 entries. This validation rule ensures that if 'All' is specified as a theme type, no other themes can be added.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.Theme"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "type": {
+          "description": "type is a required field that specifies the type of the logo for the console UI. It determines whether the logo is for the masthead or favicon. This field is an enum with valid values \"Masthead\" and \"Favicon\". Valid values are \"Masthead\" and \"Favicon\". When set to \"Masthead\", the logo will be used in the masthead or about modal of the console UI. When set to \"Favicon\", the logo will be used as the favicon of the console UI.",
+          "type": "string",
+          "default": ""
         }
       }
     },
@@ -32660,6 +32699,26 @@
           "type": "integer",
           "format": "int64",
           "default": 0
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.Theme": {
+      "description": "Theme defines a theme type for the console UI.",
+      "type": "object",
+      "required": [
+        "type",
+        "file"
+      ],
+      "properties": {
+        "file": {
+          "description": "file is a required field that references a specific file within a ConfigMap in the openshift-config namespace. This field allows the console to locate and use the specified file containing a custom logo. You can create it with a command like: - 'oc create configmap custom-logos-config --namespace=openshift-config --from-file=/path/to/file The ConfigMap key should include the file extension for the dark or light theme so that the console serves the file with the correct MIME type. Recommended Masthead and About Modal logo specifications: Image size must be less than 1 MB due to constraints on the ConfigMap size Dimensions: Max height of 60px and max width of 200px SVG format preferred Recommended Favicon specifications: Dimensions: Max height of 16px and max width of 16px PNG format preferred",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.ConfigMapFileReference"
+        },
+        "type": {
+          "description": "type is a required field that specifies the type of the logo for the console UI. This field is an enum with valid values \"Dark\" and \"Light\". The type determines whether the logo is for the dark or light theme. When set to \"Dark\", the corresponding logo for the dark theme will be used in the console UI. When set to \"Light\", the corresponding logo for the light theme will be used in the console UI. When set to \"All\", the corresponding logo for both dark and light themes will be used in the console UI.",
+          "type": "string",
+          "default": ""
         }
       }
     },

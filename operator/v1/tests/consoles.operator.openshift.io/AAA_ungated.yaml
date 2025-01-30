@@ -296,3 +296,178 @@ tests:
               visibility:
                 state: Enables
       expectedError: "spec.customization.capabilities[0].visibility.state: Unsupported value: \"Enables\": supported values: \"Enabled\", \"Disabled\""
+    - name: Should allow creating custom logos for Dark and Light themes
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          customization:
+            logos:
+              - type: Masthead
+                themes:
+                  - mode: Dark
+                    source:
+                      from: ConfigMap
+                      configMap:
+                        name: custom-logos-config
+                        key: masthead-dark-logo.svg
+                  - mode: Light
+                    source:
+                      from: ConfigMap
+                      configMap:
+                        name: custom-logos-config
+                        key: masthead-light-logo.svg
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          customization:
+            logos:
+              - type: Masthead
+                themes:
+                  - mode: Dark
+                    source:
+                      from: ConfigMap
+                      configMap:
+                        name: custom-logos-config
+                        key: masthead-dark-logo.svg
+                  - mode: Light
+                    source:
+                      from: ConfigMap
+                      configMap:
+                        name: custom-logos-config
+                        key: masthead-light-logo.svg
+    - name: Should not allow duplicate theme types
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          customization:
+            logos:
+              - type: Masthead
+                themes:
+                  - mode: Dark
+                    source:
+                      from: ConfigMap
+                      configMap:
+                        name: custom-logos-config
+                        key: masthead-dark-logo.svg
+                  - mode: Dark
+                    source:
+                      from: ConfigMap
+                      configMap:
+                        type: custom-logos-config
+                        key: masthead-dark-logo.svg
+      expectedError: "spec.customization.logos[0].themes[1]: Duplicate value: map[string]interface {}{\"mode\":\"Dark\"}"
+    - name: Should not allow duplicate custom logo types
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          customization:
+            logos:
+              - type: Masthead
+                themes:
+                  - mode: Dark
+                    source:
+                      from: ConfigMap
+                      configMap:
+                        name: custom-logos-config
+                        key: masthead-dark-logo.svg
+              - type: Masthead
+                themes:
+                  - mode: Light
+                    source:
+                      from: ConfigMap
+                      configMap:
+                        name: custom-logos-config
+                        key: masthead-light-logo.svg
+      expectedError: "spec.customization.logos[1]: Duplicate value: map[string]interface {}{\"type\":\"Masthead\"}"
+    - name: Should not allow both logos and customLogoFile to be set
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          customization:
+            logos:
+              - type: Masthead
+                themes:
+                  - mode: Dark
+                    source:
+                      from: ConfigMap
+                      configMap:
+                        name: custom-logos-config
+                        key: masthead-dark-logo.svg
+                  - mode: Light
+                    source:
+                      from: ConfigMap
+                      configMap:
+                        name: custom-logos-config
+                        key: masthead-light-logo.svg
+            customLogoFile:
+              name: custom-logos-config
+              key: custom-logo.svg
+      expectedError: 'spec.customization: Invalid value: "object": Only one of logos or customLogoFile can be set'
+    - name: Should not allow invalid file extension in source.configMap.key
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          customization:
+            logos:
+              - type: Masthead
+                themes:
+                  - mode: Dark
+                    source:
+                      from: ConfigMap
+                      configMap:
+                        name: custom-logos-config
+                        key: invalid-key.invalidextension
+      expectedError: 'spec.customization.logos[0].themes[0].source.configMap.key: Invalid value: "string": The ConfigMap key must end with a valid file extension (2 to 5 letters).'
+    - name: Should not allow invalid characters in source.configMap.name
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          customization:
+            logos:
+              - type: Masthead
+                themes:
+                  - mode: Dark
+                    source:
+                      from: ConfigMap
+                      configMap:
+                        name: invalid name!
+                        key: masthead-dark-logo.svg
+      expectedError: "spec.customization.logos[0].themes[0].source.configMap.name: Invalid value: \"string\": a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
+    - name: Should fail validation if ConfigMap is not set when From is ConfigMap
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          customization:
+            logos:
+              - type: Masthead
+                themes:
+                  - mode: Dark
+                    source:
+                      from: ConfigMap
+      expectedError: "spec.customization.logos[0].themes[0].source: Invalid value: \"object\": configMap is required when from is 'ConfigMap', and forbidden otherwise."
+    - name: Should fail validation if ConfigMap is set and From is invalid source
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          customization:
+            logos:
+              - type: Masthead
+                themes:
+                  - mode: Dark
+                    source:
+                      from: InvalidSource
+                      configMap:
+                        name: custom-logos-config
+                        key: masthead-dark-logo.svg
+      expectedError: "spec.customization.logos[0].themes[0].source.from: Unsupported value: \"InvalidSource\": supported values: \"ConfigMap\""

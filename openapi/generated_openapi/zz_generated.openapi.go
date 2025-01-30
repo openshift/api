@@ -900,6 +900,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.ClusterNetworkEntry":                                           schema_openshift_api_operator_v1_ClusterNetworkEntry(ref),
 		"github.com/openshift/api/operator/v1.Config":                                                        schema_openshift_api_operator_v1_Config(ref),
 		"github.com/openshift/api/operator/v1.ConfigList":                                                    schema_openshift_api_operator_v1_ConfigList(ref),
+		"github.com/openshift/api/operator/v1.ConfigMapFileReference":                                        schema_openshift_api_operator_v1_ConfigMapFileReference(ref),
 		"github.com/openshift/api/operator/v1.ConfigSpec":                                                    schema_openshift_api_operator_v1_ConfigSpec(ref),
 		"github.com/openshift/api/operator/v1.ConfigStatus":                                                  schema_openshift_api_operator_v1_ConfigStatus(ref),
 		"github.com/openshift/api/operator/v1.Console":                                                       schema_openshift_api_operator_v1_Console(ref),
@@ -931,6 +932,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.EtcdStatus":                                                    schema_openshift_api_operator_v1_EtcdStatus(ref),
 		"github.com/openshift/api/operator/v1.ExportNetworkFlows":                                            schema_openshift_api_operator_v1_ExportNetworkFlows(ref),
 		"github.com/openshift/api/operator/v1.FeaturesMigration":                                             schema_openshift_api_operator_v1_FeaturesMigration(ref),
+		"github.com/openshift/api/operator/v1.FileReferenceSource":                                           schema_openshift_api_operator_v1_FileReferenceSource(ref),
 		"github.com/openshift/api/operator/v1.ForwardPlugin":                                                 schema_openshift_api_operator_v1_ForwardPlugin(ref),
 		"github.com/openshift/api/operator/v1.GCPCSIDriverConfigSpec":                                        schema_openshift_api_operator_v1_GCPCSIDriverConfigSpec(ref),
 		"github.com/openshift/api/operator/v1.GCPKMSKeyReference":                                            schema_openshift_api_operator_v1_GCPKMSKeyReference(ref),
@@ -993,6 +995,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.KubeStorageVersionMigratorStatus":                              schema_openshift_api_operator_v1_KubeStorageVersionMigratorStatus(ref),
 		"github.com/openshift/api/operator/v1.LoadBalancerStrategy":                                          schema_openshift_api_operator_v1_LoadBalancerStrategy(ref),
 		"github.com/openshift/api/operator/v1.LoggingDestination":                                            schema_openshift_api_operator_v1_LoggingDestination(ref),
+		"github.com/openshift/api/operator/v1.Logo":                                                          schema_openshift_api_operator_v1_Logo(ref),
 		"github.com/openshift/api/operator/v1.MTUMigration":                                                  schema_openshift_api_operator_v1_MTUMigration(ref),
 		"github.com/openshift/api/operator/v1.MTUMigrationValues":                                            schema_openshift_api_operator_v1_MTUMigrationValues(ref),
 		"github.com/openshift/api/operator/v1.MachineConfiguration":                                          schema_openshift_api_operator_v1_MachineConfiguration(ref),
@@ -1086,6 +1089,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.StorageSpec":                                                   schema_openshift_api_operator_v1_StorageSpec(ref),
 		"github.com/openshift/api/operator/v1.StorageStatus":                                                 schema_openshift_api_operator_v1_StorageStatus(ref),
 		"github.com/openshift/api/operator/v1.SyslogLoggingDestinationParameters":                            schema_openshift_api_operator_v1_SyslogLoggingDestinationParameters(ref),
+		"github.com/openshift/api/operator/v1.Theme":                                                         schema_openshift_api_operator_v1_Theme(ref),
 		"github.com/openshift/api/operator/v1.Upstream":                                                      schema_openshift_api_operator_v1_Upstream(ref),
 		"github.com/openshift/api/operator/v1.UpstreamResolvers":                                             schema_openshift_api_operator_v1_UpstreamResolvers(ref),
 		"github.com/openshift/api/operator/v1.VSphereCSIDriverConfigSpec":                                    schema_openshift_api_operator_v1_VSphereCSIDriverConfigSpec(ref),
@@ -46172,6 +46176,36 @@ func schema_openshift_api_operator_v1_ConfigList(ref common.ReferenceCallback) c
 	}
 }
 
+func schema_openshift_api_operator_v1_ConfigMapFileReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ConfigMapFileReference references a specific file within a ConfigMap.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the name of the ConfigMap. name is a required field. Must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character. Must be at most 253 characters in length.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"key": {
+						SchemaProps: spec.SchemaProps{
+							Description: "key is the logo key inside the referenced ConfigMap. Must consist only of alphanumeric characters, dashes (-), underscores (_), and periods (.). Must be at most 253 characters in length. Must end in a valid file extension. A valid file extension must consist of a period followed by 2 to 5 alpha characters.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name", "key"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_operator_v1_ConfigSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -46396,9 +46430,31 @@ func schema_openshift_api_operator_v1_ConsoleCustomization(ref common.ReferenceC
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "ConsoleCustomization defines a list of optional configuration for the console UI.",
+				Description: "ConsoleCustomization defines a list of optional configuration for the console UI. Ensure that Logos and CustomLogoFile cannot be set at the same time.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"logos": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "logos is used to replace the OpenShift Masthead and Favicon logos in the console UI with custom logos. logos is an optional field that allows a list of logos. Only one of logos or customLogoFile can be set at a time. If logos is set, customLogoFile must be unset. When specified, there must be at least one entry and no more than 2 entries. Each type must appear only once in the list.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/operator/v1.Logo"),
+									},
+								},
+							},
+						},
+					},
 					"capabilities": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
@@ -46444,7 +46500,7 @@ func schema_openshift_api_operator_v1_ConsoleCustomization(ref common.ReferenceC
 					},
 					"customLogoFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "customLogoFile replaces the default OpenShift logo in the masthead and about dialog. It is a reference to a ConfigMap in the openshift-config namespace. This can be created with a command like 'oc create configmap custom-logo --from-file=/path/to/file -n openshift-config'. Image size must be less than 1 MB due to constraints on the ConfigMap size. The ConfigMap key should include a file extension so that the console serves the file with the correct MIME type. Recommended logo specifications: Dimensions: Max height of 68px and max width of 200px SVG format preferred",
+							Description: "customLogoFile replaces the default OpenShift logo in the masthead and about dialog. It is a reference to a Only one of customLogoFile or logos can be set at a time. ConfigMap in the openshift-config namespace. This can be created with a command like 'oc create configmap custom-logo --from-file=/path/to/file -n openshift-config'. Image size must be less than 1 MB due to constraints on the ConfigMap size. The ConfigMap key should include a file extension so that the console serves the file with the correct MIME type. The recommended file format for the logo is SVG, but other file formats are allowed if supported by the browser. Deprecated: Use logos instead.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.ConfigMapFileReference"),
 						},
@@ -46503,7 +46559,7 @@ func schema_openshift_api_operator_v1_ConsoleCustomization(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ConfigMapFileReference", "github.com/openshift/api/operator/v1.AddPage", "github.com/openshift/api/operator/v1.Capability", "github.com/openshift/api/operator/v1.DeveloperConsoleCatalogCustomization", "github.com/openshift/api/operator/v1.Perspective", "github.com/openshift/api/operator/v1.ProjectAccess", "github.com/openshift/api/operator/v1.QuickStarts"},
+			"github.com/openshift/api/config/v1.ConfigMapFileReference", "github.com/openshift/api/operator/v1.AddPage", "github.com/openshift/api/operator/v1.Capability", "github.com/openshift/api/operator/v1.DeveloperConsoleCatalogCustomization", "github.com/openshift/api/operator/v1.Logo", "github.com/openshift/api/operator/v1.Perspective", "github.com/openshift/api/operator/v1.ProjectAccess", "github.com/openshift/api/operator/v1.QuickStarts"},
 	}
 }
 
@@ -47864,6 +47920,37 @@ func schema_openshift_api_operator_v1_FeaturesMigration(ref common.ReferenceCall
 				},
 			},
 		},
+	}
+}
+
+func schema_openshift_api_operator_v1_FileReferenceSource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "FileReferenceSource is used by the console to locate the specified file containing a custom logo.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"from": {
+						SchemaProps: spec.SchemaProps{
+							Description: "from is a required field to specify the source type of the file reference. Allowed values are ConfigMap. When set to ConfigMap, the file will be sourced from a ConfigMap in the openshift-config namespace. The configMap field must be set when from is set to ConfigMap.\n\nPossible enum values:\n - `\"ConfigMap\"` represents a ConfigMap source.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"ConfigMap"},
+						},
+					},
+					"configMap": {
+						SchemaProps: spec.SchemaProps{
+							Description: "configMap specifies the ConfigMap sourcing details such as the name of the ConfigMap and the key for the file. The ConfigMap must exist in the openshift-config namespace. Required when from is \"ConfigMap\", and forbidden otherwise.",
+							Ref:         ref("github.com/openshift/api/operator/v1.ConfigMapFileReference"),
+						},
+					},
+				},
+				Required: []string{"from"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1.ConfigMapFileReference"},
 	}
 }
 
@@ -51062,6 +51149,53 @@ func schema_openshift_api_operator_v1_LoggingDestination(ref common.ReferenceCal
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/operator/v1.ContainerLoggingDestinationParameters", "github.com/openshift/api/operator/v1.SyslogLoggingDestinationParameters"},
+	}
+}
+
+func schema_openshift_api_operator_v1_Logo(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Logo defines a configuration based on theme modes for the console UI logo.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type specifies the type of the logo for the console UI. It determines whether the logo is for the masthead or favicon. type is a required field that allows values of Masthead and Favicon. When set to \"Masthead\", the logo will be used in the masthead and about modal of the console UI. When set to \"Favicon\", the logo will be used as the favicon of the console UI.\n\nPossible enum values:\n - `\"Favicon\"` Favicon represents the favicon logo.\n - `\"Masthead\"` Masthead represents the logo in the masthead.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"Favicon", "Masthead"},
+						},
+					},
+					"themes": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"mode",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "themes specifies the themes for the console UI logo. themes is a required field that allows a list of themes. Each item in the themes list must have a unique mode and a source field. Each mode determines whether the logo is for the dark or light mode of the console UI. If a theme is not specified, the default OpenShift logo will be displayed for that theme. There must be at least one entry and no more than 2 entries.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/operator/v1.Theme"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"type", "themes"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1.Theme"},
 	}
 }
 
@@ -55892,6 +56026,38 @@ func schema_openshift_api_operator_v1_SyslogLoggingDestinationParameters(ref com
 				Required: []string{"address", "port"},
 			},
 		},
+	}
+}
+
+func schema_openshift_api_operator_v1_Theme(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Theme defines a theme mode for the console UI.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "mode is used to specify what theme mode a logo will apply to in the console UI. mode is a required field that allows values of Dark and Light. When set to Dark, the logo file referenced in the 'file' field will be used when an end-user of the console UI enables the Dark mode. When set to Light, the logo file referenced in the 'file' field will be used when an end-user of the console UI enables the Light mode.\n\nPossible enum values:\n - `\"Dark\"` represents the dark mode for a console theme.\n - `\"Light\"` represents the light mode for a console theme.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"Dark", "Light"},
+						},
+					},
+					"source": {
+						SchemaProps: spec.SchemaProps{
+							Description: "source is used by the console to locate the specified file containing a custom logo. source is a required field that references a ConfigMap name and key that contains the custom logo file in the openshift-config namespace. You can create it with a command like: - 'oc create configmap custom-logos-config --namespace=openshift-config --from-file=/path/to/file' The ConfigMap key must include the file extension so that the console serves the file with the correct MIME type. The recommended file format for the Masthead and Favicon logos is SVG, but other file formats are allowed if supported by the browser. The logo image size must be less than 1 MB due to constraints on the ConfigMap size. For more information, see the documentation: https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/web_console/customizing-web-console#customizing-web-console",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1.FileReferenceSource"),
+						},
+					},
+				},
+				Required: []string{"mode", "source"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1.FileReferenceSource"},
 	}
 }
 

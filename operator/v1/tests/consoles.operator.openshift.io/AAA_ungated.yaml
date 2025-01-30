@@ -296,3 +296,100 @@ tests:
               visibility:
                 state: Enables
       expectedError: "spec.customization.capabilities[0].visibility.state: Unsupported value: \"Enables\": supported values: \"Enabled\", \"Disabled\""
+    - name: Should allow creating custom logos for Dark and Light themes
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          customization:
+            customLogos:
+              - type: Masthead
+                themes:
+                  - type: Dark
+                    file:
+                      name: custom-logos-config
+                      key: maskhead-dark-logo.svg
+                  - type: Light
+                    file:
+                      name: custom-logos-config
+                      key: maskhead-light-logo.svg
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          customization:
+            customLogos:
+              - type: Masthead
+                themes:
+                  - type: Dark
+                    file:
+                       name: custom-logos-config
+                       key: maskhead-dark-logo.svg
+                  - type: Light
+                    file:
+                       name: custom-logos-config
+                       key: maskhead-light-logo.svg
+    - name: Should allow creating a custom logo for the Default theme type
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          customization:
+            customLogos:
+              - type: Masthead
+                themes:
+                  - type: Default
+                    file:
+                      name: custom-logos-config
+                      key: maskhead-default-logo.svg
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          customization:
+            customLogos:
+              - type: Masthead
+                themes:
+                  - type: Default
+                    file:
+                      name: custom-logos-config
+                      key: maskhead-default-logo.svg
+    - name: Should allow creating custom logos for the Default and any other theme type
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          customization:
+            customLogos:
+              - type: Masthead
+                themes:
+                  - type: Default
+                    file:
+                      name: custom-logos-config
+                      key: maskhead-default-logo.svg
+                  - type: Dark
+                    file:
+                      name: custom-logos-config
+                      key: maskhead-dark-logo.svg        
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          customization:
+            customLogos:
+              - type: Masthead
+                themes:
+                  - type: Default
+                    file:
+                      name: custom-logos-config
+                      key: maskhead-default-logo.svg
+                  - type: Dark
+                    file:
+                      name: custom-logos-config
+                      key: maskhead-dark-logo.svg

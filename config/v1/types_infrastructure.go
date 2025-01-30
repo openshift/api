@@ -531,9 +531,11 @@ type AWSResourceTag struct {
 	// key sets the key of the AWS resource tag key-value pair. Key is required when defining an AWS resource tag.
 	// Key should consist of between 1 and 128 characters, and may
 	// contain only the set of alphanumeric characters, space (' '), '_', '.', '/', '=', '+', '-', ':', and '@'.
+	// Key must not be start with 'aws:'.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=128
 	// +kubebuilder:validation:XValidation:rule=`self.matches('^[0-9A-Za-z_.:/=+-@ ]+$')`,message="invalid AWS resource tag key. The string can contain only the set of alphanumeric characters, space (' '), '_', '.', '/', '=', '+', '-', ':', '@'"
+	// +kubebuilder:validation:XValidation:rule=`!self.startsWith('aws:')`,message="the prefix 'aws:' is reserved for AWS system usage and cannot be used at the beginning of a key"
 	// +required
 	Key string `json:"key"`
 	// value sets the value of the AWS resource tag key-value pair. Value is required when defining an AWS resource tag.

@@ -734,4 +734,12 @@ var (
 					enhancementPR("https://github.com/openshift/enhancements/pull/1492").
 					enableIn(configv1.DevPreviewNoUpgrade).
 					mustRegister()
+
+	FeatureGateServiceAccountNodeAudienceRestriction = newFeatureGate("ServiceAccountNodeAudienceRestriction").
+								reportProblemsToJiraComponent("Storage / Kubernetes External Components").
+								contactPerson("rbednar").
+								productScope(kubernetes).
+								enhancementPR("https://github.com/kubernetes/enhancements/issues/4412").
+								enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+								mustRegister()
 )

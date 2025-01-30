@@ -228,6 +228,9 @@
                         "name": "RouteExternalCertificate"
                     },
                     {
+                        "name": "ServiceAccountNodeAudienceRestriction"
+                    },
+                    {
                         "name": "ServiceAccountTokenNodeBinding"
                     },
                     {

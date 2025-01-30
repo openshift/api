@@ -247,12 +247,13 @@ func (ConsoleConfigRoute) SwaggerDoc() map[string]string {
 }
 
 var map_ConsoleCustomization = map[string]string{
-	"":                     "ConsoleCustomization defines a list of optional configuration for the console UI.",
+	"":                     "ConsoleCustomization defines a list of optional configuration for the console UI. Ensure that Logos and CustomLogoFile cannot be set at the same time.",
+	"logos":                "logos is used to replace the OpenShift Masthead and Favicon logos in the console UI with custom logos. logos is an optional field that allows a list of logos. When specified, there must be at least one entry and no more than 2 entries. Each item in the list must have a unique Type and a Themes field.",
 	"capabilities":         "capabilities defines an array of capabilities that can be interacted with in the console UI. Each capability defines a visual state that can be interacted with the console to render in the UI. Available capabilities are LightspeedButton and GettingStartedBanner. Each of the available capabilities may appear only once in the list.",
 	"brand":                "brand is the default branding of the web console which can be overridden by providing the brand field.  There is a limited set of specific brand options. This field controls elements of the console such as the logo. Invalid value will prevent a console rollout.",
 	"documentationBaseURL": "documentationBaseURL links to external documentation are shown in various sections of the web console.  Providing documentationBaseURL will override the default documentation URL. Invalid value will prevent a console rollout.",
 	"customProductName":    "customProductName is the name that will be displayed in page titles, logo alt text, and the about dialog instead of the normal OpenShift product name.",
-	"customLogoFile":       "customLogoFile replaces the default OpenShift logo in the masthead and about dialog. It is a reference to a ConfigMap in the openshift-config namespace. This can be created with a command like 'oc create configmap custom-logo --from-file=/path/to/file -n openshift-config'. Image size must be less than 1 MB due to constraints on the ConfigMap size. The ConfigMap key should include a file extension so that the console serves the file with the correct MIME type. Recommended logo specifications: Dimensions: Max height of 68px and max width of 200px SVG format preferred",
+	"customLogoFile":       "customLogoFile replaces the default OpenShift logo in the masthead and about dialog. It is a reference to a ConfigMap in the openshift-config namespace. This can be created with a command like 'oc create configmap custom-logo --from-file=/path/to/file -n openshift-config'. Image size must be less than 1 MB due to constraints on the ConfigMap size. The ConfigMap key should include a file extension so that the console serves the file with the correct MIME type. Recommended logo specifications: Dimensions: Max height of 60px and max width of 200px SVG format preferred Deprecated: Use Logos instead.",
 	"developerCatalog":     "developerCatalog allows to configure the shown developer catalog categories (filters) and types (sub-catalogs).",
 	"projectAccess":        "projectAccess allows customizing the available list of ClusterRoles in the Developer perspective Project access page which can be used by a project admin to specify roles to other users and restrict access within the project. If set, the list will replace the default ClusterRole options.",
 	"quickStarts":          "quickStarts allows customization of available ConsoleQuickStart resources in console.",
@@ -354,6 +355,26 @@ func (Ingress) SwaggerDoc() map[string]string {
 	return map_Ingress
 }
 
+var map_Logo = map[string]string{
+	"":       "Logo defines a configuration based on theme modes for the console UI logo.",
+	"type":   "type specifies the type of the logo for the console UI. It determines whether the logo is for the masthead or favicon. type is a required field that allows values of Masthead and Favicon. When set to \"Masthead\", the logo will be used in the masthead and about modal of the console UI. When set to \"Favicon\", the logo will be used as the favicon of the console UI.",
+	"themes": "themes specifies the themes for the console UI logo. themes is a required field that allows a list of themes. Each item in the list must have a unique Type and a File field. Each theme determines whether the logo is for the dark or light theme of the console UI. There must be at least one entry and no more than 2 entries.",
+}
+
+func (Logo) SwaggerDoc() map[string]string {
+	return map_Logo
+}
+
+var map_LogoFileReference = map[string]string{
+	"":     "LogoFileReference references a specific file within a ConfigMap.",
+	"name": "name is the name of the ConfigMap.",
+	"key":  "key is the logo key inside the referenced ConfigMap.",
+}
+
+func (LogoFileReference) SwaggerDoc() map[string]string {
+	return map_LogoFileReference
+}
+
 var map_Perspective = map[string]string{
 	"":                "Perspective defines a perspective that cluster admins want to show/hide in the perspective switcher dropdown",
 	"id":              "id defines the id of the perspective. Example: \"dev\", \"admin\". The available perspective ids can be found in the code snippet section next to the yaml editor. Incorrect or unknown ids will be ignored.",
@@ -421,6 +442,16 @@ var map_StatuspageProvider = map[string]string{
 
 func (StatuspageProvider) SwaggerDoc() map[string]string {
 	return map_StatuspageProvider
+}
+
+var map_Theme = map[string]string{
+	"":              "Theme defines a theme mode for the console UI.",
+	"mode":          "mode is used to specify what theme(s) a logo will apply to in the console UI. mode is a required field that allows values of Dark and Light. When set to Dark, the logo file referenced in the 'file' field will be used when an end-user of the console UI enables the Dark theme. When set to Light, the logo file referenced in the 'file' field will be used when an end-user of the console UI enables the Light theme.",
+	"fileReference": "fileReference is used by the console to locate the specified file containing a custom logo. fileReference is a required field that references a ConfigMap name and key that contains the custom logo file in the openshift-config namespace. You can create it with a command like: - 'oc create configmap custom-logos-config --namespace=openshift-config --from-file=/path/to/file' The ConfigMap key must include the file extension for the dark or light theme so that the console serves the file with the correct MIME type. Recommended Masthead logo specifications: The Masthead logo must be at most 1 MiB in size and must have a maximum height of 60px and a maximum width of 200px. For the Masthead logo, the SVG file format is recommended, but other file formats are allowed if the browser supports them. Recommended Favicon specifications: The Favicon logo must be at most 1 MiB in size and must have a maximum height of 16px and a maximum width of 16px. For the Favicon logo, the PNG file format is recommended, but other file formats are allowed if the browser supports them.",
+}
+
+func (Theme) SwaggerDoc() map[string]string {
+	return map_Theme
 }
 
 var map_AWSCSIDriverConfigSpec = map[string]string{

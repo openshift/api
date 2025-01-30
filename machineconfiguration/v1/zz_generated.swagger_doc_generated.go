@@ -403,7 +403,7 @@ var map_MachineConfigNodeSpec = map[string]string{
 	"node":            "node contains a reference to the node for this machine config node.",
 	"pool":            "pool contains a reference to the machine config pool that this machine config node's referenced node belongs to.",
 	"configVersion":   "configVersion holds the desired config version for the node targeted by this machine config node resource. The desired version represents the machine config the node will attempt to update to. This gets set before the machine config operator validates the new machine config against the current machine config.",
-	"pinnedImageSets": "pinnedImageSets holds the desired pinned image sets that this node should pin and pull.",
+	"pinnedImageSets": "pinnedImageSets is a user defined value that holds the names of the desired pinned image sets that the node should pull and pin.",
 }
 
 func (MachineConfigNodeSpec) SwaggerDoc() map[string]string {
@@ -461,6 +461,15 @@ var map_MachineConfigNodeStatusPinnedImageSet = map[string]string{
 
 func (MachineConfigNodeStatusPinnedImageSet) SwaggerDoc() map[string]string {
 	return map_MachineConfigNodeStatusPinnedImageSet
+}
+
+var map_MachineConfigNodeStatusPinnedImageSetError = map[string]string{
+	"":        "MachineConfigNodeStatusPinnedImageSetError holds information on the the errors associated with failed attempts at pulling and pinning images",
+	"message": "message is the message of the pinned image error.",
+}
+
+func (MachineConfigNodeStatusPinnedImageSetError) SwaggerDoc() map[string]string {
+	return map_MachineConfigNodeStatusPinnedImageSetError
 }
 
 var map_MachineConfigReference = map[string]string{

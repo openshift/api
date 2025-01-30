@@ -86,7 +86,7 @@ type MachineConfigNodeSpec struct {
 	// +required
 	ConfigVersion MachineConfigNodeSpecMachineConfigVersion `json:"configVersion"`
 
-	// pinnedImageSets holds the desired pinned image sets that this node should pin and pull.
+	// pinnedImageSets is a user defined value that holds the names of the desired pinned image sets that the node should pull and pin.
 	// +listType=map
 	// +listMapKey=name
 	// +kubebuilder:validation:MaxItems=100
@@ -118,8 +118,10 @@ type MachineConfigNodeStatus struct {
 	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 	// observedGeneration represents the generation observed by the controller.
 	// This field is updated when the controller observes a change to the desiredConfig in the configVersion of the machine config node spec.
-	// +required
-	ObservedGeneration int64 `json:"observedGeneration"`
+	// +kubebuilder:validation:XValidation:rule="self >= oldSelf", message="observedGeneration must not move backwards"
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 	// configVersion describes the current and desired machine config for this node.
 	// The current version represents the current machine config for the node and is updated after a successful update.
 	// The desired version represents the machine config the node will attempt to update to.
@@ -162,8 +164,10 @@ type MachineConfigNodeStatusPinnedImageSet struct {
 	LastFailedGeneration int32 `json:"lastFailedGeneration,omitempty"`
 	// lastFailedGenerationErrors is a list of errors why the lastFailed generation failed to be pulled and pinned.
 	// +kubebuilder:validation:MaxItems=10
+	// +listType=map
+	// +listMapKey=message
 	// +optional
-	LastFailedGenerationErrors []string `json:"lastFailedGenerationErrors,omitempty"`
+	LastFailedGenerationErrors []MachineConfigNodeStatusPinnedImageSetError `json:"lastFailedGenerationErrors,omitempty"`
 }
 
 // MachineConfigNodeStatusMachineConfigVersion holds the current and desired config versions as last updated in the MCN status.
@@ -228,8 +232,16 @@ type MachineConfigNodeSpecPinnedImageSet struct {
 	Name string `json:"name"`
 }
 
+// MachineConfigNodeStatusPinnedImageSetError holds information on the the errors associated with failed attempts at pulling and pinning images
+type MachineConfigNodeStatusPinnedImageSetError struct {
+	// message is the message of the pinned image error.
+	// +required
+	Message string `json:"message"`
+}
+
 // StateProgress is each possible state for each possible MachineConfigNodeType
 // UpgradeProgression Kind will only use the "MachinConfigPoolUpdate..." types for example
+// +enum
 type StateProgress string
 
 const (

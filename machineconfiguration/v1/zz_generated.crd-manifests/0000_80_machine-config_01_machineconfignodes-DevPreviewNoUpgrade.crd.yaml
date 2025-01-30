@@ -154,8 +154,9 @@ spec:
                 - name
                 type: object
               pinnedImageSets:
-                description: pinnedImageSets holds the desired pinned image sets that
-                  this node should pin and pull.
+                description: pinnedImageSets is a user defined value that holds the
+                  names of the desired pinned image sets that the node should pull
+                  and pin.
                 items:
                   description: |-
                     MachineConfigNodeSpecPinnedImageSet holds information on the desired pinned image sets that the current observed machine config node
@@ -320,7 +321,11 @@ spec:
                   observedGeneration represents the generation observed by the controller.
                   This field is updated when the controller observes a change to the desiredConfig in the configVersion of the machine config node spec.
                 format: int64
+                minimum: 0
                 type: integer
+                x-kubernetes-validations:
+                - message: observedGeneration must not move backwards
+                  rule: self >= oldSelf
               pinnedImageSets:
                 description: |-
                   pinnedImageSets describes the current and desired pinned image sets for this node.
@@ -355,9 +360,22 @@ spec:
                       description: lastFailedGenerationErrors is a list of errors
                         why the lastFailed generation failed to be pulled and pinned.
                       items:
-                        type: string
+                        description: MachineConfigNodeStatusPinnedImageSetError holds
+                          information on the the errors associated with failed attempts
+                          at pulling and pinning images
+                        properties:
+                          message:
+                            description: message is the message of the pinned image
+                              error.
+                            type: string
+                        required:
+                        - message
+                        type: object
                       maxItems: 10
                       type: array
+                      x-kubernetes-list-map-keys:
+                      - message
+                      x-kubernetes-list-type: map
                     name:
                       description: |-
                         name is the name of the pinned image set.
@@ -393,7 +411,6 @@ spec:
                 x-kubernetes-list-type: map
             required:
             - configVersion
-            - observedGeneration
             type: object
         required:
         - spec

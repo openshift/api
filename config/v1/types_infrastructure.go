@@ -529,6 +529,7 @@ type AWSPlatformSpec struct {
 }
 
 // AWSPlatformStatus holds the current status of the Amazon Web Services infrastructure provider.
+// +kubebuilder:validation:XValidation:rule="!has(oldSelf.resourceTags) && !has(self.resourceTags) || has(oldSelf.resourceTags) && has(self.resourceTags)",message="resourceTags may only be configured during installation"
 type AWSPlatformStatus struct {
 	// region holds the default AWS region for new AWS resources created by the cluster.
 	Region string `json:"region"`
@@ -545,6 +546,7 @@ type AWSPlatformStatus struct {
 	// AWS supports a maximum of 50 tags per resource. OpenShift reserves 25 tags for its use, leaving 25 tags
 	// available for the user.
 	// +kubebuilder:validation:MaxItems=25
+	// +kubebuilder:validation:XValidation:rule="self.all(x, x in oldSelf) && oldSelf.all(x, x in self)",message="resourceTags are immutable and may only be configured during installation"
 	// +listType=atomic
 	// +optional
 	ResourceTags []AWSResourceTag `json:"resourceTags,omitempty"`
@@ -581,9 +583,11 @@ type AWSResourceTag struct {
 	// key sets the key of the AWS resource tag key-value pair. Key is required when defining an AWS resource tag.
 	// Key should consist of between 1 and 128 characters, and may
 	// contain only the set of alphanumeric characters, space (' '), '_', '.', '/', '=', '+', '-', ':', and '@'.
+	// Key must not start with 'aws:'.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=128
 	// +kubebuilder:validation:XValidation:rule=`self.matches('^[0-9A-Za-z_.:/=+-@ ]+$')`,message="invalid AWS resource tag key. The string can contain only the set of alphanumeric characters, space (' '), '_', '.', '/', '=', '+', '-', ':', '@'"
+	// +kubebuilder:validation:XValidation:rule=`!self.startsWith('aws:')`,message="the prefix 'aws:' is reserved for AWS system usage and cannot be used at the beginning of a key"
 	// +required
 	Key string `json:"key"`
 	// value sets the value of the AWS resource tag key-value pair. Value is required when defining an AWS resource tag.

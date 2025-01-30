@@ -720,7 +720,7 @@ var (
 						mustRegister()
 
 	FeatureGateHighlyAvailableArbiter = newFeatureGate("HighlyAvailableArbiter").
-						reportProblemsToJiraComponent("TwoNode / Arbiter").
+						reportProblemsToJiraComponent("Two Node with Arbiter").
 						contactPerson("eggfoobar").
 						productScope(ocpSpecific).
 						enhancementPR("https://github.com/openshift/enhancements/pull/1674").

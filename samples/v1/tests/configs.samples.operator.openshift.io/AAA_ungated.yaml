@@ -56,4 +56,4 @@ tests:
         spec: 
           skippedHelmCharts:
           - foobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobar
-      expectedError: "Too long: may not be longer than 253"
+      expectedError: "Too long: may not be more than 253 bytes"

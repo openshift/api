@@ -3,7 +3,7 @@
 # DO NOT UPDATE THIS until you have published downstream builds for the kubebuilder tools, and checked
 # that there is an equivalent upstream version as well. Check upstream at https://storage.googleapis.com/kubebuilder-tools.
 # Publish downstream with `make -C tools publish-kubebuilder-tools`, see help text there for updating flags before publshing.
-ENVTEST_K8S_VERSION = 1.31.2
+ENVTEST_K8S_VERSION = 1.32.1
 
 # In case of emergency, use these to provide separate upstream/downstream K8s versions for testing.
 ENVTEST_K8S_DOWNSTREAM_VERSION = ${ENVTEST_K8S_VERSION}

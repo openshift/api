@@ -170,7 +170,7 @@ tests:
               - availabilityZone: foo
                 rootVolume:
                   volumeType: a123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345
-    expectedError: "spec.template.machines_v1beta1_machine_openshift_io.failureDomains.openstack[0].rootVolume.volumeType: Too long: may not be longer than 255"
+    expectedError: "spec.template.machines_v1beta1_machine_openshift_io.failureDomains.openstack[0].rootVolume.volumeType: Too long: may not be more than 255 bytes"
   - name: Should reject an OpenStack failure domain with both availabilityZone and root volume provided but with missing root volume availabilityZone
     initial: |
       apiVersion: machine.openshift.io/v1

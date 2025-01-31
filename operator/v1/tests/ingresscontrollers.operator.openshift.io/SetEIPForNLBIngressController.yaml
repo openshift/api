@@ -119,7 +119,7 @@ tests:
                     - eipalloc-1234533333333333333333333
                     - eipalloc-1234644444444444444444444
             type: LoadBalancerService
-      expectedError: "[spec.endpointPublishingStrategy.loadBalancer.providerParameters.aws.networkLoadBalancer.eipAllocations[0]: Too long: may not be longer than 26, spec.endpointPublishingStrategy.loadBalancer.providerParameters.aws.networkLoadBalancer.eipAllocations[1]: Too long: may not be longer than 26,"
+      expectedError: "[spec.endpointPublishingStrategy.loadBalancer.providerParameters.aws.networkLoadBalancer.eipAllocations[0]: Too long: may not be more than 26 bytes, spec.endpointPublishingStrategy.loadBalancer.providerParameters.aws.networkLoadBalancer.eipAllocations[1]: Too long: may not be more than 26 bytes,"
     - name: Should not be able to create ingresscontroller if the number of eipAllocations is more than 10.
       initial: |
         apiVersion: operator.openshift.io/v1
@@ -250,7 +250,7 @@ tests:
                     eipAllocations:
                     - eipalloc-0123456789abcdef0-0123456
             type: LoadBalancerService
-      expectedError: "IngressController.operator.openshift.io \"default-eip\" is invalid: [spec.endpointPublishingStrategy.loadBalancer.providerParameters.aws.networkLoadBalancer.eipAllocations[0]: Too long: may not be longer than 26"
+      expectedError: "IngressController.operator.openshift.io \"default-eip\" is invalid: [spec.endpointPublishingStrategy.loadBalancer.providerParameters.aws.networkLoadBalancer.eipAllocations[0]: Too long: may not be more than 26 bytes"
     - name: Should not be able to create an ingress controller in which the value of eipAllocations has a short hexadecimal part followed by an extra hexadecimal part.
       initial: |
         apiVersion: operator.openshift.io/v1

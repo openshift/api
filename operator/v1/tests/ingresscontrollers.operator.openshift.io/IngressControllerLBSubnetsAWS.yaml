@@ -391,7 +391,7 @@ tests:
                     subnets:
                       ids:
                       - subnet-000000000000000010
-      expectedError: "spec.endpointPublishingStrategy.loadBalancer.providerParameters.aws.classicLoadBalancer.subnets.ids[0]: Too long: may not be longer than 24"
+      expectedError: "spec.endpointPublishingStrategy.loadBalancer.providerParameters.aws.classicLoadBalancer.subnets.ids[0]: Too long: may not be more than 24 bytes"
     - name: Should not be able to create ingresscontroller with subnet id that doesn't start with subnet-.
       initial: |
         apiVersion: operator.openshift.io/v1

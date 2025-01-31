@@ -408,7 +408,7 @@ tests:
           platformStatus:
             powervs:
               resourceGroup: resource-group-should-not-accept-the-string-that-exceeds-max-length-set
-      expectedStatusError: "platformStatus.powervs.resourceGroup: Too long: may not be longer than 40"
+      expectedStatusError: "platformStatus.powervs.resourceGroup: Too long: may not be more than 40 bytes"
     - name: PowerVS platform status's resourceGroup should match the regex configured
       initial: |
         apiVersion: config.openshift.io/v1

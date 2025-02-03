@@ -35671,6 +35671,13 @@ func schema_openshift_api_machine_v1beta1_AWSMachineProviderConfig(ref common.Re
 							Format:      "",
 						},
 					},
+					"marketType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "marketType specifies the type of market for the EC2 instance. Valid values are OnDemand, Spot, CapacityBlock and omitted. Defaults to OnDemand. When set to OnDemand the instance runs as a standard OnDemand instance. When SpotMarketOptions is provided, the marketType defaults to \"Spot\". When set to Spot the instance runs as a Spot instance. When set to CapacityBlock the instance utilizes pre-purchased compute capacity (capacity blocks) with AWS Capacity Reservations. If this value is selected, CapacityReservationID must be specified to identify the target reservation.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 				Required: []string{"ami", "instanceType", "deviceIndex", "subnet", "placement"},
 			},

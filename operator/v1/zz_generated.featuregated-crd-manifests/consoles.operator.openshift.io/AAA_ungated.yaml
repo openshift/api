@@ -140,6 +140,7 @@ spec:
                       Recommended logo specifications:
                       Dimensions: Max height of 68px and max width of 200px
                       SVG format preferred
+                      Deprecated: Use customLogoFiles instead.
                     properties:
                       key:
                         description: key allows pointing to a specific key/value inside
@@ -148,6 +149,53 @@ spec:
                       name:
                         type: string
                     type: object
+                  customLogoFiles:
+                    description: |-
+                      customLogoFiles replaces the default OpenShift logo in the masthead and about dialog. It is a reference to a
+                      ConfigMap in the openshift-config namespace. This can be created with a command like
+                      'oc create configmap custom-logo --from-file=/path/to/file -n openshift-config'.
+                      Image size must be less than 1 MB due to constraints on the ConfigMap size.
+                      The ConfigMap keys should include file extensions for dark and light themes so that the console serves these files
+                      with the correct MIME type.
+                      Recommended logo specifications:
+                      Dimensions: Max height of 68px and max width of 200px
+                      SVG format preferred
+                    items:
+                      description: CustomLogoThemeFile defines a configuration based
+                        on theme types for the console UI logo.
+                      properties:
+                        path:
+                          description: |-
+                            path is the reference to a specific file within a ConfigMap in the openshift-config namespace.
+                            This field allows the console to locate and use the specified file containing a custom logo.
+                            The ConfigMap must be created with the appropriate keys and file extensions to ensure the console serves the file with the correct MIME type.
+                          properties:
+                            key:
+                              description: key allows pointing to a specific key/value
+                                inside of the configmap.  This is useful for logical
+                                file references.
+                              type: string
+                            name:
+                              type: string
+                          type: object
+                        type:
+                          description: |-
+                            type specifies the theme type for the console UI. It determines whether the console should use the dark or light theme.
+                            This field is an enum with valid values "Dark" and "Light".
+                          enum:
+                          - Dark
+                          - Light
+                          type: string
+                      required:
+                      - path
+                      - type
+                      type: object
+                    maxItems: 2
+                    minItems: 1
+                    type: array
+                    x-kubernetes-list-map-keys:
+                    - name
+                    x-kubernetes-list-type: map
                   customProductName:
                     description: |-
                       customProductName is the name that will be displayed in page titles, logo alt text, and the about dialog

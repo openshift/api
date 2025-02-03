@@ -248,11 +248,12 @@ func (ConsoleConfigRoute) SwaggerDoc() map[string]string {
 
 var map_ConsoleCustomization = map[string]string{
 	"":                     "ConsoleCustomization defines a list of optional configuration for the console UI.",
+	"customLogoFiles":      "customLogoFiles replaces the default OpenShift logo in the masthead and about dialog. It is a reference to a ConfigMap in the openshift-config namespace. This can be created with a command like 'oc create configmap custom-logo --from-file=/path/to/file -n openshift-config'. Image size must be less than 1 MB due to constraints on the ConfigMap size. The ConfigMap keys should include file extensions for dark and light themes so that the console serves these files with the correct MIME type. Recommended logo specifications: Dimensions: Max height of 68px and max width of 200px SVG format preferred",
 	"capabilities":         "capabilities defines an array of capabilities that can be interacted with in the console UI. Each capability defines a visual state that can be interacted with the console to render in the UI. Available capabilities are LightspeedButton and GettingStartedBanner. Each of the available capabilities may appear only once in the list.",
 	"brand":                "brand is the default branding of the web console which can be overridden by providing the brand field.  There is a limited set of specific brand options. This field controls elements of the console such as the logo. Invalid value will prevent a console rollout.",
 	"documentationBaseURL": "documentationBaseURL links to external documentation are shown in various sections of the web console.  Providing documentationBaseURL will override the default documentation URL. Invalid value will prevent a console rollout.",
 	"customProductName":    "customProductName is the name that will be displayed in page titles, logo alt text, and the about dialog instead of the normal OpenShift product name.",
-	"customLogoFile":       "customLogoFile replaces the default OpenShift logo in the masthead and about dialog. It is a reference to a ConfigMap in the openshift-config namespace. This can be created with a command like 'oc create configmap custom-logo --from-file=/path/to/file -n openshift-config'. Image size must be less than 1 MB due to constraints on the ConfigMap size. The ConfigMap key should include a file extension so that the console serves the file with the correct MIME type. Recommended logo specifications: Dimensions: Max height of 68px and max width of 200px SVG format preferred",
+	"customLogoFile":       "customLogoFile replaces the default OpenShift logo in the masthead and about dialog. It is a reference to a ConfigMap in the openshift-config namespace. This can be created with a command like 'oc create configmap custom-logo --from-file=/path/to/file -n openshift-config'. Image size must be less than 1 MB due to constraints on the ConfigMap size. The ConfigMap key should include a file extension so that the console serves the file with the correct MIME type. Recommended logo specifications: Dimensions: Max height of 68px and max width of 200px SVG format preferred Deprecated: Use customLogoFiles instead.",
 	"developerCatalog":     "developerCatalog allows to configure the shown developer catalog categories (filters) and types (sub-catalogs).",
 	"projectAccess":        "projectAccess allows customizing the available list of ClusterRoles in the Developer perspective Project access page which can be used by a project admin to specify roles to other users and restrict access within the project. If set, the list will replace the default ClusterRole options.",
 	"quickStarts":          "quickStarts allows customization of available ConsoleQuickStart resources in console.",
@@ -301,6 +302,16 @@ var map_ConsoleStatus = map[string]string{
 
 func (ConsoleStatus) SwaggerDoc() map[string]string {
 	return map_ConsoleStatus
+}
+
+var map_CustomLogoThemeFile = map[string]string{
+	"":     "CustomLogoThemeFile defines a configuration based on theme types for the console UI logo.",
+	"type": "type specifies the theme type for the console UI. It determines whether the console should use the dark or light theme. This field is an enum with valid values \"Dark\" and \"Light\".",
+	"path": "path is the reference to a specific file within a ConfigMap in the openshift-config namespace. This field allows the console to locate and use the specified file containing a custom logo. The ConfigMap must be created with the appropriate keys and file extensions to ensure the console serves the file with the correct MIME type.",
+}
+
+func (CustomLogoThemeFile) SwaggerDoc() map[string]string {
+	return map_CustomLogoThemeFile
 }
 
 var map_DeveloperConsoleCatalogCategory = map[string]string{

@@ -31,9 +31,6 @@
                         "name": "Example2"
                     },
                     {
-                        "name": "GatewayAPI"
-                    },
-                    {
                         "name": "MachineAPIMigration"
                     },
                     {
@@ -112,6 +109,9 @@
                     },
                     {
                         "name": "GCPLabelsTags"
+                    },
+                    {
+                        "name": "GatewayAPI"
                     },
                     {
                         "name": "HardwareSpeed"

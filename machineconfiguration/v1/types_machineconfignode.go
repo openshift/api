@@ -84,9 +84,11 @@ type MachineConfigNodeSpec struct {
 	// The desired version represents the machine config the node will attempt to update to. This gets set before the machine config operator validates
 	// the new machine config against the current machine config.
 	// +required
+	// TODO: Potentially remove since it might be redundant. There may need to be some changes to how ObservedGeneration is updated if this field
+	// is consolidated with MachineConfigNodeStatus.ConfigVersion.Current.
 	ConfigVersion MachineConfigNodeSpecMachineConfigVersion `json:"configVersion"`
 
-	// pinnedImageSets is a user defined value that holds the names of the desired pinned image sets that the node should pull and pin.
+	// pinnedImageSets is a user defined value that holds the names of the desired image sets that the node should pull and pin.
 	// +listType=map
 	// +listMapKey=name
 	// +kubebuilder:validation:MaxItems=100
@@ -97,7 +99,8 @@ type MachineConfigNodeSpec struct {
 // MCOObjectReference holds information about an object the MCO either owns
 // or modifies in some way
 type MCOObjectReference struct {
-	// name is the object name.
+	// name is the name of the object being referenced. For example, this can represent a pool
+	// or node name.
 	// Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) consisting
 	// of only lowercase alphanumeric characters, hyphens (-), and periods (.), start and end
 	// with an alphanumeric character, and be at most 253 characters in length.
@@ -115,22 +118,18 @@ type MachineConfigNodeStatus struct {
 	// +listType=map
 	// +listMapKey=type
 	// +optional
+	// TODO: add max length validation.
 	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
-	// observedGeneration represents the generation observed by the controller.
+	// observedGeneration represents the generation of the MachineConfigNode object observed by the Machine Config Operator's controller.
 	// This field is updated when the controller observes a change to the desiredConfig in the configVersion of the machine config node spec.
 	// +kubebuilder:validation:XValidation:rule="self >= oldSelf", message="observedGeneration must not move backwards"
 	// +kubebuilder:validation:Minimum=0
 	// +optional
 	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
-	// configVersion describes the current and desired machine config for this node.
-	// The current version represents the current machine config for the node and is updated after a successful update.
-	// The desired version represents the machine config the node will attempt to update to.
-	// This desired machine config has been compared to the current machine config and has been validated by the machine config operator as one that is valid and that exists.
+	// configVersion describes the current and desired machine config version for this node.
 	// +required
 	ConfigVersion MachineConfigNodeStatusMachineConfigVersion `json:"configVersion"`
 	// pinnedImageSets describes the current and desired pinned image sets for this node.
-	// The current version is the generation of the pinned image set that has most recently been successfully pulled and pinned on this node.
-	// The desired version is the generation of the pinned image set that is targeted to be pulled and pinned on this node.
 	// +listType=map
 	// +listMapKey=name
 	// +kubebuilder:validation:MaxItems=100
@@ -140,7 +139,7 @@ type MachineConfigNodeStatus struct {
 
 // MachineConfigNodeStatusPinnedImageSet holds information about the current and desired pinned image sets for the current observed machine config node.
 // +kubebuilder:validation:XValidation:rule="has(self.desiredGeneration) && has(self.currentGeneration) ? self.desiredGeneration >= self.currentGeneration : true",message="desired generation must be greater than or equal to the current generation"
-// +kubebuilder:validation:XValidation:rule="has(self.lastFailedGeneration) && has(self.desiredGeneration) ? self.desiredGeneration >= self.lastFailedGeneration : true",message="desired generation must be greater than last failed generation"
+// +kubebuilder:validation:XValidation:rule="has(self.lastFailedGeneration) && has(self.desiredGeneration) ? self.desiredGeneration >= self.lastFailedGeneration : true",message="desired generation must be greater than or equal to last failed generation"
 // +kubebuilder:validation:XValidation:rule="has(self.lastFailedGeneration) ? has(self.desiredGeneration): true",message="desired generation must be defined if last failed generation is defined"
 type MachineConfigNodeStatusPinnedImageSet struct {
 	// name is the name of the pinned image set.
@@ -162,7 +161,7 @@ type MachineConfigNodeStatusPinnedImageSet struct {
 	// +kubebuilder:validation:Minimum=0
 	// +optional
 	LastFailedGeneration int32 `json:"lastFailedGeneration,omitempty"`
-	// lastFailedGenerationErrors is a list of errors why the lastFailed generation failed to be pulled and pinned.
+	// lastFailedGenerationErrors is a list of errors explaining why the lastFailed generation failed to be pulled and pinned.
 	// +kubebuilder:validation:MaxItems=10
 	// +listType=map
 	// +listMapKey=message
@@ -174,7 +173,8 @@ type MachineConfigNodeStatusPinnedImageSet struct {
 // When the current and desired versions are not matched, the machine config pool is processing an upgrade and the machine config node will
 // monitor the upgrade process.
 // When the current and desired versions do not match, the machine config node will ignore these events given that certain operations
-// happen both during the MCO's upgrade mode and the daily operations mode.
+// happen both during the MCO's upgrade mode and the daily operations mode. //TODO: Check if this should instead say *do* match to be consistent
+// with comment on lines 204-205.
 type MachineConfigNodeStatusMachineConfigVersion struct {
 	// current is the name of the machine config currently in use on the node.
 	// This value is updated once the machine config daemon has completed the update of the configuration for the node.
@@ -236,14 +236,16 @@ type MachineConfigNodeSpecPinnedImageSet struct {
 type MachineConfigNodeStatusPinnedImageSetError struct {
 	// message is the message of the pinned image error.
 	// +required
+	// TODO: Add max length.
 	Message string `json:"message"`
 }
 
 // StateProgress is each possible state for each possible MachineConfigNodeType
-// UpgradeProgression Kind will only use the "MachinConfigPoolUpdate..." types for example
+// UpgradeProgression Kind will only use the "MachinConfigPoolUpdate..." types for example //TODO: figure out how to make comment more relevant.
 // +enum
 type StateProgress string
 
+// TODO: Trim down to only helpful statues, prioritizing OCL status needs. Relevant PR: https://github.com/openshift/api/pull/1596
 const (
 	// MachineConfigNodeUpdatePrepared describes a machine that is preparing in the daemon to trigger an update
 	MachineConfigNodeUpdatePrepared StateProgress = "UpdatePrepared"

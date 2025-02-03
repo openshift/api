@@ -112,6 +112,7 @@ spec:
                   configVersion holds the desired config version for the node targeted by this machine config node resource.
                   The desired version represents the machine config the node will attempt to update to. This gets set before the machine config operator validates
                   the new machine config against the current machine config.
+                  is consolidated with MachineConfigNodeStatus.ConfigVersion.Current.
                 properties:
                   desired:
                     description: |-
@@ -139,7 +140,8 @@ spec:
                 properties:
                   name:
                     description: |-
-                      name is the object name.
+                      name is the name of the object being referenced. For example, this can represent a pool
+                      or node name.
                       Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) consisting
                       of only lowercase alphanumeric characters, hyphens (-), and periods (.), start and end
                       with an alphanumeric character, and be at most 253 characters in length.
@@ -155,8 +157,7 @@ spec:
                 type: object
               pinnedImageSets:
                 description: pinnedImageSets is a user defined value that holds the
-                  names of the desired pinned image sets that the node should pull
-                  and pin.
+                  names of the desired image sets that the node should pull and pin.
                 items:
                   description: |-
                     MachineConfigNodeSpecPinnedImageSet holds information on the desired pinned image sets that the current observed machine config node
@@ -191,7 +192,8 @@ spec:
                 properties:
                   name:
                     description: |-
-                      name is the object name.
+                      name is the name of the object being referenced. For example, this can represent a pool
+                      or node name.
                       Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) consisting
                       of only lowercase alphanumeric characters, hyphens (-), and periods (.), start and end
                       with an alphanumeric character, and be at most 253 characters in length.
@@ -276,11 +278,8 @@ spec:
                 - type
                 x-kubernetes-list-type: map
               configVersion:
-                description: |-
-                  configVersion describes the current and desired machine config for this node.
-                  The current version represents the current machine config for the node and is updated after a successful update.
-                  The desired version represents the machine config the node will attempt to update to.
-                  This desired machine config has been compared to the current machine config and has been validated by the machine config operator as one that is valid and that exists.
+                description: configVersion describes the current and desired machine
+                  config version for this node.
                 properties:
                   current:
                     description: |-
@@ -318,7 +317,7 @@ spec:
                 type: object
               observedGeneration:
                 description: |-
-                  observedGeneration represents the generation observed by the controller.
+                  observedGeneration represents the generation of the MachineConfigNode object observed by the Machine Config Operator's controller.
                   This field is updated when the controller observes a change to the desiredConfig in the configVersion of the machine config node spec.
                 format: int64
                 minimum: 0
@@ -327,10 +326,8 @@ spec:
                 - message: observedGeneration must not move backwards
                   rule: self >= oldSelf
               pinnedImageSets:
-                description: |-
-                  pinnedImageSets describes the current and desired pinned image sets for this node.
-                  The current version is the generation of the pinned image set that has most recently been successfully pulled and pinned on this node.
-                  The desired version is the generation of the pinned image set that is targeted to be pulled and pinned on this node.
+                description: pinnedImageSets describes the current and desired pinned
+                  image sets for this node.
                 items:
                   description: MachineConfigNodeStatusPinnedImageSet holds information
                     about the current and desired pinned image sets for the current
@@ -358,7 +355,8 @@ spec:
                       type: integer
                     lastFailedGenerationErrors:
                       description: lastFailedGenerationErrors is a list of errors
-                        why the lastFailed generation failed to be pulled and pinned.
+                        explaining why the lastFailed generation failed to be pulled
+                        and pinned.
                       items:
                         description: MachineConfigNodeStatusPinnedImageSetError holds
                           information on the the errors associated with failed attempts
@@ -397,7 +395,8 @@ spec:
                       current generation
                     rule: 'has(self.desiredGeneration) && has(self.currentGeneration)
                       ? self.desiredGeneration >= self.currentGeneration : true'
-                  - message: desired generation must be greater than last failed generation
+                  - message: desired generation must be greater than or equal to last
+                      failed generation
                     rule: 'has(self.lastFailedGeneration) && has(self.desiredGeneration)
                       ? self.desiredGeneration >= self.lastFailedGeneration : true'
                   - message: desired generation must be defined if last failed generation

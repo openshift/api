@@ -171,9 +171,6 @@
                     },
                     {
                         "name": "VolumeAttributesClass"
-                    },
-                    {
-                        "name": "VolumeGroupSnapshot"
                     }
                 ],
                 "enabled": [
@@ -260,6 +257,9 @@
                     },
                     {
                         "name": "ValidatingAdmissionPolicy"
+                    },
+                    {
+                        "name": "VolumeGroupSnapshot"
                     }
                 ],
                 "version": ""

@@ -5337,6 +5337,11 @@ func (in *VSphereCSIDriverConfigSpec) DeepCopyInto(out *VSphereCSIDriverConfigSp
 		*out = new(uint32)
 		**out = **in
 	}
+	if in.MaxAllowedBlockVolumesPerNode != nil {
+		in, out := &in.MaxAllowedBlockVolumesPerNode, &out.MaxAllowedBlockVolumesPerNode
+		*out = new(uint32)
+		**out = **in
+	}
 	return
 }
 

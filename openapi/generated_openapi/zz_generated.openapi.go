@@ -56030,6 +56030,13 @@ func schema_openshift_api_operator_v1_VSphereCSIDriverConfigSpec(ref common.Refe
 							Format:      "int64",
 						},
 					},
+					"maxAllowedBlockVolumesPerNode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "maxAllowedBlockVolumesPerNode is a configuration parameter that allows setting custom value for limit of PersistentVolumes attached to a node. In vSphere version 7 this limit was set to 59 by default, however in vSphere version 8 this limit was increased to 255. For more details see: https://configmax.broadcom.com/guest?vmwareproduct=vSphere&release=vSphere%208.0&categories=3-0 Before increasing this value above 59 the cluster administrator needs to ensure that every node forming the cluster is updated to ESXi version 8 or higher and that all nodes are running the same version. According to CSI protocol the cluster orchestrator can decide on default value if the limit is not set or set to 0: https://github.com/container-storage-interface/spec/blob/98819c45a37a67e0cd466bd02b813faf91af4e45/csi.proto#L1679-L1684 Since cluster orchestrator could change its defaults this field is set to a default value that matches the original limit for vSphere version 7. Setting this value to 0 would effectively prevent CSI controller from publishing any CSI volumes to the node. Defaults to: 59",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
 				},
 			},
 		},

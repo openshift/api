@@ -71,6 +71,7 @@ clustercsidrivers.operator.openshift.io:
   FeatureGates:
   - AWSEFSDriverVolumeMetrics
   - VSphereDriverConfiguration
+  - VSphereDriverVolumeLimit
   FilenameOperatorName: csi-driver
   FilenameOperatorOrdering: "01"
   FilenameRunLevel: "0000_50"

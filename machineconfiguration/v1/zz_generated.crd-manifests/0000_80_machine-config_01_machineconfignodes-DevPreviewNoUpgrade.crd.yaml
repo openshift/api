@@ -273,6 +273,7 @@ spec:
                   - status
                   - type
                   type: object
+                maxItems: 15
                 type: array
                 x-kubernetes-list-map-keys:
                 - type
@@ -365,6 +366,7 @@ spec:
                           message:
                             description: message is the message of the pinned image
                               error.
+                            maxLength: 2048
                             type: string
                         required:
                         - message

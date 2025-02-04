@@ -65,7 +65,9 @@ type MachineConfigNodeList struct {
 	metav1.ListMeta `json:"metadata"`
 
 	// items contains a collection of MachineConfigNode resources.
+	// +kubebuilder:validation:MaxItems=100000
 	// +optional
+	// TODO: Decide on an appropriate maxItems value for this list of MachineConfigNodes. There is a 1:1 ratio between # of nodes & MCN objects.
 	Items []MachineConfigNode `json:"items"`
 }
 
@@ -117,8 +119,9 @@ type MachineConfigNodeStatus struct {
 	// +patchStrategy=merge
 	// +listType=map
 	// +listMapKey=type
+	// +kubebuilder:validation:MaxItems=15
 	// +optional
-	// TODO: add max length validation.
+	// TODO: Reevaluate maxItems value as status are trimmed down/API structure is updated.
 	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 	// observedGeneration represents the generation of the MachineConfigNode object observed by the Machine Config Operator's controller.
 	// This field is updated when the controller observes a change to the desiredConfig in the configVersion of the machine config node spec.
@@ -235,8 +238,9 @@ type MachineConfigNodeSpecPinnedImageSet struct {
 // MachineConfigNodeStatusPinnedImageSetError holds information on the the errors associated with failed attempts at pulling and pinning images
 type MachineConfigNodeStatusPinnedImageSetError struct {
 	// message is the message of the pinned image error.
+	// +kubebuilder:validation:MaxLength=2048
 	// +required
-	// TODO: Add max length.
+	// TODO: Update MaxLength value once this API design has been reevaluated.
 	Message string `json:"message"`
 }
 

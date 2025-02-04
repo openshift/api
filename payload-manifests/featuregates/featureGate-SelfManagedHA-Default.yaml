@@ -125,9 +125,6 @@
                         "name": "OpenShiftPodSecurityAdmission"
                     },
                     {
-                        "name": "PersistentIPsForVirtualization"
-                    },
-                    {
                         "name": "PinnedImages"
                     },
                     {
@@ -239,6 +236,9 @@
                     },
                     {
                         "name": "NodeDisruptionPolicy"
+                    },
+                    {
+                        "name": "PersistentIPsForVirtualization"
                     },
                     {
                         "name": "PrivateHostedZoneAWS"

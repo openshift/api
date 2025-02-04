@@ -77,6 +77,7 @@ type NodeStatus struct {
 }
 
 // +kubebuilder:validation:Enum=v2;""
+// +openshift:validation:FeatureSetAwareEnum:featureSet=Default,enum=v2;""
 type CgroupMode string
 
 const (

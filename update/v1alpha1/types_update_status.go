@@ -53,7 +53,7 @@ type UpdateStatusStatus struct {
 	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 
 	// controlPlane contains a summary and insights related to the control plane update
-	// +required
+	// +optional
 	ControlPlane ControlPlane `json:"controlPlane"`
 
 	// workerPools contains summaries and insights related to the worker pools update

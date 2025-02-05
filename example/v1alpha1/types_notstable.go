@@ -7,13 +7,16 @@ import (
 // +genclient
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-// +kubebuilder:object:root=true
-// +kubebuilder:subresource:status
 // +openshift:compatibility-gen:level=4
+// +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/xxx
+// +openshift:file-pattern=cvoRunLevel=0000_50,operatorName=my-operator,operatorOrdering=01
 
 // NotStableConfigType is a stable config type that is TechPreviewNoUpgrade only.
 //
 // Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+// +kubebuilder:object:root=true
+// +kubebuilder:resource:path=notstableconfigtypes,scope=Cluster
+// +openshift:enable:FeatureGate=Example
 type NotStableConfigType struct {
 	metav1.TypeMeta `json:",inline"`
 
@@ -31,7 +34,7 @@ type NotStableConfigType struct {
 type NotStableConfigTypeSpec struct {
 	// newField is a field that is tech preview, but because the entire type is gated, there is no marker on the field.
 	//
-	// +kubebuilder:validation:Required
+	// +required
 	NewField string `json:"newField"`
 }
 
@@ -47,7 +50,6 @@ type NotStableConfigTypeStatus struct {
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-// +kubebuilder:object:root=true
 // +openshift:compatibility-gen:level=4
 
 // NotStableConfigTypeList contains a list of NotStableConfigTypes.

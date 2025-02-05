@@ -1,0 +1,320 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "Example API"
+crdName: stableconfigtypes.example.openshift.io
+tests:
+  onCreate:
+    - name: Should persist stable fields
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          stableField: "Allowed"
+          immutableField: foo
+      expected: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          stableField: "Allowed"
+          immutableField: foo
+          nonZeroDefault: 8
+    - name: With an EvolvingUnion, Should allow an empty enum value
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          evolvingUnion:
+            type: ""
+          immutableField: foo
+      expected: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          evolvingUnion:
+            type: ""
+          immutableField: foo
+          nonZeroDefault: 8
+    - name: With an EvolvingUnion, Should allow a Stable enum value
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          evolvingUnion:
+            type: StableValue
+          immutableField: foo
+      expected: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          evolvingUnion:
+            type: StableValue
+          immutableField: foo
+          nonZeroDefault: 8
+    - name: With an CEL validated Discrminated union, should allow an empty member with the empty type value
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          celUnion:
+            type: EmptyMember
+          immutableField: foo
+      expected: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          celUnion:
+            type: EmptyMember
+          immutableField: foo
+          nonZeroDefault: 8
+    - name: With an CEL validated Discrminated union, should allow an empty member with the empty type value
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          celUnion:
+            type: EmptyMember
+          immutableField: foo
+      expected: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          celUnion:
+            type: EmptyMember
+          immutableField: foo
+          nonZeroDefault: 8
+    - name: With an CEL validated Discrminated union, should allow a required member with the required type value
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          celUnion:
+            type: RequiredMember
+            requiredMember: foo
+          immutableField: foo
+      expected: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          celUnion:
+            type: RequiredMember
+            requiredMember: foo
+          immutableField: foo
+          nonZeroDefault: 8
+    - name: With an CEL validated Discrminated union, should not allow omitting required member with the required type value
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          celUnion:
+            type: RequiredMember
+          immutableField: foo
+      expectedError: "Invalid value: \"object\": requiredMember is required when type is RequiredMember, and forbidden otherwise"
+    - name: With an CEL validated Discrminated union, should not allow the required member without the required type value
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          celUnion:
+            type: OptionalMember
+            requiredMember: foo
+          immutableField: foo
+      expectedError: "Invalid value: \"object\": requiredMember is required when type is RequiredMember, and forbidden otherwise"
+    - name: With an CEL validated Discrminated union, should not allow the optional member with the required type value
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          celUnion:
+            type: RequiredMember
+            requiredMember: foo
+            optionalMember: foo
+          immutableField: foo
+      expectedError: "Invalid value: \"object\": optionalMember is forbidden when type is not OptionalMember"
+    - name: With an CEL validated Discrminated union, should allow an optional member with the optional type value
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          celUnion:
+            type: OptionalMember
+            optionalMember: foo
+          immutableField: foo
+      expected: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          celUnion:
+            type: OptionalMember
+            optionalMember: foo
+          immutableField: foo
+          nonZeroDefault: 8
+    - name: With an CEL validated Discrminated union, should allow omitting the optional member with the optional type value
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          celUnion:
+            type: OptionalMember
+          immutableField: foo
+      expected: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          celUnion:
+            type: OptionalMember
+          immutableField: foo
+          nonZeroDefault: 8
+    - name: With an CEL validated Discrminated union, should not allow the optional member without the optional type value
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          celUnion:
+            type: RequiredMember
+            optionalMember: foo
+          immutableField: foo
+      expectedError: "Invalid value: \"object\": optionalMember is forbidden when type is not OptionalMember"
+    - name: With an CEL validated Discrminated union, should not allow the required member with the optional type value
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          celUnion:
+            type: OptionalMember
+            requiredMember: foo
+          immutableField: foo
+      expectedError: "Invalid value: \"object\": requiredMember is required when type is RequiredMember, and forbidden otherwise"
+  onUpdate:
+    - name: Should not allow changing an immutable field
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+      updated: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: bar
+      expectedError: "spec.immutableField: Invalid value: \"string\": immutableField is immutable"
+    - name: Should allow setting the optional immutable field
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+      updated: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          optionalImmutableField: foo
+      expected: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          optionalImmutableField: foo
+          nonZeroDefault: 8
+    - name: Should not allow changing the optional immutable field
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          optionalImmutableField: foo
+      updated: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          optionalImmutableField: bar
+      expectedError: "spec.optionalImmutableField: Invalid value: \"string\": optionalImmutableField is immutable once set"
+    - name: Should allow setting an immutable status field
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+      updated: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        status:
+          immutableField: bar
+      expected: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        status:
+          immutableField: bar
+    - name: Should not allow changing an immutable status field
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        status:
+          immutableField: foo
+      updated: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        status:
+          immutableField: bar
+      expectedStatusError: "status.immutableField: Invalid value: \"string\": immutableField is immutable"
+    - name: Should allow changing other fields when a persisted value is no longer valid
+      initialCRDPatches:
+      - op: remove
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/nonZeroDefault/minimum # Minimum is normally 8
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          nonZeroDefault: 1
+          immutableField: foo
+      updated: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          nonZeroDefault: 1
+          immutableField: foo
+          optionalImmutableField: foo
+      expected: | 
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          nonZeroDefault: 1
+          immutableField: foo
+          optionalImmutableField: foo
+    - name: Should allow updating a persisted value that is no longer valid to a valid value
+      initialCRDPatches:
+      - op: remove
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/nonZeroDefault/minimum # Minimum is normally 8
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          nonZeroDefault: 1
+          immutableField: foo
+      updated: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          nonZeroDefault: 8
+          immutableField: foo
+      expected: | 
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          nonZeroDefault: 8
+          immutableField: foo
+    - name: Should not allow updating a persisted value that is no longer valid to a still invalid value
+      initialCRDPatches:
+      - op: remove
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/nonZeroDefault/minimum # Minimum is normally 8
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          nonZeroDefault: 1
+          immutableField: foo
+      updated: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          nonZeroDefault: 2
+          immutableField: foo
+      expectedError: "spec.nonZeroDefault: Invalid value: 2: spec.nonZeroDefault in body should be greater than or equal to 8"

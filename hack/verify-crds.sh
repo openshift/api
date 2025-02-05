@@ -12,6 +12,17 @@ for f in $(find . -name "*.yaml" -type f); do
     grep -qre "kind:\(.*\)CustomResourceDefinition" $f || continue
     grep -qre "name:\(.*\).openshift.io" $f || continue
 
+    # skip the files that are merged to produce the final outcome
+    if [[ "$f" == *"zz_generated.featuregated-crd-manifests"* ]]; then
+      continue
+    fi
+    if [[ "$f" == *"manual-override-crd-manifests"* ]]; then
+      continue
+    fi
+    if [[ "$f" == *"testdata"* ]]; then
+      continue
+    fi
+
     if [[ $(./_output/tools/bin/yq r $f apiVersion) == "apiextensions.k8s.io/v1beta1" ]]; then
         if [[ $(./_output/tools/bin/yq r $f spec.validation.openAPIV3Schema.properties.metadata.description) != "null" ]]; then
             echo "Error: cannot have a metadata description in $f"

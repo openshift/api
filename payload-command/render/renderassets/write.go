@@ -6,9 +6,13 @@ import (
 )
 
 // SubstituteAndCopyFiles read files from the input dir, selects some by predicate, transforms them, and writes the content to output dir.
-func SubstituteAndCopyFiles(assetInputDir, assetOutputDir, featureSet string, templateData interface{}, additionalPredicates ...FileInfoPredicate) error {
+func SubstituteAndCopyFiles(assetInputDir, assetOutputDir, featureSet, clusterProfile string, templateData interface{}, additionalPredicates ...FileInfoPredicate) error {
 	defaultPredicates := []FileInfoPredicate{OnlyYaml}
-	manifestPredicates := []FileContentsPredicate{InstallerFeatureSet(featureSet)}
+	manifestPredicates := []FileContentsPredicate{
+		InstallerFeatureSet(featureSet),
+		ClusterProfile(clusterProfile),
+		BootstrapRequiredCRD(),
+	}
 
 	// write assets
 	manifests, err := New(

@@ -29,12 +29,13 @@ func (b noBools) Validate(crd *apiextensionsv1.CustomResourceDefinition) (Compar
 
 	for _, newVersion := range crd.Spec.Versions {
 		newBoolFields := []string{}
-		SchemaHas(newVersion.Schema.OpenAPIV3Schema, field.NewPath("^"), field.NewPath("^"), func(s *apiextensionsv1.JSONSchemaProps, fldPath, simpleLocation *field.Path) bool {
-			if s.Type == "boolean" {
-				newBoolFields = append(newBoolFields, simpleLocation.String())
-			}
-			return false
-		})
+		SchemaHas(newVersion.Schema.OpenAPIV3Schema, field.NewPath("^"), field.NewPath("^"), nil,
+			func(s *apiextensionsv1.JSONSchemaProps, fldPath, simpleLocation *field.Path, _ []*apiextensionsv1.JSONSchemaProps) bool {
+				if s.Type == "boolean" {
+					newBoolFields = append(newBoolFields, simpleLocation.String())
+				}
+				return false
+			})
 
 		for _, newBoolField := range newBoolFields {
 			errsToReport = append(errsToReport, fmt.Sprintf("crd/%v version/%v field/%v may not be a boolean", crd.Name, newVersion.Name, newBoolField))

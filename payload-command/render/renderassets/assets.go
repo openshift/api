@@ -134,7 +134,7 @@ func InstallerFeatureSet(featureSet string) FileContentsPredicate {
 		targetFeatureSet = featureSet
 	}
 	return func(manifest []byte) (bool, error) {
-		uncastObj, _, err := unstructured.UnstructuredJSONScheme.Decode(manifest, nil, &unstructured.Unstructured{})
+		uncastObj, _, err := codecs.UniversalDecoder().Decode(manifest, nil, &unstructured.Unstructured{})
 		if err != nil {
 			panic(fmt.Errorf("unable to decode: %w", err))
 		}
@@ -147,6 +147,56 @@ func InstallerFeatureSet(featureSet string) FileContentsPredicate {
 			if manifestFeatureSet == targetFeatureSet {
 				return true, nil
 			}
+		}
+		return false, nil
+	}
+}
+
+// ClusterProfile returns a predicate for LoadFilesRecursively that filters manifests
+// based on the specified FeatureSet.
+func ClusterProfile(clusterProfile string) FileContentsPredicate {
+	// be compatible with previous behavior
+	if len(clusterProfile) == 0 {
+		return func(manifest []byte) (bool, error) {
+			return true, nil
+		}
+	}
+
+	clusterProfileAnnotationName := fmt.Sprintf("include.release.openshift.io/%s", clusterProfile)
+	return func(manifest []byte) (bool, error) {
+		uncastObj, _, err := codecs.UniversalDecoder().Decode(manifest, nil, &unstructured.Unstructured{})
+		if err != nil {
+			panic(fmt.Errorf("unable to decode: %w", err))
+		}
+
+		isClusterProfileEnabled := uncastObj.(*unstructured.Unstructured).GetAnnotations()[clusterProfileAnnotationName]
+		if isClusterProfileEnabled == "true" {
+			return true, nil
+		}
+		return false, nil
+	}
+}
+
+// BootstrapRequiredCRD returns a predicate for LoadFilesRecursively that filters manifests
+// based on whether they are marked as being required for bootstrap or not.
+func BootstrapRequiredCRD() FileContentsPredicate {
+	return func(manifest []byte) (bool, error) {
+		uncastObj, _, err := codecs.UniversalDecoder().Decode(manifest, nil, &unstructured.Unstructured{})
+		if err != nil {
+			panic(fmt.Errorf("unable to decode: %w", err))
+		}
+
+		isBootstrapCRD := uncastObj.(*unstructured.Unstructured).GetAnnotations()["release.openshift.io/bootstrap-required"]
+		isCapabilityCRD := uncastObj.(*unstructured.Unstructured).GetAnnotations()["capability.openshift.io/name"]
+
+		if isBootstrapCRD == "true" {
+			if isCapabilityCRD != "" {
+				// Until Cluster Bootstrap can understand the capability annotation, we should error if a CRD has both annotations.
+				// Target to remove this before 4.17 closes out.
+				panic(fmt.Errorf("CRD %s has both bootstrap-required and capability annotations. These are currently not compatible annotations.", uncastObj.(*unstructured.Unstructured).GetName()))
+			}
+
+			return true, nil
 		}
 		return false, nil
 	}

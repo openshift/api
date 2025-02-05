@@ -1,12 +1,14 @@
 package schemacheck
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
 
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
+	"github.com/go-git/go-git/v5/plumbing/object"
 	"github.com/openshift/api/tools/codegen/pkg/generation"
 	"github.com/openshift/crd-schema-checker/pkg/cmd/options"
 	"github.com/openshift/crd-schema-checker/pkg/resourceread"
@@ -78,10 +80,10 @@ func (g *generator) Name() string {
 }
 
 // GenGroup runs the schemacheck generator against the given group context.
-func (g *generator) GenGroup(groupCtx generation.APIGroupContext) error {
+func (g *generator) GenGroup(groupCtx generation.APIGroupContext) ([]generation.Result, error) {
 	if g.disabled {
 		klog.V(2).Infof("Skipping API schema check for %s", groupCtx.Name)
-		return nil
+		return nil, nil
 	}
 
 	errs := []error{}
@@ -91,68 +93,85 @@ func (g *generator) GenGroup(groupCtx generation.APIGroupContext) error {
 	comparatorOptions.DisabledComparators = g.disabledComparators
 
 	if err := comparatorOptions.Validate(); err != nil {
-		return fmt.Errorf("could not validate comparator options: %w", err)
+		return nil, fmt.Errorf("could not validate comparator options: %w", err)
 	}
 
 	comparatorConfig, err := comparatorOptions.Complete()
 	if err != nil {
-		return fmt.Errorf("could not complete comparator options: %w", err)
+		return nil, fmt.Errorf("could not complete comparator options: %w", err)
 	}
+
+	var results []generation.Result
 
 	for _, version := range groupCtx.Versions {
 		klog.V(1).Infof("Verifying API schema for for %s/%s", groupCtx.Name, version.Name)
 
-		if err := g.genGroupVersion(groupCtx.Name, version, comparatorConfig); err != nil {
+		r, err := g.genGroupVersion(groupCtx.Name, version, comparatorConfig)
+		if err != nil {
 			errs = append(errs, fmt.Errorf("could not run schemacheck generator for group/version %s/%s: %w", groupCtx.Name, version.Name, err))
 		}
+
+		results = append(results, r...)
 	}
 
 	if len(errs) > 0 {
-		return kerrors.NewAggregate(errs)
+		return results, kerrors.NewAggregate(errs)
 	}
 
-	return nil
+	return results, nil
 }
 
 // genGroupVersion runs the schemacheck generator against a particular version of the API group.
-func (g *generator) genGroupVersion(group string, version generation.APIVersionContext, comparatorConfig *options.ComparatorConfig) error {
+func (g *generator) genGroupVersion(group string, version generation.APIVersionContext, comparatorConfig *options.ComparatorConfig) ([]generation.Result, error) {
 	contexts, err := loadSchemaCheckGenerationContextsForVersion(version, g.comparisonBase)
 	if err != nil {
-		return fmt.Errorf("could not load schema check generation contexts for group/version %s/%s: %w", group, version.Name, err)
+		return nil, fmt.Errorf("could not load schema check generation contexts for group/version %s/%s: %w", group, version.Name, err)
+	}
+
+	if len(contexts) == 0 {
+		klog.V(1).Infof("No CRD manifests found for %s/%s", group, version.Name)
+		return nil, nil
 	}
 
 	var manifestErrs []error
+	var results []generation.Result
 
 	for _, context := range contexts {
 		klog.V(1).Infof("Verifying schema for %s\n", context.manifestName)
 		comparisonResults, errs := comparatorConfig.ComparatorRegistry.Compare(context.oldCRD, context.manifestCRD, comparatorConfig.ComparatorNames...)
-		if len(errs) > 0 {
-			return fmt.Errorf("could not compare manifests for %s: %w", context.manifestName, kerrors.NewAggregate(errs))
+
+		result := generation.Result{
+			Generator: g.Name(),
+			Group:     group,
+			Version:   version.Name,
+			Manifest:  context.manifestName,
+			Errors:    errs,
 		}
+
+		manifestErrs = append(manifestErrs, errs...)
 
 		for _, comparisonResult := range comparisonResults {
 			for _, msg := range comparisonResult.Errors {
-				manifestErrs = append(manifestErrs, fmt.Errorf("error in %s: %s: %v", context.manifestName, comparisonResult.Name, msg))
-			}
-		}
-
-		for _, comparisonResult := range comparisonResults {
-			for _, msg := range comparisonResult.Warnings {
-				klog.Warningf("warning in %s: %s: %v", context.manifestName, comparisonResult.Name, msg)
+				err := fmt.Errorf("%s: %w", comparisonResult.Name, errors.New(msg))
+				manifestErrs = append(manifestErrs, err)
+				result.Errors = append(result.Errors, err)
 			}
 		}
 		for _, comparisonResult := range comparisonResults {
-			for _, msg := range comparisonResult.Infos {
-				klog.Infof("info in %s: %s: %v", context.manifestName, comparisonResult.Name, msg)
+			for _, warning := range comparisonResult.Warnings {
+				result.Warnings = append(result.Warnings, fmt.Sprintf("%s: %s", comparisonResult.Name, warning))
 			}
 		}
+		for _, comparisonResult := range comparisonResults {
+			for _, info := range comparisonResult.Infos {
+				result.Info = append(result.Info, fmt.Sprintf("%s: %s", comparisonResult.Name, info))
+			}
+		}
+
+		results = append(results, result)
 	}
 
-	if len(manifestErrs) > 0 {
-		return kerrors.NewAggregate(manifestErrs)
-	}
-
-	return nil
+	return results, kerrors.NewAggregate(manifestErrs)
 }
 
 // schemaCheckGenerationContext contains the context required to verify the schema for a particular
@@ -167,8 +186,6 @@ type schemaCheckGenerationContext struct {
 // within a particular API group version.
 // It finds all CRD manifests, loads the data and the original version of the manifest for comparison.
 func loadSchemaCheckGenerationContextsForVersion(version generation.APIVersionContext, gitBaseSHA string) ([]schemaCheckGenerationContext, error) {
-	errs := []error{}
-
 	repo, err := git.PlainOpenWithOptions(version.Path, &git.PlainOpenOptions{
 		DetectDotGit: true,
 	})
@@ -193,7 +210,18 @@ func loadSchemaCheckGenerationContextsForVersion(version generation.APIVersionCo
 		return nil, fmt.Errorf("could not resolve git commit %s: %w", gitBaseSHA, err)
 	}
 
-	dirEntries, err := os.ReadDir(version.Path)
+	generationContexts, err := loadSchemaCheckGenerationContextsForVersionFromDir(version, baseCommit, repoBaseDir, version.Path, gitBaseSHA)
+	if err != nil {
+		return nil, fmt.Errorf("could not load schema check generation contexts from dir %q: %w", repoBaseDir, err)
+	}
+
+	return generationContexts, nil
+}
+
+func loadSchemaCheckGenerationContextsForVersionFromDir(version generation.APIVersionContext, baseCommit *object.Commit, repoBaseDir, searchPath, gitBaseSHA string) ([]schemaCheckGenerationContext, error) {
+	var errs []error
+
+	dirEntries, err := os.ReadDir(searchPath)
 	if err != nil {
 		return nil, fmt.Errorf("could not read file info for directory %s: %v", version.Path, err)
 	}
@@ -201,12 +229,22 @@ func loadSchemaCheckGenerationContextsForVersion(version generation.APIVersionCo
 	generationContexts := []schemaCheckGenerationContext{}
 
 	for _, fileInfo := range dirEntries {
-		// Ignore any file that isn't a yaml file.
-		if fileInfo.IsDir() || filepath.Ext(fileInfo.Name()) != ".yaml" {
+		if fileInfo.IsDir() {
+			subContexts, err := loadSchemaCheckGenerationContextsForVersionFromDir(version, baseCommit, repoBaseDir, filepath.Join(searchPath, fileInfo.Name()), gitBaseSHA)
+			if err != nil {
+				errs = append(errs, fmt.Errorf("could not load schema check generation contexts from dir %q: %v", filepath.Join(searchPath, fileInfo.Name()), err))
+				continue
+			}
+
+			generationContexts = append(generationContexts, subContexts...)
 			continue
 		}
 
-		path := filepath.Join(version.Path, fileInfo.Name())
+		if filepath.Ext(fileInfo.Name()) != ".yaml" {
+			continue
+		}
+
+		path := filepath.Join(searchPath, fileInfo.Name())
 		data, err := os.ReadFile(path)
 		if err != nil {
 			errs = append(errs, fmt.Errorf("could not read file %s: %v", path, err))
@@ -227,6 +265,22 @@ func loadSchemaCheckGenerationContextsForVersion(version generation.APIVersionCo
 		crd, err := resourceread.ReadCustomResourceDefinitionV1(data)
 		if err != nil {
 			errs = append(errs, fmt.Errorf("could not read CustomResourceDefinition from file %s: %v", path, err))
+			continue
+		}
+
+		hasVersionedSchema := false
+		for i, version := range crd.Spec.Versions {
+			if version.Schema != nil && version.Schema.OpenAPIV3Schema != nil {
+				hasVersionedSchema = true
+				break
+			} else {
+				// Remove the version if it doesn't have a schema in case there are multiple versions.
+				crd.Spec.Versions = append(crd.Spec.Versions[:i], crd.Spec.Versions[i+1:]...)
+			}
+		}
+
+		if !hasVersionedSchema {
+			klog.V(1).Infof("Skipping schema check for %s as it does not have a versioned schema", path)
 			continue
 		}
 
@@ -254,10 +308,26 @@ func loadSchemaCheckGenerationContextsForVersion(version generation.APIVersionCo
 				errs = append(errs, fmt.Errorf("could not read CustomResourceDefinition from file %s in git commit %s: %v", oldFilePath, gitBaseSHA, err))
 				continue
 			}
+
+			hasVersionedSchema := false
+			for i, version := range oldCRD.Spec.Versions {
+				if version.Schema != nil && version.Schema.OpenAPIV3Schema != nil {
+					hasVersionedSchema = true
+					break
+				} else {
+					// Remove the version if it doesn't have a schema in case there are multiple versions.
+					oldCRD.Spec.Versions = append(oldCRD.Spec.Versions[:i], oldCRD.Spec.Versions[i+1:]...)
+				}
+			}
+
+			if !hasVersionedSchema {
+				// We still want to check the new schema.
+				oldCRD = nil
+			}
 		}
 
 		generationContexts = append(generationContexts, schemaCheckGenerationContext{
-			manifestName: fileInfo.Name(),
+			manifestName: oldFilePath,
 			manifestCRD:  crd,
 			oldCRD:       oldCRD,
 		})

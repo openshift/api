@@ -31,7 +31,12 @@ import (
 // +genclient
 // +k8s:openapi-gen=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:object:root=true
+// +kubebuilder:resource:path=alertingrules,scope=Namespaced
 // +kubebuilder:subresource:status
+// +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/1406
+// +openshift:file-pattern=cvoRunLevel=0000_50,operatorName=monitoring,operatorOrdering=01
+// +kubebuilder:metadata:annotations="description=OpenShift Monitoring alerting rules"
 type AlertingRule struct {
 	metav1.TypeMeta `json:",inline"`
 	// metadata is the standard object's metadata.
@@ -39,7 +44,7 @@ type AlertingRule struct {
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	// spec describes the desired state of this AlertingRule object.
-	// +kubebuilder:validation:Required
+	// +required
 	Spec AlertingRuleSpec `json:"spec"`
 
 	// status describes the current state of this AlertOverrides object.
@@ -62,8 +67,8 @@ type AlertingRuleList struct {
 	metav1.ListMeta `json:"metadata,omitempty"`
 
 	// items is a list of AlertingRule objects.
-	// +kubebuilder:validation:Required
-	Items []AlertingRule `json:"items"`
+	// +optional
+	Items []AlertingRule `json:"items,omitempty"`
 }
 
 // AlertingRuleSpec is the desired state of an AlertingRule resource.
@@ -88,7 +93,7 @@ type AlertingRuleSpec struct {
 	// +listType=map
 	// +listMapKey=name
 	// +kubebuilder:validation:MinItems:=1
-	// +kubebuilder:validation:Required
+	// +required
 	Groups []RuleGroup `json:"groups"`
 }
 
@@ -105,7 +110,7 @@ type Duration string
 type RuleGroup struct {
 	// name is the name of the group.
 	//
-	// +kubebuilder:validation:Required
+	// +required
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=2048
 	Name string `json:"name"`
@@ -125,7 +130,7 @@ type RuleGroup struct {
 	// processed sequentially, and all rules are processed.
 	//
 	// +kubebuilder:validation:MinItems:=1
-	// +kubebuilder:validation:Required
+	// +required
 	Rules []Rule `json:"rules"`
 }
 
@@ -138,7 +143,7 @@ type Rule struct {
 	// alert is the name of the alert. Must be a valid label value, i.e. may
 	// contain any Unicode character.
 	//
-	// +kubebuilder:validation:Required
+	// +required
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=2048
 	Alert string `json:"alert"`
@@ -152,7 +157,7 @@ type Rule struct {
 	// to create an always-firing "Watchdog" alert in order to ensure the alerting
 	// pipeline is functional.
 	//
-	// +kubebuilder:validation:Required
+	// +required
 	Expr intstr.IntOrString `json:"expr"`
 
 	// for is the time period after which alerts are considered firing after first
@@ -205,7 +210,7 @@ type PrometheusRuleRef struct {
 	// the reference should we ever need to.
 
 	// name of the referenced PrometheusRule.
-	// +kubebuilder:validation:Required
+	// +required
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=2048
 	Name string `json:"name"`
@@ -220,6 +225,12 @@ type PrometheusRuleRef struct {
 // Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=1
 // +k8s:openapi-gen=true
+// +kubebuilder:object:root=true
+// +kubebuilder:resource:path=alertrelabelconfigs,scope=Namespaced
+// +kubebuilder:subresource:status
+// +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/1406
+// +openshift:file-pattern=cvoRunLevel=0000_50,operatorName=monitoring,operatorOrdering=02
+// +kubebuilder:metadata:annotations="description=OpenShift Monitoring alert relabel configurations"
 type AlertRelabelConfig struct {
 	metav1.TypeMeta `json:",inline"`
 	// metadata is the standard object's metadata.
@@ -227,7 +238,7 @@ type AlertRelabelConfig struct {
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	// spec describes the desired state of this AlertRelabelConfig object.
-	// +kubebuilder:validation:Required
+	// +required
 	Spec AlertRelabelConfigSpec `json:"spec"`
 
 	// status describes the current state of this AlertRelabelConfig object.
@@ -243,7 +254,7 @@ type AlertRelabelConfigSpec struct {
 	// configs is a list of sequentially evaluated alert relabel configs.
 	//
 	// +kubebuilder:validation:MinItems:=1
-	// +kubebuilder:validation:Required
+	// +required
 	Configs []RelabelConfig `json:"configs"`
 }
 
@@ -274,9 +285,8 @@ type AlertRelabelConfigList struct {
 	metav1.ListMeta `json:"metadata,omitempty"`
 
 	// items is a list of AlertRelabelConfigs.
-	// +kubebuilder:validation:MinItems:=1
-	// +kubebuilder:validation:Required
-	Items []*AlertRelabelConfig `json:"items"`
+	// +optional
+	Items []AlertRelabelConfig `json:"items,omitempty"`
 }
 
 // LabelName is a valid Prometheus label name which may only contain ASCII

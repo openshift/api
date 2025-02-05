@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"testing"
 
 	. "github.com/onsi/ginkgo/v2"
@@ -35,6 +36,7 @@ func TestAPIs(t *testing.T) {
 	g := NewGomegaWithT(t)
 
 	var err error
+	// this assumes a directory.  Because it does, we shall assume a path to the serialized featuregate manifests too.
 	suites, err = LoadTestSuiteSpecs(filepath.Join(".."))
 	g.Expect(err).ToNot(HaveOccurred())
 
@@ -69,7 +71,7 @@ var _ = BeforeSuite(func() {
 
 	Expect(serverVersion.Major).To(Equal("1"))
 
-	minorInt, err := strconv.Atoi(serverVersion.Minor)
+	minorInt, err := strconv.Atoi(strings.Split(serverVersion.Minor, "+")[0])
 	Expect(err).ToNot(HaveOccurred())
 	Expect(minorInt).To(BeNumerically(">=", 25), fmt.Sprintf("This test suite requires a Kube API server of at least version 1.25, current version is 1.%s", serverVersion.Minor))
 

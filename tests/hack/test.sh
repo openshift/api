@@ -19,7 +19,7 @@ if [ $HOME == "/" ]; then
 fi
 
 if [ "$OPENSHIFT_CI" == "true" ] && [ -n "$ARTIFACT_DIR" ] && [ -d "$ARTIFACT_DIR" ]; then # detect ci environment there
-  GINKGO_ARGS="${GINKGO_ARGS} --junit-report=junit_api_example_tests.xml --cover --output-dir=${ARTIFACT_DIR}"
+  GINKGO_ARGS="${GINKGO_ARGS} --junit-report=junit_api_example_tests.xml --cover --output-dir=${ARTIFACT_DIR} --no-color"
 fi
 
 # Print the command we are going to run as Make would.

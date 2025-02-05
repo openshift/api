@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"sort"
 	"testing"
 
 	"github.com/openshift/crd-schema-checker/pkg/resourceread"
@@ -54,6 +55,25 @@ func AllTestsInDirForComparator(comparator CRDComparator, directory string) ([]*
 	registry := NewRegistry()
 	registry.AddComparator(comparator)
 	return AllTestsInDirForRegistry(registry, directory)
+}
+
+func AllTestsInDirForComparators(comparators []CRDComparator, directory string) ([]*simpleComparatorTest, error) {
+	registry := NewRegistry()
+	for _, c := range comparators {
+		registry.AddComparator(c)
+	}
+	return AllTestsInDirForRegistry(registry, directory)
+}
+
+func RunAllTestsInDirForComparators(t *testing.T, comparators []CRDComparator, directory string) {
+	tests, err := AllTestsInDirForComparators(comparators, directory)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	for _, test := range tests {
+		t.Run(test.ComparatorTest.Name, test.Test)
+	}
 }
 
 func RunAllTestsInDirForComparator(t *testing.T, comparator CRDComparator, directory string) {
@@ -229,6 +249,14 @@ func (tc *ComparatorTest) Test(t *testing.T, actualResults []ComparisonResults, 
 		if err != nil {
 			t.Error(err)
 		}
+
+		sort.Strings(expected.Errors)
+		sort.Strings(actual.Errors)
+		sort.Strings(expected.Warnings)
+		sort.Strings(actual.Warnings)
+		sort.Strings(expected.Infos)
+		sort.Strings(actual.Infos)
+
 		noErrorsAsExpected := len(expected.Errors) == 0 && len(actual.Errors) == 0
 		if !noErrorsAsExpected && !reflect.DeepEqual(expected.Errors, actual.Errors) {
 			t.Errorf("mismatched errors for expectedResults[%v]: expected\n%v\n, got\n%v\n", expected.Name, string(expectedBytes), string(actualBytes))

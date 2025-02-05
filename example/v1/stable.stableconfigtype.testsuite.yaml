@@ -1,6 +1,6 @@
 apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
 name: "[Stable] Example API"
-crd: 0000_50_stabletype-Default.crd.yaml
+crd: 0000_50_my-operator_01_stableconfigtypes-Default.crd.yaml
 tests:
   onCreate:
   - name: Should persist stable fields
@@ -43,6 +43,44 @@ tests:
         evolvingUnion:
           type: ""
         immutableField: foo
+  - name: With a Set, basic test
+    initial: |
+      apiVersion: example.openshift.io/v1
+      kind: StableConfigType
+      spec:
+        set: 
+          - "Foo"
+          - "Bar"
+        immutableField: foo
+    expected: |
+      apiVersion: example.openshift.io/v1
+      kind: StableConfigType
+      spec:
+        set: 
+          - "Foo"
+          - "Bar"
+        immutableField: foo
+  - name: With a Set, invalid value in the Set
+    initial: |
+      apiVersion: example.openshift.io/v1
+      kind: StableConfigType
+      spec:
+        set: 
+          - "Invalid value"
+          - "Bar"
+        immutableField: foo
+    expectedError: "Unsupported value: \"Invalid value\": supported values: \"Foo\", \"Bar\", \"Baz\", \"Qux\", \"Corge\""
+  - name: With a Set, repeating value in the Set
+    initial: |
+      apiVersion: example.openshift.io/v1
+      kind: StableConfigType
+      spec:
+        set: 
+          - "Foo"
+          - "Bar"
+          - "Foo"
+        immutableField: foo
+    expectedError: "Duplicate value: \"Foo\", spec.set: Invalid value: \"array\": failed rule: self.all(x,self.exists_one(y,x == y))]"
   - name: With an EvolvingUnion, Should allow a Stable enum value
     initial: |
       apiVersion: example.openshift.io/v1
@@ -129,6 +167,7 @@ tests:
       kind: StableConfigType
       spec:
         celUnion:
+          type: OptionalMember
           requiredMember: foo
         immutableField: foo
     expectedError: "Invalid value: \"object\": requiredMember is required when type is RequiredMember, and forbidden otherwise"
@@ -181,6 +220,7 @@ tests:
       kind: StableConfigType
       spec:
         celUnion:
+          type: RequiredMember
           optionalMember: foo
         immutableField: foo
     expectedError: "Invalid value: \"object\": optionalMember is forbidden when type is not OptionalMember"

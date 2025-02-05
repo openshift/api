@@ -1,0 +1,462 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "Infrastructure"
+crdName: infrastructures.config.openshift.io
+featureGates:
+- VSphereMultiVCenters
+tests:
+  onCreate:
+    - name: Should be able to create a minimal Infrastructure
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {} # No spec is required for a Infrastructure
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+    - name: Should be able to pass more than 1 entries to vcenters in the vsphere platform spec
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              failureDomains:
+              - name: generated-failure-domain
+                region: generated-region
+                server: server1.dev.cluster.com
+                topology:
+                  computeCluster: /IBMCloud/host/vcs-8e-workload
+                  datacenter: IBMCloud
+                  datastore: /IBMCloud/datastore/mdcnc-ds-shared
+                  networks:
+                    - ocp-ci-seg-13
+                  resourcePool: /IBMCloud/host/vcs-8e-workload/Resources
+                  template: /IBMCloud/vm/ngirard-dev-rqh5s-rhcos-generated-region-generated-zone
+                zone: generated-zone            
+              nodeNetworking:
+                external: {}
+                internal: {}
+              vcenters:
+              - datacenters:
+                - IBMCloud
+                port: 443
+                server: server1.dev.cluster.com
+              - datacenters:
+                - IBMCloud2
+                port: 443
+                server: server2.dev.cluster.com
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              failureDomains:
+              - name: generated-failure-domain
+                region: generated-region
+                server: server1.dev.cluster.com
+                topology:
+                  computeCluster: /IBMCloud/host/vcs-8e-workload
+                  datacenter: IBMCloud
+                  datastore: /IBMCloud/datastore/mdcnc-ds-shared
+                  networks:
+                    - ocp-ci-seg-13
+                  resourcePool: /IBMCloud/host/vcs-8e-workload/Resources
+                  template: /IBMCloud/vm/ngirard-dev-rqh5s-rhcos-generated-region-generated-zone
+                zone: generated-zone            
+              nodeNetworking:
+                external: {}
+                internal: {}
+              vcenters:
+              - datacenters:
+                - IBMCloud
+                port: 443
+                server: server1.dev.cluster.com
+              - datacenters:
+                - IBMCloud2
+                port: 443
+                server: server2.dev.cluster.com
+    - name: Should not be able to pass more than 3 entries to vcenters in the vsphere platform spec
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              failureDomains:
+              - name: generated-failure-domain
+                region: generated-region
+                server: server1.dev.cluster.com
+                topology:
+                  computeCluster: /IBMCloud/host/vcs-8e-workload
+                  datacenter: IBMCloud
+                  datastore: /IBMCloud/datastore/mdcnc-ds-shared
+                  networks:
+                    - ocp-ci-seg-13
+                  resourcePool: /IBMCloud/host/vcs-8e-workload/Resources
+                  template: /IBMCloud/vm/ngirard-dev-rqh5s-rhcos-generated-region-generated-zone
+                zone: generated-zone            
+              nodeNetworking:
+                external: {}
+                internal: {}
+              vcenters:
+              - datacenters:
+                - IBMCloud
+                port: 443
+                server: server1.dev.cluster.com
+              - datacenters:
+                - IBMCloud2
+                port: 443
+                server: server2.dev.cluster.com
+              - datacenters:
+                - IBMCloud2
+                port: 443
+                server: server3.dev.cluster.com
+              - datacenters:
+                - IBMCloud2
+                port: 443
+                server: server4.dev.cluster.com
+      expectedError: "Too many: 4: must have at most 3 items"
+  onUpdate:
+    - name: Should be able to modify vCenters to single from empty spec
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              failureDomains:
+              - name: generated-failure-domain
+                region: generated-region
+                server: server1.dev.cluster.com
+                topology:
+                  computeCluster: /IBMCloud/host/vcs-8e-workload
+                  datacenter: IBMCloud
+                  datastore: /IBMCloud/datastore/mdcnc-ds-shared
+                  networks:
+                    - ocp-ci-seg-13
+                  resourcePool: /IBMCloud/host/vcs-8e-workload/Resources
+                  template: /IBMCloud/vm/ngirard-dev-rqh5s-rhcos-generated-region-generated-zone
+                zone: generated-zone   
+              vcenters:
+                - datacenters:
+                    - IBMCloud
+                  port: 443
+                  server: vcs8e-vc.ocp2.dev.cluster.com
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              failureDomains:
+              - name: generated-failure-domain
+                region: generated-region
+                server: server1.dev.cluster.com
+                topology:
+                  computeCluster: /IBMCloud/host/vcs-8e-workload
+                  datacenter: IBMCloud
+                  datastore: /IBMCloud/datastore/mdcnc-ds-shared
+                  networks:
+                    - ocp-ci-seg-13
+                  resourcePool: /IBMCloud/host/vcs-8e-workload/Resources
+                  template: /IBMCloud/vm/ngirard-dev-rqh5s-rhcos-generated-region-generated-zone
+                zone: generated-zone   
+              vcenters:
+                - datacenters:
+                    - IBMCloud
+                  port: 443
+                  server: vcs8e-vc.ocp2.dev.cluster.com
+    - name: Should not be able to update vCenters to more than one from empty spec
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              failureDomains:
+              - name: fd1
+                region: region
+                server: server1.dev.cluster.com
+                topology:
+                  computeCluster: /IBMCloud/host/vcs-8e-workload
+                  datacenter: IBMCloud
+                  datastore: /IBMCloud/datastore/mdcnc-ds-shared
+                  networks:
+                    - ocp-ci-seg-13
+                  resourcePool: /IBMCloud/host/vcs-8e-workload/Resources
+                  template: /IBMCloud/vm/ngirard-dev-rqh5s-rhcos-generated-region-generated-zone
+                zone: zone
+              - name: fd2
+                region: region-2
+                server: server2.dev.cluster.com
+                topology:
+                  computeCluster: /IBMCloud2/host/vcs-8e-workload
+                  datacenter: IBMCloud2
+                  datastore: /IBMCloud2/datastore/mdcnc-ds-shared
+                  networks:
+                    - ocp-ci-seg-13
+                  resourcePool: /IBMCloud2/host/vcs-8e-workload/Resources
+                  template: /IBMCloud2/vm/ngirard-dev-rqh5s-rhcos-generated-region-generated-zone
+                zone: zone-2
+              vcenters:
+                - datacenters:
+                    - IBMCloud
+                  port: 443
+                  server: server1.dev.cluster.com
+                - datacenters:
+                    - IBMCloud
+                  port: 443
+                  server: server2.dev.cluster.com
+      expectedError: "vcenters can have at most 1 item when configured post-install"
+    - name: Should not be able to update vCenters to more than one from partial spec that is missing vcenters
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              apiVIPs:
+                - 10.38.202.2
+              ingressVIPs:
+                - 10.38.202.3
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              failureDomains:
+              - name: fd1
+                region: region
+                server: server1.dev.cluster.com
+                topology:
+                  computeCluster: /IBMCloud/host/vcs-8e-workload
+                  datacenter: IBMCloud
+                  datastore: /IBMCloud/datastore/mdcnc-ds-shared
+                  networks:
+                    - ocp-ci-seg-13
+                  resourcePool: /IBMCloud/host/vcs-8e-workload/Resources
+                  template: /IBMCloud/vm/ngirard-dev-rqh5s-rhcos-generated-region-generated-zone
+                zone: zone
+              - name: fd2
+                region: region-2
+                server: server2.dev.cluster.com
+                topology:
+                  computeCluster: /IBMCloud2/host/vcs-8e-workload
+                  datacenter: IBMCloud2
+                  datastore: /IBMCloud2/datastore/mdcnc-ds-shared
+                  networks:
+                    - ocp-ci-seg-13
+                  resourcePool: /IBMCloud2/host/vcs-8e-workload/Resources
+                  template: /IBMCloud2/vm/ngirard-dev-rqh5s-rhcos-generated-region-generated-zone
+                zone: zone-2
+              vcenters:
+                - datacenters:
+                    - IBMCloud
+                  port: 443
+                  server: server1.dev.cluster.com
+                - datacenters:
+                    - IBMCloud
+                  port: 443
+                  server: server2.dev.cluster.com
+      expectedError: "vcenters can have at most 1 item when configured post-install"
+    - name: Should be able to update vCenter config
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              failureDomains:
+              - name: fd1
+                region: generated-region
+                server: server1.dev.cluster.com
+                topology:
+                  computeCluster: /IBMCloud/host/vcs-8e-workload
+                  datacenter: IBMCloud
+                  datastore: /IBMCloud/datastore/mdcnc-ds-shared
+                  networks:
+                    - ocp-ci-seg-13
+                  resourcePool: /IBMCloud/host/vcs-8e-workload/Resources
+                  template: /IBMCloud/vm/ngirard-dev-rqh5s-rhcos-generated-region-generated-zone
+                zone: generated-zone   
+              vcenters:
+                - datacenters:
+                    - IBMCloud
+                  port: 443
+                  server: server1.dev.cluster.com
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              failureDomains:
+              - name: fd1
+                region: generated-region
+                server: server1.dev.cluster.com
+                topology:
+                  computeCluster: /IBMCloud/host/vcs-8e-workload
+                  datacenter: IBMCloud
+                  datastore: /IBMCloud/datastore/mdcnc-ds-shared
+                  networks:
+                    - ocp-ci-seg-13
+                  resourcePool: /IBMCloud/host/vcs-8e-workload/Resources
+                  template: /IBMCloud/vm/ngirard-dev-rqh5s-rhcos-generated-region-generated-zone
+                zone: generated-zone
+              - name: fd2
+                region: generated-region
+                server: server1.dev.cluster.com
+                topology:
+                  computeCluster: /IBMCloud2/host/vcs-8e-workload
+                  datacenter: IBMCloud2
+                  datastore: /IBMCloud2/datastore/mdcnc-ds-shared
+                  networks:
+                    - ocp-ci-seg-13
+                  resourcePool: /IBMCloud2/host/vcs-8e-workload/Resources
+                  template: /IBMCloud2/vm/ngirard-dev-rqh5s-rhcos-generated-region-generated-zone
+                zone: generated-zone
+              vcenters:
+                - datacenters:
+                    - IBMCloud
+                    - IBMCloud2
+                  port: 443
+                  server: server1.dev.cluster.com
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              failureDomains:
+              - name: fd1
+                region: generated-region
+                server: server1.dev.cluster.com
+                topology:
+                  computeCluster: /IBMCloud/host/vcs-8e-workload
+                  datacenter: IBMCloud
+                  datastore: /IBMCloud/datastore/mdcnc-ds-shared
+                  networks:
+                    - ocp-ci-seg-13
+                  resourcePool: /IBMCloud/host/vcs-8e-workload/Resources
+                  template: /IBMCloud/vm/ngirard-dev-rqh5s-rhcos-generated-region-generated-zone
+                zone: generated-zone
+              - name: fd2
+                region: generated-region
+                server: server1.dev.cluster.com
+                topology:
+                  computeCluster: /IBMCloud2/host/vcs-8e-workload
+                  datacenter: IBMCloud2
+                  datastore: /IBMCloud2/datastore/mdcnc-ds-shared
+                  networks:
+                    - ocp-ci-seg-13
+                  resourcePool: /IBMCloud2/host/vcs-8e-workload/Resources
+                  template: /IBMCloud2/vm/ngirard-dev-rqh5s-rhcos-generated-region-generated-zone
+                zone: generated-zone
+              vcenters:
+                - datacenters:
+                    - IBMCloud
+                    - IBMCloud2
+                  port: 443
+                  server: server1.dev.cluster.com
+    - name: Should not be able to set vCenters to multiple from single vcenter
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+                - datacenters:
+                    - IBMCloud
+                  port: 443
+                  server: server1.dev.cluster.com
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+                - datacenters:
+                    - IBMCloud
+                  port: 443
+                  server: server1.dev.cluster.com
+                - datacenters:
+                    - IBMCloud
+                  port: 443
+                  server: server2.dev.cluster.com
+      expectedError: "vcenters cannot be added or removed once set"

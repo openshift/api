@@ -9,13 +9,8 @@ schemacheck:
   enabledValidators: []
   disabledValidators: []
 schemapatch:
-  disabled: false
-  requiredFeatureSets:
-  - ""
-  - "Default"
-  - "TechPreviewNoUpgrade"
-  - "CustomNoUpgrade"
 swaggerdocs:
   disabled: false
   commentPolicy: Warn
   outputFileName: zz_generated.swagger_doc_generated.go
+manifestMerge:

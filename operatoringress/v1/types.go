@@ -10,6 +10,10 @@ import (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
+// +kubebuilder:resource:path=dnsrecords,scope=Namespaced
+// +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/584
+// +openshift:capability=Ingress
+// +openshift:file-pattern=cvoRunLevel=0000_50,operatorName=dns,operatorOrdering=01
 
 // DNSRecord is a DNS record managed in the zones defined by
 // dns.config.openshift.io/cluster .spec.publicZone and .spec.privateZone.
@@ -39,25 +43,21 @@ type DNSRecord struct {
 type DNSRecordSpec struct {
 	// dnsName is the hostname of the DNS record
 	//
-	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=1
 	// +required
 	DNSName string `json:"dnsName"`
 	// targets are record targets.
 	//
-	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinItems=1
 	// +required
 	Targets []string `json:"targets"`
 	// recordType is the DNS record type. For example, "A" or "CNAME".
-	// +kubebuilder:validation:Required
 	// +required
 	RecordType DNSRecordType `json:"recordType"`
 	// recordTTL is the record TTL in seconds. If zero, the default is 30.
 	// RecordTTL will not be used in AWS regions Alias targets, but
 	// will be used in CNAME targets, per AWS API contract.
 	//
-	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Minimum=0
 	// +required
 	RecordTTL int64 `json:"recordTTL"`
@@ -73,7 +73,7 @@ type DNSRecordSpec struct {
 	// "Unmanaged".
 	//
 	// +kubebuilder:default:="Managed"
-	// +kubebuilder:validation:Required
+	// +required
 	// +default="Managed"
 	DNSManagementPolicy DNSManagementPolicy `json:"dnsManagementPolicy,omitempty"`
 }
@@ -116,11 +116,9 @@ var (
 
 // DNSZoneCondition is just the standard condition fields.
 type DNSZoneCondition struct {
-	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=1
 	// +required
 	Type string `json:"type"`
-	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=1
 	// +required
 	Status             string      `json:"status"`
@@ -158,7 +156,6 @@ const (
 )
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-// +kubebuilder:object:root=true
 
 // DNSRecordList contains a list of dnsrecords.
 //

@@ -4,12 +4,11 @@ import (
 	"container/list"
 	"errors"
 	"fmt"
+	"strconv"
 	"time"
-
-	"gopkg.in/yaml.v3"
 )
 
-func getStringParamter(parameterName string, d *dataTreeNavigator, context Context, expressionNode *ExpressionNode) (string, error) {
+func getStringParameter(parameterName string, d *dataTreeNavigator, context Context, expressionNode *ExpressionNode) (string, error) {
 	result, err := d.GetMatchingNodes(context.ReadOnlyClone(), expressionNode)
 
 	if err != nil {
@@ -18,12 +17,12 @@ func getStringParamter(parameterName string, d *dataTreeNavigator, context Conte
 		return "", fmt.Errorf("could not find %v for format_time", parameterName)
 	}
 
-	return result.MatchingNodes.Front().Value.(*CandidateNode).Node.Value, nil
+	return result.MatchingNodes.Front().Value.(*CandidateNode).Value, nil
 }
 
 func withDateTimeFormat(d *dataTreeNavigator, context Context, expressionNode *ExpressionNode) (Context, error) {
 	if expressionNode.RHS.Operation.OperationType == blockOpType || expressionNode.RHS.Operation.OperationType == unionOpType {
-		layout, err := getStringParamter("layout", d, context, expressionNode.RHS.LHS)
+		layout, err := getStringParameter("layout", d, context, expressionNode.RHS.LHS)
 		if err != nil {
 			return Context{}, fmt.Errorf("could not get date time format: %w", err)
 		}
@@ -38,15 +37,15 @@ func withDateTimeFormat(d *dataTreeNavigator, context Context, expressionNode *E
 // for unit tests
 var Now = time.Now
 
-func nowOp(d *dataTreeNavigator, context Context, expressionNode *ExpressionNode) (Context, error) {
+func nowOp(_ *dataTreeNavigator, context Context, _ *ExpressionNode) (Context, error) {
 
-	node := &yaml.Node{
+	node := &CandidateNode{
 		Tag:   "!!timestamp",
-		Kind:  yaml.ScalarNode,
+		Kind:  ScalarNode,
 		Value: Now().Format(time.RFC3339),
 	}
 
-	return context.SingleChildContext(&CandidateNode{Node: node}), nil
+	return context.SingleChildContext(node), nil
 
 }
 
@@ -62,7 +61,7 @@ func parseDateTime(layout string, datestring string) (time.Time, error) {
 }
 
 func formatDateTime(d *dataTreeNavigator, context Context, expressionNode *ExpressionNode) (Context, error) {
-	format, err := getStringParamter("format", d, context, expressionNode.RHS)
+	format, err := getStringParameter("format", d, context, expressionNode.RHS)
 	layout := context.GetDateTimeLayout()
 
 	if err != nil {
@@ -73,7 +72,7 @@ func formatDateTime(d *dataTreeNavigator, context Context, expressionNode *Expre
 	for el := context.MatchingNodes.Front(); el != nil; el = el.Next() {
 		candidate := el.Value.(*CandidateNode)
 
-		parsedTime, err := parseDateTime(layout, candidate.Node.Value)
+		parsedTime, err := parseDateTime(layout, candidate.Value)
 		if err != nil {
 			return Context{}, fmt.Errorf("could not parse datetime of [%v]: %w", candidate.GetNicePath(), err)
 		}
@@ -82,21 +81,22 @@ func formatDateTime(d *dataTreeNavigator, context Context, expressionNode *Expre
 		node, errorReading := parseSnippet(formattedTimeStr)
 		if errorReading != nil {
 			log.Debugf("could not parse %v - lets just leave it as a string: %w", formattedTimeStr, errorReading)
-			node = &yaml.Node{
-				Kind:  yaml.ScalarNode,
+			node = &CandidateNode{
+				Kind:  ScalarNode,
 				Tag:   "!!str",
 				Value: formattedTimeStr,
 			}
 		}
-
-		results.PushBack(candidate.CreateReplacement(node))
+		node.Parent = candidate.Parent
+		node.Key = candidate.Key
+		results.PushBack(node)
 	}
 
 	return context.ChildContext(results), nil
 }
 
 func tzOp(d *dataTreeNavigator, context Context, expressionNode *ExpressionNode) (Context, error) {
-	timezoneStr, err := getStringParamter("timezone", d, context, expressionNode.RHS)
+	timezoneStr, err := getStringParameter("timezone", d, context, expressionNode.RHS)
 	layout := context.GetDateTimeLayout()
 
 	if err != nil {
@@ -112,19 +112,69 @@ func tzOp(d *dataTreeNavigator, context Context, expressionNode *ExpressionNode)
 	for el := context.MatchingNodes.Front(); el != nil; el = el.Next() {
 		candidate := el.Value.(*CandidateNode)
 
-		parsedTime, err := parseDateTime(layout, candidate.Node.Value)
+		parsedTime, err := parseDateTime(layout, candidate.Value)
 		if err != nil {
 			return Context{}, fmt.Errorf("could not parse datetime of [%v] using layout [%v]: %w", candidate.GetNicePath(), layout, err)
 		}
 		tzTime := parsedTime.In(timezone)
 
-		node := &yaml.Node{
-			Kind:  yaml.ScalarNode,
-			Tag:   candidate.Node.Tag,
-			Value: tzTime.Format(layout),
+		results.PushBack(candidate.CreateReplacement(ScalarNode, candidate.Tag, tzTime.Format(layout)))
+	}
+
+	return context.ChildContext(results), nil
+}
+
+func parseUnixTime(unixTime string) (time.Time, error) {
+	seconds, err := strconv.ParseFloat(unixTime, 64)
+
+	if err != nil {
+		return time.Now(), err
+	}
+
+	return time.UnixMilli(int64(seconds * 1000)), nil
+}
+
+func fromUnixOp(_ *dataTreeNavigator, context Context, _ *ExpressionNode) (Context, error) {
+
+	var results = list.New()
+
+	for el := context.MatchingNodes.Front(); el != nil; el = el.Next() {
+		candidate := el.Value.(*CandidateNode)
+
+		actualTag := candidate.guessTagFromCustomType()
+
+		if actualTag != "!!int" && actualTag != "!!float" {
+			return Context{}, fmt.Errorf("from_unix only works on numbers, found %v instead", candidate.Tag)
 		}
 
-		results.PushBack(candidate.CreateReplacement(node))
+		parsedTime, err := parseUnixTime(candidate.Value)
+		if err != nil {
+			return Context{}, err
+		}
+
+		node := candidate.CreateReplacement(ScalarNode, "!!timestamp", parsedTime.Format(time.RFC3339))
+
+		results.PushBack(node)
+	}
+
+	return context.ChildContext(results), nil
+}
+
+func toUnixOp(_ *dataTreeNavigator, context Context, _ *ExpressionNode) (Context, error) {
+
+	layout := context.GetDateTimeLayout()
+
+	var results = list.New()
+
+	for el := context.MatchingNodes.Front(); el != nil; el = el.Next() {
+		candidate := el.Value.(*CandidateNode)
+
+		parsedTime, err := parseDateTime(layout, candidate.Value)
+		if err != nil {
+			return Context{}, fmt.Errorf("could not parse datetime of [%v] using layout [%v]: %w", candidate.GetNicePath(), layout, err)
+		}
+
+		results.PushBack(candidate.CreateReplacement(ScalarNode, "!!int", fmt.Sprintf("%v", parsedTime.Unix())))
 	}
 
 	return context.ChildContext(results), nil

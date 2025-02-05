@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/magiconair/properties"
-	"gopkg.in/yaml.v3"
 )
 
 type propertiesDecoder struct {
@@ -52,18 +51,15 @@ func (dec *propertiesDecoder) applyPropertyComments(context Context, path []inte
 	assignmentOp := &Operation{OperationType: assignOpType, Preferences: assignPreferences{}}
 
 	rhsCandidateNode := &CandidateNode{
-		Path: path,
-		Node: &yaml.Node{
-			Tag:         "!!str",
-			Value:       fmt.Sprintf("%v", path[len(path)-1]),
-			HeadComment: dec.processComment(strings.Join(comments, "\n")),
-			Kind:        yaml.ScalarNode,
-		},
+		Tag:         "!!str",
+		Value:       fmt.Sprintf("%v", path[len(path)-1]),
+		HeadComment: dec.processComment(strings.Join(comments, "\n")),
+		Kind:        ScalarNode,
 	}
 
-	rhsCandidateNode.Node.Tag = guessTagFromCustomType(rhsCandidateNode.Node)
+	rhsCandidateNode.Tag = rhsCandidateNode.guessTagFromCustomType()
 
-	rhsOp := &Operation{OperationType: valueOpType, CandidateNode: rhsCandidateNode}
+	rhsOp := &Operation{OperationType: referenceOpType, CandidateNode: rhsCandidateNode}
 
 	assignmentOpNode := &ExpressionNode{
 		Operation: assignmentOp,
@@ -87,31 +83,10 @@ func (dec *propertiesDecoder) applyProperty(context Context, properties *propert
 		}
 	}
 
-	rhsNode := &yaml.Node{
-		Value: value,
-		Tag:   "!!str",
-		Kind:  yaml.ScalarNode,
-	}
+	rhsNode := createStringScalarNode(value)
+	rhsNode.Tag = rhsNode.guessTagFromCustomType()
 
-	rhsNode.Tag = guessTagFromCustomType(rhsNode)
-
-	rhsCandidateNode := &CandidateNode{
-		Path: path,
-		Node: rhsNode,
-	}
-
-	assignmentOp := &Operation{OperationType: assignOpType, Preferences: assignPreferences{}}
-
-	rhsOp := &Operation{OperationType: valueOpType, CandidateNode: rhsCandidateNode}
-
-	assignmentOpNode := &ExpressionNode{
-		Operation: assignmentOp,
-		LHS:       createTraversalTree(path, traversePreferences{}, false),
-		RHS:       &ExpressionNode{Operation: rhsOp},
-	}
-
-	_, err := dec.d.GetMatchingNodes(context, assignmentOpNode)
-	return err
+	return dec.d.DeeplyAssign(context, path, rhsNode)
 }
 
 func (dec *propertiesDecoder) Decode() (*CandidateNode, error) {
@@ -134,10 +109,8 @@ func (dec *propertiesDecoder) Decode() (*CandidateNode, error) {
 	properties.DisableExpansion = true
 
 	rootMap := &CandidateNode{
-		Node: &yaml.Node{
-			Kind: yaml.MappingNode,
-			Tag:  "!!map",
-		},
+		Kind: MappingNode,
+		Tag:  "!!map",
 	}
 
 	context := Context{}
@@ -151,11 +124,6 @@ func (dec *propertiesDecoder) Decode() (*CandidateNode, error) {
 	}
 	dec.finished = true
 
-	return &CandidateNode{
-		Node: &yaml.Node{
-			Kind:    yaml.DocumentNode,
-			Content: []*yaml.Node{rootMap.Node},
-		},
-	}, nil
+	return rootMap, nil
 
 }

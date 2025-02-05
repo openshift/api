@@ -25,6 +25,16 @@ type Config struct {
 	// When provided, any equivalent flag provided values are ignored.
 	SchemaPatch *SchemaPatchConfig `json:"schemapatch,omitempty"`
 
+	// ManifestMerge represents the configuration for the manifest merge generator.
+	// When omitted, the default configuration will be used.
+	// When provided, any equivalent flag provided values are ignored.
+	ManifestMerge *ManifestMerge `json:"manifestMerge,omitempty"`
+
+	// EmptyPartialSchema represents the configuration for the manifest merge generator.
+	// When omitted, the default configuration will be used.
+	// When provided, any equivalent flag provided values are ignored.
+	EmptyPartialSchema *EmptyPartialSchema `json:"emptyPartialSchema,omitempty"`
+
 	// SwaggerDocs represents the configuration for the swaggerdocs generator.
 	// When omitted, the default configuration will be used.
 	// When provided, any equivalent flag provided values are ignored.
@@ -91,6 +101,20 @@ type SchemaPatchConfig struct {
 	// When omitted, any manifest with a feature set annotation will be ignored.
 	// Example entries are `""` (empty string), `"TechPreviewNoUpgrade"` or `"TechPreviewNoUpgrade,CustomNoUpgrade"`.
 	RequiredFeatureSets []string `json:"requiredFeatureSets,omitempty"`
+}
+
+// ManifestMerge is the configuration for the manifest merge generator.
+type ManifestMerge struct {
+	// Disabled determines whether the schemapatch generator should be run or not.
+	// This generator is enabled by default so this field defaults to false.
+	Disabled bool `json:"disabled,omitempty"`
+}
+
+// ManifestMerge is the configuration for the manifest merge generator.
+type EmptyPartialSchema struct {
+	// Disabled determines whether the schemapatch generator should be run or not.
+	// This generator is enabled by default so this field defaults to false.
+	Disabled bool `json:"disabled,omitempty"`
 }
 
 // SwaggerDocsConfig is the configuration for the swaggerdocs generator.

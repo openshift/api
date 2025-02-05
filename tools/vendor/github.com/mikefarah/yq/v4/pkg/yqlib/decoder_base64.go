@@ -4,9 +4,30 @@ import (
 	"bytes"
 	"encoding/base64"
 	"io"
-
-	yaml "gopkg.in/yaml.v3"
+	"strings"
 )
+
+type base64Padder struct {
+	count int
+	io.Reader
+}
+
+func (c *base64Padder) pad(buf []byte) (int, error) {
+	pad := strings.Repeat("=", (4 - c.count%4))
+	n, err := strings.NewReader(pad).Read(buf)
+	c.count += n
+	return n, err
+}
+
+func (c *base64Padder) Read(buf []byte) (int, error) {
+	n, err := c.Reader.Read(buf)
+	c.count += n
+
+	if err == io.EOF && c.count%4 != 0 {
+		return c.pad(buf)
+	}
+	return n, err
+}
 
 type base64Decoder struct {
 	reader       io.Reader
@@ -20,7 +41,7 @@ func NewBase64Decoder() Decoder {
 }
 
 func (dec *base64Decoder) Init(reader io.Reader) error {
-	dec.reader = reader
+	dec.reader = &base64Padder{Reader: reader}
 	dec.readAnything = false
 	dec.finished = false
 	return nil
@@ -47,11 +68,5 @@ func (dec *base64Decoder) Decode() (*CandidateNode, error) {
 		}
 	}
 	dec.readAnything = true
-	return &CandidateNode{
-		Node: &yaml.Node{
-			Kind:  yaml.ScalarNode,
-			Tag:   "!!str",
-			Value: buf.String(),
-		},
-	}, nil
+	return createStringScalarNode(buf.String()), nil
 }

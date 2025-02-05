@@ -84,10 +84,10 @@ func (g *generator) Name() string {
 }
 
 // GenGroup runs the schemapatch generator against the given group context.
-func (g *generator) GenGroup(groupCtx generation.APIGroupContext) error {
+func (g *generator) GenGroup(groupCtx generation.APIGroupContext) ([]generation.Result, error) {
 	if g.disabled {
 		klog.V(2).Infof("Skipping API schema generation for %s", groupCtx.Name)
-		return nil
+		return nil, nil
 	}
 
 	versionPaths := allVersionPaths(groupCtx.Versions)
@@ -97,7 +97,7 @@ func (g *generator) GenGroup(groupCtx generation.APIGroupContext) error {
 	for _, version := range groupCtx.Versions {
 		versionRequired, err := shouldProcessGroupVersion(version, g.requiredFeatureSets)
 		if err != nil {
-			return fmt.Errorf("could not determine if version %s is required: %w", version.Name, err)
+			return nil, fmt.Errorf("could not determine if version %s is required: %w", version.Name, err)
 		}
 
 		if !versionRequired {
@@ -117,10 +117,10 @@ func (g *generator) GenGroup(groupCtx generation.APIGroupContext) error {
 	}
 
 	if len(errs) > 0 {
-		return kerrors.NewAggregate(errs)
+		return nil, kerrors.NewAggregate(errs)
 	}
 
-	return nil
+	return nil, nil
 }
 
 // genGroupVersion runs the schemapatch generator against a particular version of the API group.
@@ -130,10 +130,15 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 		return fmt.Errorf("could not load generation contexts: %w", err)
 	}
 
+	rt, err := loadGroupRuntime(versionPaths)
+	if err != nil {
+		return fmt.Errorf("error loading group runtime: %w", err)
+	}
+
 	for _, gc := range generationContexts {
 		buf := bytes.NewBuffer(nil)
 
-		if err := executeSchemaPatchForManifest(gc, buf, versionPaths, g.controllerGen); err != nil {
+		if err := executeSchemaPatchForManifest(gc, buf, versionPaths, rt, g.controllerGen); err != nil {
 			return fmt.Errorf("could not execute schemapatch for manifest %s: %w", gc.manifestPath, err)
 		}
 
@@ -192,63 +197,60 @@ type schemaPatchGenerationContext struct {
 func loadSchemaPatchGenerationContextsForVersion(version generation.APIVersionContext, requiredFeatureSets []sets.String) ([]schemaPatchGenerationContext, error) {
 	errs := []error{}
 
-	dirEntries, err := os.ReadDir(version.Path)
-	if err != nil {
-		return nil, fmt.Errorf("could not read file info for directory %s: %v", version.Path, err)
-	}
-
 	generationContexts := []schemaPatchGenerationContext{}
-
-	for _, fileInfo := range dirEntries {
+	filepath.WalkDir(version.Path, func(path string, fileInfo os.DirEntry, err error) error {
 		// Ignore any file that isn't a yaml file.
 		if fileInfo.IsDir() || filepath.Ext(fileInfo.Name()) != ".yaml" {
-			continue
+			return nil
 		}
 
-		path := filepath.Join(version.Path, fileInfo.Name())
 		data, err := os.ReadFile(path)
 		if err != nil {
 			errs = append(errs, fmt.Errorf("could not read file %s: %v", path, err))
-			continue
+			return nil
 		}
 
 		manifestInfo, err := os.Stat(path)
 		if err != nil {
 			errs = append(errs, fmt.Errorf("could not stat file %s: %v", path, err))
-			continue
+			return nil
 		}
 
 		partialObject := &metav1.PartialObjectMetadata{}
 		if err := kyaml.Unmarshal(data, partialObject); err != nil {
 			errs = append(errs, fmt.Errorf("could not unmarshal YAML in file %s for type meta inspection: %v", path, err))
-			continue
+			return nil
 		}
 
 		// Ignore any file that doesn't have a kind of CustomResourceDefinition or does not have the correct feature set annotation.
-		if !isCustomResourceDefinition(partialObject) || !hasRequiredFeatureSet(partialObject, requiredFeatureSets) {
-			continue
+		isMergedManifest := partialObject.Annotations["api.openshift.io/merged-by-featuregates"] == "true"
+		if !isCustomResourceDefinition(partialObject) || !hasRequiredFeatureSet(partialObject, requiredFeatureSets) || isMergedManifest {
+			return nil
 		}
 
 		// The file is a CRD and has the correct feature set, build out the context.
 
+		manifestParentDir := filepath.Dir(path)
 		// Work out if there is a patch file for the CRD.
-		patchPath := filepath.Join(version.Path, fmt.Sprintf("%s-patch", fileInfo.Name()))
+		patchPath := filepath.Join(manifestParentDir, fmt.Sprintf("%s-patch", fileInfo.Name()))
 		if _, err := os.Stat(patchPath); err != nil && os.IsNotExist(err) {
 			// The patch file doesn't exist, clear the path.
 			patchPath = ""
 		} else if err != nil {
 			errs = append(errs, fmt.Errorf("could not stat patch file %s: %w", patchPath, err))
-			continue
+			return nil
 		}
 
 		generationContexts = append(generationContexts, schemaPatchGenerationContext{
-			manifestPath:        filepath.Join(version.Path, fileInfo.Name()),
+			manifestPath:        path,
 			manifestFileMode:    manifestInfo.Mode(),
 			manifestData:        data,
 			patchPath:           patchPath,
 			requiredFeatureSets: getObjectFeatureSets(partialObject),
 		})
-	}
+
+		return nil
+	})
 
 	if len(errs) > 0 {
 		return nil, kerrors.NewAggregate(errs)

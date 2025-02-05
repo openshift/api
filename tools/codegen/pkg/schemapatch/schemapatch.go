@@ -3,19 +3,18 @@ package schemapatch
 import (
 	"bytes"
 	"fmt"
+	"golang.org/x/tools/go/packages"
 	"io"
+	kerrors "k8s.io/apimachinery/pkg/util/errors"
+	"k8s.io/apimachinery/pkg/util/sets"
 	"os"
 	"os/exec"
 	"path/filepath"
-	"strings"
-
-	"golang.org/x/tools/go/packages"
-	kerrors "k8s.io/apimachinery/pkg/util/errors"
-	"k8s.io/apimachinery/pkg/util/sets"
 	"sigs.k8s.io/controller-tools/pkg/crd/markers"
 	"sigs.k8s.io/controller-tools/pkg/genall"
 	"sigs.k8s.io/controller-tools/pkg/loader"
 	"sigs.k8s.io/controller-tools/pkg/schemapatcher"
+	"strings"
 )
 
 const openshiftFeatureSetEnv = "OPENSHIFT_REQUIRED_FEATURESET"
@@ -70,7 +69,7 @@ func pathsArgs(versionPaths []string) []string {
 // When the controller-gen binary is available, it will be used to generate the patch, else the code integration
 // will be used.
 // The output of the patch is written to the buffer passed.
-func executeSchemaPatchForManifest(gc schemaPatchGenerationContext, buf *bytes.Buffer, versionPaths []string, controllerGen string) error {
+func executeSchemaPatchForManifest(gc schemaPatchGenerationContext, buf *bytes.Buffer, versionPaths []string, rt *genall.Runtime, controllerGen string) error {
 	// To generate a single schema we must put the manifest in a directory of its own.
 	// Use a temp directory and remove it once the function exits.
 	dir, err := os.MkdirTemp("", "schemapatch")
@@ -86,11 +85,6 @@ func executeSchemaPatchForManifest(gc schemaPatchGenerationContext, buf *bytes.B
 	// If controllerGen is not empty, use the binary instead of the code integration.
 	if controllerGen != "" {
 		return executeSchemaPatchForManifestWithBinary(controllerGen, dir, versionPaths, buf, gc.requiredFeatureSets)
-	}
-
-	rt, err := loadGroupRuntime(versionPaths)
-	if err != nil {
-		return fmt.Errorf("error loading group runtime: %w", err)
 	}
 
 	markers.RequiredFeatureSets.Insert(gc.requiredFeatureSets.List()...)

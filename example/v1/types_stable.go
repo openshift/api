@@ -7,14 +7,17 @@ import (
 // +genclient
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-// +kubebuilder:object:root=true
-// +kubebuilder:subresource:status
 // +openshift:compatibility-gen:level=1
+// +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/xxx
+// +openshift:file-pattern=cvoRunLevel=0000_50,operatorName=my-operator,operatorOrdering=01
 
 // StableConfigType is a stable config type that may include TechPreviewNoUpgrade fields.
 //
 // Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=1
+// +kubebuilder:object:root=true
+// +kubebuilder:resource:path=stableconfigtypes,scope=Cluster
+// +kubebuilder:subresource:status
 type StableConfigType struct {
 	metav1.TypeMeta `json:",inline"`
 
@@ -29,12 +32,12 @@ type StableConfigType struct {
 }
 
 // StableConfigTypeSpec is the desired state
-// +openshift:validation:FeatureSetAwareXValidation:featureSet=CustomNoUpgrade;TechPreviewNoUpgrade,rule="has(oldSelf.coolNewField) ? has(self.coolNewField) : true",message="coolNewField may not be removed once set"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=Example,rule="has(oldSelf.coolNewField) ? has(self.coolNewField) : true",message="coolNewField may not be removed once set"
+// +openshift:validation:FeatureGateAwareXValidation:requiredFeatureGate=Example;Example2,rule="has(oldSelf.stableField) ? has(self.stableField) : true",message="stableField may not be removed once set (this should only show up with both the Example and Example2 feature gates)"
 type StableConfigTypeSpec struct {
 	// coolNewField is a field that is for tech preview only.  On normal clusters this shouldn't be present
 	//
-	// +kubebuilder:validation:Optional
-	// +openshift:enable:FeatureSets=CustomNoUpgrade;TechPreviewNoUpgrade
+	// +openshift:enable:FeatureGate=Example
 	// +optional
 	CoolNewField string `json:"coolNewField"`
 
@@ -48,7 +51,7 @@ type StableConfigTypeSpec struct {
 	// immutableField is a field that is immutable once the object has been created.
 	// It is required at all times.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="immutableField is immutable"
-	// +kubebuilder:validation:Required
+	// +required
 	ImmutableField string `json:"immutableField"`
 
 	// optionalImmutableField is a field that is immutable once set.
@@ -64,17 +67,56 @@ type StableConfigTypeSpec struct {
 	// celUnion demonstrates how to validate a discrminated union using CEL
 	// +optional
 	CELUnion CELUnion `json:"celUnion,omitempty"`
+
+	// nonZeroDefault is a demonstration of creating an integer field that has a non zero default.
+	// It required two default tags (one for CRD generation, one for client generation) and must have `omitempty` and be optional.
+	// A minimum value is added to demonstrate that a zero value would not be accepted.
+	// +kubebuilder:default:=8
+	// +default=8
+	// +kubebuilder:validation:Minimum:=8
+	// +optional
+	NonZeroDefault int32 `json:"nonZeroDefault,omitempty"`
+
+	// evolvingCollection demonstrates how to have a collection where the maximum number of items varies on cluster type.
+	// For default clusters, this will be "1" but on TechPreview clusters, this value will be "3".
+	// +openshift:validation:FeatureGateAwareMaxItems:featureGate="",maxItems=1
+	// +openshift:validation:FeatureGateAwareMaxItems:featureGate=Example,maxItems=3
+	// +optional
+	// +listType=atomic
+	EvolvingCollection []string `json:"evolvingCollection,omitempty"`
+
+	// set demonstrates how to define and validate set of strings
+	// +optional
+	Set StringSet `json:"set,omitempty"`
+
+	// subdomainNameField represents a kubenetes name field.
+	// The intention is that it validates the name in the same way metadata.Name is validated.
+	// That is, it is a DNS-1123 subdomain.
+	// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
+	// +kubebuilder:validation:MaxLength:=253
+	// +optional
+	SubdomainNameField string `json:"subdomainNameField,omitempty"`
 }
+
+// SetValue defines the types allowed in string set type
+// +kubebuilder:validation:Enum:=Foo;Bar;Baz;Qux;Corge
+type SetValue string
+
+// StringSet defines the set of strings
+// +listType=set
+// +kubebuilder:validation:XValidation:rule="self.all(x,self.exists_one(y,x == y))"
+// +kubebuilder:validation:MaxItems=5
+type StringSet []SetValue
 
 type EvolvingUnion struct {
 	// type is the discriminator. It has different values for Default and for TechPreviewNoUpgrade
-	// +kubebuilder:validation:Required
+	// +required
 	Type EvolvingDiscriminator `json:"type,omitempty"`
 }
 
 // EvolvingDiscriminator defines the audit policy profile type.
-// +openshift:validation:FeatureSetAwareEnum:featureSet=Default,enum="";StableValue
-// +openshift:validation:FeatureSetAwareEnum:featureSet=CustomNoUpgrade;TechPreviewNoUpgrade,enum="";StableValue;TechPreviewOnlyValue
+// +openshift:validation:FeatureGateAwareEnum:featureGate="",enum="";StableValue
+// +openshift:validation:FeatureGateAwareEnum:featureGate=Example,enum="";StableValue;TechPreviewOnlyValue
 type EvolvingDiscriminator string
 
 const (
@@ -91,7 +133,7 @@ const (
 // +union
 type CELUnion struct {
 	// type determines which of the union members should be populated.
-	// +kubebuilder:validation:Required
+	// +required
 	// +unionDiscriminator
 	Type CELUnionDiscriminator `json:"type,omitempty"`
 
@@ -137,7 +179,6 @@ type StableConfigTypeStatus struct {
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-// +kubebuilder:object:root=true
 // +openshift:compatibility-gen:level=1
 
 // StableConfigTypeList contains a list of StableConfigTypes.

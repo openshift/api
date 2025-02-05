@@ -2,6 +2,7 @@ package v1
 
 import (
 	"io/ioutil"
+	"path"
 	"testing"
 
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -10,8 +11,8 @@ import (
 )
 
 const (
-	infraCRDDefaultFilePath     = "0000_10_config-operator_01_infrastructure-Default.crd.yaml"
-	infraCRDTestPreviewFilePath = "0000_10_config-operator_01_infrastructure-TechPreviewNoUpgrade.crd.yaml"
+	infraCRDDefaultFilePath     = "0000_10_config-operator_01_infrastructures-Default.crd.yaml"
+	infraCRDTestPreviewFilePath = "0000_10_config-operator_01_infrastructures-TechPreviewNoUpgrade.crd.yaml"
 )
 
 // TestInfrastructureStatusDefault verifies that the infrastructure CR status does not have default value
@@ -23,7 +24,7 @@ func TestInfrastructureStatusDefault(t *testing.T) {
 	filePaths := []string{infraCRDDefaultFilePath, infraCRDTestPreviewFilePath}
 
 	for _, filepath := range filePaths {
-		infraCRDBytes, err := ioutil.ReadFile(filepath)
+		infraCRDBytes, err := ioutil.ReadFile(path.Join("zz_generated.crd-manifests", filepath))
 		if err != nil {
 			t.Fatalf("failed to read infrastructure CRD file %q: %v", filepath, err)
 		}

@@ -90,6 +90,9 @@
                         "name": "DisableKubeletCloudCredentialProviders"
                     },
                     {
+                        "name": "DualReplica"
+                    },
+                    {
                         "name": "DyanmicServiceEndpointIBMCloud"
                     },
                     {

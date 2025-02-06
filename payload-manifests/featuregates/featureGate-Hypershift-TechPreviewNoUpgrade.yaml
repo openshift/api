@@ -99,6 +99,9 @@
                         "name": "DisableKubeletCloudCredentialProviders"
                     },
                     {
+                        "name": "DualReplica"
+                    },
+                    {
                         "name": "DynamicResourceAllocation"
                     },
                     {

@@ -86,8 +86,7 @@ type MachineConfigNodeSpec struct {
 	// The desired version represents the machine config the node will attempt to update to. This gets set before the machine config operator validates
 	// the new machine config against the current machine config.
 	// +required
-	// TODO: Potentially remove since it might be redundant. There may need to be some changes to how ObservedGeneration is updated if this field
-	// is consolidated with MachineConfigNodeStatus.ConfigVersion.Current.
+	// TODO: Potentially remove in favor of/consolidate with MachineConfigNodeStatus.ConfigVersion.Current. Changes to this field may require updates to how ObservedGeneration is updated.
 	ConfigVersion MachineConfigNodeSpecMachineConfigVersion `json:"configVersion"`
 
 	// pinnedImageSets is a user defined value that holds the names of the desired image sets that the node should pull and pin.
@@ -121,7 +120,7 @@ type MachineConfigNodeStatus struct {
 	// +listMapKey=type
 	// +kubebuilder:validation:MaxItems=15
 	// +optional
-	// TODO: Reevaluate maxItems value as status are trimmed down/API structure is updated.
+	// TODO: Reevaluate maxItems value as statuses are trimmed down/API structure is updated.
 	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 	// observedGeneration represents the generation of the MachineConfigNode object observed by the Machine Config Operator's controller.
 	// This field is updated when the controller observes a change to the desiredConfig in the configVersion of the machine config node spec.
@@ -173,11 +172,10 @@ type MachineConfigNodeStatusPinnedImageSet struct {
 }
 
 // MachineConfigNodeStatusMachineConfigVersion holds the current and desired config versions as last updated in the MCN status.
-// When the current and desired versions are not matched, the machine config pool is processing an upgrade and the machine config node will
+// When the current and desired versions do not matched, the machine config pool is processing an upgrade and the machine config node will
 // monitor the upgrade process.
-// When the current and desired versions do not match, the machine config node will ignore these events given that certain operations
-// happen both during the MCO's upgrade mode and the daily operations mode. //TODO: Check if this should instead say *do* match to be consistent
-// with comment on lines 204-205.
+// When the current and desired versions do match, the machine config node will ignore these events given that certain operations
+// happen both during the MCO's upgrade mode and the daily operations mode. //TODO: Check correctness of description.
 type MachineConfigNodeStatusMachineConfigVersion struct {
 	// current is the name of the machine config currently in use on the node.
 	// This value is updated once the machine config daemon has completed the update of the configuration for the node.
@@ -203,8 +201,8 @@ type MachineConfigNodeStatusMachineConfigVersion struct {
 }
 
 // MachineConfigNodeSpecMachineConfigVersion holds the desired config version for the current observed machine config node.
-// When Current is not equal to Desired; the MachineConfigOperator is in an upgrade phase and the machine config node will
-// take account of upgrade related events. Otherwise they will be ignored given that certain operations
+// When Current is not equal to Desired, the MachineConfigOperator is in an upgrade phase and the machine config node will
+// take account of upgrade related events. Otherwise, they will be ignored given that certain operations
 // happen both during the MCO's upgrade mode and the daily operations mode.
 type MachineConfigNodeSpecMachineConfigVersion struct {
 	// desired is the name of the machine config that the the node should be upgraded to.
@@ -244,8 +242,7 @@ type MachineConfigNodeStatusPinnedImageSetError struct {
 	Message string `json:"message"`
 }
 
-// StateProgress is each possible state for each possible MachineConfigNodeType
-// UpgradeProgression Kind will only use the "MachinConfigPoolUpdate..." types for example //TODO: figure out how to make comment more relevant.
+// StateProgress highlights the possible states for each possible MachineConfigNodeType to be tracked in Conditions.
 // +enum
 type StateProgress string
 

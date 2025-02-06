@@ -112,7 +112,6 @@ spec:
                   configVersion holds the desired config version for the node targeted by this machine config node resource.
                   The desired version represents the machine config the node will attempt to update to. This gets set before the machine config operator validates
                   the new machine config against the current machine config.
-                  is consolidated with MachineConfigNodeStatus.ConfigVersion.Current.
                 properties:
                   desired:
                     description: |-

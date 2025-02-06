@@ -5181,6 +5181,10 @@
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.config.v1.ClusterOperatorStatusCondition"
           },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map",
           "x-kubernetes-patch-merge-key": "type",
           "x-kubernetes-patch-strategy": "merge"
         },

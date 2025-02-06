@@ -33,6 +33,7 @@ type StableConfigType struct {
 
 // StableConfigTypeSpec is the desired state
 // +openshift:validation:FeatureGateAwareXValidation:featureGate=Example,rule="has(oldSelf.coolNewField) ? has(self.coolNewField) : true",message="coolNewField may not be removed once set"
+// +openshift:validation:FeatureGateAwareXValidation:requiredFeatureGate=Example;Example2,rule="has(oldSelf.stableField) ? has(self.stableField) : true",message="stableField may not be removed once set (this should only show up with both the Example and Example2 feature gates)"
 type StableConfigTypeSpec struct {
 	// coolNewField is a field that is for tech preview only.  On normal clusters this shouldn't be present
 	//

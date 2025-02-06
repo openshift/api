@@ -168,6 +168,9 @@ spec:
             x-kubernetes-validations:
             - message: coolNewField may not be removed once set
               rule: 'has(oldSelf.coolNewField) ? has(self.coolNewField) : true'
+            - message: stableField may not be removed once set (this should only show
+                up with both the Example and Example2 feature gates)
+              rule: 'has(oldSelf.stableField) ? has(self.stableField) : true'
           status:
             description: status is the most recently observed status of the StableConfigType.
             properties:

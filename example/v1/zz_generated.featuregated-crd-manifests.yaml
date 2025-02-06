@@ -6,6 +6,7 @@ stableconfigtypes.example.openshift.io:
   Category: ""
   FeatureGates:
   - Example
+  - Example+Example2
   FilenameOperatorName: my-operator
   FilenameOperatorOrdering: "01"
   FilenameRunLevel: "0000_50"

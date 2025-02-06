@@ -217,6 +217,9 @@ func generateOnUpdateTable(onUpdateTests []OnUpdateTestSpec, crdFileName string)
 		var originalCRDObjectKey client.ObjectKey
 		var originalCRDSpec apiextensionsv1.CustomResourceDefinitionSpec
 
+		initialObj, err := newUnstructuredFrom(in.initial)
+		Expect(err).ToNot(HaveOccurred(), "initial data should be a valid Kubernetes YAML resource")
+
 		if len(in.crdPatches) > 0 {
 			patchedCRD, err := getPatchedCRD(crdFileName, in.crdPatches)
 			Expect(err).ToNot(HaveOccurred(), "could not load patched crd")
@@ -229,11 +232,17 @@ func generateOnUpdateTable(onUpdateTests []OnUpdateTestSpec, crdFileName string)
 			originalCRDSpec = *originalCRD.Spec.DeepCopy()
 			originalCRD.Spec = patchedCRD.Spec
 
+			// Add a sentinel field so that we can check that the schema update has persisted.
+			originalCRD.Spec.Versions[0].Schema.OpenAPIV3Schema.Properties["sentinel"] = apiextensionsv1.JSONSchemaProps{
+				Type: "string",
+				Enum: []apiextensionsv1.JSON{
+					{Raw: []byte(fmt.Sprintf(`"%s+patched"`, initialObj.GetUID()))},
+				},
+			}
+			initialObj.Object["sentinel"] = initialObj.GetUID() + "+patched"
+
 			Expect(k8sClient.Update(ctx, originalCRD)).To(Succeed(), "failed updating patched CRD schema")
 		}
-
-		initialObj, err := newUnstructuredFrom(in.initial)
-		Expect(err).ToNot(HaveOccurred(), "initial data should be a valid Kubernetes YAML resource")
 
 		initialStatus, ok, err := unstructured.NestedFieldNoCopy(initialObj.Object, "status")
 		Expect(err).ToNot(HaveOccurred())
@@ -241,7 +250,10 @@ func generateOnUpdateTable(onUpdateTests []OnUpdateTestSpec, crdFileName string)
 			Expect(initialStatus).ToNot(BeNil())
 		}
 
-		Expect(k8sClient.Create(ctx, initialObj)).ToNot(HaveOccurred(), "initial object should create successfully")
+		// Use an eventually here, so that we retry until the sential correctly applies.
+		Eventually(func() error {
+			return k8sClient.Create(ctx, initialObj)
+		}).Should(Succeed(), "initial object should create successfully")
 
 		if initialStatus != nil {
 			Expect(unstructured.SetNestedField(initialObj.Object, initialStatus, "status")).To(Succeed(), "should be able to restore initial status")
@@ -254,6 +266,25 @@ func generateOnUpdateTable(onUpdateTests []OnUpdateTestSpec, crdFileName string)
 
 			originalCRD.Spec = originalCRDSpec
 
+			// Add a sentinel field so that we can check that the schema update has persisted.
+			originalCRD.Spec.Versions[0].Schema.OpenAPIV3Schema.Properties["sentinel"] = apiextensionsv1.JSONSchemaProps{
+				Type: "string",
+				Enum: []apiextensionsv1.JSON{
+					{Raw: []byte(fmt.Sprintf(`"%s+restored"`, initialObj.GetUID()))},
+				},
+			}
+
+			Expect(k8sClient.Update(ctx, originalCRD)).To(Succeed())
+
+			Eventually(func() error {
+				updatedObj := initialObj.DeepCopy()
+				updatedObj.Object["sentinel"] = initialObj.GetUID() + "+restored"
+
+				return k8sClient.Update(ctx, updatedObj)
+			}).Should(Succeed(), "Sentinel should be persisted")
+
+			// Drop the sentinel field now we know the rest of the CRD schema is up to date.
+			originalCRD.Spec = originalCRDSpec
 			Expect(k8sClient.Update(ctx, originalCRD)).To(Succeed())
 		}
 

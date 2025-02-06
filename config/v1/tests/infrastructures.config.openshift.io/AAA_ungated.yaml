@@ -408,7 +408,7 @@ tests:
           platformStatus:
             powervs:
               resourceGroup: resource-group-should-not-accept-the-string-that-exceeds-max-length-set
-      expectedStatusError: "platformStatus.powervs.resourceGroup: Too long: may not be longer than 40"
+      expectedStatusError: "platformStatus.powervs.resourceGroup: Too long: may not be more than 40 bytes"
     - name: PowerVS platform status's resourceGroup should match the regex configured
       initial: |
         apiVersion: config.openshift.io/v1
@@ -1365,309 +1365,313 @@ tests:
               - name: BadService
                 url: https://bad-service.com
       expectedStatusError: "platformStatus.ibmcloud.serviceEndpoints[1].name: Unsupported value: \"BadService\": supported values: \"CIS\", \"COS\", \"COSConfig\", \"DNSServices\", \"GlobalCatalog\", \"GlobalSearch\", \"GlobalTagging\", \"HyperProtect\", \"IAM\", \"KeyProtect\", \"ResourceController\", \"ResourceManager\", \"VPC\""
-    - name: Should allow updating other fields with an invalid persisted IBMCloud service endpoint url that isnt https in status
+    - name: Should allow updating other fields with an invalid persisted PowerVS service endpoint name in spec
       initialCRDPatches:
-      - op: remove
-        path: /spec/versions/0/schema/openAPIV3Schema/properties/status/properties/platformStatus/properties/ibmcloud/properties/serviceEndpoints/items/url/XValidation
+      - op: replace
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/platformSpec/properties/powervs/properties/serviceEndpoints/items/properties/name
+        value:
+          pattern: "^[a-z0-9-]+$"
+          type: string
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
-        status:
-          platformStatus:
-            type: IBMCloud
-            ibmcloud:
-              cisInstanceCRN: oldCRN
+        spec:
+          platformSpec:
+            type: PowerVS
+            powervs:
               serviceEndpoints:
-              - name: IAM
-                url: http://foobar/v1
+              - name: dnsservices
+                url: https://abc
       updated: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
-        status:
+        spec:
           cloudConfig: {}
-          platformStatus:
-            type: IBMCloud
-            ibmcloud:
-              cisInstanceCRN: newCRN
+          platformSpec:
+            type: PowerVS
+            powervs:
               serviceEndpoints:
-              - name: IAM
-                url: https://foobar/v1
+              - name: dnsservices
+                url: https://abc
       expected: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
-        status:
+        spec:
           cloudConfig: {}
-          platformStatus:
-            type: IBMCloud
-            ibmcloud:
-              cisInstanceCRN: newCRN
+          platformSpec:
+            type: PowerVS
+            powervs:
               serviceEndpoints:
-              - name: IAM
-                url: https://foobar/v1
-    - name: Should allow updating other fields with an invalid persisted IBMCloud service endpoint url that doesnt match regex pattern in status
+              - name: dnsservices
+                url: https://abc
+    - name: Should allow updating adding another slice entry with an invalid persisted PowerVS service endpoint name in spec
       initialCRDPatches:
-      - op: remove
-        path: /spec/versions/0/schema/openAPIV3Schema/properties/status/properties/platformStatus/properties/ibmcloud/properties/serviceEndpoints/items/url/XValidation
+      - op: replace
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/platformSpec/properties/powervs/properties/serviceEndpoints/items/properties/name
+        value:
+          pattern: "^[a-z0-9-]+$"
+          type: string
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
-        status:
-          platformStatus:
-            type: IBMCloud
-            ibmcloud:
-              cisInstanceCRN: oldCRN
+        spec:
+          platformSpec:
+            type: PowerVS
+            powervs:
               serviceEndpoints:
-              - name: IAM
-                url: https://foobar/wrong1
+              - name: dnsservices
+                url: https://abc
       updated: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
-        status:
-          cloudConfig: {}
-          platformStatus:
-            type: IBMCloud
-            ibmcloud:
-              cisInstanceCRN: newCRN
+        spec:
+          platformSpec:
+            type: PowerVS
+            powervs:
               serviceEndpoints:
-              - name: IAM
-                url: https://foobar/wrong1
+              - name: dnsservices
+                url: https://abc
+              - name: DNSServices
+                url: https://abc
       expected: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
-        status:
-          cloudConfig: {}
-          platformStatus:
-            type: IBMCloud
-            ibmcloud:
-              cisInstanceCRN: newCRN
+        spec:
+          platformSpec:
+            type: PowerVS
+            powervs:
               serviceEndpoints:
-              - name: IAM
-                url: https://foobar/wrong1
-    - name: Should allow updating other fields with an invalid persisted IBMCloud service endpoint url of length > 300 in status
+              - name: dnsservices
+                url: https://abc
+              - name: DNSServices
+                url: https://abc
+    - name: Should not allow updating adding an invalid value to a still invalid value for a PowerVS service endpoint name in spec
       initialCRDPatches:
-      - op: remove
-        path: /spec/versions/0/schema/openAPIV3Schema/properties/status/properties/platformStatus/properties/ibmcloud/properties/serviceEndpoints/items/url/maxlength
+      - op: replace
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/platformSpec/properties/powervs/properties/serviceEndpoints/items/properties/name
+        value:
+          pattern: "^[a-z0-9-]+$"
+          type: string
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
-        status:
-          platformStatus:
-            type: IBMCloud
-            ibmcloud:
-              cisInstanceCRN: oldCRN
+        spec:
+          platformSpec:
+            type: PowerVS
+            powervs:
               serviceEndpoints:
-              - name: IAM
-                url: https://foobarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobar/api/v1
+              - name: dnsservices
+                url: https://abc
       updated: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
-        status:
-          cloudConfig: {}
-          platformStatus:
-            type: IBMCloud
-            ibmcloud:
-              cisInstanceCRN: newCRN
+        spec:
+          platformSpec:
+            type: PowerVS
+            powervs:
               serviceEndpoints:
-              - name: IAM
-                url: https://foobarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobar/api/v1
-      expected: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        status:
-          cloudConfig: {}
-          platformStatus:
-            type: IBMCloud
-            ibmcloud:
-              cisInstanceCRN: newCRN
-              serviceEndpoints:
-              - name: IAM
-                url: https://foobarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobar/api/v1
-    - name: Should allow updating other fields with an invalid persisted IBMCloud service endpoint list that exceeds the max amount of items in status
+              - name: dnsservices2
+                url: https://abc
+      expectedError: 'spec.platformSpec.powervs.serviceEndpoints[0].name: Unsupported value: "dnsservices2": supported values: "CIS", "COS", "COSConfig", "DNSServices", "GlobalCatalog", "GlobalSearch", "GlobalTagging", "HyperProtect", "IAM", "KeyProtect", "Power", "ResourceController", "ResourceManager", "VPC"'
+    - name: Should allow updating adding updating an invalid value to a valid value for PowerVS service endpoint name in spec
       initialCRDPatches:
-      - op: remove
-        path: /spec/versions/0/schema/openAPIV3Schema/properties/status/properties/platformStatus/properties/ibmcloud/properties/serviceEndpoints/MaxItems
+      - op: replace
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/platformSpec/properties/powervs/properties/serviceEndpoints/items/properties/name
+        value:
+          pattern: "^[a-z0-9-]+$"
+          type: string
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
-        status:
-          platformStatus:
-            type: IBMCloud
-            ibmcloud:
-              cisInstanceCRN: oldCRN
+        spec:
+          platformSpec:
+            type: PowerVS
+            powervs:
               serviceEndpoints:
-              - name: IAM
-                url: https://foobar/v1
-              - name: IAM2
-                url: https://foobar/v1
-              - name: IAM3
-                url: https://foobar/v1
-              - name: IAM4
-                url: https://foobar/v1
-              - name: IAM5
-                url: https://foobar/v1
-              - name: IAM6
-                url: https://foobar/v1
-              - name: IAM7
-                url: https://foobar/v1
-              - name: IAM8
-                url: https://foobar/v1
-              - name: IAM9
-                url: https://foobar/v1
-              - name: IAM10
-                url: https://foobar/v1
-              - name: IAM11
-                url: https://foobar/v1
-              - name: IAM12
-                url: https://foobar/v1
-              - name: IAM13
-                url: https://foobar/v1
-              - name: IAM14
-                url: https://foobar/v1
-              - name: IAM15
-                url: https://foobar/v1
-              - name: IAM16
-                url: https://foobar/v1
-              - name: IAM17
-                url: https://foobar/v1
-              - name: IAM18
-                url: https://foobar/v1
-              - name: IAM19
-                url: https://foobar/v1
-              - name: IAM20
-                url: https://foobar/v1
-              - name: IAM21
-                url: https://foobar/v1
-              - name: IAM22
-                url: https://foobar/v1
-              - name: IAM23
-                url: https://foobar/v1
-              - name: IAM24
-                url: https://foobar/v1
-              - name: IAM25
-                url: https://foobar/v1
-              - name: IAM26
-                url: https://foobar/v1
+              - name: dnsservices
+                url: https://abc
       updated: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
-        status:
-          cloudConfig: {}
-          platformStatus:
-            type: IBMCloud
-            ibmcloud:
-              cisInstanceCRN: newCRN
+        spec:
+          platformSpec:
+            type: PowerVS
+            powervs:
               serviceEndpoints:
-              - name: IAM
-                url: https://foobar/v1
-              - name: IAM2
-                url: https://foobar/v1
-              - name: IAM3
-                url: https://foobar/v1
-              - name: IAM4
-                url: https://foobar/v1
-              - name: IAM5
-                url: https://foobar/v1
-              - name: IAM6
-                url: https://foobar/v1
-              - name: IAM7
-                url: https://foobar/v1
-              - name: IAM8
-                url: https://foobar/v1
-              - name: IAM9
-                url: https://foobar/v1
-              - name: IAM10
-                url: https://foobar/v1
-              - name: IAM11
-                url: https://foobar/v1
-              - name: IAM12
-                url: https://foobar/v1
-              - name: IAM13
-                url: https://foobar/v1
-              - name: IAM14
-                url: https://foobar/v1
-              - name: IAM15
-                url: https://foobar/v1
-              - name: IAM16
-                url: https://foobar/v1
-              - name: IAM17
-                url: https://foobar/v1
-              - name: IAM18
-                url: https://foobar/v1
-              - name: IAM19
-                url: https://foobar/v1
-              - name: IAM20
-                url: https://foobar/v1
-              - name: IAM21
-                url: https://foobar/v1
-              - name: IAM22
-                url: https://foobar/v1
-              - name: IAM23
-                url: https://foobar/v1
-              - name: IAM24
-                url: https://foobar/v1
-              - name: IAM25
-                url: https://foobar/v1
-              - name: IAM26
-                url: https://foobar/v1
+              - name: DNSServices
+                url: https://abc
       expected: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
-        status:
-          cloudConfig: {}
-          platformStatus:
-            type: IBMCloud
-            ibmcloud:
-              cisInstanceCRN: newCRN
+        spec:
+          platformSpec:
+            type: PowerVS
+            powervs:
               serviceEndpoints:
-              - name: IAM
-                url: https://foobar/v1
-              - name: IAM2
-                url: https://foobar/v1
-              - name: IAM3
-                url: https://foobar/v1
-              - name: IAM4
-                url: https://foobar/v1
-              - name: IAM5
-                url: https://foobar/v1
-              - name: IAM6
-                url: https://foobar/v1
-              - name: IAM7
-                url: https://foobar/v1
-              - name: IAM8
-                url: https://foobar/v1
-              - name: IAM9
-                url: https://foobar/v1
-              - name: IAM10
-                url: https://foobar/v1
-              - name: IAM11
-                url: https://foobar/v1
-              - name: IAM12
-                url: https://foobar/v1
-              - name: IAM13
-                url: https://foobar/v1
-              - name: IAM14
-                url: https://foobar/v1
-              - name: IAM15
-                url: https://foobar/v1
-              - name: IAM16
-                url: https://foobar/v1
-              - name: IAM17
-                url: https://foobar/v1
-              - name: IAM18
-                url: https://foobar/v1
-              - name: IAM19
-                url: https://foobar/v1
-              - name: IAM20
-                url: https://foobar/v1
-              - name: IAM21
-                url: https://foobar/v1
-              - name: IAM22
-                url: https://foobar/v1
-              - name: IAM23
-                url: https://foobar/v1
-              - name: IAM24
-                url: https://foobar/v1
-              - name: IAM25
-                url: https://foobar/v1
-              - name: IAM26
-                url: https://foobar/v1
+              - name: DNSServices
+                url: https://abc
+    - name: Should allow updating other fields with an invalid persisted PowerVS service endpoint name in status
+      initialCRDPatches:
+      - op: replace
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/status/properties/platformStatus/properties/powervs/properties/serviceEndpoints/items/properties/name
+        value:
+          pattern: "^[a-z0-9-]+$"
+          type: string
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          platformStatus:
+            type: PowerVS
+            powervs:
+              serviceEndpoints:
+              - name: dnsservices
+                url: https://abc
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          platformStatus:
+            type: PowerVS
+            powervs:
+              region: Foo
+              serviceEndpoints:
+              - name: dnsservices
+                url: https://abc
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: HighlyAvailable
+          cpuPartitioning: None
+          infrastructureTopology: HighlyAvailable
+          platformStatus:
+            type: PowerVS
+            powervs:
+              region: Foo
+              serviceEndpoints:
+              - name: dnsservices
+                url: https://abc
+    - name: Should allow updating adding another slice entry with an invalid persisted PowerVS service endpoint name in status
+      initialCRDPatches:
+      - op: replace
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/status/properties/platformStatus/properties/powervs/properties/serviceEndpoints/items/properties/name
+        value:
+          pattern: "^[a-z0-9-]+$"
+          type: string
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          platformStatus:
+            type: PowerVS
+            powervs:
+              serviceEndpoints:
+              - name: dnsservices
+                url: https://abc
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          platformStatus:
+            type: PowerVS
+            powervs:
+              serviceEndpoints:
+              - name: dnsservices
+                url: https://abc
+              - name: DNSServices
+                url: https://abc
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: HighlyAvailable
+          cpuPartitioning: None
+          infrastructureTopology: HighlyAvailable
+          platformStatus:
+            type: PowerVS
+            powervs:
+              serviceEndpoints:
+              - name: dnsservices
+                url: https://abc
+              - name: DNSServices
+                url: https://abc
+    - name: Should not allow updating adding an invalid value to a still invalid value for a PowerVS service endpoint name in status
+      initialCRDPatches:
+      - op: replace
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/status/properties/platformStatus/properties/powervs/properties/serviceEndpoints/items/properties/name
+        value:
+          pattern: "^[a-z0-9-]+$"
+          type: string
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          platformStatus:
+            type: PowerVS
+            powervs:
+              serviceEndpoints:
+              - name: dnsservices
+                url: https://abc
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          platformStatus:
+            type: PowerVS
+            powervs:
+              serviceEndpoints:
+              - name: dnsservices2
+                url: https://abc
+      expectedStatusError: 'status.platformStatus.powervs.serviceEndpoints[0].name: Unsupported value: "dnsservices2": supported values: "CIS", "COS", "COSConfig", "DNSServices", "GlobalCatalog", "GlobalSearch", "GlobalTagging", "HyperProtect", "IAM", "KeyProtect", "Power", "ResourceController", "ResourceManager", "VPC"'
+    - name: Should allow updating adding updating an invalid value to a valid value for PowerVS service endpoint name in status
+      initialCRDPatches:
+      - op: replace
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/status/properties/platformStatus/properties/powervs/properties/serviceEndpoints/items/properties/name
+        value:
+          pattern: "^[a-z0-9-]+$"
+          type: string
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          platformStatus:
+            type: PowerVS
+            powervs:
+              serviceEndpoints:
+              - name: dnsservices
+                url: https://abc
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          platformStatus:
+            type: PowerVS
+            powervs:
+              serviceEndpoints:
+              - name: DNSServices
+                url: https://abc
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: HighlyAvailable
+          cpuPartitioning: None
+          infrastructureTopology: HighlyAvailable
+          platformStatus:
+            type: PowerVS
+            powervs:
+              serviceEndpoints:
+              - name: DNSServices
+                url: https://abc

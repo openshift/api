@@ -59,6 +59,9 @@
                         "name": "Example"
                     },
                     {
+                        "name": "Example2"
+                    },
+                    {
                         "name": "GCPClusterHostedDNS"
                     },
                     {
@@ -114,9 +117,6 @@
                     },
                     {
                         "name": "MultiArchInstallAzure"
-                    },
-                    {
-                        "name": "NetworkSegmentation"
                     },
                     {
                         "name": "NewOLM"
@@ -248,6 +248,9 @@
                     },
                     {
                         "name": "NetworkLiveMigration"
+                    },
+                    {
+                        "name": "NetworkSegmentation"
                     },
                     {
                         "name": "NodeDisruptionPolicy"

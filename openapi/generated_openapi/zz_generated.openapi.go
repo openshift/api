@@ -439,6 +439,17 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1alpha1.RetentionSizeConfig":                                       schema_openshift_api_config_v1alpha1_RetentionSizeConfig(ref),
 		"github.com/openshift/api/config/v1alpha1.Storage":                                                   schema_openshift_api_config_v1alpha1_Storage(ref),
 		"github.com/openshift/api/config/v1alpha1.UserDefinedMonitoring":                                     schema_openshift_api_config_v1alpha1_UserDefinedMonitoring(ref),
+		"github.com/openshift/api/config/v1alpha2.Custom":                                                    schema_openshift_api_config_v1alpha2_Custom(ref),
+		"github.com/openshift/api/config/v1alpha2.GatherConfig":                                              schema_openshift_api_config_v1alpha2_GatherConfig(ref),
+		"github.com/openshift/api/config/v1alpha2.GathererConfig":                                            schema_openshift_api_config_v1alpha2_GathererConfig(ref),
+		"github.com/openshift/api/config/v1alpha2.Gatherers":                                                 schema_openshift_api_config_v1alpha2_Gatherers(ref),
+		"github.com/openshift/api/config/v1alpha2.InsightsDataGather":                                        schema_openshift_api_config_v1alpha2_InsightsDataGather(ref),
+		"github.com/openshift/api/config/v1alpha2.InsightsDataGatherList":                                    schema_openshift_api_config_v1alpha2_InsightsDataGatherList(ref),
+		"github.com/openshift/api/config/v1alpha2.InsightsDataGatherSpec":                                    schema_openshift_api_config_v1alpha2_InsightsDataGatherSpec(ref),
+		"github.com/openshift/api/config/v1alpha2.InsightsDataGatherStatus":                                  schema_openshift_api_config_v1alpha2_InsightsDataGatherStatus(ref),
+		"github.com/openshift/api/config/v1alpha2.PersistentVolumeClaimReference":                            schema_openshift_api_config_v1alpha2_PersistentVolumeClaimReference(ref),
+		"github.com/openshift/api/config/v1alpha2.PersistentVolumeConfig":                                    schema_openshift_api_config_v1alpha2_PersistentVolumeConfig(ref),
+		"github.com/openshift/api/config/v1alpha2.Storage":                                                   schema_openshift_api_config_v1alpha2_Storage(ref),
 		"github.com/openshift/api/console/v1.ApplicationMenuSpec":                                            schema_openshift_api_console_v1_ApplicationMenuSpec(ref),
 		"github.com/openshift/api/console/v1.CLIDownloadLink":                                                schema_openshift_api_console_v1_CLIDownloadLink(ref),
 		"github.com/openshift/api/console/v1.ConsoleCLIDownload":                                             schema_openshift_api_console_v1_ConsoleCLIDownload(ref),
@@ -21624,6 +21635,367 @@ func schema_openshift_api_config_v1alpha1_UserDefinedMonitoring(ref common.Refer
 				Required: []string{"mode"},
 			},
 		},
+	}
+}
+
+func schema_openshift_api_config_v1alpha2_Custom(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "custom provides the custom configuration of gatherers",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"configs": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "configs is a required list of gatherers configurations that can be used to enable or disable specific gatherers. It may not exceed 100 items and each gatherer can be present only once. It is possible to disable an entire set of gatherers while allowing a specific function within that set. The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1alpha2.GathererConfig"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"configs"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha2.GathererConfig"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha2_GatherConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "gatherConfig provides data gathering configuration options.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"dataPolicy": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "dataPolicy is an optional list of DataPolicyOptions that allows user to enable additional obfuscation of the Insights archive data. It may not exceed 2 items and must not contain duplicates. Valid values are ObfuscateNetworking and WorkloadNames. When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated. When set to WorkloadNames, the gathered data about cluster resources will not contain the workload names for your deployments. Resources UIDs will be used instead. When omitted no obfuscation is applied.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"gatherers": {
+						SchemaProps: spec.SchemaProps{
+							Description: "gatherers is a required field that specifies the configuration of the gatherers.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1alpha2.Gatherers"),
+						},
+					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "storage is an optional field that allows user to define persistent storage for gathering jobs to store the Insights data archive. If omitted, the gathering job will use ephemeral storage.",
+							Ref:         ref("github.com/openshift/api/config/v1alpha2.Storage"),
+						},
+					},
+				},
+				Required: []string{"gatherers"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha2.Gatherers", "github.com/openshift/api/config/v1alpha2.Storage"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha2_GathererConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "gathererConfig allows to configure specific gatherers",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the required name of a specific gatherer It may not exceed 256 characters. The format for a gatherer name is: {gatherer}/{function} where the function is optional. Gatherer consists of a lowercase letters only that may include underscores (_). Function consists of a lowercase letters only that may include underscores (_) and is separated from the gatherer by a forward slash (/). The particular gatherers can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"state": {
+						SchemaProps: spec.SchemaProps{
+							Description: "state is a required field that allows you to configure specific gatherer. Valid values are \"Enabled\" and \"Disabled\". When set to Enabled the gatherer will run. When set to Disabled the gatherer will not run.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name", "state"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1alpha2_Gatherers(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "mode is a required field that specifies the mode for gatherers. Allowed values are All, None, and Custom. When set to All, all gatherers wil run and gather data. When set to None, all gatherers will be disabled and no data will be gathered. When set to Custom, the custom configuration from the custom field will be applied.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"custom": {
+						SchemaProps: spec.SchemaProps{
+							Description: "custom provides gathering configuration. It is required when mode is Custom, and forbidden otherwise. Custom configuration allows user to disable only a subset of gatherers. Gatherers that are not explicitly disabled in custom configuration will run.",
+							Ref:         ref("github.com/openshift/api/config/v1alpha2.Custom"),
+						},
+					},
+				},
+				Required: []string{"mode"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha2.Custom"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha2_InsightsDataGather(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "InsightsDataGather provides data gather configuration options for the the Insights Operator.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec holds user settable values for configuration",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1alpha2.InsightsDataGatherSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status holds observed values from the cluster. They may not be overridden.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1alpha2.InsightsDataGatherStatus"),
+						},
+					},
+				},
+				Required: []string{"spec"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha2.InsightsDataGatherSpec", "github.com/openshift/api/config/v1alpha2.InsightsDataGatherStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha2_InsightsDataGatherList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "InsightsDataGatherList is a collection of items Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the required standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "items is the required list of InsightsDataGather objects it may not exceed 100 items",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1alpha2.InsightsDataGather"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha2.InsightsDataGather", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha2_InsightsDataGatherSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"gatherConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "gatherConfig is an optional spec attribute that includes all the configuration options related to gathering of the Insights data and its uploading to the ingress.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1alpha2.GatherConfig"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha2.GatherConfig"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha2_InsightsDataGatherStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1alpha2_PersistentVolumeClaimReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "persistentVolumeClaimReference is a reference to a PersistentVolumeClaim.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is a string that follows the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1alpha2_PersistentVolumeConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "persistentVolumeConfig provides configuration options for PersistentVolume storage.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"claim": {
+						SchemaProps: spec.SchemaProps{
+							Description: "claim is a required field that specifies the configuration of the PersistentVolumeClaim that will be used to store the Insights data archive. The PersistentVolumeClaim must be created in the openshift-insights namespace.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1alpha2.PersistentVolumeClaimReference"),
+						},
+					},
+					"mountPath": {
+						SchemaProps: spec.SchemaProps{
+							Description: "mountPath is an optional field specifying the directory where the PVC will be mounted inside the Insights data gathering Pod. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default mount path is /var/lib/insights-operator The path may not exceed 1024 characters and must not contain a colon.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"claim"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha2.PersistentVolumeClaimReference"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha2_Storage(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "storage provides persistent storage configuration options for gathering jobs. If the type is set to PersistentVolume, then the PersistentVolume must be defined. If the type is set to Ephemeral, then the PersistentVolume must not be defined.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type is a required field that specifies the type of storage that will be used to store the Insights data archive. Valid values are \"PersistentVolume\" and \"Ephemeral\". When set to Ephemeral, the Insights data archive is stored in the ephemeral storage of the gathering job. When set to PersistentVolume, the Insights data archive is stored in the PersistentVolume that is defined by the persistentVolume field.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"persistentVolume": {
+						SchemaProps: spec.SchemaProps{
+							Description: "persistentVolume is an optional field that specifies the PersistentVolume that will be used to store the Insights data archive. The PersistentVolume must be created in the openshift-insights namespace.",
+							Ref:         ref("github.com/openshift/api/config/v1alpha2.PersistentVolumeConfig"),
+						},
+					},
+				},
+				Required: []string{"type"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha2.PersistentVolumeConfig"},
 	}
 }
 

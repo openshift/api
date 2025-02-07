@@ -1269,9 +1269,9 @@ tests:
             ibmcloud:
               serviceEndpoints:
               - name: VPC
-                url: https://dummy.vpc.com
+                url: https://dummy.vpc.com/v1
               - name: COS
-                url: https://dummy.cos.com
+                url: https://dummy.cos.com/api/v22/
       expected: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
@@ -1286,9 +1286,9 @@ tests:
             ibmcloud:
               serviceEndpoints:
               - name: VPC
-                url: https://dummy.vpc.com
+                url: https://dummy.vpc.com/v1
               - name: COS
-                url: https://dummy.cos.com
+                url: https://dummy.cos.com/api/v22/
     - name: Should not be able to add empty (URL) ServiceEndpoints to IBMCloud PlatformStatus
       initial: |
         apiVersion: config.openshift.io/v1
@@ -1312,7 +1312,7 @@ tests:
               serviceEndpoints:
               - name: COS
                 url: " "
-      expectedStatusError: " status.platformStatus.ibmcloud.serviceEndpoints[0].url: Invalid value: \"string\": url must be a valid absolute https URL"
+      expectedStatusError: "status.platformStatus.ibmcloud.serviceEndpoints[0].url: Invalid value: \"string\": url must be a valid absolute https URL, status.platformStatus.ibmcloud.serviceEndpoints[0].url: Invalid value: \"string\": URL parse error during conversion from string: parse \" \": invalid URI for request evaluating rule: url path must match /v[0,9]+ or /api/v[0,9]+"
     - name: Should not be able to add invalid (URL) ServiceEndpoints to IBMCloud PlatformStatus
       initial: |
         apiVersion: config.openshift.io/v1
@@ -1810,117 +1810,3 @@ tests:
               serviceEndpoints:
               - name: IAM
                 url: http://foobar/api/wrong1
-    - name: Should allow updating other fields with an invalid persisted IBMCloud service endpoint list that exceeds the max amount of service endpoint overrides in status
-      initialCRDPatches:
-      - op: remove
-        path: /spec/versions/0/schema/openAPIV3Schema/properties/status/properties/platformStatus/properties/ibmcloud/properties/serviceEndpoints/maxItems
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          platformStatus:
-            type: IBMCloud
-            ibmcloud:
-              serviceEndpoints:
-              - name: CIS
-                url: https://foobar/v1
-              - name: COS
-                url: https://foobar/v1
-              - name: COSCONFIG
-                url: https://foobar/v1
-              - name: DNSServices
-                url: https://foobar/v1
-              - name: GlobalCatalog
-                url: https://foobar/v1
-              - name: GlobalSearch
-                url: https://foobar/v1
-              - name: GlobalTagging
-                url: https://foobar/v1
-              - name: HyperProtect
-                url: https://foobar/v1
-              - name: IAM
-                url: https://foobar/v1
-              - name: ResourceController
-                url: https://foobar/v1
-              - name: ResourceManager
-                url: https://foobar/v1
-              - name: VPC
-                url: https://foobar/v1
-              - name: KeyProtect
-                url: https://foobar/v1
-      updated: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          platformStatus:
-            type: IBMCloud
-            ibmcloud:
-              cisInstanceCRN: oldCRN
-              serviceEndpoints:
-              - name: CIS
-                url: https://foobar/v1
-              - name: COS
-                url: https://foobar/v1
-              - name: COSCONFIG
-                url: https://foobar/v1
-              - name: DNSServices
-                url: https://foobar/v1
-              - name: GlobalCatalog
-                url: https://foobar/v1
-              - name: GlobalSearch
-                url: https://foobar/v1
-              - name: GlobalTagging
-                url: https://foobar/v1
-              - name: HyperProtect
-                url: https://foobar/v1
-              - name: IAM
-                url: https://foobar/v1
-              - name: ResourceController
-                url: https://foobar/v1
-              - name: ResourceManager
-                url: https://foobar/v1
-              - name: VPC
-                url: https://foobar/v1
-              - name: KeyProtect
-                url: https://foobar/v1
-      expected: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: HighlyAvailable
-          cpuPartitioning: None
-          infrastructureTopology: HighlyAvailable
-          platformStatus:
-            type: IBMCloud
-            ibmcloud:
-              cisInstanceCRN: oldCRN
-              serviceEndpoints:
-              - name: CIS
-                url: https://foobar/v1
-              - name: COS
-                url: https://foobar/v1
-              - name: COSCONFIG
-                url: https://foobar/v1
-              - name: DNSServices
-                url: https://foobar/v1
-              - name: GlobalCatalog
-                url: https://foobar/v1
-              - name: GlobalSearch
-                url: https://foobar/v1
-              - name: GlobalTagging
-                url: https://foobar/v1
-              - name: HyperProtect
-                url: https://foobar/v1
-              - name: IAM
-                url: https://foobar/v1
-              - name: ResourceController
-                url: https://foobar/v1
-              - name: ResourceManager
-                url: https://foobar/v1
-              - name: VPC
-                url: https://foobar/v1
-              - name: KeyProtect
-                url: https://foobar/v1

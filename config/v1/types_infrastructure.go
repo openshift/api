@@ -1622,7 +1622,7 @@ type IBMCloudServiceEndpoint struct {
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:MaxLength=300
 	// +kubebuilder:validation:XValidation:rule="isURL(self) && url(self).getScheme() == \"https\"",message="url must be a valid absolute https URL"
-	// +kubebuilder:validation:XValidation:rule=`url(self).getEscapedPath().matches('^/(api/)?v[0-9]+/{0,1}$')`,message="url path must match /v[0,9]+ or /api/v[0,9]+"
+	// +kubebuilder:validation:XValidation:rule=`matches((url(self).getEscapedPath()), '^/(api/)?v[0-9]+/{0,1}$')`,message="url path must match /v[0,9]+ or /api/v[0,9]+"
 	URL string `json:"url"`
 }
 

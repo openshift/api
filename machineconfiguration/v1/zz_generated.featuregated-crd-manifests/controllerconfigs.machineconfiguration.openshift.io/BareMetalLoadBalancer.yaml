@@ -554,7 +554,8 @@ spec:
                                         rule: isURL(self) && url(self).getScheme()
                                           == "https"
                                       - message: url path must match /v[0,9]+ or /api/v[0,9]+
-                                        rule: url(self).getEscapedPath().matches('^/(api/)?v[0-9]+/{0,1}$')
+                                        rule: matches((url(self).getEscapedPath()),
+                                          '^/(api/)?v[0-9]+/{0,1}$')
                                   required:
                                   - name
                                   - url
@@ -1888,7 +1889,8 @@ spec:
                                         rule: isURL(self) && url(self).getScheme()
                                           == "https"
                                       - message: url path must match /v[0,9]+ or /api/v[0,9]+
-                                        rule: url(self).getEscapedPath().matches('^/(api/)?v[0-9]+/{0,1}$')
+                                        rule: matches((url(self).getEscapedPath()),
+                                          '^/(api/)?v[0-9]+/{0,1}$')
                                   required:
                                   - name
                                   - url

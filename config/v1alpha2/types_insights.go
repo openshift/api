@@ -18,11 +18,10 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // +openshift:compatibility-gen:level=4
 type InsightsDataGather struct {
 	metav1.TypeMeta `json:",inline"`
-
 	// metadata is the standard object's metadata.
 	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-
 	// spec holds user settable values for configuration
 	// +required
 	Spec InsightsDataGatherSpec `json:"spec"`
@@ -43,19 +42,21 @@ type InsightsDataGatherStatus struct{}
 // gatherConfig provides data gathering configuration options.
 type GatherConfig struct {
 	// dataPolicy allows user to enable additional global obfuscation of the IP addresses and base domain
-	// in the Insights archive data. Valid values are "None" and "ObfuscateNetworking".
-	// When set to None the data is not obfuscated.
+	// in the Insights archive data. Valid values are "ClearText" and "ObfuscateNetworking".
+	// When set to ClearText the data is not obfuscated.
 	// When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
-	// The current default is None.
+	// The current default is ClearText.
 	// +optional
 	DataPolicy DataPolicy `json:"dataPolicy,omitempty"`
 	// gatherers is a list of gatherers configurations.
 	// The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md.
 	// Run the following command to get the names of last active gatherers:
 	// "oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'"
+	// +kubebuilder:validation:MaxItems=100
+	// +listType=atomic
 	// +optional
-	Gatherers []GathererConfig `json:"gatherers"`
+	Gatherers []GathererConfig `json:"gatherers,omitempty"`
 }
 
 // state declares valid gatherer state types.
@@ -65,6 +66,7 @@ type GathererState string
 // gathererConfig allows to configure specific gatherers
 type GathererConfig struct {
 	// name is the name of specific gatherer
+	// +kubebuilder:validation:MaxLength=256
 	// +required
 	Name string `json:"name"`
 	// state allows you to configure specific gatherer. Valid values are "Enabled", "Disabled" and omitted.
@@ -76,18 +78,23 @@ type GathererConfig struct {
 
 const (
 	// No data obfuscation
-	NoPolicy DataPolicy = "None"
+	ClearText DataPolicyOption = "ClearText"
 	// IP addresses and cluster domain name are obfuscated
-	ObfuscateNetworking DataPolicy = "ObfuscateNetworking"
+	ObfuscateNetworking DataPolicyOption = "ObfuscateNetworking"
 	// Gatherer state marked as disabled, which means that the gatherer will not run.
 	Disabled GathererState = "Disabled"
 	// Gatherer state marked as enabled, which means that the gatherer will run.
 	Enabled GathererState = "Enabled"
 )
 
-// dataPolicy declares valid data policy types
-// +kubebuilder:validation:Enum="";None;ObfuscateNetworking
-type DataPolicy string
+// dataPolicyOption declares valid data policy options
+// +kubebuilder:validation:Enum="";ClearText;ObfuscateNetworking
+type DataPolicyOption string
+
+// DataPolicy is a list of data policy options
+// +listType=set
+// +kubebuilder:validation:MaxItems=5
+type DataPolicy []DataPolicyOption
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
@@ -97,9 +104,12 @@ type DataPolicy string
 // +openshift:compatibility-gen:level=4
 type InsightsDataGatherList struct {
 	metav1.TypeMeta `json:",inline"`
-
 	// metadata is the standard list's metadata.
 	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+	// +required
 	metav1.ListMeta `json:"metadata"`
-	Items           []InsightsDataGather `json:"items"`
+	// items is the list of InsightsDataGather objects
+	// +kubebuilder:validation:MaxItems=100
+	// +required
+	Items []InsightsDataGather `json:"items"`
 }

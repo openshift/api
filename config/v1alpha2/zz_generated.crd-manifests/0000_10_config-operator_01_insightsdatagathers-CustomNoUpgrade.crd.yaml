@@ -53,16 +53,21 @@ spec:
                   dataPolicy:
                     description: |-
                       dataPolicy allows user to enable additional global obfuscation of the IP addresses and base domain
-                      in the Insights archive data. Valid values are "None" and "ObfuscateNetworking".
-                      When set to None the data is not obfuscated.
+                      in the Insights archive data. Valid values are "ClearText" and "ObfuscateNetworking".
+                      When set to ClearText the data is not obfuscated.
                       When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated.
                       When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
-                      The current default is None.
-                    enum:
-                    - ""
-                    - None
-                    - ObfuscateNetworking
-                    type: string
+                      The current default is ClearText.
+                    items:
+                      description: dataPolicyOption declares valid data policy options
+                      enum:
+                      - ""
+                      - ClearText
+                      - ObfuscateNetworking
+                      type: string
+                    maxItems: 5
+                    type: array
+                    x-kubernetes-list-type: set
                   gatherers:
                     description: |-
                       gatherers is a list of gatherers configurations.
@@ -74,6 +79,7 @@ spec:
                       properties:
                         name:
                           description: name is the name of specific gatherer
+                          maxLength: 256
                           type: string
                         state:
                           description: |-
@@ -88,7 +94,9 @@ spec:
                       required:
                       - name
                       type: object
+                    maxItems: 100
                     type: array
+                    x-kubernetes-list-type: atomic
                 type: object
             type: object
           status:

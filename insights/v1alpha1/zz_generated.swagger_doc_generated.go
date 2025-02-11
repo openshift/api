@@ -33,9 +33,10 @@ func (DataGatherList) SwaggerDoc() map[string]string {
 }
 
 var map_DataGatherSpec = map[string]string{
-	"":           "DataGatherSpec contains the configuration for the DataGather.",
-	"dataPolicy": "dataPolicy allows user to enable additional global obfuscation of the IP addresses and base domain in the Insights archive data. Valid values are \"ClearText\" and \"ObfuscateNetworking\". When set to ClearText the data is not obfuscated. When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is ClearText.",
-	"gatherers":  "gatherers is a list of gatherers configurations. The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
+	"":            "DataGatherSpec contains the configuration for the DataGather.",
+	"dataPolicy":  "dataPolicy allows user to enable additional global obfuscation of the IP addresses and base domain in the Insights archive data. Valid values are \"ClearText\" and \"ObfuscateNetworking\". When set to ClearText the data is not obfuscated. When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is ClearText.",
+	"gatherers":   "gatherers is a list of gatherers configurations. The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
+	"storageSpec": "storageSpec allows user to define persistent storage for on-demand gathering jobs to store the Insights data archive. If omitted, the gathering job will use ephemeral storage.",
 }
 
 func (DataGatherSpec) SwaggerDoc() map[string]string {
@@ -112,6 +113,15 @@ var map_ObjectReference = map[string]string{
 
 func (ObjectReference) SwaggerDoc() map[string]string {
 	return map_ObjectReference
+}
+
+var map_StorageSpec = map[string]string{
+	"persistentVolumeClaimName": "persistentVolumeClaimName specifies the name of the PersistentVolumeClaim that will be used to store the Insights data archive.",
+	"mountPath":                 "mountPath is the directory where the PVC will be mounted inside the Insights data gathering Pod. If omitted, the path that is used to store the Insights data archive by Insights operator will be used instead. By default, the path is /var/lib/insights-operator.",
+}
+
+func (StorageSpec) SwaggerDoc() map[string]string {
+	return map_StorageSpec
 }
 
 // AUTO-GENERATED FUNCTIONS END HERE

@@ -11316,6 +11316,11 @@
             "type": "string",
             "default": ""
           }
+        },
+        "storageSpec": {
+          "description": "storageSpec allows user to define persistent storage for on-demand gathering jobs to store the Insights data archive. If omitted, the gathering job will use ephemeral storage.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.StorageSpec"
         }
       }
     },
@@ -11753,6 +11758,23 @@
           "description": "maxSizeOfBackupsGb defines the total size in GB of backups to retain. If the current total size backups exceeds MaxSizeOfBackupsGb then the oldest backup will be removed before a new backup is initiated.",
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.StorageSpec": {
+      "type": "object",
+      "required": [
+        "persistentVolumeClaimName"
+      ],
+      "properties": {
+        "mountPath": {
+          "description": "mountPath is the directory where the PVC will be mounted inside the Insights data gathering Pod. If omitted, the path that is used to store the Insights data archive by Insights operator will be used instead. By default, the path is /var/lib/insights-operator.",
+          "type": "string"
+        },
+        "persistentVolumeClaimName": {
+          "description": "persistentVolumeClaimName specifies the name of the PersistentVolumeClaim that will be used to store the Insights data archive.",
+          "type": "string",
+          "default": ""
         }
       }
     },

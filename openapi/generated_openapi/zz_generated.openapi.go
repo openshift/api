@@ -435,6 +435,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1alpha1.RetentionNumberConfig":                                     schema_openshift_api_config_v1alpha1_RetentionNumberConfig(ref),
 		"github.com/openshift/api/config/v1alpha1.RetentionPolicy":                                           schema_openshift_api_config_v1alpha1_RetentionPolicy(ref),
 		"github.com/openshift/api/config/v1alpha1.RetentionSizeConfig":                                       schema_openshift_api_config_v1alpha1_RetentionSizeConfig(ref),
+		"github.com/openshift/api/config/v1alpha1.StorageSpec":                                               schema_openshift_api_config_v1alpha1_StorageSpec(ref),
 		"github.com/openshift/api/config/v1alpha1.UserDefinedMonitoring":                                     schema_openshift_api_config_v1alpha1_UserDefinedMonitoring(ref),
 		"github.com/openshift/api/console/v1.ApplicationMenuSpec":                                            schema_openshift_api_console_v1_ApplicationMenuSpec(ref),
 		"github.com/openshift/api/console/v1.CLIDownloadLink":                                                schema_openshift_api_console_v1_CLIDownloadLink(ref),
@@ -20755,9 +20756,18 @@ func schema_openshift_api_config_v1alpha1_GatherConfig(ref common.ReferenceCallb
 							},
 						},
 					},
+					"storageSpec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "storageSpec allows user to define persistent storage for on-demand gathering jobs to store the Insights data archive. If omitted, the gathering job will use ephemeral storage.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.StorageSpec"),
+						},
+					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha1.StorageSpec"},
 	}
 }
 
@@ -21467,6 +21477,34 @@ func schema_openshift_api_config_v1alpha1_RetentionSizeConfig(ref common.Referen
 					},
 				},
 				Required: []string{"maxSizeOfBackupsGb"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_StorageSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"persistentVolumeClaimName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "persistentVolumeClaimName specifies the name of the PersistentVolumeClaim that will be used to store the Insights data archive.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"mountPath": {
+						SchemaProps: spec.SchemaProps{
+							Description: "mountPath is the directory where the PVC will be mounted inside the Insights data gathering Pod. If omitted, the path that is used to store the Insights data archive by Insights operator will be used instead. By default, the path is /var/lib/insights-operator.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"persistentVolumeClaimName"},
 			},
 		},
 	}

@@ -330,13 +330,13 @@ spec:
                         advisorURI:
                           description: advisorURI provides the URL link to the Insights
                             Advisor.
-                          maxLength: 512
+                          maxLength: 2048
                           pattern: ^https:\/\/\S+
                           type: string
                         description:
                           description: description provides basic description of the
                             healtcheck.
-                          maxLength: 512
+                          maxLength: 2048
                           minLength: 10
                           type: string
                         state:
@@ -401,7 +401,7 @@ spec:
                       type: string
                     name:
                       description: name of the referent.
-                      maxLength: 512
+                      maxLength: 256
                       type: string
                     namespace:
                       description: namespace of the referent.

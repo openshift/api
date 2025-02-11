@@ -38,8 +38,7 @@ type InsightsDataGatherSpec struct {
 	GatherConfig GatherConfig `json:"gatherConfig,omitempty"`
 }
 
-type InsightsDataGatherStatus struct {
-}
+type InsightsDataGatherStatus struct{}
 
 // gatherConfig provides data gathering configuration options.
 type GatherConfig struct {
@@ -57,8 +56,29 @@ type GatherConfig struct {
 	// Run the following command to get the names of last active gatherers:
 	// "oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'"
 	// An example of disabling gatherers looks like this: `disabledGatherers: ["clusterconfig/machine_configs", "workloads/workload_info"]`
+	// +kubebuilder:validation:MaxItems=100
+	// +kubebuilder:validation:items:MaxLength=256
 	// +optional
 	DisabledGatherers []string `json:"disabledGatherers"`
+	// storageSpec allows user to define persistent storage for on-demand gathering
+	// jobs to store the Insights data archive.
+	// If omitted, the gathering job will use ephemeral storage.
+	// +optional
+	StorageSpec StorageSpec `json:"storageSpec,omitempty"`
+}
+
+type StorageSpec struct {
+	// persistentVolumeClaimName specifies the name of the PersistentVolumeClaim that will
+	// be used to store the Insights data archive.
+	// +kubebuilder:validation:MaxLength=256
+	// +required
+	PersistentVolumeClaimName string `json:"persistentVolumeClaimName"`
+	// mountPath is the directory where the PVC will be mounted inside the Insights data gathering Pod.
+	// If omitted, the path that is used to store the Insights data archive by Insights
+	// operator will be used instead. By default, the path is /var/lib/insights-operator.
+	// +kubebuilder:validation:MaxLength=1024
+	// +optional
+	MountPath string `json:"mountPath,omitempty"`
 }
 
 const (

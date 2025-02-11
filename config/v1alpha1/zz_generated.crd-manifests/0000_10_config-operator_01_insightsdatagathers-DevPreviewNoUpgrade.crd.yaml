@@ -72,8 +72,32 @@ spec:
                       "oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'"
                       An example of disabling gatherers looks like this: `disabledGatherers: ["clusterconfig/machine_configs", "workloads/workload_info"]`
                     items:
+                      maxLength: 256
                       type: string
+                    maxItems: 100
                     type: array
+                  storageSpec:
+                    description: |-
+                      storageSpec allows user to define persistent storage for on-demand gathering
+                      jobs to store the Insights data archive.
+                      If omitted, the gathering job will use ephemeral storage.
+                    properties:
+                      mountPath:
+                        description: |-
+                          mountPath is the directory where the PVC will be mounted inside the Insights data gathering Pod.
+                          If omitted, the path that is used to store the Insights data archive by Insights
+                          operator will be used instead. By default, the path is /var/lib/insights-operator.
+                        maxLength: 1024
+                        type: string
+                      persistentVolumeClaimName:
+                        description: |-
+                          persistentVolumeClaimName specifies the name of the PersistentVolumeClaim that will
+                          be used to store the Insights data archive.
+                        maxLength: 256
+                        type: string
+                    required:
+                    - persistentVolumeClaimName
+                    type: object
                 type: object
             type: object
           status:

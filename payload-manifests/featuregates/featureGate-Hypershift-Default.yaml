@@ -119,6 +119,9 @@
                         "name": "NewOLM"
                     },
                     {
+                        "name": "NewOLMCatalogdMetas"
+                    },
+                    {
                         "name": "NodeSwap"
                     },
                     {

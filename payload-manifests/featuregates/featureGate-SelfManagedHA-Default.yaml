@@ -119,6 +119,9 @@
                         "name": "MultiArchInstallAzure"
                     },
                     {
+                        "name": "NewOLMCatalogdMetas"
+                    },
+                    {
                         "name": "NodeSwap"
                     },
                     {

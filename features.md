@@ -8,6 +8,7 @@
 | MultiArchInstallAzure| | | | | |  |
 | ClusterVersionOperatorConfiguration| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | |  |
 | Example2| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | |  |
+| NewOLMCatalogdMetas| | | <span style="background-color: #519450">Enabled</span> | | <span style="background-color: #519450">Enabled</span> |  |
 | NewOLM| | <span style="background-color: #519450">Enabled</span> | | <span style="background-color: #519450">Enabled</span> | | <span style="background-color: #519450">Enabled</span>  |
 | AWSClusterHostedDNS| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | AutomatedEtcdBackup| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |

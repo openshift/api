@@ -32,6 +32,9 @@
                     },
                     {
                         "name": "MultiArchInstallAzure"
+                    },
+                    {
+                        "name": "NewOLMCatalogdMetas"
                     }
                 ],
                 "enabled": [

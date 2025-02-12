@@ -189,6 +189,9 @@
                         "name": "NetworkSegmentation"
                     },
                     {
+                        "name": "NewOLMCatalogdMetas"
+                    },
+                    {
                         "name": "NodeDisruptionPolicy"
                     },
                     {

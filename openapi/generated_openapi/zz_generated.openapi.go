@@ -47443,7 +47443,7 @@ func schema_openshift_api_operator_v1_IPsecFullModeConfig(ref common.ReferenceCa
 				Properties: map[string]spec.Schema{
 					"encapsulation": {
 						SchemaProps: spec.SchemaProps{
-							Description: "encapsulation option to configure libreswan on how inter-pod traffic across nodes are encapsulated to handle NAT traversal. When configured it uses UDP port 4500 for the encapsulation. Valid values are Always, Never, Auto and omitted. Always means enable UDP encapsulation regardless of whether NAT is detected. Disable means never enable UDP encapsulation even if NAT is present. Auto means enable UDP encapsulation based on the detection of NAT. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is Auto.",
+							Description: "encapsulation option to configure libreswan on how inter-pod traffic across nodes are encapsulated to handle NAT traversal. When configured it uses UDP port 4500 for the encapsulation. Valid values are Always, Auto and omitted. Always means enable UDP encapsulation regardless of whether NAT is detected. Auto means enable UDP encapsulation based on the detection of NAT. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is Auto.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

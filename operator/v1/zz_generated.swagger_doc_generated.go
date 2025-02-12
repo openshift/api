@@ -1584,7 +1584,7 @@ func (IPsecConfig) SwaggerDoc() map[string]string {
 
 var map_IPsecFullModeConfig = map[string]string{
 	"":              "IPsecFullModeConfig defines configuration parameters for the IPsec `Full` mode.",
-	"encapsulation": "encapsulation option to configure libreswan on how inter-pod traffic across nodes are encapsulated to handle NAT traversal. When configured it uses UDP port 4500 for the encapsulation. Valid values are Always, Never, Auto and omitted. Always means enable UDP encapsulation regardless of whether NAT is detected. Disable means never enable UDP encapsulation even if NAT is present. Auto means enable UDP encapsulation based on the detection of NAT. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is Auto.",
+	"encapsulation": "encapsulation option to configure libreswan on how inter-pod traffic across nodes are encapsulated to handle NAT traversal. When configured it uses UDP port 4500 for the encapsulation. Valid values are Always, Auto and omitted. Always means enable UDP encapsulation regardless of whether NAT is detected. Auto means enable UDP encapsulation based on the detection of NAT. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is Auto.",
 }
 
 func (IPsecFullModeConfig) SwaggerDoc() map[string]string {

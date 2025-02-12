@@ -382,7 +382,7 @@ spec:
                       ? self.desiredGeneration >= self.currentGeneration : true'
                   - message: error must be populated on image pull and pin failure
                     rule: 'has(self.desiredGeneration) && has(self.currentGeneration)
-                      && self.desiredGeneration != self.currentGeneration ? has(self.lastSeenError)
+                      && self.desiredGeneration != self.currentGeneration ? has(self.lastPinnedImageSetError)
                       : true'
                 maxItems: 100
                 type: array

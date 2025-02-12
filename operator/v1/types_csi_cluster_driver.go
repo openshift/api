@@ -369,6 +369,22 @@ type VSphereCSIDriverConfigSpec struct {
 	// +openshift:enable:FeatureGate=VSphereDriverConfiguration
 	// +optional
 	GranularMaxSnapshotsPerBlockVolumeInVVOL *uint32 `json:"granularMaxSnapshotsPerBlockVolumeInVVOL,omitempty"`
+
+	// maxAllowedBlockVolumesPerNode is an optional configuration parameter that allows setting custom value for limit of
+	// PersistentVolumes attached to a node. In vSphere version 7 this limit was set to 59 by default, however in
+	// vSphere version 8 this limit was increased to 255. For more details see:
+	// https://configmax.broadcom.com/guest?vmwareproduct=vSphere&release=vSphere%208.0&categories=3-0
+	// Before increasing this value above 59 the cluster administrator needs to ensure that every node forming the
+	// cluster is updated to ESXi version 8 or higher and that all nodes are running the same version.
+	// The limit must be between 1 and 255, which matches the vSphere version 8 maximum.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to
+	// change over time.
+	// The current default is 59, which matches the limit for vSphere version 7.
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=255
+	// +openshift:enable:FeatureGate=VSphereConfigurableMaxAllowedBlockVolumesPerNode
+	// +optional
+	MaxAllowedBlockVolumesPerNode *int32 `json:"maxAllowedBlockVolumesPerNode,omitempty"`
 }
 
 // ClusterCSIDriverStatus is the observed status of CSI driver operator

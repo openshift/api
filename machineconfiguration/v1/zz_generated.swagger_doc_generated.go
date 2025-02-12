@@ -451,12 +451,11 @@ func (MachineConfigNodeStatusMachineConfigVersion) SwaggerDoc() map[string]strin
 }
 
 var map_MachineConfigNodeStatusPinnedImageSet = map[string]string{
-	"":                           "MachineConfigNodeStatusPinnedImageSet holds information about the current and desired pinned image sets for the current observed machine config node.",
-	"name":                       "name is the name of the pinned image set. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) consisting of only lowercase alphanumeric characters, hyphens (-), and periods (.), start and end with an alphanumeric character, and be at most 253 characters in length.",
-	"currentGeneration":          "currentGeneration is the generation of the pinned image set that has most recently been successfully pulled and pinned on this node.",
-	"desiredGeneration":          "desiredGeneration is the generation of the pinned image set that is targeted to be pulled and pinned on this node.",
-	"lastFailedGeneration":       "lastFailedGeneration is the generation of the most recent pinned image set that failed to be pulled and pinned on this node.",
-	"lastFailedGenerationErrors": "lastFailedGenerationErrors is a list of errors explaining why the lastFailed generation failed to be pulled and pinned.",
+	"":                  "MachineConfigNodeStatusPinnedImageSet holds information about the current and desired pinned image sets for the current observed machine config node.",
+	"name":              "name is the name of the pinned image set. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) consisting of only lowercase alphanumeric characters, hyphens (-), and periods (.), start and end with an alphanumeric character, and be at most 253 characters in length.",
+	"currentGeneration": "currentGeneration is the generation of the pinned image set that has most recently been successfully pulled and pinned on this node.",
+	"desiredGeneration": "desiredGeneration is the generation of the pinned image set that is targeted to be pulled and pinned on this node.",
+	"lastSeenError":     "lastSeenError is the error explaining why the desired images failed to be pulled and pinned. The error is an empty string if the image pull and pin is successful.",
 }
 
 func (MachineConfigNodeStatusPinnedImageSet) SwaggerDoc() map[string]string {

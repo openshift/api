@@ -338,7 +338,11 @@ spec:
                         image set that has most recently been successfully pulled
                         and pinned on this node.
                       format: int32
+                      minimum: 0
                       type: integer
+                      x-kubernetes-validations:
+                      - message: currentGeneration must not move backwards
+                        rule: self >= oldSelf
                     desiredGeneration:
                       description: desiredGeneration is the generation of the pinned
                         image set that is targeted to be pulled and pinned on this
@@ -346,35 +350,15 @@ spec:
                       format: int32
                       minimum: 0
                       type: integer
-                    lastFailedGeneration:
-                      description: lastFailedGeneration is the generation of the most
-                        recent pinned image set that failed to be pulled and pinned
-                        on this node.
-                      format: int32
-                      minimum: 0
-                      type: integer
-                    lastFailedGenerationErrors:
-                      description: lastFailedGenerationErrors is a list of errors
-                        explaining why the lastFailed generation failed to be pulled
-                        and pinned.
-                      items:
-                        description: MachineConfigNodeStatusPinnedImageSetError holds
-                          information on the the errors associated with failed attempts
-                          at pulling and pinning images
-                        properties:
-                          message:
-                            description: message is the message of the pinned image
-                              error.
-                            maxLength: 2048
-                            type: string
-                        required:
-                        - message
-                        type: object
-                      maxItems: 10
-                      type: array
-                      x-kubernetes-list-map-keys:
-                      - message
-                      x-kubernetes-list-type: map
+                      x-kubernetes-validations:
+                      - message: desiredGeneration must not move backwards
+                        rule: self >= oldSelf
+                    lastSeenError:
+                      description: |-
+                        lastSeenError is the error explaining why the desired images failed to be pulled and pinned.
+                        The error is an empty string if the image pull and pin is successful.
+                      maxLength: 3276
+                      type: string
                     name:
                       description: |-
                         name is the name of the pinned image set.
@@ -396,14 +380,10 @@ spec:
                       current generation
                     rule: 'has(self.desiredGeneration) && has(self.currentGeneration)
                       ? self.desiredGeneration >= self.currentGeneration : true'
-                  - message: desired generation must be greater than or equal to last
-                      failed generation
-                    rule: 'has(self.lastFailedGeneration) && has(self.desiredGeneration)
-                      ? self.desiredGeneration >= self.lastFailedGeneration : true'
-                  - message: desired generation must be defined if last failed generation
-                      is defined
-                    rule: 'has(self.lastFailedGeneration) ? has(self.desiredGeneration):
-                      true'
+                  - message: error must be populated on image pull and pin failure
+                    rule: 'has(self.desiredGeneration) && has(self.currentGeneration)
+                      && self.desiredGeneration != self.currentGeneration ? has(self.lastSeenError)
+                      : true'
                 maxItems: 100
                 type: array
                 x-kubernetes-list-map-keys:

@@ -141,8 +141,7 @@ type MachineConfigNodeStatus struct {
 
 // MachineConfigNodeStatusPinnedImageSet holds information about the current and desired pinned image sets for the current observed machine config node.
 // +kubebuilder:validation:XValidation:rule="has(self.desiredGeneration) && has(self.currentGeneration) ? self.desiredGeneration >= self.currentGeneration : true",message="desired generation must be greater than or equal to the current generation"
-// +kubebuilder:validation:XValidation:rule="has(self.lastFailedGeneration) && has(self.desiredGeneration) ? self.desiredGeneration >= self.lastFailedGeneration : true",message="desired generation must be greater than or equal to last failed generation"
-// +kubebuilder:validation:XValidation:rule="has(self.lastFailedGeneration) ? has(self.desiredGeneration): true",message="desired generation must be defined if last failed generation is defined"
+// +kubebuilder:validation:XValidation:rule="has(self.desiredGeneration) && has(self.currentGeneration) && self.desiredGeneration != self.currentGeneration ? has(self.lastSeenError) : true",message="error must be populated on image pull and pin failure"
 type MachineConfigNodeStatusPinnedImageSet struct {
 	// name is the name of the pinned image set.
 	// Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) consisting
@@ -153,22 +152,20 @@ type MachineConfigNodeStatusPinnedImageSet struct {
 	// +required
 	Name string `json:"name"`
 	// currentGeneration is the generation of the pinned image set that has most recently been successfully pulled and pinned on this node.
+	// +kubebuilder:validation:XValidation:rule="self >= oldSelf", message="currentGeneration must not move backwards"
+	// +kubebuilder:validation:Minimum=0
 	// +optional
 	CurrentGeneration int32 `json:"currentGeneration,omitempty"`
 	// desiredGeneration is the generation of the pinned image set that is targeted to be pulled and pinned on this node.
+	// +kubebuilder:validation:XValidation:rule="self >= oldSelf", message="desiredGeneration must not move backwards"
 	// +kubebuilder:validation:Minimum=0
 	// +optional
 	DesiredGeneration int32 `json:"desiredGeneration,omitempty"`
-	// lastFailedGeneration is the generation of the most recent pinned image set that failed to be pulled and pinned on this node.
-	// +kubebuilder:validation:Minimum=0
+	// lastSeenError is the error explaining why the desired images failed to be pulled and pinned.
+	// The error is an empty string if the image pull and pin is successful.
+	// +kubebuilder:validation:MaxLength=3276
 	// +optional
-	LastFailedGeneration int32 `json:"lastFailedGeneration,omitempty"`
-	// lastFailedGenerationErrors is a list of errors explaining why the lastFailed generation failed to be pulled and pinned.
-	// +kubebuilder:validation:MaxItems=10
-	// +listType=map
-	// +listMapKey=message
-	// +optional
-	LastFailedGenerationErrors []MachineConfigNodeStatusPinnedImageSetError `json:"lastFailedGenerationErrors,omitempty"`
+	LastSeenError string `json:"lastSeenError,omitempty"`
 }
 
 // MachineConfigNodeStatusMachineConfigVersion holds the current and desired config versions as last updated in the MCN status.

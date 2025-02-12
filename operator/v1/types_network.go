@@ -579,8 +579,6 @@ type Encapsulation string
 const (
 	// EncapsulationAlways always enable UDP encapsulation regardless of whether NAT is detected.
 	EncapsulationAlways = "Always"
-	// EncapsulationNever never enable UDP encapsulation even if NAT is present.
-	EncapsulationNever = "Never"
 	// EncapsulationAuto enable UDP encapsulation based on the detection of NAT.
 	EncapsulationAuto = "Auto"
 )
@@ -591,13 +589,12 @@ type IPsecFullModeConfig struct {
 	// encapsulation option to configure libreswan on how inter-pod traffic across nodes
 	// are encapsulated to handle NAT traversal. When configured it uses UDP port 4500
 	// for the encapsulation.
-	// Valid values are Always, Never, Auto and omitted.
+	// Valid values are Always, Auto and omitted.
 	// Always means enable UDP encapsulation regardless of whether NAT is detected.
-	// Disable means never enable UDP encapsulation even if NAT is present.
 	// Auto means enable UDP encapsulation based on the detection of NAT.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable
 	// default, which is subject to change over time. The current default is Auto.
-	// +kubebuilder:validation:Enum:=Always;Never;Auto
+	// +kubebuilder:validation:Enum:=Always;Auto
 	// +optional
 	Encapsulation Encapsulation `json:"encapsulation,omitempty"`
 }

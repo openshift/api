@@ -91,6 +91,9 @@ spec:
                           operator will be used instead. The path cannot exceed 1024 characters and defaults to "/var/lib/insights-operator".
                         maxLength: 1024
                         type: string
+                        x-kubernetes-validations:
+                        - message: mountPath must not contain a colon
+                          rule: '!self.contains('':'')'
                       persistentVolumeClaimName:
                         description: |-
                           persistentVolumeClaimName is required field that specifies the name of the PersistentVolumeClaim that will

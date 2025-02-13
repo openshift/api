@@ -77,6 +77,7 @@ type StorageSpec struct {
 	// Insights data gathering Pod. If omitted, the path that is used to store the Insights data archive by Insights
 	// operator will be used instead. The path cannot exceed 1024 characters and defaults to "/var/lib/insights-operator".
 	// +kubebuilder:validation:MaxLength=1024
+	// +kubebuilder:validation:XValidation:rule="!self.contains(':')",message="mountPath must not contain a colon"
 	// +default="/var/lib/insights-operator"
 	// +optional
 	MountPath string `json:"mountPath,omitempty"`

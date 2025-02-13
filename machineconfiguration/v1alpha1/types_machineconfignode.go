@@ -140,7 +140,7 @@ type MachineConfigNodeStatus struct {
 
 // MachineConfigNodeStatusPinnedImageSet holds information about the current and desired pinned image sets for the current observed machine config node.
 // +kubebuilder:validation:XValidation:rule="has(self.desiredGeneration) && has(self.currentGeneration) ? self.desiredGeneration >= self.currentGeneration : true",message="desired generation must be greater than or equal to the current generation"
-// +kubebuilder:validation:XValidation:rule="has(self.desiredGeneration) && has(self.currentGeneration) && self.desiredGeneration != self.currentGeneration ? has(self.lastPinnedImageSetError) : true",message="error must be populated on image pull and pin failure"
+// +kubebuilder:validation:XValidation:rule="has(self.desiredGeneration) && has(self.currentGeneration) && self.desiredGeneration != self.currentGeneration ? has(self.lastPinnedImageSetError) : true",message="lastPinnedImageSetError must be populated on image pull and pin failure"
 type MachineConfigNodeStatusPinnedImageSet struct {
 	// name is the name of the pinned image set.
 	// Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) consisting

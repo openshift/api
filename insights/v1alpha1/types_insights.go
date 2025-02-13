@@ -52,26 +52,31 @@ type DataGatherSpec struct {
 	// +kubebuilder:validation:MaxItems=100
 	// +optional
 	Gatherers []GathererConfig `json:"gatherers,omitempty"`
-	// storageSpec allows user to define persistent storage for on-demand gathering
+	// storageSpec is an optional field that allows user to define persistent storage for on-demand gathering
 	// jobs to store the Insights data archive.
 	// If omitted, the gathering job will use ephemeral storage.
 	// +optional
-	StorageSpec StorageSpec `json:"storageSpec,omitempty"`
+	StorageSpec *StorageSpec `json:"storageSpec,omitempty"`
 }
 
 type StorageSpec struct {
-	// persistentVolumeClaimName specifies the name of the PersistentVolumeClaim that will
-	// be used to store the Insights data archive.
-	// +kubebuilder:validation:MaxLength=256
+	// persistentVolumeClaimName is required field that specifies the name of the PersistentVolumeClaim that will
+	// be used to store the Insights data archive. The persistenVolumeClaim must be created in the openshift-insights namespace.
 	// +required
-	PersistentVolumeClaimName string `json:"persistentVolumeClaimName"`
-	// mountPath is the directory where the PVC will be mounted inside the Insights data gathering Pod.
-	// If omitted, the path that is used to store the Insights data archive by Insights
-	// operator will be used instead. By default, the path is /var/lib/insights-operator.
+	PersistentVolumeClaimName PersistentVolumeClaimName `json:"persistentVolumeClaimName"`
+	// mountPath is an optional field specifying the directory where the PVC will be mounted inside the
+	// Insights data gathering Pod. If omitted, the path that is used to store the Insights data archive by Insights
+	// operator will be used instead. The path cannot exceed 1024 characters and defaults to "/var/lib/insights-operator".
 	// +kubebuilder:validation:MaxLength=1024
+	// +default="/var/lib/insights-operator"
 	// +optional
 	MountPath string `json:"mountPath,omitempty"`
 }
+
+// persistenVolumeClaimName is a string that follows the DNS1123 subdomain format.
+// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
+// +kubebuilder:validation:MaxLength:=253
+type PersistentVolumeClaimName string
 
 const (
 	// No data obfuscation

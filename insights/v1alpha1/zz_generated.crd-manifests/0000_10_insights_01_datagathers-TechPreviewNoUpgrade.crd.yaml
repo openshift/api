@@ -101,23 +101,29 @@ spec:
                 type: array
               storageSpec:
                 description: |-
-                  storageSpec allows user to define persistent storage for on-demand gathering
+                  storageSpec is an optional field that allows user to define persistent storage for on-demand gathering
                   jobs to store the Insights data archive.
                   If omitted, the gathering job will use ephemeral storage.
                 properties:
                   mountPath:
+                    default: /var/lib/insights-operator
                     description: |-
-                      mountPath is the directory where the PVC will be mounted inside the Insights data gathering Pod.
-                      If omitted, the path that is used to store the Insights data archive by Insights
-                      operator will be used instead. By default, the path is /var/lib/insights-operator.
+                      mountPath is an optional field specifying the directory where the PVC will be mounted inside the
+                      Insights data gathering Pod. If omitted, the path that is used to store the Insights data archive by Insights
+                      operator will be used instead. The path cannot exceed 1024 characters and defaults to "/var/lib/insights-operator".
                     maxLength: 1024
                     type: string
                   persistentVolumeClaimName:
                     description: |-
-                      persistentVolumeClaimName specifies the name of the PersistentVolumeClaim that will
-                      be used to store the Insights data archive.
-                    maxLength: 256
+                      persistentVolumeClaimName is required field that specifies the name of the PersistentVolumeClaim that will
+                      be used to store the Insights data archive. The persistenVolumeClaim must be created in the openshift-insights namespace.
+                    maxLength: 253
                     type: string
+                    x-kubernetes-validations:
+                    - message: a lowercase RFC 1123 subdomain must consist of lower
+                        case alphanumeric characters, '-' or '.', and must start and
+                        end with an alphanumeric character.
+                      rule: '!format.dns1123Subdomain().validate(self).hasValue()'
                 required:
                 - persistentVolumeClaimName
                 type: object

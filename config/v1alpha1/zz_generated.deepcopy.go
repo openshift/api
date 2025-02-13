@@ -356,7 +356,11 @@ func (in *GatherConfig) DeepCopyInto(out *GatherConfig) {
 		*out = make([]string, len(*in))
 		copy(*out, *in)
 	}
-	out.StorageSpec = in.StorageSpec
+	if in.StorageSpec != nil {
+		in, out := &in.StorageSpec, &out.StorageSpec
+		*out = new(StorageSpec)
+		**out = **in
+	}
 	return
 }
 

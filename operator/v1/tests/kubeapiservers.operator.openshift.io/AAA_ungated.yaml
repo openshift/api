@@ -16,6 +16,9 @@ tests:
           operatorLogLevel: Normal
   onUpdate:
     - name: Should reject multiple nodes with nonzero target revisions
+      initialCRDPatches:
+      - op: remove
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/status/properties/nodeStatuses/items/x-kubernetes-validations/1
       initial: |
         apiVersion: operator.openshift.io/v1
         kind: KubeAPIServer
@@ -43,6 +46,9 @@ tests:
           - nodeName: d
       expectedStatusError: "status.nodeStatuses: Invalid value: \"array\": no more than 1 node status may have a nonzero targetRevision"
     - name: Should reject decreasing currentRevision
+      initialCRDPatches:
+      - op: remove
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/status/properties/nodeStatuses/items/x-kubernetes-validations/1
       initial: |
         apiVersion: operator.openshift.io/v1
         kind: KubeAPIServer
@@ -61,6 +67,9 @@ tests:
             currentRevision: 2
       expectedStatusError: "status.nodeStatuses[0].currentRevision: Invalid value: \"integer\": must only increase"
     - name: Should reject clearing currentRevision
+      initialCRDPatches:
+      - op: remove
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/status/properties/nodeStatuses/items/x-kubernetes-validations/1
       initial: |
         apiVersion: operator.openshift.io/v1
         kind: KubeAPIServer
@@ -77,3 +86,45 @@ tests:
           nodeStatuses:
           - nodeName: a
       expectedStatusError: "status.nodeStatuses[0].currentRevision: Invalid value: \"object\": cannot be unset once set"
+    - name: Should reject adding nodes and setting revision simultaneously
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {} # No spec is required for a KubeAPIServer
+        status:
+          nodeStatuses: []
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {} # No spec is required for a KubeAPIServer
+        status:
+          nodeStatuses:
+          - nodeName: a
+            currentRevision: 3
+      expectedStatusError: "status.nodeStatuses[0]: Invalid value: \"object\": new node statuses may not set a revision"
+    - name: Should allow adding nodes with name only
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {} # No spec is required for a KubeAPIServer
+        status:
+          nodeStatuses:
+          - nodeName: a
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {} # No spec is required for a KubeAPIServer
+        status:
+          nodeStatuses:
+          - nodeName: a
+          - nodeName: b
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          nodeStatuses:
+          - nodeName: a
+          - nodeName: b

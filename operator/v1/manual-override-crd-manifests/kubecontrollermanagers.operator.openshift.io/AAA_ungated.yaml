@@ -14,3 +14,14 @@ spec:
             properties:
               managementState:
                 pattern: ^(Managed|Force)$
+          status:
+            properties:
+              nodeStatuses:
+                items:
+                  x-kubernetes-validations:
+                  - fieldPath: .currentRevision
+                    message: cannot be unset once set
+                    rule: has(self.currentRevision) || !has(oldSelf.currentRevision)
+                  - message: new node statuses may not set a revision
+                    optionalOldSelf: true
+                    rule: oldSelf.hasValue() || !(has(self.currentRevision) || has(self.targetRevision))

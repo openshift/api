@@ -273,6 +273,7 @@ spec:
                   - fieldPath: .currentRevision
                     message: cannot be unset once set
                     rule: has(self.currentRevision) || !has(oldSelf.currentRevision)
+                maxItems: 8
                 type: array
                 x-kubernetes-list-map-keys:
                 - nodeName

@@ -1,6 +1,8 @@
 apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
 name: "Infrastructure"
 crdName: infrastructures.config.openshift.io
+featureGates:
+- -AWSClusterHostedDNS
 tests:
   onCreate:
     - name: Should be able to create a minimal Infrastructure
@@ -1675,3 +1677,163 @@ tests:
               serviceEndpoints:
               - name: DNSServices
                 url: https://abc
+    - name: Should be able to create an aws resourcetag with spaces
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            aws: {}
+            type: AWS
+        status:
+          controlPlaneTopology: HighlyAvailable
+          cpuPartitioning: None
+          infrastructureTopology: HighlyAvailable
+          platform: AWS
+          platformStatus:
+            aws:
+              region: us-east-1
+              resourceTags:
+              - key: key with space
+                value: value with space
+            type: AWS
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: AWS
+            aws: {}
+        status:
+          controlPlaneTopology: HighlyAvailable
+          cpuPartitioning: None
+          infrastructureTopology: HighlyAvailable
+          platform: AWS
+          platformStatus:
+            aws:
+              region: us-east-1
+              resourceTags:
+              - key: key with space
+                value: value with space
+            type: AWS
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: AWS
+            aws: {}
+        status:
+          controlPlaneTopology: HighlyAvailable
+          cpuPartitioning: None
+          infrastructureTopology: HighlyAvailable
+          platform: AWS
+          platformStatus:
+            aws:
+              region: us-east-1
+              resourceTags:
+              - key: key with space
+                value: value with space
+            type: AWS
+    - name: Should be able to create an aws resourcetag with characters '_', '.', '/', '=', '+', '-', ':', '@'
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            aws: {}
+            type: AWS
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: AWS
+            aws: {}
+        status:
+          controlPlaneTopology: HighlyAvailable
+          cpuPartitioning: None
+          infrastructureTopology: HighlyAvailable
+          platform: AWS
+          platformStatus:
+            aws:
+              region: us-east-1
+              resourceTags:
+              - key: key:_./=+-@
+                value: value:_./=+-@
+            type: AWS
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: AWS
+            aws: {}
+        status:
+          controlPlaneTopology: HighlyAvailable
+          cpuPartitioning: None
+          infrastructureTopology: HighlyAvailable
+          platform: AWS
+          platformStatus:
+            aws:
+              region: us-east-1
+              resourceTags:
+              - key: key:_./=+-@
+                value: value:_./=+-@
+            type: AWS
+    - name: Should not be able to create an aws resourcetag with character * in key
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            aws: {}
+            type: AWS
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: AWS
+            aws: {}
+        status:
+          controlPlaneTopology: HighlyAvailable
+          cpuPartitioning: None
+          infrastructureTopology: HighlyAvailable
+          platform: AWS
+          platformStatus:
+            aws:
+              region: us-east-1
+              resourceTags:
+              - key: key:_./=+-@*
+                value: value
+            type: AWS
+      expectedStatusError: "invalid AWS resource tag key. The string can contain only the set of alphanumeric characters, space (' '), '_', '.', '/', '=', '+', '-', ':', '@'"
+    - name: Should not be able to create an aws resourcetag with character * in value
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            aws: {}
+            type: AWS
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: AWS
+            aws: {}
+        status:
+          controlPlaneTopology: HighlyAvailable
+          cpuPartitioning: None
+          infrastructureTopology: HighlyAvailable
+          platform: AWS
+          platformStatus:
+            aws:
+              region: us-east-1
+              resourceTags:
+              - key: key
+                value: value*
+            type: AWS
+      expectedStatusError: "invalid AWS resource tag value. The string can contain only the set of alphanumeric characters, space (' '), '_', '.', '/', '=', '+', '-', ':', '@'"

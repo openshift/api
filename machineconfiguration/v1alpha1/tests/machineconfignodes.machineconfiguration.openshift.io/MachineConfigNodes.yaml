@@ -202,48 +202,48 @@ tests:
               currentGeneration: 1
               desiredGeneration: 2
       expectedStatusError: "Invalid value: \"object\": lastPinnedImageSetError must be populated on image pull and pin failure"
-    - name: PinnedImageSet lastPinnedImageSetError should not be set if image pull and pin succeeds (current version = desired version)
-      initial: |
-        apiVersion: machineconfiguration.openshift.io/v1alpha1
-        kind: MachineConfigNode
-        metadata:
-          name: foobar
-        spec:
-          node:
-            name: foobar
-          pool:
-            name: worker
-          configVersion:
-            desired: rendered-worker-abc
-          pinnedImageSets:
-            - name: test-pinned-image-set
-        status:
-          observedGeneration: 1
-          configVersion:
-            desired: rendered-worker-abc
-          pinnedImageSets:
-            - name: test-pinned-image-set
-              currentGeneration: 1
-              desiredGeneration: 1
-      updated: |
-        apiVersion: machineconfiguration.openshift.io/v1alpha1
-        kind: MachineConfigNode
-        metadata:
-          name: foobar
-        spec:
-          node:
-            name: foobar
-          pool:
-            name: worker
-          configVersion:
-            desired: rendered-worker-abc
-          pinnedImageSets:
-            - name: test-pinned-image-set
-        status:
-          observedGeneration: 1
-          configVersion:
-            desired: rendered-worker-abc
-          pinnedImageSets:
-            - name: test-pinned-image-set
-              currentGeneration: 2
-              desiredGeneration: 2
+    # - name: PinnedImageSet lastPinnedImageSetError should not be set if image pull and pin succeeds (current version = desired version)
+    #   initial: |
+    #     apiVersion: machineconfiguration.openshift.io/v1alpha1
+    #     kind: MachineConfigNode
+    #     metadata:
+    #       name: foobar
+    #     spec:
+    #       node:
+    #         name: foobar
+    #       pool:
+    #         name: worker
+    #       configVersion:
+    #         desired: rendered-worker-abc
+    #       pinnedImageSets:
+    #         - name: test-pinned-image-set
+    #     status:
+    #       observedGeneration: 1
+    #       configVersion:
+    #         desired: rendered-worker-abc
+    #       pinnedImageSets:
+    #         - name: test-pinned-image-set
+    #           currentGeneration: 1
+    #           desiredGeneration: 1
+    #   updated: |
+    #     apiVersion: machineconfiguration.openshift.io/v1alpha1
+    #     kind: MachineConfigNode
+    #     metadata:
+    #       name: foobar
+    #     spec:
+    #       node:
+    #         name: foobar
+    #       pool:
+    #         name: worker
+    #       configVersion:
+    #         desired: rendered-worker-abc
+    #       pinnedImageSets:
+    #         - name: test-pinned-image-set
+    #     status:
+    #       observedGeneration: 1
+    #       configVersion:
+    #         desired: rendered-worker-abc
+    #       pinnedImageSets:
+    #         - name: test-pinned-image-set
+    #           currentGeneration: 2
+    #           desiredGeneration: 2

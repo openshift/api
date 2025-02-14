@@ -270,14 +270,17 @@ spec:
                               maxLength: 300
                               type: string
                               x-kubernetes-validations:
-                              - message: url must be a valid absolute https URL
-                                rule: isURL(self) && url(self).getScheme() == "https"
-                              - message: url path must match /v[0,9]+ or /api/v[0,9]+
-                                rule: matches((url(self).getEscapedPath()), '^/(api/)?v[0-9]+/{0,1}$')
+                              - message: url must be a valid absolute URL
+                                rule: isURL(self)
                           required:
                           - name
                           - url
                           type: object
+                          x-kubernetes-validations:
+                          - message: url must use https scheme
+                            rule: url(self.url).getScheme() == "https"
+                          - message: url path must match /v[0,9]+ or /api/v[0,9]+
+                            rule: matches((url(self.url).getEscapedPath()), '^/(api/)?v[0-9]+/{0,1}$')
                         maxItems: 13
                         type: array
                         x-kubernetes-list-map-keys:
@@ -1946,14 +1949,17 @@ spec:
                               maxLength: 300
                               type: string
                               x-kubernetes-validations:
-                              - message: url must be a valid absolute https URL
-                                rule: isURL(self) && url(self).getScheme() == "https"
-                              - message: url path must match /v[0,9]+ or /api/v[0,9]+
-                                rule: matches((url(self).getEscapedPath()), '^/(api/)?v[0-9]+/{0,1}$')
+                              - message: url must be a valid absolute URL
+                                rule: isURL(self)
                           required:
                           - name
                           - url
                           type: object
+                          x-kubernetes-validations:
+                          - message: url must use https scheme
+                            rule: url(self.url).getScheme() == "https"
+                          - message: url path must match /v[0,9]+ or /api/v[0,9]+
+                            rule: matches((url(self.url).getEscapedPath()), '^/(api/)?v[0-9]+/{0,1}$')
                         maxItems: 13
                         type: array
                         x-kubernetes-list-map-keys:

@@ -1602,6 +1602,8 @@ type VSpherePlatformStatus struct {
 
 // IBMCloudServiceEndpoint stores the configuration of a custom url to
 // override existing defaults of IBM Cloud Services.
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=DyanmicServiceEndpointIBMCloud,rule="url(self.url).getScheme() == \"https\"",message="url must use https scheme"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=DyanmicServiceEndpointIBMCloud,rule=`matches((url(self.url).getEscapedPath()), '^/(api/)?v[0-9]+/{0,1}$')`,message="url path must match /v[0,9]+ or /api/v[0,9]+"
 type IBMCloudServiceEndpoint struct {
 	// name is the name of the IBM Cloud service.
 	// Possible values are: CIS, COS, COSConfig, DNSServices, GlobalCatalog, GlobalSearch, GlobalTagging, HyperProtect, IAM, KeyProtect, ResourceController, ResourceManager, or VPC.
@@ -1621,8 +1623,7 @@ type IBMCloudServiceEndpoint struct {
 	// +required
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:MaxLength=300
-	// +kubebuilder:validation:XValidation:rule="isURL(self) && url(self).getScheme() == \"https\"",message="url must be a valid absolute https URL"
-	// +kubebuilder:validation:XValidation:rule=`matches((url(self).getEscapedPath()), '^/(api/)?v[0-9]+/{0,1}$')`,message="url path must match /v[0,9]+ or /api/v[0,9]+"
+	// +kubebuilder:validation:XValidation:rule="isURL(self)",message="url must be a valid absolute URL"
 	URL string `json:"url"`
 }
 

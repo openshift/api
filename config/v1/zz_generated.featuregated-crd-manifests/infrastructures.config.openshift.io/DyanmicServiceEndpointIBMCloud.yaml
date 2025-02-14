@@ -6,7 +6,7 @@ metadata:
     api.openshift.io/filename-cvo-runlevel: "0000_10"
     api.openshift.io/filename-operator: config-operator
     api.openshift.io/filename-ordering: "01"
-    feature-gate.release.openshift.io/: "true"
+    feature-gate.release.openshift.io/DyanmicServiceEndpointIBMCloud: "true"
     release.openshift.io/bootstrap-required: "true"
   name: infrastructures.config.openshift.io
 spec:
@@ -276,6 +276,11 @@ spec:
                           - name
                           - url
                           type: object
+                          x-kubernetes-validations:
+                          - message: url must use https scheme
+                            rule: url(self.url).getScheme() == "https"
+                          - message: url path must match /v[0,9]+ or /api/v[0,9]+
+                            rule: matches((url(self.url).getEscapedPath()), '^/(api/)?v[0-9]+/{0,1}$')
                         maxItems: 13
                         type: array
                         x-kubernetes-list-map-keys:
@@ -382,7 +387,6 @@ spec:
                                     is Name, and forbidden otherwise
                                   rule: 'has(self.type) && self.type == ''Name'' ?  has(self.name)
                                     : !has(self.name)'
-                              maxItems: 1
                               minItems: 1
                               type: array
                               x-kubernetes-list-type: atomic
@@ -772,7 +776,6 @@ spec:
                                     /<datacenter>/network/<portgroup>.
                                   items:
                                     type: string
-                                  maxItems: 1
                                   minItems: 1
                                   type: array
                                   x-kubernetes-list-type: atomic
@@ -1031,7 +1034,6 @@ spec:
                           - datacenters
                           - server
                           type: object
-                        maxItems: 1
                         minItems: 0
                         type: array
                         x-kubernetes-list-type: atomic
@@ -1080,10 +1082,6 @@ spec:
                   and the operators should not configure the operand for highly-available operation
                   The 'External' mode indicates that the control plane is hosted externally to the cluster and that
                   its components are not visible within the cluster.
-                enum:
-                - HighlyAvailable
-                - SingleReplica
-                - External
                 type: string
               cpuPartitioning:
                 default: None
@@ -1567,6 +1565,11 @@ spec:
                           - name
                           - url
                           type: object
+                          x-kubernetes-validations:
+                          - message: url must use https scheme
+                            rule: url(self.url).getScheme() == "https"
+                          - message: url path must match /v[0,9]+ or /api/v[0,9]+
+                            rule: matches((url(self.url).getEscapedPath()), '^/(api/)?v[0-9]+/{0,1}$')
                         maxItems: 13
                         type: array
                         x-kubernetes-list-map-keys:

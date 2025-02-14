@@ -26,6 +26,18 @@ tests:
             - name: VPC
               url: "http://dummy.vpc.com/v1"
     expectedError: "spec.platformSpec.ibmcloud.serviceEndpoints[0]: Invalid value: \"object\": url must use https scheme"
+  - name: Should not be able to add invalid ServiceEndpoint (invalid URL length) to IBMCloud PlatformSpec
+    initial: |
+      apiVersion: config.openshift.io/v1
+      kind: Infrastructure
+      spec:
+        platformSpec:
+          type: IBMCloud
+          ibmcloud:
+            serviceEndpoints:
+            - name: VPC
+              url: https://foobarfoobarbarfoobarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobar/api/v1
+    expectedError: "spec.platformSpec.ibmcloud.serviceEndpoints[0].url: Too long: may not be more than 300 bytes, <nil>: Invalid value: \"null\": some validation rules were not checked because the object was invalid; correct the existing errors to complete validation"
   - name: Should not be able to add invalid ServiceEndpoint (empty URL) to IBMCloud PlatformSpec
     initial: |
       apiVersion: config.openshift.io/v1
@@ -289,4 +301,26 @@ onUpdate:
             - name: VPC
               url: https://dummy.vpc.com/badpath
     expectedStatusError: "status.platformStatus.ibmcloud.serviceEndpoints[0].url: Invalid value: \"string\": url path must match /v[0,9]+ or /api/v[0,9]+"
-
+  - name: Should be able to add invalid ServiceEndpoint (invalid URL length) to IBMCloud PlatformStatus
+    initial: |
+      apiVersion: config.openshift.io/v1
+      kind: Infrastructure
+      spec: {}
+      status:
+        platformStatus:
+          type: IBMCloud
+          ibmcloud:
+            serviceEndpoints: []
+    updated: |
+      apiVersion: config.openshift.io/v1
+      kind: Infrastructure
+      spec: {}
+      status:
+        platformStatus:
+          type: IBMCloud
+          ibmcloud:
+            cisInstanceCRN: oldCRN
+            serviceEndpoints:
+            - name: IAM
+              url: https://foobarfoobarbarfoobarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarbarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobar/api/v1
+    expectedStatusError: "status.platformStatus.ibmcloud.serviceEndpoints[0].url: Too long: may not be more than 300 bytes, <nil>: Invalid value: \"null\": some validation rules were not checked because the object was invalid; correct the existing errors to complete validation"

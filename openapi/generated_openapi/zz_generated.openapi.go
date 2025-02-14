@@ -21379,7 +21379,7 @@ func schema_openshift_api_config_v1alpha2_GatherConfig(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"dataPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "dataPolicy allows user to enable additional global obfuscation of the IP addresses and base domain in the Insights archive data. Valid values are \"ClearText\" and \"ObfuscateNetworking\". When set to ClearText the data is not obfuscated. When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is ClearText.",
+							Description: "dataPolicy is a list of DataPolicyOptions that allows user to enable additional global obfuscation of the IP addresses and base domain in the Insights archive data. Valid values are [\"ClearText\"] and [\"ObfuscateNetworking\"]. When set to ClearText the data is not obfuscated. When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is ClearText.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -21395,7 +21395,10 @@ func schema_openshift_api_config_v1alpha2_GatherConfig(ref common.ReferenceCallb
 					"gatherers": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "atomic",
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
 							},
 						},
 						SchemaProps: spec.SchemaProps{

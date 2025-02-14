@@ -52,8 +52,9 @@ spec:
                 properties:
                   dataPolicy:
                     description: |-
-                      dataPolicy allows user to enable additional global obfuscation of the IP addresses and base domain
-                      in the Insights archive data. Valid values are "ClearText" and "ObfuscateNetworking".
+                      dataPolicy is a list of DataPolicyOptions that allows user to enable additional
+                      global obfuscation of the IP addresses and base domain in the Insights archive data.
+                      Valid values are ["ClearText"] and ["ObfuscateNetworking"].
                       When set to ClearText the data is not obfuscated.
                       When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated.
                       When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
@@ -65,9 +66,11 @@ spec:
                       - ClearText
                       - ObfuscateNetworking
                       type: string
-                    maxItems: 5
+                    maxItems: 3
                     type: array
-                    x-kubernetes-list-type: set
+                    x-kubernetes-list-type: atomic
+                    x-kubernetes-validations:
+                    - rule: self.all(x, self.exists_one(y, x == y))
                   gatherers:
                     description: |-
                       gatherers is a list of gatherers configurations.
@@ -96,7 +99,9 @@ spec:
                       type: object
                     maxItems: 100
                     type: array
-                    x-kubernetes-list-type: atomic
+                    x-kubernetes-list-map-keys:
+                    - name
+                    x-kubernetes-list-type: map
                 type: object
             type: object
           status:

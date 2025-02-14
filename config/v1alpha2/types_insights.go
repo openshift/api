@@ -41,8 +41,9 @@ type InsightsDataGatherStatus struct{}
 
 // gatherConfig provides data gathering configuration options.
 type GatherConfig struct {
-	// dataPolicy allows user to enable additional global obfuscation of the IP addresses and base domain
-	// in the Insights archive data. Valid values are "ClearText" and "ObfuscateNetworking".
+	// dataPolicy is a list of DataPolicyOptions that allows user to enable additional
+	// global obfuscation of the IP addresses and base domain in the Insights archive data.
+	// Valid values are ["ClearText"] and ["ObfuscateNetworking"].
 	// When set to ClearText the data is not obfuscated.
 	// When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
@@ -54,7 +55,8 @@ type GatherConfig struct {
 	// Run the following command to get the names of last active gatherers:
 	// "oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'"
 	// +kubebuilder:validation:MaxItems=100
-	// +listType=atomic
+	// +listType=map
+	// +listMapKey=name
 	// +optional
 	Gatherers []GathererConfig `json:"gatherers,omitempty"`
 }
@@ -92,8 +94,9 @@ const (
 type DataPolicyOption string
 
 // DataPolicy is a list of data policy options
-// +listType=set
-// +kubebuilder:validation:MaxItems=5
+// +kubebuilder:validation:XValidation:rule="self.all(x, self.exists_one(y, x == y))"
+// +kubebuilder:validation:MaxItems=3
+// +listType=atomic
 type DataPolicy []DataPolicyOption
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

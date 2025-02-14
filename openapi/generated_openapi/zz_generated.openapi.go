@@ -37040,7 +37040,14 @@ func schema_openshift_api_machine_v1beta1_GCPMachineProviderSpec(ref common.Refe
 					},
 					"confidentialCompute": {
 						SchemaProps: spec.SchemaProps{
-							Description: "confidentialCompute Defines whether the instance should have confidential compute enabled. If enabled OnHostMaintenance is required to be set to \"Terminate\". If omitted, the platform chooses a default, which is subject to change over time, currently that default is false.",
+							Description: "confidentialCompute Defines whether the instance should have confidential compute enabled. If enabled OnHostMaintenance is required to be set to \"Terminate\". If omitted, the platform chooses a default, which is subject to change over time, currently that default is false. If confidentialInstanceType is configured, even if confidentialCompute is Disabled, a confidential compute instance will be configured.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"confidentialInstanceType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "confidentialInstanceType determines the required type of confidential computing technology. confidentialInstanceType will preceed confidentialCompute. That is, if confidentialCompute is \"Disabled\" but a valid confidentialInstanceType is specified, a confidential instance will be configured. If confidentialInstanceType isn't set and confidentialCompute is \"Enabled\" the platform will set the default, which is subject to change over time. Currently the default is \"sev\" for \"c2d\", \"c3d\", and \"n2d\" machineTypes. For the other machine cases, a valid confidentialInstanceType must be specified.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

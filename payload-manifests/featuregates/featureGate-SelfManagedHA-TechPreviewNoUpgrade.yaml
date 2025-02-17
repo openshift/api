@@ -38,9 +38,6 @@
                     },
                     {
                         "name": "MultiArchInstallAzure"
-                    },
-                    {
-                        "name": "NewOLMCatalogdMetas"
                     }
                 ],
                 "enabled": [
@@ -190,6 +187,9 @@
                     },
                     {
                         "name": "NewOLM"
+                    },
+                    {
+                        "name": "NewOLMCatalogdAPIV1Metas"
                     },
                     {
                         "name": "NodeDisruptionPolicy"

@@ -41,6 +41,9 @@
                     },
                     {
                         "name": "NewOLM"
+                    },
+                    {
+                        "name": "NewOLMCatalogdAPIV1Metas"
                     }
                 ],
                 "enabled": [
@@ -187,9 +190,6 @@
                     },
                     {
                         "name": "NetworkSegmentation"
-                    },
-                    {
-                        "name": "NewOLMCatalogdMetas"
                     },
                     {
                         "name": "NodeDisruptionPolicy"

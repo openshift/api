@@ -266,7 +266,7 @@ type NodeStatus struct {
 
 	// currentRevision is the generation of the most recently successful deployment
 	// +kubebuilder:validation:XValidation:rule="self >= oldSelf",message="must only increase"
-	CurrentRevision int32 `json:"currentRevision"`
+	CurrentRevision int32 `json:"currentRevision,omitempty"`
 	// targetRevision is the generation of the deployment we're trying to apply
 	TargetRevision int32 `json:"targetRevision,omitempty"`
 

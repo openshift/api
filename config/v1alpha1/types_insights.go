@@ -69,10 +69,10 @@ type GatherConfig struct {
 }
 
 type StorageSpec struct {
-	// persistentVolumeClaimName is required field that specifies the name of the PersistentVolumeClaim that will
-	// be used to store the Insights data archive. The persistenVolumeClaim must be created in the openshift-insights namespace.
+	// persistentVolumeClaim is required field that specifies the name of the PersistentVolumeClaim that will
+	// be used to store the Insights data archive. The PersistentVolumeClaim must be created in the openshift-insights namespace.
 	// +required
-	PersistentVolumeClaimName PersistentVolumeClaimName `json:"persistentVolumeClaimName"`
+	PersistentVolumeClaim PersistentVolumeClaimReference `json:"persistentVolumeClaim"`
 	// mountPath is an optional field specifying the directory where the PVC will be mounted inside the
 	// Insights data gathering Pod. If omitted, the path that is used to store the Insights data archive by Insights
 	// operator will be used instead. The path cannot exceed 1024 characters and defaults to "/var/lib/insights-operator".
@@ -83,10 +83,13 @@ type StorageSpec struct {
 	MountPath string `json:"mountPath,omitempty"`
 }
 
-// persistenVolumeClaimName is a string that follows the DNS1123 subdomain format.
-// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
-// +kubebuilder:validation:MaxLength:=253
-type PersistentVolumeClaimName string
+type PersistentVolumeClaimReference struct {
+	// name is a string that follows the DNS1123 subdomain format.
+	// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
+	// +kubebuilder:validation:MaxLength:=253
+	// +required
+	Name string `json:"name"`
+}
 
 const (
 	// No data obfuscation

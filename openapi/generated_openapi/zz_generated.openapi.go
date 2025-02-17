@@ -21153,7 +21153,8 @@ func schema_openshift_api_config_v1alpha1_PersistentVolumeClaimReference(ref com
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "persistentVolumeClaimReference is a reference to a PersistentVolumeClaim.",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
@@ -21509,7 +21510,8 @@ func schema_openshift_api_config_v1alpha1_StorageSpec(ref common.ReferenceCallba
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "storageSpec provides persistent storage configuration options for on-demand gathering jobs.",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"persistentVolumeClaim": {
 						SchemaProps: spec.SchemaProps{
@@ -26901,7 +26903,8 @@ func schema_openshift_api_insights_v1alpha1_PersistentVolumeClaimReference(ref c
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "persistentVolumeClaimReference is a reference to a PersistentVolumeClaim.",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
@@ -26922,7 +26925,8 @@ func schema_openshift_api_insights_v1alpha1_StorageSpec(ref common.ReferenceCall
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "storageSpec provides persistent storage configuration options for on-demand gathering jobs.",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"persistentVolumeClaim": {
 						SchemaProps: spec.SchemaProps{

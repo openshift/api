@@ -734,4 +734,12 @@ var (
 					enhancementPR("https://github.com/openshift/enhancements/pull/1492").
 					enableIn(configv1.DevPreviewNoUpgrade).
 					mustRegister()
+
+	FeatureShortCertRotation = newFeatureGate("ShortCertRotation").
+					reportProblemsToJiraComponent("kube-apiserver").
+					contactPerson("vrutkovs").
+					productScope(ocpSpecific).
+					enableIn(configv1.DevPreviewNoUpgrade).
+					enhancementPR("https://github.com/openshift/enhancements/pull/1670").
+					mustRegister()
 )

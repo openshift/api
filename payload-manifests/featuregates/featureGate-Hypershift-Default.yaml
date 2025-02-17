@@ -188,9 +188,6 @@
                         "name": "VSphereMultiDisk"
                     },
                     {
-                        "name": "VSphereMultiNetworks"
-                    },
-                    {
                         "name": "VolumeAttributesClass"
                     },
                     {
@@ -302,6 +299,9 @@
                     },
                     {
                         "name": "UserNamespacesSupport"
+                    },
+                    {
+                        "name": "VSphereMultiNetworks"
                     },
                     {
                         "name": "ValidatingAdmissionPolicy"

@@ -94,19 +94,26 @@ spec:
                         x-kubernetes-validations:
                         - message: mountPath must not contain a colon
                           rule: '!self.contains('':'')'
-                      persistentVolumeClaimName:
+                      persistentVolumeClaim:
                         description: |-
-                          persistentVolumeClaimName is required field that specifies the name of the PersistentVolumeClaim that will
-                          be used to store the Insights data archive. The persistenVolumeClaim must be created in the openshift-insights namespace.
-                        maxLength: 253
-                        type: string
-                        x-kubernetes-validations:
-                        - message: a lowercase RFC 1123 subdomain must consist of
-                            lower case alphanumeric characters, '-' or '.', and must
-                            start and end with an alphanumeric character.
-                          rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                          persistentVolumeClaim is required field that specifies the name of the PersistentVolumeClaim that will
+                          be used to store the Insights data archive. The PersistentVolumeClaim must be created in the openshift-insights namespace.
+                        properties:
+                          name:
+                            description: name is a string that follows the DNS1123
+                              subdomain format.
+                            maxLength: 253
+                            type: string
+                            x-kubernetes-validations:
+                            - message: a lowercase RFC 1123 subdomain must consist
+                                of lower case alphanumeric characters, '-' or '.',
+                                and must start and end with an alphanumeric character.
+                              rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                        required:
+                        - name
+                        type: object
                     required:
-                    - persistentVolumeClaimName
+                    - persistentVolumeClaim
                     type: object
                 type: object
             type: object

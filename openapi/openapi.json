@@ -11470,6 +11470,19 @@
     "com.github.openshift.api.config.v1alpha1.InsightsDataGatherStatus": {
       "type": "object"
     },
+    "com.github.openshift.api.config.v1alpha1.PersistentVolumeClaimReference": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is a string that follows the DNS1123 subdomain format.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.config.v1alpha1.Policy": {
       "description": "Policy defines the verification policy for the items in the scopes list.",
       "type": "object",
@@ -11688,7 +11701,7 @@
     "com.github.openshift.api.config.v1alpha1.StorageSpec": {
       "type": "object",
       "required": [
-        "persistentVolumeClaimName"
+        "persistentVolumeClaim"
       ],
       "properties": {
         "mountPath": {
@@ -11696,10 +11709,10 @@
           "type": "string",
           "default": "/var/lib/insights-operator"
         },
-        "persistentVolumeClaimName": {
-          "description": "persistentVolumeClaimName is required field that specifies the name of the PersistentVolumeClaim that will be used to store the Insights data archive. The persistenVolumeClaim must be created in the openshift-insights namespace.",
-          "type": "string",
-          "default": ""
+        "persistentVolumeClaim": {
+          "description": "persistentVolumeClaim is required field that specifies the name of the PersistentVolumeClaim that will be used to store the Insights data archive. The PersistentVolumeClaim must be created in the openshift-insights namespace.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PersistentVolumeClaimReference"
         }
       }
     },
@@ -14960,10 +14973,23 @@
         }
       }
     },
+    "com.github.openshift.api.insights.v1alpha1.PersistentVolumeClaimReference": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is a string that follows the DNS1123 subdomain format.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.insights.v1alpha1.StorageSpec": {
       "type": "object",
       "required": [
-        "persistentVolumeClaimName"
+        "persistentVolumeClaim"
       ],
       "properties": {
         "mountPath": {
@@ -14971,10 +14997,10 @@
           "type": "string",
           "default": "/var/lib/insights-operator"
         },
-        "persistentVolumeClaimName": {
-          "description": "persistentVolumeClaimName is required field that specifies the name of the PersistentVolumeClaim that will be used to store the Insights data archive. The persistenVolumeClaim must be created in the openshift-insights namespace.",
-          "type": "string",
-          "default": ""
+        "persistentVolumeClaim": {
+          "description": "persistentVolumeClaim is required field that specifies the name of the PersistentVolumeClaim that will be used to store the Insights data archive. The PersistentVolumeClaim must be created in the openshift-insights namespace.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.insights.v1alpha1.PersistentVolumeClaimReference"
         }
       }
     },

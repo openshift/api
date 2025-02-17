@@ -41,6 +41,9 @@
                     },
                     {
                         "name": "MultiArchInstallAzure"
+                    },
+                    {
+                        "name": "SigstoreImageVerificationPKI"
                     }
                 ],
                 "enabled": [

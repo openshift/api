@@ -3,25 +3,25 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.openshift.io: https://github.com/openshift/api/pull/1457
-    api.openshift.io/merged-by-featuregates: "true"
-    include.release.openshift.io/ibm-cloud-managed: "true"
-    include.release.openshift.io/self-managed-high-availability: "true"
-    release.openshift.io/feature-set: DevPreviewNoUpgrade
-  name: clusterimagepolicies.config.openshift.io
+    api.openshift.io/filename-cvo-runlevel: "0000_10"
+    api.openshift.io/filename-operator: config-operator
+    api.openshift.io/filename-ordering: "01"
+    feature-gate.release.openshift.io/SigstoreImageVerificationPKI: "true"
+  name: imagepolicies.config.openshift.io
 spec:
   group: config.openshift.io
   names:
-    kind: ClusterImagePolicy
-    listKind: ClusterImagePolicyList
-    plural: clusterimagepolicies
-    singular: clusterimagepolicy
-  scope: Cluster
+    kind: ImagePolicy
+    listKind: ImagePolicyList
+    plural: imagepolicies
+    singular: imagepolicy
+  scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
         description: |-
-          ClusterImagePolicy holds cluster-wide configuration for image signature verification
+          ImagePolicy holds namespace-wide configuration for image signature verification
 
           Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
         properties:
@@ -43,7 +43,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: spec contains the configuration for the cluster image policy.
+            description: spec holds user settable values for configuration
             properties:
               policy:
                 description: |-

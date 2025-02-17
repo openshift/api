@@ -522,12 +522,12 @@ var (
 				enableForClusterProfile(SelfManaged, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade, configv1.Default).
 				mustRegister()
 
-	FeatureGateNewOLMCatalogdMetas = newFeatureGate("NewOLMCatalogdMetas").
+	FeatureGateNewOLMCatalogdMetas = newFeatureGate("NewOLMCatalogdAPIV1Metas").
 					reportProblemsToJiraComponent("olm").
 					contactPerson("jordank").
 					productScope(ocpSpecific).
 					enhancementPR("https://github.com/openshift/enhancements/pull/1749").
-					enableForClusterProfile(Hypershift, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+					enableForClusterProfile(SelfManaged, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
 
 	FeatureGateInsightsOnDemandDataGather = newFeatureGate("InsightsOnDemandDataGather").

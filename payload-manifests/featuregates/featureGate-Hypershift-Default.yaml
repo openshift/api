@@ -119,7 +119,7 @@
                         "name": "NewOLM"
                     },
                     {
-                        "name": "NewOLMCatalogdMetas"
+                        "name": "NewOLMCatalogdAPIV1Metas"
                     },
                     {
                         "name": "NodeSwap"

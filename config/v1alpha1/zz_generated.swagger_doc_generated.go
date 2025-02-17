@@ -344,9 +344,17 @@ func (InsightsDataGatherSpec) SwaggerDoc() map[string]string {
 	return map_InsightsDataGatherSpec
 }
 
+var map_PersistentVolumeClaimReference = map[string]string{
+	"name": "name is a string that follows the DNS1123 subdomain format.",
+}
+
+func (PersistentVolumeClaimReference) SwaggerDoc() map[string]string {
+	return map_PersistentVolumeClaimReference
+}
+
 var map_StorageSpec = map[string]string{
-	"persistentVolumeClaimName": "persistentVolumeClaimName is required field that specifies the name of the PersistentVolumeClaim that will be used to store the Insights data archive. The persistenVolumeClaim must be created in the openshift-insights namespace.",
-	"mountPath":                 "mountPath is an optional field specifying the directory where the PVC will be mounted inside the Insights data gathering Pod. If omitted, the path that is used to store the Insights data archive by Insights operator will be used instead. The path cannot exceed 1024 characters and defaults to \"/var/lib/insights-operator\".",
+	"persistentVolumeClaim": "persistentVolumeClaim is required field that specifies the name of the PersistentVolumeClaim that will be used to store the Insights data archive. The PersistentVolumeClaim must be created in the openshift-insights namespace.",
+	"mountPath":             "mountPath is an optional field specifying the directory where the PVC will be mounted inside the Insights data gathering Pod. If omitted, the path that is used to store the Insights data archive by Insights operator will be used instead. The path cannot exceed 1024 characters and defaults to \"/var/lib/insights-operator\".",
 }
 
 func (StorageSpec) SwaggerDoc() map[string]string {

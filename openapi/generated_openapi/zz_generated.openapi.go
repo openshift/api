@@ -52686,7 +52686,6 @@ func schema_openshift_api_operator_v1_NodeStatus(ref common.ReferenceCallback) c
 					"currentRevision": {
 						SchemaProps: spec.SchemaProps{
 							Description: "currentRevision is the generation of the most recently successful deployment",
-							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -52753,7 +52752,7 @@ func schema_openshift_api_operator_v1_NodeStatus(ref common.ReferenceCallback) c
 						},
 					},
 				},
-				Required: []string{"nodeName", "currentRevision"},
+				Required: []string{"nodeName"},
 			},
 		},
 		Dependencies: []string{

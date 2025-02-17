@@ -11471,6 +11471,7 @@
       "type": "object"
     },
     "com.github.openshift.api.config.v1alpha1.PersistentVolumeClaimReference": {
+      "description": "persistentVolumeClaimReference is a reference to a PersistentVolumeClaim.",
       "type": "object",
       "required": [
         "name"
@@ -11699,6 +11700,7 @@
       }
     },
     "com.github.openshift.api.config.v1alpha1.StorageSpec": {
+      "description": "storageSpec provides persistent storage configuration options for on-demand gathering jobs.",
       "type": "object",
       "required": [
         "persistentVolumeClaim"
@@ -14974,6 +14976,7 @@
       }
     },
     "com.github.openshift.api.insights.v1alpha1.PersistentVolumeClaimReference": {
+      "description": "persistentVolumeClaimReference is a reference to a PersistentVolumeClaim.",
       "type": "object",
       "required": [
         "name"
@@ -14987,6 +14990,7 @@
       }
     },
     "com.github.openshift.api.insights.v1alpha1.StorageSpec": {
+      "description": "storageSpec provides persistent storage configuration options for on-demand gathering jobs.",
       "type": "object",
       "required": [
         "persistentVolumeClaim"

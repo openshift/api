@@ -68,6 +68,7 @@ type GatherConfig struct {
 	StorageSpec *StorageSpec `json:"storageSpec,omitempty"`
 }
 
+// storageSpec provides persistent storage configuration options for on-demand gathering jobs.
 type StorageSpec struct {
 	// persistentVolumeClaim is required field that specifies the name of the PersistentVolumeClaim that will
 	// be used to store the Insights data archive. The PersistentVolumeClaim must be created in the openshift-insights namespace.
@@ -83,6 +84,7 @@ type StorageSpec struct {
 	MountPath string `json:"mountPath,omitempty"`
 }
 
+// persistentVolumeClaimReference is a reference to a PersistentVolumeClaim.
 type PersistentVolumeClaimReference struct {
 	// name is a string that follows the DNS1123 subdomain format.
 	// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."

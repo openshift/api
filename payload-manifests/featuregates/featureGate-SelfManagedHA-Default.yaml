@@ -146,9 +146,6 @@
                         "name": "RouteExternalCertificate"
                     },
                     {
-                        "name": "ServiceAccountTokenNodeBinding"
-                    },
-                    {
                         "name": "SignatureStores"
                     },
                     {
@@ -260,6 +257,9 @@
                     },
                     {
                         "name": "PrivateHostedZoneAWS"
+                    },
+                    {
+                        "name": "ServiceAccountTokenNodeBinding"
                     },
                     {
                         "name": "SetEIPForNLBIngressController"

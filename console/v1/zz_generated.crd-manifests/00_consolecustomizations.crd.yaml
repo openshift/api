@@ -1,0 +1,130 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    api-approved.openshift.io: https://github.com/openshift/api/pull/750
+    api.openshift.io/merged-by-featuregates: "true"
+    capability.openshift.io/name: Console
+    description: ConsoleCustomization is an extension for customizing the OpenShift
+      web console.
+    displayName: ConsoleCustomization
+    include.release.openshift.io/ibm-cloud-managed: "true"
+    include.release.openshift.io/self-managed-high-availability: "true"
+  name: consolecustomizations.console.openshift.io
+spec:
+  group: console.openshift.io
+  names:
+    kind: ConsoleCustomization
+    listKind: ConsoleCustomizationList
+    plural: consolecustomizations
+    singular: consolecustomization
+  scope: Cluster
+  versions:
+  - name: v1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          ConsoleCustomization defines the customization options for the OpenShift web console.
+
+          Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: spec defines the desired customization options for the console.
+            properties:
+              customLogos:
+                description: |-
+                  customLogos specifies the custom logo files for different types and themes.
+                  Each item in the list must have a unique Type.
+                items:
+                  description: CustomLogo defines a configuration for specifying custom
+                    logo files for the console UI.
+                  properties:
+                    themes:
+                      description: |-
+                        themes specifies the themes for the console UI logo.
+                        This field is a list of themes, each with a Type and a File.
+                        Each theme determines whether the logo is for the dark or light theme of the console UI.
+                        The valid values for the Type field are "Dark", "Light", and "All".
+                        The File field should reference the file inside the ConfigMap that contains the logo files.
+                        Each item in the list must have a unique combination of Type and File.
+                      items:
+                        description: Theme defines a theme type and its corresponding
+                          file reference.
+                        properties:
+                          file:
+                            description: |-
+                              file is the reference to a specific file within a ConfigMap in the openshift-config namespace.
+                              This field allows the console to locate and use the specified file containing a custom logo.
+                            properties:
+                              key:
+                                description: key allows pointing to a specific key/value
+                                  inside of the configmap.  This is useful for logical
+                                  file references.
+                                type: string
+                              name:
+                                type: string
+                            type: object
+                          type:
+                            description: |-
+                              type specifies the type of the theme for the console UI.
+                              This field is an enum with valid values "Dark", "Light", and "All".
+                            enum:
+                            - Dark
+                            - Light
+                            - All
+                            type: string
+                        required:
+                        - file
+                        - type
+                        type: object
+                      maxItems: 2
+                      minItems: 1
+                      type: array
+                      x-kubernetes-list-map-keys:
+                      - type
+                      x-kubernetes-list-type: map
+                      x-kubernetes-validations:
+                      - message: If 'All' is specified, no other themes can be added.
+                        rule: '!(self.exists(entry, entry.type == ''All'') && self.size()
+                          > 1)'
+                    type:
+                      description: |-
+                        type specifies the type of the logo for the console UI. It determines whether the logo is for the masthead or favicon.
+                        This field is an enum with valid values "Masthead" and "Favicon".
+                      enum:
+                      - Masthead
+                      - Favicon
+                      type: string
+                  required:
+                  - themes
+                  - type
+                  type: object
+                maxItems: 2
+                minItems: 1
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+            type: object
+        required:
+        - metadata
+        type: object
+    served: true
+    storage: true

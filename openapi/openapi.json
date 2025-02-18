@@ -30736,12 +30736,11 @@
       "description": "NodeStatus provides information about the current state of a particular node managed by this operator.",
       "type": "object",
       "required": [
-        "nodeName",
-        "currentRevision"
+        "nodeName"
       ],
       "properties": {
         "currentRevision": {
-          "description": "currentRevision is the generation of the most recently successful deployment. It must be set to 0 on creation. Updates must only increase the value.",
+          "description": "currentRevision is the generation of the most recently successful deployment. If set on creation, it must be set to 0. Updates must only increase the value.",
           "type": "integer",
           "format": "int32",
           "default": 0
@@ -30784,7 +30783,7 @@
           "default": ""
         },
         "targetRevision": {
-          "description": "targetRevision is the generation of the deployment we're trying to apply. It must be set to 0 on creation.",
+          "description": "targetRevision is the generation of the deployment we're trying to apply. If set on creation, it must be set to 0.",
           "type": "integer",
           "format": "int32"
         }

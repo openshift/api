@@ -241,7 +241,7 @@ spec:
                     currentRevision:
                       description: |-
                         currentRevision is the generation of the most recently successful deployment.
-                        It must be set to 0 on creation. Updates must only increase the value.
+                        If set on creation, it must be set to 0. Updates must only increase the value.
                       format: int32
                       type: integer
                       x-kubernetes-validations:
@@ -285,7 +285,7 @@ spec:
                     targetRevision:
                       description: |-
                         targetRevision is the generation of the deployment we're trying to apply.
-                        It must be set to 0 on creation.
+                        If set on creation, it must be set to 0.
                       format: int32
                       type: integer
                       x-kubernetes-validations:

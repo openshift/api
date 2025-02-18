@@ -785,9 +785,10 @@ func (NetworkSpec) SwaggerDoc() map[string]string {
 }
 
 var map_VSphereDisk = map[string]string{
-	"":        "VSphereDisk describes additional disks for vSphere.",
-	"name":    "name is used to identify the disk definition. name is required needs to be unique so that it can be used to clearly identify purpose of the disk. It must be at most 80 characters in length and must consist only of alphanumeric characters, hyphens and underscores, and must start and end with an alphanumeric character.",
-	"sizeGiB": "sizeGiB is the size of the disk in GiB. The maximum supported size 16384 GiB.",
+	"":                 "VSphereDisk describes additional disks for vSphere.",
+	"name":             "name is used to identify the disk definition. name is required needs to be unique so that it can be used to clearly identify purpose of the disk. It must be at most 80 characters in length and must consist only of alphanumeric characters, hyphens and underscores, and must start and end with an alphanumeric character.",
+	"sizeGiB":          "sizeGiB is the size of the disk in GiB. The maximum supported size 16384 GiB.",
+	"provisioningMode": "provisioningMode is an optional field that specifies the provisioning type to be used by this vSphere data disk. Allowed values are \"Thin\", \"Thick\", \"EagerlyZeroed\", and omitted. When set to Thin, the disk will be made using thin provisioning allocating the bare minimum space. When set to Thick, the full disk size will be allocated when disk is created. When set to EagerlyZeroed, the disk will be created using eager zero provisioning. An eager zeroed thick disk has all space allocated and wiped clean of any previous contents on the physical media at creation time. Such disks may take longer time during creation compared to other disk formats. When omitted, no setting will be applied to the data disk and the provisioning mode for the disk will be determined by the default storage policy configured for the datastore in vSphere.",
 }
 
 func (VSphereDisk) SwaggerDoc() map[string]string {

@@ -305,7 +305,7 @@ spec:
                         rule: has(self.currentRevision) || !has(oldSelf.currentRevision)
                       - message: new node statuses may not set a revision
                         optionalOldSelf: true
-                        rule: oldSelf.hasValue() || !(has(self.currentRevision) || has(self.targetRevision))
+                        rule: oldSelf.hasValue() || !((has(self.currentRevision) && self.currentRevision>0) || has(self.targetRevision))
                   maxItems: 8
                   type: array
                   x-kubernetes-list-map-keys:

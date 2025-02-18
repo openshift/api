@@ -39578,7 +39578,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeSpecMac
 				Properties: map[string]spec.Schema{
 					"desired": {
 						SchemaProps: spec.SchemaProps{
-							Description: "desired is the name of the machine config that the the node should be upgraded to. This value is set when the machine config pool generates a new version of its rendered configuration. When this value is changed, the machine config daemon starts the node upgrade process. This value gets set in the machine config node spec once the machine config has been targeted for upgrade and before it is validated. This value should match the desired version unless an upgrade is in progress. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) consisting of only lowercase alphanumeric characters, hyphens (-), and periods (.), start and end with an alphanumeric character, and be at most 253 characters in length.",
+							Description: "desired is the name of the machine config that the the node should be upgraded to. This value is set when the machine config pool generates a new version of its rendered configuration. When this value is changed, the machine config daemon starts the node upgrade process. This value gets set in the machine config node spec once the machine config has been targeted for upgrade and before it is validated. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) consisting of only lowercase alphanumeric characters, hyphens (-), and periods (.), start and end with an alphanumeric character, and be at most 253 characters in length.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -39600,7 +39600,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeSpecPin
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name is the name of the pinned image set. This value should match the desired version unless an upgrade is in progress. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) consisting of only lowercase alphanumeric characters, hyphens (-), and periods (.), start and end with an alphanumeric character, and be at most 253 characters in length.",
+							Description: "name is the name of the pinned image set. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) consisting of only lowercase alphanumeric characters, hyphens (-), and periods (.), start and end with an alphanumeric character, and be at most 253 characters in length.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -39706,7 +39706,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatusM
 					},
 					"desired": {
 						SchemaProps: spec.SchemaProps{
-							Description: "desired is the MachineConfig the node wants to upgrade to. This value gets set in the machine config node status once the machine config has been validated against the current machine config. This value should match the desired version unless an upgrade is in progress. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) consisting of only lowercase alphanumeric characters, hyphens (-), and periods (.), start and end with an alphanumeric character, and be at most 253 characters in length.",
+							Description: "desired is the MachineConfig the node wants to upgrade to. This value gets set in the machine config node status once the machine config has been validated against the current machine config. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) consisting of only lowercase alphanumeric characters, hyphens (-), and periods (.), start and end with an alphanumeric character, and be at most 253 characters in length.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",

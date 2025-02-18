@@ -186,7 +186,6 @@ type MachineConfigNodeStatusMachineConfigVersion struct {
 	// desired is the MachineConfig the node wants to upgrade to.
 	// This value gets set in the machine config node status once the machine config has been validated
 	// against the current machine config.
-	// This value should match the desired version unless an upgrade is in progress.
 	// Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) consisting
 	// of only lowercase alphanumeric characters, hyphens (-), and periods (.), start and end
 	// with an alphanumeric character, and be at most 253 characters in length.
@@ -205,7 +204,6 @@ type MachineConfigNodeSpecMachineConfigVersion struct {
 	// This value is set when the machine config pool generates a new version of its rendered configuration.
 	// When this value is changed, the machine config daemon starts the node upgrade process.
 	// This value gets set in the machine config node spec once the machine config has been targeted for upgrade and before it is validated.
-	// This value should match the desired version unless an upgrade is in progress.
 	// Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) consisting
 	// of only lowercase alphanumeric characters, hyphens (-), and periods (.), start and end
 	// with an alphanumeric character, and be at most 253 characters in length.
@@ -219,7 +217,6 @@ type MachineConfigNodeSpecMachineConfigVersion struct {
 // should pin and pull.
 type MachineConfigNodeSpecPinnedImageSet struct {
 	// name is the name of the pinned image set.
-	// This value should match the desired version unless an upgrade is in progress.
 	// Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) consisting
 	// of only lowercase alphanumeric characters, hyphens (-), and periods (.), start and end
 	// with an alphanumeric character, and be at most 253 characters in length.

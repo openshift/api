@@ -1068,6 +1068,7 @@ spec:
                 - HighlyAvailable
                 - HighlyAvailableArbiter
                 - SingleReplica
+                - DualReplica
                 - External
                 type: string
               cpuPartitioning:

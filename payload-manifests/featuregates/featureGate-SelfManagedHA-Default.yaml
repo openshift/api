@@ -65,6 +65,9 @@
                         "name": "GCPClusterHostedDNS"
                     },
                     {
+                        "name": "GCPCustomAPIEndpoints"
+                    },
+                    {
                         "name": "GatewayAPI"
                     },
                     {

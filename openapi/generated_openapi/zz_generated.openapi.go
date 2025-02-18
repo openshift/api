@@ -239,6 +239,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.GCPPlatformStatus":                                               schema_openshift_api_config_v1_GCPPlatformStatus(ref),
 		"github.com/openshift/api/config/v1.GCPResourceLabel":                                                schema_openshift_api_config_v1_GCPResourceLabel(ref),
 		"github.com/openshift/api/config/v1.GCPResourceTag":                                                  schema_openshift_api_config_v1_GCPResourceTag(ref),
+		"github.com/openshift/api/config/v1.GCPServiceEndpoint":                                              schema_openshift_api_config_v1_GCPServiceEndpoint(ref),
 		"github.com/openshift/api/config/v1.GenericAPIServerConfig":                                          schema_openshift_api_config_v1_GenericAPIServerConfig(ref),
 		"github.com/openshift/api/config/v1.GenericControllerConfig":                                         schema_openshift_api_config_v1_GenericControllerConfig(ref),
 		"github.com/openshift/api/config/v1.GitHubIdentityProvider":                                          schema_openshift_api_config_v1_GitHubIdentityProvider(ref),
@@ -12462,12 +12463,34 @@ func schema_openshift_api_config_v1_GCPPlatformStatus(ref common.ReferenceCallba
 							Ref:         ref("github.com/openshift/api/config/v1.CloudLoadBalancerConfig"),
 						},
 					},
+					"serviceEndpoints": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "serviceEndpoints specifies endpoints that override the default endpoints used when creating clients to interact with GCP services. When not specified, the default endpoint for the GCP region will be used. Only 1 endpoint override is permitted for each GCP service. The maximum number of endpoint overrides allowed is 9.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.GCPServiceEndpoint"),
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"projectID", "region"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.CloudLoadBalancerConfig", "github.com/openshift/api/config/v1.GCPResourceLabel", "github.com/openshift/api/config/v1.GCPResourceTag"},
+			"github.com/openshift/api/config/v1.CloudLoadBalancerConfig", "github.com/openshift/api/config/v1.GCPResourceLabel", "github.com/openshift/api/config/v1.GCPResourceTag", "github.com/openshift/api/config/v1.GCPServiceEndpoint"},
 	}
 }
 
@@ -12534,6 +12557,36 @@ func schema_openshift_api_config_v1_GCPResourceTag(ref common.ReferenceCallback)
 					},
 				},
 				Required: []string{"parentID", "key", "value"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1_GCPServiceEndpoint(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "GCPServiceEndpoint store the configuration of a custom url to override existing defaults of GCP Services.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the name of the GCP service whose endpoint is being overridden. This must be provided and cannot be empty.\n\nAllowed values are Compute, Container, CloudResourceManager, DNS, File, IAM, ServiceUsage, Storage, and TagManager.\n\nAs an example, when setting the name to Compute all requests made by the caller to the GCP Compute Service will be directed to the endpoint specified in the url field.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"url": {
+						SchemaProps: spec.SchemaProps{
+							Description: "url is a fully qualified URI that overrides the default endpoint for a client using the GCP service specified in the name field. url is required, must use the scheme https, must not be more than 253 characters in length, and must be a valid URL according to Go's net/url package (https://pkg.go.dev/net/url#URL)\n\nAn example of a valid endpoint that overrides the Compute Service: \"https://compute-myendpoint1.p.googleapis.com\"",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name", "url"},
 			},
 		},
 	}

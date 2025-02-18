@@ -253,6 +253,7 @@ type StaticPodOperatorStatus struct {
 	// +listMapKey=nodeName
 	// +optional
 	// +kubebuilder:validation:XValidation:rule="size(self.filter(status, status.?targetRevision.orValue(0) != 0)) <= 1",message="no more than 1 node status may have a nonzero targetRevision"
+	// +kubebuilder:validation:MaxItems=8
 	NodeStatuses []NodeStatus `json:"nodeStatuses,omitempty"`
 }
 

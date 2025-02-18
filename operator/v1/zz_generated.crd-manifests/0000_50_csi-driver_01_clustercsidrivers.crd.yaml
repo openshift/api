@@ -42,27 +42,6 @@ spec:
               More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
-            properties:
-              name:
-                enum:
-                - ebs.csi.aws.com
-                - efs.csi.aws.com
-                - disk.csi.azure.com
-                - file.csi.azure.com
-                - filestore.csi.storage.gke.io
-                - pd.csi.storage.gke.io
-                - cinder.csi.openstack.org
-                - csi.vsphere.vmware.com
-                - manila.csi.openstack.org
-                - csi.ovirt.org
-                - csi.kubevirt.io
-                - csi.sharedresource.openshift.io
-                - diskplugin.csi.alibabacloud.com
-                - vpc.block.csi.ibm.io
-                - powervs.csi.ibm.com
-                - secrets-store.csi.k8s.io
-                - smb.csi.k8s.io
-                type: string
             type: object
           spec:
             description: spec holds user settable values for configuration

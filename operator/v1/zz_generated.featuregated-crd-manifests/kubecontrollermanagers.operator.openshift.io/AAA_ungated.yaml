@@ -231,13 +231,17 @@ spec:
                     of a particular node managed by this operator.
                   properties:
                     currentRevision:
-                      description: currentRevision is the generation of the most recently
-                        successful deployment
+                      description: |-
+                        currentRevision is the generation of the most recently successful deployment.
+                        It must be set to 0 on creation. Updates must only increase the value.
                       format: int32
                       type: integer
                       x-kubernetes-validations:
                       - message: must only increase
                         rule: self >= oldSelf
+                      - message: must be set to 0 on creation
+                        optionalOldSelf: true
+                        rule: oldSelf.hasValue() || self == 0
                     lastFailedCount:
                       description: lastFailedCount is how often the installer pod
                         of the last failed revision failed.
@@ -271,11 +275,17 @@ spec:
                       description: nodeName is the name of the node
                       type: string
                     targetRevision:
-                      description: targetRevision is the generation of the deployment
-                        we're trying to apply
+                      description: |-
+                        targetRevision is the generation of the deployment we're trying to apply
+                        If specified, it must be set to 0 on creation.
                       format: int32
                       type: integer
+                      x-kubernetes-validations:
+                      - message: must be set to 0 on creation
+                        optionalOldSelf: true
+                        rule: oldSelf.hasValue() || self == 0
                   required:
+                  - currentRevision
                   - nodeName
                   type: object
                   x-kubernetes-validations:

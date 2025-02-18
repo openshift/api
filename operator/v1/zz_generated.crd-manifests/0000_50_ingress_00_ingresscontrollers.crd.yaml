@@ -1362,13 +1362,6 @@ spec:
                             description: |-
                               syslog holds parameters for a syslog endpoint.  Present only if
                               type is Syslog.
-                            oneOf:
-                            - properties:
-                                address:
-                                  format: ipv4
-                            - properties:
-                                address:
-                                  format: ipv6
                             properties:
                               address:
                                 description: |-
@@ -2120,17 +2113,6 @@ spec:
                     type: string
                 type: object
               tuningOptions:
-                anyOf:
-                - properties:
-                    maxConnections:
-                      enum:
-                      - -1
-                      - 0
-                - properties:
-                    maxConnections:
-                      format: int32
-                      maximum: 2000000
-                      minimum: 2000
                 description: |-
                   tuningOptions defines parameters for adjusting the performance of
                   ingress controller pods. All fields are optional and will use their
@@ -3237,8 +3219,4 @@ spec:
     served: true
     storage: true
     subresources:
-      scale:
-        labelSelectorPath: .status.selector
-        specReplicasPath: .spec.replicas
-        statusReplicasPath: .status.availableReplicas
       status: {}

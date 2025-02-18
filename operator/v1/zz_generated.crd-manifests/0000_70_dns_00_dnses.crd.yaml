@@ -353,7 +353,6 @@ spec:
                   type: object
                 type: array
               upstreamResolvers:
-                default: {}
                 description: |-
                   upstreamResolvers defines a schema for configuring CoreDNS
                   to proxy DNS messages to upstream resolvers for the case of the
@@ -474,24 +473,6 @@ spec:
                       A maximum of 15 upstreams is allowed per ForwardPlugin.
                       If no Upstreams are specified, /etc/resolv.conf is used by default
                     items:
-                      anyOf:
-                      - not:
-                          required:
-                          - address
-                          - port
-                        properties:
-                          type:
-                            enum:
-                            - ""
-                            - SystemResolvConf
-                      - optional:
-                        - port
-                        properties:
-                          type:
-                            enum:
-                            - Network
-                        required:
-                        - address
                       description: |-
                         Upstream can either be of type SystemResolvConf, or of type Network.
 
@@ -501,9 +482,6 @@ spec:
                             with an IP address or IP:port if the upstream listens on a port other than 53.
                       properties:
                         address:
-                          anyOf:
-                          - format: ipv4
-                          - format: ipv6
                           description: |-
                             address must be defined when Type is set to Network. It will be ignored otherwise.
                             It must be a valid ipv4 or ipv6 address.

@@ -11698,6 +11698,127 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1alpha2.GatherConfig": {
+      "description": "gatherConfig provides data gathering configuration options.",
+      "type": "object",
+      "properties": {
+        "dataPolicy": {
+          "description": "dataPolicy is a list of DataPolicyOptions that allows user to enable additional global obfuscation of the IP addresses and base domain in the Insights archive data. Valid values are [\"ClearText\"] and [\"ObfuscateNetworking\"]. When set to ClearText the data is not obfuscated. When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is ClearText.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "gatherers": {
+          "description": "gatherers is a list of gatherers configurations. The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1alpha2.GathererConfig"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha2.GathererConfig": {
+      "description": "gathererConfig allows to configure specific gatherers",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the name of specific gatherer",
+          "type": "string",
+          "default": ""
+        },
+        "state": {
+          "description": "state allows you to configure specific gatherer. Valid values are \"Enabled\", \"Disabled\" and omitted. When omitted, this means no opinion and the platform is left to choose a reasonable default. The current default is Enabled.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha2.InsightsDataGather": {
+      "description": "InsightsDataGather provides data gather configuration options for the the Insights Operator.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec holds user settable values for configuration",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha2.InsightsDataGatherSpec"
+        },
+        "status": {
+          "description": "status holds observed values from the cluster. They may not be overridden.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha2.InsightsDataGatherStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha2.InsightsDataGatherList": {
+      "description": "InsightsDataGatherList is a collection of items\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "metadata",
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "description": "items is the list of InsightsDataGather objects",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1alpha2.InsightsDataGather"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha2.InsightsDataGatherSpec": {
+      "type": "object",
+      "properties": {
+        "gatherConfig": {
+          "description": "gatherConfig spec attribute includes all the configuration options related to gathering of the Insights data and its uploading to the ingress.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha2.GatherConfig"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha2.InsightsDataGatherStatus": {
+      "type": "object"
+    },
     "com.github.openshift.api.console.v1.ApplicationMenuSpec": {
       "description": "ApplicationMenuSpec is the specification of the desired section and icon used for the link in the application menu.",
       "type": "object",

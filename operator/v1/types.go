@@ -263,10 +263,16 @@ type NodeStatus struct {
 	// +required
 	NodeName string `json:"nodeName"`
 
-	// currentRevision is the generation of the most recently successful deployment
+	// currentRevision is the generation of the most recently successful deployment.
+	// If set on creation, it must be set to 0. Updates must only increase the value.
 	// +kubebuilder:validation:XValidation:rule="self >= oldSelf",message="must only increase"
+	// +kubebuilder:validation:XValidation:rule="oldSelf.hasValue() || self == 0",message="must be set to 0 on creation",optionalOldSelf=true
+	// +optional
 	CurrentRevision int32 `json:"currentRevision"`
-	// targetRevision is the generation of the deployment we're trying to apply
+	// targetRevision is the generation of the deployment we're trying to apply.
+	// If set on creation, it must be set to 0.
+	// +kubebuilder:validation:XValidation:rule="oldSelf.hasValue() || self == 0",message="must be set to 0 on creation",optionalOldSelf=true
+	// +optional
 	TargetRevision int32 `json:"targetRevision,omitempty"`
 
 	// lastFailedRevision is the generation of the deployment we tried and failed to deploy.

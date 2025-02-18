@@ -30741,7 +30741,7 @@
       ],
       "properties": {
         "currentRevision": {
-          "description": "currentRevision is the generation of the most recently successful deployment",
+          "description": "currentRevision is the generation of the most recently successful deployment. It must be set to 0 on creation. Updates must only increase the value.",
           "type": "integer",
           "format": "int32",
           "default": 0
@@ -30784,7 +30784,7 @@
           "default": ""
         },
         "targetRevision": {
-          "description": "targetRevision is the generation of the deployment we're trying to apply",
+          "description": "targetRevision is the generation of the deployment we're trying to apply. It must be set to 0 on creation.",
           "type": "integer",
           "format": "int32"
         }

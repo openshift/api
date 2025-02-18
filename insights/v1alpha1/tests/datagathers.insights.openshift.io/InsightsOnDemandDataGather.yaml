@@ -2,7 +2,7 @@ apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if w
 name: "[TechPreview] DataGather"
 crdName: datagathers.insights.openshift.io
 featureGates:
-- InsightsOnDemandDataGather
+  - InsightsOnDemandDataGather
 tests:
   onCreate:
     - name: Should be able to create a minimal DataGather
@@ -14,6 +14,66 @@ tests:
         apiVersion: insights.openshift.io/v1alpha1
         kind: DataGather
         spec: {}
+    - name: Should be able to create a DataGather with a storageSpec
+      initial: |
+        apiVersion: insights.openshift.io/v1alpha1
+        kind: DataGather
+        spec:
+          storageSpec:
+            persistentVolumeClaim:
+              name: test-claim
+            mountPath: /data
+      expected: |
+        apiVersion: insights.openshift.io/v1alpha1
+        kind: DataGather
+        spec:
+          storageSpec:
+            persistentVolumeClaim:
+              name: test-claim
+            mountPath: /data
+    - name: Should be able to create a DataGather with a default MountPath
+      initial: |
+        apiVersion: insights.openshift.io/v1alpha1
+        kind: DataGather
+        spec:
+          storageSpec:
+            persistentVolumeClaim:
+              name: test-claim
+      expected: |
+        apiVersion: insights.openshift.io/v1alpha1
+        kind: DataGather
+        spec:
+          storageSpec:
+            persistentVolumeClaim:
+              name: test-claim
+            mountPath: /var/lib/insights-operator
+    - name: mountPath must not contain colon
+      initial: |
+        apiVersion: insights.openshift.io/v1alpha1
+        kind: DataGather
+        spec:
+          storageSpec:
+            persistentVolumeClaim:
+              name: test-claim
+            mountPath: /data:/data
+      expectedError: 'spec.storageSpec.mountPath: Invalid value: "string": mountPath must not contain a colon'
+    - name: storageSpec must contain PersistentVolumeClaim
+      initial: |
+        apiVersion: insights.openshift.io/v1alpha1
+        kind: DataGather
+        spec:
+          storageSpec:
+            mountPath: /data:/data
+      expectedError: "spec.storageSpec.persistentVolumeClaim: Required value"
+    - name: persistentVolumeClaim must follow the naming convention
+      initial: |
+        apiVersion: insights.openshift.io/v1alpha1
+        kind: DataGather
+        spec:
+          storageSpec:
+            persistentVolumeClaim:
+              name: INVALID_PVC_NAME
+      expectedError: 'Invalid value: "string": a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, ''-'' or ''.'', and must start and end with an alphanumeric character.'
   onUpdate:
     - name: status is present and startTime is added
       initial: |
@@ -50,7 +110,7 @@ tests:
         spec: {} # No spec is required for a DataGather
         status: 
           insightsRequestID: xyz
-      expectedStatusError: "status: Invalid value: \"object\": cannot remove startTime attribute from status"
+      expectedStatusError: 'status: Invalid value: "object": cannot remove startTime attribute from status'
     - name: startTime is immutable once set
       initial: |
         apiVersion: insights.openshift.io/v1alpha1
@@ -66,7 +126,7 @@ tests:
         status: 
           insightsRequestID: xyz
           startTime: 2023-03-13T12:34:06Z
-      expectedStatusError: "Invalid value: \"string\": startTime is immutable once set"
+      expectedStatusError: 'Invalid value: "string": startTime is immutable once set'
     - name: Status is presentt and insightsRequestID is added
       initial: |
         apiVersion: insights.openshift.io/v1alpha1
@@ -122,7 +182,7 @@ tests:
               group: ""
               resource: "pods"
               namespace: "openshift-insights"
-      expectedStatusError: "status: Invalid value: \"object\": cannot remove insightsRequestID attribute from status"
+      expectedStatusError: 'status: Invalid value: "object": cannot remove insightsRequestID attribute from status'
     - name: insightsRequestID is immutable once set
       initial: |
         apiVersion: insights.openshift.io/v1alpha1
@@ -146,7 +206,7 @@ tests:
               group: ""
               resource: "pods"
               namespace: "openshift-insights"
-      expectedStatusError: "Invalid value: \"string\": insightsRequestID is immutable once set"
+      expectedStatusError: 'Invalid value: "string": insightsRequestID is immutable once set'
     - name: finishTime cannot be removed from status
       initial: |
         apiVersion: insights.openshift.io/v1alpha1
@@ -169,7 +229,7 @@ tests:
               group: ""
               resource: "pods"
               namespace: "openshift-insights"
-      expectedStatusError: "status: Invalid value: \"object\": cannot remove finishTime attribute from status"
+      expectedStatusError: 'status: Invalid value: "object": cannot remove finishTime attribute from status'
     - name: dataGatherState cannot be removed from status
       initial: |
         apiVersion: insights.openshift.io/v1alpha1
@@ -187,7 +247,7 @@ tests:
               group: ""
               resource: "pods"
               namespace: "openshift-insights"
-      expectedStatusError: "status: Invalid value: \"object\": cannot remove dataGatherState attribute from status"
+      expectedStatusError: 'status: Invalid value: "object": cannot remove dataGatherState attribute from status'
     - name: dataGatherState cannot transition from Running to Pending
       initial: |
         apiVersion: insights.openshift.io/v1alpha1
@@ -201,7 +261,7 @@ tests:
         spec: {} # No spec is required for a DataGather
         status: 
           dataGatherState: Pending
-      expectedStatusError: "status.dataGatherState: Invalid value: \"string\": dataGatherState cannot transition from Running to Pending"
+      expectedStatusError: 'status.dataGatherState: Invalid value: "string": dataGatherState cannot transition from Running to Pending'
     - name: dataGatherState cannot transition from Completed to Pending
       initial: |
         apiVersion: insights.openshift.io/v1alpha1
@@ -215,7 +275,7 @@ tests:
         spec: {} # No spec is required for a DataGather
         status: 
           dataGatherState: Pending
-      expectedStatusError: "status.dataGatherState: Invalid value: \"string\": dataGatherState cannot transition from Completed to Pending"
+      expectedStatusError: 'status.dataGatherState: Invalid value: "string": dataGatherState cannot transition from Completed to Pending'
     - name: dataGatherState cannot transition from Failed to Pending
       initial: |
         apiVersion: insights.openshift.io/v1alpha1
@@ -229,7 +289,7 @@ tests:
         spec: {} # No spec is required for a DataGather
         status: 
           dataGatherState: Pending
-      expectedStatusError: "status.dataGatherState: Invalid value: \"string\": dataGatherState cannot transition from Failed to Pending"
+      expectedStatusError: 'status.dataGatherState: Invalid value: "string": dataGatherState cannot transition from Failed to Pending'
     - name: dataGatherState cannot transition from Completed to Running
       initial: |
         apiVersion: insights.openshift.io/v1alpha1
@@ -243,7 +303,7 @@ tests:
         spec: {} # No spec is required for a DataGather
         status: 
           dataGatherState: Running
-      expectedStatusError: "status.dataGatherState: Invalid value: \"string\": dataGatherState cannot transition from Completed to Running"
+      expectedStatusError: 'status.dataGatherState: Invalid value: "string": dataGatherState cannot transition from Completed to Running'
     - name: dataGatherState cannot transition from Failed to Running
       initial: |
         apiVersion: insights.openshift.io/v1alpha1
@@ -257,7 +317,7 @@ tests:
         spec: {} # No spec is required for a DataGather
         status: 
           dataGatherState: Running
-      expectedStatusError: "status.dataGatherState: Invalid value: \"string\": dataGatherState cannot transition from Failed to Running"
+      expectedStatusError: 'status.dataGatherState: Invalid value: "string": dataGatherState cannot transition from Failed to Running'
     - name: lastGatherDuration can be updated with a trailing zero value
       initial: |
         apiVersion: insights.openshift.io/v1alpha1
@@ -324,7 +384,7 @@ tests:
               reason: OK
               message: "test message"
               lastTransitionTime: "2024-12-01T08:04:21Z"
-    - name: lastGatherDuration can be updated with a decimal number value 
+    - name: lastGatherDuration can be updated with a decimal number value
       initial: |
         apiVersion: insights.openshift.io/v1alpha1
         kind: DataGather
@@ -357,7 +417,7 @@ tests:
               reason: OK
               message: "test message"
               lastTransitionTime: "2024-12-01T08:04:21Z"
-    - name: lastGatherDuration cannot be updated with an invalid value 
+    - name: lastGatherDuration cannot be updated with an invalid value
       initial: |
         apiVersion: insights.openshift.io/v1alpha1
         kind: DataGather
@@ -377,7 +437,7 @@ tests:
               message: "test message"
               lastTransitionTime: "2024-12-01T08:04:21Z"
       expectedStatusError: "Invalid value: \"1d2h\": gatherers[0].lastGatherDuration in body should match '^(([0-9]+(?:\\.[0-9]+)?(ns|us|µs|μs|ms|s|m|h))+)$'"
-    - name: lastGatherDuration cannot be updated with a negative value 
+    - name: lastGatherDuration cannot be updated with a negative value
       initial: |
         apiVersion: insights.openshift.io/v1alpha1
         kind: DataGather

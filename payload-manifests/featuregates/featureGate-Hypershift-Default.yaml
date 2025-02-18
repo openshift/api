@@ -167,6 +167,9 @@
                         "name": "UserNamespacesSupport"
                     },
                     {
+                        "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"
+                    },
+                    {
                         "name": "VSphereHostVMGroupZonal"
                     },
                     {

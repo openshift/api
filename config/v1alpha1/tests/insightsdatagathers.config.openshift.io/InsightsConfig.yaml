@@ -2,7 +2,7 @@ apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if w
 name: "[TechPreview] InsightsDataGather"
 crdName: insightsdatagathers.config.openshift.io
 featureGates:
-- InsightsConfig
+  - InsightsConfig
 tests:
   onCreate:
     - name: Should be able to create a minimal InsightsDataGather
@@ -14,3 +14,74 @@ tests:
         apiVersion: config.openshift.io/v1alpha1
         kind: InsightsDataGather
         spec: {}
+    - name: Should be able to create InsightsDataGather with a storageSpec
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: InsightsDataGather
+        spec:
+          gatherConfig:
+            dataPolicy: None
+            storageSpec:
+              persistentVolumeClaim:
+                name: test-claim
+              mountPath: /data
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: InsightsDataGather
+        spec:
+          gatherConfig:
+            dataPolicy: None
+            storageSpec:
+              persistentVolumeClaim:
+                name: test-claim
+              mountPath: /data
+    - name: Should be able to create InsightsDataGather with a default MountPath
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: InsightsDataGather
+        spec:
+          gatherConfig:
+            dataPolicy: None
+            storageSpec:
+              persistentVolumeClaim:
+                name: test-claim
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: InsightsDataGather
+        spec:
+          gatherConfig:
+            dataPolicy: None
+            storageSpec:
+              persistentVolumeClaim:
+                name: test-claim
+              mountPath: /var/lib/insights-operator
+    - name: mountPath must not contain colon
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: InsightsDataGather
+        spec:
+          gatherConfig:
+            storageSpec:
+              persistentVolumeClaim:
+                name: test-claim
+              mountPath: /data:/data
+      expectedError: 'spec.gatherConfig.storageSpec.mountPath: Invalid value: "string": mountPath must not contain a colon'
+    - name: storageSpec must contain PersistentVolumeClaim
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: InsightsDataGather
+        spec:
+          gatherConfig:
+            storageSpec:
+              mountPath: /data
+      expectedError: "spec.gatherConfig.storageSpec.persistentVolumeClaim: Required value"
+    - name: persistentVolumeClaim must follow the naming convention
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: InsightsDataGather
+        spec:
+          gatherConfig:
+            storageSpec:
+              persistentVolumeClaim:
+                name: INVALID_PVC_NAME
+      expectedError: 'Invalid value: "string": a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, ''-'' or ''.'', and must start and end with an alphanumeric character.'

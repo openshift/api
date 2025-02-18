@@ -38,8 +38,7 @@ type InsightsDataGatherSpec struct {
 	GatherConfig GatherConfig `json:"gatherConfig,omitempty"`
 }
 
-type InsightsDataGatherStatus struct {
-}
+type InsightsDataGatherStatus struct{}
 
 // gatherConfig provides data gathering configuration options.
 type GatherConfig struct {
@@ -49,6 +48,7 @@ type GatherConfig struct {
 	// When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
 	// The current default is None.
+	// +default="None"
 	// +optional
 	DataPolicy DataPolicy `json:"dataPolicy,omitempty"`
 	// disabledGatherers is a list of gatherers to be excluded from the gathering. All the gatherers can be disabled by providing "all" value.
@@ -57,8 +57,40 @@ type GatherConfig struct {
 	// Run the following command to get the names of last active gatherers:
 	// "oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'"
 	// An example of disabling gatherers looks like this: `disabledGatherers: ["clusterconfig/machine_configs", "workloads/workload_info"]`
+	// +kubebuilder:validation:MaxItems=100
+	// +kubebuilder:validation:items:MaxLength=256
 	// +optional
 	DisabledGatherers []string `json:"disabledGatherers"`
+	// storageSpec is an optional field that allows user to define persistent storage for on-demand gathering
+	// jobs to store the Insights data archive.
+	// If omitted, the gathering job will use ephemeral storage.
+	// +optional
+	StorageSpec *StorageSpec `json:"storageSpec,omitempty"`
+}
+
+// storageSpec provides persistent storage configuration options for on-demand gathering jobs.
+type StorageSpec struct {
+	// persistentVolumeClaim is required field that specifies the name of the PersistentVolumeClaim that will
+	// be used to store the Insights data archive. The PersistentVolumeClaim must be created in the openshift-insights namespace.
+	// +required
+	PersistentVolumeClaim PersistentVolumeClaimReference `json:"persistentVolumeClaim"`
+	// mountPath is an optional field specifying the directory where the PVC will be mounted inside the
+	// Insights data gathering Pod. If omitted, the path that is used to store the Insights data archive by Insights
+	// operator will be used instead. The path cannot exceed 1024 characters and defaults to "/var/lib/insights-operator".
+	// +kubebuilder:validation:MaxLength=1024
+	// +kubebuilder:validation:XValidation:rule="!self.contains(':')",message="mountPath must not contain a colon"
+	// +default="/var/lib/insights-operator"
+	// +optional
+	MountPath string `json:"mountPath,omitempty"`
+}
+
+// persistentVolumeClaimReference is a reference to a PersistentVolumeClaim.
+type PersistentVolumeClaimReference struct {
+	// name is a string that follows the DNS1123 subdomain format.
+	// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
+	// +kubebuilder:validation:MaxLength:=253
+	// +required
+	Name string `json:"name"`
 }
 
 const (

@@ -269,7 +269,7 @@ type NodeStatus struct {
 	// If set on creation of a nodeStatus, it must be set to 0. Updates must only increase the value.
 	// +kubebuilder:validation:XValidation:rule="self >= oldSelf",message="must only increase"
 	// +optional
-	CurrentRevision int32 `json:"currentRevision"`
+	CurrentRevision int32 `json:"currentRevision,omitempty"`
 	// targetRevision is the generation of the deployment we're trying to apply.
 	// If set on creation of a nodeStatus, it must be set to 0.
 	// +optional

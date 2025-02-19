@@ -52686,7 +52686,6 @@ func schema_openshift_api_operator_v1_NodeStatus(ref common.ReferenceCallback) c
 					"currentRevision": {
 						SchemaProps: spec.SchemaProps{
 							Description: "currentRevision is the generation of the most recently successful deployment. If set on creation of a nodeStatus, it must be set to 0. Updates must only increase the value.",
-							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},

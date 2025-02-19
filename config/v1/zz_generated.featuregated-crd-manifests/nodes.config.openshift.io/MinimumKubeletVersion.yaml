@@ -47,12 +47,17 @@ spec:
             description: spec holds user settable values for configuration
             properties:
               cgroupMode:
-                description: cgroupMode determines the cgroups version on the node
+                description: |-
+                  cgroupMode determines the cgroups version on the node
+                  cgroups v1 support has been removed from openshift and hence the supported values are "", "v2"
                 enum:
                 - v1
                 - v2
                 - ""
                 type: string
+                x-kubernetes-validations:
+                - message: cgroups v1 is not supported on openshift anymore
+                  rule: self != v1
               minimumKubeletVersion:
                 description: |-
                   minimumKubeletVersion is the lowest version of a kubelet that can join the cluster.

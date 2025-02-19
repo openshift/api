@@ -1608,7 +1608,6 @@ spec:
                           - name
                           - url
                           type: object
-                        maxItems: 13
                         type: array
                         x-kubernetes-list-map-keys:
                         - name

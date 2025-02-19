@@ -82,6 +82,7 @@ spec:
                   properties:
                     name:
                       description: name is the name of specific gatherer
+                      maxLength: 256
                       type: string
                     state:
                       description: |-
@@ -96,7 +97,59 @@ spec:
                   required:
                   - name
                   type: object
+                maxItems: 100
                 type: array
+              storageSpec:
+                description: |-
+                  storageSpec is an optional field that allows user to define persistent storage for on-demand gathering
+                  jobs to store the Insights data archive.
+                  If omitted, the gathering job will use ephemeral storage.
+                properties:
+                  persistentVolume:
+                    description: |-
+                      persistentVolume is an optional field that specifies the PersistentVolume that will be used to store the Insights data archive.
+                      The PersistentVolume must be created in the openshift-insights namespace.
+                    properties:
+                      persistentVolumeClaim:
+                        description: |-
+                          persistentVolumeClaim is an optional field that specifies the configuration of the PersistentVolumeClaim that will
+                          be used to store the Insights data archive. The PersistentVolumeClaim must be created in the openshift-insights namespace.
+                        properties:
+                          mountPath:
+                            description: |-
+                              mountPath is an optional field specifying the directory where the PVC will be mounted inside the
+                              Insights data gathering Pod. If omitted, the path that is used to store the Insights data archive by Insights
+                              operator will be used instead. The path cannot exceed 1024 characters and must not contain a colon.
+                            maxLength: 1024
+                            type: string
+                            x-kubernetes-validations:
+                            - message: mountPath must not contain a colon
+                              rule: '!self.contains('':'')'
+                          name:
+                            description: |-
+                              name is a string that follows the DNS1123 subdomain format.
+                              It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters,
+                               '-' and '.', and must start and end with an alphanumeric character.
+                            maxLength: 253
+                            type: string
+                            x-kubernetes-validations:
+                            - message: a lowercase RFC 1123 subdomain must consist
+                                of lower case alphanumeric characters, '-' or '.',
+                                and must start and end with an alphanumeric character.
+                              rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                        required:
+                        - name
+                        type: object
+                    type: object
+                  type:
+                    description: |-
+                      type is a required field that specifies the type of storage that will be used to store the Insights data archive.
+                      Valid values are "PersistentVolumeClaim" and "Ephemeral". If the value is omitted, the default value is "Ephemeral".
+                    enum:
+                    - PersistentVolumeClaim
+                    - Ephemeral
+                    type: string
+                type: object
             type: object
           status:
             description: status holds observed values from the cluster. They may not
@@ -159,6 +212,7 @@ spec:
                   - status
                   - type
                   type: object
+                maxItems: 100
                 type: array
                 x-kubernetes-list-map-keys:
                 - type
@@ -256,6 +310,7 @@ spec:
                         - status
                         - type
                         type: object
+                      maxItems: 100
                       minItems: 1
                       type: array
                       x-kubernetes-list-map-keys:
@@ -275,6 +330,7 @@ spec:
                   - lastGatherDuration
                   - name
                   type: object
+                maxItems: 100
                 type: array
                 x-kubernetes-list-map-keys:
                 - name
@@ -303,6 +359,7 @@ spec:
                         advisorURI:
                           description: advisorURI provides the URL link to the Insights
                             Advisor.
+                          maxLength: 2048
                           pattern: ^https:\/\/\S+
                           type: string
                         description:
@@ -335,11 +392,13 @@ spec:
                       - state
                       - totalRisk
                       type: object
+                    maxItems: 100
                     type: array
                     x-kubernetes-list-type: atomic
                   uri:
                     description: uri provides the URL link from which the report was
                       downloaded.
+                    maxLength: 2048
                     pattern: ^https:\/\/\S+
                     type: string
                 type: object
@@ -347,6 +406,7 @@ spec:
                 description: |-
                   insightsRequestID is an Insights request ID to track the status of the
                   Insights analysis (in console.redhat.com processing pipeline) for the corresponding Insights data archive.
+                maxLength: 256
                 type: string
                 x-kubernetes-validations:
                 - message: insightsRequestID is immutable once set
@@ -365,13 +425,16 @@ spec:
                         Enter empty string for the core group.
                         This value should consist of only lowercase alphanumeric characters, hyphens and periods.
                         Example: "", "apps", "build.openshift.io", etc.
+                      maxLength: 512
                       pattern: ^$|^[a-z0-9]([-a-z0-9]*[a-z0-9])?(.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
                       type: string
                     name:
                       description: name of the referent.
+                      maxLength: 256
                       type: string
                     namespace:
                       description: namespace of the referent.
+                      maxLength: 512
                       type: string
                     resource:
                       description: |-
@@ -379,6 +442,7 @@ spec:
                         It is normally the plural form of the resource kind in lowercase.
                         This value should consist of only lowercase alphanumeric characters and hyphens.
                         Example: "deployments", "deploymentconfigs", "pods", etc.
+                      maxLength: 512
                       pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
                       type: string
                   required:
@@ -386,6 +450,7 @@ spec:
                   - name
                   - resource
                   type: object
+                maxItems: 100
                 type: array
               startTime:
                 description: startTime is the time when Insights data gathering started.

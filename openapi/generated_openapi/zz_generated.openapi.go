@@ -423,6 +423,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1alpha1.InsightsDataGatherList":                                    schema_openshift_api_config_v1alpha1_InsightsDataGatherList(ref),
 		"github.com/openshift/api/config/v1alpha1.InsightsDataGatherSpec":                                    schema_openshift_api_config_v1alpha1_InsightsDataGatherSpec(ref),
 		"github.com/openshift/api/config/v1alpha1.InsightsDataGatherStatus":                                  schema_openshift_api_config_v1alpha1_InsightsDataGatherStatus(ref),
+		"github.com/openshift/api/config/v1alpha1.PersistentVolumeClaimReference":                            schema_openshift_api_config_v1alpha1_PersistentVolumeClaimReference(ref),
+		"github.com/openshift/api/config/v1alpha1.PersistentVolumeConfig":                                    schema_openshift_api_config_v1alpha1_PersistentVolumeConfig(ref),
 		"github.com/openshift/api/config/v1alpha1.Policy":                                                    schema_openshift_api_config_v1alpha1_Policy(ref),
 		"github.com/openshift/api/config/v1alpha1.PolicyFulcioSubject":                                       schema_openshift_api_config_v1alpha1_PolicyFulcioSubject(ref),
 		"github.com/openshift/api/config/v1alpha1.PolicyIdentity":                                            schema_openshift_api_config_v1alpha1_PolicyIdentity(ref),
@@ -433,6 +435,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1alpha1.RetentionNumberConfig":                                     schema_openshift_api_config_v1alpha1_RetentionNumberConfig(ref),
 		"github.com/openshift/api/config/v1alpha1.RetentionPolicy":                                           schema_openshift_api_config_v1alpha1_RetentionPolicy(ref),
 		"github.com/openshift/api/config/v1alpha1.RetentionSizeConfig":                                       schema_openshift_api_config_v1alpha1_RetentionSizeConfig(ref),
+		"github.com/openshift/api/config/v1alpha1.StorageSpec":                                               schema_openshift_api_config_v1alpha1_StorageSpec(ref),
 		"github.com/openshift/api/config/v1alpha1.UserDefinedMonitoring":                                     schema_openshift_api_config_v1alpha1_UserDefinedMonitoring(ref),
 		"github.com/openshift/api/console/v1.ApplicationMenuSpec":                                            schema_openshift_api_console_v1_ApplicationMenuSpec(ref),
 		"github.com/openshift/api/console/v1.CLIDownloadLink":                                                schema_openshift_api_console_v1_CLIDownloadLink(ref),
@@ -544,6 +547,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/insights/v1alpha1.HealthCheck":                                             schema_openshift_api_insights_v1alpha1_HealthCheck(ref),
 		"github.com/openshift/api/insights/v1alpha1.InsightsReport":                                          schema_openshift_api_insights_v1alpha1_InsightsReport(ref),
 		"github.com/openshift/api/insights/v1alpha1.ObjectReference":                                         schema_openshift_api_insights_v1alpha1_ObjectReference(ref),
+		"github.com/openshift/api/insights/v1alpha1.PersistentVolumeClaimReference":                          schema_openshift_api_insights_v1alpha1_PersistentVolumeClaimReference(ref),
+		"github.com/openshift/api/insights/v1alpha1.PersistentVolumeConfig":                                  schema_openshift_api_insights_v1alpha1_PersistentVolumeConfig(ref),
+		"github.com/openshift/api/insights/v1alpha1.StorageSpec":                                             schema_openshift_api_insights_v1alpha1_StorageSpec(ref),
 		"github.com/openshift/api/kubecontrolplane/v1.AggregatorConfig":                                      schema_openshift_api_kubecontrolplane_v1_AggregatorConfig(ref),
 		"github.com/openshift/api/kubecontrolplane/v1.KubeAPIServerConfig":                                   schema_openshift_api_kubecontrolplane_v1_KubeAPIServerConfig(ref),
 		"github.com/openshift/api/kubecontrolplane/v1.KubeAPIServerImagePolicyConfig":                        schema_openshift_api_kubecontrolplane_v1_KubeAPIServerImagePolicyConfig(ref),
@@ -20732,7 +20738,7 @@ func schema_openshift_api_config_v1alpha1_GatherConfig(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"dataPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "dataPolicy allows user to enable additional global obfuscation of the IP addresses and base domain in the Insights archive data. Valid values are \"None\" and \"ObfuscateNetworking\". When set to None the data is not obfuscated. When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is None.",
+							Description: "dataPolicy allows user to enable additional global obfuscation of the IP addresses and base domain in the Insights archive data. Valid values are \"None\" and \"ObfuscateNetworking\". When set to None the data is not obfuscated. When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -20752,9 +20758,17 @@ func schema_openshift_api_config_v1alpha1_GatherConfig(ref common.ReferenceCallb
 							},
 						},
 					},
+					"storageSpec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "storageSpec is an optional field that allows user to define persistent storage for on-demand gathering jobs to store the Insights data archive. If omitted, the gathering job will use ephemeral storage.",
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.StorageSpec"),
+						},
+					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha1.StorageSpec"},
 	}
 }
 
@@ -21067,6 +21081,57 @@ func schema_openshift_api_config_v1alpha1_InsightsDataGatherStatus(ref common.Re
 				Type: []string{"object"},
 			},
 		},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_PersistentVolumeClaimReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "persistentVolumeClaimReference is a reference to a PersistentVolumeClaim.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is a string that follows the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters,\n '-' and '.', and must start and end with an alphanumeric character.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"mountPath": {
+						SchemaProps: spec.SchemaProps{
+							Description: "mountPath is an optional field specifying the directory where the PVC will be mounted inside the Insights data gathering Pod. If omitted, the path that is used to store the Insights data archive by Insights operator will be used instead. The path cannot exceed 1024 characters and must not contain a colon.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_PersistentVolumeConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "persistentVolumeConfig provides configuration options for PersistentVolume storage.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"persistentVolumeClaim": {
+						SchemaProps: spec.SchemaProps{
+							Description: "persistentVolumeClaim is an optional field that specifies the configuration of the PersistentVolumeClaim that will be used to store the Insights data archive. The PersistentVolumeClaim must be created in the openshift-insights namespace.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.PersistentVolumeClaimReference"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha1.PersistentVolumeClaimReference"},
 	}
 }
 
@@ -21395,6 +21460,35 @@ func schema_openshift_api_config_v1alpha1_RetentionSizeConfig(ref common.Referen
 				Required: []string{"maxSizeOfBackupsGb"},
 			},
 		},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_StorageSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "storageSpec provides persistent storage configuration options for on-demand gathering jobs.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type is a required field that specifies the type of storage that will be used to store the Insights data archive. Valid values are \"PersistentVolumeClaim\" and \"Ephemeral\". If the value is omitted, the default value is \"Ephemeral\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"persistentVolume": {
+						SchemaProps: spec.SchemaProps{
+							Description: "persistentVolume is an optional field that specifies the PersistentVolume that will be used to store the Insights data archive. The PersistentVolume must be created in the openshift-insights namespace.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.PersistentVolumeConfig"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha1.PersistentVolumeConfig"},
 	}
 }
 
@@ -26361,6 +26455,11 @@ func schema_openshift_api_insights_v1alpha1_DataGatherList(ref common.ReferenceC
 						},
 					},
 					"items": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "items contains a list of DataGather resources.",
 							Type:        []string{"array"},
@@ -26375,7 +26474,6 @@ func schema_openshift_api_insights_v1alpha1_DataGatherList(ref common.ReferenceC
 						},
 					},
 				},
-				Required: []string{"metadata", "items"},
 			},
 		},
 		Dependencies: []string{
@@ -26412,11 +26510,17 @@ func schema_openshift_api_insights_v1alpha1_DataGatherSpec(ref common.ReferenceC
 							},
 						},
 					},
+					"storageSpec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "storageSpec is an optional field that allows user to define persistent storage for on-demand gathering jobs to store the Insights data archive. If omitted, the gathering job will use ephemeral storage.",
+							Ref:         ref("github.com/openshift/api/insights/v1alpha1.StorageSpec"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/insights/v1alpha1.GathererConfig"},
+			"github.com/openshift/api/insights/v1alpha1.GathererConfig", "github.com/openshift/api/insights/v1alpha1.StorageSpec"},
 	}
 }
 
@@ -26747,6 +26851,86 @@ func schema_openshift_api_insights_v1alpha1_ObjectReference(ref common.Reference
 				Required: []string{"group", "resource", "name"},
 			},
 		},
+	}
+}
+
+func schema_openshift_api_insights_v1alpha1_PersistentVolumeClaimReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "persistentVolumeClaimReference is a reference to a PersistentVolumeClaim.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is a string that follows the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters,\n '-' and '.', and must start and end with an alphanumeric character.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"mountPath": {
+						SchemaProps: spec.SchemaProps{
+							Description: "mountPath is an optional field specifying the directory where the PVC will be mounted inside the Insights data gathering Pod. If omitted, the path that is used to store the Insights data archive by Insights operator will be used instead. The path cannot exceed 1024 characters and must not contain a colon.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_insights_v1alpha1_PersistentVolumeConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "persistentVolumeConfig provides configuration options for PersistentVolume storage.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"persistentVolumeClaim": {
+						SchemaProps: spec.SchemaProps{
+							Description: "persistentVolumeClaim is an optional field that specifies the configuration of the PersistentVolumeClaim that will be used to store the Insights data archive. The PersistentVolumeClaim must be created in the openshift-insights namespace.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/insights/v1alpha1.PersistentVolumeClaimReference"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/insights/v1alpha1.PersistentVolumeClaimReference"},
+	}
+}
+
+func schema_openshift_api_insights_v1alpha1_StorageSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "storageSpec provides persistent storage configuration options for on-demand gathering jobs.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type is a required field that specifies the type of storage that will be used to store the Insights data archive. Valid values are \"PersistentVolumeClaim\" and \"Ephemeral\". If the value is omitted, the default value is \"Ephemeral\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"persistentVolume": {
+						SchemaProps: spec.SchemaProps{
+							Description: "persistentVolume is an optional field that specifies the PersistentVolume that will be used to store the Insights data archive. The PersistentVolume must be created in the openshift-insights namespace.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/insights/v1alpha1.PersistentVolumeConfig"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/insights/v1alpha1.PersistentVolumeConfig"},
 	}
 }
 

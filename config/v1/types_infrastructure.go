@@ -1670,7 +1670,7 @@ type IBMCloudPlatformStatus struct {
 	// overriden. The CCCMO reads in the IBMCloudPlatformSpec and validates each
 	// endpoint is resolvable. Once validated, the cloud config and IBMCloudPlatformStatus
 	// are updated to reflect the same custom endpoints.
-	// +kubebuilder:validation:MaxItems=13
+	// +openshift:validation:FeatureGateAwareMaxItems:featureGate=DyanmicServiceEndpointIBMCloud,maxItems=13
 	// +listType=map
 	// +listMapKey=name
 	// +optional

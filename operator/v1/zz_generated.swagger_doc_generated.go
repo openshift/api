@@ -248,11 +248,12 @@ func (ConsoleConfigRoute) SwaggerDoc() map[string]string {
 
 var map_ConsoleCustomization = map[string]string{
 	"":                     "ConsoleCustomization defines a list of optional configuration for the console UI.",
+	"customLogos":          "customLogos is an optional field that can be used to replace the OpenShift Masthead and Favicon logos in the console UI with custom logos. Each entry must have a unique logo type. When specified, there must be at least one entry and must not have greater than 2 entries. Each item in the list must have a unique Type.",
 	"capabilities":         "capabilities defines an array of capabilities that can be interacted with in the console UI. Each capability defines a visual state that can be interacted with the console to render in the UI. Available capabilities are LightspeedButton and GettingStartedBanner. Each of the available capabilities may appear only once in the list.",
 	"brand":                "brand is the default branding of the web console which can be overridden by providing the brand field.  There is a limited set of specific brand options. This field controls elements of the console such as the logo. Invalid value will prevent a console rollout.",
 	"documentationBaseURL": "documentationBaseURL links to external documentation are shown in various sections of the web console.  Providing documentationBaseURL will override the default documentation URL. Invalid value will prevent a console rollout.",
 	"customProductName":    "customProductName is the name that will be displayed in page titles, logo alt text, and the about dialog instead of the normal OpenShift product name.",
-	"customLogoFile":       "customLogoFile replaces the default OpenShift logo in the masthead and about dialog. It is a reference to a ConfigMap in the openshift-config namespace. This can be created with a command like 'oc create configmap custom-logo --from-file=/path/to/file -n openshift-config'. Image size must be less than 1 MB due to constraints on the ConfigMap size. The ConfigMap key should include a file extension so that the console serves the file with the correct MIME type. Recommended logo specifications: Dimensions: Max height of 68px and max width of 200px SVG format preferred",
+	"customLogoFile":       "customLogoFile replaces the default OpenShift logo in the masthead and about dialog. It is a reference to a ConfigMap in the openshift-config namespace. This can be created with a command like 'oc create configmap custom-logo --from-file=/path/to/file -n openshift-config'. Image size must be less than 1 MB due to constraints on the ConfigMap size. The ConfigMap key should include a file extension so that the console serves the file with the correct MIME type. Recommended logo specifications: Dimensions: Max height of 60px and max width of 200px SVG format preferred Deprecated: Use CustomLogos instead.",
 	"developerCatalog":     "developerCatalog allows to configure the shown developer catalog categories (filters) and types (sub-catalogs).",
 	"projectAccess":        "projectAccess allows customizing the available list of ClusterRoles in the Developer perspective Project access page which can be used by a project admin to specify roles to other users and restrict access within the project. If set, the list will replace the default ClusterRole options.",
 	"quickStarts":          "quickStarts allows customization of available ConsoleQuickStart resources in console.",
@@ -301,6 +302,16 @@ var map_ConsoleStatus = map[string]string{
 
 func (ConsoleStatus) SwaggerDoc() map[string]string {
 	return map_ConsoleStatus
+}
+
+var map_CustomLogo = map[string]string{
+	"":       "CustomLogo defines a configuration based on theme types for the console UI logo.",
+	"type":   "type is a required field that specifies the type of the logo for the console UI. It determines whether the logo is for the masthead or favicon. This field is an enum with valid values \"Masthead\" and \"Favicon\". Valid values are \"Masthead\" and \"Favicon\". When set to \"Masthead\", the logo will be used in the masthead or about modal of the console UI. When set to \"Favicon\", the logo will be used as the favicon of the console UI.",
+	"themes": "themes is a required field that specifies the themes for the console UI logo. This field is a list of themes, each with a Type. Each theme determines whether the logo is for the dark or light or default theme of the console UI. Each item in the list must have a unique Type. When specified, there must be at least one entry and must not have greater than 2 entries.",
+}
+
+func (CustomLogo) SwaggerDoc() map[string]string {
+	return map_CustomLogo
 }
 
 var map_DeveloperConsoleCatalogCategory = map[string]string{
@@ -421,6 +432,16 @@ var map_StatuspageProvider = map[string]string{
 
 func (StatuspageProvider) SwaggerDoc() map[string]string {
 	return map_StatuspageProvider
+}
+
+var map_Theme = map[string]string{
+	"":     "Theme defines a theme type for the console UI.",
+	"type": "type is a required field that specifies the type of the logo for the console UI. This field is an enum with valid values \"Dark\", \"Light\" and \"Default\". The type determines whether the logo is for the dark or light or default theme. When set to \"Dark\", the corresponding logo for the dark theme will be used in the console UI. When set to \"Light\", the corresponding logo for the light theme will be used in the console UI. When set to \"Default\", the corresponding logo will be used for any unspecified theme(s) in the console UI. If only the dark or light theme is specified, the default OCP logo will be used for the unspecified theme.",
+	"file": "file is a required field that references a specific file within a ConfigMap in the openshift-config namespace. This field allows the console to locate and use the specified file containing a custom logo. You can create it with a command like: - 'oc create configmap custom-logos-config --namespace=openshift-config --from-file=/path/to/file The ConfigMap key should include the file extension for the dark or light or default theme so that the console serves the file with the correct MIME type. Recommended Masthead and About Modal logo specifications: Image size must be less than 1 MB due to constraints on the ConfigMap size Dimensions: Max height of 60px and max width of 200px SVG format preferred Recommended Favicon specifications: Dimensions: Max height of 16px and max width of 16px PNG format preferred",
+}
+
+func (Theme) SwaggerDoc() map[string]string {
+	return map_Theme
 }
 
 var map_AWSCSIDriverConfigSpec = map[string]string{

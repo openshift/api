@@ -8306,7 +8306,7 @@
       "type": "object",
       "properties": {
         "cgroupMode": {
-          "description": "cgroupMode determines the cgroups version on the node",
+          "description": "cgroupMode determines the cgroups version on the node cgroups v1 support has been removed from openshift and hence the supported values are \"\", \"v2\"",
           "type": "string"
         },
         "minimumKubeletVersion": {

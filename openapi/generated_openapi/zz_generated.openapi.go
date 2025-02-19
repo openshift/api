@@ -15617,7 +15617,7 @@ func schema_openshift_api_config_v1_NodeSpec(ref common.ReferenceCallback) commo
 				Properties: map[string]spec.Schema{
 					"cgroupMode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "cgroupMode determines the cgroups version on the node",
+							Description: "cgroupMode determines the cgroups version on the node cgroups v1 support has been removed from openshift and hence the supported values are \"\", \"v2\"",
 							Type:        []string{"string"},
 							Format:      "",
 						},

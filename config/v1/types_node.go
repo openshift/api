@@ -38,6 +38,8 @@ type Node struct {
 
 type NodeSpec struct {
 	// cgroupMode determines the cgroups version on the node
+	// cgroups v1 support has been removed from openshift and hence the supported values are "", "v2"
+	// +kubebuilder:validation:XValidation:rule="self != v1",message="cgroups v1 is not supported on openshift anymore"
 	// +optional
 	CgroupMode CgroupMode `json:"cgroupMode,omitempty"`
 

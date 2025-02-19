@@ -20,59 +20,53 @@ tests:
         kind: DataGather
         spec:
           storageSpec:
-            persistentVolumeClaim:
-              name: test-claim
-            mountPath: /data
+            type: PersistentVolumeClaim
+            persistentVolume:
+              persistentVolumeClaim:
+                name: test-claim
+                mountPath: /data
       expected: |
         apiVersion: insights.openshift.io/v1alpha1
         kind: DataGather
         spec:
           storageSpec:
-            persistentVolumeClaim:
-              name: test-claim
-            mountPath: /data
-    - name: Should be able to create a DataGather with a default MountPath
-      initial: |
-        apiVersion: insights.openshift.io/v1alpha1
-        kind: DataGather
-        spec:
-          storageSpec:
-            persistentVolumeClaim:
-              name: test-claim
-      expected: |
-        apiVersion: insights.openshift.io/v1alpha1
-        kind: DataGather
-        spec:
-          storageSpec:
-            persistentVolumeClaim:
-              name: test-claim
-            mountPath: /var/lib/insights-operator
+            type: PersistentVolumeClaim
+            persistentVolume:
+              persistentVolumeClaim:
+                name: test-claim
+                mountPath: /data
     - name: mountPath must not contain colon
       initial: |
         apiVersion: insights.openshift.io/v1alpha1
         kind: DataGather
         spec:
           storageSpec:
-            persistentVolumeClaim:
-              name: test-claim
-            mountPath: /data:/data
-      expectedError: 'spec.storageSpec.mountPath: Invalid value: "string": mountPath must not contain a colon'
-    - name: storageSpec must contain PersistentVolumeClaim
+            type: PersistentVolumeClaim
+            persistentVolume:
+              persistentVolumeClaim:
+                name: test-claim
+                mountPath: /data:/data
+      expectedError: 'spec.storageSpec.persistentVolume.persistentVolumeClaim.mountPath: Invalid value: "string": mountPath must not contain a colon'
+    - name: storageSpec.persistentVolume.persistentVolumeClaim must contain name
       initial: |
         apiVersion: insights.openshift.io/v1alpha1
         kind: DataGather
         spec:
           storageSpec:
-            mountPath: /data:/data
-      expectedError: "spec.storageSpec.persistentVolumeClaim: Required value"
+            persistentVolume:
+              persistentVolumeClaim:
+                mountPath: /data
+      expectedError: "spec.storageSpec.persistentVolume.persistentVolumeClaim.name: Required value"
     - name: persistentVolumeClaim must follow the naming convention
       initial: |
         apiVersion: insights.openshift.io/v1alpha1
         kind: DataGather
         spec:
           storageSpec:
-            persistentVolumeClaim:
-              name: INVALID_PVC_NAME
+            type: PersistentVolumeClaim
+            persistentVolume:
+              persistentVolumeClaim:
+                name: INVALID_PVC_NAME
       expectedError: 'Invalid value: "string": a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, ''-'' or ''.'', and must start and end with an alphanumeric character.'
   onUpdate:
     - name: status is present and startTime is added

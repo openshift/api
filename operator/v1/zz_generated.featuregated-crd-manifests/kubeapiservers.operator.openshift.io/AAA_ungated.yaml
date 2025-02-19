@@ -222,8 +222,9 @@ spec:
                     of a particular node managed by this operator.
                   properties:
                     currentRevision:
-                      description: currentRevision is the generation of the most recently
-                        successful deployment
+                      description: |-
+                        currentRevision is the generation of the most recently successful deployment.
+                        If set on creation of a nodeStatus, it must be set to 0. Updates must only increase the value.
                       format: int32
                       type: integer
                       x-kubernetes-validations:
@@ -262,8 +263,9 @@ spec:
                       description: nodeName is the name of the node
                       type: string
                     targetRevision:
-                      description: targetRevision is the generation of the deployment
-                        we're trying to apply
+                      description: |-
+                        targetRevision is the generation of the deployment we're trying to apply.
+                        If set on creation of a nodeStatus, it must be set to 0.
                       format: int32
                       type: integer
                   required:
@@ -273,6 +275,16 @@ spec:
                   - fieldPath: .currentRevision
                     message: cannot be unset once set
                     rule: has(self.currentRevision) || !has(oldSelf.currentRevision)
+                  - message: when specified on creation of a nodeStatus, currentRevision
+                      must be set to 0
+                    optionalOldSelf: true
+                    rule: 'oldSelf.hasValue() || (has(self.currentRevision) ? self.currentRevision
+                      == 0 : true) '
+                  - message: when specified on creation of a nodeStatus, targetRevision
+                      must be set to 0
+                    optionalOldSelf: true
+                    rule: 'oldSelf.hasValue() || (has(self.targetRevision) ? self.targetRevision
+                      == 0 : true) '
                 type: array
                 x-kubernetes-list-map-keys:
                 - nodeName

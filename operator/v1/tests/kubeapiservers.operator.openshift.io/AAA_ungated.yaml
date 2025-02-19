@@ -63,7 +63,7 @@ tests:
     - name: Should reject clearing currentRevision
       initialCRDPatches:
       - op: remove
-        path: /spec/versions/0/schema/openAPIV3Schema/properties/status/properties/nodeStatuses/items/properties/currentRevision/x-kubernetes-validations/1
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/status/properties/nodeStatuses/items/x-kubernetes-validations/1
       initial: |
         apiVersion: operator.openshift.io/v1
         kind: KubeAPIServer
@@ -95,7 +95,7 @@ tests:
           nodeStatuses:
           - nodeName: a
             currentRevision: 3
-      expectedStatusError: "status.nodeStatuses[0].currentRevision: Invalid value: \"integer\": must be set to 0 on creation"
+      expectedStatusError: "status.nodeStatuses[0]: Invalid value: \"object\": when specified on creation of a nodeStatus, currentRevision must be set to 0 on creation"
     - name: Should reject setting new nodeStatus with a non-zero targetRevision
       initial: |
         apiVersion: operator.openshift.io/v1
@@ -111,7 +111,7 @@ tests:
           nodeStatuses:
           - nodeName: a
             targetRevision: 3
-      expectedStatusError: "status.nodeStatuses[0].targetRevision: Invalid value: \"integer\": must be set to 0 on creation"
+      expectedStatusError: "status.nodeStatuses[0]: Invalid value: \"object\": when specified on creation of a nodeStatus, targetRevision must be set to 0 on creation"
     - name: Should allow adding nodes with name only
       initial: |
         apiVersion: operator.openshift.io/v1
@@ -138,4 +138,109 @@ tests:
           nodeStatuses:
           - nodeName: a
           - nodeName: b
-
+    - name: Should allow updating currentRevision of existing nodeStatus that specified a currentRevision on creation
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {} # No spec is required for a KubeAPIServer
+        status:
+          nodeStatuses:
+          - nodeName: a
+            currentRevision: 0
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {} # No spec is required for a KubeAPIServer
+        status:
+          nodeStatuses:
+          - nodeName: a
+            currentRevision: 1
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          nodeStatuses:
+          - nodeName: a
+            currentRevision: 1
+    - name: Should allow updating targetRevision of existing nodeStatus that specified a targetRevision on creation
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {} # No spec is required for a KubeAPIServer
+        status:
+          nodeStatuses:
+          - nodeName: a
+            targetRevision: 0
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {} # No spec is required for a KubeAPIServer
+        status:
+          nodeStatuses:
+          - nodeName: a
+            targetRevision: 1
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          nodeStatuses:
+          - nodeName: a
+            targetRevision: 1
+    - name: Should allow updating currentRevision of existing nodeStatus that did not specify a currentRevision on creation
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {} # No spec is required for a KubeAPIServer
+        status:
+          nodeStatuses:
+          - nodeName: a
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {} # No spec is required for a KubeAPIServer
+        status:
+          nodeStatuses:
+          - nodeName: a
+            currentRevision: 1
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          nodeStatuses:
+          - nodeName: a
+            currentRevision: 1
+    - name: Should allow updating targetRevision of existing nodeStatus that did not specify a targetRevision on creation
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {} # No spec is required for a KubeAPIServer
+        status:
+          nodeStatuses:
+          - nodeName: a
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {} # No spec is required for a KubeAPIServer
+        status:
+          nodeStatuses:
+          - nodeName: a
+            targetRevision: 1
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          nodeStatuses:
+          - nodeName: a
+            targetRevision: 1

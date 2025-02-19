@@ -37,8 +37,8 @@ func (MyOperatorResource) SwaggerDoc() map[string]string {
 var map_NodeStatus = map[string]string{
 	"":                         "NodeStatus provides information about the current state of a particular node managed by this operator.",
 	"nodeName":                 "nodeName is the name of the node",
-	"currentRevision":          "currentRevision is the generation of the most recently successful deployment. If set on creation, it must be set to 0. Updates must only increase the value.",
-	"targetRevision":           "targetRevision is the generation of the deployment we're trying to apply. If set on creation, it must be set to 0.",
+	"currentRevision":          "currentRevision is the generation of the most recently successful deployment. If set on creation of a nodeStatus, it must be set to 0. Updates must only increase the value.",
+	"targetRevision":           "targetRevision is the generation of the deployment we're trying to apply. If set on creation of a nodeStatus, it must be set to 0.",
 	"lastFailedRevision":       "lastFailedRevision is the generation of the deployment we tried and failed to deploy.",
 	"lastFailedTime":           "lastFailedTime is the time the last failed revision failed the last time.",
 	"lastFailedReason":         "lastFailedReason is a machine readable failure reason string.",

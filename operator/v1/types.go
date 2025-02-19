@@ -258,20 +258,20 @@ type StaticPodOperatorStatus struct {
 
 // NodeStatus provides information about the current state of a particular node managed by this operator.
 // +kubebuilder:validation:XValidation:rule="has(self.currentRevision) || !has(oldSelf.currentRevision)",message="cannot be unset once set",fieldPath=".currentRevision"
+// +kubebuilder:validation:XValidation:rule="oldSelf.hasValue() || (has(self.currentRevision) ? self.currentRevision == 0 : true) ",message="when specified on creation of a nodeStatus, currentRevision must be set to 0 on creation",optionalOldSelf=true
+// +kubebuilder:validation:XValidation:rule="oldSelf.hasValue() || (has(self.targetRevision) ? self.targetRevision == 0 : true) ",message="when specified on creation of a nodeStatus, targetRevision must be set to 0 on creation",optionalOldSelf=true
 type NodeStatus struct {
 	// nodeName is the name of the node
 	// +required
 	NodeName string `json:"nodeName"`
 
 	// currentRevision is the generation of the most recently successful deployment.
-	// If set on creation, it must be set to 0. Updates must only increase the value.
+	// If set on creation of a nodeStatus, it must be set to 0. Updates must only increase the value.
 	// +kubebuilder:validation:XValidation:rule="self >= oldSelf",message="must only increase"
-	// +kubebuilder:validation:XValidation:rule="oldSelf.hasValue() || self == 0",message="must be set to 0 on creation",optionalOldSelf=true
 	// +optional
 	CurrentRevision int32 `json:"currentRevision"`
 	// targetRevision is the generation of the deployment we're trying to apply.
-	// If set on creation, it must be set to 0.
-	// +kubebuilder:validation:XValidation:rule="oldSelf.hasValue() || self == 0",message="must be set to 0 on creation",optionalOldSelf=true
+	// If set on creation of a nodeStatus, it must be set to 0.
 	// +optional
 	TargetRevision int32 `json:"targetRevision,omitempty"`
 

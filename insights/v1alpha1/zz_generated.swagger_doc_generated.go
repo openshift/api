@@ -117,17 +117,27 @@ func (ObjectReference) SwaggerDoc() map[string]string {
 
 var map_PersistentVolumeClaimReference = map[string]string{
 	"":     "persistentVolumeClaimReference is a reference to a PersistentVolumeClaim.",
-	"name": "name is a string that follows the DNS1123 subdomain format.",
+	"name": "name is a string that follows the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters,\n '-' and '.', and must start and end with an alphanumeric character.",
 }
 
 func (PersistentVolumeClaimReference) SwaggerDoc() map[string]string {
 	return map_PersistentVolumeClaimReference
 }
 
+var map_PersistentVolumeConfig = map[string]string{
+	"":                      "persistentVolumeConfig provides configuration options for PersistentVolume storage.",
+	"persistentVolumeClaim": "persistentVolumeClaim is a required field that specifies the configuration of the PersistentVolumeClaim that will be used to store the Insights data archive. The PersistentVolumeClaim must be created in the openshift-insights namespace.",
+	"mountPath":             "mountPath is an optional field specifying the directory where the PVC will be mounted inside the Insights data gathering Pod. If omitted, the path that is used to store the Insights data archive by Insights operator will be used instead. The path cannot exceed 1024 characters and must not contain a colon.",
+}
+
+func (PersistentVolumeConfig) SwaggerDoc() map[string]string {
+	return map_PersistentVolumeConfig
+}
+
 var map_StorageSpec = map[string]string{
-	"":                      "storageSpec provides persistent storage configuration options for on-demand gathering jobs.",
-	"persistentVolumeClaim": "persistentVolumeClaim is required field that specifies the name of the PersistentVolumeClaim that will be used to store the Insights data archive. The PersistentVolumeClaim must be created in the openshift-insights namespace.",
-	"mountPath":             "mountPath is an optional field specifying the directory where the PVC will be mounted inside the Insights data gathering Pod. If omitted, the path that is used to store the Insights data archive by Insights operator will be used instead. The path cannot exceed 1024 characters and defaults to \"/var/lib/insights-operator\".",
+	"":                 "storageSpec provides persistent storage configuration options for on-demand gathering jobs.",
+	"type":             "type is a required field that specifies the type of storage that will be used to store the Insights data archive. Valid values are \"PersistentVolumeClaim\" and \"Ephemeral\".",
+	"persistentVolume": "persistentVolume is an optional field that specifies the PersistentVolume that will be used to store the Insights data archive. The PersistentVolume must be created in the openshift-insights namespace.",
 }
 
 func (StorageSpec) SwaggerDoc() map[string]string {

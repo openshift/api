@@ -105,38 +105,60 @@ spec:
                   jobs to store the Insights data archive.
                   If omitted, the gathering job will use ephemeral storage.
                 properties:
-                  mountPath:
-                    default: /var/lib/insights-operator
+                  persistentVolume:
                     description: |-
-                      mountPath is an optional field specifying the directory where the PVC will be mounted inside the
-                      Insights data gathering Pod. If omitted, the path that is used to store the Insights data archive by Insights
-                      operator will be used instead. The path cannot exceed 1024 characters and defaults to "/var/lib/insights-operator".
-                    maxLength: 1024
-                    type: string
-                    x-kubernetes-validations:
-                    - message: mountPath must not contain a colon
-                      rule: '!self.contains('':'')'
-                  persistentVolumeClaim:
-                    description: |-
-                      persistentVolumeClaim is required field that specifies the name of the PersistentVolumeClaim that will
-                      be used to store the Insights data archive. The PersistentVolumeClaim must be created in the openshift-insights namespace.
+                      persistentVolume is an optional field that specifies the PersistentVolume that will be used to store the Insights data archive.
+                      The PersistentVolume must be created in the openshift-insights namespace.
                     properties:
-                      name:
-                        description: name is a string that follows the DNS1123 subdomain
-                          format.
-                        maxLength: 253
+                      mountPath:
+                        description: |-
+                          mountPath is an optional field specifying the directory where the PVC will be mounted inside the
+                          Insights data gathering Pod. If omitted, the path that is used to store the Insights data archive by Insights
+                          operator will be used instead. The path cannot exceed 1024 characters and must not contain a colon.
+                        maxLength: 1024
                         type: string
                         x-kubernetes-validations:
-                        - message: a lowercase RFC 1123 subdomain must consist of
-                            lower case alphanumeric characters, '-' or '.', and must
-                            start and end with an alphanumeric character.
-                          rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                        - message: mountPath must not contain a colon
+                          rule: '!self.contains('':'')'
+                      persistentVolumeClaim:
+                        description: |-
+                          persistentVolumeClaim is a required field that specifies the configuration of the PersistentVolumeClaim that will
+                          be used to store the Insights data archive. The PersistentVolumeClaim must be created in the openshift-insights namespace.
+                        properties:
+                          name:
+                            description: |-
+                              name is a string that follows the DNS1123 subdomain format.
+                              It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters,
+                               '-' and '.', and must start and end with an alphanumeric character.
+                            maxLength: 253
+                            type: string
+                            x-kubernetes-validations:
+                            - message: a lowercase RFC 1123 subdomain must consist
+                                of lower case alphanumeric characters, '-' or '.',
+                                and must start and end with an alphanumeric character.
+                              rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                        required:
+                        - name
+                        type: object
                     required:
-                    - name
+                    - persistentVolumeClaim
                     type: object
+                  type:
+                    description: |-
+                      type is a required field that specifies the type of storage that will be used to store the Insights data archive.
+                      Valid values are "PersistentVolumeClaim" and "Ephemeral".
+                    enum:
+                    - PersistentVolumeClaim
+                    - Ephemeral
+                    type: string
                 required:
-                - persistentVolumeClaim
+                - type
                 type: object
+                x-kubernetes-validations:
+                - message: persistentVolume is required when type is PersistentVolumeClaim,
+                    and forbidden otherwise
+                  rule: 'has(self.type) && self.type == ''PersistentVolumeClaim''
+                    ?  has(self.persistentVolume) : !has(self.persistentVolume)'
             type: object
           status:
             description: status holds observed values from the cluster. They may not

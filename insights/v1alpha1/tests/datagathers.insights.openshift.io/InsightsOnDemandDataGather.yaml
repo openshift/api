@@ -14,65 +14,103 @@ tests:
         apiVersion: insights.openshift.io/v1alpha1
         kind: DataGather
         spec: {}
-    - name: Should be able to create a DataGather with a storageSpec
+    - name: Should be able to create a DataGather with a storageSpec PersistentVolumeClaim
       initial: |
         apiVersion: insights.openshift.io/v1alpha1
         kind: DataGather
         spec:
           storageSpec:
-            persistentVolumeClaim:
-              name: test-claim
-            mountPath: /data
+            type: PersistentVolumeClaim
+            persistentVolume:
+              mountPath: /data
+              persistentVolumeClaim:
+                name: test-claim
       expected: |
         apiVersion: insights.openshift.io/v1alpha1
         kind: DataGather
         spec:
           storageSpec:
-            persistentVolumeClaim:
-              name: test-claim
-            mountPath: /data
-    - name: Should be able to create a DataGather with a default MountPath
+            type: PersistentVolumeClaim
+            persistentVolume:
+              mountPath: /data
+              persistentVolumeClaim:
+                name: test-claim
+    - name: Should be able to create a DataGather with a storageSpec Epemeral
       initial: |
         apiVersion: insights.openshift.io/v1alpha1
         kind: DataGather
         spec:
           storageSpec:
-            persistentVolumeClaim:
-              name: test-claim
+            type: Ephemeral
       expected: |
         apiVersion: insights.openshift.io/v1alpha1
         kind: DataGather
         spec:
           storageSpec:
-            persistentVolumeClaim:
-              name: test-claim
-            mountPath: /var/lib/insights-operator
+            type: Ephemeral
+    - name: When storageSpec.type is PersistentVolumeClaim then PersistentVolume must be present
+      initial: |
+        apiVersion: insights.openshift.io/v1alpha1
+        kind: DataGather
+        spec:
+          storageSpec:
+            type: PersistentVolumeClaim
+      expectedError: 'spec.storageSpec: Invalid value: "object": persistentVolume is required when type is PersistentVolumeClaim, and forbidden otherwise'
+    - name: When storageSpec.type is not PersistentVolumeClaim then PersistentVolume must not be present
+      initial: |
+        apiVersion: insights.openshift.io/v1alpha1
+        kind: DataGather
+        spec:
+          storageSpec:
+            type: Ephemeral
+            persistentVolume:
+              persistentVolumeClaim:
+                name: test-claim
+      expectedError: 'spec.storageSpec: Invalid value: "object": persistentVolume is required when type is PersistentVolumeClaim, and forbidden otherwise'
     - name: mountPath must not contain colon
       initial: |
         apiVersion: insights.openshift.io/v1alpha1
         kind: DataGather
         spec:
           storageSpec:
-            persistentVolumeClaim:
-              name: test-claim
-            mountPath: /data:/data
-      expectedError: 'spec.storageSpec.mountPath: Invalid value: "string": mountPath must not contain a colon'
-    - name: storageSpec must contain PersistentVolumeClaim
+            type: PersistentVolumeClaim
+            persistentVolume:
+              mountPath: /data:/data
+              persistentVolumeClaim:
+                name: test-claim
+      expectedError: 'spec.storageSpec.persistentVolume.mountPath: Invalid value: "string": mountPath must not contain a colon'
+    - name: storageSpec.type is required
       initial: |
         apiVersion: insights.openshift.io/v1alpha1
         kind: DataGather
         spec:
           storageSpec:
-            mountPath: /data:/data
-      expectedError: "spec.storageSpec.persistentVolumeClaim: Required value"
+            persistentVolume:
+              mountPath: /data
+              persistentVolumeClaim:
+                name: test-claim
+      expectedError: "spec.storageSpec.type: Required value"
+    - name: storageSpec.persistentVolume.persistentVolumeClaim can not be empty
+      initial: |
+        apiVersion: insights.openshift.io/v1alpha1
+        kind: DataGather
+        spec:
+          storageSpec:
+            type: PersistentVolumeClaim
+            persistentVolume:
+              mountPath: /data
+              persistentVolumeClaim:
+      expectedError: 'spec.storageSpec.persistentVolume.persistentVolumeClaim: Required value, <nil>: Invalid value: "null": some validation rules were not checked because the object was invalid; correct the existing errors to complete validation'
     - name: persistentVolumeClaim must follow the naming convention
       initial: |
         apiVersion: insights.openshift.io/v1alpha1
         kind: DataGather
         spec:
           storageSpec:
-            persistentVolumeClaim:
-              name: INVALID_PVC_NAME
+            type: PersistentVolumeClaim
+            persistentVolume:
+              persistentVolumeClaim:
+                name: INVALID_PVC_NAME
       expectedError: 'Invalid value: "string": a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, ''-'' or ''.'', and must start and end with an alphanumeric character.'
   onUpdate:
     - name: status is present and startTime is added

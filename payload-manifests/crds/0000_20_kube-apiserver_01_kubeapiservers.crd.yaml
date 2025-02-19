@@ -228,6 +228,9 @@ spec:
                       x-kubernetes-validations:
                       - message: must only increase
                         rule: self >= oldSelf
+                      - message: must be set to 0 on creation
+                        optionalOldSelf: true
+                        rule: oldSelf.hasValue() || self == 0
                     lastFailedCount:
                       description: lastFailedCount is how often the installer pod
                         of the last failed revision failed.
@@ -265,6 +268,10 @@ spec:
                         we're trying to apply
                       format: int32
                       type: integer
+                      x-kubernetes-validations:
+                      - message: must be set to 0 on creation
+                        optionalOldSelf: true
+                        rule: oldSelf.hasValue() || self == 0
                   required:
                   - nodeName
                   type: object

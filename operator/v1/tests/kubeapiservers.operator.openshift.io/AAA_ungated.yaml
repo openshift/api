@@ -95,7 +95,7 @@ tests:
           nodeStatuses:
           - nodeName: a
             currentRevision: 3
-      expectedStatusError: "status.nodeStatuses[0]: Invalid value: \"object\": when specified on creation of a nodeStatus, currentRevision must be set to 0 on creation"
+      expectedStatusError: "status.nodeStatuses[0]: Invalid value: \"object\": when specified on creation of a nodeStatus, currentRevision must be set to 0"
     - name: Should reject setting new nodeStatus with a non-zero targetRevision
       initial: |
         apiVersion: operator.openshift.io/v1
@@ -111,7 +111,7 @@ tests:
           nodeStatuses:
           - nodeName: a
             targetRevision: 3
-      expectedStatusError: "status.nodeStatuses[0]: Invalid value: \"object\": when specified on creation of a nodeStatus, targetRevision must be set to 0 on creation"
+      expectedStatusError: "status.nodeStatuses[0]: Invalid value: \"object\": when specified on creation of a nodeStatus, targetRevision must be set to 0"
     - name: Should allow adding nodes with name only
       initial: |
         apiVersion: operator.openshift.io/v1

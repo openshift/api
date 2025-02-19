@@ -258,8 +258,8 @@ type StaticPodOperatorStatus struct {
 
 // NodeStatus provides information about the current state of a particular node managed by this operator.
 // +kubebuilder:validation:XValidation:rule="has(self.currentRevision) || !has(oldSelf.currentRevision)",message="cannot be unset once set",fieldPath=".currentRevision"
-// +kubebuilder:validation:XValidation:rule="oldSelf.hasValue() || (has(self.currentRevision) ? self.currentRevision == 0 : true) ",message="when specified on creation of a nodeStatus, currentRevision must be set to 0 on creation",optionalOldSelf=true
-// +kubebuilder:validation:XValidation:rule="oldSelf.hasValue() || (has(self.targetRevision) ? self.targetRevision == 0 : true) ",message="when specified on creation of a nodeStatus, targetRevision must be set to 0 on creation",optionalOldSelf=true
+// +kubebuilder:validation:XValidation:rule="oldSelf.hasValue() || (has(self.currentRevision) ? self.currentRevision == 0 : true) ",message="when specified on creation of a nodeStatus, currentRevision must be set to 0",optionalOldSelf=true
+// +kubebuilder:validation:XValidation:rule="oldSelf.hasValue() || (has(self.targetRevision) ? self.targetRevision == 0 : true) ",message="when specified on creation of a nodeStatus, targetRevision must be set to 0",optionalOldSelf=true
 type NodeStatus struct {
 	// nodeName is the name of the node
 	// +required

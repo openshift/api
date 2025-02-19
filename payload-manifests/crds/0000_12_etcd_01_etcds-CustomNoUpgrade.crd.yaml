@@ -306,12 +306,12 @@ spec:
                     message: cannot be unset once set
                     rule: has(self.currentRevision) || !has(oldSelf.currentRevision)
                   - message: when specified on creation of a nodeStatus, currentRevision
-                      must be set to 0 on creation
+                      must be set to 0
                     optionalOldSelf: true
                     rule: 'oldSelf.hasValue() || (has(self.currentRevision) ? self.currentRevision
                       == 0 : true) '
                   - message: when specified on creation of a nodeStatus, targetRevision
-                      must be set to 0 on creation
+                      must be set to 0
                     optionalOldSelf: true
                     rule: 'oldSelf.hasValue() || (has(self.targetRevision) ? self.targetRevision
                       == 0 : true) '

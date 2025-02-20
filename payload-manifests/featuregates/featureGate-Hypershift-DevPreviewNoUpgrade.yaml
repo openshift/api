@@ -35,6 +35,9 @@
                     },
                     {
                         "name": "NewOLM"
+                    },
+                    {
+                        "name": "NewOLMCatalogdAPIV1Metas"
                     }
                 ],
                 "enabled": [

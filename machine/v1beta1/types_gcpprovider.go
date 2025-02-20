@@ -67,6 +67,8 @@ const (
 	ConfidentialComputePolicySEV ConfidentialComputePolicy = "AMDEncryptedVirtualization"
 	// ConfidentialComputePolicySEVSNP sets AMD SEV-SNP as the VM instance's confidential computing technology of choice.
 	ConfidentialComputePolicySEVSNP ConfidentialComputePolicy = "AMDEncryptedVirtualizationNestedPaging"
+	// ConfidentialComputePolicyTDX sets Intel TDX as the VM instance's confidential computing technology of choice.
+	ConfidentialComputePolicyTDX ConfidentialComputePolicy = "IntelTrustedDomainExtensions"
 )
 
 // GCPMachineProviderSpec is the type that will be embedded in a Machine.Spec.ProviderSpec field
@@ -153,13 +155,15 @@ type GCPMachineProviderSpec struct {
 	// When set to Enabled, the machine will be configured as a confidential computing instance with no preference on the confidential compute policy used. In this mode, the platform chooses a default that is subject to change over time. Currently, the default is to use AMD Secure Encrypted Virtualization.
 	// When set to AMDEncryptedVirtualization, the machine will be configured as a confidential computing instance with AMD Secure Encrypted Virtualization (AMD SEV) as the confidential computing technology.
 	// When set to AMDEncryptedVirtualizationNestedPaging, the machine will be configured as a confidential computing instance with AMD Secure Encrypted Virtualization Secure Nested Paging (AMD SEV-SNP) as the confidential computing technology.
+	// When set to IntelTrustedDomainExtensions, the machine will be configured as a confidential computing instance with Intel Trusted Domain Extensions (Intel TDX) as the confidential computing technology.
 	// If any value other than Disabled is set the selected machine type must support that specific confidential computing technology. The machine series supporting confidential computing technologies can be checked at https://cloud.google.com/confidential-computing/confidential-vm/docs/supported-configurations#all-confidential-vm-instances
 	// Currently, AMDEncryptedVirtualization is supported in c2d, n2d, and c3d machines.
 	// AMDEncryptedVirtualizationNestedPaging is supported in n2d machines.
+	// IntelTrustedDomainExtensions is supported in c3 machines.
 	// If any value other than Disabled is set, the selected region must support that specific confidential computing technology. The list of regions supporting confidential computing technologies can be checked at https://cloud.google.com/confidential-computing/confidential-vm/docs/supported-configurations#supported-zones
 	// If any value other than Disabled is set onHostMaintenance is required to be set to "Terminate".
 	// If omitted, the platform chooses a default, which is subject to change over time, currently that default is Disabled.
-	// +kubebuilder:validation:Enum="";Enabled;Disabled;AMDEncryptedVirtualization;AMDEncryptedVirtualizationNestedPaging
+	// +kubebuilder:validation:Enum="";Enabled;Disabled;AMDEncryptedVirtualization;AMDEncryptedVirtualizationNestedPaging;IntelTrustedDomainExtensions
 	// +optional
 	ConfidentialCompute ConfidentialComputePolicy `json:"confidentialCompute,omitempty"`
 

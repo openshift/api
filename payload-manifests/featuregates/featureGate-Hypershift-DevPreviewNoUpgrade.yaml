@@ -258,6 +258,9 @@
                         "name": "UserNamespacesSupport"
                     },
                     {
+                        "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"
+                    },
+                    {
                         "name": "VSphereControlPlaneMachineSet"
                     },
                     {

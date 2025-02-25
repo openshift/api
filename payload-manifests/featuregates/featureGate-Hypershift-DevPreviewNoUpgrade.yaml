@@ -243,6 +243,9 @@
                         "name": "SetEIPForNLBIngressController"
                     },
                     {
+                        "name": "ShortCertRotation"
+                    },
+                    {
                         "name": "SignatureStores"
                     },
                     {

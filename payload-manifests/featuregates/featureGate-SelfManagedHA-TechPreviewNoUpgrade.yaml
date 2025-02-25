@@ -40,6 +40,9 @@
                         "name": "MultiArchInstallAzure"
                     },
                     {
+                        "name": "ShortCertRotation"
+                    },
+                    {
                         "name": "SigstoreImageVerificationPKI"
                     }
                 ],

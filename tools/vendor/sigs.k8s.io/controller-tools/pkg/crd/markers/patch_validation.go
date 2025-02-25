@@ -124,7 +124,7 @@ func (m FeatureSetXValidation) ApplyFirst() {}
 type FeatureGateEnum struct {
 	// FeatureGateNames represents the optional feature gates that can enable this field.
 	// If any of the feature gates are enabled, the field will be enabled.
-	FeatureGateNames []string `marker:"featureGate"`
+	FeatureGateNames []string `marker:"featureGate,optional"`
 	// RequiredFeatureGateNames represents the required feature gates that must be enabled to enable this field.
 	// If any of the required feature gates are not enabled, the field will not be enabled.
 	RequiredFeatureGateNames []string `marker:"requiredFeatureGate,optional"`
@@ -132,6 +132,10 @@ type FeatureGateEnum struct {
 }
 
 func (m FeatureGateEnum) ApplyToSchema(schema *apiext.JSONSchemaProps) error {
+	if len(m.FeatureGateNames)+len(m.RequiredFeatureGateNames) == 0 {
+		return fmt.Errorf("marker %s requires at least one of featureGate or requiredFeatureGate", OpenShiftFeatureGateAwareEnumMarkerName)
+	}
+
 	if !FeatureGatesForCurrentFile.HasAny(append(m.FeatureGateNames, m.RequiredFeatureGateNames...)...) {
 		// No required or optional feature gates are enabled, so we don't need to apply this marker
 		return nil
@@ -163,7 +167,7 @@ func (m FeatureGateEnum) ApplyToSchema(schema *apiext.JSONSchemaProps) error {
 type FeatureGateMaxItems struct {
 	// FeatureGateNames represents the optional feature gates that can enable this field.
 	// If any of the feature gates are enabled, the field will be enabled.
-	FeatureGateNames []string `marker:"featureGate"`
+	FeatureGateNames []string `marker:"featureGate,optional"`
 	// RequiredFeatureGateNames represents the required feature gates that must be enabled to enable this field.
 	// If any of the required feature gates are not enabled, the field will not be enabled.
 	RequiredFeatureGateNames []string `marker:"requiredFeatureGate,optional"`
@@ -171,6 +175,10 @@ type FeatureGateMaxItems struct {
 }
 
 func (m FeatureGateMaxItems) ApplyToSchema(schema *apiext.JSONSchemaProps) error {
+	if len(m.FeatureGateNames)+len(m.RequiredFeatureGateNames) == 0 {
+		return fmt.Errorf("marker %s requires at least one of featureGate or requiredFeatureGate", OpenShiftFeatureGateAwareMaxItemsMarkerName)
+	}
+
 	if !FeatureGatesForCurrentFile.HasAny(append(m.FeatureGateNames, m.RequiredFeatureGateNames...)...) {
 		// No required or optional feature gates are enabled, so we don't need to apply this marker
 		return nil
@@ -192,7 +200,7 @@ func (m FeatureGateMaxItems) ApplyToSchema(schema *apiext.JSONSchemaProps) error
 type FeatureGateXValidation struct {
 	// FeatureGateNames represents the optional feature gates that can enable this field.
 	// If any of the feature gates are enabled, the field will be enabled.
-	FeatureGateNames []string `marker:"featureGate"`
+	FeatureGateNames []string `marker:"featureGate,optional"`
 	// RequiredFeatureGateNames represents the required feature gates that must be enabled to enable this field.
 	// If any of the required feature gates are not enabled, the field will not be enabled.
 	RequiredFeatureGateNames []string `marker:"requiredFeatureGate,optional"`
@@ -201,6 +209,10 @@ type FeatureGateXValidation struct {
 }
 
 func (m FeatureGateXValidation) ApplyToSchema(schema *apiext.JSONSchemaProps) error {
+	if len(m.FeatureGateNames)+len(m.RequiredFeatureGateNames) == 0 {
+		return fmt.Errorf("marker %s requires at least one of featureGate or requiredFeatureGate", OpenShiftFeatureGateAwareXValidationMarkerName)
+	}
+
 	if !FeatureGatesForCurrentFile.HasAny(append(m.FeatureGateNames, m.RequiredFeatureGateNames...)...) {
 		// No required or optional feature gates are enabled, so we don't need to apply this marker
 		return nil

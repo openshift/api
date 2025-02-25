@@ -237,6 +237,12 @@
                         "name": "RouteExternalCertificate"
                     },
                     {
+                        "name": "SELinuxChangePolicy"
+                    },
+                    {
+                        "name": "SELinuxMount"
+                    },
+                    {
                         "name": "ServiceAccountTokenNodeBinding"
                     },
                     {

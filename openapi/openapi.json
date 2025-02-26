@@ -13126,6 +13126,11 @@
         "subdomainNameField": {
           "description": "subdomainNameField represents a kubenetes name field. The intention is that it validates the name in the same way metadata.Name is validated. That is, it is a DNS-1123 subdomain.",
           "type": "string"
+        },
+        "subnetsWithExclusions": {
+          "description": "subnetsWithExclusions demonstrates how to validate a list of subnets with exclusions",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.example.v1.SubnetsWithExclusions"
         }
       }
     },
@@ -13150,6 +13155,32 @@
         "immutableField": {
           "description": "immutableField is a field that is immutable once the object has been created. It is required at all times.",
           "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.example.v1.SubnetsWithExclusions": {
+      "description": "SubnetsWithExclusions is used to validate a list of subnets with exclusions. It demonstrates how exclusions should be validated as subnetworks of the networks listed in the subnets field.",
+      "type": "object",
+      "required": [
+        "subnets"
+      ],
+      "properties": {
+        "excludeSubnets": {
+          "description": "excludeSubnets is a list of CIDR exclusions. The subnets in this list must be subnetworks of the subnets in the subnets list.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "subnets": {
+          "description": "subnets is a list of subnets. It may contain up to 2 subnets. The list may be either 1 IPv4 subnet, 1 IPv6 subnet, or 1 of each.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },

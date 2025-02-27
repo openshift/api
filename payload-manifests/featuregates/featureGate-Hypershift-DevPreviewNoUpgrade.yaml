@@ -246,6 +246,9 @@
                         "name": "SigstoreImageVerification"
                     },
                     {
+                        "name": "SigstoreImageVerificationPKI"
+                    },
+                    {
                         "name": "TranslateStreamCloseWebsocketRequests"
                     },
                     {

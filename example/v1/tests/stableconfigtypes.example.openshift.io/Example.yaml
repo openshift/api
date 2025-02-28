@@ -103,6 +103,58 @@ tests:
           immutableField: foo
           subdomainNameField: foo.-bar.baz
       expectedError: "spec.subdomainNameField: Invalid value: \"string\": a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
+    - name: Should allow subnets without exclusions
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          subnetsWithExclusions:
+            subnets:
+            - 192.168.0.0/16
+      expected: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          nonZeroDefault: 8
+          subnetsWithExclusions:
+            subnets:
+            - 192.168.0.0/16
+    - name: Should allow subnets with exclusions within the subnet
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          subnetsWithExclusions:
+            subnets:
+            - 192.168.0.0/16
+            excludeSubnets:
+            - 192.168.0.0/24
+      expected: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          nonZeroDefault: 8
+          subnetsWithExclusions:
+            subnets:
+            - 192.168.0.0/16
+            excludeSubnets:
+            - 192.168.0.0/24
+    - name: Should not allow subnets with exclusions not within the subnet
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          subnetsWithExclusions:
+            subnets:
+            - 192.168.0.0/16
+            excludeSubnets:
+            - 10.0.0.0/8
+      expectedError: "spec.subnetsWithExclusions.excludeSubnets: Invalid value: \"object\": excludeSubnets must be subnetworks of the networks specified in the subnets field"
   onUpdate:
     - name: Should not allow removal of a tech preview field
       initial: |

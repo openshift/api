@@ -62,6 +62,7 @@ var map_StableConfigTypeSpec = map[string]string{
 	"evolvingCollection":     "evolvingCollection demonstrates how to have a collection where the maximum number of items varies on cluster type. For default clusters, this will be \"1\" but on TechPreview clusters, this value will be \"3\".",
 	"set":                    "set demonstrates how to define and validate set of strings",
 	"subdomainNameField":     "subdomainNameField represents a kubenetes name field. The intention is that it validates the name in the same way metadata.Name is validated. That is, it is a DNS-1123 subdomain.",
+	"subnetsWithExclusions":  "subnetsWithExclusions demonstrates how to validate a list of subnets with exclusions",
 }
 
 func (StableConfigTypeSpec) SwaggerDoc() map[string]string {
@@ -76,6 +77,16 @@ var map_StableConfigTypeStatus = map[string]string{
 
 func (StableConfigTypeStatus) SwaggerDoc() map[string]string {
 	return map_StableConfigTypeStatus
+}
+
+var map_SubnetsWithExclusions = map[string]string{
+	"":               "SubnetsWithExclusions is used to validate a list of subnets with exclusions. It demonstrates how exclusions should be validated as subnetworks of the networks listed in the subnets field.",
+	"subnets":        "subnets is a list of subnets. It may contain up to 2 subnets. The list may be either 1 IPv4 subnet, 1 IPv6 subnet, or 1 of each.",
+	"excludeSubnets": "excludeSubnets is a list of CIDR exclusions. The subnets in this list must be subnetworks of the subnets in the subnets list.",
+}
+
+func (SubnetsWithExclusions) SwaggerDoc() map[string]string {
+	return map_SubnetsWithExclusions
 }
 
 // AUTO-GENERATED FUNCTIONS END HERE

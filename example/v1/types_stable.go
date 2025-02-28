@@ -96,6 +96,10 @@ type StableConfigTypeSpec struct {
 	// +kubebuilder:validation:MaxLength:=253
 	// +optional
 	SubdomainNameField string `json:"subdomainNameField,omitempty"`
+
+	// subnetsWithExclusions demonstrates how to validate a list of subnets with exclusions
+	// +optional
+	SubnetsWithExclusions SubnetsWithExclusions `json:"subnetsWithExclusions,omitempty"`
 }
 
 // SetValue defines the types allowed in string set type
@@ -177,6 +181,33 @@ type StableConfigTypeStatus struct {
 	// +optional
 	ImmutableField string `json:"immutableField,omitempty"`
 }
+
+// SubnetsWithExclusions is used to validate a list of subnets with exclusions.
+// It demonstrates how exclusions should be validated as subnetworks of the networks listed in the subnets field.
+// +kubebuilder:validation:XValidation:rule="!has(self.excludeSubnets) || self.excludeSubnets.all(e, self.subnets.exists(s, cidr(s).containsCIDR(cidr(e))))",message="excludeSubnets must be subnetworks of the networks specified in the subnets field",fieldPath=".excludeSubnets"
+type SubnetsWithExclusions struct {
+	// subnets is a list of subnets.
+	// It may contain up to 2 subnets.
+	// The list may be either 1 IPv4 subnet, 1 IPv6 subnet, or 1 of each.
+	// +kubebuilder:validation:XValidation:rule="size(self) != 2 || !isCIDR(self[0]) || !isCIDR(self[1]) || cidr(self[0]).ip().family() != cidr(self[1]).ip().family()",message="subnets must not contain 2 subnets of the same IP family"
+	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:MaxItems=2
+	// +listType=atomic
+	// +required
+	Subnets []CIDR `json:"subnets"`
+
+	// excludeSubnets is a list of CIDR exclusions.
+	// The subnets in this list must be subnetworks of the subnets in the subnets list.
+	// +kubebuilder:validation:MaxItems=25
+	// +optional
+	ExcludeSubnets []CIDR `json:"excludeSubnets,omitempty"`
+}
+
+// CIDR is used to validate a CIDR notation network.
+// The longest CIDR notation is 43 characters.
+// +kubebuilder:validation:XValidation:rule="isCIDR(self)",message="value must be a valid CIDR"
+// +kubebuilder:validation:MaxLength:=43
+type CIDR string
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +openshift:compatibility-gen:level=1

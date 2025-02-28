@@ -486,6 +486,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/example/v1.StableConfigTypeList":                                           schema_openshift_api_example_v1_StableConfigTypeList(ref),
 		"github.com/openshift/api/example/v1.StableConfigTypeSpec":                                           schema_openshift_api_example_v1_StableConfigTypeSpec(ref),
 		"github.com/openshift/api/example/v1.StableConfigTypeStatus":                                         schema_openshift_api_example_v1_StableConfigTypeStatus(ref),
+		"github.com/openshift/api/example/v1.SubnetsWithExclusions":                                          schema_openshift_api_example_v1_SubnetsWithExclusions(ref),
 		"github.com/openshift/api/example/v1alpha1.NotStableConfigType":                                      schema_openshift_api_example_v1alpha1_NotStableConfigType(ref),
 		"github.com/openshift/api/example/v1alpha1.NotStableConfigTypeList":                                  schema_openshift_api_example_v1alpha1_NotStableConfigTypeList(ref),
 		"github.com/openshift/api/example/v1alpha1.NotStableConfigTypeSpec":                                  schema_openshift_api_example_v1alpha1_NotStableConfigTypeSpec(ref),
@@ -23751,12 +23752,19 @@ func schema_openshift_api_example_v1_StableConfigTypeSpec(ref common.ReferenceCa
 							Format:      "",
 						},
 					},
+					"subnetsWithExclusions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "subnetsWithExclusions demonstrates how to validate a list of subnets with exclusions",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/example/v1.SubnetsWithExclusions"),
+						},
+					},
 				},
 				Required: []string{"immutableField"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/example/v1.CELUnion", "github.com/openshift/api/example/v1.EvolvingUnion"},
+			"github.com/openshift/api/example/v1.CELUnion", "github.com/openshift/api/example/v1.EvolvingUnion", "github.com/openshift/api/example/v1.SubnetsWithExclusions"},
 	}
 }
 
@@ -23803,6 +23811,55 @@ func schema_openshift_api_example_v1_StableConfigTypeStatus(ref common.Reference
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
+	}
+}
+
+func schema_openshift_api_example_v1_SubnetsWithExclusions(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "SubnetsWithExclusions is used to validate a list of subnets with exclusions. It demonstrates how exclusions should be validated as subnetworks of the networks listed in the subnets field.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"subnets": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "subnets is a list of subnets. It may contain up to 2 subnets. The list may be either 1 IPv4 subnet, 1 IPv6 subnet, or 1 of each.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"excludeSubnets": {
+						SchemaProps: spec.SchemaProps{
+							Description: "excludeSubnets is a list of CIDR exclusions. The subnets in this list must be subnetworks of the subnets in the subnets list.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"subnets"},
+			},
+		},
 	}
 }
 

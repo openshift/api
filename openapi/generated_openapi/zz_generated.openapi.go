@@ -21541,7 +21541,7 @@ func schema_openshift_api_config_v1alpha1_StorageSpec(ref common.ReferenceCallba
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "storageSpec provides persistent storage configuration options for on-demand gathering jobs.",
+				Description: "storageSpec provides persistent storage configuration options for on-demand gathering jobs. If the type is set to PersistentVolumeClaim, then the PersistentVolume must be defined. If the type is set to Ephemeral, then the PersistentVolume must not be defined.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"type": {
@@ -26573,7 +26573,7 @@ func schema_openshift_api_insights_v1alpha1_DataGatherSpec(ref common.ReferenceC
 					},
 					"gatherers": {
 						SchemaProps: spec.SchemaProps{
-							Description: "gatherers is a list of gatherers configurations. The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
+							Description: "gatherers is an optional list of gatherers configurations. The list must not exceed 100 items. The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -26716,7 +26716,7 @@ func schema_openshift_api_insights_v1alpha1_GathererConfig(ref common.ReferenceC
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name is the name of specific gatherer",
+							Description: "name is the required name of specific gatherer It must be at most 256 characters in length. The format for the gatherer name should be: {gatherer}/{function} where the function is optional. Gatherer consists of a lowercase string that may include underscores (_). Function consists of a lowercase string that may include underscores (_) and is separated from the gatherer by a forward slash (/). The particular gatherers can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -26816,7 +26816,7 @@ func schema_openshift_api_insights_v1alpha1_HealthCheck(ref common.ReferenceCall
 					},
 					"advisorURI": {
 						SchemaProps: spec.SchemaProps{
-							Description: "advisorURI provides the URL link to the Insights Advisor.",
+							Description: "advisorURI is required field that provides the URL link to the Insights Advisor. The link must be a valid HTTPS URL and the maximum length is 2048 characters.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -26871,7 +26871,7 @@ func schema_openshift_api_insights_v1alpha1_InsightsReport(ref common.ReferenceC
 					},
 					"uri": {
 						SchemaProps: spec.SchemaProps{
-							Description: "uri provides the URL link from which the report was downloaded.",
+							Description: "uri is optional field that provides the URL link from which the report was downloaded. The link must be a valid HTTPS URL and the maximum length is 2048 characters.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -26893,7 +26893,7 @@ func schema_openshift_api_insights_v1alpha1_ObjectReference(ref common.Reference
 				Properties: map[string]spec.Schema{
 					"group": {
 						SchemaProps: spec.SchemaProps{
-							Description: "group is the API Group of the Resource. Enter empty string for the core group. This value should consist of only lowercase alphanumeric characters, hyphens and periods. Example: \"\", \"apps\", \"build.openshift.io\", etc.",
+							Description: "group is the API Group of the Resource. Enter empty string for the core group. This value is empty or should follow the DNS1123 subdomain format and it must be at most 253 characters in length. Example: \"\", \"apps\", \"build.openshift.io\", etc.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -26901,7 +26901,7 @@ func schema_openshift_api_insights_v1alpha1_ObjectReference(ref common.Reference
 					},
 					"resource": {
 						SchemaProps: spec.SchemaProps{
-							Description: "resource is the type that is being referenced. It is normally the plural form of the resource kind in lowercase. This value should consist of only lowercase alphanumeric characters and hyphens. Example: \"deployments\", \"deploymentconfigs\", \"pods\", etc.",
+							Description: "resource is required field of the type that is being referenced. It is normally the plural form of the resource kind in lowercase. This value should consist of only lowercase alphanumeric characters and hyphens. Example: \"deployments\", \"deploymentconfigs\", \"pods\", etc.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -26909,7 +26909,7 @@ func schema_openshift_api_insights_v1alpha1_ObjectReference(ref common.Reference
 					},
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name of the referent.",
+							Description: "name of the referent that follows the DNS1123 subdomain format. It must be at most 256 characters in length.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -26917,7 +26917,7 @@ func schema_openshift_api_insights_v1alpha1_ObjectReference(ref common.Reference
 					},
 					"namespace": {
 						SchemaProps: spec.SchemaProps{
-							Description: "namespace of the referent.",
+							Description: "namespace of the referent that follows the DNS1123 subdomain format. It must be at most 253 characters in length.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -26985,7 +26985,7 @@ func schema_openshift_api_insights_v1alpha1_StorageSpec(ref common.ReferenceCall
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "storageSpec provides persistent storage configuration options for on-demand gathering jobs.",
+				Description: "storageSpec provides persistent storage configuration options for on-demand gathering jobs. If the type is set to PersistentVolumeClaim, then the PersistentVolume must be defined. If the type is set to Ephemeral, then the PersistentVolume must not be defined.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"type": {

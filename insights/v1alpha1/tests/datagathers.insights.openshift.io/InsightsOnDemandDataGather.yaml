@@ -165,7 +165,7 @@ tests:
           insightsRequestID: xyz
           startTime: 2023-03-13T12:34:06Z
       expectedStatusError: 'Invalid value: "string": startTime is immutable once set'
-    - name: Status is presentt and insightsRequestID is added
+    - name: Status is present and insightsRequestID is added
       initial: |
         apiVersion: insights.openshift.io/v1alpha1
         kind: DataGather

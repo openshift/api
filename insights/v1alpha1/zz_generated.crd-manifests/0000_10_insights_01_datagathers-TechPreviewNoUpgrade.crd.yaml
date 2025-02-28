@@ -73,7 +73,8 @@ spec:
                 type: string
               gatherers:
                 description: |-
-                  gatherers is a list of gatherers configurations.
+                  gatherers is an optional list of gatherers configurations.
+                  The list must not exceed 100 items.
                   The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md.
                   Run the following command to get the names of last active gatherers:
                   "oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'"
@@ -81,9 +82,21 @@ spec:
                   description: gathererConfig allows to configure specific gatherers
                   properties:
                     name:
-                      description: name is the name of specific gatherer
+                      description: |-
+                        name is the required name of specific gatherer
+                        It must be at most 256 characters in length.
+                        The format for the gatherer name should be: {gatherer}/{function} where the function is optional.
+                        Gatherer consists of a lowercase string that may include underscores (_).
+                        Function consists of a lowercase string that may include underscores (_) and is separated from the gatherer by a forward slash (/).
+                        The particular gatherers can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md.
                       maxLength: 256
                       type: string
+                      x-kubernetes-validations:
+                      - message: gatherer name must be in the format of {gatherer}/{function}
+                          where the gatherer and function are lowercase strings that
+                          may include underscores (_) and are separated by a forward
+                          slash (/) if the function is provided
+                        rule: self.matches("^[a-z]+[_a-z]*[a-z]([/a-z][_a-z]*)?[a-z]$")
                     state:
                       description: |-
                         state allows you to configure specific gatherer. Valid values are "Enabled", "Disabled" and omitted.
@@ -366,11 +379,14 @@ spec:
                         attributes.
                       properties:
                         advisorURI:
-                          description: advisorURI provides the URL link to the Insights
-                            Advisor.
+                          description: |-
+                            advisorURI is required field that provides the URL link to the Insights Advisor.
+                            The link must be a valid HTTPS URL and the maximum length is 2048 characters.
                           maxLength: 2048
-                          pattern: ^https:\/\/\S+
                           type: string
+                          x-kubernetes-validations:
+                          - message: advisorURI must be a valid HTTPS URL (e.g., https://example.com)
+                            rule: self.matches("^https://[^\\s]+")
                         description:
                           description: description provides basic description of the
                             healtcheck.
@@ -405,11 +421,14 @@ spec:
                     type: array
                     x-kubernetes-list-type: atomic
                   uri:
-                    description: uri provides the URL link from which the report was
-                      downloaded.
+                    description: |-
+                      uri is optional field that provides the URL link from which the report was downloaded.
+                      The link must be a valid HTTPS URL and the maximum length is 2048 characters.
                     maxLength: 2048
-                    pattern: ^https:\/\/\S+
                     type: string
+                    x-kubernetes-validations:
+                    - message: URI must be a valid HTTPS URL (e.g., https://example.com)
+                      rule: self.matches("^https://[^\\s]+")
                 type: object
               insightsRequestID:
                 description: |-
@@ -432,28 +451,49 @@ spec:
                       description: |-
                         group is the API Group of the Resource.
                         Enter empty string for the core group.
-                        This value should consist of only lowercase alphanumeric characters, hyphens and periods.
+                        This value is empty or should follow the DNS1123 subdomain format and it must be at most 253 characters in length.
                         Example: "", "apps", "build.openshift.io", etc.
-                      maxLength: 512
-                      pattern: ^$|^[a-z0-9]([-a-z0-9]*[a-z0-9])?(.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                      maxLength: 253
                       type: string
+                      x-kubernetes-validations:
+                      - message: a lowercase RFC 1123 subdomain must consist of lower
+                          case alphanumeric characters, '-' or '.', and must start
+                          and end with an alphanumeric character.
+                        rule: self.size() == 0 || !format.dns1123Subdomain().validate(self).hasValue()
                     name:
-                      description: name of the referent.
+                      description: |-
+                        name of the referent that follows the DNS1123 subdomain format.
+                        It must be at most 256 characters in length.
                       maxLength: 256
                       type: string
+                      x-kubernetes-validations:
+                      - message: a lowercase RFC 1123 subdomain must consist of lower
+                          case alphanumeric characters, '-' or '.', and must start
+                          and end with an alphanumeric character.
+                        rule: '!format.dns1123Subdomain().validate(self).hasValue()'
                     namespace:
-                      description: namespace of the referent.
-                      maxLength: 512
+                      description: |-
+                        namespace of the referent that follows the DNS1123 subdomain format.
+                        It must be at most 253 characters in length.
+                      maxLength: 253
                       type: string
+                      x-kubernetes-validations:
+                      - message: a lowercase RFC 1123 subdomain must consist of lower
+                          case alphanumeric characters, '-' or '.', and must start
+                          and end with an alphanumeric character.
+                        rule: '!format.dns1123Subdomain().validate(self).hasValue()'
                     resource:
                       description: |-
-                        resource is the type that is being referenced.
+                        resource is required field of the type that is being referenced.
                         It is normally the plural form of the resource kind in lowercase.
                         This value should consist of only lowercase alphanumeric characters and hyphens.
                         Example: "deployments", "deploymentconfigs", "pods", etc.
                       maxLength: 512
-                      pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
                       type: string
+                      x-kubernetes-validations:
+                      - message: resource must consist of only lowercase alphanumeric
+                          characters and hyphens
+                        rule: self.matches("^[a-z0-9]([-a-z0-9]*[a-z0-9])?$")
                   required:
                   - group
                   - name

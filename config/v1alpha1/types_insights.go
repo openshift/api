@@ -74,6 +74,8 @@ type GatherConfig struct {
 type DisabledGatherer string
 
 // storageSpec provides persistent storage configuration options for on-demand gathering jobs.
+// If the type is set to PersistentVolumeClaim, then the PersistentVolume must be defined.
+// If the type is set to Ephemeral, then the PersistentVolume must not be defined.
 // +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'PersistentVolumeClaim' ?  has(self.persistentVolume) : !has(self.persistentVolume)",message="persistentVolume is required when type is PersistentVolumeClaim, and forbidden otherwise"
 type StorageSpec struct {
 	// type is a required field that specifies the type of storage that will be used to store the Insights data archive.

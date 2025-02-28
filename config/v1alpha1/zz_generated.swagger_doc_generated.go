@@ -364,7 +364,7 @@ func (PersistentVolumeConfig) SwaggerDoc() map[string]string {
 }
 
 var map_StorageSpec = map[string]string{
-	"":                 "storageSpec provides persistent storage configuration options for on-demand gathering jobs.",
+	"":                 "storageSpec provides persistent storage configuration options for on-demand gathering jobs. If the type is set to PersistentVolumeClaim, then the PersistentVolume must be defined. If the type is set to Ephemeral, then the PersistentVolume must not be defined.",
 	"type":             "type is a required field that specifies the type of storage that will be used to store the Insights data archive. Valid values are \"PersistentVolumeClaim\" and \"Ephemeral\".",
 	"persistentVolume": "persistentVolume is an optional field that specifies the PersistentVolume that will be used to store the Insights data archive. The PersistentVolume must be created in the openshift-insights namespace.",
 }

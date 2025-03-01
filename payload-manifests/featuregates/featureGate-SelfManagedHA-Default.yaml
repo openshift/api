@@ -107,6 +107,9 @@
                         "name": "MachineConfigNodes"
                     },
                     {
+                        "name": "ManagedBootImagesvSphere"
+                    },
+                    {
                         "name": "MaxUnavailableStatefulSet"
                     },
                     {

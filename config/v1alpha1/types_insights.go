@@ -52,8 +52,8 @@ type GatherConfig struct {
 	// disabledGatherers is a list of gatherers to be excluded from the gathering. All the gatherers can be disabled by providing "all" value.
 	// If all the gatherers are disabled, the Insights operator does not gather any data.
 	// The format for the disabledGatherer should be: {gatherer}/{function} where the function is optional.
-	// Gatherer consists of a lowercase string that may include underscores (_).
-	// Function consists of a lowercase string that may include underscores (_) and is separated from the gatherer by a forward slash (/).
+	// Gatherer consists of a lowercase letters only that may include underscores (_).
+	// Function consists of a lowercase letters only that may include underscores (_) and is separated from the gatherer by a forward slash (/).
 	// The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md.
 	// Run the following command to get the names of last active gatherers:
 	// "oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'"
@@ -61,25 +61,28 @@ type GatherConfig struct {
 	// +kubebuilder:validation:MaxItems=100
 	// +optional
 	DisabledGatherers []DisabledGatherer `json:"disabledGatherers"`
-	// storageSpec is an optional field that allows user to define persistent storage for on-demand gathering
+	// storage is an optional field that allows user to define persistent storage for on-demand gathering
 	// jobs to store the Insights data archive.
 	// If omitted, the gathering job will use ephemeral storage.
 	// +optional
-	StorageSpec *StorageSpec `json:"storageSpec,omitempty"`
+	StorageSpec *Storage `json:"storage,omitempty"`
 }
 
 // disabledGatherer is a string that represents a gatherer that should be disabled
 // +kubebuilder:validation:MaxLength=256
-// +kubebuilder:validation:XValidation:rule=`self.matches("^[a-z]+[_a-z]*[a-z]([/a-z][_a-z]*)?[a-z]$")`,message=`disabledGatherer must be in the format of {gatherer}/{function} where the gatherer and function are lowercase strings that may include underscores (_) and are separated by a forward slash (/) if the function is provided`
+// +kubebuilder:validation:XValidation:rule=`self.matches("^[a-z]+[_a-z]*[a-z]([/a-z][_a-z]*)?[a-z]$")`,message=`disabledGatherer must be in the format of {gatherer}/{function} where the gatherer and function are lowercase letters only that may include underscores (_) and are separated by a forward slash (/) if the function is provided`
 type DisabledGatherer string
 
-// storageSpec provides persistent storage configuration options for on-demand gathering jobs.
-// If the type is set to PersistentVolumeClaim, then the PersistentVolume must be defined.
+// storage provides persistent storage configuration options for on-demand gathering jobs.
+// If the type is set to PersistentVolume, then the PersistentVolume must be defined.
 // If the type is set to Ephemeral, then the PersistentVolume must not be defined.
-// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'PersistentVolumeClaim' ?  has(self.persistentVolume) : !has(self.persistentVolume)",message="persistentVolume is required when type is PersistentVolumeClaim, and forbidden otherwise"
-type StorageSpec struct {
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'PersistentVolume' ?  has(self.persistentVolume) : !has(self.persistentVolume)",message="persistentVolume is required when type is PersistentVolume, and forbidden otherwise"
+type Storage struct {
 	// type is a required field that specifies the type of storage that will be used to store the Insights data archive.
-	// Valid values are "PersistentVolumeClaim" and "Ephemeral".
+	// Valid values are "PersistentVolume" and "Ephemeral".
+	// When set to Ephemeral, the Insights data archive is stored in the ephemeral storage of the gathering job.
+	// When set to PersistentVolume, the Insights data archive is stored in the PersistentVolume that is
+	// defined by the persistentVolume field.
 	// +required
 	Type StorageType `json:"type"`
 	// persistentVolume is an optional field that specifies the PersistentVolume that will be used to store the Insights data archive.
@@ -89,22 +92,22 @@ type StorageSpec struct {
 }
 
 // storageType declares valid storage types
-// +kubebuilder:validation:Enum=PersistentVolumeClaim;Ephemeral
+// +kubebuilder:validation:Enum=PersistentVolume;Ephemeral
 type StorageType string
 
 const (
-	// StorageTypePersistentVolumeClaim storage type
-	StorageTypePersistentVolumeClaim StorageType = "PersistentVolumeClaim"
+	// StorageTypePersistentVolume storage type
+	StorageTypePersistentVolume StorageType = "PersistentVolume"
 	// StorageTypeEphemeral storage type
 	StorageTypeEphemeral StorageType = "Ephemeral"
 )
 
 // persistentVolumeConfig provides configuration options for PersistentVolume storage.
 type PersistentVolumeConfig struct {
-	// persistentVolumeClaim is a required field that specifies the configuration of the PersistentVolumeClaim that will
+	// claim is a required field that specifies the configuration of the PersistentVolumeClaim that will
 	// be used to store the Insights data archive. The PersistentVolumeClaim must be created in the openshift-insights namespace.
 	// +required
-	PersistentVolumeClaim PersistentVolumeClaimReference `json:"persistentVolumeClaim"`
+	PersistentVolumeClaim PersistentVolumeClaimReference `json:"claim"`
 	// mountPath is an optional field specifying the directory where the PVC will be mounted inside the
 	// Insights data gathering Pod. If omitted, the path that is used to store the Insights data archive by Insights
 	// operator will be used instead. The path cannot exceed 1024 characters and must not contain a colon.

@@ -86,16 +86,16 @@ spec:
                         name is the required name of specific gatherer
                         It must be at most 256 characters in length.
                         The format for the gatherer name should be: {gatherer}/{function} where the function is optional.
-                        Gatherer consists of a lowercase string that may include underscores (_).
-                        Function consists of a lowercase string that may include underscores (_) and is separated from the gatherer by a forward slash (/).
+                        Gatherer consists of a lowercase letters only that may include underscores (_).
+                        Function consists of a lowercase letters only that may include underscores (_) and is separated from the gatherer by a forward slash (/).
                         The particular gatherers can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md.
                       maxLength: 256
                       type: string
                       x-kubernetes-validations:
                       - message: gatherer name must be in the format of {gatherer}/{function}
-                          where the gatherer and function are lowercase strings that
-                          may include underscores (_) and are separated by a forward
-                          slash (/) if the function is provided
+                          where the gatherer and function are lowercase letters only
+                          that may include underscores (_) and are separated by a
+                          forward slash (/) if the function is provided
                         rule: self.matches("^[a-z]+[_a-z]*[a-z]([/a-z][_a-z]*)?[a-z]$")
                     state:
                       description: |-
@@ -112,9 +112,9 @@ spec:
                   type: object
                 maxItems: 100
                 type: array
-              storageSpec:
+              storage:
                 description: |-
-                  storageSpec is an optional field that allows user to define persistent storage for on-demand gathering
+                  storage is an optional field that allows user to define persistent storage for on-demand gathering
                   jobs to store the Insights data archive.
                   If omitted, the gathering job will use ephemeral storage.
                 properties:
@@ -123,19 +123,9 @@ spec:
                       persistentVolume is an optional field that specifies the PersistentVolume that will be used to store the Insights data archive.
                       The PersistentVolume must be created in the openshift-insights namespace.
                     properties:
-                      mountPath:
+                      claim:
                         description: |-
-                          mountPath is an optional field specifying the directory where the PVC will be mounted inside the
-                          Insights data gathering Pod. If omitted, the path that is used to store the Insights data archive by Insights
-                          operator will be used instead. The path cannot exceed 1024 characters and must not contain a colon.
-                        maxLength: 1024
-                        type: string
-                        x-kubernetes-validations:
-                        - message: mountPath must not contain a colon
-                          rule: '!self.contains('':'')'
-                      persistentVolumeClaim:
-                        description: |-
-                          persistentVolumeClaim is a required field that specifies the configuration of the PersistentVolumeClaim that will
+                          claim is a required field that specifies the configuration of the PersistentVolumeClaim that will
                           be used to store the Insights data archive. The PersistentVolumeClaim must be created in the openshift-insights namespace.
                         properties:
                           name:
@@ -153,25 +143,38 @@ spec:
                         required:
                         - name
                         type: object
+                      mountPath:
+                        description: |-
+                          mountPath is an optional field specifying the directory where the PVC will be mounted inside the
+                          Insights data gathering Pod. If omitted, the path that is used to store the Insights data archive by Insights
+                          operator will be used instead. The path cannot exceed 1024 characters and must not contain a colon.
+                        maxLength: 1024
+                        type: string
+                        x-kubernetes-validations:
+                        - message: mountPath must not contain a colon
+                          rule: '!self.contains('':'')'
                     required:
-                    - persistentVolumeClaim
+                    - claim
                     type: object
                   type:
                     description: |-
                       type is a required field that specifies the type of storage that will be used to store the Insights data archive.
-                      Valid values are "PersistentVolumeClaim" and "Ephemeral".
+                      Valid values are "PersistentVolume" and "Ephemeral".
+                      When set to Ephemeral, the Insights data archive is stored in the ephemeral storage of the gathering job.
+                      When set to PersistentVolume, the Insights data archive is stored in the PersistentVolume that is
+                      defined by the PersistentVolume field.
                     enum:
-                    - PersistentVolumeClaim
+                    - PersistentVolume
                     - Ephemeral
                     type: string
                 required:
                 - type
                 type: object
                 x-kubernetes-validations:
-                - message: persistentVolume is required when type is PersistentVolumeClaim,
+                - message: persistentVolume is required when type is PersistentVolume,
                     and forbidden otherwise
-                  rule: 'has(self.type) && self.type == ''PersistentVolumeClaim''
-                    ?  has(self.persistentVolume) : !has(self.persistentVolume)'
+                  rule: 'has(self.type) && self.type == ''PersistentVolume'' ?  has(self.persistentVolume)
+                    : !has(self.persistentVolume)'
             type: object
           status:
             description: status holds observed values from the cluster. They may not

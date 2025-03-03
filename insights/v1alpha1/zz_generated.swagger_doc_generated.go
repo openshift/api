@@ -33,10 +33,10 @@ func (DataGatherList) SwaggerDoc() map[string]string {
 }
 
 var map_DataGatherSpec = map[string]string{
-	"":            "DataGatherSpec contains the configuration for the DataGather.",
-	"dataPolicy":  "dataPolicy allows user to enable additional global obfuscation of the IP addresses and base domain in the Insights archive data. Valid values are \"ClearText\" and \"ObfuscateNetworking\". When set to ClearText the data is not obfuscated. When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is ClearText.",
-	"gatherers":   "gatherers is an optional list of gatherers configurations. The list must not exceed 100 items. The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
-	"storageSpec": "storageSpec is an optional field that allows user to define persistent storage for on-demand gathering jobs to store the Insights data archive. If omitted, the gathering job will use ephemeral storage.",
+	"":           "DataGatherSpec contains the configuration for the DataGather.",
+	"dataPolicy": "dataPolicy allows user to enable additional global obfuscation of the IP addresses and base domain in the Insights archive data. Valid values are \"ClearText\" and \"ObfuscateNetworking\". When set to ClearText the data is not obfuscated. When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is ClearText.",
+	"gatherers":  "gatherers is an optional list of gatherers configurations. The list must not exceed 100 items. The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
+	"storage":    "storage is an optional field that allows user to define persistent storage for on-demand gathering jobs to store the Insights data archive. If omitted, the gathering job will use ephemeral storage.",
 }
 
 func (DataGatherSpec) SwaggerDoc() map[string]string {
@@ -61,7 +61,7 @@ func (DataGatherStatus) SwaggerDoc() map[string]string {
 
 var map_GathererConfig = map[string]string{
 	"":      "gathererConfig allows to configure specific gatherers",
-	"name":  "name is the required name of specific gatherer It must be at most 256 characters in length. The format for the gatherer name should be: {gatherer}/{function} where the function is optional. Gatherer consists of a lowercase string that may include underscores (_). Function consists of a lowercase string that may include underscores (_) and is separated from the gatherer by a forward slash (/). The particular gatherers can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md.",
+	"name":  "name is the required name of specific gatherer It must be at most 256 characters in length. The format for the gatherer name should be: {gatherer}/{function} where the function is optional. Gatherer consists of a lowercase letters only that may include underscores (_). Function consists of a lowercase letters only that may include underscores (_) and is separated from the gatherer by a forward slash (/). The particular gatherers can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md.",
 	"state": "state allows you to configure specific gatherer. Valid values are \"Enabled\", \"Disabled\" and omitted. When omitted, this means no opinion and the platform is left to choose a reasonable default. The current default is Enabled.",
 }
 
@@ -125,23 +125,23 @@ func (PersistentVolumeClaimReference) SwaggerDoc() map[string]string {
 }
 
 var map_PersistentVolumeConfig = map[string]string{
-	"":                      "persistentVolumeConfig provides configuration options for PersistentVolume storage.",
-	"persistentVolumeClaim": "persistentVolumeClaim is a required field that specifies the configuration of the PersistentVolumeClaim that will be used to store the Insights data archive. The PersistentVolumeClaim must be created in the openshift-insights namespace.",
-	"mountPath":             "mountPath is an optional field specifying the directory where the PVC will be mounted inside the Insights data gathering Pod. If omitted, the path that is used to store the Insights data archive by Insights operator will be used instead. The path cannot exceed 1024 characters and must not contain a colon.",
+	"":          "persistentVolumeConfig provides configuration options for PersistentVolume storage.",
+	"claim":     "claim is a required field that specifies the configuration of the PersistentVolumeClaim that will be used to store the Insights data archive. The PersistentVolumeClaim must be created in the openshift-insights namespace.",
+	"mountPath": "mountPath is an optional field specifying the directory where the PVC will be mounted inside the Insights data gathering Pod. If omitted, the path that is used to store the Insights data archive by Insights operator will be used instead. The path cannot exceed 1024 characters and must not contain a colon.",
 }
 
 func (PersistentVolumeConfig) SwaggerDoc() map[string]string {
 	return map_PersistentVolumeConfig
 }
 
-var map_StorageSpec = map[string]string{
-	"":                 "storageSpec provides persistent storage configuration options for on-demand gathering jobs. If the type is set to PersistentVolumeClaim, then the PersistentVolume must be defined. If the type is set to Ephemeral, then the PersistentVolume must not be defined.",
-	"type":             "type is a required field that specifies the type of storage that will be used to store the Insights data archive. Valid values are \"PersistentVolumeClaim\" and \"Ephemeral\".",
+var map_Storage = map[string]string{
+	"":                 "storage provides persistent storage configuration options for on-demand gathering jobs. If the type is set to PersistentVolume, then the PersistentVolume must be defined. If the type is set to Ephemeral, then the PersistentVolume must not be defined.",
+	"type":             "type is a required field that specifies the type of storage that will be used to store the Insights data archive. Valid values are \"PersistentVolume\" and \"Ephemeral\". When set to Ephemeral, the Insights data archive is stored in the ephemeral storage of the gathering job. When set to PersistentVolume, the Insights data archive is stored in the PersistentVolume that is defined by the PersistentVolume field.",
 	"persistentVolume": "persistentVolume is an optional field that specifies the PersistentVolume that will be used to store the Insights data archive. The PersistentVolume must be created in the openshift-insights namespace.",
 }
 
-func (StorageSpec) SwaggerDoc() map[string]string {
-	return map_StorageSpec
+func (Storage) SwaggerDoc() map[string]string {
+	return map_Storage
 }
 
 // AUTO-GENERATED FUNCTIONS END HERE

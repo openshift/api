@@ -752,10 +752,18 @@ var (
 					mustRegister()
 
 	FeatureGateGCPCustomAPIEndpoints = newFeatureGate("GCPCustomAPIEndpoints").
-					reportProblemsToJiraComponent("Installer").
-					contactPerson("barbacbd").
-					productScope(ocpSpecific).
-					enhancementPR("https://github.com/openshift/enhancements/pull/1492").
-					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-					mustRegister()
+						reportProblemsToJiraComponent("Installer").
+						contactPerson("barbacbd").
+						productScope(ocpSpecific).
+						enhancementPR("https://github.com/openshift/enhancements/pull/1492").
+						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						mustRegister()
+
+	FeatureGateVSphereConfigurableMaxAllowedBlockVolumesPerNode = newFeatureGate("VSphereConfigurableMaxAllowedBlockVolumesPerNode").
+									reportProblemsToJiraComponent("Storage / Kubernetes External Components").
+									contactPerson("rbednar").
+									productScope(ocpSpecific).
+									enhancementPR("https://github.com/openshift/enhancements/pull/1748").
+									enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+									mustRegister()
 )

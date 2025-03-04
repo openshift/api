@@ -137,9 +137,6 @@
                         "name": "OVNObservability"
                     },
                     {
-                        "name": "OnClusterBuild"
-                    },
-                    {
                         "name": "PinnedImages"
                     },
                     {
@@ -263,6 +260,9 @@
                     },
                     {
                         "name": "NodeDisruptionPolicy"
+                    },
+                    {
+                        "name": "OnClusterBuild"
                     },
                     {
                         "name": "OpenShiftPodSecurityAdmission"

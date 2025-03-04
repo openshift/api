@@ -237,3 +237,35 @@ A full example is included below:
         immutableField: bar
     expectedStatusError: "status.immutableField: Invalid value: \"string\": immutableField is immutable"
 ```
+
+#### Testing validation ratcheting
+
+Kubernetes now supports [validation ratcheting][validation-ratcheting].
+This means that we can now evolve the validations of APIs over time, without immediately breaking stored APIs.
+Note, any changes to validations that may be breaking still need careful consideration, this is not a 'get out of jail free' card.
+
+Ratcheting can be tested using `onUpdate` tests and the `initialCRDPatches` option.
+`initialCRDPatches` is a list of JSON Object Patches ([RFC6902][rfc6902]) that will be applied temporarily to the CRD prior to the
+initial object being created.
+This allows you to revert a newer change to an API validation, apply an object that would be invalid with the newer validation,
+and then test how the object behaves with the new, current schema.
+
+For example, if a field does not include a maximum, and we decide to enforce a new maximum, a patch such like below could be used
+to remove the maximum temporarily to then create an object which exceeds the new maximum.
+
+```
+onUpdate:
+- name: ...
+  initialCRDPatches:
+      - op: remove
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/fieldWithNewMaxLength/maximum # Maximum was not originally set
+  ...
+```
+
+Once the patch is applied, three tests should be added for each ratcheting validation:
+1. Test that other values can be updated, while the invalid value is persisted
+1. Test that the value itself cannot be updated to an alternative, newly invalid value (e.g. making the value longer in this case)
+1. Test that the value can be updated to a valid value (e.g. in this case, a value shorted than the new maximum)
+
+[validation-ratcheting]: https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/#validation-ratcheting
+[rfc6902]: https://datatracker.ietf.org/doc/html/rfc6902

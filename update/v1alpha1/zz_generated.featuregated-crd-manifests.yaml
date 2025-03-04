@@ -1,0 +1,128 @@
+clusteroperatorprogressinsights.update.openshift.io:
+  Annotations:
+    description: Provides information about a Cluster Operator update
+    displayName: ClusterOperatorProgressInsights
+  ApprovedPRNumber: https://github.com/openshift/api/pull/2012
+  CRDName: clusteroperatorprogressinsights.update.openshift.io
+  Capability: ""
+  Category: ""
+  FeatureGates:
+  - UpgradeStatus
+  FilenameOperatorName: cluster-version-operator
+  FilenameOperatorOrdering: "02"
+  FilenameRunLevel: "0000_00"
+  GroupName: update.openshift.io
+  HasStatus: true
+  KindName: ClusterOperatorProgressInsight
+  Labels: {}
+  PluralName: clusteroperatorprogressinsights
+  PrinterColumns: []
+  Scope: Cluster
+  ShortNames: null
+  TopLevelFeatureGates:
+  - UpgradeStatus
+  Version: v1alpha1
+
+clusterversionprogressinsights.update.openshift.io:
+  Annotations:
+    description: Provides summary information about an ongoing cluster control plane
+      update in Standalone clusters.
+    displayName: ClusterVersionProgressInsights
+  ApprovedPRNumber: https://github.com/openshift/api/pull/2012
+  CRDName: clusterversionprogressinsights.update.openshift.io
+  Capability: ""
+  Category: ""
+  FeatureGates:
+  - UpgradeStatus
+  FilenameOperatorName: cluster-version-operator
+  FilenameOperatorOrdering: "02"
+  FilenameRunLevel: "0000_00"
+  GroupName: update.openshift.io
+  HasStatus: true
+  KindName: ClusterVersionProgressInsight
+  Labels: {}
+  PluralName: clusterversionprogressinsights
+  PrinterColumns: []
+  Scope: Cluster
+  ShortNames: null
+  TopLevelFeatureGates:
+  - UpgradeStatus
+  Version: v1alpha1
+
+healthinsights.update.openshift.io:
+  Annotations:
+    description: Reports a piece of actionable information about the health of the
+      cluster in the context of an update
+    displayName: HealthInsights
+  ApprovedPRNumber: https://github.com/openshift/api/pull/2012
+  CRDName: healthinsights.update.openshift.io
+  Capability: ""
+  Category: ""
+  FeatureGates:
+  - UpgradeStatus
+  FilenameOperatorName: cluster-version-operator
+  FilenameOperatorOrdering: "02"
+  FilenameRunLevel: "0000_00"
+  GroupName: update.openshift.io
+  HasStatus: true
+  KindName: HealthInsight
+  Labels: {}
+  PluralName: healthinsights
+  PrinterColumns: []
+  Scope: Cluster
+  ShortNames: null
+  TopLevelFeatureGates:
+  - UpgradeStatus
+  Version: v1alpha1
+
+machineconfigpoolprogressinsights.update.openshift.io:
+  Annotations:
+    description: Provides summary information about an ongoing node pool update in
+      Standalone clusters
+    displayName: MachineConfigPoolProgressInsights
+  ApprovedPRNumber: https://github.com/openshift/api/pull/2012
+  CRDName: machineconfigpoolprogressinsights.update.openshift.io
+  Capability: ""
+  Category: ""
+  FeatureGates:
+  - UpgradeStatus
+  FilenameOperatorName: cluster-version-operator
+  FilenameOperatorOrdering: "02"
+  FilenameRunLevel: "0000_00"
+  GroupName: update.openshift.io
+  HasStatus: true
+  KindName: MachineConfigPoolProgressInsight
+  Labels: {}
+  PluralName: machineconfigpoolprogressinsights
+  PrinterColumns: []
+  Scope: Cluster
+  ShortNames: null
+  TopLevelFeatureGates:
+  - UpgradeStatus
+  Version: v1alpha1
+
+nodeprogressinsights.update.openshift.io:
+  Annotations:
+    description: Reports the state of a Node during the update
+    displayName: NodeProgressInsights
+  ApprovedPRNumber: https://github.com/openshift/api/pull/2012
+  CRDName: nodeprogressinsights.update.openshift.io
+  Capability: ""
+  Category: ""
+  FeatureGates:
+  - UpgradeStatus
+  FilenameOperatorName: cluster-version-operator
+  FilenameOperatorOrdering: "02"
+  FilenameRunLevel: "0000_00"
+  GroupName: update.openshift.io
+  HasStatus: true
+  KindName: NodeProgressInsight
+  Labels: {}
+  PluralName: nodeprogressinsights
+  PrinterColumns: []
+  Scope: Cluster
+  ShortNames: null
+  TopLevelFeatureGates:
+  - UpgradeStatus
+  Version: v1alpha1
+

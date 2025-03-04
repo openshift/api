@@ -37995,6 +37995,757 @@
         }
       }
     },
+    "com.github.openshift.api.update.v1alpha1.ClusterOperatorProgressInsight": {
+      "description": "ClusterOperatorProgressInsight reports the state of a Cluster Operator (an individual control plane component) during an update\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. ClusterOperatorProgressInsight reports the state of a Cluster Operator (an individual control plane component) during an update",
+      "type": "object",
+      "required": [
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is standard Kubernetes object metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec is empty for now, ClusterOperatorProgressInsight is purely status-reporting API. In the future spec may be used to hold configuration to drive what information is surfaced and how",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.ClusterOperatorProgressInsightSpec"
+        },
+        "status": {
+          "description": "status exposes the health and status of the ongoing cluster operator update",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.ClusterOperatorProgressInsightStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.ClusterOperatorProgressInsightList": {
+      "description": "ClusterOperatorProgressInsightList is a list of ClusterOperatorProgressInsightList resources\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "description": "items is a list of ClusterOperatorProgressInsight resources",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.ClusterOperatorProgressInsight"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is standard Kubernetes object metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.ClusterOperatorProgressInsightSpec": {
+      "description": "ClusterOperatorProgressInsightSpec is empty for now, ClusterOperatorProgressInsightSpec is purely status-reporting API. In the future spec may be used to hold configuration to drive what information is surfaced and how",
+      "type": "object"
+    },
+    "com.github.openshift.api.update.v1alpha1.ClusterOperatorProgressInsightStatus": {
+      "description": "ClusterOperatorProgressInsight reports the state of a ClusterOperator resource (which represents a control plane component update in standalone clusters), during the update",
+      "type": "object",
+      "required": [
+        "name",
+        "resource"
+      ],
+      "properties": {
+        "conditions": {
+          "description": "conditions provide details about the operator. It contains at most 10 items. Known conditions are: - Updating: whether the operator is updating; When Updating=False, the reason field can be Pending or Updated - Healthy: whether the operator is considered healthy; When Healthy=False, the reason field can be Unavailable or Degraded, and Unavailable is \"stronger\" than Degraded",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "type",
+          "x-kubernetes-patch-strategy": "merge"
+        },
+        "name": {
+          "description": "name is the name of the operator",
+          "type": "string",
+          "default": ""
+        },
+        "resource": {
+          "description": "resource is the ClusterOperator resource that represents the operator",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.ResourceRef"
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.ClusterVersionProgressInsight": {
+      "description": "ClusterVersionProgressInsight provides summary information about an ongoing cluster control plane update in Standalone clusters\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. ClusterVersionProgressInsight reports the state of a ClusterVersion resource (which represents a control plane update in standalone clusters), during a cluster update.",
+      "type": "object",
+      "required": [
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is standard Kubernetes object metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec is empty for now, ClusterVersionProgressInsight is purely status-reporting API. In the future spec may be used to hold configuration to drive what information is surfaced and how",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.ClusterVersionProgressInsightSpec"
+        },
+        "status": {
+          "description": "status exposes the health and status of the ongoing cluster update",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.ClusterVersionProgressInsightStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.ClusterVersionProgressInsightList": {
+      "description": "ClusterVersionProgressInsightList is a list of ClusterVersionProgressInsightList resources\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "description": "items is a list of ClusterVersionProgressInsight resources",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.ClusterVersionProgressInsight"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is standard Kubernetes object metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.ClusterVersionProgressInsightSpec": {
+      "description": "ClusterVersionProgressInsightSpec is empty for now, ClusterVersionProgressInsightSpec is purely status-reporting API. In the future spec may be used to hold configuration to drive what information is surfaced and how",
+      "type": "object"
+    },
+    "com.github.openshift.api.update.v1alpha1.ClusterVersionProgressInsightStatus": {
+      "description": "ClusterVersionProgressInsightStatus reports the state of a ClusterVersion resource (which represents a control plane update in standalone clusters), during the update.",
+      "type": "object",
+      "required": [
+        "resource",
+        "assessment",
+        "versions",
+        "completion",
+        "startedAt"
+      ],
+      "properties": {
+        "assessment": {
+          "description": "assessment is the assessment of the control plane update process. Valid values are: Unknown, Progressing, Completed, Degraded",
+          "type": "string",
+          "default": ""
+        },
+        "completedAt": {
+          "description": "completedAt is the time when the update completed",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "completion": {
+          "description": "completion is a percentage of the update completion (0-100)",
+          "type": "integer",
+          "format": "int32",
+          "default": 0
+        },
+        "conditions": {
+          "description": "conditions provides detailed observed conditions about ClusterVersion. It contains at most 10 items. Known conditions are: - Updating: whether the control plane (represented by this ClusterVersion) is updating",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "type",
+          "x-kubernetes-patch-strategy": "merge"
+        },
+        "estimatedCompletedAt": {
+          "description": "estimatedCompletedAt is the estimated time when the update will complete",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "resource": {
+          "description": "resource is the ClusterVersion resource that represents the control plane",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.ResourceRef"
+        },
+        "startedAt": {
+          "description": "startedAt is the time when the update started",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "versions": {
+          "description": "versions contains the original and target versions involved in the update",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.ControlPlaneUpdateVersions"
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.ControlPlaneUpdateVersions": {
+      "description": "ControlPlaneUpdateVersions contains the original and target versions of the upgrade",
+      "type": "object",
+      "required": [
+        "previous",
+        "target"
+      ],
+      "properties": {
+        "previous": {
+          "description": "previous is the version of the control plane before the update. When the cluster is being installed for the first time, the version will have a placeholder value '<none>' and carry 'Installation' metadata",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.Version"
+        },
+        "target": {
+          "description": "target is the version of the control plane after the update. It may never be '<none>' or have `Installation` metadata",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.Version"
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.HealthInsight": {
+      "description": "HealthInsight is a piece of actionable information produced by an insight producer about the health of the cluster in the context of an update\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. HealthInsight is a piece of actionable information produced by an insight producer about the health of the cluster in the context of an update",
+      "type": "object",
+      "required": [
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is standard Kubernetes object metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec is empty for now, HealthInsight is purely status-reporting API. In the future spec may be used to hold configuration to drive what information is surfaced and how",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.HealthInsightSpec"
+        },
+        "status": {
+          "description": "status reports a piece of actionable information produced by an insight producer about the health of the cluster in the context of an update",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.HealthInsightStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.HealthInsightList": {
+      "description": "HealthInsightList is a list of HealthInsightList resources\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "description": "items is a list of HealthInsight resources",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.HealthInsight"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is standard Kubernetes object metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.HealthInsightSpec": {
+      "description": "HealthInsightSpec is empty for now, HealthInsightSpec is purely status-reporting API. In the future spec may be used to hold configuration to drive what information is surfaced and how",
+      "type": "object"
+    },
+    "com.github.openshift.api.update.v1alpha1.HealthInsightStatus": {
+      "description": "HealthInsightStatus reports a piece of actionable information produced by an insight producer about the health of the cluster in the context of an update",
+      "type": "object",
+      "required": [
+        "startedAt",
+        "scope",
+        "impact",
+        "remediation"
+      ],
+      "properties": {
+        "impact": {
+          "description": "impact describes the impact the reported condition has on the cluster or update",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.InsightImpact"
+        },
+        "remediation": {
+          "description": "remediation contains information about how to resolve or prevent the reported condition",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.InsightRemediation"
+        },
+        "scope": {
+          "description": "scope is list of objects involved in the insight",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.InsightScope"
+        },
+        "startedAt": {
+          "description": "startedAt is the time when the condition reported by the insight started",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.InsightImpact": {
+      "description": "InsightImpact describes the impact the reported condition has on the cluster or update",
+      "type": "object",
+      "required": [
+        "level",
+        "type",
+        "summary"
+      ],
+      "properties": {
+        "description": {
+          "description": "description is a human-oriented, possibly longer-form description of the condition reported by the insight It must be shorter than 4096 characters.",
+          "type": "string"
+        },
+        "level": {
+          "description": "level is the severity of the impact. Valid values are Unknown, Info, Warning, Error, Critical.",
+          "type": "string",
+          "default": ""
+        },
+        "summary": {
+          "description": "summary is a short summary of the impact. It must not be empty and must be shorter than 256 characters.",
+          "type": "string",
+          "default": ""
+        },
+        "type": {
+          "description": "type is the type of the impact. Valid values are None, Unknown, API Availability, Cluster Capacity, Application Availability, Application Outage, Data Loss, Update Speed, Update Stalled.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.InsightRemediation": {
+      "description": "InsightRemediation contains information about how to resolve or prevent the reported condition",
+      "type": "object",
+      "required": [
+        "reference"
+      ],
+      "properties": {
+        "estimatedFinish": {
+          "description": "estimatedFinish is the estimated time when the informer expects the condition to be resolved, if applicable.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "reference": {
+          "description": "reference is a URL where administrators can find information to resolve or prevent the reported condition",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.InsightScope": {
+      "description": "InsightScope is a list of resources involved in the insight",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "resources": {
+          "description": "resources is a list of resources involved in the insight, of any group/kind. Maximum 16 resources can be listed.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.ResourceRef"
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "type": {
+          "description": "type is either ControlPlane or WorkerPool",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.MachineConfigPoolProgressInsight": {
+      "description": "MachineConfigPoolProgressInsight provides summary information about an ongoing node pool update in Standalone clusters\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. MachineConfigPoolProgressInsight reports the state of a MachineConfigPool resource (which represents a pool of nodes update in standalone clusters), during a cluster update.",
+      "type": "object",
+      "required": [
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is standard Kubernetes object metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec is empty for now, MachineConfigPoolProgressInsight is purely status-reporting API. In the future spec may be used to hold configuration to drive what information is surfaced and how",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.MachineConfigPoolProgressInsightSpec"
+        },
+        "status": {
+          "description": "status exposes the health and status of the ongoing cluster update",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.MachineConfigPoolProgressInsightStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.MachineConfigPoolProgressInsightList": {
+      "description": "MachineConfigPoolProgressInsightList is a list of MachineConfigPoolProgressInsightList resources\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "description": "items is a list of MachineConfigPoolProgressInsight resources",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.MachineConfigPoolProgressInsight"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is standard Kubernetes object metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.MachineConfigPoolProgressInsightSpec": {
+      "description": "MachineConfigPoolProgressInsightSpec is empty for now, MachineConfigPoolProgressInsightSpec is purely status-reporting API. In the future spec may be used to hold configuration to drive what information is surfaced and how",
+      "type": "object"
+    },
+    "com.github.openshift.api.update.v1alpha1.MachineConfigPoolProgressInsightStatus": {
+      "description": "MachineConfigPoolProgressInsightStatus reports the state of a MachineConfigPool resource (which represents a pool of nodes update in standalone clusters), during a cluster update.",
+      "type": "object",
+      "required": [
+        "name",
+        "resource",
+        "scopeType",
+        "assessment",
+        "completion"
+      ],
+      "properties": {
+        "assessment": {
+          "description": "assessment is the assessment of the machine config pool update process. Valid values are: Pending, Completed, Degraded, Excluded, Progressing",
+          "type": "string",
+          "default": ""
+        },
+        "completion": {
+          "description": "completion is a percentage of the update completion (0-100)",
+          "type": "integer",
+          "format": "int32",
+          "default": 0
+        },
+        "conditions": {
+          "description": "conditions provide details about the machine config pool update. It contains at most 10 items. Known conditions are: - Updating: whether the pool is updating; When Updating=False, the reason field can be Pending, Updated or Excluded",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "type",
+          "x-kubernetes-patch-strategy": "merge"
+        },
+        "name": {
+          "description": "name is the name of the machine config pool",
+          "type": "string",
+          "default": ""
+        },
+        "resource": {
+          "description": "resource is the MachineConfigPool resource that represents the pool",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.ResourceRef"
+        },
+        "scopeType": {
+          "description": "scopeType describes whether the pool is a control plane or a worker pool",
+          "type": "string",
+          "default": ""
+        },
+        "summaries": {
+          "description": "summaries is a list of counts of nodes matching certain criteria (e.g. updated, degraded, etc.). Maximum 16 items can be listed.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.NodeSummary"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "type",
+          "x-kubernetes-patch-strategy": "merge"
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.NodeProgressInsight": {
+      "description": "NodeProgressInsight reports the state of a Node during the update\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. NodeProgressInsight reports the state of a Node during the update",
+      "type": "object",
+      "required": [
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is standard Kubernetes object metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec is empty for now, NodeProgressInsight is purely status-reporting API. In the future spec may be used to hold configuration to drive what information is surfaced and how",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.NodeProgressInsightSpec"
+        },
+        "status": {
+          "description": "status exposes the health and status of the ongoing cluster update",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.NodeProgressInsightStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.NodeProgressInsightList": {
+      "description": "NodeProgressInsightList is a list of NodeProgressInsightList resources\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "description": "items is a list of NodeProgressInsight resources",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.NodeProgressInsight"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is standard Kubernetes object metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.NodeProgressInsightSpec": {
+      "description": "NodeProgressInsightSpec is empty for now, NodeProgressInsightSpec is purely status-reporting API. In the future spec may be used to hold configuration to drive what information is surfaced and how",
+      "type": "object"
+    },
+    "com.github.openshift.api.update.v1alpha1.NodeProgressInsightStatus": {
+      "description": "NodeProgressInsightStatus reports the state of a Node during the update",
+      "type": "object",
+      "required": [
+        "name",
+        "resource",
+        "poolResource",
+        "scopeType"
+      ],
+      "properties": {
+        "conditions": {
+          "description": "conditions provides details about the control plane update. Known conditions are: - Updating: whether the Node is updating; When Updating=False, the reason field can be Updated, Pending, or Paused. When Updating=True, the reason field can be Draining, Updating, or Rebooting - Available: whether the Node is available (accepting workloads) - Degraded: whether the Node is degraded (problem observed)",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "type",
+          "x-kubernetes-patch-strategy": "merge"
+        },
+        "estimatedToComplete": {
+          "description": "estimatedToComplete is the estimated time to complete the update, when known",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        },
+        "message": {
+          "description": "message is a short human-readable message about the node update status. It must be shorter than 100 characters.",
+          "type": "string"
+        },
+        "name": {
+          "description": "name is the name of the node",
+          "type": "string",
+          "default": ""
+        },
+        "poolResource": {
+          "description": "poolResource is the resource that represents the pool the node is a member of",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.ResourceRef"
+        },
+        "resource": {
+          "description": "resource is the Node resource that represents the node",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.ResourceRef"
+        },
+        "scopeType": {
+          "description": "scopeType describes whether the node belongs to control plane or a worker pool",
+          "type": "string",
+          "default": ""
+        },
+        "version": {
+          "description": "version is the version of the node, when known",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.NodeSummary": {
+      "description": "NodeSummary is a count of nodes matching certain criteria (e.g. updated, degraded, etc.)",
+      "type": "object",
+      "required": [
+        "type",
+        "count"
+      ],
+      "properties": {
+        "count": {
+          "description": "count is the number of nodes matching the criteria, between 0 and 1024",
+          "type": "integer",
+          "format": "int32",
+          "default": 0
+        },
+        "type": {
+          "description": "type is the type of the summary. Valid values are: Total, Available, Progressing, Outdated, Draining, Excluded, Degraded The summaries are not exclusive, a single node may be counted in multiple summaries.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.ResourceRef": {
+      "description": "ResourceRef is a reference to a kubernetes resource, typically involved in an insight",
+      "type": "object",
+      "required": [
+        "resource",
+        "name"
+      ],
+      "properties": {
+        "group": {
+          "description": "group of the object being referenced, if any",
+          "type": "string"
+        },
+        "name": {
+          "description": "name of the object being referenced",
+          "type": "string",
+          "default": ""
+        },
+        "namespace": {
+          "description": "namespace of the object being referenced, if any",
+          "type": "string"
+        },
+        "resource": {
+          "description": "resource of object being referenced",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.Version": {
+      "description": "Version describes a version involved in an update, typically on one side of an update edge",
+      "type": "object",
+      "required": [
+        "version"
+      ],
+      "properties": {
+        "metadata": {
+          "description": "metadata is a list of metadata associated with the version. It is a list of key-value pairs. The value is optional and when not provided, the metadata item has boolean semantics (presence indicates true). For example, 'Partial' metadata on a previous version indicates that the previous update was never fully completed. Can contain at most 5 items.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.VersionMetadata"
+          },
+          "x-kubernetes-list-map-keys": [
+            "key"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "key",
+          "x-kubernetes-patch-strategy": "merge"
+        },
+        "version": {
+          "description": "version is a semantic version string, or a placeholder '<none>' for the special case where this is a \"previous\" version in a new installation, in which case the metadata must contain an item with key 'Installation'",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.update.v1alpha1.VersionMetadata": {
+      "description": "VersionMetadata is a key:value item assigned to version involved in the update. Value can be empty, then the metadata have boolean semantics (true when present, false when absent)",
+      "type": "object",
+      "required": [
+        "key"
+      ],
+      "properties": {
+        "key": {
+          "description": "key is the name of this metadata value. Valid values are: Installation, Partial, Architecture",
+          "type": "string",
+          "default": ""
+        },
+        "value": {
+          "description": "value is the value for the metadata, at most 32 characters long. It is not expected to be provided for Installation and Partial metadata. For Architecture metadata, it is expected to be a string that indicates the architecture of the payload image of the version involved in the upgrade, when relevant.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.user.v1.Group": {
       "description": "Group represents a referenceable set of Users\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",

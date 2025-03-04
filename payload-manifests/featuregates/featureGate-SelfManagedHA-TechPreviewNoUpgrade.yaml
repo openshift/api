@@ -40,6 +40,12 @@
                         "name": "MultiArchInstallAzure"
                     },
                     {
+                        "name": "SELinuxChangePolicy"
+                    },
+                    {
+                        "name": "SELinuxMount"
+                    },
+                    {
                         "name": "SigstoreImageVerificationPKI"
                     }
                 ],

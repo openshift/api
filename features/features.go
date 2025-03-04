@@ -766,4 +766,20 @@ var (
 							enhancementPR("https://github.com/openshift/enhancements/pull/1712").
 							enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 							mustRegister()
+
+	FeatureGateSELinuxChangePolicy = newFeatureGate("SELinuxChangePolicy").
+					reportProblemsToJiraComponent("Storage / Kubernetes").
+					contactPerson("jsafrane").
+					productScope(kubernetes).
+					enhancementPR("https://github.com/kubernetes/enhancements/issues/1710").
+					enableIn(configv1.DevPreviewNoUpgrade).
+					mustRegister()
+
+	FeatureGateSELinuxMount = newFeatureGate("SELinuxMount").
+				reportProblemsToJiraComponent("Storage / Kubernetes").
+				contactPerson("jsafrane").
+				productScope(kubernetes).
+				enhancementPR("https://github.com/kubernetes/enhancements/issues/1710").
+				enableIn(configv1.DevPreviewNoUpgrade).
+				mustRegister()
 )

@@ -46,6 +46,12 @@
                         "name": "NewOLMCatalogdAPIV1Metas"
                     },
                     {
+                        "name": "SELinuxChangePolicy"
+                    },
+                    {
+                        "name": "SELinuxMount"
+                    },
+                    {
                         "name": "SigstoreImageVerificationPKI"
                     }
                 ],

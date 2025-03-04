@@ -20762,7 +20762,7 @@ func schema_openshift_api_config_v1alpha1_GatherConfig(ref common.ReferenceCallb
 					},
 					"storage": {
 						SchemaProps: spec.SchemaProps{
-							Description: "storage is an optional field that allows user to define persistent storage for on-demand gathering jobs to store the Insights data archive. If omitted, the gathering job will use ephemeral storage.",
+							Description: "storage is an optional field that allows user to define persistent storage for gathering jobs to store the Insights data archive. If omitted, the gathering job will use ephemeral storage.",
 							Ref:         ref("github.com/openshift/api/config/v1alpha1.Storage"),
 						},
 					},
@@ -21159,7 +21159,7 @@ func schema_openshift_api_config_v1alpha1_PersistentVolumeClaimReference(ref com
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name is a string that follows the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters,\n '-' and '.', and must start and end with an alphanumeric character.",
+							Description: "name is a string that follows the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -21188,7 +21188,7 @@ func schema_openshift_api_config_v1alpha1_PersistentVolumeConfig(ref common.Refe
 					},
 					"mountPath": {
 						SchemaProps: spec.SchemaProps{
-							Description: "mountPath is an optional field specifying the directory where the PVC will be mounted inside the Insights data gathering Pod. If omitted, the path that is used to store the Insights data archive by Insights operator will be used instead. The path cannot exceed 1024 characters and must not contain a colon.",
+							Description: "mountPath is an optional field specifying the directory where the PVC will be mounted inside the Insights data gathering Pod. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default mount path is /var/lib/insights-operator The path may not exceed 1024 characters and must not contain a colon.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -21541,7 +21541,7 @@ func schema_openshift_api_config_v1alpha1_Storage(ref common.ReferenceCallback) 
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "storage provides persistent storage configuration options for on-demand gathering jobs. If the type is set to PersistentVolume, then the PersistentVolume must be defined. If the type is set to Ephemeral, then the PersistentVolume must not be defined.",
+				Description: "storage provides persistent storage configuration options for gathering jobs. If the type is set to PersistentVolume, then the PersistentVolume must be defined. If the type is set to Ephemeral, then the PersistentVolume must not be defined.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"type": {
@@ -26587,7 +26587,7 @@ func schema_openshift_api_insights_v1alpha1_DataGatherSpec(ref common.ReferenceC
 					},
 					"storage": {
 						SchemaProps: spec.SchemaProps{
-							Description: "storage is an optional field that allows user to define persistent storage for on-demand gathering jobs to store the Insights data archive. If omitted, the gathering job will use ephemeral storage.",
+							Description: "storage is an optional field that allows user to define persistent storage for gathering jobs to store the Insights data archive. If omitted, the gathering job will use ephemeral storage.",
 							Ref:         ref("github.com/openshift/api/insights/v1alpha1.Storage"),
 						},
 					},
@@ -26938,7 +26938,7 @@ func schema_openshift_api_insights_v1alpha1_PersistentVolumeClaimReference(ref c
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name is a string that follows the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters,\n '-' and '.', and must start and end with an alphanumeric character.",
+							Description: "name is a string that follows the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -26967,7 +26967,7 @@ func schema_openshift_api_insights_v1alpha1_PersistentVolumeConfig(ref common.Re
 					},
 					"mountPath": {
 						SchemaProps: spec.SchemaProps{
-							Description: "mountPath is an optional field specifying the directory where the PVC will be mounted inside the Insights data gathering Pod. If omitted, the path that is used to store the Insights data archive by Insights operator will be used instead. The path cannot exceed 1024 characters and must not contain a colon.",
+							Description: "mountPath is an optional field specifying the directory where the PVC will be mounted inside the Insights data gathering Pod. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default mount path is /var/lib/insights-operator The path may not exceed 1024 characters and must not contain a colon.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -26985,7 +26985,7 @@ func schema_openshift_api_insights_v1alpha1_Storage(ref common.ReferenceCallback
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "storage provides persistent storage configuration options for on-demand gathering jobs. If the type is set to PersistentVolume, then the PersistentVolume must be defined. If the type is set to Ephemeral, then the PersistentVolume must not be defined.",
+				Description: "storage provides persistent storage configuration options for gathering jobs. If the type is set to PersistentVolume, then the PersistentVolume must be defined. If the type is set to Ephemeral, then the PersistentVolume must not be defined.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"type": {

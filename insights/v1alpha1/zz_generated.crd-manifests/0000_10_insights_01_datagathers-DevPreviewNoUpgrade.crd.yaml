@@ -114,8 +114,7 @@ spec:
                 type: array
               storage:
                 description: |-
-                  storage is an optional field that allows user to define persistent storage for on-demand gathering
-                  jobs to store the Insights data archive.
+                  storage is an optional field that allows user to define persistent storage for gathering jobs to store the Insights data archive.
                   If omitted, the gathering job will use ephemeral storage.
                 properties:
                   persistentVolume:
@@ -125,14 +124,13 @@ spec:
                     properties:
                       claim:
                         description: |-
-                          claim is a required field that specifies the configuration of the PersistentVolumeClaim that will
-                          be used to store the Insights data archive. The PersistentVolumeClaim must be created in the openshift-insights namespace.
+                          claim is a required field that specifies the configuration of the PersistentVolumeClaim that will be used to store the Insights data archive.
+                          The PersistentVolumeClaim must be created in the openshift-insights namespace.
                         properties:
                           name:
                             description: |-
                               name is a string that follows the DNS1123 subdomain format.
-                              It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters,
-                               '-' and '.', and must start and end with an alphanumeric character.
+                              It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.
                             maxLength: 253
                             type: string
                             x-kubernetes-validations:
@@ -145,9 +143,10 @@ spec:
                         type: object
                       mountPath:
                         description: |-
-                          mountPath is an optional field specifying the directory where the PVC will be mounted inside the
-                          Insights data gathering Pod. If omitted, the path that is used to store the Insights data archive by Insights
-                          operator will be used instead. The path cannot exceed 1024 characters and must not contain a colon.
+                          mountPath is an optional field specifying the directory where the PVC will be mounted inside the Insights data gathering Pod.
+                          When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+                          The current default mount path is /var/lib/insights-operator
+                          The path may not exceed 1024 characters and must not contain a colon.
                         maxLength: 1024
                         type: string
                         x-kubernetes-validations:

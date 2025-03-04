@@ -46,14 +46,14 @@ spec:
             description: spec holds user settable values for configuration
             properties:
               gatherConfig:
-                description: |-
-                  gatherConfig spec attribute includes all the configuration options related to
-                  gathering of the Insights data and its uploading to the ingress.
+                description: gatherConfig spec attribute includes all the configuration
+                  options related to gathering of the Insights data and its uploading
+                  to the ingress.
                 properties:
                   dataPolicy:
                     description: |-
-                      dataPolicy allows user to enable additional global obfuscation of the IP addresses and base domain
-                      in the Insights archive data. Valid values are "None" and "ObfuscateNetworking".
+                      dataPolicy allows user to enable additional global obfuscation of the IP addresses and base domain in the Insights archive data.
+                      Valid values are "None" and "ObfuscateNetworking".
                       When set to None the data is not obfuscated.
                       When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated.
                       When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
@@ -88,8 +88,7 @@ spec:
                     type: array
                   storage:
                     description: |-
-                      storage is an optional field that allows user to define persistent storage for on-demand gathering
-                      jobs to store the Insights data archive.
+                      storage is an optional field that allows user to define persistent storage for gathering jobs to store the Insights data archive.
                       If omitted, the gathering job will use ephemeral storage.
                     properties:
                       persistentVolume:
@@ -99,14 +98,13 @@ spec:
                         properties:
                           claim:
                             description: |-
-                              claim is a required field that specifies the configuration of the PersistentVolumeClaim that will
-                              be used to store the Insights data archive. The PersistentVolumeClaim must be created in the openshift-insights namespace.
+                              claim is a required field that specifies the configuration of the PersistentVolumeClaim that will be used to store the Insights data archive.
+                              The PersistentVolumeClaim must be created in the openshift-insights namespace.
                             properties:
                               name:
                                 description: |-
                                   name is a string that follows the DNS1123 subdomain format.
-                                  It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters,
-                                   '-' and '.', and must start and end with an alphanumeric character.
+                                  It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.
                                 maxLength: 253
                                 type: string
                                 x-kubernetes-validations:
@@ -120,9 +118,10 @@ spec:
                             type: object
                           mountPath:
                             description: |-
-                              mountPath is an optional field specifying the directory where the PVC will be mounted inside the
-                              Insights data gathering Pod. If omitted, the path that is used to store the Insights data archive by Insights
-                              operator will be used instead. The path cannot exceed 1024 characters and must not contain a colon.
+                              mountPath is an optional field specifying the directory where the PVC will be mounted inside the Insights data gathering Pod.
+                              When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+                              The current default mount path is /var/lib/insights-operator
+                              The path may not exceed 1024 characters and must not contain a colon.
                             maxLength: 1024
                             type: string
                             x-kubernetes-validations:
@@ -136,8 +135,7 @@ spec:
                           type is a required field that specifies the type of storage that will be used to store the Insights data archive.
                           Valid values are "PersistentVolume" and "Ephemeral".
                           When set to Ephemeral, the Insights data archive is stored in the ephemeral storage of the gathering job.
-                          When set to PersistentVolume, the Insights data archive is stored in the PersistentVolume that is
-                          defined by the persistentVolume field.
+                          When set to PersistentVolume, the Insights data archive is stored in the PersistentVolume that is defined by the persistentVolume field.
                         enum:
                         - PersistentVolume
                         - Ephemeral

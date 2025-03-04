@@ -53,14 +53,13 @@ type DataGatherSpec struct {
 	// +kubebuilder:validation:MaxItems=100
 	// +optional
 	Gatherers []GathererConfig `json:"gatherers,omitempty"`
-	// storage is an optional field that allows user to define persistent storage for on-demand gathering
-	// jobs to store the Insights data archive.
+	// storage is an optional field that allows user to define persistent storage for gathering jobs to store the Insights data archive.
 	// If omitted, the gathering job will use ephemeral storage.
 	// +optional
 	Storage *Storage `json:"storage,omitempty"`
 }
 
-// storage provides persistent storage configuration options for on-demand gathering jobs.
+// storage provides persistent storage configuration options for gathering jobs.
 // If the type is set to PersistentVolume, then the PersistentVolume must be defined.
 // If the type is set to Ephemeral, then the PersistentVolume must not be defined.
 // +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'PersistentVolume' ?  has(self.persistentVolume) : !has(self.persistentVolume)",message="persistentVolume is required when type is PersistentVolume, and forbidden otherwise"
@@ -91,13 +90,14 @@ const (
 
 // persistentVolumeConfig provides configuration options for PersistentVolume storage.
 type PersistentVolumeConfig struct {
-	// claim is a required field that specifies the configuration of the PersistentVolumeClaim that will
-	// be used to store the Insights data archive. The PersistentVolumeClaim must be created in the openshift-insights namespace.
+	// claim is a required field that specifies the configuration of the PersistentVolumeClaim that will be used to store the Insights data archive.
+	// The PersistentVolumeClaim must be created in the openshift-insights namespace.
 	// +required
-	PersistentVolumeClaim PersistentVolumeClaimReference `json:"claim"`
-	// mountPath is an optional field specifying the directory where the PVC will be mounted inside the
-	// Insights data gathering Pod. If omitted, the path that is used to store the Insights data archive by Insights
-	// operator will be used instead. The path cannot exceed 1024 characters and must not contain a colon.
+	Claim PersistentVolumeClaimReference `json:"claim"`
+	// mountPath is an optional field specifying the directory where the PVC will be mounted inside the Insights data gathering Pod.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+	// The current default mount path is /var/lib/insights-operator
+	// The path may not exceed 1024 characters and must not contain a colon.
 	// +kubebuilder:validation:MaxLength=1024
 	// +kubebuilder:validation:XValidation:rule="!self.contains(':')",message="mountPath must not contain a colon"
 	// +optional
@@ -107,8 +107,7 @@ type PersistentVolumeConfig struct {
 // persistentVolumeClaimReference is a reference to a PersistentVolumeClaim.
 type PersistentVolumeClaimReference struct {
 	// name is a string that follows the DNS1123 subdomain format.
-	// It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters,
-	//  '-' and '.', and must start and end with an alphanumeric character.
+	// It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.
 	// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
 	// +kubebuilder:validation:MaxLength:=253
 	// +required

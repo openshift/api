@@ -220,7 +220,7 @@ type TLSProfileSpec struct {
 	//   minTLSVersion: VersionTLS11
 	//
 	// NOTE: currently the highest minTLSVersion allowed is VersionTLS12
-	//
+	// +kubebuilder:validation:Required
 	MinTLSVersion TLSProtocolVersion `json:"minTLSVersion"`
 }
 

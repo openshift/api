@@ -271,6 +271,8 @@ spec:
                         - VersionTLS12
                         - VersionTLS13
                         type: string
+                    required:
+                    - minTLSVersion
                     type: object
                   intermediate:
                     description: |-

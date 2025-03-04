@@ -740,8 +740,11 @@ var (
 						contactPerson("eggfoobar").
 						productScope(ocpSpecific).
 						enhancementPR("https://github.com/openshift/enhancements/pull/1674").
-						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-						mustRegister()
+		// TODO: Do not go GA until jira issue is resolved: https://issues.redhat.com/browse/OCPEDGE-1637
+		// Annotations must correctly handle either DualReplica or HighlyAvailableArbiter going GA with
+		// the other still in TechPreview.
+		enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+		mustRegister()
 
 	FeatureGateCVOConfiguration = newFeatureGate("ClusterVersionOperatorConfiguration").
 					reportProblemsToJiraComponent("Cluster Version Operator").
@@ -782,4 +785,15 @@ var (
 				enhancementPR("https://github.com/kubernetes/enhancements/issues/1710").
 				enableIn(configv1.DevPreviewNoUpgrade).
 				mustRegister()
+
+	FeatureGateDualReplica = newFeatureGate("DualReplica").
+				reportProblemsToJiraComponent("Two Node Fencing").
+				contactPerson("jaypoulz").
+				productScope(ocpSpecific).
+				enhancementPR("https://github.com/openshift/enhancements/pull/1675").
+		// TODO: Do not go GA until jira issue is resolved: https://issues.redhat.com/browse/OCPEDGE-1637
+		// Annotations must correctly handle either DualReplica or HighlyAvailableArbiter going GA with
+		// the other still in TechPreview.
+		enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+		mustRegister()
 )

@@ -1967,6 +1967,8 @@ spec:
                         - VersionTLS12
                         - VersionTLS13
                         type: string
+                    required:
+                    - minTLSVersion
                     type: object
                   intermediate:
                     description: |-
@@ -3215,6 +3217,8 @@ spec:
                     - VersionTLS12
                     - VersionTLS13
                     type: string
+                required:
+                - minTLSVersion
                 type: object
             type: object
         type: object

@@ -296,3 +296,138 @@ tests:
               visibility:
                 state: Enables
       expectedError: "spec.customization.capabilities[0].visibility.state: Unsupported value: \"Enables\": supported values: \"Enabled\", \"Disabled\""
+    - name: Should allow creating custom logos for Dark and Light themes
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          customization:
+            customLogos:
+              - type: Masthead
+                themes:
+                  - type: Dark
+                    file:
+                      name: custom-logos-config
+                      key: masthead-dark-logo.svg
+                  - type: Light
+                    file:
+                      name: custom-logos-config
+                      key: masthead-light-logo.svg
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          customization:
+            customLogos:
+              - type: Masthead
+                themes:
+                  - type: Dark
+                    file:
+                       name: custom-logos-config
+                       key: masthead-dark-logo.svg
+                  - type: Light
+                    file:
+                       name: custom-logos-config
+                       key: masthead-light-logo.svg
+    - name: Should allow creating a custom logo for the Default theme type
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          customization:
+            customLogos:
+              - type: Masthead
+                themes:
+                  - type: Default
+                    file:
+                      name: custom-logos-config
+                      key: masthead-default-logo.svg
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          customization:
+            customLogos:
+              - type: Masthead
+                themes:
+                  - type: Default
+                    file:
+                      name: custom-logos-config
+                      key: masthead-default-logo.svg
+    - name: Should allow creating custom logos for the Default and any other theme type
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          customization:
+            customLogos:
+              - type: Masthead
+                themes:
+                  - type: Default
+                    file:
+                      name: custom-logos-config
+                      key: masthead-default-logo.svg
+                  - type: Dark
+                    file:
+                      name: custom-logos-config
+                      key: masthead-dark-logo.svg        
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          customization:
+            customLogos:
+              - type: Masthead
+                themes:
+                  - type: Default
+                    file:
+                      name: custom-logos-config
+                      key: masthead-default-logo.svg
+                  - type: Dark
+                    file:
+                      name: custom-logos-config
+                      key: masthead-dark-logo.svg
+    - name: Should not allow duplicate theme types
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          customization:
+            customLogos:
+              - type: Masthead
+                themes:
+                  - type: Dark
+                    file:
+                      name: custom-logos-config
+                      key: masthead-dark-logo.svg
+                  - type: Dark
+                    file:
+                      name: custom-logos-config
+                      key: masthead-dark-logo.svg
+      expectedError: "spec.customization.customLogos[0].themes[1]: Duplicate value: map[string]interface {}{\"type\":\"Dark\"}"
+    - name: Should not allow duplicate custom logo types
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          customization:
+            customLogos:
+              - type: Masthead
+                themes:
+                  - type: Dark
+                    file:
+                      name: custom-logos-config
+                      key: masthead-dark-logo.svg
+              - type: Masthead
+                themes:
+                  - type: Light
+                    file:
+                      name: custom-logos-config
+                      key: masthead-light-logo.svg
+      expectedError: "spec.customization.customLogos[1]: Duplicate value: map[string]interface {}{\"type\":\"Masthead\"}"

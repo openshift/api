@@ -1695,17 +1695,35 @@ type IBMCloudServiceEndpoint struct {
 
 	// url is fully qualified URI with scheme https, that overrides the default generated
 	// endpoint for a client.
-	// This must be provided and cannot be empty.
+	// This must be provided and cannot be empty. The path must follow the pattern
+	// /v[0,9]+ or /api/v[0,9]+
 	//
 	// +required
 	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:MaxLength=300
 	// +kubebuilder:validation:XValidation:rule="isURL(self)",message="url must be a valid absolute URL"
+	// +openshift:validation:FeatureGateAwareXValidation:featureGate=DyanmicServiceEndpointIBMCloud,rule="url(self).getScheme() == \"https\"",message="url must use https scheme"
+	// +openshift:validation:FeatureGateAwareXValidation:featureGate=DyanmicServiceEndpointIBMCloud,rule=`matches((url(self).getEscapedPath()), '^/(api/)?v[0-9]+/{0,1}$')`,message="url path must match /v[0,9]+ or /api/v[0,9]+"
 	URL string `json:"url"`
 }
 
 // IBMCloudPlatformSpec holds the desired state of the IBMCloud infrastructure provider.
 // This only includes fields that can be modified in the cluster.
-type IBMCloudPlatformSpec struct{}
+type IBMCloudPlatformSpec struct {
+	// serviceEndpoints is a list of custom endpoints which will override the default
+	// service endpoints of an IBM service. These endpoints are used by components
+	// within the cluster when trying to reach the IBM Cloud Services that have been
+	// overriden. The CCCMO reads in the IBMCloudPlatformSpec and validates each
+	// endpoint is resolvable. Once validated, the cloud config and IBMCloudPlatformStatus
+	// are updated to reflect the same custom endpoints.
+	// A maximum of 13 service endpoints overrides are supported.
+	// +kubebuilder:validation:MaxItems=13
+	// +listType=map
+	// +listMapKey=name
+	// +optional
+	// +openshift:enable:FeatureGate=DyanmicServiceEndpointIBMCloud
+	ServiceEndpoints []IBMCloudServiceEndpoint `json:"serviceEndpoints,omitempty"`
+}
 
 // IBMCloudPlatformStatus holds the current status of the IBMCloud infrastructure provider.
 type IBMCloudPlatformStatus struct {
@@ -1727,8 +1745,12 @@ type IBMCloudPlatformStatus struct {
 	DNSInstanceCRN string `json:"dnsInstanceCRN,omitempty"`
 
 	// serviceEndpoints is a list of custom endpoints which will override the default
-	// service endpoints of an IBM Cloud service. These endpoints are consumed by
-	// components within the cluster to reach the respective IBM Cloud Services.
+	// service endpoints of an IBM service. These endpoints are used by components
+	// within the cluster when trying to reach the IBM Cloud Services that have been
+	// overriden. The CCCMO reads in the IBMCloudPlatformSpec and validates each
+	// endpoint is resolvable. Once validated, the cloud config and IBMCloudPlatformStatus
+	// are updated to reflect the same custom endpoints.
+	// +openshift:validation:FeatureGateAwareMaxItems:featureGate=DyanmicServiceEndpointIBMCloud,maxItems=13
 	// +listType=map
 	// +listMapKey=name
 	// +optional

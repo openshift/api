@@ -389,7 +389,7 @@ spec:
                           type: string
                           x-kubernetes-validations:
                           - message: advisorURI must be a valid HTTPS URL (e.g., https://example.com)
-                            rule: self.matches("^https://[^\\s]+")
+                            rule: isURL(self) && url(self).getScheme() == "https"
                         description:
                           description: description provides basic description of the
                             healtcheck.
@@ -431,7 +431,7 @@ spec:
                     type: string
                     x-kubernetes-validations:
                     - message: URI must be a valid HTTPS URL (e.g., https://example.com)
-                      rule: self.matches("^https://[^\\s]+")
+                      rule: isURL(self) && url(self).getScheme() == "https"
                 type: object
               insightsRequestID:
                 description: |-

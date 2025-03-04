@@ -495,3 +495,35 @@ tests:
               message: "test message"
               lastTransitionTime: "2024-12-01T08:04:21Z"
       expectedStatusError: "Invalid value: \"-0m5s\": gatherers[0].lastGatherDuration in body should match '^(([0-9]+(?:\\.[0-9]+)?(ns|us|µs|μs|ms|s|m|h))+)$'"
+    - name: should not be updated with URL that is not HTTPS
+      initial: |
+        apiVersion: insights.openshift.io/v1alpha1
+        kind: DataGather
+        spec: {} # No spec is required for a DataGather
+      updated: |
+        apiVersion: insights.openshift.io/v1alpha1
+        kind: DataGather
+        spec: {} # No spec is required for a DataGather
+        status:
+          insightsReport:
+            uri: http://example.com
+      expectedStatusError: 'status.insightsReport.uri: Invalid value: "string": URI must be a valid HTTPS URL (e.g., https://example.com)'
+    - name: should be updated with a valid HTTPS URL
+      initial: |
+        apiVersion: insights.openshift.io/v1alpha1
+        kind: DataGather
+        spec: {} # No spec is required for a DataGather
+      updated: |
+        apiVersion: insights.openshift.io/v1alpha1
+        kind: DataGather
+        spec: {} # No spec is required for a DataGather
+        status:
+          insightsReport:
+            uri: https://example.com
+      expected: |
+        apiVersion: insights.openshift.io/v1alpha1
+        kind: DataGather
+        spec: {} # No spec is required for a DataGather
+        status:
+          insightsReport:
+            uri: https://example.com

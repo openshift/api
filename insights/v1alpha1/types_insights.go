@@ -261,7 +261,7 @@ type InsightsReport struct {
 	HealthChecks []HealthCheck `json:"healthChecks,omitempty"`
 	// uri is optional field that provides the URL link from which the report was downloaded.
 	// The link must be a valid HTTPS URL and the maximum length is 2048 characters.
-	// +kubebuilder:validation:XValidation:rule=`self.matches("^https://[^\\s]+")`,message=`URI must be a valid HTTPS URL (e.g., https://example.com)`
+	// +kubebuilder:validation:XValidation:rule=`isURL(self) && url(self).getScheme() == "https"`,message=`URI must be a valid HTTPS URL (e.g., https://example.com)`
 	// +kubebuilder:validation:MaxLength=2048
 	// +optional
 	URI string `json:"uri,omitempty"`
@@ -283,7 +283,7 @@ type HealthCheck struct {
 	TotalRisk int32 `json:"totalRisk"`
 	// advisorURI is required field that provides the URL link to the Insights Advisor.
 	// The link must be a valid HTTPS URL and the maximum length is 2048 characters.
-	// +kubebuilder:validation:XValidation:rule=`self.matches("^https://[^\\s]+")`,message=`advisorURI must be a valid HTTPS URL (e.g., https://example.com)`
+	// +kubebuilder:validation:XValidation:rule=`isURL(self) && url(self).getScheme() == "https"`,message=`advisorURI must be a valid HTTPS URL (e.g., https://example.com)`
 	// +kubebuilder:validation:MaxLength=2048
 	// +required
 	AdvisorURI string `json:"advisorURI"`

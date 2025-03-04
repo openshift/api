@@ -152,6 +152,7 @@ type MachineManagerSelector struct {
 	// Valid values are All and Partial.
 	// All means that every resource matched by the machine manager will be updated.
 	// Partial requires specified selector(s) and allows customisation of which resources matched by the machine manager will be updated.
+	// None means that every resource matched by the machine manager will not be updated.
 	// +unionDiscriminator
 	// +required
 	Mode MachineManagerSelectorMode `json:"mode"`
@@ -170,7 +171,7 @@ type PartialSelector struct {
 }
 
 // MachineManagerSelectorMode is a string enum used in the MachineManagerSelector union discriminator.
-// +kubebuilder:validation:Enum:="All";"Partial"
+// +kubebuilder:validation:Enum:="All";"Partial";"None"
 type MachineManagerSelectorMode string
 
 const (
@@ -180,6 +181,9 @@ const (
 	// Partial represents a configuration mode that will register resources specified by the parent MachineManager only
 	// if they match with the label selector.
 	Partial MachineManagerSelectorMode = "Partial"
+
+	// None represents a configuration mode that excludes all resources specified by the parent MachineManager from boot image updates.
+	None MachineManagerSelectorMode = "None"
 )
 
 // MachineManagerManagedResourceType is a string enum used in the MachineManager type to describe the resource

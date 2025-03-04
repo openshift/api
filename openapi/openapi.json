@@ -30444,15 +30444,13 @@
       "description": "NodeStatus provides information about the current state of a particular node managed by this operator.",
       "type": "object",
       "required": [
-        "nodeName",
-        "currentRevision"
+        "nodeName"
       ],
       "properties": {
         "currentRevision": {
-          "description": "currentRevision is the generation of the most recently successful deployment",
+          "description": "currentRevision is the generation of the most recently successful deployment. Can not be set on creation of a nodeStatus. Updates must only increase the value.",
           "type": "integer",
-          "format": "int32",
-          "default": 0
+          "format": "int32"
         },
         "lastFailedCount": {
           "description": "lastFailedCount is how often the installer pod of the last failed revision failed.",
@@ -30492,7 +30490,7 @@
           "default": ""
         },
         "targetRevision": {
-          "description": "targetRevision is the generation of the deployment we're trying to apply",
+          "description": "targetRevision is the generation of the deployment we're trying to apply. Can not be set on creation of a nodeStatus.",
           "type": "integer",
           "format": "int32"
         }

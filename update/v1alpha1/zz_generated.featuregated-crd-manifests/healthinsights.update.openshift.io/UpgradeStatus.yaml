@@ -1,0 +1,203 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    api-approved.openshift.io: https://github.com/openshift/api/pull/2012
+    api.openshift.io/filename-cvo-runlevel: "0000_00"
+    api.openshift.io/filename-operator: cluster-version-operator
+    api.openshift.io/filename-ordering: "02"
+    description: Reports a piece of actionable information about the health of the
+      cluster in the context of an update
+    displayName: HealthInsights
+    feature-gate.release.openshift.io/UpgradeStatus: "true"
+  name: healthinsights.update.openshift.io
+spec:
+  group: update.openshift.io
+  names:
+    kind: HealthInsight
+    listKind: HealthInsightList
+    plural: healthinsights
+    singular: healthinsight
+  scope: Cluster
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          HealthInsight is a piece of actionable information produced by an insight producer about the health
+          of the cluster in the context of an update
+
+          Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+          HealthInsight is a piece of actionable information produced by an insight producer about the health
+          of the cluster in the context of an update
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: |-
+              spec is empty for now, HealthInsight is purely status-reporting API. In the future spec may be used to hold
+              configuration to drive what information is surfaced and how
+            type: object
+          status:
+            description: |-
+              status reports a piece of actionable information produced by an insight producer about the health
+              of the cluster in the context of an update
+            properties:
+              impact:
+                description: impact describes the impact the reported condition has
+                  on the cluster or update
+                properties:
+                  description:
+                    description: |-
+                      description is a human-oriented, possibly longer-form description of the condition reported by the insight It must
+                      be shorter than 4096 characters.
+                    maxLength: 4096
+                    type: string
+                  level:
+                    description: level is the severity of the impact. Valid values
+                      are Unknown, Info, Warning, Error, Critical.
+                    enum:
+                    - Unknown
+                    - Info
+                    - Warning
+                    - Error
+                    - Critical
+                    type: string
+                  summary:
+                    description: summary is a short summary of the impact. It must
+                      not be empty and must be shorter than 256 characters.
+                    maxLength: 256
+                    minLength: 1
+                    type: string
+                  type:
+                    description: |-
+                      type is the type of the impact. Valid values are None, Unknown, API Availability, Cluster Capacity,
+                      Application Availability, Application Outage, Data Loss, Update Speed, Update Stalled.
+                    enum:
+                    - None
+                    - Unknown
+                    - API Availability
+                    - Cluster Capacity
+                    - Application Availability
+                    - Application Outage
+                    - Data Loss
+                    - Update Speed
+                    - Update Stalled
+                    type: string
+                required:
+                - level
+                - summary
+                - type
+                type: object
+              remediation:
+                description: remediation contains information about how to resolve
+                  or prevent the reported condition
+                properties:
+                  estimatedFinish:
+                    description: estimatedFinish is the estimated time when the informer
+                      expects the condition to be resolved, if applicable.
+                    format: date-time
+                    type: string
+                  reference:
+                    description: reference is a URL where administrators can find
+                      information to resolve or prevent the reported condition
+                    maxLength: 512
+                    type: string
+                    x-kubernetes-validations:
+                    - message: reference must a valid URL
+                      rule: isURL(self)
+                required:
+                - reference
+                type: object
+              scope:
+                description: scope is list of objects involved in the insight
+                properties:
+                  resources:
+                    description: resources is a list of resources involved in the
+                      insight, of any group/kind. Maximum 16 resources can be listed.
+                    items:
+                      description: ResourceRef is a reference to a kubernetes resource,
+                        typically involved in an insight
+                      properties:
+                        group:
+                          description: group of the object being referenced, if any
+                          maxLength: 253
+                          type: string
+                          x-kubernetes-validations:
+                          - message: a lowercase RFC 1123 subdomain must consist of
+                              lower case alphanumeric characters, '-' or '.', and
+                              must start and end with an alphanumeric character.
+                            rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                        name:
+                          description: name of the object being referenced
+                          maxLength: 253
+                          type: string
+                          x-kubernetes-validations:
+                          - message: a lowercase RFC 1123 subdomain must consist of
+                              lower case alphanumeric characters, '-' or '.', and
+                              must start and end with an alphanumeric character.
+                            rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                        namespace:
+                          description: namespace of the object being referenced, if
+                            any
+                          maxLength: 253
+                          pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                          type: string
+                        resource:
+                          description: resource of object being referenced
+                          maxLength: 253
+                          type: string
+                          x-kubernetes-validations:
+                          - message: a lowercase RFC 1123 subdomain must consist of
+                              lower case alphanumeric characters, '-' or '.', and
+                              must start and end with an alphanumeric character.
+                            rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                      required:
+                      - name
+                      - resource
+                      type: object
+                    maxItems: 16
+                    type: array
+                    x-kubernetes-list-type: atomic
+                  type:
+                    description: type is either ControlPlane or WorkerPool
+                    enum:
+                    - ControlPlane
+                    - WorkerPool
+                    type: string
+                required:
+                - type
+                type: object
+              startedAt:
+                description: startedAt is the time when the condition reported by
+                  the insight started
+                format: date-time
+                type: string
+            required:
+            - impact
+            - remediation
+            - scope
+            - startedAt
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

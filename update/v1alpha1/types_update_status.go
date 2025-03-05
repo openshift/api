@@ -56,7 +56,7 @@ type UpdateStatusStatus struct {
 
 	// controlPlane contains a summary and insights related to the control plane update
 	// +optional
-	ControlPlane ControlPlane `json:"controlPlane"`
+	ControlPlane *ControlPlane `json:"controlPlane,omitempty"`
 
 	// workerPools contains summaries and insights related to the worker pools update
 	// +listType=map

@@ -36967,6 +36967,13 @@ func schema_openshift_api_machine_v1beta1_EBSBlockDeviceSpec(ref common.Referenc
 							Format:      "int64",
 						},
 					},
+					"throughput": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Throughput to provision in MiB/s. This parameter is valid only for gp3 volumes.\n\nConstraints: 125-1000 for General Purpose SSD (gp3)",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
 					"volumeSize": {
 						SchemaProps: spec.SchemaProps{
 							Description: "The size of the volume, in GiB.\n\nConstraints: 1-16384 for General Purpose SSD (gp2), 4-16384 for Provisioned IOPS SSD (io1), 500-16384 for Throughput Optimized HDD (st1), 500-16384 for Cold HDD (sc1), and 1-1024 for Magnetic (standard) volumes. If you specify a snapshot, the volume size must be equal to or larger than the snapshot size.\n\nDefault: If you're creating the volume from a snapshot and don't specify a volume size, the default is the snapshot size.",

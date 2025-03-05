@@ -448,6 +448,69 @@ tests:
       kind: UpdateStatus
       spec: {}
     expectedStatusError: "Invalid value: \"object\": target version must not be '<none>' or have Installation metadata"
+
+  - name: UpdateStatus refuses controlPlane not represented by a ClusterVersion or HostedCluster
+    initial: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: UpdateStatus
+      spec: {}
+    updated: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: UpdateStatus
+      spec: {}
+      status:
+        controlPlane:
+          resource:
+            group: config.openshift.io
+            resource: clusteroperators
+            name: authentication
+          poolResource:
+            group: machineconfiguration.openshift.io
+            resource: machineconfigpools
+            name: master
+          conditions:
+          - type: Updating
+            status: "True"
+            lastTransitionTime: "2021-01-01T00:00:00Z"
+            reason: ClusterVersionProgressing
+            message: "Installing version 4.18.0"
+    expected: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: UpdateStatus
+      spec: {}
+    expectedStatusError: "Invalid value: \"object\": controlPlane.resource must be either a clusterversions.config.openshift.io or a hostedclusters.hypershift.openshift.io resource"
+
+  - name: UpdateStatus refuses controlPlane pool that is not a MCP
+    initial: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: UpdateStatus
+      spec: {}
+    updated: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: UpdateStatus
+      spec: {}
+      status:
+        controlPlane:
+          resource:
+            group: config.openshift.io
+            resource: clusterversions
+            name: version
+          poolResource:
+            group: config.openshift.io
+            resource: clusteroperators
+            name: authentication
+          conditions:
+          - type: Updating
+            status: "True"
+            lastTransitionTime: "2021-01-01T00:00:00Z"
+            reason: ClusterVersionProgressing
+            message: "Installing version 4.18.0"
+    expected: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: UpdateStatus
+      spec: {}
+    expectedStatusError: "Invalid value: \"object\": controlPlane.poolResource must be a machineconfigpools.machineconfiguration.openshift.io resource"
+
   - name: UpdateStatus can contain a ClusterOperator insight
     initial: |
       apiVersion: update.openshift.io/v1alpha1

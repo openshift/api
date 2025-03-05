@@ -99,8 +99,9 @@ type ControlPlane struct {
 	// only the "correct" resource types to be referenced (here, ClusterVersion and HostedCluster). However, because we
 	// use resource references in many places and this API is intended to be consumed by clients, not produced, consistency
 	// seems to be more valuable than type safety for producers.
-	// +required
-	Resource ResourceRef `json:"resource"`
+	// +optional
+	// +kubebuilder:validation:XValidation:rule="(self.group == 'config.openshift.io' && self.resource == 'clusterversions') || (self.group == 'hypershift.openshift.io' && self.resource == 'hostedclusters')",message="controlPlane.resource must be either a clusterversions.config.openshift.io or a hostedclusters.hypershift.openshift.io resource"
+	Resource *ResourceRef `json:"resource"`
 
 	// poolResource is the resource that represents control plane node pool, typically a MachineConfigPool. This field
 	// is optional because some form factors (like Hosted Control Planes) do not have dedicated control plane node pools,
@@ -111,6 +112,7 @@ type ControlPlane struct {
 	// references in many places and this API is intended to be consumed by clients, not produced, consistency seems to be
 	// more valuable than type safety for producers.
 	// +optional
+	// +kubebuilder:validation:XValidation:rule="(self.group == 'machineconfiguration.openshift.io' && self.resource == 'machineconfigpools')",message="controlPlane.poolResource must be a machineconfigpools.machineconfiguration.openshift.io resource"
 	PoolResource *PoolResourceRef `json:"poolResource,omitempty"`
 
 	// informers is a list of insight producers, each carries a list of insights relevant for control plane

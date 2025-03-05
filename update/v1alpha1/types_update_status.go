@@ -58,7 +58,11 @@ type UpdateStatusStatus struct {
 	// +optional
 	ControlPlane *ControlPlane `json:"controlPlane,omitempty"`
 
-	// workerPools contains summaries and insights related to the worker pools update
+	// workerPools contains summaries and insights related to the worker pools update. Each item in the list represents
+	// a single worker pool and carries all insights reported for it by informers. It has at most 32 items.
+	// TODO(UpdateStatus API GA): Determine a proper limit for MCPs / NodePool
+	// TODO(UpdateStatus): How to handle degenerate clusters with many pools? Worst case clusters can have per-node pools
+	//                     so hundreds, and hypothetically more empty ones.
 	// +listType=map
 	// +listMapKey=name
 	// +patchStrategy=merge

@@ -45,6 +45,7 @@ type UpdateStatusSpec struct {
 // update informers
 type UpdateStatusStatus struct {
 	// conditions provide details about the controller operational matters
+	// TODO(UpdateStatus API GA): Update the list of conditions expected to be present
 	// +listType=map
 	// +listMapKey=type
 	// +patchStrategy=merge

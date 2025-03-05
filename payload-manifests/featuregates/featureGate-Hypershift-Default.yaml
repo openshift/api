@@ -74,6 +74,9 @@
                         "name": "GatewayAPI"
                     },
                     {
+                        "name": "GatewayAPIController"
+                    },
+                    {
                         "name": "HighlyAvailableArbiter"
                     },
                     {

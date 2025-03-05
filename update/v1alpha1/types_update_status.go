@@ -44,7 +44,10 @@ type UpdateStatusSpec struct {
 // UpdateStatusStatus is the API about in-progress updates. It aggregates and summarizes UpdateInsights produced by
 // update informers
 type UpdateStatusStatus struct {
-	// conditions provide details about the controller operational matters
+	// conditions provide details about the controller operational matters, exposing whether the controller managing this
+	// UpdateStatus is functioning well, receives insights from individual informers, and is able to interpret them and
+	// relay them through this UpdateStatus. These condition do not communicate anything about the state of the update
+	// itself but may indicate whether the UpdateStatus content is reliable or not.
 	// TODO(UpdateStatus API GA): Update the list of conditions expected to be present
 	// +listType=map
 	// +listMapKey=type
@@ -72,9 +75,14 @@ type UpdateStatusStatus struct {
 	WorkerPools []Pool `json:"workerPools,omitempty" patchStrategy:"merge" patchMergeKey:"name"`
 }
 
-// ControlPlane contains a summary and insights related to the control plane update
+// ControlPlane contains a summary and insights related to the control plane update.
 type ControlPlane struct {
-	// conditions provides details about the control plane update
+	// conditions provides details about the control plane update. This is a high-level status of an abstract control place
+	// concept, and will typically be the controller's interpretation / summarization of the insights it received (that
+	// will be placed in .informers[].insights for clients that want to perform further analysis of the data).
+	// Known condition types are:
+	// * "Updating": Whether the cluster control plane is currently updating or not
+	//
 	// +listType=map
 	// +listMapKey=type
 	// +patchStrategy=merge
@@ -84,7 +92,8 @@ type ControlPlane struct {
 	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 
 	// resource is the resource that represents the control plane. It will typically be a ClusterVersion resource
-	// in standalone OpenShift and HostedCluster in Hosted Control Planes.
+	// in standalone OpenShift and HostedCluster in Hosted Control Planes. This field is optional because the information
+	// may be unknown temporarily.
 	//
 	// Note: By OpenShift API conventions, in isolation this should probably be a specialized reference type that allows
 	// only the "correct" resource types to be referenced (here, ClusterVersion and HostedCluster). However, because we
@@ -94,7 +103,8 @@ type ControlPlane struct {
 	Resource ResourceRef `json:"resource"`
 
 	// poolResource is the resource that represents control plane node pool, typically a MachineConfigPool. This field
-	// is optional because some form factors (like Hosted Control Planes) do not have dedicated control plane node pools.
+	// is optional because some form factors (like Hosted Control Planes) do not have dedicated control plane node pools,
+	// and also because the information may be unknown temporarily.
 	//
 	// Note: By OpenShift API conventions, in isolation this should probably be a specialized reference type that allows
 	// only the "correct" resource types to be referenced (here, MachineConfigPool). However, because we use resource

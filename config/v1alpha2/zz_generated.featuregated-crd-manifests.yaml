@@ -1,6 +1,6 @@
 insightsdatagathers.config.openshift.io:
   Annotations: {}
-  ApprovedPRNumber: https://github.com/openshift/api/pull/1245
+  ApprovedPRNumber: https://github.com/openshift/api/pull/2195
   CRDName: insightsdatagathers.config.openshift.io
   Capability: ""
   Category: ""

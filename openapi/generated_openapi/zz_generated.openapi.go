@@ -21635,7 +21635,7 @@ func schema_openshift_api_config_v1alpha2_GatherConfig(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"dataPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "dataPolicy is an optional list of DataPolicyOptions that allows user to enable additional global obfuscation of the IP addresses and base domain in the Insights archive data. Valid values are [\"ClearText\"], [\"ObfuscateNetworking\"] and [\"WorkloadNames\"]. When set to ClearText the data is not obfuscated. When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is \"ClearText\".",
+							Description: "dataPolicy is an optional list of DataPolicyOptions that allows user to enable additional obfuscation of the Insights archive data. It may not exceed 2 items and must not contain duplicates. Valid values are ObfuscateNetworking and WorkloadNames. When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated. When set to WorkloadNames the data from Deployment Validation Operator is obfuscated. When omitted no obfuscation is applied.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -21658,7 +21658,7 @@ func schema_openshift_api_config_v1alpha2_GatherConfig(ref common.ReferenceCallb
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "gatherers is an optional list of gatherers configurations. It can be used to enable or disable specific gatherers. It may not exceed 100 items and each gatherer can be present only once. The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
+							Description: "gatherers is an optional list of gatherers configurations that can be used to enable or disable specific gatherers. It may not exceed 100 items and each gatherer can be present only once. When omitted, this means that all gatherers are enabled. It is possible to disable an entire set of gatherers while allowing a specific function within that set. For example, you can disable \"gathererOne\" while enabling \"gathererOne/functionOne.\" The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -21693,7 +21693,7 @@ func schema_openshift_api_config_v1alpha2_GathererConfig(ref common.ReferenceCal
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name is the required name of a specific gatherer It may not exceed 256 characters. The format for the disabledGatherer should be: {gatherer}/{function} where the function is optional. Gatherer consists of a lowercase letters only that may include underscores (_). Function consists of a lowercase letters only that may include underscores (_) and is separated from the gatherer by a forward slash (/). The particular gatherers can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
+							Description: "name is the required name of a specific gatherer It may not exceed 256 characters. The format for a gatherer name is: {gatherer}/{function} where the function is optional. Gatherer consists of a lowercase letters only that may include underscores (_). Function consists of a lowercase letters only that may include underscores (_) and is separated from the gatherer by a forward slash (/). The particular gatherers can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",

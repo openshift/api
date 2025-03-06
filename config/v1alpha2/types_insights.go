@@ -12,7 +12,7 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=insightsdatagathers,scope=Cluster
 // +kubebuilder:subresource:status
-// +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/1245
+// +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/2195
 // +openshift:file-pattern=cvoRunLevel=0000_10,operatorName=config-operator,operatorOrdering=01
 // +openshift:enable:FeatureGate=InsightsConfig
 // +openshift:compatibility-gen:level=4
@@ -33,24 +33,28 @@ type InsightsDataGather struct {
 type InsightsDataGatherSpec struct {
 	// gatherConfig is an optional spec attribute that includes all the configuration options related to gathering of the Insights data and its uploading to the ingress.
 	// +optional
-	GatherConfig GatherConfig `json:"gatherConfig,omitempty"`
+	GatherConfig GatherConfig `json:"gatherConfig"`
 }
 
 type InsightsDataGatherStatus struct{}
 
 // gatherConfig provides data gathering configuration options.
 type GatherConfig struct {
-	// dataPolicy is an optional list of DataPolicyOptions that allows user to enable additional global obfuscation of the IP addresses and base domain in the Insights archive data.
-	// Valid values are ["ClearText"], ["ObfuscateNetworking"] and ["WorkloadNames"].
-	// When set to ClearText the data is not obfuscated.
+	// dataPolicy is an optional list of DataPolicyOptions that allows user to enable additional obfuscation of the Insights archive data.
+	// It may not exceed 2 items and must not contain duplicates.
+	// Valid values are ObfuscateNetworking and WorkloadNames.
 	// When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated.
-	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
-	// The current default is "ClearText".
+	// When set to WorkloadNames the data from Deployment Validation Operator is obfuscated.
+	// When omitted no obfuscation is applied.
+	// +kubebuilder:validation:MaxItems=2
+	// +kubebuilder:validation:XValidation:rule="self.all(x, self.exists_one(y, x == y))",message="DataPolicy must not contain duplicates"
 	// +optional
-	DataPolicy DataPolicy `json:"dataPolicy,omitempty"`
-	// gatherers is an optional list of gatherers configurations.
-	// It can be used to enable or disable specific gatherers.
+	DataPolicy []DataPolicyOption `json:"dataPolicy,omitempty"`
+	// gatherers is an optional list of gatherers configurations that can be used to enable or disable specific gatherers.
 	// It may not exceed 100 items and each gatherer can be present only once.
+	// When omitted, this means that all gatherers are enabled.
+	// It is possible to disable an entire set of gatherers while allowing a specific function within that set.
+	// For example, you can disable "gathererOne" while enabling "gathererOne/functionOne."
 	// The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md.
 	// Run the following command to get the names of last active gatherers:
 	// "oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'"
@@ -62,27 +66,19 @@ type GatherConfig struct {
 	// storage is an optional field that allows user to define persistent storage for gathering jobs to store the Insights data archive.
 	// If omitted, the gathering job will use ephemeral storage.
 	// +optional
-	StorageSpec *Storage `json:"storage,omitempty"`
+	Storage *Storage `json:"storage,omitempty"`
 }
 
 // dataPolicyOption declares valid data policy options
-// +kubebuilder:validation:Enum=ClearText;ObfuscateNetworking;WorkloadNames
+// +kubebuilder:validation:Enum=ObfuscateNetworking;WorkloadNames
 type DataPolicyOption string
 
 const (
-	// No data obfuscation
-	DataPolicyOptionClearText DataPolicyOption = "ClearText"
 	// IP addresses and cluster domain name are obfuscated
 	DataPolicyOptionObfuscateNetworking DataPolicyOption = "ObfuscateNetworking"
 	// Data from Deployment Validation Operator are obfuscated
 	DataPolicyOptionObfuscateWorkloadNames DataPolicyOption = "WorkloadNames"
 )
-
-// DataPolicy is a list of data policy options
-// It may not exceed 3 items and must not contain duplicates.
-// +kubebuilder:validation:XValidation:rule="self.all(x, self.exists_one(y, x == y))"
-// +kubebuilder:validation:MaxItems=3
-type DataPolicy []DataPolicyOption
 
 // storage provides persistent storage configuration options for gathering jobs.
 // If the type is set to PersistentVolume, then the PersistentVolume must be defined.
@@ -142,7 +138,7 @@ type PersistentVolumeClaimReference struct {
 type GathererConfig struct {
 	// name is the required name of a specific gatherer
 	// It may not exceed 256 characters.
-	// The format for the disabledGatherer should be: {gatherer}/{function} where the function is optional.
+	// The format for a gatherer name is: {gatherer}/{function} where the function is optional.
 	// Gatherer consists of a lowercase letters only that may include underscores (_).
 	// Function consists of a lowercase letters only that may include underscores (_) and is separated from the gatherer by a forward slash (/).
 	// The particular gatherers can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md.

@@ -197,9 +197,6 @@
                         "name": "VSphereMultiDisk"
                     },
                     {
-                        "name": "VSphereMultiNetworks"
-                    },
-                    {
                         "name": "VolumeAttributesClass"
                     },
                     {
@@ -293,6 +290,9 @@
                     },
                     {
                         "name": "VSphereDriverConfiguration"
+                    },
+                    {
+                        "name": "VSphereMultiNetworks"
                     },
                     {
                         "name": "VSphereMultiVCenters"

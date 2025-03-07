@@ -38,29 +38,30 @@ tests:
             insights:
             - uid: "1234"
               acquiredAt: "2021-01-01T00:00:00Z"
-              type: ClusterVersion
-              clusterVersion:
-                resource:
-                  group: config.openshift.io
-                  resource: clusterversions
-                  name: version
-                assessment: Progressing
-                versions:
-                  previous:
-                    version: "<none>"
-                    metadata:
-                    - key: Installation
-                  target:
-                    version: 4.18.0
-                completion: 42
-                startedAt: "2021-01-01T00:00:00Z"
-                estimatedCompletedAt: "2021-01-01T02:00:00Z"
-                conditions:
-                - type: Updating
-                  status: "True"
-                  lastTransitionTime: "2021-01-01T00:00:00Z"
-                  reason: ClusterVersionProgressing
-                  message: "Installing version 4.18.0"
+              insight:
+                type: ClusterVersion
+                clusterVersion:
+                  resource:
+                    group: config.openshift.io
+                    resource: clusterversions
+                    name: version
+                  assessment: Progressing
+                  versions:
+                    previous:
+                      version: "<none>"
+                      metadata:
+                      - key: Installation
+                    target:
+                      version: 4.18.0
+                  completion: 42
+                  startedAt: "2021-01-01T00:00:00Z"
+                  estimatedCompletedAt: "2021-01-01T02:00:00Z"
+                  conditions:
+                  - type: Updating
+                    status: "True"
+                    lastTransitionTime: "2021-01-01T00:00:00Z"
+                    reason: ClusterVersionProgressing
+                    message: "Installing version 4.18.0"
           conditions:
           - type: Updating
             status: "True"
@@ -86,29 +87,30 @@ tests:
             insights:
             - uid: "1234"
               acquiredAt: "2021-01-01T00:00:00Z"
-              type: ClusterVersion
-              clusterVersion:
-                resource:
-                  group: config.openshift.io
-                  resource: clusterversions
-                  name: version
-                assessment: Progressing
-                versions:
-                  previous:
-                    version: "<none>"
-                    metadata:
-                    - key: Installation
-                  target:
-                    version: 4.18.0
-                completion: 42
-                startedAt: "2021-01-01T00:00:00Z"
-                estimatedCompletedAt: "2021-01-01T02:00:00Z"
-                conditions:
-                - type: Updating
-                  status: "True"
-                  lastTransitionTime: "2021-01-01T00:00:00Z"
-                  reason: ClusterVersionProgressing
-                  message: "Installing version 4.18.0"
+              insight:
+                type: ClusterVersion
+                clusterVersion:
+                  resource:
+                    group: config.openshift.io
+                    resource: clusterversions
+                    name: version
+                  assessment: Progressing
+                  versions:
+                    previous:
+                      version: "<none>"
+                      metadata:
+                      - key: Installation
+                    target:
+                      version: 4.18.0
+                  completion: 42
+                  startedAt: "2021-01-01T00:00:00Z"
+                  estimatedCompletedAt: "2021-01-01T02:00:00Z"
+                  conditions:
+                  - type: Updating
+                    status: "True"
+                    lastTransitionTime: "2021-01-01T00:00:00Z"
+                    reason: ClusterVersionProgressing
+                    message: "Installing version 4.18.0"
           conditions:
           - type: Updating
             status: "True"
@@ -140,29 +142,30 @@ tests:
             insights:
             - uid: "1234"
               acquiredAt: "2021-01-01T00:00:00Z"
-              type: ClusterVersion
-              clusterVersion:
-                resource:
-                  group: config.openshift.io
-                  resource: clusterversions
-                  name: version
-                assessment: Progressing
-                versions:
-                  previous:
-                    version: 4.17.0
-                    metadata:
-                    - key: Partial
-                  target:
-                    version: 4.18.0
-                completion: 42
-                startedAt: "2021-01-01T00:00:00Z"
-                estimatedCompletedAt: "2021-01-01T02:00:00Z"
-                conditions:
-                - type: Updating
-                  status: "True"
-                  lastTransitionTime: "2021-01-01T00:00:00Z"
-                  reason: ClusterVersionProgressing
-                  message: "Installing version 4.18.0"
+              insight:
+                type: ClusterVersion
+                clusterVersion:
+                  resource:
+                    group: config.openshift.io
+                    resource: clusterversions
+                    name: version
+                  assessment: Progressing
+                  versions:
+                    previous:
+                      version: 4.17.0
+                      metadata:
+                      - key: Partial
+                    target:
+                      version: 4.18.0
+                  completion: 42
+                  startedAt: "2021-01-01T00:00:00Z"
+                  estimatedCompletedAt: "2021-01-01T02:00:00Z"
+                  conditions:
+                  - type: Updating
+                    status: "True"
+                    lastTransitionTime: "2021-01-01T00:00:00Z"
+                    reason: ClusterVersionProgressing
+                    message: "Installing version 4.18.0"
           conditions:
           - type: Updating
             status: "True"
@@ -188,29 +191,30 @@ tests:
             insights:
             - uid: "1234"
               acquiredAt: "2021-01-01T00:00:00Z"
-              type: ClusterVersion
-              clusterVersion:
-                resource:
-                  group: config.openshift.io
-                  resource: clusterversions
-                  name: version
-                assessment: Progressing
-                versions:
-                  previous:
-                    version: 4.17.0
-                    metadata:
-                    - key: Partial
-                  target:
-                    version: 4.18.0
-                completion: 42
-                startedAt: "2021-01-01T00:00:00Z"
-                estimatedCompletedAt: "2021-01-01T02:00:00Z"
-                conditions:
-                - type: Updating
-                  status: "True"
-                  lastTransitionTime: "2021-01-01T00:00:00Z"
-                  reason: ClusterVersionProgressing
-                  message: "Installing version 4.18.0"
+              insight:
+                type: ClusterVersion
+                clusterVersion:
+                  resource:
+                    group: config.openshift.io
+                    resource: clusterversions
+                    name: version
+                  assessment: Progressing
+                  versions:
+                    previous:
+                      version: 4.17.0
+                      metadata:
+                      - key: Partial
+                    target:
+                      version: 4.18.0
+                  completion: 42
+                  startedAt: "2021-01-01T00:00:00Z"
+                  estimatedCompletedAt: "2021-01-01T02:00:00Z"
+                  conditions:
+                  - type: Updating
+                    status: "True"
+                    lastTransitionTime: "2021-01-01T00:00:00Z"
+                    reason: ClusterVersionProgressing
+                    message: "Installing version 4.18.0"
           conditions:
           - type: Updating
             status: "True"
@@ -242,27 +246,28 @@ tests:
             insights:
             - uid: "1234"
               acquiredAt: "2021-01-01T00:00:00Z"
-              type: ClusterVersion
-              clusterVersion:
-                resource:
-                  group: config.openshift.io
-                  resource: clusterversions
-                  name: version
-                assessment: Progressing
-                versions:
-                  previous:
-                    version: <none>
-                  target:
-                    version: 4.18.0
-                completion: 42
-                startedAt: "2021-01-01T00:00:00Z"
-                estimatedCompletedAt: "2021-01-01T02:00:00Z"
-                conditions:
-                - type: Updating
-                  status: "True"
-                  lastTransitionTime: "2021-01-01T00:00:00Z"
-                  reason: ClusterVersionProgressing
-                  message: "Installing version 4.18.0"
+              insight:
+                type: ClusterVersion
+                clusterVersion:
+                  resource:
+                    group: config.openshift.io
+                    resource: clusterversions
+                    name: version
+                  assessment: Progressing
+                  versions:
+                    previous:
+                      version: <none>
+                    target:
+                      version: 4.18.0
+                  completion: 42
+                  startedAt: "2021-01-01T00:00:00Z"
+                  estimatedCompletedAt: "2021-01-01T02:00:00Z"
+                  conditions:
+                  - type: Updating
+                    status: "True"
+                    lastTransitionTime: "2021-01-01T00:00:00Z"
+                    reason: ClusterVersionProgressing
+                    message: "Installing version 4.18.0"
           conditions:
           - type: Updating
             status: "True"
@@ -298,29 +303,30 @@ tests:
             insights:
             - uid: "1234"
               acquiredAt: "2021-01-01T00:00:00Z"
-              type: ClusterVersion
-              clusterVersion:
-                resource:
-                  group: config.openshift.io
-                  resource: clusterversions
-                  name: version
-                assessment: Progressing
-                versions:
-                  previous:
-                    version: 4.17.0
-                    metadata:
-                    - key: Installation
-                  target:
-                    version: 4.18.0
-                completion: 42
-                startedAt: "2021-01-01T00:00:00Z"
-                estimatedCompletedAt: "2021-01-01T02:00:00Z"
-                conditions:
-                - type: Updating
-                  status: "True"
-                  lastTransitionTime: "2021-01-01T00:00:00Z"
-                  reason: ClusterVersionProgressing
-                  message: "Installing version 4.18.0"
+              insight:
+                type: ClusterVersion
+                clusterVersion:
+                  resource:
+                    group: config.openshift.io
+                    resource: clusterversions
+                    name: version
+                  assessment: Progressing
+                  versions:
+                    previous:
+                      version: 4.17.0
+                      metadata:
+                      - key: Installation
+                    target:
+                      version: 4.18.0
+                  completion: 42
+                  startedAt: "2021-01-01T00:00:00Z"
+                  estimatedCompletedAt: "2021-01-01T02:00:00Z"
+                  conditions:
+                  - type: Updating
+                    status: "True"
+                    lastTransitionTime: "2021-01-01T00:00:00Z"
+                    reason: ClusterVersionProgressing
+                    message: "Installing version 4.18.0"
           conditions:
           - type: Updating
             status: "True"
@@ -356,29 +362,30 @@ tests:
             insights:
             - uid: "1234"
               acquiredAt: "2021-01-01T00:00:00Z"
-              type: ClusterVersion
-              clusterVersion:
-                resource:
-                  group: config.openshift.io
-                  resource: clusterversions
-                  name: version
-                assessment: Progressing
-                versions:
-                  previous:
-                    version: 4.17.0
-                  target:
-                    version: <none>
-                    metadata:
-                    - key: Installation
-                completion: 42
-                startedAt: "2021-01-01T00:00:00Z"
-                estimatedCompletedAt: "2021-01-01T02:00:00Z"
-                conditions:
-                - type: Updating
-                  status: "True"
-                  lastTransitionTime: "2021-01-01T00:00:00Z"
-                  reason: ClusterVersionProgressing
-                  message: "Installing version 4.18.0"
+              insight:
+                type: ClusterVersion
+                clusterVersion:
+                  resource:
+                    group: config.openshift.io
+                    resource: clusterversions
+                    name: version
+                  assessment: Progressing
+                  versions:
+                    previous:
+                      version: 4.17.0
+                    target:
+                      version: <none>
+                      metadata:
+                      - key: Installation
+                  completion: 42
+                  startedAt: "2021-01-01T00:00:00Z"
+                  estimatedCompletedAt: "2021-01-01T02:00:00Z"
+                  conditions:
+                  - type: Updating
+                    status: "True"
+                    lastTransitionTime: "2021-01-01T00:00:00Z"
+                    reason: ClusterVersionProgressing
+                    message: "Installing version 4.18.0"
           conditions:
           - type: Updating
             status: "True"
@@ -414,29 +421,30 @@ tests:
             insights:
             - uid: "1234"
               acquiredAt: "2021-01-01T00:00:00Z"
-              type: ClusterVersion
-              clusterVersion:
-                resource:
-                  group: config.openshift.io
-                  resource: clusterversions
-                  name: version
-                assessment: Progressing
-                versions:
-                  previous:
-                    version: 4.17.0
-                  target:
-                    version: 4.18.0
-                    metadata:
-                    - key: Installation
-                completion: 42
-                startedAt: "2021-01-01T00:00:00Z"
-                estimatedCompletedAt: "2021-01-01T02:00:00Z"
-                conditions:
-                - type: Updating
-                  status: "True"
-                  lastTransitionTime: "2021-01-01T00:00:00Z"
-                  reason: ClusterVersionProgressing
-                  message: "Installing version 4.18.0"
+              insight:
+                type: ClusterVersion
+                clusterVersion:
+                  resource:
+                    group: config.openshift.io
+                    resource: clusterversions
+                    name: version
+                  assessment: Progressing
+                  versions:
+                    previous:
+                      version: 4.17.0
+                    target:
+                      version: 4.18.0
+                      metadata:
+                      - key: Installation
+                  completion: 42
+                  startedAt: "2021-01-01T00:00:00Z"
+                  estimatedCompletedAt: "2021-01-01T02:00:00Z"
+                  conditions:
+                  - type: Updating
+                    status: "True"
+                    lastTransitionTime: "2021-01-01T00:00:00Z"
+                    reason: ClusterVersionProgressing
+                    message: "Installing version 4.18.0"
           conditions:
           - type: Updating
             status: "True"
@@ -511,6 +519,106 @@ tests:
       spec: {}
     expectedStatusError: "Invalid value: \"object\": controlPlane.poolResource must be a machineconfigpools.machineconfiguration.openshift.io resource"
 
+  - name: UpdateStatus can contain a workerPools item represented by MCP
+    initial: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: UpdateStatus
+      spec: {}
+    updated: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: UpdateStatus
+      spec: {}
+      status:
+        workerPools:
+        - name: worker
+          resource:
+            group: machineconfiguration.openshift.io
+            resource: machineconfigpools
+            name: worker
+    expected: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: UpdateStatus
+      spec: {}
+      status:
+        workerPools:
+        - name: worker
+          resource:
+            group: machineconfiguration.openshift.io
+            resource: machineconfigpools
+            name: worker
+
+  - name: UpdateStatus can contain a workerPools item represented by NodePool
+    initial: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: UpdateStatus
+      spec: {}
+    updated: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: UpdateStatus
+      spec: {}
+      status:
+        workerPools:
+        - name: worker
+          resource:
+            group: hypershift.openshift.io
+            resource: nodepools
+            name: worker
+    expected: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: UpdateStatus
+      spec: {}
+      status:
+        workerPools:
+        - name: worker
+          resource:
+            group: hypershift.openshift.io
+            resource: nodepools
+            name: worker
+
+  - name: UpdateStatus refuses workerPools item that is not represented by MCP or NodePool
+    initial: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: UpdateStatus
+      spec: {}
+    updated: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: UpdateStatus
+      spec: {}
+      status:
+       workerPools:
+       - name: worker
+         resource:
+           group: config.openshift.io
+           resource: clusteroperators
+           name: worker
+    expected: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: UpdateStatus
+      spec: {}
+    expectedStatusError: "Invalid value: \"object\": workerPools[].poolResource must be a machineconfigpools.machineconfiguration.openshift.io or hostedclusters.hypershift.openshift.io resource"
+
+  - name: UpdateStatus refuses workerPools item where name does not match the resource
+    initial: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: UpdateStatus
+      spec: {}
+    updated: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: UpdateStatus
+      spec: {}
+      status:
+       workerPools:
+       - name: worker
+         resource:
+           group: machineconfiguration.openshift.io
+           resource: machineconfigpools
+           name: not-worker
+    expected: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: UpdateStatus
+      spec: {}
+    expectedStatusError: "Invalid value: \"object\": workerPools .name must match .resource.name"
+
   - name: UpdateStatus can contain a ClusterOperator insight
     initial: |
       apiVersion: update.openshift.io/v1alpha1
@@ -531,24 +639,25 @@ tests:
             insights:
             - uid: "1234"
               acquiredAt: "2021-01-01T00:00:00Z"
-              type: ClusterOperator
-              clusterOperator:
-                name: image-registry
-                resource:
-                  group: config.openshift.io
-                  resource: clusteroperators
+              insight:
+                type: ClusterOperator
+                clusterOperator:
                   name: image-registry
-                conditions:
-                - type: Updating
-                  status: "False"
-                  lastTransitionTime: "2021-01-01T00:00:00Z"
-                  reason: Pending
-                  message: Waiting to be updated
-                - type: Healthy
-                  status: "False"
-                  lastTransitionTime: "2021-01-01T00:00:00Z"
-                  reason: Degraded
-                  message: Image registry is degraded
+                  resource:
+                    group: config.openshift.io
+                    resource: clusteroperators
+                    name: image-registry
+                  conditions:
+                  - type: Updating
+                    status: "False"
+                    lastTransitionTime: "2021-01-01T00:00:00Z"
+                    reason: Pending
+                    message: Waiting to be updated
+                  - type: Healthy
+                    status: "False"
+                    lastTransitionTime: "2021-01-01T00:00:00Z"
+                    reason: Degraded
+                    message: Image registry is degraded
           conditions: []
     expected: |
       apiVersion: update.openshift.io/v1alpha1
@@ -565,24 +674,25 @@ tests:
             insights:
             - uid: "1234"
               acquiredAt: "2021-01-01T00:00:00Z"
-              type: ClusterOperator
-              clusterOperator:
-                name: image-registry
-                resource:
-                  group: config.openshift.io
-                  resource: clusteroperators
+              insight:
+                type: ClusterOperator
+                clusterOperator:
                   name: image-registry
-                conditions:
-                - type: Updating
-                  status: "False"
-                  lastTransitionTime: "2021-01-01T00:00:00Z"
-                  reason: Pending
-                  message: Waiting to be updated
-                - type: Healthy
-                  status: "False"
-                  lastTransitionTime: "2021-01-01T00:00:00Z"
-                  reason: Degraded
-                  message: Image registry is degraded
+                  resource:
+                    group: config.openshift.io
+                    resource: clusteroperators
+                    name: image-registry
+                  conditions:
+                  - type: Updating
+                    status: "False"
+                    lastTransitionTime: "2021-01-01T00:00:00Z"
+                    reason: Pending
+                    message: Waiting to be updated
+                  - type: Healthy
+                    status: "False"
+                    lastTransitionTime: "2021-01-01T00:00:00Z"
+                    reason: Degraded
+                    message: Image registry is degraded
           conditions: []
 
   - name: UpdateStatus can contain a MachineConfigPool insight
@@ -613,21 +723,22 @@ tests:
             insights:
             - uid: "1234"
               acquiredAt: "2021-01-01T00:00:00Z"
-              type: MachineConfigPool
-              machineConfigPool:
-                name: image-registry
-                resource:
-                  group: machineconfiguration.openshift.io
-                  resource: machineconfigpools
-                  name: worker
-                scopeType: WorkerPool
-                assessment: Completed
-                completion: 100
-                summaries:
-                - type: Total
-                  count: 8
-                - type: Outdated
-                  count: 0
+              insight:
+                type: MachineConfigPool
+                machineConfigPool:
+                  name: image-registry
+                  resource:
+                    group: machineconfiguration.openshift.io
+                    resource: machineconfigpools
+                    name: worker
+                  scopeType: WorkerPool
+                  assessment: Completed
+                  completion: 100
+                  summaries:
+                  - type: Total
+                    count: 8
+                  - type: Outdated
+                    count: 0
           conditions: []
     expected: |
       apiVersion: update.openshift.io/v1alpha1
@@ -652,21 +763,22 @@ tests:
             insights:
             - uid: "1234"
               acquiredAt: "2021-01-01T00:00:00Z"
-              type: MachineConfigPool
-              machineConfigPool:
-                name: image-registry
-                resource:
-                  group: machineconfiguration.openshift.io
-                  resource: machineconfigpools
-                  name: worker
-                scopeType: WorkerPool
-                assessment: Completed
-                completion: 100
-                summaries:
-                - type: Total
-                  count: 8
-                - type: Outdated
-                  count: 0
+              insight:
+                type: MachineConfigPool
+                machineConfigPool:
+                  name: image-registry
+                  resource:
+                    group: machineconfiguration.openshift.io
+                    resource: machineconfigpools
+                    name: worker
+                  scopeType: WorkerPool
+                  assessment: Completed
+                  completion: 100
+                  summaries:
+                  - type: Total
+                    count: 8
+                  - type: Outdated
+                    count: 0
           conditions: []
   - name: UpdateStatus can contain a Node insight
     initial: |
@@ -696,36 +808,37 @@ tests:
             insights:
             - uid: "1234"
               acquiredAt: "2021-01-01T00:00:00Z"
-              type: Node
-              node:
-                name: node-42
-                resource:
-                  resource: nodes
+              insight:
+                type: Node
+                node:
                   name: node-42
-                poolResource:
-                  group: machineconfiguration.openshift.io
-                  resource: machineconfigpools
-                  name: worker
-                scopeType: WorkerPool
-                version: 4.18.0
-                estToComplete: 42m
-                message: "Unschedulable | Disk Pressure"
-                conditions:
-                - type: Updating
-                  status: "True"
-                  lastTransitionTime: "2021-01-01T00:00:00Z"
-                  reason: Draining
-                  message: "Node is draining"
-                - type: Degraded
-                  status: "False"
-                  lastTransitionTime: "2021-01-01T00:00:00Z"
-                  reason: AsExpected
-                  message: "All is well"
-                - type: Available
-                  status: "False"
-                  lastTransitionTime: "2021-01-01T00:00:00Z"
-                  reason: MultipleReasons
+                  resource:
+                    resource: nodes
+                    name: node-42
+                  poolResource:
+                    group: machineconfiguration.openshift.io
+                    resource: machineconfigpools
+                    name: worker
+                  scopeType: WorkerPool
+                  version: 4.18.0
+                  estToComplete: 42m
                   message: "Unschedulable | Disk Pressure"
+                  conditions:
+                  - type: Updating
+                    status: "True"
+                    lastTransitionTime: "2021-01-01T00:00:00Z"
+                    reason: Draining
+                    message: "Node is draining"
+                  - type: Degraded
+                    status: "False"
+                    lastTransitionTime: "2021-01-01T00:00:00Z"
+                    reason: AsExpected
+                    message: "All is well"
+                  - type: Available
+                    status: "False"
+                    lastTransitionTime: "2021-01-01T00:00:00Z"
+                    reason: MultipleReasons
+                    message: "Unschedulable | Disk Pressure"
     expected: |
       apiVersion: update.openshift.io/v1alpha1
       kind: UpdateStatus
@@ -749,36 +862,37 @@ tests:
             insights:
             - uid: "1234"
               acquiredAt: "2021-01-01T00:00:00Z"
-              type: Node
-              node:
-                name: node-42
-                resource:
-                  resource: nodes
+              insight:
+                type: Node
+                node:
                   name: node-42
-                poolResource:
-                  group: machineconfiguration.openshift.io
-                  resource: machineconfigpools
-                  name: worker
-                scopeType: WorkerPool
-                version: 4.18.0
-                estToComplete: 42m
-                message: "Unschedulable | Disk Pressure"
-                conditions:
-                - type: Updating
-                  status: "True"
-                  lastTransitionTime: "2021-01-01T00:00:00Z"
-                  reason: Draining
-                  message: "Node is draining"
-                - type: Degraded
-                  status: "False"
-                  lastTransitionTime: "2021-01-01T00:00:00Z"
-                  reason: AsExpected
-                  message: "All is well"
-                - type: Available
-                  status: "False"
-                  lastTransitionTime: "2021-01-01T00:00:00Z"
-                  reason: MultipleReasons
+                  resource:
+                    resource: nodes
+                    name: node-42
+                  poolResource:
+                    group: machineconfiguration.openshift.io
+                    resource: machineconfigpools
+                    name: worker
+                  scopeType: WorkerPool
+                  version: 4.18.0
+                  estToComplete: 42m
                   message: "Unschedulable | Disk Pressure"
+                  conditions:
+                  - type: Updating
+                    status: "True"
+                    lastTransitionTime: "2021-01-01T00:00:00Z"
+                    reason: Draining
+                    message: "Node is draining"
+                  - type: Degraded
+                    status: "False"
+                    lastTransitionTime: "2021-01-01T00:00:00Z"
+                    reason: AsExpected
+                    message: "All is well"
+                  - type: Available
+                    status: "False"
+                    lastTransitionTime: "2021-01-01T00:00:00Z"
+                    reason: MultipleReasons
+                    message: "Unschedulable | Disk Pressure"
 
   - name: UpdateStatus can contain a Health insight
     initial: |
@@ -800,25 +914,26 @@ tests:
             insights:
             - uid: "4331"
               acquiredAt: "2021-01-01T00:00:00Z"
-              type: Health
-              health:
-                startedAt: "2021-01-01T00:00:00Z"
-                scope:
-                  type: ControlPlane
-                  resources:
-                  - group: config.openshift.io
-                    resource: clusterversions
-                    name: version
-                  - resource: nodes
-                    name: node-42
-                impact:
-                  level: Error
-                  type: Cluster Capacity
-                  summary: Something that involves a CV and node-42 and affects capacity
-                  description: Potentially longer description of the issue
-                remediation:
-                  reference: https://access.redhat.com/solutions/1234
-                  estimatedFinish: "2021-01-01T02:00:00Z"
+              insight:
+                type: Health
+                health:
+                  startedAt: "2021-01-01T00:00:00Z"
+                  scope:
+                    type: ControlPlane
+                    resources:
+                    - group: config.openshift.io
+                      resource: clusterversions
+                      name: version
+                    - resource: nodes
+                      name: node-42
+                  impact:
+                    level: Error
+                    type: Cluster Capacity
+                    summary: Something that involves a CV and node-42 and affects capacity
+                    description: Potentially longer description of the issue
+                  remediation:
+                    reference: https://access.redhat.com/solutions/1234
+                    estimatedFinish: "2021-01-01T02:00:00Z"
           conditions: []
     expected: |
       apiVersion: update.openshift.io/v1alpha1
@@ -835,23 +950,24 @@ tests:
             insights:
             - uid: "4331"
               acquiredAt: "2021-01-01T00:00:00Z"
-              type: Health
-              health:
-                startedAt: "2021-01-01T00:00:00Z"
-                scope:
-                  type: ControlPlane
-                  resources:
-                  - group: config.openshift.io
-                    resource: clusterversions
-                    name: version
-                  - resource: nodes
-                    name: node-42
-                impact:
-                  level: Error
-                  type: Cluster Capacity
-                  summary: Something that involves a CV and node-42 and affects capacity
-                  description: Potentially longer description of the issue
-                remediation:
-                  reference: https://access.redhat.com/solutions/1234
-                  estimatedFinish: "2021-01-01T02:00:00Z"
+              insight:
+                type: Health
+                health:
+                  startedAt: "2021-01-01T00:00:00Z"
+                  scope:
+                    type: ControlPlane
+                    resources:
+                    - group: config.openshift.io
+                      resource: clusterversions
+                      name: version
+                    - resource: nodes
+                      name: node-42
+                  impact:
+                    level: Error
+                    type: Cluster Capacity
+                    summary: Something that involves a CV and node-42 and affects capacity
+                    description: Potentially longer description of the issue
+                  remediation:
+                    reference: https://access.redhat.com/solutions/1234
+                    estimatedFinish: "2021-01-01T02:00:00Z"
           conditions: []

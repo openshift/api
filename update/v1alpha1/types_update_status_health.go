@@ -30,7 +30,7 @@ type InsightScope struct {
 	// +required
 	Type ScopeType `json:"type"`
 
-	// resources is a list of resources involved in the insight, of any group/kind
+	// resources is a list of resources involved in the insight, of any group/kind. Maximum 16 resources can be listed.
 	// +optional
 	// +listType=atomic
 	// +kubebuilder:validation:MaxItems=16
@@ -50,22 +50,24 @@ const (
 
 // InsightImpact describes the impact the reported condition has on the cluster or update
 type InsightImpact struct {
-	// level is the severity of the impact
+	// level is the severity of the impact. Valid values are Unknown, Info, Warning, Error, Critical.
 	// +required
 	Level InsightImpactLevel `json:"level"`
 
-	// type is the type of the impact
+	// type is the type of the impact. Valid values are None, Unknown, API Availability, Cluster Capacity,
+	// Application Availability, Application Outage, Data Loss, Update Speed, Update Stalled.
 	// +required
 	Type InsightImpactType `json:"type"`
 
-	// summary is a short summary of the impact
+	// summary is a short summary of the impact. It must not be empty and must be shorter than 256 characters.
 	// +required
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:MaxLength=256
 	// +kubebuilder:validation:MinLength=1
 	Summary string `json:"summary"`
 
-	// description is a human-oriented, possibly longer-form description of the condition reported by the insight
+	// description is a human-oriented, possibly longer-form description of the condition reported by the insight It must
+	// be shorter than 4096 characters.
 	// +optional
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:MaxLength=4096
@@ -117,8 +119,8 @@ type InsightRemediation struct {
 	// reference is a URL where administrators can find information to resolve or prevent the reported condition
 	// +required
 	// +kubebuilder:validation:Type=string
-	// +kubebuilder:validation:Format=uri
 	// +kubebuilder:validation:MaxLength=512
+	// +kubebuilder:validation:XValidation:rule="isURL(self)",message="reference must a valid URL"
 	Reference string `json:"reference"`
 
 	// estimatedFinish is the estimated time when the informer expects the condition to be resolved, if applicable.

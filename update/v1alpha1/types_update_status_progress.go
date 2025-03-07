@@ -5,7 +5,9 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // ClusterVersionStatusInsight reports the state of a ClusterVersion resource (which represents a control plane
 // update in standalone clusters), during the update.
 type ClusterVersionStatusInsight struct {
-	// conditions provides detailed observed conditions about ClusterVersion
+	// conditions provides detailed observed conditions about ClusterVersion. It contains at most 10 items.
+	// Known conditions are:
+	// - Updating: whether the control plane (represented by this ClusterVersion) is updating
 	// +listType=map
 	// +listMapKey=type
 	// +patchStrategy=merge
@@ -16,14 +18,15 @@ type ClusterVersionStatusInsight struct {
 
 	// resource is the ClusterVersion resource that represents the control plane
 	//
-	// Note: By OpenShift API conventions, in isolation this should be a specialized reference that refers just to
-	// resource name (because the rest is implied by status insight type). However, because we use resource references in
-	// many places and this API is intended to be consumed by clients, not produced, consistency seems to be more valuable
-	// than type safety for producers.
+	// +Note: By OpenShift API conventions, in isolation this should be a specialized reference that refers just to
+	// +resource name (because the rest is implied by status insight type). However, because we use resource references in
+	// +many places and this API is intended to be consumed by clients, not produced, consistency seems to be more valuable
+	// +than type safety for producers.
 	// +required
+	// +kubebuilder:validation:XValidation:rule="self.group == 'config.openshift.io' && self.resource == 'clusterversions'",message="resource must be a clusterversions.config.openshift.io resource"
 	Resource ResourceRef `json:"resource"`
 
-	// assessment is the assessment of the control plane update process
+	// assessment is the assessment of the control plane update process. Valid values are: Unknown, Progressing, Completed, Degraded
 	// +required
 	Assessment ControlPlaneAssessment `json:"assessment"`
 
@@ -92,12 +95,14 @@ type Version struct {
 	// with key 'Installation'
 	// +required
 	// +kubebuilder:validation:Type=string
-	// +kubebuilder:validation:MinLength=5
 	// +kubebuilder:validation:MaxLength=64
+	// +kubebuilder:validation:Pattern=`^(<none>)|((?:0|[1-9]\d*)[.](?:0|[1-9]\d*)[.](?:0|[1-9]\d*)(?:-(?:(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:[.](?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?)?$`
+	// +kubebuilder:validation:XValidation:rule="self.version == '<none>' ? (has(self.metadata) && self.metadata.exists(m, m.key == 'Installation')) : !(has(self.metadata) && self.metadata.exists(m, m.key == 'Installation'))",message="previous version must be '<none>' iff marked with Installation metadata"
 	Version string `json:"version"`
 
 	// metadata is a list of metadata associated with the version. It is a list of key-value pairs. The value is optional
-	// and when not provided, the metadata item has boolean semantics (presence indicates true)
+	// and when not provided, the metadata item has boolean semantics (presence indicates true). For example, 'Partial'
+	// metadata on a previous version indicates that the previous update was never fully completed. Can contain at most 5 items.
 	// +listType=map
 	// +listMapKey=key
 	// +patchStrategy=merge
@@ -110,11 +115,13 @@ type Version struct {
 // VersionMetadata is a key:value item assigned to version involved in the update. Value can be empty, then the metadata
 // have boolean semantics (true when present, false when absent)
 type VersionMetadata struct {
-	// key is the name of this metadata value
+	// key is the name of this metadata value. Valid values are: Installation, Partial, Architecture
 	// +required
 	Key VersionMetadataKey `json:"key"`
 
-	// value is the value for the metadata
+	// value is the value for the metadata, at most 32 characters long. It is not expected to be provided for Installation
+	// and Partial metadata. For Architecture metadata, it is expected to be a string that indicates the architecture of the
+	// payload image of the version involved in the upgrade, when relevant.
 	// +optional
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:MaxLength=32
@@ -159,7 +166,9 @@ const (
 // ClusterOperatorStatusInsight reports the state of a ClusterOperator resource (which represents a control plane
 // component update in standalone clusters), during the update
 type ClusterOperatorStatusInsight struct {
-	// conditions provide details about the operator
+	// conditions provide details about the operator. It contains at most 10 items. Known conditions are:
+	// - Updating: whether the operator is updating; When Updating=False, the reason field can be Pending or Updated
+	// - Healthy: whether the operator is considered healthy; When Healthy=False, the reason field can be Unavailable or Degraded, and Unavailable is "stronger" than Degraded
 	// +listType=map
 	// +listMapKey=type
 	// +patchStrategy=merge
@@ -178,11 +187,12 @@ type ClusterOperatorStatusInsight struct {
 
 	// resource is the ClusterOperator resource that represents the operator
 	//
-	// Note: By OpenShift API conventions, in isolation this should be a specialized reference that refers just to
-	// resource name (because the rest is implied by status insight type). However, because we use resource references in
-	// many places and this API is intended to be consumed by clients, not produced, consistency seems to be more valuable
-	// than type safety for producers.
+	// +Note: By OpenShift API conventions, in isolation this should be a specialized reference that refers just to
+	// +resource name (because the rest is implied by status insight type). However, because we use resource references in
+	// +many places and this API is intended to be consumed by clients, not produced, consistency seems to be more valuable
+	// +than type safety for producers.
 	// +required
+	// +kubebuilder:validation:XValidation:rule="self.group == 'config.openshift.io' && self.resource == 'clusteroperators'",message="resource must be a clusteroperators.config.openshift.io resource"
 	Resource ResourceRef `json:"resource"`
 }
 
@@ -226,7 +236,8 @@ const (
 
 // MachineConfigPoolStatusInsight reports the state of a MachineConfigPool resource during the update
 type MachineConfigPoolStatusInsight struct {
-	// conditions provide details about the machine config pool update
+	// conditions provide details about the machine config pool update. It contains at most 10 items. Known conditions are:
+	// - Updating: whether the pool is updating; When Updating=False, the reason field can be Pending, Updated or Excluded
 	// +listType=map
 	// +listMapKey=type
 	// +patchStrategy=merge
@@ -250,13 +261,14 @@ type MachineConfigPoolStatusInsight struct {
 	// many places and this API is intended to be consumed by clients, not produced, consistency seems to be more valuable
 	// than type safety for producers.
 	// +required
+	// +kubebuilder:validation:XValidation:rule="self.group == 'machineconfiguration.openshift.io' && self.resource == 'machineconfigpools'",message="resource must be a machineconfigpools.machineconfiguration.openshift.io resource"
 	Resource PoolResourceRef `json:"resource"`
 
 	// scopeType describes whether the pool is a control plane or a worker pool
 	// +required
 	Scope ScopeType `json:"scopeType"`
 
-	// assessment is the assessment of the machine config pool update process
+	// assessment is the assessment of the machine config pool update process. Valid values are: Pending, Completed, Degraded, Excluded, Progressing
 	// +required
 	Assessment PoolAssessment `json:"assessment"`
 
@@ -266,7 +278,7 @@ type MachineConfigPoolStatusInsight struct {
 	// +kubebuilder:validation:Maximum=100
 	Completion int32 `json:"completion"`
 
-	// summaries is a list of counts of nodes matching certain criteria (e.g. updated, degraded, etc.)
+	// summaries is a list of counts of nodes matching certain criteria (e.g. updated, degraded, etc.). Maximum 16 items can be listed.
 	// +listType=map
 	// +listMapKey=type
 	// +patchStrategy=merge
@@ -296,7 +308,8 @@ const (
 
 // NodeSummary is a count of nodes matching certain criteria (e.g. updated, degraded, etc.)
 type NodeSummary struct {
-	// type is the type of the summary
+	// type is the type of the summary. Valid values are: Total, Available, Progressing, Outdated, Draining, Excluded, Degraded
+	// The summaries are not exclusive, a single node may be counted in multiple summaries.
 	// +required
 	Type NodeSummaryType `json:"type"`
 
@@ -332,7 +345,10 @@ const (
 
 // NodeStatusInsight reports the state of a Node during the update
 type NodeStatusInsight struct {
-	// conditions provides details about the control plane update
+	// conditions provides details about the control plane update. Known conditions are:
+	// - Updating: whether the Node is updating; When Updating=False, the reason field can be Updated, Pending, or Paused. When Updating=True, the reason field can be Draining, Updating, or Rebooting
+	// - Available: whether the Node is available (accepting workloads)
+	// - Degraded: whether the Node is degraded (problem observed)
 	// +listType=map
 	// +listMapKey=type
 	// +patchStrategy=merge
@@ -355,6 +371,7 @@ type NodeStatusInsight struct {
 	// many places and this API is intended to be consumed by clients, not produced, consistency seems to be more valuable
 	// than type safety for producers.
 	// +required
+	// +kubebuilder:validation:XValidation:rule="self.group == '' && self.resource == 'nodes'",message="resource must be a nodes.core.k8s.io resource"
 	Resource ResourceRef `json:"resource"`
 
 	// poolResource is the resource that represents the pool the node is a member of
@@ -364,6 +381,7 @@ type NodeStatusInsight struct {
 	// resource references in many places and this API is intended to be consumed by clients, not produced, consistency
 	// seems to be more valuable than type safety for producers.
 	// +required
+	// +kubebuilder:validation:XValidation:rule="self.group == 'machineconfiguration.openshift.io' && self.resource == 'machineconfigpools'",message="resource must be a machineconfigpools.machineconfiguration.openshift.io resource"
 	PoolResource PoolResourceRef `json:"poolResource"`
 
 	// scopeType describes whether the node belongs to control plane or a worker pool
@@ -374,15 +392,16 @@ type NodeStatusInsight struct {
 	// +optional
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:MaxLength=64
+	// +kubebuilder:validation:Pattern=`^((?:0|[1-9]\d*)[.](?:0|[1-9]\d*)[.](?:0|[1-9]\d*)(?:-(?:(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:[.](?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?)?$`
 	Version string `json:"version,omitempty"`
 
-	// estToComplete is the estimated time to complete the update, when known
+	// estimatedToComplete is the estimated time to complete the update, when known
 	// +optional
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:Format=duration
-	EstToComplete *metav1.Duration `json:"estToComplete,omitempty"`
+	EstimatedToComplete *metav1.Duration `json:"estimatedToComplete,omitempty"`
 
-	// message is a short human-readable message about the node update status
+	// message is a short human-readable message about the node update status. It must be shorter than 100 characters.
 	// +optional
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:MaxLength=100

@@ -511,6 +511,106 @@ tests:
       spec: {}
     expectedStatusError: "Invalid value: \"object\": controlPlane.poolResource must be a machineconfigpools.machineconfiguration.openshift.io resource"
 
+  - name: UpdateStatus can contain a workerPools item represented by MCP
+    initial: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: UpdateStatus
+      spec: {}
+    updated: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: UpdateStatus
+      spec: {}
+      status:
+        workerPools:
+        - name: worker
+          resource:
+            group: machineconfiguration.openshift.io
+            resource: machineconfigpools
+            name: worker
+    expected: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: UpdateStatus
+      spec: {}
+      status:
+        workerPools:
+        - name: worker
+          resource:
+            group: machineconfiguration.openshift.io
+            resource: machineconfigpools
+            name: worker
+
+  - name: UpdateStatus can contain a workerPools item represented by NodePool
+    initial: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: UpdateStatus
+      spec: {}
+    updated: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: UpdateStatus
+      spec: {}
+      status:
+        workerPools:
+        - name: worker
+          resource:
+            group: hypershift.openshift.io
+            resource: nodepools
+            name: worker
+    expected: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: UpdateStatus
+      spec: {}
+      status:
+        workerPools:
+        - name: worker
+          resource:
+            group: hypershift.openshift.io
+            resource: nodepools
+            name: worker
+
+  - name: UpdateStatus refuses workerPools item that is not represented by MCP or NodePool
+    initial: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: UpdateStatus
+      spec: {}
+    updated: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: UpdateStatus
+      spec: {}
+      status:
+       workerPools:
+       - name: worker
+         resource:
+           group: config.openshift.io
+           resource: clusteroperators
+           name: worker
+    expected: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: UpdateStatus
+      spec: {}
+    expectedStatusError: "Invalid value: \"object\": workerPools[].poolResource must be a machineconfigpools.machineconfiguration.openshift.io or hostedclusters.hypershift.openshift.io resource"
+
+  - name: UpdateStatus refuses workerPools item where name does not match the resource
+    initial: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: UpdateStatus
+      spec: {}
+    updated: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: UpdateStatus
+      spec: {}
+      status:
+       workerPools:
+       - name: worker
+         resource:
+           group: machineconfiguration.openshift.io
+           resource: machineconfigpools
+           name: not-worker
+    expected: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: UpdateStatus
+      spec: {}
+    expectedStatusError: "Invalid value: \"object\": workerPools .name must match .resource.name"
+
   - name: UpdateStatus can contain a ClusterOperator insight
     initial: |
       apiVersion: update.openshift.io/v1alpha1

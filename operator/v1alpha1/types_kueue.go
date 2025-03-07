@@ -13,6 +13,7 @@ import (
 // +openshift:compatibility-gen:level=4
 // +k8s:openapi-gen=true
 // +genclient
+// +genclient:nonNamespaced
 // +kubebuilder:storageversion
 // +kubebuilder:subresource:status
 type Kueue struct {
@@ -45,6 +46,13 @@ const (
 	QueueName ManageJobsWithoutQueueNameOption = "QueueName"
 )
 
+type EnabledOrDisabled string
+
+const (
+	Enabled  EnabledOrDisabled = "Enabled"
+	Disabled EnabledOrDisabled = "Disabled"
+)
+
 type KueueConfiguration struct {
 	// waitForPodsReady configures gang admission
 	// +optional
@@ -54,27 +62,30 @@ type KueueConfiguration struct {
 	Integrations Integrations `json:"integrations"`
 	// featureGates are advanced features for Kueue
 	// +optional
-	FeatureGates map[string]bool `json:"featureGates,omitempty"`
+	FeatureGates map[string]EnabledOrDisabled `json:"featureGates,omitempty"`
 	// resources provides additional configuration options for handling the resources.
 	// Supports https://github.com/kubernetes-sigs/kueue/blob/release-0.10/keps/2937-resource-transformer/README.md
 	// +optional
 	Resources Resources `json:"resources,omitempty"`
-	// ManageJobsWithoutQueueName controls whether or not Kueue reconciles
+	// manageJobsWithoutQueueName controls whether or not Kueue reconciles
 	// jobs that don't set the annotation kueue.x-k8s.io/queue-name.
 	// Allowed values are NoQueueName and QueueName
 	// Default will be QueueName
+	// +kubebuilder:default=QueueName
 	// +optional
 	ManageJobsWithoutQueueName *ManageJobsWithoutQueueNameOption `json:"manageJobsWithoutQueueName,omitempty"`
-	// ManagedJobsNamespaceSelector can be used to omit some namespaces from ManagedJobsWithoutQueueName
+	// managedJobsNamespaceSelector can be used to omit some namespaces from ManagedJobsWithoutQueueName
+	// Only valid if ManagedJobsWithoutQueueName is NoQueueName
 	// +optional
 	ManagedJobsNamespaceSelector *metav1.LabelSelector `json:"managedJobsNamespaceSelector,omitempty"`
-	// FairSharing controls the fair sharing semantics across the cluster.
+	// fairSharing controls the fair sharing semantics across the cluster.
 	FairSharing FairSharing `json:"fairSharing,omitempty"`
-	// Disable Metrics
+	// ,etrics
 	// Microshift does not enable metrics by default
 	// Default will assume metrics are enabled.
-	// +optional
-	DisableMetrics *bool `json:"disableMetrics,omitempty"`
+	// +kubebuilder:default=Enabled
+	// +required
+	Metrics *EnabledOrDisabled `json:"metrics,omitempty"`
 }
 
 // KueueStatus defines the observed state of Kueue
@@ -101,11 +112,13 @@ type KueueList struct {
 // These structs come directly from Kueue.
 
 type Resources struct {
-	// ExcludedResourcePrefixes defines which resources should be ignored by Kueue
+	// excludedResourcePrefixes defines which resources should be ignored by Kueue
+	// +optional
 	ExcludeResourcePrefixes []string `json:"excludeResourcePrefixes,omitempty"`
 
-	// Transformations defines how to transform PodSpec resources into Workload resource requests.
+	// transformations defines how to transform PodSpec resources into Workload resource requests.
 	// This is intended to be a map with Input as the key (enforced by validation code)
+	// +optional
 	Transformations []ResourceTransformation `json:"transformations,omitempty"`
 }
 
@@ -115,15 +128,20 @@ const Retain ResourceTransformationStrategy = "Retain"
 const Replace ResourceTransformationStrategy = "Replace"
 
 type ResourceTransformation struct {
-	// Input is the name of the input resource.
+	// input is the name of the input resource.
+	// +required
 	Input corev1.ResourceName `json:"input"`
 
-	// Strategy specifies if the input resource should be replaced or retained.
+	// strategy specifies if the input resource should be replaced or retained.
 	// Defaults to Retain
+	// +kubebuilder:default=Retain
+	// +kubebuilder:validation:MaxLength=6
+	// +optional
 	Strategy *ResourceTransformationStrategy `json:"strategy,omitempty"`
 
-	// Outputs specifies the output resources and quantities per unit of input resource.
+	// outputs specifies the output resources and quantities per unit of input resource.
 	// An empty Outputs combined with a `Replace` Strategy causes the Input resource to be ignored by Kueue.
+	// +optional
 	Outputs corev1.ResourceList `json:"outputs,omitempty"`
 }
 
@@ -137,7 +155,9 @@ const (
 type FairSharing struct {
 	// enable indicates whether to enable fair sharing for all cohorts.
 	// Defaults to false.
-	Enable bool `json:"enable"`
+	// +kubebuilder:default=Disabled
+	// +optional
+	Enable EnabledOrDisabled `json:"enable"`
 
 	// preemptionStrategies indicates which constraints should a preemption satisfy.
 	// The preemption algorithm will only use the next strategy in the list if the
@@ -161,27 +181,24 @@ type FairSharing struct {
 // WaitForPodsReady defines configuration for the Wait For Pods Ready feature,
 // which is used to ensure that all Pods are ready within the specified time.
 type WaitForPodsReady struct {
-	// Enable indicates whether to enable wait for pods ready feature.
-	// Defaults to false.
-	Enable bool `json:"enable,omitempty"`
-
-	// Timeout defines the time for an admitted workload to reach the
+	// timeout defines the time for an admitted workload to reach the
 	// PodsReady=true condition. When the timeout is exceeded, the workload
 	// evicted and requeued in the same cluster queue.
 	// Defaults to 5min.
 	// +optional
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
 
-	// BlockAdmission when true, cluster queue will block admissions for all
+	// blockAdmission when true, cluster queue will block admissions for all
 	// subsequent jobs until the jobs reach the PodsReady=true condition.
 	// This setting is only honored when `Enable` is set to true.
-	BlockAdmission *bool `json:"blockAdmission,omitempty"`
+	// +optional
+	BlockAdmission *EnabledOrDisabled `json:"blockAdmission,omitempty"`
 
-	// RequeuingStrategy defines the strategy for requeuing a Workload.
+	// requeuingStrategy defines the strategy for requeuing a Workload.
 	// +optional
 	RequeuingStrategy *RequeuingStrategy `json:"requeuingStrategy,omitempty"`
 
-	// RecoveryTimeout defines an opt-in timeout, measured since the
+	// recoveryTimeout defines an opt-in timeout, measured since the
 	// last transition to the PodsReady=false condition after a Workload is Admitted and running.
 	// Such a transition may happen when a Pod failed and the replacement Pod
 	// is awaited to be scheduled.
@@ -192,30 +209,8 @@ type WaitForPodsReady struct {
 	RecoveryTimeout *metav1.Duration `json:"recoveryTimeout,omitempty"`
 }
 
-type MultiKueue struct {
-	// GCInterval defines the time interval between two consecutive garbage collection runs.
-	// Defaults to 1min. If 0, the garbage collection is disabled.
-	// +optional
-	GCInterval *metav1.Duration `json:"gcInterval"`
-
-	// Origin defines a label value used to track the creator of workloads in the worker
-	// clusters.
-	// This is used by multikueue in components like its garbage collector to identify
-	// remote objects that ware created by this multikueue manager cluster and delete
-	// them if their local counterpart no longer exists.
-	// +optional
-	Origin *string `json:"origin,omitempty"`
-
-	// WorkerLostTimeout defines the time a local workload's multikueue admission check state is kept Ready
-	// if the connection with its reserving worker cluster is lost.
-	//
-	// Defaults to 15 minutes.
-	// +optional
-	WorkerLostTimeout *metav1.Duration `json:"workerLostTimeout,omitempty"`
-}
-
 type RequeuingStrategy struct {
-	// Timestamp defines the timestamp used for re-queuing a Workload
+	// timestamp defines the timestamp used for re-queuing a Workload
 	// that was evicted due to Pod readiness. The possible values are:
 	//
 	// - `Eviction` (default) indicates from Workload `Evicted` condition with `PodsReadyTimeout` reason.
@@ -224,7 +219,7 @@ type RequeuingStrategy struct {
 	// +optional
 	Timestamp *RequeuingTimestamp `json:"timestamp,omitempty"`
 
-	// BackoffLimitCount defines the maximum number of re-queuing retries.
+	// backoffLimitCount defines the maximum number of re-queuing retries.
 	// Once the number is reached, the workload is deactivated (`.spec.activate`=`false`).
 	// When it is null, the workloads will repeatedly and endless re-queueing.
 	//
@@ -244,12 +239,14 @@ type RequeuingStrategy struct {
 	// re-queuing an evicted workload.
 	//
 	// Defaults to 60.
+	// +kubebuilder:default=60
 	// +optional
 	BackoffBaseSeconds *int32 `json:"backoffBaseSeconds,omitempty"`
 
 	// BackoffMaxSeconds defines the maximum backoff time to re-queue an evicted workload.
 	//
 	// Defaults to 3600.
+	// +kubebuilder:default=3600
 	// +optional
 	BackoffMaxSeconds *int32 `json:"backoffMaxSeconds,omitempty"`
 }
@@ -265,6 +262,7 @@ const (
 )
 
 type Integrations struct {
+	// frameworks
 	// List of framework names to be enabled.
 	// Possible options:
 	//  - "batch/job"
@@ -281,7 +279,9 @@ type Integrations struct {
 	//  - "deployment" (requires enabling pod integration)
 	//  - "statefulset" (requires enabling pod integration)
 	//  - "leaderworkerset.x-k8s.io/leaderworkerset" (requires enabling pod integration)
+	// +kubebuilder:validation:items:MaxLength=14
 	Frameworks []string `json:"frameworks,omitempty"`
+	// externalFrameworks
 	// List of GroupVersionKinds that are managed for Kueue by external controllers;
 	// the expected format is `Kind.version.group.com`.
 	ExternalFrameworks []string `json:"externalFrameworks,omitempty"`

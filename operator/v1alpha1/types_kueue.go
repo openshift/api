@@ -37,6 +37,7 @@ type KueueOperandSpec struct {
 	Config KueueConfiguration `json:"config"`
 }
 
+// +kubebuilder:validation:Enum="NoQueueName;QueueName"
 type ManageJobsWithoutQueueNameOption string
 
 const (
@@ -46,6 +47,7 @@ const (
 	QueueName ManageJobsWithoutQueueNameOption = "QueueName"
 )
 
+// +kubebuilder:validation:Enum="Enabled;Disabled"
 type EnabledOrDisabled string
 
 const (
@@ -79,12 +81,14 @@ type KueueConfiguration struct {
 	// +optional
 	ManagedJobsNamespaceSelector *metav1.LabelSelector `json:"managedJobsNamespaceSelector,omitempty"`
 	// fairSharing controls the fair sharing semantics across the cluster.
+	// +optional
 	FairSharing FairSharing `json:"fairSharing,omitempty"`
-	// ,etrics
+	// metrics allows one to change if metrics
+	// are enabled or disabled.
 	// Microshift does not enable metrics by default
 	// Default will assume metrics are enabled.
 	// +kubebuilder:default=Enabled
-	// +required
+	// +optional
 	Metrics *EnabledOrDisabled `json:"metrics,omitempty"`
 }
 
@@ -105,14 +109,15 @@ type KueueList struct {
 	// +optional
 	metav1.ListMeta `json:"metadata,omitempty"`
 	// items is a slice of kueue
+	// this is a cluster scoped resource and there can only be 1 kueue
+	// +kubebuilder:validation:MaxItems=1
 	// +required
 	Items []Kueue `json:"items"`
 }
 
 // These structs come directly from Kueue.
-
 type Resources struct {
-	// excludedResourcePrefixes defines which resources should be ignored by Kueue
+	// excludeResourcePrefixes defines which resources should be ignored by Kueue
 	// +optional
 	ExcludeResourcePrefixes []string `json:"excludeResourcePrefixes,omitempty"`
 
@@ -122,6 +127,7 @@ type Resources struct {
 	Transformations []ResourceTransformation `json:"transformations,omitempty"`
 }
 
+// +kubebuilder:validation:Enum=Retain;Replace
 type ResourceTransformationStrategy string
 
 const Retain ResourceTransformationStrategy = "Retain"
@@ -133,9 +139,7 @@ type ResourceTransformation struct {
 	Input corev1.ResourceName `json:"input"`
 
 	// strategy specifies if the input resource should be replaced or retained.
-	// Defaults to Retain
 	// +kubebuilder:default=Retain
-	// +kubebuilder:validation:MaxLength=6
 	// +optional
 	Strategy *ResourceTransformationStrategy `json:"strategy,omitempty"`
 
@@ -145,6 +149,7 @@ type ResourceTransformation struct {
 	Outputs corev1.ResourceList `json:"outputs,omitempty"`
 }
 
+// +kubebuilder:validation:Enum=LessThanOrEqualToFinalShare;LessThanInitialShare
 type PreemptionStrategy string
 
 const (
@@ -216,6 +221,8 @@ type RequeuingStrategy struct {
 	// - `Eviction` (default) indicates from Workload `Evicted` condition with `PodsReadyTimeout` reason.
 	// - `Creation` indicates from Workload .metadata.creationTimestamp.
 	//
+	// +kubebuilder:default=Eviction
+	// +kubebuilder:validation:MaxLength=8
 	// +optional
 	Timestamp *RequeuingTimestamp `json:"timestamp,omitempty"`
 
@@ -235,7 +242,7 @@ type RequeuingStrategy struct {
 	// +optional
 	BackoffLimitCount *int32 `json:"backoffLimitCount,omitempty"`
 
-	// BackoffBaseSeconds defines the base for the exponential backoff for
+	// backoffBaseSeconds defines the base for the exponential backoff for
 	// re-queuing an evicted workload.
 	//
 	// Defaults to 60.
@@ -243,7 +250,7 @@ type RequeuingStrategy struct {
 	// +optional
 	BackoffBaseSeconds *int32 `json:"backoffBaseSeconds,omitempty"`
 
-	// BackoffMaxSeconds defines the maximum backoff time to re-queue an evicted workload.
+	// backoffMaxSeconds defines the maximum backoff time to re-queue an evicted workload.
 	//
 	// Defaults to 3600.
 	// +kubebuilder:default=3600
@@ -262,8 +269,7 @@ const (
 )
 
 type Integrations struct {
-	// frameworks
-	// List of framework names to be enabled.
+	// frameworks are a list of names to be enabled.
 	// Possible options:
 	//  - "batch/job"
 	//  - "kubeflow.org/mpijob"
@@ -279,10 +285,10 @@ type Integrations struct {
 	//  - "deployment" (requires enabling pod integration)
 	//  - "statefulset" (requires enabling pod integration)
 	//  - "leaderworkerset.x-k8s.io/leaderworkerset" (requires enabling pod integration)
-	// +kubebuilder:validation:items:MaxLength=14
+	// +kubebuilder:validation:MaxItems=14
 	Frameworks []string `json:"frameworks,omitempty"`
-	// externalFrameworks
-	// List of GroupVersionKinds that are managed for Kueue by external controllers;
+	// externalFrameworks are a list of GroupVersionKinds
+	// that are managed for Kueue by external controllers;
 	// the expected format is `Kind.version.group.com`.
 	ExternalFrameworks []string `json:"externalFrameworks,omitempty"`
 

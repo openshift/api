@@ -1123,7 +1123,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1alpha1.KueueOperandSpec":                                        schema_openshift_api_operator_v1alpha1_KueueOperandSpec(ref),
 		"github.com/openshift/api/operator/v1alpha1.KueueStatus":                                             schema_openshift_api_operator_v1alpha1_KueueStatus(ref),
 		"github.com/openshift/api/operator/v1alpha1.LoggingConfig":                                           schema_openshift_api_operator_v1alpha1_LoggingConfig(ref),
-		"github.com/openshift/api/operator/v1alpha1.MultiKueue":                                              schema_openshift_api_operator_v1alpha1_MultiKueue(ref),
 		"github.com/openshift/api/operator/v1alpha1.NodeStatus":                                              schema_openshift_api_operator_v1alpha1_NodeStatus(ref),
 		"github.com/openshift/api/operator/v1alpha1.OLM":                                                     schema_openshift_api_operator_v1alpha1_OLM(ref),
 		"github.com/openshift/api/operator/v1alpha1.OLMList":                                                 schema_openshift_api_operator_v1alpha1_OLMList(ref),
@@ -56860,8 +56859,8 @@ func schema_openshift_api_operator_v1alpha1_FairSharing(ref common.ReferenceCall
 					"enable": {
 						SchemaProps: spec.SchemaProps{
 							Description: "enable indicates whether to enable fair sharing for all cohorts. Defaults to false.",
-							Default:     false,
-							Type:        []string{"boolean"},
+							Default:     "",
+							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
@@ -56881,7 +56880,6 @@ func schema_openshift_api_operator_v1alpha1_FairSharing(ref common.ReferenceCall
 						},
 					},
 				},
-				Required: []string{"enable"},
 			},
 		},
 	}
@@ -57129,7 +57127,7 @@ func schema_openshift_api_operator_v1alpha1_Integrations(ref common.ReferenceCal
 				Properties: map[string]spec.Schema{
 					"frameworks": {
 						SchemaProps: spec.SchemaProps{
-							Description: "List of framework names to be enabled. Possible options:\n - \"batch/job\"\n - \"kubeflow.org/mpijob\"\n - \"ray.io/rayjob\"\n - \"ray.io/raycluster\"\n - \"jobset.x-k8s.io/jobset\"\n - \"kubeflow.org/paddlejob\"\n - \"kubeflow.org/pytorchjob\"\n - \"kubeflow.org/tfjob\"\n - \"kubeflow.org/xgboostjob\"\n - \"workload.codeflare.dev/appwrapper\"\n - \"pod\"\n - \"deployment\" (requires enabling pod integration)\n - \"statefulset\" (requires enabling pod integration)\n - \"leaderworkerset.x-k8s.io/leaderworkerset\" (requires enabling pod integration)",
+							Description: "frameworks List of framework names to be enabled. Possible options:\n - \"batch/job\"\n - \"kubeflow.org/mpijob\"\n - \"ray.io/rayjob\"\n - \"ray.io/raycluster\"\n - \"jobset.x-k8s.io/jobset\"\n - \"kubeflow.org/paddlejob\"\n - \"kubeflow.org/pytorchjob\"\n - \"kubeflow.org/tfjob\"\n - \"kubeflow.org/xgboostjob\"\n - \"workload.codeflare.dev/appwrapper\"\n - \"pod\"\n - \"deployment\" (requires enabling pod integration)\n - \"statefulset\" (requires enabling pod integration)\n - \"leaderworkerset.x-k8s.io/leaderworkerset\" (requires enabling pod integration)",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -57144,7 +57142,7 @@ func schema_openshift_api_operator_v1alpha1_Integrations(ref common.ReferenceCal
 					},
 					"externalFrameworks": {
 						SchemaProps: spec.SchemaProps{
-							Description: "List of GroupVersionKinds that are managed for Kueue by external controllers; the expected format is `Kind.version.group.com`.",
+							Description: "externalFrameworks List of GroupVersionKinds that are managed for Kueue by external controllers; the expected format is `Kind.version.group.com`.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -57257,8 +57255,8 @@ func schema_openshift_api_operator_v1alpha1_KueueConfiguration(ref common.Refere
 								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Default: false,
-										Type:    []string{"boolean"},
+										Default: "",
+										Type:    []string{"string"},
 										Format:  "",
 									},
 								},
@@ -57274,33 +57272,33 @@ func schema_openshift_api_operator_v1alpha1_KueueConfiguration(ref common.Refere
 					},
 					"manageJobsWithoutQueueName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ManageJobsWithoutQueueName controls whether or not Kueue reconciles jobs that don't set the annotation kueue.x-k8s.io/queue-name. Allowed values are NoQueueName and QueueName Default will be QueueName",
+							Description: "manageJobsWithoutQueueName controls whether or not Kueue reconciles jobs that don't set the annotation kueue.x-k8s.io/queue-name. Allowed values are NoQueueName and QueueName Default will be QueueName",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"managedJobsNamespaceSelector": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ManagedJobsNamespaceSelector can be used to omit some namespaces from ManagedJobsWithoutQueueName",
+							Description: "managedJobsNamespaceSelector can be used to omit some namespaces from ManagedJobsWithoutQueueName",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"),
 						},
 					},
 					"fairSharing": {
 						SchemaProps: spec.SchemaProps{
-							Description: "FairSharing controls the fair sharing semantics across the cluster.",
+							Description: "fairSharing controls the fair sharing semantics across the cluster.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/operator/v1alpha1.FairSharing"),
 						},
 					},
-					"disableMetrics": {
+					"metrics": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Disable Metrics Microshift does not enable metrics by default Default will assume metrics are enabled.",
-							Type:        []string{"boolean"},
+							Description: "Metrics Microshift does not enable metrics by default Default will assume metrics are enabled.",
+							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 				},
-				Required: []string{"integrations"},
+				Required: []string{"integrations", "metrics"},
 			},
 		},
 		Dependencies: []string{
@@ -57534,39 +57532,6 @@ func schema_openshift_api_operator_v1alpha1_LoggingConfig(ref common.ReferenceCa
 				Required: []string{"level", "vmodule"},
 			},
 		},
-	}
-}
-
-func schema_openshift_api_operator_v1alpha1_MultiKueue(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"gcInterval": {
-						SchemaProps: spec.SchemaProps{
-							Description: "GCInterval defines the time interval between two consecutive garbage collection runs. Defaults to 1min. If 0, the garbage collection is disabled.",
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
-						},
-					},
-					"origin": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Origin defines a label value used to track the creator of workloads in the worker clusters. This is used by multikueue in components like its garbage collector to identify remote objects that ware created by this multikueue manager cluster and delete them if their local counterpart no longer exists.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"workerLostTimeout": {
-						SchemaProps: spec.SchemaProps{
-							Description: "WorkerLostTimeout defines the time a local workload's multikueue admission check state is kept Ready if the connection with its reserving worker cluster is lost.\n\nDefaults to 15 minutes.",
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
 	}
 }
 
@@ -58082,14 +58047,14 @@ func schema_openshift_api_operator_v1alpha1_RequeuingStrategy(ref common.Referen
 				Properties: map[string]spec.Schema{
 					"timestamp": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Timestamp defines the timestamp used for re-queuing a Workload that was evicted due to Pod readiness. The possible values are:\n\n- `Eviction` (default) indicates from Workload `Evicted` condition with `PodsReadyTimeout` reason. - `Creation` indicates from Workload .metadata.creationTimestamp.",
+							Description: "timestamp defines the timestamp used for re-queuing a Workload that was evicted due to Pod readiness. The possible values are:\n\n- `Eviction` (default) indicates from Workload `Evicted` condition with `PodsReadyTimeout` reason. - `Creation` indicates from Workload .metadata.creationTimestamp.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"backoffLimitCount": {
 						SchemaProps: spec.SchemaProps{
-							Description: "BackoffLimitCount defines the maximum number of re-queuing retries. Once the number is reached, the workload is deactivated (`.spec.activate`=`false`). When it is null, the workloads will repeatedly and endless re-queueing.\n\nEvery backoff duration is about \"b*2^(n-1)+Rand\" where: - \"b\" represents the base set by \"BackoffBaseSeconds\" parameter, - \"n\" represents the \"workloadStatus.requeueState.count\", - \"Rand\" represents the random jitter. During this time, the workload is taken as an inadmissible and other workloads will have a chance to be admitted. By default, the consecutive requeue delays are around: (60s, 120s, 240s, ...).\n\nDefaults to null.",
+							Description: "backoffLimitCount defines the maximum number of re-queuing retries. Once the number is reached, the workload is deactivated (`.spec.activate`=`false`). When it is null, the workloads will repeatedly and endless re-queueing.\n\nEvery backoff duration is about \"b*2^(n-1)+Rand\" where: - \"b\" represents the base set by \"BackoffBaseSeconds\" parameter, - \"n\" represents the \"workloadStatus.requeueState.count\", - \"Rand\" represents the random jitter. During this time, the workload is taken as an inadmissible and other workloads will have a chance to be admitted. By default, the consecutive requeue delays are around: (60s, 120s, 240s, ...).\n\nDefaults to null.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -58122,7 +58087,7 @@ func schema_openshift_api_operator_v1alpha1_ResourceTransformation(ref common.Re
 				Properties: map[string]spec.Schema{
 					"input": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Input is the name of the input resource.",
+							Description: "input is the name of the input resource.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -58130,14 +58095,14 @@ func schema_openshift_api_operator_v1alpha1_ResourceTransformation(ref common.Re
 					},
 					"strategy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Strategy specifies if the input resource should be replaced or retained. Defaults to Retain",
+							Description: "strategy specifies if the input resource should be replaced or retained. Defaults to Retain",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"outputs": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Outputs specifies the output resources and quantities per unit of input resource. An empty Outputs combined with a `Replace` Strategy causes the Input resource to be ignored by Kueue.",
+							Description: "outputs specifies the output resources and quantities per unit of input resource. An empty Outputs combined with a `Replace` Strategy causes the Input resource to be ignored by Kueue.",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,
@@ -58166,7 +58131,7 @@ func schema_openshift_api_operator_v1alpha1_Resources(ref common.ReferenceCallba
 				Properties: map[string]spec.Schema{
 					"excludeResourcePrefixes": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ExcludedResourcePrefixes defines which resources should be ignored by Kueue",
+							Description: "excludedResourcePrefixes defines which resources should be ignored by Kueue",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -58181,7 +58146,7 @@ func schema_openshift_api_operator_v1alpha1_Resources(ref common.ReferenceCallba
 					},
 					"transformations": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Transformations defines how to transform PodSpec resources into Workload resource requests. This is intended to be a map with Input as the key (enforced by validation code)",
+							Description: "transformations defines how to transform PodSpec resources into Workload resource requests. This is intended to be a map with Input as the key (enforced by validation code)",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -58362,35 +58327,28 @@ func schema_openshift_api_operator_v1alpha1_WaitForPodsReady(ref common.Referenc
 				Description: "WaitForPodsReady defines configuration for the Wait For Pods Ready feature, which is used to ensure that all Pods are ready within the specified time.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"enable": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Enable indicates whether to enable wait for pods ready feature. Defaults to false.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
 					"timeout": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Timeout defines the time for an admitted workload to reach the PodsReady=true condition. When the timeout is exceeded, the workload evicted and requeued in the same cluster queue. Defaults to 5min.",
+							Description: "timeout defines the time for an admitted workload to reach the PodsReady=true condition. When the timeout is exceeded, the workload evicted and requeued in the same cluster queue. Defaults to 5min.",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
 					"blockAdmission": {
 						SchemaProps: spec.SchemaProps{
-							Description: "BlockAdmission when true, cluster queue will block admissions for all subsequent jobs until the jobs reach the PodsReady=true condition. This setting is only honored when `Enable` is set to true.",
-							Type:        []string{"boolean"},
+							Description: "blockAdmission when true, cluster queue will block admissions for all subsequent jobs until the jobs reach the PodsReady=true condition. This setting is only honored when `Enable` is set to true.",
+							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"requeuingStrategy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RequeuingStrategy defines the strategy for requeuing a Workload.",
+							Description: "requeuingStrategy defines the strategy for requeuing a Workload.",
 							Ref:         ref("github.com/openshift/api/operator/v1alpha1.RequeuingStrategy"),
 						},
 					},
 					"recoveryTimeout": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RecoveryTimeout defines an opt-in timeout, measured since the last transition to the PodsReady=false condition after a Workload is Admitted and running. Such a transition may happen when a Pod failed and the replacement Pod is awaited to be scheduled. After exceeding the timeout the corresponding job gets suspended again and requeued after the backoff delay. The timeout is enforced only if waitForPodsReady.enable=true. If not set, there is no timeout.",
+							Description: "recoveryTimeout defines an opt-in timeout, measured since the last transition to the PodsReady=false condition after a Workload is Admitted and running. Such a transition may happen when a Pod failed and the replacement Pod is awaited to be scheduled. After exceeding the timeout the corresponding job gets suspended again and requeued after the backoff delay. The timeout is enforced only if waitForPodsReady.enable=true. If not set, there is no timeout.",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},

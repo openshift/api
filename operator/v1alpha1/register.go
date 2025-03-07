@@ -41,6 +41,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&EtcdBackupList{},
 		&ClusterVersionOperator{},
 		&ClusterVersionOperatorList{},
+		&Kueue{},
+		&KueueList{},
 	)
 
 	return nil

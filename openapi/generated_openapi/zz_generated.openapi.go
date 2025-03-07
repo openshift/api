@@ -1110,12 +1110,20 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1alpha1.EtcdBackupList":                                          schema_openshift_api_operator_v1alpha1_EtcdBackupList(ref),
 		"github.com/openshift/api/operator/v1alpha1.EtcdBackupSpec":                                          schema_openshift_api_operator_v1alpha1_EtcdBackupSpec(ref),
 		"github.com/openshift/api/operator/v1alpha1.EtcdBackupStatus":                                        schema_openshift_api_operator_v1alpha1_EtcdBackupStatus(ref),
+		"github.com/openshift/api/operator/v1alpha1.FairSharing":                                             schema_openshift_api_operator_v1alpha1_FairSharing(ref),
 		"github.com/openshift/api/operator/v1alpha1.GenerationHistory":                                       schema_openshift_api_operator_v1alpha1_GenerationHistory(ref),
 		"github.com/openshift/api/operator/v1alpha1.GenericOperatorConfig":                                   schema_openshift_api_operator_v1alpha1_GenericOperatorConfig(ref),
 		"github.com/openshift/api/operator/v1alpha1.ImageContentSourcePolicy":                                schema_openshift_api_operator_v1alpha1_ImageContentSourcePolicy(ref),
 		"github.com/openshift/api/operator/v1alpha1.ImageContentSourcePolicyList":                            schema_openshift_api_operator_v1alpha1_ImageContentSourcePolicyList(ref),
 		"github.com/openshift/api/operator/v1alpha1.ImageContentSourcePolicySpec":                            schema_openshift_api_operator_v1alpha1_ImageContentSourcePolicySpec(ref),
+		"github.com/openshift/api/operator/v1alpha1.Integrations":                                            schema_openshift_api_operator_v1alpha1_Integrations(ref),
+		"github.com/openshift/api/operator/v1alpha1.Kueue":                                                   schema_openshift_api_operator_v1alpha1_Kueue(ref),
+		"github.com/openshift/api/operator/v1alpha1.KueueConfiguration":                                      schema_openshift_api_operator_v1alpha1_KueueConfiguration(ref),
+		"github.com/openshift/api/operator/v1alpha1.KueueList":                                               schema_openshift_api_operator_v1alpha1_KueueList(ref),
+		"github.com/openshift/api/operator/v1alpha1.KueueOperandSpec":                                        schema_openshift_api_operator_v1alpha1_KueueOperandSpec(ref),
+		"github.com/openshift/api/operator/v1alpha1.KueueStatus":                                             schema_openshift_api_operator_v1alpha1_KueueStatus(ref),
 		"github.com/openshift/api/operator/v1alpha1.LoggingConfig":                                           schema_openshift_api_operator_v1alpha1_LoggingConfig(ref),
+		"github.com/openshift/api/operator/v1alpha1.MultiKueue":                                              schema_openshift_api_operator_v1alpha1_MultiKueue(ref),
 		"github.com/openshift/api/operator/v1alpha1.NodeStatus":                                              schema_openshift_api_operator_v1alpha1_NodeStatus(ref),
 		"github.com/openshift/api/operator/v1alpha1.OLM":                                                     schema_openshift_api_operator_v1alpha1_OLM(ref),
 		"github.com/openshift/api/operator/v1alpha1.OLMList":                                                 schema_openshift_api_operator_v1alpha1_OLMList(ref),
@@ -1125,8 +1133,12 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1alpha1.OperatorSpec":                                            schema_openshift_api_operator_v1alpha1_OperatorSpec(ref),
 		"github.com/openshift/api/operator/v1alpha1.OperatorStatus":                                          schema_openshift_api_operator_v1alpha1_OperatorStatus(ref),
 		"github.com/openshift/api/operator/v1alpha1.RepositoryDigestMirrors":                                 schema_openshift_api_operator_v1alpha1_RepositoryDigestMirrors(ref),
+		"github.com/openshift/api/operator/v1alpha1.RequeuingStrategy":                                       schema_openshift_api_operator_v1alpha1_RequeuingStrategy(ref),
+		"github.com/openshift/api/operator/v1alpha1.ResourceTransformation":                                  schema_openshift_api_operator_v1alpha1_ResourceTransformation(ref),
+		"github.com/openshift/api/operator/v1alpha1.Resources":                                               schema_openshift_api_operator_v1alpha1_Resources(ref),
 		"github.com/openshift/api/operator/v1alpha1.StaticPodOperatorStatus":                                 schema_openshift_api_operator_v1alpha1_StaticPodOperatorStatus(ref),
 		"github.com/openshift/api/operator/v1alpha1.VersionAvailability":                                     schema_openshift_api_operator_v1alpha1_VersionAvailability(ref),
+		"github.com/openshift/api/operator/v1alpha1.WaitForPodsReady":                                        schema_openshift_api_operator_v1alpha1_WaitForPodsReady(ref),
 		"github.com/openshift/api/operatorcontrolplane/v1alpha1.LogEntry":                                    schema_openshift_api_operatorcontrolplane_v1alpha1_LogEntry(ref),
 		"github.com/openshift/api/operatorcontrolplane/v1alpha1.OutageEntry":                                 schema_openshift_api_operatorcontrolplane_v1alpha1_OutageEntry(ref),
 		"github.com/openshift/api/operatorcontrolplane/v1alpha1.PodNetworkConnectivityCheck":                 schema_openshift_api_operatorcontrolplane_v1alpha1_PodNetworkConnectivityCheck(ref),
@@ -56839,6 +56851,42 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupStatus(ref common.Referenc
 	}
 }
 
+func schema_openshift_api_operator_v1alpha1_FairSharing(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enable": {
+						SchemaProps: spec.SchemaProps{
+							Description: "enable indicates whether to enable fair sharing for all cohorts. Defaults to false.",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"preemptionStrategies": {
+						SchemaProps: spec.SchemaProps{
+							Description: "preemptionStrategies indicates which constraints should a preemption satisfy. The preemption algorithm will only use the next strategy in the list if the incoming workload (preemptor) doesn't fit after using the previous strategies. Possible values are: - LessThanOrEqualToFinalShare: Only preempt a workload if the share of the preemptor CQ\n  with the preemptor workload is less than or equal to the share of the preemptee CQ\n  without the workload to be preempted.\n  This strategy might favor preemption of smaller workloads in the preemptee CQ,\n  regardless of priority or start time, in an effort to keep the share of the CQ\n  as high as possible.\n- LessThanInitialShare: Only preempt a workload if the share of the preemptor CQ\n  with the incoming workload is strictly less than the share of the preemptee CQ.\n  This strategy doesn't depend on the share usage of the workload being preempted.\n  As a result, the strategy chooses to preempt workloads with the lowest priority and\n  newest start time first.\nThe default strategy is [\"LessThanOrEqualToFinalShare\", \"LessThanInitialShare\"].",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"enable"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_operator_v1alpha1_GenerationHistory(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -57073,6 +57121,392 @@ func schema_openshift_api_operator_v1alpha1_ImageContentSourcePolicySpec(ref com
 	}
 }
 
+func schema_openshift_api_operator_v1alpha1_Integrations(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"frameworks": {
+						SchemaProps: spec.SchemaProps{
+							Description: "List of framework names to be enabled. Possible options:\n - \"batch/job\"\n - \"kubeflow.org/mpijob\"\n - \"ray.io/rayjob\"\n - \"ray.io/raycluster\"\n - \"jobset.x-k8s.io/jobset\"\n - \"kubeflow.org/paddlejob\"\n - \"kubeflow.org/pytorchjob\"\n - \"kubeflow.org/tfjob\"\n - \"kubeflow.org/xgboostjob\"\n - \"workload.codeflare.dev/appwrapper\"\n - \"pod\"\n - \"deployment\" (requires enabling pod integration)\n - \"statefulset\" (requires enabling pod integration)\n - \"leaderworkerset.x-k8s.io/leaderworkerset\" (requires enabling pod integration)",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"externalFrameworks": {
+						SchemaProps: spec.SchemaProps{
+							Description: "List of GroupVersionKinds that are managed for Kueue by external controllers; the expected format is `Kind.version.group.com`.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"labelKeysToCopy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "labelKeysToCopy is a list of label keys that should be copied from the job into the workload object. It is not required for the job to have all the labels from this list. If a job does not have some label with the given key from this list, the constructed workload object will be created without this label. In the case of creating a workload from a composable job (pod group), if multiple objects have labels with some key from the list, the values of these labels must match or otherwise the workload creation would fail. The labels are copied only during the workload creation and are not updated even if the labels of the underlying job are changed.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_Kueue(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Kueue is the Schema for the kueue API Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata for kueue",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec holds user settable values for configuration",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1alpha1.KueueOperandSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status holds observed values from the cluster. They may not be overridden.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1alpha1.KueueStatus"),
+						},
+					},
+				},
+				Required: []string{"spec"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1alpha1.KueueOperandSpec", "github.com/openshift/api/operator/v1alpha1.KueueStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_KueueConfiguration(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"waitForPodsReady": {
+						SchemaProps: spec.SchemaProps{
+							Description: "waitForPodsReady configures gang admission",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1alpha1.WaitForPodsReady"),
+						},
+					},
+					"integrations": {
+						SchemaProps: spec.SchemaProps{
+							Description: "integrations are the types of integrations Kueue will manager",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1alpha1.Integrations"),
+						},
+					},
+					"featureGates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "featureGates are advanced features for Kueue",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: false,
+										Type:    []string{"boolean"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"resources": {
+						SchemaProps: spec.SchemaProps{
+							Description: "resources provides additional configuration options for handling the resources. Supports https://github.com/kubernetes-sigs/kueue/blob/release-0.10/keps/2937-resource-transformer/README.md",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1alpha1.Resources"),
+						},
+					},
+					"manageJobsWithoutQueueName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ManageJobsWithoutQueueName controls whether or not Kueue reconciles jobs that don't set the annotation kueue.x-k8s.io/queue-name. Allowed values are NoQueueName and QueueName Default will be QueueName",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"managedJobsNamespaceSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ManagedJobsNamespaceSelector can be used to omit some namespaces from ManagedJobsWithoutQueueName",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"),
+						},
+					},
+					"fairSharing": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FairSharing controls the fair sharing semantics across the cluster.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1alpha1.FairSharing"),
+						},
+					},
+					"disableMetrics": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Disable Metrics Microshift does not enable metrics by default Default will assume metrics are enabled.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"integrations"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1alpha1.FairSharing", "github.com/openshift/api/operator/v1alpha1.Integrations", "github.com/openshift/api/operator/v1alpha1.Resources", "github.com/openshift/api/operator/v1alpha1.WaitForPodsReady", "k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_KueueList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "KueueList contains a list of Kueue\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata for the list",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "items is a slice of kueue",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/operator/v1alpha1.Kueue"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1alpha1.Kueue", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_KueueOperandSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"managementState": {
+						SchemaProps: spec.SchemaProps{
+							Description: "managementState indicates whether and how the operator should manage the component",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"logLevel": {
+						SchemaProps: spec.SchemaProps{
+							Description: "logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for their operands.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"operatorLogLevel": {
+						SchemaProps: spec.SchemaProps{
+							Description: "operatorLogLevel is an intent based logging for the operator itself.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for themselves.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"unsupportedConfigOverrides": {
+						SchemaProps: spec.SchemaProps{
+							Description: "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
+							Ref:         ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
+						},
+					},
+					"observedConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because it is an input to the level for the operator",
+							Ref:         ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
+						},
+					},
+					"config": {
+						SchemaProps: spec.SchemaProps{
+							Description: "config that is persisted to a config map",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1alpha1.KueueConfiguration"),
+						},
+					},
+				},
+				Required: []string{"managementState", "config"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1alpha1.KueueConfiguration", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_KueueStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "KueueStatus defines the observed state of Kueue",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"observedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedGeneration is the last generation change you've dealt with",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions is a list of conditions and their status",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/operator/v1.OperatorCondition"),
+									},
+								},
+							},
+						},
+					},
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Description: "version is the level this availability applies to",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"readyReplicas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "readyReplicas indicates how many replicas are ready and at the desired state",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"latestAvailableRevision": {
+						SchemaProps: spec.SchemaProps{
+							Description: "latestAvailableRevision is the deploymentID of the most recent deployment",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"generations": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"group",
+									"resource",
+									"namespace",
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/operator/v1.GenerationStatus"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"readyReplicas"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
+	}
+}
+
 func schema_openshift_api_operator_v1alpha1_LoggingConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -57100,6 +57534,39 @@ func schema_openshift_api_operator_v1alpha1_LoggingConfig(ref common.ReferenceCa
 				Required: []string{"level", "vmodule"},
 			},
 		},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_MultiKueue(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"gcInterval": {
+						SchemaProps: spec.SchemaProps{
+							Description: "GCInterval defines the time interval between two consecutive garbage collection runs. Defaults to 1min. If 0, the garbage collection is disabled.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"origin": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Origin defines a label value used to track the creator of workloads in the worker clusters. This is used by multikueue in components like its garbage collector to identify remote objects that ware created by this multikueue manager cluster and delete them if their local counterpart no longer exists.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"workerLostTimeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "WorkerLostTimeout defines the time a local workload's multikueue admission check state is kept Ready if the connection with its reserving worker cluster is lost.\n\nDefaults to 15 minutes.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
 	}
 }
 
@@ -57607,6 +58074,133 @@ func schema_openshift_api_operator_v1alpha1_RepositoryDigestMirrors(ref common.R
 	}
 }
 
+func schema_openshift_api_operator_v1alpha1_RequeuingStrategy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"timestamp": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Timestamp defines the timestamp used for re-queuing a Workload that was evicted due to Pod readiness. The possible values are:\n\n- `Eviction` (default) indicates from Workload `Evicted` condition with `PodsReadyTimeout` reason. - `Creation` indicates from Workload .metadata.creationTimestamp.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"backoffLimitCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "BackoffLimitCount defines the maximum number of re-queuing retries. Once the number is reached, the workload is deactivated (`.spec.activate`=`false`). When it is null, the workloads will repeatedly and endless re-queueing.\n\nEvery backoff duration is about \"b*2^(n-1)+Rand\" where: - \"b\" represents the base set by \"BackoffBaseSeconds\" parameter, - \"n\" represents the \"workloadStatus.requeueState.count\", - \"Rand\" represents the random jitter. During this time, the workload is taken as an inadmissible and other workloads will have a chance to be admitted. By default, the consecutive requeue delays are around: (60s, 120s, 240s, ...).\n\nDefaults to null.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"backoffBaseSeconds": {
+						SchemaProps: spec.SchemaProps{
+							Description: "BackoffBaseSeconds defines the base for the exponential backoff for re-queuing an evicted workload.\n\nDefaults to 60.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"backoffMaxSeconds": {
+						SchemaProps: spec.SchemaProps{
+							Description: "BackoffMaxSeconds defines the maximum backoff time to re-queue an evicted workload.\n\nDefaults to 3600.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_ResourceTransformation(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"input": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Input is the name of the input resource.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"strategy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Strategy specifies if the input resource should be replaced or retained. Defaults to Retain",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"outputs": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Outputs specifies the output resources and quantities per unit of input resource. An empty Outputs combined with a `Replace` Strategy causes the Input resource to be ignored by Kueue.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"input"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_Resources(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"excludeResourcePrefixes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ExcludedResourcePrefixes defines which resources should be ignored by Kueue",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"transformations": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Transformations defines how to transform PodSpec resources into Workload resource requests. This is intended to be a map with Input as the key (enforced by validation code)",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/operator/v1alpha1.ResourceTransformation"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1alpha1.ResourceTransformation"},
+	}
+}
+
 func schema_openshift_api_operator_v1alpha1_StaticPodOperatorStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -57758,6 +58352,53 @@ func schema_openshift_api_operator_v1alpha1_VersionAvailability(ref common.Refer
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/operator/v1alpha1.GenerationHistory"},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_WaitForPodsReady(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "WaitForPodsReady defines configuration for the Wait For Pods Ready feature, which is used to ensure that all Pods are ready within the specified time.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enable": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Enable indicates whether to enable wait for pods ready feature. Defaults to false.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"timeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Timeout defines the time for an admitted workload to reach the PodsReady=true condition. When the timeout is exceeded, the workload evicted and requeued in the same cluster queue. Defaults to 5min.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"blockAdmission": {
+						SchemaProps: spec.SchemaProps{
+							Description: "BlockAdmission when true, cluster queue will block admissions for all subsequent jobs until the jobs reach the PodsReady=true condition. This setting is only honored when `Enable` is set to true.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"requeuingStrategy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RequeuingStrategy defines the strategy for requeuing a Workload.",
+							Ref:         ref("github.com/openshift/api/operator/v1alpha1.RequeuingStrategy"),
+						},
+					},
+					"recoveryTimeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RecoveryTimeout defines an opt-in timeout, measured since the last transition to the PodsReady=false condition after a Workload is Admitted and running. Such a transition may happen when a Pod failed and the replacement Pod is awaited to be scheduled. After exceeding the timeout the corresponding job gets suspended again and requeued after the backoff delay. The timeout is enforced only if waitForPodsReady.enable=true. If not set, there is no timeout.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1alpha1.RequeuingStrategy", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
 	}
 }
 

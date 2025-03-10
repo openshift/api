@@ -185,7 +185,7 @@ spec:
                             type: string
                           requiredMinimumComponentVersions:
                             description: |-
-                              requiredMinimumComponentVersion is a list of component/version pairs that declares the is the lowest version the given
+                              requiredMinimumComponentVersions is a list of component/version pairs that declares the is the lowest version the given
                               component may be in this cluster.
                               Currently, the only supported component is Kubelet, and setting a required minimum kubelet component will set the
                               minimumKubeletVersion field in the nodes.config.openshift.io CRD.
@@ -201,8 +201,9 @@ spec:
                                   - Kubelet
                                   type: string
                                 version:
-                                  description: version is the minimum version the
-                                    given component may be in this cluster.
+                                  description: |-
+                                    version is the minimum version the given component may be in this cluster.
+                                    version must be in semver format (x.y.z) and must consist only of numbers and periods (.).
                                   maxLength: 8
                                   type: string
                                   x-kubernetes-validations:
@@ -233,7 +234,7 @@ spec:
                             type: string
                           requiredMinimumComponentVersions:
                             description: |-
-                              requiredMinimumComponentVersion is a list of component/version pairs that declares the is the lowest version the given
+                              requiredMinimumComponentVersions is a list of component/version pairs that declares the is the lowest version the given
                               component may be in this cluster.
                               Currently, the only supported component is Kubelet, and setting a required minimum kubelet component will set the
                               minimumKubeletVersion field in the nodes.config.openshift.io CRD.
@@ -249,8 +250,9 @@ spec:
                                   - Kubelet
                                   type: string
                                 version:
-                                  description: version is the minimum version the
-                                    given component may be in this cluster.
+                                  description: |-
+                                    version is the minimum version the given component may be in this cluster.
+                                    version must be in semver format (x.y.z) and must consist only of numbers and periods (.).
                                   maxLength: 8
                                   type: string
                                   x-kubernetes-validations:

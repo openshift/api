@@ -9,6 +9,8 @@ import (
 )
 
 // FeatureGateDescription is a golang-only interface used to contains details for a feature gate.
+//
+//nolint:all
 type FeatureGateDescription struct {
 	// FeatureGateAttributes is the information that appears in the API
 	FeatureGateAttributes configv1.FeatureGateAttributes
@@ -23,9 +25,6 @@ type FeatureGateDescription struct {
 	OwningProduct OwningProduct
 	// EnhancementPR is the PR for the enhancement.
 	EnhancementPR string
-	// RequiredMinimumKubeletVersion is the lowest version the MinimumKubeletVersion field in the
-	// nodes.config object may be set to to enable this feature.
-	RequiredMinimumKubeletVersion string
 }
 
 type FeatureGateEnabledDisabled struct {
@@ -48,6 +47,7 @@ var (
 	kubernetes  = OwningProduct("Kubernetes")
 )
 
+//nolint:all
 type featureGateBuilder struct {
 	name                  string
 	owningJiraComponent   string
@@ -151,10 +151,20 @@ func (b *featureGateBuilder) register() (configv1.FeatureGateName, error) {
 	}
 
 	featureGateName := configv1.FeatureGateName(b.name)
+	var minComponentVersions []configv1.RequiredMinimumComponentVersion
+	if b.minimumKubeletVersion != "" {
+		if minComponentVersions == nil {
+			minComponentVersions = []configv1.RequiredMinimumComponentVersion{}
+		}
+		minComponentVersions = append(minComponentVersions, configv1.RequiredMinimumComponentVersion{
+			Component: configv1.RequiredMinimumComponentKubelet,
+			Version:   b.minimumKubeletVersion,
+		})
+	}
 	description := FeatureGateDescription{
 		FeatureGateAttributes: configv1.FeatureGateAttributes{
-			Name:                          featureGateName,
-			RequiredMinimumKubeletVersion: b.minimumKubeletVersion,
+			Name:                             featureGateName,
+			RequiredMinimumComponentVersions: minComponentVersions,
 		},
 		OwningJiraComponent: b.owningJiraComponent,
 		ResponsiblePerson:   b.responsiblePerson,

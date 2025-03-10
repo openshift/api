@@ -8,14 +8,18 @@ import (
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// Kueue is the Schema for the kueue API
+// Kueue is the CRD to represent the kueue operator
+// This CRD defines the configuration that the Kueue
 // Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
 // +openshift:compatibility-gen:level=4
+// +kubebuilder:object:root=true
+// +kubebuilder:resource:path=kueue,scope=Cluster
 // +k8s:openapi-gen=true
 // +genclient
 // +genclient:nonNamespaced
 // +kubebuilder:storageversion
 // +kubebuilder:subresource:status
+// +kubebuilder:validation:XValidation:rule="self.metadata.name == 'cluster'",message="olm is a singleton, .metadata.name must be 'cluster'"
 type Kueue struct {
 	metav1.TypeMeta `json:",inline"`
 	// metadata for kueue
@@ -119,11 +123,15 @@ type KueueList struct {
 type Resources struct {
 	// excludeResourcePrefixes defines which resources should be ignored by Kueue
 	// +optional
+	// +kubebuilder:validation:items:MaxLength=64
+	// +kubebuilder:validation:MaxItems=64
 	ExcludeResourcePrefixes []string `json:"excludeResourcePrefixes,omitempty"`
 
 	// transformations defines how to transform PodSpec resources into Workload resource requests.
 	// This is intended to be a map with Input as the key (enforced by validation code)
 	// +optional
+	// +kubebuilder:validation:items:MaxLength=64
+	// +kubebuilder:validation:MaxItems=64
 	Transformations []ResourceTransformation `json:"transformations,omitempty"`
 }
 
@@ -180,6 +188,8 @@ type FairSharing struct {
 	//   As a result, the strategy chooses to preempt workloads with the lowest priority and
 	//   newest start time first.
 	// The default strategy is ["LessThanOrEqualToFinalShare", "LessThanInitialShare"].
+	// +optional
+	// +kubebuilder:validation:MaxItems=2
 	PreemptionStrategies []PreemptionStrategy `json:"preemptionStrategies,omitempty"`
 }
 
@@ -286,10 +296,16 @@ type Integrations struct {
 	//  - "statefulset" (requires enabling pod integration)
 	//  - "leaderworkerset.x-k8s.io/leaderworkerset" (requires enabling pod integration)
 	// +kubebuilder:validation:MaxItems=14
-	Frameworks []string `json:"frameworks,omitempty"`
+	// +kubebuilder:validation:items:MaxLength=64
+	// +required
+	Frameworks []string `json:"frameworks"`
 	// externalFrameworks are a list of GroupVersionKinds
 	// that are managed for Kueue by external controllers;
 	// the expected format is `Kind.version.group.com`.
+	// As far as
+	// +optional
+	// +kubebuilder:validation:items:MaxLength=64
+	// +kubebuilder:validation:MaxItems=4
 	ExternalFrameworks []string `json:"externalFrameworks,omitempty"`
 
 	// labelKeysToCopy is a list of label keys that should be copied from the job into the
@@ -301,5 +317,8 @@ type Integrations struct {
 	// match or otherwise the workload creation would fail. The labels are copied only
 	// during the workload creation and are not updated even if the labels of the
 	// underlying job are changed.
+	// +kubebuilder:validation:items:MaxLength=64
+	// +kubebuilder:validation:MaxItems=64
+	// +optional
 	LabelKeysToCopy []string `json:"labelKeysToCopy,omitempty"`
 }

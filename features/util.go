@@ -2,9 +2,10 @@ package features
 
 import (
 	"fmt"
-	configv1 "github.com/openshift/api/config/v1"
 	"net/url"
 	"strings"
+
+	configv1 "github.com/openshift/api/config/v1"
 )
 
 // FeatureGateDescription is a golang-only interface used to contains details for a feature gate.

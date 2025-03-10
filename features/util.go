@@ -2,9 +2,10 @@ package features
 
 import (
 	"fmt"
-	configv1 "github.com/openshift/api/config/v1"
 	"net/url"
 	"strings"
+
+	configv1 "github.com/openshift/api/config/v1"
 )
 
 // FeatureGateDescription is a golang-only interface used to contains details for a feature gate.
@@ -22,6 +23,9 @@ type FeatureGateDescription struct {
 	OwningProduct OwningProduct
 	// EnhancementPR is the PR for the enhancement.
 	EnhancementPR string
+	// RequiredMinimumKubeletVersion is the lowest version the MinimumKubeletVersion field in the
+	// nodes.config object may be set to to enable this feature.
+	RequiredMinimumKubeletVersion string
 }
 
 type FeatureGateEnabledDisabled struct {
@@ -45,11 +49,12 @@ var (
 )
 
 type featureGateBuilder struct {
-	name                string
-	owningJiraComponent string
-	responsiblePerson   string
-	owningProduct       OwningProduct
-	enhancementPRURL    string
+	name                  string
+	owningJiraComponent   string
+	responsiblePerson     string
+	owningProduct         OwningProduct
+	enhancementPRURL      string
+	minimumKubeletVersion string
 
 	statusByClusterProfileByFeatureSet map[ClusterProfileName]map[configv1.FeatureSet]bool
 }
@@ -110,6 +115,11 @@ func (b *featureGateBuilder) enableForClusterProfile(clusterProfile ClusterProfi
 	return b
 }
 
+func (b *featureGateBuilder) requiredMinimumKubeletVersion(version string) *featureGateBuilder {
+	b.minimumKubeletVersion = version
+	return b
+}
+
 func (b *featureGateBuilder) register() (configv1.FeatureGateName, error) {
 	if len(b.name) == 0 {
 		return "", fmt.Errorf("missing name")
@@ -143,7 +153,8 @@ func (b *featureGateBuilder) register() (configv1.FeatureGateName, error) {
 	featureGateName := configv1.FeatureGateName(b.name)
 	description := FeatureGateDescription{
 		FeatureGateAttributes: configv1.FeatureGateAttributes{
-			Name: featureGateName,
+			Name:                          featureGateName,
+			RequiredMinimumKubeletVersion: b.minimumKubeletVersion,
 		},
 		OwningJiraComponent: b.owningJiraComponent,
 		ResponsiblePerson:   b.responsiblePerson,

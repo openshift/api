@@ -362,6 +362,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.RepositoryDigestMirrors":                                         schema_openshift_api_config_v1_RepositoryDigestMirrors(ref),
 		"github.com/openshift/api/config/v1.RequestHeaderIdentityProvider":                                   schema_openshift_api_config_v1_RequestHeaderIdentityProvider(ref),
 		"github.com/openshift/api/config/v1.RequiredHSTSPolicy":                                              schema_openshift_api_config_v1_RequiredHSTSPolicy(ref),
+		"github.com/openshift/api/config/v1.RequiredMinimumComponentVersion":                                 schema_openshift_api_config_v1_RequiredMinimumComponentVersion(ref),
 		"github.com/openshift/api/config/v1.Scheduler":                                                       schema_openshift_api_config_v1_Scheduler(ref),
 		"github.com/openshift/api/config/v1.SchedulerList":                                                   schema_openshift_api_config_v1_SchedulerList(ref),
 		"github.com/openshift/api/config/v1.SchedulerSpec":                                                   schema_openshift_api_config_v1_SchedulerSpec(ref),
@@ -12105,10 +12106,34 @@ func schema_openshift_api_config_v1_FeatureGateAttributes(ref common.ReferenceCa
 							Format:      "",
 						},
 					},
+					"requiredMinimumComponentVersions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"component",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "requiredMinimumComponentVersions is a list of component/version pairs that declares the is the lowest version the given component may be in this cluster. Currently, the only supported component is Kubelet, and setting a required minimum kubelet component will set the minimumKubeletVersion field in the nodes.config.openshift.io CRD.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.RequiredMinimumComponentVersion"),
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"name"},
 			},
 		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.RequiredMinimumComponentVersion"},
 	}
 }
 
@@ -18552,6 +18577,36 @@ func schema_openshift_api_config_v1_RequiredHSTSPolicy(ref common.ReferenceCallb
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/config/v1.MaxAgePolicy", "k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"},
+	}
+}
+
+func schema_openshift_api_config_v1_RequiredMinimumComponentVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "RequiredMinimumComponentVersion is a pair of Component and Version that specifies the required minimum Version of the given Component to enable this feature.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"component": {
+						SchemaProps: spec.SchemaProps{
+							Description: "component is the entity whose version must be above a certain version.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Description: "version is the minimum version the given component may be in this cluster. version must be in semver format (x.y.z) and must consist only of numbers and periods (.).",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"component", "version"},
+			},
+		},
 	}
 }
 

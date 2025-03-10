@@ -7,6 +7,7 @@ metadata:
     include.release.openshift.io/ibm-cloud-managed: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
     release.openshift.io/bootstrap-required: "true"
+    release.openshift.io/feature-set: CustomNoUpgrade
   name: featuregates.config.openshift.io
 spec:
   group: config.openshift.io
@@ -182,6 +183,42 @@ spec:
                             description: name is the name of the FeatureGate.
                             pattern: ^([A-Za-z0-9-]+\.)*[A-Za-z0-9-]+\.?$
                             type: string
+                          requiredMinimumComponentVersions:
+                            description: |-
+                              requiredMinimumComponentVersions is a list of component/version pairs that declares the is the lowest version the given
+                              component may be in this cluster.
+                              Currently, the only supported component is Kubelet, and setting a required minimum kubelet component will set the
+                              minimumKubeletVersion field in the nodes.config.openshift.io CRD.
+                            items:
+                              description: |-
+                                MinimumComponentVersion is a pair of Component and Version that specifies the required minimum Version of the given Component
+                                to enable this feature.
+                              properties:
+                                component:
+                                  description: component is the entity whose version
+                                    must be above a certain version.
+                                  enum:
+                                  - Kubelet
+                                  type: string
+                                version:
+                                  description: |-
+                                    version is the minimum version the given component may be in this cluster.
+                                    version must be in semver format (x.y.z) and must consist only of numbers and periods (.).
+                                  maxLength: 8
+                                  type: string
+                                  x-kubernetes-validations:
+                                  - message: minmumKubeletVersion must be in a semver
+                                      compatible format of x.y.z, or empty
+                                    rule: self.matches('^[0-9]*.[0-9]*.[0-9]*$')
+                              required:
+                              - component
+                              - version
+                              type: object
+                            maxItems: 1
+                            type: array
+                            x-kubernetes-list-map-keys:
+                            - component
+                            x-kubernetes-list-type: map
                         required:
                         - name
                         type: object
@@ -195,6 +232,42 @@ spec:
                             description: name is the name of the FeatureGate.
                             pattern: ^([A-Za-z0-9-]+\.)*[A-Za-z0-9-]+\.?$
                             type: string
+                          requiredMinimumComponentVersions:
+                            description: |-
+                              requiredMinimumComponentVersions is a list of component/version pairs that declares the is the lowest version the given
+                              component may be in this cluster.
+                              Currently, the only supported component is Kubelet, and setting a required minimum kubelet component will set the
+                              minimumKubeletVersion field in the nodes.config.openshift.io CRD.
+                            items:
+                              description: |-
+                                MinimumComponentVersion is a pair of Component and Version that specifies the required minimum Version of the given Component
+                                to enable this feature.
+                              properties:
+                                component:
+                                  description: component is the entity whose version
+                                    must be above a certain version.
+                                  enum:
+                                  - Kubelet
+                                  type: string
+                                version:
+                                  description: |-
+                                    version is the minimum version the given component may be in this cluster.
+                                    version must be in semver format (x.y.z) and must consist only of numbers and periods (.).
+                                  maxLength: 8
+                                  type: string
+                                  x-kubernetes-validations:
+                                  - message: minmumKubeletVersion must be in a semver
+                                      compatible format of x.y.z, or empty
+                                    rule: self.matches('^[0-9]*.[0-9]*.[0-9]*$')
+                              required:
+                              - component
+                              - version
+                              type: object
+                            maxItems: 1
+                            type: array
+                            x-kubernetes-list-map-keys:
+                            - component
+                            x-kubernetes-list-type: map
                         required:
                         - name
                         type: object

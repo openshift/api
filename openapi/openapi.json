@@ -6271,6 +6271,18 @@
           "description": "name is the name of the FeatureGate.",
           "type": "string",
           "default": ""
+        },
+        "requiredMinimumComponentVersions": {
+          "description": "requiredMinimumComponentVersions is a list of component/version pairs that declares the is the lowest version the given component may be in this cluster. Currently, the only supported component is Kubelet, and setting a required minimum kubelet component will set the minimumKubeletVersion field in the nodes.config.openshift.io CRD.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.MinimumComponentVersion"
+          },
+          "x-kubernetes-list-map-keys": [
+            "component"
+          ],
+          "x-kubernetes-list-type": "map"
         }
       }
     },
@@ -8046,6 +8058,26 @@
           "description": "The smallest allowed value (in seconds) of the RequiredHSTSPolicy max-age Setting max-age=0 allows the deletion of an existing HSTS header from a host.  This is a necessary tool for administrators to quickly correct mistakes. This value can be left unspecified, in which case no lower limit is enforced.",
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.MinimumComponentVersion": {
+      "description": "MinimumComponentVersion is a pair of Component and Version that specifies the required minimum Version of the given Component to enable this feature.",
+      "type": "object",
+      "required": [
+        "component",
+        "version"
+      ],
+      "properties": {
+        "component": {
+          "description": "component is the entity whose version must be above a certain version.",
+          "type": "string",
+          "default": ""
+        },
+        "version": {
+          "description": "version is the minimum version the given component may be in this cluster. version must be in semver format (x.y.z) and must consist only of numbers and periods (.).",
+          "type": "string",
+          "default": ""
         }
       }
     },

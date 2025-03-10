@@ -9,6 +9,8 @@ import (
 )
 
 // FeatureGateDescription is a golang-only interface used to contains details for a feature gate.
+//
+//nolint:all
 type FeatureGateDescription struct {
 	// FeatureGateAttributes is the information that appears in the API
 	FeatureGateAttributes configv1.FeatureGateAttributes
@@ -45,12 +47,14 @@ var (
 	kubernetes  = OwningProduct("Kubernetes")
 )
 
+//nolint:all
 type featureGateBuilder struct {
-	name                string
-	owningJiraComponent string
-	responsiblePerson   string
-	owningProduct       OwningProduct
-	enhancementPRURL    string
+	name                  string
+	owningJiraComponent   string
+	responsiblePerson     string
+	owningProduct         OwningProduct
+	enhancementPRURL      string
+	minimumKubeletVersion string
 
 	statusByClusterProfileByFeatureSet map[ClusterProfileName]map[configv1.FeatureSet]bool
 }
@@ -111,6 +115,11 @@ func (b *featureGateBuilder) enableForClusterProfile(clusterProfile ClusterProfi
 	return b
 }
 
+func (b *featureGateBuilder) requiredMinimumKubeletVersion(version string) *featureGateBuilder {
+	b.minimumKubeletVersion = version
+	return b
+}
+
 func (b *featureGateBuilder) register() (configv1.FeatureGateName, error) {
 	if len(b.name) == 0 {
 		return "", fmt.Errorf("missing name")
@@ -142,9 +151,20 @@ func (b *featureGateBuilder) register() (configv1.FeatureGateName, error) {
 	}
 
 	featureGateName := configv1.FeatureGateName(b.name)
+	var minComponentVersions []configv1.MinimumComponentVersion
+	if b.minimumKubeletVersion != "" {
+		if minComponentVersions == nil {
+			minComponentVersions = []configv1.MinimumComponentVersion{}
+		}
+		minComponentVersions = append(minComponentVersions, configv1.MinimumComponentVersion{
+			Component: configv1.MinimumComponentKubelet,
+			Version:   b.minimumKubeletVersion,
+		})
+	}
 	description := FeatureGateDescription{
 		FeatureGateAttributes: configv1.FeatureGateAttributes{
-			Name: featureGateName,
+			Name:                             featureGateName,
+			RequiredMinimumComponentVersions: minComponentVersions,
 		},
 		OwningJiraComponent: b.owningJiraComponent,
 		ResponsiblePerson:   b.responsiblePerson,

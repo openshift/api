@@ -20,7 +20,7 @@ package v1alpha1
 
 // XdpProgramInfo contains the xdp program details
 type XdpProgramInfo struct {
-	// The list of points to which the program should be attached.  The list items
+	// links is the list of points to which the program should be attached.  The list items
 	// are optional and may be udated after the bpf program has been loaded
 	// +optional
 	// +kubebuilder:default:={}
@@ -28,21 +28,21 @@ type XdpProgramInfo struct {
 }
 
 type XdpAttachInfo struct {
-	// Selector to determine the network interface (or interfaces)
+	// interfaceSelector to determine the network interface (or interfaces)
 	InterfaceSelector InterfaceSelector `json:"interfaceSelector"`
 
-	// Containers identifies the set of containers in which to attach the eBPF
+	// containers identify the set of containers in which to attach the eBPF
 	// program.
 	Containers ContainerSelector `json:"containers"`
 
-	// Priority specifies the priority of the bpf program in relation to
+	// priority specifies the priority of the bpf program in relation to
 	// other programs of the same type with the same attach point. It is a value
 	// from 0 to 1000 where lower values have higher precedence.
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=1000
 	Priority int32 `json:"priority"`
 
-	// ProceedOn allows the user to call other xdp programs in chain on this exit code.
+	// proceedOn allows the user to call other xdp programs in chain on this exit code.
 	// Multiple values are supported by repeating the parameter.
 	// +optional
 	// +kubebuilder:validation:MaxItems=6
@@ -51,7 +51,7 @@ type XdpAttachInfo struct {
 }
 
 type XdpProgramInfoState struct {
-	// List of attach points for the BPF program on the given node. Each entry
+	// links is the list of attach points for the BPF program on the given node. Each entry
 	// in *AttachInfoState represents a specific, unique attach point that is
 	// derived from *AttachInfo by fully expanding any selectors.  Each entry
 	// also contains information about the attach point required by the
@@ -64,20 +64,20 @@ type XdpProgramInfoState struct {
 type XdpAttachInfoState struct {
 	AttachInfoStateCommon `json:",inline"`
 
-	// Interface name to attach the xdp program to.
+	// ifName is interface name to attach the xdp program to.
 	IfName string `json:"ifName"`
 
-	// Container pid to attach the xdp program in.
+	// containerPid Container pid to attach the xdp program in.
 	ContainerPid int32 `json:"containerPid"`
 
-	// Priority specifies the priority of the xdp program in relation to
+	// priority specifies the priority of the xdp program in relation to
 	// other programs of the same type with the same attach point. It is a value
 	// from 0 to 1000 where lower values have higher precedence.
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=1000
 	Priority int32 `json:"priority"`
 
-	// ProceedOn allows the user to call other xdp programs in chain on this exit code.
+	// proceedOn allows the user to call other xdp programs in chain on this exit code.
 	// Multiple values are supported by repeating the parameter.
 	// +kubebuilder:validation:MaxItems=6
 	ProceedOn []XdpProceedOnValue `json:"proceedOn"`

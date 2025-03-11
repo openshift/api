@@ -20,32 +20,32 @@ package v1alpha1
 
 // UprobeProgramInfo contains the information for the uprobe program
 type UprobeProgramInfo struct {
-	// The list of points to which the program should be attached.  The list items
-	// are optional and may be udated after the bpf program has been loaded
+	// links is The list of points to which the program should be attached.  The list items
+	// are optional and may be updated after the bpf program has been loaded
 	// +optional
 	// +kubebuilder:default:={}
 	Links []UprobeAttachInfo `json:"links"`
 }
 
 type UprobeAttachInfo struct {
-	// Function to attach the uprobe to.
+	// function to attach the uprobe to.
 	// +optional
 	Function string `json:"function"`
 
-	// Offset added to the address of the function for uprobe.
+	// offset added to the address of the function for uprobe.
 	// +optional
 	// +kubebuilder:default:=0
 	Offset uint64 `json:"offset"`
 
-	// Library name or the absolute path to a binary or library.
+	// target is the Library name or the absolute path to a binary or library.
 	Target string `json:"target"`
 
-	// Only execute uprobe for given process identification number (PID). If PID
+	// pid is only execute uprobe for given process identification number (PID). If PID
 	// is not provided, uprobe executes for all PIDs.
 	// +optional
 	Pid *int32 `json:"pid"`
 
-	// Containers identifies the set of containers in which to attach the
+	// containers identify the set of containers in which to attach the
 	// uprobe.
 	Containers ContainerSelector `json:"containers"`
 }
@@ -64,24 +64,24 @@ type UprobeProgramInfoState struct {
 type UprobeAttachInfoState struct {
 	AttachInfoStateCommon `json:",inline"`
 
-	// Function to attach the uprobe to.
+	// function to attach the uprobe to.
 	// +optional
 	Function string `json:"function"`
 
-	// Offset added to the address of the function for uprobe.
+	// offset added to the address of the function for uprobe.
 	// +optional
 	// +kubebuilder:default:=0
 	Offset uint64 `json:"offset"`
 
-	// Library name or the absolute path to a binary or library.
+	// target is the library name or the absolute path to a binary or library.
 	Target string `json:"target"`
 
-	// Only execute uprobe for given process identification number (PID). If PID
+	// pid is Only execute uprobe for given process identification number (PID). If PID
 	// is not provided, uprobe executes for all PIDs.
 	// +optional
 	Pid *int32 `json:"pid"`
 
-	// Container pid to attach the uprobe program in.
+	// containerPid is container pid to attach the uprobe program in.
 	// +optional
 	ContainerPid int32 `json:"containerPid"`
 }

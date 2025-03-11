@@ -25,12 +25,12 @@ import (
 // +kubebuilder:validation:MaxProperties=1
 // +kubebuilder:validation:MinProperties=1
 type InterfaceSelector struct {
-	// Interfaces refers to a list of network interfaces to attach the BPF
+	// interfaces refers to a list of network interfaces to attach the BPF
 	// program to.
 	// +optional
 	Interfaces *[]string `json:"interfaces,omitempty"`
 
-	// Attach BPF program to the primary interface on the node. Only 'true' accepted.
+	// primaryNodeInterface to attach BPF program to the primary interface on the node. Only 'true' accepted.
 	// +optional
 	PrimaryNodeInterface *bool `json:"primaryNodeInterface,omitempty"`
 }
@@ -38,16 +38,16 @@ type InterfaceSelector struct {
 // ClContainerSelector identifies a set of containers. For example, this can be
 // used to identify a set of containers in which to attach uprobes.
 type ClContainerSelector struct {
-	// Target namespaces.
+	// namespaces indicate the target namespaces.
 	// +optional
 	// +kubebuilder:default:=""
 	Namespace string `json:"namespace"`
 
-	// Target pods. This field must be specified, to select all pods use
+	// pods indicate the target pods. This field must be specified, to select all pods use
 	// standard metav1.LabelSelector semantics and make it empty.
 	Pods metav1.LabelSelector `json:"pods"`
 
-	// Name(s) of container(s).  If none are specified, all containers in the
+	// containerNames indicate the Name(s) of container(s).  If none are specified, all containers in the
 	// pod are selected.
 	// +optional
 	ContainerNames *[]string `json:"containerNames,omitempty"`
@@ -57,11 +57,11 @@ type ClContainerSelector struct {
 // in that "Namespace" was removed. Namespace scoped programs can only attach to the namespace
 // they are created in, so namespace at this level doesn't apply.
 type ContainerSelector struct {
-	// Target pods. This field must be specified, to select all pods use
+	// pods indicate the target pods. This field must be specified, to select all pods use
 	// standard metav1.LabelSelector semantics and make it empty.
 	Pods metav1.LabelSelector `json:"pods"`
 
-	// Name(s) of container(s).  If none are specified, all containers in the
+	// containerNames indicate the name(s) of container(s).  If none are specified, all containers in the
 	// pod are selected.
 	// +optional
 	ContainerNames *[]string `json:"containerNames,omitempty"`
@@ -69,24 +69,24 @@ type ContainerSelector struct {
 
 // BpfAppCommon defines the common attributes for all BpfApp programs
 type BpfAppCommon struct {
-	// NodeSelector allows the user to specify which nodes to deploy the
+	// nodeSelector allows the user to specify which nodes to deploy the
 	// bpf program to. This field must be specified, to select all nodes
 	// use standard metav1.LabelSelector semantics and make it empty.
 	NodeSelector metav1.LabelSelector `json:"nodeSelector"`
 
-	// GlobalData allows the user to set global variables when the program is loaded
+	// globalData allows the user to set global variables when the program is loaded
 	// with an array of raw bytes. This is a very low level primitive. The caller
 	// is responsible for formatting the byte string appropriately considering
 	// such things as size, endianness, alignment and packing of data structures.
 	// +optional
 	GlobalData map[string][]byte `json:"globalData,omitempty"`
 
-	// Bytecode configures where the bpf program's bytecode should be loaded
+	// bytecode configures where the bpf program's bytecode should be loaded
 	// from.
 	ByteCode ByteCodeSelector `json:"byteCode"`
 
 	// TODO: need to work out how MapOwnerSelector will work after load-attach-split
-	// MapOwnerSelector is used to select the loaded eBPF program this eBPF program
+	// mapOwnerSelector is used to select the loaded eBPF program this eBPF program
 	// will share a map with.
 	// +optional
 	MapOwnerSelector *metav1.LabelSelector `json:"mapOwnerSelector"`
@@ -107,27 +107,27 @@ type BpfAppStatus struct {
 // AttachInfoStateCommon reflects the status for one attach point for a given bpf
 // application program
 type AttachInfoStateCommon struct {
-	// ShouldAttach reflects whether the attachment should exist.
+	// shouldAttach reflects whether the attachment should exist.
 	ShouldAttach bool `json:"shouldAttach"`
-	// Unique identifier for the attach point assigned by bpfman agent.
+	// uuid is an Unique identifier for the attach point assigned by bpfman agent.
 	UUID string `json:"uuid"`
-	// An identifier for the link assigned by bpfman. This field is
+	// linkId is an identifier for the link assigned by bpfman. This field is
 	// empty until the program is successfully attached and bpfman returns the
 	// id.
 	LinkId *uint32 `json:"linkId"`
-	// LinkStatus reflects whether the attachment has been reconciled
+	// linkStatus reflects whether the attachment has been reconciled
 	// successfully, and if not, why.
 	LinkStatus LinkStatus `json:"linkStatus"`
 }
 
 type BpfProgramStateCommon struct {
-	// Name is the name of the function that is the entry point for the BPF
+	// name is the name of the function that is the entry point for the BPF
 	// program
 	Name string `json:"name"`
-	// ProgramLinkStatus reflects whether all links requested for the program
+	// programLinkStatus reflects whether all links requested for the program
 	// are in the correct state.
 	ProgramLinkStatus ProgramLinkStatus `json:"programLinkStatus"`
-	// ProgramId is the id of the program in the kernel.  Not set until the
+	// programId is the id of the program in the kernel.  Not set until the
 	// program is loaded.
 	// +optional
 	ProgramId *uint32 `json:"programId"`
@@ -148,24 +148,24 @@ const (
 
 // ByteCodeSelector defines the various ways to reference bpf bytecode objects.
 type ByteCodeSelector struct {
-	// Image used to specify a bytecode container image.
+	// image used to specify a bytecode container image.
 	Image *ByteCodeImage `json:"image,omitempty"`
 
-	// Path is used to specify a bytecode object via filepath.
+	// path is used to specify a bytecode object via filepath.
 	Path *string `json:"path,omitempty"`
 }
 
 // ByteCodeImage defines how to specify a bytecode container image.
 type ByteCodeImage struct {
-	// Valid container image URL used to reference a remote bytecode image.
+	// url is a valid container image URL used to reference a remote bytecode image.
 	Url string `json:"url"`
 
-	// PullPolicy describes a policy for if/when to pull a bytecode image. Defaults to IfNotPresent.
+	// pullPolicy describes a policy for if/when to pull a bytecode image. Defaults to IfNotPresent.
 	// +kubebuilder:default:=IfNotPresent
 	// +optional
 	ImagePullPolicy PullPolicy `json:"imagePullPolicy"`
 
-	// ImagePullSecret is the name of the secret bpfman should use to get remote image
+	// imagePullSecret is the name of the secret bpfman should use to get remote image
 	// repository secrets.
 	// +optional
 	ImagePullSecret *ImagePullSecretSelector `json:"imagePullSecret,omitempty"`
@@ -173,10 +173,10 @@ type ByteCodeImage struct {
 
 // ImagePullSecretSelector defines the name and namespace of an image pull secret.
 type ImagePullSecretSelector struct {
-	// Name of the secret which contains the credentials to access the image repository.
+	// name of the secret which contains the credentials to access the image repository.
 	Name string `json:"name"`
 
-	// Namespace of the secret which contains the credentials to access the image repository.
+	// namespace of the secret which contains the credentials to access the image repository.
 	Namespace string `json:"namespace"`
 }
 

@@ -31,7 +31,7 @@ type ClFexitProgramInfo struct {
 // ClFexitLoadInfo contains the program-specific load information for Fexit
 // programs
 type ClFexitLoadInfo struct {
-	// Function is the name of the function to attach the Fexit program to.
+	// function is the name of the function to attach the Fexit program to.
 	Function string `json:"function"`
 }
 

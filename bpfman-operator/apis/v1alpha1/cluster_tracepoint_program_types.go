@@ -20,21 +20,21 @@ package v1alpha1
 
 // ClTracepointProgramInfo contains the Tracepoint program details
 type ClTracepointProgramInfo struct {
-	// The list of points to which the program should be attached.  The list items
-	// are optional and may be udated after the bpf program has been loaded
+	// links is the list of points to which the program should be attached.  The list items
+	// are optional and may be updated after the bpf program has been loaded
 	// +optional
 	// +kubebuilder:default:={}
 	Links []ClTracepointAttachInfo `json:"links"`
 }
 
 type ClTracepointAttachInfo struct {
-	// Name refers to the name of a kernel tracepoint to attach the
+	// name refers to the name of a kernel tracepoint to attach the
 	// bpf program to.
 	Name string `json:"name"`
 }
 
 type ClTracepointProgramInfoState struct {
-	// List of attach points for the BPF program on the given node. Each entry
+	// links is the list of attach points for the BPF program on the given node. Each entry
 	// in *AttachInfoState represents a specific, unique attach point that is
 	// derived from *AttachInfo by fully expanding any selectors.  Each entry
 	// also contains information about the attach point required by the

@@ -31,28 +31,28 @@ type ClTcProgramInfo struct {
 }
 
 type ClTcAttachInfo struct {
-	// Selector to determine the network interface (or interfaces)
+	// interfaceSelector to determine the network interface (or interfaces)
 	InterfaceSelector InterfaceSelector `json:"interfaceSelector"`
 
-	// Containers identifies the set of containers in which to attach the eBPF
+	// containers identifies the set of containers in which to attach the eBPF
 	// program. If Containers is not specified, the BPF program will be attached
 	// in the root network namespace.
 	// +optional
 	Containers *ClContainerSelector `json:"containers"`
 
-	// Direction specifies the direction of traffic the tc program should
+	// direction specifies the direction of traffic the tc program should
 	// attach to for a given network device.
 	// +kubebuilder:validation:Enum=ingress;egress
 	Direction string `json:"direction"`
 
-	// Priority specifies the priority of the tc program in relation to
+	// priority specifies the priority of the tc program in relation to
 	// other programs of the same type with the same attach point. It is a value
 	// from 0 to 1000 where lower values have higher precedence.
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=1000
 	Priority int32 `json:"priority"`
 
-	// ProceedOn allows the user to call other tc programs in chain on this exit code.
+	// proceedOn allows the user to call other tc programs in chain on this exit code.
 	// Multiple values are supported by repeating the parameter.
 	// +optional
 	// +kubebuilder:validation:MaxItems=11
@@ -61,10 +61,10 @@ type ClTcAttachInfo struct {
 }
 
 type ClTcProgramInfoState struct {
-	// List of attach points for the BPF program on the given node. Each entry
+	// links is the List of attach points for the BPF program on the given node. Each entry
 	// in *AttachInfoState represents a specific, unique attach point that is
 	// derived from *AttachInfo by fully expanding any selectors.  Each entry
-	// also contains information about the attach point required by the
+	// also contains information about the attached point required by the
 	// reconciler
 	// +optional
 	// +kubebuilder:default:={}
@@ -74,26 +74,26 @@ type ClTcProgramInfoState struct {
 type ClTcAttachInfoState struct {
 	AttachInfoStateCommon `json:",inline"`
 
-	// Interface name to attach the tc program to.
+	// ifname is the Interface name to attach the tc program to.
 	IfName string `json:"ifName"`
 
 	// Optional container pid to attach the tc program in.
 	// +optional
 	ContainerPid *int32 `json:"containerPid"`
 
-	// Direction specifies the direction of traffic the tc program should
+	// direction specifies the direction of traffic the tc program should
 	// attach to for a given network device.
 	// +kubebuilder:validation:Enum=ingress;egress
 	Direction string `json:"direction"`
 
-	// Priority specifies the priority of the tc program in relation to
+	// priority specifies the priority of the tc program in relation to
 	// other programs of the same type with the same attach point. It is a value
 	// from 0 to 1000 where lower values have higher precedence.
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=1000
 	Priority int32 `json:"priority"`
 
-	// ProceedOn allows the user to call other tc programs in chain on this exit code.
+	// proceedOn allows the user to call other tc programs in chain on this exit code.
 	// Multiple values are supported by repeating the parameter.
 	// +kubebuilder:validation:MaxItems=11
 	ProceedOn []TcProceedOnValue `json:"proceedOn"`

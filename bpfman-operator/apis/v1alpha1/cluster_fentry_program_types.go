@@ -31,7 +31,7 @@ type ClFentryProgramInfo struct {
 // ClFentryLoadInfo contains the program-specific load information for Fentry
 // programs
 type ClFentryLoadInfo struct {
-	// Function is the name of the function to attach the Fentry program to.
+	// function is the name of the function to attach the Fentry program to.
 	Function string `json:"function"`
 }
 

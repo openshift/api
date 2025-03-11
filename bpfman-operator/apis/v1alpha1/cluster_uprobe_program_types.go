@@ -20,7 +20,7 @@ package v1alpha1
 
 // ClUprobeProgramInfo contains the information for the uprobe program
 type ClUprobeProgramInfo struct {
-	// The list of points to which the program should be attached.  The list items
+	// links in the list of points to which the program should be attached.  The list items
 	// are optional and may be udated after the bpf program has been loaded
 	// +optional
 	// +kubebuilder:default:={}
@@ -28,24 +28,24 @@ type ClUprobeProgramInfo struct {
 }
 
 type ClUprobeAttachInfo struct {
-	// Function to attach the uprobe to.
+	// function to attach the uprobe to.
 	// +optional
 	Function string `json:"function"`
 
-	// Offset added to the address of the function for uprobe.
+	// offset added to the address of the function for uprobe.
 	// +optional
 	// +kubebuilder:default:=0
 	Offset uint64 `json:"offset"`
 
-	// Library name or the absolute path to a binary or library.
+	// target is the Library name or the absolute path to a binary or library.
 	Target string `json:"target"`
 
-	// Only execute uprobe for given process identification number (PID). If PID
+	// pid only execute uprobe for given process identification number (PID). If PID
 	// is not provided, uprobe executes for all PIDs.
 	// +optional
 	Pid *int32 `json:"pid"`
 
-	// Containers identifies the set of containers in which to attach the
+	// containers identify the set of containers in which to attach the
 	// uprobe. If Containers is not specified, the uprobe will be attached in
 	// the bpfman-agent container.
 	// +optional
@@ -53,7 +53,7 @@ type ClUprobeAttachInfo struct {
 }
 
 type ClUprobeProgramInfoState struct {
-	// List of attach points for the BPF program on the given node. Each entry
+	// links is the list of attach points for the BPF program on the given node. Each entry
 	// in *AttachInfoState represents a specific, unique attach point that is
 	// derived from *AttachInfo by fully expanding any selectors.  Each entry
 	// also contains information about the attach point required by the
@@ -66,19 +66,19 @@ type ClUprobeProgramInfoState struct {
 type ClUprobeAttachInfoState struct {
 	AttachInfoStateCommon `json:",inline"`
 
-	// Function to attach the uprobe to.
+	// function to attach the uprobe to.
 	// +optional
 	Function string `json:"function"`
 
-	// Offset added to the address of the function for uprobe.
+	// offset added to the address of the function for uprobe.
 	// +optional
 	// +kubebuilder:default:=0
 	Offset uint64 `json:"offset"`
 
-	// Library name or the absolute path to a binary or library.
+	// target is the library name or the absolute path to a binary or library.
 	Target string `json:"target"`
 
-	// Only execute uprobe for given process identification number (PID). If PID
+	// pid only execute uprobe for given process identification number (PID). If PID
 	// is not provided, uprobe executes for all PIDs.
 	// +optional
 	Pid *int32 `json:"pid"`

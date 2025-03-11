@@ -24,40 +24,41 @@ import (
 
 // BpfApplicationProgramState defines the desired state of BpfApplication
 // +union
-// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'xdp' ?  has(self.xdpInfo) : !has(self.xdpInfo)",message="xdpInfo configuration is required when type is xdp, and forbidden otherwise"
-// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'tc' ?  has(self.tcInfo) : !has(self.tcInfo)",message="tcInfo configuration is required when type is tc, and forbidden otherwise"
-// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'tcx' ?  has(self.tcxInfo) : !has(self.tcxInfo)",message="tcx configuration is required when type is TCtcxX, and forbidden otherwise"
-// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'uprobe' ?  has(self.uprobeInfo) : !has(self.uprobeInfo)",message="uprobe configuration is required when type is uprobe, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'XDP' ?  has(self.xdpInfo) : !has(self.xdpInfo)",message="xdpInfo configuration is required when type is xdp, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'TC' ?  has(self.tcInfo) : !has(self.tcInfo)",message="tcInfo configuration is required when type is tc, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'TCX' ?  has(self.tcxInfo) : !has(self.tcxInfo)",message="tcx configuration is required when type is TCX, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'Uprobe' ?  has(self.uprobeInfo) : !has(self.uprobeInfo)",message="uprobe configuration is required when type is uprobe, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'UretProbe' ?  has(self.uretprobeInfo) : !has(self.upretrobeInfo)",message="uretprobe configuration is required when type is uretprobe, and forbidden otherwise"
 type BpfApplicationProgramState struct {
 	BpfProgramStateCommon `json:",inline"`
 
-	// Type specifies the bpf program type
+	// type specifies the bpf program type
 	// +unionDiscriminator
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Enum:="xdp";"tc";"tcx";"uprobe";"uretprobe"
-	Type EBPFProgType `json:"type,omitempty"`
+	// +required
+	// +kubebuilder:validation:Enum:="XDP";"TC";"TCX";"Uprobe";"UretProbe"
+	Type EBPFProgType `json:"type"`
 
-	// xdp defines the desired state of the application's XdpPrograms.
+	// xdpInfo defines the desired state of the application's XdpPrograms.
 	// +unionMember
 	// +optional
 	XDPInfo *XdpProgramInfoState `json:"xdpInfo,omitempty"`
 
-	// tc defines the desired state of the application's TcPrograms.
+	// tcInfo defines the desired state of the application's TcPrograms.
 	// +unionMember
 	// +optional
 	TCInfo *TcProgramInfoState `json:"tcInfo,omitempty"`
 
-	// tcx defines the desired state of the application's TcxPrograms.
+	// tcxInfo defines the desired state of the application's TcxPrograms.
 	// +unionMember
 	// +optional
 	TCXInfo *TcxProgramInfoState `json:"tcxInfo,omitempty"`
 
-	// uprobe defines the desired state of the application's UprobePrograms.
+	// uprobeInfo defines the desired state of the application's UprobePrograms.
 	// +unionMember
 	// +optional
 	UprobeInfo *UprobeProgramInfoState `json:"uprobeInfo,omitempty"`
 
-	// uretprobe defines the desired state of the application's UretprobePrograms.
+	// uretprobeInfo defines the desired state of the application's UretprobePrograms.
 	// +unionMember
 	// +optional
 	UretprobeInfo *UprobeProgramInfoState `json:"uretprobeInfo,omitempty"`
@@ -65,17 +66,17 @@ type BpfApplicationProgramState struct {
 
 // BpfApplicationSpec defines the desired state of BpfApplication
 type BpfApplicationStateSpec struct {
-	// Node is the name of the node for this BpfApplicationStateSpec.
+	// node is the name of the node for this BpfApplicationStateSpec.
 	Node string `json:"node"`
-	// The number of times the BpfApplicationState has been updated.  Set to 1
+	// updateCount is the number of times the BpfApplicationState has been updated. Set to 1
 	// when the object is created, then it is incremented prior to each update.
 	// This allows us to verify that the API server has the updated object prior
 	// to starting a new Reconcile operation.
 	UpdateCount int64 `json:"updateCount"`
-	// AppLoadStatus reflects the status of loading the bpf application on the
+	// appLoadStatus reflects the status of loading the bpf application on the
 	// given node.
 	AppLoadStatus AppLoadStatus `json:"appLoadStatus"`
-	// Programs is a list of bpf programs contained in the parent application.
+	// programs is a list of bpf programs contained in the parent application.
 	// It is a map from the bpf program name to BpfApplicationProgramState
 	// elements.
 	Programs []BpfApplicationProgramState `json:"programs,omitempty"`

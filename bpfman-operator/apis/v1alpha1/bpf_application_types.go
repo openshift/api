@@ -22,42 +22,43 @@ import (
 
 // BpfApplicationProgram defines the desired state of BpfApplication
 // +union
-// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'xdp' ?  has(self.xdpInfo) : !has(self.xdpInfo)",message="xdpInfo configuration is required when type is xdp, and forbidden otherwise"
-// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'tc' ?  has(self.tcInfo) : !has(self.tcInfo)",message="tcInfo configuration is required when type is tc, and forbidden otherwise"
-// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'tcx' ?  has(self.tcxInfo) : !has(self.tcxInfo)",message="tcxInfo configuration is required when type is tcx, and forbidden otherwise"
-// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'uprobe' ?  has(self.uprobeInfo) : !has(self.uprobeInfo)",message="uprobeInfo configuration is required when type is uprobe, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'XDP' ?  has(self.xdpInfo) : !has(self.xdpInfo)",message="xdpInfo configuration is required when type is xdp, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'TC' ?  has(self.tcInfo) : !has(self.tcInfo)",message="tcInfo configuration is required when type is tc, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'TCX' ?  has(self.tcxInfo) : !has(self.tcxInfo)",message="tcxInfo configuration is required when type is tcx, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'Uprobe' ?  has(self.uprobeInfo) : !has(self.uprobeInfo)",message="uprobeInfo configuration is required when type is uprobe, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'UretProbe' ?  has(self.uretprobeInfo) : !has(self.upretrobeInfo)",message="uretprobe configuration is required when type is uretprobe, and forbidden otherwise"
 type BpfApplicationProgram struct {
-	// Name is the name of the function that is the entry point for the BPF
+	// name is the name of the function that is the entry point for the BPF
 	// program
 	Name string `json:"name"`
 
-	// Type specifies the bpf program type
+	// type specifies the bpf program type
 	// +unionDiscriminator
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Enum:="xdp";"tc";"tcx";"uprobe";"uretprobe"
-	Type EBPFProgType `json:"type,omitempty"`
+	// +required
+	// +kubebuilder:validation:Enum:="XDP";"TC";"TCX";"Uprobe";"UretProbe"
+	Type EBPFProgType `json:"type"`
 
-	// xdp defines the desired state of the application's XdpPrograms.
+	// xdpInfo defines the desired state of the application's XdpPrograms.
 	// +unionMember
 	// +optional
 	XDPInfo *XdpProgramInfo `json:"xdpInfo,omitempty"`
 
-	// tc defines the desired state of the application's TcPrograms.
+	// tcInfo defines the desired state of the application's TcPrograms.
 	// +unionMember
 	// +optional
 	TCInfo *TcProgramInfo `json:"tcInfo,omitempty"`
 
-	// tcx defines the desired state of the application's TcxPrograms.
+	// tcxInfo defines the desired state of the application's TcxPrograms.
 	// +unionMember
 	// +optional
 	TCXInfo *TcxProgramInfo `json:"tcxInfo,omitempty"`
 
-	// uprobe defines the desired state of the application's UprobePrograms.
+	// uprobeInfo defines the desired state of the application's UprobePrograms.
 	// +unionMember
 	// +optional
 	UprobeInfo *UprobeProgramInfo `json:"uprobeInfo,omitempty"`
 
-	// uretprobe defines the desired state of the application's UretprobePrograms.
+	// uretprobeInfo defines the desired state of the application's UretprobePrograms.
 	// +unionMember
 	// +optional
 	UretprobeInfo *UprobeProgramInfo `json:"uretprobeInfo,omitempty"`
@@ -67,7 +68,7 @@ type BpfApplicationProgram struct {
 type BpfApplicationSpec struct {
 	BpfAppCommon `json:",inline"`
 
-	// Programs is the list of bpf programs in the BpfApplication that should be
+	// programs is the list of bpf programs in the BpfApplication that should be
 	// loaded. The application can selectively choose which program(s) to run
 	// from this list based on the optional attach points provided.
 	// +kubebuilder:validation:MinItems:=1

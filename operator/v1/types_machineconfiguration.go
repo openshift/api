@@ -41,8 +41,10 @@ type MachineConfigurationSpec struct {
 	// managedBootImages allows configuration for the management of boot images for machine
 	// resources within the cluster. This configuration allows users to select resources that should
 	// be updated to the latest boot images during cluster upgrades, ensuring that new machines
-	// always boot with the current cluster version's boot image. When omitted, no boot images
-	// will be updated.
+	// always boot with the current cluster version's boot image. When omitted, this means no opinion
+	// and the platform is left to choose a reasonable default, which is subject to change over time.
+	// The default for each machine manager mode is All for GCP and AWS platforms, and None for all
+	// other platforms.
 	// +openshift:enable:FeatureGate=ManagedBootImages
 	// +optional
 	ManagedBootImages ManagedBootImages `json:"managedBootImages"`
@@ -96,6 +98,12 @@ type MachineConfigurationStatus struct {
 	// +openshift:enable:FeatureGate=NodeDisruptionPolicy
 	// +optional
 	NodeDisruptionPolicyStatus NodeDisruptionPolicyStatus `json:"nodeDisruptionPolicyStatus"`
+
+	// managedBootImagesStatus reflects what the latest cluster-validated boot image configuration is
+	// and will be used by Machine Config Controller while performing boot image updates.
+	// +openshift:enable:FeatureGate=ManagedBootImages
+	// +optional
+	ManagedBootImagesStatus ManagedBootImages `json:"managedBootImagesStatus"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -122,6 +130,7 @@ type ManagedBootImages struct {
 	// +listType=map
 	// +listMapKey=resource
 	// +listMapKey=apiGroup
+	// +kubebuilder:validation:MaxItems=5
 	MachineManagers []MachineManager `json:"machineManagers"`
 }
 

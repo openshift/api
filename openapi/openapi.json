@@ -33370,9 +33370,12 @@
     },
     "com.github.openshift.api.operator.v1alpha1.Integrations": {
       "type": "object",
+      "required": [
+        "frameworks"
+      ],
       "properties": {
         "externalFrameworks": {
-          "description": "externalFrameworks List of GroupVersionKinds that are managed for Kueue by external controllers; the expected format is `Kind.version.group.com`.",
+          "description": "externalFrameworks are a list of GroupVersionKinds that are managed for Kueue by external controllers; the expected format is `Kind.version.group.com`. As far as",
           "type": "array",
           "items": {
             "type": "string",
@@ -33380,7 +33383,7 @@
           }
         },
         "frameworks": {
-          "description": "frameworks List of framework names to be enabled. Possible options:\n - \"batch/job\"\n - \"kubeflow.org/mpijob\"\n - \"ray.io/rayjob\"\n - \"ray.io/raycluster\"\n - \"jobset.x-k8s.io/jobset\"\n - \"kubeflow.org/paddlejob\"\n - \"kubeflow.org/pytorchjob\"\n - \"kubeflow.org/tfjob\"\n - \"kubeflow.org/xgboostjob\"\n - \"workload.codeflare.dev/appwrapper\"\n - \"pod\"\n - \"deployment\" (requires enabling pod integration)\n - \"statefulset\" (requires enabling pod integration)\n - \"leaderworkerset.x-k8s.io/leaderworkerset\" (requires enabling pod integration)",
+          "description": "frameworks are a list of names to be enabled. Possible options:\n - \"batch/job\"\n - \"kubeflow.org/mpijob\"\n - \"ray.io/rayjob\"\n - \"ray.io/raycluster\"\n - \"jobset.x-k8s.io/jobset\"\n - \"kubeflow.org/paddlejob\"\n - \"kubeflow.org/pytorchjob\"\n - \"kubeflow.org/tfjob\"\n - \"kubeflow.org/xgboostjob\"\n - \"workload.codeflare.dev/appwrapper\"\n - \"pod\"\n - \"deployment\" (requires enabling pod integration)\n - \"statefulset\" (requires enabling pod integration)\n - \"leaderworkerset.x-k8s.io/leaderworkerset\" (requires enabling pod integration)",
           "type": "array",
           "items": {
             "type": "string",
@@ -33398,7 +33401,7 @@
       }
     },
     "com.github.openshift.api.operator.v1alpha1.Kueue": {
-      "description": "Kueue is the Schema for the kueue API Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "description": "Kueue is the CRD to represent the kueue operator This CRD defines the configuration that the Kueue Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
       "type": "object",
       "required": [
         "spec"
@@ -33432,8 +33435,7 @@
     "com.github.openshift.api.operator.v1alpha1.KueueConfiguration": {
       "type": "object",
       "required": [
-        "integrations",
-        "metrics"
+        "integrations"
       ],
       "properties": {
         "fairSharing": {
@@ -33459,11 +33461,11 @@
           "type": "string"
         },
         "managedJobsNamespaceSelector": {
-          "description": "managedJobsNamespaceSelector can be used to omit some namespaces from ManagedJobsWithoutQueueName",
+          "description": "managedJobsNamespaceSelector can be used to omit some namespaces from ManagedJobsWithoutQueueName Only valid if ManagedJobsWithoutQueueName is NoQueueName",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector"
         },
         "metrics": {
-          "description": "Metrics Microshift does not enable metrics by default Default will assume metrics are enabled.",
+          "description": "metrics allows one to change if metrics are enabled or disabled. Microshift does not enable metrics by default Default will assume metrics are enabled.",
           "type": "string"
         },
         "resources": {
@@ -33490,7 +33492,7 @@
           "type": "string"
         },
         "items": {
-          "description": "items is a slice of kueue",
+          "description": "items is a slice of kueue this is a cluster scoped resource and there can only be 1 kueue",
           "type": "array",
           "items": {
             "default": {},
@@ -33937,7 +33939,7 @@
       "type": "object",
       "properties": {
         "backoffBaseSeconds": {
-          "description": "BackoffBaseSeconds defines the base for the exponential backoff for re-queuing an evicted workload.\n\nDefaults to 60.",
+          "description": "backoffBaseSeconds defines the base for the exponential backoff for re-queuing an evicted workload.\n\nDefaults to 60.",
           "type": "integer",
           "format": "int32"
         },
@@ -33947,7 +33949,7 @@
           "format": "int32"
         },
         "backoffMaxSeconds": {
-          "description": "BackoffMaxSeconds defines the maximum backoff time to re-queue an evicted workload.\n\nDefaults to 3600.",
+          "description": "backoffMaxSeconds defines the maximum backoff time to re-queue an evicted workload.\n\nDefaults to 3600.",
           "type": "integer",
           "format": "int32"
         },
@@ -33976,16 +33978,17 @@
           }
         },
         "strategy": {
-          "description": "strategy specifies if the input resource should be replaced or retained. Defaults to Retain",
+          "description": "strategy specifies if the input resource should be replaced or retained.",
           "type": "string"
         }
       }
     },
     "com.github.openshift.api.operator.v1alpha1.Resources": {
+      "description": "These structs come directly from Kueue.",
       "type": "object",
       "properties": {
         "excludeResourcePrefixes": {
-          "description": "excludedResourcePrefixes defines which resources should be ignored by Kueue",
+          "description": "excludeResourcePrefixes defines which resources should be ignored by Kueue",
           "type": "array",
           "items": {
             "type": "string",

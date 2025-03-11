@@ -52,6 +52,9 @@
                         "name": "SELinuxMount"
                     },
                     {
+                        "name": "ShortCertRotation"
+                    },
+                    {
                         "name": "SigstoreImageVerificationPKI"
                     }
                 ],

@@ -158,9 +158,6 @@
                         "name": "PreconfiguredUDNAddresses"
                     },
                     {
-                        "name": "RouteAdvertisements"
-                    },
-                    {
                         "name": "SELinuxMount"
                     },
                     {
@@ -284,6 +281,9 @@
                     },
                     {
                         "name": "ProcMountType"
+                    },
+                    {
+                        "name": "RouteAdvertisements"
                     },
                     {
                         "name": "RouteExternalCertificate"

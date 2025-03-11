@@ -35,12 +35,19 @@ type ClFentryLoadInfo struct {
 	Function string `json:"function"`
 }
 
+type AttachType string
+
+const (
+	Attach  AttachType = "true"
+	Dettach AttachType = "false"
+)
+
 // ClFentryAttachInfo indicates that the Fentry program should be attached to
 // the function identified in ClFentryLoadInfo. The only valid value for Attach
 // is true.
 type ClFentryAttachInfo struct {
-	// +kubebuilder:validation:Enum=true
-	Attach bool `json:"attach"`
+	// +kubebuilder:validation:Enum==Attach;Dettach;
+	Attach AttachType `json:"attach"`
 }
 
 type ClFentryProgramInfoState struct {

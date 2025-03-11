@@ -39,8 +39,8 @@ type ClFexitLoadInfo struct {
 // the function identified in ClFentryLoadInfo. The only valid value for Attach
 // is true.
 type ClFexitAttachInfo struct {
-	// +kubebuilder:validation:Enum=true
-	Attach bool `json:"attach"`
+	// +kubebuilder:validation:Enum==Attach;Dettach;
+	Attach AttachType `json:"attach"`
 }
 
 type ClFexitProgramInfoState struct {

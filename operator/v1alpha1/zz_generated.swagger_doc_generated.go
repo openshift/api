@@ -267,8 +267,8 @@ func (FairSharing) SwaggerDoc() map[string]string {
 }
 
 var map_Integrations = map[string]string{
-	"frameworks":         "frameworks List of framework names to be enabled. Possible options:\n - \"batch/job\"\n - \"kubeflow.org/mpijob\"\n - \"ray.io/rayjob\"\n - \"ray.io/raycluster\"\n - \"jobset.x-k8s.io/jobset\"\n - \"kubeflow.org/paddlejob\"\n - \"kubeflow.org/pytorchjob\"\n - \"kubeflow.org/tfjob\"\n - \"kubeflow.org/xgboostjob\"\n - \"workload.codeflare.dev/appwrapper\"\n - \"pod\"\n - \"deployment\" (requires enabling pod integration)\n - \"statefulset\" (requires enabling pod integration)\n - \"leaderworkerset.x-k8s.io/leaderworkerset\" (requires enabling pod integration)",
-	"externalFrameworks": "externalFrameworks List of GroupVersionKinds that are managed for Kueue by external controllers; the expected format is `Kind.version.group.com`.",
+	"frameworks":         "frameworks are a list of names to be enabled. Possible options:\n - \"batch/job\"\n - \"kubeflow.org/mpijob\"\n - \"ray.io/rayjob\"\n - \"ray.io/raycluster\"\n - \"jobset.x-k8s.io/jobset\"\n - \"kubeflow.org/paddlejob\"\n - \"kubeflow.org/pytorchjob\"\n - \"kubeflow.org/tfjob\"\n - \"kubeflow.org/xgboostjob\"\n - \"workload.codeflare.dev/appwrapper\"\n - \"pod\"\n - \"deployment\" (requires enabling pod integration)\n - \"statefulset\" (requires enabling pod integration)\n - \"leaderworkerset.x-k8s.io/leaderworkerset\" (requires enabling pod integration)",
+	"externalFrameworks": "externalFrameworks are a list of GroupVersionKinds that are managed for Kueue by external controllers; the expected format is `Kind.version.group.com`. As far as",
 	"labelKeysToCopy":    "labelKeysToCopy is a list of label keys that should be copied from the job into the workload object. It is not required for the job to have all the labels from this list. If a job does not have some label with the given key from this list, the constructed workload object will be created without this label. In the case of creating a workload from a composable job (pod group), if multiple objects have labels with some key from the list, the values of these labels must match or otherwise the workload creation would fail. The labels are copied only during the workload creation and are not updated even if the labels of the underlying job are changed.",
 }
 
@@ -277,7 +277,7 @@ func (Integrations) SwaggerDoc() map[string]string {
 }
 
 var map_Kueue = map[string]string{
-	"":         "Kueue is the Schema for the kueue API Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"":         "Kueue is the CRD to represent the kueue operator This CRD defines the configuration that the Kueue Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 	"metadata": "metadata for kueue",
 	"spec":     "spec holds user settable values for configuration",
 	"status":   "status holds observed values from the cluster. They may not be overridden.",
@@ -295,7 +295,7 @@ var map_KueueConfiguration = map[string]string{
 	"manageJobsWithoutQueueName":   "manageJobsWithoutQueueName controls whether or not Kueue reconciles jobs that don't set the annotation kueue.x-k8s.io/queue-name. Allowed values are NoQueueName and QueueName Default will be QueueName",
 	"managedJobsNamespaceSelector": "managedJobsNamespaceSelector can be used to omit some namespaces from ManagedJobsWithoutQueueName Only valid if ManagedJobsWithoutQueueName is NoQueueName",
 	"fairSharing":                  "fairSharing controls the fair sharing semantics across the cluster.",
-	"metrics":                      ",etrics Microshift does not enable metrics by default Default will assume metrics are enabled.",
+	"metrics":                      "metrics allows one to change if metrics are enabled or disabled. Microshift does not enable metrics by default Default will assume metrics are enabled.",
 }
 
 func (KueueConfiguration) SwaggerDoc() map[string]string {
@@ -305,7 +305,7 @@ func (KueueConfiguration) SwaggerDoc() map[string]string {
 var map_KueueList = map[string]string{
 	"":         "KueueList contains a list of Kueue\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 	"metadata": "metadata for the list",
-	"items":    "items is a slice of kueue",
+	"items":    "items is a slice of kueue this is a cluster scoped resource and there can only be 1 kueue",
 }
 
 func (KueueList) SwaggerDoc() map[string]string {
@@ -331,8 +331,8 @@ func (KueueStatus) SwaggerDoc() map[string]string {
 var map_RequeuingStrategy = map[string]string{
 	"timestamp":          "timestamp defines the timestamp used for re-queuing a Workload that was evicted due to Pod readiness. The possible values are:\n\n- `Eviction` (default) indicates from Workload `Evicted` condition with `PodsReadyTimeout` reason. - `Creation` indicates from Workload .metadata.creationTimestamp.",
 	"backoffLimitCount":  "backoffLimitCount defines the maximum number of re-queuing retries. Once the number is reached, the workload is deactivated (`.spec.activate`=`false`). When it is null, the workloads will repeatedly and endless re-queueing.\n\nEvery backoff duration is about \"b*2^(n-1)+Rand\" where: - \"b\" represents the base set by \"BackoffBaseSeconds\" parameter, - \"n\" represents the \"workloadStatus.requeueState.count\", - \"Rand\" represents the random jitter. During this time, the workload is taken as an inadmissible and other workloads will have a chance to be admitted. By default, the consecutive requeue delays are around: (60s, 120s, 240s, ...).\n\nDefaults to null.",
-	"backoffBaseSeconds": "BackoffBaseSeconds defines the base for the exponential backoff for re-queuing an evicted workload.\n\nDefaults to 60.",
-	"backoffMaxSeconds":  "BackoffMaxSeconds defines the maximum backoff time to re-queue an evicted workload.\n\nDefaults to 3600.",
+	"backoffBaseSeconds": "backoffBaseSeconds defines the base for the exponential backoff for re-queuing an evicted workload.\n\nDefaults to 60.",
+	"backoffMaxSeconds":  "backoffMaxSeconds defines the maximum backoff time to re-queue an evicted workload.\n\nDefaults to 3600.",
 }
 
 func (RequeuingStrategy) SwaggerDoc() map[string]string {
@@ -341,7 +341,7 @@ func (RequeuingStrategy) SwaggerDoc() map[string]string {
 
 var map_ResourceTransformation = map[string]string{
 	"input":    "input is the name of the input resource.",
-	"strategy": "strategy specifies if the input resource should be replaced or retained. Defaults to Retain",
+	"strategy": "strategy specifies if the input resource should be replaced or retained.",
 	"outputs":  "outputs specifies the output resources and quantities per unit of input resource. An empty Outputs combined with a `Replace` Strategy causes the Input resource to be ignored by Kueue.",
 }
 
@@ -350,7 +350,8 @@ func (ResourceTransformation) SwaggerDoc() map[string]string {
 }
 
 var map_Resources = map[string]string{
-	"excludeResourcePrefixes": "excludedResourcePrefixes defines which resources should be ignored by Kueue",
+	"":                        "These structs come directly from Kueue.",
+	"excludeResourcePrefixes": "excludeResourcePrefixes defines which resources should be ignored by Kueue",
 	"transformations":         "transformations defines how to transform PodSpec resources into Workload resource requests. This is intended to be a map with Input as the key (enforced by validation code)",
 }
 

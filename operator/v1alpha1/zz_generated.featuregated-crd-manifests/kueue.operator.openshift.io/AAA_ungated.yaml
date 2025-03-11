@@ -1,0 +1,20 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    feature-gate.release.openshift.io/: "true"
+  name: kueue.operator.openshift.io
+spec:
+  group: operator.openshift.io
+  names:
+    kind: Kueue
+    listKind: KueueList
+    plural: kueue
+    singular: kueue
+  scope: Cluster
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+    subresources:
+      status: {}

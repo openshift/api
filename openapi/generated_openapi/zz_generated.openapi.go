@@ -57113,7 +57113,7 @@ func schema_openshift_api_operator_v1alpha1_Integrations(ref common.ReferenceCal
 				Properties: map[string]spec.Schema{
 					"frameworks": {
 						SchemaProps: spec.SchemaProps{
-							Description: "frameworks List of framework names to be enabled. Possible options:\n - \"batch/job\"\n - \"kubeflow.org/mpijob\"\n - \"ray.io/rayjob\"\n - \"ray.io/raycluster\"\n - \"jobset.x-k8s.io/jobset\"\n - \"kubeflow.org/paddlejob\"\n - \"kubeflow.org/pytorchjob\"\n - \"kubeflow.org/tfjob\"\n - \"kubeflow.org/xgboostjob\"\n - \"workload.codeflare.dev/appwrapper\"\n - \"pod\"\n - \"deployment\" (requires enabling pod integration)\n - \"statefulset\" (requires enabling pod integration)\n - \"leaderworkerset.x-k8s.io/leaderworkerset\" (requires enabling pod integration)",
+							Description: "frameworks are a list of names to be enabled. Possible options:\n - \"batch/job\"\n - \"kubeflow.org/mpijob\"\n - \"ray.io/rayjob\"\n - \"ray.io/raycluster\"\n - \"jobset.x-k8s.io/jobset\"\n - \"kubeflow.org/paddlejob\"\n - \"kubeflow.org/pytorchjob\"\n - \"kubeflow.org/tfjob\"\n - \"kubeflow.org/xgboostjob\"\n - \"workload.codeflare.dev/appwrapper\"\n - \"pod\"\n - \"deployment\" (requires enabling pod integration)\n - \"statefulset\" (requires enabling pod integration)\n - \"leaderworkerset.x-k8s.io/leaderworkerset\" (requires enabling pod integration)",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -57128,7 +57128,7 @@ func schema_openshift_api_operator_v1alpha1_Integrations(ref common.ReferenceCal
 					},
 					"externalFrameworks": {
 						SchemaProps: spec.SchemaProps{
-							Description: "externalFrameworks List of GroupVersionKinds that are managed for Kueue by external controllers; the expected format is `Kind.version.group.com`.",
+							Description: "externalFrameworks are a list of GroupVersionKinds that are managed for Kueue by external controllers; the expected format is `Kind.version.group.com`. As far as",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -57157,6 +57157,7 @@ func schema_openshift_api_operator_v1alpha1_Integrations(ref common.ReferenceCal
 						},
 					},
 				},
+				Required: []string{"frameworks"},
 			},
 		},
 	}
@@ -57166,7 +57167,7 @@ func schema_openshift_api_operator_v1alpha1_Kueue(ref common.ReferenceCallback) 
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "Kueue is the Schema for the kueue API Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Description: "Kueue is the CRD to represent the kueue operator This CRD defines the configuration that the Kueue Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -57265,7 +57266,7 @@ func schema_openshift_api_operator_v1alpha1_KueueConfiguration(ref common.Refere
 					},
 					"managedJobsNamespaceSelector": {
 						SchemaProps: spec.SchemaProps{
-							Description: "managedJobsNamespaceSelector can be used to omit some namespaces from ManagedJobsWithoutQueueName",
+							Description: "managedJobsNamespaceSelector can be used to omit some namespaces from ManagedJobsWithoutQueueName Only valid if ManagedJobsWithoutQueueName is NoQueueName",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"),
 						},
 					},
@@ -57278,13 +57279,13 @@ func schema_openshift_api_operator_v1alpha1_KueueConfiguration(ref common.Refere
 					},
 					"metrics": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Metrics Microshift does not enable metrics by default Default will assume metrics are enabled.",
+							Description: "metrics allows one to change if metrics are enabled or disabled. Microshift does not enable metrics by default Default will assume metrics are enabled.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 				},
-				Required: []string{"integrations", "metrics"},
+				Required: []string{"integrations"},
 			},
 		},
 		Dependencies: []string{
@@ -57322,7 +57323,7 @@ func schema_openshift_api_operator_v1alpha1_KueueList(ref common.ReferenceCallba
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "items is a slice of kueue",
+							Description: "items is a slice of kueue this is a cluster scoped resource and there can only be 1 kueue",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -58047,14 +58048,14 @@ func schema_openshift_api_operator_v1alpha1_RequeuingStrategy(ref common.Referen
 					},
 					"backoffBaseSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Description: "BackoffBaseSeconds defines the base for the exponential backoff for re-queuing an evicted workload.\n\nDefaults to 60.",
+							Description: "backoffBaseSeconds defines the base for the exponential backoff for re-queuing an evicted workload.\n\nDefaults to 60.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
 					},
 					"backoffMaxSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Description: "BackoffMaxSeconds defines the maximum backoff time to re-queue an evicted workload.\n\nDefaults to 3600.",
+							Description: "backoffMaxSeconds defines the maximum backoff time to re-queue an evicted workload.\n\nDefaults to 3600.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -58081,7 +58082,7 @@ func schema_openshift_api_operator_v1alpha1_ResourceTransformation(ref common.Re
 					},
 					"strategy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "strategy specifies if the input resource should be replaced or retained. Defaults to Retain",
+							Description: "strategy specifies if the input resource should be replaced or retained.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -58113,11 +58114,12 @@ func schema_openshift_api_operator_v1alpha1_Resources(ref common.ReferenceCallba
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "These structs come directly from Kueue.",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"excludeResourcePrefixes": {
 						SchemaProps: spec.SchemaProps{
-							Description: "excludedResourcePrefixes defines which resources should be ignored by Kueue",
+							Description: "excludeResourcePrefixes defines which resources should be ignored by Kueue",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{

@@ -38,7 +38,7 @@ type ClTcxAttachInfo struct {
 
 	// direction specifies the direction of traffic the tcx program should
 	// attach to for a given network device.
-	// +kubebuilder:validation:Enum=ingress;egress
+	// +kubebuilder:validation:Enum=Ingress;Egress
 	Direction string `json:"direction"`
 
 	// priority specifies the priority of the tcx program in relation to
@@ -72,7 +72,7 @@ type ClTcxAttachInfoState struct {
 
 	// direction specifies the direction of traffic the tcx program should
 	// attach to for a given network device.
-	// +kubebuilder:validation:Enum=ingress;egress
+	// +kubebuilder:validation:Enum=Ingress;Egress
 	Direction string `json:"direction"`
 
 	// priority specifies the priority of the tcx program in relation to

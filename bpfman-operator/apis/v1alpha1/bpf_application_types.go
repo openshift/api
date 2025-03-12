@@ -22,11 +22,11 @@ import (
 
 // BpfApplicationProgram defines the desired state of BpfApplication
 // +union
-// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'XDP' ?  has(self.xdpInfo) : !has(self.xdpInfo)",message="xdpInfo configuration is required when type is xdp, and forbidden otherwise"
-// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'TC' ?  has(self.tcInfo) : !has(self.tcInfo)",message="tcInfo configuration is required when type is tc, and forbidden otherwise"
-// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'TCX' ?  has(self.tcxInfo) : !has(self.tcxInfo)",message="tcxInfo configuration is required when type is tcx, and forbidden otherwise"
-// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'Uprobe' ?  has(self.uprobeInfo) : !has(self.uprobeInfo)",message="uprobeInfo configuration is required when type is uprobe, and forbidden otherwise"
-// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'UretProbe' ?  has(self.uretprobeInfo) : !has(self.upretrobeInfo)",message="uretprobe configuration is required when type is uretprobe, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'XDP' ?  has(self.xdp) : !has(self.xdp)",message="xdp configuration is required when type is xdp, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'TC' ?  has(self.tc) : !has(self.tc)",message="tc configuration is required when type is tc, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'TCX' ?  has(self.tcx) : !has(self.tcx)",message="tcx configuration is required when type is tcx, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'Uprobe' ?  has(self.uprobe) : !has(self.uprobe)",message="uprobe configuration is required when type is uprobe, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'UretProbe' ?  has(self.uretprobe) : !has(self.upretrobe)",message="uretprobe configuration is required when type is uretprobe, and forbidden otherwise"
 type BpfApplicationProgram struct {
 	// name is the name of the function that is the entry point for the BPF
 	// program
@@ -38,30 +38,30 @@ type BpfApplicationProgram struct {
 	// +kubebuilder:validation:Enum:="XDP";"TC";"TCX";"Uprobe";"UretProbe"
 	Type EBPFProgType `json:"type"`
 
-	// xdpInfo defines the desired state of the application's XdpPrograms.
+	// xdp defines the desired state of the application's XdpPrograms.
 	// +unionMember
 	// +optional
-	XDPInfo *XdpProgramInfo `json:"xdpInfo,omitempty"`
+	XDP *XdpProgramInfo `json:"xdp,omitempty"`
 
-	// tcInfo defines the desired state of the application's TcPrograms.
+	// tc defines the desired state of the application's TcPrograms.
 	// +unionMember
 	// +optional
-	TCInfo *TcProgramInfo `json:"tcInfo,omitempty"`
+	TC *TcProgramInfo `json:"tc,omitempty"`
 
-	// tcxInfo defines the desired state of the application's TcxPrograms.
+	// tcx defines the desired state of the application's TcxPrograms.
 	// +unionMember
 	// +optional
-	TCXInfo *TcxProgramInfo `json:"tcxInfo,omitempty"`
+	TCX *TcxProgramInfo `json:"tcx,omitempty"`
 
-	// uprobeInfo defines the desired state of the application's UprobePrograms.
+	// uprobe defines the desired state of the application's UprobePrograms.
 	// +unionMember
 	// +optional
-	UprobeInfo *UprobeProgramInfo `json:"uprobeInfo,omitempty"`
+	Uprobe *UprobeProgramInfo `json:"uprobe,omitempty"`
 
-	// uretprobeInfo defines the desired state of the application's UretprobePrograms.
+	// uretprobe defines the desired state of the application's UretprobePrograms.
 	// +unionMember
 	// +optional
-	UretprobeInfo *UprobeProgramInfo `json:"uretprobeInfo,omitempty"`
+	Uretprobe *UprobeProgramInfo `json:"uretprobe,omitempty"`
 }
 
 // BpfApplicationSpec defines the desired state of BpfApplication

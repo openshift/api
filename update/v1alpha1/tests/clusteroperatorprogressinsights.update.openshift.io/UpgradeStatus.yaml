@@ -1,0 +1,128 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "ClusterOperatorProgressInsight"
+crdName: clusteroperatorprogressinsights.update.openshift.io
+featureGate: UpgradeStatus
+tests:
+  onCreate:
+  - name: Should be able to create a minimal ClusterOperatorProgressInsight
+    initial: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: ClusterOperatorProgressInsight
+      spec: {} # No spec is required for a ClusterOperatorProgressInsight
+    expected: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: ClusterOperatorProgressInsight
+      spec: {}
+  onUpdate:
+  - name: ClusterOperatorProgressInsight example
+    initial: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: ClusterOperatorProgressInsight
+      spec: {}
+    updated: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: ClusterOperatorProgressInsight
+      spec: {}
+      status:
+        name: authentication
+        resource:
+          group: config.openshift.io
+          resource: clusteroperators
+          name: authentication
+        conditions:
+        - type: Updating
+          status: "False"
+          lastTransitionTime: "2021-01-01T00:00:00Z"
+          reason: Pending
+          message: "Installing version 4.18.0"
+        - type: Healthy
+          status: "False"
+          lastTransitionTime: "2021-01-01T00:00:00Z"
+          reason: Degraded
+          message: "Authentication operator is not healthy"
+    expected: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: ClusterOperatorProgressInsight
+      spec: {}
+      status:
+        name: authentication
+        resource:
+          group: config.openshift.io
+          resource: clusteroperators
+          name: authentication
+        conditions:
+        - type: Updating
+          status: "False"
+          lastTransitionTime: "2021-01-01T00:00:00Z"
+          reason: Pending
+          message: "Installing version 4.18.0"
+        - type: Healthy
+          status: "False"
+          lastTransitionTime: "2021-01-01T00:00:00Z"
+          reason: Degraded
+          message: "Authentication operator is not healthy"
+
+  - name: Cannot refer to a resource that is not a ClusterOperator
+    initial: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: ClusterOperatorProgressInsight
+      spec: {}
+    updated: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: ClusterOperatorProgressInsight
+      spec: {}
+      status:
+        name: authentication
+        resource:
+          group: config.openshift.io
+          resource: clusterversions
+          name: authentication
+        conditions:
+        - type: Updating
+          status: "False"
+          lastTransitionTime: "2021-01-01T00:00:00Z"
+          reason: Pending
+          message: "Installing version 4.18.0"
+        - type: Healthy
+          status: "False"
+          lastTransitionTime: "2021-01-01T00:00:00Z"
+          reason: Degraded
+          message: "Authentication operator is not healthy"
+    expected: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: ClusterOperatorProgressInsight
+      spec: {}
+    expectedStatusError: "Invalid value: \"object\": resource must be a clusteroperators.config.openshift.io resource"
+
+  - name: Name must match resource
+    initial: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: ClusterOperatorProgressInsight
+      spec: {}
+    updated: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: ClusterOperatorProgressInsight
+      spec: {}
+      status:
+        name: etcd
+        resource:
+          group: config.openshift.io
+          resource: clusteroperators
+          name: authentication
+        conditions:
+        - type: Updating
+          status: "False"
+          lastTransitionTime: "2021-01-01T00:00:00Z"
+          reason: Pending
+          message: "Installing version 4.18.0"
+        - type: Healthy
+          status: "False"
+          lastTransitionTime: "2021-01-01T00:00:00Z"
+          reason: Degraded
+          message: "Authentication operator is not healthy"
+    expected: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: ClusterOperatorProgressInsight
+      spec: {}
+    expectedStatusError: "Invalid value: \"object\": .name must match .resource.name"
+

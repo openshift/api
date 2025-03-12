@@ -33210,7 +33210,7 @@
       "type": "object",
       "properties": {
         "enable": {
-          "description": "enable indicates whether to enable fair sharing for all cohorts. Defaults to false.",
+          "description": "enable indicates whether to enable fair sharing for all cohorts.",
           "type": "string",
           "default": ""
         },
@@ -33444,7 +33444,7 @@
           "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.FairSharing"
         },
         "featureGates": {
-          "description": "featureGates are advanced features for Kueue",
+          "description": "featureGates are advanced features for Kueue if ManagementState is Unmanaged Otherwise we will fail at validation time.",
           "type": "object",
           "additionalProperties": {
             "type": "string",
@@ -33452,16 +33452,16 @@
           }
         },
         "integrations": {
-          "description": "integrations are the types of integrations Kueue will manager",
+          "description": "integrations are the types of integrations Kueue will manage",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.Integrations"
         },
         "manageJobsWithoutQueueName": {
-          "description": "manageJobsWithoutQueueName controls whether or not Kueue reconciles jobs that don't set the annotation kueue.x-k8s.io/queue-name. Allowed values are NoQueueName and QueueName Default will be QueueName",
+          "description": "manageJobsWithoutQueueName controls whether or not Kueue reconciles jobs that don't set the annotation kueue.x-k8s.io/queue-name.",
           "type": "string"
         },
         "managedJobsNamespaceSelector": {
-          "description": "managedJobsNamespaceSelector can be used to omit some namespaces from ManagedJobsWithoutQueueName Only valid if ManagedJobsWithoutQueueName is NoQueueName",
+          "description": "managedJobsNamespaceSelector can be used to omit some namespaces from ManagedJobsWithoutQueueName Only valid if ManagedJobsWithoutQueueName is QueueNameOptional",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector"
         },
         "metrics": {
@@ -33518,7 +33518,7 @@
       ],
       "properties": {
         "config": {
-          "description": "config that is persisted to a config map",
+          "description": "config is the desired configuration for the kueue operator.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.KueueConfiguration"
         },

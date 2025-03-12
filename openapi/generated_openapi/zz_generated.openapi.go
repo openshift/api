@@ -56858,7 +56858,7 @@ func schema_openshift_api_operator_v1alpha1_FairSharing(ref common.ReferenceCall
 				Properties: map[string]spec.Schema{
 					"enable": {
 						SchemaProps: spec.SchemaProps{
-							Description: "enable indicates whether to enable fair sharing for all cohorts. Defaults to false.",
+							Description: "enable indicates whether to enable fair sharing for all cohorts.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -57241,16 +57241,9 @@ func schema_openshift_api_operator_v1alpha1_KueueConfiguration(ref common.Refere
 							Ref:         ref("github.com/openshift/api/operator/v1alpha1.WaitForPodsReady"),
 						},
 					},
-					"integrations": {
-						SchemaProps: spec.SchemaProps{
-							Description: "integrations are the types of integrations Kueue will manager",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/openshift/api/operator/v1alpha1.Integrations"),
-						},
-					},
 					"featureGates": {
 						SchemaProps: spec.SchemaProps{
-							Description: "featureGates are advanced features for Kueue",
+							Description: "featureGates are advanced features for Kueue if ManagementState is Unmanaged Otherwise we will fail at validation time.",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,
@@ -57264,6 +57257,13 @@ func schema_openshift_api_operator_v1alpha1_KueueConfiguration(ref common.Refere
 							},
 						},
 					},
+					"integrations": {
+						SchemaProps: spec.SchemaProps{
+							Description: "integrations are the types of integrations Kueue will manage",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1alpha1.Integrations"),
+						},
+					},
 					"resources": {
 						SchemaProps: spec.SchemaProps{
 							Description: "resources provides additional configuration options for handling the resources. Supports https://github.com/kubernetes-sigs/kueue/blob/release-0.10/keps/2937-resource-transformer/README.md",
@@ -57273,14 +57273,14 @@ func schema_openshift_api_operator_v1alpha1_KueueConfiguration(ref common.Refere
 					},
 					"manageJobsWithoutQueueName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "manageJobsWithoutQueueName controls whether or not Kueue reconciles jobs that don't set the annotation kueue.x-k8s.io/queue-name. Allowed values are NoQueueName and QueueName Default will be QueueName",
+							Description: "manageJobsWithoutQueueName controls whether or not Kueue reconciles jobs that don't set the annotation kueue.x-k8s.io/queue-name.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"managedJobsNamespaceSelector": {
 						SchemaProps: spec.SchemaProps{
-							Description: "managedJobsNamespaceSelector can be used to omit some namespaces from ManagedJobsWithoutQueueName Only valid if ManagedJobsWithoutQueueName is NoQueueName",
+							Description: "managedJobsNamespaceSelector can be used to omit some namespaces from ManagedJobsWithoutQueueName Only valid if ManagedJobsWithoutQueueName is QueueNameOptional",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"),
 						},
 					},
@@ -57400,7 +57400,7 @@ func schema_openshift_api_operator_v1alpha1_KueueOperandSpec(ref common.Referenc
 					},
 					"config": {
 						SchemaProps: spec.SchemaProps{
-							Description: "config that is persisted to a config map",
+							Description: "config is the desired configuration for the kueue operator.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/operator/v1alpha1.KueueConfiguration"),
 						},

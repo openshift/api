@@ -258,7 +258,7 @@ func (RepositoryDigestMirrors) SwaggerDoc() map[string]string {
 }
 
 var map_FairSharing = map[string]string{
-	"enable":               "enable indicates whether to enable fair sharing for all cohorts. Defaults to false.",
+	"enable":               "enable indicates whether to enable fair sharing for all cohorts.",
 	"preemptionStrategies": "preemptionStrategies indicates which constraints should a preemption satisfy. The preemption algorithm will only use the next strategy in the list if the incoming workload (preemptor) doesn't fit after using the previous strategies. Possible values are: - LessThanOrEqualToFinalShare: Only preempt a workload if the share of the preemptor CQ\n  with the preemptor workload is less than or equal to the share of the preemptee CQ\n  without the workload to be preempted.\n  This strategy might favor preemption of smaller workloads in the preemptee CQ,\n  regardless of priority or start time, in an effort to keep the share of the CQ\n  as high as possible.\n- LessThanInitialShare: Only preempt a workload if the share of the preemptor CQ\n  with the incoming workload is strictly less than the share of the preemptee CQ.\n  This strategy doesn't depend on the share usage of the workload being preempted.\n  As a result, the strategy chooses to preempt workloads with the lowest priority and\n  newest start time first.\nThe default strategy is [\"LessThanOrEqualToFinalShare\", \"LessThanInitialShare\"].",
 }
 
@@ -289,11 +289,11 @@ func (Kueue) SwaggerDoc() map[string]string {
 
 var map_KueueConfiguration = map[string]string{
 	"waitForPodsReady":             "waitForPodsReady configures gang admission",
-	"integrations":                 "integrations are the types of integrations Kueue will manager",
-	"featureGates":                 "featureGates are advanced features for Kueue",
+	"featureGates":                 "featureGates are advanced features for Kueue if ManagementState is Unmanaged Otherwise we will fail at validation time.",
+	"integrations":                 "integrations are the types of integrations Kueue will manage",
 	"resources":                    "resources provides additional configuration options for handling the resources. Supports https://github.com/kubernetes-sigs/kueue/blob/release-0.10/keps/2937-resource-transformer/README.md",
-	"manageJobsWithoutQueueName":   "manageJobsWithoutQueueName controls whether or not Kueue reconciles jobs that don't set the annotation kueue.x-k8s.io/queue-name. Allowed values are NoQueueName and QueueName Default will be QueueName",
-	"managedJobsNamespaceSelector": "managedJobsNamespaceSelector can be used to omit some namespaces from ManagedJobsWithoutQueueName Only valid if ManagedJobsWithoutQueueName is NoQueueName",
+	"manageJobsWithoutQueueName":   "manageJobsWithoutQueueName controls whether or not Kueue reconciles jobs that don't set the annotation kueue.x-k8s.io/queue-name.",
+	"managedJobsNamespaceSelector": "managedJobsNamespaceSelector can be used to omit some namespaces from ManagedJobsWithoutQueueName Only valid if ManagedJobsWithoutQueueName is QueueNameOptional",
 	"fairSharing":                  "fairSharing controls the fair sharing semantics across the cluster.",
 	"metrics":                      "metrics allows one to change if metrics are enabled or disabled. Microshift does not enable metrics by default Default will assume metrics are enabled.",
 }
@@ -313,7 +313,7 @@ func (KueueList) SwaggerDoc() map[string]string {
 }
 
 var map_KueueOperandSpec = map[string]string{
-	"config": "config that is persisted to a config map",
+	"config": "config is the desired configuration for the kueue operator.",
 }
 
 func (KueueOperandSpec) SwaggerDoc() map[string]string {

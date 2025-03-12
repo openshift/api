@@ -36,22 +36,29 @@ type Kueue struct {
 
 type KueueOperandSpec struct {
 	operatorv1.OperatorSpec `json:",inline"`
-	// config that is persisted to a config map
+	// config is the desired configuration
+	// for the kueue operator.
 	// +required
 	Config KueueConfiguration `json:"config"`
 }
 
-// +kubebuilder:validation:Enum="NoQueueName;QueueName"
+// +kubebuilder:validation:Enum=QueueNameOptional;QueueNameRequired
 type ManageJobsWithoutQueueNameOption string
 
+// ManageJobsWithoutQueueName allows to control what kind of
+// jobs kueue will manage.
+// Kueue jobs usually require kueue.x-k8s.io/queue-name on each job
+// to be opt-in for Kueue.
 const (
-	// NoQueueName means that all jobs will be gated by Kueue
-	NoQueueName ManageJobsWithoutQueueNameOption = "NoQueueName"
-	// QueueName means that the jobs require a queue label.
-	QueueName ManageJobsWithoutQueueNameOption = "QueueName"
+	// QueueNameOptional means kueue will assume all workloads
+	// are to be gated by Kueue.
+	// This must be used with ManagedJobsNamespaceSelector.
+	QueueNameOptional ManageJobsWithoutQueueNameOption = "QueueNameOptional"
+	// QueueNameRequired means that the jobs require a queue label.
+	QueueNameRequired ManageJobsWithoutQueueNameOption = "QueueNameRequired"
 )
 
-// +kubebuilder:validation:Enum="Enabled;Disabled"
+// +kubebuilder:validation:Enum=Enabled;Disabled
 type EnabledOrDisabled string
 
 const (
@@ -59,29 +66,39 @@ const (
 	Disabled EnabledOrDisabled = "Disabled"
 )
 
+// Feature gates is unresolved
+// Option 1:
+//   Drop the feature gate entirely
+//   Feature gate modification is not supported.
+// Option 2:
+//   Allow for modifications of feature gates if operator is an Unmanaged state
+//   We could validate that user set operator in "Unmanaged" state as part of operator v1 API
+//   When this is set, specific experimental fields will be enabled.
+
 type KueueConfiguration struct {
 	// waitForPodsReady configures gang admission
 	// +optional
 	WaitForPodsReady WaitForPodsReady `json:"waitForPodsReady,omitempty"`
-	// integrations are the types of integrations Kueue will manager
-	// +required
-	Integrations Integrations `json:"integrations"`
 	// featureGates are advanced features for Kueue
+	// TODO: we could only allow features
+	// if ManagementState is Unmanaged
+	// Otherwise we will fail at validation time.
 	// +optional
 	FeatureGates map[string]EnabledOrDisabled `json:"featureGates,omitempty"`
+	// integrations are the types of integrations Kueue will manage
+	// +required
+	Integrations Integrations `json:"integrations"`
 	// resources provides additional configuration options for handling the resources.
 	// Supports https://github.com/kubernetes-sigs/kueue/blob/release-0.10/keps/2937-resource-transformer/README.md
 	// +optional
 	Resources Resources `json:"resources,omitempty"`
 	// manageJobsWithoutQueueName controls whether or not Kueue reconciles
 	// jobs that don't set the annotation kueue.x-k8s.io/queue-name.
-	// Allowed values are NoQueueName and QueueName
-	// Default will be QueueName
-	// +kubebuilder:default=QueueName
+	// +kubebuilder:default=QueueNameRequired
 	// +optional
 	ManageJobsWithoutQueueName *ManageJobsWithoutQueueNameOption `json:"manageJobsWithoutQueueName,omitempty"`
 	// managedJobsNamespaceSelector can be used to omit some namespaces from ManagedJobsWithoutQueueName
-	// Only valid if ManagedJobsWithoutQueueName is NoQueueName
+	// Only valid if ManagedJobsWithoutQueueName is QueueNameOptional
 	// +optional
 	ManagedJobsNamespaceSelector *metav1.LabelSelector `json:"managedJobsNamespaceSelector,omitempty"`
 	// fairSharing controls the fair sharing semantics across the cluster.
@@ -91,7 +108,6 @@ type KueueConfiguration struct {
 	// are enabled or disabled.
 	// Microshift does not enable metrics by default
 	// Default will assume metrics are enabled.
-	// +kubebuilder:default=Enabled
 	// +optional
 	Metrics *EnabledOrDisabled `json:"metrics,omitempty"`
 }
@@ -124,18 +140,18 @@ type Resources struct {
 	// excludeResourcePrefixes defines which resources should be ignored by Kueue
 	// +optional
 	// +kubebuilder:validation:items:MaxLength=64
-	// +kubebuilder:validation:MaxItems=64
+	// +kubebuilder:validation:MaxItems=16
 	ExcludeResourcePrefixes []string `json:"excludeResourcePrefixes,omitempty"`
 
 	// transformations defines how to transform PodSpec resources into Workload resource requests.
 	// This is intended to be a map with Input as the key (enforced by validation code)
 	// +optional
 	// +kubebuilder:validation:items:MaxLength=64
-	// +kubebuilder:validation:MaxItems=64
+	// +kubebuilder:validation:MaxItems=16
 	Transformations []ResourceTransformation `json:"transformations,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Retain;Replace
+// +kubebuilder:validation:Enum="Retain";"Replace"
 type ResourceTransformationStrategy string
 
 const Retain ResourceTransformationStrategy = "Retain"
@@ -167,7 +183,6 @@ const (
 
 type FairSharing struct {
 	// enable indicates whether to enable fair sharing for all cohorts.
-	// Defaults to false.
 	// +kubebuilder:default=Disabled
 	// +optional
 	Enable EnabledOrDisabled `json:"enable"`
@@ -231,7 +246,6 @@ type RequeuingStrategy struct {
 	// - `Eviction` (default) indicates from Workload `Evicted` condition with `PodsReadyTimeout` reason.
 	// - `Creation` indicates from Workload .metadata.creationTimestamp.
 	//
-	// +kubebuilder:default=Eviction
 	// +kubebuilder:validation:MaxLength=8
 	// +optional
 	Timestamp *RequeuingTimestamp `json:"timestamp,omitempty"`

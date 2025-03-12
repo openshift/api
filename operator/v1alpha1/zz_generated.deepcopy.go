@@ -469,7 +469,6 @@ func (in *Kueue) DeepCopyObject() runtime.Object {
 func (in *KueueConfiguration) DeepCopyInto(out *KueueConfiguration) {
 	*out = *in
 	in.WaitForPodsReady.DeepCopyInto(&out.WaitForPodsReady)
-	in.Integrations.DeepCopyInto(&out.Integrations)
 	if in.FeatureGates != nil {
 		in, out := &in.FeatureGates, &out.FeatureGates
 		*out = make(map[string]EnabledOrDisabled, len(*in))
@@ -477,6 +476,7 @@ func (in *KueueConfiguration) DeepCopyInto(out *KueueConfiguration) {
 			(*out)[key] = val
 		}
 	}
+	in.Integrations.DeepCopyInto(&out.Integrations)
 	in.Resources.DeepCopyInto(&out.Resources)
 	if in.ManageJobsWithoutQueueName != nil {
 		in, out := &in.ManageJobsWithoutQueueName, &out.ManageJobsWithoutQueueName

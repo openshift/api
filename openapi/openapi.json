@@ -11320,20 +11320,16 @@
       "type": "object",
       "properties": {
         "dataPolicy": {
-          "description": "dataPolicy allows user to enable additional global obfuscation of the IP addresses and base domain in the Insights archive data. Valid values are \"None\" and \"ObfuscateNetworking\". When set to None the data is not obfuscated. When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
+          "description": "dataPolicy allows user to enable additional global obfuscation of the IP addresses and base domain in the Insights archive data. Valid values are \"None\" and \"ObfuscateNetworking\". When set to None the data is not obfuscated. When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is None.",
           "type": "string"
         },
         "disabledGatherers": {
-          "description": "disabledGatherers is a list of gatherers to be excluded from the gathering. All the gatherers can be disabled by providing \"all\" value. If all the gatherers are disabled, the Insights operator does not gather any data. The format for the disabledGatherer should be: {gatherer}/{function} where the function is optional. Gatherer consists of a lowercase letters only that may include underscores (_). Function consists of a lowercase letters only that may include underscores (_) and is separated from the gatherer by a forward slash (/). The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\" An example of disabling gatherers looks like this: `disabledGatherers: [\"clusterconfig/machine_configs\", \"workloads/workload_info\"]`",
+          "description": "disabledGatherers is a list of gatherers to be excluded from the gathering. All the gatherers can be disabled by providing \"all\" value. If all the gatherers are disabled, the Insights operator does not gather any data. The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\" An example of disabling gatherers looks like this: `disabledGatherers: [\"clusterconfig/machine_configs\", \"workloads/workload_info\"]`",
           "type": "array",
           "items": {
             "type": "string",
             "default": ""
           }
-        },
-        "storage": {
-          "description": "storage is an optional field that allows user to define persistent storage for gathering jobs to store the Insights data archive. If omitted, the gathering job will use ephemeral storage.",
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.Storage"
         }
       }
     },
@@ -11550,38 +11546,6 @@
         },
         "hostname": {
           "description": "hostname specifies the expected hostname imposed on the subject to which the certificate was issued, and it must match the hostname listed in the Subject Alternative Name (SAN) DNS field of the certificate. The hostname should be a valid dns 1123 subdomain name, optionally prefixed by '*.', and at most 253 characters in length. It should consist only of lowercase alphanumeric characters, hyphens, periods and the optional preceding asterisk.",
-          "type": "string"
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1alpha1.PersistentVolumeClaimReference": {
-      "description": "persistentVolumeClaimReference is a reference to a PersistentVolumeClaim.",
-      "type": "object",
-      "required": [
-        "name"
-      ],
-      "properties": {
-        "name": {
-          "description": "name is a string that follows the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.",
-          "type": "string",
-          "default": ""
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1alpha1.PersistentVolumeConfig": {
-      "description": "persistentVolumeConfig provides configuration options for PersistentVolume storage.",
-      "type": "object",
-      "required": [
-        "claim"
-      ],
-      "properties": {
-        "claim": {
-          "description": "claim is a required field that specifies the configuration of the PersistentVolumeClaim that will be used to store the Insights data archive. The PersistentVolumeClaim must be created in the openshift-insights namespace.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PersistentVolumeClaimReference"
-        },
-        "mountPath": {
-          "description": "mountPath is an optional field specifying the directory where the PVC will be mounted inside the Insights data gathering Pod. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default mount path is /var/lib/insights-operator The path may not exceed 1024 characters and must not contain a colon.",
           "type": "string"
         }
       }
@@ -11803,24 +11767,6 @@
           "description": "maxSizeOfBackupsGb defines the total size in GB of backups to retain. If the current total size backups exceeds MaxSizeOfBackupsGb then the oldest backup will be removed before a new backup is initiated.",
           "type": "integer",
           "format": "int32"
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1alpha1.Storage": {
-      "description": "storage provides persistent storage configuration options for gathering jobs. If the type is set to PersistentVolume, then the PersistentVolume must be defined. If the type is set to Ephemeral, then the PersistentVolume must not be defined.",
-      "type": "object",
-      "required": [
-        "type"
-      ],
-      "properties": {
-        "persistentVolume": {
-          "description": "persistentVolume is an optional field that specifies the PersistentVolume that will be used to store the Insights data archive. The PersistentVolume must be created in the openshift-insights namespace.",
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PersistentVolumeConfig"
-        },
-        "type": {
-          "description": "type is a required field that specifies the type of storage that will be used to store the Insights data archive. Valid values are \"PersistentVolume\" and \"Ephemeral\". When set to Ephemeral, the Insights data archive is stored in the ephemeral storage of the gathering job. When set to PersistentVolume, the Insights data archive is stored in the PersistentVolume that is defined by the persistentVolume field.",
-          "type": "string",
-          "default": ""
         }
       }
     },
@@ -14864,6 +14810,10 @@
     "com.github.openshift.api.insights.v1alpha1.DataGatherList": {
       "description": "DataGatherList is a collection of items\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
       "type": "object",
+      "required": [
+        "metadata",
+        "items"
+      ],
       "properties": {
         "apiVersion": {
           "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
@@ -14875,8 +14825,7 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.insights.v1alpha1.DataGather"
-          },
-          "x-kubernetes-list-type": "atomic"
+          }
         },
         "kind": {
           "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
@@ -14899,16 +14848,12 @@
           "default": ""
         },
         "gatherers": {
-          "description": "gatherers is an optional list of gatherers configurations. The list must not exceed 100 items. The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
+          "description": "gatherers is a list of gatherers configurations. The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
           "type": "array",
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.insights.v1alpha1.GathererConfig"
           }
-        },
-        "storage": {
-          "description": "storage is an optional field that allows user to define persistent storage for gathering jobs to store the Insights data archive. If omitted, the gathering job will use ephemeral storage.",
-          "$ref": "#/definitions/com.github.openshift.api.insights.v1alpha1.Storage"
         }
       }
     },
@@ -14981,7 +14926,7 @@
       ],
       "properties": {
         "name": {
-          "description": "name is the required name of specific gatherer It must be at most 256 characters in length. The format for the gatherer name should be: {gatherer}/{function} where the function is optional. Gatherer consists of a lowercase letters only that may include underscores (_). Function consists of a lowercase letters only that may include underscores (_) and is separated from the gatherer by a forward slash (/). The particular gatherers can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md.",
+          "description": "name is the name of specific gatherer",
           "type": "string",
           "default": ""
         },
@@ -15037,7 +14982,7 @@
       ],
       "properties": {
         "advisorURI": {
-          "description": "advisorURI is required field that provides the URL link to the Insights Advisor. The link must be a valid HTTPS URL and the maximum length is 2048 characters.",
+          "description": "advisorURI provides the URL link to the Insights Advisor.",
           "type": "string",
           "default": ""
         },
@@ -15077,7 +15022,7 @@
           "x-kubernetes-list-type": "atomic"
         },
         "uri": {
-          "description": "uri is optional field that provides the URL link from which the report was downloaded. The link must be a valid HTTPS URL and the maximum length is 2048 characters.",
+          "description": "uri provides the URL link from which the report was downloaded.",
           "type": "string"
         }
       }
@@ -15092,71 +15037,21 @@
       ],
       "properties": {
         "group": {
-          "description": "group is the API Group of the Resource. Enter empty string for the core group. This value is empty or should follow the DNS1123 subdomain format and it must be at most 253 characters in length. Example: \"\", \"apps\", \"build.openshift.io\", etc.",
+          "description": "group is the API Group of the Resource. Enter empty string for the core group. This value should consist of only lowercase alphanumeric characters, hyphens and periods. Example: \"\", \"apps\", \"build.openshift.io\", etc.",
           "type": "string",
           "default": ""
         },
         "name": {
-          "description": "name of the referent that follows the DNS1123 subdomain format. It must be at most 256 characters in length.",
+          "description": "name of the referent.",
           "type": "string",
           "default": ""
         },
         "namespace": {
-          "description": "namespace of the referent that follows the DNS1123 subdomain format. It must be at most 253 characters in length.",
+          "description": "namespace of the referent.",
           "type": "string"
         },
         "resource": {
-          "description": "resource is required field of the type that is being referenced. It is normally the plural form of the resource kind in lowercase. This value should consist of only lowercase alphanumeric characters and hyphens. Example: \"deployments\", \"deploymentconfigs\", \"pods\", etc.",
-          "type": "string",
-          "default": ""
-        }
-      }
-    },
-    "com.github.openshift.api.insights.v1alpha1.PersistentVolumeClaimReference": {
-      "description": "persistentVolumeClaimReference is a reference to a PersistentVolumeClaim.",
-      "type": "object",
-      "required": [
-        "name"
-      ],
-      "properties": {
-        "name": {
-          "description": "name is a string that follows the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.",
-          "type": "string",
-          "default": ""
-        }
-      }
-    },
-    "com.github.openshift.api.insights.v1alpha1.PersistentVolumeConfig": {
-      "description": "persistentVolumeConfig provides configuration options for PersistentVolume storage.",
-      "type": "object",
-      "required": [
-        "claim"
-      ],
-      "properties": {
-        "claim": {
-          "description": "claim is a required field that specifies the configuration of the PersistentVolumeClaim that will be used to store the Insights data archive. The PersistentVolumeClaim must be created in the openshift-insights namespace.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.insights.v1alpha1.PersistentVolumeClaimReference"
-        },
-        "mountPath": {
-          "description": "mountPath is an optional field specifying the directory where the PVC will be mounted inside the Insights data gathering Pod. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default mount path is /var/lib/insights-operator The path may not exceed 1024 characters and must not contain a colon.",
-          "type": "string"
-        }
-      }
-    },
-    "com.github.openshift.api.insights.v1alpha1.Storage": {
-      "description": "storage provides persistent storage configuration options for gathering jobs. If the type is set to PersistentVolume, then the PersistentVolume must be defined. If the type is set to Ephemeral, then the PersistentVolume must not be defined.",
-      "type": "object",
-      "required": [
-        "type"
-      ],
-      "properties": {
-        "persistentVolume": {
-          "description": "persistentVolume is an optional field that specifies the PersistentVolume that will be used to store the Insights data archive. The PersistentVolume must be created in the openshift-insights namespace.",
-          "$ref": "#/definitions/com.github.openshift.api.insights.v1alpha1.PersistentVolumeConfig"
-        },
-        "type": {
-          "description": "type is a required field that specifies the type of storage that will be used to store the Insights data archive. Valid values are \"PersistentVolume\" and \"Ephemeral\". When set to Ephemeral, the Insights data archive is stored in the ephemeral storage of the gathering job. When set to PersistentVolume, the Insights data archive is stored in the PersistentVolume that is defined by the PersistentVolume field.",
+          "description": "resource is the type that is being referenced. It is normally the plural form of the resource kind in lowercase. This value should consist of only lowercase alphanumeric characters and hyphens. Example: \"deployments\", \"deploymentconfigs\", \"pods\", etc.",
           "type": "string",
           "default": ""
         }

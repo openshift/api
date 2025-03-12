@@ -301,9 +301,6 @@
                         "name": "VSphereMultiVCenters"
                     },
                     {
-                        "name": "VSphereStaticIPs"
-                    },
-                    {
                         "name": "ValidatingAdmissionPolicy"
                     }
                 ],

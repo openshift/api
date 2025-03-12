@@ -108,7 +108,6 @@ status:
     - name: NodeSwap
     - name: RouteExternalCertificate
     - name: SigstoreImageVerification
-    - name: VSphereStaticIPs
     - name: ValidatingAdmissionPolicy
     enabled:
     - name: AlibabaPlatform

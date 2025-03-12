@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 // All fields are required unless explicitly marked optional
-// +kubebuilder:validation:Required
 package v1alpha1
 
 // ClTcxProgramInfo defines the tcx program details

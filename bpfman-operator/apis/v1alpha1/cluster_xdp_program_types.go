@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 // All fields are required unless explicitly marked optional
-// +kubebuilder:validation:Required
 package v1alpha1
 
 // +kubebuilder:validation:Enum=aborted;drop;pass;tx;redirect;dispatcher_return
@@ -50,7 +49,7 @@ type ClXdpAttachInfo struct {
 	// proceedOn allows the user to call other xdp programs in chain on this exit code.
 	// Multiple values are supported by repeating the parameter.
 	// +optional
-	// +kubebuilder:validation:MaxItems=6
+	// +kubebuilder:validation:Enum=aborted;drop;pass;tx;redirect;dispatcher_return;
 	// +kubebuilder:default:={pass,dispatcher_return}
 	ProceedOn []XdpProceedOnValue `json:"proceedOn"`
 }
@@ -85,6 +84,6 @@ type ClXdpAttachInfoState struct {
 
 	// proceedOn allows the user to call other xdp programs in chain on this exit code.
 	// Multiple values are supported by repeating the parameter.
-	// +kubebuilder:validation:MaxItems=6
+	// +kubebuilder:validation:Enum=aborted;drop;pass;tx;redirect;dispatcher_return;
 	ProceedOn []XdpProceedOnValue `json:"proceedOn"`
 }

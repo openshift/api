@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 // All fields are required unless explicitly marked optional
-// +kubebuilder:validation:Required
 package v1alpha1
 
 // ClFexitProgramInfo defines the Fexit program details
@@ -39,8 +38,8 @@ type ClFexitLoadInfo struct {
 // the function identified in ClFentryLoadInfo. The only valid value for Attach
 // is true.
 type ClFexitAttachInfo struct {
-	// +kubebuilder:validation:Enum==Attach;Dettach;
-	Attach AttachType `json:"attach"`
+	// +kubebuilder:validation:Enum=Attach;Dettach;
+	Mode AttachTypeAttach `json:"mode"`
 }
 
 type ClFexitProgramInfoState struct {

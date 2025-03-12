@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 // All fields are required unless explicitly marked optional
-// +kubebuilder:validation:Required
 package v1alpha1
 
 // TcProgramInfo defines the tc program details
@@ -50,7 +49,7 @@ type TcAttachInfo struct {
 	// proceedOn allows the user to call other tc programs in chain on this exit code.
 	// Multiple values are supported by repeating the parameter.
 	// +optional
-	// +kubebuilder:validation:MaxItems=11
+	// +kubebuilder:validation:Enum=unspec;ok;reclassify;shot;pipe;stolen;queued;repeat;redirect;trap;dispatcher_return;
 	// +kubebuilder:default:={pipe,dispatcher_return}
 	ProceedOn []TcProceedOnValue `json:"proceedOn"`
 }
@@ -89,6 +88,6 @@ type TcAttachInfoState struct {
 
 	// proceedOn allows the user to call other tc programs in chain on this exit code.
 	// Multiple values are supported by repeating the parameter.
-	// +kubebuilder:validation:MaxItems=11
+	// +kubebuilder:validation:Enum=unspec;ok;reclassify;shot;pipe;stolen;queued;repeat;redirect;trap;dispatcher_return;
 	ProceedOn []TcProceedOnValue `json:"proceedOn"`
 }

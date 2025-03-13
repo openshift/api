@@ -68,8 +68,8 @@ type ClXdpProgramInfoState struct {
 type ClXdpAttachInfoState struct {
 	AttachInfoStateCommon `json:",inline"`
 
-	// ifname is the interface name to attach the xdp program to.
-	IfName string `json:"ifName"`
+	// interfaceName is the interface name to attach the xdp program to.
+	InterfaceName string `json:"interfaceName"`
 
 	// containerPid is an optional container pid to attach the xdp program in.
 	// +optional

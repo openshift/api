@@ -29,6 +29,9 @@ type ClTracepointProgramInfo struct {
 type ClTracepointAttachInfo struct {
 	// name refers to the name of a kernel tracepoint to attach the
 	// bpf program to.
+	// +kubebuilder:validation:Pattern="^[a-zA-Z][a-zA-Z0-9_]+."
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=64
 	Name string `json:"name"`
 }
 

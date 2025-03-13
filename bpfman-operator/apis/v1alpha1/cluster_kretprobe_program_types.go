@@ -28,6 +28,9 @@ type ClKretprobeProgramInfo struct {
 
 type ClKretprobeAttachInfo struct {
 	// function to attach the kprobe to.
+	// +kubebuilder:validation:Pattern="^[a-zA-Z][a-zA-Z0-9_]+."
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=64
 	Function string `json:"function"`
 }
 

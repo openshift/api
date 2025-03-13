@@ -17,7 +17,7 @@ limitations under the License.
 // All fields are required unless explicitly marked optional
 package v1alpha1
 
-// +kubebuilder:validation:Enum:=Aborted;Drop;Pass;TX;Redirect;DispatcherReturn;
+// +kubebuilder:validation:Enum:=Aborted;Drop;Pass;TX;ReDirect;DispatcherReturn;
 type XdpProceedOnValue string
 
 // ClXdpProgramInfo contains the xdp program details

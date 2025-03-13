@@ -17,6 +17,7 @@ limitations under the License.
 // All fields are required unless explicitly marked optional
 package v1alpha1
 
+// +kubebuilder:validation:Enum:=UnSpec;OK;ReClassify;Shot;Pipe;Stolen;Queued;Repeat;ReDirect;Trap;DispatcherReturn;
 type TcProceedOnValue string
 
 // ClTcProgramInfo defines the tc program details
@@ -40,7 +41,7 @@ type ClTcAttachInfo struct {
 
 	// direction specifies the direction of traffic the tc program should
 	// attach to for a given network device.
-	// +kubebuilder:validation:Enum=ingress;egress
+	// +kubebuilder:validation:Enum=Ingress;Egress
 	Direction TCDirectionType `json:"direction"`
 
 	// priority specifies the priority of the tc program in relation to
@@ -53,8 +54,7 @@ type ClTcAttachInfo struct {
 	// proceedOn allows the user to call other tc programs in chain on this exit code.
 	// Multiple values are supported by repeating the parameter.
 	// +optional
-	// +kubebuilder:validation:MaxItems=11
-	// +kubebuilder:default:={pipe,dispatche_return}
+	// +kubebuilder:default:={Pipe,DispatcherReturn}
 	ProceedOn []TcProceedOnValue `json:"proceedOn"`
 }
 
@@ -81,7 +81,7 @@ type ClTcAttachInfoState struct {
 
 	// direction specifies the direction of traffic the tc program should
 	// attach to for a given network device.
-	// +kubebuilder:validation:Enum=ingress;egress
+	// +kubebuilder:validation:Enum=Ingress;Egress
 	Direction TCDirectionType `json:"direction"`
 
 	// priority specifies the priority of the tc program in relation to
@@ -93,6 +93,5 @@ type ClTcAttachInfoState struct {
 
 	// proceedOn allows the user to call other tc programs in chain on this exit code.
 	// Multiple values are supported by repeating the parameter.
-	// +kubebuilder:validation:MaxItems=11
 	ProceedOn []TcProceedOnValue `json:"proceedOn"`
 }

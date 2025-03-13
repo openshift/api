@@ -58,8 +58,8 @@ const (
 type TCDirectionType string
 
 const (
-	TCIngress TCDirectionType = "ingress"
-	TCEgress  TCDirectionType = "egress"
+	TCIngress TCDirectionType = "Ingress"
+	TCEgress  TCDirectionType = "Egress"
 )
 
 // ClBpfApplicationProgram defines the desired state of BpfApplication

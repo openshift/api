@@ -36,7 +36,7 @@ type TcxAttachInfo struct {
 
 	// direction specifies the direction of traffic the tcx program should
 	// attach to for a given network device.
-	// +kubebuilder:validation:Enum=ingress;egress
+	// +kubebuilder:validation:Enum=Ingress;Egress
 	Direction TCDirectionType `json:"direction"`
 
 	// priority specifies the priority of the tcx program in relation to
@@ -69,7 +69,7 @@ type TcxAttachInfoState struct {
 
 	// direction specifies the direction of traffic the tcx program should
 	// attach to for a given network device.
-	// +kubebuilder:validation:Enum=ingress;egress
+	// +kubebuilder:validation:Enum=Ingress;Egress
 	Direction TCDirectionType `json:"direction"`
 
 	// priority specifies the priority of the tcx program in relation to

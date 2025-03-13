@@ -84,6 +84,9 @@
                         "name": "BuildCSIVolumes"
                     },
                     {
+                        "name": "CBORServingAndStorage"
+                    },
+                    {
                         "name": "CPMSMachineNamePrefix"
                     },
                     {

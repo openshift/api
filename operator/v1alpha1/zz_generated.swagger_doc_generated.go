@@ -279,7 +279,7 @@ func (Integrations) SwaggerDoc() map[string]string {
 var map_Kueue = map[string]string{
 	"":         "Kueue is the CRD to represent the kueue operator This CRD defines the configuration that the Kueue Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 	"metadata": "metadata for kueue",
-	"spec":     "spec holds user settable values for configuration",
+	"spec":     "spec holds user settable values for configuration kueue configuration must not be changed once the object exists to change the configuration, one can delete the object and create a new object.",
 	"status":   "status holds observed values from the cluster. They may not be overridden.",
 }
 
@@ -288,8 +288,6 @@ func (Kueue) SwaggerDoc() map[string]string {
 }
 
 var map_KueueConfiguration = map[string]string{
-	"waitForPodsReady":             "waitForPodsReady configures gang admission",
-	"featureGates":                 "featureGates are advanced features for Kueue if ManagementState is Unmanaged Otherwise we will fail at validation time.",
 	"integrations":                 "integrations are the types of integrations Kueue will manage",
 	"resources":                    "resources provides additional configuration options for handling the resources. Supports https://github.com/kubernetes-sigs/kueue/blob/release-0.10/keps/2937-resource-transformer/README.md",
 	"manageJobsWithoutQueueName":   "manageJobsWithoutQueueName controls whether or not Kueue reconciles jobs that don't set the annotation kueue.x-k8s.io/queue-name.",
@@ -328,19 +326,8 @@ func (KueueStatus) SwaggerDoc() map[string]string {
 	return map_KueueStatus
 }
 
-var map_RequeuingStrategy = map[string]string{
-	"timestamp":          "timestamp defines the timestamp used for re-queuing a Workload that was evicted due to Pod readiness. The possible values are:\n\n- `Eviction` (default) indicates from Workload `Evicted` condition with `PodsReadyTimeout` reason. - `Creation` indicates from Workload .metadata.creationTimestamp.",
-	"backoffLimitCount":  "backoffLimitCount defines the maximum number of re-queuing retries. Once the number is reached, the workload is deactivated (`.spec.activate`=`false`). When it is null, the workloads will repeatedly and endless re-queueing.\n\nEvery backoff duration is about \"b*2^(n-1)+Rand\" where: - \"b\" represents the base set by \"BackoffBaseSeconds\" parameter, - \"n\" represents the \"workloadStatus.requeueState.count\", - \"Rand\" represents the random jitter. During this time, the workload is taken as an inadmissible and other workloads will have a chance to be admitted. By default, the consecutive requeue delays are around: (60s, 120s, 240s, ...).\n\nDefaults to null.",
-	"backoffBaseSeconds": "backoffBaseSeconds defines the base for the exponential backoff for re-queuing an evicted workload.\n\nDefaults to 60.",
-	"backoffMaxSeconds":  "backoffMaxSeconds defines the maximum backoff time to re-queue an evicted workload.\n\nDefaults to 3600.",
-}
-
-func (RequeuingStrategy) SwaggerDoc() map[string]string {
-	return map_RequeuingStrategy
-}
-
 var map_ResourceTransformation = map[string]string{
-	"input":    "input is the name of the input resource.",
+	"input":    "input is the name of the input resource. resources are pod spec resources like cpu, memory, gpus",
 	"strategy": "strategy specifies if the input resource should be replaced or retained.",
 	"outputs":  "outputs specifies the output resources and quantities per unit of input resource. An empty Outputs combined with a `Replace` Strategy causes the Input resource to be ignored by Kueue.",
 }
@@ -357,18 +344,6 @@ var map_Resources = map[string]string{
 
 func (Resources) SwaggerDoc() map[string]string {
 	return map_Resources
-}
-
-var map_WaitForPodsReady = map[string]string{
-	"":                  "WaitForPodsReady defines configuration for the Wait For Pods Ready feature, which is used to ensure that all Pods are ready within the specified time.",
-	"timeout":           "timeout defines the time for an admitted workload to reach the PodsReady=true condition. When the timeout is exceeded, the workload evicted and requeued in the same cluster queue. Defaults to 5min.",
-	"blockAdmission":    "blockAdmission when true, cluster queue will block admissions for all subsequent jobs until the jobs reach the PodsReady=true condition. This setting is only honored when `Enable` is set to true.",
-	"requeuingStrategy": "requeuingStrategy defines the strategy for requeuing a Workload.",
-	"recoveryTimeout":   "recoveryTimeout defines an opt-in timeout, measured since the last transition to the PodsReady=false condition after a Workload is Admitted and running. Such a transition may happen when a Pod failed and the replacement Pod is awaited to be scheduled. After exceeding the timeout the corresponding job gets suspended again and requeued after the backoff delay. The timeout is enforced only if waitForPodsReady.enable=true. If not set, there is no timeout.",
-}
-
-func (WaitForPodsReady) SwaggerDoc() map[string]string {
-	return map_WaitForPodsReady
 }
 
 var map_OLM = map[string]string{

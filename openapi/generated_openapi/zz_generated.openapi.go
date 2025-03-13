@@ -1132,12 +1132,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1alpha1.OperatorSpec":                                            schema_openshift_api_operator_v1alpha1_OperatorSpec(ref),
 		"github.com/openshift/api/operator/v1alpha1.OperatorStatus":                                          schema_openshift_api_operator_v1alpha1_OperatorStatus(ref),
 		"github.com/openshift/api/operator/v1alpha1.RepositoryDigestMirrors":                                 schema_openshift_api_operator_v1alpha1_RepositoryDigestMirrors(ref),
-		"github.com/openshift/api/operator/v1alpha1.RequeuingStrategy":                                       schema_openshift_api_operator_v1alpha1_RequeuingStrategy(ref),
 		"github.com/openshift/api/operator/v1alpha1.ResourceTransformation":                                  schema_openshift_api_operator_v1alpha1_ResourceTransformation(ref),
 		"github.com/openshift/api/operator/v1alpha1.Resources":                                               schema_openshift_api_operator_v1alpha1_Resources(ref),
 		"github.com/openshift/api/operator/v1alpha1.StaticPodOperatorStatus":                                 schema_openshift_api_operator_v1alpha1_StaticPodOperatorStatus(ref),
 		"github.com/openshift/api/operator/v1alpha1.VersionAvailability":                                     schema_openshift_api_operator_v1alpha1_VersionAvailability(ref),
-		"github.com/openshift/api/operator/v1alpha1.WaitForPodsReady":                                        schema_openshift_api_operator_v1alpha1_WaitForPodsReady(ref),
 		"github.com/openshift/api/operatorcontrolplane/v1alpha1.LogEntry":                                    schema_openshift_api_operatorcontrolplane_v1alpha1_LogEntry(ref),
 		"github.com/openshift/api/operatorcontrolplane/v1alpha1.OutageEntry":                                 schema_openshift_api_operatorcontrolplane_v1alpha1_OutageEntry(ref),
 		"github.com/openshift/api/operatorcontrolplane/v1alpha1.PodNetworkConnectivityCheck":                 schema_openshift_api_operatorcontrolplane_v1alpha1_PodNetworkConnectivityCheck(ref),
@@ -57207,7 +57205,7 @@ func schema_openshift_api_operator_v1alpha1_Kueue(ref common.ReferenceCallback) 
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "spec holds user settable values for configuration",
+							Description: "spec holds user settable values for configuration kueue configuration must not be changed once the object exists to change the configuration, one can delete the object and create a new object.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/operator/v1alpha1.KueueOperandSpec"),
 						},
@@ -57232,31 +57230,9 @@ func schema_openshift_api_operator_v1alpha1_KueueConfiguration(ref common.Refere
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "Feature gates is unresolved Option 1:\n\n\tDrop the feature gate entirely\n\tFeature gate modification is not supported.\n\nOption 2:\n\n\tAllow for modifications of feature gates if operator is an Unmanaged state\n\tWe could validate that user set operator in \"Unmanaged\" state as part of operator v1 API\n\tWhen this is set, specific experimental fields will be enabled.\n\nOption 3:\n\n\tAllow for a users to specifiy a configmap that matches kueue configuration\n\tOperator will fetch the configmap and assume its valid.",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"waitForPodsReady": {
-						SchemaProps: spec.SchemaProps{
-							Description: "waitForPodsReady configures gang admission",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/openshift/api/operator/v1alpha1.WaitForPodsReady"),
-						},
-					},
-					"featureGates": {
-						SchemaProps: spec.SchemaProps{
-							Description: "featureGates are advanced features for Kueue if ManagementState is Unmanaged Otherwise we will fail at validation time.",
-							Type:        []string{"object"},
-							AdditionalProperties: &spec.SchemaOrBool{
-								Allows: true,
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
 					"integrations": {
 						SchemaProps: spec.SchemaProps{
 							Description: "integrations are the types of integrations Kueue will manage",
@@ -57303,7 +57279,7 @@ func schema_openshift_api_operator_v1alpha1_KueueConfiguration(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1alpha1.FairSharing", "github.com/openshift/api/operator/v1alpha1.Integrations", "github.com/openshift/api/operator/v1alpha1.Resources", "github.com/openshift/api/operator/v1alpha1.WaitForPodsReady", "k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"},
+			"github.com/openshift/api/operator/v1alpha1.FairSharing", "github.com/openshift/api/operator/v1alpha1.Integrations", "github.com/openshift/api/operator/v1alpha1.Resources", "k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"},
 	}
 }
 
@@ -58040,46 +58016,6 @@ func schema_openshift_api_operator_v1alpha1_RepositoryDigestMirrors(ref common.R
 	}
 }
 
-func schema_openshift_api_operator_v1alpha1_RequeuingStrategy(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"timestamp": {
-						SchemaProps: spec.SchemaProps{
-							Description: "timestamp defines the timestamp used for re-queuing a Workload that was evicted due to Pod readiness. The possible values are:\n\n- `Eviction` (default) indicates from Workload `Evicted` condition with `PodsReadyTimeout` reason. - `Creation` indicates from Workload .metadata.creationTimestamp.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"backoffLimitCount": {
-						SchemaProps: spec.SchemaProps{
-							Description: "backoffLimitCount defines the maximum number of re-queuing retries. Once the number is reached, the workload is deactivated (`.spec.activate`=`false`). When it is null, the workloads will repeatedly and endless re-queueing.\n\nEvery backoff duration is about \"b*2^(n-1)+Rand\" where: - \"b\" represents the base set by \"BackoffBaseSeconds\" parameter, - \"n\" represents the \"workloadStatus.requeueState.count\", - \"Rand\" represents the random jitter. During this time, the workload is taken as an inadmissible and other workloads will have a chance to be admitted. By default, the consecutive requeue delays are around: (60s, 120s, 240s, ...).\n\nDefaults to null.",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"backoffBaseSeconds": {
-						SchemaProps: spec.SchemaProps{
-							Description: "backoffBaseSeconds defines the base for the exponential backoff for re-queuing an evicted workload.\n\nDefaults to 60.",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"backoffMaxSeconds": {
-						SchemaProps: spec.SchemaProps{
-							Description: "backoffMaxSeconds defines the maximum backoff time to re-queue an evicted workload.\n\nDefaults to 3600.",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-				},
-			},
-		},
-	}
-}
-
 func schema_openshift_api_operator_v1alpha1_ResourceTransformation(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -58088,7 +58024,7 @@ func schema_openshift_api_operator_v1alpha1_ResourceTransformation(ref common.Re
 				Properties: map[string]spec.Schema{
 					"input": {
 						SchemaProps: spec.SchemaProps{
-							Description: "input is the name of the input resource.",
+							Description: "input is the name of the input resource. resources are pod spec resources like cpu, memory, gpus",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -58319,46 +58255,6 @@ func schema_openshift_api_operator_v1alpha1_VersionAvailability(ref common.Refer
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/operator/v1alpha1.GenerationHistory"},
-	}
-}
-
-func schema_openshift_api_operator_v1alpha1_WaitForPodsReady(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "WaitForPodsReady defines configuration for the Wait For Pods Ready feature, which is used to ensure that all Pods are ready within the specified time.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"timeout": {
-						SchemaProps: spec.SchemaProps{
-							Description: "timeout defines the time for an admitted workload to reach the PodsReady=true condition. When the timeout is exceeded, the workload evicted and requeued in the same cluster queue. Defaults to 5min.",
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
-						},
-					},
-					"blockAdmission": {
-						SchemaProps: spec.SchemaProps{
-							Description: "blockAdmission when true, cluster queue will block admissions for all subsequent jobs until the jobs reach the PodsReady=true condition. This setting is only honored when `Enable` is set to true.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"requeuingStrategy": {
-						SchemaProps: spec.SchemaProps{
-							Description: "requeuingStrategy defines the strategy for requeuing a Workload.",
-							Ref:         ref("github.com/openshift/api/operator/v1alpha1.RequeuingStrategy"),
-						},
-					},
-					"recoveryTimeout": {
-						SchemaProps: spec.SchemaProps{
-							Description: "recoveryTimeout defines an opt-in timeout, measured since the last transition to the PodsReady=false condition after a Workload is Admitted and running. Such a transition may happen when a Pod failed and the replacement Pod is awaited to be scheduled. After exceeding the timeout the corresponding job gets suspended again and requeued after the backoff delay. The timeout is enforced only if waitForPodsReady.enable=true. If not set, there is no timeout.",
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"github.com/openshift/api/operator/v1alpha1.RequeuingStrategy", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
 	}
 }
 

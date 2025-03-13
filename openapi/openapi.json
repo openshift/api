@@ -33421,7 +33421,7 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
         "spec": {
-          "description": "spec holds user settable values for configuration",
+          "description": "spec holds user settable values for configuration kueue configuration must not be changed once the object exists to change the configuration, one can delete the object and create a new object.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.KueueOperandSpec"
         },
@@ -33433,6 +33433,7 @@
       }
     },
     "com.github.openshift.api.operator.v1alpha1.KueueConfiguration": {
+      "description": "Feature gates is unresolved Option 1:\n\n\tDrop the feature gate entirely\n\tFeature gate modification is not supported.\n\nOption 2:\n\n\tAllow for modifications of feature gates if operator is an Unmanaged state\n\tWe could validate that user set operator in \"Unmanaged\" state as part of operator v1 API\n\tWhen this is set, specific experimental fields will be enabled.\n\nOption 3:\n\n\tAllow for a users to specifiy a configmap that matches kueue configuration\n\tOperator will fetch the configmap and assume its valid.",
       "type": "object",
       "required": [
         "integrations"
@@ -33442,14 +33443,6 @@
           "description": "fairSharing controls the fair sharing semantics across the cluster.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.FairSharing"
-        },
-        "featureGates": {
-          "description": "featureGates are advanced features for Kueue if ManagementState is Unmanaged Otherwise we will fail at validation time.",
-          "type": "object",
-          "additionalProperties": {
-            "type": "string",
-            "default": ""
-          }
         },
         "integrations": {
           "description": "integrations are the types of integrations Kueue will manage",
@@ -33472,11 +33465,6 @@
           "description": "resources provides additional configuration options for handling the resources. Supports https://github.com/kubernetes-sigs/kueue/blob/release-0.10/keps/2937-resource-transformer/README.md",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.Resources"
-        },
-        "waitForPodsReady": {
-          "description": "waitForPodsReady configures gang admission",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.WaitForPodsReady"
         }
       }
     },
@@ -33935,30 +33923,6 @@
         }
       }
     },
-    "com.github.openshift.api.operator.v1alpha1.RequeuingStrategy": {
-      "type": "object",
-      "properties": {
-        "backoffBaseSeconds": {
-          "description": "backoffBaseSeconds defines the base for the exponential backoff for re-queuing an evicted workload.\n\nDefaults to 60.",
-          "type": "integer",
-          "format": "int32"
-        },
-        "backoffLimitCount": {
-          "description": "backoffLimitCount defines the maximum number of re-queuing retries. Once the number is reached, the workload is deactivated (`.spec.activate`=`false`). When it is null, the workloads will repeatedly and endless re-queueing.\n\nEvery backoff duration is about \"b*2^(n-1)+Rand\" where: - \"b\" represents the base set by \"BackoffBaseSeconds\" parameter, - \"n\" represents the \"workloadStatus.requeueState.count\", - \"Rand\" represents the random jitter. During this time, the workload is taken as an inadmissible and other workloads will have a chance to be admitted. By default, the consecutive requeue delays are around: (60s, 120s, 240s, ...).\n\nDefaults to null.",
-          "type": "integer",
-          "format": "int32"
-        },
-        "backoffMaxSeconds": {
-          "description": "backoffMaxSeconds defines the maximum backoff time to re-queue an evicted workload.\n\nDefaults to 3600.",
-          "type": "integer",
-          "format": "int32"
-        },
-        "timestamp": {
-          "description": "timestamp defines the timestamp used for re-queuing a Workload that was evicted due to Pod readiness. The possible values are:\n\n- `Eviction` (default) indicates from Workload `Evicted` condition with `PodsReadyTimeout` reason. - `Creation` indicates from Workload .metadata.creationTimestamp.",
-          "type": "string"
-        }
-      }
-    },
     "com.github.openshift.api.operator.v1alpha1.ResourceTransformation": {
       "type": "object",
       "required": [
@@ -33966,7 +33930,7 @@
       ],
       "properties": {
         "input": {
-          "description": "input is the name of the input resource.",
+          "description": "input is the name of the input resource. resources are pod spec resources like cpu, memory, gpus",
           "type": "string",
           "default": ""
         },
@@ -34101,28 +34065,6 @@
           "description": "version is the level this availability applies to",
           "type": "string",
           "default": ""
-        }
-      }
-    },
-    "com.github.openshift.api.operator.v1alpha1.WaitForPodsReady": {
-      "description": "WaitForPodsReady defines configuration for the Wait For Pods Ready feature, which is used to ensure that all Pods are ready within the specified time.",
-      "type": "object",
-      "properties": {
-        "blockAdmission": {
-          "description": "blockAdmission when true, cluster queue will block admissions for all subsequent jobs until the jobs reach the PodsReady=true condition. This setting is only honored when `Enable` is set to true.",
-          "type": "string"
-        },
-        "recoveryTimeout": {
-          "description": "recoveryTimeout defines an opt-in timeout, measured since the last transition to the PodsReady=false condition after a Workload is Admitted and running. Such a transition may happen when a Pod failed and the replacement Pod is awaited to be scheduled. After exceeding the timeout the corresponding job gets suspended again and requeued after the backoff delay. The timeout is enforced only if waitForPodsReady.enable=true. If not set, there is no timeout.",
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
-        },
-        "requeuingStrategy": {
-          "description": "requeuingStrategy defines the strategy for requeuing a Workload.",
-          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.RequeuingStrategy"
-        },
-        "timeout": {
-          "description": "timeout defines the time for an admitted workload to reach the PodsReady=true condition. When the timeout is exceeded, the workload evicted and requeued in the same cluster queue. Defaults to 5min.",
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
         }
       }
     },

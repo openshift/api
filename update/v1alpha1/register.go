@@ -34,6 +34,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&ClusterVersionProgressInsightList{},
 		&ClusterOperatorProgressInsight{},
 		&ClusterOperatorProgressInsightList{},
+		&MachineConfigPoolProgressInsight{},
+		&MachineConfigPoolProgressInsightList{},
 	)
 	metav1.AddToGroupVersion(scheme, GroupVersion)
 	return nil

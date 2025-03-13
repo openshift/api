@@ -30,6 +30,9 @@ import (
 type BpfApplicationProgram struct {
 	// name is the name of the function that is the entry point for the BPF
 	// program
+	// +kubebuilder:validation:Pattern="^[a-zA-Z][a-zA-Z0-9_]+."
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=64
 	Name string `json:"name"`
 
 	// type specifies the bpf program type

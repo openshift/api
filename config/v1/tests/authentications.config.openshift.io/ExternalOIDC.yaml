@@ -121,6 +121,367 @@ tests:
               username:
                 claim: "preferred_username"
                 prefixPolicy: NoPrefix
+    - name: Can set OIDC providers with uid claim mapping as a specific claim
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              uid:
+                claim: sub
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              uid:
+                claim: sub
+    - name: Can set OIDC providers with uid claim mapping as a CEL expression
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              uid:
+                expression: claims.sub
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              uid:
+                expression: claims.sub
+    - name: Cannot set OIDC providers with uid claim mapping specifying both claim and expression
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              uid:
+                claim: sub
+                expression: claims.sub
+      expectedError: "both claim and expression must not be set"
+    - name: Can set OIDC providers with uid claim mapping specifying an empty claim
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              uid:
+                claim: ""
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              uid:
+                claim: ""
+    - name: Cannot set OIDC providers with uid claim mapping specifying an empty expression
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              uid:
+                expression: ""
+      expectedError: "Invalid value: \"\": spec.oidcProviders[0].claimMappings.uid.expression in body should be at least 1 chars long"
+    - name: Cannot set OIDC providers with empty uid claim mapping specified
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              uid: {}
+      expectedError: "either claim or expression must be set"
+    - name: Can set OIDC providers with extra claim mappings
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              extra:
+              - key: example.com/foo
+                valueExpression: claims.foo
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              extra:
+              - key: example.com/foo
+                valueExpression: claims.foo
+    - name: Cannot set OIDC providers with extra claim mappings where key uses the reserved domain kubernetes.io
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              extra:
+              - key: kubernetes.io/foo
+                valueExpression: claims.foo
+      expectedError: the domain 'kubernetes.io' is reserved for Kubernetes use
+    - name: Cannot set OIDC providers with extra claim mappings where key uses the reserved domain k8s.io
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              extra:
+              - key: k8s.io/foo
+                valueExpression: claims.foo
+      expectedError: the domain 'k8s.io' is reserved for Kubernetes use
+    - name: Cannot set OIDC providers with extra claim mappings where key uses the reserved domain openshift.io
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              extra:
+              - key: openshift.io/foo
+                valueExpression: claims.foo
+      expectedError: the domain 'openshift.io' is reserved for OpenShift use
+    - name: Cannot set OIDC providers with extra claim mappings where key uses a subdomain of kubernetes.io
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              extra:
+              - key: bar.kubernetes.io/foo
+                valueExpression: claims.foo
+      expectedError: the subdomains '*.kubernetes.io' are reserved for Kubernetes use
+    - name: Cannot set OIDC providers with extra claim mappings where key uses a subdomain of k8s.io
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              extra:
+              - key: bar.k8s.io/foo
+                valueExpression: claims.foo
+      expectedError: the subdomains '*.k8s.io' are reserved for Kubernetes use
+    - name: Cannot set OIDC providers with extra claim mappings where key uses a subdomain of openshift.io
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              extra:
+              - key: bar.openshift.io/foo
+                valueExpression: claims.foo
+      expectedError: the subdomains '*.openshift.io' are reserved for OpenShift use
+    - name: Cannot set OIDC providers with extra claim mappings where key is not a domain-prefixed path
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              extra:
+              - key: example.com
+                valueExpression: claims.foo
+      expectedError: key must contain the '/' character
+    - name: Cannot set OIDC providers with extra claim mappings where key contains an empty path
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              extra:
+              - key: example.com/
+                valueExpression: claims.foo
+      expectedError: the path of the key must not be empty and must consist of at least one alphanumeric character, percent-encoded octets, apostrophe, '-', '.', '_', '~', '!', '$', '&', '(', ')', '*', '+', ',', ';', '=', and ':'
+    - name: Cannot set OIDC providers with extra claim mappings where key contains an invalid path
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              extra:
+              - key: example.com/@^#
+                valueExpression: claims.foo
+      expectedError: the path of the key must not be empty and must consist of at least one alphanumeric character, percent-encoded octets, apostrophe, '-', '.', '_', '~', '!', '$', '&', '(', ')', '*', '+', ',', ';', '=', and ':'
+    - name: Cannot set OIDC providers with extra claim where key is missing
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              extra:
+              - valueExpression: claims.foo
+      expectedError: "spec.oidcProviders[0].claimMappings.extra[0].key: Required value"
+    - name: Cannot set OIDC providers with extra claim where key is an empty string
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              extra:
+              - key: ""
+                valueExpression: claims.foo
+      expectedError: "Invalid value: \"\": spec.oidcProviders[0].claimMappings.extra[0].key in body should be at least 1 chars long"
+    - name: Cannot set OIDC providers with extra claim where valueExpression is missing
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              extra:
+              - key: example.com/foo
+      expectedError: "spec.oidcProviders[0].claimMappings.extra[0].valueExpression: Required value"
+    - name: Cannot set OIDC providers with extra claim where valueExpression is an empty string
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              extra:
+              - key: example.com/foo
+                valueExpression: ""
+      expectedError: "Invalid value: \"\": spec.oidcProviders[0].claimMappings.extra[0].valueExpression in body should be at least 1 chars long"
   onUpdate:
     - name: Updating OIDC provider with a client that's not in the status
       initial: &initConfig |

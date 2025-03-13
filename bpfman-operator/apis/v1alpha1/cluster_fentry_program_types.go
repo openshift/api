@@ -31,6 +31,9 @@ type ClFentryProgramInfo struct {
 // programs
 type ClFentryLoadInfo struct {
 	// function is the name of the function to attach the Fentry program to.
+	// +kubebuilder:validation:Pattern="^[a-zA-Z][a-zA-Z0-9_]+."
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=64
 	Function string `json:"function"`
 }
 

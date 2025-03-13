@@ -27,6 +27,9 @@ type Kueue struct {
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	// spec holds user settable values for configuration
+	// kueue configuration must not be changed once the object exists
+	// to change the configuration, one can delete the object and create a new object.
+	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="values are immutable once set"
 	// +required
 	Spec KueueOperandSpec `json:"spec"`
 	// status holds observed values from the cluster. They may not be overridden.
@@ -66,32 +69,7 @@ const (
 	Disabled EnabledOrDisabled = "Disabled"
 )
 
-// Feature gates is unresolved
-// Option 1:
-//
-//	Drop the feature gate entirely
-//	Feature gate modification is not supported.
-//
-// Option 2:
-//
-//	Allow for modifications of feature gates if operator is an Unmanaged state
-//	We could validate that user set operator in "Unmanaged" state as part of operator v1 API
-//	When this is set, specific experimental fields will be enabled.
-//
-// Option 3:
-//
-//	Allow for a users to specifiy a configmap that matches kueue configuration
-//	Operator will fetch the configmap and assume its valid.
 type KueueConfiguration struct {
-	// waitForPodsReady configures gang admission
-	// +optional
-	WaitForPodsReady WaitForPodsReady `json:"waitForPodsReady,omitempty"`
-	// featureGates are advanced features for Kueue
-	// TODO: we could only allow features
-	// if ManagementState is Unmanaged
-	// Otherwise we will fail at validation time.
-	// +optional
-	FeatureGates map[string]EnabledOrDisabled `json:"featureGates,omitempty"`
 	// integrations are the types of integrations Kueue will manage
 	// +required
 	Integrations Integrations `json:"integrations"`
@@ -153,19 +131,24 @@ type Resources struct {
 	// transformations defines how to transform PodSpec resources into Workload resource requests.
 	// This is intended to be a map with Input as the key (enforced by validation code)
 	// +optional
-	// +kubebuilder:validation:items:MaxLength=64
 	// +kubebuilder:validation:MaxItems=16
 	Transformations []ResourceTransformation `json:"transformations,omitempty"`
 }
 
-// +kubebuilder:validation:Enum="Retain";"Replace"
+// +kubebuilder:validation:Enum=Retain;Replace
 type ResourceTransformationStrategy string
 
+// ResourceTransformations apply transformation to pod spec resources
+// Retain means that we will keep the original resources and
+// apply a transformation.
+// Replace means that the original resources will be replaced
+// after the transformation is done.
 const Retain ResourceTransformationStrategy = "Retain"
 const Replace ResourceTransformationStrategy = "Replace"
 
 type ResourceTransformation struct {
 	// input is the name of the input resource.
+	// resources are pod spec resources like cpu, memory, gpus
 	// +required
 	Input corev1.ResourceName `json:"input"`
 
@@ -190,7 +173,6 @@ const (
 
 type FairSharing struct {
 	// enable indicates whether to enable fair sharing for all cohorts.
-	// +kubebuilder:default=Disabled
 	// +optional
 	Enable EnabledOrDisabled `json:"enable"`
 
@@ -214,90 +196,6 @@ type FairSharing struct {
 	// +kubebuilder:validation:MaxItems=2
 	PreemptionStrategies []PreemptionStrategy `json:"preemptionStrategies,omitempty"`
 }
-
-// WaitForPodsReady defines configuration for the Wait For Pods Ready feature,
-// which is used to ensure that all Pods are ready within the specified time.
-type WaitForPodsReady struct {
-	// timeout defines the time for an admitted workload to reach the
-	// PodsReady=true condition. When the timeout is exceeded, the workload
-	// evicted and requeued in the same cluster queue.
-	// Defaults to 5min.
-	// +optional
-	Timeout *metav1.Duration `json:"timeout,omitempty"`
-
-	// blockAdmission when true, cluster queue will block admissions for all
-	// subsequent jobs until the jobs reach the PodsReady=true condition.
-	// This setting is only honored when `Enable` is set to true.
-	// +optional
-	BlockAdmission *EnabledOrDisabled `json:"blockAdmission,omitempty"`
-
-	// requeuingStrategy defines the strategy for requeuing a Workload.
-	// +optional
-	RequeuingStrategy *RequeuingStrategy `json:"requeuingStrategy,omitempty"`
-
-	// recoveryTimeout defines an opt-in timeout, measured since the
-	// last transition to the PodsReady=false condition after a Workload is Admitted and running.
-	// Such a transition may happen when a Pod failed and the replacement Pod
-	// is awaited to be scheduled.
-	// After exceeding the timeout the corresponding job gets suspended again
-	// and requeued after the backoff delay. The timeout is enforced only if waitForPodsReady.enable=true.
-	// If not set, there is no timeout.
-	// +optional
-	RecoveryTimeout *metav1.Duration `json:"recoveryTimeout,omitempty"`
-}
-
-type RequeuingStrategy struct {
-	// timestamp defines the timestamp used for re-queuing a Workload
-	// that was evicted due to Pod readiness. The possible values are:
-	//
-	// - `Eviction` (default) indicates from Workload `Evicted` condition with `PodsReadyTimeout` reason.
-	// - `Creation` indicates from Workload .metadata.creationTimestamp.
-	//
-	// +kubebuilder:validation:MaxLength=8
-	// +optional
-	Timestamp *RequeuingTimestamp `json:"timestamp,omitempty"`
-
-	// backoffLimitCount defines the maximum number of re-queuing retries.
-	// Once the number is reached, the workload is deactivated (`.spec.activate`=`false`).
-	// When it is null, the workloads will repeatedly and endless re-queueing.
-	//
-	// Every backoff duration is about "b*2^(n-1)+Rand" where:
-	// - "b" represents the base set by "BackoffBaseSeconds" parameter,
-	// - "n" represents the "workloadStatus.requeueState.count",
-	// - "Rand" represents the random jitter.
-	// During this time, the workload is taken as an inadmissible and
-	// other workloads will have a chance to be admitted.
-	// By default, the consecutive requeue delays are around: (60s, 120s, 240s, ...).
-	//
-	// Defaults to null.
-	// +optional
-	BackoffLimitCount *int32 `json:"backoffLimitCount,omitempty"`
-
-	// backoffBaseSeconds defines the base for the exponential backoff for
-	// re-queuing an evicted workload.
-	//
-	// Defaults to 60.
-	// +kubebuilder:default=60
-	// +optional
-	BackoffBaseSeconds *int32 `json:"backoffBaseSeconds,omitempty"`
-
-	// backoffMaxSeconds defines the maximum backoff time to re-queue an evicted workload.
-	//
-	// Defaults to 3600.
-	// +kubebuilder:default=3600
-	// +optional
-	BackoffMaxSeconds *int32 `json:"backoffMaxSeconds,omitempty"`
-}
-
-type RequeuingTimestamp string
-
-const (
-	// CreationTimestamp timestamp (from Workload .metadata.creationTimestamp).
-	CreationTimestamp RequeuingTimestamp = "Creation"
-
-	// EvictionTimestamp timestamp (from Workload .status.conditions).
-	EvictionTimestamp RequeuingTimestamp = "Eviction"
-)
 
 type Integrations struct {
 	// frameworks are a list of names to be enabled.

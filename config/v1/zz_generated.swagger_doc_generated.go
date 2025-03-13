@@ -948,7 +948,8 @@ func (FeatureGate) SwaggerDoc() map[string]string {
 }
 
 var map_FeatureGateAttributes = map[string]string{
-	"name": "name is the name of the FeatureGate.",
+	"name":                             "name is the name of the FeatureGate.",
+	"requiredMinimumComponentVersions": "requiredMinimumComponentVersions is a list of component/version pairs that declares the is the lowest version the given component may be in this cluster. Currently, the only supported component is Kubelet, and setting a required minimum kubelet component will set the minimumKubeletVersion field in the nodes.config.openshift.io CRD.",
 }
 
 func (FeatureGateAttributes) SwaggerDoc() map[string]string {
@@ -990,6 +991,16 @@ var map_FeatureGateStatus = map[string]string{
 
 func (FeatureGateStatus) SwaggerDoc() map[string]string {
 	return map_FeatureGateStatus
+}
+
+var map_RequiredMinimumComponentVersion = map[string]string{
+	"":          "RequiredMinimumComponentVersion is a pair of Component and Version that specifies the required minimum Version of the given Component to enable this feature.",
+	"component": "component is the entity whose version must be above a certain version.",
+	"version":   "version is the minimum version the given component may be in this cluster. version must be in semver format (x.y.z) and must consist only of numbers and periods (.).",
+}
+
+func (RequiredMinimumComponentVersion) SwaggerDoc() map[string]string {
+	return map_RequiredMinimumComponentVersion
 }
 
 var map_Image = map[string]string{

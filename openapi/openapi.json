@@ -6230,6 +6230,18 @@
           "description": "name is the name of the FeatureGate.",
           "type": "string",
           "default": ""
+        },
+        "requiredMinimumComponentVersions": {
+          "description": "requiredMinimumComponentVersions is a list of component/version pairs that declares the is the lowest version the given component may be in this cluster. Currently, the only supported component is Kubelet, and setting a required minimum kubelet component will set the minimumKubeletVersion field in the nodes.config.openshift.io CRD.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.RequiredMinimumComponentVersion"
+          },
+          "x-kubernetes-list-map-keys": [
+            "component"
+          ],
+          "x-kubernetes-list-type": "map"
         }
       }
     },
@@ -10004,6 +10016,26 @@
         "preloadPolicy": {
           "description": "preloadPolicy directs the client to include hosts in its host preload list so that it never needs to do an initial load to get the HSTS header (note that this is not defined in RFC 6797 and is therefore client implementation-dependent).",
           "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.RequiredMinimumComponentVersion": {
+      "description": "RequiredMinimumComponentVersion is a pair of Component and Version that specifies the required minimum Version of the given Component to enable this feature.",
+      "type": "object",
+      "required": [
+        "component",
+        "version"
+      ],
+      "properties": {
+        "component": {
+          "description": "component is the entity whose version must be above a certain version.",
+          "type": "string",
+          "default": ""
+        },
+        "version": {
+          "description": "version is the minimum version the given component may be in this cluster. version must be in semver format (x.y.z) and must consist only of numbers and periods (.).",
+          "type": "string",
+          "default": ""
         }
       }
     },

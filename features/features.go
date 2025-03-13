@@ -498,6 +498,15 @@ var (
 				enableForClusterProfile(Hypershift, configv1.Default, configv1.TechPreviewNoUpgrade).
 				mustRegister()
 
+	FeatureGateExternalOIDCWithAdditionalClaimMappings = newFeatureGate("ExternalOIDCWithUIDAndExtraClaimMappings").
+				reportProblemsToJiraComponent("authentication").
+				contactPerson("bpalmer").
+				productScope(ocpSpecific).
+				enhancementPR("https://github.com/openshift/enhancements/pull/1777").
+				enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+				enableForClusterProfile(Hypershift, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+				mustRegister()
+
 	FeatureGateExample = newFeatureGate("Example").
 				reportProblemsToJiraComponent("cluster-config").
 				contactPerson("deads").

@@ -279,9 +279,6 @@
                         "name": "UserNamespacesSupport"
                     },
                     {
-                        "name": "VSphereControlPlaneMachineSet"
-                    },
-                    {
                         "name": "VSphereDriverConfiguration"
                     },
                     {

@@ -51701,7 +51701,7 @@ func schema_openshift_api_operator_v1_MachineConfigurationSpec(ref common.Refere
 					},
 					"managedBootImages": {
 						SchemaProps: spec.SchemaProps{
-							Description: "managedBootImages allows configuration for the management of boot images for machine resources within the cluster. This configuration allows users to select resources that should be updated to the latest boot images during cluster upgrades, ensuring that new machines always boot with the current cluster version's boot image. When omitted, no boot images will be updated.",
+							Description: "managedBootImages allows configuration for the management of boot images for machine resources within the cluster. This configuration allows users to select resources that should be updated to the latest boot images during cluster upgrades, ensuring that new machines always boot with the current cluster version's boot image. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default for each machine manager mode is All for GCP and AWS platforms, and None for all other platforms.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/operator/v1.ManagedBootImages"),
 						},
@@ -51766,11 +51766,18 @@ func schema_openshift_api_operator_v1_MachineConfigurationStatus(ref common.Refe
 							Ref:         ref("github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatus"),
 						},
 					},
+					"managedBootImagesStatus": {
+						SchemaProps: spec.SchemaProps{
+							Description: "managedBootImagesStatus reflects what the latest cluster-validated boot image configuration is and will be used by Machine Config Controller while performing boot image updates.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1.ManagedBootImages"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
+			"github.com/openshift/api/operator/v1.ManagedBootImages", "github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -51821,7 +51828,7 @@ func schema_openshift_api_operator_v1_MachineManagerSelector(ref common.Referenc
 				Properties: map[string]spec.Schema{
 					"mode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "mode determines how machine managers will be selected for updates. Valid values are All and Partial. All means that every resource matched by the machine manager will be updated. Partial requires specified selector(s) and allows customisation of which resources matched by the machine manager will be updated.",
+							Description: "mode determines how machine managers will be selected for updates. Valid values are All and Partial. All means that every resource matched by the machine manager will be updated. Partial requires specified selector(s) and allows customisation of which resources matched by the machine manager will be updated. None means that every resource matched by the machine manager will not be updated.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",

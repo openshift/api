@@ -45,7 +45,6 @@ type XdpAttachInfo struct {
 	// Multiple values are supported by repeating the parameter.
 	// +optional
 	// +kubebuilder:validation:MaxItems=6
-	// +kubebuilder:validation:Enum=aborted;drop;pass;tx;redirect;dispatcher_return;
 	// +kubebuilder:default:={pass,dispatcher_return}
 	ProceedOn []XdpProceedOnValue `json:"proceedOn"`
 }
@@ -79,6 +78,6 @@ type XdpAttachInfoState struct {
 
 	// proceedOn allows the user to call other xdp programs in chain on this exit code.
 	// Multiple values are supported by repeating the parameter.
-	// +kubebuilder:validation:Enum=aborted;drop;pass;tx;redirect;dispatcher_return;
+	// +kubebuilder:validation:MaxItems=6
 	ProceedOn []XdpProceedOnValue `json:"proceedOn"`
 }

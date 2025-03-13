@@ -36,8 +36,8 @@ type TcAttachInfo struct {
 
 	// direction specifies the direction of traffic the tc program should
 	// attach to for a given network device.
-	// +kubebuilder:validation:Enum=Ingress;Egress
-	Direction string `json:"direction"`
+	// +kubebuilder:validation:Enum=ingress;egress
+	Direction TCDirectionType `json:"direction"`
 
 	// priority specifies the priority of the tc program in relation to
 	// other programs of the same type with the same attach point. It is a value
@@ -49,7 +49,7 @@ type TcAttachInfo struct {
 	// proceedOn allows the user to call other tc programs in chain on this exit code.
 	// Multiple values are supported by repeating the parameter.
 	// +optional
-	// +kubebuilder:validation:Enum=unspec;ok;reclassify;shot;pipe;stolen;queued;repeat;redirect;trap;dispatcher_return;
+	// +kubebuilder:validation:MaxItems=11
 	// +kubebuilder:default:={pipe,dispatcher_return}
 	ProceedOn []TcProceedOnValue `json:"proceedOn"`
 }
@@ -68,16 +68,16 @@ type TcProgramInfoState struct {
 type TcAttachInfoState struct {
 	AttachInfoStateCommon `json:",inline"`
 
-	// ifName is the interface name to attach the tc program to.
-	IfName string `json:"ifName"`
+	// interfaceName is the Interface name to attach the tc program to.
+	InterfaceName string `json:"interfaceName"`
 
 	// containerPid is the Container pid to attach the tc program in.
 	ContainerPid int32 `json:"containerPid"`
 
 	// direction specifies the direction of traffic the tc program should
 	// attach to for a given network device.
-	// +kubebuilder:validation:Enum=Ingress;Egress
-	Direction string `json:"direction"`
+	// +kubebuilder:validation:Enum=ingress;egress
+	Direction TCDirectionType `json:"direction"`
 
 	// priority specifies the priority of the tc program in relation to
 	// other programs of the same type with the same attach point. It is a value
@@ -88,6 +88,6 @@ type TcAttachInfoState struct {
 
 	// proceedOn allows the user to call other tc programs in chain on this exit code.
 	// Multiple values are supported by repeating the parameter.
-	// +kubebuilder:validation:Enum=unspec;ok;reclassify;shot;pipe;stolen;queued;repeat;redirect;trap;dispatcher_return;
+	// +kubebuilder:validation:MaxItems=11
 	ProceedOn []TcProceedOnValue `json:"proceedOn"`
 }

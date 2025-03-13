@@ -182,13 +182,13 @@ func (in *BpfApplicationProgram) DeepCopyInto(out *BpfApplicationProgram) {
 		*out = new(TcxProgramInfo)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.Uprobe != nil {
-		in, out := &in.Uprobe, &out.Uprobe
+	if in.UProbe != nil {
+		in, out := &in.UProbe, &out.UProbe
 		*out = new(UprobeProgramInfo)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.Uretprobe != nil {
-		in, out := &in.Uretprobe, &out.Uretprobe
+	if in.URetProbe != nil {
+		in, out := &in.URetProbe, &out.URetProbe
 		*out = new(UprobeProgramInfo)
 		(*in).DeepCopyInto(*out)
 	}
@@ -223,13 +223,13 @@ func (in *BpfApplicationProgramState) DeepCopyInto(out *BpfApplicationProgramSta
 		*out = new(TcxProgramInfoState)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.Uprobe != nil {
-		in, out := &in.Uprobe, &out.Uprobe
+	if in.UProbe != nil {
+		in, out := &in.UProbe, &out.UProbe
 		*out = new(UprobeProgramInfoState)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.Uretprobe != nil {
-		in, out := &in.Uretprobe, &out.Uretprobe
+	if in.URetProbe != nil {
+		in, out := &in.URetProbe, &out.URetProbe
 		*out = new(UprobeProgramInfoState)
 		(*in).DeepCopyInto(*out)
 	}
@@ -432,38 +432,38 @@ func (in *ClBpfApplicationProgram) DeepCopyInto(out *ClBpfApplicationProgram) {
 		*out = new(ClTcxProgramInfo)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.Fentry != nil {
-		in, out := &in.Fentry, &out.Fentry
+	if in.FEntry != nil {
+		in, out := &in.FEntry, &out.FEntry
 		*out = new(ClFentryProgramInfo)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.Fexit != nil {
-		in, out := &in.Fexit, &out.Fexit
+	if in.FExit != nil {
+		in, out := &in.FExit, &out.FExit
 		*out = new(ClFexitProgramInfo)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.Kprobe != nil {
-		in, out := &in.Kprobe, &out.Kprobe
+	if in.KProbe != nil {
+		in, out := &in.KProbe, &out.KProbe
 		*out = new(ClKprobeProgramInfo)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.Kretprobe != nil {
-		in, out := &in.Kretprobe, &out.Kretprobe
+	if in.KRetProbe != nil {
+		in, out := &in.KRetProbe, &out.KRetProbe
 		*out = new(ClKretprobeProgramInfo)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.Uprobe != nil {
-		in, out := &in.Uprobe, &out.Uprobe
+	if in.UProbe != nil {
+		in, out := &in.UProbe, &out.UProbe
 		*out = new(ClUprobeProgramInfo)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.Uretprobe != nil {
-		in, out := &in.Uretprobe, &out.Uretprobe
+	if in.URetProbe != nil {
+		in, out := &in.URetProbe, &out.URetProbe
 		*out = new(ClUprobeProgramInfo)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.Tracepoint != nil {
-		in, out := &in.Tracepoint, &out.Tracepoint
+	if in.TracePoint != nil {
+		in, out := &in.TracePoint, &out.TracePoint
 		*out = new(ClTracepointProgramInfo)
 		(*in).DeepCopyInto(*out)
 	}
@@ -498,38 +498,38 @@ func (in *ClBpfApplicationProgramState) DeepCopyInto(out *ClBpfApplicationProgra
 		*out = new(ClTcxProgramInfoState)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.Fentry != nil {
-		in, out := &in.Fentry, &out.Fentry
+	if in.FEntry != nil {
+		in, out := &in.FEntry, &out.FEntry
 		*out = new(ClFentryProgramInfoState)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.Fexit != nil {
-		in, out := &in.Fexit, &out.Fexit
+	if in.FExit != nil {
+		in, out := &in.FExit, &out.FExit
 		*out = new(ClFexitProgramInfoState)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.Kprobe != nil {
-		in, out := &in.Kprobe, &out.Kprobe
+	if in.KProbe != nil {
+		in, out := &in.KProbe, &out.KProbe
 		*out = new(ClKprobeProgramInfoState)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.Kretprobe != nil {
-		in, out := &in.Kretprobe, &out.Kretprobe
+	if in.KRetProbe != nil {
+		in, out := &in.KRetProbe, &out.KRetProbe
 		*out = new(ClKretprobeProgramInfoState)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.Uprobe != nil {
-		in, out := &in.Uprobe, &out.Uprobe
+	if in.UProbe != nil {
+		in, out := &in.UProbe, &out.UProbe
 		*out = new(ClUprobeProgramInfoState)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.Uretprobe != nil {
-		in, out := &in.Uretprobe, &out.Uretprobe
+	if in.URetProbe != nil {
+		in, out := &in.URetProbe, &out.URetProbe
 		*out = new(ClUprobeProgramInfoState)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.Tracepoint != nil {
-		in, out := &in.Tracepoint, &out.Tracepoint
+	if in.TracePoint != nil {
+		in, out := &in.TracePoint, &out.TracePoint
 		*out = new(ClTracepointProgramInfoState)
 		(*in).DeepCopyInto(*out)
 	}

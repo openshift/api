@@ -24,9 +24,9 @@ import (
 // +union
 // +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'XDP' ?  has(self.xdp) : !has(self.xdp)",message="xdp configuration is required when type is xdp, and forbidden otherwise"
 // +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'TC' ?  has(self.tc) : !has(self.tc)",message="tc configuration is required when type is tc, and forbidden otherwise"
-// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'TCX' ?  has(self.tcx) : !has(self.tcx)",message="tcx configuration is required when type is tcx, and forbidden otherwise"
-// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'Uprobe' ?  has(self.uprobe) : !has(self.uprobe)",message="uprobe configuration is required when type is uprobe, and forbidden otherwise"
-// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'UretProbe' ?  has(self.uretprobe) : !has(self.upretrobe)",message="uretprobe configuration is required when type is uretprobe, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'TCX' ?  has(self.tcx) : !has(self.tcx)",message="tcx configuration is required when type is TCX, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'UProbe' ?  has(self.uprobe) : !has(self.uprobe)",message="uprobe configuration is required when type is uprobe, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'URetProbe' ?  has(self.uretprobe) : !has(self.uretprobe)",message="uretprobe configuration is required when type is uretprobe, and forbidden otherwise"
 type BpfApplicationProgram struct {
 	// name is the name of the function that is the entry point for the BPF
 	// program
@@ -56,12 +56,12 @@ type BpfApplicationProgram struct {
 	// uprobe defines the desired state of the application's UprobePrograms.
 	// +unionMember
 	// +optional
-	Uprobe *UprobeProgramInfo `json:"uprobe,omitempty"`
+	UProbe *UprobeProgramInfo `json:"uprobe,omitempty"`
 
 	// uretprobe defines the desired state of the application's UretprobePrograms.
 	// +unionMember
 	// +optional
-	Uretprobe *UprobeProgramInfo `json:"uretprobe,omitempty"`
+	URetProbe *UprobeProgramInfo `json:"uretprobe,omitempty"`
 }
 
 // BpfApplicationSpec defines the desired state of BpfApplication

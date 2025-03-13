@@ -36,8 +36,8 @@ type TcxAttachInfo struct {
 
 	// direction specifies the direction of traffic the tcx program should
 	// attach to for a given network device.
-	// +kubebuilder:validation:Enum=Ingress;Egress
-	Direction string `json:"direction"`
+	// +kubebuilder:validation:Enum=ingress;egress
+	Direction TCDirectionType `json:"direction"`
 
 	// priority specifies the priority of the tcx program in relation to
 	// other programs of the same type with the same attach point. It is a value
@@ -61,16 +61,16 @@ type TcxProgramInfoState struct {
 type TcxAttachInfoState struct {
 	AttachInfoStateCommon `json:",inline"`
 
-	// ifName is the interface name to attach the tcx program to.
-	IfName string `json:"ifName"`
+	// interfaceName is the Interface name to attach the tc program to.
+	InterfaceName string `json:"interfaceName"`
 
 	// containerPid is the container pid to attach the tcx program in.
 	ContainerPid int32 `json:"containerPid"`
 
 	// direction specifies the direction of traffic the tcx program should
 	// attach to for a given network device.
-	// +kubebuilder:validation:Enum=Ingress;Egress
-	Direction string `json:"direction"`
+	// +kubebuilder:validation:Enum=ingress;egress
+	Direction TCDirectionType `json:"direction"`
 
 	// priority specifies the priority of the tcx program in relation to
 	// other programs of the same type with the same attach point. It is a value

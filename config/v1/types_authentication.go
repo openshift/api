@@ -249,7 +249,29 @@ type TokenIssuer struct {
 	// the "ca-bundle.crt" key.
 	// If unset, system trust is used instead.
 	CertificateAuthority ConfigMapNameReference `json:"issuerCertificateAuthority"`
+
+	// discoveryURL, if specified, overrides the URL used to fetch discovery
+	// information instead of using "{url}/.well-known/openid-configuration".
+	// The exact value specified is used, so "/.well-known/openid-configuration"
+	// must be included in discoveryURL if needed.
+	// Example:
+	// discoveryURL: "https://oidc.oidc-namespace/.well-known/openid-configuration"
+	// discoveryURL: "https://oidc.example.com/.well-known/openid-configuration"
+	DiscoveryURL string `json:"discoveryURL,omitempty"`
+
+	// AudienceMatchPolicy controls how the "aud" claim in JWT tokens is validated.
+	// It allows flexible matching of the audience value in tokens.
+	// Possible values: MatchAny, MatchAll.
+	AudienceMatchPolicy AudienceMatchPolicyType `json:"audienceMatchPolicy,omitempty"`
 }
+
+// AudienceMatchPolicyType is a set of valid values for Issuer.AudienceMatchPolicy
+type AudienceMatchPolicyType string
+
+// Valid types for AudienceMatchPolicyType
+const (
+	AudienceMatchPolicyMatchAny AudienceMatchPolicyType = "MatchAny"
+)
 
 type TokenClaimMappings struct {
 	// username is a name of the claim that should be used to construct
@@ -269,6 +291,24 @@ type TokenClaimMapping struct {
 	//
 	// +required
 	Claim string `json:"claim"`
+
+	// UID claim mapping
+	UID ClaimOrExpression `json:"uid,omitempty"`
+
+	// Extra claim mappings
+	Extra []ExtraMapping `json:"extra,omitempty"`
+}
+
+// ClaimOrExpression provides the configuration for a single claim or expression.
+type ClaimOrExpression struct {
+	Claim      string
+	Expression string
+}
+
+// ExtraMapping provides the configuration for a single extra mapping.
+type ExtraMapping struct {
+	Key             string
+	ValueExpression string
 }
 
 type OIDCClientConfig struct {
@@ -447,6 +487,13 @@ type TokenClaimValidationRule struct {
 	// requiredClaim allows configuring a required claim name and its expected
 	// value
 	RequiredClaim *TokenRequiredClaim `json:"requiredClaim"`
+
+	// Expression allows configuring a custom validation rule based on an expression
+	// This field defines a validation rule using a claim expression to evaluate the token
+	Expression string `json:"expression,omitempty"`
+
+	// Message defines a custom error message to be returned if the validation fails
+	Message string `json:"message,omitempty"`
 }
 
 type TokenRequiredClaim struct {
@@ -462,4 +509,10 @@ type TokenRequiredClaim struct {
 	// +kubebuilder:validation:MinLength=1
 	// +required
 	RequiredValue string `json:"requiredValue"`
+}
+
+// UserValidationRule provides the configuration for a single user validation rule.
+type ToeknUserValidationRule struct {
+	Expression string
+	Message    string
 }

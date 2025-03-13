@@ -1,0 +1,215 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "NodeProgressInsight"
+crdName: nodeprogressinsights.update.openshift.io
+featureGate: UpgradeStatus
+tests:
+  onCreate:
+  - name: Should be able to create a minimal NodeProgressInsight
+    initial: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: NodeProgressInsight
+      spec: {} # No spec is required for a NodeProgressInsight
+    expected: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: NodeProgressInsight
+      spec: {}
+  onUpdate:
+  - name: NodeProgressInsight example
+    initial: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: NodeProgressInsight
+      spec: {}
+
+    updated: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: NodeProgressInsight
+      spec: {}
+      status:
+        conditions:
+        - type: Updating
+          status: "False"
+          lastTransitionTime: "2021-07-01T00:00:00Z"
+          reason: Pending
+          message: "Waiting to update"
+        name: a-node
+        resource:
+          resource: nodes
+          name: a-node
+        poolResource:
+          group: machineconfiguration.openshift.io
+          resource: machineconfigpools
+          name: worker
+        scopeType: WorkerPool
+        version: 4.20.0-rc.0
+        estimatedToComplete: 42m
+        message: Waiting to update
+
+    expected: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: NodeProgressInsight
+      spec: {}
+      status:
+        apiVersion: update.openshift.io/v1alpha1
+      kind: NodeProgressInsight
+      spec: {}
+      status:
+        conditions:
+        - type: Updating
+          status: "False"
+          lastTransitionTime: "2021-07-01T00:00:00Z"
+          reason: Pending
+          message: "Waiting to update"
+        name: a-node
+        resource:
+          resource: nodes
+          name: a-node
+        poolResource:
+          group: machineconfiguration.openshift.io
+          resource: machineconfigpools
+          name: worker
+        scopeType: WorkerPool
+        version: 4.20.0-rc.0
+        estimatedToComplete: 42m
+        message: Waiting to update
+
+  - name: Cannot refer to a resource that is not a Node
+    initial: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: NodeProgressInsight
+      spec: {}
+    updated: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: NodeProgressInsight
+      spec: {}
+      status:
+        conditions:
+        - type: Updating
+          status: "False"
+          lastTransitionTime: "2021-07-01T00:00:00Z"
+          reason: Pending
+          message: "Waiting to update"
+        name: not-a-node
+        resource:
+          group: machineconfiguration.openshift.io
+          resource: machineconfigpools
+          name: not-a-node
+        poolResource:
+          group: machineconfiguration.openshift.io
+          resource: machineconfigpools
+          name: worker
+        scopeType: WorkerPool
+        version: 4.20.0-rc.0
+        estimatedToComplete: 42m
+        message: Waiting to update
+
+    expected: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: NodeProgressInsight
+      spec: {}
+    expectedStatusError: "Invalid value: \"object\": resource must be a nodes.core.k8s.io resource"
+
+  - name: Cannot refer to a pool resource that is not a MachineConfigPool
+    initial: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: NodeProgressInsight
+      spec: {}
+    updated: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: NodeProgressInsight
+      spec: {}
+      status:
+        conditions:
+        - type: Updating
+          status: "False"
+          lastTransitionTime: "2021-07-01T00:00:00Z"
+          reason: Pending
+          message: "Waiting to update"
+        name: a-node
+        resource:
+          resource: nodes
+          name: a-node
+        poolResource:
+          group: config.openshift.io
+          resource: clusteroperators
+          name: machine-config
+        scopeType: WorkerPool
+        version: 4.20.0-rc.0
+        estimatedToComplete: 42m
+        message: Waiting to update
+
+    expected: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: NodeProgressInsight
+      spec: {}
+    expectedStatusError: "Invalid value: \"object\": resource must be a machineconfigpools.machineconfiguration.openshift.io resource"
+
+  - name: Name must match resource
+    initial: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: NodeProgressInsight
+      spec: {}
+    updated: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: NodeProgressInsight
+      spec: {}
+      status:
+        conditions:
+        - type: Updating
+          status: "False"
+          lastTransitionTime: "2021-07-01T00:00:00Z"
+          reason: Pending
+          message: "Waiting to update"
+        name: a-node
+        resource:
+          resource: nodes
+          name: b-node
+        poolResource:
+          group: machineconfiguration.openshift.io
+          resource: machineconfigpools
+          name: worker
+        scopeType: WorkerPool
+        version: 4.20.0-rc.0
+        estimatedToComplete: 42m
+        message: Waiting to update
+
+    expected: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: NodeProgressInsight
+      spec: {}
+    expectedStatusError: "Invalid value: \"object\": .name must match .resource.name"
+
+  - name: Version must be a semver
+    initial: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: NodeProgressInsight
+      spec: {}
+    updated: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: NodeProgressInsight
+      spec: {}
+      status:
+        conditions:
+        - type: Updating
+          status: "False"
+          lastTransitionTime: "2021-07-01T00:00:00Z"
+          reason: Pending
+          message: "Waiting to update"
+        name: a-node
+        resource:
+          resource: nodes
+          name: a-node
+        poolResource:
+          group: machineconfiguration.openshift.io
+          resource: machineconfigpools
+          name: worker
+        scopeType: WorkerPool
+        version: not-a-version
+        estimatedToComplete: 42m
+        message: Waiting to update
+
+    expected: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: NodeProgressInsight
+      spec: {}
+    expectedStatusError: "Invalid value: \"not-a-version\": version in body should match"
+

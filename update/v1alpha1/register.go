@@ -38,6 +38,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&MachineConfigPoolProgressInsightList{},
 		&NodeProgressInsight{},
 		&NodeProgressInsightList{},
+		&HealthInsight{},
+		&HealthInsightList{},
 	)
 	metav1.AddToGroupVersion(scheme, GroupVersion)
 	return nil

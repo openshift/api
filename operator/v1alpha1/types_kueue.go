@@ -68,13 +68,20 @@ const (
 
 // Feature gates is unresolved
 // Option 1:
-//   Drop the feature gate entirely
-//   Feature gate modification is not supported.
+//
+//	Drop the feature gate entirely
+//	Feature gate modification is not supported.
+//
 // Option 2:
-//   Allow for modifications of feature gates if operator is an Unmanaged state
-//   We could validate that user set operator in "Unmanaged" state as part of operator v1 API
-//   When this is set, specific experimental fields will be enabled.
-
+//
+//	Allow for modifications of feature gates if operator is an Unmanaged state
+//	We could validate that user set operator in "Unmanaged" state as part of operator v1 API
+//	When this is set, specific experimental fields will be enabled.
+//
+// Option 3:
+//
+//	Allow for a users to specifiy a configmap that matches kueue configuration
+//	Operator will fetch the configmap and assume its valid.
 type KueueConfiguration struct {
 	// waitForPodsReady configures gang admission
 	// +optional

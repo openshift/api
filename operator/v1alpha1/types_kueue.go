@@ -19,7 +19,7 @@ import (
 // +genclient:nonNamespaced
 // +kubebuilder:storageversion
 // +kubebuilder:subresource:status
-// +kubebuilder:validation:XValidation:rule="self.metadata.name == 'cluster'",message="olm is a singleton, .metadata.name must be 'cluster'"
+// +kubebuilder:validation:XValidation:rule="self.metadata.name == 'cluster'",message="kueue is a singleton, .metadata.name must be 'cluster'"
 type Kueue struct {
 	metav1.TypeMeta `json:",inline"`
 	// metadata for kueue
@@ -70,13 +70,36 @@ const (
 )
 
 type KueueConfiguration struct {
-	// integrations are the types of integrations Kueue will manage
+	// integrations are the workloads Kueue will manage
+	// kueue has integrations in the codebase and it also allows
+	// for external frameworks
 	// +required
 	Integrations Integrations `json:"integrations"`
+	// metrics allows one to configure if kueue metrics
+	// will be exposed to monitoring.
+	// Kueue provides a series of metrics to monitor
+	// the status of LocalQueues and resource flavors
+	// See https://kueue.sigs.k8s.io/docs/reference/metrics/ for a detailed list
+	// +optional
+	Metrics *EnabledOrDisabled `json:"metrics,omitempty"`
+	// expermentalFeatures are more expermental features
+	// that users can use to configure kueue.
+	// We do not guarantee that these features will yet be supported
+	// Once we are comfortable with these features, we will move this out of this list.
+	// +optional
+	ExpermentalFeatures *ExpermentalFeatures `json:"expermentalFeatures,omitempty"`
+}
+
+// These are more advanced features.
+type ExpermentalFeatures struct {
 	// resources provides additional configuration options for handling the resources.
 	// Supports https://github.com/kubernetes-sigs/kueue/blob/release-0.10/keps/2937-resource-transformer/README.md
 	// +optional
 	Resources Resources `json:"resources,omitempty"`
+	// featureGates are advanced gates that can control the feature gates that kueue sets
+	// in the configuration.
+	// +optional
+	FeatureGates map[string]EnabledOrDisabled `json:"featureGates,omitempty"`
 	// manageJobsWithoutQueueName controls whether or not Kueue reconciles
 	// jobs that don't set the annotation kueue.x-k8s.io/queue-name.
 	// +kubebuilder:default=QueueNameRequired
@@ -84,17 +107,12 @@ type KueueConfiguration struct {
 	ManageJobsWithoutQueueName *ManageJobsWithoutQueueNameOption `json:"manageJobsWithoutQueueName,omitempty"`
 	// managedJobsNamespaceSelector can be used to omit some namespaces from ManagedJobsWithoutQueueName
 	// Only valid if ManagedJobsWithoutQueueName is QueueNameOptional
+	// +kubebuilder:validation:XValidation:rule="self.manageJobsWithoutQueueName==QueueNameOptional",message="managedJobsNamespaceSelector is only valid if manageJobsWithoutQueueName is QueueNameOptional"
 	// +optional
 	ManagedJobsNamespaceSelector *metav1.LabelSelector `json:"managedJobsNamespaceSelector,omitempty"`
 	// fairSharing controls the fair sharing semantics across the cluster.
 	// +optional
 	FairSharing FairSharing `json:"fairSharing,omitempty"`
-	// metrics allows one to change if metrics
-	// are enabled or disabled.
-	// Microshift does not enable metrics by default
-	// Default will assume metrics are enabled.
-	// +optional
-	Metrics *EnabledOrDisabled `json:"metrics,omitempty"`
 }
 
 // KueueStatus defines the observed state of Kueue
@@ -146,6 +164,11 @@ type ResourceTransformationStrategy string
 const Retain ResourceTransformationStrategy = "Retain"
 const Replace ResourceTransformationStrategy = "Replace"
 
+// ResourceTransformations apply transformation to pod spec resources
+// Retain means that we will keep the original resources and
+// apply a transformation.
+// Replace means that the original resources will be replaced
+// after the transformation is done.
 type ResourceTransformation struct {
 	// input is the name of the input resource.
 	// resources are pod spec resources like cpu, memory, gpus
@@ -153,7 +176,10 @@ type ResourceTransformation struct {
 	Input corev1.ResourceName `json:"input"`
 
 	// strategy specifies if the input resource should be replaced or retained.
-	// +kubebuilder:default=Retain
+	// retain means that we will keep the original resources and
+	// apply a transformation.
+	// replace means that the original resources will be replaced
+	// after the transformation is done.
 	// +optional
 	Strategy *ResourceTransformationStrategy `json:"strategy,omitempty"`
 
@@ -173,6 +199,7 @@ const (
 
 type FairSharing struct {
 	// enable indicates whether to enable fair sharing for all cohorts.
+	// this is disabled by default.
 	// +optional
 	Enable EnabledOrDisabled `json:"enable"`
 
@@ -197,6 +224,45 @@ type FairSharing struct {
 	PreemptionStrategies []PreemptionStrategy `json:"preemptionStrategies,omitempty"`
 }
 
+// +kubebuilder:validation:Enum=batch/job;ray.io/rayjob;ray.io/raycluster;jobset.x-k8s.io/jobset;kubeflow.org/mpijob;kubeflow.org/paddlejob;kubeflow.org/pytorchjob;kubeflow.org/tfjob;kubeflow.org/xgboostjob;workload.codeflare.dev/appwrapper;pod;deployment;statefulset;leaderworkerset.x-k8s.io/leaderworkerset
+type KueueIntegrations string
+
+const (
+	BatchJob        KueueIntegrations = "batch/job"
+	RayJob          KueueIntegrations = "ray.io/rayjob"
+	RayCluster      KueueIntegrations = "ray.io/raycluster"
+	JobSet          KueueIntegrations = "jobset.x-k8s.io/jobset"
+	MPIJob          KueueIntegrations = "kubeflow.org/mpijob"
+	PaddeJob        KueueIntegrations = "kubeflow.org/paddlejob"
+	PyTorchJob      KueueIntegrations = "kubeflow.org/pytorchjob"
+	TfJob           KueueIntegrations = "kubeflow.org/tfjob"
+	XGBoostJob      KueueIntegrations = "kubeflow.org/xgboostjob"
+	AppWrappers     KueueIntegrations = "workload.codeflare.dev/appwrapper"
+	Pod             KueueIntegrations = "pod"
+	Deployment      KueueIntegrations = "deployment"
+	Statefulset     KueueIntegrations = "statefulset"
+	LeaderWorkerSet KueueIntegrations = "leaderworkerset.x-k8s.io/leaderworkerset"
+)
+
+// This is the GVK for an external framework.
+// Controller runtime requires this in this format
+// for api discoverability.
+type ExternalFramework struct {
+	// group of externalFramework
+	// +kubebuilder:validation:MaxLength=256
+	// +required
+	Group string `json:"group"`
+	// resourceType of external framework
+	// this is the same as Kind in the GVK settings
+	// +required
+	// +kubebuilder:validation:MaxLength=256
+	ResourceType string `json:"resourceType"`
+	// version is the version of the api
+	// +required
+	// +kubebuilder:validation:MaxLength=256
+	Version string `json:"version"`
+}
+
 type Integrations struct {
 	// frameworks are a list of names to be enabled.
 	// Possible options:
@@ -215,17 +281,19 @@ type Integrations struct {
 	//  - "statefulset" (requires enabling pod integration)
 	//  - "leaderworkerset.x-k8s.io/leaderworkerset" (requires enabling pod integration)
 	// +kubebuilder:validation:MaxItems=14
-	// +kubebuilder:validation:items:MaxLength=64
+	// +kubebuilder:validation:MinItems=1
+	// This is required and must have at least one element.
+	// The frameworks are jobs that Kueue will manage.
 	// +required
-	Frameworks []string `json:"frameworks"`
+	Frameworks []KueueIntegrations `json:"frameworks"`
 	// externalFrameworks are a list of GroupVersionKinds
 	// that are managed for Kueue by external controllers;
 	// the expected format is `Kind.version.group.com`.
-	// As far as
+	// These are optional and should only be used if you have an external controller
+	// that integrations with kueue.
 	// +optional
-	// +kubebuilder:validation:items:MaxLength=64
 	// +kubebuilder:validation:MaxItems=4
-	ExternalFrameworks []string `json:"externalFrameworks,omitempty"`
+	ExternalFrameworks []ExternalFramework `json:"externalFrameworks,omitempty"`
 
 	// labelKeysToCopy is a list of label keys that should be copied from the job into the
 	// workload object. It is not required for the job to have all the labels from this

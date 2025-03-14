@@ -502,7 +502,7 @@ var (
 				reportProblemsToJiraComponent("authentication").
 				contactPerson("everettraven").
 				productScope(ocpSpecific).
-				enhancementPR("").
+				enhancementPR("https://github.com/openshift/enhancements/pull/1596").
 				enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 				enableForClusterProfile(Hypershift, configv1.TechPreviewNoUpgrade).
 				mustRegister()

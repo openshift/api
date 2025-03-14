@@ -272,6 +272,7 @@ type TokenClaimMappings struct {
 	// When omitted, this means the user has no opinion and the platform
 	// is left to choose a default, which is subject to change over time.
 	// The current default is to use the 'sub' claim.
+	//
 	// +optional
 	// +openshift:enable:FeatureGate=ExternalOIDCWithUIDAndExtraMappings
 	UID UIDClaimMapping `json:"uid,omitempty"`
@@ -280,8 +281,11 @@ type TokenClaimMappings struct {
 	// used to construct the extra attribute for the cluster identity.
 	// When omitted, no extra attributes will be present on the cluster identity.
 	// key values for extra mappings must be unique.
+	// A maximum of 64 extra attribute mappings may be provided.
+	//
 	// +optional
 	// +openshift:enable:FeatureGate=ExternalOIDCWithUIDAndExtraMappings
+	// +kubebuilder:validation:MaxItems=64
 	// +listType=map
 	// +listMapKey=key
 	Extra []ExtraMapping `json:"extra,omitempty"`
@@ -361,7 +365,7 @@ type ExtraMapping struct {
 	// +kubebuilder:validation:XValidation:rule="self.split('/', 2)[0].endsWith('.k8s.io')",message="the subdomains '*.k8s.io' are reserved for Kubernetes use"
 	// +kubebuilder:validation:XValidation:rule="self.split('/', 2)[0].size() > 253",message="the domain of the key must not exceed 253 characters in length"
 	//
-	// +kubebuilder:validation:XValidation:rule="self.split('/', 2)[1].matches('[A-Za-z0-9/\-._~%!$&'()*+,;=:]+')",message="the path of the key must consist of only alphanumeric characters, percent-encoded octets, '-', '.', '_', '~', '!', '$', '&', ''', '(', ')', '*', '+', ',', ';', '=', and ':'"
+	// +kubebuilder:validation:XValidation:rule="self.split('/', 2)[1].matches('[A-Za-z0-9/\\-._~%!$&\\\\'()*+,;=:]+')",message="the path of the key must consist of only alphanumeric characters, percent-encoded octets, apostrophe, '-', '.', '_', '~', '!', '$', '&', '(', ')', '*', '+', ',', ';', '=', and ':'"
 	// +kubebuilder:validation:XValidation:rule="self.split('/', 2)[1].size > 64",message="the path of the key must not exceed 64 characters in length"
 	Key string `json:"key"`
 

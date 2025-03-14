@@ -11842,20 +11842,15 @@
         }
       }
     },
-    "com.github.openshift.api.config.v1alpha2.GatherConfig": {
-      "description": "gatherConfig provides data gathering configuration options.",
+    "com.github.openshift.api.config.v1alpha2.Custom": {
+      "description": "custom provides the custom configuration of gatherers",
       "type": "object",
+      "required": [
+        "gatherers"
+      ],
       "properties": {
-        "dataPolicy": {
-          "description": "dataPolicy is an optional list of DataPolicyOptions that allows user to enable additional obfuscation of the Insights archive data. It may not exceed 2 items and must not contain duplicates. Valid values are ObfuscateNetworking and WorkloadNames. When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated. When set to WorkloadNames the data from Deployment Validation Operator is obfuscated. When omitted no obfuscation is applied.",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "default": ""
-          }
-        },
         "gatherers": {
-          "description": "gatherers is an optional list of gatherers configurations that can be used to enable or disable specific gatherers. It may not exceed 100 items and each gatherer can be present only once. When omitted, this means that all gatherers are enabled. It is possible to disable an entire set of gatherers while allowing a specific function within that set. For example, you can disable \"gathererOne\" while enabling \"gathererOne/functionOne.\" The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
+          "description": "gatherers is a required list of gatherers configurations that can be used to enable or disable specific gatherers. It may not exceed 100 items and each gatherer can be present only once. It is possible to disable an entire set of gatherers while allowing a specific function within that set. The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
           "type": "array",
           "items": {
             "default": {},
@@ -11865,6 +11860,33 @@
             "name"
           ],
           "x-kubernetes-list-type": "map"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha2.GatherConfig": {
+      "description": "gatherConfig provides data gathering configuration options.",
+      "type": "object",
+      "required": [
+        "mode"
+      ],
+      "properties": {
+        "custom": {
+          "description": "custom provides gathering configuration. It is required when mode is Custom, and forbidden otherwise. Custom configuration allows user to disable only a subset of gatherers. Gatherers that are not explicitly disabled in custom configuration will run.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha2.Custom"
+        },
+        "dataPolicy": {
+          "description": "dataPolicy is an optional list of DataPolicyOptions that allows user to enable additional obfuscation of the Insights archive data. It may not exceed 2 items and must not contain duplicates. Valid values are ObfuscateNetworking and WorkloadNames. When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated. When set to WorkloadNames the data from Deployment Validation Operator is obfuscated. When omitted no obfuscation is applied.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "mode": {
+          "description": "mode is a required field that specifies the mode for gatherers. Allowed values are Enabled, Disabled, and Custom. When set to Enabled, all gatherers wil run and gather data. When set to Disabled, all gatherers will be disabled and no data will be gathered. When set to Custom, the custom configuration from the custom field will be applied.",
+          "type": "string",
+          "default": ""
         },
         "storage": {
           "description": "storage is an optional field that allows user to define persistent storage for gathering jobs to store the Insights data archive. If omitted, the gathering job will use ephemeral storage.",
@@ -11876,7 +11898,8 @@
       "description": "gathererConfig allows to configure specific gatherers",
       "type": "object",
       "required": [
-        "name"
+        "name",
+        "state"
       ],
       "properties": {
         "name": {
@@ -11885,8 +11908,9 @@
           "default": ""
         },
         "state": {
-          "description": "state is an optional field that allows you to configure specific gatherer. Valid values are \"Enabled\" and \"Disabled\". When set to Enabled the gatherer will run. When set to Disabled the gatherer will not run. When omitted, this means no opinion and the platform is left to choose a reasonable default. The current default is Enabled.",
-          "type": "string"
+          "description": "state is a required field that allows you to configure specific gatherer. Valid values are \"Enabled\" and \"Disabled\". When set to Enabled the gatherer will run. When set to Disabled the gatherer will not run.",
+          "type": "string",
+          "default": ""
         }
       }
     },

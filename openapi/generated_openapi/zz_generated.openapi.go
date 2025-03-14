@@ -439,6 +439,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1alpha1.RetentionSizeConfig":                                       schema_openshift_api_config_v1alpha1_RetentionSizeConfig(ref),
 		"github.com/openshift/api/config/v1alpha1.Storage":                                                   schema_openshift_api_config_v1alpha1_Storage(ref),
 		"github.com/openshift/api/config/v1alpha1.UserDefinedMonitoring":                                     schema_openshift_api_config_v1alpha1_UserDefinedMonitoring(ref),
+		"github.com/openshift/api/config/v1alpha2.Custom":                                                    schema_openshift_api_config_v1alpha2_Custom(ref),
 		"github.com/openshift/api/config/v1alpha2.GatherConfig":                                              schema_openshift_api_config_v1alpha2_GatherConfig(ref),
 		"github.com/openshift/api/config/v1alpha2.GathererConfig":                                            schema_openshift_api_config_v1alpha2_GathererConfig(ref),
 		"github.com/openshift/api/config/v1alpha2.InsightsDataGather":                                        schema_openshift_api_config_v1alpha2_InsightsDataGather(ref),
@@ -21626,6 +21627,44 @@ func schema_openshift_api_config_v1alpha1_UserDefinedMonitoring(ref common.Refer
 	}
 }
 
+func schema_openshift_api_config_v1alpha2_Custom(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "custom provides the custom configuration of gatherers",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"gatherers": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "gatherers is a required list of gatherers configurations that can be used to enable or disable specific gatherers. It may not exceed 100 items and each gatherer can be present only once. It is possible to disable an entire set of gatherers while allowing a specific function within that set. The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1alpha2.GathererConfig"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"gatherers"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha2.GathererConfig"},
+	}
+}
+
 func schema_openshift_api_config_v1alpha2_GatherConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -21648,26 +21687,19 @@ func schema_openshift_api_config_v1alpha2_GatherConfig(ref common.ReferenceCallb
 							},
 						},
 					},
-					"gatherers": {
-						VendorExtensible: spec.VendorExtensible{
-							Extensions: spec.Extensions{
-								"x-kubernetes-list-map-keys": []interface{}{
-									"name",
-								},
-								"x-kubernetes-list-type": "map",
-							},
-						},
+					"mode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "gatherers is an optional list of gatherers configurations that can be used to enable or disable specific gatherers. It may not exceed 100 items and each gatherer can be present only once. When omitted, this means that all gatherers are enabled. It is possible to disable an entire set of gatherers while allowing a specific function within that set. For example, you can disable \"gathererOne\" while enabling \"gathererOne/functionOne.\" The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("github.com/openshift/api/config/v1alpha2.GathererConfig"),
-									},
-								},
-							},
+							Description: "mode is a required field that specifies the mode for gatherers. Allowed values are Enabled, Disabled, and Custom. When set to Enabled, all gatherers wil run and gather data. When set to Disabled, all gatherers will be disabled and no data will be gathered. When set to Custom, the custom configuration from the custom field will be applied.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"custom": {
+						SchemaProps: spec.SchemaProps{
+							Description: "custom provides gathering configuration. It is required when mode is Custom, and forbidden otherwise. Custom configuration allows user to disable only a subset of gatherers. Gatherers that are not explicitly disabled in custom configuration will run.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1alpha2.Custom"),
 						},
 					},
 					"storage": {
@@ -21677,10 +21709,11 @@ func schema_openshift_api_config_v1alpha2_GatherConfig(ref common.ReferenceCallb
 						},
 					},
 				},
+				Required: []string{"mode"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha2.GathererConfig", "github.com/openshift/api/config/v1alpha2.Storage"},
+			"github.com/openshift/api/config/v1alpha2.Custom", "github.com/openshift/api/config/v1alpha2.Storage"},
 	}
 }
 
@@ -21701,13 +21734,14 @@ func schema_openshift_api_config_v1alpha2_GathererConfig(ref common.ReferenceCal
 					},
 					"state": {
 						SchemaProps: spec.SchemaProps{
-							Description: "state is an optional field that allows you to configure specific gatherer. Valid values are \"Enabled\" and \"Disabled\". When set to Enabled the gatherer will run. When set to Disabled the gatherer will not run. When omitted, this means no opinion and the platform is left to choose a reasonable default. The current default is Enabled.",
+							Description: "state is a required field that allows you to configure specific gatherer. Valid values are \"Enabled\" and \"Disabled\". When set to Enabled the gatherer will run. When set to Disabled the gatherer will not run.",
+							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 				},
-				Required: []string{"name"},
+				Required: []string{"name", "state"},
 			},
 		},
 	}

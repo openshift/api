@@ -50,6 +50,64 @@ spec:
                   all the configuration options related to gathering of the Insights
                   data and its uploading to the ingress.
                 properties:
+                  custom:
+                    description: |-
+                      custom provides gathering configuration.
+                      It is required when mode is Custom, and forbidden otherwise.
+                      Custom configuration allows user to disable only a subset of gatherers.
+                      Gatherers that are not explicitly disabled in custom configuration will run.
+                    properties:
+                      gatherers:
+                        description: |-
+                          gatherers is a required list of gatherers configurations that can be used to enable or disable specific gatherers.
+                          It may not exceed 100 items and each gatherer can be present only once.
+                          It is possible to disable an entire set of gatherers while allowing a specific function within that set.
+                          The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md.
+                          Run the following command to get the names of last active gatherers:
+                          "oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'"
+                        items:
+                          description: gathererConfig allows to configure specific
+                            gatherers
+                          properties:
+                            name:
+                              description: |-
+                                name is the required name of a specific gatherer
+                                It may not exceed 256 characters.
+                                The format for a gatherer name is: {gatherer}/{function} where the function is optional.
+                                Gatherer consists of a lowercase letters only that may include underscores (_).
+                                Function consists of a lowercase letters only that may include underscores (_) and is separated from the gatherer by a forward slash (/).
+                                The particular gatherers can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md.
+                                Run the following command to get the names of last active gatherers:
+                                "oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'"
+                              maxLength: 256
+                              type: string
+                              x-kubernetes-validations:
+                              - message: gatherer name must be in the format of {gatherer}/{function}
+                                  where the gatherer and function are lowercase letters
+                                  only that may include underscores (_) and are separated
+                                  by a forward slash (/) if the function is provided
+                                rule: self.matches("^[a-z]+[_a-z]*[a-z]([/a-z][_a-z]*)?[a-z]$")
+                            state:
+                              description: |-
+                                state is a required field that allows you to configure specific gatherer. Valid values are "Enabled" and "Disabled".
+                                When set to Enabled the gatherer will run.
+                                When set to Disabled the gatherer will not run.
+                              enum:
+                              - Enabled
+                              - Disabled
+                              type: string
+                          required:
+                          - name
+                          - state
+                          type: object
+                        maxItems: 100
+                        type: array
+                        x-kubernetes-list-map-keys:
+                        - name
+                        x-kubernetes-list-type: map
+                    required:
+                    - gatherers
+                    type: object
                   dataPolicy:
                     description: |-
                       dataPolicy is an optional list of DataPolicyOptions that allows user to enable additional obfuscation of the Insights archive data.
@@ -69,56 +127,17 @@ spec:
                     x-kubernetes-validations:
                     - message: DataPolicy must not contain duplicates
                       rule: self.all(x, self.exists_one(y, x == y))
-                  gatherers:
+                  mode:
                     description: |-
-                      gatherers is an optional list of gatherers configurations that can be used to enable or disable specific gatherers.
-                      It may not exceed 100 items and each gatherer can be present only once.
-                      When omitted, this means that all gatherers are enabled.
-                      It is possible to disable an entire set of gatherers while allowing a specific function within that set.
-                      For example, you can disable "gathererOne" while enabling "gathererOne/functionOne."
-                      The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md.
-                      Run the following command to get the names of last active gatherers:
-                      "oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'"
-                    items:
-                      description: gathererConfig allows to configure specific gatherers
-                      properties:
-                        name:
-                          description: |-
-                            name is the required name of a specific gatherer
-                            It may not exceed 256 characters.
-                            The format for a gatherer name is: {gatherer}/{function} where the function is optional.
-                            Gatherer consists of a lowercase letters only that may include underscores (_).
-                            Function consists of a lowercase letters only that may include underscores (_) and is separated from the gatherer by a forward slash (/).
-                            The particular gatherers can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md.
-                            Run the following command to get the names of last active gatherers:
-                            "oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'"
-                          maxLength: 256
-                          type: string
-                          x-kubernetes-validations:
-                          - message: gatherer name must be in the format of {gatherer}/{function}
-                              where the gatherer and function are lowercase letters
-                              only that may include underscores (_) and are separated
-                              by a forward slash (/) if the function is provided
-                            rule: self.matches("^[a-z]+[_a-z]*[a-z]([/a-z][_a-z]*)?[a-z]$")
-                        state:
-                          description: |-
-                            state is an optional field that allows you to configure specific gatherer. Valid values are "Enabled" and "Disabled".
-                            When set to Enabled the gatherer will run.
-                            When set to Disabled the gatherer will not run.
-                            When omitted, this means no opinion and the platform is left to choose a reasonable default.
-                            The current default is Enabled.
-                          enum:
-                          - Enabled
-                          - Disabled
-                          type: string
-                      required:
-                      - name
-                      type: object
-                    maxItems: 100
-                    type: array
-                    x-kubernetes-list-map-keys:
-                    - name
-                    x-kubernetes-list-type: map
+                      mode is a required field that specifies the mode for gatherers. Allowed values are Enabled, Disabled, and Custom.
+                      When set to Enabled, all gatherers wil run and gather data.
+                      When set to Disabled, all gatherers will be disabled and no data will be gathered.
+                      When set to Custom, the custom configuration from the custom field will be applied.
+                    enum:
+                    - Enabled
+                    - Disabled
+                    - Custom
+                    type: string
                   storage:
                     description: |-
                       storage is an optional field that allows user to define persistent storage for gathering jobs to store the Insights data archive.
@@ -181,7 +200,13 @@ spec:
                         and forbidden otherwise
                       rule: 'has(self.type) && self.type == ''PersistentVolume'' ?  has(self.persistentVolume)
                         : !has(self.persistentVolume)'
+                required:
+                - mode
                 type: object
+                x-kubernetes-validations:
+                - message: custom is required when mode is Custom, and forbidden otherwise
+                  rule: 'has(self.mode) && self.mode == ''Custom'' ?  has(self.custom)
+                    : !has(self.custom)'
             type: object
           status:
             description: status holds observed values from the cluster. They may not

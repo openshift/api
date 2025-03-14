@@ -20,6 +20,7 @@ tests:
         kind: InsightsDataGather
         spec:
           gatherConfig:
+            mode: Enabled
             dataPolicy:
               - WorkloadNames
             storage:
@@ -33,6 +34,7 @@ tests:
         kind: InsightsDataGather
         spec:
           gatherConfig:
+            mode: Enabled
             dataPolicy:
               - WorkloadNames
             storage:
@@ -47,6 +49,7 @@ tests:
         kind: InsightsDataGather
         spec:
           gatherConfig:
+            mode: Enabled
             dataPolicy:
               - ObfuscateNetworking
               - WorkloadNames
@@ -61,6 +64,7 @@ tests:
         kind: InsightsDataGather
         spec:
           gatherConfig:
+            mode: Enabled
             dataPolicy:
               - ObfuscateNetworking
               - WorkloadNames
@@ -76,6 +80,7 @@ tests:
         kind: InsightsDataGather
         spec:
           gatherConfig:
+            mode: Enabled
             storage:
               type: Ephemeral
       expected: |
@@ -83,6 +88,7 @@ tests:
         kind: InsightsDataGather
         spec:
           gatherConfig:
+            mode: Enabled
             storage:
               type: Ephemeral
     - name: Should be able to create InsightsDataGather with valid GathererConfig
@@ -91,35 +97,40 @@ tests:
         kind: InsightsDataGather
         spec:
           gatherConfig:
-            gatherers:
-              - name: gatherer
-                state: Disabled
-              - name: valid_gatherer
-                state: Enabled
-              - name: gatherer/function
-                state: Enabled
-              - name: gatherer_a/function_a
-                state: Disabled
+            mode: Custom
+            custom:
+              gatherers:
+                - name: gatherer
+                  state: Disabled
+                - name: valid_gatherer
+                  state: Enabled
+                - name: gatherer/function
+                  state: Enabled
+                - name: gatherer_a/function_a
+                  state: Disabled
       expected: |
         apiVersion: config.openshift.io/v1alpha2
         kind: InsightsDataGather
         spec:
           gatherConfig:
-            gatherers:
-              - name: gatherer
-                state: Disabled
-              - name: valid_gatherer
-                state: Enabled
-              - name: gatherer/function
-                state: Enabled
-              - name: gatherer_a/function_a
-                state: Disabled
+            mode: Custom
+            custom:
+              gatherers:
+                - name: gatherer
+                  state: Disabled
+                - name: valid_gatherer
+                  state: Enabled
+                - name: gatherer/function
+                  state: Enabled
+                - name: gatherer_a/function_a
+                  state: Disabled
     - name: Should be able to create InsightsDataGather with valid combination of dataPolicy values
       initial: |
         apiVersion: config.openshift.io/v1alpha2
         kind: InsightsDataGather
         spec:
           gatherConfig:
+            mode: Enabled
             dataPolicy:
               - ObfuscateNetworking
               - WorkloadNames
@@ -128,6 +139,7 @@ tests:
         kind: InsightsDataGather
         spec:
           gatherConfig:
+            mode: Enabled
             dataPolicy:
               - ObfuscateNetworking
               - WorkloadNames
@@ -137,6 +149,7 @@ tests:
         kind: InsightsDataGather
         spec:
           gatherConfig:
+            mode: Enabled
             storage:
               type: PersistentVolume
       expectedError: 'spec.gatherConfig.storage: Invalid value: "object": persistentVolume is required when type is PersistentVolume, and forbidden otherwise'
@@ -146,6 +159,7 @@ tests:
         kind: InsightsDataGather
         spec:
           gatherConfig:
+            mode: Enabled
             storage:
               type: Ephemeral
               persistentVolume:
@@ -158,6 +172,7 @@ tests:
         kind: InsightsDataGather
         spec:
           gatherConfig:
+            mode: Enabled
             storage:
               type: PersistentVolume
               persistentVolume:
@@ -171,9 +186,11 @@ tests:
         kind: InsightsDataGather
         spec:
           gatherConfig:
-            gatherers:
-              - name: invalid_gatherer_1
-                state: Disabled
+            mode: Enabled
+            custom:
+              gatherers:
+                - name: invalid_gatherer_1
+                  state: Disabled
       expectedError: 'Invalid value: "string": gatherer name must be in the format of {gatherer}/{function} where the gatherer and function are lowercase letters only that may include underscores (_) and are separated by a forward slash (/) if the function is provided'
     - name: storage.type is required
       initial: |
@@ -181,6 +198,7 @@ tests:
         kind: InsightsDataGather
         spec:
           gatherConfig:
+            mode: Enabled
             storage:
               persistentVolume:
                 mountPath: /data
@@ -193,6 +211,7 @@ tests:
         kind: InsightsDataGather
         spec:
           gatherConfig:
+            mode: Enabled
             storage:
               type: PersistentVolume
               persistentVolume:
@@ -205,6 +224,7 @@ tests:
         kind: InsightsDataGather
         spec:
           gatherConfig:
+            mode: Enabled
             storage:
               type: PersistentVolume
               persistentVolume:
@@ -217,16 +237,47 @@ tests:
         kind: InsightsDataGather
         spec:
           gatherConfig:
-            gatherers:
-              - name: gatherer
-                state: InvalidState
-      expectedError: 'spec.gatherConfig.gatherers[0].state: Unsupported value: "InvalidState": supported values: "Enabled", "Disabled", <nil>:'
+            mode: Custom
+            custom:
+              gatherers:
+                - name: gatherer
+                  state: InvalidState
+      expectedError: 'spec.gatherConfig.custom.gatherers[0].state: Unsupported value: "InvalidState": supported values: "Enabled", "Disabled", <nil>:'
     - name: dataPolicy must be one of the valid values
       initial: |
         apiVersion: config.openshift.io/v1alpha2
         kind: InsightsDataGather
         spec:
           gatherConfig:
+            mode: Enabled
             dataPolicy:
               - InvalidPolicy
       expectedError: 'spec.gatherConfig.dataPolicy[0]: Unsupported value: "InvalidPolicy": supported values: "ObfuscateNetworking", "WorkloadNames", <nil>'
+    - name: mode must have a valid value
+      initial: |
+        apiVersion: config.openshift.io/v1alpha2
+        kind: InsightsDataGather
+        spec:
+          gatherConfig:
+            mode: InvalidMode
+      expectedError: 'spec.gatherConfig.mode: Unsupported value: "InvalidMode": supported values: "Enabled", "Disabled", "Custom", <nil>'
+    - name: mode set to Custom must have gatherers present
+      initial: |
+        apiVersion: config.openshift.io/v1alpha2
+        kind: InsightsDataGather
+        spec:
+          gatherConfig:
+            mode: Custom
+      expectedError: 'spec.gatherConfig: Invalid value: "object": custom is required when mode is Custom, and forbidden otherwise'
+    - name: mode set to Disabled must not have gatherers present
+      initial: |
+        apiVersion: config.openshift.io/v1alpha2
+        kind: InsightsDataGather
+        spec:
+          gatherConfig:
+            mode: Disabled
+            custom:
+              gatherers:
+                - name: gatherer
+                  state: Enabled
+      expectedError: 'Invalid value: "object": custom is required when mode is Custom, and forbidden otherwise'

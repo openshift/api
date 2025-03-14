@@ -33206,11 +33206,69 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1alpha1.ExpermentalFeatures": {
+      "description": "These are more advanced features.",
+      "type": "object",
+      "properties": {
+        "fairSharing": {
+          "description": "fairSharing controls the fair sharing semantics across the cluster.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.FairSharing"
+        },
+        "featureGates": {
+          "description": "featureGates are advanced gates that can control the feature gates that kueue sets in the configuration.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "manageJobsWithoutQueueName": {
+          "description": "manageJobsWithoutQueueName controls whether or not Kueue reconciles jobs that don't set the annotation kueue.x-k8s.io/queue-name.",
+          "type": "string"
+        },
+        "managedJobsNamespaceSelector": {
+          "description": "managedJobsNamespaceSelector can be used to omit some namespaces from ManagedJobsWithoutQueueName Only valid if ManagedJobsWithoutQueueName is QueueNameOptional",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector"
+        },
+        "resources": {
+          "description": "resources provides additional configuration options for handling the resources. Supports https://github.com/kubernetes-sigs/kueue/blob/release-0.10/keps/2937-resource-transformer/README.md",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.Resources"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1alpha1.ExternalFramework": {
+      "description": "This is the GVK for an external framework. Controller runtime requires this in this format for api discoverability.",
+      "type": "object",
+      "required": [
+        "group",
+        "resourceType",
+        "version"
+      ],
+      "properties": {
+        "group": {
+          "description": "group of externalFramework",
+          "type": "string",
+          "default": ""
+        },
+        "resourceType": {
+          "description": "resourceType of external framework this is the same as Kind in the GVK settings",
+          "type": "string",
+          "default": ""
+        },
+        "version": {
+          "description": "version is the version of the api",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1alpha1.FairSharing": {
       "type": "object",
       "properties": {
         "enable": {
-          "description": "enable indicates whether to enable fair sharing for all cohorts.",
+          "description": "enable indicates whether to enable fair sharing for all cohorts. this is disabled by default.",
           "type": "string",
           "default": ""
         },
@@ -33375,15 +33433,15 @@
       ],
       "properties": {
         "externalFrameworks": {
-          "description": "externalFrameworks are a list of GroupVersionKinds that are managed for Kueue by external controllers; the expected format is `Kind.version.group.com`. As far as",
+          "description": "externalFrameworks are a list of GroupVersionKinds that are managed for Kueue by external controllers; the expected format is `Kind.version.group.com`. These are optional and should only be used if you have an external controller that integrations with kueue.",
           "type": "array",
           "items": {
-            "type": "string",
-            "default": ""
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.ExternalFramework"
           }
         },
         "frameworks": {
-          "description": "frameworks are a list of names to be enabled. Possible options:\n - \"batch/job\"\n - \"kubeflow.org/mpijob\"\n - \"ray.io/rayjob\"\n - \"ray.io/raycluster\"\n - \"jobset.x-k8s.io/jobset\"\n - \"kubeflow.org/paddlejob\"\n - \"kubeflow.org/pytorchjob\"\n - \"kubeflow.org/tfjob\"\n - \"kubeflow.org/xgboostjob\"\n - \"workload.codeflare.dev/appwrapper\"\n - \"pod\"\n - \"deployment\" (requires enabling pod integration)\n - \"statefulset\" (requires enabling pod integration)\n - \"leaderworkerset.x-k8s.io/leaderworkerset\" (requires enabling pod integration)",
+          "description": "frameworks are a list of names to be enabled. Possible options:\n - \"batch/job\"\n - \"kubeflow.org/mpijob\"\n - \"ray.io/rayjob\"\n - \"ray.io/raycluster\"\n - \"jobset.x-k8s.io/jobset\"\n - \"kubeflow.org/paddlejob\"\n - \"kubeflow.org/pytorchjob\"\n - \"kubeflow.org/tfjob\"\n - \"kubeflow.org/xgboostjob\"\n - \"workload.codeflare.dev/appwrapper\"\n - \"pod\"\n - \"deployment\" (requires enabling pod integration)\n - \"statefulset\" (requires enabling pod integration)\n - \"leaderworkerset.x-k8s.io/leaderworkerset\" (requires enabling pod integration)\nThis is required and must have at least one element. The frameworks are jobs that Kueue will manage.",
           "type": "array",
           "items": {
             "type": "string",
@@ -33433,38 +33491,23 @@
       }
     },
     "com.github.openshift.api.operator.v1alpha1.KueueConfiguration": {
-      "description": "Feature gates is unresolved Option 1:\n\n\tDrop the feature gate entirely\n\tFeature gate modification is not supported.\n\nOption 2:\n\n\tAllow for modifications of feature gates if operator is an Unmanaged state\n\tWe could validate that user set operator in \"Unmanaged\" state as part of operator v1 API\n\tWhen this is set, specific experimental fields will be enabled.\n\nOption 3:\n\n\tAllow for a users to specifiy a configmap that matches kueue configuration\n\tOperator will fetch the configmap and assume its valid.",
       "type": "object",
       "required": [
         "integrations"
       ],
       "properties": {
-        "fairSharing": {
-          "description": "fairSharing controls the fair sharing semantics across the cluster.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.FairSharing"
+        "expermentalFeatures": {
+          "description": "unsupportedConfigOverrides are more expermental features that users can use to configure kueue. We do not guarantee that these features will yet be supported Once we are comfortable with these features, we will move this out of this list.",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.ExpermentalFeatures"
         },
         "integrations": {
-          "description": "integrations are the types of integrations Kueue will manage",
+          "description": "integrations are the workloads Kueue will manage kueue has integrations in the codebase and it also allows for external frameworks",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.Integrations"
         },
-        "manageJobsWithoutQueueName": {
-          "description": "manageJobsWithoutQueueName controls whether or not Kueue reconciles jobs that don't set the annotation kueue.x-k8s.io/queue-name.",
-          "type": "string"
-        },
-        "managedJobsNamespaceSelector": {
-          "description": "managedJobsNamespaceSelector can be used to omit some namespaces from ManagedJobsWithoutQueueName Only valid if ManagedJobsWithoutQueueName is QueueNameOptional",
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector"
-        },
         "metrics": {
-          "description": "metrics allows one to change if metrics are enabled or disabled. Microshift does not enable metrics by default Default will assume metrics are enabled.",
+          "description": "metrics allows one to configure if kueue metrics will be exposed to monitoring. Kueue provides a series of metrics to monitor the status of LocalQueues and resource flavors See https://kueue.sigs.k8s.io/docs/reference/metrics/ for a detailed list",
           "type": "string"
-        },
-        "resources": {
-          "description": "resources provides additional configuration options for handling the resources. Supports https://github.com/kubernetes-sigs/kueue/blob/release-0.10/keps/2937-resource-transformer/README.md",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.Resources"
         }
       }
     },
@@ -33924,6 +33967,7 @@
       }
     },
     "com.github.openshift.api.operator.v1alpha1.ResourceTransformation": {
+      "description": "ResourceTransformations apply transformation to pod spec resources Retain means that we will keep the original resources and apply a transformation. Replace means that the original resources will be replaced after the transformation is done.",
       "type": "object",
       "required": [
         "input"
@@ -33942,7 +33986,7 @@
           }
         },
         "strategy": {
-          "description": "strategy specifies if the input resource should be replaced or retained.",
+          "description": "strategy specifies if the input resource should be replaced or retained. retain means that we will keep the original resources and apply a transformation. replace means that the original resources will be replaced after the transformation is done.",
           "type": "string"
         }
       }

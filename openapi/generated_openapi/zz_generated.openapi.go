@@ -1110,6 +1110,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1alpha1.EtcdBackupList":                                          schema_openshift_api_operator_v1alpha1_EtcdBackupList(ref),
 		"github.com/openshift/api/operator/v1alpha1.EtcdBackupSpec":                                          schema_openshift_api_operator_v1alpha1_EtcdBackupSpec(ref),
 		"github.com/openshift/api/operator/v1alpha1.EtcdBackupStatus":                                        schema_openshift_api_operator_v1alpha1_EtcdBackupStatus(ref),
+		"github.com/openshift/api/operator/v1alpha1.ExpermentalFeatures":                                     schema_openshift_api_operator_v1alpha1_ExpermentalFeatures(ref),
+		"github.com/openshift/api/operator/v1alpha1.ExternalFramework":                                       schema_openshift_api_operator_v1alpha1_ExternalFramework(ref),
 		"github.com/openshift/api/operator/v1alpha1.FairSharing":                                             schema_openshift_api_operator_v1alpha1_FairSharing(ref),
 		"github.com/openshift/api/operator/v1alpha1.GenerationHistory":                                       schema_openshift_api_operator_v1alpha1_GenerationHistory(ref),
 		"github.com/openshift/api/operator/v1alpha1.GenericOperatorConfig":                                   schema_openshift_api_operator_v1alpha1_GenericOperatorConfig(ref),
@@ -56848,6 +56850,102 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupStatus(ref common.Referenc
 	}
 }
 
+func schema_openshift_api_operator_v1alpha1_ExpermentalFeatures(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "These are more advanced features.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"resources": {
+						SchemaProps: spec.SchemaProps{
+							Description: "resources provides additional configuration options for handling the resources. Supports https://github.com/kubernetes-sigs/kueue/blob/release-0.10/keps/2937-resource-transformer/README.md",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1alpha1.Resources"),
+						},
+					},
+					"featureGates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "featureGates are advanced gates that can control the feature gates that kueue sets in the configuration.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"manageJobsWithoutQueueName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "manageJobsWithoutQueueName controls whether or not Kueue reconciles jobs that don't set the annotation kueue.x-k8s.io/queue-name.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"managedJobsNamespaceSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "managedJobsNamespaceSelector can be used to omit some namespaces from ManagedJobsWithoutQueueName Only valid if ManagedJobsWithoutQueueName is QueueNameOptional",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"),
+						},
+					},
+					"fairSharing": {
+						SchemaProps: spec.SchemaProps{
+							Description: "fairSharing controls the fair sharing semantics across the cluster.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1alpha1.FairSharing"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1alpha1.FairSharing", "github.com/openshift/api/operator/v1alpha1.Resources", "k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_ExternalFramework(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "This is the GVK for an external framework. Controller runtime requires this in this format for api discoverability.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"group": {
+						SchemaProps: spec.SchemaProps{
+							Description: "group of externalFramework",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"resourceType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "resourceType of external framework this is the same as Kind in the GVK settings",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Description: "version is the version of the api",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"group", "resourceType", "version"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_operator_v1alpha1_FairSharing(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -56856,7 +56954,7 @@ func schema_openshift_api_operator_v1alpha1_FairSharing(ref common.ReferenceCall
 				Properties: map[string]spec.Schema{
 					"enable": {
 						SchemaProps: spec.SchemaProps{
-							Description: "enable indicates whether to enable fair sharing for all cohorts.",
+							Description: "enable indicates whether to enable fair sharing for all cohorts. this is disabled by default.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -57125,7 +57223,7 @@ func schema_openshift_api_operator_v1alpha1_Integrations(ref common.ReferenceCal
 				Properties: map[string]spec.Schema{
 					"frameworks": {
 						SchemaProps: spec.SchemaProps{
-							Description: "frameworks are a list of names to be enabled. Possible options:\n - \"batch/job\"\n - \"kubeflow.org/mpijob\"\n - \"ray.io/rayjob\"\n - \"ray.io/raycluster\"\n - \"jobset.x-k8s.io/jobset\"\n - \"kubeflow.org/paddlejob\"\n - \"kubeflow.org/pytorchjob\"\n - \"kubeflow.org/tfjob\"\n - \"kubeflow.org/xgboostjob\"\n - \"workload.codeflare.dev/appwrapper\"\n - \"pod\"\n - \"deployment\" (requires enabling pod integration)\n - \"statefulset\" (requires enabling pod integration)\n - \"leaderworkerset.x-k8s.io/leaderworkerset\" (requires enabling pod integration)",
+							Description: "frameworks are a list of names to be enabled. Possible options:\n - \"batch/job\"\n - \"kubeflow.org/mpijob\"\n - \"ray.io/rayjob\"\n - \"ray.io/raycluster\"\n - \"jobset.x-k8s.io/jobset\"\n - \"kubeflow.org/paddlejob\"\n - \"kubeflow.org/pytorchjob\"\n - \"kubeflow.org/tfjob\"\n - \"kubeflow.org/xgboostjob\"\n - \"workload.codeflare.dev/appwrapper\"\n - \"pod\"\n - \"deployment\" (requires enabling pod integration)\n - \"statefulset\" (requires enabling pod integration)\n - \"leaderworkerset.x-k8s.io/leaderworkerset\" (requires enabling pod integration)\nThis is required and must have at least one element. The frameworks are jobs that Kueue will manage.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -57140,14 +57238,13 @@ func schema_openshift_api_operator_v1alpha1_Integrations(ref common.ReferenceCal
 					},
 					"externalFrameworks": {
 						SchemaProps: spec.SchemaProps{
-							Description: "externalFrameworks are a list of GroupVersionKinds that are managed for Kueue by external controllers; the expected format is `Kind.version.group.com`. As far as",
+							Description: "externalFrameworks are a list of GroupVersionKinds that are managed for Kueue by external controllers; the expected format is `Kind.version.group.com`. These are optional and should only be used if you have an external controller that integrations with kueue.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/operator/v1alpha1.ExternalFramework"),
 									},
 								},
 							},
@@ -57172,6 +57269,8 @@ func schema_openshift_api_operator_v1alpha1_Integrations(ref common.ReferenceCal
 				Required: []string{"frameworks"},
 			},
 		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1alpha1.ExternalFramework"},
 	}
 }
 
@@ -57230,48 +57329,26 @@ func schema_openshift_api_operator_v1alpha1_KueueConfiguration(ref common.Refere
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "Feature gates is unresolved Option 1:\n\n\tDrop the feature gate entirely\n\tFeature gate modification is not supported.\n\nOption 2:\n\n\tAllow for modifications of feature gates if operator is an Unmanaged state\n\tWe could validate that user set operator in \"Unmanaged\" state as part of operator v1 API\n\tWhen this is set, specific experimental fields will be enabled.\n\nOption 3:\n\n\tAllow for a users to specifiy a configmap that matches kueue configuration\n\tOperator will fetch the configmap and assume its valid.",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"integrations": {
 						SchemaProps: spec.SchemaProps{
-							Description: "integrations are the types of integrations Kueue will manage",
+							Description: "integrations are the workloads Kueue will manage kueue has integrations in the codebase and it also allows for external frameworks",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/operator/v1alpha1.Integrations"),
 						},
 					},
-					"resources": {
-						SchemaProps: spec.SchemaProps{
-							Description: "resources provides additional configuration options for handling the resources. Supports https://github.com/kubernetes-sigs/kueue/blob/release-0.10/keps/2937-resource-transformer/README.md",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/openshift/api/operator/v1alpha1.Resources"),
-						},
-					},
-					"manageJobsWithoutQueueName": {
-						SchemaProps: spec.SchemaProps{
-							Description: "manageJobsWithoutQueueName controls whether or not Kueue reconciles jobs that don't set the annotation kueue.x-k8s.io/queue-name.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"managedJobsNamespaceSelector": {
-						SchemaProps: spec.SchemaProps{
-							Description: "managedJobsNamespaceSelector can be used to omit some namespaces from ManagedJobsWithoutQueueName Only valid if ManagedJobsWithoutQueueName is QueueNameOptional",
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"),
-						},
-					},
-					"fairSharing": {
-						SchemaProps: spec.SchemaProps{
-							Description: "fairSharing controls the fair sharing semantics across the cluster.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/openshift/api/operator/v1alpha1.FairSharing"),
-						},
-					},
 					"metrics": {
 						SchemaProps: spec.SchemaProps{
-							Description: "metrics allows one to change if metrics are enabled or disabled. Microshift does not enable metrics by default Default will assume metrics are enabled.",
+							Description: "metrics allows one to configure if kueue metrics will be exposed to monitoring. Kueue provides a series of metrics to monitor the status of LocalQueues and resource flavors See https://kueue.sigs.k8s.io/docs/reference/metrics/ for a detailed list",
 							Type:        []string{"string"},
 							Format:      "",
+						},
+					},
+					"expermentalFeatures": {
+						SchemaProps: spec.SchemaProps{
+							Description: "unsupportedConfigOverrides are more expermental features that users can use to configure kueue. We do not guarantee that these features will yet be supported Once we are comfortable with these features, we will move this out of this list.",
+							Ref:         ref("github.com/openshift/api/operator/v1alpha1.ExpermentalFeatures"),
 						},
 					},
 				},
@@ -57279,7 +57356,7 @@ func schema_openshift_api_operator_v1alpha1_KueueConfiguration(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1alpha1.FairSharing", "github.com/openshift/api/operator/v1alpha1.Integrations", "github.com/openshift/api/operator/v1alpha1.Resources", "k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"},
+			"github.com/openshift/api/operator/v1alpha1.ExpermentalFeatures", "github.com/openshift/api/operator/v1alpha1.Integrations"},
 	}
 }
 
@@ -58020,7 +58097,8 @@ func schema_openshift_api_operator_v1alpha1_ResourceTransformation(ref common.Re
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "ResourceTransformations apply transformation to pod spec resources Retain means that we will keep the original resources and apply a transformation. Replace means that the original resources will be replaced after the transformation is done.",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"input": {
 						SchemaProps: spec.SchemaProps{
@@ -58032,7 +58110,7 @@ func schema_openshift_api_operator_v1alpha1_ResourceTransformation(ref common.Re
 					},
 					"strategy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "strategy specifies if the input resource should be replaced or retained.",
+							Description: "strategy specifies if the input resource should be replaced or retained. retain means that we will keep the original resources and apply a transformation. replace means that the original resources will be replaced after the transformation is done.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

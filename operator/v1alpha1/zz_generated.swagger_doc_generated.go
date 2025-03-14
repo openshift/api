@@ -257,8 +257,32 @@ func (RepositoryDigestMirrors) SwaggerDoc() map[string]string {
 	return map_RepositoryDigestMirrors
 }
 
+var map_ExpermentalFeatures = map[string]string{
+	"":                             "These are more advanced features.",
+	"resources":                    "resources provides additional configuration options for handling the resources. Supports https://github.com/kubernetes-sigs/kueue/blob/release-0.10/keps/2937-resource-transformer/README.md",
+	"featureGates":                 "featureGates are advanced gates that can control the feature gates that kueue sets in the configuration.",
+	"manageJobsWithoutQueueName":   "manageJobsWithoutQueueName controls whether or not Kueue reconciles jobs that don't set the annotation kueue.x-k8s.io/queue-name.",
+	"managedJobsNamespaceSelector": "managedJobsNamespaceSelector can be used to omit some namespaces from ManagedJobsWithoutQueueName Only valid if ManagedJobsWithoutQueueName is QueueNameOptional",
+	"fairSharing":                  "fairSharing controls the fair sharing semantics across the cluster.",
+}
+
+func (ExpermentalFeatures) SwaggerDoc() map[string]string {
+	return map_ExpermentalFeatures
+}
+
+var map_ExternalFramework = map[string]string{
+	"":             "This is the GVK for an external framework. Controller runtime requires this in this format for api discoverability.",
+	"group":        "group of externalFramework",
+	"resourceType": "resourceType of external framework this is the same as Kind in the GVK settings",
+	"version":      "version is the version of the api",
+}
+
+func (ExternalFramework) SwaggerDoc() map[string]string {
+	return map_ExternalFramework
+}
+
 var map_FairSharing = map[string]string{
-	"enable":               "enable indicates whether to enable fair sharing for all cohorts.",
+	"enable":               "enable indicates whether to enable fair sharing for all cohorts. this is disabled by default.",
 	"preemptionStrategies": "preemptionStrategies indicates which constraints should a preemption satisfy. The preemption algorithm will only use the next strategy in the list if the incoming workload (preemptor) doesn't fit after using the previous strategies. Possible values are: - LessThanOrEqualToFinalShare: Only preempt a workload if the share of the preemptor CQ\n  with the preemptor workload is less than or equal to the share of the preemptee CQ\n  without the workload to be preempted.\n  This strategy might favor preemption of smaller workloads in the preemptee CQ,\n  regardless of priority or start time, in an effort to keep the share of the CQ\n  as high as possible.\n- LessThanInitialShare: Only preempt a workload if the share of the preemptor CQ\n  with the incoming workload is strictly less than the share of the preemptee CQ.\n  This strategy doesn't depend on the share usage of the workload being preempted.\n  As a result, the strategy chooses to preempt workloads with the lowest priority and\n  newest start time first.\nThe default strategy is [\"LessThanOrEqualToFinalShare\", \"LessThanInitialShare\"].",
 }
 
@@ -267,8 +291,8 @@ func (FairSharing) SwaggerDoc() map[string]string {
 }
 
 var map_Integrations = map[string]string{
-	"frameworks":         "frameworks are a list of names to be enabled. Possible options:\n - \"batch/job\"\n - \"kubeflow.org/mpijob\"\n - \"ray.io/rayjob\"\n - \"ray.io/raycluster\"\n - \"jobset.x-k8s.io/jobset\"\n - \"kubeflow.org/paddlejob\"\n - \"kubeflow.org/pytorchjob\"\n - \"kubeflow.org/tfjob\"\n - \"kubeflow.org/xgboostjob\"\n - \"workload.codeflare.dev/appwrapper\"\n - \"pod\"\n - \"deployment\" (requires enabling pod integration)\n - \"statefulset\" (requires enabling pod integration)\n - \"leaderworkerset.x-k8s.io/leaderworkerset\" (requires enabling pod integration)",
-	"externalFrameworks": "externalFrameworks are a list of GroupVersionKinds that are managed for Kueue by external controllers; the expected format is `Kind.version.group.com`. As far as",
+	"frameworks":         "frameworks are a list of names to be enabled. Possible options:\n - \"batch/job\"\n - \"kubeflow.org/mpijob\"\n - \"ray.io/rayjob\"\n - \"ray.io/raycluster\"\n - \"jobset.x-k8s.io/jobset\"\n - \"kubeflow.org/paddlejob\"\n - \"kubeflow.org/pytorchjob\"\n - \"kubeflow.org/tfjob\"\n - \"kubeflow.org/xgboostjob\"\n - \"workload.codeflare.dev/appwrapper\"\n - \"pod\"\n - \"deployment\" (requires enabling pod integration)\n - \"statefulset\" (requires enabling pod integration)\n - \"leaderworkerset.x-k8s.io/leaderworkerset\" (requires enabling pod integration)\nThis is required and must have at least one element. The frameworks are jobs that Kueue will manage.",
+	"externalFrameworks": "externalFrameworks are a list of GroupVersionKinds that are managed for Kueue by external controllers; the expected format is `Kind.version.group.com`. These are optional and should only be used if you have an external controller that integrations with kueue.",
 	"labelKeysToCopy":    "labelKeysToCopy is a list of label keys that should be copied from the job into the workload object. It is not required for the job to have all the labels from this list. If a job does not have some label with the given key from this list, the constructed workload object will be created without this label. In the case of creating a workload from a composable job (pod group), if multiple objects have labels with some key from the list, the values of these labels must match or otherwise the workload creation would fail. The labels are copied only during the workload creation and are not updated even if the labels of the underlying job are changed.",
 }
 
@@ -288,12 +312,9 @@ func (Kueue) SwaggerDoc() map[string]string {
 }
 
 var map_KueueConfiguration = map[string]string{
-	"integrations":                 "integrations are the types of integrations Kueue will manage",
-	"resources":                    "resources provides additional configuration options for handling the resources. Supports https://github.com/kubernetes-sigs/kueue/blob/release-0.10/keps/2937-resource-transformer/README.md",
-	"manageJobsWithoutQueueName":   "manageJobsWithoutQueueName controls whether or not Kueue reconciles jobs that don't set the annotation kueue.x-k8s.io/queue-name.",
-	"managedJobsNamespaceSelector": "managedJobsNamespaceSelector can be used to omit some namespaces from ManagedJobsWithoutQueueName Only valid if ManagedJobsWithoutQueueName is QueueNameOptional",
-	"fairSharing":                  "fairSharing controls the fair sharing semantics across the cluster.",
-	"metrics":                      "metrics allows one to change if metrics are enabled or disabled. Microshift does not enable metrics by default Default will assume metrics are enabled.",
+	"integrations":        "integrations are the workloads Kueue will manage kueue has integrations in the codebase and it also allows for external frameworks",
+	"metrics":             "metrics allows one to configure if kueue metrics will be exposed to monitoring. Kueue provides a series of metrics to monitor the status of LocalQueues and resource flavors See https://kueue.sigs.k8s.io/docs/reference/metrics/ for a detailed list",
+	"expermentalFeatures": "unsupportedConfigOverrides are more expermental features that users can use to configure kueue. We do not guarantee that these features will yet be supported Once we are comfortable with these features, we will move this out of this list.",
 }
 
 func (KueueConfiguration) SwaggerDoc() map[string]string {
@@ -327,8 +348,9 @@ func (KueueStatus) SwaggerDoc() map[string]string {
 }
 
 var map_ResourceTransformation = map[string]string{
+	"":         "ResourceTransformations apply transformation to pod spec resources Retain means that we will keep the original resources and apply a transformation. Replace means that the original resources will be replaced after the transformation is done.",
 	"input":    "input is the name of the input resource. resources are pod spec resources like cpu, memory, gpus",
-	"strategy": "strategy specifies if the input resource should be replaced or retained.",
+	"strategy": "strategy specifies if the input resource should be replaced or retained. retain means that we will keep the original resources and apply a transformation. replace means that the original resources will be replaced after the transformation is done.",
 	"outputs":  "outputs specifies the output resources and quantities per unit of input resource. An empty Outputs combined with a `Replace` Strategy causes the Input resource to be ignored by Kueue.",
 }
 

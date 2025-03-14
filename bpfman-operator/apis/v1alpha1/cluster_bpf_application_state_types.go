@@ -40,7 +40,6 @@ type ClBpfApplicationProgramState struct {
 	// +unionDiscriminator
 	// +required
 	// +kubebuilder:validation:Enum:="XDP";"TC";"TCX";"FEntry";"FExit";"KProbe";"KRetProbe";"UProbe";"URetProbe";"TracePoint"
-
 	Type EBPFProgType `json:"type"`
 
 	// xdp defines the desired state of the application's XdpPrograms.

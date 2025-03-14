@@ -320,7 +320,6 @@ infrastructures.config.openshift.io:
   - GCPLabelsTags
   - HighlyAvailableArbiter
   - NutanixMultiSubnets
-  - VSphereControlPlaneMachineSet
   - VSphereHostVMGroupZonal
   - VSphereMultiNetworks
   - VSphereMultiVCenters

@@ -1,0 +1,514 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    api.openshift.io/merged-by-featuregates: "true"
+    include.release.openshift.io/ibm-cloud-managed: "true"
+    include.release.openshift.io/self-managed-high-availability: "true"
+  name: kueue.operator.openshift.io
+spec:
+  group: operator.openshift.io
+  names:
+    kind: Kueue
+    listKind: KueueList
+    plural: kueue
+    singular: kueue
+  scope: Cluster
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          Kueue is the CRD to represent the kueue operator
+          This CRD defines the configuration that the Kueue
+          Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: |-
+              spec holds user settable values for configuration
+              kueue configuration must not be changed once the object exists
+              to change the configuration, one can delete the object and create a new object.
+            properties:
+              config:
+                description: |-
+                  config is the desired configuration
+                  for the kueue operator.
+                properties:
+                  expermentalFeatures:
+                    description: |-
+                      unsupportedConfigOverrides are more expermental features
+                      that users can use to configure kueue.
+                      We do not guarantee that these features will yet be supported
+                      Once we are comfortable with these features, we will move this out of this list.
+                    properties:
+                      fairSharing:
+                        description: fairSharing controls the fair sharing semantics
+                          across the cluster.
+                        properties:
+                          enable:
+                            description: |-
+                              enable indicates whether to enable fair sharing for all cohorts.
+                              this is disabled by default.
+                            enum:
+                            - Enabled
+                            - Disabled
+                            type: string
+                          preemptionStrategies:
+                            description: |-
+                              preemptionStrategies indicates which constraints should a preemption satisfy.
+                              The preemption algorithm will only use the next strategy in the list if the
+                              incoming workload (preemptor) doesn't fit after using the previous strategies.
+                              Possible values are:
+                              - LessThanOrEqualToFinalShare: Only preempt a workload if the share of the preemptor CQ
+                                with the preemptor workload is less than or equal to the share of the preemptee CQ
+                                without the workload to be preempted.
+                                This strategy might favor preemption of smaller workloads in the preemptee CQ,
+                                regardless of priority or start time, in an effort to keep the share of the CQ
+                                as high as possible.
+                              - LessThanInitialShare: Only preempt a workload if the share of the preemptor CQ
+                                with the incoming workload is strictly less than the share of the preemptee CQ.
+                                This strategy doesn't depend on the share usage of the workload being preempted.
+                                As a result, the strategy chooses to preempt workloads with the lowest priority and
+                                newest start time first.
+                              The default strategy is ["LessThanOrEqualToFinalShare", "LessThanInitialShare"].
+                            items:
+                              enum:
+                              - LessThanOrEqualToFinalShare
+                              - LessThanInitialShare
+                              type: string
+                            maxItems: 2
+                            type: array
+                        type: object
+                      featureGates:
+                        additionalProperties:
+                          enum:
+                          - Enabled
+                          - Disabled
+                          type: string
+                        description: |-
+                          featureGates are advanced gates that can control the feature gates that kueue sets
+                          in the configuration.
+                        type: object
+                      manageJobsWithoutQueueName:
+                        default: QueueNameRequired
+                        description: |-
+                          manageJobsWithoutQueueName controls whether or not Kueue reconciles
+                          jobs that don't set the annotation kueue.x-k8s.io/queue-name.
+                        enum:
+                        - QueueNameOptional
+                        - QueueNameRequired
+                        type: string
+                      managedJobsNamespaceSelector:
+                        description: |-
+                          managedJobsNamespaceSelector can be used to omit some namespaces from ManagedJobsWithoutQueueName
+                          Only valid if ManagedJobsWithoutQueueName is QueueNameOptional
+                        properties:
+                          matchExpressions:
+                            description: matchExpressions is a list of label selector
+                              requirements. The requirements are ANDed.
+                            items:
+                              description: |-
+                                A label selector requirement is a selector that contains values, a key, and an operator that
+                                relates the key and values.
+                              properties:
+                                key:
+                                  description: key is the label key that the selector
+                                    applies to.
+                                  type: string
+                                operator:
+                                  description: |-
+                                    operator represents a key's relationship to a set of values.
+                                    Valid operators are In, NotIn, Exists and DoesNotExist.
+                                  type: string
+                                values:
+                                  description: |-
+                                    values is an array of string values. If the operator is In or NotIn,
+                                    the values array must be non-empty. If the operator is Exists or DoesNotExist,
+                                    the values array must be empty. This array is replaced during a strategic
+                                    merge patch.
+                                  items:
+                                    type: string
+                                  type: array
+                                  x-kubernetes-list-type: atomic
+                              required:
+                              - key
+                              - operator
+                              type: object
+                            type: array
+                            x-kubernetes-list-type: atomic
+                          matchLabels:
+                            additionalProperties:
+                              type: string
+                            description: |-
+                              matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels
+                              map is equivalent to an element of matchExpressions, whose key field is "key", the
+                              operator is "In", and the values array contains only "value". The requirements are ANDed.
+                            type: object
+                        type: object
+                        x-kubernetes-map-type: atomic
+                        x-kubernetes-validations:
+                        - message: managedJobsNamespaceSelector is only valid if manageJobsWithoutQueueName
+                            is QueueNameOptional
+                          rule: self.manageJobsWithoutQueueName==QueueNameOptional
+                      resources:
+                        description: |-
+                          resources provides additional configuration options for handling the resources.
+                          Supports https://github.com/kubernetes-sigs/kueue/blob/release-0.10/keps/2937-resource-transformer/README.md
+                        properties:
+                          excludeResourcePrefixes:
+                            description: excludeResourcePrefixes defines which resources
+                              should be ignored by Kueue
+                            items:
+                              maxLength: 64
+                              type: string
+                            maxItems: 16
+                            type: array
+                          transformations:
+                            description: |-
+                              transformations defines how to transform PodSpec resources into Workload resource requests.
+                              This is intended to be a map with Input as the key (enforced by validation code)
+                            items:
+                              description: |-
+                                ResourceTransformations apply transformation to pod spec resources
+                                Retain means that we will keep the original resources and
+                                apply a transformation.
+                                Replace means that the original resources will be replaced
+                                after the transformation is done.
+                              properties:
+                                input:
+                                  description: |-
+                                    input is the name of the input resource.
+                                    resources are pod spec resources like cpu, memory, gpus
+                                  type: string
+                                outputs:
+                                  additionalProperties:
+                                    anyOf:
+                                    - type: integer
+                                    - type: string
+                                    pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                    x-kubernetes-int-or-string: true
+                                  description: |-
+                                    outputs specifies the output resources and quantities per unit of input resource.
+                                    An empty Outputs combined with a `Replace` Strategy causes the Input resource to be ignored by Kueue.
+                                  type: object
+                                strategy:
+                                  description: |-
+                                    strategy specifies if the input resource should be replaced or retained.
+                                    retain means that we will keep the original resources and
+                                    apply a transformation.
+                                    replace means that the original resources will be replaced
+                                    after the transformation is done.
+                                  enum:
+                                  - Retain
+                                  - Replace
+                                  type: string
+                              required:
+                              - input
+                              type: object
+                            maxItems: 16
+                            type: array
+                        type: object
+                    type: object
+                  integrations:
+                    description: |-
+                      integrations are the workloads Kueue will manage
+                      kueue has integrations in the codebase and it also allows
+                      for external frameworks
+                    properties:
+                      externalFrameworks:
+                        description: |-
+                          externalFrameworks are a list of GroupVersionKinds
+                          that are managed for Kueue by external controllers;
+                          the expected format is `Kind.version.group.com`.
+                          These are optional and should only be used if you have an external controller
+                          that integrations with kueue.
+                        items:
+                          description: |-
+                            This is the GVK for an external framework.
+                            Controller runtime requires this in this format
+                            for api discoverability.
+                          properties:
+                            group:
+                              description: group of externalFramework
+                              maxLength: 256
+                              type: string
+                            resourceType:
+                              description: |-
+                                resourceType of external framework
+                                this is the same as Kind in the GVK settings
+                              maxLength: 256
+                              type: string
+                            version:
+                              description: version is the version of the api
+                              maxLength: 256
+                              type: string
+                          required:
+                          - group
+                          - resourceType
+                          - version
+                          type: object
+                        maxItems: 4
+                        type: array
+                      frameworks:
+                        description: |-
+                          frameworks are a list of names to be enabled.
+                          Possible options:
+                           - "batch/job"
+                           - "kubeflow.org/mpijob"
+                           - "ray.io/rayjob"
+                           - "ray.io/raycluster"
+                           - "jobset.x-k8s.io/jobset"
+                           - "kubeflow.org/paddlejob"
+                           - "kubeflow.org/pytorchjob"
+                           - "kubeflow.org/tfjob"
+                           - "kubeflow.org/xgboostjob"
+                           - "workload.codeflare.dev/appwrapper"
+                           - "pod"
+                           - "deployment" (requires enabling pod integration)
+                           - "statefulset" (requires enabling pod integration)
+                           - "leaderworkerset.x-k8s.io/leaderworkerset" (requires enabling pod integration)
+                          This is required and must have at least one element.
+                          The frameworks are jobs that Kueue will manage.
+                        items:
+                          enum:
+                          - batch/job
+                          - ray.io/rayjob
+                          - ray.io/raycluster
+                          - jobset.x-k8s.io/jobset
+                          - kubeflow.org/mpijob
+                          - kubeflow.org/paddlejob
+                          - kubeflow.org/pytorchjob
+                          - kubeflow.org/tfjob
+                          - kubeflow.org/xgboostjob
+                          - workload.codeflare.dev/appwrapper
+                          - pod
+                          - deployment
+                          - statefulset
+                          - leaderworkerset.x-k8s.io/leaderworkerset
+                          type: string
+                        maxItems: 14
+                        minItems: 1
+                        type: array
+                      labelKeysToCopy:
+                        description: |-
+                          labelKeysToCopy is a list of label keys that should be copied from the job into the
+                          workload object. It is not required for the job to have all the labels from this
+                          list. If a job does not have some label with the given key from this list, the
+                          constructed workload object will be created without this label. In the case
+                          of creating a workload from a composable job (pod group), if multiple objects
+                          have labels with some key from the list, the values of these labels must
+                          match or otherwise the workload creation would fail. The labels are copied only
+                          during the workload creation and are not updated even if the labels of the
+                          underlying job are changed.
+                        items:
+                          maxLength: 64
+                          type: string
+                        maxItems: 64
+                        type: array
+                    required:
+                    - frameworks
+                    type: object
+                  metrics:
+                    description: |-
+                      metrics allows one to configure if kueue metrics
+                      will be exposed to monitoring.
+                      Kueue provides a series of metrics to monitor
+                      the status of LocalQueues and resource flavors
+                      See https://kueue.sigs.k8s.io/docs/reference/metrics/ for a detailed list
+                    enum:
+                    - Enabled
+                    - Disabled
+                    type: string
+                required:
+                - integrations
+                type: object
+              logLevel:
+                default: Normal
+                description: |-
+                  logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a
+                  simple way to manage coarse grained logging choices that operators have to interpret for their operands.
+
+                  Valid values are: "Normal", "Debug", "Trace", "TraceAll".
+                  Defaults to "Normal".
+                enum:
+                - ""
+                - Normal
+                - Debug
+                - Trace
+                - TraceAll
+                type: string
+              managementState:
+                description: managementState indicates whether and how the operator
+                  should manage the component
+                pattern: ^(Managed|Unmanaged|Force|Removed)$
+                type: string
+              observedConfig:
+                description: |-
+                  observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because
+                  it is an input to the level for the operator
+                nullable: true
+                type: object
+                x-kubernetes-preserve-unknown-fields: true
+              operatorLogLevel:
+                default: Normal
+                description: |-
+                  operatorLogLevel is an intent based logging for the operator itself.  It does not give fine grained control, but it is a
+                  simple way to manage coarse grained logging choices that operators have to interpret for themselves.
+
+                  Valid values are: "Normal", "Debug", "Trace", "TraceAll".
+                  Defaults to "Normal".
+                enum:
+                - ""
+                - Normal
+                - Debug
+                - Trace
+                - TraceAll
+                type: string
+              unsupportedConfigOverrides:
+                description: |-
+                  unsupportedConfigOverrides overrides the final configuration that was computed by the operator.
+                  Red Hat does not support the use of this field.
+                  Misuse of this field could lead to unexpected behavior or conflict with other configuration options.
+                  Seek guidance from the Red Hat support before using this field.
+                  Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.
+                nullable: true
+                type: object
+                x-kubernetes-preserve-unknown-fields: true
+            required:
+            - config
+            type: object
+            x-kubernetes-validations:
+            - message: values are immutable once set
+              rule: self == oldSelf
+          status:
+            description: status holds observed values from the cluster. They may not
+              be overridden.
+            properties:
+              conditions:
+                description: conditions is a list of conditions and their status
+                items:
+                  description: OperatorCondition is just the standard condition fields.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      type: string
+                    reason:
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - status
+                  - type
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+              generations:
+                description: generations are used to determine when an item needs
+                  to be reconciled or has changed in a way that needs a reaction.
+                items:
+                  description: GenerationStatus keeps track of the generation for
+                    a given resource so that decisions about forced updates can be
+                    made.
+                  properties:
+                    group:
+                      description: group is the group of the thing you're tracking
+                      type: string
+                    hash:
+                      description: hash is an optional field set for resources without
+                        generation that are content sensitive like secrets and configmaps
+                      type: string
+                    lastGeneration:
+                      description: lastGeneration is the last generation of the workload
+                        controller involved
+                      format: int64
+                      type: integer
+                    name:
+                      description: name is the name of the thing you're tracking
+                      type: string
+                    namespace:
+                      description: namespace is where the thing you're tracking is
+                      type: string
+                    resource:
+                      description: resource is the resource type of the thing you're
+                        tracking
+                      type: string
+                  required:
+                  - group
+                  - name
+                  - namespace
+                  - resource
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - group
+                - resource
+                - namespace
+                - name
+                x-kubernetes-list-type: map
+              latestAvailableRevision:
+                description: latestAvailableRevision is the deploymentID of the most
+                  recent deployment
+                format: int32
+                type: integer
+                x-kubernetes-validations:
+                - message: must only increase
+                  rule: self >= oldSelf
+              observedGeneration:
+                description: observedGeneration is the last generation change you've
+                  dealt with
+                format: int64
+                type: integer
+              readyReplicas:
+                description: readyReplicas indicates how many replicas are ready and
+                  at the desired state
+                format: int32
+                type: integer
+              version:
+                description: version is the level this availability applies to
+                type: string
+            type: object
+        required:
+        - spec
+        type: object
+        x-kubernetes-validations:
+        - message: kueue is a singleton, .metadata.name must be 'cluster'
+          rule: self.metadata.name == 'cluster'
+    served: true
+    storage: true
+    subresources:
+      status: {}

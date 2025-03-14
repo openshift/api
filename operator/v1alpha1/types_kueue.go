@@ -75,13 +75,6 @@ type KueueConfiguration struct {
 	// for external frameworks
 	// +required
 	Integrations Integrations `json:"integrations"`
-	// metrics allows one to configure if kueue metrics
-	// will be exposed to monitoring.
-	// Kueue provides a series of metrics to monitor
-	// the status of LocalQueues and resource flavors
-	// See https://kueue.sigs.k8s.io/docs/reference/metrics/ for a detailed list
-	// +optional
-	Metrics *EnabledOrDisabled `json:"metrics,omitempty"`
 	// expermentalFeatures are more expermental features
 	// that users can use to configure kueue.
 	// We do not guarantee that these features will yet be supported

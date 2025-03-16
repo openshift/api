@@ -47,7 +47,8 @@ controlplanemachinesets.machine.openshift.io:
     name: Age
     type: date
   Scope: Namespaced
-  ShortNames: null
+  ShortNames:
+  - cpms
   TopLevelFeatureGates: []
   Version: v1
 

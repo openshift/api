@@ -17,6 +17,8 @@ spec:
     kind: ControlPlaneMachineSet
     listKind: ControlPlaneMachineSetList
     plural: controlplanemachinesets
+    shortNames:
+    - cpms
     singular: controlplanemachineset
   scope: Namespaced
   versions:

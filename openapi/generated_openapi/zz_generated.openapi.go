@@ -12209,7 +12209,7 @@ func schema_openshift_api_config_v1_FeatureGateAttributes(ref common.ReferenceCa
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "requiredMinimumComponentVersions is a list of component/version pairs that declares the is the lowest version the given component may be in this cluster. Currently, the only supported component is Kubelet, and setting a required minimum kubelet component will set the minimumKubeletVersion field in the nodes.config.openshift.io CRD.",
+							Description: "requiredMinimumComponentVersions is a list of component/version pairs that declares the is the lowest version the given component may be in this cluster to have this feature turned on in the Default featureset. Currently, the only supported component is Kubelet, and setting the MinimumComponentVersion.Component to \"Kubelet\" will mean this feature will be added to the Default set if the minimumKubeletVersion in the nodes.config object is lower than or equal to the given MinimumComponentVersion.Version",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -12272,12 +12272,34 @@ func schema_openshift_api_config_v1_FeatureGateDetails(ref common.ReferenceCallb
 							},
 						},
 					},
+					"renderedMinimumComponentVersions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"component",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "renderedMinimumComponentVersions are the component versions that the feature gate list of this status were rendered from. Currently, the only supported component is Kubelet, and setting the MinimumComponentVersion.Component to \"Kubelet\" will mean feature set was rendered given the minimumKubeletVersion in the nodes.config object was lower than or equal to the given MinimumComponentVersion.Version",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.MinimumComponentVersion"),
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"version"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.FeatureGateAttributes"},
+			"github.com/openshift/api/config/v1.FeatureGateAttributes", "github.com/openshift/api/config/v1.MinimumComponentVersion"},
 	}
 }
 
@@ -15210,7 +15232,7 @@ func schema_openshift_api_config_v1_MinimumComponentVersion(ref common.Reference
 				Properties: map[string]spec.Schema{
 					"component": {
 						SchemaProps: spec.SchemaProps{
-							Description: "component is the entity whose version must be above a certain version.",
+							Description: "component is the entity whose version must be above a certain version. The only valid value is Kubelet",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -15218,7 +15240,7 @@ func schema_openshift_api_config_v1_MinimumComponentVersion(ref common.Reference
 					},
 					"version": {
 						SchemaProps: spec.SchemaProps{
-							Description: "version is the minimum version the given component may be in this cluster. version must be in semver format (x.y.z) and must consist only of numbers and periods (.).",
+							Description: "version is the minimum version the given component may be in this cluster. version must be in semver format (x.y.z) and must consist only of numbers and periods (.). Note: this is the version of the component, not Openshift. For instance, when Component is \"Kubelet\", it is a required version of the Kubelet (i.e: kubernetes version, like 1.32.0), not the corresponding Openshift version (4.19.0)",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",

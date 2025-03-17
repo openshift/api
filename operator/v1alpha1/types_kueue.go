@@ -2,7 +2,6 @@ package v1alpha1
 
 import (
 	operatorv1 "github.com/openshift/api/operator/v1"
-	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -45,67 +44,12 @@ type KueueOperandSpec struct {
 	Config KueueConfiguration `json:"config"`
 }
 
-// +kubebuilder:validation:Enum=QueueNameOptional;QueueNameRequired
-type ManageJobsWithoutQueueNameOption string
-
-// ManageJobsWithoutQueueName allows to control what kind of
-// jobs kueue will manage.
-// Kueue jobs usually require kueue.x-k8s.io/queue-name on each job
-// to be opt-in for Kueue.
-const (
-	// QueueNameOptional means kueue will assume all workloads
-	// are to be gated by Kueue.
-	// This must be used with ManagedJobsNamespaceSelector.
-	QueueNameOptional ManageJobsWithoutQueueNameOption = "QueueNameOptional"
-	// QueueNameRequired means that the jobs require a queue label.
-	QueueNameRequired ManageJobsWithoutQueueNameOption = "QueueNameRequired"
-)
-
-// +kubebuilder:validation:Enum=Enabled;Disabled
-type EnabledOrDisabled string
-
-const (
-	Enabled  EnabledOrDisabled = "Enabled"
-	Disabled EnabledOrDisabled = "Disabled"
-)
-
 type KueueConfiguration struct {
 	// integrations are the workloads Kueue will manage
 	// kueue has integrations in the codebase and it also allows
 	// for external frameworks
 	// +required
 	Integrations Integrations `json:"integrations"`
-	// expermentalFeatures are more expermental features
-	// that users can use to configure kueue.
-	// We do not guarantee that these features will yet be supported
-	// Once we are comfortable with these features, we will move this out of this list.
-	// +optional
-	ExpermentalFeatures *ExpermentalFeatures `json:"expermentalFeatures,omitempty"`
-}
-
-// These are more advanced features.
-type ExpermentalFeatures struct {
-	// resources provides additional configuration options for handling the resources.
-	// Supports https://github.com/kubernetes-sigs/kueue/blob/release-0.10/keps/2937-resource-transformer/README.md
-	// +optional
-	Resources Resources `json:"resources,omitempty"`
-	// featureGates are advanced gates that can control the feature gates that kueue sets
-	// in the configuration.
-	// +optional
-	FeatureGates map[string]EnabledOrDisabled `json:"featureGates,omitempty"`
-	// manageJobsWithoutQueueName controls whether or not Kueue reconciles
-	// jobs that don't set the annotation kueue.x-k8s.io/queue-name.
-	// +kubebuilder:default=QueueNameRequired
-	// +optional
-	ManageJobsWithoutQueueName *ManageJobsWithoutQueueNameOption `json:"manageJobsWithoutQueueName,omitempty"`
-	// managedJobsNamespaceSelector can be used to omit some namespaces from ManagedJobsWithoutQueueName
-	// Only valid if ManagedJobsWithoutQueueName is QueueNameOptional
-	// +kubebuilder:validation:XValidation:rule="self.manageJobsWithoutQueueName==QueueNameOptional",message="managedJobsNamespaceSelector is only valid if manageJobsWithoutQueueName is QueueNameOptional"
-	// +optional
-	ManagedJobsNamespaceSelector *metav1.LabelSelector `json:"managedJobsNamespaceSelector,omitempty"`
-	// fairSharing controls the fair sharing semantics across the cluster.
-	// +optional
-	FairSharing FairSharing `json:"fairSharing,omitempty"`
 }
 
 // KueueStatus defines the observed state of Kueue
@@ -129,92 +73,6 @@ type KueueList struct {
 	// +kubebuilder:validation:MaxItems=1
 	// +required
 	Items []Kueue `json:"items"`
-}
-
-// These structs come directly from Kueue.
-type Resources struct {
-	// excludeResourcePrefixes defines which resources should be ignored by Kueue
-	// +optional
-	// +kubebuilder:validation:items:MaxLength=64
-	// +kubebuilder:validation:MaxItems=16
-	ExcludeResourcePrefixes []string `json:"excludeResourcePrefixes,omitempty"`
-
-	// transformations defines how to transform PodSpec resources into Workload resource requests.
-	// This is intended to be a map with Input as the key (enforced by validation code)
-	// +optional
-	// +kubebuilder:validation:MaxItems=16
-	Transformations []ResourceTransformation `json:"transformations,omitempty"`
-}
-
-// +kubebuilder:validation:Enum=Retain;Replace
-type ResourceTransformationStrategy string
-
-// ResourceTransformations apply transformation to pod spec resources
-// Retain means that we will keep the original resources and
-// apply a transformation.
-// Replace means that the original resources will be replaced
-// after the transformation is done.
-const Retain ResourceTransformationStrategy = "Retain"
-const Replace ResourceTransformationStrategy = "Replace"
-
-// ResourceTransformations apply transformation to pod spec resources
-// Retain means that we will keep the original resources and
-// apply a transformation.
-// Replace means that the original resources will be replaced
-// after the transformation is done.
-type ResourceTransformation struct {
-	// input is the name of the input resource.
-	// resources are pod spec resources like cpu, memory, gpus
-	// +required
-	Input corev1.ResourceName `json:"input"`
-
-	// strategy specifies if the input resource should be replaced or retained.
-	// retain means that we will keep the original resources and
-	// apply a transformation.
-	// replace means that the original resources will be replaced
-	// after the transformation is done.
-	// +optional
-	Strategy *ResourceTransformationStrategy `json:"strategy,omitempty"`
-
-	// outputs specifies the output resources and quantities per unit of input resource.
-	// An empty Outputs combined with a `Replace` Strategy causes the Input resource to be ignored by Kueue.
-	// +optional
-	Outputs corev1.ResourceList `json:"outputs,omitempty"`
-}
-
-// +kubebuilder:validation:Enum=LessThanOrEqualToFinalShare;LessThanInitialShare
-type PreemptionStrategy string
-
-const (
-	LessThanOrEqualToFinalShare PreemptionStrategy = "LessThanOrEqualToFinalShare"
-	LessThanInitialShare        PreemptionStrategy = "LessThanInitialShare"
-)
-
-type FairSharing struct {
-	// enable indicates whether to enable fair sharing for all cohorts.
-	// this is disabled by default.
-	// +optional
-	Enable EnabledOrDisabled `json:"enable"`
-
-	// preemptionStrategies indicates which constraints should a preemption satisfy.
-	// The preemption algorithm will only use the next strategy in the list if the
-	// incoming workload (preemptor) doesn't fit after using the previous strategies.
-	// Possible values are:
-	// - LessThanOrEqualToFinalShare: Only preempt a workload if the share of the preemptor CQ
-	//   with the preemptor workload is less than or equal to the share of the preemptee CQ
-	//   without the workload to be preempted.
-	//   This strategy might favor preemption of smaller workloads in the preemptee CQ,
-	//   regardless of priority or start time, in an effort to keep the share of the CQ
-	//   as high as possible.
-	// - LessThanInitialShare: Only preempt a workload if the share of the preemptor CQ
-	//   with the incoming workload is strictly less than the share of the preemptee CQ.
-	//   This strategy doesn't depend on the share usage of the workload being preempted.
-	//   As a result, the strategy chooses to preempt workloads with the lowest priority and
-	//   newest start time first.
-	// The default strategy is ["LessThanOrEqualToFinalShare", "LessThanInitialShare"].
-	// +optional
-	// +kubebuilder:validation:MaxItems=2
-	PreemptionStrategies []PreemptionStrategy `json:"preemptionStrategies,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=batch/job;ray.io/rayjob;ray.io/raycluster;jobset.x-k8s.io/jobset;kubeflow.org/mpijob;kubeflow.org/paddlejob;kubeflow.org/pytorchjob;kubeflow.org/tfjob;kubeflow.org/xgboostjob;workload.codeflare.dev/appwrapper;pod;deployment;statefulset;leaderworkerset.x-k8s.io/leaderworkerset
@@ -275,6 +133,7 @@ type Integrations struct {
 	//  - "leaderworkerset.x-k8s.io/leaderworkerset" (requires enabling pod integration)
 	// +kubebuilder:validation:MaxItems=14
 	// +kubebuilder:validation:MinItems=1
+	// kubebuilder:validation:UniqueItems=true
 	// This is required and must have at least one element.
 	// The frameworks are jobs that Kueue will manage.
 	// +required

@@ -28,7 +28,6 @@ type Kueue struct {
 	// spec holds user settable values for configuration
 	// kueue configuration must not be changed once the object exists
 	// to change the configuration, one can delete the object and create a new object.
-	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="values are immutable once set"
 	// +required
 	Spec KueueOperandSpec `json:"spec"`
 	// status holds observed values from the cluster. They may not be overridden.
@@ -75,24 +74,24 @@ type KueueList struct {
 	Items []Kueue `json:"items"`
 }
 
-// +kubebuilder:validation:Enum=batch/job;ray.io/rayjob;ray.io/raycluster;jobset.x-k8s.io/jobset;kubeflow.org/mpijob;kubeflow.org/paddlejob;kubeflow.org/pytorchjob;kubeflow.org/tfjob;kubeflow.org/xgboostjob;workload.codeflare.dev/appwrapper;pod;deployment;statefulset;leaderworkerset.x-k8s.io/leaderworkerset
+// +kubebuilder:validation:Enum=batchjob;rayjob;raycluster;jobset;mpijob;paddlejob;pytorchjob;tfjob;xgboostjob;appwrapper;pod;deployment;statefulset;leaderworkerset
 type KueueIntegrations string
 
 const (
-	BatchJob        KueueIntegrations = "batch/job"
-	RayJob          KueueIntegrations = "ray.io/rayjob"
-	RayCluster      KueueIntegrations = "ray.io/raycluster"
-	JobSet          KueueIntegrations = "jobset.x-k8s.io/jobset"
-	MPIJob          KueueIntegrations = "kubeflow.org/mpijob"
-	PaddeJob        KueueIntegrations = "kubeflow.org/paddlejob"
-	PyTorchJob      KueueIntegrations = "kubeflow.org/pytorchjob"
-	TfJob           KueueIntegrations = "kubeflow.org/tfjob"
-	XGBoostJob      KueueIntegrations = "kubeflow.org/xgboostjob"
-	AppWrappers     KueueIntegrations = "workload.codeflare.dev/appwrapper"
+	BatchJob        KueueIntegrations = "batchjob"
+	RayJob          KueueIntegrations = "rayjob"
+	RayCluster      KueueIntegrations = "raycluster"
+	JobSet          KueueIntegrations = "jobset"
+	MPIJob          KueueIntegrations = "mpijob"
+	PaddeJob        KueueIntegrations = "paddlejob"
+	PyTorchJob      KueueIntegrations = "pytorchjob"
+	TfJob           KueueIntegrations = "tfjob"
+	XGBoostJob      KueueIntegrations = "xgboostjob"
+	AppWrappers     KueueIntegrations = "appwrapper"
 	Pod             KueueIntegrations = "pod"
 	Deployment      KueueIntegrations = "deployment"
 	Statefulset     KueueIntegrations = "statefulset"
-	LeaderWorkerSet KueueIntegrations = "leaderworkerset.x-k8s.io/leaderworkerset"
+	LeaderWorkerSet KueueIntegrations = "leaderworkerset"
 )
 
 // This is the GVK for an external framework.
@@ -100,51 +99,39 @@ const (
 // for api discoverability.
 type ExternalFramework struct {
 	// group of externalFramework
-	// +kubebuilder:validation:MaxLength=256
+	// +kubebuilder:validation:MaxLength=253
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:XValidation:rule="self.size() == 0 || !format.qualifiedName().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
 	// +required
 	Group string `json:"group"`
-	// resourceType of external framework
-	// this is the same as Kind in the GVK settings
+	// resource of external framework
 	// +required
 	// +kubebuilder:validation:MaxLength=256
-	ResourceType string `json:"resourceType"`
+	// +kubebuilder:validation:XValidation:rule="self.size() == 0 || !format.qualifiedName().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
+	// +kubebuilder:validation:MinLength=1
+	Resource string `json:"resource"`
 	// version is the version of the api
 	// +required
 	// +kubebuilder:validation:MaxLength=256
+	// +kubebuilder:validation:MinLength=1
 	Version string `json:"version"`
 }
 
 type Integrations struct {
 	// frameworks are a list of names to be enabled.
-	// Possible options:
-	//  - "batch/job"
-	//  - "kubeflow.org/mpijob"
-	//  - "ray.io/rayjob"
-	//  - "ray.io/raycluster"
-	//  - "jobset.x-k8s.io/jobset"
-	//  - "kubeflow.org/paddlejob"
-	//  - "kubeflow.org/pytorchjob"
-	//  - "kubeflow.org/tfjob"
-	//  - "kubeflow.org/xgboostjob"
-	//  - "workload.codeflare.dev/appwrapper"
-	//  - "pod"
-	//  - "deployment" (requires enabling pod integration)
-	//  - "statefulset" (requires enabling pod integration)
-	//  - "leaderworkerset.x-k8s.io/leaderworkerset" (requires enabling pod integration)
+	// This is required and must have at least one element.
+	// The frameworks are jobs that Kueue will manage.
 	// +kubebuilder:validation:MaxItems=14
 	// +kubebuilder:validation:MinItems=1
 	// kubebuilder:validation:UniqueItems=true
-	// This is required and must have at least one element.
-	// The frameworks are jobs that Kueue will manage.
 	// +required
 	Frameworks []KueueIntegrations `json:"frameworks"`
-	// externalFrameworks are a list of GroupVersionKinds
+	// externalFrameworks are a list of GroupVersionResources
 	// that are managed for Kueue by external controllers;
-	// the expected format is `Kind.version.group.com`.
 	// These are optional and should only be used if you have an external controller
 	// that integrations with kueue.
 	// +optional
-	// +kubebuilder:validation:MaxItems=4
+	// +kubebuilder:validation:MaxItems=32
 	ExternalFrameworks []ExternalFramework `json:"externalFrameworks,omitempty"`
 
 	// labelKeysToCopy is a list of label keys that should be copied from the job into the
@@ -156,8 +143,9 @@ type Integrations struct {
 	// match or otherwise the workload creation would fail. The labels are copied only
 	// during the workload creation and are not updated even if the labels of the
 	// underlying job are changed.
-	// +kubebuilder:validation:items:MaxLength=64
+	// +kubebuilder:validation:items:MaxLength=317
 	// +kubebuilder:validation:MaxItems=64
+	// +kubebuilder:validation:XValidation:rule="self.size() == 0 || !format.qualifiedName().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
 	// +optional
 	LabelKeysToCopy []string `json:"labelKeysToCopy,omitempty"`
 }

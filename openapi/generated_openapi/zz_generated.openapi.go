@@ -56861,9 +56861,9 @@ func schema_openshift_api_operator_v1alpha1_ExternalFramework(ref common.Referen
 							Format:      "",
 						},
 					},
-					"resourceType": {
+					"resource": {
 						SchemaProps: spec.SchemaProps{
-							Description: "resourceType of external framework this is the same as Kind in the GVK settings",
+							Description: "resource of external framework",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -56878,7 +56878,7 @@ func schema_openshift_api_operator_v1alpha1_ExternalFramework(ref common.Referen
 						},
 					},
 				},
-				Required: []string{"group", "resourceType", "version"},
+				Required: []string{"group", "resource", "version"},
 			},
 		},
 	}
@@ -57126,7 +57126,7 @@ func schema_openshift_api_operator_v1alpha1_Integrations(ref common.ReferenceCal
 				Properties: map[string]spec.Schema{
 					"frameworks": {
 						SchemaProps: spec.SchemaProps{
-							Description: "frameworks are a list of names to be enabled. Possible options:\n - \"batch/job\"\n - \"kubeflow.org/mpijob\"\n - \"ray.io/rayjob\"\n - \"ray.io/raycluster\"\n - \"jobset.x-k8s.io/jobset\"\n - \"kubeflow.org/paddlejob\"\n - \"kubeflow.org/pytorchjob\"\n - \"kubeflow.org/tfjob\"\n - \"kubeflow.org/xgboostjob\"\n - \"workload.codeflare.dev/appwrapper\"\n - \"pod\"\n - \"deployment\" (requires enabling pod integration)\n - \"statefulset\" (requires enabling pod integration)\n - \"leaderworkerset.x-k8s.io/leaderworkerset\" (requires enabling pod integration)\nThis is required and must have at least one element. The frameworks are jobs that Kueue will manage.",
+							Description: "frameworks are a list of names to be enabled. This is required and must have at least one element. The frameworks are jobs that Kueue will manage. kubebuilder:validation:UniqueItems=true",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -57141,7 +57141,7 @@ func schema_openshift_api_operator_v1alpha1_Integrations(ref common.ReferenceCal
 					},
 					"externalFrameworks": {
 						SchemaProps: spec.SchemaProps{
-							Description: "externalFrameworks are a list of GroupVersionKinds that are managed for Kueue by external controllers; the expected format is `Kind.version.group.com`. These are optional and should only be used if you have an external controller that integrations with kueue.",
+							Description: "externalFrameworks are a list of GroupVersionResources that are managed for Kueue by external controllers; These are optional and should only be used if you have an external controller that integrations with kueue.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{

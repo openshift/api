@@ -33211,7 +33211,7 @@
       "type": "object",
       "required": [
         "group",
-        "resourceType",
+        "resource",
         "version"
       ],
       "properties": {
@@ -33220,8 +33220,8 @@
           "type": "string",
           "default": ""
         },
-        "resourceType": {
-          "description": "resourceType of external framework this is the same as Kind in the GVK settings",
+        "resource": {
+          "description": "resource of external framework",
           "type": "string",
           "default": ""
         },
@@ -33383,7 +33383,7 @@
       ],
       "properties": {
         "externalFrameworks": {
-          "description": "externalFrameworks are a list of GroupVersionKinds that are managed for Kueue by external controllers; the expected format is `Kind.version.group.com`. These are optional and should only be used if you have an external controller that integrations with kueue.",
+          "description": "externalFrameworks are a list of GroupVersionResources that are managed for Kueue by external controllers; These are optional and should only be used if you have an external controller that integrations with kueue.",
           "type": "array",
           "items": {
             "default": {},
@@ -33391,7 +33391,7 @@
           }
         },
         "frameworks": {
-          "description": "frameworks are a list of names to be enabled. Possible options:\n - \"batch/job\"\n - \"kubeflow.org/mpijob\"\n - \"ray.io/rayjob\"\n - \"ray.io/raycluster\"\n - \"jobset.x-k8s.io/jobset\"\n - \"kubeflow.org/paddlejob\"\n - \"kubeflow.org/pytorchjob\"\n - \"kubeflow.org/tfjob\"\n - \"kubeflow.org/xgboostjob\"\n - \"workload.codeflare.dev/appwrapper\"\n - \"pod\"\n - \"deployment\" (requires enabling pod integration)\n - \"statefulset\" (requires enabling pod integration)\n - \"leaderworkerset.x-k8s.io/leaderworkerset\" (requires enabling pod integration)\nThis is required and must have at least one element. The frameworks are jobs that Kueue will manage.",
+          "description": "frameworks are a list of names to be enabled. This is required and must have at least one element. The frameworks are jobs that Kueue will manage. kubebuilder:validation:UniqueItems=true",
           "type": "array",
           "items": {
             "type": "string",

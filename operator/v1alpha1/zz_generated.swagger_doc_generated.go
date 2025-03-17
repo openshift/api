@@ -258,10 +258,10 @@ func (RepositoryDigestMirrors) SwaggerDoc() map[string]string {
 }
 
 var map_ExternalFramework = map[string]string{
-	"":             "This is the GVK for an external framework. Controller runtime requires this in this format for api discoverability.",
-	"group":        "group of externalFramework",
-	"resourceType": "resourceType of external framework this is the same as Kind in the GVK settings",
-	"version":      "version is the version of the api",
+	"":         "This is the GVK for an external framework. Controller runtime requires this in this format for api discoverability.",
+	"group":    "group of externalFramework",
+	"resource": "resource of external framework",
+	"version":  "version is the version of the api",
 }
 
 func (ExternalFramework) SwaggerDoc() map[string]string {
@@ -269,8 +269,8 @@ func (ExternalFramework) SwaggerDoc() map[string]string {
 }
 
 var map_Integrations = map[string]string{
-	"frameworks":         "frameworks are a list of names to be enabled. Possible options:\n - \"batch/job\"\n - \"kubeflow.org/mpijob\"\n - \"ray.io/rayjob\"\n - \"ray.io/raycluster\"\n - \"jobset.x-k8s.io/jobset\"\n - \"kubeflow.org/paddlejob\"\n - \"kubeflow.org/pytorchjob\"\n - \"kubeflow.org/tfjob\"\n - \"kubeflow.org/xgboostjob\"\n - \"workload.codeflare.dev/appwrapper\"\n - \"pod\"\n - \"deployment\" (requires enabling pod integration)\n - \"statefulset\" (requires enabling pod integration)\n - \"leaderworkerset.x-k8s.io/leaderworkerset\" (requires enabling pod integration)\nThis is required and must have at least one element. The frameworks are jobs that Kueue will manage.",
-	"externalFrameworks": "externalFrameworks are a list of GroupVersionKinds that are managed for Kueue by external controllers; the expected format is `Kind.version.group.com`. These are optional and should only be used if you have an external controller that integrations with kueue.",
+	"frameworks":         "frameworks are a list of names to be enabled. This is required and must have at least one element. The frameworks are jobs that Kueue will manage. kubebuilder:validation:UniqueItems=true",
+	"externalFrameworks": "externalFrameworks are a list of GroupVersionResources that are managed for Kueue by external controllers; These are optional and should only be used if you have an external controller that integrations with kueue.",
 	"labelKeysToCopy":    "labelKeysToCopy is a list of label keys that should be copied from the job into the workload object. It is not required for the job to have all the labels from this list. If a job does not have some label with the given key from this list, the constructed workload object will be created without this label. In the case of creating a workload from a composable job (pod group), if multiple objects have labels with some key from the list, the values of these labels must match or otherwise the workload creation would fail. The labels are copied only during the workload creation and are not updated even if the labels of the underlying job are changed.",
 }
 

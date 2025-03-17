@@ -59,9 +59,8 @@ spec:
                     properties:
                       externalFrameworks:
                         description: |-
-                          externalFrameworks are a list of GroupVersionKinds
+                          externalFrameworks are a list of GroupVersionResources
                           that are managed for Kueue by external controllers;
-                          the expected format is `Kind.version.group.com`.
                           These are optional and should only be used if you have an external controller
                           that integrations with kueue.
                         items:
@@ -72,61 +71,58 @@ spec:
                           properties:
                             group:
                               description: group of externalFramework
-                              maxLength: 256
+                              maxLength: 253
+                              minLength: 1
                               type: string
-                            resourceType:
-                              description: |-
-                                resourceType of external framework
-                                this is the same as Kind in the GVK settings
+                              x-kubernetes-validations:
+                              - message: a lowercase RFC 1123 subdomain must consist
+                                  of lower case alphanumeric characters, '-' or '.',
+                                  and must start and end with an alphanumeric character.
+                                rule: self.size() == 0 || !format.qualifiedName().validate(self).hasValue()
+                            resource:
+                              description: resource of external framework
                               maxLength: 256
+                              minLength: 1
                               type: string
+                              x-kubernetes-validations:
+                              - message: a lowercase RFC 1123 subdomain must consist
+                                  of lower case alphanumeric characters, '-' or '.',
+                                  and must start and end with an alphanumeric character.
+                                rule: self.size() == 0 || !format.qualifiedName().validate(self).hasValue()
                             version:
                               description: version is the version of the api
                               maxLength: 256
+                              minLength: 1
                               type: string
                           required:
                           - group
-                          - resourceType
+                          - resource
                           - version
                           type: object
-                        maxItems: 4
+                        maxItems: 32
                         type: array
                       frameworks:
                         description: |-
                           frameworks are a list of names to be enabled.
-                          Possible options:
-                           - "batch/job"
-                           - "kubeflow.org/mpijob"
-                           - "ray.io/rayjob"
-                           - "ray.io/raycluster"
-                           - "jobset.x-k8s.io/jobset"
-                           - "kubeflow.org/paddlejob"
-                           - "kubeflow.org/pytorchjob"
-                           - "kubeflow.org/tfjob"
-                           - "kubeflow.org/xgboostjob"
-                           - "workload.codeflare.dev/appwrapper"
-                           - "pod"
-                           - "deployment" (requires enabling pod integration)
-                           - "statefulset" (requires enabling pod integration)
-                           - "leaderworkerset.x-k8s.io/leaderworkerset" (requires enabling pod integration)
                           This is required and must have at least one element.
                           The frameworks are jobs that Kueue will manage.
+                          kubebuilder:validation:UniqueItems=true
                         items:
                           enum:
-                          - batch/job
-                          - ray.io/rayjob
-                          - ray.io/raycluster
-                          - jobset.x-k8s.io/jobset
-                          - kubeflow.org/mpijob
-                          - kubeflow.org/paddlejob
-                          - kubeflow.org/pytorchjob
-                          - kubeflow.org/tfjob
-                          - kubeflow.org/xgboostjob
-                          - workload.codeflare.dev/appwrapper
+                          - batchjob
+                          - rayjob
+                          - raycluster
+                          - jobset
+                          - mpijob
+                          - paddlejob
+                          - pytorchjob
+                          - tfjob
+                          - xgboostjob
+                          - appwrapper
                           - pod
                           - deployment
                           - statefulset
-                          - leaderworkerset.x-k8s.io/leaderworkerset
+                          - leaderworkerset
                           type: string
                         maxItems: 14
                         minItems: 1
@@ -143,10 +139,15 @@ spec:
                           during the workload creation and are not updated even if the labels of the
                           underlying job are changed.
                         items:
-                          maxLength: 64
+                          maxLength: 317
                           type: string
                         maxItems: 64
                         type: array
+                        x-kubernetes-validations:
+                        - message: a lowercase RFC 1123 subdomain must consist of
+                            lower case alphanumeric characters, '-' or '.', and must
+                            start and end with an alphanumeric character.
+                          rule: self.size() == 0 || !format.qualifiedName().validate(self).hasValue()
                     required:
                     - frameworks
                     type: object
@@ -208,9 +209,6 @@ spec:
             required:
             - config
             type: object
-            x-kubernetes-validations:
-            - message: values are immutable once set
-              rule: self == oldSelf
           status:
             description: status holds observed values from the cluster. They may not
               be overridden.

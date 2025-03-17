@@ -468,7 +468,7 @@ func (TokenClaimMapping) SwaggerDoc() map[string]string {
 var map_TokenClaimMappings = map[string]string{
 	"username": "username is a name of the claim that should be used to construct usernames for the cluster identity.\n\nDefault value: \"sub\"",
 	"groups":   "groups is a name of the claim that should be used to construct groups for the cluster identity. The referenced claim must use array of strings values.",
-	"uid":      "uid is an optional field for configuring the claim mapping used to construct the uid for the cluster identity.\n\nWhen using uid.claim to specify the claim it must be a single string value. When using uid.expression the expression must result in a single string value.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose a default, which is subject to change over time. The current default is to use the 'sub' claim.",
+	"uid":      "uid is a required field for configuring the claim mapping used to construct the uid for the cluster identity.\n\nWhen using uid.claim to specify the claim it must be a single string value. When using uid.expression the expression must result in a single string value.",
 	"extra":    "extra is an optional field for configuring the mappings used to construct the extra attribute for the cluster identity. When omitted, no extra attributes will be present on the cluster identity. key values for extra mappings must be unique. A maximum of 64 extra attribute mappings may be provided.",
 }
 

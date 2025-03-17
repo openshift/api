@@ -272,6 +272,41 @@ spec:
                         - name
                         type: object
                       type: array
+                    renderedMinimumComponentVersions:
+                      description: |-
+                        renderedMinimumComponentVersions are the component versions that the feature gate list of this status were rendered from.
+                        Currently, the only supported component is Kubelet, and setting a required minimum kubelet component will set the
+                        minimumKubeletVersion field in the nodes.config.openshift.io CRD.
+                      items:
+                        description: |-
+                          MinimumComponentVersion is a pair of Component and Version that specifies the required minimum Version of the given Component
+                          to enable this feature.
+                        properties:
+                          component:
+                            description: component is the entity whose version must
+                              be above a certain version.
+                            enum:
+                            - Kubelet
+                            type: string
+                          version:
+                            description: |-
+                              version is the minimum version the given component may be in this cluster.
+                              version must be in semver format (x.y.z) and must consist only of numbers and periods (.).
+                            maxLength: 8
+                            type: string
+                            x-kubernetes-validations:
+                            - message: minmumKubeletVersion must be in a semver compatible
+                                format of x.y.z, or empty
+                              rule: self.matches('^[0-9]*.[0-9]*.[0-9]*$')
+                        required:
+                        - component
+                        - version
+                        type: object
+                      maxItems: 1
+                      type: array
+                      x-kubernetes-list-map-keys:
+                      - component
+                      x-kubernetes-list-type: map
                     version:
                       description: version matches the version provided by the ClusterVersion
                         and in the ClusterOperator.Status.Versions field.

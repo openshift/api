@@ -957,9 +957,10 @@ func (FeatureGateAttributes) SwaggerDoc() map[string]string {
 }
 
 var map_FeatureGateDetails = map[string]string{
-	"version":  "version matches the version provided by the ClusterVersion and in the ClusterOperator.Status.Versions field.",
-	"enabled":  "enabled is a list of all feature gates that are enabled in the cluster for the named version.",
-	"disabled": "disabled is a list of all feature gates that are disabled in the cluster for the named version.",
+	"version":                          "version matches the version provided by the ClusterVersion and in the ClusterOperator.Status.Versions field.",
+	"enabled":                          "enabled is a list of all feature gates that are enabled in the cluster for the named version.",
+	"disabled":                         "disabled is a list of all feature gates that are disabled in the cluster for the named version.",
+	"renderedMinimumComponentVersions": "renderedMinimumComponentVersions are the component versions that the feature gate list of this status were rendered from. Currently, the only supported component is Kubelet, and setting a required minimum kubelet component will set the minimumKubeletVersion field in the nodes.config.openshift.io CRD.",
 }
 
 func (FeatureGateDetails) SwaggerDoc() map[string]string {

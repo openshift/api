@@ -2066,6 +2066,11 @@ func (in *FeatureGateDetails) DeepCopyInto(out *FeatureGateDetails) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	if in.RenderedMinimumComponentVersions != nil {
+		in, out := &in.RenderedMinimumComponentVersions, &out.RenderedMinimumComponentVersions
+		*out = make([]MinimumComponentVersion, len(*in))
+		copy(*out, *in)
+	}
 	return
 }
 

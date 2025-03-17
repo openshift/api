@@ -125,6 +125,15 @@ type FeatureGateDetails struct {
 	// disabled is a list of all feature gates that are disabled in the cluster for the named version.
 	// +optional
 	Disabled []FeatureGateAttributes `json:"disabled"`
+	// renderedMinimumComponentVersions are the component versions that the feature gate list of this status were rendered from.
+	// Currently, the only supported component is Kubelet, and setting a required minimum kubelet component will set the
+	// minimumKubeletVersion field in the nodes.config.openshift.io CRD.
+	// +kubebuilder:validation:MaxItems:=1
+	// +listType=map
+	// +listMapKey=component
+	// +openshift:enable:FeatureGate=MinimumKubeletVersion
+	// +optional
+	RenderedMinimumComponentVersions []MinimumComponentVersion `json:"renderedMinimumComponentVersions,omitempty"`
 }
 
 type FeatureGateAttributes struct {

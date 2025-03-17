@@ -6272,6 +6272,18 @@
             "$ref": "#/definitions/com.github.openshift.api.config.v1.FeatureGateAttributes"
           }
         },
+        "renderedMinimumComponentVersions": {
+          "description": "renderedMinimumComponentVersions are the component versions that the feature gate list of this status were rendered from. Currently, the only supported component is Kubelet, and setting a required minimum kubelet component will set the minimumKubeletVersion field in the nodes.config.openshift.io CRD.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.MinimumComponentVersion"
+          },
+          "x-kubernetes-list-map-keys": [
+            "component"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
         "version": {
           "description": "version matches the version provided by the ClusterVersion and in the ClusterOperator.Status.Versions field.",
           "type": "string",

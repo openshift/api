@@ -12193,12 +12193,34 @@ func schema_openshift_api_config_v1_FeatureGateDetails(ref common.ReferenceCallb
 							},
 						},
 					},
+					"renderedMinimumComponentVersions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"component",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "renderedMinimumComponentVersions are the component versions that the feature gate list of this status were rendered from. Currently, the only supported component is Kubelet, and setting a required minimum kubelet component will set the minimumKubeletVersion field in the nodes.config.openshift.io CRD.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.MinimumComponentVersion"),
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"version"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.FeatureGateAttributes"},
+			"github.com/openshift/api/config/v1.FeatureGateAttributes", "github.com/openshift/api/config/v1.MinimumComponentVersion"},
 	}
 }
 

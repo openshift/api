@@ -33388,7 +33388,10 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.ExternalFramework"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "atomic"
+          ]
         },
         "frameworks": {
           "description": "frameworks are a list of names to be enabled. This is required and must have at least one element. The frameworks are jobs that Kueue will manage. kubebuilder:validation:UniqueItems=true",
@@ -33396,7 +33399,10 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "atomic"
+          ]
         },
         "labelKeysToCopy": {
           "description": "labelKeysToCopy is a list of label keys that should be copied from the job into the workload object. It is not required for the job to have all the labels from this list. If a job does not have some label with the given key from this list, the constructed workload object will be created without this label. In the case of creating a workload from a composable job (pod group), if multiple objects have labels with some key from the list, the values of these labels must match or otherwise the workload creation would fail. The labels are copied only during the workload creation and are not updated even if the labels of the underlying job are changed.",
@@ -33404,7 +33410,10 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "atomic"
+          ]
         }
       }
     },

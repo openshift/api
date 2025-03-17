@@ -124,14 +124,16 @@ type Integrations struct {
 	// +kubebuilder:validation:MaxItems=14
 	// +kubebuilder:validation:MinItems=1
 	// kubebuilder:validation:UniqueItems=true
+	// +listMapKey=atomic
 	// +required
 	Frameworks []KueueIntegrations `json:"frameworks"`
 	// externalFrameworks are a list of GroupVersionResources
 	// that are managed for Kueue by external controllers;
 	// These are optional and should only be used if you have an external controller
 	// that integrations with kueue.
-	// +optional
+	// +listMapKey=atomic
 	// +kubebuilder:validation:MaxItems=32
+	// +optional
 	ExternalFrameworks []ExternalFramework `json:"externalFrameworks,omitempty"`
 
 	// labelKeysToCopy is a list of label keys that should be copied from the job into the
@@ -146,6 +148,7 @@ type Integrations struct {
 	// +kubebuilder:validation:items:MaxLength=317
 	// +kubebuilder:validation:MaxItems=64
 	// +kubebuilder:validation:XValidation:rule="self.size() == 0 || !format.qualifiedName().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
+	// +listMapKey=atomic
 	// +optional
 	LabelKeysToCopy []string `json:"labelKeysToCopy,omitempty"`
 }

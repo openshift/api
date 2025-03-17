@@ -57125,6 +57125,13 @@ func schema_openshift_api_operator_v1alpha1_Integrations(ref common.ReferenceCal
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"frameworks": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"atomic",
+								},
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "frameworks are a list of names to be enabled. This is required and must have at least one element. The frameworks are jobs that Kueue will manage. kubebuilder:validation:UniqueItems=true",
 							Type:        []string{"array"},
@@ -57140,6 +57147,13 @@ func schema_openshift_api_operator_v1alpha1_Integrations(ref common.ReferenceCal
 						},
 					},
 					"externalFrameworks": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"atomic",
+								},
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "externalFrameworks are a list of GroupVersionResources that are managed for Kueue by external controllers; These are optional and should only be used if you have an external controller that integrations with kueue.",
 							Type:        []string{"array"},
@@ -57154,6 +57168,13 @@ func schema_openshift_api_operator_v1alpha1_Integrations(ref common.ReferenceCal
 						},
 					},
 					"labelKeysToCopy": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"atomic",
+								},
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "labelKeysToCopy is a list of label keys that should be copied from the job into the workload object. It is not required for the job to have all the labels from this list. If a job does not have some label with the given key from this list, the constructed workload object will be created without this label. In the case of creating a workload from a composable job (pod group), if multiple objects have labels with some key from the list, the values of these labels must match or otherwise the workload creation would fail. The labels are copied only during the workload creation and are not updated even if the labels of the underlying job are changed.",
 							Type:        []string{"array"},

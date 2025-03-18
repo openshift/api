@@ -1122,6 +1122,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1alpha1.KueueList":                                               schema_openshift_api_operator_v1alpha1_KueueList(ref),
 		"github.com/openshift/api/operator/v1alpha1.KueueOperandSpec":                                        schema_openshift_api_operator_v1alpha1_KueueOperandSpec(ref),
 		"github.com/openshift/api/operator/v1alpha1.KueueStatus":                                             schema_openshift_api_operator_v1alpha1_KueueStatus(ref),
+		"github.com/openshift/api/operator/v1alpha1.LabelKeys":                                               schema_openshift_api_operator_v1alpha1_LabelKeys(ref),
 		"github.com/openshift/api/operator/v1alpha1.LoggingConfig":                                           schema_openshift_api_operator_v1alpha1_LoggingConfig(ref),
 		"github.com/openshift/api/operator/v1alpha1.NodeStatus":                                              schema_openshift_api_operator_v1alpha1_NodeStatus(ref),
 		"github.com/openshift/api/operator/v1alpha1.OLM":                                                     schema_openshift_api_operator_v1alpha1_OLM(ref),
@@ -56855,7 +56856,7 @@ func schema_openshift_api_operator_v1alpha1_ExternalFramework(ref common.Referen
 				Properties: map[string]spec.Schema{
 					"group": {
 						SchemaProps: spec.SchemaProps{
-							Description: "group of externalFramework",
+							Description: "group of externalFramework must be a valid qualified name consisting of a lower-case alphanumeric string, and hyphens of at most 63 characters in length. The name must start and end with an alphanumeric character. The name may be optionally prefixed with a subdomain consisting of lower-case alphanumeric characters, hyphens and periods, of at most 253 characters in length. Each period separated segment within the subdomain must start and end with an alphanumeric character. The optional prefix and the name are separate by a forward slash (/).",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -56863,7 +56864,7 @@ func schema_openshift_api_operator_v1alpha1_ExternalFramework(ref common.Referen
 					},
 					"resource": {
 						SchemaProps: spec.SchemaProps{
-							Description: "resource of external framework",
+							Description: "resource of external framework must be a valid qualified name consisting of a lower-case alphanumeric string, and hyphens of at most 63 characters in length. The name must start and end with an alphanumeric character. The name may be optionally prefixed with a subdomain consisting of lower-case alphanumeric characters, hyphens and periods, of at most 253 characters in length. Each period separated segment within the subdomain must start and end with an alphanumeric character.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -57127,13 +57128,11 @@ func schema_openshift_api_operator_v1alpha1_Integrations(ref common.ReferenceCal
 					"frameworks": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-map-keys": []interface{}{
-									"atomic",
-								},
+								"x-kubernetes-list-type": "atomic",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "frameworks are a list of names to be enabled. This is required and must have at least one element. The frameworks are jobs that Kueue will manage. kubebuilder:validation:UniqueItems=true",
+							Description: "frameworks are a list of names to be enabled. This is required and must have at least one element. The frameworks are jobs that Kueue will manage. KueueIntegrations is a list of frameworks that Kueue has support for. The allowed values are BatchJob;RayJob;RayCluster;JobSet;MPIJob;PaddleJob;PytorchJob;TFJob;XGBoostJob;AppWrappers;Pod;Deployment;StatefulSet;LeaderWorkerSet. kubebuilder:validation:UniqueItems=true",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -57149,13 +57148,11 @@ func schema_openshift_api_operator_v1alpha1_Integrations(ref common.ReferenceCal
 					"externalFrameworks": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-map-keys": []interface{}{
-									"atomic",
-								},
+								"x-kubernetes-list-type": "atomic",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "externalFrameworks are a list of GroupVersionResources that are managed for Kueue by external controllers; These are optional and should only be used if you have an external controller that integrations with kueue.",
+							Description: "externalFrameworks are a list of GroupVersionResources that are managed for Kueue by external controllers; These are optional and should only be used if you have an external controller that integrates with Kueue.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -57170,20 +57167,17 @@ func schema_openshift_api_operator_v1alpha1_Integrations(ref common.ReferenceCal
 					"labelKeysToCopy": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-map-keys": []interface{}{
-									"atomic",
-								},
+								"x-kubernetes-list-type": "atomic",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "labelKeysToCopy is a list of label keys that should be copied from the job into the workload object. It is not required for the job to have all the labels from this list. If a job does not have some label with the given key from this list, the constructed workload object will be created without this label. In the case of creating a workload from a composable job (pod group), if multiple objects have labels with some key from the list, the values of these labels must match or otherwise the workload creation would fail. The labels are copied only during the workload creation and are not updated even if the labels of the underlying job are changed.",
+							Description: "labelKeysToCopy are a list of label keys that are copied once a workload is created these keys are persisted to the internal Kueue workload object. otherwise only the Kueue labels will be copied.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/operator/v1alpha1.LabelKeys"),
 									},
 								},
 							},
@@ -57194,7 +57188,7 @@ func schema_openshift_api_operator_v1alpha1_Integrations(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1alpha1.ExternalFramework"},
+			"github.com/openshift/api/operator/v1alpha1.ExternalFramework", "github.com/openshift/api/operator/v1alpha1.LabelKeys"},
 	}
 }
 
@@ -57202,7 +57196,7 @@ func schema_openshift_api_operator_v1alpha1_Kueue(ref common.ReferenceCallback) 
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "Kueue is the CRD to represent the kueue operator This CRD defines the configuration that the Kueue Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Description: "Kueue is the CRD to represent the Kueue operator This CRD defines the configuration that the Kueue Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -57228,7 +57222,7 @@ func schema_openshift_api_operator_v1alpha1_Kueue(ref common.ReferenceCallback) 
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "spec holds user settable values for configuration kueue configuration must not be changed once the object exists to change the configuration, one can delete the object and create a new object.",
+							Description: "spec holds user settable values for configuration",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/operator/v1alpha1.KueueOperandSpec"),
 						},
@@ -57257,7 +57251,7 @@ func schema_openshift_api_operator_v1alpha1_KueueConfiguration(ref common.Refere
 				Properties: map[string]spec.Schema{
 					"integrations": {
 						SchemaProps: spec.SchemaProps{
-							Description: "integrations are the workloads Kueue will manage kueue has integrations in the codebase and it also allows for external frameworks",
+							Description: "integrations are the workloads Kueue will manage Kueue has integrations in the codebase and it also allows for external frameworks Kueue are an important part to specify for the API as Kueue will only manage the workloads that are specfied in this list. This is a required field.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/operator/v1alpha1.Integrations"),
 						},
@@ -57301,7 +57295,7 @@ func schema_openshift_api_operator_v1alpha1_KueueList(ref common.ReferenceCallba
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "items is a slice of kueue this is a cluster scoped resource and there can only be 1 kueue",
+							Description: "items is a slice of Kueue this is a cluster scoped resource and there can only be 1 Kueue",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -57364,7 +57358,7 @@ func schema_openshift_api_operator_v1alpha1_KueueOperandSpec(ref common.Referenc
 					},
 					"config": {
 						SchemaProps: spec.SchemaProps{
-							Description: "config is the desired configuration for the kueue operator.",
+							Description: "config is the desired configuration for the Kueue operator.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/operator/v1alpha1.KueueConfiguration"),
 						},
@@ -57467,6 +57461,25 @@ func schema_openshift_api_operator_v1alpha1_KueueStatus(ref common.ReferenceCall
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_LabelKeys(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"key": {
+						SchemaProps: spec.SchemaProps{
+							Description: "key is the label key A label key must be a valid qualified name consisting of a lower-case alphanumeric string, and hyphens of at most 63 characters in length. The name must start and end with an alphanumeric character. The name may be optionally prefixed with a subdomain consisting of lower-case alphanumeric characters, hyphens and periods, of at most 253 characters in length. Each period separated segment within the subdomain must start and end with an alphanumeric character. The optional prefix and the name are separate by a forward slash (/).",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
 	}
 }
 

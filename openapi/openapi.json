@@ -33216,12 +33216,12 @@
       ],
       "properties": {
         "group": {
-          "description": "group of externalFramework",
+          "description": "group of externalFramework must be a valid qualified name consisting of a lower-case alphanumeric string, and hyphens of at most 63 characters in length. The name must start and end with an alphanumeric character. The name may be optionally prefixed with a subdomain consisting of lower-case alphanumeric characters, hyphens and periods, of at most 253 characters in length. Each period separated segment within the subdomain must start and end with an alphanumeric character. The optional prefix and the name are separate by a forward slash (/).",
           "type": "string",
           "default": ""
         },
         "resource": {
-          "description": "resource of external framework",
+          "description": "resource of external framework must be a valid qualified name consisting of a lower-case alphanumeric string, and hyphens of at most 63 characters in length. The name must start and end with an alphanumeric character. The name may be optionally prefixed with a subdomain consisting of lower-case alphanumeric characters, hyphens and periods, of at most 253 characters in length. Each period separated segment within the subdomain must start and end with an alphanumeric character.",
           "type": "string",
           "default": ""
         },
@@ -33383,42 +33383,36 @@
       ],
       "properties": {
         "externalFrameworks": {
-          "description": "externalFrameworks are a list of GroupVersionResources that are managed for Kueue by external controllers; These are optional and should only be used if you have an external controller that integrations with kueue.",
+          "description": "externalFrameworks are a list of GroupVersionResources that are managed for Kueue by external controllers; These are optional and should only be used if you have an external controller that integrates with Kueue.",
           "type": "array",
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.ExternalFramework"
           },
-          "x-kubernetes-list-map-keys": [
-            "atomic"
-          ]
+          "x-kubernetes-list-type": "atomic"
         },
         "frameworks": {
-          "description": "frameworks are a list of names to be enabled. This is required and must have at least one element. The frameworks are jobs that Kueue will manage. kubebuilder:validation:UniqueItems=true",
+          "description": "frameworks are a list of names to be enabled. This is required and must have at least one element. The frameworks are jobs that Kueue will manage. KueueIntegrations is a list of frameworks that Kueue has support for. The allowed values are BatchJob;RayJob;RayCluster;JobSet;MPIJob;PaddleJob;PytorchJob;TFJob;XGBoostJob;AppWrappers;Pod;Deployment;StatefulSet;LeaderWorkerSet. kubebuilder:validation:UniqueItems=true",
           "type": "array",
           "items": {
             "type": "string",
             "default": ""
           },
-          "x-kubernetes-list-map-keys": [
-            "atomic"
-          ]
+          "x-kubernetes-list-type": "atomic"
         },
         "labelKeysToCopy": {
-          "description": "labelKeysToCopy is a list of label keys that should be copied from the job into the workload object. It is not required for the job to have all the labels from this list. If a job does not have some label with the given key from this list, the constructed workload object will be created without this label. In the case of creating a workload from a composable job (pod group), if multiple objects have labels with some key from the list, the values of these labels must match or otherwise the workload creation would fail. The labels are copied only during the workload creation and are not updated even if the labels of the underlying job are changed.",
+          "description": "labelKeysToCopy are a list of label keys that are copied once a workload is created these keys are persisted to the internal Kueue workload object. otherwise only the Kueue labels will be copied.",
           "type": "array",
           "items": {
-            "type": "string",
-            "default": ""
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.LabelKeys"
           },
-          "x-kubernetes-list-map-keys": [
-            "atomic"
-          ]
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
     "com.github.openshift.api.operator.v1alpha1.Kueue": {
-      "description": "Kueue is the CRD to represent the kueue operator This CRD defines the configuration that the Kueue Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "description": "Kueue is the CRD to represent the Kueue operator This CRD defines the configuration that the Kueue Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
       "type": "object",
       "required": [
         "spec"
@@ -33438,7 +33432,7 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
         "spec": {
-          "description": "spec holds user settable values for configuration kueue configuration must not be changed once the object exists to change the configuration, one can delete the object and create a new object.",
+          "description": "spec holds user settable values for configuration",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.KueueOperandSpec"
         },
@@ -33456,7 +33450,7 @@
       ],
       "properties": {
         "integrations": {
-          "description": "integrations are the workloads Kueue will manage kueue has integrations in the codebase and it also allows for external frameworks",
+          "description": "integrations are the workloads Kueue will manage Kueue has integrations in the codebase and it also allows for external frameworks Kueue are an important part to specify for the API as Kueue will only manage the workloads that are specfied in this list. This is a required field.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.Integrations"
         }
@@ -33474,7 +33468,7 @@
           "type": "string"
         },
         "items": {
-          "description": "items is a slice of kueue this is a cluster scoped resource and there can only be 1 kueue",
+          "description": "items is a slice of Kueue this is a cluster scoped resource and there can only be 1 Kueue",
           "type": "array",
           "items": {
             "default": {},
@@ -33500,7 +33494,7 @@
       ],
       "properties": {
         "config": {
-          "description": "config is the desired configuration for the kueue operator.",
+          "description": "config is the desired configuration for the Kueue operator.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.KueueConfiguration"
         },
@@ -33579,6 +33573,15 @@
         },
         "version": {
           "description": "version is the level this availability applies to",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1alpha1.LabelKeys": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "description": "key is the label key A label key must be a valid qualified name consisting of a lower-case alphanumeric string, and hyphens of at most 63 characters in length. The name must start and end with an alphanumeric character. The name may be optionally prefixed with a subdomain consisting of lower-case alphanumeric characters, hyphens and periods, of at most 253 characters in length. Each period separated segment within the subdomain must start and end with an alphanumeric character. The optional prefix and the name are separate by a forward slash (/).",
           "type": "string"
         }
       }

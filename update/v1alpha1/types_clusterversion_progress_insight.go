@@ -235,17 +235,6 @@ type ResourceRef struct {
 	Namespace string `json:"namespace,omitempty"`
 }
 
-// ScopeType is one of ControlPlane or WorkerPool
-// +kubebuilder:validation:Enum=ControlPlane;WorkerPool
-type ScopeType string
-
-const (
-	// ControlPlane is used for insights that are related to the control plane (including control plane pool or nodes)
-	ControlPlaneScope ScopeType = "ControlPlane"
-	// WorkerPool is used for insights that are related to a worker pools and nodes (excluding control plane)
-	WorkerPoolScope ScopeType = "WorkerPool"
-)
-
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // ClusterVersionProgressInsightList is a list of ClusterVersionProgressInsightList resources

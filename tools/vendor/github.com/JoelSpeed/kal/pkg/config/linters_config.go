@@ -38,6 +38,26 @@ const (
 
 	// ConditionsUseProtobufIgnore indicates that the linter will not emit a warning if the conditions are not using protobuf tags.
 	ConditionsUseProtobufIgnore ConditionsUseProtobuf = "Ignore"
+
+	// ConditionsUseProtobufForbid indicates that the linter will emit an error if the conditions are using protobuf tags, a fix will also be suggested.
+	ConditionsUseProtobufForbid ConditionsUseProtobuf = "Forbid"
+)
+
+// ConditionsUsePatchStrategy is the policy for the conditions linter.
+type ConditionsUsePatchStrategy string
+
+const (
+	// ConditionsUsePatchStrategySuggestFix indicates that the linter will emit a warning if the conditions are not using patch strategy tags and suggest a fix.
+	ConditionsUsePatchStrategySuggestFix ConditionsUsePatchStrategy = "SuggestFix"
+
+	// ConditionsUsePatchStrategyWarn indicates that the linter will emit a warning if the conditions are not using patch strategy tags.
+	ConditionsUsePatchStrategyWarn ConditionsUsePatchStrategy = "Warn"
+
+	// ConditionsUsePatchStrategyIgnore indicates that the linter will not emit a warning if the conditions are not using patch strategy tags.
+	ConditionsUsePatchStrategyIgnore ConditionsUsePatchStrategy = "Ignore"
+
+	// ConditionsUsePatchStrategyForbid indicates that the linter will emit an error if the conditions are using patch strategy tags, a fix will also be suggested.
+	ConditionsUsePatchStrategyForbid ConditionsUsePatchStrategy = "Forbid"
 )
 
 // ConditionsConfig contains configuration for the conditions linter.
@@ -50,12 +70,22 @@ type ConditionsConfig struct {
 	IsFirstField ConditionsFirstField `json:"isFirstField"`
 
 	// useProtobuf indicates whether the linter should use protobuf tags.
-	// Valid values are SuggestFix, Warn and Ignore.
+	// Valid values are SuggestFix, Warn, Ignore and Forbid.
 	// When set to SuggestFix, the linter will emit a warning if the conditions are not using protobuf tags and suggest a fix.
 	// When set to Warn, the linter will emit a warning if the conditions are not using protobuf tags.
 	// When set to Ignore, the linter will not emit a warning if the conditions are not using protobuf tags.
+	// When set to Forbid, the linter will emit an error if the conditions are using protobuf tags, a fix will also be suggested.
 	// When otherwise not specified, the default value is SuggestFix.
 	UseProtobuf ConditionsUseProtobuf `json:"useProtobuf"`
+
+	// usePatchStrategy indicates whether the linter should enforce the patch strategy tags.
+	// Valid values are SuggestFix, Warn, Ignore and Forbid.
+	// When set to SuggestFix, the linter will emit a warning if the conditions are not using patch strategy tags and suggest a fix.
+	// When set to Warn, the linter will emit a warning if the conditions are not using patch strategy tags.
+	// When set to Ignore, the linter will not emit a warning if the conditions are not using patch strategy tags.
+	// When set to Forbid, the linter will emit an error if the conditions are using patch strategy tags, a fix will also be suggested.
+	// When otherwise not specified, the default value is SuggestFix.
+	UsePatchStrategy ConditionsUsePatchStrategy `json:"usePatchStrategy"`
 }
 
 // JSONTagsConfig contains configuration for the jsontags linter.

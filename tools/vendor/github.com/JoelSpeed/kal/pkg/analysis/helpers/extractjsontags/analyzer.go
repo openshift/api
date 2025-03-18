@@ -81,6 +81,7 @@ func run(pass *analysis.Pass) (interface{}, error) {
 	return results, nil
 }
 
+//nolint:cyclop
 func extractTagInfo(tag *ast.BasicLit) FieldTagInfo {
 	if tag == nil || tag.Value == "" {
 		return FieldTagInfo{Missing: true}
@@ -105,6 +106,15 @@ func extractTagInfo(tag *ast.BasicLit) FieldTagInfo {
 	end := pos + token.Pos(len(tagValue))
 
 	tagValues := strings.Split(tagValue, ",")
+
+	if len(tagValues) == 1 && tagValues[0] == "-" {
+		return FieldTagInfo{
+			Ignored:  true,
+			RawValue: tagValue,
+			Pos:      pos,
+			End:      end,
+		}
+	}
 
 	if len(tagValues) == 2 && tagValues[0] == "" && tagValues[1] == "inline" {
 		return FieldTagInfo{
@@ -131,6 +141,9 @@ func extractTagInfo(tag *ast.BasicLit) FieldTagInfo {
 type FieldTagInfo struct {
 	// Name is the name of the field extracted from the json tag.
 	Name string
+
+	// Ignored is true if the field is ignored by json package.
+	Ignored bool
 
 	// OmitEmpty is true if the field has the omitempty option in the json tag.
 	OmitEmpty bool

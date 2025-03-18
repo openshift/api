@@ -312,6 +312,11 @@ type Marker struct {
 	End token.Pos
 }
 
+// String returns the string representation of the marker.
+func (m Marker) String() string {
+	return strings.TrimPrefix(m.RawComment, "// +")
+}
+
 // MarkerSet is a set implementation for Markers that uses
 // the Marker identifier as the key, but returns all full Markers
 // with that identifier as the result.

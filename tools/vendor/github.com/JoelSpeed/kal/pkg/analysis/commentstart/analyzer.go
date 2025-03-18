@@ -5,19 +5,19 @@ import (
 	"fmt"
 	"go/ast"
 	"go/token"
+	"go/types"
 	"strings"
 
 	"github.com/JoelSpeed/kal/pkg/analysis/helpers/extractjsontags"
+	"github.com/JoelSpeed/kal/pkg/analysis/helpers/inspector"
+	"github.com/JoelSpeed/kal/pkg/analysis/helpers/markers"
 	"golang.org/x/tools/go/analysis"
-	"golang.org/x/tools/go/analysis/passes/inspect"
-	"golang.org/x/tools/go/ast/inspector"
 )
 
 const name = "commentstart"
 
 var (
 	errCouldNotGetInspector = errors.New("could not get inspector")
-	errCouldNotGetJSONTags  = errors.New("could not get json tags")
 )
 
 // Analyzer is the analyzer for the commentstart package.
@@ -26,54 +26,32 @@ var Analyzer = &analysis.Analyzer{
 	Name:     name,
 	Doc:      "Check that all struct fields in an API have a godoc, and that the godoc starts with the serialised field name",
 	Run:      run,
-	Requires: []*analysis.Analyzer{inspect.Analyzer, extractjsontags.Analyzer},
+	Requires: []*analysis.Analyzer{inspector.Analyzer},
 }
 
 func run(pass *analysis.Pass) (interface{}, error) {
-	inspect, ok := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
+	inspect, ok := pass.ResultOf[inspector.Analyzer].(inspector.Inspector)
 	if !ok {
 		return nil, errCouldNotGetInspector
 	}
 
-	jsonTags, ok := pass.ResultOf[extractjsontags.Analyzer].(extractjsontags.StructFieldTags)
-	if !ok {
-		return nil, errCouldNotGetJSONTags
-	}
-
-	// Filter to structs so that we can iterate over fields in a struct.
-	nodeFilter := []ast.Node{
-		(*ast.StructType)(nil),
-	}
-
-	inspect.Preorder(nodeFilter, func(n ast.Node) {
-		sTyp, ok := n.(*ast.StructType)
-		if !ok {
-			return
-		}
-
-		if sTyp.Fields == nil {
-			return
-		}
-
-		for _, field := range sTyp.Fields.List {
-			checkField(pass, field, jsonTags)
-		}
+	inspect.InspectFields(func(field *ast.Field, stack []ast.Node, jsonTagInfo extractjsontags.FieldTagInfo, markersAccess markers.Markers) {
+		checkField(pass, field, jsonTagInfo)
 	})
 
 	return nil, nil //nolint:nilnil
 }
 
-func checkField(pass *analysis.Pass, field *ast.Field, jsonTags extractjsontags.StructFieldTags) {
-	if field == nil || len(field.Names) == 0 {
+func checkField(pass *analysis.Pass, field *ast.Field, tagInfo extractjsontags.FieldTagInfo) {
+	if tagInfo.Name == "" {
 		return
 	}
 
-	fieldName := field.Names[0].Name
-
-	tagInfo := jsonTags.FieldTags(field)
-
-	if tagInfo.Name == "" {
-		return
+	var fieldName string
+	if len(field.Names) > 0 {
+		fieldName = field.Names[0].Name
+	} else {
+		fieldName = types.ExprString(field.Type)
 	}
 
 	if field.Doc == nil {

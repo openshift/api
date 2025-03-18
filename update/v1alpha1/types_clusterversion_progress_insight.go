@@ -117,8 +117,10 @@ const (
 
 // ControlPlaneUpdateVersions contains the original and target versions of the upgrade
 type ControlPlaneUpdateVersions struct {
-	// previous is the version of the control plane before the update. When the cluster is being installed
-	// for the first time, the version will have a placeholder value '<none>' and carry 'Installation' metadata
+	// previous is the desired version of the control plane the before the update, regardless of completion. When
+	// the cluster is being installed for the first time, the version will have a placeholder value '<none>' and carry
+	// 'Installation' metadata. When the current update was triggered in the state where the previous update was not fully
+	// completed, the version will carry 'Partial' metadata.
 	// +required
 	// +kubebuilder:validation:XValidation:rule="self.version == '<none>' ? (has(self.metadata) && self.metadata.exists(m, m.key == 'Installation')) : !(has(self.metadata) && self.metadata.exists(m, m.key == 'Installation'))",message="previous version must be '<none>' iff marked with Installation metadata"
 	Previous Version `json:"previous"`

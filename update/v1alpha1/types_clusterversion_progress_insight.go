@@ -67,41 +67,56 @@ type ClusterVersionProgressInsightStatus struct {
 	// +kubebuilder:validation:Pattern=`^[a-z0-9-]+$`
 	Name string `json:"name"`
 
-	// assessment is the assessment of the control plane update process. Valid values are: Unknown, Progressing, Completed, Degraded
+	// assessment is a brief summary assessment of the control plane update process. These values are human-oriented, and
+	// while they look like state enums, they are not meant to be used as such. They are meant as human-oriented brief
+	// summaries that can be directly used in UIs and reports. For machine-oriented conditional behavior depending on the
+	// state, the conditions should be used instead.
+	// The known values are: Unknown, Progressing, Completed, Degraded but the API is not restricted to these values, and
+	// valid values could be even more than one word.
 	// +required
 	Assessment ControlPlaneAssessment `json:"assessment"`
 
-	// versions contains the original and target versions involved in the update
+	// versions contains the original and target versions involved in the update, either the ongoing one or the last update
+	// completed.
 	// +required
 	Versions ControlPlaneUpdateVersions `json:"versions"`
 
-	// completion is a percentage of the update completion (0-100)
+	// completion is a percentage of the update completion (0-100). When there is no update in progress, the Cluster Version
+	// Progress Insight represents the last update (or installation, which is considered to be an update to the initial version)
+	// that is by definition completed, and therefore the completion is 100.
 	// +required
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=100
 	Completion int32 `json:"completion"`
 
-	// startedAt is the time when the update started
+	// startedAt is the time when the update started. When there is no update in progress, the Cluster Version
+	// Progress Insight represents the last update (or installation, which is considered to be an update to the initial version)
+	// that is by definition completed, and this field represents the time when that update was initiated.
 	// +required
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:Format=date-time
 	StartedAt metav1.Time `json:"startedAt"`
 
-	// completedAt is the time when the update completed
+	// completedAt is the time when the update completed. This field is only set when the update is completed.
 	// +optional
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:Format=date-time
 	CompletedAt *metav1.Time `json:"completedAt,omitempty"`
 
-	// estimatedCompletedAt is the estimated time when the update will complete
+	// estimatedCompletedAt is the estimated time when the update will complete, if such estimate is available. When there
+	// is no update in progress, this field is either not set at all, or its value is the time when the last update was
+	// expected to complete.
 	// +optional
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:Format=date-time
 	EstimatedCompletedAt *metav1.Time `json:"estimatedCompletedAt,omitempty"`
 }
 
-// ControlPlaneAssessment is the assessment of the control plane update process
-// +kubebuilder:validation:Enum=Unknown;Progressing;Completed;Degraded
+// ControlPlaneAssessment convey assessments of the control plane update process. These values are human-oriented, and
+// while they look like state enums, they are not meant to be used as such. They are meant as human-oriented brief
+// summaries that can be directly used in UIs and reports. For machine-oriented conditional behavior depending on the
+// state, the conditions should be used instead. The known values are: Unknown, Progressing, Completed, Degraded but
+// the API is not restricted to these values, and valid values could be even more than one word.
 type ControlPlaneAssessment string
 
 const (

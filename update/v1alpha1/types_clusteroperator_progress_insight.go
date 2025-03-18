@@ -43,7 +43,6 @@ type ClusterOperatorProgressInsightSpec struct {
 
 // ClusterOperatorProgressInsight reports the state of a ClusterOperator resource (which represents a control plane
 // component update in standalone clusters), during the update
-// +kubebuilder:validation:XValidation:rule="self.name == self.resource.name",message=".name must match .resource.name"
 type ClusterOperatorProgressInsightStatus struct {
 	// conditions provide details about the operator. It contains at most 10 items. Known conditions are:
 	// - Updating: whether the operator is updating; When Updating=False, the reason field can be Pending or Updated
@@ -60,23 +59,13 @@ type ClusterOperatorProgressInsightStatus struct {
 	// +kubebuilder:validation:XValidation:rule="self.all(c, c.type != 'Healthy' || c.type == 'Updating' && (c.reason == 'Updated' || c.reason == 'Pending' || c.reason == 'Progressing' || c.reason == 'CannotDetermine'))",message="Cluster Operator Progress Insight Updating condition must have one of known reasons: 'Updated', 'Pending', 'Progressing', or 'CannotDetermine'"
 	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 
-	// name is the name of the operator
+	// name is the name of the operator, equal to the name of the corresponding clusteroperators.config.openshift.io resource
 	// +required
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=64
 	// +kubebuilder:validation:Pattern=`^[a-z0-9-]+$`
 	Name string `json:"name"`
-
-	// resource is the ClusterOperator resource that represents the operator
-	//
-	// +Note: By OpenShift API conventions, in isolation this should be a specialized reference that refers just to
-	// +resource name (because the rest is implied by status insight type). However, because we use resource references in
-	// +many places and this API is intended to be consumed by clients, not produced, consistency seems to be more valuable
-	// +than type safety for producers.
-	// +required
-	// +kubebuilder:validation:XValidation:rule="self.group == 'config.openshift.io' && self.resource == 'clusteroperators'",message="resource must be a clusteroperators.config.openshift.io resource"
-	Resource ResourceRef `json:"resource"`
 }
 
 // ClusterOperatorProgressInsightConditionType are types of conditions that can be reported on ClusterOperator status insights

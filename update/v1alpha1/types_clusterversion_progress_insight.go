@@ -180,7 +180,7 @@ const (
 	ArchitectureMetadata VersionMetadataKey = "Architecture"
 )
 
-// ClusterVersionProgressInsightConditionType are types of conditions that can be reported on ClusterVersion status insight
+// ClusterVersionProgressInsightConditionType are types of conditions that can be reported on ClusterVersion progress insight
 type ClusterVersionProgressInsightConditionType string
 
 const (
@@ -188,7 +188,7 @@ const (
 	ClusterVersionProgressInsightUpdating ClusterVersionProgressInsightConditionType = "Updating"
 )
 
-// ClusterVersionProgressInsightUpdatingReason are well-known reasons for the Updating condition on ClusterVersion status insights
+// ClusterVersionProgressInsightUpdatingReason are well-known reasons for the Updating condition on ClusterVersion progress insights
 type ClusterVersionProgressInsightUpdatingReason string
 
 const (

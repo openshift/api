@@ -53,7 +53,10 @@ type ClusterVersionProgressInsightStatus struct {
 	// +patchStrategy=merge
 	// +patchMergeKey=type
 	// +optional
-	// +kubebuilder:validation:MaxItems=10
+	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:MaxItems=1
+	// +kubebuilder:validation:XValidation:rule="self.all(c, c.type == 'Updating')",message="ClusterVersion Progress Insight conditions must have 'Updating' condition"
+	// +kubebuilder:validation:XValidation:rule="self.all(c, c.type != 'Updating' || c.type == 'Updating' && (c.reason == 'CannotDetermineUpdating' || c.reason == 'ClusterVersionProgressing' || c.reason == 'ClusterVersionNotProgressing'))",message="ClusterVersion Progress Insight Updating condition must have one of known reasons: 'CannotDetermineUpdating', 'ClusterVersionProgressing', or 'ClusterVersionNotProgressing'"
 	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 
 	// name is equal to the name of the corresponding clusterversions.config.openshift.io resource, typically 'version'

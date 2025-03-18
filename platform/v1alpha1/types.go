@@ -42,11 +42,9 @@ type ActiveBundleDeployment struct {
 type PlatformOperatorStatus struct {
 	// conditions represent the latest available observations of a platform operator's current state.
 	// +optional
-	// +patchMergeKey=type
-	// +patchStrategy=merge
 	// +listType=map
 	// +listMapKey=type
-	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
+	Conditions []metav1.Condition `json:"conditions,omitempty"`
 
 	// activeBundleDeployment is the reference to the BundleDeployment resource that's
 	// being managed by this PO resource. If this field is not populated in the status

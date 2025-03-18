@@ -82,7 +82,6 @@
     "com.github.openshift.api.apiserver.v1.APIRequestCountStatus": {
       "type": "object",
       "required": [
-        "conditions",
         "requestCount"
       ],
       "properties": {
@@ -93,8 +92,10 @@
             "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
           },
-          "x-kubernetes-patch-merge-key": "type",
-          "x-kubernetes-patch-strategy": "merge"
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "currentHour": {
           "description": "currentHour contains request history for the current hour. This is porcelain to make the API easier to read by humans seeing if they addressed a problem. This field is reset on the hour.",
@@ -3984,7 +3985,13 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "type",
+          "x-kubernetes-patch-strategy": "merge"
         },
         "node": {
           "description": "node is the node name, as specified by the Kubernetes field: node.metadata.name",
@@ -5630,9 +5637,7 @@
           "x-kubernetes-list-map-keys": [
             "type"
           ],
-          "x-kubernetes-list-type": "map",
-          "x-kubernetes-patch-merge-key": "type",
-          "x-kubernetes-patch-strategy": "merge"
+          "x-kubernetes-list-type": "map"
         },
         "release": {
           "description": "release is the target of the update.",
@@ -8231,9 +8236,7 @@
           "x-kubernetes-list-map-keys": [
             "type"
           ],
-          "x-kubernetes-list-type": "map",
-          "x-kubernetes-patch-merge-key": "type",
-          "x-kubernetes-patch-strategy": "merge"
+          "x-kubernetes-list-type": "map"
         },
         "migration": {
           "description": "migration contains the cluster network migration configuration.",
@@ -8347,9 +8350,7 @@
           "x-kubernetes-list-map-keys": [
             "type"
           ],
-          "x-kubernetes-list-type": "map",
-          "x-kubernetes-patch-merge-key": "type",
-          "x-kubernetes-patch-strategy": "merge"
+          "x-kubernetes-list-type": "map"
         }
       }
     },
@@ -13260,9 +13261,7 @@
           "x-kubernetes-list-map-keys": [
             "type"
           ],
-          "x-kubernetes-list-type": "map",
-          "x-kubernetes-patch-merge-key": "type",
-          "x-kubernetes-patch-strategy": "merge"
+          "x-kubernetes-list-type": "map"
         },
         "immutableField": {
           "description": "immutableField is a field that is immutable once the object has been created. It is required at all times.",
@@ -13382,9 +13381,7 @@
           "x-kubernetes-list-map-keys": [
             "type"
           ],
-          "x-kubernetes-list-type": "map",
-          "x-kubernetes-patch-merge-key": "type",
-          "x-kubernetes-patch-strategy": "merge"
+          "x-kubernetes-list-type": "map"
         }
       }
     },
@@ -13536,7 +13533,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         }
       }
     },
@@ -14926,9 +14927,7 @@
           "x-kubernetes-list-map-keys": [
             "type"
           ],
-          "x-kubernetes-list-type": "map",
-          "x-kubernetes-patch-merge-key": "type",
-          "x-kubernetes-patch-strategy": "merge"
+          "x-kubernetes-list-type": "map"
         },
         "dataGatherState": {
           "description": "dataGatherState reflects the current state of the data gathering process.",
@@ -15011,9 +15010,7 @@
           "x-kubernetes-list-map-keys": [
             "type"
           ],
-          "x-kubernetes-list-type": "map",
-          "x-kubernetes-patch-merge-key": "type",
-          "x-kubernetes-patch-strategy": "merge"
+          "x-kubernetes-list-type": "map"
         },
         "lastGatherDuration": {
           "description": "lastGatherDuration represents the time spent gathering.",
@@ -18958,7 +18955,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "instanceId": {
           "description": "instanceId is the instance ID of the machine created in alibabacloud",
@@ -19153,9 +19154,7 @@
           "x-kubernetes-list-map-keys": [
             "type"
           ],
-          "x-kubernetes-list-type": "map",
-          "x-kubernetes-patch-merge-key": "type",
-          "x-kubernetes-patch-strategy": "merge"
+          "x-kubernetes-list-type": "map"
         },
         "observedGeneration": {
           "description": "observedGeneration is the most recent generation observed for this ControlPlaneMachineSet. It corresponds to the ControlPlaneMachineSets's generation, which is updated on mutation by the API Server.",
@@ -19612,7 +19611,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "kind": {
           "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
@@ -19882,9 +19885,7 @@
           "x-kubernetes-list-map-keys": [
             "type"
           ],
-          "x-kubernetes-list-type": "map",
-          "x-kubernetes-patch-merge-key": "type",
-          "x-kubernetes-patch-strategy": "merge"
+          "x-kubernetes-list-type": "map"
         },
         "instanceId": {
           "description": "instanceId is the instance ID of the machine created in PowerVS instanceId uniquely identifies a Power VS server instance(VM) under a Power VS service. This will help in updating or deleting a VM in Power VS Cloud",
@@ -20873,7 +20874,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "instanceId": {
           "description": "instanceId is the instance ID of the machine created in AWS",
@@ -21155,7 +21160,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "kind": {
           "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
@@ -21672,7 +21681,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "instanceId": {
           "description": "instanceId is the ID of the instance in GCP",
@@ -22877,7 +22890,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "instanceId": {
           "description": "instanceId is the ID of the instance in VSphere",
@@ -23173,9 +23190,7 @@
           "x-kubernetes-list-map-keys": [
             "type"
           ],
-          "x-kubernetes-list-type": "map",
-          "x-kubernetes-patch-merge-key": "type",
-          "x-kubernetes-patch-strategy": "merge"
+          "x-kubernetes-list-type": "map"
         },
         "configVersion": {
           "description": "configVersion describes the current and desired machine config for this node. The current version represents the current machine config for the node and is updated after a successful update. The desired version represents the machine config the node will attempt to update to. This desired machine config has been compared to the current machine config and has been validated by the machine config operator as one that is valid and that exists.",
@@ -23399,9 +23414,7 @@
           "x-kubernetes-list-map-keys": [
             "type"
           ],
-          "x-kubernetes-list-type": "map",
-          "x-kubernetes-patch-merge-key": "type",
-          "x-kubernetes-patch-strategy": "merge"
+          "x-kubernetes-list-type": "map"
         },
         "finalImagePullspec": {
           "description": "finalImagePushSpec describes the fully qualified pushspec produced by this build that the final image can be. Must be in sha format.",
@@ -23558,9 +23571,7 @@
           "x-kubernetes-list-map-keys": [
             "type"
           ],
-          "x-kubernetes-list-type": "map",
-          "x-kubernetes-patch-merge-key": "type",
-          "x-kubernetes-patch-strategy": "merge"
+          "x-kubernetes-list-type": "map"
         },
         "currentImagePullspec": {
           "description": "currentImagePullspec is the fully qualified image pull spec used by the MCO to pull down the new OSImage. This must include sha256.",
@@ -23744,9 +23755,7 @@
           "x-kubernetes-list-map-keys": [
             "type"
           ],
-          "x-kubernetes-list-type": "map",
-          "x-kubernetes-patch-merge-key": "type",
-          "x-kubernetes-patch-strategy": "merge"
+          "x-kubernetes-list-type": "map"
         }
       }
     },
@@ -23850,7 +23859,11 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
-          }
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         }
       }
     },
@@ -30207,9 +30220,7 @@
           "x-kubernetes-list-map-keys": [
             "type"
           ],
-          "x-kubernetes-list-type": "map",
-          "x-kubernetes-patch-merge-key": "type",
-          "x-kubernetes-patch-strategy": "merge"
+          "x-kubernetes-list-type": "map"
         },
         "managedBootImagesStatus": {
           "description": "managedBootImagesStatus reflects what the latest cluster-validated boot image configuration is and will be used by Machine Config Controller while performing boot image updates.",
@@ -33195,9 +33206,7 @@
           "x-kubernetes-list-map-keys": [
             "type"
           ],
-          "x-kubernetes-list-type": "map",
-          "x-kubernetes-patch-merge-key": "type",
-          "x-kubernetes-patch-strategy": "merge"
+          "x-kubernetes-list-type": "map"
         }
       }
     },
@@ -35203,9 +35212,7 @@
           "x-kubernetes-list-map-keys": [
             "type"
           ],
-          "x-kubernetes-list-type": "map",
-          "x-kubernetes-patch-merge-key": "type",
-          "x-kubernetes-patch-strategy": "merge"
+          "x-kubernetes-list-type": "map"
         }
       }
     },
@@ -37089,8 +37096,10 @@
             "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
           },
-          "x-kubernetes-patch-merge-key": "type",
-          "x-kubernetes-patch-strategy": "merge"
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         }
       }
     },
@@ -37204,8 +37213,10 @@
             "default": {},
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
           },
-          "x-kubernetes-patch-merge-key": "type",
-          "x-kubernetes-patch-strategy": "merge"
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
         }
       }
     },

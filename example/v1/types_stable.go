@@ -169,11 +169,10 @@ const (
 type StableConfigTypeStatus struct {
 	// Represents the observations of a foo's current state.
 	// Known .status.conditions.type are: "Available", "Progressing", and "Degraded"
-	// +patchMergeKey=type
-	// +patchStrategy=merge
 	// +listType=map
 	// +listMapKey=type
-	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,1,rep,name=conditions"`
+	// +optional
+	Conditions []metav1.Condition `json:"conditions,omitempty"`
 
 	// immutableField is a field that is immutable once the object has been created.
 	// It is required at all times.

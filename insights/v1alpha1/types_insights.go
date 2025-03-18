@@ -178,13 +178,11 @@ type DataGatherState string
 // +kubebuilder:validation:Optional
 type DataGatherStatus struct {
 	// conditions provide details on the status of the gatherer job.
-	// +patchMergeKey=type
-	// +patchStrategy=merge
 	// +listType=map
 	// +listMapKey=type
 	// +kubebuilder:validation:MaxItems=100
 	// +optional
-	Conditions []metav1.Condition `json:"conditions" patchStrategy:"merge" patchMergeKey:"type"`
+	Conditions []metav1.Condition `json:"conditions,omitempty"`
 	// dataGatherState reflects the current state of the data gathering process.
 	// +optional
 	State DataGatherState `json:"dataGatherState,omitempty"`
@@ -224,14 +222,12 @@ type DataGatherStatus struct {
 // data gatherer.
 type GathererStatus struct {
 	// conditions provide details on the status of each gatherer.
-	// +patchMergeKey=type
-	// +patchStrategy=merge
 	// +listType=map
 	// +listMapKey=type
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=100
 	// +required
-	Conditions []metav1.Condition `json:"conditions" patchStrategy:"merge" patchMergeKey:"type"`
+	Conditions []metav1.Condition `json:"conditions"`
 	// name is the name of the gatherer.
 	// +required
 	// +kubebuilder:validation:MaxLength=256

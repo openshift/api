@@ -263,13 +263,17 @@ type TokenClaimMappings struct {
 	// The referenced claim must use array of strings values.
 	Groups PrefixedClaimMapping `json:"groups,omitempty"`
 
-	// uid is a required field for configuring the claim mapping
+	// uid is an optional field for configuring the claim mapping
 	// used to construct the uid for the cluster identity.
 	//
 	// When using uid.claim to specify the claim it must be a single string value.
 	// When using uid.expression the expression must result in a single string value.
 	//
-	// +required
+	// When omitted, this means the user has no opinion and the platform
+	// is left to choose a default, which is subject to change over time.
+	// The current default is to use the 'sub' claim.
+	//
+	// +optional
 	// +openshift:enable:FeatureGate=ExternalOIDCWithUIDAndExtraMappings
 	UID UIDClaimMapping `json:"uid,omitempty"`
 

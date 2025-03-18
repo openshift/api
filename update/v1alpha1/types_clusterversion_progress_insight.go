@@ -56,15 +56,13 @@ type ClusterVersionProgressInsightStatus struct {
 	// +kubebuilder:validation:MaxItems=10
 	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 
-	// resource is the ClusterVersion resource that represents the control plane
-	//
-	// +Note: By OpenShift API conventions, in isolation this should be a specialized reference that refers just to
-	// +resource name (because the rest is implied by status insight type). However, because we use resource references in
-	// +many places and this API is intended to be consumed by clients, not produced, consistency seems to be more valuable
-	// +than type safety for producers.
+	// name is equal to the name of the corresponding clusterversions.config.openshift.io resource, typically 'version'
 	// +required
-	// +kubebuilder:validation:XValidation:rule="self.group == 'config.openshift.io' && self.resource == 'clusterversions'",message="resource must be a clusterversions.config.openshift.io resource"
-	Resource ResourceRef `json:"resource"`
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=64
+	// +kubebuilder:validation:Pattern=`^[a-z0-9-]+$`
+	Name string `json:"name"`
 
 	// assessment is the assessment of the control plane update process. Valid values are: Unknown, Progressing, Completed, Degraded
 	// +required

@@ -85,13 +85,13 @@ type ClusterVersionProgressInsightStatus struct {
 	// +required
 	Versions ControlPlaneUpdateVersions `json:"versions"`
 
-	// completion is a percentage of the update completion (0-100). When there is no update in progress, the Cluster Version
-	// Progress Insight represents the last update (or installation, which is considered to be an update to the initial version)
-	// that is by definition completed, and therefore the completion is 100.
+	// completionPercent conveys the update completion (0-100). When there is no update in progress, the ClusterVersion
+	// Progress Insight represents the last update (or installation, which is considered to be an update to the initial
+	// version) that is by definition completed, and therefore the completionPercent is 100.
 	// +required
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=100
-	Completion int32 `json:"completion"`
+	Completion int32 `json:"completionPercent"`
 
 	// startedAt is the time when the update started. When there is no update in progress, the Cluster Version
 	// Progress Insight represents the last update (or installation, which is considered to be an update to the initial version)

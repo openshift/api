@@ -67,21 +67,18 @@ type MachineConfigPoolProgressInsightStatus struct {
 	// +kubebuilder:validation:Pattern=`^[a-z0-9-]+$`
 	Name string `json:"name"`
 
-	// resource is the MachineConfigPool resource that represents the pool
-	//
-	// +Note: By OpenShift API conventions, in isolation this should be a specialized reference that refers just to
-	// +resource name (because the rest is implied by status insight type). However, because we use resource references in
-	// +many places and this API is intended to be consumed by clients, not produced, consistency seems to be more valuable
-	// +than type safety for producers.
-	// +required
-	// +kubebuilder:validation:XValidation:rule="self.group == 'machineconfiguration.openshift.io' && self.resource == 'machineconfigpools'",message="resource must be a machineconfigpools.machineconfiguration.openshift.io resource"
-	Resource ResourceRef `json:"resource"`
-
 	// scopeType describes whether the pool is a control plane or a worker pool
 	// +required
 	Scope ScopeType `json:"scopeType"`
 
-	// assessment is the assessment of the machine config pool update process. Valid values are: Pending, Completed, Degraded, Excluded, Progressing
+	// assessment is a brief summary assessment of the pool update process. This value is human-oriented, and while it
+	// looks like a state/phase enum, it is not meant to be used as such. Assessment is meant as human-oriented brief
+	// summary matching the state expressed in conditions (taking into account various relations between them, like
+	// ordering or precedence), intended to be directly used in UIs and reports. For machine-oriented conditional behavior
+	// depending on the state, the conditions should be used instead.
+	//
+	// The known values are: Pending, Completed, Degraded, Excluded, Progressing. The API is not restricted to these
+	// values, and valid values can be even brief phrases, up to 64 characters long.
 	// +required
 	Assessment PoolAssessment `json:"assessment"`
 
@@ -101,8 +98,11 @@ type MachineConfigPoolProgressInsightStatus struct {
 	Summaries []NodeSummary `json:"summaries,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 }
 
-// PoolAssessment is the assessment of the node pool update process
-// +kubebuilder:validation:Enum=Pending;Completed;Degraded;Excluded;Progressing
+// PoolAssessment is a brief summary assessment of the pool update process. This value is human-oriented, and while it
+// looks like a state/phase enum, it is not meant to be used as such. Assessment is meant as human-oriented brief
+// summary matching the state expressed in conditions (taking into account various relations between them, like
+// ordering or precedence), intended to be directly used in UIs and reports. For machine-oriented conditional behavior
+// depending on the state, the conditions should be used instead.
 type PoolAssessment string
 
 const (

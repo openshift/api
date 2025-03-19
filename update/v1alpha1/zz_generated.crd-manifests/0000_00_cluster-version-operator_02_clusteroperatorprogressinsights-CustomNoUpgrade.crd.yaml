@@ -26,7 +26,6 @@ spec:
           ClusterOperatorProgressInsight reports the state of a Cluster Operator (an individual control plane component) during an update
 
           Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
-          ClusterOperatorProgressInsight reports the state of a Cluster Operator (an individual control plane component) during an update
         properties:
           apiVersion:
             description: |-
@@ -113,71 +112,27 @@ spec:
                   - status
                   - type
                   type: object
-                maxItems: 10
+                maxItems: 5
                 type: array
                 x-kubernetes-list-map-keys:
                 - type
                 x-kubernetes-list-type: map
               name:
-                description: name is the name of the operator
+                description: name is the name of the operator, equal to the name of
+                  the corresponding clusteroperators.config.openshift.io resource
                 maxLength: 64
                 minLength: 1
                 pattern: ^[a-z0-9-]+$
                 type: string
-              resource:
-                description: resource is the ClusterOperator resource that represents
-                  the operator
-                properties:
-                  group:
-                    description: group of the object being referenced, if any
-                    maxLength: 253
-                    type: string
-                    x-kubernetes-validations:
-                    - message: a lowercase RFC 1123 subdomain must consist of lower
-                        case alphanumeric characters, '-' or '.', and must start and
-                        end with an alphanumeric character.
-                      rule: '!format.dns1123Subdomain().validate(self).hasValue()'
-                  name:
-                    description: name of the object being referenced
-                    maxLength: 253
-                    type: string
-                    x-kubernetes-validations:
-                    - message: a lowercase RFC 1123 subdomain must consist of lower
-                        case alphanumeric characters, '-' or '.', and must start and
-                        end with an alphanumeric character.
-                      rule: '!format.dns1123Subdomain().validate(self).hasValue()'
-                  namespace:
-                    description: namespace of the object being referenced, if any
-                    maxLength: 253
-                    pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
-                    type: string
-                  resource:
-                    description: resource of object being referenced
-                    maxLength: 253
-                    type: string
-                    x-kubernetes-validations:
-                    - message: a lowercase RFC 1123 subdomain must consist of lower
-                        case alphanumeric characters, '-' or '.', and must start and
-                        end with an alphanumeric character.
-                      rule: '!format.dns1123Subdomain().validate(self).hasValue()'
-                required:
-                - name
-                - resource
-                type: object
-                x-kubernetes-validations:
-                - message: resource must be a clusteroperators.config.openshift.io
-                    resource
-                  rule: self.group == 'config.openshift.io' && self.resource == 'clusteroperators'
             required:
             - name
-            - resource
             type: object
-            x-kubernetes-validations:
-            - message: .name must match .resource.name
-              rule: self.name == self.resource.name
         required:
         - spec
         type: object
+        x-kubernetes-validations:
+        - message: When status is present, .status must match .metadata.name
+          rule: '!has(self.status) || self.status.name == self.metadata.name'
     served: true
     storage: true
     subresources:

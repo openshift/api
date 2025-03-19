@@ -26,7 +26,6 @@ spec:
           NodeProgressInsight reports the state of a Node during the update
 
           Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
-          NodeProgressInsight reports the state of a Node during the update
         properties:
           apiVersion:
             description: |-
@@ -114,7 +113,7 @@ spec:
                   - status
                   - type
                   type: object
-                maxItems: 10
+                maxItems: 5
                 type: array
                 x-kubernetes-list-map-keys:
                 - type
@@ -166,10 +165,10 @@ spec:
                     maxLength: 253
                     type: string
                     x-kubernetes-validations:
-                    - message: a lowercase RFC 1123 subdomain must consist of lower
-                        case alphanumeric characters, '-' or '.', and must start and
-                        end with an alphanumeric character.
-                      rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                    - message: a lowercase RFC 1123 label must consist of lower case
+                        alphanumeric characters or '-', and must start and end with
+                        an alphanumeric character.
+                      rule: '!format.dns1123Label().validate(self).hasValue()'
                 required:
                 - name
                 - resource
@@ -179,48 +178,6 @@ spec:
                     resource
                   rule: self.group == 'machineconfiguration.openshift.io' && self.resource
                     == 'machineconfigpools'
-              resource:
-                description: resource is the Node resource that represents the node
-                properties:
-                  group:
-                    description: group of the object being referenced, if any
-                    maxLength: 253
-                    type: string
-                    x-kubernetes-validations:
-                    - message: a lowercase RFC 1123 subdomain must consist of lower
-                        case alphanumeric characters, '-' or '.', and must start and
-                        end with an alphanumeric character.
-                      rule: '!format.dns1123Subdomain().validate(self).hasValue()'
-                  name:
-                    description: name of the object being referenced
-                    maxLength: 253
-                    type: string
-                    x-kubernetes-validations:
-                    - message: a lowercase RFC 1123 subdomain must consist of lower
-                        case alphanumeric characters, '-' or '.', and must start and
-                        end with an alphanumeric character.
-                      rule: '!format.dns1123Subdomain().validate(self).hasValue()'
-                  namespace:
-                    description: namespace of the object being referenced, if any
-                    maxLength: 253
-                    pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
-                    type: string
-                  resource:
-                    description: resource of object being referenced
-                    maxLength: 253
-                    type: string
-                    x-kubernetes-validations:
-                    - message: a lowercase RFC 1123 subdomain must consist of lower
-                        case alphanumeric characters, '-' or '.', and must start and
-                        end with an alphanumeric character.
-                      rule: '!format.dns1123Subdomain().validate(self).hasValue()'
-                required:
-                - name
-                - resource
-                type: object
-                x-kubernetes-validations:
-                - message: resource must be a nodes.core.k8s.io resource
-                  rule: '!has(self.group) && self.resource == ''nodes'''
               scopeType:
                 description: scopeType describes whether the node belongs to control
                   plane or a worker pool
@@ -229,22 +186,26 @@ spec:
                 - WorkerPool
                 type: string
               version:
-                description: version is the version of the node, when known
+                description: |-
+                  version is the OCP semantic version the Node is currently running, when known. This field abstracts the internal
+                  cross-resource relations where OCP version is just one property of the MachineConfig that the Node happens to be
+                  reconciled to by the Machine Config Operator, because it matches the selectors on the MachineConfigPool resource
+                  tied to the MachineConfig. It should be considered and used as an inferred value, mostly suitable to be displayed
+                  in the UIs. It is not guaranteed to be present for all Nodes.
                 maxLength: 64
                 pattern: ^((?:0|[1-9]\d*)[.](?:0|[1-9]\d*)[.](?:0|[1-9]\d*)(?:-(?:(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:[.](?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?)$
                 type: string
             required:
             - name
             - poolResource
-            - resource
             - scopeType
             type: object
-            x-kubernetes-validations:
-            - message: .name must match .resource.name
-              rule: self.name == self.resource.name
         required:
         - spec
         type: object
+        x-kubernetes-validations:
+        - message: When status is present, .status must match .metadata.name
+          rule: '!has(self.status) || self.status.name == self.metadata.name'
     served: true
     storage: true
     subresources:

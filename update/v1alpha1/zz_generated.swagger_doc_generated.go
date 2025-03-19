@@ -12,7 +12,7 @@ package v1alpha1
 
 // AUTO-GENERATED FUNCTIONS START HERE
 var map_ClusterOperatorProgressInsight = map[string]string{
-	"":         "ClusterOperatorProgressInsight reports the state of a Cluster Operator (an individual control plane component) during an update\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. ClusterOperatorProgressInsight reports the state of a Cluster Operator (an individual control plane component) during an update",
+	"":         "ClusterOperatorProgressInsight reports the state of a Cluster Operator (an individual control plane component) during an update\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 	"metadata": "metadata is standard Kubernetes object metadata",
 	"spec":     "spec is empty for now, ClusterOperatorProgressInsight is purely status-reporting API. In the future spec may be used to hold configuration to drive what information is surfaced and how",
 	"status":   "status exposes the health and status of the ongoing cluster operator update",
@@ -43,8 +43,7 @@ func (ClusterOperatorProgressInsightSpec) SwaggerDoc() map[string]string {
 var map_ClusterOperatorProgressInsightStatus = map[string]string{
 	"":           "ClusterOperatorProgressInsight reports the state of a ClusterOperator resource (which represents a control plane component update in standalone clusters), during the update",
 	"conditions": "conditions provide details about the operator. It contains at most 10 items. Known conditions are: - Updating: whether the operator is updating; When Updating=False, the reason field can be Pending or Updated - Healthy: whether the operator is considered healthy; When Healthy=False, the reason field can be Unavailable or Degraded, and Unavailable is \"stronger\" than Degraded",
-	"name":       "name is the name of the operator",
-	"resource":   "resource is the ClusterOperator resource that represents the operator",
+	"name":       "name is the name of the operator, equal to the name of the corresponding clusteroperators.config.openshift.io resource",
 }
 
 func (ClusterOperatorProgressInsightStatus) SwaggerDoc() map[string]string {
@@ -52,7 +51,7 @@ func (ClusterOperatorProgressInsightStatus) SwaggerDoc() map[string]string {
 }
 
 var map_ClusterVersionProgressInsight = map[string]string{
-	"":         "ClusterVersionProgressInsight provides summary information about an ongoing cluster control plane update in Standalone clusters\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. ClusterVersionProgressInsight reports the state of a ClusterVersion resource (which represents a control plane update in standalone clusters), during a cluster update.",
+	"":         "ClusterVersionProgressInsight provides summary information about an ongoing cluster control plane update in Standalone clusters\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 	"metadata": "metadata is standard Kubernetes object metadata",
 	"spec":     "spec is empty for now, ClusterVersionProgressInsight is purely status-reporting API. In the future spec may be used to hold configuration to drive what information is surfaced and how",
 	"status":   "status exposes the health and status of the ongoing cluster update",
@@ -83,13 +82,13 @@ func (ClusterVersionProgressInsightSpec) SwaggerDoc() map[string]string {
 var map_ClusterVersionProgressInsightStatus = map[string]string{
 	"":                     "ClusterVersionProgressInsightStatus reports the state of a ClusterVersion resource (which represents a control plane update in standalone clusters), during the update.",
 	"conditions":           "conditions provides detailed observed conditions about ClusterVersion. It contains at most 10 items. Known conditions are: - Updating: whether the control plane (represented by this ClusterVersion) is updating",
-	"resource":             "resource is the ClusterVersion resource that represents the control plane",
-	"assessment":           "assessment is the assessment of the control plane update process. Valid values are: Unknown, Progressing, Completed, Degraded",
-	"versions":             "versions contains the original and target versions involved in the update",
-	"completion":           "completion is a percentage of the update completion (0-100)",
-	"startedAt":            "startedAt is the time when the update started",
-	"completedAt":          "completedAt is the time when the update completed",
-	"estimatedCompletedAt": "estimatedCompletedAt is the estimated time when the update will complete",
+	"name":                 "name is equal to the name of the corresponding clusterversions.config.openshift.io resource, typically 'version'",
+	"assessment":           "assessment is a brief summary assessment of the control plane update process. This value is human-oriented, and while it looks like a state/phase enum, it is not meant to be used as such. Assessment is meant as human-oriented brief summary matching the state expressed in conditions (taking into account various relations between them, like ordering or precedence), intended to be directly used in UIs and reports. For machine-oriented conditional behavior depending on the state, the conditions should be used instead.\n\nThe known values are: Unknown, Progressing, Completed, Degraded. The API is not restricted to these values, and valid values can be even brief phrases, up to 64 characters long.",
+	"versions":             "versions contains the original and target versions involved in the update, either the ongoing one or the last update completed.",
+	"completionPercent":    "completionPercent conveys the update completion (0-100). When there is no update in progress, the ClusterVersion Progress Insight represents the last update (or installation, which is considered to be an update to the initial version) that is by definition completed, and therefore the completionPercent is 100.",
+	"startedAt":            "startedAt is the time when the update started. When there is no update in progress, the Cluster Version Progress Insight represents the last update (or installation, which is considered to be an update to the initial version) that is by definition completed, and this field represents the time when that update was initiated.",
+	"completedAt":          "completedAt is the time when the update completed. This field is only set when the update is completed.",
+	"estimatedCompletedAt": "estimatedCompletedAt is the estimated time when the update will complete, if such estimate is available. When there is no update in progress, this field is either not set at all, or its value is the time when the last update was expected to complete.",
 }
 
 func (ClusterVersionProgressInsightStatus) SwaggerDoc() map[string]string {
@@ -98,12 +97,32 @@ func (ClusterVersionProgressInsightStatus) SwaggerDoc() map[string]string {
 
 var map_ControlPlaneUpdateVersions = map[string]string{
 	"":         "ControlPlaneUpdateVersions contains the original and target versions of the upgrade",
-	"previous": "previous is the version of the control plane before the update. When the cluster is being installed for the first time, the version will have a placeholder value '<none>' and carry 'Installation' metadata",
-	"target":   "target is the version of the control plane after the update. It may never be '<none>' or have `Installation` metadata",
+	"previous": "previous is the desired version of the control plane the before the update, regardless of completion. When empty, it means the cluster was never updated yet, and the target version is the initial version of the cluster. When the current update was triggered in the state where the previous update was not fully completed, the version will carry 'Partial' metadata.",
+	"target":   "target is the version of the control plane after the update. If the cluster was never updated, the version will carry 'Installation' metadata.",
 }
 
 func (ControlPlaneUpdateVersions) SwaggerDoc() map[string]string {
 	return map_ControlPlaneUpdateVersions
+}
+
+var map_Version = map[string]string{
+	"":         "Version describes a version involved in an update, typically on one side of an update edge",
+	"version":  "version is a semantic version string",
+	"metadata": "metadata is a list of metadata associated with the version. It is a list of key-value pairs. The value is optional and when not provided, the metadata item has boolean semantics (presence indicates true). For example, 'Partial' metadata on a previous version indicates that the previous update was never fully completed. Can contain at most 5 items.",
+}
+
+func (Version) SwaggerDoc() map[string]string {
+	return map_Version
+}
+
+var map_VersionMetadata = map[string]string{
+	"":      "VersionMetadata is a key:value item assigned to version involved in the update. Value can be empty, then the metadata have boolean semantics (true when present, false when absent)",
+	"key":   "key is the name of this metadata value. Valid values are:\n  Installation (boolean): indicates the target version is also initial version of the cluster\n  Partial (boolean): indicates the previous update was not fully completed\n  Architecture: a string that indicates the architecture of the payload image of the version involved in the upgrade, present only when relevant",
+	"value": "value is the value for the metadata, at most 32 characters long. It is not expected to be provided for Installation and Partial metadata. For Architecture metadata, it is expected to be a string that indicates the architecture of the payload image of the version involved in the upgrade, when relevant.",
+}
+
+func (VersionMetadata) SwaggerDoc() map[string]string {
+	return map_VersionMetadata
 }
 
 var map_ResourceRef = map[string]string{
@@ -116,26 +135,6 @@ var map_ResourceRef = map[string]string{
 
 func (ResourceRef) SwaggerDoc() map[string]string {
 	return map_ResourceRef
-}
-
-var map_Version = map[string]string{
-	"":         "Version describes a version involved in an update, typically on one side of an update edge",
-	"version":  "version is a semantic version string, or a placeholder '<none>' for the special case where this is a \"previous\" version in a new installation, in which case the metadata must contain an item with key 'Installation'",
-	"metadata": "metadata is a list of metadata associated with the version. It is a list of key-value pairs. The value is optional and when not provided, the metadata item has boolean semantics (presence indicates true). For example, 'Partial' metadata on a previous version indicates that the previous update was never fully completed. Can contain at most 5 items.",
-}
-
-func (Version) SwaggerDoc() map[string]string {
-	return map_Version
-}
-
-var map_VersionMetadata = map[string]string{
-	"":      "VersionMetadata is a key:value item assigned to version involved in the update. Value can be empty, then the metadata have boolean semantics (true when present, false when absent)",
-	"key":   "key is the name of this metadata value. Valid values are: Installation, Partial, Architecture",
-	"value": "value is the value for the metadata, at most 32 characters long. It is not expected to be provided for Installation and Partial metadata. For Architecture metadata, it is expected to be a string that indicates the architecture of the payload image of the version involved in the upgrade, when relevant.",
-}
-
-func (VersionMetadata) SwaggerDoc() map[string]string {
-	return map_VersionMetadata
 }
 
 var map_HealthInsight = map[string]string{
@@ -212,7 +211,7 @@ func (InsightScope) SwaggerDoc() map[string]string {
 }
 
 var map_MachineConfigPoolProgressInsight = map[string]string{
-	"":         "MachineConfigPoolProgressInsight provides summary information about an ongoing node pool update in Standalone clusters\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. MachineConfigPoolProgressInsight reports the state of a MachineConfigPool resource (which represents a pool of nodes update in standalone clusters), during a cluster update.",
+	"":         "MachineConfigPoolProgressInsight provides summary information about an ongoing node pool update in Standalone clusters\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 	"metadata": "metadata is standard Kubernetes object metadata",
 	"spec":     "spec is empty for now, MachineConfigPoolProgressInsight is purely status-reporting API. In the future spec may be used to hold configuration to drive what information is surfaced and how",
 	"status":   "status exposes the health and status of the ongoing cluster update",
@@ -241,14 +240,13 @@ func (MachineConfigPoolProgressInsightSpec) SwaggerDoc() map[string]string {
 }
 
 var map_MachineConfigPoolProgressInsightStatus = map[string]string{
-	"":           "MachineConfigPoolProgressInsightStatus reports the state of a MachineConfigPool resource (which represents a pool of nodes update in standalone clusters), during a cluster update.",
-	"conditions": "conditions provide details about the machine config pool update. It contains at most 10 items. Known conditions are: - Updating: whether the pool is updating; When Updating=False, the reason field can be Pending, Updated or Excluded",
-	"name":       "name is the name of the machine config pool",
-	"resource":   "resource is the MachineConfigPool resource that represents the pool",
-	"scopeType":  "scopeType describes whether the pool is a control plane or a worker pool",
-	"assessment": "assessment is the assessment of the machine config pool update process. Valid values are: Pending, Completed, Degraded, Excluded, Progressing",
-	"completion": "completion is a percentage of the update completion (0-100)",
-	"summaries":  "summaries is a list of counts of nodes matching certain criteria (e.g. updated, degraded, etc.). Maximum 16 items can be listed.",
+	"":                  "MachineConfigPoolProgressInsightStatus reports the state of a MachineConfigPool resource (which represents a pool of nodes update in standalone clusters), during a cluster update.",
+	"conditions":        "conditions provide details about the machine config pool update. It contains at most 10 items. Known conditions are: - Updating: whether the pool is updating; When Updating=False, the reason field can be Pending, Updated or Excluded",
+	"name":              "name is the name of the machine config pool",
+	"scopeType":         "scopeType describes whether the pool is a control plane or a worker pool",
+	"assessment":        "assessment is a brief summary assessment of the pool update process. This value is human-oriented, and while it looks like a state/phase enum, it is not meant to be used as such. Assessment is meant as human-oriented brief summary matching the state expressed in conditions (taking into account various relations between them, like ordering or precedence), intended to be directly used in UIs and reports. For machine-oriented conditional behavior depending on the state, the conditions should be used instead.\n\nThe known values are: Pending, Completed, Degraded, Excluded, Progressing. The API is not restricted to these values, and valid values can be even brief phrases, up to 64 characters long.",
+	"completionPercent": "completionPercent is a percentage of the pool update completion (0-100)",
+	"summaries":         "summaries is a list of counts of nodes matching certain criteria (e.g. updated, degraded, etc.). Maximum 16 items can be listed.",
 }
 
 func (MachineConfigPoolProgressInsightStatus) SwaggerDoc() map[string]string {
@@ -258,7 +256,7 @@ func (MachineConfigPoolProgressInsightStatus) SwaggerDoc() map[string]string {
 var map_NodeSummary = map[string]string{
 	"":      "NodeSummary is a count of nodes matching certain criteria (e.g. updated, degraded, etc.)",
 	"type":  "type is the type of the summary. Valid values are: Total, Available, Progressing, Outdated, Draining, Excluded, Degraded The summaries are not exclusive, a single node may be counted in multiple summaries.",
-	"count": "count is the number of nodes matching the criteria, between 0 and 1024",
+	"count": "count is the number of nodes matching the criteria, between 0 and 2000",
 }
 
 func (NodeSummary) SwaggerDoc() map[string]string {
@@ -266,7 +264,7 @@ func (NodeSummary) SwaggerDoc() map[string]string {
 }
 
 var map_NodeProgressInsight = map[string]string{
-	"":         "NodeProgressInsight reports the state of a Node during the update\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. NodeProgressInsight reports the state of a Node during the update",
+	"":         "NodeProgressInsight reports the state of a Node during the update\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 	"metadata": "metadata is standard Kubernetes object metadata",
 	"spec":     "spec is empty for now, NodeProgressInsight is purely status-reporting API. In the future spec may be used to hold configuration to drive what information is surfaced and how",
 	"status":   "status exposes the health and status of the ongoing cluster update",
@@ -298,10 +296,9 @@ var map_NodeProgressInsightStatus = map[string]string{
 	"":                    "NodeProgressInsightStatus reports the state of a Node during the update",
 	"conditions":          "conditions provides details about the control plane update. Known conditions are: - Updating: whether the Node is updating; When Updating=False, the reason field can be Updated, Pending, or Paused. When Updating=True, the reason field can be Draining, Updating, or Rebooting - Available: whether the Node is available (accepting workloads) - Degraded: whether the Node is degraded (problem observed)",
 	"name":                "name is the name of the node",
-	"resource":            "resource is the Node resource that represents the node",
 	"poolResource":        "poolResource is the resource that represents the pool the node is a member of",
 	"scopeType":           "scopeType describes whether the node belongs to control plane or a worker pool",
-	"version":             "version is the version of the node, when known",
+	"version":             "version is the OCP semantic version the Node is currently running, when known. This field abstracts the internal cross-resource relations where OCP version is just one property of the MachineConfig that the Node happens to be reconciled to by the Machine Config Operator, because it matches the selectors on the MachineConfigPool resource tied to the MachineConfig. It should be considered and used as an inferred value, mostly suitable to be displayed in the UIs. It is not guaranteed to be present for all Nodes.",
 	"estimatedToComplete": "estimatedToComplete is the estimated time to complete the update, when known",
 	"message":             "message is a short human-readable message about the node update status. It must be shorter than 100 characters.",
 }

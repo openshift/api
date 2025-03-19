@@ -64880,7 +64880,7 @@ func schema_openshift_api_update_v1alpha1_ClusterOperatorProgressInsight(ref com
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "ClusterOperatorProgressInsight reports the state of a Cluster Operator (an individual control plane component) during an update\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. ClusterOperatorProgressInsight reports the state of a Cluster Operator (an individual control plane component) during an update",
+				Description: "ClusterOperatorProgressInsight reports the state of a Cluster Operator (an individual control plane component) during an update\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -65021,25 +65021,18 @@ func schema_openshift_api_update_v1alpha1_ClusterOperatorProgressInsightStatus(r
 					},
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name is the name of the operator",
+							Description: "name is the name of the operator, equal to the name of the corresponding clusteroperators.config.openshift.io resource",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"resource": {
-						SchemaProps: spec.SchemaProps{
-							Description: "resource is the ClusterOperator resource that represents the operator",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/openshift/api/update/v1alpha1.ResourceRef"),
-						},
-					},
 				},
-				Required: []string{"name", "resource"},
+				Required: []string{"name"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/update/v1alpha1.ResourceRef", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -65047,7 +65040,7 @@ func schema_openshift_api_update_v1alpha1_ClusterVersionProgressInsight(ref comm
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "ClusterVersionProgressInsight provides summary information about an ongoing cluster control plane update in Standalone clusters\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. ClusterVersionProgressInsight reports the state of a ClusterVersion resource (which represents a control plane update in standalone clusters), during a cluster update.",
+				Description: "ClusterVersionProgressInsight provides summary information about an ongoing cluster control plane update in Standalone clusters\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -65186,16 +65179,17 @@ func schema_openshift_api_update_v1alpha1_ClusterVersionProgressInsightStatus(re
 							},
 						},
 					},
-					"resource": {
+					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "resource is the ClusterVersion resource that represents the control plane",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/openshift/api/update/v1alpha1.ResourceRef"),
+							Description: "name is equal to the name of the corresponding clusterversions.config.openshift.io resource, typically 'version'",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"assessment": {
 						SchemaProps: spec.SchemaProps{
-							Description: "assessment is the assessment of the control plane update process. Valid values are: Unknown, Progressing, Completed, Degraded",
+							Description: "assessment is a brief summary assessment of the control plane update process. This value is human-oriented, and while it looks like a state/phase enum, it is not meant to be used as such. Assessment is meant as human-oriented brief summary matching the state expressed in conditions (taking into account various relations between them, like ordering or precedence), intended to be directly used in UIs and reports. For machine-oriented conditional behavior depending on the state, the conditions should be used instead.\n\nThe known values are: Unknown, Progressing, Completed, Degraded. The API is not restricted to these values, and valid values can be even brief phrases, up to 64 characters long.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -65203,14 +65197,14 @@ func schema_openshift_api_update_v1alpha1_ClusterVersionProgressInsightStatus(re
 					},
 					"versions": {
 						SchemaProps: spec.SchemaProps{
-							Description: "versions contains the original and target versions involved in the update",
+							Description: "versions contains the original and target versions involved in the update, either the ongoing one or the last update completed.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/update/v1alpha1.ControlPlaneUpdateVersions"),
 						},
 					},
-					"completion": {
+					"completionPercent": {
 						SchemaProps: spec.SchemaProps{
-							Description: "completion is a percentage of the update completion (0-100)",
+							Description: "completionPercent conveys the update completion (0-100). When there is no update in progress, the ClusterVersion Progress Insight represents the last update (or installation, which is considered to be an update to the initial version) that is by definition completed, and therefore the completionPercent is 100.",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
@@ -65218,28 +65212,28 @@ func schema_openshift_api_update_v1alpha1_ClusterVersionProgressInsightStatus(re
 					},
 					"startedAt": {
 						SchemaProps: spec.SchemaProps{
-							Description: "startedAt is the time when the update started",
+							Description: "startedAt is the time when the update started. When there is no update in progress, the Cluster Version Progress Insight represents the last update (or installation, which is considered to be an update to the initial version) that is by definition completed, and this field represents the time when that update was initiated.",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
 						},
 					},
 					"completedAt": {
 						SchemaProps: spec.SchemaProps{
-							Description: "completedAt is the time when the update completed",
+							Description: "completedAt is the time when the update completed. This field is only set when the update is completed.",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
 						},
 					},
 					"estimatedCompletedAt": {
 						SchemaProps: spec.SchemaProps{
-							Description: "estimatedCompletedAt is the estimated time when the update will complete",
+							Description: "estimatedCompletedAt is the estimated time when the update will complete, if such estimate is available. When there is no update in progress, this field is either not set at all, or its value is the time when the last update was expected to complete.",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
 						},
 					},
 				},
-				Required: []string{"resource", "assessment", "versions", "completion", "startedAt"},
+				Required: []string{"name", "assessment", "versions", "completionPercent", "startedAt"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/update/v1alpha1.ControlPlaneUpdateVersions", "github.com/openshift/api/update/v1alpha1.ResourceRef", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+			"github.com/openshift/api/update/v1alpha1.ControlPlaneUpdateVersions", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -65252,20 +65246,19 @@ func schema_openshift_api_update_v1alpha1_ControlPlaneUpdateVersions(ref common.
 				Properties: map[string]spec.Schema{
 					"previous": {
 						SchemaProps: spec.SchemaProps{
-							Description: "previous is the version of the control plane before the update. When the cluster is being installed for the first time, the version will have a placeholder value '<none>' and carry 'Installation' metadata",
-							Default:     map[string]interface{}{},
+							Description: "previous is the desired version of the control plane the before the update, regardless of completion. When empty, it means the cluster was never updated yet, and the target version is the initial version of the cluster. When the current update was triggered in the state where the previous update was not fully completed, the version will carry 'Partial' metadata.",
 							Ref:         ref("github.com/openshift/api/update/v1alpha1.Version"),
 						},
 					},
 					"target": {
 						SchemaProps: spec.SchemaProps{
-							Description: "target is the version of the control plane after the update. It may never be '<none>' or have `Installation` metadata",
+							Description: "target is the version of the control plane after the update. If the cluster was never updated, the version will carry 'Installation' metadata.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/update/v1alpha1.Version"),
 						},
 					},
 				},
-				Required: []string{"previous", "target"},
+				Required: []string{"target"},
 			},
 		},
 		Dependencies: []string{
@@ -65550,7 +65543,7 @@ func schema_openshift_api_update_v1alpha1_MachineConfigPoolProgressInsight(ref c
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "MachineConfigPoolProgressInsight provides summary information about an ongoing node pool update in Standalone clusters\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. MachineConfigPoolProgressInsight reports the state of a MachineConfigPool resource (which represents a pool of nodes update in standalone clusters), during a cluster update.",
+				Description: "MachineConfigPoolProgressInsight provides summary information about an ongoing node pool update in Standalone clusters\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -65697,13 +65690,6 @@ func schema_openshift_api_update_v1alpha1_MachineConfigPoolProgressInsightStatus
 							Format:      "",
 						},
 					},
-					"resource": {
-						SchemaProps: spec.SchemaProps{
-							Description: "resource is the MachineConfigPool resource that represents the pool",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/openshift/api/update/v1alpha1.ResourceRef"),
-						},
-					},
 					"scopeType": {
 						SchemaProps: spec.SchemaProps{
 							Description: "scopeType describes whether the pool is a control plane or a worker pool",
@@ -65714,15 +65700,15 @@ func schema_openshift_api_update_v1alpha1_MachineConfigPoolProgressInsightStatus
 					},
 					"assessment": {
 						SchemaProps: spec.SchemaProps{
-							Description: "assessment is the assessment of the machine config pool update process. Valid values are: Pending, Completed, Degraded, Excluded, Progressing",
+							Description: "assessment is a brief summary assessment of the pool update process. This value is human-oriented, and while it looks like a state/phase enum, it is not meant to be used as such. Assessment is meant as human-oriented brief summary matching the state expressed in conditions (taking into account various relations between them, like ordering or precedence), intended to be directly used in UIs and reports. For machine-oriented conditional behavior depending on the state, the conditions should be used instead.\n\nThe known values are: Pending, Completed, Degraded, Excluded, Progressing. The API is not restricted to these values, and valid values can be even brief phrases, up to 64 characters long.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"completion": {
+					"completionPercent": {
 						SchemaProps: spec.SchemaProps{
-							Description: "completion is a percentage of the update completion (0-100)",
+							Description: "completionPercent is a percentage of the pool update completion (0-100)",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
@@ -65753,11 +65739,11 @@ func schema_openshift_api_update_v1alpha1_MachineConfigPoolProgressInsightStatus
 						},
 					},
 				},
-				Required: []string{"name", "resource", "scopeType", "assessment", "completion"},
+				Required: []string{"name", "scopeType", "assessment", "completionPercent"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/update/v1alpha1.NodeSummary", "github.com/openshift/api/update/v1alpha1.ResourceRef", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
+			"github.com/openshift/api/update/v1alpha1.NodeSummary", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -65765,7 +65751,7 @@ func schema_openshift_api_update_v1alpha1_NodeProgressInsight(ref common.Referen
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "NodeProgressInsight reports the state of a Node during the update\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. NodeProgressInsight reports the state of a Node during the update",
+				Description: "NodeProgressInsight reports the state of a Node during the update\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -65912,13 +65898,6 @@ func schema_openshift_api_update_v1alpha1_NodeProgressInsightStatus(ref common.R
 							Format:      "",
 						},
 					},
-					"resource": {
-						SchemaProps: spec.SchemaProps{
-							Description: "resource is the Node resource that represents the node",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/openshift/api/update/v1alpha1.ResourceRef"),
-						},
-					},
 					"poolResource": {
 						SchemaProps: spec.SchemaProps{
 							Description: "poolResource is the resource that represents the pool the node is a member of",
@@ -65936,7 +65915,7 @@ func schema_openshift_api_update_v1alpha1_NodeProgressInsightStatus(ref common.R
 					},
 					"version": {
 						SchemaProps: spec.SchemaProps{
-							Description: "version is the version of the node, when known",
+							Description: "version is the OCP semantic version the Node is currently running, when known. This field abstracts the internal cross-resource relations where OCP version is just one property of the MachineConfig that the Node happens to be reconciled to by the Machine Config Operator, because it matches the selectors on the MachineConfigPool resource tied to the MachineConfig. It should be considered and used as an inferred value, mostly suitable to be displayed in the UIs. It is not guaranteed to be present for all Nodes.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -65955,7 +65934,7 @@ func schema_openshift_api_update_v1alpha1_NodeProgressInsightStatus(ref common.R
 						},
 					},
 				},
-				Required: []string{"name", "resource", "poolResource", "scopeType"},
+				Required: []string{"name", "poolResource", "scopeType"},
 			},
 		},
 		Dependencies: []string{
@@ -65980,7 +65959,7 @@ func schema_openshift_api_update_v1alpha1_NodeSummary(ref common.ReferenceCallba
 					},
 					"count": {
 						SchemaProps: spec.SchemaProps{
-							Description: "count is the number of nodes matching the criteria, between 0 and 1024",
+							Description: "count is the number of nodes matching the criteria, between 0 and 2000",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
@@ -66046,8 +66025,7 @@ func schema_openshift_api_update_v1alpha1_Version(ref common.ReferenceCallback) 
 				Properties: map[string]spec.Schema{
 					"version": {
 						SchemaProps: spec.SchemaProps{
-							Description: "version is a semantic version string, or a placeholder '<none>' for the special case where this is a \"previous\" version in a new installation, in which case the metadata must contain an item with key 'Installation'",
-							Default:     "",
+							Description: "version is a semantic version string",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -66077,7 +66055,6 @@ func schema_openshift_api_update_v1alpha1_Version(ref common.ReferenceCallback) 
 						},
 					},
 				},
-				Required: []string{"version"},
 			},
 		},
 		Dependencies: []string{
@@ -66094,7 +66071,7 @@ func schema_openshift_api_update_v1alpha1_VersionMetadata(ref common.ReferenceCa
 				Properties: map[string]spec.Schema{
 					"key": {
 						SchemaProps: spec.SchemaProps{
-							Description: "key is the name of this metadata value. Valid values are: Installation, Partial, Architecture",
+							Description: "key is the name of this metadata value. Valid values are:\n  Installation (boolean): indicates the target version is also initial version of the cluster\n  Partial (boolean): indicates the previous update was not fully completed\n  Architecture: a string that indicates the architecture of the payload image of the version involved in the upgrade, present only when relevant",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",

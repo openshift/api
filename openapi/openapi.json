@@ -37996,7 +37996,7 @@
       }
     },
     "com.github.openshift.api.update.v1alpha1.ClusterOperatorProgressInsight": {
-      "description": "ClusterOperatorProgressInsight reports the state of a Cluster Operator (an individual control plane component) during an update\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. ClusterOperatorProgressInsight reports the state of a Cluster Operator (an individual control plane component) during an update",
+      "description": "ClusterOperatorProgressInsight reports the state of a Cluster Operator (an individual control plane component) during an update\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
       "type": "object",
       "required": [
         "spec"
@@ -38062,8 +38062,7 @@
       "description": "ClusterOperatorProgressInsight reports the state of a ClusterOperator resource (which represents a control plane component update in standalone clusters), during the update",
       "type": "object",
       "required": [
-        "name",
-        "resource"
+        "name"
       ],
       "properties": {
         "conditions": {
@@ -38081,19 +38080,14 @@
           "x-kubernetes-patch-strategy": "merge"
         },
         "name": {
-          "description": "name is the name of the operator",
+          "description": "name is the name of the operator, equal to the name of the corresponding clusteroperators.config.openshift.io resource",
           "type": "string",
           "default": ""
-        },
-        "resource": {
-          "description": "resource is the ClusterOperator resource that represents the operator",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.ResourceRef"
         }
       }
     },
     "com.github.openshift.api.update.v1alpha1.ClusterVersionProgressInsight": {
-      "description": "ClusterVersionProgressInsight provides summary information about an ongoing cluster control plane update in Standalone clusters\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. ClusterVersionProgressInsight reports the state of a ClusterVersion resource (which represents a control plane update in standalone clusters), during a cluster update.",
+      "description": "ClusterVersionProgressInsight provides summary information about an ongoing cluster control plane update in Standalone clusters\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
       "type": "object",
       "required": [
         "spec"
@@ -38159,24 +38153,24 @@
       "description": "ClusterVersionProgressInsightStatus reports the state of a ClusterVersion resource (which represents a control plane update in standalone clusters), during the update.",
       "type": "object",
       "required": [
-        "resource",
+        "name",
         "assessment",
         "versions",
-        "completion",
+        "completionPercent",
         "startedAt"
       ],
       "properties": {
         "assessment": {
-          "description": "assessment is the assessment of the control plane update process. Valid values are: Unknown, Progressing, Completed, Degraded",
+          "description": "assessment is a brief summary assessment of the control plane update process. This value is human-oriented, and while it looks like a state/phase enum, it is not meant to be used as such. Assessment is meant as human-oriented brief summary matching the state expressed in conditions (taking into account various relations between them, like ordering or precedence), intended to be directly used in UIs and reports. For machine-oriented conditional behavior depending on the state, the conditions should be used instead.\n\nThe known values are: Unknown, Progressing, Completed, Degraded. The API is not restricted to these values, and valid values can be even brief phrases, up to 64 characters long.",
           "type": "string",
           "default": ""
         },
         "completedAt": {
-          "description": "completedAt is the time when the update completed",
+          "description": "completedAt is the time when the update completed. This field is only set when the update is completed.",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
-        "completion": {
-          "description": "completion is a percentage of the update completion (0-100)",
+        "completionPercent": {
+          "description": "completionPercent conveys the update completion (0-100). When there is no update in progress, the ClusterVersion Progress Insight represents the last update (or installation, which is considered to be an update to the initial version) that is by definition completed, and therefore the completionPercent is 100.",
           "type": "integer",
           "format": "int32",
           "default": 0
@@ -38196,20 +38190,20 @@
           "x-kubernetes-patch-strategy": "merge"
         },
         "estimatedCompletedAt": {
-          "description": "estimatedCompletedAt is the estimated time when the update will complete",
+          "description": "estimatedCompletedAt is the estimated time when the update will complete, if such estimate is available. When there is no update in progress, this field is either not set at all, or its value is the time when the last update was expected to complete.",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
-        "resource": {
-          "description": "resource is the ClusterVersion resource that represents the control plane",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.ResourceRef"
+        "name": {
+          "description": "name is equal to the name of the corresponding clusterversions.config.openshift.io resource, typically 'version'",
+          "type": "string",
+          "default": ""
         },
         "startedAt": {
-          "description": "startedAt is the time when the update started",
+          "description": "startedAt is the time when the update started. When there is no update in progress, the Cluster Version Progress Insight represents the last update (or installation, which is considered to be an update to the initial version) that is by definition completed, and this field represents the time when that update was initiated.",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "versions": {
-          "description": "versions contains the original and target versions involved in the update",
+          "description": "versions contains the original and target versions involved in the update, either the ongoing one or the last update completed.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.ControlPlaneUpdateVersions"
         }
@@ -38219,17 +38213,15 @@
       "description": "ControlPlaneUpdateVersions contains the original and target versions of the upgrade",
       "type": "object",
       "required": [
-        "previous",
         "target"
       ],
       "properties": {
         "previous": {
-          "description": "previous is the version of the control plane before the update. When the cluster is being installed for the first time, the version will have a placeholder value '<none>' and carry 'Installation' metadata",
-          "default": {},
+          "description": "previous is the desired version of the control plane the before the update, regardless of completion. When empty, it means the cluster was never updated yet, and the target version is the initial version of the cluster. When the current update was triggered in the state where the previous update was not fully completed, the version will carry 'Partial' metadata.",
           "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.Version"
         },
         "target": {
-          "description": "target is the version of the control plane after the update. It may never be '<none>' or have `Installation` metadata",
+          "description": "target is the version of the control plane after the update. If the cluster was never updated, the version will carry 'Installation' metadata.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.Version"
         }
@@ -38401,7 +38393,7 @@
       }
     },
     "com.github.openshift.api.update.v1alpha1.MachineConfigPoolProgressInsight": {
-      "description": "MachineConfigPoolProgressInsight provides summary information about an ongoing node pool update in Standalone clusters\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. MachineConfigPoolProgressInsight reports the state of a MachineConfigPool resource (which represents a pool of nodes update in standalone clusters), during a cluster update.",
+      "description": "MachineConfigPoolProgressInsight provides summary information about an ongoing node pool update in Standalone clusters\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
       "type": "object",
       "required": [
         "spec"
@@ -38468,19 +38460,18 @@
       "type": "object",
       "required": [
         "name",
-        "resource",
         "scopeType",
         "assessment",
-        "completion"
+        "completionPercent"
       ],
       "properties": {
         "assessment": {
-          "description": "assessment is the assessment of the machine config pool update process. Valid values are: Pending, Completed, Degraded, Excluded, Progressing",
+          "description": "assessment is a brief summary assessment of the pool update process. This value is human-oriented, and while it looks like a state/phase enum, it is not meant to be used as such. Assessment is meant as human-oriented brief summary matching the state expressed in conditions (taking into account various relations between them, like ordering or precedence), intended to be directly used in UIs and reports. For machine-oriented conditional behavior depending on the state, the conditions should be used instead.\n\nThe known values are: Pending, Completed, Degraded, Excluded, Progressing. The API is not restricted to these values, and valid values can be even brief phrases, up to 64 characters long.",
           "type": "string",
           "default": ""
         },
-        "completion": {
-          "description": "completion is a percentage of the update completion (0-100)",
+        "completionPercent": {
+          "description": "completionPercent is a percentage of the pool update completion (0-100)",
           "type": "integer",
           "format": "int32",
           "default": 0
@@ -38504,11 +38495,6 @@
           "type": "string",
           "default": ""
         },
-        "resource": {
-          "description": "resource is the MachineConfigPool resource that represents the pool",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.ResourceRef"
-        },
         "scopeType": {
           "description": "scopeType describes whether the pool is a control plane or a worker pool",
           "type": "string",
@@ -38531,7 +38517,7 @@
       }
     },
     "com.github.openshift.api.update.v1alpha1.NodeProgressInsight": {
-      "description": "NodeProgressInsight reports the state of a Node during the update\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. NodeProgressInsight reports the state of a Node during the update",
+      "description": "NodeProgressInsight reports the state of a Node during the update\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
       "type": "object",
       "required": [
         "spec"
@@ -38598,7 +38584,6 @@
       "type": "object",
       "required": [
         "name",
-        "resource",
         "poolResource",
         "scopeType"
       ],
@@ -38635,18 +38620,13 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.ResourceRef"
         },
-        "resource": {
-          "description": "resource is the Node resource that represents the node",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.update.v1alpha1.ResourceRef"
-        },
         "scopeType": {
           "description": "scopeType describes whether the node belongs to control plane or a worker pool",
           "type": "string",
           "default": ""
         },
         "version": {
-          "description": "version is the version of the node, when known",
+          "description": "version is the OCP semantic version the Node is currently running, when known. This field abstracts the internal cross-resource relations where OCP version is just one property of the MachineConfig that the Node happens to be reconciled to by the Machine Config Operator, because it matches the selectors on the MachineConfigPool resource tied to the MachineConfig. It should be considered and used as an inferred value, mostly suitable to be displayed in the UIs. It is not guaranteed to be present for all Nodes.",
           "type": "string"
         }
       }
@@ -38660,7 +38640,7 @@
       ],
       "properties": {
         "count": {
-          "description": "count is the number of nodes matching the criteria, between 0 and 1024",
+          "description": "count is the number of nodes matching the criteria, between 0 and 2000",
           "type": "integer",
           "format": "int32",
           "default": 0
@@ -38703,9 +38683,6 @@
     "com.github.openshift.api.update.v1alpha1.Version": {
       "description": "Version describes a version involved in an update, typically on one side of an update edge",
       "type": "object",
-      "required": [
-        "version"
-      ],
       "properties": {
         "metadata": {
           "description": "metadata is a list of metadata associated with the version. It is a list of key-value pairs. The value is optional and when not provided, the metadata item has boolean semantics (presence indicates true). For example, 'Partial' metadata on a previous version indicates that the previous update was never fully completed. Can contain at most 5 items.",
@@ -38722,9 +38699,8 @@
           "x-kubernetes-patch-strategy": "merge"
         },
         "version": {
-          "description": "version is a semantic version string, or a placeholder '<none>' for the special case where this is a \"previous\" version in a new installation, in which case the metadata must contain an item with key 'Installation'",
-          "type": "string",
-          "default": ""
+          "description": "version is a semantic version string",
+          "type": "string"
         }
       }
     },
@@ -38736,7 +38712,7 @@
       ],
       "properties": {
         "key": {
-          "description": "key is the name of this metadata value. Valid values are: Installation, Partial, Architecture",
+          "description": "key is the name of this metadata value. Valid values are:\n  Installation (boolean): indicates the target version is also initial version of the cluster\n  Partial (boolean): indicates the previous update was not fully completed\n  Architecture: a string that indicates the architecture of the payload image of the version involved in the upgrade, present only when relevant",
           "type": "string",
           "default": ""
         },

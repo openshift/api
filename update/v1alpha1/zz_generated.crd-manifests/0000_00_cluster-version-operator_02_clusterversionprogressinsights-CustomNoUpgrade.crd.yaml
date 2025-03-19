@@ -27,8 +27,6 @@ spec:
           ClusterVersionProgressInsight provides summary information about an ongoing cluster control plane update in Standalone clusters
 
           Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
-          ClusterVersionProgressInsight reports the state of a ClusterVersion resource (which represents a control plane
-          update in standalone clusters), during a cluster update.
         properties:
           apiVersion:
             description: |-
@@ -57,20 +55,28 @@ spec:
               update
             properties:
               assessment:
-                description: 'assessment is the assessment of the control plane update
-                  process. Valid values are: Unknown, Progressing, Completed, Degraded'
-                enum:
-                - Unknown
-                - Progressing
-                - Completed
-                - Degraded
+                description: |-
+                  assessment is a brief summary assessment of the control plane update process. This value is human-oriented, and
+                  while it looks like a state/phase enum, it is not meant to be used as such. Assessment is meant as human-oriented
+                  brief summary matching the state expressed in conditions (taking into account various relations between them, like
+                  ordering or precedence), intended to be directly used in UIs and reports. For machine-oriented conditional behavior
+                  depending on the state, the conditions should be used instead.
+
+                  The known values are: Unknown, Progressing, Completed, Degraded. The API is not restricted to these values, and
+                  valid values can be even brief phrases, up to 64 characters long.
+                maxLength: 64
+                minLength: 1
                 type: string
               completedAt:
-                description: completedAt is the time when the update completed
+                description: completedAt is the time when the update completed. This
+                  field is only set when the update is completed.
                 format: date-time
                 type: string
-              completion:
-                description: completion is a percentage of the update completion (0-100)
+              completionPercent:
+                description: |-
+                  completionPercent conveys the update completion (0-100). When there is no update in progress, the ClusterVersion
+                  Progress Insight represents the last update (or installation, which is considered to be an update to the initial
+                  version) that is by definition completed, and therefore the completionPercent is 100.
                 format: int32
                 maximum: 100
                 minimum: 0
@@ -134,72 +140,43 @@ spec:
                   - status
                   - type
                   type: object
-                maxItems: 10
+                maxItems: 5
                 type: array
                 x-kubernetes-list-map-keys:
                 - type
                 x-kubernetes-list-type: map
               estimatedCompletedAt:
-                description: estimatedCompletedAt is the estimated time when the update
-                  will complete
+                description: |-
+                  estimatedCompletedAt is the estimated time when the update will complete, if such estimate is available. When there
+                  is no update in progress, this field is either not set at all, or its value is the time when the last update was
+                  expected to complete.
                 format: date-time
                 type: string
-              resource:
-                description: resource is the ClusterVersion resource that represents
-                  the control plane
-                properties:
-                  group:
-                    description: group of the object being referenced, if any
-                    maxLength: 253
-                    type: string
-                    x-kubernetes-validations:
-                    - message: a lowercase RFC 1123 subdomain must consist of lower
-                        case alphanumeric characters, '-' or '.', and must start and
-                        end with an alphanumeric character.
-                      rule: '!format.dns1123Subdomain().validate(self).hasValue()'
-                  name:
-                    description: name of the object being referenced
-                    maxLength: 253
-                    type: string
-                    x-kubernetes-validations:
-                    - message: a lowercase RFC 1123 subdomain must consist of lower
-                        case alphanumeric characters, '-' or '.', and must start and
-                        end with an alphanumeric character.
-                      rule: '!format.dns1123Subdomain().validate(self).hasValue()'
-                  namespace:
-                    description: namespace of the object being referenced, if any
-                    maxLength: 253
-                    pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
-                    type: string
-                  resource:
-                    description: resource of object being referenced
-                    maxLength: 253
-                    type: string
-                    x-kubernetes-validations:
-                    - message: a lowercase RFC 1123 subdomain must consist of lower
-                        case alphanumeric characters, '-' or '.', and must start and
-                        end with an alphanumeric character.
-                      rule: '!format.dns1123Subdomain().validate(self).hasValue()'
-                required:
-                - name
-                - resource
-                type: object
-                x-kubernetes-validations:
-                - message: resource must be a clusterversions.config.openshift.io
-                    resource
-                  rule: self.group == 'config.openshift.io' && self.resource == 'clusterversions'
+              name:
+                description: name is equal to the name of the corresponding clusterversions.config.openshift.io
+                  resource, typically 'version'
+                maxLength: 64
+                minLength: 1
+                pattern: ^[a-z0-9-]+$
+                type: string
               startedAt:
-                description: startedAt is the time when the update started
+                description: |-
+                  startedAt is the time when the update started. When there is no update in progress, the Cluster Version
+                  Progress Insight represents the last update (or installation, which is considered to be an update to the initial version)
+                  that is by definition completed, and this field represents the time when that update was initiated.
                 format: date-time
                 type: string
               versions:
-                description: versions contains the original and target versions involved
-                  in the update
+                description: |-
+                  versions contains the original and target versions involved in the update, either the ongoing one or the last update
+                  completed.
                 properties:
                   previous:
                     description: |-
-                      previous is the version of the control plane before the update. When the cluster is being installed
-                      for the first time, the version will have a placeholder value '<none>' and carry 'Installation' metadata
+                      previous is the desired version of the control plane the before the update, regardless of completion. When empty,
+                      it means the cluster was never updated yet, and the target version is the initial version of the cluster. When the
+                      current update was triggered in the state where the previous update was not fully completed, the version will carry
+                      'Partial' metadata.
                     properties:
                       metadata:
                         description: |-
@@ -212,8 +189,11 @@ spec:
                             have boolean semantics (true when present, false when absent)
                           properties:
                             key:
-                              description: 'key is the name of this metadata value.
-                                Valid values are: Installation, Partial, Architecture'
+                              description: |-
+                                key is the name of this metadata value. Valid values are:
+                                  Installation (boolean): indicates the target version is also initial version of the cluster
+                                  Partial (boolean): indicates the previous update was not fully completed
+                                  Architecture: a string that indicates the architecture of the payload image of the version involved in the upgrade, present only when relevant
                               enum:
                               - Installation
                               - Partial
@@ -229,32 +209,26 @@ spec:
                           required:
                           - key
                           type: object
-                        maxItems: 5
+                        maxItems: 2
                         type: array
                         x-kubernetes-list-map-keys:
                         - key
                         x-kubernetes-list-type: map
                       version:
-                        description: |-
-                          version is a semantic version string, or a placeholder '<none>' for the special case where this
-                          is a "previous" version in a new installation, in which case the metadata must contain an item
-                          with key 'Installation'
+                        description: version is a semantic version string
                         maxLength: 64
-                        pattern: ^(<none>)|((?:0|[1-9]\d*)[.](?:0|[1-9]\d*)[.](?:0|[1-9]\d*)(?:-(?:(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:[.](?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?)$
+                        minLength: 5
+                        pattern: ^(?:0|[1-9]\d*)[.](?:0|[1-9]\d*)[.](?:0|[1-9]\d*)(?:-(?:(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:[.](?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?$
                         type: string
-                    required:
-                    - version
                     type: object
                     x-kubernetes-validations:
-                    - message: previous version must be '<none>' iff marked with Installation
-                        metadata
-                      rule: 'self.version == ''<none>'' ? (has(self.metadata) && self.metadata.exists(m,
-                        m.key == ''Installation'')) : !(has(self.metadata) && self.metadata.exists(m,
-                        m.key == ''Installation''))'
+                    - message: previous version cannot have 'Installation' metadata
+                      rule: '!has(self.metadata) || !self.metadata.exists(m, m.key
+                        == ''Installation'')'
                   target:
-                    description: target is the version of the control plane after
-                      the update. It may never be '<none>' or have `Installation`
-                      metadata
+                    description: |-
+                      target is the version of the control plane after the update. If the cluster was never updated, the version will carry
+                      'Installation' metadata.
                     properties:
                       metadata:
                         description: |-
@@ -267,8 +241,11 @@ spec:
                             have boolean semantics (true when present, false when absent)
                           properties:
                             key:
-                              description: 'key is the name of this metadata value.
-                                Valid values are: Installation, Partial, Architecture'
+                              description: |-
+                                key is the name of this metadata value. Valid values are:
+                                  Installation (boolean): indicates the target version is also initial version of the cluster
+                                  Partial (boolean): indicates the previous update was not fully completed
+                                  Architecture: a string that indicates the architecture of the payload image of the version involved in the upgrade, present only when relevant
                               enum:
                               - Installation
                               - Partial
@@ -284,41 +261,49 @@ spec:
                           required:
                           - key
                           type: object
-                        maxItems: 5
+                        maxItems: 2
                         type: array
                         x-kubernetes-list-map-keys:
                         - key
                         x-kubernetes-list-type: map
                       version:
-                        description: |-
-                          version is a semantic version string, or a placeholder '<none>' for the special case where this
-                          is a "previous" version in a new installation, in which case the metadata must contain an item
-                          with key 'Installation'
+                        description: version is a semantic version string
                         maxLength: 64
-                        pattern: ^(<none>)|((?:0|[1-9]\d*)[.](?:0|[1-9]\d*)[.](?:0|[1-9]\d*)(?:-(?:(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:[.](?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?)$
+                        minLength: 5
+                        pattern: ^(?:0|[1-9]\d*)[.](?:0|[1-9]\d*)[.](?:0|[1-9]\d*)(?:-(?:(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:[.](?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?$
                         type: string
-                    required:
-                    - version
                     type: object
                     x-kubernetes-validations:
-                    - message: target version must not be '<none>' or have Installation
-                        metadata
-                      rule: self.version != '<none>' && !(has(self.metadata) && self.metadata.exists(m,
-                        m.key == 'Installation'))
+                    - message: Target version must be set and not empty
+                      rule: has(self.version) && size(self.version) > 0
+                    - message: target version cannot have 'Partial' metadata
+                      rule: '!has(self.metadata) || !self.metadata.exists(m, m.key
+                        == ''Partial'')'
                 required:
-                - previous
                 - target
                 type: object
+                x-kubernetes-validations:
+                - message: target version must have 'Installation' metadata when previous
+                    version is empty
+                  rule: has(self.previous) || (has(self.target.metadata) && self.target.metadata.exists(m,
+                    m.key == 'Installation'))
+                - message: target version can only have 'Installation' metadata when
+                    previous version is empty
+                  rule: '!(has(self.previous) && has(self.target.metadata) && self.target.metadata.exists(m,
+                    m.key == ''Installation''))'
             required:
             - assessment
-            - completion
-            - resource
+            - completionPercent
+            - name
             - startedAt
             - versions
             type: object
         required:
         - spec
         type: object
+        x-kubernetes-validations:
+        - message: When status is present, .status must match .metadata.name
+          rule: '!has(self.status) || self.status.name == self.metadata.name'
     served: true
     storage: true
     subresources:

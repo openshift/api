@@ -75,7 +75,11 @@ type NodeProgressInsightStatus struct {
 	// +required
 	Scope ScopeType `json:"scopeType"`
 
-	// version is the OCP version the Node is currently running
+	// version is the OCP semantic version the Node is currently running, when known. This field abstracts the internal
+	// cross-resource relations where OCP version is just one property of the MachineConfig that the Node happens to be
+	// reconciled to by the Machine Config Operator, because it matches the selectors on the MachineConfigPool resource
+	// tied to the MachineConfig. It should be considered and used as an inferred value, mostly suitable to be displayed
+	// in the UIs. It is not guaranteed to be present for all Nodes.
 	// +optional
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:MaxLength=64

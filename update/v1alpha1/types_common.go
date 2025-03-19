@@ -12,7 +12,7 @@ type ResourceRef struct {
 	// +required
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:MaxLength=253
-	// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
+	// +kubebuilder:validation:XValidation:rule="!format.dns1123label().validate(self).hasValue()",message="a lowercase RFC 1123 label must consist of lower case alphanumeric characters or '-', and must start and end with an alphanumeric character."
 	Resource string `json:"resource"`
 
 	// name of the object being referenced

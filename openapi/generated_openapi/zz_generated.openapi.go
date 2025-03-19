@@ -56851,12 +56851,12 @@ func schema_openshift_api_operator_v1alpha1_ExternalFramework(ref common.Referen
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "This is the GVK for an external framework. Controller runtime requires this in this format for api discoverability.",
+				Description: "This is the GVR for an external framework. Controller runtime requires this in this format for api discoverability.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"group": {
 						SchemaProps: spec.SchemaProps{
-							Description: "group of externalFramework must be a valid qualified name consisting of a lower-case alphanumeric string, and hyphens of at most 63 characters in length. The name must start and end with an alphanumeric character. The name may be optionally prefixed with a subdomain consisting of lower-case alphanumeric characters, hyphens and periods, of at most 253 characters in length. Each period separated segment within the subdomain must start and end with an alphanumeric character. The optional prefix and the name are separate by a forward slash (/).",
+							Description: "group of externalFramework group is the API group of the externalFramework. Must be a valid qualified name consisting of a lower-case alphanumeric string, and hyphens of at most 63 characters in length. The name must start and end with an alphanumeric character. The name may be optionally prefixed with a subdomain consisting of lower-case alphanumeric characters, hyphens and periods, of at most 253 characters in length. Each period separated segment within the subdomain must start and end with an alphanumeric character. The optional prefix and the name are separate by a forward slash (/).",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -56864,7 +56864,7 @@ func schema_openshift_api_operator_v1alpha1_ExternalFramework(ref common.Referen
 					},
 					"resource": {
 						SchemaProps: spec.SchemaProps{
-							Description: "resource of external framework must be a valid qualified name consisting of a lower-case alphanumeric string, and hyphens of at most 63 characters in length. The name must start and end with an alphanumeric character. The name may be optionally prefixed with a subdomain consisting of lower-case alphanumeric characters, hyphens and periods, of at most 253 characters in length. Each period separated segment within the subdomain must start and end with an alphanumeric character.",
+							Description: "resource is the Resource type of the external framework. Resource types are lowercase and plural (e.g. pods, deployments). Must be a valid qualified name consisting of a lower-case alphanumeric string and hyphens of at most 63 characters in length. The name must start and end with an alphanumeric character. The name may be optionally prefixed with a subdomain consisting of lower-case alphanumeric characters, hyphens and periods, of at most 253 characters in length. Each period separated segment within the subdomain must start and end with an alphanumeric character.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -56872,7 +56872,7 @@ func schema_openshift_api_operator_v1alpha1_ExternalFramework(ref common.Referen
 					},
 					"version": {
 						SchemaProps: spec.SchemaProps{
-							Description: "version is the version of the api",
+							Description: "version is the version of the api (e.g. v1alpha1, v1beta1, v1).",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -57132,7 +57132,7 @@ func schema_openshift_api_operator_v1alpha1_Integrations(ref common.ReferenceCal
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "frameworks are a list of names to be enabled. This is required and must have at least one element. The frameworks are jobs that Kueue will manage. KueueIntegrations is a list of frameworks that Kueue has support for. The allowed values are BatchJob;RayJob;RayCluster;JobSet;MPIJob;PaddleJob;PytorchJob;TFJob;XGBoostJob;AppWrappers;Pod;Deployment;StatefulSet;LeaderWorkerSet. kubebuilder:validation:UniqueItems=true",
+							Description: "frameworks are a unique list of names to be enabled. This is required and must have at least one element. The frameworks are jobs that Kueue will manage. Frameworks are a list of frameworks that Kueue has support for. The allowed values are BatchJob;RayJob;RayCluster;JobSet;MPIJob;PaddleJob;PytorchJob;TFJob;XGBoostJob;AppWrappers;Pod;Deployment;StatefulSet;LeaderWorkerSet.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -57171,7 +57171,7 @@ func schema_openshift_api_operator_v1alpha1_Integrations(ref common.ReferenceCal
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "labelKeysToCopy are a list of label keys that are copied once a workload is created these keys are persisted to the internal Kueue workload object. otherwise only the Kueue labels will be copied.",
+							Description: "labelKeysToCopy are a list of label keys that are copied once a workload is created. These keys are persisted to the internal Kueue workload object. If not specified, only the Kueue labels will be copied.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -57251,7 +57251,7 @@ func schema_openshift_api_operator_v1alpha1_KueueConfiguration(ref common.Refere
 				Properties: map[string]spec.Schema{
 					"integrations": {
 						SchemaProps: spec.SchemaProps{
-							Description: "integrations are the workloads Kueue will manage Kueue has integrations in the codebase and it also allows for external frameworks Kueue are an important part to specify for the API as Kueue will only manage the workloads that are specfied in this list. This is a required field.",
+							Description: "integrations is a required field that configures the Kueue's workload integrations. Kueue has both standard integrations, known as job frameworks, and external integrations known as external frameworks. Kueue will only manage workloads that correspond to the specified integrations.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/operator/v1alpha1.Integrations"),
 						},

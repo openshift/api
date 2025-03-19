@@ -405,7 +405,7 @@ func (in *Integrations) DeepCopyInto(out *Integrations) {
 	*out = *in
 	if in.Frameworks != nil {
 		in, out := &in.Frameworks, &out.Frameworks
-		*out = make([]KueueIntegrations, len(*in))
+		*out = make([]KueueIntegration, len(*in))
 		copy(*out, *in)
 	}
 	if in.ExternalFrameworks != nil {

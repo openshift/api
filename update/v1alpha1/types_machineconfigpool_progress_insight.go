@@ -156,6 +156,31 @@ const (
 	NodesDegraded NodeSummaryType = "Degraded"
 )
 
+// MachineConfigPoolProgressInsightConditionType are types of conditions that can be reported on MachineConfigPool progress insights
+type MachineConfigPoolProgressInsightConditionType string
+
+const (
+	// Updating condition communicates whether the MachineConfigPool is updating
+	MachineConfigPoolProgressInsightUpdating MachineConfigPoolProgressInsightConditionType = "Updating"
+	MachineConfigPoolProgressInsightHealthy  MachineConfigPoolProgressInsightConditionType = "Healthy"
+)
+
+// MachineConfigPoolUpdatingReason are well-known reasons for the Updating condition on MachineConfigPool progress insights
+type MachineConfigPoolUpdatingReason string
+
+const (
+	// Updated is used with Updating=False when all nodes in MachineConfigPool completed updating
+	MachineConfigPoolUpdatingReasonUpdated MachineConfigPoolUpdatingReason = "Updated"
+	// Pending is used with Updating=False when MachinePoolConfig is not updating yet but is expected to start updating eventually
+	MachineConfigPoolUpdatingReasonPending MachineConfigPoolUpdatingReason = "Pending"
+	// Paused is used with Updating=False when some nodes are running outdated versions but the MCP is paused
+	MachineConfigPoolUpdatingReasonPaused MachineConfigPoolUpdatingReason = "Paused"
+	// Progressing is used with Updating=True when the ClusterOperator is updating
+	MachineConfigPoolUpdatingReasonProgressing MachineConfigPoolUpdatingReason = "Progressing"
+	// CannotDetermine is used with Updating=Unknown
+	MachineConfigPoolUpdatingCannotDetermine MachineConfigPoolUpdatingReason = "CannotDetermine"
+)
+
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // MachineConfigPoolProgressInsightList is a list of MachineConfigPoolProgressInsightList resources

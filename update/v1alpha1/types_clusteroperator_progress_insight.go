@@ -53,11 +53,9 @@ type ClusterOperatorProgressInsightStatus struct {
 	// +patchStrategy=merge
 	// +patchMergeKey=type
 	// +optional
-	// +kubebuilder:validation:MinItems=2
-	// +kubebuilder:validation:MaxItems=2
-	// +kubebuilder:validation:XValidation:rule="self.all(c, c.type == 'Updating' || c.type == 'Healthy')",message="Cluster Operator Progress Insight conditions must have 'Updating' and 'Healthy' conditions"
-	// +kubebuilder:validation:XValidation:rule="self.all(c, c.type != 'Updating' || c.type == 'Healthy' && (c.reason == 'AsExpected' || c.reason == 'Unavailable' || c.reason == 'Degraded' || c.reason == 'CannotDetermine'))",message="Cluster Operator Progress Insight Healthy condition must have one of known reasons: 'AsExpected', 'Unavailable', 'Degraded', or 'CannotDetermine'"
-	// +kubebuilder:validation:XValidation:rule="self.all(c, c.type != 'Healthy' || c.type == 'Updating' && (c.reason == 'Updated' || c.reason == 'Pending' || c.reason == 'Progressing' || c.reason == 'CannotDetermine'))",message="Cluster Operator Progress Insight Updating condition must have one of known reasons: 'Updated', 'Pending', 'Progressing', or 'CannotDetermine'"
+	// +kubebuilder:validation:MaxItems=5
+	// +TODO: Add validations to enforce all known conditions are present (CEL+MinItems), once conditions stabilize
+	// +TODO: Add validations to enforce that only known Reasons are used in conditions, once conditions stabilize
 	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 
 	// name is the name of the operator, equal to the name of the corresponding clusteroperators.config.openshift.io resource

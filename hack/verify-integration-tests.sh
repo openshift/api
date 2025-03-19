@@ -5,7 +5,7 @@ set -o pipefail
 
 source "$(dirname "${BASH_SOURCE}")/lib/init.sh"
 
-# Build yq when it's not present and not overriden for a specific file.
+# Build yq when it's not present and not overridden for a specific file.
 if [ -z "${YQ:-}" ];then
   ${TOOLS_MAKE} yq
   YQ="${TOOLS_OUTPUT}/yq"

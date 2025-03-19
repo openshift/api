@@ -2,7 +2,7 @@
 
 source "$(dirname "${BASH_SOURCE}")/lib/init.sh"
 
-# Use PULL_BASE_REF for CI, otherwise use master unless overriden.
+# Use PULL_BASE_REF for CI, otherwise use master unless overridden.
 COMPARISON_BASE=${COMPARISON_BASE:-${PULL_BASE_SHA:-"master"}}
 
 # Use a trap so this gets printed at the end of the log even when we exit early due to an error/failure

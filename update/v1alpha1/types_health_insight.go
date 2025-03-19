@@ -75,7 +75,7 @@ type InsightScope struct {
 	// resources is a list of resources involved in the insight, of any group/kind. Maximum 16 resources can be listed.
 	// +optional
 	// +listType=atomic
-	// +kubebuilder:validation:MaxItems=16
+	// +kubebuilder:validation:MaxItems=128
 	Resources []ResourceRef `json:"resources,omitempty"`
 }
 

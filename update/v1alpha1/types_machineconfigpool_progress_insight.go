@@ -94,7 +94,7 @@ type MachineConfigPoolProgressInsightStatus struct {
 	// +patchStrategy=merge
 	// +patchMergeKey=type
 	// +optional
-	// +kubebuilder:validation:MaxItems=16
+	// +kubebuilder:validation:MaxItems=7
 	Summaries []NodeSummary `json:"summaries,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 }
 
@@ -126,10 +126,10 @@ type NodeSummary struct {
 	// +required
 	Type NodeSummaryType `json:"type"`
 
-	// count is the number of nodes matching the criteria, between 0 and 1024
+	// count is the number of nodes matching the criteria, between 0 and 2000
 	// +required
 	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=1024
+	// +kubebuilder:validation:Maximum=2000
 	Count int32 `json:"count"`
 }
 

@@ -75,7 +75,7 @@ type NodeProgressInsightStatus struct {
 	// +required
 	Scope ScopeType `json:"scopeType"`
 
-	// version is the version of the node, when known
+	// version is the OCP version the Node is currently running
 	// +optional
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:MaxLength=64

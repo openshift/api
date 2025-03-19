@@ -27,8 +27,6 @@ spec:
           MachineConfigPoolProgressInsight provides summary information about an ongoing node pool update in Standalone clusters
 
           Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
-          MachineConfigPoolProgressInsight reports the state of a MachineConfigPool resource (which represents a pool of nodes
-          update in standalone clusters), during a cluster update.
         properties:
           apiVersion:
             description: |-
@@ -57,18 +55,21 @@ spec:
               update
             properties:
               assessment:
-                description: 'assessment is the assessment of the machine config pool
-                  update process. Valid values are: Pending, Completed, Degraded,
-                  Excluded, Progressing'
-                enum:
-                - Pending
-                - Completed
-                - Degraded
-                - Excluded
-                - Progressing
+                description: |-
+                  assessment is a brief summary assessment of the pool update process. This value is human-oriented, and while it
+                  looks like a state/phase enum, it is not meant to be used as such. Assessment is meant as human-oriented brief
+                  summary matching the state expressed in conditions (taking into account various relations between them, like
+                  ordering or precedence), intended to be directly used in UIs and reports. For machine-oriented conditional behavior
+                  depending on the state, the conditions should be used instead.
+
+                  The known values are: Pending, Completed, Degraded, Excluded, Progressing. The API is not restricted to these
+                  values, and valid values can be even brief phrases, up to 64 characters long.
+                maxLength: 64
+                minLength: 1
                 type: string
-              completion:
-                description: completion is a percentage of the update completion (0-100)
+              completionPercent:
+                description: completionPercent is a percentage of the pool update
+                  completion (0-100)
                 format: int32
                 maximum: 100
                 minimum: 0
@@ -131,7 +132,7 @@ spec:
                   - status
                   - type
                   type: object
-                maxItems: 10
+                maxItems: 5
                 type: array
                 x-kubernetes-list-map-keys:
                 - type
@@ -142,51 +143,6 @@ spec:
                 minLength: 1
                 pattern: ^[a-z0-9-]+$
                 type: string
-              resource:
-                description: resource is the MachineConfigPool resource that represents
-                  the pool
-                properties:
-                  group:
-                    description: group of the object being referenced, if any
-                    maxLength: 253
-                    type: string
-                    x-kubernetes-validations:
-                    - message: a lowercase RFC 1123 subdomain must consist of lower
-                        case alphanumeric characters, '-' or '.', and must start and
-                        end with an alphanumeric character.
-                      rule: '!format.dns1123Subdomain().validate(self).hasValue()'
-                  name:
-                    description: name of the object being referenced
-                    maxLength: 253
-                    type: string
-                    x-kubernetes-validations:
-                    - message: a lowercase RFC 1123 subdomain must consist of lower
-                        case alphanumeric characters, '-' or '.', and must start and
-                        end with an alphanumeric character.
-                      rule: '!format.dns1123Subdomain().validate(self).hasValue()'
-                  namespace:
-                    description: namespace of the object being referenced, if any
-                    maxLength: 253
-                    pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
-                    type: string
-                  resource:
-                    description: resource of object being referenced
-                    maxLength: 253
-                    type: string
-                    x-kubernetes-validations:
-                    - message: a lowercase RFC 1123 subdomain must consist of lower
-                        case alphanumeric characters, '-' or '.', and must start and
-                        end with an alphanumeric character.
-                      rule: '!format.dns1123Subdomain().validate(self).hasValue()'
-                required:
-                - name
-                - resource
-                type: object
-                x-kubernetes-validations:
-                - message: resource must be a machineconfigpools.machineconfiguration.openshift.io
-                    resource
-                  rule: self.group == 'machineconfiguration.openshift.io' && self.resource
-                    == 'machineconfigpools'
               scopeType:
                 description: scopeType describes whether the pool is a control plane
                   or a worker pool
@@ -204,9 +160,9 @@ spec:
                   properties:
                     count:
                       description: count is the number of nodes matching the criteria,
-                        between 0 and 1024
+                        between 0 and 2000
                       format: int32
-                      maximum: 1024
+                      maximum: 2000
                       minimum: 0
                       type: integer
                     type:
@@ -226,24 +182,23 @@ spec:
                   - count
                   - type
                   type: object
-                maxItems: 16
+                maxItems: 7
                 type: array
                 x-kubernetes-list-map-keys:
                 - type
                 x-kubernetes-list-type: map
             required:
             - assessment
-            - completion
+            - completionPercent
             - name
-            - resource
             - scopeType
             type: object
-            x-kubernetes-validations:
-            - message: .name must match .resource.name
-              rule: self.name == self.resource.name
         required:
         - spec
         type: object
+        x-kubernetes-validations:
+        - message: When status is present, .status must match .metadata.name
+          rule: '!has(self.status) || self.status.name == self.metadata.name'
     served: true
     storage: true
     subresources:

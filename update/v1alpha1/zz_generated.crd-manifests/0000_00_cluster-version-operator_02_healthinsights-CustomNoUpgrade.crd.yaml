@@ -163,15 +163,15 @@ spec:
                           maxLength: 253
                           type: string
                           x-kubernetes-validations:
-                          - message: a lowercase RFC 1123 subdomain must consist of
-                              lower case alphanumeric characters, '-' or '.', and
-                              must start and end with an alphanumeric character.
-                            rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                          - message: a lowercase RFC 1123 label must consist of lower
+                              case alphanumeric characters or '-', and must start
+                              and end with an alphanumeric character.
+                            rule: '!format.dns1123Label().validate(self).hasValue()'
                       required:
                       - name
                       - resource
                       type: object
-                    maxItems: 16
+                    maxItems: 128
                     type: array
                     x-kubernetes-list-type: atomic
                   type:

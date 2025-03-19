@@ -43,7 +43,6 @@ type MachineConfigPoolProgressInsightSpec struct {
 
 // MachineConfigPoolProgressInsightStatus reports the state of a MachineConfigPool resource (which represents a pool of nodes
 // update in standalone clusters), during a cluster update.
-// +kubebuilder:validation:XValidation:rule="self.name == self.resource.name",message=".name must match .resource.name"
 type MachineConfigPoolProgressInsightStatus struct {
 	// conditions provide details about the machine config pool update. It contains at most 10 items. Known conditions are:
 	// - Updating: whether the pool is updating; When Updating=False, the reason field can be Pending, Updated or Excluded

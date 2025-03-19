@@ -142,22 +142,23 @@ type ControlPlaneUpdateVersions struct {
 	// current update was triggered in the state where the previous update was not fully completed, the version will carry
 	// 'Partial' metadata.
 	// +optional
+	// +kubebuilder:validation:XValidation:rule="!has(self.metadata) || !self.metadata.exists(m, m.key == 'Installation')",message="previous version cannot have 'Installation' metadata"
 	Previous *Version `json:"previous,omitempty"`
 
 	// target is the version of the control plane after the update. If the cluster was never updated, the version will carry
 	// 'Installation' metadata.
 	// +required
 	// +kubebuilder:validation:XValidation:rule="has(self.version) && size(self.version) > 0",message="Target version must be set and not empty"
+	// +kubebuilder:validation:XValidation:rule="!has(self.metadata) || !self.metadata.exists(m, m.key == 'Partial')",message="target version cannot have 'Partial' metadata"
 	Target Version `json:"target"`
 }
 
 // Version describes a version involved in an update, typically on one side of an update edge
 type Version struct {
-	// version is a semantic version string, or a placeholder '<none>' for the special case where this
-	// is a "previous" version in a new installation, in which case the metadata must contain an item
-	// with key 'Installation'
+	// version is a semantic version string
 	// +optional
 	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:MinLength=5
 	// +kubebuilder:validation:MaxLength=64
 	// +kubebuilder:validation:Pattern=`^(?:0|[1-9]\d*)[.](?:0|[1-9]\d*)[.](?:0|[1-9]\d*)(?:-(?:(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:[.](?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?$`
 	Version string `json:"version,omitempty"`

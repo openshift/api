@@ -19,6 +19,7 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // +openshift:enable:FeatureGate=UpgradeStatus
 // +kubebuilder:metadata:annotations="description=Provides information about a Cluster Operator update"
 // +kubebuilder:metadata:annotations="displayName=ClusterOperatorProgressInsights"
+// +kubebuilder:validation:XValidation:rule="self.metadata.name == self.status.name",message="Progress Insight .metadata.name must match .status.name"
 // ClusterOperatorProgressInsight reports the state of a Cluster Operator (an individual control plane component) during an update
 type ClusterOperatorProgressInsight struct {
 	metav1.TypeMeta `json:",inline"`

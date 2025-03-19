@@ -19,6 +19,7 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // +openshift:enable:FeatureGate=UpgradeStatus
 // +kubebuilder:metadata:annotations="description=Provides summary information about an ongoing cluster control plane update in Standalone clusters."
 // +kubebuilder:metadata:annotations="displayName=ClusterVersionProgressInsights"
+// +kubebuilder:validation:XValidation:rule="self.metadata.name == self.status.name",message="Progress Insight .metadata.name must match .status.name"
 // ClusterVersionProgressInsight reports the state of a ClusterVersion resource (which represents a control plane
 // update in standalone clusters), during a cluster update.
 type ClusterVersionProgressInsight struct {

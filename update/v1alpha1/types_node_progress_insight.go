@@ -19,7 +19,7 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // +openshift:enable:FeatureGate=UpgradeStatus
 // +kubebuilder:metadata:annotations="description=Reports the state of a Node during the update"
 // +kubebuilder:metadata:annotations="displayName=NodeProgressInsights"
-// +kubebuilder:validation:XValidation:rule="self.metadata.name == self.status.name",message="Progress Insight .metadata.name must match .status.name"
+// +kubebuilder:validation:XValidation:rule="!has(self.status) || (has(self.status) && self.metadata.name == self.status.name)",message="Progress Insight .metadata.name must match .status.name, when status is present"
 // NodeProgressInsight reports the state of a Node during the update
 type NodeProgressInsight struct {
 	metav1.TypeMeta `json:",inline"`
@@ -43,7 +43,6 @@ type NodeProgressInsightSpec struct {
 }
 
 // NodeProgressInsightStatus reports the state of a Node during the update
-// +kubebuilder:validation:XValidation:rule="self.name == self.resource.name",message=".name must match .resource.name"
 type NodeProgressInsightStatus struct {
 	// conditions provides details about the control plane update. Known conditions are:
 	// - Updating: whether the Node is updating; When Updating=False, the reason field can be Updated, Pending, or Paused. When Updating=True, the reason field can be Draining, Updating, or Rebooting

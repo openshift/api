@@ -26,13 +26,13 @@ To skip protobuf generation, set \$PROTO_OPTIONAL."
   exit 1
 fi
 
-# Build go-to-protobuf when it's not present and not overriden for a specific file.
+# Build go-to-protobuf when it's not present and not overridden for a specific file.
 if [ -z "${GO_TO_PROTOBUF:-}" ]; then
   ${TOOLS_MAKE} go-to-protobuf
   GO_TO_PROTOBUF="${TOOLS_OUTPUT}/go-to-protobuf"
 fi
 
-# Build protoc-gen-gogo when it's not present and not overriden for a specific file.
+# Build protoc-gen-gogo when it's not present and not overridden for a specific file.
 if [ -z "${PROTOC_GEN_GOGO:-}" ]; then
   ${TOOLS_MAKE} protoc-gen-gogo
   PROTOC_GEN_GOGO="${TOOLS_OUTPUT}/protoc-gen-gogo"

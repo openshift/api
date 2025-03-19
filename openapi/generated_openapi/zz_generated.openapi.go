@@ -56856,7 +56856,7 @@ func schema_openshift_api_operator_v1alpha1_ExternalFramework(ref common.Referen
 				Properties: map[string]spec.Schema{
 					"group": {
 						SchemaProps: spec.SchemaProps{
-							Description: "group of externalFramework group is the API group of the externalFramework. Must be a valid qualified name consisting of a lower-case alphanumeric string, and hyphens of at most 63 characters in length. The name must start and end with an alphanumeric character. The name may be optionally prefixed with a subdomain consisting of lower-case alphanumeric characters, hyphens and periods, of at most 253 characters in length. Each period separated segment within the subdomain must start and end with an alphanumeric character. The optional prefix and the name are separate by a forward slash (/).",
+							Description: "group is the API group of the externalFramework. Must be a valid qualified name consisting of a lower-case alphanumeric string, and hyphens of at most 63 characters in length. The name must start and end with an alphanumeric character. The name may be optionally prefixed with a subdomain consisting of lower-case alphanumeric characters, hyphens and periods, of at most 253 characters in length. Each period separated segment within the subdomain must start and end with an alphanumeric character. The optional prefix and the name are separate by a forward slash (/).",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -57123,7 +57123,8 @@ func schema_openshift_api_operator_v1alpha1_Integrations(ref common.ReferenceCal
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "This is the integrations for Kueue. Kueue uses these apis to determine which jobs will be managed by Kueue.",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"frameworks": {
 						VendorExtensible: spec.VendorExtensible{

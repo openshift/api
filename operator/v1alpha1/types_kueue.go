@@ -96,7 +96,6 @@ const (
 // Controller runtime requires this in this format
 // for api discoverability.
 type ExternalFramework struct {
-	// group of externalFramework
 	// group is the API group of the externalFramework.
 	// Must be a valid qualified name consisting of a lower-case alphanumeric string,
 	// and hyphens of at most 63 characters in length. The name must start and end with an alphanumeric character.
@@ -106,7 +105,7 @@ type ExternalFramework struct {
 	// The optional prefix and the name are separate by a forward slash (/).
 	// +kubebuilder:validation:MaxLength=253
 	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:XValidation:rule="self.size() == 0 || !format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
+	// +kubebuilder:validation:XValidation:rule="self.size() == 0 || !format.dns1123Label().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
 	// +required
 	Group string `json:"group"`
 	// resource is the Resource type of the external framework.
@@ -119,17 +118,20 @@ type ExternalFramework struct {
 	// Each period separated segment within the subdomain must start and end with an alphanumeric character.
 	// +kubebuilder:validation:MaxLength=256
 	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:XValidation:rule="self.size() == 0 || !format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
+	// +kubebuilder:validation:XValidation:rule="self.size() == 0 || !format.dns1123Label().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
 	// +required
 	Resource string `json:"resource"`
 	// version is the version of the api (e.g. v1alpha1, v1beta1, v1).
 	// +kubebuilder:validation:MaxLength=256
 	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:XValidation:rule="self.size() == 0 || !format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
+	// +kubebuilder:validation:XValidation:rule="self.size() == 0 || !format.dns1123Label().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
 	// +required
 	Version string `json:"version"`
 }
 
+// This is the integrations for Kueue.
+// Kueue uses these apis to determine
+// which jobs will be managed by Kueue.
 type Integrations struct {
 	// frameworks are a unique list of names to be enabled.
 	// This is required and must have at least one element.
@@ -170,6 +172,7 @@ type LabelKeys struct {
 	// Each period separated segment within the subdomain must start and end with an alphanumeric character.
 	// The optional prefix and the name are separate by a forward slash (/).
 	// +kubebuilder:validation:MaxLength=317
+	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:XValidation:rule="self.size() == 0 || !format.qualifiedName().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
 	// +optional
 	Key string `json:"key,omitempty"`

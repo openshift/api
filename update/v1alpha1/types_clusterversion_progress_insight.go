@@ -135,18 +135,19 @@ const (
 )
 
 // ControlPlaneUpdateVersions contains the original and target versions of the upgrade
+// +kubebuilder:validation:XValidation:rule="has(self.previous) || (has(self.target.metadata) && self.target.metadata.exists(m, m.key == 'Installation'))",message="Target version must have 'Installation' metadata when previous version is not"
 type ControlPlaneUpdateVersions struct {
-	// previous is the desired version of the control plane the before the update, regardless of completion. When
-	// the cluster is being installed for the first time, the version will have a placeholder value '<none>' and carry
-	// 'Installation' metadata. When the current update was triggered in the state where the previous update was not fully
-	// completed, the version will carry 'Partial' metadata.
-	// +required
-	// +kubebuilder:validation:XValidation:rule="self.version == '<none>' ? (has(self.metadata) && self.metadata.exists(m, m.key == 'Installation')) : !(has(self.metadata) && self.metadata.exists(m, m.key == 'Installation'))",message="previous version must be '<none>' iff marked with Installation metadata"
-	Previous Version `json:"previous"`
+	// previous is the desired version of the control plane the before the update, regardless of completion. When empty,
+	// it means the cluster was never updated yet, and the target version is the initial version of the cluster. When the
+	// current update was triggered in the state where the previous update was not fully completed, the version will carry
+	// 'Partial' metadata.
+	// +optional
+	Previous *Version `json:"previous,omitempty"`
 
-	// target is the version of the control plane after the update. It may never be '<none>' or have `Installation` metadata
+	// target is the version of the control plane after the update. If the cluster was never updated, the version will carry
+	// 'Installation' metadata.
 	// +required
-	// +kubebuilder:validation:XValidation:rule="self.version != '<none>' && !(has(self.metadata) && self.metadata.exists(m, m.key == 'Installation'))",message="target version must not be '<none>' or have Installation metadata"
+	// +kubebuilder:validation:XValidation:rule="has(self.version) && len(self.version) > 0",message="Target version must be set and not empty"
 	Target Version `json:"target"`
 }
 
@@ -155,11 +156,11 @@ type Version struct {
 	// version is a semantic version string, or a placeholder '<none>' for the special case where this
 	// is a "previous" version in a new installation, in which case the metadata must contain an item
 	// with key 'Installation'
-	// +required
+	// +optional
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:MaxLength=64
-	// +kubebuilder:validation:Pattern=`^(<none>)|((?:0|[1-9]\d*)[.](?:0|[1-9]\d*)[.](?:0|[1-9]\d*)(?:-(?:(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:[.](?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?)$`
-	Version string `json:"version"`
+	// +kubebuilder:validation:Pattern=`^(?:0|[1-9]\d*)[.](?:0|[1-9]\d*)[.](?:0|[1-9]\d*)(?:-(?:(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:[.](?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?$`
+	Version string `json:"version,omitempty"`
 
 	// metadata is a list of metadata associated with the version. It is a list of key-value pairs. The value is optional
 	// and when not provided, the metadata item has boolean semantics (presence indicates true). For example, 'Partial'
@@ -169,14 +170,17 @@ type Version struct {
 	// +patchStrategy=merge
 	// +patchMergeKey=key
 	// +optional
-	// +kubebuilder:validation:MaxItems=5
+	// +kubebuilder:validation:MaxItems=2
 	Metadata []VersionMetadata `json:"metadata,omitempty" patchStrategy:"merge" patchMergeKey:"key"`
 }
 
 // VersionMetadata is a key:value item assigned to version involved in the update. Value can be empty, then the metadata
 // have boolean semantics (true when present, false when absent)
 type VersionMetadata struct {
-	// key is the name of this metadata value. Valid values are: Installation, Partial, Architecture
+	// key is the name of this metadata value. Valid values are:
+	//   Installation (boolean): indicates the target version is also initial version of the cluster
+	//   Partial (boolean): indicates the previous update was not fully completed
+	//   Architecture: a string that indicates the architecture of the payload image of the version involved in the upgrade, present only when relevant
 	// +required
 	Key VersionMetadataKey `json:"key"`
 

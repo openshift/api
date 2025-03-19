@@ -17,6 +17,7 @@ import (
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=notstableconfigtypes,scope=Cluster
 // +openshift:enable:FeatureGate=Example
+// +kubebuilder:subresource:status
 type NotStableConfigType struct {
 	metav1.TypeMeta `json:",inline"`
 
@@ -42,11 +43,10 @@ type NotStableConfigTypeSpec struct {
 type NotStableConfigTypeStatus struct {
 	// Represents the observations of a foo's current state.
 	// Known .status.conditions.type are: "Available", "Progressing", and "Degraded"
-	// +patchMergeKey=type
-	// +patchStrategy=merge
 	// +listType=map
 	// +listMapKey=type
-	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,1,rep,name=conditions"`
+	// +optional
+	Conditions []metav1.Condition `json:"conditions,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

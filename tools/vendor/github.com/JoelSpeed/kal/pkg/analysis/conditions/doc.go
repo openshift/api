@@ -19,7 +19,7 @@ Where the tags and markers are incorrect, the linter will suggest fixes to impro
 Conditions are also idiomatically the first item in the struct, the linter will highlight when the conditions field is not the first field in the struct.
 If this is not a desired behaviour, set the linter config option `isFirstField` to `Ignore`.
 
-Protobuf tags are required for in-tree API types, but not for CRDs.
-When linting CRD based types, set the `useProtobuf` config option to `Ignore`.
+Protobuf tags and patch strategy are required for in-tree API types, but not for CRDs.
+When linting CRD based types, set the `useProtobuf` and `usePatchStrategy` config option to `Ignore` or `Forbid`.
 */
 package conditions

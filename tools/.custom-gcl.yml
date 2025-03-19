@@ -3,4 +3,4 @@ name: golangci-kal
 destination: ./bin
 plugins:
 - module: 'github.com/JoelSpeed/kal'
-  version: v0.0.0-20250121143106-304c215e474e
+  version:  v0.0.0-20250305092907-abd233a9fed8

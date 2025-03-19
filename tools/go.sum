@@ -40,8 +40,8 @@ github.com/Djarvur/go-err113 v0.0.0-20210108212216-aea10b59be24 h1:sHglBQTwgx+rW
 github.com/Djarvur/go-err113 v0.0.0-20210108212216-aea10b59be24/go.mod h1:4UJr5HIiMZrwgkSPdsjy2uOQExX/WEILpIrO9UPGuXs=
 github.com/GaijinEntertainment/go-exhaustruct/v3 v3.3.0 h1:/fTUt5vmbkAcMBt4YQiuC23cV0kEsN1MVMNqeOW43cU=
 github.com/GaijinEntertainment/go-exhaustruct/v3 v3.3.0/go.mod h1:ONJg5sxcbsdQQ4pOW8TGdTidT2TMAUy/2Xhr8mrYaao=
-github.com/JoelSpeed/kal v0.0.0-20250121143106-304c215e474e h1:H7jNmU1/bzAi4YFVpRPUzE3hzcrOCk1H6qJpLVCAPaI=
-github.com/JoelSpeed/kal v0.0.0-20250121143106-304c215e474e/go.mod h1:zptAqBcJGHljQfJR7oQXVKS/E6KVUFZDkE7OJDQeKOw=
+github.com/JoelSpeed/kal v0.0.0-20250305092907-abd233a9fed8 h1:VEL+oi/UfgMIXUw66Ou/TIpEnlsjl7Y1nxB7gEAamcc=
+github.com/JoelSpeed/kal v0.0.0-20250305092907-abd233a9fed8/go.mod h1:zptAqBcJGHljQfJR7oQXVKS/E6KVUFZDkE7OJDQeKOw=
 github.com/Masterminds/semver/v3 v3.3.0 h1:B8LGeaivUe71a5qox1ICM/JLl0NqZSW5CHyL+hmvYS0=
 github.com/Masterminds/semver/v3 v3.3.0/go.mod h1:4V+yj/TJE1HU9XfppCwVMZq3I84lprf4nC11bSS5beM=
 github.com/Microsoft/go-winio v0.5.2/go.mod h1:WpS1mjBmmwHBEWmogvA2mj8546UReBk4v8QkMxJ6pZY=
@@ -285,6 +285,8 @@ github.com/golangci/revgrep v0.5.3 h1:3tL7c1XBMtWHHqVpS5ChmiAAoe4PF/d5+ULzV9sLAz
 github.com/golangci/revgrep v0.5.3/go.mod h1:U4R/s9dlXZsg8uJmaR1GrloUr14D7qDl8gi2iPXJH8k=
 github.com/golangci/unconvert v0.0.0-20240309020433-c5143eacb3ed h1:IURFTjxeTfNFP0hTEi1YKjB/ub8zkpaOqFFMApi2EAs=
 github.com/golangci/unconvert v0.0.0-20240309020433-c5143eacb3ed/go.mod h1:XLXN8bNw4CGRPaqgl3bv/lhz7bsGPh4/xSaMTbo2vkQ=
+github.com/google/btree v1.0.1 h1:gK4Kx5IaGY9CD5sPJ36FHiBJ6ZXl0kilRiiCj+jdYp4=
+github.com/google/btree v1.0.1/go.mod h1:xXMiIv4Fb/0kKde4SpL7qlzvu5cMJDRkFDxJfI9uaxA=
 github.com/google/cel-go v0.22.0 h1:b3FJZxpiv1vTMo2/5RDUqAHPxkT8mmMfJIrq1llbf7g=
 github.com/google/cel-go v0.22.0/go.mod h1:BuznPXXfQDpXKWQ9sPW3TzlAJN5zzFe+i9tIs0yC4s8=
 github.com/google/gnostic-models v0.6.8 h1:yo/ABAfM5IMRsS1VnXjTBvUb61tFIHozhlYvRgGre9I=
@@ -475,8 +477,6 @@ github.com/openshift/controller-tools v0.12.1-0.20250218152928-be0dbe446d10 h1:s
 github.com/openshift/controller-tools v0.12.1-0.20250218152928-be0dbe446d10/go.mod h1:LkvYw1gDIjjhvamu3BGP9z4bgWbtOtvK7KNF3kw1Shg=
 github.com/openshift/crd-schema-checker v0.0.0-20241113192003-573763d3107a h1:gBheMF1vVwxfnuGHJ82f/nmUATdtewq60/yhbBqD4+M=
 github.com/openshift/crd-schema-checker v0.0.0-20241113192003-573763d3107a/go.mod h1:sTxJ4ZFW9r9fEdbW2v0yMRi6NcyTbx0fII4p83IQ+L8=
-github.com/openshift/kubernetes/staging/src/k8s.io/apiserver v0.0.0-20241125210059-e3abfef0b992 h1:UHSO67L/pCyCcqZphO4PiX638s6QrpJN8OBYMkFIeYE=
-github.com/openshift/kubernetes/staging/src/k8s.io/apiserver v0.0.0-20241125210059-e3abfef0b992/go.mod h1:Pe8Uicw828Quq+iQKnOG2MB0dZs1qFNcvnixRuMD/58=
 github.com/otiai10/copy v1.2.0/go.mod h1:rrF5dJ5F0t/EWSYODDu4j9/vEeYHMkc8jt0zJChqQWw=
 github.com/otiai10/copy v1.14.0 h1:dCI/t1iTdYGtkvCuBG2BgR6KZa83PTclw4U5n2wAllU=
 github.com/otiai10/copy v1.14.0/go.mod h1:ECfuL02W+/FkTWZWgQqXPWZgW9oeKCSQ5qVfSc4qc4w=
@@ -917,6 +917,8 @@ k8s.io/apiextensions-apiserver v0.32.2 h1:2YMk285jWMk2188V2AERy5yDwBYrjgWYggscgh
 k8s.io/apiextensions-apiserver v0.32.2/go.mod h1:GPwf8sph7YlJT3H6aKUWtd0E+oyShk/YHWQHf/OOgCA=
 k8s.io/apimachinery v0.32.2 h1:yoQBR9ZGkA6Rgmhbp/yuT9/g+4lxtsGYwW6dR6BDPLQ=
 k8s.io/apimachinery v0.32.2/go.mod h1:GpHVgxoKlTxClKcteaeuF1Ul/lDVb74KpZcxcmLDElE=
+k8s.io/apiserver v0.32.2 h1:WzyxAu4mvLkQxwD9hGa4ZfExo3yZZaYzoYvvVDlM6vw=
+k8s.io/apiserver v0.32.2/go.mod h1:PEwREHiHNU2oFdte7BjzA1ZyjWjuckORLIK/wLV5goM=
 k8s.io/client-go v0.32.2 h1:4dYCD4Nz+9RApM2b/3BtVvBHw54QjMFUl1OLcJG5yOA=
 k8s.io/client-go v0.32.2/go.mod h1:fpZ4oJXclZ3r2nDOv+Ux3XcJutfrwjKTCHz2H3sww94=
 k8s.io/code-generator v0.32.2 h1:CIvyPrLWP7cMgrqval2qYT839YAwCDeSvGfXgWSNpHQ=

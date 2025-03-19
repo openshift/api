@@ -10,7 +10,7 @@ notstableconfigtypes.example.openshift.io:
   FilenameOperatorOrdering: "01"
   FilenameRunLevel: "0000_50"
   GroupName: example.openshift.io
-  HasStatus: false
+  HasStatus: true
   KindName: NotStableConfigType
   Labels: {}
   PluralName: notstableconfigtypes

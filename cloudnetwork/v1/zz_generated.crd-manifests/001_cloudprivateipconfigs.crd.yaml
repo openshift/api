@@ -126,6 +126,9 @@ spec:
                   - type
                   type: object
                 type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
               node:
                 description: 'node is the node name, as specified by the Kubernetes
                   field: node.metadata.name'

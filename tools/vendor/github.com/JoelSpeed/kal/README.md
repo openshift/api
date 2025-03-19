@@ -151,13 +151,17 @@ Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge"
 
 Conditions are idiomatically the first field within the status struct, and the linter will highlight when the Conditions are not the first field.
 
+Protobuf tags and patch strategy are required for in-tree API types, but not for CRDs.
+When linting CRD based types, set the `useProtobuf` and `usePatchStrategy` config option to `Ignore` or `Forbid`.
+
 ### Configuration
 
 ```yaml
 lintersConfig:
   conditions:
     isFirstField: Warn | Ignore # The policy for the Conditions field being the first field. Defaults to `Warn`.
-    useProtobuf: SuggestFix | Warn | Ignore # The policy for the protobuf tag on the Conditions field. Defaults to `SuggestFix`.
+    useProtobuf: SuggestFix | Warn | Ignore | Forbid # The policy for the protobuf tag on the Conditions field. Defaults to `SuggestFix`.
+    usePatchStrategy: SuggestFix | Warn | Ignore | Forbid # The policy for the patchStrategy tag on the Conditions field. Defaults to `SuggestFix`.
 ```
 
 ### Fixes (via standalone binary only)
@@ -165,10 +169,15 @@ lintersConfig:
 The `conditions` linter can automatically fix the tags on the `Conditions` field.
 When they do not match the expected format, the linter will suggest to update the tags to match the expected format.
 
-For CRDs, protobuf tags are not expected. By setting the `useProtobuf` configuration to `Ignore`, the linter will not suggest to add the protobuf tag to the `Conditions` field tags.
+For CRDs, protobuf tags and patch strategy are not expected.
+By setting the `useProtobuf`/`usePatchStrategy` configuration to `Ignore`, the linter will not suggest to add the protobuf/patch strategy tag to the `Conditions` field tags.
+By setting the `useProtobuf`/`usePatchStrategy` configuration to `Forbid`, the linter will suggest to remove the protobuf/patch strategy tag from the `Conditions` field tags.
 
 The linter will also suggest to add missing markers.
 If any of the 5 markers in the example above are missing, the linter will suggest to add them directly above the field.
+
+When `usePatchStrategy` is set to `Ignore`, the linter will not suggest to add the `patchStrategy` and `patchMergeKey` tags to the `Conditions` field markers.
+When `usePatchStrategy` is set to `Forbid`, the linter will suggest to remove the `patchStrategy` and `patchMergeKey` tags from the `Conditions` field markers.
 
 ## CommentStart
 
@@ -221,6 +230,14 @@ The `nobools` linter checks that fields in the API types do not contain a `bool`
 
 Booleans are limited and do not evolve well over time.
 It is recommended instead to create a string alias with meaningful values, as an enum.
+
+## NoFloats
+
+The `nofloats` linter checks that fields in the API types do not contain a `float32` or `float64` type.
+
+Floating-point values cannot be reliably round-tripped without changing and have varying precision and representation across languages and architectures.
+Their use should be avoided as much as possible.
+They should never be used in spec.
 
 ## Nophase
 

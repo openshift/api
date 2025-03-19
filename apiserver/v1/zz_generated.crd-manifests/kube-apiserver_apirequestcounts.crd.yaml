@@ -128,6 +128,9 @@ spec:
                   - type
                   type: object
                 type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
               currentHour:
                 description: |-
                   currentHour contains request history for the current hour. This is porcelain to make the API

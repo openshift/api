@@ -66,22 +66,7 @@ type NodeProgressInsightStatus struct {
 	// +kubebuilder:validation:MaxLength=253
 	Name string `json:"name"`
 
-	// resource is the Node resource that represents the node
-	//
-	// +Note: By OpenShift API conventions, in isolation this should be a specialized reference that refers just to
-	// +resource name (because the rest is implied by status insight type). However, because we use resource references in
-	// +many places and this API is intended to be consumed by clients, not produced, consistency seems to be more valuable
-	// +than type safety for producers.
-	// +required
-	// +kubebuilder:validation:XValidation:rule="!has(self.group) && self.resource == 'nodes'",message="resource must be a nodes.core.k8s.io resource"
-	Resource ResourceRef `json:"resource"`
-
 	// poolResource is the resource that represents the pool the node is a member of
-	//
-	// +Note: By OpenShift API conventions, in isolation this should probably be a specialized reference type that allows
-	// +only the "correct" resource types to be referenced (here, MachineConfigPool or NodePool). However, because we use
-	// +resource references in many places and this API is intended to be consumed by clients, not produced, consistency
-	// +seems to be more valuable than type safety for producers.
 	// +required
 	// +kubebuilder:validation:XValidation:rule="self.group == 'machineconfiguration.openshift.io' && self.resource == 'machineconfigpools'",message="resource must be a machineconfigpools.machineconfiguration.openshift.io resource"
 	PoolResource ResourceRef `json:"poolResource"`

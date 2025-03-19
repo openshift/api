@@ -19,7 +19,7 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // +openshift:enable:FeatureGate=UpgradeStatus
 // +kubebuilder:metadata:annotations="description=Provides summary information about an ongoing cluster control plane update in Standalone clusters."
 // +kubebuilder:metadata:annotations="displayName=ClusterVersionProgressInsights"
-// +kubebuilder:validation:XValidation:rule="self.metadata.name == self.status.name",message="Progress Insight .metadata.name must match .status.name"
+// +kubebuilder:validation:XValidation:rule="!has(self.status) || (has(self.status) && self.metadata.name == self.status.name)",message="Progress Insight .metadata.name must match .status.name, when status is present"
 // ClusterVersionProgressInsight reports the state of a ClusterVersion resource (which represents a control plane
 // update in standalone clusters), during a cluster update.
 type ClusterVersionProgressInsight struct {
@@ -75,6 +75,7 @@ type ClusterVersionProgressInsightStatus struct {
 	//
 	// The known values are: Unknown, Progressing, Completed, Degraded. The API is not restricted to these values, and
 	// valid values can be even brief phrases, up to 64 characters long.
+	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=64
 	// +required
@@ -135,7 +136,8 @@ const (
 )
 
 // ControlPlaneUpdateVersions contains the original and target versions of the upgrade
-// +kubebuilder:validation:XValidation:rule="has(self.previous) || (has(self.target.metadata) && self.target.metadata.exists(m, m.key == 'Installation'))",message="Target version must have 'Installation' metadata when previous version is not"
+// +kubebuilder:validation:XValidation:rule="has(self.previous) || (has(self.target.metadata) && self.target.metadata.exists(m, m.key == 'Installation'))",message="target version must have 'Installation' metadata when previous version is empty"
+// +kubebuilder:validation:XValidation:rule="!(has(self.previous) && has(self.target.metadata) && self.target.metadata.exists(m, m.key == 'Installation'))",message="target version can only have 'Installation' metadata when previous version is empty"
 type ControlPlaneUpdateVersions struct {
 	// previous is the desired version of the control plane the before the update, regardless of completion. When empty,
 	// it means the cluster was never updated yet, and the target version is the initial version of the cluster. When the
@@ -147,7 +149,7 @@ type ControlPlaneUpdateVersions struct {
 	// target is the version of the control plane after the update. If the cluster was never updated, the version will carry
 	// 'Installation' metadata.
 	// +required
-	// +kubebuilder:validation:XValidation:rule="has(self.version) && len(self.version) > 0",message="Target version must be set and not empty"
+	// +kubebuilder:validation:XValidation:rule="has(self.version) && size(self.version) > 0",message="Target version must be set and not empty"
 	Target Version `json:"target"`
 }
 

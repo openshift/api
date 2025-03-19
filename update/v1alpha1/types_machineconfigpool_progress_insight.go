@@ -19,7 +19,7 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // +openshift:enable:FeatureGate=UpgradeStatus
 // +kubebuilder:metadata:annotations="description=Provides summary information about an ongoing node pool update in Standalone clusters"
 // +kubebuilder:metadata:annotations="displayName=MachineConfigPoolProgressInsights"
-// +kubebuilder:validation:XValidation:rule="self.metadata.name == self.status.name",message="Progress Insight .metadata.name must match .status.name"
+// +kubebuilder:validation:XValidation:rule="!has(self.status) || (has(self.status) && self.metadata.name == self.status.name)",message="Progress Insight .metadata.name must match .status.name, when status is present"
 // MachineConfigPoolProgressInsight reports the state of a MachineConfigPool resource (which represents a pool of nodes
 // update in standalone clusters), during a cluster update.
 type MachineConfigPoolProgressInsight struct {
@@ -80,13 +80,16 @@ type MachineConfigPoolProgressInsightStatus struct {
 	// The known values are: Pending, Completed, Degraded, Excluded, Progressing. The API is not restricted to these
 	// values, and valid values can be even brief phrases, up to 64 characters long.
 	// +required
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=64
 	Assessment PoolAssessment `json:"assessment"`
 
-	// completion is a percentage of the update completion (0-100)
+	// completionPercent is a percentage of the pool update completion (0-100)
 	// +required
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=100
-	Completion int32 `json:"completion"`
+	Completion int32 `json:"completionPercent"`
 
 	// summaries is a list of counts of nodes matching certain criteria (e.g. updated, degraded, etc.). Maximum 16 items can be listed.
 	// +listType=map

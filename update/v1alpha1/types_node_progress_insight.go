@@ -19,6 +19,7 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // +openshift:enable:FeatureGate=UpgradeStatus
 // +kubebuilder:metadata:annotations="description=Reports the state of a Node during the update"
 // +kubebuilder:metadata:annotations="displayName=NodeProgressInsights"
+// +kubebuilder:validation:XValidation:rule="self.metadata.name == self.status.name",message="Progress Insight .metadata.name must match .status.name"
 // NodeProgressInsight reports the state of a Node during the update
 type NodeProgressInsight struct {
 	metav1.TypeMeta `json:",inline"`

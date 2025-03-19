@@ -19,6 +19,7 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // +openshift:enable:FeatureGate=UpgradeStatus
 // +kubebuilder:metadata:annotations="description=Provides summary information about an ongoing node pool update in Standalone clusters"
 // +kubebuilder:metadata:annotations="displayName=MachineConfigPoolProgressInsights"
+// +kubebuilder:validation:XValidation:rule="self.metadata.name == self.status.name",message="Progress Insight .metadata.name must match .status.name"
 // MachineConfigPoolProgressInsight reports the state of a MachineConfigPool resource (which represents a pool of nodes
 // update in standalone clusters), during a cluster update.
 type MachineConfigPoolProgressInsight struct {

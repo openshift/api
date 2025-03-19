@@ -208,8 +208,10 @@ const (
 type ClusterVersionProgressInsightConditionType string
 
 const (
-	// Updating condition communicates whether the ClusterVersion is updating
+	// Updating condition communicates whether the control plane, represented by this ClusterVersion, is updating
 	ClusterVersionProgressInsightUpdating ClusterVersionProgressInsightConditionType = "Updating"
+	// Healthy condition communicates whether the control plane update process is observed to be healthy
+	ClusterVersionProgressInsightHealthy ClusterVersionProgressInsightConditionType = "Healthy"
 )
 
 // ClusterVersionProgressInsightUpdatingReason are well-known reasons for the Updating condition on ClusterVersion progress insights
@@ -219,9 +221,9 @@ const (
 	// CannotDetermineUpdating is used with Updating=Unknown
 	ClusterVersionCannotDetermineUpdating ClusterVersionProgressInsightUpdatingReason = "CannotDetermineUpdating"
 	// ClusterVersionProgressing means that ClusterVersion is considered to be Updating=True because it has a Progressing=True condition
-	ClusterVersionProgressing ClusterVersionProgressInsightUpdatingReason = "ClusterVersionProgressing"
+	ClusterVersionProgressing ClusterVersionProgressInsightUpdatingReason = "Progressing"
 	// ClusterVersionNotProgressing means that ClusterVersion is considered to be Updating=False because it has a Progressing=False condition
-	ClusterVersionNotProgressing ClusterVersionProgressInsightUpdatingReason = "ClusterVersionNotProgressing"
+	ClusterVersionNotProgressing ClusterVersionProgressInsightUpdatingReason = "NotProgressing"
 )
 
 // ResourceRef is a reference to a kubernetes resource, typically involved in an insight

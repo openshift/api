@@ -67,14 +67,18 @@ type ClusterVersionProgressInsightStatus struct {
 	// +kubebuilder:validation:Pattern=`^[a-z0-9-]+$`
 	Name string `json:"name"`
 
-	// assessment is a brief summary assessment of the control plane update process. These values are human-oriented, and
-	// while they look like state enums, they are not meant to be used as such. They are meant as human-oriented brief
-	// summaries that can be directly used in UIs and reports. For machine-oriented conditional behavior depending on the
-	// state, the conditions should be used instead.
-	// The known values are: Unknown, Progressing, Completed, Degraded but the API is not restricted to these values, and
-	// valid values could be even more than one word.
+	// assessment is a brief summary assessment of the control plane update process. This value is human-oriented, and
+	// while it looks like a state/phase enum, it is not meant to be used as such. Assessment is meant as human-oriented
+	// brief summary matching the state expressed in conditions (taking into account various relations between them, like
+	// ordering or precedence), intended to be directly used in UIs and reports. For machine-oriented conditional behavior
+	// depending on the state, the conditions should be used instead.
+	//
+	// The known values are: Unknown, Progressing, Completed, Degraded. The API is not restricted to these values, and
+	// valid values can be even brief phrases, up to 64 characters long.
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=64
 	// +required
-	Assessment ControlPlaneAssessment `json:"assessment"`
+	Assessment ClusterVersionAssessment `json:"assessment"`
 
 	// versions contains the original and target versions involved in the update, either the ongoing one or the last update
 	// completed.
@@ -117,17 +121,17 @@ type ClusterVersionProgressInsightStatus struct {
 // summaries that can be directly used in UIs and reports. For machine-oriented conditional behavior depending on the
 // state, the conditions should be used instead. The known values are: Unknown, Progressing, Completed, Degraded but
 // the API is not restricted to these values, and valid values could be even more than one word.
-type ControlPlaneAssessment string
+type ClusterVersionAssessment string
 
 const (
 	// Unknown means the update status and health cannot be determined
-	ControlPlaneAssessmentUnknown ControlPlaneAssessment = "Unknown"
+	ClusterVersionAssessmentUnknown ClusterVersionAssessment = "Unknown"
 	// Progressing means the control plane is updating and no problems or slowness are detected
-	ControlPlaneAssessmentProgressing ControlPlaneAssessment = "Progressing"
+	ClusterVersionAssessmentProgressing ClusterVersionAssessment = "Progressing"
 	// Completed means the control plane successfully completed updating and no problems are detected
-	ControlPlaneAssessmentCompleted ControlPlaneAssessment = "Completed"
+	ClusterVersionAssessmentCompleted ClusterVersionAssessment = "Completed"
 	// Degraded means the process of updating the control plane suffers from an observed problem
-	ControlPlaneAssessmentDegraded ControlPlaneAssessment = "Degraded"
+	ClusterVersionAssessmentDegraded ClusterVersionAssessment = "Degraded"
 )
 
 // ControlPlaneUpdateVersions contains the original and target versions of the upgrade

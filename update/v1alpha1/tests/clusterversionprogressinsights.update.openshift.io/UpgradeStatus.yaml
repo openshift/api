@@ -22,21 +22,18 @@ tests:
     updated: |
       apiVersion: update.openshift.io/v1alpha1
       kind: ClusterVersionProgressInsight
+      metadata:
+        name: version
       spec: {}
       status:
-        resource:
-          group: config.openshift.io
-          resource: clusterversions
-          name: version
+        name: version
         assessment: Progressing
         versions:
-          previous:
-            version: "<none>"
-            metadata:
-            - key: Installation
           target:
             version: 4.18.0
-        completion: 42
+            metadata:
+            - key: Installation
+        completionPercent: 42
         startedAt: "2021-01-01T00:00:00Z"
         estimatedCompletedAt: "2021-01-01T02:00:00Z"
         conditions:
@@ -48,21 +45,18 @@ tests:
     expected: |
       apiVersion: update.openshift.io/v1alpha1
       kind: ClusterVersionProgressInsight
+      metadata:
+        name: version
       spec: {}
       status:
-        resource:
-          group: config.openshift.io
-          resource: clusterversions
-          name: version
+        name: version
         assessment: Progressing
         versions:
-          previous:
-            version: "<none>"
-            metadata:
-            - key: Installation
           target:
             version: 4.18.0
-        completion: 42
+            metadata:
+            - key: Installation
+        completionPercent: 42
         startedAt: "2021-01-01T00:00:00Z"
         estimatedCompletedAt: "2021-01-01T02:00:00Z"
         conditions:
@@ -71,7 +65,6 @@ tests:
           lastTransitionTime: "2021-01-01T00:00:00Z"
           reason: ClusterVersionProgressing
           message: "Installing version 4.18.0"
-
   - name: ClusterVersionProgressInsight representing update
     initial: |
       apiVersion: update.openshift.io/v1alpha1
@@ -80,12 +73,11 @@ tests:
     updated: |
       apiVersion: update.openshift.io/v1alpha1
       kind: ClusterVersionProgressInsight
+      metadata:
+        name: version
       spec: {}
       status:
-        resource:
-          group: config.openshift.io
-          resource: clusterversions
-          name: version
+        name: version
         assessment: Progressing
         versions:
           previous:
@@ -94,7 +86,7 @@ tests:
             - key: Partial
           target:
             version: 4.18.0
-        completion: 42
+        completionPercent: 42
         startedAt: "2021-01-01T00:00:00Z"
         estimatedCompletedAt: "2021-01-01T02:00:00Z"
         conditions:
@@ -106,12 +98,11 @@ tests:
     expected: |
       apiVersion: update.openshift.io/v1alpha1
       kind: ClusterVersionProgressInsight
+      metadata:
+        name: version
       spec: {}
       status:
-        resource:
-          group: config.openshift.io
-          resource: clusterversions
-          name: version
+        name: version
         assessment: Progressing
         versions:
           previous:
@@ -120,7 +111,7 @@ tests:
             - key: Partial
           target:
             version: 4.18.0
-        completion: 42
+        completionPercent: 42
         startedAt: "2021-01-01T00:00:00Z"
         estimatedCompletedAt: "2021-01-01T02:00:00Z"
         conditions:
@@ -129,8 +120,7 @@ tests:
           lastTransitionTime: "2021-01-01T00:00:00Z"
           reason: ClusterVersionProgressing
           message: "Updating from incomplete 4.17.0 to 4.18.0"
-
-  - name: Invalid installation-like versions in ClusterVersionProgressInsight (<none> without installation metadata)
+  - name: Previous version can only be empty if target version is marked with Installation metadata
     initial: |
       apiVersion: update.openshift.io/v1alpha1
       kind: ClusterVersionProgressInsight
@@ -138,19 +128,16 @@ tests:
     updated: |
       apiVersion: update.openshift.io/v1alpha1
       kind: ClusterVersionProgressInsight
+      metadata:
+        name: version
       spec: {}
       status:
-        resource:
-          group: config.openshift.io
-          resource: clusterversions
-          name: version
+        name: version
         assessment: Progressing
         versions:
-          previous:
-            version: <none>
           target:
             version: 4.18.0
-        completion: 42
+        completionPercent: 42
         startedAt: "2021-01-01T00:00:00Z"
         estimatedCompletedAt: "2021-01-01T02:00:00Z"
         conditions:
@@ -163,8 +150,8 @@ tests:
       apiVersion: update.openshift.io/v1alpha1
       kind: ClusterVersionProgressInsight
       spec: {}
-    expectedStatusError: "Invalid value: \"object\": previous version must be '<none>' iff marked with Installation metadata"
-  - name: Invalid installation-like versions in ClusterVersionProgressInsight (installation metadata without <none>)
+    expectedStatusError: "Invalid value: \"object\": target version must have 'Installation' metadata when previous version is empty"
+  - name: Target version can only have Installation metadata if previous version is empty
     initial: |
       apiVersion: update.openshift.io/v1alpha1
       kind: ClusterVersionProgressInsight
@@ -172,84 +159,11 @@ tests:
     updated: |
       apiVersion: update.openshift.io/v1alpha1
       kind: ClusterVersionProgressInsight
+      metadata:
+          name: version
       spec: {}
       status:
-        resource:
-          group: config.openshift.io
-          resource: clusterversions
-          name: version
-        assessment: Progressing
-        versions:
-          previous:
-            version: 4.17.0
-            metadata:
-            - key: Installation
-          target:
-            version: 4.18.0
-        completion: 42
-        startedAt: "2021-01-01T00:00:00Z"
-        estimatedCompletedAt: "2021-01-01T02:00:00Z"
-        conditions:
-        - type: Updating
-          status: "True"
-          lastTransitionTime: "2021-01-01T00:00:00Z"
-          reason: ClusterVersionProgressing
-          message: "Installing version 4.18.0"
-    expected: |
-      apiVersion: update.openshift.io/v1alpha1
-      kind: ClusterVersionProgressInsight
-      spec: {}
-    expectedStatusError: "Invalid value: \"object\": previous version must be '<none>' iff marked with Installation metadata"
-  - name: Invalid installation-like versions in ClusterVersionProgressInsight (none/installation in target)
-    initial: |
-      apiVersion: update.openshift.io/v1alpha1
-      kind: ClusterVersionProgressInsight
-      spec: {}
-    updated: |
-      apiVersion: update.openshift.io/v1alpha1
-      kind: ClusterVersionProgressInsight
-      spec: {}
-      status:
-        resource:
-          group: config.openshift.io
-          resource: clusterversions
-          name: version
-        assessment: Progressing
-        versions:
-          previous:
-            version: 4.17.0
-          target:
-            version: <none>
-            metadata:
-            - key: Installation
-        completion: 42
-        startedAt: "2021-01-01T00:00:00Z"
-        estimatedCompletedAt: "2021-01-01T02:00:00Z"
-        conditions:
-        - type: Updating
-          status: "True"
-          lastTransitionTime: "2021-01-01T00:00:00Z"
-          reason: ClusterVersionProgressing
-          message: "Installing version 4.18.0"
-    expected: |
-      apiVersion: update.openshift.io/v1alpha1
-      kind: ClusterVersionProgressInsight
-      spec: {}
-    expectedStatusError: "Invalid value: \"object\": target version must not be '<none>' or have Installation metadata"
-  - name: Invalid installation-like versions in ClusterVersionProgressInsight (installation metadata on target)
-    initial: |
-      apiVersion: update.openshift.io/v1alpha1
-      kind: ClusterVersionProgressInsight
-      spec: {}
-    updated: |
-      apiVersion: update.openshift.io/v1alpha1
-      kind: ClusterVersionProgressInsight
-      spec: {}
-      status:
-        resource:
-          group: config.openshift.io
-          resource: clusterversions
-          name: version
+        name: version
         assessment: Progressing
         versions:
           previous:
@@ -258,7 +172,7 @@ tests:
             version: 4.18.0
             metadata:
             - key: Installation
-        completion: 42
+        completionPercent: 42
         startedAt: "2021-01-01T00:00:00Z"
         estimatedCompletedAt: "2021-01-01T02:00:00Z"
         conditions:
@@ -271,9 +185,8 @@ tests:
       apiVersion: update.openshift.io/v1alpha1
       kind: ClusterVersionProgressInsight
       spec: {}
-    expectedStatusError: "Invalid value: \"object\": target version must not be '<none>' or have Installation metadata"
-
-  - name: Cannot refer to a resource that is not a ClusterVersion
+    expectedStatusError: "Invalid value: \"object\": target version can only have 'Installation' metadata when previous version is empty"
+  - name: Previous version cannot have Installation metadata
     initial: |
       apiVersion: update.openshift.io/v1alpha1
       kind: ClusterVersionProgressInsight
@@ -281,19 +194,55 @@ tests:
     updated: |
       apiVersion: update.openshift.io/v1alpha1
       kind: ClusterVersionProgressInsight
+      metadata:
+          name: version
       spec: {}
       status:
-        resource:
-          group: config.openshift.io
-          resource: clusteroperators
-          name: version
+        name: version
+        assessment: Progressing
+        versions:
+          previous:
+            version: 4.17.0
+            metadata:
+            - key: Installation
+          target:
+            version: 4.18.0
+        completionPercent: 42
+        startedAt: "2021-01-01T00:00:00Z"
+        estimatedCompletedAt: "2021-01-01T02:00:00Z"
+        conditions:
+        - type: Updating
+          status: "True"
+          lastTransitionTime: "2021-01-01T00:00:00Z"
+          reason: ClusterVersionProgressing
+          message: "Installing version 4.18.0"
+    expected: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: ClusterVersionProgressInsight
+      spec: {}
+    expectedStatusError: "Invalid value: \"object\": previous version cannot have 'Installation' metadata"
+  - name: Target version cannot have Partial metadata
+    initial: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: ClusterVersionProgressInsight
+      spec: {}
+    updated: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: ClusterVersionProgressInsight
+      metadata:
+        name: version
+      spec: {}
+      status:
+        name: version
         assessment: Progressing
         versions:
           previous:
             version: 4.17.0
           target:
             version: 4.18.0
-        completion: 42
+            metadata:
+            - key: Partial
+        completionPercent: 42
         startedAt: "2021-01-01T00:00:00Z"
         estimatedCompletedAt: "2021-01-01T02:00:00Z"
         conditions:
@@ -306,9 +255,8 @@ tests:
       apiVersion: update.openshift.io/v1alpha1
       kind: ClusterVersionProgressInsight
       spec: {}
-    expectedStatusError: "Invalid value: \"object\": resource must be a clusterversions.config.openshift.io resource"
-
-  - name: Version must be either a semver string or <none>
+    expectedStatusError: "Invalid value: \"object\": target version cannot have 'Partial' metadata"
+  - name: Version must be a semver string
     initial: |
       apiVersion: update.openshift.io/v1alpha1
       kind: ClusterVersionProgressInsight
@@ -316,19 +264,18 @@ tests:
     updated: |
       apiVersion: update.openshift.io/v1alpha1
       kind: ClusterVersionProgressInsight
+      metadata:
+        name: version
       spec: {}
       status:
-        resource:
-          group: config.openshift.io
-          resource: clusterversions
-          name: version
+        name: version
         assessment: Progressing
         versions:
           previous:
             version: not-a-semver
           target:
             version: 4.19.0-0.ci-2025-03-12-113627
-        completion: 42
+        completionPercent: 42
         startedAt: "2021-01-01T00:00:00Z"
         estimatedCompletedAt: "2021-01-01T02:00:00Z"
         conditions:
@@ -342,3 +289,36 @@ tests:
       kind: ClusterVersionProgressInsight
       spec: {}
     expectedStatusError: "Invalid value: \"not-a-semver\": versions.previous.version in body should match"
+#  - name: Name and .status.name must match
+#    initial: |
+#      apiVersion: update.openshift.io/v1alpha1
+#      kind: ClusterVersionProgressInsight
+#      spec: {}
+#    updated: |
+#      apiVersion: update.openshift.io/v1alpha1
+#      kind: ClusterVersionProgressInsight
+#      metadata:
+#          name: version
+#      spec: {}
+#      status:
+#        name: not-version
+#        assessment: Progressing
+#        versions:
+#          previous:
+#            version: 4.17.0
+#          target:
+#            version: 4.18.0
+#        completionPercent: 42
+#        startedAt: "2021-01-01T00:00:00Z"
+#        estimatedCompletedAt: "2021-01-01T02:00:00Z"
+#        conditions:
+#        - type: Updating
+#          status: "True"
+#          lastTransitionTime: "2021-01-01T00:00:00Z"
+#          reason: ClusterVersionProgressing
+#          message: "Installing version 4.18.0"
+#    expected: |
+#      apiVersion: update.openshift.io/v1alpha1
+#      kind: ClusterVersionProgressInsight
+#      spec: {}
+#    expectedStatusError: "TODO"

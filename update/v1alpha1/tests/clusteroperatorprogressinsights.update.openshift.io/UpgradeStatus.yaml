@@ -22,13 +22,11 @@ tests:
     updated: |
       apiVersion: update.openshift.io/v1alpha1
       kind: ClusterOperatorProgressInsight
+      metadata:
+        name: authentication
       spec: {}
       status:
         name: authentication
-        resource:
-          group: config.openshift.io
-          resource: clusteroperators
-          name: authentication
         conditions:
         - type: Updating
           status: "False"
@@ -43,13 +41,11 @@ tests:
     expected: |
       apiVersion: update.openshift.io/v1alpha1
       kind: ClusterOperatorProgressInsight
+      metadata:
+        name: authentication
       spec: {}
       status:
         name: authentication
-        resource:
-          group: config.openshift.io
-          resource: clusteroperators
-          name: authentication
         conditions:
         - type: Updating
           status: "False"
@@ -61,68 +57,33 @@ tests:
           lastTransitionTime: "2021-01-01T00:00:00Z"
           reason: Degraded
           message: "Authentication operator is not healthy"
-
-  - name: Cannot refer to a resource that is not a ClusterOperator
-    initial: |
-      apiVersion: update.openshift.io/v1alpha1
-      kind: ClusterOperatorProgressInsight
-      spec: {}
-    updated: |
-      apiVersion: update.openshift.io/v1alpha1
-      kind: ClusterOperatorProgressInsight
-      spec: {}
-      status:
-        name: authentication
-        resource:
-          group: config.openshift.io
-          resource: clusterversions
-          name: authentication
-        conditions:
-        - type: Updating
-          status: "False"
-          lastTransitionTime: "2021-01-01T00:00:00Z"
-          reason: Pending
-          message: "Installing version 4.18.0"
-        - type: Healthy
-          status: "False"
-          lastTransitionTime: "2021-01-01T00:00:00Z"
-          reason: Degraded
-          message: "Authentication operator is not healthy"
-    expected: |
-      apiVersion: update.openshift.io/v1alpha1
-      kind: ClusterOperatorProgressInsight
-      spec: {}
-    expectedStatusError: "Invalid value: \"object\": resource must be a clusteroperators.config.openshift.io resource"
-
-  - name: Name must match resource
-    initial: |
-      apiVersion: update.openshift.io/v1alpha1
-      kind: ClusterOperatorProgressInsight
-      spec: {}
-    updated: |
-      apiVersion: update.openshift.io/v1alpha1
-      kind: ClusterOperatorProgressInsight
-      spec: {}
-      status:
-        name: etcd
-        resource:
-          group: config.openshift.io
-          resource: clusteroperators
-          name: authentication
-        conditions:
-        - type: Updating
-          status: "False"
-          lastTransitionTime: "2021-01-01T00:00:00Z"
-          reason: Pending
-          message: "Installing version 4.18.0"
-        - type: Healthy
-          status: "False"
-          lastTransitionTime: "2021-01-01T00:00:00Z"
-          reason: Degraded
-          message: "Authentication operator is not healthy"
-    expected: |
-      apiVersion: update.openshift.io/v1alpha1
-      kind: ClusterOperatorProgressInsight
-      spec: {}
-    expectedStatusError: "Invalid value: \"object\": .name must match .resource.name"
+#  - name: Name and .status.name must match
+#    initial: |
+#      apiVersion: update.openshift.io/v1alpha1
+#      kind: ClusterOperatorProgressInsight
+#      spec: {}
+#    updated: |
+#      apiVersion: update.openshift.io/v1alpha1
+#      kind: ClusterOperatorProgressInsight
+#      metadata:
+#        name: etcd
+#      spec: {}
+#      status:
+#        name: not-etc
+#        conditions:
+#        - type: Updating
+#          status: "False"
+#          lastTransitionTime: "2021-01-01T00:00:00Z"
+#          reason: Pending
+#          message: "Installing version 4.18.0"
+#        - type: Healthy
+#          status: "False"
+#          lastTransitionTime: "2021-01-01T00:00:00Z"
+#          reason: Degraded
+#          message: "Authentication operator is not healthy"
+#    expected: |
+#      apiVersion: update.openshift.io/v1alpha1
+#      kind: ClusterOperatorProgressInsight
+#      spec: {}
+#    expectedStatusError: "TODO"
 

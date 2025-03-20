@@ -22,101 +22,20 @@ tests:
     updated: |
       apiVersion: update.openshift.io/v1alpha1
       kind: MachineConfigPoolProgressInsight
+      metadata:
+        name: worker
       spec: {}
       status:
+        name: worker
         conditions:
         - type: Updating
           status: "False"
           lastTransitionTime: "2021-01-01T00:00:00Z"
           reason: Updated
           message: "All nodes on version 4.18.0"
-        name: worker
-        resource:
-          group: machineconfiguration.openshift.io
-          resource: machineconfigpools
-          name: worker
         scopeType: WorkerPool
         assessment: Completed
-        completion: 100
-        summaries:
-        - type: Total
-          count: 3
-        - type: Available
-          count: 3
-        - type: Progressing
-          count: 0
-        - type: Outdated
-          count: 0
-        - type: Draining
-          count: 0
-        - type: Excluded
-          count: 0
-        - type: Degraded
-          count: 0
-
-    expected: |
-      apiVersion: update.openshift.io/v1alpha1
-      kind: MachineConfigPoolProgressInsight
-      spec: {}
-      status:
-        apiVersion: update.openshift.io/v1alpha1
-      kind: MachineConfigPoolProgressInsight
-      spec: {}
-      status:
-        conditions:
-        - type: Updating
-          status: "False"
-          lastTransitionTime: "2021-01-01T00:00:00Z"
-          reason: Updated
-          message: "All nodes on version 4.18.0"
-        name: worker
-        resource:
-          group: machineconfiguration.openshift.io
-          resource: machineconfigpools
-          name: worker
-        scopeType: WorkerPool
-        assessment: Completed
-        completion: 100
-        summaries:
-        - type: Total
-          count: 3
-        - type: Available
-          count: 3
-        - type: Progressing
-          count: 0
-        - type: Outdated
-          count: 0
-        - type: Draining
-          count: 0
-        - type: Excluded
-          count: 0
-        - type: Degraded
-          count: 0
-
-  - name: Cannot refer to a resource that is not a MachineConfigPool
-    initial: |
-      apiVersion: update.openshift.io/v1alpha1
-      kind: MachineConfigPoolProgressInsight
-      spec: {}
-    updated: |
-      apiVersion: update.openshift.io/v1alpha1
-      kind: MachineConfigPoolProgressInsight
-      spec: {}
-      status:
-        conditions:
-        - type: Updating
-          status: "False"
-          lastTransitionTime: "2021-01-01T00:00:00Z"
-          reason: Updated
-          message: "All nodes on version 4.18.0"
-        name: worker
-        resource:
-          group: machineconfiguration.openshift.io
-          resource: machineconfig
-          name: worker
-        scopeType: WorkerPool
-        assessment: Completed
-        completion: 100
+        completionPercent: 100
         summaries:
         - type: Total
           count: 3
@@ -136,32 +55,19 @@ tests:
       apiVersion: update.openshift.io/v1alpha1
       kind: MachineConfigPoolProgressInsight
       spec: {}
-    expectedStatusError: "Invalid value: \"object\": resource must be a machineconfigpools.machineconfiguration.openshift.io resource"
-
-  - name: Name must match resource
-    initial: |
-      apiVersion: update.openshift.io/v1alpha1
-      kind: MachineConfigPoolProgressInsight
-      spec: {}
-    updated: |
-      apiVersion: update.openshift.io/v1alpha1
-      kind: MachineConfigPoolProgressInsight
-      spec: {}
+      metadata:
+        name: worker
       status:
+        name: worker
         conditions:
         - type: Updating
           status: "False"
           lastTransitionTime: "2021-01-01T00:00:00Z"
           reason: Updated
           message: "All nodes on version 4.18.0"
-        name: master
-        resource:
-          group: machineconfiguration.openshift.io
-          resource: machineconfigpools
-          name: worker
         scopeType: WorkerPool
         assessment: Completed
-        completion: 100
+        completionPercent: 100
         summaries:
         - type: Total
           count: 3
@@ -177,10 +83,46 @@ tests:
           count: 0
         - type: Degraded
           count: 0
-
-    expected: |
-      apiVersion: update.openshift.io/v1alpha1
-      kind: MachineConfigPoolProgressInsight
-      spec: {}
-    expectedStatusError: "Invalid value: \"object\": .name must match .resource.name"
+#  - name: Name and .status.name must match
+#    initial: |
+#      apiVersion: update.openshift.io/v1alpha1
+#      kind: MachineConfigPoolProgressInsight
+#      spec: {}
+#    updated: |
+#      apiVersion: update.openshift.io/v1alpha1
+#      kind: MachineConfigPoolProgressInsight
+#      metadata:
+#        name: worker
+#      spec: {}
+#      status:
+#        name: master
+#        conditions:
+#        - type: Updating
+#          status: "False"
+#          lastTransitionTime: "2021-01-01T00:00:00Z"
+#          reason: Updated
+#          message: "All nodes on version 4.18.0"
+#        scopeType: WorkerPool
+#        assessment: Completed
+#        completionPercent: 100
+#        summaries:
+#        - type: Total
+#          count: 3
+#        - type: Available
+#          count: 3
+#        - type: Progressing
+#          count: 0
+#        - type: Outdated
+#          count: 0
+#        - type: Draining
+#          count: 0
+#        - type: Excluded
+#          count: 0
+#        - type: Degraded
+#          count: 0
+#    expected: |
+#      apiVersion: update.openshift.io/v1alpha1
+#      kind: MachineConfigPoolProgressInsight
+#      spec: {}
+#    expectedStatusError: "TODO"
 

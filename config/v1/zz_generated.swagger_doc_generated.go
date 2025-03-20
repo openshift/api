@@ -948,7 +948,8 @@ func (FeatureGate) SwaggerDoc() map[string]string {
 }
 
 var map_FeatureGateAttributes = map[string]string{
-	"name": "name is the name of the FeatureGate.",
+	"name":                             "name is the name of the FeatureGate.",
+	"requiredMinimumComponentVersions": "requiredMinimumComponentVersions is a list of component/version pairs that declares the is the lowest version the given component may be in this cluster. Currently, the only supported component is Kubelet, and setting a required minimum kubelet component will set the minimumKubeletVersion field in the nodes.config.openshift.io CRD.",
 }
 
 func (FeatureGateAttributes) SwaggerDoc() map[string]string {
@@ -956,9 +957,10 @@ func (FeatureGateAttributes) SwaggerDoc() map[string]string {
 }
 
 var map_FeatureGateDetails = map[string]string{
-	"version":  "version matches the version provided by the ClusterVersion and in the ClusterOperator.Status.Versions field.",
-	"enabled":  "enabled is a list of all feature gates that are enabled in the cluster for the named version.",
-	"disabled": "disabled is a list of all feature gates that are disabled in the cluster for the named version.",
+	"version":                          "version matches the version provided by the ClusterVersion and in the ClusterOperator.Status.Versions field.",
+	"enabled":                          "enabled is a list of all feature gates that are enabled in the cluster for the named version.",
+	"disabled":                         "disabled is a list of all feature gates that are disabled in the cluster for the named version.",
+	"renderedMinimumComponentVersions": "renderedMinimumComponentVersions are the component versions that the feature gate list of this status were rendered from. Currently, the only supported component is Kubelet, and setting a required minimum kubelet component will set the minimumKubeletVersion field in the nodes.config.openshift.io CRD.",
 }
 
 func (FeatureGateDetails) SwaggerDoc() map[string]string {
@@ -990,6 +992,16 @@ var map_FeatureGateStatus = map[string]string{
 
 func (FeatureGateStatus) SwaggerDoc() map[string]string {
 	return map_FeatureGateStatus
+}
+
+var map_MinimumComponentVersion = map[string]string{
+	"":          "MinimumComponentVersion is a pair of Component and Version that specifies the required minimum Version of the given Component to enable this feature.",
+	"component": "component is the entity whose version must be above a certain version.",
+	"version":   "version is the minimum version the given component may be in this cluster. version must be in semver format (x.y.z) and must consist only of numbers and periods (.).",
+}
+
+func (MinimumComponentVersion) SwaggerDoc() map[string]string {
+	return map_MinimumComponentVersion
 }
 
 var map_Image = map[string]string{
@@ -2143,7 +2155,8 @@ func (NodeSpec) SwaggerDoc() map[string]string {
 }
 
 var map_NodeStatus = map[string]string{
-	"conditions": "conditions contain the details and the current state of the nodes.config object",
+	"conditions":            "conditions contain the details and the current state of the nodes.config object",
+	"minimumKubeletVersion": "minimumKubeletVersion is the lowest version of a kubelet that can join the cluster. Specifically, the apiserver will deny most authorization requests of kubelets that are older than the specified version, only allowing the kubelet to get and update its node object, and perform subjectaccessreviews. This means any kubelet that attempts to join the cluster will not be able to run any assigned workloads, and will eventually be marked as not ready. Its max length is 8, so maximum version allowed is either \"9.999.99\" or \"99.99.99\". Since the kubelet reports the version of the kubernetes release, not Openshift, this field references the underlying kubernetes version this version of Openshift is based off of. In other words: if an admin wishes to ensure no nodes run an older version than Openshift 4.17, then they should set the minimumKubeletVersion to 1.30.0. When comparing versions, the kubelet's version is stripped of any contents outside of major.minor.patch version. Thus, a kubelet with version \"1.0.0-ec.0\" will be compatible with minimumKubeletVersion \"1.0.0\" or earlier. This status field is used to reflect the actualized minimum kubelet version, which can be interpreted from the FeatureGateStatus.RenderedMinimumComponentVersion when Component == Kubelet, after that FeatureGateStatus finishes rolling out to all kubelets.",
 }
 
 func (NodeStatus) SwaggerDoc() map[string]string {

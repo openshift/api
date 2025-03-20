@@ -18,6 +18,8 @@ tests:
     initial: |
       apiVersion: update.openshift.io/v1alpha1
       kind: NodeProgressInsight
+      metadata:
+        name: a-node
       spec: {}
     updated: |
       apiVersion: update.openshift.io/v1alpha1
@@ -67,6 +69,8 @@ tests:
     initial: |
       apiVersion: update.openshift.io/v1alpha1
       kind: NodeProgressInsight
+      metadata:
+        name: a-node
       spec: {}
     updated: |
       apiVersion: update.openshift.io/v1alpha1
@@ -99,6 +103,8 @@ tests:
     initial: |
       apiVersion: update.openshift.io/v1alpha1
       kind: NodeProgressInsight
+      metadata:
+        name: a-node
       spec: {}
     updated: |
       apiVersion: update.openshift.io/v1alpha1
@@ -127,35 +133,37 @@ tests:
       kind: NodeProgressInsight
       spec: {}
     expectedStatusError: "Invalid value: \"not-a-version\": version in body should match"
-#  - name: Name and .status.name must match
-#    initial: |
-#      apiVersion: update.openshift.io/v1alpha1
-#      kind: NodeProgressInsight
-#      spec: {}
-#    updated: |
-#      apiVersion: update.openshift.io/v1alpha1
-#      kind: NodeProgressInsight
-#      metadata:
-#        name: a-node
-#      spec: {}
-#      status:
-#        name: b-node
-#        conditions:
-#        - type: Updating
-#          status: "False"
-#          lastTransitionTime: "2021-07-01T00:00:00Z"
-#          reason: Pending
-#          message: "Waiting to update"
-#        poolResource:
-#          group: machineconfiguration.openshift.io
-#          resource: machineconfigpools
-#          name: worker
-#        scopeType: WorkerPool
-#        version: 4.20.0-rc.0
-#        estimatedToComplete: 42m
-#        message: Waiting to update
-#    expected: |
-#      apiVersion: update.openshift.io/v1alpha1
-#      kind: NodeProgressInsight
-#      spec: {}
-#    expectedStatusError: "TODO"
+  - name: Name and .status.name must match
+    initial: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: NodeProgressInsight
+      metadata:
+        name: a-node
+      spec: {}
+    updated: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: NodeProgressInsight
+      metadata:
+        name: a-node
+      spec: {}
+      status:
+        name: b-node
+        conditions:
+        - type: Updating
+          status: "False"
+          lastTransitionTime: "2021-07-01T00:00:00Z"
+          reason: Pending
+          message: "Waiting to update"
+        poolResource:
+          group: machineconfiguration.openshift.io
+          resource: machineconfigpools
+          name: worker
+        scopeType: WorkerPool
+        version: 4.20.0-rc.0
+        estimatedToComplete: 42m
+        message: Waiting to update
+    expected: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: NodeProgressInsight
+      spec: {}
+    expectedStatusError: "Invalid value: \"object\": When status is present, .status must match .metadata.name"

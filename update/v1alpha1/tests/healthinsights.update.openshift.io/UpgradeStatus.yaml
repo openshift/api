@@ -19,7 +19,6 @@ tests:
       apiVersion: update.openshift.io/v1alpha1
       kind: HealthInsight
       spec: {}
-
     updated: |
       apiVersion: update.openshift.io/v1alpha1
       kind: HealthInsight
@@ -46,7 +45,6 @@ tests:
           description: Long message about why this is bad
         remediation:
           reference: https://docs.openshift.com/pdbs-are-hard
-
     expected: |
       apiVersion: update.openshift.io/v1alpha1
       kind: HealthInsight
@@ -78,7 +76,6 @@ tests:
       apiVersion: update.openshift.io/v1alpha1
       kind: HealthInsight
       spec: {}
-
     updated: |
       apiVersion: update.openshift.io/v1alpha1
       kind: HealthInsight
@@ -105,7 +102,6 @@ tests:
           description: Long message about why this is bad
         remediation:
           reference: not-a-url
-
     expected: |
       apiVersion: update.openshift.io/v1alpha1
       kind: HealthInsight

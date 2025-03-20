@@ -30146,6 +30146,11 @@
         "forceRedeploymentReason"
       ],
       "properties": {
+        "configurationValidationPolicy": {
+          "description": "configurationValidationPolicy tells the operator how new machine configurations should be validated. Valid values are Strict and Relaxed: Strict: Rejects changes to MachineConfigs if fields that doesn't support to be updated are changed. Relaxed: Changes to protected fields are allowed and will be applied in new nodes joining the cluster.",
+          "type": "string",
+          "default": "Strict"
+        },
         "failedRevisionLimit": {
           "description": "failedRevisionLimit is the number of failed static pod installer revisions to keep on disk and in the api -1 = unlimited, 0 or unset = 5 (default)",
           "type": "integer",

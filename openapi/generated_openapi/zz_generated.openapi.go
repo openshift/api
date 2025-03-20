@@ -51713,6 +51713,14 @@ func schema_openshift_api_operator_v1_MachineConfigurationSpec(ref common.Refere
 							Ref:         ref("github.com/openshift/api/operator/v1.NodeDisruptionPolicyConfig"),
 						},
 					},
+					"configurationValidationPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "configurationValidationPolicy tells the operator how new machine configurations should be validated. Valid values are Strict and Relaxed: Strict: Rejects changes to MachineConfigs if fields that doesn't support to be updated are changed. Relaxed: Changes to protected fields are allowed and will be applied in new nodes joining the cluster.",
+							Default:     "Strict",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 				Required: []string{"managementState", "forceRedeploymentReason"},
 			},

@@ -257,6 +257,81 @@ func (RepositoryDigestMirrors) SwaggerDoc() map[string]string {
 	return map_RepositoryDigestMirrors
 }
 
+var map_ExternalFramework = map[string]string{
+	"":         "This is the GVR for an external framework. Controller runtime requires this in this format for api discoverability.",
+	"group":    "group is the API group of the externalFramework. Must be a valid DNS 1123 subdomain consisting of of lower-case alphanumeric characters, hyphens and periods, of at most 253 characters in length. Each period separated segment within the subdomain must start and end with an alphanumeric character.",
+	"resource": "resource is the Resource type of the external framework. Resource types are lowercase and plural (e.g. pods, deployments). Must be a valid DNS 1123 label consisting of a lower-case alphanumeric string and hyphens of at most 63 characters in length. The value must start and end with an alphanumeric character.",
+	"version":  "version is the version of the api (e.g. v1alpha1, v1beta1, v1). Must be a valid DNS 1035 label consisting of a lower-case alphanumeric string and hyphens of at most 63 characters in length. The value must start with an alphabetic character and end with an alphanumeric character.",
+}
+
+func (ExternalFramework) SwaggerDoc() map[string]string {
+	return map_ExternalFramework
+}
+
+var map_Integrations = map[string]string{
+	"":                   "This is the integrations for Kueue. Kueue uses these apis to determine which jobs will be managed by Kueue.",
+	"frameworks":         "frameworks are a unique list of names to be enabled. This is required and must have at least one element. Each framework represents a type of job that Kueue will manage. Frameworks are a list of frameworks that Kueue has support for. The allowed values are BatchJob, RayJob, RayCluster, JobSet, MPIJob, PaddleJob, PytorchJob, TFJob, XGBoostJob, AppWrapper, Pod, Deployment, StatefulSet and LeaderWorkerSet.",
+	"externalFrameworks": "externalFrameworks are a list of GroupVersionResources that are managed for Kueue by external controllers. These are optional and should only be used if you have an external controller that integrates with Kueue.",
+	"labelKeysToCopy":    "labelKeysToCopy are a list of label keys that are copied once a workload is created. These keys are persisted to the internal Kueue workload object. If not specified, only the Kueue labels will be copied.",
+}
+
+func (Integrations) SwaggerDoc() map[string]string {
+	return map_Integrations
+}
+
+var map_Kueue = map[string]string{
+	"":         "Kueue is the CRD to represent the Kueue operator This CRD defines the configuration that the Kueue Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"metadata": "metadata for kueue",
+	"spec":     "spec holds user settable values for configuration",
+	"status":   "status holds observed values from the cluster. They may not be overridden.",
+}
+
+func (Kueue) SwaggerDoc() map[string]string {
+	return map_Kueue
+}
+
+var map_KueueConfiguration = map[string]string{
+	"integrations": "integrations is a required field that configures the Kueue's workload integrations. Kueue has both standard integrations, known as job frameworks, and external integrations known as external frameworks. Kueue will only manage workloads that correspond to the specified integrations.",
+}
+
+func (KueueConfiguration) SwaggerDoc() map[string]string {
+	return map_KueueConfiguration
+}
+
+var map_KueueList = map[string]string{
+	"":         "KueueList contains a list of Kueue\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"metadata": "metadata for the list",
+	"items":    "items is a slice of Kueue this is a cluster scoped resource and there can only be 1 Kueue",
+}
+
+func (KueueList) SwaggerDoc() map[string]string {
+	return map_KueueList
+}
+
+var map_KueueOperandSpec = map[string]string{
+	"config": "config is the desired configuration for the Kueue operator.",
+}
+
+func (KueueOperandSpec) SwaggerDoc() map[string]string {
+	return map_KueueOperandSpec
+}
+
+var map_KueueStatus = map[string]string{
+	"": "KueueStatus defines the observed state of Kueue",
+}
+
+func (KueueStatus) SwaggerDoc() map[string]string {
+	return map_KueueStatus
+}
+
+var map_LabelKeys = map[string]string{
+	"key": "key is the label key A label key must be a valid qualified name consisting of a lower-case alphanumeric string, and hyphens of at most 63 characters in length. The name must start and end with an alphanumeric character. The name may be optionally prefixed with a subdomain consisting of lower-case alphanumeric characters, hyphens and periods, of at most 253 characters in length. Each period separated segment within the subdomain must start and end with an alphanumeric character. The optional prefix and the name are separate by a forward slash (/).",
+}
+
+func (LabelKeys) SwaggerDoc() map[string]string {
+	return map_LabelKeys
+}
+
 var map_OLM = map[string]string{
 	"":         "OLM provides information to configure an operator to manage the OLM controllers\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 	"metadata": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",

@@ -66,6 +66,27 @@ imagecontentsourcepolicies.operator.openshift.io:
   TopLevelFeatureGates: []
   Version: v1alpha1
 
+kueue.operator.openshift.io:
+  Annotations: {}
+  ApprovedPRNumber: ""
+  CRDName: kueue.operator.openshift.io
+  Capability: ""
+  Category: ""
+  FeatureGates: []
+  FilenameOperatorName: ""
+  FilenameOperatorOrdering: ""
+  FilenameRunLevel: ""
+  GroupName: operator.openshift.io
+  HasStatus: true
+  KindName: Kueue
+  Labels: {}
+  PluralName: kueue
+  PrinterColumns: []
+  Scope: Cluster
+  ShortNames: null
+  TopLevelFeatureGates: []
+  Version: v1alpha1
+
 olms.operator.openshift.io:
   Annotations:
     include.release.openshift.io/ibm-cloud-managed: "false"

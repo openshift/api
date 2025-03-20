@@ -12,8 +12,8 @@ package v1alpha2
 
 // AUTO-GENERATED FUNCTIONS START HERE
 var map_Custom = map[string]string{
-	"":          "custom provides the custom configuration of gatherers",
-	"gatherers": "gatherers is a required list of gatherers configurations that can be used to enable or disable specific gatherers. It may not exceed 100 items and each gatherer can be present only once. It is possible to disable an entire set of gatherers while allowing a specific function within that set. The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
+	"":        "custom provides the custom configuration of gatherers",
+	"configs": "configs is a required list of gatherers configurations that can be used to enable or disable specific gatherers. It may not exceed 100 items and each gatherer can be present only once. It is possible to disable an entire set of gatherers while allowing a specific function within that set. The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
 }
 
 func (Custom) SwaggerDoc() map[string]string {
@@ -22,9 +22,8 @@ func (Custom) SwaggerDoc() map[string]string {
 
 var map_GatherConfig = map[string]string{
 	"":           "gatherConfig provides data gathering configuration options.",
-	"dataPolicy": "dataPolicy is an optional list of DataPolicyOptions that allows user to enable additional obfuscation of the Insights archive data. It may not exceed 2 items and must not contain duplicates. Valid values are ObfuscateNetworking and WorkloadNames. When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated. When set to WorkloadNames the data from Deployment Validation Operator is obfuscated. When omitted no obfuscation is applied.",
-	"mode":       "mode is a required field that specifies the mode for gatherers. Allowed values are Enabled, Disabled, and Custom. When set to Enabled, all gatherers wil run and gather data. When set to Disabled, all gatherers will be disabled and no data will be gathered. When set to Custom, the custom configuration from the custom field will be applied.",
-	"custom":     "custom provides gathering configuration. It is required when mode is Custom, and forbidden otherwise. Custom configuration allows user to disable only a subset of gatherers. Gatherers that are not explicitly disabled in custom configuration will run.",
+	"dataPolicy": "dataPolicy is an optional list of DataPolicyOptions that allows user to enable additional obfuscation of the Insights archive data. It may not exceed 2 items and must not contain duplicates. Valid values are ObfuscateNetworking and WorkloadNames. When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated. When set to WorkloadNames the data from the Deployment Validation Operator is obfuscated. When omitted no obfuscation is applied.",
+	"gatherers":  "gatherers is a required field that specifies the configuration of the gatherers.",
 	"storage":    "storage is an optional field that allows user to define persistent storage for gathering jobs to store the Insights data archive. If omitted, the gathering job will use ephemeral storage.",
 }
 
@@ -40,6 +39,15 @@ var map_GathererConfig = map[string]string{
 
 func (GathererConfig) SwaggerDoc() map[string]string {
 	return map_GathererConfig
+}
+
+var map_Gatherers = map[string]string{
+	"mode":   "mode is a required field that specifies the mode for gatherers. Allowed values are All, None, and Custom. When set to All, all gatherers wil run and gather data. When set to None, all gatherers will be disabled and no data will be gathered. When set to Custom, the custom configuration from the custom field will be applied.",
+	"custom": "custom provides gathering configuration. It is required when mode is Custom, and forbidden otherwise. Custom configuration allows user to disable only a subset of gatherers. Gatherers that are not explicitly disabled in custom configuration will run.",
+}
+
+func (Gatherers) SwaggerDoc() map[string]string {
+	return map_Gatherers
 }
 
 var map_InsightsDataGather = map[string]string{

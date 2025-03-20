@@ -39,21 +39,31 @@ type InsightsDataGatherSpec struct {
 type InsightsDataGatherStatus struct{}
 
 // gatherConfig provides data gathering configuration options.
-// +kubebuilder:validation:XValidation:rule="has(self.mode) && self.mode == 'Custom' ?  has(self.custom) : !has(self.custom)",message="custom is required when mode is Custom, and forbidden otherwise"
 type GatherConfig struct {
 	// dataPolicy is an optional list of DataPolicyOptions that allows user to enable additional obfuscation of the Insights archive data.
 	// It may not exceed 2 items and must not contain duplicates.
 	// Valid values are ObfuscateNetworking and WorkloadNames.
 	// When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated.
-	// When set to WorkloadNames the data from Deployment Validation Operator is obfuscated.
+	// When set to WorkloadNames the data from the Deployment Validation Operator is obfuscated.
 	// When omitted no obfuscation is applied.
 	// +kubebuilder:validation:MaxItems=2
-	// +kubebuilder:validation:XValidation:rule="self.all(x, self.exists_one(y, x == y))",message="DataPolicy must not contain duplicates"
+	// +kubebuilder:validation:XValidation:rule="self.all(x, self.exists_one(y, x == y))",message="dataPolicy items must be unique"
 	// +optional
-	DataPolicy []DataPolicyOption `json:"dataPolicy,omitempty"`
-	// mode is a required field that specifies the mode for gatherers. Allowed values are Enabled, Disabled, and Custom.
-	// When set to Enabled, all gatherers wil run and gather data.
-	// When set to Disabled, all gatherers will be disabled and no data will be gathered.
+	DataPolicy []DataPolicyOption `json:"dataPolicy"`
+	// gatherers is a required field that specifies the configuration of the gatherers.
+	// +required
+	Gatherers Gatherers `json:"gatherers"`
+	// storage is an optional field that allows user to define persistent storage for gathering jobs to store the Insights data archive.
+	// If omitted, the gathering job will use ephemeral storage.
+	// +optional
+	Storage *Storage `json:"storage,omitempty"`
+}
+
+// +kubebuilder:validation:XValidation:rule="has(self.mode) && self.mode == 'Custom' ?  has(self.custom) : !has(self.custom)",message="custom is required when mode is Custom, and forbidden otherwise"
+type Gatherers struct {
+	// mode is a required field that specifies the mode for gatherers. Allowed values are All, None, and Custom.
+	// When set to All, all gatherers wil run and gather data.
+	// When set to None, all gatherers will be disabled and no data will be gathered.
 	// When set to Custom, the custom configuration from the custom field will be applied.
 	// +required
 	Mode GatheringMode `json:"mode"`
@@ -62,16 +72,12 @@ type GatherConfig struct {
 	// Custom configuration allows user to disable only a subset of gatherers.
 	// Gatherers that are not explicitly disabled in custom configuration will run.
 	// +optional
-	Custom Custom `json:"custom,omitempty"`
-	// storage is an optional field that allows user to define persistent storage for gathering jobs to store the Insights data archive.
-	// If omitted, the gathering job will use ephemeral storage.
-	// +optional
-	Storage *Storage `json:"storage,omitempty"`
+	Custom *Custom `json:"custom,omitempty"`
 }
 
 // custom provides the custom configuration of gatherers
 type Custom struct {
-	// gatherers is a required list of gatherers configurations that can be used to enable or disable specific gatherers.
+	// configs is a required list of gatherers configurations that can be used to enable or disable specific gatherers.
 	// It may not exceed 100 items and each gatherer can be present only once.
 	// It is possible to disable an entire set of gatherers while allowing a specific function within that set.
 	// The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md.
@@ -81,18 +87,18 @@ type Custom struct {
 	// +listType=map
 	// +listMapKey=name
 	// +required
-	Gatherers []GathererConfig `json:"gatherers"`
+	Configs []GathererConfig `json:"configs"`
 }
 
 // gatheringMode defines the valid gathering modes.
-// +kubebuilder:validation:Enum=Enabled;Disabled;Custom
+// +kubebuilder:validation:Enum=All;None;Custom
 type GatheringMode string
 
 const (
 	// Enabled enables all gatherers
-	GatheringModeEnabled GatheringMode = "Enabled"
+	GatheringModeAll GatheringMode = "All"
 	// Disabled disables all gatherers
-	GatheringModeDisabled GatheringMode = "Disabled"
+	GatheringModeNone GatheringMode = "None"
 	// Custom applies the configuration from GatheringConfig.
 	GatheringModeCustom GatheringMode = "Custom"
 )

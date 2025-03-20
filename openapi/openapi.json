@@ -30211,6 +30211,11 @@
           "x-kubernetes-patch-merge-key": "type",
           "x-kubernetes-patch-strategy": "merge"
         },
+        "ignoreIrreconcilableConfig": {
+          "description": "ignoreIrreconcilableConfig tells the operator to ignore irreconciliable configuration changes in already existing nodes. New nodes joining the cluster will see the newest configuration.",
+          "type": "boolean",
+          "default": false
+        },
         "managedBootImagesStatus": {
           "description": "managedBootImagesStatus reflects what the latest cluster-validated boot image configuration is and will be used by Machine Config Controller while performing boot image updates.",
           "default": {},

@@ -708,6 +708,11 @@ spec:
                 x-kubernetes-list-map-keys:
                 - type
                 x-kubernetes-list-type: map
+              ignoreIrreconcilableConfig:
+                description: |-
+                  ignoreIrreconcilableConfig tells the operator to ignore irreconciliable configuration changes
+                  in already existing nodes. New nodes joining the cluster will see the newest configuration.
+                type: boolean
               managedBootImagesStatus:
                 description: |-
                   managedBootImagesStatus reflects what the latest cluster-validated boot image configuration is

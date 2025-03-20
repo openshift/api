@@ -51773,6 +51773,14 @@ func schema_openshift_api_operator_v1_MachineConfigurationStatus(ref common.Refe
 							Ref:         ref("github.com/openshift/api/operator/v1.ManagedBootImages"),
 						},
 					},
+					"ignoreIrreconcilableConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ignoreIrreconcilableConfig tells the operator to ignore irreconciliable configuration changes in already existing nodes. New nodes joining the cluster will see the newest configuration.",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 				},
 			},
 		},

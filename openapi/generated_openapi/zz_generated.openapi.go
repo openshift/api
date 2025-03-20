@@ -52417,6 +52417,13 @@ func schema_openshift_api_operator_v1_MachineConfigurationSpec(ref common.Refere
 							Ref:         ref("github.com/openshift/api/operator/v1.NodeDisruptionPolicyConfig"),
 						},
 					},
+					"machineConfigurationValidationPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "machineConfigurationValidationPolicy tells the operator how new machine configurations should be validated. Allowed values are Strict, Relaxed, and omitted. DefaultValidationPolicy represents a configuration validation mode chosen by the system. Currently, the default is StrictValidationPolicy. StrictValidationPolicy represents a configuration validation mode that enforces that changes to the rendered MCs are not altering fields outside the supported ones. More info about supported fields: https://docs.redhat.com/en/documentation/openshift_container_platform/latest/html/machine_configuration/machine-config-index#what-can-you-change-with-machine-configs RelaxedValidationPolicy represents a configuration validation mode that does not perform any validation over the fields that cannot be changed. Usage of this mode is discouraged.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 				Required: []string{"managementState", "forceRedeploymentReason"},
 			},

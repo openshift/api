@@ -1414,6 +1414,7 @@ var map_MachineConfigurationStatus = map[string]string{
 	"conditions":                 "conditions is a list of conditions and their status",
 	"nodeDisruptionPolicyStatus": "nodeDisruptionPolicyStatus status reflects what the latest cluster-validated policies are, and will be used by the Machine Config Daemon during future node updates.",
 	"managedBootImagesStatus":    "managedBootImagesStatus reflects what the latest cluster-validated boot image configuration is and will be used by Machine Config Controller while performing boot image updates.",
+	"ignoreIrreconcilableConfig": "ignoreIrreconcilableConfig tells the operator to ignore irreconciliable configuration changes in already existing nodes. New nodes joining the cluster will see the newest configuration.",
 }
 
 func (MachineConfigurationStatus) SwaggerDoc() map[string]string {

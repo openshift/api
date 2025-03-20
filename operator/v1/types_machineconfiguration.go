@@ -103,6 +103,11 @@ type MachineConfigurationStatus struct {
 	// +openshift:enable:FeatureGate=ManagedBootImages
 	// +optional
 	ManagedBootImagesStatus ManagedBootImages `json:"managedBootImagesStatus"`
+
+	// ignoreIrreconcilableConfig tells the operator to ignore irreconciliable configuration changes
+	// in already existing nodes. New nodes joining the cluster will see the newest configuration.
+	// +optional
+	IgnoreIrreconciliableConfig bool `json:"ignoreIrreconcilableConfig"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

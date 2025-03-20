@@ -97,12 +97,9 @@ const (
 // for api discoverability.
 type ExternalFramework struct {
 	// group is the API group of the externalFramework.
-	// Must be a valid qualified name consisting of a lower-case alphanumeric string,
-	// and hyphens of at most 63 characters in length. The name must start and end with an alphanumeric character.
-	// The name may be optionally prefixed with a subdomain consisting of lower-case alphanumeric characters,
+	// Must be a valid DNS 1123 subdomain consisting of of lower-case alphanumeric characters,
 	// hyphens and periods, of at most 253 characters in length.
 	// Each period separated segment within the subdomain must start and end with an alphanumeric character.
-	// The optional prefix and the name are separate by a forward slash (/).
 	// +kubebuilder:validation:MaxLength=253
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:XValidation:rule="self.size() == 0 || !format.dns1123Label().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
@@ -110,21 +107,21 @@ type ExternalFramework struct {
 	Group string `json:"group"`
 	// resource is the Resource type of the external framework.
 	// Resource types are lowercase and plural (e.g. pods, deployments).
-	// Must be a valid qualified name consisting of a lower-case alphanumeric string
+	// Must be a valid DNS 1123 label consisting of a lower-case alphanumeric string
 	// and hyphens of at most 63 characters in length.
-	// The name must start and end with an alphanumeric character.
-	// The name may be optionally prefixed with a subdomain consisting of lower-case alphanumeric characters,
-	// hyphens and periods, of at most 253 characters in length.
-	// Each period separated segment within the subdomain must start and end with an alphanumeric character.
-	// +kubebuilder:validation:MaxLength=256
+	// The value must start and end with an alphanumeric character.
+	// +kubebuilder:validation:MaxLength=63
 	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:XValidation:rule="self.size() == 0 || !format.dns1123Label().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
+	// +kubebuilder:validation:XValidation:rule="self.size() == 0 || !format.dns1123Label().validate(self).hasValue()",message="a lowercase RFC 1123 label must consist of lower case alphanumeric characters and '-', and must start and end with an alphanumeric character."
 	// +required
 	Resource string `json:"resource"`
 	// version is the version of the api (e.g. v1alpha1, v1beta1, v1).
-	// +kubebuilder:validation:MaxLength=256
+	// Must be a valid DNS 1035 label consisting of a lower-case alphanumeric string
+	// and hyphens of at most 63 characters in length.
+	// The value must start with an alphabetic character and end with an alphanumeric character.
+	// +kubebuilder:validation:MaxLength=63
 	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:XValidation:rule="self.size() == 0 || !format.dns1123Label().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
+	// +kubebuilder:validation:XValidation:rule="self.size() == 0 || !format.dns1035Label().validate(self).hasValue()",message="a lowercase RFC 1035 label must consist of lower case alphanumeric characters, '-' or '.', and must start with an alphabetic character and end with an alphanumeric character."
 	// +required
 	Version string `json:"version"`
 }
@@ -135,9 +132,9 @@ type ExternalFramework struct {
 type Integrations struct {
 	// frameworks are a unique list of names to be enabled.
 	// This is required and must have at least one element.
-	// The frameworks are jobs that Kueue will manage.
+	// Each framework represents a type of job that Kueue will manage.
 	// Frameworks are a list of frameworks that Kueue has support for.
-	// The allowed values are BatchJob;RayJob;RayCluster;JobSet;MPIJob;PaddleJob;PytorchJob;TFJob;XGBoostJob;AppWrappers;Pod;Deployment;StatefulSet;LeaderWorkerSet.
+	// The allowed values are BatchJob, RayJob, RayCluster, JobSet, MPIJob, PaddleJob, PytorchJob, TFJob, XGBoostJob, AppWrapper, Pod, Deployment, StatefulSet and LeaderWorkerSet.
 	// +kubebuilder:validation:MaxItems=14
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:XValidation:rule="self.all(x, self.exists_one(y, x == y))",message="each item in frameworks must be unique"
@@ -145,14 +142,13 @@ type Integrations struct {
 	// +required
 	Frameworks []KueueIntegration `json:"frameworks"`
 	// externalFrameworks are a list of GroupVersionResources
-	// that are managed for Kueue by external controllers;
+	// that are managed for Kueue by external controllers.
 	// These are optional and should only be used if you have an external controller
 	// that integrates with Kueue.
 	// +listType=atomic
 	// +kubebuilder:validation:MaxItems=32
 	// +optional
 	ExternalFrameworks []ExternalFramework `json:"externalFrameworks,omitempty"`
-
 	// labelKeysToCopy are a list of label keys that are copied once a workload is created.
 	// These keys are persisted to the internal Kueue workload object.
 	// If not specified, only the Kueue labels will be copied.
@@ -173,7 +169,7 @@ type LabelKeys struct {
 	// The optional prefix and the name are separate by a forward slash (/).
 	// +kubebuilder:validation:MaxLength=317
 	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:XValidation:rule="self.size() == 0 || !format.qualifiedName().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
+	// +kubebuilder:validation:XValidation:rule="!format.qualifiedName().validate(self).hasValue()",message="a qualified name must consist of a lower-case alphanumeric and hyphenated string of at most 63 characters in length, starting and ending with alphanumeric chracters. The name may be optionally prefixed with a subdomain consisting of lower-case alphanumeric characters, hyphens and periods, of at most 253 characters in length. Each period separated segment within the subdomain must start and end with an alphanumeric character."
 	// +optional
 	Key string `json:"key,omitempty"`
 }

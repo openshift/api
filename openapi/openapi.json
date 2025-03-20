@@ -33216,17 +33216,17 @@
       ],
       "properties": {
         "group": {
-          "description": "group is the API group of the externalFramework. Must be a valid qualified name consisting of a lower-case alphanumeric string, and hyphens of at most 63 characters in length. The name must start and end with an alphanumeric character. The name may be optionally prefixed with a subdomain consisting of lower-case alphanumeric characters, hyphens and periods, of at most 253 characters in length. Each period separated segment within the subdomain must start and end with an alphanumeric character. The optional prefix and the name are separate by a forward slash (/).",
+          "description": "group is the API group of the externalFramework. Must be a valid DNS 1123 subdomain consisting of of lower-case alphanumeric characters, hyphens and periods, of at most 253 characters in length. Each period separated segment within the subdomain must start and end with an alphanumeric character.",
           "type": "string",
           "default": ""
         },
         "resource": {
-          "description": "resource is the Resource type of the external framework. Resource types are lowercase and plural (e.g. pods, deployments). Must be a valid qualified name consisting of a lower-case alphanumeric string and hyphens of at most 63 characters in length. The name must start and end with an alphanumeric character. The name may be optionally prefixed with a subdomain consisting of lower-case alphanumeric characters, hyphens and periods, of at most 253 characters in length. Each period separated segment within the subdomain must start and end with an alphanumeric character.",
+          "description": "resource is the Resource type of the external framework. Resource types are lowercase and plural (e.g. pods, deployments). Must be a valid DNS 1123 label consisting of a lower-case alphanumeric string and hyphens of at most 63 characters in length. The value must start and end with an alphanumeric character.",
           "type": "string",
           "default": ""
         },
         "version": {
-          "description": "version is the version of the api (e.g. v1alpha1, v1beta1, v1).",
+          "description": "version is the version of the api (e.g. v1alpha1, v1beta1, v1). Must be a valid DNS 1035 label consisting of a lower-case alphanumeric string and hyphens of at most 63 characters in length. The value must start with an alphabetic character and end with an alphanumeric character.",
           "type": "string",
           "default": ""
         }
@@ -33384,7 +33384,7 @@
       ],
       "properties": {
         "externalFrameworks": {
-          "description": "externalFrameworks are a list of GroupVersionResources that are managed for Kueue by external controllers; These are optional and should only be used if you have an external controller that integrates with Kueue.",
+          "description": "externalFrameworks are a list of GroupVersionResources that are managed for Kueue by external controllers. These are optional and should only be used if you have an external controller that integrates with Kueue.",
           "type": "array",
           "items": {
             "default": {},
@@ -33393,7 +33393,7 @@
           "x-kubernetes-list-type": "atomic"
         },
         "frameworks": {
-          "description": "frameworks are a unique list of names to be enabled. This is required and must have at least one element. The frameworks are jobs that Kueue will manage. Frameworks are a list of frameworks that Kueue has support for. The allowed values are BatchJob;RayJob;RayCluster;JobSet;MPIJob;PaddleJob;PytorchJob;TFJob;XGBoostJob;AppWrappers;Pod;Deployment;StatefulSet;LeaderWorkerSet.",
+          "description": "frameworks are a unique list of names to be enabled. This is required and must have at least one element. Each framework represents a type of job that Kueue will manage. Frameworks are a list of frameworks that Kueue has support for. The allowed values are BatchJob, RayJob, RayCluster, JobSet, MPIJob, PaddleJob, PytorchJob, TFJob, XGBoostJob, AppWrapper, Pod, Deployment, StatefulSet and LeaderWorkerSet.",
           "type": "array",
           "items": {
             "type": "string",

@@ -259,9 +259,9 @@ func (RepositoryDigestMirrors) SwaggerDoc() map[string]string {
 
 var map_ExternalFramework = map[string]string{
 	"":         "This is the GVR for an external framework. Controller runtime requires this in this format for api discoverability.",
-	"group":    "group is the API group of the externalFramework. Must be a valid qualified name consisting of a lower-case alphanumeric string, and hyphens of at most 63 characters in length. The name must start and end with an alphanumeric character. The name may be optionally prefixed with a subdomain consisting of lower-case alphanumeric characters, hyphens and periods, of at most 253 characters in length. Each period separated segment within the subdomain must start and end with an alphanumeric character. The optional prefix and the name are separate by a forward slash (/).",
-	"resource": "resource is the Resource type of the external framework. Resource types are lowercase and plural (e.g. pods, deployments). Must be a valid qualified name consisting of a lower-case alphanumeric string and hyphens of at most 63 characters in length. The name must start and end with an alphanumeric character. The name may be optionally prefixed with a subdomain consisting of lower-case alphanumeric characters, hyphens and periods, of at most 253 characters in length. Each period separated segment within the subdomain must start and end with an alphanumeric character.",
-	"version":  "version is the version of the api (e.g. v1alpha1, v1beta1, v1).",
+	"group":    "group is the API group of the externalFramework. Must be a valid DNS 1123 subdomain consisting of of lower-case alphanumeric characters, hyphens and periods, of at most 253 characters in length. Each period separated segment within the subdomain must start and end with an alphanumeric character.",
+	"resource": "resource is the Resource type of the external framework. Resource types are lowercase and plural (e.g. pods, deployments). Must be a valid DNS 1123 label consisting of a lower-case alphanumeric string and hyphens of at most 63 characters in length. The value must start and end with an alphanumeric character.",
+	"version":  "version is the version of the api (e.g. v1alpha1, v1beta1, v1). Must be a valid DNS 1035 label consisting of a lower-case alphanumeric string and hyphens of at most 63 characters in length. The value must start with an alphabetic character and end with an alphanumeric character.",
 }
 
 func (ExternalFramework) SwaggerDoc() map[string]string {
@@ -270,8 +270,8 @@ func (ExternalFramework) SwaggerDoc() map[string]string {
 
 var map_Integrations = map[string]string{
 	"":                   "This is the integrations for Kueue. Kueue uses these apis to determine which jobs will be managed by Kueue.",
-	"frameworks":         "frameworks are a unique list of names to be enabled. This is required and must have at least one element. The frameworks are jobs that Kueue will manage. Frameworks are a list of frameworks that Kueue has support for. The allowed values are BatchJob;RayJob;RayCluster;JobSet;MPIJob;PaddleJob;PytorchJob;TFJob;XGBoostJob;AppWrappers;Pod;Deployment;StatefulSet;LeaderWorkerSet.",
-	"externalFrameworks": "externalFrameworks are a list of GroupVersionResources that are managed for Kueue by external controllers; These are optional and should only be used if you have an external controller that integrates with Kueue.",
+	"frameworks":         "frameworks are a unique list of names to be enabled. This is required and must have at least one element. Each framework represents a type of job that Kueue will manage. Frameworks are a list of frameworks that Kueue has support for. The allowed values are BatchJob, RayJob, RayCluster, JobSet, MPIJob, PaddleJob, PytorchJob, TFJob, XGBoostJob, AppWrapper, Pod, Deployment, StatefulSet and LeaderWorkerSet.",
+	"externalFrameworks": "externalFrameworks are a list of GroupVersionResources that are managed for Kueue by external controllers. These are optional and should only be used if you have an external controller that integrates with Kueue.",
 	"labelKeysToCopy":    "labelKeysToCopy are a list of label keys that are copied once a workload is created. These keys are persisted to the internal Kueue workload object. If not specified, only the Kueue labels will be copied.",
 }
 

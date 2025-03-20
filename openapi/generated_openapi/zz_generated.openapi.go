@@ -56856,7 +56856,7 @@ func schema_openshift_api_operator_v1alpha1_ExternalFramework(ref common.Referen
 				Properties: map[string]spec.Schema{
 					"group": {
 						SchemaProps: spec.SchemaProps{
-							Description: "group is the API group of the externalFramework. Must be a valid qualified name consisting of a lower-case alphanumeric string, and hyphens of at most 63 characters in length. The name must start and end with an alphanumeric character. The name may be optionally prefixed with a subdomain consisting of lower-case alphanumeric characters, hyphens and periods, of at most 253 characters in length. Each period separated segment within the subdomain must start and end with an alphanumeric character. The optional prefix and the name are separate by a forward slash (/).",
+							Description: "group is the API group of the externalFramework. Must be a valid DNS 1123 subdomain consisting of of lower-case alphanumeric characters, hyphens and periods, of at most 253 characters in length. Each period separated segment within the subdomain must start and end with an alphanumeric character.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -56864,7 +56864,7 @@ func schema_openshift_api_operator_v1alpha1_ExternalFramework(ref common.Referen
 					},
 					"resource": {
 						SchemaProps: spec.SchemaProps{
-							Description: "resource is the Resource type of the external framework. Resource types are lowercase and plural (e.g. pods, deployments). Must be a valid qualified name consisting of a lower-case alphanumeric string and hyphens of at most 63 characters in length. The name must start and end with an alphanumeric character. The name may be optionally prefixed with a subdomain consisting of lower-case alphanumeric characters, hyphens and periods, of at most 253 characters in length. Each period separated segment within the subdomain must start and end with an alphanumeric character.",
+							Description: "resource is the Resource type of the external framework. Resource types are lowercase and plural (e.g. pods, deployments). Must be a valid DNS 1123 label consisting of a lower-case alphanumeric string and hyphens of at most 63 characters in length. The value must start and end with an alphanumeric character.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -56872,7 +56872,7 @@ func schema_openshift_api_operator_v1alpha1_ExternalFramework(ref common.Referen
 					},
 					"version": {
 						SchemaProps: spec.SchemaProps{
-							Description: "version is the version of the api (e.g. v1alpha1, v1beta1, v1).",
+							Description: "version is the version of the api (e.g. v1alpha1, v1beta1, v1). Must be a valid DNS 1035 label consisting of a lower-case alphanumeric string and hyphens of at most 63 characters in length. The value must start with an alphabetic character and end with an alphanumeric character.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -57133,7 +57133,7 @@ func schema_openshift_api_operator_v1alpha1_Integrations(ref common.ReferenceCal
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "frameworks are a unique list of names to be enabled. This is required and must have at least one element. The frameworks are jobs that Kueue will manage. Frameworks are a list of frameworks that Kueue has support for. The allowed values are BatchJob;RayJob;RayCluster;JobSet;MPIJob;PaddleJob;PytorchJob;TFJob;XGBoostJob;AppWrappers;Pod;Deployment;StatefulSet;LeaderWorkerSet.",
+							Description: "frameworks are a unique list of names to be enabled. This is required and must have at least one element. Each framework represents a type of job that Kueue will manage. Frameworks are a list of frameworks that Kueue has support for. The allowed values are BatchJob, RayJob, RayCluster, JobSet, MPIJob, PaddleJob, PytorchJob, TFJob, XGBoostJob, AppWrapper, Pod, Deployment, StatefulSet and LeaderWorkerSet.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -57153,7 +57153,7 @@ func schema_openshift_api_operator_v1alpha1_Integrations(ref common.ReferenceCal
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "externalFrameworks are a list of GroupVersionResources that are managed for Kueue by external controllers; These are optional and should only be used if you have an external controller that integrates with Kueue.",
+							Description: "externalFrameworks are a list of GroupVersionResources that are managed for Kueue by external controllers. These are optional and should only be used if you have an external controller that integrates with Kueue.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{

@@ -18,6 +18,8 @@ tests:
     initial: |
       apiVersion: update.openshift.io/v1alpha1
       kind: ClusterOperatorProgressInsight
+      metadata:
+        name: authentication
       spec: {}
     updated: |
       apiVersion: update.openshift.io/v1alpha1
@@ -57,33 +59,35 @@ tests:
           lastTransitionTime: "2021-01-01T00:00:00Z"
           reason: Degraded
           message: "Authentication operator is not healthy"
-#  - name: Name and .status.name must match
-#    initial: |
-#      apiVersion: update.openshift.io/v1alpha1
-#      kind: ClusterOperatorProgressInsight
-#      spec: {}
-#    updated: |
-#      apiVersion: update.openshift.io/v1alpha1
-#      kind: ClusterOperatorProgressInsight
-#      metadata:
-#        name: etcd
-#      spec: {}
-#      status:
-#        name: not-etc
-#        conditions:
-#        - type: Updating
-#          status: "False"
-#          lastTransitionTime: "2021-01-01T00:00:00Z"
-#          reason: Pending
-#          message: "Installing version 4.18.0"
-#        - type: Healthy
-#          status: "False"
-#          lastTransitionTime: "2021-01-01T00:00:00Z"
-#          reason: Degraded
-#          message: "Authentication operator is not healthy"
-#    expected: |
-#      apiVersion: update.openshift.io/v1alpha1
-#      kind: ClusterOperatorProgressInsight
-#      spec: {}
-#    expectedStatusError: "TODO"
+  - name: Name and .status.name must match
+    initial: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: ClusterOperatorProgressInsight
+      metadata:
+        name: etcd
+      spec: {}
+    updated: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: ClusterOperatorProgressInsight
+      metadata:
+        name: etcd
+      spec: {}
+      status:
+        name: not-etc
+        conditions:
+        - type: Updating
+          status: "False"
+          lastTransitionTime: "2021-01-01T00:00:00Z"
+          reason: Pending
+          message: "Installing version 4.18.0"
+        - type: Healthy
+          status: "False"
+          lastTransitionTime: "2021-01-01T00:00:00Z"
+          reason: Degraded
+          message: "Authentication operator is not healthy"
+    expected: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: ClusterOperatorProgressInsight
+      spec: {}
+    expectedStatusError: "Invalid value: \"object\": When status is present, .status must match .metadata.name"
 

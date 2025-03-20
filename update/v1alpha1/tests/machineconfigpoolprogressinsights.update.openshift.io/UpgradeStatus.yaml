@@ -18,6 +18,8 @@ tests:
     initial: |
       apiVersion: update.openshift.io/v1alpha1
       kind: MachineConfigPoolProgressInsight
+      metadata:
+        name: worker
       spec: {}
     updated: |
       apiVersion: update.openshift.io/v1alpha1
@@ -83,46 +85,48 @@ tests:
           count: 0
         - type: Degraded
           count: 0
-#  - name: Name and .status.name must match
-#    initial: |
-#      apiVersion: update.openshift.io/v1alpha1
-#      kind: MachineConfigPoolProgressInsight
-#      spec: {}
-#    updated: |
-#      apiVersion: update.openshift.io/v1alpha1
-#      kind: MachineConfigPoolProgressInsight
-#      metadata:
-#        name: worker
-#      spec: {}
-#      status:
-#        name: master
-#        conditions:
-#        - type: Updating
-#          status: "False"
-#          lastTransitionTime: "2021-01-01T00:00:00Z"
-#          reason: Updated
-#          message: "All nodes on version 4.18.0"
-#        scopeType: WorkerPool
-#        assessment: Completed
-#        completionPercent: 100
-#        summaries:
-#        - type: Total
-#          count: 3
-#        - type: Available
-#          count: 3
-#        - type: Progressing
-#          count: 0
-#        - type: Outdated
-#          count: 0
-#        - type: Draining
-#          count: 0
-#        - type: Excluded
-#          count: 0
-#        - type: Degraded
-#          count: 0
-#    expected: |
-#      apiVersion: update.openshift.io/v1alpha1
-#      kind: MachineConfigPoolProgressInsight
-#      spec: {}
-#    expectedStatusError: "TODO"
+  - name: Name and .status.name must match
+    initial: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: MachineConfigPoolProgressInsight
+      metadata:
+        name: worker
+      spec: {}
+    updated: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: MachineConfigPoolProgressInsight
+      metadata:
+        name: worker
+      spec: {}
+      status:
+        name: master
+        conditions:
+        - type: Updating
+          status: "False"
+          lastTransitionTime: "2021-01-01T00:00:00Z"
+          reason: Updated
+          message: "All nodes on version 4.18.0"
+        scopeType: WorkerPool
+        assessment: Completed
+        completionPercent: 100
+        summaries:
+        - type: Total
+          count: 3
+        - type: Available
+          count: 3
+        - type: Progressing
+          count: 0
+        - type: Outdated
+          count: 0
+        - type: Draining
+          count: 0
+        - type: Excluded
+          count: 0
+        - type: Degraded
+          count: 0
+    expected: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: MachineConfigPoolProgressInsight
+      spec: {}
+    expectedStatusError: "Invalid value: \"object\": When status is present, .status must match .metadata.name"
 

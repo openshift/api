@@ -18,6 +18,8 @@ tests:
     initial: |
       apiVersion: update.openshift.io/v1alpha1
       kind: ClusterVersionProgressInsight
+      metadata:
+        name: version
       spec: {}
     updated: |
       apiVersion: update.openshift.io/v1alpha1
@@ -69,6 +71,8 @@ tests:
     initial: |
       apiVersion: update.openshift.io/v1alpha1
       kind: ClusterVersionProgressInsight
+      metadata:
+        name: version
       spec: {}
     updated: |
       apiVersion: update.openshift.io/v1alpha1
@@ -124,6 +128,8 @@ tests:
     initial: |
       apiVersion: update.openshift.io/v1alpha1
       kind: ClusterVersionProgressInsight
+      metadata:
+        name: version
       spec: {}
     updated: |
       apiVersion: update.openshift.io/v1alpha1
@@ -155,12 +161,14 @@ tests:
     initial: |
       apiVersion: update.openshift.io/v1alpha1
       kind: ClusterVersionProgressInsight
+      metadata:
+        name: version
       spec: {}
     updated: |
       apiVersion: update.openshift.io/v1alpha1
       kind: ClusterVersionProgressInsight
       metadata:
-          name: version
+        name: version
       spec: {}
       status:
         name: version
@@ -190,12 +198,14 @@ tests:
     initial: |
       apiVersion: update.openshift.io/v1alpha1
       kind: ClusterVersionProgressInsight
+      metadata:
+        name: version
       spec: {}
     updated: |
       apiVersion: update.openshift.io/v1alpha1
       kind: ClusterVersionProgressInsight
       metadata:
-          name: version
+        name: version
       spec: {}
       status:
         name: version
@@ -225,6 +235,8 @@ tests:
     initial: |
       apiVersion: update.openshift.io/v1alpha1
       kind: ClusterVersionProgressInsight
+      metadata:
+        name: version
       spec: {}
     updated: |
       apiVersion: update.openshift.io/v1alpha1
@@ -260,6 +272,8 @@ tests:
     initial: |
       apiVersion: update.openshift.io/v1alpha1
       kind: ClusterVersionProgressInsight
+      metadata:
+        name: version
       spec: {}
     updated: |
       apiVersion: update.openshift.io/v1alpha1
@@ -289,36 +303,38 @@ tests:
       kind: ClusterVersionProgressInsight
       spec: {}
     expectedStatusError: "Invalid value: \"not-a-semver\": versions.previous.version in body should match"
-#  - name: Name and .status.name must match
-#    initial: |
-#      apiVersion: update.openshift.io/v1alpha1
-#      kind: ClusterVersionProgressInsight
-#      spec: {}
-#    updated: |
-#      apiVersion: update.openshift.io/v1alpha1
-#      kind: ClusterVersionProgressInsight
-#      metadata:
-#          name: version
-#      spec: {}
-#      status:
-#        name: not-version
-#        assessment: Progressing
-#        versions:
-#          previous:
-#            version: 4.17.0
-#          target:
-#            version: 4.18.0
-#        completionPercent: 42
-#        startedAt: "2021-01-01T00:00:00Z"
-#        estimatedCompletedAt: "2021-01-01T02:00:00Z"
-#        conditions:
-#        - type: Updating
-#          status: "True"
-#          lastTransitionTime: "2021-01-01T00:00:00Z"
-#          reason: ClusterVersionProgressing
-#          message: "Installing version 4.18.0"
-#    expected: |
-#      apiVersion: update.openshift.io/v1alpha1
-#      kind: ClusterVersionProgressInsight
-#      spec: {}
-#    expectedStatusError: "TODO"
+  - name: Name and .status.name must match
+    initial: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: ClusterVersionProgressInsight
+      metadata:
+        name: version
+      spec: {}
+    updated: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: ClusterVersionProgressInsight
+      metadata:
+        name: version
+      spec: {}
+      status:
+        name: not-version
+        assessment: Progressing
+        versions:
+          previous:
+            version: 4.17.0
+          target:
+            version: 4.18.0
+        completionPercent: 42
+        startedAt: "2021-01-01T00:00:00Z"
+        estimatedCompletedAt: "2021-01-01T02:00:00Z"
+        conditions:
+        - type: Updating
+          status: "True"
+          lastTransitionTime: "2021-01-01T00:00:00Z"
+          reason: ClusterVersionProgressing
+          message: "Installing version 4.18.0"
+    expected: |
+      apiVersion: update.openshift.io/v1alpha1
+      kind: ClusterVersionProgressInsight
+      spec: {}
+    expectedStatusError: "Invalid value: \"object\": When status is present, .status must match .metadata.name"

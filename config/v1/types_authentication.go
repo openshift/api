@@ -220,6 +220,9 @@ type OIDCProvider struct {
 	//
 	// +listType=atomic
 	ClaimValidationRules []TokenClaimValidationRule `json:"claimValidationRules,omitempty"`
+
+	// UserValidationRule provides the configuration for a single user validation rule.
+	UserValidationRules []TokenUserValidationRule `json:"userValidationRule,omitempty"`
 }
 
 // +kubebuilder:validation:MinLength=1
@@ -249,6 +252,22 @@ type TokenIssuer struct {
 	// the "ca-bundle.crt" key.
 	// If unset, system trust is used instead.
 	CertificateAuthority ConfigMapNameReference `json:"issuerCertificateAuthority"`
+
+	// discoveryURL, if specified, overrides the URL used to fetch discovery
+	// information instead of using "{url}/.well-known/openid-configuration".
+	// The exact value specified is used, so "/.well-known/openid-configuration"
+	// must be included in discoveryURL if needed.
+	// Must use the https:// scheme.
+	//
+	// +kubebuilder:validation:Pattern=`^https:\/\/[^\s]`
+	// +optional
+	DiscoveryURL string `json:"discoveryURL,omitempty"`
+
+	// AudienceMatchPolicy controls how the "aud" claim in JWT tokens is validated.
+	// It allows flexible matching of the audience value in tokens.
+	// Possible values: MatchAny, MatchAll.
+	// +optional
+	AudienceMatchPolicy AudienceMatchPolicyType `json:"audienceMatchPolicy,omitempty"`
 }
 
 type TokenClaimMappings struct {
@@ -290,6 +309,14 @@ type TokenClaimMappings struct {
 	// +listMapKey=key
 	Extra []ExtraMapping `json:"extra,omitempty"`
 }
+
+// AudienceMatchPolicyType is a set of valid values for Issuer.AudienceMatchPolicy
+type AudienceMatchPolicyType string
+
+// Valid types for AudienceMatchPolicyType
+const (
+	AudienceMatchPolicyMatchAny AudienceMatchPolicyType = "MatchAny"
+)
 
 type TokenClaimMapping struct {
 	// claim is a JWT token claim to be used in the mapping
@@ -570,6 +597,11 @@ type TokenClaimValidationRule struct {
 	// requiredClaim allows configuring a required claim name and its expected
 	// value
 	RequiredClaim *TokenRequiredClaim `json:"requiredClaim"`
+
+	// +optional
+	// +kubebuilder:validation:MaxLength=1024
+	Expression string `json:"expression,omitempty"`
+	Message    string `json:"message,omitempty"`
 }
 
 type TokenRequiredClaim struct {
@@ -585,4 +617,12 @@ type TokenRequiredClaim struct {
 	// +kubebuilder:validation:MinLength=1
 	// +required
 	RequiredValue string `json:"requiredValue"`
+}
+
+// UserValidationRule provides the configuration for a single user validation rule.
+type TokenUserValidationRule struct {
+	// +optional
+	// +kubebuilder:validation:MaxLength=1024
+	Expression string `json:"expression,omitempty"`
+	Message    string `json:"message,omitempty"`
 }

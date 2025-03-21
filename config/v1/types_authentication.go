@@ -274,7 +274,7 @@ type TokenClaimMappings struct {
 	// The current default is to use the 'sub' claim.
 	//
 	// +optional
-	UID UIDClaimMapping `json:"uid,omitempty"`
+	UID TokenClaimOrExpressionMapping `json:"uid,omitempty"`
 
 	// extra is an optional field for configuring the mappings
 	// used to construct the extra attribute for the cluster identity.
@@ -297,7 +297,7 @@ type TokenClaimMapping struct {
 }
 
 // +kubebuilder:validation:XValidation:rule="!(has(self.claim) && has(self.expression))",message="both claim and expression must not be set"
-// +kubebuilder:validation:Xvalidation:rule="has(self.claim) || has(self.expression)",message="one of claim or expression must be set"
+// +kubebuilder:validation:XValidation:rule="has(self.claim) || has(self.expression)",message="either claim or expression must be set"
 type TokenClaimOrExpressionMapping struct {
 	// claim is an optional field for specifying the
 	// JWT token claim that is used in the mapping.
@@ -348,7 +348,7 @@ type ExtraMapping struct {
 	// It must not exceed 253 characters in length.
 	// It must start and end with an alphanumeric character.
 	// It must only contain lower case alphanumeric characters and '-' or '.'.
-	// It must not use the reserved domains, or be subdomains of, kubernetes.io, k8s.io.
+	// It must not use the reserved domains, or be subdomains of, "kubernetes.io", "k8s.io", and "openshift.io".
 	//
 	// The path portion of the key (string of characters after the '/') must not be empty and must consist of at least one
 	// alphanumeric character, percent-encoded octets, '-', '.', '_', '~', '!', '$', '&', ''', '(', ')', '*', '+', ',', ';', '=', and ':'.
@@ -364,6 +364,8 @@ type ExtraMapping struct {
 	// +kubebuilder:validation:XValidation:rule="!self.split('/', 2)[0].endsWith('.kubernetes.io')",message="the subdomains '*.kubernetes.io' are reserved for Kubernetes use"
 	// +kubebuilder:validation:XValidation:rule="self.split('/', 2)[0] != 'k8s.io'",message="the domain 'k8s.io' is reserved for Kubernetes use"
 	// +kubebuilder:validation:XValidation:rule="!self.split('/', 2)[0].endsWith('.k8s.io')",message="the subdomains '*.k8s.io' are reserved for Kubernetes use"
+	// +kubebuilder:validation:XValidation:rule="self.split('/', 2)[0] != 'openshift.io'",message="the domain 'openshift.io' is reserved for OpenShift use"
+	// +kubebuilder:validation:XValidation:rule="!self.split('/', 2)[0].endsWith('.openshift.io')",message="the subdomains '*.openshift.io' are reserved for OpenShift use"
 	// +kubebuilder:validation:XValidation:rule="self.split('/', 2)[0].size() < 253",message="the domain of the key must not exceed 253 characters in length"
 	//
 	// +kubebuilder:validation:XValidation:rule="self.split('/', 2)[1].matches('[A-Za-z0-9/\\\\-._~%!$&\\'()*+;=:]+')",message="the path of the key must not be empty and must consist of at least one alphanumeric character, percent-encoded octets, apostrophe, '-', '.', '_', '~', '!', '$', '&', '(', ')', '*', '+', ',', ';', '=', and ':'"
@@ -549,10 +551,6 @@ type PrefixedClaimMapping struct {
 	// an array of strings "a", "b" and  "c", the mapping will result in an
 	// array of string "myoidc:a", "myoidc:b" and "myoidc:c".
 	Prefix string `json:"prefix"`
-}
-
-type UIDClaimMapping struct {
-	TokenClaimOrExpressionMapping `json:",inline"`
 }
 
 type TokenValidationRuleType string

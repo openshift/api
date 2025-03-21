@@ -297,9 +297,6 @@
                         "name": "VSphereMultiNetworks"
                     },
                     {
-                        "name": "VSphereMultiVCenters"
-                    },
-                    {
                         "name": "VSphereStaticIPs"
                     },
                     {

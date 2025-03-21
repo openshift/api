@@ -270,6 +270,9 @@
                         "name": "TranslateStreamCloseWebsocketRequests"
                     },
                     {
+                        "name": "UpdateStatusAPI"
+                    },
+                    {
                         "name": "UpgradeStatus"
                     },
                     {

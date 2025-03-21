@@ -1716,7 +1716,7 @@ type IBMCloudPlatformSpec struct {
 	// serviceEndpoints is a list of custom endpoints which will override the default
 	// service endpoints of an IBM service. These endpoints are used by components
 	// within the cluster when trying to reach the IBM Cloud Services that have been
-	// overriden. The CCCMO reads in the IBMCloudPlatformSpec and validates each
+	// overridden. The CCCMO reads in the IBMCloudPlatformSpec and validates each
 	// endpoint is resolvable. Once validated, the cloud config and IBMCloudPlatformStatus
 	// are updated to reflect the same custom endpoints.
 	// A maximum of 13 service endpoints overrides are supported.
@@ -1750,7 +1750,7 @@ type IBMCloudPlatformStatus struct {
 	// serviceEndpoints is a list of custom endpoints which will override the default
 	// service endpoints of an IBM service. These endpoints are used by components
 	// within the cluster when trying to reach the IBM Cloud Services that have been
-	// overriden. The CCCMO reads in the IBMCloudPlatformSpec and validates each
+	// overridden. The CCCMO reads in the IBMCloudPlatformSpec and validates each
 	// endpoint is resolvable. Once validated, the cloud config and IBMCloudPlatformStatus
 	// are updated to reflect the same custom endpoints.
 	// +openshift:validation:FeatureGateAwareMaxItems:featureGate=DyanmicServiceEndpointIBMCloud,maxItems=13

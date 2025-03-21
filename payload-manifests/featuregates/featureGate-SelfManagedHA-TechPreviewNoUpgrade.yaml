@@ -50,6 +50,9 @@
                     },
                     {
                         "name": "SigstoreImageVerificationPKI"
+                    },
+                    {
+                        "name": "UpdateStatusAPI"
                     }
                 ],
                 "enabled": [

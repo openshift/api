@@ -90,6 +90,11 @@ spec:
                             key values for extra mappings must be unique.
                             A maximum of 64 extra attribute mappings may be provided.
                           items:
+                            description: |-
+                              ExtraMapping allows specifying a key and CEL expression
+                              to evaluate the keys' value. It is used to create additional
+                              mappings and attributes added to a cluster identity from
+                              a provided authentication token.
                             properties:
                               key:
                                 description: |-
@@ -109,8 +114,8 @@ spec:
 
                                   The path portion of the key (string of characters after the '/') must not be empty and must consist of at least one
                                   alphanumeric character, percent-encoded octets, '-', '.', '_', '~', '!', '$', '&', ''', '(', ')', '*', '+', ',', ';', '=', and ':'.
-                                  It must not exceed 64 characters in length.
-                                maxLength: 318
+                                  It must not exceed 63 characters in length.
+                                maxLength: 317
                                 minLength: 1
                                 type: string
                                 x-kubernetes-validations:
@@ -139,18 +144,15 @@ spec:
                                 - message: the subdomains '*.openshift.io' are reserved
                                     for OpenShift use
                                   rule: '!self.split(''/'', 2)[0].endsWith(''.openshift.io'')'
-                                - message: the domain of the key must not exceed 253
-                                    characters in length
-                                  rule: self.split('/', 2)[0].size() < 253
                                 - message: the path of the key must not be empty and
                                     must consist of at least one alphanumeric character,
                                     percent-encoded octets, apostrophe, '-', '.',
                                     '_', '~', '!', '$', '&', '(', ')', '*', '+', ',',
                                     ';', '=', and ':'
                                   rule: self.split('/', 2)[1].matches('[A-Za-z0-9/\\-._~%!$&\'()*+;=:]+')
-                                - message: the path of the key must not exceed 64
+                                - message: the path of the key must not exceed 63
                                     characters in length
-                                  rule: self.split('/', 2)[1].size() < 64
+                                  rule: self.split('/', 2)[1].size() <= 63
                               valueExpression:
                                 description: |-
                                   valueExpression is a required field to specify the CEL expression to extract
@@ -165,9 +167,9 @@ spec:
                                   For example, the 'sub' claim value can be accessed as 'claims.sub'.
                                   Nested claims can be accessed using dot notation ('claims.foo.bar').
 
-                                  valueExpression must not exceed 1024 characters in length.
+                                  valueExpression must not exceed 4096 characters in length.
                                   valueExpression must not be empty.
-                                maxLength: 1024
+                                maxLength: 4096
                                 minLength: 1
                                 type: string
                             required:
@@ -224,6 +226,10 @@ spec:
 
                                 Either claim or expression must be set.
                                 claim must not be specified when expression is set.
+                                When specified, claim must be at least 1 character in length
+                                and must not exceed 256 characters in length.
+                              maxLength: 256
+                              minLength: 1
                               type: string
                             expression:
                               description: |-
@@ -240,8 +246,8 @@ spec:
                                 Either claim or expression must be set.
                                 expression must not be specified when claim is set.
                                 When specified, expression must be at least 1 character in length
-                                and must not exceed 1024 characters in length.
-                              maxLength: 1024
+                                and must not exceed 4096 characters in length.
+                              maxLength: 4096
                               minLength: 1
                               type: string
                           type: object

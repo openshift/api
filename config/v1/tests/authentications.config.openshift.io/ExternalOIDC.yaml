@@ -190,7 +190,7 @@ tests:
               uid:
                 claim: sub
                 expression: claims.sub
-      expectedError: "both claim and expression must not be set"
+      expectedError: "precisely one of claim or expression must be set"
     - name: Cannot set OIDC providers with uid claim mapping specifying an empty claim
       initial: |
         apiVersion: config.openshift.io/v1
@@ -234,7 +234,7 @@ tests:
               audiences: ['openshift-aud']
             claimMappings:
               uid: {}
-      expectedError: "either claim or expression must be set"
+      expectedError: "precisely one of claim or expression must be set"
     - name: Can set OIDC providers with extra claim mappings
       initial: |
         apiVersion: config.openshift.io/v1

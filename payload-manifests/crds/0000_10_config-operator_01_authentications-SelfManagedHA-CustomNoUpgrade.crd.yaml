@@ -102,7 +102,7 @@ spec:
                                   to use as the extra attribute key.
 
                                   key must be a domain-prefix path (e.g 'example.org/foo').
-                                  key must not exceed 318 characters in length.
+                                  key must not exceed 510 characters in length.
                                   key must contain the '/' character, separating the domain and path characters.
                                   key must not be empty.
 
@@ -114,8 +114,8 @@ spec:
 
                                   The path portion of the key (string of characters after the '/') must not be empty and must consist of at least one
                                   alphanumeric character, percent-encoded octets, '-', '.', '_', '~', '!', '$', '&', ''', '(', ')', '*', '+', ',', ';', '=', and ':'.
-                                  It must not exceed 63 characters in length.
-                                maxLength: 317
+                                  It must not exceed 256 characters in length.
+                                maxLength: 510
                                 minLength: 1
                                 type: string
                                 x-kubernetes-validations:
@@ -150,9 +150,9 @@ spec:
                                     '_', '~', '!', '$', '&', '(', ')', '*', '+', ',',
                                     ';', '=', and ':'
                                   rule: self.split('/', 2)[1].matches('[A-Za-z0-9/\\-._~%!$&\'()*+;=:]+')
-                                - message: the path of the key must not exceed 63
+                                - message: the path of the key must not exceed 256
                                     characters in length
-                                  rule: self.split('/', 2)[1].size() <= 63
+                                  rule: self.split('/', 2)[1].size() <= 256
                               valueExpression:
                                 description: |-
                                   valueExpression is a required field to specify the CEL expression to extract
@@ -224,7 +224,7 @@ spec:
                                 The value of this claim will be assigned to
                                 the field in which this mapping is associated.
 
-                                Either claim or expression must be set.
+                                Precisely one of claim or expression must be set.
                                 claim must not be specified when expression is set.
                                 When specified, claim must be at least 1 character in length
                                 and must not exceed 256 characters in length.
@@ -243,7 +243,7 @@ spec:
                                 For example, the 'sub' claim value can be accessed as 'claims.sub'.
                                 Nested claims can be accessed using dot notation ('claims.foo.bar').
 
-                                Either claim or expression must be set.
+                                Precisely one of claim or expression must be set.
                                 expression must not be specified when claim is set.
                                 When specified, expression must be at least 1 character in length
                                 and must not exceed 4096 characters in length.
@@ -252,10 +252,9 @@ spec:
                               type: string
                           type: object
                           x-kubernetes-validations:
-                          - message: both claim and expression must not be set
-                            rule: '!(has(self.claim) && has(self.expression))'
-                          - message: either claim or expression must be set
-                            rule: has(self.claim) || has(self.expression)
+                          - message: precisely one of claim or expression must be
+                              set
+                            rule: 'has(self.claim) ? !has(self.expression) : has(self.expression)'
                         username:
                           description: |-
                             username is a name of the claim that should be used to construct

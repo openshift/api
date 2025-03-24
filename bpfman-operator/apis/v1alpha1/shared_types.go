@@ -162,7 +162,7 @@ type ByteCodeImage struct {
 	// url is a valid container image URL used to reference a remote bytecode image.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MaxLength:=525
-	// +kubebuilder:validation:XValidation:rule="isURL(self)",message="must be a valid URL"
+	// +kubebuilder:validation:Pattern=`[a-zA-Z0-9_][a-zA-Z0-9._-]{0,127}`
 	Url string `json:"url"`
 
 	// pullPolicy describes a policy for if/when to pull a bytecode image. Defaults to IfNotPresent.

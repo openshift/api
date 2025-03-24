@@ -35,7 +35,7 @@ type BpfApplicationProgramState struct {
 	// type specifies the bpf program type
 	// +unionDiscriminator
 	// +required
-	// +kubebuilder:validation:Enum:="XDP";"TC";"TCX";"Uprobe";"UretProbe"
+	// +kubebuilder:validation:Enum:="XDP";"TC";"TCX";"UProbe";"URetProbe"
 	Type EBPFProgType `json:"type"`
 
 	// xdp defines the desired state of the application's XdpPrograms.

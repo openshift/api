@@ -150,6 +150,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.APIServerStatus":                                                 schema_openshift_api_config_v1_APIServerStatus(ref),
 		"github.com/openshift/api/config/v1.AWSDNSSpec":                                                      schema_openshift_api_config_v1_AWSDNSSpec(ref),
 		"github.com/openshift/api/config/v1.AWSIngressSpec":                                                  schema_openshift_api_config_v1_AWSIngressSpec(ref),
+		"github.com/openshift/api/config/v1.AWSKMSConfig":                                                    schema_openshift_api_config_v1_AWSKMSConfig(ref),
 		"github.com/openshift/api/config/v1.AWSPlatformSpec":                                                 schema_openshift_api_config_v1_AWSPlatformSpec(ref),
 		"github.com/openshift/api/config/v1.AWSPlatformStatus":                                               schema_openshift_api_config_v1_AWSPlatformStatus(ref),
 		"github.com/openshift/api/config/v1.AWSResourceTag":                                                  schema_openshift_api_config_v1_AWSResourceTag(ref),
@@ -282,6 +283,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.IngressSpec":                                                     schema_openshift_api_config_v1_IngressSpec(ref),
 		"github.com/openshift/api/config/v1.IngressStatus":                                                   schema_openshift_api_config_v1_IngressStatus(ref),
 		"github.com/openshift/api/config/v1.IntermediateTLSProfile":                                          schema_openshift_api_config_v1_IntermediateTLSProfile(ref),
+		"github.com/openshift/api/config/v1.KMSConfig":                                                       schema_openshift_api_config_v1_KMSConfig(ref),
 		"github.com/openshift/api/config/v1.KeystoneIdentityProvider":                                        schema_openshift_api_config_v1_KeystoneIdentityProvider(ref),
 		"github.com/openshift/api/config/v1.KubeClientConfig":                                                schema_openshift_api_config_v1_KubeClientConfig(ref),
 		"github.com/openshift/api/config/v1.KubevirtPlatformSpec":                                            schema_openshift_api_config_v1_KubevirtPlatformSpec(ref),
@@ -8305,7 +8307,8 @@ func schema_openshift_api_config_v1_APIServerEncryption(ref common.ReferenceCall
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "APIServerEncryption is used to encrypt sensitive resources on the cluster.",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
@@ -8314,9 +8317,29 @@ func schema_openshift_api_config_v1_APIServerEncryption(ref common.ReferenceCall
 							Format:      "",
 						},
 					},
+					"kms": {
+						SchemaProps: spec.SchemaProps{
+							Description: "kms defines the configuration for the external KMS instance that manages the encryption keys, when KMS encryption is enabled sensitive resources will be encrypted using keys managed by an externally configured KMS instance.\n\nThe Key Management Service (KMS) instance provides symmetric encryption and is responsible for managing the lifecyle of the encryption keys outside of the control plane. This allows integration with an external provider to manage the data encryption keys securely.",
+							Ref:         ref("github.com/openshift/api/config/v1.KMSConfig"),
+						},
+					},
+				},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "type",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"kms": "KMS",
+							},
+						},
+					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.KMSConfig"},
 	}
 }
 
@@ -8378,6 +8401,11 @@ func schema_openshift_api_config_v1_APIServerNamedServingCert(ref common.Referen
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"names": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "names is a optional list of explicit DNS names (leading wildcards allowed) that should use this certificate to serve secure traffic. If no names are provided, the implicit names will be extracted from the certificates. Exact names trump over wildcard names. Explicit names defined here trump over extracted implicit names.",
 							Type:        []string{"array"},
@@ -8415,6 +8443,11 @@ func schema_openshift_api_config_v1_APIServerServingCerts(ref common.ReferenceCa
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"namedCertificates": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "namedCertificates references secrets containing the TLS cert info for serving secure traffic to specific hostnames. If no named certificates are provided, or no named certificates match the server name as understood by a client, the defaultServingCertificate will be used.",
 							Type:        []string{"array"},
@@ -8457,6 +8490,11 @@ func schema_openshift_api_config_v1_APIServerSpec(ref common.ReferenceCallback) 
 						},
 					},
 					"additionalCORSAllowedOrigins": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "additionalCORSAllowedOrigins lists additional, user-defined regular expressions describing hosts for which the API server allows access using the CORS headers. This may be needed to access the API and the integrated OAuth server from JavaScript applications. The values are regular expressions that correspond to the Golang regular expression language.",
 							Type:        []string{"array"},
@@ -8556,6 +8594,36 @@ func schema_openshift_api_config_v1_AWSIngressSpec(ref common.ReferenceCallback)
 						},
 					},
 				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1_AWSKMSConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "AWSKMSConfig defines the KMS config specific to AWS KMS provider",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"keyARN": {
+						SchemaProps: spec.SchemaProps{
+							Description: "keyARN specifies the Amazon Resource Name (ARN) of the AWS KMS key used for encryption. The value must adhere to the format `arn:aws:kms:<region>:<account_id>:key/<key_id>`, where: - `<region>` is the AWS region consisting of lowercase letters and hyphens followed by a number. - `<account_id>` is a 12-digit numeric identifier for the AWS account. - `<key_id>` is a unique identifier for the KMS key, consisting of lowercase hexadecimal characters and hyphens.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"region": {
+						SchemaProps: spec.SchemaProps{
+							Description: "region specifies the AWS region where the KMS instance exists, and follows the format `<region-prefix>-<region-name>-<number>`, e.g.: `us-east-1`. Only lowercase letters and hyphens followed by numbers are allowed.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"keyARN", "region"},
 			},
 		},
 	}
@@ -14638,6 +14706,48 @@ func schema_openshift_api_config_v1_IntermediateTLSProfile(ref common.ReferenceC
 				Type:        []string{"object"},
 			},
 		},
+	}
+}
+
+func schema_openshift_api_config_v1_KMSConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "KMSConfig defines the configuration for the KMS instance that will be used with KMSEncryptionProvider encryption",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type defines the kind of platform for the KMS provider. Available provider types are AWS only.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"aws": {
+						SchemaProps: spec.SchemaProps{
+							Description: "aws defines the key config for using an AWS KMS instance for the encryption. The AWS KMS instance is managed by the user outside the purview of the control plane.",
+							Ref:         ref("github.com/openshift/api/config/v1.AWSKMSConfig"),
+						},
+					},
+				},
+				Required: []string{"type"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "type",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"aws": "AWS",
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.AWSKMSConfig"},
 	}
 }
 

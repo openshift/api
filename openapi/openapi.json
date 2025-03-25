@@ -33596,6 +33596,32 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1alpha1.ExternalFramework": {
+      "description": "This is the GVR for an external framework. Controller runtime requires this in this format for api discoverability.",
+      "type": "object",
+      "required": [
+        "group",
+        "resource",
+        "version"
+      ],
+      "properties": {
+        "group": {
+          "description": "group is the API group of the externalFramework. Must be a valid DNS 1123 subdomain consisting of of lower-case alphanumeric characters, hyphens and periods, of at most 253 characters in length. Each period separated segment within the subdomain must start and end with an alphanumeric character.",
+          "type": "string",
+          "default": ""
+        },
+        "resource": {
+          "description": "resource is the Resource type of the external framework. Resource types are lowercase and plural (e.g. pods, deployments). Must be a valid DNS 1123 label consisting of a lower-case alphanumeric string and hyphens of at most 63 characters in length. The value must start and end with an alphanumeric character.",
+          "type": "string",
+          "default": ""
+        },
+        "version": {
+          "description": "version is the version of the api (e.g. v1alpha1, v1beta1, v1). Must be a valid DNS 1035 label consisting of a lower-case alphanumeric string and hyphens of at most 63 characters in length. The value must start with an alphabetic character and end with an alphanumeric character.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1alpha1.GenerationHistory": {
       "description": "GenerationHistory keeps track of the generation for a given resource so that decisions about forced updated can be made. DEPRECATED: Use fields in v1.GenerationStatus instead",
       "type": "object",
@@ -33737,6 +33763,217 @@
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.RepositoryDigestMirrors"
           }
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1alpha1.Integrations": {
+      "description": "This is the integrations for Kueue. Kueue uses these apis to determine which jobs will be managed by Kueue.",
+      "type": "object",
+      "required": [
+        "frameworks"
+      ],
+      "properties": {
+        "externalFrameworks": {
+          "description": "externalFrameworks are a list of GroupVersionResources that are managed for Kueue by external controllers. These are optional and should only be used if you have an external controller that integrates with Kueue.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.ExternalFramework"
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "frameworks": {
+          "description": "frameworks are a unique list of names to be enabled. This is required and must have at least one element. Each framework represents a type of job that Kueue will manage. Frameworks are a list of frameworks that Kueue has support for. The allowed values are BatchJob, RayJob, RayCluster, JobSet, MPIJob, PaddleJob, PytorchJob, TFJob, XGBoostJob, AppWrapper, Pod, Deployment, StatefulSet and LeaderWorkerSet.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "labelKeysToCopy": {
+          "description": "labelKeysToCopy are a list of label keys that are copied once a workload is created. These keys are persisted to the internal Kueue workload object. If not specified, only the Kueue labels will be copied.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.LabelKeys"
+          },
+          "x-kubernetes-list-type": "atomic"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1alpha1.Kueue": {
+      "description": "Kueue is the CRD to represent the Kueue operator This CRD defines the configuration that the Kueue Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata for kueue",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec holds user settable values for configuration",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.KueueOperandSpec"
+        },
+        "status": {
+          "description": "status holds observed values from the cluster. They may not be overridden.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.KueueStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1alpha1.KueueConfiguration": {
+      "type": "object",
+      "required": [
+        "integrations"
+      ],
+      "properties": {
+        "integrations": {
+          "description": "integrations is a required field that configures the Kueue's workload integrations. Kueue has both standard integrations, known as job frameworks, and external integrations known as external frameworks. Kueue will only manage workloads that correspond to the specified integrations.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.Integrations"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1alpha1.KueueList": {
+      "description": "KueueList contains a list of Kueue\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "description": "items is a slice of Kueue this is a cluster scoped resource and there can only be 1 Kueue",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.Kueue"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata for the list",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1alpha1.KueueOperandSpec": {
+      "type": "object",
+      "required": [
+        "managementState",
+        "config"
+      ],
+      "properties": {
+        "config": {
+          "description": "config is the desired configuration for the Kueue operator.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.KueueConfiguration"
+        },
+        "logLevel": {
+          "description": "logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for their operands.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
+          "type": "string"
+        },
+        "managementState": {
+          "description": "managementState indicates whether and how the operator should manage the component",
+          "type": "string",
+          "default": ""
+        },
+        "observedConfig": {
+          "description": "observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because it is an input to the level for the operator",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        },
+        "operatorLogLevel": {
+          "description": "operatorLogLevel is an intent based logging for the operator itself.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for themselves.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
+          "type": "string"
+        },
+        "unsupportedConfigOverrides": {
+          "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1alpha1.KueueStatus": {
+      "description": "KueueStatus defines the observed state of Kueue",
+      "type": "object",
+      "required": [
+        "readyReplicas"
+      ],
+      "properties": {
+        "conditions": {
+          "description": "conditions is a list of conditions and their status",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.OperatorCondition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "generations": {
+          "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
+          },
+          "x-kubernetes-list-map-keys": [
+            "group",
+            "resource",
+            "namespace",
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "latestAvailableRevision": {
+          "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
+          "type": "integer",
+          "format": "int32"
+        },
+        "observedGeneration": {
+          "description": "observedGeneration is the last generation change you've dealt with",
+          "type": "integer",
+          "format": "int64"
+        },
+        "readyReplicas": {
+          "description": "readyReplicas indicates how many replicas are ready and at the desired state",
+          "type": "integer",
+          "format": "int32",
+          "default": 0
+        },
+        "version": {
+          "description": "version is the level this availability applies to",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1alpha1.LabelKeys": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "description": "key is the label key A label key must be a valid qualified name consisting of a lower-case alphanumeric string, and hyphens of at most 63 characters in length. The name must start and end with an alphanumeric character. The name may be optionally prefixed with a subdomain consisting of lower-case alphanumeric characters, hyphens and periods, of at most 253 characters in length. Each period separated segment within the subdomain must start and end with an alphanumeric character. The optional prefix and the name are separate by a forward slash (/).",
+          "type": "string"
         }
       }
     },

@@ -96,9 +96,6 @@
                         "name": "ChunkSizeMiB"
                     },
                     {
-                        "name": "CloudDualStackNodeIPs"
-                    },
-                    {
                         "name": "ClusterMonitoringConfig"
                     },
                     {
@@ -106,9 +103,6 @@
                     },
                     {
                         "name": "DNSNameResolver"
-                    },
-                    {
-                        "name": "DisableKubeletCloudCredentialProviders"
                     },
                     {
                         "name": "DualReplica"
@@ -301,9 +295,6 @@
                     },
                     {
                         "name": "VSphereStaticIPs"
-                    },
-                    {
-                        "name": "ValidatingAdmissionPolicy"
                     },
                     {
                         "name": "VolumeAttributesClass"

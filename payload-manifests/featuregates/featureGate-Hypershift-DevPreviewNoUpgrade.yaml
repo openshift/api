@@ -84,9 +84,6 @@
                         "name": "ChunkSizeMiB"
                     },
                     {
-                        "name": "CloudDualStackNodeIPs"
-                    },
-                    {
                         "name": "ClusterAPIInstallIBMCloud"
                     },
                     {
@@ -100,9 +97,6 @@
                     },
                     {
                         "name": "DNSNameResolver"
-                    },
-                    {
-                        "name": "DisableKubeletCloudCredentialProviders"
                     },
                     {
                         "name": "DualReplica"

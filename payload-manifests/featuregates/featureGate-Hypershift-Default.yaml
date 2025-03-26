@@ -232,13 +232,7 @@
                         "name": "ChunkSizeMiB"
                     },
                     {
-                        "name": "CloudDualStackNodeIPs"
-                    },
-                    {
                         "name": "ConsolePluginContentSecurityPolicy"
-                    },
-                    {
-                        "name": "DisableKubeletCloudCredentialProviders"
                     },
                     {
                         "name": "ExternalOIDC"

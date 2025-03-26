@@ -47,6 +47,32 @@ type KueueConfiguration struct {
 	// Kueue will only manage workloads that correspond to the specified integrations.
 	// +required
 	Integrations Integrations `json:"integrations"`
+	// queueLabelPolicy controls whether or not Kueue reconciles
+	// jobs that don't set the label kueue.x-k8s.io/queue-name.
+	// The allowed values are QueueNameRequired and QueueNameOptional.
+	// If set to QueueNameRequired, then those jobs will be suspended and never started unless
+	// they are assigned a queue and eventually admitted. This also applies to
+	// jobs created before starting the kueue controller.
+	// Defaults to QueueNameOptional; therefore, those jobs are not managed and if they are created
+	// unsuspended, they will start immediately.
+	// +optional
+	QueueLabelPolicy *QueueLabelNamePolicy `json:"queueLabelPolicy,omitempty"`
+	// kueueGangSchedulingPolicy controls how Kueue admits workloads
+	// Kueue provides the ability to admit workloads all in one (gang admission)
+	// and evicts workloads if they are not ready within a specific time.
+	// This is an optional field.
+	// The allowed values are BlockAdmission, EvictNotReadyWorkloads, and Disabled.
+	// The default value will be Disabled.
+	// BlockAdmission serializes the admission process for Kueue
+	// Workloads will be admitted one at a time and will wait
+	// for the workloads to be ready before going on to the next one in the list.
+	// EvictNotReadyWorkloads will not block admission but will evict Workloads that are not ready
+	// within a defaulted timelimit.
+	// +optional
+	KueueGangSchedulingPolicy *KueueGangSchedulingPolicyOptions `json:"kueueGangSchedulingPolicy,omitempty"`
+	// fairSharing TODO not done yet
+	// +optional
+	FairSharing *FairSharing `json:"fairSharing,omitemoty"`
 }
 
 // KueueStatus defines the observed state of Kueue
@@ -172,4 +198,51 @@ type LabelKeys struct {
 	// +kubebuilder:validation:XValidation:rule="!format.qualifiedName().validate(self).hasValue()",message="a qualified name must consist of a lower-case alphanumeric and hyphenated string of at most 63 characters in length, starting and ending with alphanumeric chracters. The name may be optionally prefixed with a subdomain consisting of lower-case alphanumeric characters, hyphens and periods, of at most 253 characters in length. Each period separated segment within the subdomain must start and end with an alphanumeric character."
 	// +optional
 	Key string `json:"key,omitempty"`
+}
+
+// +kubebuilder:validation:Enum=EvictNotReadyWorkloads;Disabled
+type KueueGangSchedulingPolicyOptions string
+
+const (
+	KueueGangSchedulingPolicyBlockAdmission         KueueGangSchedulingPolicyOptions = "BlockAdmission"
+	KueueGangSchedulingPolicyEvictNotReadyWorkloads KueueGangSchedulingPolicyOptions = "EvictNotReadyWorkloads"
+	KueueGangSchedulingPolicyDisabled               KueueGangSchedulingPolicyOptions = "Disabled"
+)
+
+// +kubebuilder:validation:Enum=QueueNameRequired;QueueNameOptional
+type QueueLabelNamePolicy string
+
+const (
+	QueueLabelNamePolicyRequired QueueLabelNamePolicy = "QueueNameRequired"
+	QueueLabelNamePolicyOptional QueueLabelNamePolicy = "QueueNameOptional"
+)
+
+// +kubebuilder:validation:Enum=LessThanOrEqualToFinalShare;LessThanInitialShare
+type PreemptionStrategy string
+
+const (
+	LessThanOrEqualToFinalShare PreemptionStrategy = "LessThanOrEqualToFinalShare"
+	LessThanInitialShare        PreemptionStrategy = "LessThanInitialShare"
+)
+
+type FairSharing struct {
+	// preemptionStrategies indicates which constraints should a preemption satisfy.
+	// The preemption algorithm will only use the next strategy in the list if the
+	// incoming workload (preemptor) doesn't fit after using the previous strategies.
+	// Possible values are:
+	// - LessThanOrEqualToFinalShare: Only preempt a workload if the share of the preemptor CQ
+	//   with the preemptor workload is less than or equal to the share of the preemptee CQ
+	//   without the workload to be preempted.
+	//   This strategy might favor preemption of smaller workloads in the preemptee CQ,
+	//   regardless of priority or start time, in an effort to keep the share of the CQ
+	//   as high as possible.
+	// - LessThanInitialShare: Only preempt a workload if the share of the preemptor CQ
+	//   with the incoming workload is strictly less than the share of the preemptee CQ.
+	//   This strategy doesn't depend on the share usage of the workload being preempted.
+	//   As a result, the strategy chooses to preempt workloads with the lowest priority and
+	//   newest start time first.
+	// The default strategy is ["LessThanOrEqualToFinalShare", "LessThanInitialShare"].
+	// +kubebuilder:validation:MaxItems=2
+	// +optional
+	PreemptionStrategies []PreemptionStrategy `json:"preemptionStrategies,omitempty"`
 }

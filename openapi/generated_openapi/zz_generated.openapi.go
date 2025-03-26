@@ -1111,6 +1111,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1alpha1.EtcdBackupSpec":                                          schema_openshift_api_operator_v1alpha1_EtcdBackupSpec(ref),
 		"github.com/openshift/api/operator/v1alpha1.EtcdBackupStatus":                                        schema_openshift_api_operator_v1alpha1_EtcdBackupStatus(ref),
 		"github.com/openshift/api/operator/v1alpha1.ExternalFramework":                                       schema_openshift_api_operator_v1alpha1_ExternalFramework(ref),
+		"github.com/openshift/api/operator/v1alpha1.FairSharing":                                             schema_openshift_api_operator_v1alpha1_FairSharing(ref),
 		"github.com/openshift/api/operator/v1alpha1.GenerationHistory":                                       schema_openshift_api_operator_v1alpha1_GenerationHistory(ref),
 		"github.com/openshift/api/operator/v1alpha1.GenericOperatorConfig":                                   schema_openshift_api_operator_v1alpha1_GenericOperatorConfig(ref),
 		"github.com/openshift/api/operator/v1alpha1.ImageContentSourcePolicy":                                schema_openshift_api_operator_v1alpha1_ImageContentSourcePolicy(ref),
@@ -56885,6 +56886,33 @@ func schema_openshift_api_operator_v1alpha1_ExternalFramework(ref common.Referen
 	}
 }
 
+func schema_openshift_api_operator_v1alpha1_FairSharing(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"preemptionStrategies": {
+						SchemaProps: spec.SchemaProps{
+							Description: "preemptionStrategies indicates which constraints should a preemption satisfy. The preemption algorithm will only use the next strategy in the list if the incoming workload (preemptor) doesn't fit after using the previous strategies. Possible values are: - LessThanOrEqualToFinalShare: Only preempt a workload if the share of the preemptor CQ\n  with the preemptor workload is less than or equal to the share of the preemptee CQ\n  without the workload to be preempted.\n  This strategy might favor preemption of smaller workloads in the preemptee CQ,\n  regardless of priority or start time, in an effort to keep the share of the CQ\n  as high as possible.\n- LessThanInitialShare: Only preempt a workload if the share of the preemptor CQ\n  with the incoming workload is strictly less than the share of the preemptee CQ.\n  This strategy doesn't depend on the share usage of the workload being preempted.\n  As a result, the strategy chooses to preempt workloads with the lowest priority and\n  newest start time first.\nThe default strategy is [\"LessThanOrEqualToFinalShare\", \"LessThanInitialShare\"].",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_operator_v1alpha1_GenerationHistory(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -57257,12 +57285,32 @@ func schema_openshift_api_operator_v1alpha1_KueueConfiguration(ref common.Refere
 							Ref:         ref("github.com/openshift/api/operator/v1alpha1.Integrations"),
 						},
 					},
+					"queueLabelPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "queueLabelPolicy controls whether or not Kueue reconciles jobs that don't set the label kueue.x-k8s.io/queue-name. The allowed values are QueueNameRequired and QueueNameOptional. If set to QueueNameRequired, then those jobs will be suspended and never started unless they are assigned a queue and eventually admitted. This also applies to jobs created before starting the kueue controller. Defaults to QueueNameOptional; therefore, those jobs are not managed and if they are created unsuspended, they will start immediately.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"kueueGangSchedulingPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "kueueGangSchedulingPolicy controls how Kueue admits workloads Kueue provides the ability to admit workloads all in one (gang admission) and evicts workloads if they are not ready within a specific time. This is an optional field. The allowed values are BlockAdmission, EvictNotReadyWorkloads, and Disabled. The default value will be Disabled. BlockAdmission serializes the admission process for Kueue Workloads will be admitted one at a time and will wait for the workloads to be ready before going on to the next one in the list. EvictNotReadyWorkloads will not block admission but will evict Workloads that are not ready within a defaulted timelimit.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"fairSharing": {
+						SchemaProps: spec.SchemaProps{
+							Description: "fairSharing TODO not done yet",
+							Ref:         ref("github.com/openshift/api/operator/v1alpha1.FairSharing"),
+						},
+					},
 				},
 				Required: []string{"integrations"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1alpha1.Integrations"},
+			"github.com/openshift/api/operator/v1alpha1.FairSharing", "github.com/openshift/api/operator/v1alpha1.Integrations"},
 	}
 }
 

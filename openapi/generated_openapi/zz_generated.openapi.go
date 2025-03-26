@@ -568,12 +568,14 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/insights/v1alpha1.PersistentVolumeClaimReference":                          schema_openshift_api_insights_v1alpha1_PersistentVolumeClaimReference(ref),
 		"github.com/openshift/api/insights/v1alpha1.PersistentVolumeConfig":                                  schema_openshift_api_insights_v1alpha1_PersistentVolumeConfig(ref),
 		"github.com/openshift/api/insights/v1alpha1.Storage":                                                 schema_openshift_api_insights_v1alpha1_Storage(ref),
+		"github.com/openshift/api/insights/v1alpha2.Custom":                                                  schema_openshift_api_insights_v1alpha2_Custom(ref),
 		"github.com/openshift/api/insights/v1alpha2.DataGather":                                              schema_openshift_api_insights_v1alpha2_DataGather(ref),
 		"github.com/openshift/api/insights/v1alpha2.DataGatherList":                                          schema_openshift_api_insights_v1alpha2_DataGatherList(ref),
 		"github.com/openshift/api/insights/v1alpha2.DataGatherSpec":                                          schema_openshift_api_insights_v1alpha2_DataGatherSpec(ref),
 		"github.com/openshift/api/insights/v1alpha2.DataGatherStatus":                                        schema_openshift_api_insights_v1alpha2_DataGatherStatus(ref),
 		"github.com/openshift/api/insights/v1alpha2.GathererConfig":                                          schema_openshift_api_insights_v1alpha2_GathererConfig(ref),
 		"github.com/openshift/api/insights/v1alpha2.GathererStatus":                                          schema_openshift_api_insights_v1alpha2_GathererStatus(ref),
+		"github.com/openshift/api/insights/v1alpha2.Gatherers":                                               schema_openshift_api_insights_v1alpha2_Gatherers(ref),
 		"github.com/openshift/api/insights/v1alpha2.HealthCheck":                                             schema_openshift_api_insights_v1alpha2_HealthCheck(ref),
 		"github.com/openshift/api/insights/v1alpha2.InsightsReport":                                          schema_openshift_api_insights_v1alpha2_InsightsReport(ref),
 		"github.com/openshift/api/insights/v1alpha2.ObjectReference":                                         schema_openshift_api_insights_v1alpha2_ObjectReference(ref),
@@ -27684,6 +27686,44 @@ func schema_openshift_api_insights_v1alpha1_Storage(ref common.ReferenceCallback
 	}
 }
 
+func schema_openshift_api_insights_v1alpha2_Custom(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "custom provides the custom configuration of gatherers",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"configs": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "configs is a required list of gatherers configurations that can be used to enable or disable specific gatherers. It may not exceed 100 items and each gatherer can be present only once. It is possible to disable an entire set of gatherers while allowing a specific function within that set. The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/insights/v1alpha2.GathererConfig"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"configs"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/insights/v1alpha2.GathererConfig"},
+	}
+}
+
 func schema_openshift_api_insights_v1alpha2_DataGather(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -27798,25 +27838,29 @@ func schema_openshift_api_insights_v1alpha2_DataGatherSpec(ref common.ReferenceC
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"dataPolicy": {
-						SchemaProps: spec.SchemaProps{
-							Description: "dataPolicy allows user to enable additional global obfuscation of the IP addresses and base domain in the Insights archive data. Valid values are \"ClearText\" and \"ObfuscateNetworking\". When set to ClearText the data is not obfuscated. When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is ClearText.",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
 						},
-					},
-					"gatherers": {
 						SchemaProps: spec.SchemaProps{
-							Description: "gatherers is an optional list of gatherers configurations. The list must not exceed 100 items. The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
+							Description: "dataPolicy is an optional list of DataPolicyOptions that allows user to enable additional obfuscation of the Insights archive data. It may not exceed 2 items and must not contain duplicates. Valid values are ObfuscateNetworking and WorkloadNames. When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated. When set to WorkloadNames, the gathered data about cluster resources will not contain the workload names for your deployments. Resources UIDs will be used instead. When omitted no obfuscation is applied.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("github.com/openshift/api/insights/v1alpha2.GathererConfig"),
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
 									},
 								},
 							},
+						},
+					},
+					"gatherers": {
+						SchemaProps: spec.SchemaProps{
+							Description: "gatherers is an optional field that specifies the configuration of the gatherers. If omitted, all gatherers will be run.",
+							Ref:         ref("github.com/openshift/api/insights/v1alpha2.Gatherers"),
 						},
 					},
 					"storage": {
@@ -27829,7 +27873,7 @@ func schema_openshift_api_insights_v1alpha2_DataGatherSpec(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/insights/v1alpha2.GathererConfig", "github.com/openshift/api/insights/v1alpha2.Storage"},
+			"github.com/openshift/api/insights/v1alpha2.Gatherers", "github.com/openshift/api/insights/v1alpha2.Storage"},
 	}
 }
 
@@ -27850,7 +27894,7 @@ func schema_openshift_api_insights_v1alpha2_DataGatherStatus(ref common.Referenc
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "conditions provide details on the status of the gatherer job.",
+							Description: "conditions is an optional field that provides details on the status of the gatherer job. It may not exceed 100 items and must not contain duplicates.\n\nThe current condition types are DataUploaded, DataRecorded, DataProcessed, RemoteConfigurationNotAvailable, RemoteConfigurationInvalid\n\nThe DataUploaded condition is used to represent whether or not the archive was successfully uploaded for further processing. When it has a status of True and a reason of Succeeded, the archive was successfully uploaded. When it has a status of Unknown and a reason of NoUploadYet, the upload has not occurred, or there was no data to upload. When it has a status of False and a reason Failed, the upload failed. The accompanying message will include the specific error encountered.\n\nThe DataRecorded condition is used to represent whether or not the archive was successfully recorded. When it has a status of True and a reason of Succeeded, the archive was recorded successfully. When it has a status of Unknown and a reason of NoDataGatheringYet, the data gathering process has not started yet. When it has a status of False and a reason of RecordingFailed, the recording failed and a message will include the specific error encountered.\n\nThe DataProcessed condition is used to represent whether or not the archive was processed by the processing service. When it has a status of True and a reason of Processed, the data was processed successfully. When it has a status of Unknown and a reason of NothingToProcessYet, there is no data to process at the moment. When it has a status of False and a reason of Failure, processing failed and a message will include the specific error encountered.\n\nThe RemoteConfigurationAvailable condition is used to represent whether the remote configuration is available. When it has a status of Unknown and a reason of Unknown or RemoteConfigNotRequestedYet, the state of the remote configuration is unknown—typically at startup. When it has a status of True and a reason of Succeeded, the configuration is available. When it has a status of False and a reason of NoToken, the configuration was disabled by removing the cloud.openshift.com field from the pull secret. When it has a status of False and a reason of DisabledByConfiguration, the configuration was disabled in insightsdatagather.config.openshift.io.\n\nThe RemoteConfigurationValid condition is used to represent whether the remote configuration is valid. When it has a status of Unknown and a reason of Unknown or NoValidationYet, the validity of the remote configuration is unknown—typically at startup. When it has a status of True and a reason of Succeeded, the configuration is valid. When it has a status of False and a reason of Invalid, the configuration is invalid.\n\nThe Progressing condition is used to represent the phase of gathering When it has a status of False and the reason is DataGatherPending, the gathering has not started yet. When it has a status of True and reason is Gathering, the gathering is running. When it has a status of False and reason is GatheringSucceeded, the gathering succesfully finished. When it has a status of False and reason is GatheringFailed, the gathering failed.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -27860,13 +27904,6 @@ func schema_openshift_api_insights_v1alpha2_DataGatherStatus(ref common.Referenc
 									},
 								},
 							},
-						},
-					},
-					"dataGatherState": {
-						SchemaProps: spec.SchemaProps{
-							Description: "dataGatherState reflects the current state of the data gathering process.",
-							Type:        []string{"string"},
-							Format:      "",
 						},
 					},
 					"gatherers": {
@@ -27904,8 +27941,17 @@ func schema_openshift_api_insights_v1alpha2_DataGatherStatus(ref common.Referenc
 						},
 					},
 					"relatedObjects": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+									"namespace",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
-							Description: "relatedObjects is a list of resources which are useful when debugging or inspecting the data gathering Pod",
+							Description: "relatedObjects is an optional list of resources which are useful when debugging or inspecting the data gathering Pod It may not exceed 100 items and must not contain duplicates.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -27919,7 +27965,7 @@ func schema_openshift_api_insights_v1alpha2_DataGatherStatus(ref common.Referenc
 					},
 					"insightsRequestID": {
 						SchemaProps: spec.SchemaProps{
-							Description: "insightsRequestID is an Insights request ID to track the status of the Insights analysis (in console.redhat.com processing pipeline) for the corresponding Insights data archive.",
+							Description: "insightsRequestID is an optional Insights request ID to track the status of the Insights analysis (in console.redhat.com processing pipeline) for the corresponding Insights data archive. It may not exceed 256 characters and is immutable once set.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -27948,7 +27994,7 @@ func schema_openshift_api_insights_v1alpha2_GathererConfig(ref common.ReferenceC
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name is the required name of specific gatherer It must be at most 256 characters in length. The format for the gatherer name should be: {gatherer}/{function} where the function is optional. Gatherer consists of a lowercase letters only that may include underscores (_). Function consists of a lowercase letters only that may include underscores (_) and is separated from the gatherer by a forward slash (/). The particular gatherers can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md.",
+							Description: "name is the required name of a specific gatherer It may not exceed 256 characters. The format for a gatherer name is: {gatherer}/{function} where the function is optional. Gatherer consists of a lowercase letters only that may include underscores (_). Function consists of a lowercase letters only that may include underscores (_) and is separated from the gatherer by a forward slash (/). The particular gatherers can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -27956,14 +28002,14 @@ func schema_openshift_api_insights_v1alpha2_GathererConfig(ref common.ReferenceC
 					},
 					"state": {
 						SchemaProps: spec.SchemaProps{
-							Description: "state allows you to configure specific gatherer. Valid values are \"Enabled\", \"Disabled\" and omitted. When omitted, this means no opinion and the platform is left to choose a reasonable default. The current default is Enabled.",
+							Description: "state is a required field that allows you to configure specific gatherer. Valid values are \"Enabled\" and \"Disabled\". When set to Enabled the gatherer will run. When set to Disabled the gatherer will not run.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 				},
-				Required: []string{"name"},
+				Required: []string{"name", "state"},
 			},
 		},
 	}
@@ -27986,7 +28032,7 @@ func schema_openshift_api_insights_v1alpha2_GathererStatus(ref common.ReferenceC
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "conditions provide details on the status of each gatherer.",
+							Description: "conditions provide details on the status of each gatherer.\n\nThe current condition type is DataGathered\n\nThe DataGathered condition is used to represent whether or not the data was gathered by a gatherer specified by name. When it has a status of True and a reason of GatheredOK, the data has been successfully gathered as expected. When it has a status of False and a reason of NoData, no data was gathered—for example, when the resource is not present in the cluster. When it has a status of False and a reason of GatherError, an error occurred and no data was gathered. When it has a status of False and a reason of GatherPanic, a panic occurred during gathering and no data was collected. When it has a status of False and a reason of GatherWithErrorReason, data was partially gathered or gathered with an error message.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -28000,24 +28046,68 @@ func schema_openshift_api_insights_v1alpha2_GathererStatus(ref common.ReferenceC
 					},
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name is the name of the gatherer.",
+							Description: "name is the required name of the gatherer. It must contain at least 5 characters and may not exceed 256 characters.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"lastGatherDuration": {
+					"lastGatherSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Description: "lastGatherDuration represents the time spent gathering.",
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+							Description: "lastGatherSeconds is required field that represents the time spent gathering in seconds",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
 						},
 					},
 				},
-				Required: []string{"conditions", "name", "lastGatherDuration"},
+				Required: []string{"name", "lastGatherSeconds"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
+	}
+}
+
+func schema_openshift_api_insights_v1alpha2_Gatherers(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Gathereres specifies the configuration of the gatherers",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "mode is a required field that specifies the mode for gatherers. Allowed values are All and Custom. When set to All, all gatherers wil run and gather data. When set to Custom, the custom configuration from the custom field will be applied.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"custom": {
+						SchemaProps: spec.SchemaProps{
+							Description: "custom provides gathering configuration. It is required when mode is Custom, and forbidden otherwise. Custom configuration allows user to disable only a subset of gatherers. Gatherers that are not explicitly disabled in custom configuration will run.",
+							Ref:         ref("github.com/openshift/api/insights/v1alpha2.Custom"),
+						},
+					},
+				},
+				Required: []string{"mode"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "mode",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"custom": "Custom",
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/insights/v1alpha2.Custom"},
 	}
 }
 
@@ -28030,7 +28120,7 @@ func schema_openshift_api_insights_v1alpha2_HealthCheck(ref common.ReferenceCall
 				Properties: map[string]spec.Schema{
 					"description": {
 						SchemaProps: spec.SchemaProps{
-							Description: "description provides basic description of the healtcheck.",
+							Description: "description is required field that provides basic description of the healtcheck. It must contain at least 10 characters and may not exceed 2048 characters.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28038,10 +28128,10 @@ func schema_openshift_api_insights_v1alpha2_HealthCheck(ref common.ReferenceCall
 					},
 					"totalRisk": {
 						SchemaProps: spec.SchemaProps{
-							Description: "totalRisk of the healthcheck. Indicator of the total risk posed by the detected issue; combination of impact and likelihood. The values can be from 1 to 4, and the higher the number, the more important the issue.",
-							Default:     0,
-							Type:        []string{"integer"},
-							Format:      "int32",
+							Description: "totalRisk is the required field of the healthcheck. It is indicator of the total risk posed by the detected issue; combination of impact and likelihood. Allowed values are Low, Medium, Important and Critical. The value represents the severity of the issue.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"advisorURI": {
@@ -28052,16 +28142,8 @@ func schema_openshift_api_insights_v1alpha2_HealthCheck(ref common.ReferenceCall
 							Format:      "",
 						},
 					},
-					"state": {
-						SchemaProps: spec.SchemaProps{
-							Description: "state determines what the current state of the health check is. Health check is enabled by default and can be disabled by the user in the Insights advisor user interface.",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 				},
-				Required: []string{"description", "totalRisk", "advisorURI", "state"},
+				Required: []string{"description", "totalRisk", "advisorURI"},
 			},
 		},
 	}
@@ -28074,16 +28156,21 @@ func schema_openshift_api_insights_v1alpha2_InsightsReport(ref common.ReferenceC
 				Description: "insightsReport provides Insights health check report based on the most recently sent Insights data.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"downloadedAt": {
+					"downloadedTime": {
 						SchemaProps: spec.SchemaProps{
-							Description: "downloadedAt is the time when the last Insights report was downloaded. An empty value means that there has not been any Insights report downloaded yet and it usually appears in disconnected clusters (or clusters when the Insights data gathering is disabled).",
+							Description: "downloadedTime is an optional time when the last Insights report was downloaded. An empty value means that there has not been any Insights report downloaded yet and it usually appears in disconnected clusters (or clusters when the Insights data gathering is disabled).",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
 						},
 					},
 					"healthChecks": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "atomic",
+								"x-kubernetes-list-map-keys": []interface{}{
+									"advisorURI",
+									"totalRisk",
+									"description",
+								},
+								"x-kubernetes-list-type": "map",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -28123,7 +28210,7 @@ func schema_openshift_api_insights_v1alpha2_ObjectReference(ref common.Reference
 				Properties: map[string]spec.Schema{
 					"group": {
 						SchemaProps: spec.SchemaProps{
-							Description: "group is the API Group of the Resource. Enter empty string for the core group. This value is empty or should follow the DNS1123 subdomain format and it must be at most 253 characters in length. Example: \"\", \"apps\", \"build.openshift.io\", etc.",
+							Description: "group is required field that specifies the API Group of the Resource. Enter empty string for the core group. This value is empty or it should follow the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start with an alphabetic character and end with an alphanumeric character. Example: \"\", \"apps\", \"build.openshift.io\", etc.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28131,7 +28218,7 @@ func schema_openshift_api_insights_v1alpha2_ObjectReference(ref common.Reference
 					},
 					"resource": {
 						SchemaProps: spec.SchemaProps{
-							Description: "resource is required field of the type that is being referenced. It is normally the plural form of the resource kind in lowercase. This value should consist of only lowercase alphanumeric characters and hyphens. Example: \"deployments\", \"deploymentconfigs\", \"pods\", etc.",
+							Description: "resource is required field of the type that is being referenced and follows the DNS1035 format. It is normally the plural form of the resource kind in lowercase. It must be at most 63 characters in length, and must must consist of only lowercase alphanumeric characters and hyphens, and must start with an alphabetic character and end with an alphanumeric character. Example: \"deployments\", \"deploymentconfigs\", \"pods\", etc.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28139,7 +28226,7 @@ func schema_openshift_api_insights_v1alpha2_ObjectReference(ref common.Reference
 					},
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name of the referent that follows the DNS1123 subdomain format. It must be at most 256 characters in length.",
+							Description: "name is required field that specifies the referent that follows the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start with an alphabetic character and end with an alphanumeric character..",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28147,13 +28234,14 @@ func schema_openshift_api_insights_v1alpha2_ObjectReference(ref common.Reference
 					},
 					"namespace": {
 						SchemaProps: spec.SchemaProps{
-							Description: "namespace of the referent that follows the DNS1123 subdomain format. It must be at most 253 characters in length.",
+							Description: "namespace if required field of the referent that follows the DNS1123 labels format. It must be at most 63 characters in length, and must must consist of only lowercase alphanumeric characters and hyphens, and must start with an alphabetic character and end with an alphanumeric character.",
+							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 				},
-				Required: []string{"group", "resource", "name"},
+				Required: []string{"group", "resource", "name", "namespace"},
 			},
 		},
 	}
@@ -28234,6 +28322,18 @@ func schema_openshift_api_insights_v1alpha2_Storage(ref common.ReferenceCallback
 					},
 				},
 				Required: []string{"type"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "type",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"persistentVolume": "PersistentVolume",
+							},
+						},
+					},
+				},
 			},
 		},
 		Dependencies: []string{

@@ -517,6 +517,22 @@ tests:
               - key: example.com/foo
                 valueExpression: "claims.foo"
       expectedError: "Duplicate value: map[string]interface {}{\"key\":\"example.com/foo\"}"
+    - name: Cannot set OIDC providers with extra claim with a key that is not a valid RFC 1123 DNS subdomain
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              extra:
+              - key: ex@mpl3.com/foo
+                valueExpression: "claims.foo"
+      expectedError: "the domain of the key must consist of only lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character"
   onUpdate:
     - name: Updating OIDC provider with a client that's not in the status
       initial: &initConfig |

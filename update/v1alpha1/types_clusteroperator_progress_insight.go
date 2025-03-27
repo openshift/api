@@ -49,13 +49,11 @@ type ClusterOperatorProgressInsightStatus struct {
 	// - Healthy: whether the operator is considered healthy; When Healthy=False, the reason field can be Unavailable or Degraded, and Unavailable is "stronger" than Degraded
 	// +listType=map
 	// +listMapKey=type
-	// +patchStrategy=merge
-	// +patchMergeKey=type
 	// +optional
 	// +kubebuilder:validation:MaxItems=5
 	// +TODO: Add validations to enforce all known conditions are present (CEL+MinItems), once conditions stabilize
 	// +TODO: Add validations to enforce that only known Reasons are used in conditions, once conditions stabilize
-	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
+	Conditions []metav1.Condition `json:"conditions,omitempty"`
 
 	// name is the name of the operator, equal to the name of the corresponding clusteroperators.config.openshift.io resource
 	// +required

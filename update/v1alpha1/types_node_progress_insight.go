@@ -49,13 +49,11 @@ type NodeProgressInsightStatus struct {
 	// - Degraded: whether the Node is degraded (problem observed)
 	// +listType=map
 	// +listMapKey=type
-	// +patchStrategy=merge
-	// +patchMergeKey=type
 	// +optional
 	// +kubebuilder:validation:MaxItems=5
 	// +TODO: Add validations to enforce all known conditions are present (CEL+MinItems), once conditions stabilize
 	// +TODO: Add validations to enforce that only known Reasons are used in conditions, once conditions stabilize
-	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
+	Conditions []metav1.Condition `json:"conditions,omitempty"`
 
 	// name is the name of the node
 	// +required

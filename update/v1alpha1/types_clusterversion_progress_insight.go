@@ -49,13 +49,11 @@ type ClusterVersionProgressInsightStatus struct {
 	// - Updating: whether the control plane (represented by this ClusterVersion) is updating
 	// +listType=map
 	// +listMapKey=type
-	// +patchStrategy=merge
-	// +patchMergeKey=type
 	// +optional
 	// +kubebuilder:validation:MaxItems=5
 	// +TODO: Add validations to enforce all known conditions are present (CEL+MinItems), once conditions stabilize
 	// +TODO: Add validations to enforce that only known Reasons are used in conditions, once conditions stabilize
-	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
+	Conditions []metav1.Condition `json:"conditions,omitempty"`
 
 	// name is equal to the name of the corresponding clusterversions.config.openshift.io resource, typically 'version'
 	// +required
@@ -168,11 +166,9 @@ type Version struct {
 	// metadata on a previous version indicates that the previous update was never fully completed. Can contain at most 5 items.
 	// +listType=map
 	// +listMapKey=key
-	// +patchStrategy=merge
-	// +patchMergeKey=key
 	// +optional
 	// +kubebuilder:validation:MaxItems=2
-	Metadata []VersionMetadata `json:"metadata,omitempty" patchStrategy:"merge" patchMergeKey:"key"`
+	Metadata []VersionMetadata `json:"metadata,omitempty"`
 }
 
 // VersionMetadata is a key:value item assigned to version involved in the update. Value can be empty, then the metadata

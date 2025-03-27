@@ -48,13 +48,11 @@ type MachineConfigPoolProgressInsightStatus struct {
 	// - Updating: whether the pool is updating; When Updating=False, the reason field can be Pending, Updated or Excluded
 	// +listType=map
 	// +listMapKey=type
-	// +patchStrategy=merge
-	// +patchMergeKey=type
 	// +optional
 	// +kubebuilder:validation:MaxItems=5
 	// +TODO: Add validations to enforce all known conditions are present (CEL+MinItems), once conditions stabilize
 	// +TODO: Add validations to enforce that only known Reasons are used in conditions, once conditions stabilize
-	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
+	Conditions []metav1.Condition `json:"conditions,omitempty"`
 
 	// name is the name of the machine config pool
 	// +required
@@ -91,11 +89,9 @@ type MachineConfigPoolProgressInsightStatus struct {
 	// summaries is a list of counts of nodes matching certain criteria (e.g. updated, degraded, etc.). Maximum 16 items can be listed.
 	// +listType=map
 	// +listMapKey=type
-	// +patchStrategy=merge
-	// +patchMergeKey=type
 	// +optional
 	// +kubebuilder:validation:MaxItems=7
-	Summaries []NodeSummary `json:"summaries,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
+	Summaries []NodeSummary `json:"summaries,omitempty"`
 }
 
 // PoolAssessment is a brief summary assessment of the pool update process. This value is human-oriented, and while it

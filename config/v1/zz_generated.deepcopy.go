@@ -5701,7 +5701,15 @@ func (in *TokenClaimMappings) DeepCopyInto(out *TokenClaimMappings) {
 	*out = *in
 	in.Username.DeepCopyInto(&out.Username)
 	out.Groups = in.Groups
+<<<<<<< HEAD
 	out.UID = in.UID
+=======
+	if in.UID != nil {
+		in, out := &in.UID, &out.UID
+		*out = new(TokenClaimOrExpressionMapping)
+		**out = **in
+	}
+>>>>>>> d74d0076c40633ea2a0d1577bdeebf78adca8159
 	if in.Extra != nil {
 		in, out := &in.Extra, &out.Extra
 		*out = make([]ExtraMapping, len(*in))

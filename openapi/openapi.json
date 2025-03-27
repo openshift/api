@@ -38075,9 +38075,7 @@
           "x-kubernetes-list-map-keys": [
             "type"
           ],
-          "x-kubernetes-list-type": "map",
-          "x-kubernetes-patch-merge-key": "type",
-          "x-kubernetes-patch-strategy": "merge"
+          "x-kubernetes-list-type": "map"
         },
         "name": {
           "description": "name is the name of the operator, equal to the name of the corresponding clusteroperators.config.openshift.io resource",
@@ -38185,9 +38183,7 @@
           "x-kubernetes-list-map-keys": [
             "type"
           ],
-          "x-kubernetes-list-type": "map",
-          "x-kubernetes-patch-merge-key": "type",
-          "x-kubernetes-patch-strategy": "merge"
+          "x-kubernetes-list-type": "map"
         },
         "estimatedCompletedAt": {
           "description": "estimatedCompletedAt is the estimated time when the update will complete, if such estimate is available. When there is no update in progress, this field is either not set at all, or its value is the time when the last update was expected to complete.",
@@ -38486,9 +38482,7 @@
           "x-kubernetes-list-map-keys": [
             "type"
           ],
-          "x-kubernetes-list-type": "map",
-          "x-kubernetes-patch-merge-key": "type",
-          "x-kubernetes-patch-strategy": "merge"
+          "x-kubernetes-list-type": "map"
         },
         "name": {
           "description": "name is the name of the machine config pool",
@@ -38510,9 +38504,7 @@
           "x-kubernetes-list-map-keys": [
             "type"
           ],
-          "x-kubernetes-list-type": "map",
-          "x-kubernetes-patch-merge-key": "type",
-          "x-kubernetes-patch-strategy": "merge"
+          "x-kubernetes-list-type": "map"
         }
       }
     },
@@ -38598,9 +38590,7 @@
           "x-kubernetes-list-map-keys": [
             "type"
           ],
-          "x-kubernetes-list-type": "map",
-          "x-kubernetes-patch-merge-key": "type",
-          "x-kubernetes-patch-strategy": "merge"
+          "x-kubernetes-list-type": "map"
         },
         "estimatedToComplete": {
           "description": "estimatedToComplete is the estimated time to complete the update, when known",
@@ -38694,9 +38684,7 @@
           "x-kubernetes-list-map-keys": [
             "key"
           ],
-          "x-kubernetes-list-type": "map",
-          "x-kubernetes-patch-merge-key": "key",
-          "x-kubernetes-patch-strategy": "merge"
+          "x-kubernetes-list-type": "map"
         },
         "version": {
           "description": "version is a semantic version string",

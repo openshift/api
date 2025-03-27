@@ -40336,7 +40336,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MCOObjectReference(ref c
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name is the object name. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
+							Description: "name is the name of the object being referenced. For example, this can represent a machine config pool or node name. Must be a lowercase RFC-1123 subdomain name (https://tools.ietf.org/html/rfc1123) consisting of only lowercase alphanumeric characters, hyphens (-), and periods (.), and must start and end with an alphanumeric character, and be at most 253 characters in length.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -40372,8 +40372,9 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNode(ref co
 					},
 					"metadata": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+							Description: "metadata is the standard object metadata.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
 						},
 					},
 					"spec": {
@@ -40422,13 +40423,15 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeList(re
 					},
 					"metadata": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+							Description: "metadata is the standard list metadata.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
 						},
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
+							Description: "items contains a collection of MachineConfigNode resources.",
+							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
@@ -40440,7 +40443,6 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeList(re
 						},
 					},
 				},
-				Required: []string{"metadata", "items"},
 			},
 		},
 		Dependencies: []string{
@@ -40471,7 +40473,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeSpec(re
 					},
 					"configVersion": {
 						SchemaProps: spec.SchemaProps{
-							Description: "configVersion holds the desired config version for the node targeted by this machine config node resource. The desired version represents the machine config the node will attempt to update to. This gets set before the machine config operator validates the new machine config against the current machine config.",
+							Description: "configVersion holds the desired config version for the node targeted by this machine config node resource. The desired version represents the machine config the node will attempt to update to and gets set before the machine config operator validates the new machine config against the current machine config.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeSpecMachineConfigVersion"),
 						},
@@ -40486,7 +40488,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeSpec(re
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "pinnedImageSets holds the desired pinned image sets that this node should pin and pull.",
+							Description: "pinnedImageSets is a user defined value that holds the names of the desired image sets that the node should pull and pin.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -40511,12 +40513,12 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeSpecMac
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "MachineConfigNodeSpecMachineConfigVersion holds the desired config version for the current observed machine config node. When Current is not equal to Desired; the MachineConfigOperator is in an upgrade phase and the machine config node will take account of upgrade related events. Otherwise they will be ignored given that certain operations happen both during the MCO's upgrade mode and the daily operations mode.",
+				Description: "MachineConfigNodeSpecMachineConfigVersion holds the desired config version for the current observed machine config node. When Current is not equal to Desired, the MachineConfigOperator is in an upgrade phase and the machine config node will take account of upgrade related events. Otherwise, they will be ignored given that certain operations happen both during the MCO's upgrade mode and the daily operations mode.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"desired": {
 						SchemaProps: spec.SchemaProps{
-							Description: "desired is the name of the machine config that the the node should be upgraded to. This value is set when the machine config pool generates a new version of its rendered configuration. When this value is changed, the machine config daemon starts the node upgrade process. This value gets set in the machine config node spec once the machine config has been targeted for upgrade and before it is validated. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
+							Description: "desired is the name of the machine config that the the node should be upgraded to. This value is set when the machine config pool generates a new version of its rendered configuration. When this value is changed, the machine config daemon starts the node upgrade process. This value gets set in the machine config node spec once the machine config has been targeted for upgrade and before it is validated. Must be a lowercase RFC-1123 subdomain name (https://tools.ietf.org/html/rfc1123) consisting of only lowercase alphanumeric characters, hyphens (-), and periods (.), and must start and end with an alphanumeric character, and be at most 253 characters in length.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -40533,11 +40535,12 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeSpecPin
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "MachineConfigNodeSpecPinnedImageSet holds information on the desired pinned image sets that the current observed machine config node should pin and pull.",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name is the name of the pinned image set. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
+							Description: "name is the name of the pinned image set. Must be a lowercase RFC-1123 subdomain name (https://tools.ietf.org/html/rfc1123) consisting of only lowercase alphanumeric characters, hyphens (-), and periods (.), and must start and end with an alphanumeric character, and be at most 253 characters in length.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -40581,14 +40584,14 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatus(
 					},
 					"observedGeneration": {
 						SchemaProps: spec.SchemaProps{
-							Description: "observedGeneration represents the generation observed by the controller. This field is updated when the controller observes a change to the desiredConfig in the configVersion of the machine config node spec.",
+							Description: "observedGeneration represents the generation of the MachineConfigNode object observed by the Machine Config Operator's controller. This field is updated when the controller observes a change to the desiredConfig in the configVersion of the machine config node spec.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
 					},
 					"configVersion": {
 						SchemaProps: spec.SchemaProps{
-							Description: "configVersion describes the current and desired machine config for this node. The current version represents the current machine config for the node and is updated after a successful update. The desired version represents the machine config the node will attempt to update to. This desired machine config has been compared to the current machine config and has been validated by the machine config operator as one that is valid and that exists.",
+							Description: "configVersion describes the current and desired machine config version for this node.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeStatusMachineConfigVersion"),
 						},
@@ -40603,7 +40606,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatus(
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "pinnedImageSets describes the current and desired pinned image sets for this node. The current version is the generation of the pinned image set that has most recently been successfully pulled and pinned on this node. The desired version is the generation of the pinned image set that is targeted to be pulled and pinned on this node.",
+							Description: "pinnedImageSets describes the current and desired pinned image sets for this node.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -40616,7 +40619,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatus(
 						},
 					},
 				},
-				Required: []string{"observedGeneration", "configVersion"},
+				Required: []string{"configVersion"},
 			},
 		},
 		Dependencies: []string{
@@ -40628,12 +40631,12 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatusM
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "MachineConfigNodeStatusMachineConfigVersion holds the current and desired config versions as last updated in the MCN status. When the current and desired versions are not matched, the machine config pool is processing an upgrade and the machine config node will monitor the upgrade process. When the current and desired versions do not match, the machine config node will ignore these events given that certain operations happen both during the MCO's upgrade mode and the daily operations mode.",
+				Description: "MachineConfigNodeStatusMachineConfigVersion holds the current and desired config versions as last updated in the MCN status. When the current and desired versions do not match, the machine config pool is processing an upgrade and the machine config node will monitor the upgrade process. When the current and desired versions do match, the machine config node will ignore these events given that certain operations happen both during the MCO's upgrade mode and the daily operations mode.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"current": {
 						SchemaProps: spec.SchemaProps{
-							Description: "current is the name of the machine config currently in use on the node. This value is updated once the machine config daemon has completed the update of the configuration for the node. This value should match the desired version unless an upgrade is in progress. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
+							Description: "current is the name of the machine config currently in use on the node. This value is updated once the machine config daemon has completed the update of the configuration for the node. This value should match the desired version unless an upgrade is in progress. Must be a lowercase RFC-1123 subdomain name (https://tools.ietf.org/html/rfc1123) consisting of only lowercase alphanumeric characters, hyphens (-), and periods (.), and must start and end with an alphanumeric character, and be at most 253 characters in length.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -40641,7 +40644,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatusM
 					},
 					"desired": {
 						SchemaProps: spec.SchemaProps{
-							Description: "desired is the MachineConfig the node wants to upgrade to. This value gets set in the machine config node status once the machine config has been validated against the current machine config. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
+							Description: "desired is the MachineConfig the node wants to upgrade to. This value gets set in the machine config node status once the machine config has been validated against the current machine config. Must be a lowercase RFC-1123 subdomain name (https://tools.ietf.org/html/rfc1123) consisting of only lowercase alphanumeric characters, hyphens (-), and periods (.), and must start and end with an alphanumeric character, and be at most 253 characters in length.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -40658,11 +40661,12 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatusP
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "MachineConfigNodeStatusPinnedImageSet holds information about the current, desired, and failed pinned image sets for the observed machine config node.",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name is the name of the pinned image set. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
+							Description: "name is the name of the pinned image set. Must be a lowercase RFC-1123 subdomain name (https://tools.ietf.org/html/rfc1123) consisting of only lowercase alphanumeric characters, hyphens (-), and periods (.), and must start and end with an alphanumeric character, and be at most 253 characters in length.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -40677,7 +40681,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatusP
 					},
 					"desiredGeneration": {
 						SchemaProps: spec.SchemaProps{
-							Description: "desiredGeneration version is the generation of the pinned image set that is targeted to be pulled and pinned on this node.",
+							Description: "desiredGeneration is the generation of the pinned image set that is targeted to be pulled and pinned on this node.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -40689,19 +40693,11 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatusP
 							Format:      "int32",
 						},
 					},
-					"lastFailedGenerationErrors": {
+					"lastFailedGenerationError": {
 						SchemaProps: spec.SchemaProps{
-							Description: "lastFailedGenerationErrors is a list of errors why the lastFailed generation failed to be pulled and pinned.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
+							Description: "lastFailedGenerationError is the error explaining why the desired images failed to be pulled and pinned. The error is an empty string if the image pull and pin is successful.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},

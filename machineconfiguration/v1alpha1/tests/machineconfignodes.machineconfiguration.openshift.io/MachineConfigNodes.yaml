@@ -156,7 +156,7 @@ tests:
               currentGeneration: 2
               desiredGeneration: 1
       expectedStatusError: "Invalid value: \"object\": desired generation must be greater than or equal to the current generation"
-    - name: PinnedImageSet desired generation must be greater than last failed generation
+    - name: PinnedImageSet desired generation must be greater than or equal to the last failed generation
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1alpha1
         kind: MachineConfigNode
@@ -179,7 +179,6 @@ tests:
             - name: test-pinned-image-set
               currentGeneration: 2
               desiredGeneration: 2
-              lastFailedGeneration: 1
       updated: |
         apiVersion: machineconfiguration.openshift.io/v1alpha1
         kind: MachineConfigNode
@@ -203,8 +202,8 @@ tests:
               currentGeneration: 3
               desiredGeneration: 3
               lastFailedGeneration: 4
-      expectedStatusError: "Invalid value: \"object\": desired generation must be greater than last failed generation"
-    - name: PinnedImageSet desired generation must be set if last failed generation is set
+      expectedStatusError: "Invalid value: \"object\": desired generation must be greater than or equal to the last failed generation"
+    - name: PinnedImageSet last failed generation error must be defined on image pull and pin failure
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1alpha1
         kind: MachineConfigNode
@@ -225,6 +224,8 @@ tests:
             desired: rendered-worker-abc
           pinnedImageSets:
             - name: test-pinned-image-set
+              currentGeneration: 2
+              desiredGeneration: 2
       updated: |
         apiVersion: machineconfiguration.openshift.io/v1alpha1
         kind: MachineConfigNode
@@ -245,5 +246,7 @@ tests:
             desired: rendered-worker-abc
           pinnedImageSets:
             - name: test-pinned-image-set
-              lastFailedGeneration: 2
-      expectedStatusError: "Invalid value: \"object\": desired generation must be defined if last failed generation is defined"
+              currentGeneration: 2
+              desiredGeneration: 3
+              lastFailedGeneration: 3
+      expectedStatusError: "Invalid value: \"object\": last failed generation error must be defined on image pull and pin failure"

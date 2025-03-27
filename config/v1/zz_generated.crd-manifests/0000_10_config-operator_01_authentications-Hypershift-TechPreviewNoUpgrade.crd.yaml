@@ -6,6 +6,7 @@ metadata:
     api.openshift.io/merged-by-featuregates: "true"
     include.release.openshift.io/ibm-cloud-managed: "true"
     release.openshift.io/bootstrap-required: "true"
+    release.openshift.io/feature-set: TechPreviewNoUpgrade
   name: authentications.config.openshift.io
 spec:
   group: config.openshift.io

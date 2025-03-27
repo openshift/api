@@ -301,9 +301,6 @@
                         "name": "VSphereDriverConfiguration"
                     },
                     {
-                        "name": "VSphereMultiVCenters"
-                    },
-                    {
                         "name": "VSphereStaticIPs"
                     },
                     {

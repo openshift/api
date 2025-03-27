@@ -111,6 +111,9 @@
                         "name": "ExternalOIDC"
                     },
                     {
+                        "name": "ExternalOIDCAdditionMappings"
+                    },
+                    {
                         "name": "GCPClusterHostedDNS"
                     },
                     {

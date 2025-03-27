@@ -20,6 +20,12 @@ import (
 	"k8s.io/klog/v2"
 )
 
+const (
+	// featureGatedCRDManifests is the folder name we use to generate
+	// partial CRD manifests.
+	featureGatedCRDManifests = "zz_generated.featuregated-crd-manifests"
+)
+
 // Options contains the configuration required for the schemacheck generator.
 type Options struct {
 	// Disabled indicates whether the schemacheck generator is disabled or not.
@@ -230,6 +236,12 @@ func loadSchemaCheckGenerationContextsForVersionFromDir(version generation.APIVe
 
 	for _, fileInfo := range dirEntries {
 		if fileInfo.IsDir() {
+			if fileInfo.Name() == featureGatedCRDManifests {
+				// We don't want to check the feature gated manifests.
+				// All changes will appear in the merged CRD manifests so checking the partial manifests just duplicates errors.
+				continue
+			}
+
 			subContexts, err := loadSchemaCheckGenerationContextsForVersionFromDir(version, baseCommit, repoBaseDir, filepath.Join(searchPath, fileInfo.Name()), gitBaseSHA)
 			if err != nil {
 				errs = append(errs, fmt.Errorf("could not load schema check generation contexts from dir %q: %v", filepath.Join(searchPath, fileInfo.Name()), err))

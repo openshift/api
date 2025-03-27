@@ -238,12 +238,6 @@
                         "name": "ChunkSizeMiB"
                     },
                     {
-                        "name": "CloudDualStackNodeIPs"
-                    },
-                    {
-                        "name": "DisableKubeletCloudCredentialProviders"
-                    },
-                    {
                         "name": "GCPLabelsTags"
                     },
                     {
@@ -305,9 +299,6 @@
                     },
                     {
                         "name": "VSphereStaticIPs"
-                    },
-                    {
-                        "name": "ValidatingAdmissionPolicy"
                     }
                 ],
                 "version": ""

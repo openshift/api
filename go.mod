@@ -5,6 +5,7 @@ go 1.23.0
 toolchain go1.23.4
 
 require (
+	github.com/blang/semver/v4 v4.0.0
 	github.com/gogo/protobuf v1.3.2
 	golang.org/x/tools v0.26.0
 	k8s.io/api v0.32.1

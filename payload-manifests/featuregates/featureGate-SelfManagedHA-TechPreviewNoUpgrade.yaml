@@ -19,9 +19,6 @@
                         "name": "ClusterAPIInstall"
                     },
                     {
-                        "name": "ClusterAPIInstallIBMCloud"
-                    },
-                    {
                         "name": "ClusterVersionOperatorConfiguration"
                     },
                     {
@@ -91,6 +88,9 @@
                     },
                     {
                         "name": "CloudDualStackNodeIPs"
+                    },
+                    {
+                        "name": "ClusterAPIInstallIBMCloud"
                     },
                     {
                         "name": "ClusterMonitoringConfig"

@@ -48,6 +48,35 @@ spec:
                   config is the desired configuration
                   for the Kueue operator.
                 properties:
+                  fairSharing:
+                    description: fairSharing TODO not done yet
+                    properties:
+                      preemptionStrategies:
+                        description: |-
+                          preemptionStrategies indicates which constraints should a preemption satisfy.
+                          The preemption algorithm will only use the next strategy in the list if the
+                          incoming workload (preemptor) doesn't fit after using the previous strategies.
+                          Possible values are:
+                          - LessThanOrEqualToFinalShare: Only preempt a workload if the share of the preemptor CQ
+                            with the preemptor workload is less than or equal to the share of the preemptee CQ
+                            without the workload to be preempted.
+                            This strategy might favor preemption of smaller workloads in the preemptee CQ,
+                            regardless of priority or start time, in an effort to keep the share of the CQ
+                            as high as possible.
+                          - LessThanInitialShare: Only preempt a workload if the share of the preemptor CQ
+                            with the incoming workload is strictly less than the share of the preemptee CQ.
+                            This strategy doesn't depend on the share usage of the workload being preempted.
+                            As a result, the strategy chooses to preempt workloads with the lowest priority and
+                            newest start time first.
+                          The default strategy is ["LessThanOrEqualToFinalShare", "LessThanInitialShare"].
+                        items:
+                          enum:
+                          - LessThanOrEqualToFinalShare
+                          - LessThanInitialShare
+                          type: string
+                        maxItems: 2
+                        type: array
+                    type: object
                   integrations:
                     description: |-
                       integrations is a required field that configures the Kueue's workload integrations.
@@ -186,6 +215,58 @@ spec:
                         x-kubernetes-list-type: atomic
                     required:
                     - frameworks
+                    type: object
+                  kueueGangSchedulingPolicy:
+                    description: kueueGangSchedulingPolicy controls how Kueue admits
+                      workloads
+                    properties:
+                      byWorkload:
+                        description: |-
+                          byWorkload controls how admission is done.
+                          The options are Sequential and Parallel.
+                          Sequential means workloads are admitted in sequential order and Kueue waits
+                          for those workloads to be ready.
+                          Parallel admits workloads in parallel and does not wait on these workloads to be ready.
+                          Workloads can be evicted in the background if they are not ready within default settings.
+                        enum:
+                        - Parallel
+                        - Sequential
+                        type: string
+                        x-kubernetes-validations:
+                        - message: byWorkload is only valid if policy equals ByWorkload
+                          rule: self.policy==ByWorkload
+                      policy:
+                        description: |-
+                          policy allows for changing the kinds of gang scheduling Kueue does.
+                          This is an optional field.
+                          The allowed values are ByWorkload and Disabled.
+                          The default value will be Disabled.
+                          ByWorkload allows for configuration how admission is performed
+                          for Kueue.
+                        enum:
+                        - ByWorkload
+                        - Disabled
+                        type: string
+                    type: object
+                  queueLabelPolicy:
+                    description: |-
+                      queueLabelPolicy controls how kueue manages workloads
+                      The default behavior of Kueue will manage workloads that have a queue-name label.
+                    properties:
+                      queueLabelPolicy:
+                        description: |-
+                          queueLabelPolicy controls whether or not Kueue reconciles
+                          jobs that don't set the label kueue.x-k8s.io/queue-name.
+                          The allowed values are QueueNameRequired and QueueNameOptional.
+                          If set to QueueNameRequired, then those jobs will be suspended and never started unless
+                          they are assigned a queue and eventually admitted. This also applies to
+                          jobs created before starting the kueue controller.
+                          Defaults to QueueNameOptional; therefore, those jobs are not managed and if they are created
+                          unsuspended, they will start immediately.
+                        enum:
+                        - QueueNameRequired
+                        - QueueNameOptional
+                        type: string
                     type: object
                 required:
                 - integrations

@@ -33465,6 +33465,7 @@
       "properties": {
         "fairSharing": {
           "description": "fairSharing TODO not done yet",
+          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.FairSharing"
         },
         "integrations": {
@@ -33473,12 +33474,30 @@
           "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.Integrations"
         },
         "kueueGangSchedulingPolicy": {
-          "description": "kueueGangSchedulingPolicy controls how Kueue admits workloads Kueue provides the ability to admit workloads all in one (gang admission) and evicts workloads if they are not ready within a specific time. This is an optional field. The allowed values are BlockAdmission, EvictNotReadyWorkloads, and Disabled. The default value will be Disabled. BlockAdmission serializes the admission process for Kueue Workloads will be admitted one at a time and will wait for the workloads to be ready before going on to the next one in the list. EvictNotReadyWorkloads will not block admission but will evict Workloads that are not ready within a defaulted timelimit.",
-          "type": "string"
+          "description": "kueueGangSchedulingPolicy controls how Kueue admits workloads",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.KueueGangSchedulingPolicy"
         },
         "queueLabelPolicy": {
-          "description": "queueLabelPolicy controls whether or not Kueue reconciles jobs that don't set the label kueue.x-k8s.io/queue-name. The allowed values are QueueNameRequired and QueueNameOptional. If set to QueueNameRequired, then those jobs will be suspended and never started unless they are assigned a queue and eventually admitted. This also applies to jobs created before starting the kueue controller. Defaults to QueueNameOptional; therefore, those jobs are not managed and if they are created unsuspended, they will start immediately.",
-          "type": "string"
+          "description": "queueLabelPolicy controls how kueue manages workloads The default behavior of Kueue will manage workloads that have a queue-name label.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.QueueLabelPolicy"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1alpha1.KueueGangSchedulingPolicy": {
+      "description": "Kueue provides the ability to admit workloads all in one (gang admission) and evicts workloads if they are not ready within a specific time.",
+      "type": "object",
+      "properties": {
+        "byWorkload": {
+          "description": "byWorkload controls how admission is done. The options are Sequential and Parallel. Sequential means workloads are admitted in sequential order and Kueue waits for those workloads to be ready. Parallel admits workloads in parallel and does not wait on these workloads to be ready. Workloads can be evicted in the background if they are not ready within default settings.",
+          "type": "string",
+          "default": ""
+        },
+        "policy": {
+          "description": "policy allows for changing the kinds of gang scheduling Kueue does. This is an optional field. The allowed values are ByWorkload and Disabled. The default value will be Disabled. ByWorkload allows for configuration how admission is performed for Kueue.",
+          "type": "string",
+          "default": ""
         }
       }
     },
@@ -33921,6 +33940,16 @@
         "taskSummary": {
           "description": "taskSummary is a high level summary of what the controller is currently attempting to do.  It is high-level, human-readable and not guaranteed in any way. (I needed this for debugging and realized it made a great summary).",
           "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1alpha1.QueueLabelPolicy": {
+      "type": "object",
+      "properties": {
+        "queueLabelPolicy": {
+          "description": "queueLabelPolicy controls whether or not Kueue reconciles jobs that don't set the label kueue.x-k8s.io/queue-name. The allowed values are QueueNameRequired and QueueNameOptional. If set to QueueNameRequired, then those jobs will be suspended and never started unless they are assigned a queue and eventually admitted. This also applies to jobs created before starting the kueue controller. Defaults to QueueNameOptional; therefore, those jobs are not managed and if they are created unsuspended, they will start immediately.",
+          "type": "string",
+          "default": ""
         }
       }
     },

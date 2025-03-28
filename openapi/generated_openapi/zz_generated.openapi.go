@@ -1120,6 +1120,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1alpha1.Integrations":                                            schema_openshift_api_operator_v1alpha1_Integrations(ref),
 		"github.com/openshift/api/operator/v1alpha1.Kueue":                                                   schema_openshift_api_operator_v1alpha1_Kueue(ref),
 		"github.com/openshift/api/operator/v1alpha1.KueueConfiguration":                                      schema_openshift_api_operator_v1alpha1_KueueConfiguration(ref),
+		"github.com/openshift/api/operator/v1alpha1.KueueGangSchedulingPolicy":                               schema_openshift_api_operator_v1alpha1_KueueGangSchedulingPolicy(ref),
 		"github.com/openshift/api/operator/v1alpha1.KueueList":                                               schema_openshift_api_operator_v1alpha1_KueueList(ref),
 		"github.com/openshift/api/operator/v1alpha1.KueueOperandSpec":                                        schema_openshift_api_operator_v1alpha1_KueueOperandSpec(ref),
 		"github.com/openshift/api/operator/v1alpha1.KueueStatus":                                             schema_openshift_api_operator_v1alpha1_KueueStatus(ref),
@@ -1133,6 +1134,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1alpha1.OperatorCondition":                                       schema_openshift_api_operator_v1alpha1_OperatorCondition(ref),
 		"github.com/openshift/api/operator/v1alpha1.OperatorSpec":                                            schema_openshift_api_operator_v1alpha1_OperatorSpec(ref),
 		"github.com/openshift/api/operator/v1alpha1.OperatorStatus":                                          schema_openshift_api_operator_v1alpha1_OperatorStatus(ref),
+		"github.com/openshift/api/operator/v1alpha1.QueueLabelPolicy":                                        schema_openshift_api_operator_v1alpha1_QueueLabelPolicy(ref),
 		"github.com/openshift/api/operator/v1alpha1.RepositoryDigestMirrors":                                 schema_openshift_api_operator_v1alpha1_RepositoryDigestMirrors(ref),
 		"github.com/openshift/api/operator/v1alpha1.StaticPodOperatorStatus":                                 schema_openshift_api_operator_v1alpha1_StaticPodOperatorStatus(ref),
 		"github.com/openshift/api/operator/v1alpha1.VersionAvailability":                                     schema_openshift_api_operator_v1alpha1_VersionAvailability(ref),
@@ -57287,21 +57289,22 @@ func schema_openshift_api_operator_v1alpha1_KueueConfiguration(ref common.Refere
 					},
 					"queueLabelPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "queueLabelPolicy controls whether or not Kueue reconciles jobs that don't set the label kueue.x-k8s.io/queue-name. The allowed values are QueueNameRequired and QueueNameOptional. If set to QueueNameRequired, then those jobs will be suspended and never started unless they are assigned a queue and eventually admitted. This also applies to jobs created before starting the kueue controller. Defaults to QueueNameOptional; therefore, those jobs are not managed and if they are created unsuspended, they will start immediately.",
-							Type:        []string{"string"},
-							Format:      "",
+							Description: "queueLabelPolicy controls how kueue manages workloads The default behavior of Kueue will manage workloads that have a queue-name label.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1alpha1.QueueLabelPolicy"),
 						},
 					},
 					"kueueGangSchedulingPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "kueueGangSchedulingPolicy controls how Kueue admits workloads Kueue provides the ability to admit workloads all in one (gang admission) and evicts workloads if they are not ready within a specific time. This is an optional field. The allowed values are BlockAdmission, EvictNotReadyWorkloads, and Disabled. The default value will be Disabled. BlockAdmission serializes the admission process for Kueue Workloads will be admitted one at a time and will wait for the workloads to be ready before going on to the next one in the list. EvictNotReadyWorkloads will not block admission but will evict Workloads that are not ready within a defaulted timelimit.",
-							Type:        []string{"string"},
-							Format:      "",
+							Description: "kueueGangSchedulingPolicy controls how Kueue admits workloads",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1alpha1.KueueGangSchedulingPolicy"),
 						},
 					},
 					"fairSharing": {
 						SchemaProps: spec.SchemaProps{
 							Description: "fairSharing TODO not done yet",
+							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/operator/v1alpha1.FairSharing"),
 						},
 					},
@@ -57310,7 +57313,36 @@ func schema_openshift_api_operator_v1alpha1_KueueConfiguration(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1alpha1.FairSharing", "github.com/openshift/api/operator/v1alpha1.Integrations"},
+			"github.com/openshift/api/operator/v1alpha1.FairSharing", "github.com/openshift/api/operator/v1alpha1.Integrations", "github.com/openshift/api/operator/v1alpha1.KueueGangSchedulingPolicy", "github.com/openshift/api/operator/v1alpha1.QueueLabelPolicy"},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_KueueGangSchedulingPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Kueue provides the ability to admit workloads all in one (gang admission) and evicts workloads if they are not ready within a specific time.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"policy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "policy allows for changing the kinds of gang scheduling Kueue does. This is an optional field. The allowed values are ByWorkload and Disabled. The default value will be Disabled. ByWorkload allows for configuration how admission is performed for Kueue.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"byWorkload": {
+						SchemaProps: spec.SchemaProps{
+							Description: "byWorkload controls how admission is done. The options are Sequential and Parallel. Sequential means workloads are admitted in sequential order and Kueue waits for those workloads to be ready. Parallel admits workloads in parallel and does not wait on these workloads to be ready. Workloads can be evicted in the background if they are not ready within default settings.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
 	}
 }
 
@@ -58026,6 +58058,26 @@ func schema_openshift_api_operator_v1alpha1_OperatorStatus(ref common.ReferenceC
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/operator/v1alpha1.OperatorCondition", "github.com/openshift/api/operator/v1alpha1.VersionAvailability"},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_QueueLabelPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"queueLabelPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "queueLabelPolicy controls whether or not Kueue reconciles jobs that don't set the label kueue.x-k8s.io/queue-name. The allowed values are QueueNameRequired and QueueNameOptional. If set to QueueNameRequired, then those jobs will be suspended and never started unless they are assigned a queue and eventually admitted. This also applies to jobs created before starting the kueue controller. Defaults to QueueNameOptional; therefore, those jobs are not managed and if they are created unsuspended, they will start immediately.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
 	}
 }
 

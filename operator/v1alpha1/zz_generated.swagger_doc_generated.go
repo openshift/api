@@ -268,6 +268,14 @@ func (ExternalFramework) SwaggerDoc() map[string]string {
 	return map_ExternalFramework
 }
 
+var map_FairSharing = map[string]string{
+	"preemptionStrategies": "preemptionStrategies indicates which constraints should a preemption satisfy. The preemption algorithm will only use the next strategy in the list if the incoming workload (preemptor) doesn't fit after using the previous strategies. Possible values are: - LessThanOrEqualToFinalShare: Only preempt a workload if the share of the preemptor CQ\n  with the preemptor workload is less than or equal to the share of the preemptee CQ\n  without the workload to be preempted.\n  This strategy might favor preemption of smaller workloads in the preemptee CQ,\n  regardless of priority or start time, in an effort to keep the share of the CQ\n  as high as possible.\n- LessThanInitialShare: Only preempt a workload if the share of the preemptor CQ\n  with the incoming workload is strictly less than the share of the preemptee CQ.\n  This strategy doesn't depend on the share usage of the workload being preempted.\n  As a result, the strategy chooses to preempt workloads with the lowest priority and\n  newest start time first.\nThe default strategy is [\"LessThanOrEqualToFinalShare\", \"LessThanInitialShare\"].",
+}
+
+func (FairSharing) SwaggerDoc() map[string]string {
+	return map_FairSharing
+}
+
 var map_Integrations = map[string]string{
 	"":                   "This is the integrations for Kueue. Kueue uses these apis to determine which jobs will be managed by Kueue.",
 	"frameworks":         "frameworks are a unique list of names to be enabled. This is required and must have at least one element. Each framework represents a type of job that Kueue will manage. Frameworks are a list of frameworks that Kueue has support for. The allowed values are BatchJob, RayJob, RayCluster, JobSet, MPIJob, PaddleJob, PytorchJob, TFJob, XGBoostJob, AppWrapper, Pod, Deployment, StatefulSet and LeaderWorkerSet.",
@@ -291,11 +299,24 @@ func (Kueue) SwaggerDoc() map[string]string {
 }
 
 var map_KueueConfiguration = map[string]string{
-	"integrations": "integrations is a required field that configures the Kueue's workload integrations. Kueue has both standard integrations, known as job frameworks, and external integrations known as external frameworks. Kueue will only manage workloads that correspond to the specified integrations.",
+	"integrations":              "integrations is a required field that configures the Kueue's workload integrations. Kueue has both standard integrations, known as job frameworks, and external integrations known as external frameworks. Kueue will only manage workloads that correspond to the specified integrations.",
+	"queueLabelPolicy":          "queueLabelPolicy controls how kueue manages workloads The default behavior of Kueue will manage workloads that have a queue-name label.",
+	"kueueGangSchedulingPolicy": "kueueGangSchedulingPolicy controls how Kueue admits workloads",
+	"fairSharing":               "fairSharing TODO not done yet",
 }
 
 func (KueueConfiguration) SwaggerDoc() map[string]string {
 	return map_KueueConfiguration
+}
+
+var map_KueueGangSchedulingPolicy = map[string]string{
+	"":           "Kueue provides the ability to admit workloads all in one (gang admission) and evicts workloads if they are not ready within a specific time.",
+	"policy":     "policy allows for changing the kinds of gang scheduling Kueue does. This is an optional field. The allowed values are ByWorkload and Disabled. The default value will be Disabled. ByWorkload allows for configuration how admission is performed for Kueue.",
+	"byWorkload": "byWorkload controls how admission is done. The options are Sequential and Parallel. Sequential means workloads are admitted in sequential order and Kueue waits for those workloads to be ready. Parallel admits workloads in parallel and does not wait on these workloads to be ready. Workloads can be evicted in the background if they are not ready within default settings.",
+}
+
+func (KueueGangSchedulingPolicy) SwaggerDoc() map[string]string {
+	return map_KueueGangSchedulingPolicy
 }
 
 var map_KueueList = map[string]string{
@@ -330,6 +351,14 @@ var map_LabelKeys = map[string]string{
 
 func (LabelKeys) SwaggerDoc() map[string]string {
 	return map_LabelKeys
+}
+
+var map_QueueLabelPolicy = map[string]string{
+	"queueLabelPolicy": "queueLabelPolicy controls whether or not Kueue reconciles jobs that don't set the label kueue.x-k8s.io/queue-name. The allowed values are QueueNameRequired and QueueNameOptional. If set to QueueNameRequired, then those jobs will be suspended and never started unless they are assigned a queue and eventually admitted. This also applies to jobs created before starting the kueue controller. Defaults to QueueNameOptional; therefore, those jobs are not managed and if they are created unsuspended, they will start immediately.",
+}
+
+func (QueueLabelPolicy) SwaggerDoc() map[string]string {
+	return map_QueueLabelPolicy
 }
 
 var map_OLM = map[string]string{

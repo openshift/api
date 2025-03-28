@@ -49,14 +49,19 @@ type KueueConfiguration struct {
 	Integrations Integrations `json:"integrations"`
 	// queueLabelPolicy controls how kueue manages workloads
 	// The default behavior of Kueue will manage workloads that have a queue-name label.
+	// This field is optional.
 	// +optional
 	QueueLabelPolicy QueueLabelPolicy `json:"queueLabelPolicy,omitempty"`
-	// kueueGangSchedulingPolicy controls how Kueue admits workloads
+	// kueueGangSchedulingPolicy controls how Kueue admits workloads.
+	// Gang Scheduling is the act of all or nothing scheduling.
+	// Kueue provides this ability.
+	// This field is optional.
 	// +optional
 	KueueGangSchedulingPolicy KueueGangSchedulingPolicy `json:"kueueGangSchedulingPolicy,omitempty"`
-	// fairSharing TODO not done yet
+	// premption is the process of evicting one or more admitted Workloads to accommodate another Workload.
+	// Kueue has classical premption and preemption via fair sharing.
 	// +optional
-	FairSharing FairSharing `json:"fairSharing,omitempty"`
+	Premption Premption `json:"premption,omitempty"`
 }
 
 // KueueStatus defines the observed state of Kueue
@@ -239,41 +244,23 @@ type QueueLabelPolicy struct {
 	// If set to QueueNameRequired, then those jobs will be suspended and never started unless
 	// they are assigned a queue and eventually admitted. This also applies to
 	// jobs created before starting the kueue controller.
-	// Defaults to QueueNameOptional; therefore, those jobs are not managed and if they are created
+	// Defaults to QueueNameRequired; therefore, those jobs are not managed and if they are created
 	// unsuspended, they will start immediately.
 	// +optional
 	QueueLabelPolicy QueueLabelNamePolicy `json:"queueLabelPolicy"`
 }
 
-// +kubebuilder:validation:Enum=LessThanOrEqualToFinalShare;LessThanInitialShare
+// +kubebuilder:validation:Enum=Classical;FairSharing
 type PreemptionStrategy string
 
 const (
-	LessThanOrEqualToFinalShare PreemptionStrategy = "LessThanOrEqualToFinalShare"
-	LessThanInitialShare        PreemptionStrategy = "LessThanInitialShare"
+	PreemeptionStrategyClassical   PreemptionStrategy = "Classical"
+	PreemeptionStrategyFairsharing PreemptionStrategy = "FairSharing"
 )
 
-type FairSharing struct {
-	// preemptionStrategies indicates which constraints should a preemption satisfy.
-	// The preemption algorithm will only use the next strategy in the list if the
-	// incoming workload (preemptor) doesn't fit after using the previous strategies.
-	// Possible values are:
-	// - LessThanOrEqualToFinalShare: Only preempt a workload
-	//   if the share of the preemptor ClusterQueue
-	//   with the preemptor workload is less than
-	//   or equal to the share of the preemptee ClusterQueue
-	//   without the workload to be preempted.
-	//   This strategy might favor preemption of smaller workloads
-	//   in the preemptee ClusterQueue,
-	//   regardless of priority or start time, in an effort to keep the share of the ClusterQueue
-	//   as high as possible.
-	// - LessThanInitialShare: Only preempt a workload if the share of the preemptor ClusterQueue
-	//   with the incoming workload is strictly less than the share of the preemptee ClusterQueue.
-	//   This strategy doesn't depend on the share usage of the workload being preempted.
-	//   As a result, the strategy chooses to preempt workloads with the lowest priority and
-	//   newest start time first.
-	// The default strategy is ["LessThanOrEqualToFinalShare", "LessThanInitialShare"].
-	// +kubebuilder:validation:MaxItems=2
+type Premption struct {
+	// preemptionStrategies are the types of preemption kueue allows.
+	// Kueue has two types of preemption: classical and fair sharing.
 	// +optional
-	PreemptionStrategies []PreemptionStrategy `json:"preemptionStrategies,omitempty"`
+	PreemptionStrategies PreemptionStrategy `json:"preemptionStrategies"`
 }

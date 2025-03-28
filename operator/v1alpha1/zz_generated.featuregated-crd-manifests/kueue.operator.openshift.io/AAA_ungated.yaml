@@ -46,35 +46,6 @@ spec:
                   config is the desired configuration
                   for the Kueue operator.
                 properties:
-                  fairSharing:
-                    description: fairSharing TODO not done yet
-                    properties:
-                      preemptionStrategies:
-                        description: |-
-                          preemptionStrategies indicates which constraints should a preemption satisfy.
-                          The preemption algorithm will only use the next strategy in the list if the
-                          incoming workload (preemptor) doesn't fit after using the previous strategies.
-                          Possible values are:
-                          - LessThanOrEqualToFinalShare: Only preempt a workload if the share of the preemptor CQ
-                            with the preemptor workload is less than or equal to the share of the preemptee CQ
-                            without the workload to be preempted.
-                            This strategy might favor preemption of smaller workloads in the preemptee CQ,
-                            regardless of priority or start time, in an effort to keep the share of the CQ
-                            as high as possible.
-                          - LessThanInitialShare: Only preempt a workload if the share of the preemptor CQ
-                            with the incoming workload is strictly less than the share of the preemptee CQ.
-                            This strategy doesn't depend on the share usage of the workload being preempted.
-                            As a result, the strategy chooses to preempt workloads with the lowest priority and
-                            newest start time first.
-                          The default strategy is ["LessThanOrEqualToFinalShare", "LessThanInitialShare"].
-                        items:
-                          enum:
-                          - LessThanOrEqualToFinalShare
-                          - LessThanInitialShare
-                          type: string
-                        maxItems: 2
-                        type: array
-                    type: object
                   integrations:
                     description: |-
                       integrations is a required field that configures the Kueue's workload integrations.
@@ -215,17 +186,22 @@ spec:
                     - frameworks
                     type: object
                   kueueGangSchedulingPolicy:
-                    description: kueueGangSchedulingPolicy controls how Kueue admits
-                      workloads
+                    description: |-
+                      kueueGangSchedulingPolicy controls how Kueue admits workloads.
+                      Gang Scheduling is the act of all or nothing scheduling.
+                      Kueue provides this ability.
+                      This field is optional.
                     properties:
                       byWorkload:
                         description: |-
                           byWorkload controls how admission is done.
-                          The options are Sequential and Parallel.
-                          Sequential means workloads are admitted in sequential order and Kueue waits
-                          for those workloads to be ready.
-                          Parallel admits workloads in parallel and does not wait on these workloads to be ready.
-                          Workloads can be evicted in the background if they are not ready within default settings.
+                          When admission is set to Sequential, only pods from the currently processing workload will be admitted.
+                          Once all pods from the current workload are admitted, and ready, Kueue will process the next workload.
+                          Sequential processing may slow down admission when the cluster has sufficient capacity for multiple workloads,
+                          but provides a higher guarantee of workloads scheduling all pods together successfully.
+                          When set to Parallel, pods from any workload will be admitted at any time.
+                          This may lead to a deadlock where workloads are in contention for cluster capacity and
+                          pods from another workload having successfully scheduled prevent pods from the current workload scheduling.
                         enum:
                         - Parallel
                         - Sequential
@@ -246,10 +222,25 @@ spec:
                         - Disabled
                         type: string
                     type: object
+                  premption:
+                    description: |-
+                      premption is the process of evicting one or more admitted Workloads to accommodate another Workload.
+                      Kueue has classical premption and preemption via fair sharing.
+                    properties:
+                      preemptionStrategies:
+                        description: |-
+                          preemptionStrategies are the types of preemption kueue allows.
+                          Kueue has two types of preemption: classical and fair sharing.
+                        enum:
+                        - Classical
+                        - FairSharing
+                        type: string
+                    type: object
                   queueLabelPolicy:
                     description: |-
                       queueLabelPolicy controls how kueue manages workloads
                       The default behavior of Kueue will manage workloads that have a queue-name label.
+                      This field is optional.
                     properties:
                       queueLabelPolicy:
                         description: |-
@@ -259,7 +250,7 @@ spec:
                           If set to QueueNameRequired, then those jobs will be suspended and never started unless
                           they are assigned a queue and eventually admitted. This also applies to
                           jobs created before starting the kueue controller.
-                          Defaults to QueueNameOptional; therefore, those jobs are not managed and if they are created
+                          Defaults to QueueNameRequired; therefore, those jobs are not managed and if they are created
                           unsuspended, they will start immediately.
                         enum:
                         - QueueNameRequired

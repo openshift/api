@@ -33232,19 +33232,6 @@
         }
       }
     },
-    "com.github.openshift.api.operator.v1alpha1.FairSharing": {
-      "type": "object",
-      "properties": {
-        "preemptionStrategies": {
-          "description": "preemptionStrategies indicates which constraints should a preemption satisfy. The preemption algorithm will only use the next strategy in the list if the incoming workload (preemptor) doesn't fit after using the previous strategies. Possible values are: - LessThanOrEqualToFinalShare: Only preempt a workload\n  if the share of the preemptor ClusterQueue\n  with the preemptor workload is less than\n  or equal to the share of the preemptee ClusterQueue\n  without the workload to be preempted.\n  This strategy might favor preemption of smaller workloads\n  in the preemptee ClusterQueue,\n  regardless of priority or start time, in an effort to keep the share of the ClusterQueue\n  as high as possible.\n- LessThanInitialShare: Only preempt a workload if the share of the preemptor ClusterQueue\n  with the incoming workload is strictly less than the share of the preemptee ClusterQueue.\n  This strategy doesn't depend on the share usage of the workload being preempted.\n  As a result, the strategy chooses to preempt workloads with the lowest priority and\n  newest start time first.\nThe default strategy is [\"LessThanOrEqualToFinalShare\", \"LessThanInitialShare\"].",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "default": ""
-          }
-        }
-      }
-    },
     "com.github.openshift.api.operator.v1alpha1.GenerationHistory": {
       "description": "GenerationHistory keeps track of the generation for a given resource so that decisions about forced updated can be made. DEPRECATED: Use fields in v1.GenerationStatus instead",
       "type": "object",
@@ -33463,23 +33450,23 @@
         "integrations"
       ],
       "properties": {
-        "fairSharing": {
-          "description": "fairSharing TODO not done yet",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.FairSharing"
-        },
         "integrations": {
           "description": "integrations is a required field that configures the Kueue's workload integrations. Kueue has both standard integrations, known as job frameworks, and external integrations known as external frameworks. Kueue will only manage workloads that correspond to the specified integrations.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.Integrations"
         },
         "kueueGangSchedulingPolicy": {
-          "description": "kueueGangSchedulingPolicy controls how Kueue admits workloads",
+          "description": "kueueGangSchedulingPolicy controls how Kueue admits workloads. Gang Scheduling is the act of all or nothing scheduling. Kueue provides this ability. This field is optional.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.KueueGangSchedulingPolicy"
         },
+        "premption": {
+          "description": "premption is the process of evicting one or more admitted Workloads to accommodate another Workload. Kueue has classical premption and preemption via fair sharing.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.Premption"
+        },
         "queueLabelPolicy": {
-          "description": "queueLabelPolicy controls how kueue manages workloads The default behavior of Kueue will manage workloads that have a queue-name label.",
+          "description": "queueLabelPolicy controls how kueue manages workloads The default behavior of Kueue will manage workloads that have a queue-name label. This field is optional.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.QueueLabelPolicy"
         }
@@ -33943,11 +33930,21 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1alpha1.Premption": {
+      "type": "object",
+      "properties": {
+        "preemptionStrategies": {
+          "description": "preemptionStrategies are the types of preemption kueue allows. Kueue has two types of preemption: classical and fair sharing.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1alpha1.QueueLabelPolicy": {
       "type": "object",
       "properties": {
         "queueLabelPolicy": {
-          "description": "queueLabelPolicy controls whether or not Kueue reconciles jobs that don't set the label kueue.x-k8s.io/queue-name. The allowed values are QueueNameRequired and QueueNameOptional. If set to QueueNameRequired, then those jobs will be suspended and never started unless they are assigned a queue and eventually admitted. This also applies to jobs created before starting the kueue controller. Defaults to QueueNameOptional; therefore, those jobs are not managed and if they are created unsuspended, they will start immediately.",
+          "description": "queueLabelPolicy controls whether or not Kueue reconciles jobs that don't set the label kueue.x-k8s.io/queue-name. The allowed values are QueueNameRequired and QueueNameOptional. If set to QueueNameRequired, then those jobs will be suspended and never started unless they are assigned a queue and eventually admitted. This also applies to jobs created before starting the kueue controller. Defaults to QueueNameRequired; therefore, those jobs are not managed and if they are created unsuspended, they will start immediately.",
           "type": "string",
           "default": ""
         }

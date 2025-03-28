@@ -212,11 +212,13 @@ type KueueGangSchedulingPolicy struct {
 	// +optional
 	Policy KueueGangSchedulingPolicyOptions `json:"policy"`
 	// byWorkload controls how admission is done.
-	// The options are Sequential and Parallel.
-	// Sequential means workloads are admitted in sequential order and Kueue waits
-	// for those workloads to be ready.
-	// Parallel admits workloads in parallel and does not wait on these workloads to be ready.
-	// Workloads can be evicted in the background if they are not ready within default settings.
+	// When admission is set to Sequential, only pods from the currently processing workload will be admitted.
+	// Once all pods from the current workload are admitted, and ready, Kueue will process the next workload.
+	// Sequential processing may slow down admission when the cluster has sufficient capacity for multiple workloads,
+	// but provides a higher guarantee of workloads scheduling all pods together successfully.
+	// When set to Parallel, pods from any workload will be admitted at any time.
+	// This may lead to a deadlock where workloads are in contention for cluster capacity and
+	// pods from another workload having successfully scheduled prevent pods from the current workload scheduling.
 	// +kubebuilder:validation:XValidation:rule="self.policy==ByWorkload",message="byWorkload is only valid if policy equals ByWorkload"
 	// +optional
 	ByWorkload KueueGangSchedulingAdmissionOptions `json:"byWorkload"`
@@ -256,14 +258,17 @@ type FairSharing struct {
 	// The preemption algorithm will only use the next strategy in the list if the
 	// incoming workload (preemptor) doesn't fit after using the previous strategies.
 	// Possible values are:
-	// - LessThanOrEqualToFinalShare: Only preempt a workload if the share of the preemptor CQ
-	//   with the preemptor workload is less than or equal to the share of the preemptee CQ
+	// - LessThanOrEqualToFinalShare: Only preempt a workload
+	//   if the share of the preemptor ClusterQueue
+	//   with the preemptor workload is less than
+	//   or equal to the share of the preemptee ClusterQueue
 	//   without the workload to be preempted.
-	//   This strategy might favor preemption of smaller workloads in the preemptee CQ,
-	//   regardless of priority or start time, in an effort to keep the share of the CQ
+	//   This strategy might favor preemption of smaller workloads
+	//   in the preemptee ClusterQueue,
+	//   regardless of priority or start time, in an effort to keep the share of the ClusterQueue
 	//   as high as possible.
-	// - LessThanInitialShare: Only preempt a workload if the share of the preemptor CQ
-	//   with the incoming workload is strictly less than the share of the preemptee CQ.
+	// - LessThanInitialShare: Only preempt a workload if the share of the preemptor ClusterQueue
+	//   with the incoming workload is strictly less than the share of the preemptee ClusterQueue.
 	//   This strategy doesn't depend on the share usage of the workload being preempted.
 	//   As a result, the strategy chooses to preempt workloads with the lowest priority and
 	//   newest start time first.

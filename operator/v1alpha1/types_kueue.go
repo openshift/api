@@ -259,8 +259,8 @@ const (
 )
 
 type Premption struct {
-	// preemptionStrategies are the types of preemption kueue allows.
+	// preemptionStrategy are the types of preemption kueue allows.
 	// Kueue has two types of preemption: classical and fair sharing.
 	// +optional
-	PreemptionStrategies PreemptionStrategy `json:"preemptionStrategies"`
+	PreemptionStrategy PreemptionStrategy `json:"preemptionStrategy"`
 }

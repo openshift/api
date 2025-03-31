@@ -346,7 +346,7 @@ func (LabelKeys) SwaggerDoc() map[string]string {
 }
 
 var map_Premption = map[string]string{
-	"preemptionStrategies": "preemptionStrategies are the types of preemption kueue allows. Kueue has two types of preemption: classical and fair sharing.",
+	"preemptionStrategy": "preemptionStrategy are the types of preemption kueue allows. Kueue has two types of preemption: classical and fair sharing.",
 }
 
 func (Premption) SwaggerDoc() map[string]string {

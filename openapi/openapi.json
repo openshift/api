@@ -33933,8 +33933,8 @@
     "com.github.openshift.api.operator.v1alpha1.Premption": {
       "type": "object",
       "properties": {
-        "preemptionStrategies": {
-          "description": "preemptionStrategies are the types of preemption kueue allows. Kueue has two types of preemption: classical and fair sharing.",
+        "preemptionStrategy": {
+          "description": "preemptionStrategy are the types of preemption kueue allows. Kueue has two types of preemption: classical and fair sharing.",
           "type": "string",
           "default": ""
         }

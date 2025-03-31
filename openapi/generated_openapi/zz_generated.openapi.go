@@ -58040,9 +58040,9 @@ func schema_openshift_api_operator_v1alpha1_Premption(ref common.ReferenceCallba
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"preemptionStrategies": {
+					"preemptionStrategy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "preemptionStrategies are the types of preemption kueue allows. Kueue has two types of preemption: classical and fair sharing.",
+							Description: "preemptionStrategy are the types of preemption kueue allows. Kueue has two types of preemption: classical and fair sharing.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",

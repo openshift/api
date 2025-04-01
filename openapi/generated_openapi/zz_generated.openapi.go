@@ -792,7 +792,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeList":                       schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeList(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeSpec":                       schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeSpec(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeSpecMachineConfigVersion":   schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeSpecMachineConfigVersion(ref),
-		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeSpecPinnedImageSet":         schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeSpecPinnedImageSet(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeStatus":                     schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatus(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeStatusMachineConfigVersion": schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatusMachineConfigVersion(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeStatusPinnedImageSet":       schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatusPinnedImageSet(ref),
@@ -40478,34 +40477,12 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeSpec(re
 							Ref:         ref("github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeSpecMachineConfigVersion"),
 						},
 					},
-					"pinnedImageSets": {
-						VendorExtensible: spec.VendorExtensible{
-							Extensions: spec.Extensions{
-								"x-kubernetes-list-map-keys": []interface{}{
-									"name",
-								},
-								"x-kubernetes-list-type": "map",
-							},
-						},
-						SchemaProps: spec.SchemaProps{
-							Description: "pinnedImageSets is a user defined value that holds the names of the desired image sets that the node should pull and pin.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeSpecPinnedImageSet"),
-									},
-								},
-							},
-						},
-					},
 				},
 				Required: []string{"node", "pool", "configVersion"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machineconfiguration/v1alpha1.MCOObjectReference", "github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeSpecMachineConfigVersion", "github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeSpecPinnedImageSet"},
+			"github.com/openshift/api/machineconfiguration/v1alpha1.MCOObjectReference", "github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeSpecMachineConfigVersion"},
 	}
 }
 
@@ -40526,28 +40503,6 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeSpecMac
 					},
 				},
 				Required: []string{"desired"},
-			},
-		},
-	}
-}
-
-func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeSpecPinnedImageSet(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MachineConfigNodeSpecPinnedImageSet holds information on the desired pinned image sets that the current observed machine config node should pin and pull.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Description: "name is the name of the pinned image set. Must be a lowercase RFC-1123 subdomain name (https://tools.ietf.org/html/rfc1123) consisting of only lowercase alphanumeric characters, hyphens (-), and periods (.), and must start and end with an alphanumeric character, and be at most 253 characters in length.",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-				},
-				Required: []string{"name"},
 			},
 		},
 	}

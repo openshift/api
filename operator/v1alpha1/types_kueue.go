@@ -58,10 +58,10 @@ type KueueConfiguration struct {
 	// This field is optional.
 	// +optional
 	KueueGangSchedulingPolicy KueueGangSchedulingPolicy `json:"kueueGangSchedulingPolicy,omitempty"`
-	// premption is the process of evicting one or more admitted Workloads to accommodate another Workload.
+	// preemption is the process of evicting one or more admitted Workloads to accommodate another Workload.
 	// Kueue has classical premption and preemption via fair sharing.
 	// +optional
-	Premption Premption `json:"premption,omitempty"`
+	Preemption Preemption `json:"preemption,omitempty"`
 }
 
 // KueueStatus defines the observed state of Kueue
@@ -258,9 +258,20 @@ const (
 	PreemeptionStrategyFairsharing PreemptionStrategy = "FairSharing"
 )
 
-type Premption struct {
+type Preemption struct {
 	// preemptionStrategy are the types of preemption kueue allows.
 	// Kueue has two types of preemption: classical and fair sharing.
+	// Classical means that an incoming workload, which does
+	// not fit within the unusued quota, is eligible to issue preemptions
+	// when the requests of the workload are below the
+	// resource flavor's nominal quota or borrowWithinCohort is enabled
+	// on the Cluster Queue.
+	// FairSharing is a more heavy weight algorithm.
+	// ClusterQueues with pending Workloads can preempt other Workloads
+	// in their cohort until the preempting ClusterQueue
+	// obtains an equal or weighted share of the borrowable resources.
+	// The borrowable resources are the unused nominal quota
+	// of all the ClusterQueues in the cohort.
 	// +optional
 	PreemptionStrategy PreemptionStrategy `json:"preemptionStrategy"`
 }

@@ -294,7 +294,7 @@ var map_KueueConfiguration = map[string]string{
 	"integrations":              "integrations is a required field that configures the Kueue's workload integrations. Kueue has both standard integrations, known as job frameworks, and external integrations known as external frameworks. Kueue will only manage workloads that correspond to the specified integrations.",
 	"queueLabelPolicy":          "queueLabelPolicy controls how kueue manages workloads The default behavior of Kueue will manage workloads that have a queue-name label. This field is optional.",
 	"kueueGangSchedulingPolicy": "kueueGangSchedulingPolicy controls how Kueue admits workloads. Gang Scheduling is the act of all or nothing scheduling. Kueue provides this ability. This field is optional.",
-	"premption":                 "premption is the process of evicting one or more admitted Workloads to accommodate another Workload. Kueue has classical premption and preemption via fair sharing.",
+	"preemption":                "preemption is the process of evicting one or more admitted Workloads to accommodate another Workload. Kueue has classical premption and preemption via fair sharing.",
 }
 
 func (KueueConfiguration) SwaggerDoc() map[string]string {
@@ -345,12 +345,12 @@ func (LabelKeys) SwaggerDoc() map[string]string {
 	return map_LabelKeys
 }
 
-var map_Premption = map[string]string{
-	"preemptionStrategy": "preemptionStrategy are the types of preemption kueue allows. Kueue has two types of preemption: classical and fair sharing.",
+var map_Preemption = map[string]string{
+	"preemptionStrategy": "preemptionStrategy are the types of preemption kueue allows. Kueue has two types of preemption: classical and fair sharing. Classical means that an incoming workload, which does not fit within the unusued quota, is eligible to issue preemptions when the requests of the workload are below the resource flavor's nominal quota or borrowWithinCohort is enabled on the Cluster Queue. FairSharing is a more heavy weight algorithm. ClusterQueues with pending Workloads can preempt other Workloads in their cohort until the preempting ClusterQueue obtains an equal or weighted share of the borrowable resources. The borrowable resources are the unused nominal quota of all the ClusterQueues in the cohort.",
 }
 
-func (Premption) SwaggerDoc() map[string]string {
-	return map_Premption
+func (Preemption) SwaggerDoc() map[string]string {
+	return map_Preemption
 }
 
 var map_QueueLabelPolicy = map[string]string{

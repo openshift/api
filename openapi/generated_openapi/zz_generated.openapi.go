@@ -1133,7 +1133,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1alpha1.OperatorCondition":                                       schema_openshift_api_operator_v1alpha1_OperatorCondition(ref),
 		"github.com/openshift/api/operator/v1alpha1.OperatorSpec":                                            schema_openshift_api_operator_v1alpha1_OperatorSpec(ref),
 		"github.com/openshift/api/operator/v1alpha1.OperatorStatus":                                          schema_openshift_api_operator_v1alpha1_OperatorStatus(ref),
-		"github.com/openshift/api/operator/v1alpha1.Premption":                                               schema_openshift_api_operator_v1alpha1_Premption(ref),
+		"github.com/openshift/api/operator/v1alpha1.Preemption":                                              schema_openshift_api_operator_v1alpha1_Preemption(ref),
 		"github.com/openshift/api/operator/v1alpha1.QueueLabelPolicy":                                        schema_openshift_api_operator_v1alpha1_QueueLabelPolicy(ref),
 		"github.com/openshift/api/operator/v1alpha1.RepositoryDigestMirrors":                                 schema_openshift_api_operator_v1alpha1_RepositoryDigestMirrors(ref),
 		"github.com/openshift/api/operator/v1alpha1.StaticPodOperatorStatus":                                 schema_openshift_api_operator_v1alpha1_StaticPodOperatorStatus(ref),
@@ -57274,11 +57274,11 @@ func schema_openshift_api_operator_v1alpha1_KueueConfiguration(ref common.Refere
 							Ref:         ref("github.com/openshift/api/operator/v1alpha1.KueueGangSchedulingPolicy"),
 						},
 					},
-					"premption": {
+					"preemption": {
 						SchemaProps: spec.SchemaProps{
-							Description: "premption is the process of evicting one or more admitted Workloads to accommodate another Workload. Kueue has classical premption and preemption via fair sharing.",
+							Description: "preemption is the process of evicting one or more admitted Workloads to accommodate another Workload. Kueue has classical premption and preemption via fair sharing.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/openshift/api/operator/v1alpha1.Premption"),
+							Ref:         ref("github.com/openshift/api/operator/v1alpha1.Preemption"),
 						},
 					},
 				},
@@ -57286,7 +57286,7 @@ func schema_openshift_api_operator_v1alpha1_KueueConfiguration(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1alpha1.Integrations", "github.com/openshift/api/operator/v1alpha1.KueueGangSchedulingPolicy", "github.com/openshift/api/operator/v1alpha1.Premption", "github.com/openshift/api/operator/v1alpha1.QueueLabelPolicy"},
+			"github.com/openshift/api/operator/v1alpha1.Integrations", "github.com/openshift/api/operator/v1alpha1.KueueGangSchedulingPolicy", "github.com/openshift/api/operator/v1alpha1.Preemption", "github.com/openshift/api/operator/v1alpha1.QueueLabelPolicy"},
 	}
 }
 
@@ -58034,7 +58034,7 @@ func schema_openshift_api_operator_v1alpha1_OperatorStatus(ref common.ReferenceC
 	}
 }
 
-func schema_openshift_api_operator_v1alpha1_Premption(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_openshift_api_operator_v1alpha1_Preemption(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -58042,7 +58042,7 @@ func schema_openshift_api_operator_v1alpha1_Premption(ref common.ReferenceCallba
 				Properties: map[string]spec.Schema{
 					"preemptionStrategy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "preemptionStrategy are the types of preemption kueue allows. Kueue has two types of preemption: classical and fair sharing.",
+							Description: "preemptionStrategy are the types of preemption kueue allows. Kueue has two types of preemption: classical and fair sharing. Classical means that an incoming workload, which does not fit within the unusued quota, is eligible to issue preemptions when the requests of the workload are below the resource flavor's nominal quota or borrowWithinCohort is enabled on the Cluster Queue. FairSharing is a more heavy weight algorithm. ClusterQueues with pending Workloads can preempt other Workloads in their cohort until the preempting ClusterQueue obtains an equal or weighted share of the borrowable resources. The borrowable resources are the unused nominal quota of all the ClusterQueues in the cohort.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",

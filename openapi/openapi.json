@@ -33460,10 +33460,10 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.KueueGangSchedulingPolicy"
         },
-        "premption": {
-          "description": "premption is the process of evicting one or more admitted Workloads to accommodate another Workload. Kueue has classical premption and preemption via fair sharing.",
+        "preemption": {
+          "description": "preemption is the process of evicting one or more admitted Workloads to accommodate another Workload. Kueue has classical premption and preemption via fair sharing.",
           "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.Premption"
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.Preemption"
         },
         "queueLabelPolicy": {
           "description": "queueLabelPolicy controls how kueue manages workloads The default behavior of Kueue will manage workloads that have a queue-name label. This field is optional.",
@@ -33930,11 +33930,11 @@
         }
       }
     },
-    "com.github.openshift.api.operator.v1alpha1.Premption": {
+    "com.github.openshift.api.operator.v1alpha1.Preemption": {
       "type": "object",
       "properties": {
         "preemptionStrategy": {
-          "description": "preemptionStrategy are the types of preemption kueue allows. Kueue has two types of preemption: classical and fair sharing.",
+          "description": "preemptionStrategy are the types of preemption kueue allows. Kueue has two types of preemption: classical and fair sharing. Classical means that an incoming workload, which does not fit within the unusued quota, is eligible to issue preemptions when the requests of the workload are below the resource flavor's nominal quota or borrowWithinCohort is enabled on the Cluster Queue. FairSharing is a more heavy weight algorithm. ClusterQueues with pending Workloads can preempt other Workloads in their cohort until the preempting ClusterQueue obtains an equal or weighted share of the borrowable resources. The borrowable resources are the unused nominal quota of all the ClusterQueues in the cohort.",
           "type": "string",
           "default": ""
         }

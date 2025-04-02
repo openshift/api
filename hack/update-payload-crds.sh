@@ -4,7 +4,6 @@ source "$(dirname "${BASH_SOURCE}")/lib/init.sh"
 
 #TODO(jerzhang): once MOSC/MOSB graduates, update the v1 crds to include them
 crd_globs="\
-    authorization/v1/zz_generated.crd-manifests/*_config-operator_*.crd*yaml\
     config/v1/zz_generated.crd-manifests/*_config-operator_*.crd*yaml\
     machine/v1/zz_generated.crd-manifests/*.crd*yaml\
     operator/v1/zz_generated.crd-manifests//*_config-operator_*.crd*yaml\

@@ -44,14 +44,6 @@ var (
 					enhancementPR("https://github.com/openshift/enhancements/pull/1706").
 					mustRegister()
 
-	FeatureGateServiceAccountTokenNodeBinding = newFeatureGate("ServiceAccountTokenNodeBinding").
-							reportProblemsToJiraComponent("apiserver-auth").
-							contactPerson("stlaz").
-							productScope(kubernetes).
-							enhancementPR("https://github.com/kubernetes/enhancements/issues/4193").
-							enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-							mustRegister()
-
 	FeatureGateValidatingAdmissionPolicy = newFeatureGate("ValidatingAdmissionPolicy").
 						reportProblemsToJiraComponent("kube-apiserver").
 						contactPerson("benluddy").
@@ -91,14 +83,6 @@ var (
 					enhancementPR(legacyFeatureGateWithoutEnhancement).
 					enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
-
-	FeatureGateNodeSwap = newFeatureGate("NodeSwap").
-				reportProblemsToJiraComponent("node").
-				contactPerson("ehashman").
-				productScope(kubernetes).
-				enhancementPR("https://github.com/kubernetes/enhancements/issues/2400").
-				enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-				mustRegister()
 
 	FeatureGateMachineAPIProviderOpenStack = newFeatureGate("MachineAPIProviderOpenStack").
 						reportProblemsToJiraComponent("openstack").
@@ -194,14 +178,6 @@ var (
 					enhancementPR(legacyFeatureGateWithoutEnhancement).
 					enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
-
-	FeatureGateCloudDualStackNodeIPs = newFeatureGate("CloudDualStackNodeIPs").
-						reportProblemsToJiraComponent("machine-config-operator/platform-baremetal").
-						contactPerson("mkowalsk").
-						productScope(kubernetes).
-						enhancementPR("https://github.com/kubernetes/enhancements/issues/3705").
-						enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-						mustRegister()
 
 	FeatureGateVSphereHostVMGroupZonal = newFeatureGate("VSphereHostVMGroupZonal").
 						reportProblemsToJiraComponent("splat").
@@ -409,14 +385,6 @@ var (
 					enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
 
-	FeatureGateDisableKubeletCloudCredentialProviders = newFeatureGate("DisableKubeletCloudCredentialProviders").
-								reportProblemsToJiraComponent("cloud-provider").
-								contactPerson("jspeed").
-								productScope(kubernetes).
-								enhancementPR("https://github.com/kubernetes/enhancements/issues/2395").
-								enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-								mustRegister()
-
 	FeatureGateOnClusterBuild = newFeatureGate("OnClusterBuild").
 					reportProblemsToJiraComponent("MachineConfigOperator").
 					contactPerson("dkhater").
@@ -464,14 +432,6 @@ var (
 					enhancementPR(legacyFeatureGateWithoutEnhancement).
 					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
-
-	FeatureGateTranslateStreamCloseWebsocketRequests = newFeatureGate("TranslateStreamCloseWebsocketRequests").
-								reportProblemsToJiraComponent("kube-apiserver").
-								contactPerson("akashem").
-								productScope(kubernetes).
-								enhancementPR("https://github.com/kubernetes/enhancements/issues/4006").
-								enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-								mustRegister()
 
 	FeatureGateVolumeAttributesClass = newFeatureGate("VolumeAttributesClass").
 						reportProblemsToJiraComponent("Storage / Kubernetes External Components").
@@ -671,14 +631,6 @@ var (
 						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 						mustRegister()
 
-	FeatureGateUserNamespacesSupport = newFeatureGate("UserNamespacesSupport").
-						reportProblemsToJiraComponent("Node").
-						contactPerson("haircommander").
-						productScope(kubernetes).
-						enhancementPR("https://github.com/kubernetes/enhancements/issues/127").
-						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-						mustRegister()
-
 	FeatureGateUserNamespacesPodSecurityStandards = newFeatureGate("UserNamespacesPodSecurityStandards").
 							reportProblemsToJiraComponent("Node").
 							contactPerson("haircommander").
@@ -686,14 +638,6 @@ var (
 							enhancementPR("https://github.com/kubernetes/enhancements/issues/127").
 							enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 							mustRegister()
-
-	FeatureGateProcMountType = newFeatureGate("ProcMountType").
-					reportProblemsToJiraComponent("Node").
-					contactPerson("haircommander").
-					productScope(kubernetes).
-					enhancementPR("https://github.com/kubernetes/enhancements/issues/4265").
-					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-					mustRegister()
 
 	FeatureGateVSphereMultiNetworks = newFeatureGate("VSphereMultiNetworks").
 					reportProblemsToJiraComponent("SPLAT").

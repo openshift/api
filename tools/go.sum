@@ -473,8 +473,8 @@ github.com/onsi/ginkgo/v2 v2.21.0 h1:7rg/4f3rB88pb5obDgNZrNHrQ4e6WpjonchcpuBRnZM
 github.com/onsi/ginkgo/v2 v2.21.0/go.mod h1:7Du3c42kxCUegi0IImZ1wUQzMBVecgIHjR1C+NkhLQo=
 github.com/onsi/gomega v1.36.2 h1:koNYke6TVk6ZmnyHrCXba/T/MoLBXFjeC1PtvYgw0A8=
 github.com/onsi/gomega v1.36.2/go.mod h1:DdwyADRjrc825LhMEkD76cHR5+pUnjhUN8GlHlRPHzY=
-github.com/openshift/controller-tools v0.12.1-0.20250218152928-be0dbe446d10 h1:slivXSA18sKFUUZh5sheEThoRhwzOY9xIChniKEhulU=
-github.com/openshift/controller-tools v0.12.1-0.20250218152928-be0dbe446d10/go.mod h1:LkvYw1gDIjjhvamu3BGP9z4bgWbtOtvK7KNF3kw1Shg=
+github.com/openshift/controller-tools v0.12.1-0.20250402141027-24f590ca0886 h1:Ez6hT01wFM+C1O/tY+n8AugjOTvtqgovqUFOyaF6ObI=
+github.com/openshift/controller-tools v0.12.1-0.20250402141027-24f590ca0886/go.mod h1:LkvYw1gDIjjhvamu3BGP9z4bgWbtOtvK7KNF3kw1Shg=
 github.com/openshift/crd-schema-checker v0.0.0-20241113192003-573763d3107a h1:gBheMF1vVwxfnuGHJ82f/nmUATdtewq60/yhbBqD4+M=
 github.com/openshift/crd-schema-checker v0.0.0-20241113192003-573763d3107a/go.mod h1:sTxJ4ZFW9r9fEdbW2v0yMRi6NcyTbx0fII4p83IQ+L8=
 github.com/otiai10/copy v1.2.0/go.mod h1:rrF5dJ5F0t/EWSYODDu4j9/vEeYHMkc8jt0zJChqQWw=

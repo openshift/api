@@ -54,13 +54,13 @@ func (DataGatherSpec) SwaggerDoc() map[string]string {
 
 var map_DataGatherStatus = map[string]string{
 	"":                  "DataGatherStatus contains information relating to the DataGather state.",
-	"conditions":        "conditions provide details on the status of the gatherer job.",
+	"conditions":        "conditions is an optional field that provides details on the status of the gatherer job. It may not exceed 100 items and must not contain duplicates.\n\nThe current condition types are DataUploaded, DataRecorded, DataProcessed, RemoteConfigurationNotAvailable, RemoteConfigurationInvalid\n\nThe DataUploaded condition is used to represent whether or not the archive was successfully uploaded for further processing. When it has a status of True and a reason of HttpStatus200, the archive was successfully uploaded. When it has a status of Unknown and a reason of NoUploadYet, the upload has not occurred yet. When it has a status of False and a reason like HttpStatusXXX, the upload failed and the reason reflects the returned HTTP status code. The accompanying message will include the specific error encountered.\n\nThe DataRecorded condition is used to represent whether or not the archive was successfully recorded. When it has a status of True and a reason of AsExpected, the archive was recorded successfully. When it has a status of Unknown and a reason of NoDataGatheringYet, the data gathering process has not started yet. When it has a status of False and a reason of RecordingFailed, the recording failed and a message will include the specific error encountered.\n\nThe DataProcessed condition is used to represent whether or not the archive was processed by the processing service. When it has a status of True and a reason of Processed, the data was processed successfully. When it has a status of Unknown and a reason of NothingToProcessYet, there is no data to process at the moment. When it has a status of False and a reason of Failure, processing failed and a message will include the specific error encountered.\n\nThe RemoteConfigurationNotAvailable condition is used to represent whether the remote configuration is available. When it has a status of Unknown and a reason of Unknown, the state of the remote configuration is unknown—typically at startup. When is has a satatus of True and a reason of AsExpected, the configuration is available.\n\nThe RemoteConfigurationInvalid condition is used to represent whether the remote configuration is valid. When it has a status of Unknown and a reason of Unknown, the validity of the remote configuration is unknown—typically at startup. When is has a satatus of True and a reason of AsExpected, the configuration is valid.",
 	"dataGatherState":   "dataGatherState reflects the current state of the data gathering process.",
 	"gatherers":         "gatherers is a list of active gatherers (and their statuses) in the last gathering.",
 	"startTime":         "startTime is the time when Insights data gathering started.",
 	"finishTime":        "finishTime is the time when Insights data gathering finished.",
-	"relatedObjects":    "relatedObjects is a list of resources which are useful when debugging or inspecting the data gathering Pod",
-	"insightsRequestID": "insightsRequestID is an Insights request ID to track the status of the Insights analysis (in console.redhat.com processing pipeline) for the corresponding Insights data archive.",
+	"relatedObjects":    "relatedObjects is an optional list of resources which are useful when debugging or inspecting the data gathering Pod It may not exceed 100 items and must not contain duplicates.",
+	"insightsRequestID": "insightsRequestID is an optional Insights request ID to track the status of the Insights analysis (in console.redhat.com processing pipeline) for the corresponding Insights data archive. It may not exceed 256 characters and is immutable once set.",
 	"insightsReport":    "insightsReport provides general Insights analysis results. When omitted, this means no data gathering has taken place yet or the corresponding Insights analysis (identified by \"insightsRequestID\") is not available.",
 }
 
@@ -80,8 +80,8 @@ func (GathererConfig) SwaggerDoc() map[string]string {
 
 var map_GathererStatus = map[string]string{
 	"":                   "gathererStatus represents information about a particular data gatherer.",
-	"conditions":         "conditions provide details on the status of each gatherer.",
-	"name":               "name is the name of the gatherer.",
+	"conditions":         "conditions provide details on the status of each gatherer.\n\nThe current condition type is DataGathered\n\nThe DataGathered condition is used to represent whether or not the data was gathered by a gatherer specified by name. When it has a status of True and a reason of GatheredOK, the data has been successfully gathered as expected. When it has a status of False and a reason of NoData, no data was gathered—for example, when the resource is not present in the cluster. When it has a status of False and a reason of GatherError, an error occurred and no data was gathered. When it has a status of False and a reason of GatherPanic, a panic occurred during gathering and no data was collected. When it has a status of False and a reason of GatherWithErrorReason, data was partially gathered or gathered with an error message.",
+	"name":               "name is the required name of the gatherer. It must contain at least 5 characters and may not exceed 256 characters.",
 	"lastGatherDuration": "lastGatherDuration represents the time spent gathering.",
 }
 
@@ -101,10 +101,10 @@ func (Gatherers) SwaggerDoc() map[string]string {
 
 var map_HealthCheck = map[string]string{
 	"":            "healthCheck represents an Insights health check attributes.",
-	"description": "description provides basic description of the healtcheck.",
-	"totalRisk":   "totalRisk of the healthcheck. Indicator of the total risk posed by the detected issue; combination of impact and likelihood. The values can be from 1 to 4, and the higher the number, the more important the issue.",
+	"description": "description is required field that provides basic description of the healtcheck. It must contain at least 10 characters and may not exceed 2048 characters.",
+	"totalRisk":   "totalRisk is the required field of the healthcheck. It is indicator of the total risk posed by the detected issue; combination of impact and likelihood. The values can be from 1 to 4, and the higher the number, the more important the issue.",
 	"advisorURI":  "advisorURI is required field that provides the URL link to the Insights Advisor. The link must be a valid HTTPS URL and the maximum length is 2048 characters.",
-	"state":       "state determines what the current state of the health check is. Health check is enabled by default and can be disabled by the user in the Insights advisor user interface.",
+	"state":       "state is required field that determines what the current state of the health check is. Health check is enabled by default and can be disabled by the user in the Insights advisor user interface.",
 }
 
 func (HealthCheck) SwaggerDoc() map[string]string {
@@ -112,10 +112,10 @@ func (HealthCheck) SwaggerDoc() map[string]string {
 }
 
 var map_InsightsReport = map[string]string{
-	"":             "insightsReport provides Insights health check report based on the most recently sent Insights data.",
-	"downloadedAt": "downloadedAt is the time when the last Insights report was downloaded. An empty value means that there has not been any Insights report downloaded yet and it usually appears in disconnected clusters (or clusters when the Insights data gathering is disabled).",
-	"healthChecks": "healthChecks provides basic information about active Insights health checks in a cluster.",
-	"uri":          "uri is optional field that provides the URL link from which the report was downloaded. The link must be a valid HTTPS URL and the maximum length is 2048 characters.",
+	"":               "insightsReport provides Insights health check report based on the most recently sent Insights data.",
+	"downloadedTime": "downloadedTime is an optional time when the last Insights report was downloaded. An empty value means that there has not been any Insights report downloaded yet and it usually appears in disconnected clusters (or clusters when the Insights data gathering is disabled).",
+	"healthChecks":   "healthChecks provides basic information about active Insights health checks in a cluster.",
+	"uri":            "uri is optional field that provides the URL link from which the report was downloaded. The link must be a valid HTTPS URL and the maximum length is 2048 characters.",
 }
 
 func (InsightsReport) SwaggerDoc() map[string]string {
@@ -124,10 +124,10 @@ func (InsightsReport) SwaggerDoc() map[string]string {
 
 var map_ObjectReference = map[string]string{
 	"":          "ObjectReference contains enough information to let you inspect or modify the referred object.",
-	"group":     "group is the API Group of the Resource. Enter empty string for the core group. This value is empty or should follow the DNS1123 subdomain format and it must be at most 253 characters in length. Example: \"\", \"apps\", \"build.openshift.io\", etc.",
-	"resource":  "resource is required field of the type that is being referenced. It is normally the plural form of the resource kind in lowercase. This value should consist of only lowercase alphanumeric characters and hyphens. Example: \"deployments\", \"deploymentconfigs\", \"pods\", etc.",
-	"name":      "name of the referent that follows the DNS1123 subdomain format. It must be at most 256 characters in length.",
-	"namespace": "namespace of the referent that follows the DNS1123 subdomain format. It must be at most 253 characters in length.",
+	"group":     "group is required field that specifies the API Group of the Resource. Enter empty string for the core group. This value is empty or it should follow the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character. Example: \"\", \"apps\", \"build.openshift.io\", etc.",
+	"resource":  "resource is required field of the type that is being referenced. It is normally the plural form of the resource kind in lowercase. It must be at most 63 characters in length, and must must consist of only lowercase alphanumeric characters and hyphens Example: \"deployments\", \"deploymentconfigs\", \"pods\", etc.",
+	"name":      "name is required field that specifies the referent that follows the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.",
+	"namespace": "namespace if required field of the referent that follows the DNS1123 labels format. It must be at most 63 characters in length, and must must consist of only lowercase alphanumeric characters and hyphens",
 }
 
 func (ObjectReference) SwaggerDoc() map[string]string {

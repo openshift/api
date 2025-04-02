@@ -27809,7 +27809,7 @@ func schema_openshift_api_insights_v1alpha2_DataGatherStatus(ref common.Referenc
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "conditions provide details on the status of the gatherer job.",
+							Description: "conditions is an optional field that provides details on the status of the gatherer job. It may not exceed 100 items and must not contain duplicates.\n\nThe current condition types are DataUploaded, DataRecorded, DataProcessed, RemoteConfigurationNotAvailable, RemoteConfigurationInvalid\n\nThe DataUploaded condition is used to represent whether or not the archive was successfully uploaded for further processing. When it has a status of True and a reason of HttpStatus200, the archive was successfully uploaded. When it has a status of Unknown and a reason of NoUploadYet, the upload has not occurred yet. When it has a status of False and a reason like HttpStatusXXX, the upload failed and the reason reflects the returned HTTP status code. The accompanying message will include the specific error encountered.\n\nThe DataRecorded condition is used to represent whether or not the archive was successfully recorded. When it has a status of True and a reason of AsExpected, the archive was recorded successfully. When it has a status of Unknown and a reason of NoDataGatheringYet, the data gathering process has not started yet. When it has a status of False and a reason of RecordingFailed, the recording failed and a message will include the specific error encountered.\n\nThe DataProcessed condition is used to represent whether or not the archive was processed by the processing service. When it has a status of True and a reason of Processed, the data was processed successfully. When it has a status of Unknown and a reason of NothingToProcessYet, there is no data to process at the moment. When it has a status of False and a reason of Failure, processing failed and a message will include the specific error encountered.\n\nThe RemoteConfigurationNotAvailable condition is used to represent whether the remote configuration is available. When it has a status of Unknown and a reason of Unknown, the state of the remote configuration is unknown—typically at startup. When is has a satatus of True and a reason of AsExpected, the configuration is available.\n\nThe RemoteConfigurationInvalid condition is used to represent whether the remote configuration is valid. When it has a status of Unknown and a reason of Unknown, the validity of the remote configuration is unknown—typically at startup. When is has a satatus of True and a reason of AsExpected, the configuration is valid.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -27865,11 +27865,15 @@ func schema_openshift_api_insights_v1alpha2_DataGatherStatus(ref common.Referenc
 					"relatedObjects": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "atomic",
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+									"namespace",
+								},
+								"x-kubernetes-list-type": "map",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "relatedObjects is a list of resources which are useful when debugging or inspecting the data gathering Pod",
+							Description: "relatedObjects is an optional list of resources which are useful when debugging or inspecting the data gathering Pod It may not exceed 100 items and must not contain duplicates.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -27883,7 +27887,7 @@ func schema_openshift_api_insights_v1alpha2_DataGatherStatus(ref common.Referenc
 					},
 					"insightsRequestID": {
 						SchemaProps: spec.SchemaProps{
-							Description: "insightsRequestID is an Insights request ID to track the status of the Insights analysis (in console.redhat.com processing pipeline) for the corresponding Insights data archive.",
+							Description: "insightsRequestID is an optional Insights request ID to track the status of the Insights analysis (in console.redhat.com processing pipeline) for the corresponding Insights data archive. It may not exceed 256 characters and is immutable once set.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -27950,7 +27954,7 @@ func schema_openshift_api_insights_v1alpha2_GathererStatus(ref common.ReferenceC
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "conditions provide details on the status of each gatherer.",
+							Description: "conditions provide details on the status of each gatherer.\n\nThe current condition type is DataGathered\n\nThe DataGathered condition is used to represent whether or not the data was gathered by a gatherer specified by name. When it has a status of True and a reason of GatheredOK, the data has been successfully gathered as expected. When it has a status of False and a reason of NoData, no data was gathered—for example, when the resource is not present in the cluster. When it has a status of False and a reason of GatherError, an error occurred and no data was gathered. When it has a status of False and a reason of GatherPanic, a panic occurred during gathering and no data was collected. When it has a status of False and a reason of GatherWithErrorReason, data was partially gathered or gathered with an error message.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -27964,7 +27968,7 @@ func schema_openshift_api_insights_v1alpha2_GathererStatus(ref common.ReferenceC
 					},
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name is the name of the gatherer.",
+							Description: "name is the required name of the gatherer. It must contain at least 5 characters and may not exceed 256 characters.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28024,7 +28028,7 @@ func schema_openshift_api_insights_v1alpha2_HealthCheck(ref common.ReferenceCall
 				Properties: map[string]spec.Schema{
 					"description": {
 						SchemaProps: spec.SchemaProps{
-							Description: "description provides basic description of the healtcheck.",
+							Description: "description is required field that provides basic description of the healtcheck. It must contain at least 10 characters and may not exceed 2048 characters.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28032,7 +28036,7 @@ func schema_openshift_api_insights_v1alpha2_HealthCheck(ref common.ReferenceCall
 					},
 					"totalRisk": {
 						SchemaProps: spec.SchemaProps{
-							Description: "totalRisk of the healthcheck. Indicator of the total risk posed by the detected issue; combination of impact and likelihood. The values can be from 1 to 4, and the higher the number, the more important the issue.",
+							Description: "totalRisk is the required field of the healthcheck. It is indicator of the total risk posed by the detected issue; combination of impact and likelihood. The values can be from 1 to 4, and the higher the number, the more important the issue.",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
@@ -28048,7 +28052,7 @@ func schema_openshift_api_insights_v1alpha2_HealthCheck(ref common.ReferenceCall
 					},
 					"state": {
 						SchemaProps: spec.SchemaProps{
-							Description: "state determines what the current state of the health check is. Health check is enabled by default and can be disabled by the user in the Insights advisor user interface.",
+							Description: "state is required field that determines what the current state of the health check is. Health check is enabled by default and can be disabled by the user in the Insights advisor user interface.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28068,9 +28072,9 @@ func schema_openshift_api_insights_v1alpha2_InsightsReport(ref common.ReferenceC
 				Description: "insightsReport provides Insights health check report based on the most recently sent Insights data.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"downloadedAt": {
+					"downloadedTime": {
 						SchemaProps: spec.SchemaProps{
-							Description: "downloadedAt is the time when the last Insights report was downloaded. An empty value means that there has not been any Insights report downloaded yet and it usually appears in disconnected clusters (or clusters when the Insights data gathering is disabled).",
+							Description: "downloadedTime is an optional time when the last Insights report was downloaded. An empty value means that there has not been any Insights report downloaded yet and it usually appears in disconnected clusters (or clusters when the Insights data gathering is disabled).",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
 						},
 					},
@@ -28117,7 +28121,7 @@ func schema_openshift_api_insights_v1alpha2_ObjectReference(ref common.Reference
 				Properties: map[string]spec.Schema{
 					"group": {
 						SchemaProps: spec.SchemaProps{
-							Description: "group is the API Group of the Resource. Enter empty string for the core group. This value is empty or should follow the DNS1123 subdomain format and it must be at most 253 characters in length. Example: \"\", \"apps\", \"build.openshift.io\", etc.",
+							Description: "group is required field that specifies the API Group of the Resource. Enter empty string for the core group. This value is empty or it should follow the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character. Example: \"\", \"apps\", \"build.openshift.io\", etc.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28125,7 +28129,7 @@ func schema_openshift_api_insights_v1alpha2_ObjectReference(ref common.Reference
 					},
 					"resource": {
 						SchemaProps: spec.SchemaProps{
-							Description: "resource is required field of the type that is being referenced. It is normally the plural form of the resource kind in lowercase. This value should consist of only lowercase alphanumeric characters and hyphens. Example: \"deployments\", \"deploymentconfigs\", \"pods\", etc.",
+							Description: "resource is required field of the type that is being referenced. It is normally the plural form of the resource kind in lowercase. It must be at most 63 characters in length, and must must consist of only lowercase alphanumeric characters and hyphens Example: \"deployments\", \"deploymentconfigs\", \"pods\", etc.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28133,7 +28137,7 @@ func schema_openshift_api_insights_v1alpha2_ObjectReference(ref common.Reference
 					},
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name of the referent that follows the DNS1123 subdomain format. It must be at most 256 characters in length.",
+							Description: "name is required field that specifies the referent that follows the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28141,13 +28145,14 @@ func schema_openshift_api_insights_v1alpha2_ObjectReference(ref common.Reference
 					},
 					"namespace": {
 						SchemaProps: spec.SchemaProps{
-							Description: "namespace of the referent that follows the DNS1123 subdomain format. It must be at most 253 characters in length.",
+							Description: "namespace if required field of the referent that follows the DNS1123 labels format. It must be at most 63 characters in length, and must must consist of only lowercase alphanumeric characters and hyphens",
+							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 				},
-				Required: []string{"group", "resource", "name"},
+				Required: []string{"group", "resource", "name", "namespace"},
 			},
 		},
 	}

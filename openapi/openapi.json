@@ -15542,7 +15542,7 @@
       "type": "object",
       "properties": {
         "conditions": {
-          "description": "conditions provide details on the status of the gatherer job.",
+          "description": "conditions is an optional field that provides details on the status of the gatherer job. It may not exceed 100 items and must not contain duplicates.\n\nThe current condition types are DataUploaded, DataRecorded, DataProcessed, RemoteConfigurationNotAvailable, RemoteConfigurationInvalid\n\nThe DataUploaded condition is used to represent whether or not the archive was successfully uploaded for further processing. When it has a status of True and a reason of HttpStatus200, the archive was successfully uploaded. When it has a status of Unknown and a reason of NoUploadYet, the upload has not occurred yet. When it has a status of False and a reason like HttpStatusXXX, the upload failed and the reason reflects the returned HTTP status code. The accompanying message will include the specific error encountered.\n\nThe DataRecorded condition is used to represent whether or not the archive was successfully recorded. When it has a status of True and a reason of AsExpected, the archive was recorded successfully. When it has a status of Unknown and a reason of NoDataGatheringYet, the data gathering process has not started yet. When it has a status of False and a reason of RecordingFailed, the recording failed and a message will include the specific error encountered.\n\nThe DataProcessed condition is used to represent whether or not the archive was processed by the processing service. When it has a status of True and a reason of Processed, the data was processed successfully. When it has a status of Unknown and a reason of NothingToProcessYet, there is no data to process at the moment. When it has a status of False and a reason of Failure, processing failed and a message will include the specific error encountered.\n\nThe RemoteConfigurationNotAvailable condition is used to represent whether the remote configuration is available. When it has a status of Unknown and a reason of Unknown, the state of the remote configuration is unknown—typically at startup. When is has a satatus of True and a reason of AsExpected, the configuration is available.\n\nThe RemoteConfigurationInvalid condition is used to represent whether the remote configuration is valid. When it has a status of Unknown and a reason of Unknown, the validity of the remote configuration is unknown—typically at startup. When is has a satatus of True and a reason of AsExpected, the configuration is valid.",
           "type": "array",
           "items": {
             "default": {},
@@ -15579,17 +15579,21 @@
           "$ref": "#/definitions/com.github.openshift.api.insights.v1alpha2.InsightsReport"
         },
         "insightsRequestID": {
-          "description": "insightsRequestID is an Insights request ID to track the status of the Insights analysis (in console.redhat.com processing pipeline) for the corresponding Insights data archive.",
+          "description": "insightsRequestID is an optional Insights request ID to track the status of the Insights analysis (in console.redhat.com processing pipeline) for the corresponding Insights data archive. It may not exceed 256 characters and is immutable once set.",
           "type": "string"
         },
         "relatedObjects": {
-          "description": "relatedObjects is a list of resources which are useful when debugging or inspecting the data gathering Pod",
+          "description": "relatedObjects is an optional list of resources which are useful when debugging or inspecting the data gathering Pod It may not exceed 100 items and must not contain duplicates.",
           "type": "array",
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.insights.v1alpha2.ObjectReference"
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-map-keys": [
+            "name",
+            "namespace"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "startTime": {
           "description": "startTime is the time when Insights data gathering started.",
@@ -15626,7 +15630,7 @@
       ],
       "properties": {
         "conditions": {
-          "description": "conditions provide details on the status of each gatherer.",
+          "description": "conditions provide details on the status of each gatherer.\n\nThe current condition type is DataGathered\n\nThe DataGathered condition is used to represent whether or not the data was gathered by a gatherer specified by name. When it has a status of True and a reason of GatheredOK, the data has been successfully gathered as expected. When it has a status of False and a reason of NoData, no data was gathered—for example, when the resource is not present in the cluster. When it has a status of False and a reason of GatherError, an error occurred and no data was gathered. When it has a status of False and a reason of GatherPanic, a panic occurred during gathering and no data was collected. When it has a status of False and a reason of GatherWithErrorReason, data was partially gathered or gathered with an error message.",
           "type": "array",
           "items": {
             "default": {},
@@ -15642,7 +15646,7 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
         },
         "name": {
-          "description": "name is the name of the gatherer.",
+          "description": "name is the required name of the gatherer. It must contain at least 5 characters and may not exceed 256 characters.",
           "type": "string",
           "default": ""
         }
@@ -15682,17 +15686,17 @@
           "default": ""
         },
         "description": {
-          "description": "description provides basic description of the healtcheck.",
+          "description": "description is required field that provides basic description of the healtcheck. It must contain at least 10 characters and may not exceed 2048 characters.",
           "type": "string",
           "default": ""
         },
         "state": {
-          "description": "state determines what the current state of the health check is. Health check is enabled by default and can be disabled by the user in the Insights advisor user interface.",
+          "description": "state is required field that determines what the current state of the health check is. Health check is enabled by default and can be disabled by the user in the Insights advisor user interface.",
           "type": "string",
           "default": ""
         },
         "totalRisk": {
-          "description": "totalRisk of the healthcheck. Indicator of the total risk posed by the detected issue; combination of impact and likelihood. The values can be from 1 to 4, and the higher the number, the more important the issue.",
+          "description": "totalRisk is the required field of the healthcheck. It is indicator of the total risk posed by the detected issue; combination of impact and likelihood. The values can be from 1 to 4, and the higher the number, the more important the issue.",
           "type": "integer",
           "format": "int32",
           "default": 0
@@ -15703,8 +15707,8 @@
       "description": "insightsReport provides Insights health check report based on the most recently sent Insights data.",
       "type": "object",
       "properties": {
-        "downloadedAt": {
-          "description": "downloadedAt is the time when the last Insights report was downloaded. An empty value means that there has not been any Insights report downloaded yet and it usually appears in disconnected clusters (or clusters when the Insights data gathering is disabled).",
+        "downloadedTime": {
+          "description": "downloadedTime is an optional time when the last Insights report was downloaded. An empty value means that there has not been any Insights report downloaded yet and it usually appears in disconnected clusters (or clusters when the Insights data gathering is disabled).",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "healthChecks": {
@@ -15728,25 +15732,27 @@
       "required": [
         "group",
         "resource",
-        "name"
+        "name",
+        "namespace"
       ],
       "properties": {
         "group": {
-          "description": "group is the API Group of the Resource. Enter empty string for the core group. This value is empty or should follow the DNS1123 subdomain format and it must be at most 253 characters in length. Example: \"\", \"apps\", \"build.openshift.io\", etc.",
+          "description": "group is required field that specifies the API Group of the Resource. Enter empty string for the core group. This value is empty or it should follow the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character. Example: \"\", \"apps\", \"build.openshift.io\", etc.",
           "type": "string",
           "default": ""
         },
         "name": {
-          "description": "name of the referent that follows the DNS1123 subdomain format. It must be at most 256 characters in length.",
+          "description": "name is required field that specifies the referent that follows the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.",
           "type": "string",
           "default": ""
         },
         "namespace": {
-          "description": "namespace of the referent that follows the DNS1123 subdomain format. It must be at most 253 characters in length.",
-          "type": "string"
+          "description": "namespace if required field of the referent that follows the DNS1123 labels format. It must be at most 63 characters in length, and must must consist of only lowercase alphanumeric characters and hyphens",
+          "type": "string",
+          "default": ""
         },
         "resource": {
-          "description": "resource is required field of the type that is being referenced. It is normally the plural form of the resource kind in lowercase. This value should consist of only lowercase alphanumeric characters and hyphens. Example: \"deployments\", \"deploymentconfigs\", \"pods\", etc.",
+          "description": "resource is required field of the type that is being referenced. It is normally the plural form of the resource kind in lowercase. It must be at most 63 characters in length, and must must consist of only lowercase alphanumeric characters and hyphens Example: \"deployments\", \"deploymentconfigs\", \"pods\", etc.",
           "type": "string",
           "default": ""
         }

@@ -200,43 +200,53 @@ const (
 	GathererStateDisabled GathererState = "Disabled"
 )
 
-// dataGatherState declares valid gathering state types
-// +kubebuilder:validation:Optional
-// +kubebuilder:validation:Enum=Running;Completed;Failed;Pending
-// +kubebuilder:validation:XValidation:rule="!(oldSelf == 'Running' && self == 'Pending')", message="dataGatherState cannot transition from Running to Pending"
-// +kubebuilder:validation:XValidation:rule="!(oldSelf == 'Completed' && self == 'Pending')", message="dataGatherState cannot transition from Completed to Pending"
-// +kubebuilder:validation:XValidation:rule="!(oldSelf == 'Failed' && self == 'Pending')", message="dataGatherState cannot transition from Failed to Pending"
-// +kubebuilder:validation:XValidation:rule="!(oldSelf == 'Completed' && self == 'Running')", message="dataGatherState cannot transition from Completed to Running"
-// +kubebuilder:validation:XValidation:rule="!(oldSelf == 'Failed' && self == 'Running')", message="dataGatherState cannot transition from Failed to Running"
-type DataGatherState string
-
-const (
-	// Data gathering is running
-	DataGatherStateRunning DataGatherState = "Running"
-	// Data gathering is completed
-	DataGatherStateCompleted DataGatherState = "Completed"
-	// Data gathering failed
-	DataGatherStateFailed DataGatherState = "Failed"
-	// Data gathering is pending
-	DataGatherStatePending DataGatherState = "Pending"
-)
-
 // DataGatherStatus contains information relating to the DataGather state.
 // +kubebuilder:validation:XValidation:rule="(!has(oldSelf.insightsRequestID) || has(self.insightsRequestID))",message="cannot remove insightsRequestID attribute from status"
 // +kubebuilder:validation:XValidation:rule="(!has(oldSelf.startTime) || has(self.startTime))",message="cannot remove startTime attribute from status"
 // +kubebuilder:validation:XValidation:rule="(!has(oldSelf.finishTime) || has(self.finishTime))",message="cannot remove finishTime attribute from status"
-// +kubebuilder:validation:XValidation:rule="(!has(oldSelf.dataGatherState) || has(self.dataGatherState))",message="cannot remove dataGatherState attribute from status"
 // +kubebuilder:validation:Optional
 type DataGatherStatus struct {
-	// conditions provide details on the status of the gatherer job.
+	// conditions is an optional field that provides details on the status of the gatherer job.
+	// It may not exceed 100 items and must not contain duplicates.
+	//
+	// The current condition types are DataUploaded, DataRecorded, DataProcessed, RemoteConfigurationNotAvailable, RemoteConfigurationInvalid
+	//
+	// The DataUploaded condition is used to represent whether or not the archive was successfully uploaded for further processing.
+	// When it has a status of True and a reason of Succeeded, the archive was successfully uploaded.
+	// When it has a status of Unknown and a reason of NoUploadYet, the upload has not occurred, or there was no data to upload.
+	// When it has a status of False and a reason Failed, the upload failed. The accompanying message will include the specific error encountered.
+	//
+	// The DataRecorded condition is used to represent whether or not the archive was successfully recorded.
+	// When it has a status of True and a reason of AsExpected, the archive was recorded successfully.
+	// When it has a status of Unknown and a reason of NoDataGatheringYet, the data gathering process has not started yet.
+	// When it has a status of False and a reason of RecordingFailed, the recording failed and a message will include the specific error encountered.
+	//
+	// The DataProcessed condition is used to represent whether or not the archive was processed by the processing service.
+	// When it has a status of True and a reason of Processed, the data was processed successfully.
+	// When it has a status of Unknown and a reason of NothingToProcessYet, there is no data to process at the moment.
+	// When it has a status of False and a reason of Failure, processing failed and a message will include the specific error encountered.
+	//
+	// The RemoteConfigurationAvailable condition is used to represent whether the remote configuration is available.
+	// When it has a status of Unknown and a reason of Unknown or RemoteConfigNotRequestedYet, the state of the remote configuration is unknown—typically at startup.
+	// When it has a status of True and a reason of AsExpected, the configuration is available.
+	// When it has a status of False and a reason of AsExpected, the configuration is not available.
+	//
+	// The RemoteConfigurationValid condition is used to represent whether the remote configuration is valid.
+	// When it has a status of Unknown and a reason of Unknown or NoValidationYet, the validity of the remote configuration is unknown—typically at startup.
+	// When it has a status of True and a reason of AsExpected, the configuration is valid.
+	// When it has a status of False and a reason of AsExpected, the configuration is invalid.
+	//
+	// The Progressing condition is used to represent the phase of gathering
+	// When it has a status of False and the reason is DataGatherPending, the gathering has not started yet.
+	// When it has a status of True and reason is Gathering, the gathering is running.
+	// When it has a status of False and reason is GatheringSucceeded, the gathering succesfully finished.
+	// When it has a status of False and reason is GatheringFailed, the gathering failed.
+	//
 	// +listType=map
 	// +listMapKey=type
 	// +kubebuilder:validation:MaxItems=100
 	// +optional
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
-	// dataGatherState reflects the current state of the data gathering process.
-	// +optional
-	State DataGatherState `json:"dataGatherState,omitempty"`
 	// gatherers is a list of active gatherers (and their statuses) in the last gathering.
 	// +listType=map
 	// +listMapKey=name
@@ -251,14 +261,16 @@ type DataGatherStatus struct {
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="finishTime is immutable once set"
 	// +optional
 	FinishTime metav1.Time `json:"finishTime,omitempty"`
-	// relatedObjects is a list of resources which are useful when debugging or inspecting the data
-	// gathering Pod
-	// +listType=atomic
+	// relatedObjects is an optional list of resources which are useful when debugging or inspecting the data gathering Pod
+	// It may not exceed 100 items and must not contain duplicates.
+	// +listType=map
+	// +listMapKey=name
+	// +listMapKey=namespace
 	// +kubebuilder:validation:MaxItems=100
 	// +optional
 	RelatedObjects []ObjectReference `json:"relatedObjects,omitempty"`
-	// insightsRequestID is an Insights request ID to track the status of the
-	// Insights analysis (in console.redhat.com processing pipeline) for the corresponding Insights data archive.
+	// insightsRequestID is an optional Insights request ID to track the status of the Insights analysis (in console.redhat.com processing pipeline) for the corresponding Insights data archive.
+	// It may not exceed 256 characters and is immutable once set.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="insightsRequestID is immutable once set"
 	// +kubebuilder:validation:MaxLength=256
 	// +optional
@@ -274,35 +286,48 @@ type DataGatherStatus struct {
 // data gatherer.
 type GathererStatus struct {
 	// conditions provide details on the status of each gatherer.
+	//
+	// The current condition type is DataGathered
+	//
+	// The DataGathered condition is used to represent whether or not the data was gathered by a gatherer specified by name.
+	// When it has a status of True and a reason of GatheredOK, the data has been successfully gathered as expected.
+	// When it has a status of False and a reason of NoData, no data was gathered—for example, when the resource is not present in the cluster.
+	// When it has a status of False and a reason of GatherError, an error occurred and no data was gathered.
+	// When it has a status of False and a reason of GatherPanic, a panic occurred during gathering and no data was collected.
+	// When it has a status of False and a reason of GatherWithErrorReason, data was partially gathered or gathered with an error message.
+	//
 	// +listType=map
 	// +listMapKey=type
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=100
 	// +optional
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
-	// name is the name of the gatherer.
+	// name is the required name of the gatherer.
+	// It must contain at least 5 characters and may not exceed 256 characters.
 	// +required
 	// +kubebuilder:validation:MaxLength=256
 	// +kubebuilder:validation:MinLength=5
 	Name string `json:"name"`
-	// lastGatherDuration represents the time spent gathering.
+	// lastGatherSeconds is required field that represents the time spent gathering in seconds
+	// +kubebuilder:validation:Minimum=0
 	// +required
-	// +kubebuilder:validation:Type=string
-	// +kubebuilder:validation:Pattern="^(([0-9]+(?:\\.[0-9]+)?(ns|us|µs|μs|ms|s|m|h))+)$"
-	LastGatherDuration metav1.Duration `json:"lastGatherDuration"`
+	LastGatherSeconds int32 `json:"lastGatherSeconds"`
 }
 
 // insightsReport provides Insights health check report based on the most
 // recently sent Insights data.
 type InsightsReport struct {
-	// downloadedAt is the time when the last Insights report was downloaded.
+	// downloadedTime is an optional time when the last Insights report was downloaded.
 	// An empty value means that there has not been any Insights report downloaded yet and
 	// it usually appears in disconnected clusters (or clusters when the Insights data gathering is disabled).
 	// +optional
-	DownloadedAt metav1.Time `json:"downloadedAt,omitempty"`
+	DownloadedTime metav1.Time `json:"downloadedTime,omitempty"`
 	// healthChecks provides basic information about active Insights health checks
 	// in a cluster.
-	// +listType=atomic
+	// +listType=map
+	// +listMapKey=advisorURI
+	// +listMapKey=totalRisk
+	// +listMapKey=description
 	// +kubebuilder:validation:MaxItems=100
 	// +optional
 	HealthChecks []HealthCheck `json:"healthChecks,omitempty"`
@@ -316,48 +341,43 @@ type InsightsReport struct {
 
 // healthCheck represents an Insights health check attributes.
 type HealthCheck struct {
-	// description provides basic description of the healtcheck.
+	// description is required field that provides basic description of the healtcheck.
+	// It must contain at least 10 characters and may not exceed 2048 characters.
 	// +required
 	// +kubebuilder:validation:MaxLength=2048
 	// +kubebuilder:validation:MinLength=10
 	Description string `json:"description"`
-	// totalRisk of the healthcheck. Indicator of the total risk posed
-	// by the detected issue; combination of impact and likelihood. The values can be from 1 to 4,
-	// and the higher the number, the more important the issue.
+	// totalRisk is the required field of the healthcheck.
+	// It is indicator of the total risk posed by the detected issue; combination of impact and likelihood.
+	// Allowed values are Low, Medium, Important and Critical.
+	// The value represents the severity of the issue.
 	// +required
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=4
-	TotalRisk int32 `json:"totalRisk"`
+	TotalRisk TotalRisk `json:"totalRisk"`
 	// advisorURI is required field that provides the URL link to the Insights Advisor.
 	// The link must be a valid HTTPS URL and the maximum length is 2048 characters.
 	// +kubebuilder:validation:XValidation:rule=`isURL(self) && url(self).getScheme() == "https"`,message=`advisorURI must be a valid HTTPS URL (e.g., https://example.com)`
 	// +kubebuilder:validation:MaxLength=2048
 	// +required
 	AdvisorURI string `json:"advisorURI"`
-	// state determines what the current state of the health check is.
-	// Health check is enabled by default and can be disabled
-	// by the user in the Insights advisor user interface.
-	// +required
-	State HealthCheckState `json:"state"`
 }
 
-// healthCheckState provides information about the status of the
-// health check (for example, the health check may be marked as disabled by the user).
-// +kubebuilder:validation:Enum:=Enabled;Disabled
-type HealthCheckState string
+// totalRisk defines the valid totalRisk values.
+// +kubebuilder:validation:Enum=Low;Moderate;Important;Critical
+type TotalRisk string
 
 const (
-	// enabled marks the health check as enabled
-	HealthCheckEnabled HealthCheckState = "Enabled"
-	// disabled marks the health check as disabled
-	HealthCheckDisabled HealthCheckState = "Disabled"
+	TotalRiskLow       TotalRisk = "Low"
+	TotalRiskModerate  TotalRisk = "Moderate"
+	TotalRiskImportant TotalRisk = "Important"
+	TotalRiskCritical  TotalRisk = "Critical"
 )
 
 // ObjectReference contains enough information to let you inspect or modify the referred object.
 type ObjectReference struct {
-	// group is the API Group of the Resource.
+	// group is required field that specifies the API Group of the Resource.
 	// Enter empty string for the core group.
-	// This value is empty or should follow the DNS1123 subdomain format and it must be at most 253 characters in length.
+	// This value is empty or it should follow the DNS1123 subdomain format.
+	// It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.
 	// Example: "", "apps", "build.openshift.io", etc.
 	// +kubebuilder:validation:XValidation:rule="self.size() == 0 || !format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
 	// +kubebuilder:validation:MaxLength:=253
@@ -365,24 +385,24 @@ type ObjectReference struct {
 	Group string `json:"group"`
 	// resource is required field of the type that is being referenced.
 	// It is normally the plural form of the resource kind in lowercase.
-	// This value should consist of only lowercase alphanumeric characters and hyphens.
+	// It must be at most 63 characters in length, and must must consist of only lowercase alphanumeric characters and hyphens
 	// Example: "deployments", "deploymentconfigs", "pods", etc.
-	// +kubebuilder:validation:XValidation:rule=`self.matches("^[a-z0-9]([-a-z0-9]*[a-z0-9])?$")`,message=`resource must consist of only lowercase alphanumeric characters and hyphens`
-	// +kubebuilder:validation:MaxLength=512
+	// +kubebuilder:validation:XValidation:rule=`!format.dns1123Label().validate(self).hasValue()`,message="the value must consist of only lowercase alphanumeric characters and hyphens"
+	// +kubebuilder:validation:MaxLength=63
 	// +required
 	Resource string `json:"resource"`
-	// name of the referent that follows the DNS1123 subdomain format.
-	// It must be at most 256 characters in length.
-	// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
-	// +kubebuilder:validation:MaxLength=256
-	// +required
-	Name string `json:"name"`
-	// namespace of the referent that follows the DNS1123 subdomain format.
-	// It must be at most 253 characters in length.
+	// name is required field that specifies the referent that follows the DNS1123 subdomain format.
+	// It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.
 	// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
 	// +kubebuilder:validation:MaxLength=253
-	// +optional
-	Namespace string `json:"namespace,omitempty"`
+	// +required
+	Name string `json:"name"`
+	// namespace if required field of the referent that follows the DNS1123 labels format.
+	// It must be at most 63 characters in length, and must must consist of only lowercase alphanumeric characters and hyphens
+	// +kubebuilder:validation:XValidation:rule=`!format.dns1123Label().validate(self).hasValue()`,message="the value must consist of only lowercase alphanumeric characters and hyphens"
+	// +kubebuilder:validation:MaxLength=63
+	// +required
+	Namespace string `json:"namespace"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

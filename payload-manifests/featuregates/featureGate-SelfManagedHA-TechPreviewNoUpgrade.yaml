@@ -90,9 +90,6 @@
                         "name": "ChunkSizeMiB"
                     },
                     {
-                        "name": "CloudDualStackNodeIPs"
-                    },
-                    {
                         "name": "ClusterMonitoringConfig"
                     },
                     {
@@ -100,9 +97,6 @@
                     },
                     {
                         "name": "DNSNameResolver"
-                    },
-                    {
-                        "name": "DisableKubeletCloudCredentialProviders"
                     },
                     {
                         "name": "DualReplica"
@@ -219,9 +213,6 @@
                         "name": "NodeDisruptionPolicy"
                     },
                     {
-                        "name": "NodeSwap"
-                    },
-                    {
                         "name": "NutanixMultiSubnets"
                     },
                     {
@@ -246,16 +237,10 @@
                         "name": "PrivateHostedZoneAWS"
                     },
                     {
-                        "name": "ProcMountType"
-                    },
-                    {
                         "name": "RouteAdvertisements"
                     },
                     {
                         "name": "RouteExternalCertificate"
-                    },
-                    {
-                        "name": "ServiceAccountTokenNodeBinding"
                     },
                     {
                         "name": "SetEIPForNLBIngressController"
@@ -267,16 +252,10 @@
                         "name": "SigstoreImageVerification"
                     },
                     {
-                        "name": "TranslateStreamCloseWebsocketRequests"
-                    },
-                    {
                         "name": "UpgradeStatus"
                     },
                     {
                         "name": "UserNamespacesPodSecurityStandards"
-                    },
-                    {
-                        "name": "UserNamespacesSupport"
                     },
                     {
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"

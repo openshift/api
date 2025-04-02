@@ -134,9 +134,6 @@
                         "name": "NewOLMCatalogdAPIV1Metas"
                     },
                     {
-                        "name": "NodeSwap"
-                    },
-                    {
                         "name": "NutanixMultiSubnets"
                     },
                     {
@@ -152,9 +149,6 @@
                         "name": "PlatformOperators"
                     },
                     {
-                        "name": "ProcMountType"
-                    },
-                    {
                         "name": "RouteAdvertisements"
                     },
                     {
@@ -165,9 +159,6 @@
                     },
                     {
                         "name": "SELinuxMount"
-                    },
-                    {
-                        "name": "ServiceAccountTokenNodeBinding"
                     },
                     {
                         "name": "ShortCertRotation"
@@ -182,16 +173,10 @@
                         "name": "SigstoreImageVerificationPKI"
                     },
                     {
-                        "name": "TranslateStreamCloseWebsocketRequests"
-                    },
-                    {
                         "name": "UpgradeStatus"
                     },
                     {
                         "name": "UserNamespacesPodSecurityStandards"
-                    },
-                    {
-                        "name": "UserNamespacesSupport"
                     },
                     {
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"
@@ -236,12 +221,6 @@
                     },
                     {
                         "name": "ChunkSizeMiB"
-                    },
-                    {
-                        "name": "CloudDualStackNodeIPs"
-                    },
-                    {
-                        "name": "DisableKubeletCloudCredentialProviders"
                     },
                     {
                         "name": "ExternalOIDC"

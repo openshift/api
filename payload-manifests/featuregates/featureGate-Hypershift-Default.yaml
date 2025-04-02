@@ -23,9 +23,6 @@
                         "name": "BootcNodeManagement"
                     },
                     {
-                        "name": "CPMSMachineNamePrefix"
-                    },
-                    {
                         "name": "ClusterAPIInstall"
                     },
                     {
@@ -233,6 +230,9 @@
                     },
                     {
                         "name": "BuildCSIVolumes"
+                    },
+                    {
+                        "name": "CPMSMachineNamePrefix"
                     },
                     {
                         "name": "ChunkSizeMiB"

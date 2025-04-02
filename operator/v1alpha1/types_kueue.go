@@ -226,7 +226,6 @@ type GangSchedulingPolicy struct {
 	// When set to Parallel, pods from any workload will be admitted at any time.
 	// This may lead to a deadlock where workloads are in contention for cluster capacity and
 	// pods from another workload having successfully scheduled prevent pods from the current workload scheduling.
-	// +kubebuilder:validation:XValidation:rule="self.policy=='ByWorkload'",message="byWorkload is only valid if policy equals ByWorkload"
 	// +optional
 	ByWorkload *GangSchedulingAdmissionOptions `json:"byWorkload,omitempty"`
 }
@@ -246,11 +245,10 @@ type QueueLabelPolicy struct {
 	// QueueNameOptional means that workloads will be suspended on
 	// creation and a label will be added via a mutating webhook.
 	// QueueNameRequired means that workloads that are managed
-	// by Kueue must have a the label kueue.x-k8s.io/queue-name.
+	// by Kueue must have a label kueue.x-k8s.io/queue-name.
 	// If this label is not present on the workload, then Kueue will
 	// ignore this workload.
-	// Defaults to QueueNameRequired; therefore, those jobs are not managed and if they are created
-	// unsuspended, they will start immediately.
+	// Defaults to QueueNameRequired.
 	// +optional
 	Policy *QueueLabelNamePolicy `json:"policy,omitempty"`
 }
@@ -277,6 +275,7 @@ type Preemption struct {
 	// The borrowable resources are the unused nominal quota
 	// of all the ClusterQueues in the cohort.
 	// FairSharing is a more heavy weight algorithm.
+	// The default is Classical.
 	// +optional
 	PreemptionStrategy *PreemptionStrategy `json:"preemptionStrategy,omitempty"`
 }

@@ -69,9 +69,6 @@ spec:
                         - Parallel
                         - Sequential
                         type: string
-                        x-kubernetes-validations:
-                        - message: byWorkload is only valid if policy equals ByWorkload
-                          rule: self.policy=='ByWorkload'
                       policy:
                         description: |-
                           policy allows you to enable and configure gang scheduling.
@@ -252,6 +249,7 @@ spec:
                           The borrowable resources are the unused nominal quota
                           of all the ClusterQueues in the cohort.
                           FairSharing is a more heavy weight algorithm.
+                          The default is Classical.
                         enum:
                         - Classical
                         - FairSharing
@@ -271,11 +269,10 @@ spec:
                           QueueNameOptional means that workloads will be suspended on
                           creation and a label will be added via a mutating webhook.
                           QueueNameRequired means that workloads that are managed
-                          by Kueue must have a the label kueue.x-k8s.io/queue-name.
+                          by Kueue must have a label kueue.x-k8s.io/queue-name.
                           If this label is not present on the workload, then Kueue will
                           ignore this workload.
-                          Defaults to QueueNameRequired; therefore, those jobs are not managed and if they are created
-                          unsuspended, they will start immediately.
+                          Defaults to QueueNameRequired.
                         enum:
                         - QueueNameRequired
                         - QueueNameOptional

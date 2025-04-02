@@ -58039,7 +58039,7 @@ func schema_openshift_api_operator_v1alpha1_Preemption(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"preemptionStrategy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "preemptionStrategy are the types of preemption kueue allows. Kueue has two types of preemption: classical and fair sharing. Classical means that an incoming workload, which does not fit within the unusued quota, is eligible to issue preemptions when the requests of the workload are below the resource flavor's nominal quota or borrowWithinCohort is enabled on the Cluster Queue. Fairsharing means that ClusterQueues with pending Workloads can preempt other Workloads in their cohort until the preempting ClusterQueue obtains an equal or weighted share of the borrowable resources. The borrowable resources are the unused nominal quota of all the ClusterQueues in the cohort. FairSharing is a more heavy weight algorithm.",
+							Description: "preemptionStrategy are the types of preemption kueue allows. Kueue has two types of preemption: classical and fair sharing. Classical means that an incoming workload, which does not fit within the unusued quota, is eligible to issue preemptions when the requests of the workload are below the resource flavor's nominal quota or borrowWithinCohort is enabled on the Cluster Queue. Fairsharing means that ClusterQueues with pending Workloads can preempt other Workloads in their cohort until the preempting ClusterQueue obtains an equal or weighted share of the borrowable resources. The borrowable resources are the unused nominal quota of all the ClusterQueues in the cohort. FairSharing is a more heavy weight algorithm. The default is Classical.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -58058,7 +58058,7 @@ func schema_openshift_api_operator_v1alpha1_QueueLabelPolicy(ref common.Referenc
 				Properties: map[string]spec.Schema{
 					"policy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "policy controls whether or not Kueue reconciles jobs that don't set the label kueue.x-k8s.io/queue-name. The allowed values are QueueNameRequired and QueueNameOptional. QueueNameOptional means that workloads will be suspended on creation and a label will be added via a mutating webhook. QueueNameRequired means that workloads that are managed by Kueue must have a the label kueue.x-k8s.io/queue-name. If this label is not present on the workload, then Kueue will ignore this workload. Defaults to QueueNameRequired; therefore, those jobs are not managed and if they are created unsuspended, they will start immediately.",
+							Description: "policy controls whether or not Kueue reconciles jobs that don't set the label kueue.x-k8s.io/queue-name. The allowed values are QueueNameRequired and QueueNameOptional. QueueNameOptional means that workloads will be suspended on creation and a label will be added via a mutating webhook. QueueNameRequired means that workloads that are managed by Kueue must have a label kueue.x-k8s.io/queue-name. If this label is not present on the workload, then Kueue will ignore this workload. Defaults to QueueNameRequired.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

@@ -1111,6 +1111,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1alpha1.EtcdBackupSpec":                                          schema_openshift_api_operator_v1alpha1_EtcdBackupSpec(ref),
 		"github.com/openshift/api/operator/v1alpha1.EtcdBackupStatus":                                        schema_openshift_api_operator_v1alpha1_EtcdBackupStatus(ref),
 		"github.com/openshift/api/operator/v1alpha1.ExternalFramework":                                       schema_openshift_api_operator_v1alpha1_ExternalFramework(ref),
+		"github.com/openshift/api/operator/v1alpha1.GangSchedulingPolicy":                                    schema_openshift_api_operator_v1alpha1_GangSchedulingPolicy(ref),
 		"github.com/openshift/api/operator/v1alpha1.GenerationHistory":                                       schema_openshift_api_operator_v1alpha1_GenerationHistory(ref),
 		"github.com/openshift/api/operator/v1alpha1.GenericOperatorConfig":                                   schema_openshift_api_operator_v1alpha1_GenericOperatorConfig(ref),
 		"github.com/openshift/api/operator/v1alpha1.ImageContentSourcePolicy":                                schema_openshift_api_operator_v1alpha1_ImageContentSourcePolicy(ref),
@@ -1119,7 +1120,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1alpha1.Integrations":                                            schema_openshift_api_operator_v1alpha1_Integrations(ref),
 		"github.com/openshift/api/operator/v1alpha1.Kueue":                                                   schema_openshift_api_operator_v1alpha1_Kueue(ref),
 		"github.com/openshift/api/operator/v1alpha1.KueueConfiguration":                                      schema_openshift_api_operator_v1alpha1_KueueConfiguration(ref),
-		"github.com/openshift/api/operator/v1alpha1.KueueGangSchedulingPolicy":                               schema_openshift_api_operator_v1alpha1_KueueGangSchedulingPolicy(ref),
 		"github.com/openshift/api/operator/v1alpha1.KueueList":                                               schema_openshift_api_operator_v1alpha1_KueueList(ref),
 		"github.com/openshift/api/operator/v1alpha1.KueueOperandSpec":                                        schema_openshift_api_operator_v1alpha1_KueueOperandSpec(ref),
 		"github.com/openshift/api/operator/v1alpha1.KueueStatus":                                             schema_openshift_api_operator_v1alpha1_KueueStatus(ref),
@@ -56888,6 +56888,33 @@ func schema_openshift_api_operator_v1alpha1_ExternalFramework(ref common.Referen
 	}
 }
 
+func schema_openshift_api_operator_v1alpha1_GangSchedulingPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Kueue provides the ability to admit workloads all in one (gang admission) and evicts workloads if they are not ready within a specific time.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"policy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "policy allows you to enable and configure gang scheduling. This is an optional field. The allowed values are ByWorkload and Disabled. The default value will be Disabled. When set to ByWorkload, this means each workload is processed and considered for admission as a single unit. Where workloads do not become ready over time, the entire workload may then be evicted and retried at a later time.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"byWorkload": {
+						SchemaProps: spec.SchemaProps{
+							Description: "byWorkload controls how admission is done. When admission is set to Sequential, only pods from the currently processing workload will be admitted. Once all pods from the current workload are admitted, and ready, Kueue will process the next workload. Sequential processing may slow down admission when the cluster has sufficient capacity for multiple workloads, but provides a higher guarantee of workloads scheduling all pods together successfully. When set to Parallel, pods from any workload will be admitted at any time. This may lead to a deadlock where workloads are in contention for cluster capacity and pods from another workload having successfully scheduled prevent pods from the current workload scheduling.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_operator_v1alpha1_GenerationHistory(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -57200,7 +57227,7 @@ func schema_openshift_api_operator_v1alpha1_Kueue(ref common.ReferenceCallback) 
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "Kueue is the CRD to represent the Kueue operator This CRD defines the configuration that the Kueue Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Description: "Kueue is the CRD to represent the Kueue operator. This CRD defines the configuration for Kueue. Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -57263,21 +57290,18 @@ func schema_openshift_api_operator_v1alpha1_KueueConfiguration(ref common.Refere
 					"queueLabelPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Description: "queueLabelPolicy controls how kueue manages workloads The default behavior of Kueue will manage workloads that have a queue-name label. This field is optional.",
-							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/operator/v1alpha1.QueueLabelPolicy"),
 						},
 					},
-					"kueueGangSchedulingPolicy": {
+					"gangSchedulingPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "kueueGangSchedulingPolicy controls how Kueue admits workloads. Gang Scheduling is the act of all or nothing scheduling. Kueue provides this ability. This field is optional.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/openshift/api/operator/v1alpha1.KueueGangSchedulingPolicy"),
+							Description: "gangSchedulingPolicy controls how Kueue admits workloads. Gang Scheduling is the act of all or nothing scheduling, where workloads do not become ready within a certain period, they may be evicted and later retried. This field is optional.",
+							Ref:         ref("github.com/openshift/api/operator/v1alpha1.GangSchedulingPolicy"),
 						},
 					},
 					"preemption": {
 						SchemaProps: spec.SchemaProps{
 							Description: "preemption is the process of evicting one or more admitted Workloads to accommodate another Workload. Kueue has classical premption and preemption via fair sharing.",
-							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/operator/v1alpha1.Preemption"),
 						},
 					},
@@ -57286,36 +57310,7 @@ func schema_openshift_api_operator_v1alpha1_KueueConfiguration(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1alpha1.Integrations", "github.com/openshift/api/operator/v1alpha1.KueueGangSchedulingPolicy", "github.com/openshift/api/operator/v1alpha1.Preemption", "github.com/openshift/api/operator/v1alpha1.QueueLabelPolicy"},
-	}
-}
-
-func schema_openshift_api_operator_v1alpha1_KueueGangSchedulingPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "Kueue provides the ability to admit workloads all in one (gang admission) and evicts workloads if they are not ready within a specific time.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"policy": {
-						SchemaProps: spec.SchemaProps{
-							Description: "policy allows for changing the kinds of gang scheduling Kueue does. This is an optional field. The allowed values are ByWorkload and Disabled. The default value will be Disabled. ByWorkload allows for configuration how admission is performed for Kueue.",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"byWorkload": {
-						SchemaProps: spec.SchemaProps{
-							Description: "byWorkload controls how admission is done. When admission is set to Sequential, only pods from the currently processing workload will be admitted. Once all pods from the current workload are admitted, and ready, Kueue will process the next workload. Sequential processing may slow down admission when the cluster has sufficient capacity for multiple workloads, but provides a higher guarantee of workloads scheduling all pods together successfully. When set to Parallel, pods from any workload will be admitted at any time. This may lead to a deadlock where workloads are in contention for cluster capacity and pods from another workload having successfully scheduled prevent pods from the current workload scheduling.",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-				},
-			},
-		},
+			"github.com/openshift/api/operator/v1alpha1.GangSchedulingPolicy", "github.com/openshift/api/operator/v1alpha1.Integrations", "github.com/openshift/api/operator/v1alpha1.Preemption", "github.com/openshift/api/operator/v1alpha1.QueueLabelPolicy"},
 	}
 }
 
@@ -57526,12 +57521,14 @@ func schema_openshift_api_operator_v1alpha1_LabelKeys(ref common.ReferenceCallba
 				Properties: map[string]spec.Schema{
 					"key": {
 						SchemaProps: spec.SchemaProps{
-							Description: "key is the label key A label key must be a valid qualified name consisting of a lower-case alphanumeric string, and hyphens of at most 63 characters in length. The name must start and end with an alphanumeric character. The name may be optionally prefixed with a subdomain consisting of lower-case alphanumeric characters, hyphens and periods, of at most 253 characters in length. Each period separated segment within the subdomain must start and end with an alphanumeric character. The optional prefix and the name are separate by a forward slash (/).",
+							Description: "key is the label key. A label key must be a valid qualified name consisting of a lower-case alphanumeric string, and hyphens of at most 63 characters in length. The name must start and end with an alphanumeric character. The name may be optionally prefixed with a subdomain consisting of lower-case alphanumeric characters, hyphens and periods, of at most 253 characters in length. Each period separated segment within the subdomain must start and end with an alphanumeric character. The optional prefix and the name are separate by a forward slash (/).",
+							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 				},
+				Required: []string{"key"},
 			},
 		},
 	}
@@ -58042,8 +58039,7 @@ func schema_openshift_api_operator_v1alpha1_Preemption(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"preemptionStrategy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "preemptionStrategy are the types of preemption kueue allows. Kueue has two types of preemption: classical and fair sharing. Classical means that an incoming workload, which does not fit within the unusued quota, is eligible to issue preemptions when the requests of the workload are below the resource flavor's nominal quota or borrowWithinCohort is enabled on the Cluster Queue. FairSharing is a more heavy weight algorithm. ClusterQueues with pending Workloads can preempt other Workloads in their cohort until the preempting ClusterQueue obtains an equal or weighted share of the borrowable resources. The borrowable resources are the unused nominal quota of all the ClusterQueues in the cohort.",
-							Default:     "",
+							Description: "preemptionStrategy are the types of preemption kueue allows. Kueue has two types of preemption: classical and fair sharing. Classical means that an incoming workload, which does not fit within the unusued quota, is eligible to issue preemptions when the requests of the workload are below the resource flavor's nominal quota or borrowWithinCohort is enabled on the Cluster Queue. Fairsharing means that ClusterQueues with pending Workloads can preempt other Workloads in their cohort until the preempting ClusterQueue obtains an equal or weighted share of the borrowable resources. The borrowable resources are the unused nominal quota of all the ClusterQueues in the cohort. FairSharing is a more heavy weight algorithm.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -58060,10 +58056,9 @@ func schema_openshift_api_operator_v1alpha1_QueueLabelPolicy(ref common.Referenc
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"queueLabelPolicy": {
+					"policy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "queueLabelPolicy controls whether or not Kueue reconciles jobs that don't set the label kueue.x-k8s.io/queue-name. The allowed values are QueueNameRequired and QueueNameOptional. If set to QueueNameRequired, then those jobs will be suspended and never started unless they are assigned a queue and eventually admitted. This also applies to jobs created before starting the kueue controller. Defaults to QueueNameRequired; therefore, those jobs are not managed and if they are created unsuspended, they will start immediately.",
-							Default:     "",
+							Description: "policy controls whether or not Kueue reconciles jobs that don't set the label kueue.x-k8s.io/queue-name. The allowed values are QueueNameRequired and QueueNameOptional. QueueNameOptional means that workloads will be suspended on creation and a label will be added via a mutating webhook. QueueNameRequired means that workloads that are managed by Kueue must have a the label kueue.x-k8s.io/queue-name. If this label is not present on the workload, then Kueue will ignore this workload. Defaults to QueueNameRequired; therefore, those jobs are not managed and if they are created unsuspended, they will start immediately.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

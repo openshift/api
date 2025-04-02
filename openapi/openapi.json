@@ -33478,7 +33478,7 @@
           "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.Preemption"
         },
         "queueLabelPolicy": {
-          "description": "queueLabelPolicy controls how kueue manages workloads The default behavior of Kueue will manage workloads that have a queue-name label. This field is optional.",
+          "description": "queueLabelPolicy controls how kueue manages workloads The default behavior of Kueue will manage workloads that have a queue-name label. Workloads that are missing these label will be ignored by Kueue. This field is optional.",
           "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.QueueLabelPolicy"
         }
       }

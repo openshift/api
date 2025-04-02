@@ -57289,7 +57289,7 @@ func schema_openshift_api_operator_v1alpha1_KueueConfiguration(ref common.Refere
 					},
 					"queueLabelPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "queueLabelPolicy controls how kueue manages workloads The default behavior of Kueue will manage workloads that have a queue-name label. This field is optional.",
+							Description: "queueLabelPolicy controls how kueue manages workloads The default behavior of Kueue will manage workloads that have a queue-name label. Workloads that are missing these label will be ignored by Kueue. This field is optional.",
 							Ref:         ref("github.com/openshift/api/operator/v1alpha1.QueueLabelPolicy"),
 						},
 					},

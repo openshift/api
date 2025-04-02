@@ -302,7 +302,7 @@ func (Kueue) SwaggerDoc() map[string]string {
 
 var map_KueueConfiguration = map[string]string{
 	"integrations":         "integrations is a required field that configures the Kueue's workload integrations. Kueue has both standard integrations, known as job frameworks, and external integrations known as external frameworks. Kueue will only manage workloads that correspond to the specified integrations.",
-	"queueLabelPolicy":     "queueLabelPolicy controls how kueue manages workloads The default behavior of Kueue will manage workloads that have a queue-name label. This field is optional.",
+	"queueLabelPolicy":     "queueLabelPolicy controls how kueue manages workloads The default behavior of Kueue will manage workloads that have a queue-name label. Workloads that are missing these label will be ignored by Kueue. This field is optional.",
 	"gangSchedulingPolicy": "gangSchedulingPolicy controls how Kueue admits workloads. Gang Scheduling is the act of all or nothing scheduling, where workloads do not become ready within a certain period, they may be evicted and later retried. This field is optional.",
 	"preemption":           "preemption is the process of evicting one or more admitted Workloads to accommodate another Workload. Kueue has classical premption and preemption via fair sharing.",
 }

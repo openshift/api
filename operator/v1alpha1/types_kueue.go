@@ -49,6 +49,7 @@ type KueueConfiguration struct {
 	Integrations Integrations `json:"integrations"`
 	// queueLabelPolicy controls how kueue manages workloads
 	// The default behavior of Kueue will manage workloads that have a queue-name label.
+	// Workloads that are missing these label will be ignored by Kueue.
 	// This field is optional.
 	// +optional
 	QueueLabelPolicy *QueueLabelPolicy `json:"queueLabelPolicy,omitempty"`

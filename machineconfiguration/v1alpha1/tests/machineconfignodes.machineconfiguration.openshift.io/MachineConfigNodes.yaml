@@ -80,35 +80,6 @@ tests:
           node:
             name: foobar
       expectedError: "spec.configVersion: Required value, <nil>: Invalid value: \"null\""
-    - name: Should be able to create a MachineConfigNode with a PinnedImageSet
-      initial: |
-        apiVersion: machineconfiguration.openshift.io/v1alpha1
-        kind: MachineConfigNode
-        metadata:
-          name: foobar
-        spec:
-          node:
-            name: foobar
-          pool:
-            name: worker
-          configVersion:
-            desired: rendered-worker-abc
-          pinnedImageSets:
-            - name: test-pinned-image-set
-      expected: |
-        apiVersion: machineconfiguration.openshift.io/v1alpha1
-        kind: MachineConfigNode
-        metadata:
-          name: foobar
-        spec:
-          node:
-            name: foobar
-          pool:
-            name: worker
-          configVersion:
-            desired: rendered-worker-abc
-          pinnedImageSets:
-            - name: test-pinned-image-set
   onUpdate:
     - name: PinnedImageSet desired generation must be greater than or equal to the current generation
       initial: |
@@ -123,8 +94,6 @@ tests:
             name: worker
           configVersion:
             desired: rendered-worker-abc
-          pinnedImageSets:
-            - name: test-pinned-image-set
         status:
           observedGeneration: 1
           configVersion:
@@ -145,8 +114,6 @@ tests:
             name: worker
           configVersion:
             desired: rendered-worker-abc
-          pinnedImageSets:
-            - name: test-pinned-image-set
         status:
           observedGeneration: 1
           configVersion:
@@ -169,8 +136,6 @@ tests:
             name: worker
           configVersion:
             desired: rendered-worker-abc
-          pinnedImageSets:
-            - name: test-pinned-image-set
         status:
           observedGeneration: 4
           configVersion:
@@ -191,8 +156,6 @@ tests:
             name: worker
           configVersion:
             desired: rendered-worker-abc
-          pinnedImageSets:
-            - name: test-pinned-image-set
         status:
           observedGeneration: 5
           configVersion:
@@ -216,8 +179,6 @@ tests:
             name: worker
           configVersion:
             desired: rendered-worker-abc
-          pinnedImageSets:
-            - name: test-pinned-image-set
         status:
           observedGeneration: 4
           configVersion:
@@ -238,8 +199,6 @@ tests:
             name: worker
           configVersion:
             desired: rendered-worker-abc
-          pinnedImageSets:
-            - name: test-pinned-image-set
         status:
           observedGeneration: 5
           configVersion:

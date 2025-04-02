@@ -23398,18 +23398,6 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.MCOObjectReference"
         },
-        "pinnedImageSets": {
-          "description": "pinnedImageSets is a user defined value that holds the names of the desired image sets that the node should pull and pin.",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigNodeSpecPinnedImageSet"
-          },
-          "x-kubernetes-list-map-keys": [
-            "name"
-          ],
-          "x-kubernetes-list-type": "map"
-        },
         "pool": {
           "description": "pool contains a reference to the machine config pool that this machine config node's referenced node belongs to.",
           "default": {},
@@ -23426,20 +23414,6 @@
       "properties": {
         "desired": {
           "description": "desired is the name of the machine config that the the node should be upgraded to. This value is set when the machine config pool generates a new version of its rendered configuration. When this value is changed, the machine config daemon starts the node upgrade process. This value gets set in the machine config node spec once the machine config has been targeted for upgrade and before it is validated. Must be a lowercase RFC-1123 subdomain name (https://tools.ietf.org/html/rfc1123) consisting of only lowercase alphanumeric characters, hyphens (-), and periods (.), and must start and end with an alphanumeric character, and be at most 253 characters in length.",
-          "type": "string",
-          "default": ""
-        }
-      }
-    },
-    "com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigNodeSpecPinnedImageSet": {
-      "description": "MachineConfigNodeSpecPinnedImageSet holds information on the desired pinned image sets that the current observed machine config node should pin and pull.",
-      "type": "object",
-      "required": [
-        "name"
-      ],
-      "properties": {
-        "name": {
-          "description": "name is the name of the pinned image set. Must be a lowercase RFC-1123 subdomain name (https://tools.ietf.org/html/rfc1123) consisting of only lowercase alphanumeric characters, hyphens (-), and periods (.), and must start and end with an alphanumeric character, and be at most 253 characters in length.",
           "type": "string",
           "default": ""
         }

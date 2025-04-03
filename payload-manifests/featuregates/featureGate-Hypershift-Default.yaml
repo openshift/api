@@ -167,9 +167,6 @@
                         "name": "SELinuxMount"
                     },
                     {
-                        "name": "ServiceAccountTokenNodeBinding"
-                    },
-                    {
                         "name": "ShortCertRotation"
                     },
                     {
@@ -189,9 +186,6 @@
                     },
                     {
                         "name": "UserNamespacesPodSecurityStandards"
-                    },
-                    {
-                        "name": "UserNamespacesSupport"
                     },
                     {
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"
@@ -293,6 +287,9 @@
                     },
                     {
                         "name": "SetEIPForNLBIngressController"
+                    },
+                    {
+                        "name": "UserNamespacesSupport"
                     },
                     {
                         "name": "VSphereControlPlaneMachineSet"

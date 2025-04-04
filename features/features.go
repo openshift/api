@@ -825,4 +825,16 @@ var (
 									enhancementPR("https://github.com/openshift/enhancements/pull/1748").
 									enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 									mustRegister()
+
+	FeatureGateUpdateStatusAPI = newFeatureGate("UpdateStatusAPI").
+					reportProblemsToJiraComponent("Cluster Version Operator").
+					contactPerson("pmuller").
+					productScope(ocpSpecific).
+		// OTA originally created and used the UpgradeStatus legacy feature gate for the related
+		// functionality, enabled in TechPreview. Moving the functionality into the cluster,
+		// exposed by an API proved to be more complex and experimental than thought, so it was
+		// decided to create and use a new feature gate that is only enabled in DevPreview.
+		enhancementPR("https://github.com/openshift/enhancements/pull/1701").
+		enableIn(configv1.DevPreviewNoUpgrade).
+		mustRegister()
 )

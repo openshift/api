@@ -4,6 +4,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+type MachineConfigurationValidationPolicy string
+
 // +genclient
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -56,6 +58,17 @@ type MachineConfigurationSpec struct {
 	// +openshift:enable:FeatureGate=NodeDisruptionPolicy
 	// +optional
 	NodeDisruptionPolicy NodeDisruptionPolicyConfig `json:"nodeDisruptionPolicy"`
+
+
+	// configurationValidationPolicy tells the operator how new machine configurations should be validated.
+	// Valid values are Strict and Relaxed:
+	// Strict: Rejects changes to MachineConfigs if fields that doesn't support to be updated are changed.
+	// Relaxed: Changes to protected fields are allowed and will be applied in new nodes joining the cluster.
+	// +kubebuilder:validation:Enum=Strict;Relaxed
+	// +kubebuilder:validation:Default=Strict
+	// +default="Strict"
+	// +optional
+	ConfigurationValidationPolicy MachineConfigurationValidationPolicy `json:"configurationValidationPolicy,omitempty"`
 }
 
 type MachineConfigurationStatus struct {

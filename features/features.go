@@ -219,14 +219,6 @@ var (
 					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
 
-	FeatureGateVSphereMultiVCenters = newFeatureGate("VSphereMultiVCenters").
-					reportProblemsToJiraComponent("splat").
-					contactPerson("vr4manta").
-					productScope(ocpSpecific).
-					enhancementPR(legacyFeatureGateWithoutEnhancement).
-					enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-					mustRegister()
-
 	FeatureGateVSphereStaticIPs = newFeatureGate("VSphereStaticIPs").
 					reportProblemsToJiraComponent("splat").
 					contactPerson("rvanderp3").

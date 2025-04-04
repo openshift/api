@@ -33009,6 +33009,16 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1alpha1.ByWorkload": {
+      "description": "ByWorkload controls how admission is done",
+      "type": "object",
+      "properties": {
+        "admission": {
+          "description": "When admission is set to Sequential, only pods from the currently processing workload will be admitted. Once all pods from the current workload are admitted, and ready, Kueue will process the next workload. Sequential processing may slow down admission when the cluster has sufficient capacity for multiple workloads, but provides a higher guarantee of workloads scheduling all pods together successfully. When set to Parallel, pods from any workload will be admitted at any time. This may lead to a deadlock where workloads are in contention for cluster capacity and pods from another workload having successfully scheduled prevent pods from the current workload scheduling.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1alpha1.ClusterVersionOperator": {
       "description": "ClusterVersionOperator holds cluster-wide information about the Cluster Version Operator.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
       "type": "object",
@@ -33237,8 +33247,8 @@
       "type": "object",
       "properties": {
         "byWorkload": {
-          "description": "byWorkload controls how admission is done. When admission is set to Sequential, only pods from the currently processing workload will be admitted. Once all pods from the current workload are admitted, and ready, Kueue will process the next workload. Sequential processing may slow down admission when the cluster has sufficient capacity for multiple workloads, but provides a higher guarantee of workloads scheduling all pods together successfully. When set to Parallel, pods from any workload will be admitted at any time. This may lead to a deadlock where workloads are in contention for cluster capacity and pods from another workload having successfully scheduled prevent pods from the current workload scheduling.",
-          "type": "string"
+          "description": "byWorkload controls how admission is done. byWorkload is only required if policy is equal to ByWorkload.",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.ByWorkload"
         },
         "policy": {
           "description": "policy allows you to enable and configure gang scheduling. This is an optional field. The allowed values are ByWorkload and Disabled. The default value will be Disabled. When set to ByWorkload, this means each workload is processed and considered for admission as a single unit. Where workloads do not become ready over time, the entire workload may then be evicted and retried at a later time.",
@@ -33932,8 +33942,8 @@
     "com.github.openshift.api.operator.v1alpha1.Preemption": {
       "type": "object",
       "properties": {
-        "preemptionStrategy": {
-          "description": "preemptionStrategy are the types of preemption kueue allows. Kueue has two types of preemption: classical and fair sharing. Classical means that an incoming workload, which does not fit within the unusued quota, is eligible to issue preemptions when the requests of the workload are below the resource flavor's nominal quota or borrowWithinCohort is enabled on the Cluster Queue. Fairsharing means that ClusterQueues with pending Workloads can preempt other Workloads in their cohort until the preempting ClusterQueue obtains an equal or weighted share of the borrowable resources. The borrowable resources are the unused nominal quota of all the ClusterQueues in the cohort. FairSharing is a more heavy weight algorithm. The default is Classical.",
+        "preemptionPolicy": {
+          "description": "preemptionPolicy are the types of preemption kueue allows. Kueue has two types of preemption: classical and fair sharing. Classical means that an incoming workload, which does not fit within the unusued quota, is eligible to issue preemptions when the requests of the workload are below the resource flavor's nominal quota or borrowWithinCohort is enabled on the Cluster Queue. Fairsharing means that ClusterQueues with pending Workloads can preempt other Workloads in their cohort until the preempting ClusterQueue obtains an equal or weighted share of the borrowable resources. The borrowable resources are the unused nominal quota of all the ClusterQueues in the cohort. FairSharing is a more heavy weight algorithm. The default is Classical.",
           "type": "string"
         }
       }

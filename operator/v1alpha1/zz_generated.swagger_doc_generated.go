@@ -257,6 +257,15 @@ func (RepositoryDigestMirrors) SwaggerDoc() map[string]string {
 	return map_RepositoryDigestMirrors
 }
 
+var map_ByWorkload = map[string]string{
+	"":          "ByWorkload controls how admission is done",
+	"admission": "When admission is set to Sequential, only pods from the currently processing workload will be admitted. Once all pods from the current workload are admitted, and ready, Kueue will process the next workload. Sequential processing may slow down admission when the cluster has sufficient capacity for multiple workloads, but provides a higher guarantee of workloads scheduling all pods together successfully. When set to Parallel, pods from any workload will be admitted at any time. This may lead to a deadlock where workloads are in contention for cluster capacity and pods from another workload having successfully scheduled prevent pods from the current workload scheduling.",
+}
+
+func (ByWorkload) SwaggerDoc() map[string]string {
+	return map_ByWorkload
+}
+
 var map_ExternalFramework = map[string]string{
 	"":         "This is the GVR for an external framework. Controller runtime requires this in this format for api discoverability.",
 	"group":    "group is the API group of the externalFramework. Must be a valid DNS 1123 subdomain consisting of of lower-case alphanumeric characters, hyphens and periods, of at most 253 characters in length. Each period separated segment within the subdomain must start and end with an alphanumeric character.",
@@ -271,7 +280,7 @@ func (ExternalFramework) SwaggerDoc() map[string]string {
 var map_GangSchedulingPolicy = map[string]string{
 	"":           "Kueue provides the ability to admit workloads all in one (gang admission) and evicts workloads if they are not ready within a specific time.",
 	"policy":     "policy allows you to enable and configure gang scheduling. This is an optional field. The allowed values are ByWorkload and Disabled. The default value will be Disabled. When set to ByWorkload, this means each workload is processed and considered for admission as a single unit. Where workloads do not become ready over time, the entire workload may then be evicted and retried at a later time.",
-	"byWorkload": "byWorkload controls how admission is done. When admission is set to Sequential, only pods from the currently processing workload will be admitted. Once all pods from the current workload are admitted, and ready, Kueue will process the next workload. Sequential processing may slow down admission when the cluster has sufficient capacity for multiple workloads, but provides a higher guarantee of workloads scheduling all pods together successfully. When set to Parallel, pods from any workload will be admitted at any time. This may lead to a deadlock where workloads are in contention for cluster capacity and pods from another workload having successfully scheduled prevent pods from the current workload scheduling.",
+	"byWorkload": "byWorkload controls how admission is done. byWorkload is only required if policy is equal to ByWorkload.",
 }
 
 func (GangSchedulingPolicy) SwaggerDoc() map[string]string {
@@ -346,7 +355,7 @@ func (LabelKeys) SwaggerDoc() map[string]string {
 }
 
 var map_Preemption = map[string]string{
-	"preemptionStrategy": "preemptionStrategy are the types of preemption kueue allows. Kueue has two types of preemption: classical and fair sharing. Classical means that an incoming workload, which does not fit within the unusued quota, is eligible to issue preemptions when the requests of the workload are below the resource flavor's nominal quota or borrowWithinCohort is enabled on the Cluster Queue. Fairsharing means that ClusterQueues with pending Workloads can preempt other Workloads in their cohort until the preempting ClusterQueue obtains an equal or weighted share of the borrowable resources. The borrowable resources are the unused nominal quota of all the ClusterQueues in the cohort. FairSharing is a more heavy weight algorithm. The default is Classical.",
+	"preemptionPolicy": "preemptionPolicy are the types of preemption kueue allows. Kueue has two types of preemption: classical and fair sharing. Classical means that an incoming workload, which does not fit within the unusued quota, is eligible to issue preemptions when the requests of the workload are below the resource flavor's nominal quota or borrowWithinCohort is enabled on the Cluster Queue. Fairsharing means that ClusterQueues with pending Workloads can preempt other Workloads in their cohort until the preempting ClusterQueue obtains an equal or weighted share of the borrowable resources. The borrowable resources are the unused nominal quota of all the ClusterQueues in the cohort. FairSharing is a more heavy weight algorithm. The default is Classical.",
 }
 
 func (Preemption) SwaggerDoc() map[string]string {

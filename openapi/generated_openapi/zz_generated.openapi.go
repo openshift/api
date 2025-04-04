@@ -1100,6 +1100,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.UpstreamResolvers":                                             schema_openshift_api_operator_v1_UpstreamResolvers(ref),
 		"github.com/openshift/api/operator/v1.VSphereCSIDriverConfigSpec":                                    schema_openshift_api_operator_v1_VSphereCSIDriverConfigSpec(ref),
 		"github.com/openshift/api/operator/v1alpha1.BackupJobReference":                                      schema_openshift_api_operator_v1alpha1_BackupJobReference(ref),
+		"github.com/openshift/api/operator/v1alpha1.ByWorkload":                                              schema_openshift_api_operator_v1alpha1_ByWorkload(ref),
 		"github.com/openshift/api/operator/v1alpha1.ClusterVersionOperator":                                  schema_openshift_api_operator_v1alpha1_ClusterVersionOperator(ref),
 		"github.com/openshift/api/operator/v1alpha1.ClusterVersionOperatorList":                              schema_openshift_api_operator_v1alpha1_ClusterVersionOperatorList(ref),
 		"github.com/openshift/api/operator/v1alpha1.ClusterVersionOperatorSpec":                              schema_openshift_api_operator_v1alpha1_ClusterVersionOperatorSpec(ref),
@@ -56505,6 +56506,26 @@ func schema_openshift_api_operator_v1alpha1_BackupJobReference(ref common.Refere
 	}
 }
 
+func schema_openshift_api_operator_v1alpha1_ByWorkload(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ByWorkload controls how admission is done",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"admission": {
+						SchemaProps: spec.SchemaProps{
+							Description: "When admission is set to Sequential, only pods from the currently processing workload will be admitted. Once all pods from the current workload are admitted, and ready, Kueue will process the next workload. Sequential processing may slow down admission when the cluster has sufficient capacity for multiple workloads, but provides a higher guarantee of workloads scheduling all pods together successfully. When set to Parallel, pods from any workload will be admitted at any time. This may lead to a deadlock where workloads are in contention for cluster capacity and pods from another workload having successfully scheduled prevent pods from the current workload scheduling.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_operator_v1alpha1_ClusterVersionOperator(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -56904,14 +56925,15 @@ func schema_openshift_api_operator_v1alpha1_GangSchedulingPolicy(ref common.Refe
 					},
 					"byWorkload": {
 						SchemaProps: spec.SchemaProps{
-							Description: "byWorkload controls how admission is done. When admission is set to Sequential, only pods from the currently processing workload will be admitted. Once all pods from the current workload are admitted, and ready, Kueue will process the next workload. Sequential processing may slow down admission when the cluster has sufficient capacity for multiple workloads, but provides a higher guarantee of workloads scheduling all pods together successfully. When set to Parallel, pods from any workload will be admitted at any time. This may lead to a deadlock where workloads are in contention for cluster capacity and pods from another workload having successfully scheduled prevent pods from the current workload scheduling.",
-							Type:        []string{"string"},
-							Format:      "",
+							Description: "byWorkload controls how admission is done. byWorkload is only required if policy is equal to ByWorkload.",
+							Ref:         ref("github.com/openshift/api/operator/v1alpha1.ByWorkload"),
 						},
 					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1alpha1.ByWorkload"},
 	}
 }
 
@@ -58037,9 +58059,9 @@ func schema_openshift_api_operator_v1alpha1_Preemption(ref common.ReferenceCallb
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"preemptionStrategy": {
+					"preemptionPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "preemptionStrategy are the types of preemption kueue allows. Kueue has two types of preemption: classical and fair sharing. Classical means that an incoming workload, which does not fit within the unusued quota, is eligible to issue preemptions when the requests of the workload are below the resource flavor's nominal quota or borrowWithinCohort is enabled on the Cluster Queue. Fairsharing means that ClusterQueues with pending Workloads can preempt other Workloads in their cohort until the preempting ClusterQueue obtains an equal or weighted share of the borrowable resources. The borrowable resources are the unused nominal quota of all the ClusterQueues in the cohort. FairSharing is a more heavy weight algorithm. The default is Classical.",
+							Description: "preemptionPolicy are the types of preemption kueue allows. Kueue has two types of preemption: classical and fair sharing. Classical means that an incoming workload, which does not fit within the unusued quota, is eligible to issue preemptions when the requests of the workload are below the resource flavor's nominal quota or borrowWithinCohort is enabled on the Cluster Queue. Fairsharing means that ClusterQueues with pending Workloads can preempt other Workloads in their cohort until the preempting ClusterQueue obtains an equal or weighted share of the borrowable resources. The borrowable resources are the unused nominal quota of all the ClusterQueues in the cohort. FairSharing is a more heavy weight algorithm. The default is Classical.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

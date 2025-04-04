@@ -220,6 +220,13 @@ type GangSchedulingPolicy struct {
 	// +optional
 	Policy *GangSchedulingPolicyOptions `json:"policy,omitempty"`
 	// byWorkload controls how admission is done.
+	// byWorkload is only required if policy is equal to ByWorkload.
+	// +optional
+	ByWorkload *ByWorkload `json:"byWorkload,omitempty"`
+}
+
+// ByWorkload controls how admission is done
+type ByWorkload struct {
 	// When admission is set to Sequential, only pods from the currently processing workload will be admitted.
 	// Once all pods from the current workload are admitted, and ready, Kueue will process the next workload.
 	// Sequential processing may slow down admission when the cluster has sufficient capacity for multiple workloads,
@@ -228,7 +235,7 @@ type GangSchedulingPolicy struct {
 	// This may lead to a deadlock where workloads are in contention for cluster capacity and
 	// pods from another workload having successfully scheduled prevent pods from the current workload scheduling.
 	// +optional
-	ByWorkload *GangSchedulingAdmissionOptions `json:"byWorkload,omitempty"`
+	Admission *GangSchedulingAdmissionOptions `json:"admission,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=QueueNameRequired;QueueNameOptional
@@ -255,15 +262,15 @@ type QueueLabelPolicy struct {
 }
 
 // +kubebuilder:validation:Enum=Classical;FairSharing
-type PreemptionStrategy string
+type PreemptionPolicy string
 
 const (
-	PreemeptionStrategyClassical   PreemptionStrategy = "Classical"
-	PreemeptionStrategyFairsharing PreemptionStrategy = "FairSharing"
+	PreemptionStrategyClassical   PreemptionPolicy = "Classical"
+	PreemptionStrategyFairsharing PreemptionPolicy = "FairSharing"
 )
 
 type Preemption struct {
-	// preemptionStrategy are the types of preemption kueue allows.
+	// preemptionPolicy are the types of preemption kueue allows.
 	// Kueue has two types of preemption: classical and fair sharing.
 	// Classical means that an incoming workload, which does
 	// not fit within the unusued quota, is eligible to issue preemptions
@@ -278,5 +285,5 @@ type Preemption struct {
 	// FairSharing is a more heavy weight algorithm.
 	// The default is Classical.
 	// +optional
-	PreemptionStrategy *PreemptionStrategy `json:"preemptionStrategy,omitempty"`
+	PreemptionPolicy *PreemptionPolicy `json:"preemptionPolicy,omitempty"`
 }

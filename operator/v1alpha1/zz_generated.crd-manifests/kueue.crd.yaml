@@ -1,0 +1,362 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    api.openshift.io/merged-by-featuregates: "true"
+    include.release.openshift.io/ibm-cloud-managed: "true"
+    include.release.openshift.io/self-managed-high-availability: "true"
+  name: kueue.operator.openshift.io
+spec:
+  group: operator.openshift.io
+  names:
+    kind: Kueue
+    listKind: KueueList
+    plural: kueue
+    singular: kueue
+  scope: Cluster
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          Kueue is the CRD to represent the Kueue operator
+          This CRD defines the configuration that the Kueue
+          Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: spec holds user settable values for configuration
+            properties:
+              config:
+                description: |-
+                  config is the desired configuration
+                  for the Kueue operator.
+                properties:
+                  integrations:
+                    description: |-
+                      integrations is a required field that configures the Kueue's workload integrations.
+                      Kueue has both standard integrations, known as job frameworks, and external integrations known as external frameworks.
+                      Kueue will only manage workloads that correspond to the specified integrations.
+                    properties:
+                      externalFrameworks:
+                        description: |-
+                          externalFrameworks are a list of GroupVersionResources
+                          that are managed for Kueue by external controllers.
+                          These are optional and should only be used if you have an external controller
+                          that integrates with Kueue.
+                        items:
+                          description: |-
+                            This is the GVR for an external framework.
+                            Controller runtime requires this in this format
+                            for api discoverability.
+                          properties:
+                            group:
+                              description: |-
+                                group is the API group of the externalFramework.
+                                Must be a valid DNS 1123 subdomain consisting of of lower-case alphanumeric characters,
+                                hyphens and periods, of at most 253 characters in length.
+                                Each period separated segment within the subdomain must start and end with an alphanumeric character.
+                              maxLength: 253
+                              minLength: 1
+                              type: string
+                              x-kubernetes-validations:
+                              - message: a lowercase RFC 1123 subdomain must consist
+                                  of lower case alphanumeric characters, '-' or '.',
+                                  and must start and end with an alphanumeric character.
+                                rule: self.size() == 0 || !format.dns1123Label().validate(self).hasValue()
+                            resource:
+                              description: |-
+                                resource is the Resource type of the external framework.
+                                Resource types are lowercase and plural (e.g. pods, deployments).
+                                Must be a valid DNS 1123 label consisting of a lower-case alphanumeric string
+                                and hyphens of at most 63 characters in length.
+                                The value must start and end with an alphanumeric character.
+                              maxLength: 63
+                              minLength: 1
+                              type: string
+                              x-kubernetes-validations:
+                              - message: a lowercase RFC 1123 label must consist of
+                                  lower case alphanumeric characters and '-', and
+                                  must start and end with an alphanumeric character.
+                                rule: self.size() == 0 || !format.dns1123Label().validate(self).hasValue()
+                            version:
+                              description: |-
+                                version is the version of the api (e.g. v1alpha1, v1beta1, v1).
+                                Must be a valid DNS 1035 label consisting of a lower-case alphanumeric string
+                                and hyphens of at most 63 characters in length.
+                                The value must start with an alphabetic character and end with an alphanumeric character.
+                              maxLength: 63
+                              minLength: 1
+                              type: string
+                              x-kubernetes-validations:
+                              - message: a lowercase RFC 1035 label must consist of
+                                  lower case alphanumeric characters, '-' or '.',
+                                  and must start with an alphabetic character and
+                                  end with an alphanumeric character.
+                                rule: self.size() == 0 || !format.dns1035Label().validate(self).hasValue()
+                          required:
+                          - group
+                          - resource
+                          - version
+                          type: object
+                        maxItems: 32
+                        type: array
+                        x-kubernetes-list-type: atomic
+                      frameworks:
+                        description: |-
+                          frameworks are a unique list of names to be enabled.
+                          This is required and must have at least one element.
+                          Each framework represents a type of job that Kueue will manage.
+                          Frameworks are a list of frameworks that Kueue has support for.
+                          The allowed values are BatchJob, RayJob, RayCluster, JobSet, MPIJob, PaddleJob, PytorchJob, TFJob, XGBoostJob, AppWrapper, Pod, Deployment, StatefulSet and LeaderWorkerSet.
+                        items:
+                          enum:
+                          - BatchJob
+                          - RayJob
+                          - RayCluster
+                          - JobSet
+                          - MPIJob
+                          - PaddleJob
+                          - PytorchJob
+                          - TFJob
+                          - XGBoostJob
+                          - AppWrapper
+                          - Pod
+                          - Deployment
+                          - StatefulSet
+                          - LeaderWorkerSet
+                          type: string
+                        maxItems: 14
+                        minItems: 1
+                        type: array
+                        x-kubernetes-list-type: atomic
+                        x-kubernetes-validations:
+                        - message: each item in frameworks must be unique
+                          rule: self.all(x, self.exists_one(y, x == y))
+                      labelKeysToCopy:
+                        description: |-
+                          labelKeysToCopy are a list of label keys that are copied once a workload is created.
+                          These keys are persisted to the internal Kueue workload object.
+                          If not specified, only the Kueue labels will be copied.
+                        items:
+                          properties:
+                            key:
+                              description: |-
+                                key is the label key
+                                A label key must be a valid qualified name consisting of a lower-case alphanumeric string,
+                                and hyphens of at most 63 characters in length.
+                                The name must start and end with an alphanumeric character.
+                                The name may be optionally prefixed with a subdomain consisting of lower-case alphanumeric characters,
+                                hyphens and periods, of at most 253 characters in length.
+                                Each period separated segment within the subdomain must start and end with an alphanumeric character.
+                                The optional prefix and the name are separate by a forward slash (/).
+                              maxLength: 317
+                              minLength: 1
+                              type: string
+                              x-kubernetes-validations:
+                              - message: a qualified name must consist of a lower-case
+                                  alphanumeric and hyphenated string of at most 63
+                                  characters in length, starting and ending with alphanumeric
+                                  chracters. The name may be optionally prefixed with
+                                  a subdomain consisting of lower-case alphanumeric
+                                  characters, hyphens and periods, of at most 253
+                                  characters in length. Each period separated segment
+                                  within the subdomain must start and end with an
+                                  alphanumeric character.
+                                rule: '!format.qualifiedName().validate(self).hasValue()'
+                          type: object
+                        maxItems: 64
+                        type: array
+                        x-kubernetes-list-type: atomic
+                    required:
+                    - frameworks
+                    type: object
+                required:
+                - integrations
+                type: object
+              logLevel:
+                default: Normal
+                description: |-
+                  logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a
+                  simple way to manage coarse grained logging choices that operators have to interpret for their operands.
+
+                  Valid values are: "Normal", "Debug", "Trace", "TraceAll".
+                  Defaults to "Normal".
+                enum:
+                - ""
+                - Normal
+                - Debug
+                - Trace
+                - TraceAll
+                type: string
+              managementState:
+                description: managementState indicates whether and how the operator
+                  should manage the component
+                pattern: ^(Managed|Unmanaged|Force|Removed)$
+                type: string
+              observedConfig:
+                description: |-
+                  observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because
+                  it is an input to the level for the operator
+                nullable: true
+                type: object
+                x-kubernetes-preserve-unknown-fields: true
+              operatorLogLevel:
+                default: Normal
+                description: |-
+                  operatorLogLevel is an intent based logging for the operator itself.  It does not give fine grained control, but it is a
+                  simple way to manage coarse grained logging choices that operators have to interpret for themselves.
+
+                  Valid values are: "Normal", "Debug", "Trace", "TraceAll".
+                  Defaults to "Normal".
+                enum:
+                - ""
+                - Normal
+                - Debug
+                - Trace
+                - TraceAll
+                type: string
+              unsupportedConfigOverrides:
+                description: |-
+                  unsupportedConfigOverrides overrides the final configuration that was computed by the operator.
+                  Red Hat does not support the use of this field.
+                  Misuse of this field could lead to unexpected behavior or conflict with other configuration options.
+                  Seek guidance from the Red Hat support before using this field.
+                  Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.
+                nullable: true
+                type: object
+                x-kubernetes-preserve-unknown-fields: true
+            required:
+            - config
+            type: object
+          status:
+            description: status holds observed values from the cluster. They may not
+              be overridden.
+            properties:
+              conditions:
+                description: conditions is a list of conditions and their status
+                items:
+                  description: OperatorCondition is just the standard condition fields.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      type: string
+                    reason:
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - status
+                  - type
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+              generations:
+                description: generations are used to determine when an item needs
+                  to be reconciled or has changed in a way that needs a reaction.
+                items:
+                  description: GenerationStatus keeps track of the generation for
+                    a given resource so that decisions about forced updates can be
+                    made.
+                  properties:
+                    group:
+                      description: group is the group of the thing you're tracking
+                      type: string
+                    hash:
+                      description: hash is an optional field set for resources without
+                        generation that are content sensitive like secrets and configmaps
+                      type: string
+                    lastGeneration:
+                      description: lastGeneration is the last generation of the workload
+                        controller involved
+                      format: int64
+                      type: integer
+                    name:
+                      description: name is the name of the thing you're tracking
+                      type: string
+                    namespace:
+                      description: namespace is where the thing you're tracking is
+                      type: string
+                    resource:
+                      description: resource is the resource type of the thing you're
+                        tracking
+                      type: string
+                  required:
+                  - group
+                  - name
+                  - namespace
+                  - resource
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - group
+                - resource
+                - namespace
+                - name
+                x-kubernetes-list-type: map
+              latestAvailableRevision:
+                description: latestAvailableRevision is the deploymentID of the most
+                  recent deployment
+                format: int32
+                type: integer
+                x-kubernetes-validations:
+                - message: must only increase
+                  rule: self >= oldSelf
+              observedGeneration:
+                description: observedGeneration is the last generation change you've
+                  dealt with
+                format: int64
+                type: integer
+              readyReplicas:
+                description: readyReplicas indicates how many replicas are ready and
+                  at the desired state
+                format: int32
+                type: integer
+              version:
+                description: version is the level this availability applies to
+                type: string
+            type: object
+        required:
+        - spec
+        type: object
+        x-kubernetes-validations:
+        - message: Kueue is a singleton, .metadata.name must be 'cluster'
+          rule: self.metadata.name == 'cluster'
+    served: true
+    storage: true
+    subresources:
+      status: {}

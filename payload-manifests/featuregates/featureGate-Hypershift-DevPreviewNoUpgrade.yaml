@@ -35,6 +35,9 @@
                     },
                     {
                         "name": "NewOLMCatalogdAPIV1Metas"
+                    },
+                    {
+                        "name": "NewOLMPreflightPermissionChecks"
                     }
                 ],
                 "enabled": [

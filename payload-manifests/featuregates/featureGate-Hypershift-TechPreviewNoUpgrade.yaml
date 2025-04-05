@@ -282,9 +282,6 @@
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"
                     },
                     {
-                        "name": "VSphereControlPlaneMachineSet"
-                    },
-                    {
                         "name": "VSphereDriverConfiguration"
                     },
                     {

@@ -108,7 +108,6 @@ status:
     - name: NodeSwap
     - name: RouteExternalCertificate
     - name: SigstoreImageVerification
-    - name: VSphereControlPlaneMachineSet
     - name: VSphereStaticIPs
     - name: ValidatingAdmissionPolicy
     enabled:

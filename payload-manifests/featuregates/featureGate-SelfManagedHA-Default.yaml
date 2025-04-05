@@ -295,9 +295,6 @@
                         "name": "SetEIPForNLBIngressController"
                     },
                     {
-                        "name": "VSphereControlPlaneMachineSet"
-                    },
-                    {
                         "name": "VSphereDriverConfiguration"
                     },
                     {

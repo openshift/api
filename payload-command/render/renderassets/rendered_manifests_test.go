@@ -109,7 +109,6 @@ status:
     - name: RouteExternalCertificate
     - name: SigstoreImageVerification
     - name: VSphereControlPlaneMachineSet
-    - name: VSphereStaticIPs
     - name: ValidatingAdmissionPolicy
     enabled:
     - name: AlibabaPlatform

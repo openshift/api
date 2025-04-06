@@ -255,9 +255,6 @@
                         "name": "RouteExternalCertificate"
                     },
                     {
-                        "name": "ServiceAccountTokenNodeBinding"
-                    },
-                    {
                         "name": "SetEIPForNLBIngressController"
                     },
                     {

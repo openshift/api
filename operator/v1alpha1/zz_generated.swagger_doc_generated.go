@@ -277,14 +277,14 @@ func (ExternalFramework) SwaggerDoc() map[string]string {
 	return map_ExternalFramework
 }
 
-var map_GangSchedulingPolicy = map[string]string{
+var map_GangScheduling = map[string]string{
 	"":           "Kueue provides the ability to admit workloads all in one (gang admission) and evicts workloads if they are not ready within a specific time.",
 	"policy":     "policy allows you to enable and configure gang scheduling. This is an optional field. The allowed values are ByWorkload and Disabled. The default value will be Disabled. When set to ByWorkload, this means each workload is processed and considered for admission as a single unit. Where workloads do not become ready over time, the entire workload may then be evicted and retried at a later time.",
 	"byWorkload": "byWorkload controls how admission is done. byWorkload is only required if policy is equal to ByWorkload.",
 }
 
-func (GangSchedulingPolicy) SwaggerDoc() map[string]string {
-	return map_GangSchedulingPolicy
+func (GangScheduling) SwaggerDoc() map[string]string {
+	return map_GangScheduling
 }
 
 var map_Integrations = map[string]string{
@@ -310,10 +310,10 @@ func (Kueue) SwaggerDoc() map[string]string {
 }
 
 var map_KueueConfiguration = map[string]string{
-	"integrations":         "integrations is a required field that configures the Kueue's workload integrations. Kueue has both standard integrations, known as job frameworks, and external integrations known as external frameworks. Kueue will only manage workloads that correspond to the specified integrations.",
-	"queueLabelPolicy":     "queueLabelPolicy controls how kueue manages workloads The default behavior of Kueue will manage workloads that have a queue-name label. Workloads that are missing these label will be ignored by Kueue. This field is optional.",
-	"gangSchedulingPolicy": "gangSchedulingPolicy controls how Kueue admits workloads. Gang Scheduling is the act of all or nothing scheduling, where workloads do not become ready within a certain period, they may be evicted and later retried. This field is optional.",
-	"preemption":           "preemption is the process of evicting one or more admitted Workloads to accommodate another Workload. Kueue has classical premption and preemption via fair sharing.",
+	"integrations":       "integrations is a required field that configures the Kueue's workload integrations. Kueue has both standard integrations, known as job frameworks, and external integrations known as external frameworks. Kueue will only manage workloads that correspond to the specified integrations.",
+	"workloadManagement": "workloadManagement controls how kueue manages workloads. The default behavior of Kueue will manage workloads that have a queue-name label. Workloads that are missing these label will be ignored by Kueue. This field is optional.",
+	"gangScheduling":     "gangScheduling controls how Kueue admits workloads. Gang Scheduling is the act of all or nothing scheduling, where workloads do not become ready within a certain period, they may be evicted and later retried. This field is optional.",
+	"preemption":         "preemption is the process of evicting one or more admitted Workloads to accommodate another Workload. Kueue has classical premption and preemption via fair sharing. This field is optional.",
 }
 
 func (KueueConfiguration) SwaggerDoc() map[string]string {
@@ -362,12 +362,12 @@ func (Preemption) SwaggerDoc() map[string]string {
 	return map_Preemption
 }
 
-var map_QueueLabelPolicy = map[string]string{
-	"policy": "policy controls whether or not Kueue reconciles jobs that don't set the label kueue.x-k8s.io/queue-name. The allowed values are QueueNameRequired and QueueNameOptional. QueueNameOptional means that workloads will be suspended on creation and a label will be added via a mutating webhook. QueueNameRequired means that workloads that are managed by Kueue must have a label kueue.x-k8s.io/queue-name. If this label is not present on the workload, then Kueue will ignore this workload. Defaults to QueueNameRequired.",
+var map_WorkloadManagement = map[string]string{
+	"labelPolicy": "labelPolicy controls whether or not Kueue reconciles jobs that don't set the label kueue.x-k8s.io/queue-name. The allowed values are QueueName and None. None means that workloads will be suspended on creation and a label will be added via a mutating webhook. QueueName means that workloads that are managed by Kueue must have a label kueue.x-k8s.io/queue-name. If this label is not present on the workload, then Kueue will ignore this workload. Defaults to QueueName.",
 }
 
-func (QueueLabelPolicy) SwaggerDoc() map[string]string {
-	return map_QueueLabelPolicy
+func (WorkloadManagement) SwaggerDoc() map[string]string {
+	return map_WorkloadManagement
 }
 
 var map_OLM = map[string]string{

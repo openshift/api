@@ -47,20 +47,21 @@ type KueueConfiguration struct {
 	// Kueue will only manage workloads that correspond to the specified integrations.
 	// +required
 	Integrations Integrations `json:"integrations"`
-	// queueLabelPolicy controls how kueue manages workloads
+	// workloadManagement controls how kueue manages workloads.
 	// The default behavior of Kueue will manage workloads that have a queue-name label.
 	// Workloads that are missing these label will be ignored by Kueue.
 	// This field is optional.
 	// +optional
-	QueueLabelPolicy *QueueLabelPolicy `json:"queueLabelPolicy,omitempty"`
-	// gangSchedulingPolicy controls how Kueue admits workloads.
+	WorkloadManagement *WorkloadManagement `json:"workloadManagement,omitempty"`
+	// gangScheduling controls how Kueue admits workloads.
 	// Gang Scheduling is the act of all or nothing scheduling,
 	// where workloads do not become ready within a certain period, they may be evicted and later retried.
 	// This field is optional.
 	// +optional
-	GangSchedulingPolicy *GangSchedulingPolicy `json:"gangSchedulingPolicy,omitempty"`
+	GangScheduling *GangScheduling `json:"gangScheduling,omitempty"`
 	// preemption is the process of evicting one or more admitted Workloads to accommodate another Workload.
 	// Kueue has classical premption and preemption via fair sharing.
+	// This field is optional.
 	// +optional
 	Preemption *Preemption `json:"preemption,omitempty"`
 }
@@ -191,25 +192,25 @@ type LabelKeys struct {
 }
 
 // +kubebuilder:validation:Enum=ByWorkload;Disabled
-type GangSchedulingPolicyOptions string
+type GangSchedulingPolicy string
 
 const (
-	GangSchedulingPolicyByWorkload GangSchedulingPolicyOptions = "ByWorkload"
-	GangSchedulingPolicyDisabled   GangSchedulingPolicyOptions = "Disabled"
+	GangSchedulingPolicyByWorkload GangSchedulingPolicy = "ByWorkload"
+	GangSchedulingPolicyDisabled   GangSchedulingPolicy = "Disabled"
 )
 
 // +kubebuilder:validation:Enum=Parallel;Sequential
-type GangSchedulingAdmissionOptions string
+type GangSchedulingWorkloadAdmission string
 
 const (
-	GangSchedulingAdmissionOptionsSequential GangSchedulingAdmissionOptions = "Sequential"
-	GangSchedulingAdmissionOptionsParallel   GangSchedulingAdmissionOptions = "Parallel"
+	GangSchedulingWorkloadAdmissionSequential GangSchedulingWorkloadAdmission = "Sequential"
+	GangSchedulingWorkloadAdmissionParallel   GangSchedulingWorkloadAdmission = "Parallel"
 )
 
 // Kueue provides the ability to admit workloads all in one (gang admission)
 // and evicts workloads if they are not ready within a specific time.
-// +kubebuilder:validation:XValidation:rule="has(self.policy) && self.policy == 'ByWorkload' ?  has(self.byWorkload) : !has(self.byWorkload)",message="byWorkload is required when policy is ByWorkload, and forbidden otherwise"
-type GangSchedulingPolicy struct {
+// +kubebuilder:validation:XValidation:rule="has(self.policy) && self.policy == 'ByWorkload' ?  has(self.byWorkload) : !has(self.byWorkload)",message="byWorkload is required when policy is byWorkload, and forbidden otherwise"
+type GangScheduling struct {
 	// policy allows you to enable and configure gang scheduling.
 	// This is an optional field.
 	// The allowed values are ByWorkload and Disabled.
@@ -218,7 +219,7 @@ type GangSchedulingPolicy struct {
 	// for admission as a single unit.
 	// Where workloads do not become ready over time, the entire workload may then be evicted and retried at a later time.
 	// +optional
-	Policy *GangSchedulingPolicyOptions `json:"policy,omitempty"`
+	Policy *GangSchedulingPolicy `json:"policy,omitempty"`
 	// byWorkload controls how admission is done.
 	// byWorkload is only required if policy is equal to ByWorkload.
 	// +optional
@@ -236,30 +237,30 @@ type ByWorkload struct {
 	// This may lead to a deadlock where workloads are in contention for cluster capacity and
 	// pods from another workload having successfully scheduled prevent pods from the current workload scheduling.
 	// +optional
-	Admission *GangSchedulingAdmissionOptions `json:"admission,omitempty"`
+	Admission *GangSchedulingWorkloadAdmission `json:"admission,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=QueueNameRequired;QueueNameOptional
-type QueueLabelNamePolicy string
+// +kubebuilder:validation:Enum=QueueName;None
+type LabelPolicy string
 
 const (
-	QueueLabelNamePolicyRequired QueueLabelNamePolicy = "QueueNameRequired"
-	QueueLabelNamePolicyOptional QueueLabelNamePolicy = "QueueNameOptional"
+	QueueLabelNamePolicyRequired LabelPolicy = "QueueName"
+	QueueLabelNamePolicyOptional LabelPolicy = "None"
 )
 
-type QueueLabelPolicy struct {
-	// policy controls whether or not Kueue reconciles
+type WorkloadManagement struct {
+	// labelPolicy controls whether or not Kueue reconciles
 	// jobs that don't set the label kueue.x-k8s.io/queue-name.
-	// The allowed values are QueueNameRequired and QueueNameOptional.
-	// QueueNameOptional means that workloads will be suspended on
+	// The allowed values are QueueName and None.
+	// None means that workloads will be suspended on
 	// creation and a label will be added via a mutating webhook.
-	// QueueNameRequired means that workloads that are managed
+	// QueueName means that workloads that are managed
 	// by Kueue must have a label kueue.x-k8s.io/queue-name.
 	// If this label is not present on the workload, then Kueue will
 	// ignore this workload.
-	// Defaults to QueueNameRequired.
+	// Defaults to QueueName.
 	// +optional
-	Policy *QueueLabelNamePolicy `json:"policy,omitempty"`
+	LabelPolicy *LabelPolicy `json:"labelPolicy,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=Classical;FairSharing

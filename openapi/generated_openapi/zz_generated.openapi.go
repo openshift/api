@@ -1112,7 +1112,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1alpha1.EtcdBackupSpec":                                          schema_openshift_api_operator_v1alpha1_EtcdBackupSpec(ref),
 		"github.com/openshift/api/operator/v1alpha1.EtcdBackupStatus":                                        schema_openshift_api_operator_v1alpha1_EtcdBackupStatus(ref),
 		"github.com/openshift/api/operator/v1alpha1.ExternalFramework":                                       schema_openshift_api_operator_v1alpha1_ExternalFramework(ref),
-		"github.com/openshift/api/operator/v1alpha1.GangSchedulingPolicy":                                    schema_openshift_api_operator_v1alpha1_GangSchedulingPolicy(ref),
+		"github.com/openshift/api/operator/v1alpha1.GangScheduling":                                          schema_openshift_api_operator_v1alpha1_GangScheduling(ref),
 		"github.com/openshift/api/operator/v1alpha1.GenerationHistory":                                       schema_openshift_api_operator_v1alpha1_GenerationHistory(ref),
 		"github.com/openshift/api/operator/v1alpha1.GenericOperatorConfig":                                   schema_openshift_api_operator_v1alpha1_GenericOperatorConfig(ref),
 		"github.com/openshift/api/operator/v1alpha1.ImageContentSourcePolicy":                                schema_openshift_api_operator_v1alpha1_ImageContentSourcePolicy(ref),
@@ -1135,10 +1135,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1alpha1.OperatorSpec":                                            schema_openshift_api_operator_v1alpha1_OperatorSpec(ref),
 		"github.com/openshift/api/operator/v1alpha1.OperatorStatus":                                          schema_openshift_api_operator_v1alpha1_OperatorStatus(ref),
 		"github.com/openshift/api/operator/v1alpha1.Preemption":                                              schema_openshift_api_operator_v1alpha1_Preemption(ref),
-		"github.com/openshift/api/operator/v1alpha1.QueueLabelPolicy":                                        schema_openshift_api_operator_v1alpha1_QueueLabelPolicy(ref),
 		"github.com/openshift/api/operator/v1alpha1.RepositoryDigestMirrors":                                 schema_openshift_api_operator_v1alpha1_RepositoryDigestMirrors(ref),
 		"github.com/openshift/api/operator/v1alpha1.StaticPodOperatorStatus":                                 schema_openshift_api_operator_v1alpha1_StaticPodOperatorStatus(ref),
 		"github.com/openshift/api/operator/v1alpha1.VersionAvailability":                                     schema_openshift_api_operator_v1alpha1_VersionAvailability(ref),
+		"github.com/openshift/api/operator/v1alpha1.WorkloadManagement":                                      schema_openshift_api_operator_v1alpha1_WorkloadManagement(ref),
 		"github.com/openshift/api/operatorcontrolplane/v1alpha1.LogEntry":                                    schema_openshift_api_operatorcontrolplane_v1alpha1_LogEntry(ref),
 		"github.com/openshift/api/operatorcontrolplane/v1alpha1.OutageEntry":                                 schema_openshift_api_operatorcontrolplane_v1alpha1_OutageEntry(ref),
 		"github.com/openshift/api/operatorcontrolplane/v1alpha1.PodNetworkConnectivityCheck":                 schema_openshift_api_operatorcontrolplane_v1alpha1_PodNetworkConnectivityCheck(ref),
@@ -56909,7 +56909,7 @@ func schema_openshift_api_operator_v1alpha1_ExternalFramework(ref common.Referen
 	}
 }
 
-func schema_openshift_api_operator_v1alpha1_GangSchedulingPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_openshift_api_operator_v1alpha1_GangScheduling(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -57309,21 +57309,21 @@ func schema_openshift_api_operator_v1alpha1_KueueConfiguration(ref common.Refere
 							Ref:         ref("github.com/openshift/api/operator/v1alpha1.Integrations"),
 						},
 					},
-					"queueLabelPolicy": {
+					"workloadManagement": {
 						SchemaProps: spec.SchemaProps{
-							Description: "queueLabelPolicy controls how kueue manages workloads The default behavior of Kueue will manage workloads that have a queue-name label. Workloads that are missing these label will be ignored by Kueue. This field is optional.",
-							Ref:         ref("github.com/openshift/api/operator/v1alpha1.QueueLabelPolicy"),
+							Description: "workloadManagement controls how kueue manages workloads. The default behavior of Kueue will manage workloads that have a queue-name label. Workloads that are missing these label will be ignored by Kueue. This field is optional.",
+							Ref:         ref("github.com/openshift/api/operator/v1alpha1.WorkloadManagement"),
 						},
 					},
-					"gangSchedulingPolicy": {
+					"gangScheduling": {
 						SchemaProps: spec.SchemaProps{
-							Description: "gangSchedulingPolicy controls how Kueue admits workloads. Gang Scheduling is the act of all or nothing scheduling, where workloads do not become ready within a certain period, they may be evicted and later retried. This field is optional.",
-							Ref:         ref("github.com/openshift/api/operator/v1alpha1.GangSchedulingPolicy"),
+							Description: "gangScheduling controls how Kueue admits workloads. Gang Scheduling is the act of all or nothing scheduling, where workloads do not become ready within a certain period, they may be evicted and later retried. This field is optional.",
+							Ref:         ref("github.com/openshift/api/operator/v1alpha1.GangScheduling"),
 						},
 					},
 					"preemption": {
 						SchemaProps: spec.SchemaProps{
-							Description: "preemption is the process of evicting one or more admitted Workloads to accommodate another Workload. Kueue has classical premption and preemption via fair sharing.",
+							Description: "preemption is the process of evicting one or more admitted Workloads to accommodate another Workload. Kueue has classical premption and preemption via fair sharing. This field is optional.",
 							Ref:         ref("github.com/openshift/api/operator/v1alpha1.Preemption"),
 						},
 					},
@@ -57332,7 +57332,7 @@ func schema_openshift_api_operator_v1alpha1_KueueConfiguration(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1alpha1.GangSchedulingPolicy", "github.com/openshift/api/operator/v1alpha1.Integrations", "github.com/openshift/api/operator/v1alpha1.Preemption", "github.com/openshift/api/operator/v1alpha1.QueueLabelPolicy"},
+			"github.com/openshift/api/operator/v1alpha1.GangScheduling", "github.com/openshift/api/operator/v1alpha1.Integrations", "github.com/openshift/api/operator/v1alpha1.Preemption", "github.com/openshift/api/operator/v1alpha1.WorkloadManagement"},
 	}
 }
 
@@ -58072,25 +58072,6 @@ func schema_openshift_api_operator_v1alpha1_Preemption(ref common.ReferenceCallb
 	}
 }
 
-func schema_openshift_api_operator_v1alpha1_QueueLabelPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"policy": {
-						SchemaProps: spec.SchemaProps{
-							Description: "policy controls whether or not Kueue reconciles jobs that don't set the label kueue.x-k8s.io/queue-name. The allowed values are QueueNameRequired and QueueNameOptional. QueueNameOptional means that workloads will be suspended on creation and a label will be added via a mutating webhook. QueueNameRequired means that workloads that are managed by Kueue must have a label kueue.x-k8s.io/queue-name. If this label is not present on the workload, then Kueue will ignore this workload. Defaults to QueueNameRequired.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-				},
-			},
-		},
-	}
-}
-
 func schema_openshift_api_operator_v1alpha1_RepositoryDigestMirrors(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -58279,6 +58260,25 @@ func schema_openshift_api_operator_v1alpha1_VersionAvailability(ref common.Refer
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/operator/v1alpha1.GenerationHistory"},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_WorkloadManagement(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"labelPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "labelPolicy controls whether or not Kueue reconciles jobs that don't set the label kueue.x-k8s.io/queue-name. The allowed values are QueueName and None. None means that workloads will be suspended on creation and a label will be added via a mutating webhook. QueueName means that workloads that are managed by Kueue must have a label kueue.x-k8s.io/queue-name. If this label is not present on the workload, then Kueue will ignore this workload. Defaults to QueueName.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
 	}
 }
 

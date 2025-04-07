@@ -46,9 +46,9 @@ spec:
                   config is the desired configuration
                   for the Kueue operator.
                 properties:
-                  gangSchedulingPolicy:
+                  gangScheduling:
                     description: |-
-                      gangSchedulingPolicy controls how Kueue admits workloads.
+                      gangScheduling controls how Kueue admits workloads.
                       Gang Scheduling is the act of all or nothing scheduling,
                       where workloads do not become ready within a certain period, they may be evicted and later retried.
                       This field is optional.
@@ -88,7 +88,7 @@ spec:
                         type: string
                     type: object
                     x-kubernetes-validations:
-                    - message: byWorkload is required when policy is ByWorkload, and
+                    - message: byWorkload is required when policy is byWorkload, and
                         forbidden otherwise
                       rule: 'has(self.policy) && self.policy == ''ByWorkload'' ?  has(self.byWorkload)
                         : !has(self.byWorkload)'
@@ -237,6 +237,7 @@ spec:
                     description: |-
                       preemption is the process of evicting one or more admitted Workloads to accommodate another Workload.
                       Kueue has classical premption and preemption via fair sharing.
+                      This field is optional.
                     properties:
                       preemptionPolicy:
                         description: |-
@@ -259,28 +260,28 @@ spec:
                         - FairSharing
                         type: string
                     type: object
-                  queueLabelPolicy:
+                  workloadManagement:
                     description: |-
-                      queueLabelPolicy controls how kueue manages workloads
+                      workloadManagement controls how kueue manages workloads.
                       The default behavior of Kueue will manage workloads that have a queue-name label.
                       Workloads that are missing these label will be ignored by Kueue.
                       This field is optional.
                     properties:
-                      policy:
+                      labelPolicy:
                         description: |-
-                          policy controls whether or not Kueue reconciles
+                          labelPolicy controls whether or not Kueue reconciles
                           jobs that don't set the label kueue.x-k8s.io/queue-name.
-                          The allowed values are QueueNameRequired and QueueNameOptional.
-                          QueueNameOptional means that workloads will be suspended on
+                          The allowed values are QueueName and None.
+                          None means that workloads will be suspended on
                           creation and a label will be added via a mutating webhook.
-                          QueueNameRequired means that workloads that are managed
+                          QueueName means that workloads that are managed
                           by Kueue must have a label kueue.x-k8s.io/queue-name.
                           If this label is not present on the workload, then Kueue will
                           ignore this workload.
-                          Defaults to QueueNameRequired.
+                          Defaults to QueueName.
                         enum:
-                        - QueueNameRequired
-                        - QueueNameOptional
+                        - QueueName
+                        - None
                         type: string
                     type: object
                 required:

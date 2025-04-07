@@ -29,9 +29,6 @@
                         "name": "ClusterAPIInstall"
                     },
                     {
-                        "name": "ClusterAPIInstallIBMCloud"
-                    },
-                    {
                         "name": "ClusterMonitoringConfig"
                     },
                     {
@@ -239,6 +236,9 @@
                     },
                     {
                         "name": "CloudDualStackNodeIPs"
+                    },
+                    {
+                        "name": "ClusterAPIInstallIBMCloud"
                     },
                     {
                         "name": "DisableKubeletCloudCredentialProviders"

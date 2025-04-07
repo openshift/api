@@ -227,6 +227,7 @@ type GangSchedulingPolicy struct {
 
 // ByWorkload controls how admission is done
 type ByWorkload struct {
+	// admission controls how kueue will process workloads.
 	// When admission is set to Sequential, only pods from the currently processing workload will be admitted.
 	// Once all pods from the current workload are admitted, and ready, Kueue will process the next workload.
 	// Sequential processing may slow down admission when the cluster has sufficient capacity for multiple workloads,

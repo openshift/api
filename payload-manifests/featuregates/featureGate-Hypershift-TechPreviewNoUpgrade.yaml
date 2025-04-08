@@ -43,6 +43,9 @@
                         "name": "NewOLMCatalogdAPIV1Metas"
                     },
                     {
+                        "name": "NewOLMPreflightPermissionChecks"
+                    },
+                    {
                         "name": "SELinuxChangePolicy"
                     },
                     {

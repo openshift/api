@@ -63,7 +63,7 @@ spec:
                         properties:
                           admission:
                             description: |-
-                              admission controls how kueue will process workloads.
+                              admission controls how Kueue will process workloads.
                               Allowed values are Sequential and Parallel.
                               When admission is set to Sequential, only pods from the currently processing workload will be admitted.
                               Once all pods from the current workload are admitted, and ready, Kueue will process the next workload.
@@ -238,7 +238,7 @@ spec:
                     properties:
                       preemptionPolicy:
                         description: |-
-                          preemptionPolicy are the types of preemption kueue allows.
+                          preemptionPolicy are the types of preemption Kueue allows.
                           Kueue has two types of preemption: Classical and FairSharing.
                           Classical means that an incoming workload, which does
                           not fit within the unusued quota, is eligible to issue preemptions
@@ -259,7 +259,7 @@ spec:
                     type: object
                   workloadManagement:
                     description: |-
-                      workloadManagement controls how kueue manages workloads.
+                      workloadManagement controls how Kueue manages workloads.
                       By default Kueue will manage workloads that have a queue-name label.
                       Workloads that are missing the queue-name will be ignored by Kueue.
                       This field is optional.
@@ -344,8 +344,9 @@ spec:
             - config
             type: object
           status:
-            description: status holds observed values from the cluster. They may not
-              be overridden.
+            description: |-
+              status holds observed values from the cluster.
+              They may not be overridden.
             properties:
               conditions:
                 description: conditions is a list of conditions and their status

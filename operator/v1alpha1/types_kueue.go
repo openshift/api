@@ -21,14 +21,15 @@ import (
 // +kubebuilder:validation:XValidation:rule="self.metadata.name == 'cluster'",message="Kueue is a singleton, .metadata.name must be 'cluster'"
 type Kueue struct {
 	metav1.TypeMeta `json:",inline"`
-	// metadata for kueue
+	// metadata for Kueue.
 	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	// spec holds user settable values for configuration
 	// +required
 	Spec KueueOperandSpec `json:"spec"`
-	// status holds observed values from the cluster. They may not be overridden.
+	// status holds observed values from the cluster.
+	// They may not be overridden.
 	// +optional
 	Status KueueStatus `json:"status,omitempty"`
 }
@@ -48,7 +49,7 @@ type KueueConfiguration struct {
 	// Kueue will only manage workloads that correspond to the specified integrations.
 	// +required
 	Integrations Integrations `json:"integrations"`
-	// workloadManagement controls how kueue manages workloads.
+	// workloadManagement controls how Kueue manages workloads.
 	// By default Kueue will manage workloads that have a queue-name label.
 	// Workloads that are missing the queue-name will be ignored by Kueue.
 	// This field is optional.
@@ -240,7 +241,7 @@ type GangScheduling struct {
 
 // ByWorkload controls how admission is done
 type ByWorkload struct {
-	// admission controls how kueue will process workloads.
+	// admission controls how Kueue will process workloads.
 	// Allowed values are Sequential and Parallel.
 	// When admission is set to Sequential, only pods from the currently processing workload will be admitted.
 	// Once all pods from the current workload are admitted, and ready, Kueue will process the next workload.
@@ -285,7 +286,7 @@ const (
 )
 
 type Preemption struct {
-	// preemptionPolicy are the types of preemption kueue allows.
+	// preemptionPolicy are the types of preemption Kueue allows.
 	// Kueue has two types of preemption: Classical and FairSharing.
 	// Classical means that an incoming workload, which does
 	// not fit within the unusued quota, is eligible to issue preemptions

@@ -259,7 +259,7 @@ func (RepositoryDigestMirrors) SwaggerDoc() map[string]string {
 
 var map_ByWorkload = map[string]string{
 	"":          "ByWorkload controls how admission is done",
-	"admission": "admission controls how kueue will process workloads. Allowed values are Sequential and Parallel. When admission is set to Sequential, only pods from the currently processing workload will be admitted. Once all pods from the current workload are admitted, and ready, Kueue will process the next workload. Sequential processing may slow down admission when the cluster has sufficient capacity for multiple workloads, but provides a higher guarantee of workloads scheduling all pods together successfully. When set to Parallel, pods from any workload will be admitted at any time. This may lead to a deadlock where workloads are in contention for cluster capacity and pods from another workload having successfully scheduled prevent pods from the current workload scheduling.",
+	"admission": "admission controls how Kueue will process workloads. Allowed values are Sequential and Parallel. When admission is set to Sequential, only pods from the currently processing workload will be admitted. Once all pods from the current workload are admitted, and ready, Kueue will process the next workload. Sequential processing may slow down admission when the cluster has sufficient capacity for multiple workloads, but provides a higher guarantee of workloads scheduling all pods together successfully. When set to Parallel, pods from any workload will be admitted at any time. This may lead to a deadlock where workloads are in contention for cluster capacity and pods from another workload having successfully scheduled prevent pods from the current workload scheduling.",
 }
 
 func (ByWorkload) SwaggerDoc() map[string]string {
@@ -300,7 +300,7 @@ func (Integrations) SwaggerDoc() map[string]string {
 
 var map_Kueue = map[string]string{
 	"":         "Kueue is the CRD to represent the Kueue operator This CRD defines the configuration that the Kueue Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
-	"metadata": "metadata for kueue",
+	"metadata": "metadata for Kueue.",
 	"spec":     "spec holds user settable values for configuration",
 	"status":   "status holds observed values from the cluster. They may not be overridden.",
 }
@@ -311,7 +311,7 @@ func (Kueue) SwaggerDoc() map[string]string {
 
 var map_KueueConfiguration = map[string]string{
 	"integrations":       "integrations is a required field that configures the Kueue's workload integrations. Kueue has both standard integrations, known as job frameworks, and external integrations known as external frameworks. Kueue will only manage workloads that correspond to the specified integrations.",
-	"workloadManagement": "workloadManagement controls how kueue manages workloads. By default Kueue will manage workloads that have a queue-name label. Workloads that are missing the queue-name will be ignored by Kueue. This field is optional. If this field is not specified, Kueue will only manage workloads that have the queue-name label.",
+	"workloadManagement": "workloadManagement controls how Kueue manages workloads. By default Kueue will manage workloads that have a queue-name label. Workloads that are missing the queue-name will be ignored by Kueue. This field is optional. If this field is not specified, Kueue will only manage workloads that have the queue-name label.",
 	"gangScheduling":     "gangScheduling controls how Kueue admits workloads. Gang Scheduling is the act of all or nothing scheduling, where workloads do not become ready within a certain period, they may be evicted and later retried. This field is optional. If this field is not specified, gang scheduling will be disabled.",
 	"preemption":         "preemption is the process of evicting one or more admitted Workloads to accommodate another Workload. Kueue has classical premption and preemption via fair sharing. This field is optional. If this field is not specified, preemption will be set to Classical.",
 }
@@ -355,7 +355,7 @@ func (LabelKeys) SwaggerDoc() map[string]string {
 }
 
 var map_Preemption = map[string]string{
-	"preemptionPolicy": "preemptionPolicy are the types of preemption kueue allows. Kueue has two types of preemption: Classical and FairSharing. Classical means that an incoming workload, which does not fit within the unusued quota, is eligible to issue preemptions when the requests of the workload are below the resource flavor's nominal quota or borrowWithinCohort is enabled on the Cluster Queue. FairSharing means that ClusterQueues with pending Workloads can preempt other Workloads in their cohort until the preempting ClusterQueue obtains an equal or weighted share of the borrowable resources. The borrowable resources are the unused nominal quota of all the ClusterQueues in the cohort. FairSharing is a more heavy weight algorithm. The default is Classical.",
+	"preemptionPolicy": "preemptionPolicy are the types of preemption Kueue allows. Kueue has two types of preemption: Classical and FairSharing. Classical means that an incoming workload, which does not fit within the unusued quota, is eligible to issue preemptions when the requests of the workload are below the resource flavor's nominal quota or borrowWithinCohort is enabled on the Cluster Queue. FairSharing means that ClusterQueues with pending Workloads can preempt other Workloads in their cohort until the preempting ClusterQueue obtains an equal or weighted share of the borrowable resources. The borrowable resources are the unused nominal quota of all the ClusterQueues in the cohort. FairSharing is a more heavy weight algorithm. The default is Classical.",
 }
 
 func (Preemption) SwaggerDoc() map[string]string {

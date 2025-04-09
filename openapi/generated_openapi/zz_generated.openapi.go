@@ -58285,7 +58285,7 @@ func schema_openshift_api_operator_v1alpha1_WorkloadManagement(ref common.Refere
 				Properties: map[string]spec.Schema{
 					"labelPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "labelPolicy controls whether or not Kueue reconciles jobs that don't set the label kueue.x-k8s.io/queue-name. The allowed values are QueueName and None. None means that workloads will be suspended on creation and a label will be added via a mutating webhook. This will be applied for all integrations that Kueue manages. QueueName means that workloads that are managed by Kueue must have a label kueue.x-k8s.io/queue-name. If this label is not present on the workload, then Kueue will ignore this workload. Defaults to QueueName.",
+							Description: "labelPolicy controls whether or not Kueue reconciles jobs that don't set the label kueue.x-k8s.io/queue-name. The allowed values are QueueName and None. None means that workloads will be suspended on creation and a label will be added via a mutating webhook. This will be applied for all integrations that Kueue manages. QueueName means that workloads that are managed by Kueue must have a label kueue.x-k8s.io/queue-name. If this label is not present on the workload, then Kueue will ignore this workload.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",

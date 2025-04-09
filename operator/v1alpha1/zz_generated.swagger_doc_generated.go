@@ -268,9 +268,9 @@ func (ByWorkload) SwaggerDoc() map[string]string {
 
 var map_ExternalFramework = map[string]string{
 	"":         "This is the GVR for an external framework. Controller runtime requires this in this format for api discoverability.",
-	"group":    "group is the API group of the externalFramework. Must be a valid DNS 1123 subdomain consisting of of lower-case alphanumeric characters, hyphens and periods, of at most 253 characters in length. Each period separated segment within the subdomain must start and end with an alphanumeric character.",
-	"resource": "resource is the Resource type of the external framework. Resource types are lowercase and plural (e.g. pods, deployments). Must be a valid DNS 1123 label consisting of a lower-case alphanumeric string and hyphens of at most 63 characters in length. The value must start and end with an alphanumeric character.",
-	"version":  "version is the version of the api (e.g. v1alpha1, v1beta1, v1). Must be a valid DNS 1035 label consisting of a lower-case alphanumeric string and hyphens of at most 63 characters in length. The value must start with an alphabetic character and end with an alphanumeric character.",
+	"group":    "group is the API group of the externalFramework. Must be a valid DNS 1123 subdomain consisting of of lower-case alphanumeric characters, hyphens and periods, of at most 253 characters in length. Each period separated segment within the subdomain must start and end with an alphanumeric character. We are using matches and not cel functions to allow for use on 4.17.",
+	"resource": "resource is the Resource type of the external framework. Resource types are lowercase and plural (e.g. pods, deployments). Must be a valid DNS 1123 label consisting of a lower-case alphanumeric string and hyphens of at most 63 characters in length. The value must start and end with an alphanumeric character. We are using matches and not cel functions to allow for use on 4.17.",
+	"version":  "version is the version of the api (e.g. v1alpha1, v1beta1, v1). Must be a valid DNS 1035 label consisting of a lower-case alphanumeric string and hyphens of at most 63 characters in length. The value must start with an alphabetic character and end with an alphanumeric character. We are using matches and not cel functions to allow for use on 4.17.",
 }
 
 func (ExternalFramework) SwaggerDoc() map[string]string {
@@ -299,7 +299,7 @@ func (Integrations) SwaggerDoc() map[string]string {
 }
 
 var map_Kueue = map[string]string{
-	"":         "Kueue is the CRD to represent the Kueue operator. This CRD defines the configuration for Kueue. Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"":         "Kueue is the CRD to represent the Kueue operator This CRD defines the configuration that the Kueue Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 	"metadata": "metadata for kueue",
 	"spec":     "spec holds user settable values for configuration",
 	"status":   "status holds observed values from the cluster. They may not be overridden.",
@@ -311,9 +311,9 @@ func (Kueue) SwaggerDoc() map[string]string {
 
 var map_KueueConfiguration = map[string]string{
 	"integrations":       "integrations is a required field that configures the Kueue's workload integrations. Kueue has both standard integrations, known as job frameworks, and external integrations known as external frameworks. Kueue will only manage workloads that correspond to the specified integrations.",
-	"workloadManagement": "workloadManagement controls how kueue manages workloads. The default behavior of Kueue will manage workloads that have a queue-name label. Workloads that are missing these label will be ignored by Kueue. This field is optional.",
-	"gangScheduling":     "gangScheduling controls how Kueue admits workloads. Gang Scheduling is the act of all or nothing scheduling, where workloads do not become ready within a certain period, they may be evicted and later retried. This field is optional.",
-	"preemption":         "preemption is the process of evicting one or more admitted Workloads to accommodate another Workload. Kueue has classical premption and preemption via fair sharing. This field is optional.",
+	"workloadManagement": "workloadManagement controls how kueue manages workloads. By default Kueue will manage workloads that have a queue-name label. Workloads that are missing the queue-name will be ignored by Kueue. This field is optional. If this field is not specified, Kueue will only manage workloads that have the queue-name label.",
+	"gangScheduling":     "gangScheduling controls how Kueue admits workloads. Gang Scheduling is the act of all or nothing scheduling, where workloads do not become ready within a certain period, they may be evicted and later retried. This field is optional. If this field is not specified, gang scheduling will be disabled.",
+	"preemption":         "preemption is the process of evicting one or more admitted Workloads to accommodate another Workload. Kueue has classical premption and preemption via fair sharing. This field is optional. If this field is not specified, preemption will be set to Classical.",
 }
 
 func (KueueConfiguration) SwaggerDoc() map[string]string {
@@ -347,7 +347,7 @@ func (KueueStatus) SwaggerDoc() map[string]string {
 }
 
 var map_LabelKeys = map[string]string{
-	"key": "key is the label key. A label key must be a valid qualified name consisting of a lower-case alphanumeric string, and hyphens of at most 63 characters in length. The name must start and end with an alphanumeric character. The name may be optionally prefixed with a subdomain consisting of lower-case alphanumeric characters, hyphens and periods, of at most 253 characters in length. Each period separated segment within the subdomain must start and end with an alphanumeric character. The optional prefix and the name are separate by a forward slash (/).",
+	"key": "key is the label key. A label key must be a valid qualified name consisting of a lower-case alphanumeric string, and hyphens of at most 63 characters in length. We are using matches and not cel functions to allow for use on 4.17. The name must start and end with an alphanumeric character. The name may be optionally prefixed with a subdomain consisting of lower-case alphanumeric characters, hyphens and periods, of at most 253 characters in length. Each period separated segment within the subdomain must start and end with an alphanumeric character. The optional prefix and the name are separate by a forward slash (/).",
 }
 
 func (LabelKeys) SwaggerDoc() map[string]string {
@@ -355,7 +355,7 @@ func (LabelKeys) SwaggerDoc() map[string]string {
 }
 
 var map_Preemption = map[string]string{
-	"preemptionPolicy": "preemptionPolicy are the types of preemption kueue allows. Kueue has two types of preemption: classical and fair sharing. Classical means that an incoming workload, which does not fit within the unusued quota, is eligible to issue preemptions when the requests of the workload are below the resource flavor's nominal quota or borrowWithinCohort is enabled on the Cluster Queue. Fairsharing means that ClusterQueues with pending Workloads can preempt other Workloads in their cohort until the preempting ClusterQueue obtains an equal or weighted share of the borrowable resources. The borrowable resources are the unused nominal quota of all the ClusterQueues in the cohort. FairSharing is a more heavy weight algorithm. The default is Classical.",
+	"preemptionPolicy": "preemptionPolicy are the types of preemption kueue allows. Kueue has two types of preemption: Classical and FairSharing. Classical means that an incoming workload, which does not fit within the unusued quota, is eligible to issue preemptions when the requests of the workload are below the resource flavor's nominal quota or borrowWithinCohort is enabled on the Cluster Queue. FairSharing means that ClusterQueues with pending Workloads can preempt other Workloads in their cohort until the preempting ClusterQueue obtains an equal or weighted share of the borrowable resources. The borrowable resources are the unused nominal quota of all the ClusterQueues in the cohort. FairSharing is a more heavy weight algorithm. The default is Classical.",
 }
 
 func (Preemption) SwaggerDoc() map[string]string {
@@ -363,7 +363,7 @@ func (Preemption) SwaggerDoc() map[string]string {
 }
 
 var map_WorkloadManagement = map[string]string{
-	"labelPolicy": "labelPolicy controls whether or not Kueue reconciles jobs that don't set the label kueue.x-k8s.io/queue-name. The allowed values are QueueName and None. None means that workloads will be suspended on creation and a label will be added via a mutating webhook. QueueName means that workloads that are managed by Kueue must have a label kueue.x-k8s.io/queue-name. If this label is not present on the workload, then Kueue will ignore this workload. Defaults to QueueName.",
+	"labelPolicy": "labelPolicy controls whether or not Kueue reconciles jobs that don't set the label kueue.x-k8s.io/queue-name. The allowed values are QueueName and None. None means that workloads will be suspended on creation and a label will be added via a mutating webhook. This will be applied for all integrations that Kueue manages. QueueName means that workloads that are managed by Kueue must have a label kueue.x-k8s.io/queue-name. If this label is not present on the workload, then Kueue will ignore this workload.",
 }
 
 func (WorkloadManagement) SwaggerDoc() map[string]string {

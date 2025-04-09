@@ -19,8 +19,8 @@ spec:
     schema:
       openAPIV3Schema:
         description: |-
-          Kueue is the CRD to represent the Kueue operator.
-          This CRD defines the configuration for Kueue.
+          Kueue is the CRD to represent the Kueue operator
+          This CRD defines the configuration that the Kueue
           Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
         properties:
           apiVersion:
@@ -54,6 +54,7 @@ spec:
                       Gang Scheduling is the act of all or nothing scheduling,
                       where workloads do not become ready within a certain period, they may be evicted and later retried.
                       This field is optional.
+                      If this field is not specified, gang scheduling will be disabled.
                     properties:
                       byWorkload:
                         description: |-
@@ -88,6 +89,8 @@ spec:
                         - ByWorkload
                         - Disabled
                         type: string
+                    required:
+                    - policy
                     type: object
                     x-kubernetes-validations:
                     - message: byWorkload is required when policy is byWorkload, and
@@ -97,7 +100,8 @@ spec:
                   integrations:
                     description: |-
                       integrations is a required field that configures the Kueue's workload integrations.
-                      Kueue has both standard integrations, known as job frameworks, and external integrations known as external frameworks.
+                      Kueue has both standard integrations, known as job frameworks, and external integrations
+                      known as external frameworks.
                       Kueue will only manage workloads that correspond to the specified integrations.
                     properties:
                       externalFrameworks:
@@ -118,14 +122,13 @@ spec:
                                 Must be a valid DNS 1123 subdomain consisting of of lower-case alphanumeric characters,
                                 hyphens and periods, of at most 253 characters in length.
                                 Each period separated segment within the subdomain must start and end with an alphanumeric character.
+                                We are using matches and not cel functions to allow for use on 4.17.
                               maxLength: 253
                               minLength: 1
                               type: string
                               x-kubernetes-validations:
-                              - message: a lowercase RFC 1123 subdomain must consist
-                                  of lower case alphanumeric characters, '-' or '.',
-                                  and must start and end with an alphanumeric character.
-                                rule: self.size() == 0 || !format.dns1123Label().validate(self).hasValue()
+                              - rule: self.matches(r'^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$')
+                                  && self.size() <= 253
                             resource:
                               description: |-
                                 resource is the Resource type of the external framework.
@@ -133,29 +136,26 @@ spec:
                                 Must be a valid DNS 1123 label consisting of a lower-case alphanumeric string
                                 and hyphens of at most 63 characters in length.
                                 The value must start and end with an alphanumeric character.
+                                We are using matches and not cel functions to allow for use on 4.17.
                               maxLength: 63
                               minLength: 1
                               type: string
                               x-kubernetes-validations:
-                              - message: a lowercase RFC 1123 label must consist of
-                                  lower case alphanumeric characters and '-', and
-                                  must start and end with an alphanumeric character.
-                                rule: self.size() == 0 || !format.dns1123Label().validate(self).hasValue()
+                              - rule: self.matches(r'^[a-z0-9]([-a-z0-9]*[a-z0-9])?$')
+                                  && self.size() <= 63
                             version:
                               description: |-
                                 version is the version of the api (e.g. v1alpha1, v1beta1, v1).
                                 Must be a valid DNS 1035 label consisting of a lower-case alphanumeric string
                                 and hyphens of at most 63 characters in length.
                                 The value must start with an alphabetic character and end with an alphanumeric character.
+                                We are using matches and not cel functions to allow for use on 4.17.
                               maxLength: 63
                               minLength: 1
                               type: string
                               x-kubernetes-validations:
-                              - message: a lowercase RFC 1035 label must consist of
-                                  lower case alphanumeric characters, '-' or '.',
-                                  and must start with an alphabetic character and
-                                  end with an alphanumeric character.
-                                rule: self.size() == 0 || !format.dns1035Label().validate(self).hasValue()
+                              - rule: self.matches(r'^[a-z0-9]([-a-z0-9]*[a-z0-9])?$')
+                                  && self.size() <= 63
                           required:
                           - group
                           - resource
@@ -179,7 +179,7 @@ spec:
                           - JobSet
                           - MPIJob
                           - PaddleJob
-                          - PytorchJob
+                          - PyTorchJob
                           - TFJob
                           - XGBoostJob
                           - AppWrapper
@@ -207,6 +207,7 @@ spec:
                                 key is the label key.
                                 A label key must be a valid qualified name consisting of a lower-case alphanumeric string,
                                 and hyphens of at most 63 characters in length.
+                                We are using matches and not cel functions to allow for use on 4.17.
                                 The name must start and end with an alphanumeric character.
                                 The name may be optionally prefixed with a subdomain consisting of lower-case alphanumeric characters,
                                 hyphens and periods, of at most 253 characters in length.
@@ -216,22 +217,14 @@ spec:
                               minLength: 1
                               type: string
                               x-kubernetes-validations:
-                              - message: a qualified name must consist of a lower-case
-                                  alphanumeric and hyphenated string of at most 63
-                                  characters in length, starting and ending with alphanumeric
-                                  chracters. The name may be optionally prefixed with
-                                  a subdomain consisting of lower-case alphanumeric
-                                  characters, hyphens and periods, of at most 253
-                                  characters in length. Each period separated segment
-                                  within the subdomain must start and end with an
-                                  alphanumeric character.
-                                rule: '!format.qualifiedName().validate(self).hasValue()'
+                              - rule: self.matches(r'^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?([a-z0-9]([-a-z0-9]*[a-z0-9])?)$')
+                                  && self.size() <= 317
                           required:
                           - key
                           type: object
                         maxItems: 64
                         type: array
-                        x-kubernetes-list-type: atomic
+                        x-kubernetes-list-type: set
                     required:
                     - frameworks
                     type: object
@@ -240,17 +233,18 @@ spec:
                       preemption is the process of evicting one or more admitted Workloads to accommodate another Workload.
                       Kueue has classical premption and preemption via fair sharing.
                       This field is optional.
+                      If this field is not specified, preemption will be set to Classical.
                     properties:
                       preemptionPolicy:
                         description: |-
                           preemptionPolicy are the types of preemption kueue allows.
-                          Kueue has two types of preemption: classical and fair sharing.
+                          Kueue has two types of preemption: Classical and FairSharing.
                           Classical means that an incoming workload, which does
                           not fit within the unusued quota, is eligible to issue preemptions
                           when the requests of the workload are below the
                           resource flavor's nominal quota or borrowWithinCohort is enabled
                           on the Cluster Queue.
-                          Fairsharing means that ClusterQueues with pending Workloads can preempt other Workloads
+                          FairSharing means that ClusterQueues with pending Workloads can preempt other Workloads
                           in their cohort until the preempting ClusterQueue
                           obtains an equal or weighted share of the borrowable resources.
                           The borrowable resources are the unused nominal quota
@@ -265,9 +259,11 @@ spec:
                   workloadManagement:
                     description: |-
                       workloadManagement controls how kueue manages workloads.
-                      The default behavior of Kueue will manage workloads that have a queue-name label.
-                      Workloads that are missing these label will be ignored by Kueue.
+                      By default Kueue will manage workloads that have a queue-name label.
+                      Workloads that are missing the queue-name will be ignored by Kueue.
                       This field is optional.
+                      If this field is not specified, Kueue will only manage workloads
+                      that have the queue-name label.
                     properties:
                       labelPolicy:
                         description: |-
@@ -276,15 +272,17 @@ spec:
                           The allowed values are QueueName and None.
                           None means that workloads will be suspended on
                           creation and a label will be added via a mutating webhook.
+                          This will be applied for all integrations that Kueue manages.
                           QueueName means that workloads that are managed
                           by Kueue must have a label kueue.x-k8s.io/queue-name.
                           If this label is not present on the workload, then Kueue will
                           ignore this workload.
-                          Defaults to QueueName.
                         enum:
                         - QueueName
                         - None
                         type: string
+                    required:
+                    - labelPolicy
                     type: object
                 required:
                 - integrations

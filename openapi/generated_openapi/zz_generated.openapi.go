@@ -56515,7 +56515,7 @@ func schema_openshift_api_operator_v1alpha1_ByWorkload(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"admission": {
 						SchemaProps: spec.SchemaProps{
-							Description: "admission controls how kueue will process workloads. When admission is set to Sequential, only pods from the currently processing workload will be admitted. Once all pods from the current workload are admitted, and ready, Kueue will process the next workload. Sequential processing may slow down admission when the cluster has sufficient capacity for multiple workloads, but provides a higher guarantee of workloads scheduling all pods together successfully. When set to Parallel, pods from any workload will be admitted at any time. This may lead to a deadlock where workloads are in contention for cluster capacity and pods from another workload having successfully scheduled prevent pods from the current workload scheduling.",
+							Description: "admission controls how kueue will process workloads. Allowed values are Sequential and Parallel. When admission is set to Sequential, only pods from the currently processing workload will be admitted. Once all pods from the current workload are admitted, and ready, Kueue will process the next workload. Sequential processing may slow down admission when the cluster has sufficient capacity for multiple workloads, but provides a higher guarantee of workloads scheduling all pods together successfully. When set to Parallel, pods from any workload will be admitted at any time. This may lead to a deadlock where workloads are in contention for cluster capacity and pods from another workload having successfully scheduled prevent pods from the current workload scheduling.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -56926,7 +56926,7 @@ func schema_openshift_api_operator_v1alpha1_GangScheduling(ref common.ReferenceC
 					},
 					"byWorkload": {
 						SchemaProps: spec.SchemaProps{
-							Description: "byWorkload controls how admission is done. byWorkload is only required if policy is equal to ByWorkload.",
+							Description: "byWorkload configures how Kueue will process workloads for admission. byWorkload is required when policy is ByWorkload, and forbidden otherwise.",
 							Ref:         ref("github.com/openshift/api/operator/v1alpha1.ByWorkload"),
 						},
 					},

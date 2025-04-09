@@ -124,9 +124,6 @@
                         "name": "ImageModeStatusReporting"
                     },
                     {
-                        "name": "ImageStreamImportMode"
-                    },
-                    {
                         "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {
@@ -277,6 +274,9 @@
                     },
                     {
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
+                    },
+                    {
+                        "name": "ImageStreamImportMode"
                     },
                     {
                         "name": "ImageVolume"

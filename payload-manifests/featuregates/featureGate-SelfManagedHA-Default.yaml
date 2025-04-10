@@ -161,9 +161,6 @@
                         "name": "OVNObservability"
                     },
                     {
-                        "name": "PinnedImages"
-                    },
-                    {
                         "name": "PreconfiguredUDNAddresses"
                     },
                     {
@@ -284,6 +281,9 @@
                     },
                     {
                         "name": "PersistentIPsForVirtualization"
+                    },
+                    {
+                        "name": "PinnedImages"
                     },
                     {
                         "name": "ProcMountType"

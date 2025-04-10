@@ -56920,7 +56920,7 @@ func schema_openshift_api_operator_v1alpha1_GangScheduling(ref common.ReferenceC
 				Properties: map[string]spec.Schema{
 					"policy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "policy allows you to enable and configure gang scheduling. The allowed values are ByWorkload and None. The default value will be None. When set to ByWorkload, this means each workload is processed and considered for admission as a single unit. Where workloads do not become ready over time, the entire workload may then be evicted and retried at a later time. policy is a required field.",
+							Description: "policy allows you to enable and configure gang scheduling. The allowed values are ByWorkload and None. When set to ByWorkload, this means each workload is processed and considered for admission as a single unit. Where workloads do not become ready over time, the entire workload may then be evicted and retried at a later time. policy is a required field.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -57217,7 +57217,10 @@ func schema_openshift_api_operator_v1alpha1_Integrations(ref common.ReferenceCal
 					"externalFrameworks": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "atomic",
+								"x-kubernetes-list-map-keys": []interface{}{
+									"group",
+								},
+								"x-kubernetes-list-type": "map",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -57236,6 +57239,9 @@ func schema_openshift_api_operator_v1alpha1_Integrations(ref common.ReferenceCal
 					"labelKeysToCopy": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"key",
+								},
 								"x-kubernetes-list-type": "map",
 							},
 						},

@@ -173,7 +173,8 @@ type Integrations struct {
 	// that integrates with Kueue.
 	// externalFrameworks, if specified, must have at least 1 item.
 	// externalFrameworks, if specified, can not have more than 32 items.
-	// +listType=atomic
+	// +listType=map
+	// +listMapKey=group
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=32
 	// +optional
@@ -186,7 +187,7 @@ type Integrations struct {
 	// +kubebuilder:validation:MaxItems=64
 	// +kubebuilder:validation:MinItems=1
 	// +listType=map
-	// +listMapType=key
+	// +listMapKey=key
 	// +optional
 	LabelKeysToCopy []LabelKeys `json:"labelKeysToCopy,omitempty"`
 }
@@ -231,7 +232,6 @@ const (
 type GangScheduling struct {
 	// policy allows you to enable and configure gang scheduling.
 	// The allowed values are ByWorkload and None.
-	// The default value will be None.
 	// When set to ByWorkload, this means each workload is processed and considered
 	// for admission as a single unit.
 	// Where workloads do not become ready over time, the entire workload may then be evicted and retried at a later time.

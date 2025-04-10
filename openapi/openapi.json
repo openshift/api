@@ -33258,7 +33258,7 @@
           "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.ByWorkload"
         },
         "policy": {
-          "description": "policy allows you to enable and configure gang scheduling. The allowed values are ByWorkload and None. The default value will be None. When set to ByWorkload, this means each workload is processed and considered for admission as a single unit. Where workloads do not become ready over time, the entire workload may then be evicted and retried at a later time. policy is a required field.",
+          "description": "policy allows you to enable and configure gang scheduling. The allowed values are ByWorkload and None. When set to ByWorkload, this means each workload is processed and considered for admission as a single unit. Where workloads do not become ready over time, the entire workload may then be evicted and retried at a later time. policy is a required field.",
           "type": "string",
           "default": ""
         }
@@ -33430,7 +33430,10 @@
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.ExternalFramework"
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-map-keys": [
+            "group"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "frameworks": {
           "description": "frameworks are a list of frameworks that Kueue has support for. The allowed values are BatchJob, RayJob, RayCluster, JobSet, MPIJob, PaddleJob, PyTorchJob, TFJob, XGBoostJob, AppWrapper, Pod, Deployment, StatefulSet and LeaderWorkerSet. frameworks are required and must have at least one element. frameworks can not have more than 14 elements. Each framework represents a type of job that Kueue will manage.",
@@ -33448,6 +33451,9 @@
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.LabelKeys"
           },
+          "x-kubernetes-list-map-keys": [
+            "key"
+          ],
           "x-kubernetes-list-type": "map"
         }
       }

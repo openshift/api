@@ -279,7 +279,7 @@ func (ExternalFramework) SwaggerDoc() map[string]string {
 
 var map_GangScheduling = map[string]string{
 	"":           "Kueue provides the ability to admit workloads all in one (gang admission) and evicts workloads if they are not ready within a specific time.",
-	"policy":     "policy allows you to enable and configure gang scheduling. The allowed values are ByWorkload and None. The default value will be None. When set to ByWorkload, this means each workload is processed and considered for admission as a single unit. Where workloads do not become ready over time, the entire workload may then be evicted and retried at a later time. policy is a required field.",
+	"policy":     "policy allows you to enable and configure gang scheduling. The allowed values are ByWorkload and None. When set to ByWorkload, this means each workload is processed and considered for admission as a single unit. Where workloads do not become ready over time, the entire workload may then be evicted and retried at a later time. policy is a required field.",
 	"byWorkload": "byWorkload configures how Kueue will process workloads for admission. byWorkload is required when policy is ByWorkload, and forbidden otherwise.",
 }
 

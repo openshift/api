@@ -248,7 +248,8 @@ type GangScheduling struct {
 // ByWorkload controls how admission is done
 type ByWorkload struct {
 	// admission controls how Kueue will process workloads.
-	// admission is an optional field.
+	// admission is a required field with policy is set to ByWorkload.
+	// admission is only required if policy is specified to ByWorkload.
 	// Allowed values are Sequential and Parallel.
 	// When admission is set to Sequential, only pods from the currently processing workload will be admitted.
 	// Once all pods from the current workload are admitted, and ready, Kueue will process the next workload.
@@ -257,8 +258,8 @@ type ByWorkload struct {
 	// When set to Parallel, pods from any workload will be admitted at any time.
 	// This may lead to a deadlock where workloads are in contention for cluster capacity and
 	// pods from another workload having successfully scheduled prevent pods from the current workload scheduling.
-	// +optional
-	Admission GangSchedulingWorkloadAdmission `json:"admission,omitempty"`
+	// +required
+	Admission GangSchedulingWorkloadAdmission `json:"admission"`
 }
 
 // +kubebuilder:validation:Enum=QueueName;None
@@ -272,6 +273,7 @@ const (
 type WorkloadManagement struct {
 	// labelPolicy controls whether or not Kueue reconciles
 	// jobs that don't set the label kueue.x-k8s.io/queue-name.
+	// labelPolicy is a required field.
 	// The allowed values are QueueName and None.
 	// None means that workloads will be suspended on
 	// creation and a label will be added via a mutating webhook.
@@ -294,7 +296,8 @@ const (
 
 type Preemption struct {
 	// preemptionPolicy are the types of preemption Kueue allows.
-	// Kueue has two types of preemption: Classical and FairSharing.
+	// preemptionPolicy is an optional field.
+	// The allowed values are Classical and FairSharing.
 	// Classical means that an incoming workload, which does
 	// not fit within the unusued quota, is eligible to issue preemptions
 	// when the requests of the workload are below the

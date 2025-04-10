@@ -56515,12 +56515,14 @@ func schema_openshift_api_operator_v1alpha1_ByWorkload(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"admission": {
 						SchemaProps: spec.SchemaProps{
-							Description: "admission controls how Kueue will process workloads. admission is an optional field. Allowed values are Sequential and Parallel. When admission is set to Sequential, only pods from the currently processing workload will be admitted. Once all pods from the current workload are admitted, and ready, Kueue will process the next workload. Sequential processing may slow down admission when the cluster has sufficient capacity for multiple workloads, but provides a higher guarantee of workloads scheduling all pods together successfully. When set to Parallel, pods from any workload will be admitted at any time. This may lead to a deadlock where workloads are in contention for cluster capacity and pods from another workload having successfully scheduled prevent pods from the current workload scheduling.",
+							Description: "admission controls how Kueue will process workloads. admission is a required field with policy is set to ByWorkload. admission is only required if policy is specified to ByWorkload. Allowed values are Sequential and Parallel. When admission is set to Sequential, only pods from the currently processing workload will be admitted. Once all pods from the current workload are admitted, and ready, Kueue will process the next workload. Sequential processing may slow down admission when the cluster has sufficient capacity for multiple workloads, but provides a higher guarantee of workloads scheduling all pods together successfully. When set to Parallel, pods from any workload will be admitted at any time. This may lead to a deadlock where workloads are in contention for cluster capacity and pods from another workload having successfully scheduled prevent pods from the current workload scheduling.",
+							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 				},
+				Required: []string{"admission"},
 			},
 		},
 	}
@@ -58075,7 +58077,7 @@ func schema_openshift_api_operator_v1alpha1_Preemption(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"preemptionPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "preemptionPolicy are the types of preemption Kueue allows. Kueue has two types of preemption: Classical and FairSharing. Classical means that an incoming workload, which does not fit within the unusued quota, is eligible to issue preemptions when the requests of the workload are below the resource flavor's nominal quota or borrowWithinCohort is enabled on the Cluster Queue. FairSharing means that ClusterQueues with pending Workloads can preempt other Workloads in their cohort until the preempting ClusterQueue obtains an equal or weighted share of the borrowable resources. The borrowable resources are the unused nominal quota of all the ClusterQueues in the cohort. FairSharing is a more heavy weight algorithm. The default is Classical.",
+							Description: "preemptionPolicy are the types of preemption Kueue allows. preemptionPolicy is an optional field. The allowed values are Classical and FairSharing. Classical means that an incoming workload, which does not fit within the unusued quota, is eligible to issue preemptions when the requests of the workload are below the resource flavor's nominal quota or borrowWithinCohort is enabled on the Cluster Queue. FairSharing means that ClusterQueues with pending Workloads can preempt other Workloads in their cohort until the preempting ClusterQueue obtains an equal or weighted share of the borrowable resources. The borrowable resources are the unused nominal quota of all the ClusterQueues in the cohort. FairSharing is a more heavy weight algorithm. The default is Classical.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -58285,7 +58287,7 @@ func schema_openshift_api_operator_v1alpha1_WorkloadManagement(ref common.Refere
 				Properties: map[string]spec.Schema{
 					"labelPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "labelPolicy controls whether or not Kueue reconciles jobs that don't set the label kueue.x-k8s.io/queue-name. The allowed values are QueueName and None. None means that workloads will be suspended on creation and a label will be added via a mutating webhook. This will be applied for all integrations that Kueue manages. QueueName means that workloads that are managed by Kueue must have a label kueue.x-k8s.io/queue-name. If this label is not present on the workload, then Kueue will ignore this workload.",
+							Description: "labelPolicy controls whether or not Kueue reconciles jobs that don't set the label kueue.x-k8s.io/queue-name. labelPolicy is a required field. The allowed values are QueueName and None. None means that workloads will be suspended on creation and a label will be added via a mutating webhook. This will be applied for all integrations that Kueue manages. QueueName means that workloads that are managed by Kueue must have a label kueue.x-k8s.io/queue-name. If this label is not present on the workload, then Kueue will ignore this workload.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",

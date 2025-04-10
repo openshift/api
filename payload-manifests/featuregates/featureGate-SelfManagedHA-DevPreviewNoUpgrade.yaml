@@ -29,6 +29,9 @@
                     },
                     {
                         "name": "MultiArchInstallAzure"
+                    },
+                    {
+                        "name": "ShortCertRotation"
                     }
                 ],
                 "enabled": [
@@ -256,9 +259,6 @@
                     },
                     {
                         "name": "SetEIPForNLBIngressController"
-                    },
-                    {
-                        "name": "ShortCertRotation"
                     },
                     {
                         "name": "SignatureStores"

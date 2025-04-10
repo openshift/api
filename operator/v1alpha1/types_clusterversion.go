@@ -20,6 +20,8 @@ import (
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/2044
 // +openshift:enable:FeatureGate=ClusterVersionOperatorConfiguration
 // +kubebuilder:validation:XValidation:rule="self.metadata.name == 'cluster'",message="ClusterVersionOperator is a singleton; the .metadata.name field must be 'cluster'"
+// +kubebuilder:metadata:annotations=include.release.openshift.io/ibm-cloud-managed=false
+// +kubebuilder:metadata:annotations=include.release.openshift.io/self-managed-high-availability=true
 type ClusterVersionOperator struct {
 	metav1.TypeMeta `json:",inline"`
 

@@ -32,7 +32,7 @@ require (
 	sigs.k8s.io/yaml v1.4.0
 )
 
-replace sigs.k8s.io/controller-tools => github.com/openshift/controller-tools v0.12.1-0.20250220135952-fe24dd6f3a0c
+replace sigs.k8s.io/controller-tools => github.com/openshift/controller-tools v0.12.1-0.20250409115419-a0be4596dbc5
 
 require (
 	cloud.google.com/go v0.115.0 // indirect

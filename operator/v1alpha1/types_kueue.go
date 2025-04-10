@@ -52,22 +52,22 @@ type KueueConfiguration struct {
 	// workloadManagement controls how Kueue manages workloads.
 	// By default Kueue will manage workloads that have a queue-name label.
 	// Workloads that are missing the queue-name will be ignored by Kueue.
-	// This field is optional.
-	// If this field is not specified, Kueue will only manage workloads
+	// If tworkloadManagement is not specified, Kueue will only manage workloads
 	// that have the queue-name label.
+	// This field is optional.
 	// +optional
 	WorkloadManagement *WorkloadManagement `json:"workloadManagement,omitempty"`
 	// gangScheduling controls how Kueue admits workloads.
 	// Gang Scheduling is the act of all or nothing scheduling,
 	// where workloads do not become ready within a certain period, they may be evicted and later retried.
 	// This field is optional.
-	// If this field is not specified, gang scheduling will be disabled.
+	// If gangScheduling is not specified, gang scheduling will be disabled.
 	// +optional
 	GangScheduling *GangScheduling `json:"gangScheduling,omitempty"`
 	// preemption is the process of evicting one or more admitted Workloads to accommodate another Workload.
 	// Kueue has classical premption and preemption via fair sharing.
-	// This field is optional.
-	// If this field is not specified, preemption will be set to Classical.
+	// preemption is optional.
+	// If preemption is not specified, preemption will be set to Classical.
 	// +optional
 	Preemption *Preemption `json:"preemption,omitempty"`
 }
@@ -123,7 +123,7 @@ type ExternalFramework struct {
 	// Must be a valid DNS 1123 subdomain consisting of of lower-case alphanumeric characters,
 	// hyphens and periods, of at most 253 characters in length.
 	// Each period separated segment within the subdomain must start and end with an alphanumeric character.
-	// We are using matches and not cel functions to allow for use on 4.17.
+	// group uses matches and not cel functions to allow for use on 4.17.
 	// +kubebuilder:validation:MaxLength=253
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:XValidation:rule="self.matches(r'^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$') && self.size() <= 253"
@@ -134,7 +134,7 @@ type ExternalFramework struct {
 	// Must be a valid DNS 1123 label consisting of a lower-case alphanumeric string
 	// and hyphens of at most 63 characters in length.
 	// The value must start and end with an alphanumeric character.
-	// We are using matches and not cel functions to allow for use on 4.17.
+	// resource uses matches and not cel functions to allow for use on 4.17.
 	// +kubebuilder:validation:MaxLength=63
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:XValidation:rule="self.matches(r'^[a-z0-9]([-a-z0-9]*[a-z0-9])?$') && self.size() <= 63"
@@ -144,7 +144,7 @@ type ExternalFramework struct {
 	// Must be a valid DNS 1035 label consisting of a lower-case alphanumeric string
 	// and hyphens of at most 63 characters in length.
 	// The value must start with an alphabetic character and end with an alphanumeric character.
-	// We are using matches and not cel functions to allow for use on 4.17.
+	// version uses matches and not cel functions to allow for use on 4.17.
 	// +kubebuilder:validation:MaxLength=63
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:XValidation:rule="self.matches(r'^[a-z0-9]([-a-z0-9]*[a-z0-9])?$') && self.size() <= 63"
@@ -156,11 +156,11 @@ type ExternalFramework struct {
 // Kueue uses these apis to determine
 // which jobs will be managed by Kueue.
 type Integrations struct {
-	// frameworks are a unique list of names to be enabled.
-	// This is required and must have at least one element.
+	// frameworks are a list of frameworks that Kueue has support for.
+	// The allowed values are BatchJob, RayJob, RayCluster, JobSet, MPIJob, PaddleJob, PyTorchJob, TFJob, XGBoostJob, AppWrapper, Pod, Deployment, StatefulSet and LeaderWorkerSet.
+	// frameworks are required and must have at least one element.
+	// frameworks can not have more than 14 elements.
 	// Each framework represents a type of job that Kueue will manage.
-	// Frameworks are a list of frameworks that Kueue has support for.
-	// The allowed values are BatchJob, RayJob, RayCluster, JobSet, MPIJob, PaddleJob, PytorchJob, TFJob, XGBoostJob, AppWrapper, Pod, Deployment, StatefulSet and LeaderWorkerSet.
 	// +kubebuilder:validation:MaxItems=14
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:XValidation:rule="self.all(x, self.exists_one(y, x == y))",message="each item in frameworks must be unique"
@@ -169,17 +169,23 @@ type Integrations struct {
 	Frameworks []KueueIntegration `json:"frameworks"`
 	// externalFrameworks are a list of GroupVersionResources
 	// that are managed for Kueue by external controllers.
-	// These are optional and should only be used if you have an external controller
+	// externalFrameworks are optional and should only be used if you have an external controller
 	// that integrates with Kueue.
+	// externalFrameworks, if specified, must have at least 1 item.
+	// externalFrameworks, if specified, can not have more than 32 items.
 	// +listType=atomic
+	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=32
 	// +optional
 	ExternalFrameworks []ExternalFramework `json:"externalFrameworks,omitempty"`
 	// labelKeysToCopy are a list of label keys that are copied once a workload is created.
 	// These keys are persisted to the internal Kueue workload object.
 	// If not specified, only the Kueue labels will be copied.
+	// labelKeysToCopy, if specified, is limited to a maximum of 64 items.
+	// labelKeysToCopy, if specified, must have at least one item.
 	// +kubebuilder:validation:MaxItems=64
-	// +listType=set
+	// +kubebuilder:validation:MinItems=1
+	// +listType=map
 	// +listMapType=key
 	// +optional
 	LabelKeysToCopy []LabelKeys `json:"labelKeysToCopy,omitempty"`
@@ -189,7 +195,7 @@ type LabelKeys struct {
 	// key is the label key.
 	// A label key must be a valid qualified name consisting of a lower-case alphanumeric string,
 	// and hyphens of at most 63 characters in length.
-	// We are using matches and not cel functions to allow for use on 4.17.
+	// To support older openshift versions, matches is used instead of CEL validation.
 	// The name must start and end with an alphanumeric character.
 	// The name may be optionally prefixed with a subdomain consisting of lower-case alphanumeric characters,
 	// hyphens and periods, of at most 253 characters in length.
@@ -202,12 +208,12 @@ type LabelKeys struct {
 	Key string `json:"key"`
 }
 
-// +kubebuilder:validation:Enum=ByWorkload;Disabled
+// +kubebuilder:validation:Enum=ByWorkload;None
 type GangSchedulingPolicy string
 
 const (
 	GangSchedulingPolicyByWorkload GangSchedulingPolicy = "ByWorkload"
-	GangSchedulingPolicyDisabled   GangSchedulingPolicy = "Disabled"
+	GangSchedulingPolicyNone       GangSchedulingPolicy = "None"
 )
 
 // +kubebuilder:validation:Enum=Parallel;Sequential
@@ -224,12 +230,12 @@ const (
 // +union
 type GangScheduling struct {
 	// policy allows you to enable and configure gang scheduling.
-	// This is an optional field.
-	// The allowed values are ByWorkload and Disabled.
-	// The default value will be Disabled.
+	// The allowed values are ByWorkload and None.
+	// The default value will be None.
 	// When set to ByWorkload, this means each workload is processed and considered
 	// for admission as a single unit.
 	// Where workloads do not become ready over time, the entire workload may then be evicted and retried at a later time.
+	// policy is a required field.
 	// +required
 	// +unionDiscriminator
 	Policy GangSchedulingPolicy `json:"policy"`
@@ -242,6 +248,7 @@ type GangScheduling struct {
 // ByWorkload controls how admission is done
 type ByWorkload struct {
 	// admission controls how Kueue will process workloads.
+	// admission is an optional field.
 	// Allowed values are Sequential and Parallel.
 	// When admission is set to Sequential, only pods from the currently processing workload will be admitted.
 	// Once all pods from the current workload are admitted, and ready, Kueue will process the next workload.

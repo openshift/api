@@ -121,7 +121,7 @@ type MachineConfigNodeStatus struct {
 	// observedGeneration represents the generation of the MachineConfigNode object observed by the Machine Config Operator's controller.
 	// This field is updated when the controller observes a change to the desiredConfig in the configVersion of the machine config node spec.
 	// +kubebuilder:validation:XValidation:rule="self >= oldSelf", message="observedGeneration must not decrease"
-	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Minimum=1
 	// +optional
 	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 	// configVersion describes the current and desired machine config version for this node.
@@ -150,17 +150,17 @@ type MachineConfigNodeStatusPinnedImageSet struct {
 	Name string `json:"name"`
 	// currentGeneration is the generation of the pinned image set that has most recently been successfully pulled and pinned on this node.
 	// +kubebuilder:validation:XValidation:rule="self >= oldSelf", message="currentGeneration must not decrease"
-	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Minimum=1
 	// +optional
 	CurrentGeneration int32 `json:"currentGeneration,omitempty"`
 	// desiredGeneration is the generation of the pinned image set that is targeted to be pulled and pinned on this node.
 	// +kubebuilder:validation:XValidation:rule="self >= oldSelf", message="desiredGeneration must not decrease"
-	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Minimum=1
 	// +optional
 	DesiredGeneration int32 `json:"desiredGeneration,omitempty"`
 	// lastFailedGeneration is the generation of the most recent pinned image set that failed to be pulled and pinned on this node.
 	// +kubebuilder:validation:XValidation:rule="self >= oldSelf", message="lastFailedGeneration must not decrease"
-	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Minimum=1
 	// +optional
 	LastFailedGeneration int32 `json:"lastFailedGeneration,omitempty"`
 	// lastFailedGenerationError is the error explaining why the desired images failed to be pulled and pinned.

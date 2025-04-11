@@ -480,7 +480,7 @@ var (
 				productScope(ocpSpecific).
 				enhancementPR("https://github.com/openshift/enhancements/pull/1777").
 				enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-				enableForClusterProfile(Hypershift, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+				enableForClusterProfile(Hypershift, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade, configv1.Default).
 				mustRegister()
 
 	FeatureGateExample = newFeatureGate("Example").

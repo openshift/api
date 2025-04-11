@@ -280,7 +280,7 @@ spec:
                   observedGeneration represents the generation of the MachineConfigNode object observed by the Machine Config Operator's controller.
                   This field is updated when the controller observes a change to the desiredConfig in the configVersion of the machine config node spec.
                 format: int64
-                minimum: 0
+                minimum: 1
                 type: integer
                 x-kubernetes-validations:
                 - message: observedGeneration must not decrease
@@ -298,7 +298,7 @@ spec:
                         image set that has most recently been successfully pulled
                         and pinned on this node.
                       format: int32
-                      minimum: 0
+                      minimum: 1
                       type: integer
                       x-kubernetes-validations:
                       - message: currentGeneration must not decrease
@@ -308,7 +308,7 @@ spec:
                         image set that is targeted to be pulled and pinned on this
                         node.
                       format: int32
-                      minimum: 0
+                      minimum: 1
                       type: integer
                       x-kubernetes-validations:
                       - message: desiredGeneration must not decrease
@@ -318,7 +318,7 @@ spec:
                         recent pinned image set that failed to be pulled and pinned
                         on this node.
                       format: int32
-                      minimum: 0
+                      minimum: 1
                       type: integer
                       x-kubernetes-validations:
                       - message: lastFailedGeneration must not decrease

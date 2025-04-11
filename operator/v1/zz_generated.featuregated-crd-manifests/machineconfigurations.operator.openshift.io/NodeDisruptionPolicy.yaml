@@ -46,6 +46,17 @@ spec:
             description: spec is the specification of the desired behavior of the
               Machine Config Operator
             properties:
+              configurationValidationPolicy:
+                default: Strict
+                description: |-
+                  configurationValidationPolicy tells the operator how new machine configurations should be validated.
+                  Valid values are Strict and Relaxed:
+                  Strict: Rejects changes to MachineConfigs if fields that doesn't support to be updated are changed.
+                  Relaxed: Changes to protected fields are allowed and will be applied in new nodes joining the cluster.
+                enum:
+                - Strict
+                - Relaxed
+                type: string
               failedRevisionLimit:
                 description: |-
                   failedRevisionLimit is the number of failed static pod installer revisions to keep on disk and in the api

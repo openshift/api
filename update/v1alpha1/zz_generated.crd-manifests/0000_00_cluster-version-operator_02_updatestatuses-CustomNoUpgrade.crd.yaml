@@ -1,0 +1,2323 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    api-approved.openshift.io: https://github.com/openshift/api/pull/2012
+    api.openshift.io/merged-by-featuregates: "true"
+    description: Provides health and status information about OpenShift cluster updates.
+    displayName: UpdateStatuses
+    include.release.openshift.io/ibm-cloud-managed: "true"
+    include.release.openshift.io/self-managed-high-availability: "true"
+    release.openshift.io/feature-set: CustomNoUpgrade
+  name: updatestatuses.update.openshift.io
+spec:
+  group: update.openshift.io
+  names:
+    kind: UpdateStatus
+    listKind: UpdateStatusList
+    plural: updatestatuses
+    singular: updatestatus
+  scope: Cluster
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          UpdateStatus reports status for in-progress cluster version updates
+
+          Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: |-
+              spec is empty for now, UpdateStatus is purely status-reporting API. In the future spec may be used to hold
+              configuration to drive what information is surfaced and how
+            type: object
+          status:
+            description: status exposes the health and status of the ongoing cluster
+              update
+            properties:
+              conditions:
+                description: |-
+                  conditions provide details about the controller operational matters, exposing whether the controller managing this
+                  UpdateStatus is functioning well, receives insights from individual informers, and is able to interpret them and
+                  relay them through this UpdateStatus. These condition do not communicate anything about the state of the update
+                  itself but may indicate whether the UpdateStatus content is reliable or not.
+                items:
+                  description: Condition contains details for one aspect of the current
+                    state of this API Resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                maxItems: 10
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+              controlPlane:
+                description: controlPlane contains a summary and insights related
+                  to the control plane update
+                properties:
+                  conditions:
+                    description: |-
+                      conditions provides details about the control plane update. This is a high-level status of an abstract control plane
+                      concept, and will typically be the controller's interpretation / summarization of the insights it received (that
+                      will be placed in .informers[].insights for clients that want to perform further analysis of the data).
+                      Known condition types are:
+                      * "Updating": Whether the cluster control plane is currently updating or not
+                    items:
+                      description: Condition contains details for one aspect of the
+                        current state of this API Resource.
+                      properties:
+                        lastTransitionTime:
+                          description: |-
+                            lastTransitionTime is the last time the condition transitioned from one status to another.
+                            This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                          format: date-time
+                          type: string
+                        message:
+                          description: |-
+                            message is a human readable message indicating details about the transition.
+                            This may be an empty string.
+                          maxLength: 32768
+                          type: string
+                        observedGeneration:
+                          description: |-
+                            observedGeneration represents the .metadata.generation that the condition was set based upon.
+                            For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                            with respect to the current state of the instance.
+                          format: int64
+                          minimum: 0
+                          type: integer
+                        reason:
+                          description: |-
+                            reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                            Producers of specific condition types may define expected values and meanings for this field,
+                            and whether the values are considered a guaranteed API.
+                            The value should be a CamelCase string.
+                            This field may not be empty.
+                          maxLength: 1024
+                          minLength: 1
+                          pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                          type: string
+                        status:
+                          description: status of the condition, one of True, False,
+                            Unknown.
+                          enum:
+                          - "True"
+                          - "False"
+                          - Unknown
+                          type: string
+                        type:
+                          description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                          maxLength: 316
+                          pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                          type: string
+                      required:
+                      - lastTransitionTime
+                      - message
+                      - reason
+                      - status
+                      - type
+                      type: object
+                    maxItems: 10
+                    type: array
+                    x-kubernetes-list-map-keys:
+                    - type
+                    x-kubernetes-list-type: map
+                  informers:
+                    description: |-
+                      informers is a list of insight producers. An informer is a system, internal or external to the cluster, that
+                      produces units of information relevant to the update process, either about its progress or its health. Each
+                      informer in the list is identified by a name, and contains a list of insights it contributed to the Update Status API,
+                      relevant to the control plane update. Contains at most 16 items.
+                    items:
+                      description: |-
+                        ControlPlaneInformer represents a system, internal or external to the cluster, that  produces units of information
+                        relevant to the update process, either about its progress or its health. Each informer is identified by a name, and
+                        contains a list of insights it contributed to the Update Status API, relevant to the control plane update.
+                      properties:
+                        insights:
+                          description: |-
+                            insights is a list of insights produced by this producer. Insights are units of information relevant to an update
+                            progress or health information. There are two types of update insights: status insights and health insights. The
+                            first type are directly tied to the update process, regardless of whether it is proceeding smoothly or not.
+
+                            Status Insights expose the state of a single resource that is directly involved in the update process, usually a resource
+                            that either has a notion of "being updated," (such as a Node or ClusterOperator) or represents a higher-level
+                            abstraction (such as a ClusterVersion resource tahat represents the control plane or MachineConfigPool that represents
+                            a pool of nodes).
+
+                            Health Insights report a state or condition in the cluster that is abnormal or negative and either affects or is
+                            affected by the update. Ideally, none would be generated in a standard healthy update. Health insights communicate
+                            a condition that warrants attention by the cluster administrator.
+                          items:
+                            description: ControlPlaneInsight is a unique piece of
+                              either status/progress or update health information
+                              produced by update informer
+                            properties:
+                              acquiredAt:
+                                description: acquiredAt is the time when the data
+                                  was acquired by the producer
+                                format: date-time
+                                type: string
+                              insight:
+                                description: insight is a discriminated union of all
+                                  insights types that can be reported for the control
+                                  plane
+                                properties:
+                                  clusterOperator:
+                                    description: |-
+                                      clusterOperator is a status insight about the state of a control plane cluster operator update
+                                      represented by a ClusterOperator resource
+                                    properties:
+                                      conditions:
+                                        description: |-
+                                          conditions provide details about the operator. It contains at most 10 items. Known conditions are:
+                                          - Updating: whether the operator is updating; When Updating=False, the reason field can be Pending or Updated
+                                          - Healthy: whether the operator is considered healthy; When Healthy=False, the reason field can be Unavailable or Degraded, and Unavailable is "stronger" than Degraded
+                                        items:
+                                          description: Condition contains details
+                                            for one aspect of the current state of
+                                            this API Resource.
+                                          properties:
+                                            lastTransitionTime:
+                                              description: |-
+                                                lastTransitionTime is the last time the condition transitioned from one status to another.
+                                                This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                                              format: date-time
+                                              type: string
+                                            message:
+                                              description: |-
+                                                message is a human readable message indicating details about the transition.
+                                                This may be an empty string.
+                                              maxLength: 32768
+                                              type: string
+                                            observedGeneration:
+                                              description: |-
+                                                observedGeneration represents the .metadata.generation that the condition was set based upon.
+                                                For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                                                with respect to the current state of the instance.
+                                              format: int64
+                                              minimum: 0
+                                              type: integer
+                                            reason:
+                                              description: |-
+                                                reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                                                Producers of specific condition types may define expected values and meanings for this field,
+                                                and whether the values are considered a guaranteed API.
+                                                The value should be a CamelCase string.
+                                                This field may not be empty.
+                                              maxLength: 1024
+                                              minLength: 1
+                                              pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                                              type: string
+                                            status:
+                                              description: status of the condition,
+                                                one of True, False, Unknown.
+                                              enum:
+                                              - "True"
+                                              - "False"
+                                              - Unknown
+                                              type: string
+                                            type:
+                                              description: type of condition in CamelCase
+                                                or in foo.example.com/CamelCase.
+                                              maxLength: 316
+                                              pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                                              type: string
+                                          required:
+                                          - lastTransitionTime
+                                          - message
+                                          - reason
+                                          - status
+                                          - type
+                                          type: object
+                                        maxItems: 10
+                                        type: array
+                                        x-kubernetes-list-map-keys:
+                                        - type
+                                        x-kubernetes-list-type: map
+                                      name:
+                                        description: name is the name of the operator
+                                        maxLength: 64
+                                        minLength: 1
+                                        pattern: ^[a-z0-9-]+$
+                                        type: string
+                                      resource:
+                                        description: resource is the ClusterOperator
+                                          resource that represents the operator
+                                        properties:
+                                          group:
+                                            description: group of the object being
+                                              referenced, if any
+                                            maxLength: 253
+                                            type: string
+                                            x-kubernetes-validations:
+                                            - message: a lowercase RFC 1123 subdomain
+                                                must consist of lower case alphanumeric
+                                                characters, '-' or '.', and must start
+                                                and end with an alphanumeric character.
+                                              rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                                          name:
+                                            description: name of the object being
+                                              referenced
+                                            maxLength: 253
+                                            type: string
+                                            x-kubernetes-validations:
+                                            - message: a lowercase RFC 1123 subdomain
+                                                must consist of lower case alphanumeric
+                                                characters, '-' or '.', and must start
+                                                and end with an alphanumeric character.
+                                              rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                                          namespace:
+                                            description: namespace of the object being
+                                              referenced, if any
+                                            maxLength: 253
+                                            pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                                            type: string
+                                          resource:
+                                            description: resource of object being
+                                              referenced
+                                            maxLength: 253
+                                            type: string
+                                            x-kubernetes-validations:
+                                            - message: a lowercase RFC 1123 subdomain
+                                                must consist of lower case alphanumeric
+                                                characters, '-' or '.', and must start
+                                                and end with an alphanumeric character.
+                                              rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                                        required:
+                                        - name
+                                        - resource
+                                        type: object
+                                        x-kubernetes-validations:
+                                        - message: resource must be a clusteroperators.config.openshift.io
+                                            resource
+                                          rule: self.group == 'config.openshift.io'
+                                            && self.resource == 'clusteroperators'
+                                    required:
+                                    - name
+                                    - resource
+                                    type: object
+                                  clusterVersion:
+                                    description: |-
+                                      clusterVersion is a status insight about the state of a control plane update, where
+                                      the control plane is represented by a ClusterVersion resource usually managed by CVO
+                                    properties:
+                                      assessment:
+                                        description: 'assessment is the assessment
+                                          of the control plane update process. Valid
+                                          values are: Unknown, Progressing, Completed,
+                                          Degraded'
+                                        enum:
+                                        - Unknown
+                                        - Progressing
+                                        - Completed
+                                        - Degraded
+                                        type: string
+                                      completedAt:
+                                        description: completedAt is the time when
+                                          the update completed
+                                        format: date-time
+                                        type: string
+                                      completion:
+                                        description: completion is a percentage of
+                                          the update completion (0-100)
+                                        format: int32
+                                        maximum: 100
+                                        minimum: 0
+                                        type: integer
+                                      conditions:
+                                        description: |-
+                                          conditions provides detailed observed conditions about ClusterVersion. It contains at most 10 items.
+                                          Known conditions are:
+                                          - Updating: whether the control plane (represented by this ClusterVersion) is updating
+                                        items:
+                                          description: Condition contains details
+                                            for one aspect of the current state of
+                                            this API Resource.
+                                          properties:
+                                            lastTransitionTime:
+                                              description: |-
+                                                lastTransitionTime is the last time the condition transitioned from one status to another.
+                                                This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                                              format: date-time
+                                              type: string
+                                            message:
+                                              description: |-
+                                                message is a human readable message indicating details about the transition.
+                                                This may be an empty string.
+                                              maxLength: 32768
+                                              type: string
+                                            observedGeneration:
+                                              description: |-
+                                                observedGeneration represents the .metadata.generation that the condition was set based upon.
+                                                For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                                                with respect to the current state of the instance.
+                                              format: int64
+                                              minimum: 0
+                                              type: integer
+                                            reason:
+                                              description: |-
+                                                reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                                                Producers of specific condition types may define expected values and meanings for this field,
+                                                and whether the values are considered a guaranteed API.
+                                                The value should be a CamelCase string.
+                                                This field may not be empty.
+                                              maxLength: 1024
+                                              minLength: 1
+                                              pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                                              type: string
+                                            status:
+                                              description: status of the condition,
+                                                one of True, False, Unknown.
+                                              enum:
+                                              - "True"
+                                              - "False"
+                                              - Unknown
+                                              type: string
+                                            type:
+                                              description: type of condition in CamelCase
+                                                or in foo.example.com/CamelCase.
+                                              maxLength: 316
+                                              pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                                              type: string
+                                          required:
+                                          - lastTransitionTime
+                                          - message
+                                          - reason
+                                          - status
+                                          - type
+                                          type: object
+                                        maxItems: 10
+                                        type: array
+                                        x-kubernetes-list-map-keys:
+                                        - type
+                                        x-kubernetes-list-type: map
+                                      estimatedCompletedAt:
+                                        description: estimatedCompletedAt is the estimated
+                                          time when the update will complete
+                                        format: date-time
+                                        type: string
+                                      resource:
+                                        description: resource is the ClusterVersion
+                                          resource that represents the control plane
+                                        properties:
+                                          group:
+                                            description: group of the object being
+                                              referenced, if any
+                                            maxLength: 253
+                                            type: string
+                                            x-kubernetes-validations:
+                                            - message: a lowercase RFC 1123 subdomain
+                                                must consist of lower case alphanumeric
+                                                characters, '-' or '.', and must start
+                                                and end with an alphanumeric character.
+                                              rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                                          name:
+                                            description: name of the object being
+                                              referenced
+                                            maxLength: 253
+                                            type: string
+                                            x-kubernetes-validations:
+                                            - message: a lowercase RFC 1123 subdomain
+                                                must consist of lower case alphanumeric
+                                                characters, '-' or '.', and must start
+                                                and end with an alphanumeric character.
+                                              rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                                          namespace:
+                                            description: namespace of the object being
+                                              referenced, if any
+                                            maxLength: 253
+                                            pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                                            type: string
+                                          resource:
+                                            description: resource of object being
+                                              referenced
+                                            maxLength: 253
+                                            type: string
+                                            x-kubernetes-validations:
+                                            - message: a lowercase RFC 1123 subdomain
+                                                must consist of lower case alphanumeric
+                                                characters, '-' or '.', and must start
+                                                and end with an alphanumeric character.
+                                              rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                                        required:
+                                        - name
+                                        - resource
+                                        type: object
+                                        x-kubernetes-validations:
+                                        - message: resource must be a clusterversions.config.openshift.io
+                                            resource
+                                          rule: self.group == 'config.openshift.io'
+                                            && self.resource == 'clusterversions'
+                                      startedAt:
+                                        description: startedAt is the time when the
+                                          update started
+                                        format: date-time
+                                        type: string
+                                      versions:
+                                        description: versions contains the original
+                                          and target versions of the upgrade
+                                        properties:
+                                          previous:
+                                            description: |-
+                                              previous is the version of the control plane before the update. When the cluster is being installed
+                                              for the first time, the version will have a placeholder value '<none>' and carry 'Installation' metadata
+                                            properties:
+                                              metadata:
+                                                description: |-
+                                                  metadata is a list of metadata associated with the version. It is a list of key-value pairs. The value is optional
+                                                  and when not provided, the metadata item has boolean semantics (presence indicates true). For example, 'Partial'
+                                                  metadata on a previous version indicates that the previous update was never fully completed. Can contain at most 5 items.
+                                                items:
+                                                  description: |-
+                                                    VersionMetadata is a key:value item assigned to version involved in the update. Value can be empty, then the metadata
+                                                    have boolean semantics (true when present, false when absent)
+                                                  properties:
+                                                    key:
+                                                      description: 'key is the name
+                                                        of this metadata value. Valid
+                                                        values are: Installation,
+                                                        Partial, Architecture'
+                                                      enum:
+                                                      - Installation
+                                                      - Partial
+                                                      - Architecture
+                                                      type: string
+                                                    value:
+                                                      description: |-
+                                                        value is the value for the metadata, at most 32 characters long. It is not expected to be provided for Installation
+                                                        and Partial metadata. For Architecture metadata, it is expected to be a string that indicates the architecture of the
+                                                        payload image of the version involved in the upgrade, when relevant.
+                                                      maxLength: 32
+                                                      type: string
+                                                  required:
+                                                  - key
+                                                  type: object
+                                                maxItems: 5
+                                                type: array
+                                                x-kubernetes-list-map-keys:
+                                                - key
+                                                x-kubernetes-list-type: map
+                                              version:
+                                                description: |-
+                                                  version is a semantic version string, or a placeholder '<none>' for the special case where this
+                                                  is a "previous" version in a new installation, in which case the metadata must contain an item
+                                                  with key 'Installation'
+                                                maxLength: 64
+                                                pattern: ^(<none>)|((?:0|[1-9]\d*)[.](?:0|[1-9]\d*)[.](?:0|[1-9]\d*)(?:-(?:(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:[.](?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?)?$
+                                                type: string
+                                                x-kubernetes-validations:
+                                                - message: previous version must be
+                                                    '<none>' iff marked with Installation
+                                                    metadata
+                                                  rule: 'self.version == ''<none>''
+                                                    ? (has(self.metadata) && self.metadata.exists(m,
+                                                    m.key == ''Installation'')) :
+                                                    !(has(self.metadata) && self.metadata.exists(m,
+                                                    m.key == ''Installation''))'
+                                            required:
+                                            - version
+                                            type: object
+                                            x-kubernetes-validations:
+                                            - message: previous version must be '<none>'
+                                                iff marked with Installation metadata
+                                              rule: 'self.version == ''<none>'' ?
+                                                (has(self.metadata) && self.metadata.exists(m,
+                                                m.key == ''Installation'')) : !(has(self.metadata)
+                                                && self.metadata.exists(m, m.key ==
+                                                ''Installation''))'
+                                          target:
+                                            description: target is the version of
+                                              the control plane after the update.
+                                              It may never be '<none>' or have `Installation`
+                                              metadata
+                                            properties:
+                                              metadata:
+                                                description: |-
+                                                  metadata is a list of metadata associated with the version. It is a list of key-value pairs. The value is optional
+                                                  and when not provided, the metadata item has boolean semantics (presence indicates true). For example, 'Partial'
+                                                  metadata on a previous version indicates that the previous update was never fully completed. Can contain at most 5 items.
+                                                items:
+                                                  description: |-
+                                                    VersionMetadata is a key:value item assigned to version involved in the update. Value can be empty, then the metadata
+                                                    have boolean semantics (true when present, false when absent)
+                                                  properties:
+                                                    key:
+                                                      description: 'key is the name
+                                                        of this metadata value. Valid
+                                                        values are: Installation,
+                                                        Partial, Architecture'
+                                                      enum:
+                                                      - Installation
+                                                      - Partial
+                                                      - Architecture
+                                                      type: string
+                                                    value:
+                                                      description: |-
+                                                        value is the value for the metadata, at most 32 characters long. It is not expected to be provided for Installation
+                                                        and Partial metadata. For Architecture metadata, it is expected to be a string that indicates the architecture of the
+                                                        payload image of the version involved in the upgrade, when relevant.
+                                                      maxLength: 32
+                                                      type: string
+                                                  required:
+                                                  - key
+                                                  type: object
+                                                maxItems: 5
+                                                type: array
+                                                x-kubernetes-list-map-keys:
+                                                - key
+                                                x-kubernetes-list-type: map
+                                              version:
+                                                description: |-
+                                                  version is a semantic version string, or a placeholder '<none>' for the special case where this
+                                                  is a "previous" version in a new installation, in which case the metadata must contain an item
+                                                  with key 'Installation'
+                                                maxLength: 64
+                                                pattern: ^(<none>)|((?:0|[1-9]\d*)[.](?:0|[1-9]\d*)[.](?:0|[1-9]\d*)(?:-(?:(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:[.](?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?)?$
+                                                type: string
+                                                x-kubernetes-validations:
+                                                - message: previous version must be
+                                                    '<none>' iff marked with Installation
+                                                    metadata
+                                                  rule: 'self.version == ''<none>''
+                                                    ? (has(self.metadata) && self.metadata.exists(m,
+                                                    m.key == ''Installation'')) :
+                                                    !(has(self.metadata) && self.metadata.exists(m,
+                                                    m.key == ''Installation''))'
+                                            required:
+                                            - version
+                                            type: object
+                                            x-kubernetes-validations:
+                                            - message: target version must not be
+                                                '<none>' or have Installation metadata
+                                              rule: self.version != '<none>' && !(has(self.metadata)
+                                                && self.metadata.exists(m, m.key ==
+                                                'Installation'))
+                                        required:
+                                        - previous
+                                        - target
+                                        type: object
+                                    required:
+                                    - assessment
+                                    - completion
+                                    - resource
+                                    - startedAt
+                                    - versions
+                                    type: object
+                                  health:
+                                    description: |-
+                                      health is a generic health insight about the update. It does not represent a status of any specific
+                                      resource but surfaces actionable information about the health of the cluster or an update
+                                    properties:
+                                      impact:
+                                        description: impact describes the impact the
+                                          reported condition has on the cluster or
+                                          update
+                                        properties:
+                                          description:
+                                            description: |-
+                                              description is a human-oriented, possibly longer-form description of the condition reported by the insight It must
+                                              be shorter than 4096 characters.
+                                            maxLength: 4096
+                                            type: string
+                                          level:
+                                            description: level is the severity of
+                                              the impact. Valid values are Unknown,
+                                              Info, Warning, Error, Critical.
+                                            enum:
+                                            - Unknown
+                                            - Info
+                                            - Warning
+                                            - Error
+                                            - Critical
+                                            type: string
+                                          summary:
+                                            description: summary is a short summary
+                                              of the impact. It must not be empty
+                                              and must be shorter than 256 characters.
+                                            maxLength: 256
+                                            minLength: 1
+                                            type: string
+                                          type:
+                                            description: |-
+                                              type is the type of the impact. Valid values are None, Unknown, API Availability, Cluster Capacity,
+                                              Application Availability, Application Outage, Data Loss, Update Speed, Update Stalled.
+                                            enum:
+                                            - None
+                                            - Unknown
+                                            - API Availability
+                                            - Cluster Capacity
+                                            - Application Availability
+                                            - Application Outage
+                                            - Data Loss
+                                            - Update Speed
+                                            - Update Stalled
+                                            type: string
+                                        required:
+                                        - level
+                                        - summary
+                                        - type
+                                        type: object
+                                      remediation:
+                                        description: remediation contains information
+                                          about how to resolve or prevent the reported
+                                          condition
+                                        properties:
+                                          estimatedFinish:
+                                            description: estimatedFinish is the estimated
+                                              time when the informer expects the condition
+                                              to be resolved, if applicable.
+                                            format: date-time
+                                            type: string
+                                          reference:
+                                            description: reference is a URL where
+                                              administrators can find information
+                                              to resolve or prevent the reported condition
+                                            maxLength: 512
+                                            type: string
+                                            x-kubernetes-validations:
+                                            - message: reference must a valid URL
+                                              rule: isURL(self)
+                                        required:
+                                        - reference
+                                        type: object
+                                      scope:
+                                        description: scope is list of objects involved
+                                          in the insight
+                                        properties:
+                                          resources:
+                                            description: resources is a list of resources
+                                              involved in the insight, of any group/kind.
+                                              Maximum 16 resources can be listed.
+                                            items:
+                                              description: ResourceRef is a reference
+                                                to a kubernetes resource, typically
+                                                involved in an insight
+                                              properties:
+                                                group:
+                                                  description: group of the object
+                                                    being referenced, if any
+                                                  maxLength: 253
+                                                  type: string
+                                                  x-kubernetes-validations:
+                                                  - message: a lowercase RFC 1123
+                                                      subdomain must consist of lower
+                                                      case alphanumeric characters,
+                                                      '-' or '.', and must start and
+                                                      end with an alphanumeric character.
+                                                    rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                                                name:
+                                                  description: name of the object
+                                                    being referenced
+                                                  maxLength: 253
+                                                  type: string
+                                                  x-kubernetes-validations:
+                                                  - message: a lowercase RFC 1123
+                                                      subdomain must consist of lower
+                                                      case alphanumeric characters,
+                                                      '-' or '.', and must start and
+                                                      end with an alphanumeric character.
+                                                    rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                                                namespace:
+                                                  description: namespace of the object
+                                                    being referenced, if any
+                                                  maxLength: 253
+                                                  pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                                                  type: string
+                                                resource:
+                                                  description: resource of object
+                                                    being referenced
+                                                  maxLength: 253
+                                                  type: string
+                                                  x-kubernetes-validations:
+                                                  - message: a lowercase RFC 1123
+                                                      subdomain must consist of lower
+                                                      case alphanumeric characters,
+                                                      '-' or '.', and must start and
+                                                      end with an alphanumeric character.
+                                                    rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                                              required:
+                                              - name
+                                              - resource
+                                              type: object
+                                            maxItems: 16
+                                            type: array
+                                            x-kubernetes-list-type: atomic
+                                          type:
+                                            description: type is either ControlPlane
+                                              or WorkerPool
+                                            enum:
+                                            - ControlPlane
+                                            - WorkerPool
+                                            type: string
+                                        required:
+                                        - type
+                                        type: object
+                                      startedAt:
+                                        description: startedAt is the time when the
+                                          condition reported by the insight started
+                                        format: date-time
+                                        type: string
+                                    required:
+                                    - impact
+                                    - remediation
+                                    - scope
+                                    - startedAt
+                                    type: object
+                                  machineConfigPool:
+                                    description: |-
+                                      machineConfigPool is a status insight about the state of a worker pool update, where the worker pool
+                                      is represented by a MachineConfigPool resource
+                                    properties:
+                                      assessment:
+                                        description: 'assessment is the assessment
+                                          of the machine config pool update process.
+                                          Valid values are: Pending, Completed, Degraded,
+                                          Excluded, Progressing'
+                                        enum:
+                                        - Pending
+                                        - Completed
+                                        - Degraded
+                                        - Excluded
+                                        - Progressing
+                                        type: string
+                                      completion:
+                                        description: completion is a percentage of
+                                          the update completion (0-100)
+                                        format: int32
+                                        maximum: 100
+                                        minimum: 0
+                                        type: integer
+                                      conditions:
+                                        description: |-
+                                          conditions provide details about the machine config pool update. It contains at most 10 items. Known conditions are:
+                                          - Updating: whether the pool is updating; When Updating=False, the reason field can be Pending, Updated or Excluded
+                                        items:
+                                          description: Condition contains details
+                                            for one aspect of the current state of
+                                            this API Resource.
+                                          properties:
+                                            lastTransitionTime:
+                                              description: |-
+                                                lastTransitionTime is the last time the condition transitioned from one status to another.
+                                                This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                                              format: date-time
+                                              type: string
+                                            message:
+                                              description: |-
+                                                message is a human readable message indicating details about the transition.
+                                                This may be an empty string.
+                                              maxLength: 32768
+                                              type: string
+                                            observedGeneration:
+                                              description: |-
+                                                observedGeneration represents the .metadata.generation that the condition was set based upon.
+                                                For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                                                with respect to the current state of the instance.
+                                              format: int64
+                                              minimum: 0
+                                              type: integer
+                                            reason:
+                                              description: |-
+                                                reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                                                Producers of specific condition types may define expected values and meanings for this field,
+                                                and whether the values are considered a guaranteed API.
+                                                The value should be a CamelCase string.
+                                                This field may not be empty.
+                                              maxLength: 1024
+                                              minLength: 1
+                                              pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                                              type: string
+                                            status:
+                                              description: status of the condition,
+                                                one of True, False, Unknown.
+                                              enum:
+                                              - "True"
+                                              - "False"
+                                              - Unknown
+                                              type: string
+                                            type:
+                                              description: type of condition in CamelCase
+                                                or in foo.example.com/CamelCase.
+                                              maxLength: 316
+                                              pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                                              type: string
+                                          required:
+                                          - lastTransitionTime
+                                          - message
+                                          - reason
+                                          - status
+                                          - type
+                                          type: object
+                                        maxItems: 10
+                                        type: array
+                                        x-kubernetes-list-map-keys:
+                                        - type
+                                        x-kubernetes-list-type: map
+                                      name:
+                                        description: name is the name of the machine
+                                          config pool
+                                        maxLength: 64
+                                        minLength: 1
+                                        pattern: ^[a-z0-9-]+$
+                                        type: string
+                                      resource:
+                                        description: |-
+                                          resource is the MachineConfigPool resource that represents the pool
+
+                                          Note: By OpenShift API conventions, in isolation this should be a specialized reference that refers just to
+                                          resource name (because the rest is implied by status insight type). However, because we use resource references in
+                                          many places and this API is intended to be consumed by clients, not produced, consistency seems to be more valuable
+                                          than type safety for producers.
+                                        properties:
+                                          group:
+                                            description: group of the object being
+                                              referenced, if any
+                                            maxLength: 253
+                                            type: string
+                                            x-kubernetes-validations:
+                                            - message: a lowercase RFC 1123 subdomain
+                                                must consist of lower case alphanumeric
+                                                characters, '-' or '.', and must start
+                                                and end with an alphanumeric character.
+                                              rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                                          name:
+                                            description: name of the object being
+                                              referenced
+                                            maxLength: 253
+                                            type: string
+                                            x-kubernetes-validations:
+                                            - message: a lowercase RFC 1123 subdomain
+                                                must consist of lower case alphanumeric
+                                                characters, '-' or '.', and must start
+                                                and end with an alphanumeric character.
+                                              rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                                          namespace:
+                                            description: namespace of the object being
+                                              referenced, if any
+                                            maxLength: 253
+                                            pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                                            type: string
+                                          resource:
+                                            description: resource of object being
+                                              referenced
+                                            maxLength: 253
+                                            type: string
+                                            x-kubernetes-validations:
+                                            - message: a lowercase RFC 1123 subdomain
+                                                must consist of lower case alphanumeric
+                                                characters, '-' or '.', and must start
+                                                and end with an alphanumeric character.
+                                              rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                                        required:
+                                        - name
+                                        - resource
+                                        type: object
+                                        x-kubernetes-validations:
+                                        - message: resource must be a machineconfigpools.machineconfiguration.openshift.io
+                                            resource
+                                          rule: self.group == 'machineconfiguration.openshift.io'
+                                            && self.resource == 'machineconfigpools'
+                                        - message: a poolResource must be a machineconfigpools.machineconfiguration.openshift.io
+                                            resource
+                                          rule: has(self.resource) && (self.resource
+                                            == 'machineconfigpools' && self.group
+                                            == 'machineconfiguration.openshift.io'
+                                      scopeType:
+                                        description: scopeType describes whether the
+                                          pool is a control plane or a worker pool
+                                        enum:
+                                        - ControlPlane
+                                        - WorkerPool
+                                        type: string
+                                      summaries:
+                                        description: summaries is a list of counts
+                                          of nodes matching certain criteria (e.g.
+                                          updated, degraded, etc.). Maximum 16 items
+                                          can be listed.
+                                        items:
+                                          description: NodeSummary is a count of nodes
+                                            matching certain criteria (e.g. updated,
+                                            degraded, etc.)
+                                          properties:
+                                            count:
+                                              description: count is the number of
+                                                nodes matching the criteria
+                                              format: int32
+                                              maximum: 4096
+                                              minimum: 0
+                                              type: integer
+                                            type:
+                                              description: |-
+                                                type is the type of the summary. Valid values are: Total, Available, Progressing, Outdated, Draining, Excluded, Degraded
+                                                The summaries are not exclusive, a single node may be counted in multiple summaries.
+                                              enum:
+                                              - Total
+                                              - Available
+                                              - Progressing
+                                              - Outdated
+                                              - Draining
+                                              - Excluded
+                                              - Degraded
+                                              type: string
+                                          required:
+                                          - count
+                                          - type
+                                          type: object
+                                        maxItems: 16
+                                        type: array
+                                        x-kubernetes-list-map-keys:
+                                        - type
+                                        x-kubernetes-list-type: map
+                                    required:
+                                    - assessment
+                                    - completion
+                                    - name
+                                    - resource
+                                    - scopeType
+                                    type: object
+                                  node:
+                                    description: |-
+                                      node is a status insight about the state of a worker node update, where the worker node is represented
+                                      by a Node resource
+                                    properties:
+                                      conditions:
+                                        description: |-
+                                          conditions provides details about the control plane update. Known conditions are:
+                                          - Updating: whether the Node is updating; When Updating=False, the reason field can be Updated, Pending, or Paused. When Updating=True, the reason field can be Draining, Updating, or Rebooting
+                                          - Available: whether the Node is available (accepting workloads)
+                                          - Degraded: whether the Node is degraded (problem observed)
+                                        items:
+                                          description: Condition contains details
+                                            for one aspect of the current state of
+                                            this API Resource.
+                                          properties:
+                                            lastTransitionTime:
+                                              description: |-
+                                                lastTransitionTime is the last time the condition transitioned from one status to another.
+                                                This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                                              format: date-time
+                                              type: string
+                                            message:
+                                              description: |-
+                                                message is a human readable message indicating details about the transition.
+                                                This may be an empty string.
+                                              maxLength: 32768
+                                              type: string
+                                            observedGeneration:
+                                              description: |-
+                                                observedGeneration represents the .metadata.generation that the condition was set based upon.
+                                                For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                                                with respect to the current state of the instance.
+                                              format: int64
+                                              minimum: 0
+                                              type: integer
+                                            reason:
+                                              description: |-
+                                                reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                                                Producers of specific condition types may define expected values and meanings for this field,
+                                                and whether the values are considered a guaranteed API.
+                                                The value should be a CamelCase string.
+                                                This field may not be empty.
+                                              maxLength: 1024
+                                              minLength: 1
+                                              pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                                              type: string
+                                            status:
+                                              description: status of the condition,
+                                                one of True, False, Unknown.
+                                              enum:
+                                              - "True"
+                                              - "False"
+                                              - Unknown
+                                              type: string
+                                            type:
+                                              description: type of condition in CamelCase
+                                                or in foo.example.com/CamelCase.
+                                              maxLength: 316
+                                              pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                                              type: string
+                                          required:
+                                          - lastTransitionTime
+                                          - message
+                                          - reason
+                                          - status
+                                          - type
+                                          type: object
+                                        maxItems: 10
+                                        type: array
+                                        x-kubernetes-list-map-keys:
+                                        - type
+                                        x-kubernetes-list-type: map
+                                      estimatedToComplete:
+                                        description: estimatedToComplete is the estimated
+                                          time to complete the update, when known
+                                        format: duration
+                                        type: string
+                                      message:
+                                        description: message is a short human-readable
+                                          message about the node update status. It
+                                          must be shorter than 100 characters.
+                                        maxLength: 100
+                                        type: string
+                                      name:
+                                        description: name is the name of the node
+                                        maxLength: 253
+                                        minLength: 1
+                                        type: string
+                                      poolResource:
+                                        description: |-
+                                          poolResource is the resource that represents the pool the node is a member of
+
+                                          Note: By OpenShift API conventions, in isolation this should probably be a specialized reference type that allows
+                                          only the "correct" resource types to be referenced (here, MachineConfigPool or NodePool). However, because we use
+                                          resource references in many places and this API is intended to be consumed by clients, not produced, consistency
+                                          seems to be more valuable than type safety for producers.
+                                        properties:
+                                          group:
+                                            description: group of the object being
+                                              referenced, if any
+                                            maxLength: 253
+                                            type: string
+                                            x-kubernetes-validations:
+                                            - message: a lowercase RFC 1123 subdomain
+                                                must consist of lower case alphanumeric
+                                                characters, '-' or '.', and must start
+                                                and end with an alphanumeric character.
+                                              rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                                          name:
+                                            description: name of the object being
+                                              referenced
+                                            maxLength: 253
+                                            type: string
+                                            x-kubernetes-validations:
+                                            - message: a lowercase RFC 1123 subdomain
+                                                must consist of lower case alphanumeric
+                                                characters, '-' or '.', and must start
+                                                and end with an alphanumeric character.
+                                              rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                                          namespace:
+                                            description: namespace of the object being
+                                              referenced, if any
+                                            maxLength: 253
+                                            pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                                            type: string
+                                          resource:
+                                            description: resource of object being
+                                              referenced
+                                            maxLength: 253
+                                            type: string
+                                            x-kubernetes-validations:
+                                            - message: a lowercase RFC 1123 subdomain
+                                                must consist of lower case alphanumeric
+                                                characters, '-' or '.', and must start
+                                                and end with an alphanumeric character.
+                                              rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                                        required:
+                                        - name
+                                        - resource
+                                        type: object
+                                        x-kubernetes-validations:
+                                        - message: resource must be a machineconfigpools.machineconfiguration.openshift.io
+                                            resource
+                                          rule: self.group == 'machineconfiguration.openshift.io'
+                                            && self.resource == 'machineconfigpools'
+                                        - message: a poolResource must be a machineconfigpools.machineconfiguration.openshift.io
+                                            resource
+                                          rule: has(self.resource) && (self.resource
+                                            == 'machineconfigpools' && self.group
+                                            == 'machineconfiguration.openshift.io'
+                                      resource:
+                                        description: |-
+                                          resource is the Node resource that represents the node
+
+                                          Note: By OpenShift API conventions, in isolation this should be a specialized reference that refers just to
+                                          resource name (because the rest is implied by status insight type). However, because we use resource references in
+                                          many places and this API is intended to be consumed by clients, not produced, consistency seems to be more valuable
+                                          than type safety for producers.
+                                        properties:
+                                          group:
+                                            description: group of the object being
+                                              referenced, if any
+                                            maxLength: 253
+                                            type: string
+                                            x-kubernetes-validations:
+                                            - message: a lowercase RFC 1123 subdomain
+                                                must consist of lower case alphanumeric
+                                                characters, '-' or '.', and must start
+                                                and end with an alphanumeric character.
+                                              rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                                          name:
+                                            description: name of the object being
+                                              referenced
+                                            maxLength: 253
+                                            type: string
+                                            x-kubernetes-validations:
+                                            - message: a lowercase RFC 1123 subdomain
+                                                must consist of lower case alphanumeric
+                                                characters, '-' or '.', and must start
+                                                and end with an alphanumeric character.
+                                              rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                                          namespace:
+                                            description: namespace of the object being
+                                              referenced, if any
+                                            maxLength: 253
+                                            pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                                            type: string
+                                          resource:
+                                            description: resource of object being
+                                              referenced
+                                            maxLength: 253
+                                            type: string
+                                            x-kubernetes-validations:
+                                            - message: a lowercase RFC 1123 subdomain
+                                                must consist of lower case alphanumeric
+                                                characters, '-' or '.', and must start
+                                                and end with an alphanumeric character.
+                                              rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                                        required:
+                                        - name
+                                        - resource
+                                        type: object
+                                        x-kubernetes-validations:
+                                        - message: resource must be a nodes.core.k8s.io
+                                            resource
+                                          rule: self.group == '' && self.resource
+                                            == 'nodes'
+                                      scopeType:
+                                        description: scopeType describes whether the
+                                          node belongs to control plane or a worker
+                                          pool
+                                        enum:
+                                        - ControlPlane
+                                        - WorkerPool
+                                        type: string
+                                      version:
+                                        description: version is the version of the
+                                          node, when known
+                                        maxLength: 64
+                                        pattern: ^((?:0|[1-9]\d*)[.](?:0|[1-9]\d*)[.](?:0|[1-9]\d*)(?:-(?:(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:[.](?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?)?$
+                                        type: string
+                                    required:
+                                    - name
+                                    - poolResource
+                                    - resource
+                                    - scopeType
+                                    type: object
+                                  type:
+                                    description: |-
+                                      type identifies the type of the update insight, one of: ClusterVersion, ClusterOperator, MachineConfigPool, Node, Health
+                                      ClusterVersion, ClusterOperator, MachineConfigPool, Node types are progress insights about a resource directly
+                                      involved in the update process
+                                      Health insights report a state or condition in the cluster that is abnormal or negative and either affects or is
+                                      affected by the update.
+                                    enum:
+                                    - ClusterVersion
+                                    - ClusterOperator
+                                    - MachineConfigPool
+                                    - Node
+                                    - Health
+                                    type: string
+                                required:
+                                - type
+                                type: object
+                                x-kubernetes-validations:
+                                - message: clusterVersion is required when type is
+                                    ClusterVersion, and forbidden otherwise
+                                  rule: 'has(self.type) && self.type == ''ClusterVersion''
+                                    ?  has(self.clusterVersion) : !has(self.clusterVersion)'
+                                - message: clusterOperator is required when type is
+                                    ClusterOperator, and forbidden otherwise
+                                  rule: 'has(self.type) && self.type == ''ClusterOperator''
+                                    ?  has(self.clusterOperator) : !has(self.clusterOperator)'
+                                - message: machineConfigPool is required when type
+                                    is MachineConfigPool, and forbidden otherwise
+                                  rule: 'has(self.type) && self.type == ''MachineConfigPool''
+                                    ?  has(self.machineConfigPool) : !has(self.machineConfigPool)'
+                                - message: node is required when type is Node, and
+                                    forbidden otherwise
+                                  rule: 'has(self.type) && self.type == ''Node'' ?  has(self.node)
+                                    : !has(self.node)'
+                                - message: health is required when type is Health,
+                                    and forbidden otherwise
+                                  rule: 'has(self.type) && self.type == ''Health''
+                                    ?  has(self.health) : !has(self.health)'
+                              uid:
+                                description: uid identifies the insight over time
+                                maxLength: 63
+                                minLength: 1
+                                pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                                type: string
+                            required:
+                            - acquiredAt
+                            - insight
+                            - uid
+                            type: object
+                          maxItems: 128
+                          type: array
+                          x-kubernetes-list-map-keys:
+                          - uid
+                          x-kubernetes-list-type: map
+                        name:
+                          description: name is the name of the insight producer
+                          maxLength: 253
+                          type: string
+                          x-kubernetes-validations:
+                          - message: a lowercase RFC 1123 subdomain must consist of
+                              lower case alphanumeric characters, '-' or '.', and
+                              must start and end with an alphanumeric character.
+                            rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                      required:
+                      - name
+                      type: object
+                    maxItems: 16
+                    type: array
+                    x-kubernetes-list-map-keys:
+                    - name
+                    x-kubernetes-list-type: map
+                  poolResource:
+                    description: |-
+                      poolResource is the resource that represents control plane node pool, typically a MachineConfigPool. This field
+                      is optional because some form factors (like Hosted Control Planes) do not have dedicated control plane node pools,
+                      and also because the information may be unknown temporarily.
+                    properties:
+                      group:
+                        description: group of the object being referenced, if any
+                        maxLength: 253
+                        type: string
+                        x-kubernetes-validations:
+                        - message: a lowercase RFC 1123 subdomain must consist of
+                            lower case alphanumeric characters, '-' or '.', and must
+                            start and end with an alphanumeric character.
+                          rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                      name:
+                        description: name of the object being referenced
+                        maxLength: 253
+                        type: string
+                        x-kubernetes-validations:
+                        - message: a lowercase RFC 1123 subdomain must consist of
+                            lower case alphanumeric characters, '-' or '.', and must
+                            start and end with an alphanumeric character.
+                          rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                      namespace:
+                        description: namespace of the object being referenced, if
+                          any
+                        maxLength: 253
+                        pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                        type: string
+                      resource:
+                        description: resource of object being referenced
+                        maxLength: 253
+                        type: string
+                        x-kubernetes-validations:
+                        - message: a lowercase RFC 1123 subdomain must consist of
+                            lower case alphanumeric characters, '-' or '.', and must
+                            start and end with an alphanumeric character.
+                          rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                    required:
+                    - name
+                    - resource
+                    type: object
+                    x-kubernetes-validations:
+                    - message: controlPlane.poolResource must be a machineconfigpools.machineconfiguration.openshift.io
+                        resource
+                      rule: (self.group == 'machineconfiguration.openshift.io' &&
+                        self.resource == 'machineconfigpools')
+                    - message: a poolResource must be a machineconfigpools.machineconfiguration.openshift.io
+                        resource
+                      rule: has(self.resource) && (self.resource == 'machineconfigpools'
+                        && self.group == 'machineconfiguration.openshift.io'
+                  resource:
+                    description: |-
+                      resource is the resource that represents the control plane. It will typically be a ClusterVersion resource
+                      in standalone OpenShift and HostedCluster in Hosted Control Planes. This field is optional because the information
+                      may be unknown temporarily.
+                    properties:
+                      group:
+                        description: group of the object being referenced, if any
+                        maxLength: 253
+                        type: string
+                        x-kubernetes-validations:
+                        - message: a lowercase RFC 1123 subdomain must consist of
+                            lower case alphanumeric characters, '-' or '.', and must
+                            start and end with an alphanumeric character.
+                          rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                      name:
+                        description: name of the object being referenced
+                        maxLength: 253
+                        type: string
+                        x-kubernetes-validations:
+                        - message: a lowercase RFC 1123 subdomain must consist of
+                            lower case alphanumeric characters, '-' or '.', and must
+                            start and end with an alphanumeric character.
+                          rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                      namespace:
+                        description: namespace of the object being referenced, if
+                          any
+                        maxLength: 253
+                        pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                        type: string
+                      resource:
+                        description: resource of object being referenced
+                        maxLength: 253
+                        type: string
+                        x-kubernetes-validations:
+                        - message: a lowercase RFC 1123 subdomain must consist of
+                            lower case alphanumeric characters, '-' or '.', and must
+                            start and end with an alphanumeric character.
+                          rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                    required:
+                    - name
+                    - resource
+                    type: object
+                    x-kubernetes-validations:
+                    - message: controlPlane.resource must be either a clusterversions.config.openshift.io
+                        or a hostedclusters.hypershift.openshift.io resource
+                      rule: (self.group == 'config.openshift.io' && self.resource
+                        == 'clusterversions') || (self.group == 'hypershift.openshift.io'
+                        && self.resource == 'hostedclusters')
+                type: object
+              workerPools:
+                description: |-
+                  workerPools contains summaries and insights related to the worker pools update. Each item in the list represents
+                  a single worker pool and carries all insights reported for it by informers. It has at most 32 items.
+                                      so hundreds, and hypothetically more empty ones.
+                items:
+                  description: Pool contains a summary and insights related to a node
+                    pool update
+                  properties:
+                    conditions:
+                      description: |-
+                        conditions provides details about the node pool update. This is a high-level status of an abstract "pool of nodes"
+                        concept, and will typically be the controller's interpretation / summarization of the insights it received (that
+                        will be placed in .informers[].insights for clients that want to perform further analysis of the data).
+                        Known condition types are:
+                        * "Updating": Whether the pool of nodes is currently updating or not
+                      items:
+                        description: Condition contains details for one aspect of
+                          the current state of this API Resource.
+                        properties:
+                          lastTransitionTime:
+                            description: |-
+                              lastTransitionTime is the last time the condition transitioned from one status to another.
+                              This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                            format: date-time
+                            type: string
+                          message:
+                            description: |-
+                              message is a human readable message indicating details about the transition.
+                              This may be an empty string.
+                            maxLength: 32768
+                            type: string
+                          observedGeneration:
+                            description: |-
+                              observedGeneration represents the .metadata.generation that the condition was set based upon.
+                              For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                              with respect to the current state of the instance.
+                            format: int64
+                            minimum: 0
+                            type: integer
+                          reason:
+                            description: |-
+                              reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                              Producers of specific condition types may define expected values and meanings for this field,
+                              and whether the values are considered a guaranteed API.
+                              The value should be a CamelCase string.
+                              This field may not be empty.
+                            maxLength: 1024
+                            minLength: 1
+                            pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                            type: string
+                          status:
+                            description: status of the condition, one of True, False,
+                              Unknown.
+                            enum:
+                            - "True"
+                            - "False"
+                            - Unknown
+                            type: string
+                          type:
+                            description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                            maxLength: 316
+                            pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                            type: string
+                        required:
+                        - lastTransitionTime
+                        - message
+                        - reason
+                        - status
+                        - type
+                        type: object
+                      maxItems: 10
+                      type: array
+                      x-kubernetes-list-map-keys:
+                      - type
+                      x-kubernetes-list-type: map
+                    informers:
+                      description: |-
+                        informers is a list of insight producers. An informer is a system, internal or external to the cluster, that
+                        produces units of information relevant to the update process, either about its progress or its health. Each
+                        informer in the list is identified by a name, and contains a list of insights it contributed to the Update Status API,
+                        relevant to the process of updating this pool of nodes.
+                      items:
+                        description: |-
+                          WorkerPoolInformer represents a system, internal or external to the cluster, that  produces units of information
+                          relevant to the update process, either about its progress or its health. Each informer is identified by a name, and
+                          contains a list of insights it contributed to the Update Status API, relevant to a specific worker pool.
+                        properties:
+                          insights:
+                            description: |-
+                              insights is a list of insights produced by this producer. Insights are units of information relevant to an update
+                              progress or health information. There are two types of update insights: status insights and health insights. The
+                              first type are directly tied to the update process, regardless of whether it is proceeding smoothly or not.
+
+                              Status Insights expose the state of a single resource that is directly involved in the update process, usually a resource
+                              that either has a notion of "being updated," (such as a Node or ClusterOperator) or represents a higher-level
+                              abstraction (such as a ClusterVersion resource tahat represents the control plane or MachineConfigPool that represents
+                              a pool of nodes).
+
+                              Health Insights report a state or condition in the cluster that is abnormal or negative and either affects or is
+                              affected by the update. Ideally, none would be generated in a standard healthy update. Health insights communicate
+                              a condition that warrants attention by the cluster administrator.
+                            items:
+                              description: WorkerPoolInsight is a unique piece of
+                                either status/progress or update health information
+                                produced by update informer
+                              properties:
+                                acquiredAt:
+                                  description: acquiredAt is the time when the data
+                                    was acquired by the producer
+                                  format: date-time
+                                  type: string
+                                insight:
+                                  description: insight is a discriminated union of
+                                    all insights types that can be reported for a
+                                    worker pool
+                                  properties:
+                                    health:
+                                      description: |-
+                                        health is a generic health insight about the update. It does not represent a status of any specific
+                                        resource but surfaces actionable information about the health of the cluster or an update
+                                      properties:
+                                        impact:
+                                          description: impact describes the impact
+                                            the reported condition has on the cluster
+                                            or update
+                                          properties:
+                                            description:
+                                              description: |-
+                                                description is a human-oriented, possibly longer-form description of the condition reported by the insight It must
+                                                be shorter than 4096 characters.
+                                              maxLength: 4096
+                                              type: string
+                                            level:
+                                              description: level is the severity of
+                                                the impact. Valid values are Unknown,
+                                                Info, Warning, Error, Critical.
+                                              enum:
+                                              - Unknown
+                                              - Info
+                                              - Warning
+                                              - Error
+                                              - Critical
+                                              type: string
+                                            summary:
+                                              description: summary is a short summary
+                                                of the impact. It must not be empty
+                                                and must be shorter than 256 characters.
+                                              maxLength: 256
+                                              minLength: 1
+                                              type: string
+                                            type:
+                                              description: |-
+                                                type is the type of the impact. Valid values are None, Unknown, API Availability, Cluster Capacity,
+                                                Application Availability, Application Outage, Data Loss, Update Speed, Update Stalled.
+                                              enum:
+                                              - None
+                                              - Unknown
+                                              - API Availability
+                                              - Cluster Capacity
+                                              - Application Availability
+                                              - Application Outage
+                                              - Data Loss
+                                              - Update Speed
+                                              - Update Stalled
+                                              type: string
+                                          required:
+                                          - level
+                                          - summary
+                                          - type
+                                          type: object
+                                        remediation:
+                                          description: remediation contains information
+                                            about how to resolve or prevent the reported
+                                            condition
+                                          properties:
+                                            estimatedFinish:
+                                              description: estimatedFinish is the
+                                                estimated time when the informer expects
+                                                the condition to be resolved, if applicable.
+                                              format: date-time
+                                              type: string
+                                            reference:
+                                              description: reference is a URL where
+                                                administrators can find information
+                                                to resolve or prevent the reported
+                                                condition
+                                              maxLength: 512
+                                              type: string
+                                              x-kubernetes-validations:
+                                              - message: reference must a valid URL
+                                                rule: isURL(self)
+                                          required:
+                                          - reference
+                                          type: object
+                                        scope:
+                                          description: scope is list of objects involved
+                                            in the insight
+                                          properties:
+                                            resources:
+                                              description: resources is a list of
+                                                resources involved in the insight,
+                                                of any group/kind. Maximum 16 resources
+                                                can be listed.
+                                              items:
+                                                description: ResourceRef is a reference
+                                                  to a kubernetes resource, typically
+                                                  involved in an insight
+                                                properties:
+                                                  group:
+                                                    description: group of the object
+                                                      being referenced, if any
+                                                    maxLength: 253
+                                                    type: string
+                                                    x-kubernetes-validations:
+                                                    - message: a lowercase RFC 1123
+                                                        subdomain must consist of
+                                                        lower case alphanumeric characters,
+                                                        '-' or '.', and must start
+                                                        and end with an alphanumeric
+                                                        character.
+                                                      rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                                                  name:
+                                                    description: name of the object
+                                                      being referenced
+                                                    maxLength: 253
+                                                    type: string
+                                                    x-kubernetes-validations:
+                                                    - message: a lowercase RFC 1123
+                                                        subdomain must consist of
+                                                        lower case alphanumeric characters,
+                                                        '-' or '.', and must start
+                                                        and end with an alphanumeric
+                                                        character.
+                                                      rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                                                  namespace:
+                                                    description: namespace of the
+                                                      object being referenced, if
+                                                      any
+                                                    maxLength: 253
+                                                    pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                                                    type: string
+                                                  resource:
+                                                    description: resource of object
+                                                      being referenced
+                                                    maxLength: 253
+                                                    type: string
+                                                    x-kubernetes-validations:
+                                                    - message: a lowercase RFC 1123
+                                                        subdomain must consist of
+                                                        lower case alphanumeric characters,
+                                                        '-' or '.', and must start
+                                                        and end with an alphanumeric
+                                                        character.
+                                                      rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                                                required:
+                                                - name
+                                                - resource
+                                                type: object
+                                              maxItems: 16
+                                              type: array
+                                              x-kubernetes-list-type: atomic
+                                            type:
+                                              description: type is either ControlPlane
+                                                or WorkerPool
+                                              enum:
+                                              - ControlPlane
+                                              - WorkerPool
+                                              type: string
+                                          required:
+                                          - type
+                                          type: object
+                                        startedAt:
+                                          description: startedAt is the time when
+                                            the condition reported by the insight
+                                            started
+                                          format: date-time
+                                          type: string
+                                      required:
+                                      - impact
+                                      - remediation
+                                      - scope
+                                      - startedAt
+                                      type: object
+                                    machineConfigPool:
+                                      description: |-
+                                        machineConfigPool is a status insight about the state of a worker pool update, where the worker pool
+                                        is represented by a MachineConfigPool resource
+                                      properties:
+                                        assessment:
+                                          description: 'assessment is the assessment
+                                            of the machine config pool update process.
+                                            Valid values are: Pending, Completed,
+                                            Degraded, Excluded, Progressing'
+                                          enum:
+                                          - Pending
+                                          - Completed
+                                          - Degraded
+                                          - Excluded
+                                          - Progressing
+                                          type: string
+                                        completion:
+                                          description: completion is a percentage
+                                            of the update completion (0-100)
+                                          format: int32
+                                          maximum: 100
+                                          minimum: 0
+                                          type: integer
+                                        conditions:
+                                          description: |-
+                                            conditions provide details about the machine config pool update. It contains at most 10 items. Known conditions are:
+                                            - Updating: whether the pool is updating; When Updating=False, the reason field can be Pending, Updated or Excluded
+                                          items:
+                                            description: Condition contains details
+                                              for one aspect of the current state
+                                              of this API Resource.
+                                            properties:
+                                              lastTransitionTime:
+                                                description: |-
+                                                  lastTransitionTime is the last time the condition transitioned from one status to another.
+                                                  This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                                                format: date-time
+                                                type: string
+                                              message:
+                                                description: |-
+                                                  message is a human readable message indicating details about the transition.
+                                                  This may be an empty string.
+                                                maxLength: 32768
+                                                type: string
+                                              observedGeneration:
+                                                description: |-
+                                                  observedGeneration represents the .metadata.generation that the condition was set based upon.
+                                                  For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                                                  with respect to the current state of the instance.
+                                                format: int64
+                                                minimum: 0
+                                                type: integer
+                                              reason:
+                                                description: |-
+                                                  reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                                                  Producers of specific condition types may define expected values and meanings for this field,
+                                                  and whether the values are considered a guaranteed API.
+                                                  The value should be a CamelCase string.
+                                                  This field may not be empty.
+                                                maxLength: 1024
+                                                minLength: 1
+                                                pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                                                type: string
+                                              status:
+                                                description: status of the condition,
+                                                  one of True, False, Unknown.
+                                                enum:
+                                                - "True"
+                                                - "False"
+                                                - Unknown
+                                                type: string
+                                              type:
+                                                description: type of condition in
+                                                  CamelCase or in foo.example.com/CamelCase.
+                                                maxLength: 316
+                                                pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                                                type: string
+                                            required:
+                                            - lastTransitionTime
+                                            - message
+                                            - reason
+                                            - status
+                                            - type
+                                            type: object
+                                          maxItems: 10
+                                          type: array
+                                          x-kubernetes-list-map-keys:
+                                          - type
+                                          x-kubernetes-list-type: map
+                                        name:
+                                          description: name is the name of the machine
+                                            config pool
+                                          maxLength: 64
+                                          minLength: 1
+                                          pattern: ^[a-z0-9-]+$
+                                          type: string
+                                        resource:
+                                          description: |-
+                                            resource is the MachineConfigPool resource that represents the pool
+
+                                            Note: By OpenShift API conventions, in isolation this should be a specialized reference that refers just to
+                                            resource name (because the rest is implied by status insight type). However, because we use resource references in
+                                            many places and this API is intended to be consumed by clients, not produced, consistency seems to be more valuable
+                                            than type safety for producers.
+                                          properties:
+                                            group:
+                                              description: group of the object being
+                                                referenced, if any
+                                              maxLength: 253
+                                              type: string
+                                              x-kubernetes-validations:
+                                              - message: a lowercase RFC 1123 subdomain
+                                                  must consist of lower case alphanumeric
+                                                  characters, '-' or '.', and must
+                                                  start and end with an alphanumeric
+                                                  character.
+                                                rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                                            name:
+                                              description: name of the object being
+                                                referenced
+                                              maxLength: 253
+                                              type: string
+                                              x-kubernetes-validations:
+                                              - message: a lowercase RFC 1123 subdomain
+                                                  must consist of lower case alphanumeric
+                                                  characters, '-' or '.', and must
+                                                  start and end with an alphanumeric
+                                                  character.
+                                                rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                                            namespace:
+                                              description: namespace of the object
+                                                being referenced, if any
+                                              maxLength: 253
+                                              pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                                              type: string
+                                            resource:
+                                              description: resource of object being
+                                                referenced
+                                              maxLength: 253
+                                              type: string
+                                              x-kubernetes-validations:
+                                              - message: a lowercase RFC 1123 subdomain
+                                                  must consist of lower case alphanumeric
+                                                  characters, '-' or '.', and must
+                                                  start and end with an alphanumeric
+                                                  character.
+                                                rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                                          required:
+                                          - name
+                                          - resource
+                                          type: object
+                                          x-kubernetes-validations:
+                                          - message: resource must be a machineconfigpools.machineconfiguration.openshift.io
+                                              resource
+                                            rule: self.group == 'machineconfiguration.openshift.io'
+                                              && self.resource == 'machineconfigpools'
+                                          - message: a poolResource must be a machineconfigpools.machineconfiguration.openshift.io
+                                              resource
+                                            rule: has(self.resource) && (self.resource
+                                              == 'machineconfigpools' && self.group
+                                              == 'machineconfiguration.openshift.io'
+                                        scopeType:
+                                          description: scopeType describes whether
+                                            the pool is a control plane or a worker
+                                            pool
+                                          enum:
+                                          - ControlPlane
+                                          - WorkerPool
+                                          type: string
+                                        summaries:
+                                          description: summaries is a list of counts
+                                            of nodes matching certain criteria (e.g.
+                                            updated, degraded, etc.). Maximum 16 items
+                                            can be listed.
+                                          items:
+                                            description: NodeSummary is a count of
+                                              nodes matching certain criteria (e.g.
+                                              updated, degraded, etc.)
+                                            properties:
+                                              count:
+                                                description: count is the number of
+                                                  nodes matching the criteria
+                                                format: int32
+                                                maximum: 4096
+                                                minimum: 0
+                                                type: integer
+                                              type:
+                                                description: |-
+                                                  type is the type of the summary. Valid values are: Total, Available, Progressing, Outdated, Draining, Excluded, Degraded
+                                                  The summaries are not exclusive, a single node may be counted in multiple summaries.
+                                                enum:
+                                                - Total
+                                                - Available
+                                                - Progressing
+                                                - Outdated
+                                                - Draining
+                                                - Excluded
+                                                - Degraded
+                                                type: string
+                                            required:
+                                            - count
+                                            - type
+                                            type: object
+                                          maxItems: 16
+                                          type: array
+                                          x-kubernetes-list-map-keys:
+                                          - type
+                                          x-kubernetes-list-type: map
+                                      required:
+                                      - assessment
+                                      - completion
+                                      - name
+                                      - resource
+                                      - scopeType
+                                      type: object
+                                    node:
+                                      description: |-
+                                        node is a status insight about the state of a worker node update, where the worker node is represented
+                                        by a Node resource
+                                      properties:
+                                        conditions:
+                                          description: |-
+                                            conditions provides details about the control plane update. Known conditions are:
+                                            - Updating: whether the Node is updating; When Updating=False, the reason field can be Updated, Pending, or Paused. When Updating=True, the reason field can be Draining, Updating, or Rebooting
+                                            - Available: whether the Node is available (accepting workloads)
+                                            - Degraded: whether the Node is degraded (problem observed)
+                                          items:
+                                            description: Condition contains details
+                                              for one aspect of the current state
+                                              of this API Resource.
+                                            properties:
+                                              lastTransitionTime:
+                                                description: |-
+                                                  lastTransitionTime is the last time the condition transitioned from one status to another.
+                                                  This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                                                format: date-time
+                                                type: string
+                                              message:
+                                                description: |-
+                                                  message is a human readable message indicating details about the transition.
+                                                  This may be an empty string.
+                                                maxLength: 32768
+                                                type: string
+                                              observedGeneration:
+                                                description: |-
+                                                  observedGeneration represents the .metadata.generation that the condition was set based upon.
+                                                  For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                                                  with respect to the current state of the instance.
+                                                format: int64
+                                                minimum: 0
+                                                type: integer
+                                              reason:
+                                                description: |-
+                                                  reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                                                  Producers of specific condition types may define expected values and meanings for this field,
+                                                  and whether the values are considered a guaranteed API.
+                                                  The value should be a CamelCase string.
+                                                  This field may not be empty.
+                                                maxLength: 1024
+                                                minLength: 1
+                                                pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                                                type: string
+                                              status:
+                                                description: status of the condition,
+                                                  one of True, False, Unknown.
+                                                enum:
+                                                - "True"
+                                                - "False"
+                                                - Unknown
+                                                type: string
+                                              type:
+                                                description: type of condition in
+                                                  CamelCase or in foo.example.com/CamelCase.
+                                                maxLength: 316
+                                                pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                                                type: string
+                                            required:
+                                            - lastTransitionTime
+                                            - message
+                                            - reason
+                                            - status
+                                            - type
+                                            type: object
+                                          maxItems: 10
+                                          type: array
+                                          x-kubernetes-list-map-keys:
+                                          - type
+                                          x-kubernetes-list-type: map
+                                        estimatedToComplete:
+                                          description: estimatedToComplete is the
+                                            estimated time to complete the update,
+                                            when known
+                                          format: duration
+                                          type: string
+                                        message:
+                                          description: message is a short human-readable
+                                            message about the node update status.
+                                            It must be shorter than 100 characters.
+                                          maxLength: 100
+                                          type: string
+                                        name:
+                                          description: name is the name of the node
+                                          maxLength: 253
+                                          minLength: 1
+                                          type: string
+                                        poolResource:
+                                          description: |-
+                                            poolResource is the resource that represents the pool the node is a member of
+
+                                            Note: By OpenShift API conventions, in isolation this should probably be a specialized reference type that allows
+                                            only the "correct" resource types to be referenced (here, MachineConfigPool or NodePool). However, because we use
+                                            resource references in many places and this API is intended to be consumed by clients, not produced, consistency
+                                            seems to be more valuable than type safety for producers.
+                                          properties:
+                                            group:
+                                              description: group of the object being
+                                                referenced, if any
+                                              maxLength: 253
+                                              type: string
+                                              x-kubernetes-validations:
+                                              - message: a lowercase RFC 1123 subdomain
+                                                  must consist of lower case alphanumeric
+                                                  characters, '-' or '.', and must
+                                                  start and end with an alphanumeric
+                                                  character.
+                                                rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                                            name:
+                                              description: name of the object being
+                                                referenced
+                                              maxLength: 253
+                                              type: string
+                                              x-kubernetes-validations:
+                                              - message: a lowercase RFC 1123 subdomain
+                                                  must consist of lower case alphanumeric
+                                                  characters, '-' or '.', and must
+                                                  start and end with an alphanumeric
+                                                  character.
+                                                rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                                            namespace:
+                                              description: namespace of the object
+                                                being referenced, if any
+                                              maxLength: 253
+                                              pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                                              type: string
+                                            resource:
+                                              description: resource of object being
+                                                referenced
+                                              maxLength: 253
+                                              type: string
+                                              x-kubernetes-validations:
+                                              - message: a lowercase RFC 1123 subdomain
+                                                  must consist of lower case alphanumeric
+                                                  characters, '-' or '.', and must
+                                                  start and end with an alphanumeric
+                                                  character.
+                                                rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                                          required:
+                                          - name
+                                          - resource
+                                          type: object
+                                          x-kubernetes-validations:
+                                          - message: resource must be a machineconfigpools.machineconfiguration.openshift.io
+                                              resource
+                                            rule: self.group == 'machineconfiguration.openshift.io'
+                                              && self.resource == 'machineconfigpools'
+                                          - message: a poolResource must be a machineconfigpools.machineconfiguration.openshift.io
+                                              resource
+                                            rule: has(self.resource) && (self.resource
+                                              == 'machineconfigpools' && self.group
+                                              == 'machineconfiguration.openshift.io'
+                                        resource:
+                                          description: |-
+                                            resource is the Node resource that represents the node
+
+                                            Note: By OpenShift API conventions, in isolation this should be a specialized reference that refers just to
+                                            resource name (because the rest is implied by status insight type). However, because we use resource references in
+                                            many places and this API is intended to be consumed by clients, not produced, consistency seems to be more valuable
+                                            than type safety for producers.
+                                          properties:
+                                            group:
+                                              description: group of the object being
+                                                referenced, if any
+                                              maxLength: 253
+                                              type: string
+                                              x-kubernetes-validations:
+                                              - message: a lowercase RFC 1123 subdomain
+                                                  must consist of lower case alphanumeric
+                                                  characters, '-' or '.', and must
+                                                  start and end with an alphanumeric
+                                                  character.
+                                                rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                                            name:
+                                              description: name of the object being
+                                                referenced
+                                              maxLength: 253
+                                              type: string
+                                              x-kubernetes-validations:
+                                              - message: a lowercase RFC 1123 subdomain
+                                                  must consist of lower case alphanumeric
+                                                  characters, '-' or '.', and must
+                                                  start and end with an alphanumeric
+                                                  character.
+                                                rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                                            namespace:
+                                              description: namespace of the object
+                                                being referenced, if any
+                                              maxLength: 253
+                                              pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                                              type: string
+                                            resource:
+                                              description: resource of object being
+                                                referenced
+                                              maxLength: 253
+                                              type: string
+                                              x-kubernetes-validations:
+                                              - message: a lowercase RFC 1123 subdomain
+                                                  must consist of lower case alphanumeric
+                                                  characters, '-' or '.', and must
+                                                  start and end with an alphanumeric
+                                                  character.
+                                                rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                                          required:
+                                          - name
+                                          - resource
+                                          type: object
+                                          x-kubernetes-validations:
+                                          - message: resource must be a nodes.core.k8s.io
+                                              resource
+                                            rule: self.group == '' && self.resource
+                                              == 'nodes'
+                                        scopeType:
+                                          description: scopeType describes whether
+                                            the node belongs to control plane or a
+                                            worker pool
+                                          enum:
+                                          - ControlPlane
+                                          - WorkerPool
+                                          type: string
+                                        version:
+                                          description: version is the version of the
+                                            node, when known
+                                          maxLength: 64
+                                          pattern: ^((?:0|[1-9]\d*)[.](?:0|[1-9]\d*)[.](?:0|[1-9]\d*)(?:-(?:(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:[.](?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?)?$
+                                          type: string
+                                      required:
+                                      - name
+                                      - poolResource
+                                      - resource
+                                      - scopeType
+                                      type: object
+                                    type:
+                                      description: |-
+                                        type identifies the type of the update insight, one of: MachineConfigPool, Node, Health
+                                        MachineConfigPool, Node types are progress insights about a resource directly involved in the update process
+                                        Health insights report a state or condition in the cluster that is abnormal or negative and either affects or is
+                                        affected by the update.
+                                      enum:
+                                      - MachineConfigPool
+                                      - Node
+                                      - Health
+                                      type: string
+                                  required:
+                                  - type
+                                  type: object
+                                  x-kubernetes-validations:
+                                  - message: machineConfigPool is required when type
+                                      is MachineConfigPool, and forbidden otherwise
+                                    rule: 'has(self.type) && self.type == ''MachineConfigPool''
+                                      ?  has(self.machineConfigPool) : !has(self.machineConfigPool)'
+                                  - message: node is required when type is Node, and
+                                      forbidden otherwise
+                                    rule: 'has(self.type) && self.type == ''Node''
+                                      ?  has(self.node) : !has(self.node)'
+                                  - message: health is required when type is Health,
+                                      and forbidden otherwise
+                                    rule: 'has(self.type) && self.type == ''Health''
+                                      ?  has(self.health) : !has(self.health)'
+                                uid:
+                                  description: uid identifies the insight over time
+                                  maxLength: 63
+                                  minLength: 1
+                                  pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                                  type: string
+                              required:
+                              - acquiredAt
+                              - insight
+                              - uid
+                              type: object
+                            maxItems: 1024
+                            type: array
+                            x-kubernetes-list-map-keys:
+                            - uid
+                            x-kubernetes-list-type: map
+                          name:
+                            description: name is the name of the insight producer
+                            maxLength: 253
+                            type: string
+                            x-kubernetes-validations:
+                            - message: a lowercase RFC 1123 subdomain must consist
+                                of lower case alphanumeric characters, '-' or '.',
+                                and must start and end with an alphanumeric character.
+                              rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                        required:
+                        - name
+                        type: object
+                      maxItems: 16
+                      type: array
+                      x-kubernetes-list-map-keys:
+                      - name
+                      x-kubernetes-list-type: map
+                    name:
+                      description: name is the name of the pool, follows the same
+                        rules as a Kubernetes resource name (RFC-1123 subdomain)
+                      maxLength: 253
+                      type: string
+                      x-kubernetes-validations:
+                      - message: a lowercase RFC 1123 subdomain must consist of lower
+                          case alphanumeric characters, '-' or '.', and must start
+                          and end with an alphanumeric character.
+                        rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                    resource:
+                      description: |-
+                        resource is the resource that represents the pool, either a MachineConfigPool in Standalone OpenShift or a NodePool
+                        in Hosted Control Planes.
+                      properties:
+                        group:
+                          description: group of the object being referenced, if any
+                          maxLength: 253
+                          type: string
+                          x-kubernetes-validations:
+                          - message: a lowercase RFC 1123 subdomain must consist of
+                              lower case alphanumeric characters, '-' or '.', and
+                              must start and end with an alphanumeric character.
+                            rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                        name:
+                          description: name of the object being referenced
+                          maxLength: 253
+                          type: string
+                          x-kubernetes-validations:
+                          - message: a lowercase RFC 1123 subdomain must consist of
+                              lower case alphanumeric characters, '-' or '.', and
+                              must start and end with an alphanumeric character.
+                            rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                        namespace:
+                          description: namespace of the object being referenced, if
+                            any
+                          maxLength: 253
+                          pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                          type: string
+                        resource:
+                          description: resource of object being referenced
+                          maxLength: 253
+                          type: string
+                          x-kubernetes-validations:
+                          - message: a lowercase RFC 1123 subdomain must consist of
+                              lower case alphanumeric characters, '-' or '.', and
+                              must start and end with an alphanumeric character.
+                            rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                      required:
+                      - name
+                      - resource
+                      type: object
+                      x-kubernetes-validations:
+                      - message: workerPools[].poolResource must be a machineconfigpools.machineconfiguration.openshift.io
+                          or hostedclusters.hypershift.openshift.io resource
+                        rule: (self.group == 'machineconfiguration.openshift.io' &&
+                          self.resource == 'machineconfigpools') || (self.group ==
+                          'hypershift.openshift.io' && self.resource == 'nodepools')
+                      - message: a poolResource must be a machineconfigpools.machineconfiguration.openshift.io
+                          resource
+                        rule: has(self.resource) && (self.resource == 'machineconfigpools'
+                          && self.group == 'machineconfiguration.openshift.io'
+                  required:
+                  - name
+                  - resource
+                  type: object
+                  x-kubernetes-validations:
+                  - message: workerPools .name must match .resource.name
+                    rule: self.name == self.resource.name
+                maxItems: 32
+                type: array
+                x-kubernetes-list-map-keys:
+                - name
+                x-kubernetes-list-type: map
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

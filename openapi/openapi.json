@@ -35655,6 +35655,10 @@
           "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "udnName": {
+          "description": "udnName is the User Defined Networks Name to apply to a project Reference of regex and max length: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set",
+          "type": "string"
         }
       }
     },

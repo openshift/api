@@ -60822,6 +60822,13 @@ func schema_openshift_api_project_v1_ProjectRequest(ref common.ReferenceCallback
 							Format:      "",
 						},
 					},
+					"udnName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "udnName is the User Defined Networks Name to apply to a project Reference of regex and max length: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 			},
 		},

@@ -247,6 +247,9 @@
                         "name": "ExternalOIDC"
                     },
                     {
+                        "name": "ExternalOIDCWithUIDAndExtraClaimMappings"
+                    },
+                    {
                         "name": "GCPLabelsTags"
                     },
                     {

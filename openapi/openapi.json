@@ -33966,7 +33966,8 @@
       "properties": {
         "preemptionPolicy": {
           "description": "preemptionPolicy are the types of preemption Kueue allows. preemptionPolicy is an optional field. The allowed values are Classical and FairSharing. Classical means that an incoming workload, which does not fit within the unusued quota, is eligible to issue preemptions when the requests of the workload are below the resource flavor's nominal quota or borrowWithinCohort is enabled on the Cluster Queue. FairSharing means that ClusterQueues with pending Workloads can preempt other Workloads in their cohort until the preempting ClusterQueue obtains an equal or weighted share of the borrowable resources. The borrowable resources are the unused nominal quota of all the ClusterQueues in the cohort. FairSharing is a more heavy weight algorithm. The default is Classical.",
-          "type": "string"
+          "type": "string",
+          "default": ""
         }
       }
     },

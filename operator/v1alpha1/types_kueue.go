@@ -56,20 +56,20 @@ type KueueConfiguration struct {
 	// that have the queue-name label.
 	// This field is optional.
 	// +optional
-	WorkloadManagement *WorkloadManagement `json:"workloadManagement,omitempty"`
+	WorkloadManagement *WorkloadManagement `json:"workloadManagement"`
 	// gangScheduling controls how Kueue admits workloads.
 	// Gang Scheduling is the act of all or nothing scheduling,
 	// where workloads do not become ready within a certain period, they may be evicted and later retried.
 	// This field is optional.
 	// If gangScheduling is not specified, gang scheduling will be disabled.
 	// +optional
-	GangScheduling *GangScheduling `json:"gangScheduling,omitempty"`
+	GangScheduling *GangScheduling `json:"gangScheduling"`
 	// preemption is the process of evicting one or more admitted Workloads to accommodate another Workload.
 	// Kueue has classical premption and preemption via fair sharing.
 	// preemption is optional.
 	// If preemption is not specified, preemption will be set to Classical.
 	// +optional
-	Preemption *Preemption `json:"preemption,omitempty"`
+	Preemption *Preemption `json:"preemption"`
 }
 
 // KueueStatus defines the observed state of Kueue
@@ -178,7 +178,7 @@ type Integrations struct {
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=32
 	// +optional
-	ExternalFrameworks []ExternalFramework `json:"externalFrameworks,omitempty"`
+	ExternalFrameworks []ExternalFramework `json:"externalFrameworks"`
 	// labelKeysToCopy are a list of label keys that are copied once a workload is created.
 	// These keys are persisted to the internal Kueue workload object.
 	// If not specified, only the Kueue labels will be copied.
@@ -189,7 +189,7 @@ type Integrations struct {
 	// +listType=map
 	// +listMapKey=key
 	// +optional
-	LabelKeysToCopy []LabelKeys `json:"labelKeysToCopy,omitempty"`
+	LabelKeysToCopy []LabelKeys `json:"labelKeysToCopy"`
 }
 
 type LabelKeys struct {
@@ -242,7 +242,7 @@ type GangScheduling struct {
 	// byWorkload configures how Kueue will process workloads for admission.
 	// byWorkload is required when policy is ByWorkload, and forbidden otherwise.
 	// +optional
-	ByWorkload *ByWorkload `json:"byWorkload,omitempty"`
+	ByWorkload *ByWorkload `json:"byWorkload"`
 }
 
 // ByWorkload controls how admission is done
@@ -311,5 +311,5 @@ type Preemption struct {
 	// FairSharing is a more heavy weight algorithm.
 	// The default is Classical.
 	// +optional
-	PreemptionPolicy PreemptionPolicy `json:"preemptionPolicy,omitempty"`
+	PreemptionPolicy PreemptionPolicy `json:"preemptionPolicy"`
 }

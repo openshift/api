@@ -589,12 +589,15 @@ func listTestResultForVariant(featureGate string, jobVariant JobVariant) (*Testi
 			// example: release-4.18, release-4.17
 			release = strings.TrimPrefix(currentRelease, "release-")
 		} else {
+			// Temporary until branching on 2025-04-18, or we find a way to fix sippy to return the dev branch sooner.
+			release = "4.19"
+
 			// means its main branch
-			var err error
-			release, err = getLatestRelease()
-			if err != nil {
-				return nil, fmt.Errorf("couldn't fetch latest release version: %w", err)
-			}
+			// var err error
+			// release, err = getLatestRelease()
+			// if err != nil {
+			// 	return nil, fmt.Errorf("couldn't fetch latest release version: %w", err)
+			// }
 		}
 		queryParams := currURL.Query()
 		queryParams.Add("release", release)

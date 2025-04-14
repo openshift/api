@@ -9,7 +9,6 @@ metadata:
     displayName: ConsolePlugin
     include.release.openshift.io/ibm-cloud-managed: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
-    release.openshift.io/feature-set: DevPreviewNoUpgrade
     service.beta.openshift.io/inject-cabundle: "true"
   name: consoleplugins.console.openshift.io
 spec:

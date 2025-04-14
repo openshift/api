@@ -40,7 +40,7 @@ var (
 					reportProblemsToJiraComponent("Management Console").
 					contactPerson("jhadvig").
 					productScope(ocpSpecific).
-					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+					enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					enhancementPR("https://github.com/openshift/enhancements/pull/1706").
 					mustRegister()
 

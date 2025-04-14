@@ -38,9 +38,6 @@
                         "name": "ClusterVersionOperatorConfiguration"
                     },
                     {
-                        "name": "ConsolePluginContentSecurityPolicy"
-                    },
-                    {
                         "name": "DNSNameResolver"
                     },
                     {
@@ -239,6 +236,9 @@
                     },
                     {
                         "name": "CloudDualStackNodeIPs"
+                    },
+                    {
+                        "name": "ConsolePluginContentSecurityPolicy"
                     },
                     {
                         "name": "DisableKubeletCloudCredentialProviders"

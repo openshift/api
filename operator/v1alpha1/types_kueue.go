@@ -52,24 +52,27 @@ type KueueConfiguration struct {
 	// workloadManagement controls how Kueue manages workloads.
 	// By default Kueue will manage workloads that have a queue-name label.
 	// Workloads that are missing the queue-name will be ignored by Kueue.
-	// If tworkloadManagement is not specified, Kueue will only manage workloads
-	// that have the queue-name label.
+	// If workloadManagement is not specified, the operator will decide the
+	// default.
+	// This default could change over time.
 	// This field is optional.
 	// +optional
-	WorkloadManagement *WorkloadManagement `json:"workloadManagement"`
+	WorkloadManagement WorkloadManagement `json:"workloadManagement"`
 	// gangScheduling controls how Kueue admits workloads.
 	// Gang Scheduling is the act of all or nothing scheduling,
 	// where workloads do not become ready within a certain period, they may be evicted and later retried.
 	// This field is optional.
-	// If gangScheduling is not specified, gang scheduling will be disabled.
+	// If gangScheduling is not specified, the operator will decide the default.
+	// This default could change over time.
 	// +optional
-	GangScheduling *GangScheduling `json:"gangScheduling"`
+	GangScheduling GangScheduling `json:"gangScheduling"`
 	// preemption is the process of evicting one or more admitted Workloads to accommodate another Workload.
 	// Kueue has classical premption and preemption via fair sharing.
 	// preemption is optional.
-	// If preemption is not specified, preemption will be set to Classical.
+	// If preemption is not specified, the operator will decide the default.
+	// This default could change over time.
 	// +optional
-	Preemption *Preemption `json:"preemption"`
+	Preemption Preemption `json:"preemption"`
 }
 
 // KueueStatus defines the observed state of Kueue
@@ -123,10 +126,10 @@ type ExternalFramework struct {
 	// Must be a valid DNS 1123 subdomain consisting of of lower-case alphanumeric characters,
 	// hyphens and periods, of at most 253 characters in length.
 	// Each period separated segment within the subdomain must start and end with an alphanumeric character.
-	// group uses matches and not cel functions to allow for use on 4.17.
+	// +group uses matches and not cel functions to allow for use on 4.17.
 	// +kubebuilder:validation:MaxLength=253
 	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:XValidation:rule="self.matches(r'^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$') && self.size() <= 253"
+	// +kubebuilder:validation:XValidation:rule="self.matches(r'^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$')"
 	// +required
 	Group string `json:"group"`
 	// resource is the Resource type of the external framework.
@@ -134,20 +137,20 @@ type ExternalFramework struct {
 	// Must be a valid DNS 1123 label consisting of a lower-case alphanumeric string
 	// and hyphens of at most 63 characters in length.
 	// The value must start and end with an alphanumeric character.
-	// resource uses matches and not cel functions to allow for use on 4.17.
+	// +resource uses matches and not cel functions to allow for use on 4.17.
 	// +kubebuilder:validation:MaxLength=63
 	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:XValidation:rule="self.matches(r'^[a-z0-9]([-a-z0-9]*[a-z0-9])?$') && self.size() <= 63"
+	// +kubebuilder:validation:XValidation:rule="self.matches(r'^[a-z0-9]([-a-z0-9]*[a-z0-9])?$')"
 	// +required
 	Resource string `json:"resource"`
 	// version is the version of the api (e.g. v1alpha1, v1beta1, v1).
 	// Must be a valid DNS 1035 label consisting of a lower-case alphanumeric string
 	// and hyphens of at most 63 characters in length.
 	// The value must start with an alphabetic character and end with an alphanumeric character.
-	// version uses matches and not cel functions to allow for use on 4.17.
+	// +version uses matches and not cel functions to allow for use on 4.17.
 	// +kubebuilder:validation:MaxLength=63
 	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:XValidation:rule="self.matches(r'^[a-z0-9]([-a-z0-9]*[a-z0-9])?$') && self.size() <= 63"
+	// +kubebuilder:validation:XValidation:rule="self.matches(r'^[a-z0-9]([-a-z0-9]*[a-z0-9])?$')"
 	// +required
 	Version string `json:"version"`
 }
@@ -171,11 +174,9 @@ type Integrations struct {
 	// that are managed for Kueue by external controllers.
 	// externalFrameworks are optional and should only be used if you have an external controller
 	// that integrates with Kueue.
-	// externalFrameworks, if specified, must have at least 1 item.
 	// externalFrameworks, if specified, can not have more than 32 items.
 	// +listType=map
 	// +listMapKey=group
-	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=32
 	// +optional
 	ExternalFrameworks []ExternalFramework `json:"externalFrameworks"`
@@ -183,9 +184,7 @@ type Integrations struct {
 	// These keys are persisted to the internal Kueue workload object.
 	// If not specified, only the Kueue labels will be copied.
 	// labelKeysToCopy, if specified, is limited to a maximum of 64 items.
-	// labelKeysToCopy, if specified, must have at least one item.
 	// +kubebuilder:validation:MaxItems=64
-	// +kubebuilder:validation:MinItems=1
 	// +listType=map
 	// +listMapKey=key
 	// +optional
@@ -202,14 +201,15 @@ type LabelKeys struct {
 	// hyphens and periods, of at most 253 characters in length.
 	// Each period separated segment within the subdomain must start and end with an alphanumeric character.
 	// The optional prefix and the name are separate by a forward slash (/).
+	// +key uses matches and not cel functions to allow for use on 4.17.
 	// +kubebuilder:validation:MaxLength=317
 	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:XValidation:rule="self.matches(r'^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?([a-z0-9]([-a-z0-9]*[a-z0-9])?)$') && self.size() <= 317"
+	// +kubebuilder:validation:XValidation:rule="self.matches(r'^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?([a-z0-9]([-a-z0-9]*[a-z0-9])?)$')"
 	// +required
 	Key string `json:"key"`
 }
 
-// +kubebuilder:validation:Enum=ByWorkload;None
+// +kubebuilder:validation:Enum=ByWorkload;None;""
 type GangSchedulingPolicy string
 
 const (
@@ -217,7 +217,7 @@ const (
 	GangSchedulingPolicyNone       GangSchedulingPolicy = "None"
 )
 
-// +kubebuilder:validation:Enum=Parallel;Sequential
+// +kubebuilder:validation:Enum="";Parallel;Sequential
 type GangSchedulingWorkloadAdmission string
 
 const (
@@ -231,7 +231,7 @@ const (
 // +union
 type GangScheduling struct {
 	// policy allows you to enable and configure gang scheduling.
-	// The allowed values are ByWorkload and None.
+	// The allowed values are ByWorkload, None and "".
 	// When set to ByWorkload, this means each workload is processed and considered
 	// for admission as a single unit.
 	// Where workloads do not become ready over time, the entire workload may then be evicted and retried at a later time.
@@ -242,7 +242,7 @@ type GangScheduling struct {
 	// byWorkload configures how Kueue will process workloads for admission.
 	// byWorkload is required when policy is ByWorkload, and forbidden otherwise.
 	// +optional
-	ByWorkload *ByWorkload `json:"byWorkload"`
+	ByWorkload ByWorkload `json:"byWorkload"`
 }
 
 // ByWorkload controls how admission is done
@@ -250,7 +250,7 @@ type ByWorkload struct {
 	// admission controls how Kueue will process workloads.
 	// admission is a required field with policy is set to ByWorkload.
 	// admission is only required if policy is specified to ByWorkload.
-	// Allowed values are Sequential and Parallel.
+	// Allowed values are Sequential, Parallel and "".
 	// When admission is set to Sequential, only pods from the currently processing workload will be admitted.
 	// Once all pods from the current workload are admitted, and ready, Kueue will process the next workload.
 	// Sequential processing may slow down admission when the cluster has sufficient capacity for multiple workloads,
@@ -262,7 +262,7 @@ type ByWorkload struct {
 	Admission GangSchedulingWorkloadAdmission `json:"admission"`
 }
 
-// +kubebuilder:validation:Enum=QueueName;None
+// +kubebuilder:validation:Enum="";QueueName;None
 type LabelPolicy string
 
 const (
@@ -274,7 +274,7 @@ type WorkloadManagement struct {
 	// labelPolicy controls whether or not Kueue reconciles
 	// jobs that don't set the label kueue.x-k8s.io/queue-name.
 	// labelPolicy is a required field.
-	// The allowed values are QueueName and None.
+	// The allowed values are QueueName, None and "".
 	// None means that workloads will be suspended on
 	// creation and a label will be added via a mutating webhook.
 	// This will be applied for all integrations that Kueue manages.
@@ -286,7 +286,7 @@ type WorkloadManagement struct {
 	LabelPolicy LabelPolicy `json:"labelPolicy"`
 }
 
-// +kubebuilder:validation:Enum=Classical;FairSharing
+// +kubebuilder:validation:Enum="";Classical;FairSharing
 type PreemptionPolicy string
 
 const (
@@ -297,7 +297,7 @@ const (
 type Preemption struct {
 	// preemptionPolicy are the types of preemption Kueue allows.
 	// preemptionPolicy is an optional field.
-	// The allowed values are Classical and FairSharing.
+	// The allowed values are Classical, FairSharing and "".
 	// Classical means that an incoming workload, which does
 	// not fit within the unusued quota, is eligible to issue preemptions
 	// when the requests of the workload are below the

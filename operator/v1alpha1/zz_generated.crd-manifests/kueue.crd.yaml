@@ -54,7 +54,8 @@ spec:
                       Gang Scheduling is the act of all or nothing scheduling,
                       where workloads do not become ready within a certain period, they may be evicted and later retried.
                       This field is optional.
-                      If gangScheduling is not specified, gang scheduling will be disabled.
+                      If gangScheduling is not specified, the operator will decide the default.
+                      This default could change over time.
                     properties:
                       byWorkload:
                         description: |-
@@ -66,7 +67,7 @@ spec:
                               admission controls how Kueue will process workloads.
                               admission is a required field with policy is set to ByWorkload.
                               admission is only required if policy is specified to ByWorkload.
-                              Allowed values are Sequential and Parallel.
+                              Allowed values are Sequential, Parallel and "".
                               When admission is set to Sequential, only pods from the currently processing workload will be admitted.
                               Once all pods from the current workload are admitted, and ready, Kueue will process the next workload.
                               Sequential processing may slow down admission when the cluster has sufficient capacity for multiple workloads,
@@ -75,6 +76,7 @@ spec:
                               This may lead to a deadlock where workloads are in contention for cluster capacity and
                               pods from another workload having successfully scheduled prevent pods from the current workload scheduling.
                             enum:
+                            - ""
                             - Parallel
                             - Sequential
                             type: string
@@ -84,7 +86,7 @@ spec:
                       policy:
                         description: |-
                           policy allows you to enable and configure gang scheduling.
-                          The allowed values are ByWorkload and None.
+                          The allowed values are ByWorkload, None and "".
                           When set to ByWorkload, this means each workload is processed and considered
                           for admission as a single unit.
                           Where workloads do not become ready over time, the entire workload may then be evicted and retried at a later time.
@@ -92,6 +94,7 @@ spec:
                         enum:
                         - ByWorkload
                         - None
+                        - ""
                         type: string
                     required:
                     - policy
@@ -114,7 +117,6 @@ spec:
                           that are managed for Kueue by external controllers.
                           externalFrameworks are optional and should only be used if you have an external controller
                           that integrates with Kueue.
-                          externalFrameworks, if specified, must have at least 1 item.
                           externalFrameworks, if specified, can not have more than 32 items.
                         items:
                           description: |-
@@ -128,13 +130,11 @@ spec:
                                 Must be a valid DNS 1123 subdomain consisting of of lower-case alphanumeric characters,
                                 hyphens and periods, of at most 253 characters in length.
                                 Each period separated segment within the subdomain must start and end with an alphanumeric character.
-                                group uses matches and not cel functions to allow for use on 4.17.
                               maxLength: 253
                               minLength: 1
                               type: string
                               x-kubernetes-validations:
                               - rule: self.matches(r'^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$')
-                                  && self.size() <= 253
                             resource:
                               description: |-
                                 resource is the Resource type of the external framework.
@@ -142,33 +142,28 @@ spec:
                                 Must be a valid DNS 1123 label consisting of a lower-case alphanumeric string
                                 and hyphens of at most 63 characters in length.
                                 The value must start and end with an alphanumeric character.
-                                resource uses matches and not cel functions to allow for use on 4.17.
                               maxLength: 63
                               minLength: 1
                               type: string
                               x-kubernetes-validations:
                               - rule: self.matches(r'^[a-z0-9]([-a-z0-9]*[a-z0-9])?$')
-                                  && self.size() <= 63
                             version:
                               description: |-
                                 version is the version of the api (e.g. v1alpha1, v1beta1, v1).
                                 Must be a valid DNS 1035 label consisting of a lower-case alphanumeric string
                                 and hyphens of at most 63 characters in length.
                                 The value must start with an alphabetic character and end with an alphanumeric character.
-                                version uses matches and not cel functions to allow for use on 4.17.
                               maxLength: 63
                               minLength: 1
                               type: string
                               x-kubernetes-validations:
                               - rule: self.matches(r'^[a-z0-9]([-a-z0-9]*[a-z0-9])?$')
-                                  && self.size() <= 63
                           required:
                           - group
                           - resource
                           - version
                           type: object
                         maxItems: 32
-                        minItems: 1
                         type: array
                         x-kubernetes-list-map-keys:
                         - group
@@ -210,7 +205,6 @@ spec:
                           These keys are persisted to the internal Kueue workload object.
                           If not specified, only the Kueue labels will be copied.
                           labelKeysToCopy, if specified, is limited to a maximum of 64 items.
-                          labelKeysToCopy, if specified, must have at least one item.
                         items:
                           properties:
                             key:
@@ -229,12 +223,10 @@ spec:
                               type: string
                               x-kubernetes-validations:
                               - rule: self.matches(r'^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?([a-z0-9]([-a-z0-9]*[a-z0-9])?)$')
-                                  && self.size() <= 317
                           required:
                           - key
                           type: object
                         maxItems: 64
-                        minItems: 1
                         type: array
                         x-kubernetes-list-map-keys:
                         - key
@@ -247,13 +239,14 @@ spec:
                       preemption is the process of evicting one or more admitted Workloads to accommodate another Workload.
                       Kueue has classical premption and preemption via fair sharing.
                       preemption is optional.
-                      If preemption is not specified, preemption will be set to Classical.
+                      If preemption is not specified, the operator will decide the default.
+                      This default could change over time.
                     properties:
                       preemptionPolicy:
                         description: |-
                           preemptionPolicy are the types of preemption Kueue allows.
                           preemptionPolicy is an optional field.
-                          The allowed values are Classical and FairSharing.
+                          The allowed values are Classical, FairSharing and "".
                           Classical means that an incoming workload, which does
                           not fit within the unusued quota, is eligible to issue preemptions
                           when the requests of the workload are below the
@@ -267,6 +260,7 @@ spec:
                           FairSharing is a more heavy weight algorithm.
                           The default is Classical.
                         enum:
+                        - ""
                         - Classical
                         - FairSharing
                         type: string
@@ -276,8 +270,9 @@ spec:
                       workloadManagement controls how Kueue manages workloads.
                       By default Kueue will manage workloads that have a queue-name label.
                       Workloads that are missing the queue-name will be ignored by Kueue.
-                      If tworkloadManagement is not specified, Kueue will only manage workloads
-                      that have the queue-name label.
+                      If workloadManagement is not specified, the operator will decide the
+                      default.
+                      This default could change over time.
                       This field is optional.
                     properties:
                       labelPolicy:
@@ -285,7 +280,7 @@ spec:
                           labelPolicy controls whether or not Kueue reconciles
                           jobs that don't set the label kueue.x-k8s.io/queue-name.
                           labelPolicy is a required field.
-                          The allowed values are QueueName and None.
+                          The allowed values are QueueName, None and "".
                           None means that workloads will be suspended on
                           creation and a label will be added via a mutating webhook.
                           This will be applied for all integrations that Kueue manages.
@@ -294,6 +289,7 @@ spec:
                           If this label is not present on the workload, then Kueue will
                           ignore this workload.
                         enum:
+                        - ""
                         - QueueName
                         - None
                         type: string

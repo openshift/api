@@ -167,7 +167,7 @@ type Integrations struct {
 	// +kubebuilder:validation:MaxItems=14
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:XValidation:rule="self.all(x, self.exists_one(y, x == y))",message="each item in frameworks must be unique"
-	// +listType=atomic
+	// +listType=set
 	// +required
 	Frameworks []KueueIntegration `json:"frameworks"`
 	// externalFrameworks are a list of GroupVersionResources
@@ -235,6 +235,8 @@ type GangScheduling struct {
 	// When set to ByWorkload, this means each workload is processed and considered
 	// for admission as a single unit.
 	// Where workloads do not become ready over time, the entire workload may then be evicted and retried at a later time.
+	// None means gang scheduling is disabled.
+	// "" means the the operator will decide the default.
 	// policy is a required field.
 	// +required
 	// +unionDiscriminator
@@ -242,13 +244,12 @@ type GangScheduling struct {
 	// byWorkload configures how Kueue will process workloads for admission.
 	// byWorkload is required when policy is ByWorkload, and forbidden otherwise.
 	// +optional
-	ByWorkload ByWorkload `json:"byWorkload"`
+	ByWorkload *ByWorkload `json:"byWorkload,omitempty"`
 }
 
 // ByWorkload controls how admission is done
 type ByWorkload struct {
 	// admission controls how Kueue will process workloads.
-	// admission is a required field with policy is set to ByWorkload.
 	// admission is only required if policy is specified to ByWorkload.
 	// Allowed values are Sequential, Parallel and "".
 	// When admission is set to Sequential, only pods from the currently processing workload will be admitted.
@@ -258,6 +259,7 @@ type ByWorkload struct {
 	// When set to Parallel, pods from any workload will be admitted at any time.
 	// This may lead to a deadlock where workloads are in contention for cluster capacity and
 	// pods from another workload having successfully scheduled prevent pods from the current workload scheduling.
+	// When set to "", the operator will decide
 	// +required
 	Admission GangSchedulingWorkloadAdmission `json:"admission"`
 }
@@ -280,6 +282,8 @@ type WorkloadManagement struct {
 	// This will be applied for all integrations that Kueue manages.
 	// QueueName means that workloads that are managed
 	// by Kueue must have a label kueue.x-k8s.io/queue-name.
+	// "" is our default setting which the operator will
+	// decide the default.
 	// If this label is not present on the workload, then Kueue will
 	// ignore this workload.
 	// +required
@@ -309,7 +313,8 @@ type Preemption struct {
 	// The borrowable resources are the unused nominal quota
 	// of all the ClusterQueues in the cohort.
 	// FairSharing is a more heavy weight algorithm.
-	// The default is Classical.
-	// +optional
+	// "" is our default setting which means that the operator will
+	// decide the default.
+	// +required
 	PreemptionPolicy PreemptionPolicy `json:"preemptionPolicy"`
 }

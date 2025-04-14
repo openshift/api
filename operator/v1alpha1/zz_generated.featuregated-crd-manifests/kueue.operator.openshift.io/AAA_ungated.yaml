@@ -63,7 +63,6 @@ spec:
                           admission:
                             description: |-
                               admission controls how Kueue will process workloads.
-                              admission is a required field with policy is set to ByWorkload.
                               admission is only required if policy is specified to ByWorkload.
                               Allowed values are Sequential, Parallel and "".
                               When admission is set to Sequential, only pods from the currently processing workload will be admitted.
@@ -193,7 +192,7 @@ spec:
                         maxItems: 14
                         minItems: 1
                         type: array
-                        x-kubernetes-list-type: atomic
+                        x-kubernetes-list-type: set
                         x-kubernetes-validations:
                         - message: each item in frameworks must be unique
                           rule: self.all(x, self.exists_one(y, x == y))
@@ -256,12 +255,15 @@ spec:
                           The borrowable resources are the unused nominal quota
                           of all the ClusterQueues in the cohort.
                           FairSharing is a more heavy weight algorithm.
-                          The default is Classical.
+                          "" is our default setting which means that the operator will
+                          decide the default.
                         enum:
                         - ""
                         - Classical
                         - FairSharing
                         type: string
+                    required:
+                    - preemptionPolicy
                     type: object
                   workloadManagement:
                     description: |-
@@ -284,6 +286,8 @@ spec:
                           This will be applied for all integrations that Kueue manages.
                           QueueName means that workloads that are managed
                           by Kueue must have a label kueue.x-k8s.io/queue-name.
+                          "" is our default setting which the operator will
+                          decide the default.
                           If this label is not present on the workload, then Kueue will
                           ignore this workload.
                         enum:

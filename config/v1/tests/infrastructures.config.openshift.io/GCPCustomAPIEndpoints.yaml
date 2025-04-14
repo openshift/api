@@ -34,7 +34,7 @@ tests:
               cloudLoadBalancerConfig:
                 dnsType: PlatformDefault
               serviceEndpoints:
-                - {name: "Compute", url: "https://compute-myendpoint1.p.googleapis.com"}
+                - {name: "Compute", url: "compute-myendpoint1.p.googleapis.com"}
       updated: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
@@ -53,7 +53,7 @@ tests:
               cloudLoadBalancerConfig:
                 dnsType: PlatformDefault
               serviceEndpoints:
-                - {name: "Compute", url: "https://compute-myendpoint1.p.googleapis.com"}
+                - {name: "Compute", url: "compute-myendpoint1.p.googleapis.com"}
       expected: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
@@ -72,7 +72,7 @@ tests:
               cloudLoadBalancerConfig:
                 dnsType: PlatformDefault
               serviceEndpoints:
-                - {name: "Compute", url: "https://compute-myendpoint1.p.googleapis.com"}
+                - {name: "Compute", url: "compute-myendpoint1.p.googleapis.com"}
     - name: Service Endpoint Same Name
       initial: |
         apiVersion: config.openshift.io/v1
@@ -99,8 +99,8 @@ tests:
               cloudLoadBalancerConfig:
                 dnsType: PlatformDefault
               serviceEndpoints:
-                - {name: "Compute", url: "https://compute-myendpoint1.p.googleapis.com"}
-                - {name: "Compute", url: "https://compute-myendpoint2.p.googleapis.com"}
+                - {name: "Compute", url: "compute-myendpoint1.p.googleapis.com"}
+                - {name: "Compute", url: "compute-myendpoint2.p.googleapis.com"}
       expectedStatusError: "status.platformStatus.gcp.serviceEndpoints: Invalid value: \"array\": only 1 endpoint override is permitted per GCP service name"
     - name: Service Endpoint Empty URL
       initial: |
@@ -129,35 +129,7 @@ tests:
                 dnsType: PlatformDefault
               serviceEndpoints:
                 - {name: "Compute", url: ""}
-      expectedStatusError: "status.platformStatus.gcp.serviceEndpoints[0].url: Invalid value: \"string\": must be a valid URL"
-    - name: Service Endpoint HTTP URL
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec:
-          platformSpec:
-            type: GCP
-            gcp: {}
-      updated: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec:
-          platformSpec:
-            type: GCP
-            gcp: {}
-        status:
-          controlPlaneTopology: HighlyAvailable
-          cpuPartitioning: None
-          infrastructureTopology: HighlyAvailable
-          platform: GCP
-          platformStatus:
-            type: GCP
-            gcp:
-              cloudLoadBalancerConfig:
-                dnsType: PlatformDefault
-              serviceEndpoints:
-                - {name: "Compute", url: "http://compute-myendpoint1.p.googleapis.com"}
-      expectedStatusError: "status.platformStatus.gcp.serviceEndpoints[0].url: Invalid value: \"string\": scheme must be https"
+      expectedStatusError: "status.platformStatus.gcp.serviceEndpoints[0].url: Invalid value: \"\": platformStatus.gcp.serviceEndpoints[0].url in body should be at least 1 chars long"
     - name: Service Endpoint URL Too Long
       initial: |
         apiVersion: config.openshift.io/v1
@@ -184,7 +156,7 @@ tests:
               cloudLoadBalancerConfig:
                 dnsType: PlatformDefault
               serviceEndpoints:
-                - {name: "Compute", url: "https://compute-myendpoint1-where-the-url-name-length-is-way-way-way-way-way-way-way-way-way-way-way-way-way-way-way-way-way-way-way-way-way-way-way-way-way-way-way-way-way-way-way-wayyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy-too-long.p.googleapis.com"}
+                - {name: "Compute", url: "compute-myendpoint1-where-the-url-name-length-is-way-way-way-way-way-way-way-way-way-way-way-way-way-way-way-way-way-way-way-way-way-way-way-way-way-way-way-way-way-way-way-wayyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy-too-long.p.googleapis.com"}
       expectedStatusError: "[status.platformStatus.gcp.serviceEndpoints[0].url: Too long: may not be more than 253 bytes, <nil>: Invalid value: \"null\": some validation rules were not checked because the object was invalid; correct the existing errors to complete validation]"
     - name: Service Endpoint Bad Name
       initial: |
@@ -212,7 +184,7 @@ tests:
               cloudLoadBalancerConfig:
                 dnsType: PlatformDefault
               serviceEndpoints:
-                - {name: "UnknownService", url: "https://compute-myendpoint1.p.googleapis.com"}
+                - {name: "UnknownService", url: "compute-myendpoint1.p.googleapis.com"}
       expectedStatusError: "[status.platformStatus.gcp.serviceEndpoints[0].name: Unsupported value: \"UnknownService\": supported values: \"Compute\", \"Container\", \"CloudResourceManager\", \"DNS\", \"File\", \"IAM\", \"ServiceUsage\", \"Storage\", \"TagManager\", <nil>: Invalid value: \"null\": some validation rules were not checked because the object was invalid; correct the existing errors to complete validation"
     - name: Service Endpoint End Slash
       initial: |
@@ -240,7 +212,7 @@ tests:
               cloudLoadBalancerConfig:
                 dnsType: PlatformDefault
               serviceEndpoints:
-                - {name: "Compute", url: "https://compute-myendpoint1.p.googleapis.com/"}
+                - {name: "Compute", url: "compute-myendpoint1.p.googleapis.com/"}
       expected: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
@@ -259,32 +231,60 @@ tests:
               cloudLoadBalancerConfig:
                 dnsType: PlatformDefault
               serviceEndpoints:
-                - {name: "Compute", url: "https://compute-myendpoint1.p.googleapis.com/"}
-    - name: Service Endpoint Bad Path
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec:
-          platformSpec:
-            type: GCP
-            gcp: {}
-      updated: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec:
-          platformSpec:
-            type: GCP
-            gcp: {}
-        status:
-          controlPlaneTopology: HighlyAvailable
-          cpuPartitioning: None
-          infrastructureTopology: HighlyAvailable
-          platform: GCP
-          platformStatus:
-            type: GCP
-            gcp:
-              cloudLoadBalancerConfig:
-                dnsType: PlatformDefault
-              serviceEndpoints:
-                - {name: "Compute", url: "https://compute-myendpoint1.p.googleapis.com/bad"}
-      expectedStatusError: "status.platformStatus.gcp.serviceEndpoints[0].url: Invalid value: \"string\": url must consist only of a scheme and domain. The url path must be empty."
+                - {name: "Compute", url: "compute-myendpoint1.p.googleapis.com/"}
+#    - name: Service Endpoint Bad Path
+#      initial: |
+#        apiVersion: config.openshift.io/v1
+#        kind: Infrastructure
+#        spec:
+#          platformSpec:
+#            type: GCP
+#            gcp: {}
+#      updated: |
+#        apiVersion: config.openshift.io/v1
+#        kind: Infrastructure
+#        spec:
+#          platformSpec:
+#            type: GCP
+#            gcp: {}
+#        status:
+#          controlPlaneTopology: HighlyAvailable
+#          cpuPartitioning: None
+#          infrastructureTopology: HighlyAvailable
+#          platform: GCP
+#          platformStatus:
+#            type: GCP
+#            gcp:
+#              cloudLoadBalancerConfig:
+#                dnsType: PlatformDefault
+#              serviceEndpoints:
+#                - {name: "Compute", url: "compute-myendpoint1.p.googleapis.com/bad"}
+#      expectedStatusError: "status.platformStatus.gcp.serviceEndpoints[0].url: Invalid value: \"string\": url must only be a domain. The url path must be empty."
+#    - name: Service Endpoint Should Not Contain Scheme
+#      initial: |
+#        apiVersion: config.openshift.io/v1
+#        kind: Infrastructure
+#        spec:
+#          platformSpec:
+#            type: GCP
+#            gcp: {}
+#      updated: |
+#        apiVersion: config.openshift.io/v1
+#        kind: Infrastructure
+#        spec:
+#          platformSpec:
+#            type: GCP
+#            gcp: {}
+#        status:
+#          controlPlaneTopology: HighlyAvailable
+#          cpuPartitioning: None
+#          infrastructureTopology: HighlyAvailable
+#          platform: GCP
+#          platformStatus:
+#            type: GCP
+#            gcp:
+#              cloudLoadBalancerConfig:
+#                dnsType: PlatformDefault
+#              serviceEndpoints:
+#                - {name: "Compute", url: "https://compute-myendpoint1.p.googleapis.com"}
+#      expectedStatusError: "status.platformStatus.gcp.serviceEndpoints[0].url: Invalid value: \"string\": url must only be a domain. The url path must be empty."

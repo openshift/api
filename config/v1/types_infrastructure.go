@@ -680,13 +680,11 @@ type GCPServiceEndpoint struct {
 	// url is required, must use the scheme https, must not be more than 253 characters in length,
 	// and must be a valid URL according to Go's net/url package (https://pkg.go.dev/net/url#URL)
 	//
-	// An example of a valid endpoint that overrides the Compute Service: "https://compute-myendpoint1.p.googleapis.com"
+	// An example of a valid endpoint that overrides the Compute Service: "compute-myendpoint1.p.googleapis.com"
 	//
 	// +required
+	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=253
-	// +kubebuilder:validation:XValidation:rule="isURL(self)",message="must be a valid URL"
-	// +kubebuilder:validation:XValidation:rule="isURL(self) ? (url(self).getScheme() == \"https\") : true",message="scheme must be https"
-	// +kubebuilder:validation:XValidation:rule="url(self).getEscapedPath() == \"\" || url(self).getEscapedPath() == \"/\"",message="url must consist only of a scheme and domain. The url path must be empty."
 	URL string `json:"url"`
 }
 

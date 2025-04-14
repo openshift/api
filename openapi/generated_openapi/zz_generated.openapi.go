@@ -12680,7 +12680,7 @@ func schema_openshift_api_config_v1_GCPServiceEndpoint(ref common.ReferenceCallb
 					},
 					"url": {
 						SchemaProps: spec.SchemaProps{
-							Description: "url is a fully qualified URI that overrides the default endpoint for a client using the GCP service specified in the name field. url is required, must use the scheme https, must not be more than 253 characters in length, and must be a valid URL according to Go's net/url package (https://pkg.go.dev/net/url#URL)\n\nAn example of a valid endpoint that overrides the Compute Service: \"https://compute-myendpoint1.p.googleapis.com\"",
+							Description: "url is a fully qualified URI that overrides the default endpoint for a client using the GCP service specified in the name field. url is required, must use the scheme https, must not be more than 253 characters in length, and must be a valid URL according to Go's net/url package (https://pkg.go.dev/net/url#URL)\n\nAn example of a valid endpoint that overrides the Compute Service: \"compute-myendpoint1.p.googleapis.com\"",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",

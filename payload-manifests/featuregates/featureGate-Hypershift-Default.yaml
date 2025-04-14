@@ -71,6 +71,9 @@
                         "name": "GCPCustomAPIEndpoints"
                     },
                     {
+                        "name": "GatewayAPI"
+                    },
+                    {
                         "name": "GatewayAPIController"
                     },
                     {
@@ -248,9 +251,6 @@
                     },
                     {
                         "name": "GCPLabelsTags"
-                    },
-                    {
-                        "name": "GatewayAPI"
                     },
                     {
                         "name": "HardwareSpeed"

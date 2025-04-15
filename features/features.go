@@ -233,6 +233,7 @@ var (
 						productScope(ocpSpecific).
 						enhancementPR(legacyFeatureGateWithoutEnhancement).
 						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						enableForClusterProfile(SelfManaged, configv1.Default). // Promote to GA only for SelfManaged
 						mustRegister()
 
 	FeatureGateCPMSMachineNamePrefix = newFeatureGate("CPMSMachineNamePrefix").

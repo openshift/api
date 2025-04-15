@@ -320,6 +320,7 @@ infrastructures.config.openshift.io:
   - GCPCustomAPIEndpoints
   - GCPLabelsTags
   - HighlyAvailableArbiter
+  - HighlyAvailableArbiter+DualReplica
   - NutanixMultiSubnets
   - VSphereHostVMGroupZonal
   - VSphereMultiNetworks

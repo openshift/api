@@ -6,6 +6,7 @@ metadata:
     api.openshift.io/filename-cvo-runlevel: "0000_10"
     api.openshift.io/filename-operator: config-operator
     api.openshift.io/filename-ordering: "01"
+    feature-gate.release.openshift.io/DualReplica: "true"
     feature-gate.release.openshift.io/HighlyAvailableArbiter: "true"
     release.openshift.io/bootstrap-required: "true"
   name: infrastructures.config.openshift.io
@@ -1038,6 +1039,7 @@ spec:
                 - HighlyAvailable
                 - HighlyAvailableArbiter
                 - SingleReplica
+                - DualReplica
                 - External
                 type: string
               cpuPartitioning:

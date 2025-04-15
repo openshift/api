@@ -22,6 +22,9 @@
                         "name": "ClusterVersionOperatorConfiguration"
                     },
                     {
+                        "name": "DualReplica"
+                    },
+                    {
                         "name": "EventedPLEG"
                     },
                     {
@@ -103,9 +106,6 @@
                     },
                     {
                         "name": "DisableKubeletCloudCredentialProviders"
-                    },
-                    {
-                        "name": "DualReplica"
                     },
                     {
                         "name": "DyanmicServiceEndpointIBMCloud"

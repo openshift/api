@@ -787,7 +787,7 @@ var (
 		// TODO: Do not go GA until jira issue is resolved: https://issues.redhat.com/browse/OCPEDGE-1637
 		// Annotations must correctly handle either DualReplica or HighlyAvailableArbiter going GA with
 		// the other still in TechPreview.
-		enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+		enableIn(configv1.DevPreviewNoUpgrade).
 		mustRegister()
 
 	FeatureGateGatewayAPIController = newFeatureGate("GatewayAPIController").

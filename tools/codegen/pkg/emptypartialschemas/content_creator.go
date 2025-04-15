@@ -41,6 +41,8 @@ func createFeatureGatedCRDManifests(allCRDInfo map[string]*CRDInfo, outputDir st
 			}
 			filename := filepath.Join(crdDir, yamlName)
 			allowedFiles.Insert(yamlName)
+			// we allow patch files that would require higher control over the generated file
+			allowedFiles.Insert(yamlName + "-patch")
 			klog.V(2).Infof("working with %v in featuregate %q in %v", crdInfo.CRDName, featureGate, yamlName)
 
 			minimalCRD := minimalCRDFor(crdInfo, featureGate)

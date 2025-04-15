@@ -73,6 +73,14 @@ func extractFeatureGatesFromValidationMarker(comments []string, tagName string) 
 		featureGatesToSplit := extractNamedValuesFromSingleLine(tagVal)["featureGate"]
 		featureGates := strings.Split(featureGatesToSplit, ";")
 
+		// TODO: Hack to handle scenario where a featureGate references multiple gates that can have
+		// different feature sets (DevPreview vs TechPreview vs GA)
+		if len(featureGates) > 1 {
+			joinedFeatureGates := strings.Replace(featureGatesToSplit, ";", "+", -1)
+			ret = append(ret, joinedFeatureGates)
+			continue
+		}
+
 		for _, featureGate := range featureGates {
 			if featureGate == `""` {
 				// this happens when the "no feature gate" is needed for things like enums

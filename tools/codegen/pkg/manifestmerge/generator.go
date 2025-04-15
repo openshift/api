@@ -633,9 +633,15 @@ func mergeAllPertinentCRDsInDir(resourcePath string, filter ManifestFilter, star
 		return nil, errs
 	}
 
+	multiFeatureGateFileSet := multiFeatureGateFiles(partialManifestFiles)
+	shouldUseSkipped := []string{}
 	foundAFile := false
 	for _, partialManifest := range partialManifestFiles {
 		path := filepath.Join(resourcePath, partialManifest.Name())
+		if strings.HasSuffix(partialManifest.Name(), "-patch") {
+			// Patch files are not part of partial manifests and should be skipped
+			continue
+		}
 		data, err := os.ReadFile(path)
 		if err != nil {
 			errs = append(errs, fmt.Errorf("could not read file %s: %w", path, err))
@@ -647,6 +653,13 @@ func mergeAllPertinentCRDsInDir(resourcePath string, filter ManifestFilter, star
 			continue
 		}
 		if !useManifest {
+			continue
+		}
+
+		// If we're at this point then the featureGate file is desired to be used for this deployment
+		// so we check if it is part of the skip set, if so, we skip and decide later how to merge.
+		if multiFeatureGateFileSet.Has(partialManifest.Name()) {
+			shouldUseSkipped = append(shouldUseSkipped, partialManifest.Name())
 			continue
 		}
 
@@ -663,6 +676,53 @@ func mergeAllPertinentCRDsInDir(resourcePath string, filter ManifestFilter, star
 		newResult.(*unstructured.Unstructured).SetAnnotations(annotations)
 
 		resultingCRD = newResult
+	}
+
+	// We look through the multiFeatureGateFileSet and determine which files should be merged in
+	for _, filePath := range multiFeatureGateFileSet.UnsortedList() {
+		// Determine which featureGate to merge.
+		//
+		// If there are more than 2 skipped files then the desired merge file is the union file
+		// we check to make sure we only merge a union file that is composed of all skipped features.
+		// TODO: re-evaluate this approach, logic will not work with more than 2 feature gates that target different featureSets
+		//
+		// If there is only 1 skipped file use that as normal
+		mergeFile := false
+		switch {
+		case len(shouldUseSkipped) >= 2 && strings.Contains(filePath, "+"):
+			fileNameContainsAllFeatures := true
+			for _, skipFileName := range shouldUseSkipped {
+				fileExtension := filepath.Ext(skipFileName)
+				if !strings.Contains(filePath, strings.TrimSuffix(skipFileName, fileExtension)) {
+					fileNameContainsAllFeatures = false
+					break
+				}
+			}
+			mergeFile = fileNameContainsAllFeatures
+		case len(shouldUseSkipped) == 1:
+			mergeFile = strings.Contains(filePath, shouldUseSkipped[0])
+		}
+
+		if mergeFile {
+			path := filepath.Join(resourcePath, filePath)
+			data, err := os.ReadFile(path)
+			if err != nil {
+				errs = append(errs, fmt.Errorf("could not read file %s: %w", path, err))
+				continue
+			}
+			newResult, err := mergeCRD(resultingCRD, data, path)
+			if err != nil {
+				errs = append(errs, fmt.Errorf("error applying %q: %w", path, err))
+				continue
+			}
+
+			// I added this to debug which files were being combined part way through the generation
+			annotations := newResult.(*unstructured.Unstructured).GetAnnotations()
+			annotations[fmt.Sprintf("partial-filename.release.openshift.io/%s", path)] = "true"
+			newResult.(*unstructured.Unstructured).SetAnnotations(annotations)
+
+			resultingCRD = newResult
+		}
 	}
 
 	if !foundAFile {

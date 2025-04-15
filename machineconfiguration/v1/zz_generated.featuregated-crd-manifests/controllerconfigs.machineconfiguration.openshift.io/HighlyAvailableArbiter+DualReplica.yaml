@@ -7,6 +7,7 @@ metadata:
     api.openshift.io/filename-operator: machine-config
     api.openshift.io/filename-ordering: "01"
     feature-gate.release.openshift.io/DualReplica: "true"
+    feature-gate.release.openshift.io/HighlyAvailableArbiter: "true"
   labels:
     openshift.io/operator-managed: ""
   name: controllerconfigs.machineconfiguration.openshift.io
@@ -1329,6 +1330,7 @@ spec:
                           its components are not visible within the cluster.
                         enum:
                         - HighlyAvailable
+                        - HighlyAvailableArbiter
                         - SingleReplica
                         - DualReplica
                         - External

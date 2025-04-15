@@ -294,3 +294,41 @@ func (f *Everything) UseCRD(metadata crdForFeatureSet) bool {
 func (f *Everything) String() string {
 	return "Everything"
 }
+
+// multiFeatureGateFiles For situations where openshift:validation:FeatureGateAwareEnum:featureGate
+// has multiple feature gates we need to identify if these files exist.
+// This allows us to drive decisions where multiple feature gates address the same value but for different
+// release gates for example FeatureA is DevPreview but FeatureB is TechPreview on the same value.
+func multiFeatureGateFiles(featureGateFiles []os.DirEntry) sets.Set[string] {
+	shouldSkip := sets.New[string]()
+	foundJoinedFeatureFiles := sets.New[string]()
+	for _, featureFileName := range featureGateFiles {
+		// Identify files of FeatureA+FeatureB.yaml name
+		if strings.Contains(featureFileName.Name(), "+") {
+			foundJoinedFeatureFiles.Insert(featureFileName.Name())
+			fileExtension := filepath.Ext(featureFileName.Name())
+			// Compose file names for FeatureA.yaml or FeatureB.yaml
+			for _, fileName := range strings.Split(featureFileName.Name(), "+") {
+				if !strings.HasSuffix(fileName, fileExtension) {
+					fileName += fileExtension
+				}
+				foundJoinedFeatureFiles.Insert(fileName)
+			}
+		}
+	}
+
+	// Check if the composed files exist
+	for _, feature := range featureGateFiles {
+		if foundJoinedFeatureFiles.Has(feature.Name()) {
+			shouldSkip.Insert(feature.Name())
+		}
+	}
+
+	// If we don't find more than 1 file, then we're in some unknown scenario
+	// where only FeatureA+FeatureB.yaml and FeatureA.yaml exist, return empty list
+	// to avoid any confusion and treat as normal
+	if shouldSkip.Len() <= 1 {
+		return sets.Set[string]{}
+	}
+	return shouldSkip
+}

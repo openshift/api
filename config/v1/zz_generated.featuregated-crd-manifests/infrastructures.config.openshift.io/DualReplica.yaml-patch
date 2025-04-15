@@ -1,0 +1,8 @@
+- op: "replace"
+  path: "/spec/versions/0/schema/openAPIV3Schema/properties/status/properties/controlPlaneTopology/enum"
+  value:
+    - HighlyAvailable
+    - SingleReplica
+    - DualReplica
+    - External
+

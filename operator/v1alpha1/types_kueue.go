@@ -236,7 +236,9 @@ type GangScheduling struct {
 	// for admission as a single unit.
 	// Where workloads do not become ready over time, the entire workload may then be evicted and retried at a later time.
 	// None means gang scheduling is disabled.
-	// "" means the the operator will decide the default.
+	// When set to "", this means no opinion and the operator is left
+	// to choose a reasonable default, which is subject to change over time.
+	// The current default is None.
 	// policy is a required field.
 	// +required
 	// +unionDiscriminator
@@ -259,7 +261,9 @@ type ByWorkload struct {
 	// When set to Parallel, pods from any workload will be admitted at any time.
 	// This may lead to a deadlock where workloads are in contention for cluster capacity and
 	// pods from another workload having successfully scheduled prevent pods from the current workload scheduling.
-	// When set to "", the operator will decide
+	// When set to "", this means no opinion and the operator is left
+	// to choose a reasonable default, which is subject to change over time.
+	// The current default is Parallel.
 	// +required
 	Admission GangSchedulingWorkloadAdmission `json:"admission"`
 }
@@ -282,10 +286,11 @@ type WorkloadManagement struct {
 	// This will be applied for all integrations that Kueue manages.
 	// QueueName means that workloads that are managed
 	// by Kueue must have a label kueue.x-k8s.io/queue-name.
-	// "" is our default setting which the operator will
-	// decide the default.
 	// If this label is not present on the workload, then Kueue will
 	// ignore this workload.
+	// When set to "", this means no opinion and the operator is left
+	// to choose a reasonable default, which is subject to change over time.
+	// The current default is QueueName.
 	// +required
 	LabelPolicy LabelPolicy `json:"labelPolicy"`
 }
@@ -313,8 +318,9 @@ type Preemption struct {
 	// The borrowable resources are the unused nominal quota
 	// of all the ClusterQueues in the cohort.
 	// FairSharing is a more heavy weight algorithm.
-	// "" is our default setting which means that the operator will
-	// decide the default.
+	// When set to "", this means no opinion and the operator is left
+	// to choose a reasonable default, which is subject to change over time.
+	// The current default is Classical.
 	// +required
 	PreemptionPolicy PreemptionPolicy `json:"preemptionPolicy"`
 }

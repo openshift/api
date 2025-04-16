@@ -28,9 +28,6 @@
                         "name": "Example2"
                     },
                     {
-                        "name": "MachineAPIMigration"
-                    },
-                    {
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
                     },
                     {
@@ -178,6 +175,9 @@
                     },
                     {
                         "name": "KMSv1"
+                    },
+                    {
+                        "name": "MachineAPIMigration"
                     },
                     {
                         "name": "MachineAPIProviderOpenStack"

@@ -588,27 +588,28 @@ func listTestResultForVariant(featureGate string, jobVariant JobVariant) (*Testi
 
 	testNameToResults := map[string]*TestResults{}
 	queries := sippy.QueriesFor(jobVariant.Cloud, jobVariant.Architecture, jobVariant.Topology, jobVariant.NetworkStack, testPattern)
+	var release string
+	// if its not main branch, then use the ENV var to determine the release version
+	currentRelease := os.Getenv("PULL_BASE_REF")
+	if strings.Contains(currentRelease, "release-") {
+		// example: release-4.18, release-4.17
+		release = strings.TrimPrefix(currentRelease, "release-")
+	} else {
+		// means its main branch
+		var err error
+		release, err = getLatestRelease()
+		if err != nil {
+			return nil, fmt.Errorf("couldn't fetch latest release version: %w", err)
+		}
+	}
+	fmt.Printf("Querying sippy release %s for test run results\n", release)
+
 	for _, currQuery := range queries {
 		currURL := &url.URL{
 			Scheme: "https",
 			Host:   "sippy.dptools.openshift.org",
 			Path:   "api/tests",
 		}
-		var release string
-		// if its not main branch, then use the ENV var to determine the release version
-		currentRelease := os.Getenv("PULL_BASE_REF")
-		if strings.Contains(currentRelease, "release-") {
-			// example: release-4.18, release-4.17
-			release = strings.TrimPrefix(currentRelease, "release-")
-		} else {
-			// means its main branch
-			var err error
-			release, err = getLatestRelease()
-			if err != nil {
-				return nil, fmt.Errorf("couldn't fetch latest release version: %w", err)
-			}
-		}
-		fmt.Printf("Querying sippy release %s for test run results\n", release)
 		queryParams := currURL.Query()
 		queryParams.Add("release", release)
 		queryParams.Add("period", "default")

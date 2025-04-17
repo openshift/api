@@ -119,9 +119,6 @@
                         "name": "MaxUnavailableStatefulSet"
                     },
                     {
-                        "name": "MetricsCollectionProfiles"
-                    },
-                    {
                         "name": "MinimumKubeletVersion"
                     },
                     {
@@ -263,6 +260,9 @@
                     },
                     {
                         "name": "ManagedBootImagesAWS"
+                    },
+                    {
+                        "name": "MetricsCollectionProfiles"
                     },
                     {
                         "name": "MultiArchInstallAWS"

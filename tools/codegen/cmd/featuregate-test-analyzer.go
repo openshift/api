@@ -533,6 +533,10 @@ func getLatestRelease() (string, error) {
 
 	var result struct {
 		Releases []string `json:"releases"`
+		Dates    map[string]struct {
+			GA               *time.Time `json:"ga,omitempty"`
+			DevelopmentStart *time.Time `json:"development_start,omitempty"`
+		} `json:"dates"`
 	}
 	err = json.Unmarshal(body, &result)
 	if err != nil {
@@ -543,7 +547,15 @@ func getLatestRelease() (string, error) {
 		return "", fmt.Errorf("no releases found")
 	}
 
-	return result.Releases[0], nil
+	for _, release := range result.Releases {
+		if dates, ok := result.Dates[release]; ok {
+			if dates.DevelopmentStart != nil && !dates.DevelopmentStart.IsZero() && time.Now().After(*dates.DevelopmentStart) {
+				return release, nil
+			}
+		}
+	}
+
+	return "", fmt.Errorf("no valid development releases found")
 }
 
 func listTestResultForVariant(featureGate string, jobVariant JobVariant) (*TestingResults, error) {
@@ -589,15 +601,12 @@ func listTestResultForVariant(featureGate string, jobVariant JobVariant) (*Testi
 			// example: release-4.18, release-4.17
 			release = strings.TrimPrefix(currentRelease, "release-")
 		} else {
-			// Temporary until branching on 2025-04-18, or we find a way to fix sippy to return the dev branch sooner.
-			release = "4.19"
-
 			// means its main branch
-			// var err error
-			// release, err = getLatestRelease()
-			// if err != nil {
-			// 	return nil, fmt.Errorf("couldn't fetch latest release version: %w", err)
-			// }
+			var err error
+			release, err = getLatestRelease()
+			if err != nil {
+				return nil, fmt.Errorf("couldn't fetch latest release version: %w", err)
+			}
 		}
 		queryParams := currURL.Query()
 		queryParams.Add("release", release)

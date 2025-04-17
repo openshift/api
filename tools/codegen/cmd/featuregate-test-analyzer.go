@@ -464,7 +464,7 @@ func testResultByName(results []TestResults, testName string) *TestResults {
 }
 
 func listTestResultFor(featureGate string, clusterProfiles sets.Set[string]) (map[JobVariant]*TestingResults, error) {
-	fmt.Printf("Query component readiness for all test run results for feature gate %q on clusterProfile %q\n", featureGate, sets.List(clusterProfiles))
+	fmt.Printf("Query sippy for all test run results for feature gate %q on clusterProfile %q\n", featureGate, sets.List(clusterProfiles))
 
 	results := map[JobVariant]*TestingResults{}
 
@@ -567,7 +567,7 @@ func listTestResultForVariant(featureGate string, jobVariant JobVariant) (*Testi
 		testPattern = fmt.Sprintf("install should succeed")
 	}
 
-	fmt.Printf("Query component readiness for all test run results for pattern %q on variant %#v\n", testPattern, jobVariant)
+	fmt.Printf("Query sippy for all test run results for pattern %q on variant %#v\n", testPattern, jobVariant)
 
 	defaultTransport := &http.Transport{
 		Proxy:                 http.ProxyFromEnvironment,
@@ -608,6 +608,7 @@ func listTestResultForVariant(featureGate string, jobVariant JobVariant) (*Testi
 				return nil, fmt.Errorf("couldn't fetch latest release version: %w", err)
 			}
 		}
+		fmt.Printf("Querying sippy release %s for test run results\n", release)
 		queryParams := currURL.Query()
 		queryParams.Add("release", release)
 		queryParams.Add("period", "default")

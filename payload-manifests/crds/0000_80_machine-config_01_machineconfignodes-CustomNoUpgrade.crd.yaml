@@ -2,7 +2,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    api-approved.openshift.io: https://github.com/openshift/api/pull/2256
+    api-approved.openshift.io: https://github.com/openshift/api/pull/2255
     api.openshift.io/merged-by-featuregates: "true"
     include.release.openshift.io/ibm-cloud-managed: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
@@ -72,12 +72,12 @@ spec:
       name: UncordonedNode
       priority: 1
       type: string
-    name: v1alpha1
+    name: v1
     schema:
       openAPIV3Schema:
         description: |-
           MachineConfigNode describes the health of the Machines on the system
-          Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+          Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
         properties:
           apiVersion:
             description: |-
@@ -177,8 +177,11 @@ spec:
               config node.
             properties:
               conditions:
-                description: conditions represent the observations of a machine config
-                  node's current state.
+                description: |-
+                  conditions represent the observations of a machine config node's current state. Valid types are:
+                  UpdatePrepared, UpdateExecuted, UpdatePostActionComplete, UpdateComplete, Updated, Resumed,
+                  Drained, AppliedFilesAndOS, Cordoned, Uncordoned, RebootedNode, NodeDegraded, PinnedImageSetsProgressing,
+                  and PinnedImageSetsDegraded.
                 items:
                   description: Condition contains details for one aspect of the current
                     state of this API Resource.
@@ -280,7 +283,7 @@ spec:
                   observedGeneration represents the generation of the MachineConfigNode object observed by the Machine Config Operator's controller.
                   This field is updated when the controller observes a change to the desiredConfig in the configVersion of the machine config node spec.
                 format: int64
-                minimum: 0
+                minimum: 1
                 type: integer
                 x-kubernetes-validations:
                 - message: observedGeneration must not decrease
@@ -298,7 +301,7 @@ spec:
                         image set that has most recently been successfully pulled
                         and pinned on this node.
                       format: int32
-                      minimum: 0
+                      minimum: 1
                       type: integer
                       x-kubernetes-validations:
                       - message: currentGeneration must not decrease
@@ -308,7 +311,7 @@ spec:
                         image set that is targeted to be pulled and pinned on this
                         node.
                       format: int32
-                      minimum: 0
+                      minimum: 1
                       type: integer
                       x-kubernetes-validations:
                       - message: desiredGeneration must not decrease
@@ -318,7 +321,7 @@ spec:
                         recent pinned image set that failed to be pulled and pinned
                         on this node.
                       format: int32
-                      minimum: 0
+                      minimum: 1
                       type: integer
                       x-kubernetes-validations:
                       - message: lastFailedGeneration must not decrease

@@ -155,9 +155,6 @@
                         "name": "ProcMountType"
                     },
                     {
-                        "name": "RouteAdvertisements"
-                    },
-                    {
                         "name": "RouteExternalCertificate"
                     },
                     {
@@ -293,6 +290,9 @@
                     },
                     {
                         "name": "PrivateHostedZoneAWS"
+                    },
+                    {
+                        "name": "RouteAdvertisements"
                     },
                     {
                         "name": "SetEIPForNLBIngressController"

@@ -228,6 +228,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.ExternalIPPolicy":                                                schema_openshift_api_config_v1_ExternalIPPolicy(ref),
 		"github.com/openshift/api/config/v1.ExternalPlatformSpec":                                            schema_openshift_api_config_v1_ExternalPlatformSpec(ref),
 		"github.com/openshift/api/config/v1.ExternalPlatformStatus":                                          schema_openshift_api_config_v1_ExternalPlatformStatus(ref),
+		"github.com/openshift/api/config/v1.ExtraMapping":                                                    schema_openshift_api_config_v1_ExtraMapping(ref),
 		"github.com/openshift/api/config/v1.FeatureGate":                                                     schema_openshift_api_config_v1_FeatureGate(ref),
 		"github.com/openshift/api/config/v1.FeatureGateAttributes":                                           schema_openshift_api_config_v1_FeatureGateAttributes(ref),
 		"github.com/openshift/api/config/v1.FeatureGateDetails":                                              schema_openshift_api_config_v1_FeatureGateDetails(ref),
@@ -382,10 +383,12 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.TestReportingStatus":                                             schema_openshift_api_config_v1_TestReportingStatus(ref),
 		"github.com/openshift/api/config/v1.TokenClaimMapping":                                               schema_openshift_api_config_v1_TokenClaimMapping(ref),
 		"github.com/openshift/api/config/v1.TokenClaimMappings":                                              schema_openshift_api_config_v1_TokenClaimMappings(ref),
+		"github.com/openshift/api/config/v1.TokenClaimOrExpressionMapping":                                   schema_openshift_api_config_v1_TokenClaimOrExpressionMapping(ref),
 		"github.com/openshift/api/config/v1.TokenClaimValidationRule":                                        schema_openshift_api_config_v1_TokenClaimValidationRule(ref),
 		"github.com/openshift/api/config/v1.TokenConfig":                                                     schema_openshift_api_config_v1_TokenConfig(ref),
 		"github.com/openshift/api/config/v1.TokenIssuer":                                                     schema_openshift_api_config_v1_TokenIssuer(ref),
 		"github.com/openshift/api/config/v1.TokenRequiredClaim":                                              schema_openshift_api_config_v1_TokenRequiredClaim(ref),
+		"github.com/openshift/api/config/v1.UIDClaimMapping":                                                 schema_openshift_api_config_v1_UIDClaimMapping(ref),
 		"github.com/openshift/api/config/v1.Update":                                                          schema_openshift_api_config_v1_Update(ref),
 		"github.com/openshift/api/config/v1.UpdateHistory":                                                   schema_openshift_api_config_v1_UpdateHistory(ref),
 		"github.com/openshift/api/config/v1.UsernameClaimMapping":                                            schema_openshift_api_config_v1_UsernameClaimMapping(ref),
@@ -12132,6 +12135,52 @@ func schema_openshift_api_config_v1_ExternalPlatformStatus(ref common.ReferenceC
 	}
 }
 
+func schema_openshift_api_config_v1_ExtraMapping(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+<<<<<<< HEAD
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"key": {
+						SchemaProps: spec.SchemaProps{
+<<<<<<< HEAD
+							Description: "key is a required field that specifies the string to use as the extra attribute key.\n\nkey must be a domain-prefix path (e.g 'example.org/foo'). key must not exceed 318 characters in length. key must contain the '/' character, separating the domain and path characters. key must not be empty.\n\nThe domain portion of the key (string of characters prior to the '/') must be a valid RFC1123 subdomain. It must not exceed 253 characters in length. It must start and end with an alphanumeric character. It must only contain lower case alphanumeric characters and '-' or '.'. It must not use the reserved domains, or be subdomains of, kubernetes.io, k8s.io.\n\nThe path portion of the key (string of characters after the '/') must only contain alphanumeric characters, percent-encoded octets, '-', '.', '_', '~', '!', '$', '&', ''', '(', ')', '*', '+', ',', ';', '=', and ':'. It must not exceed 64 characters in length.",
+=======
+							Description: "key is a required field that specifies the string to use as the extra attribute key.\n\nkey must be a domain-prefix path (e.g 'example.org/foo'). key must not exceed 318 characters in length. key must contain the '/' character, separating the domain and path characters. key must not be empty.\n\nThe domain portion of the key (string of characters prior to the '/') must be a valid RFC1123 subdomain. It must not exceed 253 characters in length. It must start and end with an alphanumeric character. It must only contain lower case alphanumeric characters and '-' or '.'. It must not use the reserved domains, or be subdomains of, \"kubernetes.io\", \"k8s.io\", and \"openshift.io\".\n\nThe path portion of the key (string of characters after the '/') must not be empty and must consist of at least one alphanumeric character, percent-encoded octets, '-', '.', '_', '~', '!', '$', '&', ''', '(', ')', '*', '+', ',', ';', '=', and ':'. It must not exceed 64 characters in length.",
+>>>>>>> 08e74ff95815c264035a454e20d0de3023a2ad62
+=======
+				Description: "ExtraMapping allows specifying a key and CEL expression to evaluate the keys' value. It is used to create additional mappings and attributes added to a cluster identity from a provided authentication token.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"key": {
+						SchemaProps: spec.SchemaProps{
+							Description: "key is a required field that specifies the string to use as the extra attribute key.\n\nkey must be a domain-prefix path (e.g 'example.org/foo'). key must not exceed 510 characters in length. key must contain the '/' character, separating the domain and path characters. key must not be empty.\n\nThe domain portion of the key (string of characters prior to the '/') must be a valid RFC1123 subdomain. It must not exceed 253 characters in length. It must start and end with an alphanumeric character. It must only contain lower case alphanumeric characters and '-' or '.'. It must not use the reserved domains, or be subdomains of, \"kubernetes.io\", \"k8s.io\", and \"openshift.io\".\n\nThe path portion of the key (string of characters after the '/') must not be empty and must consist of at least one alphanumeric character, percent-encoded octets, '-', '.', '_', '~', '!', '$', '&', ''', '(', ')', '*', '+', ',', ';', '=', and ':'. It must not exceed 256 characters in length.",
+>>>>>>> d74d0076c40633ea2a0d1577bdeebf78adca8159
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"valueExpression": {
+						SchemaProps: spec.SchemaProps{
+<<<<<<< HEAD
+							Description: "valueExpression is a required field to specify the CEL expression to extract the extra attribute value from a JWT token's claims. valueExpression must produce a string or string array value. \"\", [], and null are treated as the extra mapping not being present. Empty string values within an array are filtered out.\n\nCEL expressions have access to the token claims through a CEL variable, 'claims'. 'claims' is a map of claim names to claim values. For example, the 'sub' claim value can be accessed as 'claims.sub'. Nested claims can be accessed using dot notation ('claims.foo.bar').\n\nvalueExpression must not exceed 1024 characters in length. valueExpression must not be empty.",
+=======
+							Description: "valueExpression is a required field to specify the CEL expression to extract the extra attribute value from a JWT token's claims. valueExpression must produce a string or string array value. \"\", [], and null are treated as the extra mapping not being present. Empty string values within an array are filtered out.\n\nCEL expressions have access to the token claims through a CEL variable, 'claims'. 'claims' is a map of claim names to claim values. For example, the 'sub' claim value can be accessed as 'claims.sub'. Nested claims can be accessed using dot notation ('claims.foo.bar').\n\nvalueExpression must not exceed 4096 characters in length. valueExpression must not be empty.",
+>>>>>>> d74d0076c40633ea2a0d1577bdeebf78adca8159
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"key", "valueExpression"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_config_v1_FeatureGate(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -19359,11 +19408,103 @@ func schema_openshift_api_config_v1_TokenClaimMappings(ref common.ReferenceCallb
 							Ref:         ref("github.com/openshift/api/config/v1.PrefixedClaimMapping"),
 						},
 					},
+					"uid": {
+						SchemaProps: spec.SchemaProps{
+							Description: "uid is an optional field for configuring the claim mapping used to construct the uid for the cluster identity.\n\nWhen using uid.claim to specify the claim it must be a single string value. When using uid.expression the expression must result in a single string value.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose a default, which is subject to change over time. The current default is to use the 'sub' claim.",
+<<<<<<< HEAD
+							Default:     map[string]interface{}{},
+<<<<<<< HEAD
+							Ref:         ref("github.com/openshift/api/config/v1.UIDClaimMapping"),
+=======
+							Ref:         ref("github.com/openshift/api/config/v1.TokenClaimOrExpressionMapping"),
+>>>>>>> 08e74ff95815c264035a454e20d0de3023a2ad62
+=======
+							Ref:         ref("github.com/openshift/api/config/v1.TokenClaimOrExpressionMapping"),
+>>>>>>> d74d0076c40633ea2a0d1577bdeebf78adca8159
+						},
+					},
+					"extra": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"key",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "extra is an optional field for configuring the mappings used to construct the extra attribute for the cluster identity. When omitted, no extra attributes will be present on the cluster identity. key values for extra mappings must be unique. A maximum of 64 extra attribute mappings may be provided.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.ExtraMapping"),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.PrefixedClaimMapping", "github.com/openshift/api/config/v1.UsernameClaimMapping"},
+<<<<<<< HEAD
+<<<<<<< HEAD
+			"github.com/openshift/api/config/v1.ExtraMapping", "github.com/openshift/api/config/v1.PrefixedClaimMapping", "github.com/openshift/api/config/v1.UIDClaimMapping", "github.com/openshift/api/config/v1.UsernameClaimMapping"},
+=======
+			"github.com/openshift/api/config/v1.ExtraMapping", "github.com/openshift/api/config/v1.PrefixedClaimMapping", "github.com/openshift/api/config/v1.TokenClaimOrExpressionMapping", "github.com/openshift/api/config/v1.UsernameClaimMapping"},
+>>>>>>> 08e74ff95815c264035a454e20d0de3023a2ad62
+=======
+			"github.com/openshift/api/config/v1.ExtraMapping", "github.com/openshift/api/config/v1.PrefixedClaimMapping", "github.com/openshift/api/config/v1.TokenClaimOrExpressionMapping", "github.com/openshift/api/config/v1.UsernameClaimMapping"},
+>>>>>>> d74d0076c40633ea2a0d1577bdeebf78adca8159
+	}
+}
+
+func schema_openshift_api_config_v1_TokenClaimOrExpressionMapping(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+<<<<<<< HEAD
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"claim": {
+						SchemaProps: spec.SchemaProps{
+<<<<<<< HEAD
+							Description: "claim is an optional field for specifying the JWT token claim that is used in the mapping. The value of this claim will be assigned to the field in which this mapping is associated.\n\nEither claim or expression must be set. claim must not be specified when expression is set. claim must not exceed 256 characters in length.",
+=======
+							Description: "claim is an optional field for specifying the JWT token claim that is used in the mapping. The value of this claim will be assigned to the field in which this mapping is associated.\n\nEither claim or expression must be set. claim must not be specified when expression is set. When specified, claim must be at least 1 character in length and must not exceed 256 characters in length.",
+>>>>>>> 08e74ff95815c264035a454e20d0de3023a2ad62
+=======
+				Description: "TokenClaimOrExpressionMapping allows specifying either a JWT token claim or CEL expression to be used when mapping claims from an authentication token to cluster identities.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"claim": {
+						SchemaProps: spec.SchemaProps{
+							Description: "claim is an optional field for specifying the JWT token claim that is used in the mapping. The value of this claim will be assigned to the field in which this mapping is associated.\n\nPrecisely one of claim or expression must be set. claim must not be specified when expression is set. When specified, claim must be at least 1 character in length and must not exceed 256 characters in length.",
+>>>>>>> d74d0076c40633ea2a0d1577bdeebf78adca8159
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"expression": {
+						SchemaProps: spec.SchemaProps{
+<<<<<<< HEAD
+<<<<<<< HEAD
+							Description: "expression is an optional field for specifying a CEL expression that produces a string value from JWT token claims.\n\nCEL expressions have access to the token claims through a CEL variable, 'claims'. 'claims' is a map of claim names to claim values. For example, the 'sub' claim value can be accessed as 'claims.sub'. Nested claims can be accessed using dot notation ('claims.foo.bar').\n\nEither claim or expression must be set. expression must not be specified when claim is set. expression must not exceed 1024 characters in length.",
+=======
+							Description: "expression is an optional field for specifying a CEL expression that produces a string value from JWT token claims.\n\nCEL expressions have access to the token claims through a CEL variable, 'claims'. 'claims' is a map of claim names to claim values. For example, the 'sub' claim value can be accessed as 'claims.sub'. Nested claims can be accessed using dot notation ('claims.foo.bar').\n\nEither claim or expression must be set. expression must not be specified when claim is set. When specified, expression must be at least 1 character in length and must not exceed 1024 characters in length.",
+>>>>>>> 08e74ff95815c264035a454e20d0de3023a2ad62
+=======
+							Description: "expression is an optional field for specifying a CEL expression that produces a string value from JWT token claims.\n\nCEL expressions have access to the token claims through a CEL variable, 'claims'. 'claims' is a map of claim names to claim values. For example, the 'sub' claim value can be accessed as 'claims.sub'. Nested claims can be accessed using dot notation ('claims.foo.bar').\n\nPrecisely one of claim or expression must be set. expression must not be specified when claim is set. When specified, expression must be at least 1 character in length and must not exceed 4096 characters in length.",
+>>>>>>> d74d0076c40633ea2a0d1577bdeebf78adca8159
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
 	}
 }
 
@@ -19505,6 +19646,32 @@ func schema_openshift_api_config_v1_TokenRequiredClaim(ref common.ReferenceCallb
 					},
 				},
 				Required: []string{"claim", "requiredValue"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1_UIDClaimMapping(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"claim": {
+						SchemaProps: spec.SchemaProps{
+							Description: "claim is an optional field for specifying the JWT token claim that is used in the mapping. The value of this claim will be assigned to the field in which this mapping is associated.\n\nEither claim or expression must be set. claim must not be specified when expression is set. claim must not exceed 256 characters in length.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"expression": {
+						SchemaProps: spec.SchemaProps{
+							Description: "expression is an optional field for specifying a CEL expression that produces a string value from JWT token claims.\n\nCEL expressions have access to the token claims through a CEL variable, 'claims'. 'claims' is a map of claim names to claim values. For example, the 'sub' claim value can be accessed as 'claims.sub'. Nested claims can be accessed using dot notation ('claims.foo.bar').\n\nEither claim or expression must be set. expression must not be specified when claim is set. expression must not exceed 1024 characters in length.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
 			},
 		},
 	}

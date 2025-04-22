@@ -220,6 +220,10 @@ type OIDCProvider struct {
 	//
 	// +listType=atomic
 	ClaimValidationRules []TokenClaimValidationRule `json:"claimValidationRules,omitempty"`
+
+	// +optional
+	// UserValidationRule provides the configuration for a single user validation rule.
+	UserValidationRules []TokenUserValidationRule `json:"userValidationRule,omitempty"`
 }
 
 // +kubebuilder:validation:MinLength=1
@@ -249,7 +253,43 @@ type TokenIssuer struct {
 	// the "ca-bundle.crt" key.
 	// If unset, system trust is used instead.
 	CertificateAuthority ConfigMapNameReference `json:"issuerCertificateAuthority"`
+
+	// discoveryURL, if specified, overrides the URL used to fetch discovery
+	// information instead of using "{url}/.well-known/openid-configuration".
+	// The exact value specified is used, so "/.well-known/openid-configuration"
+	// must be included in discoveryURL if needed.
+	// Must use the https:// scheme.
+	//
+	// +kubebuilder:validation:Pattern=`^https:\/\/[^\s]`
+	// Ensure that discoveryURL is unique within the set of seenDiscoveryURLs
+	// +kubebuilder:validation:XValidation:rule="!seenDiscoveryURLs.has(self.issuer.discoveryURL)",message="discoveryURL must be unique"
+	// +kubebuilder:validation:XValidation:rule="self.issuer.discoveryURL.size() > 0 ? (self.issuer.url.size() == 0 || self.issuer.url.trim('/').notEquals(self.issuer.discoveryURL.trim('/')))" ,message="discoveryURL must be different from URL"
+	// +kubebuilder:validation:XValidation:rule="self.issuer.discoveryURL.size() > 0 ? has(self.StructuredAuthenticationConfiguration) && self.StructuredAuthenticationConfiguration" ,message="discoveryURL is not supported when StructuredAuthenticationConfiguration feature gate is disabled"
+
+	// +optional
+	DiscoveryURL string `json:"discoveryURL,omitempty"`
+
+	// AudienceMatchPolicy controls how the "aud" claim in JWT tokens is validated.
+	// It allows flexible matching of the audience value in tokens.
+	// Possible values: MatchAny, MatchAll.
+	// +kubebuilder:validation:XValidation:rule="self.audienceMatchPolicy.size() > 0",message="At least one audienceMatchPolicy is required"
+	// +kubebuilder:validation:XValidation:rule="self.audienceMatchPolicy.size() <= 1 || (has(self.StructuredAuthenticationConfiguration) && self.StructuredAuthenticationConfiguration)",message="Multiple audienceMatchPolicy values are not supported when StructuredAuthenticationConfiguration feature gate is disabled"
+	// +kubebuilder:validation:XValidation:rule="self.audienceMatchPolicy.all(a, a.size() > 0)",message="AudienceMatchPolicy values cannot be empty"
+	// +kubebuilder:validation:XValidation:rule="self.audienceMatchPolicy.size() == self.audienceMatchPolicy.distinct().size()",message="Duplicate audienceMatchPolicy values are not allowed"
+	// +kubebuilder:validation:XValidation:rule="self.audienceMatchPolicy.size() > 1 ? self.audienceMatchPolicy == 'MatchAny' : true",message="audienceMatchPolicy must be MatchAny for multiple values"
+	// +kubebuilder:validation:XValidation:rule="self.audienceMatchPolicy.size() == 1 ? (self.audienceMatchPolicy == '' || self.audienceMatchPolicy == 'MatchAny') : true",message="audienceMatchPolicy must be empty or MatchAny for a single value"
+
+	// +optional
+	AudienceMatchPolicy AudienceMatchPolicyType `json:"audienceMatchPolicy,omitempty"`
 }
+
+// AudienceMatchPolicyType is a set of valid values for Issuer.AudienceMatchPolicy
+type AudienceMatchPolicyType string
+
+// Valid types for AudienceMatchPolicyType
+const (
+	AudienceMatchPolicyMatchAny AudienceMatchPolicyType = "MatchAny"
+)
 
 type TokenClaimMappings struct {
 	// username is a name of the claim that should be used to construct
@@ -262,6 +302,31 @@ type TokenClaimMappings struct {
 	// groups for the cluster identity.
 	// The referenced claim must use array of strings values.
 	Groups PrefixedClaimMapping `json:"groups,omitempty"`
+
+	// uid is an optional field for configuring the claim mapping
+	// used to construct the uid for the cluster identity.
+	//
+	// When using uid.claim to specify the claim it must be a single string value.
+	// When using uid.expression the expression must result in a single string value.
+	//
+	// When omitted, this means the user has no opinion and the platform
+	// is left to choose a default, which is subject to change over time.
+	// The current default is to use the 'sub' claim.
+	//
+	// +optional
+	UID *TokenClaimOrExpressionMapping `json:"uid,omitempty"`
+
+	// extra is an optional field for configuring the mappings
+	// used to construct the extra attribute for the cluster identity.
+	// When omitted, no extra attributes will be present on the cluster identity.
+	// key values for extra mappings must be unique.
+	// A maximum of 64 extra attribute mappings may be provided.
+	//
+	// +optional
+	// +kubebuilder:validation:MaxItems=64
+	// +listType=map
+	// +listMapKey=key
+	Extra []ExtraMapping `json:"extra,omitempty"`
 }
 
 type TokenClaimMapping struct {
@@ -269,6 +334,110 @@ type TokenClaimMapping struct {
 	//
 	// +required
 	Claim string `json:"claim"`
+}
+
+// TokenClaimOrExpressionMapping allows specifying either a JWT
+// token claim or CEL expression to be used when mapping claims
+// from an authentication token to cluster identities.
+// +kubebuilder:validation:XValidation:rule="has(self.claim) ? !has(self.expression) : has(self.expression)",message="precisely one of claim or expression must be set"
+type TokenClaimOrExpressionMapping struct {
+	// claim is an optional field for specifying the
+	// JWT token claim that is used in the mapping.
+	// The value of this claim will be assigned to
+	// the field in which this mapping is associated.
+	//
+	// Precisely one of claim or expression must be set.
+	// claim must not be specified when expression is set.
+	// When specified, claim must be at least 1 character in length
+	// and must not exceed 256 characters in length.
+	//
+	// +optional
+	// +kubebuilder:validation:MaxLength=256
+	// +kubebuilder:validation:MinLength=1
+	Claim string `json:"claim,omitempty"`
+
+	// expression is an optional field for specifying a
+	// CEL expression that produces a string value from
+	// JWT token claims.
+	//
+	// CEL expressions have access to the token claims
+	// through a CEL variable, 'claims'.
+	// 'claims' is a map of claim names to claim values.
+	// For example, the 'sub' claim value can be accessed as 'claims.sub'.
+	// Nested claims can be accessed using dot notation ('claims.foo.bar').
+	//
+	// Precisely one of claim or expression must be set.
+	// expression must not be specified when claim is set.
+	// When specified, expression must be at least 1 character in length
+	// and must not exceed 4096 characters in length.
+	//
+	// +optional
+	// +kubebuilder:validation:MaxLength=4096
+	// +kubebuilder:validation:MinLength=1
+	Expression string `json:"expression,omitempty"`
+}
+
+// ExtraMapping allows specifying a key and CEL expression
+// to evaluate the keys' value. It is used to create additional
+// mappings and attributes added to a cluster identity from
+// a provided authentication token.
+type ExtraMapping struct {
+	// key is a required field that specifies the string
+	// to use as the extra attribute key.
+	//
+	// key must be a domain-prefix path (e.g 'example.org/foo').
+	// key must not exceed 510 characters in length.
+	// key must contain the '/' character, separating the domain and path characters.
+	// key must not be empty.
+	//
+	// The domain portion of the key (string of characters prior to the '/') must be a valid RFC1123 subdomain.
+	// It must not exceed 253 characters in length.
+	// It must start and end with an alphanumeric character.
+	// It must only contain lower case alphanumeric characters and '-' or '.'.
+	// It must not use the reserved domains, or be subdomains of, "kubernetes.io", "k8s.io", and "openshift.io".
+	//
+	// The path portion of the key (string of characters after the '/') must not be empty and must consist of at least one
+	// alphanumeric character, percent-encoded octets, '-', '.', '_', '~', '!', '$', '&', ''', '(', ')', '*', '+', ',', ';', '=', and ':'.
+	// It must not exceed 256 characters in length.
+	//
+	// +required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=510
+	// +kubebuilder:validation:XValidation:rule="self.contains('/')",message="key must contain the '/' character"
+	//
+	// +kubebuilder:validation:XValidation:rule="self.split('/', 2)[0].matches(\"^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$\")",message="the domain of the key must consist of only lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character"
+	// +kubebuilder:validation:XValidation:rule="self.split('/', 2)[0].size() <= 253",message="the domain of the key must not exceed 253 characters in length"
+	//
+	// +kubebuilder:validation:XValidation:rule="self.split('/', 2)[0] != 'kubernetes.io'",message="the domain 'kubernetes.io' is reserved for Kubernetes use"
+	// +kubebuilder:validation:XValidation:rule="!self.split('/', 2)[0].endsWith('.kubernetes.io')",message="the subdomains '*.kubernetes.io' are reserved for Kubernetes use"
+	// +kubebuilder:validation:XValidation:rule="self.split('/', 2)[0] != 'k8s.io'",message="the domain 'k8s.io' is reserved for Kubernetes use"
+	// +kubebuilder:validation:XValidation:rule="!self.split('/', 2)[0].endsWith('.k8s.io')",message="the subdomains '*.k8s.io' are reserved for Kubernetes use"
+	// +kubebuilder:validation:XValidation:rule="self.split('/', 2)[0] != 'openshift.io'",message="the domain 'openshift.io' is reserved for OpenShift use"
+	// +kubebuilder:validation:XValidation:rule="!self.split('/', 2)[0].endsWith('.openshift.io')",message="the subdomains '*.openshift.io' are reserved for OpenShift use"
+	//
+	// +kubebuilder:validation:XValidation:rule="self.split('/', 2)[1].matches('[A-Za-z0-9/\\\\-._~%!$&\\'()*+;=:]+')",message="the path of the key must not be empty and must consist of at least one alphanumeric character, percent-encoded octets, apostrophe, '-', '.', '_', '~', '!', '$', '&', '(', ')', '*', '+', ',', ';', '=', and ':'"
+	// +kubebuilder:validation:XValidation:rule="self.split('/', 2)[1].size() <= 256",message="the path of the key must not exceed 256 characters in length"
+	Key string `json:"key"`
+
+	// valueExpression is a required field to specify the CEL expression to extract
+	// the extra attribute value from a JWT token's claims.
+	// valueExpression must produce a string or string array value.
+	// "", [], and null are treated as the extra mapping not being present.
+	// Empty string values within an array are filtered out.
+	//
+	// CEL expressions have access to the token claims
+	// through a CEL variable, 'claims'.
+	// 'claims' is a map of claim names to claim values.
+	// For example, the 'sub' claim value can be accessed as 'claims.sub'.
+	// Nested claims can be accessed using dot notation ('claims.foo.bar').
+	//
+	// valueExpression must not exceed 4096 characters in length.
+	// valueExpression must not be empty.
+	//
+	// +required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=4096
+	ValueExpression string `json:"valueExpression"`
 }
 
 type OIDCClientConfig struct {
@@ -432,6 +601,10 @@ type PrefixedClaimMapping struct {
 	Prefix string `json:"prefix"`
 }
 
+type UIDClaimMapping struct {
+	TokenClaimOrExpressionMapping `json:",inline"`
+}
+
 type TokenValidationRuleType string
 
 const (
@@ -445,9 +618,16 @@ type TokenClaimValidationRule struct {
 	// +kubebuilder:default="RequiredClaim"
 	Type TokenValidationRuleType `json:"type"`
 
-	// requiredClaim allows configuring a required claim name and its expected
-	// value
+	// requiredClaim allows configuring a required claim name and its expected value
 	RequiredClaim *TokenRequiredClaim `json:"requiredClaim"`
+
+	// Expression must not exceed 4096 characters in length.
+	// Expression must not be empty.
+	// +optional
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=4096
+	Expression string `json:"expression,omitempty"`
+	Message    string `json:"message,omitempty"`
 }
 
 type TokenRequiredClaim struct {
@@ -463,4 +643,15 @@ type TokenRequiredClaim struct {
 	// +kubebuilder:validation:MinLength=1
 	// +required
 	RequiredValue string `json:"requiredValue"`
+}
+
+// UserValidationRule provides the configuration for a single user validation rule.
+type TokenUserValidationRule struct {
+	// Expression must not exceed 4096 characters in length.
+	// Expression must not be empty.
+	// +optional
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=4096
+	Expression string `json:"expression,omitempty"`
+	Message    string `json:"message,omitempty"`
 }

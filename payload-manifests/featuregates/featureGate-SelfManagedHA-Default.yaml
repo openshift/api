@@ -20,6 +20,9 @@
                         "name": "AutomatedEtcdBackup"
                     },
                     {
+                        "name": "AzureMultiDisk"
+                    },
+                    {
                         "name": "BootcNodeManagement"
                     },
                     {

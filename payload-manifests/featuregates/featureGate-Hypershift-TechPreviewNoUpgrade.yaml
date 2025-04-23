@@ -132,6 +132,9 @@
                         "name": "ExternalOIDC"
                     },
                     {
+                        "name": "ExternalOIDCWithUIDAndExtraClaimMappings"
+                    },
+                    {
                         "name": "GCPClusterHostedDNS"
                     },
                     {

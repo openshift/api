@@ -732,6 +732,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/machine/v1beta1.ConfidentialVM":                                            schema_openshift_api_machine_v1beta1_ConfidentialVM(ref),
 		"github.com/openshift/api/machine/v1beta1.DataDisk":                                                  schema_openshift_api_machine_v1beta1_DataDisk(ref),
 		"github.com/openshift/api/machine/v1beta1.DataDiskManagedDiskParameters":                             schema_openshift_api_machine_v1beta1_DataDiskManagedDiskParameters(ref),
+		"github.com/openshift/api/machine/v1beta1.DedicatedHostTenancy":                                      schema_openshift_api_machine_v1beta1_DedicatedHostTenancy(ref),
 		"github.com/openshift/api/machine/v1beta1.DiskEncryptionSetParameters":                               schema_openshift_api_machine_v1beta1_DiskEncryptionSetParameters(ref),
 		"github.com/openshift/api/machine/v1beta1.DiskSettings":                                              schema_openshift_api_machine_v1beta1_DiskSettings(ref),
 		"github.com/openshift/api/machine/v1beta1.EBSBlockDeviceSpec":                                        schema_openshift_api_machine_v1beta1_EBSBlockDeviceSpec(ref),
@@ -37498,6 +37499,33 @@ func schema_openshift_api_machine_v1beta1_DataDiskManagedDiskParameters(ref comm
 	}
 }
 
+func schema_openshift_api_machine_v1beta1_DedicatedHostTenancy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DedicatedHostTenancy describes the host tenancy configuration. This is used in scenarios where hosts are to be deployed to specific dedicated hosts.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"hostId": {
+						SchemaProps: spec.SchemaProps{
+							Description: "HostID specifies the Dedicated Host on which the instance should be launched.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"hostAffinity": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Affinity specifies the dedicated host affinity setting for the instance. When affinity is set to Host, an instance launched onto a specific host always restarts on the same host if stopped.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_machine_v1beta1_DiskEncryptionSetParameters(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -39623,14 +39651,22 @@ func schema_openshift_api_machine_v1beta1_Placement(ref common.ReferenceCallback
 					},
 					"tenancy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "tenancy indicates if instance should run on shared or single-tenant hardware. There are supported 3 options: default, dedicated and host.",
+							Description: "tenancy indicates if instance should run on shared or single-tenant hardware. There are supported 3 options: default, dedicated, and host.",
 							Type:        []string{"string"},
 							Format:      "",
+						},
+					},
+					"dedicatedHostTenancy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "dedicatedHostTenancy when tenancy is set to 'host', this defines the host ID and host affinty to apply to associated machines.",
+							Ref:         ref("github.com/openshift/api/machine/v1beta1.DedicatedHostTenancy"),
 						},
 					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"github.com/openshift/api/machine/v1beta1.DedicatedHostTenancy"},
 	}
 }
 

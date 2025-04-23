@@ -152,9 +152,6 @@
                         "name": "RouteAdvertisements"
                     },
                     {
-                        "name": "RouteExternalCertificate"
-                    },
-                    {
                         "name": "SELinuxChangePolicy"
                     },
                     {
@@ -296,6 +293,9 @@
                     },
                     {
                         "name": "PrivateHostedZoneAWS"
+                    },
+                    {
+                        "name": "RouteExternalCertificate"
                     },
                     {
                         "name": "SetEIPForNLBIngressController"

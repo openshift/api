@@ -3,7 +3,6 @@ name: "ControlPlaneMachineSet (+CPMSMachineNamePrefix)"
 crdName: controlplanemachinesets.machine.openshift.io
 featureGates:
   - CPMSMachineNamePrefix
-  - -MachineAPIMigration
 tests:
   onCreate:
     - name: Should be able to create a minimal ControlPlaneMachineSet
@@ -24,6 +23,7 @@ tests:
                   machine.openshift.io/cluster-api-machine-type: master
                   machine.openshift.io/cluster-api-cluster: cluster
               spec:
+                authoritativeAPI: MachineAPI
                 providerSpec: {}
       expected: |
         apiVersion: machine.openshift.io/v1
@@ -46,6 +46,7 @@ tests:
                   machine.openshift.io/cluster-api-machine-type: master
                   machine.openshift.io/cluster-api-cluster: cluster
               spec:
+                authoritativeAPI: MachineAPI
                 providerSpec: {}
     - name: Should be able to create ControlPlaneMachineSet with machineNamePrefix
       initial: |
@@ -66,6 +67,7 @@ tests:
                   machine.openshift.io/cluster-api-machine-type: master
                   machine.openshift.io/cluster-api-cluster: cluster
               spec:
+                authoritativeAPI: MachineAPI
                 providerSpec: {}
       expected: |
         apiVersion: machine.openshift.io/v1
@@ -89,6 +91,7 @@ tests:
                   machine.openshift.io/cluster-api-machine-type: master
                   machine.openshift.io/cluster-api-cluster: cluster
               spec:
+                authoritativeAPI: MachineAPI
                 providerSpec: {}
     - name: Should reject to create ControlPlaneMachineSet with empty machineNamePrefix
       initial: |
@@ -109,6 +112,7 @@ tests:
                   machine.openshift.io/cluster-api-machine-type: master
                   machine.openshift.io/cluster-api-cluster: cluster
               spec:
+                authoritativeAPI: MachineAPI
                 providerSpec: {}
       expectedError: 'Invalid value: "": spec.machineNamePrefix in body should be at least 1 chars long'
     - name: Should reject to create ControlPlaneMachineSet with invalid machineNamePrefix
@@ -130,6 +134,7 @@ tests:
                   machine.openshift.io/cluster-api-machine-type: master
                   machine.openshift.io/cluster-api-cluster: cluster
               spec:
+                authoritativeAPI: MachineAPI
                 providerSpec: {}
       expectedError: 'Invalid value: "string": a lowercase RFC 1123 subdomain must consist of lowercase alphanumeric characters, hyphens (''-''), and periods (''.''). Each block, separated by periods, must start and end with an alphanumeric character. Hyphens are not allowed at the start or end of a block, and consecutive periods are not permitted.'
     - name: Should reject to create ControlPlaneMachineSet with invalid machineNamePrefix - Consecutive periods are not permitted
@@ -151,5 +156,6 @@ tests:
                   machine.openshift.io/cluster-api-machine-type: master
                   machine.openshift.io/cluster-api-cluster: cluster
               spec:
+                authoritativeAPI: MachineAPI
                 providerSpec: {}
       expectedError: 'Invalid value: "string": a lowercase RFC 1123 subdomain must consist of lowercase alphanumeric characters, hyphens (''-''), and periods (''.''). Each block, separated by periods, must start and end with an alphanumeric character. Hyphens are not allowed at the start or end of a block, and consecutive periods are not permitted.'

@@ -2,7 +2,6 @@
 | ------ | --- | --- | --- | --- | --- | ---  |
 | ClusterAPIInstall| | | | | |  |
 | EventedPLEG| | | | | |  |
-| MachineAPIMigration| | | | | |  |
 | MachineAPIOperatorDisableMachineHealthCheckController| | | | | |  |
 | MultiArchInstallAzure| | | | | |  |
 | ClusterVersionOperatorConfiguration| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | |  |
@@ -38,6 +37,7 @@
 | InsightsOnDemandDataGather| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | InsightsRuntimeExtractor| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | KMSEncryptionProvider| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
+| MachineAPIMigration| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | MachineAPIProviderOpenStack| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | MachineConfigNodes| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | MaxUnavailableStatefulSet| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |

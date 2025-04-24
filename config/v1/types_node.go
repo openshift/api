@@ -95,7 +95,7 @@ const (
 	LowUpdateSlowReaction WorkerLatencyProfileType = "LowUpdateSlowReaction"
 
 	// Default values of relavent Kubelet, Kube Controller Manager and Kube API Server
-	DefaultUpdateDefaultReaction WorkerLatencyProfileType = "Default"
+	DefaultUpdateDefaultReaction WorkerLatencyProfileType = LowUpdateSlowReaction
 )
 
 const (

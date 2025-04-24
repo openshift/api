@@ -817,7 +817,6 @@ var (
 					reportProblemsToJiraComponent("kube-apiserver").
 					contactPerson("vrutkovs").
 					productScope(ocpSpecific).
-					enableIn(configv1.DevPreviewNoUpgrade).
 					enhancementPR("https://github.com/openshift/enhancements/pull/1670").
 					mustRegister()
 

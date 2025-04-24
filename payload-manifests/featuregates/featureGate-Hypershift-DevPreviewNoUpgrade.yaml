@@ -35,6 +35,9 @@
                     },
                     {
                         "name": "NewOLMPreflightPermissionChecks"
+                    },
+                    {
+                        "name": "ShortCertRotation"
                     }
                 ],
                 "enabled": [
@@ -259,9 +262,6 @@
                     },
                     {
                         "name": "SetEIPForNLBIngressController"
-                    },
-                    {
-                        "name": "ShortCertRotation"
                     },
                     {
                         "name": "SignatureStores"

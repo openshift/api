@@ -132,6 +132,14 @@ var (
 						enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 						mustRegister()
 
+	FeatureGateAzureDedicatedHosts = newFeatureGate("AzureDedicatedHosts").
+						reportProblemsToJiraComponent("installer").
+						contactPerson("rvanderp3").
+						productScope(ocpSpecific).
+						enhancementPR("https://github.com/openshift/enhancements/pull/1783").
+						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						mustRegister()
+
 	FeatureGateMaxUnavailableStatefulSet = newFeatureGate("MaxUnavailableStatefulSet").
 						reportProblemsToJiraComponent("apps").
 						contactPerson("atiratree").

@@ -69,6 +69,9 @@
                         "name": "AutomatedEtcdBackup"
                     },
                     {
+                        "name": "AzureDedicatedHosts"
+                    },
+                    {
                         "name": "AzureMultiDisk"
                     },
                     {

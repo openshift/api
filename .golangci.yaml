@@ -8,6 +8,7 @@ linters-settings:
           enable:
           - "maxlength"
           - "nobools"
+          - "nomaps"
           - "statussubresource"
         lintersConfig:
           conditions:

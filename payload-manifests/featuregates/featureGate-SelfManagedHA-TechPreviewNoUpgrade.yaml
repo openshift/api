@@ -219,9 +219,6 @@
                         "name": "NewOLMCatalogdAPIV1Metas"
                     },
                     {
-                        "name": "NewOLMOwnSingleNamespace"
-                    },
-                    {
                         "name": "NewOLMPreflightPermissionChecks"
                     },
                     {

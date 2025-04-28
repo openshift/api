@@ -45557,6 +45557,13 @@ func schema_openshift_api_operator_v1_AWSNetworkLoadBalancerParameters(ref commo
 							},
 						},
 					},
+					"managedSecurityGroup": {
+						SchemaProps: spec.SchemaProps{
+							Description: "managedSecurityGroup specifies whether the service load balancer should create and manage security group for the Network Load Balancer.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 				},
 			},
 		},

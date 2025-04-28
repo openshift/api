@@ -165,6 +165,9 @@
                         "name": "IngressControllerLBSubnetsAWS"
                     },
                     {
+                        "name": "IngressNLBSecurityGroup"
+                    },
+                    {
                         "name": "InsightsConfig"
                     },
                     {

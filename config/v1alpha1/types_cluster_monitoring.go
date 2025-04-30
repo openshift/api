@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -77,6 +78,12 @@ type ClusterMonitoringSpec struct {
 	// userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring.
 	// +required
 	UserDefined UserDefinedMonitoring `json:"userDefined"`
+	// alertmanagerMainConfig provides configuration options for the default Alertmanager instance
+	// running in the `openshift-monitoring` namespace. It allows users to control whether Alertmanager
+	// is enabled, its logging behavior, pod scheduling preferences, and resource requests.
+	// Required: This field must be specified.
+	// +required
+	AlertmanagerMainConfig AlertmanagerMainConfig `json:"alertmanagerMainConfig"`
 }
 
 // UserDefinedMonitoring config for user-defined projects.
@@ -100,4 +107,136 @@ const (
 	UserDefinedDisabled UserDefinedMode = "Disabled"
 	// UserDefinedNamespaceIsolated enables monitoring for user-defined projects with namespace-scoped tenancy. This ensures that metrics, alerts, and monitoring data are isolated at the namespace level.
 	UserDefinedNamespaceIsolated UserDefinedMode = "NamespaceIsolated"
+)
+
+// alertmanagerMainConfig provides configuration options for the default Alertmanager instance
+// that runs in the `openshift-monitoring` namespace. Use this configuration to control
+// whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.
+//
+// Required: This field must be specified. a
+type AlertmanagerMainConfig struct {
+	// mode determines whether the default/main Alertmanager instance should be deployed
+	// as part of the monitoring stack. When set to "Enabled", the Cluster Monitoring Operator
+	// ensures that an Alertmanager instance is created and managed in the `openshift-monitoring` namespace.
+	// When set to "Disabled", the operator will not deploy the Alertmanager instance.
+	// Use this field if you want to explicitly opt in or out of running a platform-level Alertmanager.
+	// Required: This field must be specified.
+	// +kubebuilder:validation:Enum:=Enabled;Disabled;
+	// +required
+	DeploymentMode AlertManagerMode `json:"mode"`
+	// userMode controls whether Alertmanager should process configurations from user-defined (non-platform)
+	// namespaces for AlertmanagerConfig lookups.
+	// When set to true, Alertmanager will search for AlertmanagerConfig resources in user-defined namespaces.
+	// This field is only effective when the user workload Alertmanager instance is not enabled.
+	// If the user workload monitoring Alertmanager is enabled, this field is ignored.
+	// Required: This field must be specified.
+	// +kubebuilder:validation:Enum="";Enabled;Disabled
+	// +required
+	UserMode UserAlertManagerMode `json:"userMode"`
+	// logLevel defines the verbosity of logs emitted by Alertmanager.
+	// This field allows users to control the amount and severity of logs generated, which can be useful
+	// for debugging issues or reducing noise in production environments.
+	// Allowed values are:
+	// - `Error`: Logs only errors.
+	// - `Warn`: Logs warnings and errors.
+	// - `Info`: Logs general information, warnings, and errors. Default.
+	// - `Debug`: Logs detailed debug information.
+	// When omitted, the default value `Info` is used.
+	// +optional
+	LogLevel string `json:"logLevel,omitempty"`
+	// nodeSelector is the node selector applied to network diagnostics components
+	//
+	// When omitted, this means the user has no opinion and the platform is left
+	// to choose reasonable defaults. These defaults are subject to change over time.
+	// The current default is `kubernetes.io/os: linux`.
+	//
+	// This field is optional. When omitted, Pods can be scheduled onto any available node.
+	// +optional
+	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
+	// resources defines the compute resource requests and limits for the Alertmanager container.
+	// This includes CPU and memory constraints to help control scheduling and resource usage.
+	// When not specified, defaults are used by the platform. Requests cannot exceed limits.
+	// This field is optional.
+	// More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+	// +optional
+	Resources *v1.ResourceRequirements `json:"resources,omitempty"`
+	// secrets Defines a list of secrets that need to be mounted into the Alertmanager.
+	// The secrets must reside within the same namespace as the Alertmanager object.
+	// They will be added as volumes named secret-<secret-name> and mounted at
+	// /etc/alertmanager/secrets/<secret-name> within the 'alertmanager' container of
+	// the Alertmanager Pods.
+	// This field is optional.
+	// +optional
+	Secrets []SecretName `json:"secrets,omitempty"`
+	// tolerations is a list of tolerations applied to network diagnostics components
+	//
+	// When omitted, this means the user has no opinion and the platform is left
+	// to choose reasonable defaults. These defaults are subject to change over time.
+	// The current default is `- operator: "Exists"` which means that all taints are tolerated.
+	// This field is optional.
+	// +optional
+	Tolerations []v1.Toleration `json:"tolerations,omitempty"`
+	// topologySpreadConstraints defines rules for how Alertmanager Pods should be distributed
+	// across topology domains such as zones, nodes, or other user-defined labels.
+	//
+	// This helps improve high availability and resource efficiency by avoiding placing
+	// too many replicas in the same failure domain.
+	//
+	// When omitted, no constraints are applied and Pod scheduling is left to the default behavior.
+	// This field maps directly to the `topologySpreadConstraints` field in the Pod spec.
+	// +optional
+	TopologySpreadConstraints []v1.TopologySpreadConstraint `json:"topologySpreadConstraints,omitempty"`
+	// volumeClaimTemplate Defines persistent storage for Alertmanager. Use this setting to
+	// configure the persistent volume claim, including storage class, volume
+	// size, and name.
+	// If omitted, the Pod uses ephemeral storage and alert data will not persist
+	// across restarts.
+	// // This field is optional.
+	// +optional
+	VolumeClaimTemplate v1.PersistentVolumeClaim `json:"volumeClaimTemplate,omitempty"`
+}
+
+// SecretName is a type that represents the name of a Secret in the same namespace.
+type SecretName string
+
+// AlertManagerMode defines the deployment state of the platform Alertmanager instance.
+//
+// Possible values:
+// - "Enabled": The Alertmanager instance will be deployed and managed by the operator.
+// - "Disabled": The operator will not deploy an Alertmanager instance.
+type AlertManagerMode string
+
+const (
+	// AlertManagerModeEnabled means the Alertmanager instance will be deployed and managed by the operator.
+	AlertManagerModeEnabled AlertManagerMode = "Enabled"
+
+	// AlertManagerModeDisabled means the operator will not deploy the Alertmanager instance.
+	AlertManagerModeDisabled AlertManagerMode = "Disabled"
+)
+
+// UserAlertManagerMode defines mode for user-defines namespaced
+//
+// Possible values:
+// - "Enabled": User-defined namespaces can be selected for AlertmanagerConfig lookups.
+// - "Disabled": User-defined namespaces cannot be selected for AlertmanagerConfig lookups.
+type UserAlertManagerMode string
+
+const (
+	// UserAlertmanagerEnabled enables user-defined namespaces to be selected for `AlertmanagerConfig` lookups. This setting only
+	// applies if the user workload monitoring instance of Alertmanager is not enabled.
+	UserAlertManagerEnabled UserAlertManagerMode = "Enabled"
+	// UserAlertManagerDisabled disables user-defined namespaces to be selected for `AlertmanagerConfig` lookups. This setting only
+	// applies if the user workload monitoring instance of Alertmanager is not enabled.
+	UserAlertManagerDisabled UserAlertManagerMode = "Disabled"
+)
+
+// +kubebuilder:validation:Enum=Error;Warn;Info;Debug
+// +default=Info
+type LogLevelType string
+
+const (
+	LogLevelError LogLevelType = "Error"
+	LogLevelWarn  LogLevelType = "Warn"
+	LogLevelInfo  LogLevelType = "Info"
+	LogLevelDebug LogLevelType = "Debug"
 )

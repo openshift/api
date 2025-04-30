@@ -118,6 +118,23 @@ func (ClusterImagePolicyStatus) SwaggerDoc() map[string]string {
 	return map_ClusterImagePolicyStatus
 }
 
+var map_AlertmanagerMainConfig = map[string]string{
+	"":                          "alertmanagerMainConfig provides configuration options for the default Alertmanager instance that runs in the `openshift-monitoring` namespace. Use this configuration to control whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.\n\nRequired: This field must be specified. a",
+	"mode":                      "mode determines whether the default/main Alertmanager instance should be deployed as part of the monitoring stack. When set to \"Enabled\", the Cluster Monitoring Operator ensures that an Alertmanager instance is created and managed in the `openshift-monitoring` namespace. When set to \"Disabled\", the operator will not deploy the Alertmanager instance. Use this field if you want to explicitly opt in or out of running a platform-level Alertmanager. Required: This field must be specified.",
+	"userMode":                  "userMode controls whether Alertmanager should process configurations from user-defined (non-platform) namespaces for AlertmanagerConfig lookups. When set to true, Alertmanager will search for AlertmanagerConfig resources in user-defined namespaces. This field is only effective when the user workload Alertmanager instance is not enabled. If the user workload monitoring Alertmanager is enabled, this field is ignored. Required: This field must be specified.",
+	"logLevel":                  "logLevel defines the verbosity of logs emitted by Alertmanager. This field allows users to control the amount and severity of logs generated, which can be useful for debugging issues or reducing noise in production environments. Allowed values are: - `Error`: Logs only errors. - `Warn`: Logs warnings and errors. - `Info`: Logs general information, warnings, and errors. Default. - `Debug`: Logs detailed debug information. When omitted, the default value `Info` is used.",
+	"nodeSelector":              "nodeSelector is the node selector applied to network diagnostics components\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default is `kubernetes.io/os: linux`.\n\nThis field is optional. When omitted, Pods can be scheduled onto any available node.",
+	"resources":                 "resources defines the compute resource requests and limits for the Alertmanager container. This includes CPU and memory constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
+	"secrets":                   "secrets Defines a list of secrets that need to be mounted into the Alertmanager. The secrets must reside within the same namespace as the Alertmanager object. They will be added as volumes named secret-<secret-name> and mounted at /etc/alertmanager/secrets/<secret-name> within the 'alertmanager' container of the Alertmanager Pods. This field is optional.",
+	"tolerations":               "tolerations is a list of tolerations applied to network diagnostics components\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default is `- operator: \"Exists\"` which means that all taints are tolerated. This field is optional.",
+	"topologySpreadConstraints": "topologySpreadConstraints defines rules for how Alertmanager Pods should be distributed across topology domains such as zones, nodes, or other user-defined labels.\n\nThis helps improve high availability and resource efficiency by avoiding placing too many replicas in the same failure domain.\n\nWhen omitted, no constraints are applied and Pod scheduling is left to the default behavior. This field maps directly to the `topologySpreadConstraints` field in the Pod spec.",
+	"volumeClaimTemplate":       "volumeClaimTemplate Defines persistent storage for Alertmanager. Use this setting to configure the persistent volume claim, including storage class, volume size, and name. If omitted, the Pod uses ephemeral storage and alert data will not persist across restarts. // This field is optional.",
+}
+
+func (AlertmanagerMainConfig) SwaggerDoc() map[string]string {
+	return map_AlertmanagerMainConfig
+}
+
 var map_ClusterMonitoring = map[string]string{
 	"":         "ClusterMonitoring is the Custom Resource object which holds the current status of Cluster Monitoring Operator. CMO is a central component of the monitoring stack.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. ClusterMonitoring is the Schema for the Cluster Monitoring Operators API",
 	"metadata": "metadata is the standard object metadata.",
@@ -140,8 +157,9 @@ func (ClusterMonitoringList) SwaggerDoc() map[string]string {
 }
 
 var map_ClusterMonitoringSpec = map[string]string{
-	"":            "ClusterMonitoringSpec defines the desired state of Cluster Monitoring Operator",
-	"userDefined": "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring.",
+	"":                       "ClusterMonitoringSpec defines the desired state of Cluster Monitoring Operator",
+	"userDefined":            "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring.",
+	"alertmanagerMainConfig": "alertmanagerMainConfig provides configuration options for the default Alertmanager instance running in the `openshift-monitoring` namespace. It allows users to control whether Alertmanager is enabled, its logging behavior, pod scheduling preferences, and resource requests. Required: This field must be specified.",
 }
 
 func (ClusterMonitoringSpec) SwaggerDoc() map[string]string {

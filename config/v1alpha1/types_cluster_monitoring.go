@@ -142,6 +142,7 @@ type AlertmanagerMainConfig struct {
 	// - `Info`: Logs general information, warnings, and errors. Default.
 	// - `Debug`: Logs detailed debug information.
 	// When omitted, the default value `Info` is used.
+	// +kubebuilder:validation:MaxLength=253
 	// +optional
 	LogLevel string `json:"logLevel,omitempty"`
 	// nodeSelector is the node selector applied to network diagnostics components
@@ -167,6 +168,7 @@ type AlertmanagerMainConfig struct {
 	// the Alertmanager Pods.
 	// This field is optional.
 	// +optional
+	// +kubebuilder:validation:MaxItems=10
 	Secrets []SecretName `json:"secrets,omitempty"`
 	// tolerations is a list of tolerations applied to network diagnostics components
 	//
@@ -174,6 +176,7 @@ type AlertmanagerMainConfig struct {
 	// to choose reasonable defaults. These defaults are subject to change over time.
 	// The current default is `- operator: "Exists"` which means that all taints are tolerated.
 	// This field is optional.
+	// +kubebuilder:validation:MaxItems=10
 	// +optional
 	Tolerations []v1.Toleration `json:"tolerations,omitempty"`
 	// topologySpreadConstraints defines rules for how Alertmanager Pods should be distributed
@@ -184,6 +187,7 @@ type AlertmanagerMainConfig struct {
 	//
 	// When omitted, no constraints are applied and Pod scheduling is left to the default behavior.
 	// This field maps directly to the `topologySpreadConstraints` field in the Pod spec.
+	// +kubebuilder:validation:MaxItems=10
 	// +optional
 	TopologySpreadConstraints []v1.TopologySpreadConstraint `json:"topologySpreadConstraints,omitempty"`
 	// volumeClaimTemplate Defines persistent storage for Alertmanager. Use this setting to
@@ -197,6 +201,7 @@ type AlertmanagerMainConfig struct {
 }
 
 // SecretName is a type that represents the name of a Secret in the same namespace.
+// +kubebuilder:validation:MaxLength=253
 type SecretName string
 
 // AlertManagerMode defines the deployment state of the platform Alertmanager instance.

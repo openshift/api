@@ -155,9 +155,6 @@
                         "name": "SELinuxMount"
                     },
                     {
-                        "name": "ServiceAccountTokenNodeBinding"
-                    },
-                    {
                         "name": "ShortCertRotation"
                     },
                     {
@@ -299,6 +296,9 @@
                     },
                     {
                         "name": "RouteExternalCertificate"
+                    },
+                    {
+                        "name": "ServiceAccountTokenNodeBinding"
                     },
                     {
                         "name": "SetEIPForNLBIngressController"

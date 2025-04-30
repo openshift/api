@@ -66,6 +66,7 @@ spec:
                       - `Info`: Logs general information, warnings, and errors. Default.
                       - `Debug`: Logs detailed debug information.
                       When omitted, the default value `Info` is used.
+                    maxLength: 253
                     type: string
                   mode:
                     description: |-
@@ -166,7 +167,9 @@ spec:
                     items:
                       description: SecretName is a type that represents the name of
                         a Secret in the same namespace.
+                      maxLength: 253
                       type: string
+                    maxItems: 10
                     type: array
                   tolerations:
                     description: |-
@@ -212,6 +215,7 @@ spec:
                             If the operator is Exists, the value should be empty, otherwise just a regular string.
                           type: string
                       type: object
+                    maxItems: 10
                     type: array
                   topologySpreadConstraints:
                     description: |-
@@ -396,6 +400,7 @@ spec:
                       - topologyKey
                       - whenUnsatisfiable
                       type: object
+                    maxItems: 10
                     type: array
                   userMode:
                     description: |-

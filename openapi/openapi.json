@@ -29738,7 +29738,7 @@
       ],
       "properties": {
         "mode": {
-          "description": "mode determines how machine managers will be selected for updates. Valid values are All and Partial. All means that every resource matched by the machine manager will be updated. Partial requires specified selector(s) and allows customisation of which resources matched by the machine manager will be updated.",
+          "description": "mode determines how machine managers will be selected for updates. Valid values are All and Partial. All means that every resource matched by the machine manager will be updated. Partial requires specified selector(s) and allows customisation of which resources matched by the machine manager will be updated. None means that every resource matched by the machine manager will not be updated.",
           "type": "string",
           "default": ""
         },
@@ -31169,6 +31169,9 @@
     "com.github.openshift.api.operator.v1.PartialSelector": {
       "description": "PartialSelector provides label selector(s) that can be used to match machine management resources.",
       "type": "object",
+      "required": [
+        "machineResourceSelector"
+      ],
       "properties": {
         "machineResourceSelector": {
           "description": "machineResourceSelector is a label selector that can be used to select machine resources like MachineSets.",

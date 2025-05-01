@@ -101,9 +101,6 @@
                         "name": "MachineAPIProviderOpenStack"
                     },
                     {
-                        "name": "MachineConfigNodes"
-                    },
-                    {
                         "name": "MaxUnavailableStatefulSet"
                     },
                     {
@@ -254,6 +251,9 @@
                     },
                     {
                         "name": "KMSv1"
+                    },
+                    {
+                        "name": "MachineConfigNodes"
                     },
                     {
                         "name": "ManagedBootImages"

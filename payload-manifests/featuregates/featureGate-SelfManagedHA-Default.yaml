@@ -308,9 +308,6 @@
                     },
                     {
                         "name": "VSphereMultiVCenters"
-                    },
-                    {
-                        "name": "ValidatingAdmissionPolicy"
                     }
                 ],
                 "version": ""

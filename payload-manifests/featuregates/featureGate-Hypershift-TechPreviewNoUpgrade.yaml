@@ -309,9 +309,6 @@
                         "name": "VSphereMultiNetworks"
                     },
                     {
-                        "name": "ValidatingAdmissionPolicy"
-                    },
-                    {
                         "name": "VolumeAttributesClass"
                     },
                     {

@@ -311,9 +311,6 @@
                     },
                     {
                         "name": "VSphereMultiNetworks"
-                    },
-                    {
-                        "name": "ValidatingAdmissionPolicy"
                     }
                 ],
                 "version": ""

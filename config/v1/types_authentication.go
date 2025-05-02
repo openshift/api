@@ -243,6 +243,10 @@ type OIDCProvider struct {
 	// +listType=atomic
 	// +optional
 	ClaimValidationRules []TokenClaimValidationRule `json:"claimValidationRules,omitempty"`
+
+	// +optional
+	// userValidationRules provides the configuration for a single user validation rule.
+	UserValidationRules []TokenUserValidationRule `json:"userValidationRules,omitempty"`
 }
 
 // +kubebuilder:validation:MinLength=1
@@ -291,7 +295,39 @@ type TokenIssuer struct {
 	//
 	// +optional
 	CertificateAuthority ConfigMapNameReference `json:"issuerCertificateAuthority"`
+
+	// discoveryURL, if specified, overrides the URL used to fetch discovery
+	// information instead of using "{url}/.well-known/openid-configuration".
+	// The exact value specified is used, so "/.well-known/openid-configuration"
+	// must be included in discoveryURL if needed. Must be a valid https URL
+	// without query parameters, user info, or fragments.
+	//
+	// +kubebuilder:validation:XValidation:rule="self.size() > 0 ? isURL(self) : true",message="discoveryURL must be a valid URL"
+	// +kubebuilder:validation:XValidation:rule="self.size() > 0 ? url(self).scheme == 'https' : true",message="discoveryURL must use https scheme"
+	// +kubebuilder:validation:XValidation:rule="self.size() > 0 ? url(self).query == '' : true",message="discoveryURL must not contain query parameters"
+	// +kubebuilder:validation:XValidation:rule="self.size() > 0 ? url(self).user == '' : true",message="discoveryURL must not contain user info"
+	// +kubebuilder:validation:XValidation:rule="self.size() > 0 ? url(self).fragment == '' : true",message="discoveryURL must not contain a fragment"
+	// +kubebuilder:validation:XValidation:rule="self.size() > 0 ? (issuer.url.size() == 0 || self.find('^.+[^/]') != issuer.url.find('^.+[^/]')) : true",message="discoveryURL must be different from URL"
+	//
+	// +optional
+	DiscoveryURL string `json:"discoveryURL,omitempty"`
+
+	// audienceMatchPolicy specifies how token audiences are matched.
+	// If omitted, the system applies a default policy.
+	//
+	// +optional
+	AudienceMatchPolicy AudienceMatchPolicy `json:"audienceMatchPolicy,omitempty"`
 }
+
+// AudienceMatchPolicyType is a set of valid values for Issuer.AudienceMatchPolicy.
+//
+// +kubebuilder:validation:Enum=MatchAny;""
+type AudienceMatchPolicy string
+
+// Valid types for AudienceMatchPolicyType
+const (
+	AudienceMatchPolicyMatchAny AudienceMatchPolicy = "MatchAny"
+)
 
 type TokenClaimMappings struct {
 	// username is a required field that configures how the username of a cluster identity
@@ -717,14 +753,22 @@ type PrefixedClaimMapping struct {
 	Prefix string `json:"prefix"`
 }
 
-// TokenValidationRuleType represents the different
-// claim validation rule types that can be configured.
-// +enum
+// TokenValidationRuleType defines the type of token validation rule.
+//
+// +kubebuilder:validation:Enum=RequiredClaim;Expression
 type TokenValidationRuleType string
 
 const (
-	TokenValidationRuleTypeRequiredClaim = "RequiredClaim"
+	TokenValidationRuleRequiredClaim TokenValidationRuleType = "RequiredClaim"
+	TokenValidationRuleExpression    TokenValidationRuleType = "Expression"
 )
+
+// TokenClaimValidationRule represents a validation rule based on token claims.
+// If type is RequiredClaim, requiredClaim must be set.
+// If type is Expression, expressionRule must be set.
+//
+// +kubebuilder:validation:XValidation:rule="self.type != 'RequiredClaim' || has(self.requiredClaim)",message="requiredClaim must be set when type is 'RequiredClaim'"
+// +kubebuilder:validation:XValidation:rule="self.type != 'Expression' || has(self.expressionRule)",message="expressionRule must be set when type is 'Expression'"
 
 type TokenClaimValidationRule struct {
 	// type is an optional field that configures the type of the validation rule.
@@ -742,19 +786,20 @@ type TokenClaimValidationRule struct {
 	// +kubebuilder:default="RequiredClaim"
 	Type TokenValidationRuleType `json:"type"`
 
-	// requiredClaim is an optional field that configures the required claim
-	// and value that the Kubernetes API server will use to validate if an incoming
-	// JWT is valid for this identity provider.
+	// requiredClaim allows configuring a required claim name and its expected value.
+	// RequiredClaim is used when type is RequiredClaim.
+	// +optional
+	RequiredClaim *TokenRequiredClaim `json:"requiredClaim"`
+
+	// expressionRule contains the configuration for the "Expression" type.
+	// Must be set if type == "Expression".
 	//
 	// +optional
-	RequiredClaim *TokenRequiredClaim `json:"requiredClaim,omitempty"`
+	ExpressionRule *TokenExpressionRule `json:"expressionRule,omitempty"`
 }
 
 type TokenRequiredClaim struct {
-	// claim is a required field that configures the name of the required claim.
-	// When taken from the JWT claims, claim must be a string value.
-	//
-	// claim must not be an empty string ("").
+	// claim is a name of a required claim. Only claims with string values are supported.
 	//
 	// +kubebuilder:validation:MinLength=1
 	// +required
@@ -770,4 +815,26 @@ type TokenRequiredClaim struct {
 	// +kubebuilder:validation:MinLength=1
 	// +required
 	RequiredValue string `json:"requiredValue"`
+}
+
+type TokenExpressionRule struct {
+	// CEL expression to evaluate against token claims.
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=4096
+	Expression string `json:"expression"`
+
+	// Optional message shown when the validation fails.
+	// +optional
+	Message string `json:"message,omitempty"`
+}
+
+// UserValidationRule provides the configuration for a single user validation rule.
+type TokenUserValidationRule struct {
+	// Expression must not exceed 4096 characters in length.
+	// Expression must not be empty.
+	// +optional
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=4096
+	Expression string `json:"expression,omitempty"`
+	Message    string `json:"message,omitempty"`
 }

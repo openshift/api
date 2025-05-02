@@ -49,9 +49,6 @@
                         "name": "NewOLMPreflightPermissionChecks"
                     },
                     {
-                        "name": "SELinuxChangePolicy"
-                    },
-                    {
                         "name": "SELinuxMount"
                     },
                     {
@@ -262,6 +259,9 @@
                     },
                     {
                         "name": "RouteExternalCertificate"
+                    },
+                    {
+                        "name": "SELinuxChangePolicy"
                     },
                     {
                         "name": "ServiceAccountTokenNodeBinding"

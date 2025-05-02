@@ -100,14 +100,6 @@ var (
 				enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 				mustRegister()
 
-	FeatureGateMachineAPIProviderOpenStack = newFeatureGate("MachineAPIProviderOpenStack").
-						reportProblemsToJiraComponent("openstack").
-						contactPerson("egarcia").
-						productScope(ocpSpecific).
-						enhancementPR(legacyFeatureGateWithoutEnhancement).
-						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-						mustRegister()
-
 	FeatureGateInsightsConfigAPI = newFeatureGate("InsightsConfigAPI").
 					reportProblemsToJiraComponent("insights").
 					contactPerson("tremes").

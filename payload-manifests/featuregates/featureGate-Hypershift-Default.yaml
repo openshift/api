@@ -149,9 +149,6 @@
                         "name": "RouteAdvertisements"
                     },
                     {
-                        "name": "SELinuxChangePolicy"
-                    },
-                    {
                         "name": "SELinuxMount"
                     },
                     {
@@ -174,9 +171,6 @@
                     },
                     {
                         "name": "UserNamespacesPodSecurityStandards"
-                    },
-                    {
-                        "name": "UserNamespacesSupport"
                     },
                     {
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"
@@ -298,10 +292,16 @@
                         "name": "RouteExternalCertificate"
                     },
                     {
+                        "name": "SELinuxChangePolicy"
+                    },
+                    {
                         "name": "ServiceAccountTokenNodeBinding"
                     },
                     {
                         "name": "SetEIPForNLBIngressController"
+                    },
+                    {
+                        "name": "UserNamespacesSupport"
                     },
                     {
                         "name": "VSphereDriverConfiguration"

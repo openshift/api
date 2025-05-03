@@ -80,6 +80,9 @@
                         "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {
+                        "name": "IngressNLBSecurityGroup"
+                    },
+                    {
                         "name": "InsightsConfig"
                     },
                     {

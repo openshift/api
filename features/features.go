@@ -835,4 +835,12 @@ var (
 									enhancementPR("https://github.com/openshift/enhancements/pull/1748").
 									enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 									mustRegister()
+
+	FeatureGateIngressNLBSecurityGroup = newFeatureGate("IngressNLBSecurityGroup").
+						reportProblemsToJiraComponent("Networking/router").
+						contactPerson("miciah").
+						productScope(kubernetes).
+						enhancementPR("https://github.com/kubernetes/enhancements/issues/TBD").
+						enableIn(configv1.TechPreviewNoUpgrade).
+						mustRegister()
 )

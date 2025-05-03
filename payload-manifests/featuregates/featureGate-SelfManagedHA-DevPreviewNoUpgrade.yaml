@@ -22,6 +22,9 @@
                         "name": "EventedPLEG"
                     },
                     {
+                        "name": "IngressNLBSecurityGroup"
+                    },
+                    {
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
                     },
                     {

@@ -45557,6 +45557,28 @@ func schema_openshift_api_operator_v1_AWSNetworkLoadBalancerParameters(ref commo
 							},
 						},
 					},
+					"securityGroups": {
+						SchemaProps: spec.SchemaProps{
+							Description: "securityGroups is a list of IDs or Names of Security Groups (SG) instances that are assigned to the Network Load Balancer. The following restrictions apply:\n\nOnly a single Security Group can be added (??). An SG can be allocated to only a single IngressController.\n\nSecurityGroups *AWSSecurityGroups `json:\"securityGroups\"`",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"managedSecurityGroup": {
+						SchemaProps: spec.SchemaProps{
+							Description: "managedSecurityGroup specifies whether the service load balancer should create and manage security groups for the Network Load Balancer.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 				},
 			},
 		},

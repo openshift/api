@@ -7,6 +7,7 @@ metadata:
     capability.openshift.io/name: Ingress
     include.release.openshift.io/ibm-cloud-managed: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
+    release.openshift.io/feature-set: TechPreviewNoUpgrade
   name: ingresscontrollers.operator.openshift.io
 spec:
   group: operator.openshift.io
@@ -449,6 +450,37 @@ spec:
                                     x-kubernetes-validations:
                                     - message: eipAllocations cannot contain duplicates
                                       rule: self.all(x, self.exists_one(y, x == y))
+                                  managedSecurityGroup:
+                                    description: |-
+                                      managedSecurityGroup specifies whether the service load balancer should create
+                                      and manage security groups for the Network Load Balancer.
+                                    type: boolean
+                                  securityGroups:
+                                    description: |-
+                                      securityGroups is a list of IDs or Names of Security Groups (SG) instances that
+                                      are assigned to the Network Load Balancer.
+                                      The following restrictions apply:
+
+                                      Only a single Security Group can be added (??).
+                                      An SG can be allocated to only a single IngressController.
+
+                                      SecurityGroups *AWSSecurityGroups `json:"securityGroups"`
+                                    items:
+                                      description: AWSSecurityGroup is a reference
+                                        to an AWS security group name or ID.
+                                      maxLength: 256
+                                      minLength: 1
+                                      type: string
+                                      x-kubernetes-validations:
+                                      - message: security group name cannot contain
+                                          a comma
+                                        rule: '!self.contains('','')'
+                                      - message: security group follow the pattern
+                                          '^sg-[0-9A-Za-z]{17}$' if it starts with
+                                          'sg-'
+                                        rule: 'self.startsWith(''sg-'') ? self.matches(''^sg-[0-9A-Za-z]{17}$'')
+                                          : true'
+                                    type: array
                                   subnets:
                                     description: |-
                                       subnets specifies the subnets to which the load balancer will
@@ -2717,6 +2749,37 @@ spec:
                                     x-kubernetes-validations:
                                     - message: eipAllocations cannot contain duplicates
                                       rule: self.all(x, self.exists_one(y, x == y))
+                                  managedSecurityGroup:
+                                    description: |-
+                                      managedSecurityGroup specifies whether the service load balancer should create
+                                      and manage security groups for the Network Load Balancer.
+                                    type: boolean
+                                  securityGroups:
+                                    description: |-
+                                      securityGroups is a list of IDs or Names of Security Groups (SG) instances that
+                                      are assigned to the Network Load Balancer.
+                                      The following restrictions apply:
+
+                                      Only a single Security Group can be added (??).
+                                      An SG can be allocated to only a single IngressController.
+
+                                      SecurityGroups *AWSSecurityGroups `json:"securityGroups"`
+                                    items:
+                                      description: AWSSecurityGroup is a reference
+                                        to an AWS security group name or ID.
+                                      maxLength: 256
+                                      minLength: 1
+                                      type: string
+                                      x-kubernetes-validations:
+                                      - message: security group name cannot contain
+                                          a comma
+                                        rule: '!self.contains('','')'
+                                      - message: security group follow the pattern
+                                          '^sg-[0-9A-Za-z]{17}$' if it starts with
+                                          'sg-'
+                                        rule: 'self.startsWith(''sg-'') ? self.matches(''^sg-[0-9A-Za-z]{17}$'')
+                                          : true'
+                                    type: array
                                   subnets:
                                     description: |-
                                       subnets specifies the subnets to which the load balancer will

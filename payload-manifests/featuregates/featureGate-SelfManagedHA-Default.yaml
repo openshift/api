@@ -143,7 +143,13 @@
                         "name": "PlatformOperators"
                     },
                     {
-                        "name": "ProcMountType"
+                        "name": "ProcMountType",
+                        "requiredMinimumComponentVersions": [
+                            {
+                                "component": "Kubelet",
+                                "version": "1.30.0"
+                            }
+                        ]
                     },
                     {
                         "name": "RouteAdvertisements"
@@ -173,10 +179,22 @@
                         "name": "UpgradeStatus"
                     },
                     {
-                        "name": "UserNamespacesPodSecurityStandards"
+                        "name": "UserNamespacesPodSecurityStandards",
+                        "requiredMinimumComponentVersions": [
+                            {
+                                "component": "Kubelet",
+                                "version": "1.30.0"
+                            }
+                        ]
                     },
                     {
-                        "name": "UserNamespacesSupport"
+                        "name": "UserNamespacesSupport",
+                        "requiredMinimumComponentVersions": [
+                            {
+                                "component": "Kubelet",
+                                "version": "1.30.0"
+                            }
+                        ]
                     },
                     {
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"

@@ -195,32 +195,53 @@ const (
 )
 
 type OIDCProvider struct {
-	// name of the OIDC provider
+	// name configures the unique human-readable identifier
+	// associated with the identity provider.
+	// name is used to distinguish between multiple identity providers.
+	// name has no impact on token validation or authentication mechanics.
+	// name is required.
+	// name must not be an empty string ("").
 	//
 	// +kubebuilder:validation:MinLength=1
 	// +required
 	Name string `json:"name"`
-	// issuer describes atributes of the OIDC token issuer
+
+	// issuer configures how the platform interacts
+	// with the identity provider and how tokens issued
+	// from the identity provider are evaluated by the
+	// Kubernetes API Server.
+	// issuer is required.
 	//
 	// +required
 	Issuer TokenIssuer `json:"issuer"`
 
-	// oidcClients contains configuration for the platform's clients that
-	// need to request tokens from the issuer
+	// oidcClients configures how on-cluster, platform clients should request tokens from the identity provider.
+	// oidcClients is optional.
+	// oidcClients must not exceed 20 entries.
+	// oidcClients entries must have unique namespace/name pairs.
 	//
 	// +listType=map
 	// +listMapKey=componentNamespace
 	// +listMapKey=componentName
 	// +kubebuilder:validation:MaxItems=20
+	// +optional
 	OIDCClients []OIDCClientConfig `json:"oidcClients"`
 
-	// claimMappings describes rules on how to transform information from an
-	// ID token into a cluster identity
+	// claimMappings configures the rules to be used by the Kubernetes API Server
+	// for translating claims in a JWT token, issued by the identity provider,
+	// to a cluster identity.
+	// claimMappings is optional.
+	// +optional
 	ClaimMappings TokenClaimMappings `json:"claimMappings"`
 
-	// claimValidationRules are rules that are applied to validate token claims to authenticate users.
+	// claimValidationRules configures the rules to be used the Kubernetes API Server
+	// for validating the claims in a JWT token issued by the identity provider.
+	// claimValidationRules is optional.
+	//
+	// Validation rules are joined via an AND operation.
 	//
 	// +listType=atomic
+	// +optional
 	ClaimValidationRules []TokenClaimValidationRule `json:"claimValidationRules,omitempty"`
 }
 
@@ -228,17 +249,24 @@ type OIDCProvider struct {
 type TokenAudience string
 
 type TokenIssuer struct {
-	// URL is the serving URL of the token issuer.
-	// Must use the https:// scheme.
+	// issuerURL configures the URL that is used to issue tokens
+	// by the identity provider.
+	// issuerURL is used by the Kubernetes API Server to determine
+	// how authentication tokens should be handled, by matching
+	// the 'iss' claim in the JWT to the issuerURL for configured
+	// identity providers.
+	// issuerURL is required.
+	// issuerURL must use the 'https' scheme.
 	//
 	// +kubebuilder:validation:Pattern=`^https:\/\/[^\s]`
 	// +required
 	URL string `json:"issuerURL"`
 
-	// audiences is an array of audiences that the token was issued for.
-	// Valid tokens must include at least one of these values in their
-	// "aud" claim.
-	// Must be set to exactly one value.
+	// audiences configures the acceptable audiences the JWT token,
+	// issued by the identity provider, must be issued to.
+	// At least one of the entries must match the 'aud' claim in the JWT token.
+	// audiences is required.
+	// audiences must contain at least one entry but must not exceed ten entries.
 	//
 	// +listType=set
 	// +kubebuilder:validation:MinItems=1
@@ -246,23 +274,39 @@ type TokenIssuer struct {
 	// +required
 	Audiences []TokenAudience `json:"audiences"`
 
-	// CertificateAuthority is a reference to a config map in the
-	// configuration namespace. The .data of the configMap must contain
-	// the "ca-bundle.crt" key.
-	// If unset, system trust is used instead.
+	// issuerCertificateAuthority configures the certificate authority,
+	// used by the Kubernetes API Server, to validate the connection to
+	// the identity provider when fetching discovery information.
+	// issuerCertificateAuthority is optional.
+	//
+	// When not specified, the system trust is used.
+	//
+	// When specified, it must reference a ConfigMap in the openshift-config
+	// namespace containing the PEM encoded CA certificates under the 'ca-bundle.crt'
+	// key in the data field of the ConfigMap.
+	//
+	// +optional
 	CertificateAuthority ConfigMapNameReference `json:"issuerCertificateAuthority"`
 }
 
 type TokenClaimMappings struct {
-	// username is a name of the claim that should be used to construct
-	// usernames for the cluster identity.
+	// username configures how the username of a cluster identity
+	// should be constructed from the claims in a JWT token issued
+	// by the identity provider.
+	// username is optional.
 	//
-	// Default value: "sub"
+	// +optional
 	Username UsernameClaimMapping `json:"username,omitempty"`
 
-	// groups is a name of the claim that should be used to construct
-	// groups for the cluster identity.
-	// The referenced claim must use array of strings values.
+	// groups configures how the groups of a cluster identity
+	// should be constructed from the claims in a JWT token issued
+	// by the identity provider.
+	// When referencing a claim, if the claim is present in the JWT
+	// token, its value must be list of groups separated by a comma (',').
+	// For example - '"foo"' and '"foo", "bar", "baz"' are valid claim values.
+	// groups is optional.
+	//
+	// +optional
 	Groups PrefixedClaimMapping `json:"groups,omitempty"`
 
 	// uid is an optional field for configuring the claim mapping
@@ -293,8 +337,14 @@ type TokenClaimMappings struct {
 	Extra []ExtraMapping `json:"extra,omitempty"`
 }
 
+// TokenClaimMapping allows specifying a JWT token
+// claim to be used when mapping claims from an
+// authentication token to cluster identities.
 type TokenClaimMapping struct {
-	// claim is a JWT token claim to be used in the mapping
+	// claim configures the JWT token claim whose
+	// value is assigned to the cluster identity
+	// field associated with this mapping.
+	// claim is required.
 	//
 	// +required
 	Claim string `json:"claim"`
@@ -404,48 +454,91 @@ type ExtraMapping struct {
 	ValueExpression string `json:"valueExpression"`
 }
 
+// OIDCClientConfig configures how platform clients
+// interact with identity providers as an authentication
+// method
 type OIDCClientConfig struct {
-	// componentName is the name of the component that is supposed to consume this
-	// client configuration
+	// componentName is the name of the platform component being configured
+	// to use the identity provider as an authentication mode.
+	// componentName is used in combination with componentNamespace as a unique identifier.
+	// componentName is required.
+	// componentName must not be empty and must not exceed 256 characters in length.
 	//
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=256
 	// +required
 	ComponentName string `json:"componentName"`
 
-	// componentNamespace is the namespace of the component that is supposed to consume this
-	// client configuration
+	// componentNamespace specifies the namespace in which the platform component, being configured 
+	// to use the identity provider as an authentication mode, is running.
+	// componentNamespace is used in combination with componentName as a unique identifier.
+	// componentNamespace is required.
+	// componentNamespace must not be empty and must not exceed 63 characters in length
 	//
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=63
 	// +required
 	ComponentNamespace string `json:"componentNamespace"`
 
-	// clientID is the identifier of the OIDC client from the OIDC provider
+	// clientID configures the identifier, from the identity provider, that the platform
+	// component uses for authentication requests made to the identity provider.
+	// The identity provider must accept this identifier for platform components
+	// to be able to use the identity provider as an authentication mode.
+	// clientID is required.
+	// clientID must not be empty.
 	//
 	// +kubebuilder:validation:MinLength=1
 	// +required
 	ClientID string `json:"clientID"`
 
-	// clientSecret refers to a secret in the `openshift-config` namespace that
-	// contains the client secret in the `clientSecret` key of the `.data` field
+	// clientSecret configures the client secret used by the platform component
+	// when making authentication requests to the identity provider.
+	// clientSecret is optional.
+	//
+	// When omitted, this means no opinion and the platform component is
+	// left to choose a default - which may be subject to change over time.
+	//
+	// When specified, clientSecret references a Secret in the 'openshift-config'
+	// namespace that contains the client secret in the 'clientSecret' key of the '.data' field. 
+	//
+	// +optional
 	ClientSecret SecretNameReference `json:"clientSecret"`
 
 	// extraScopes is an optional set of scopes to request tokens with.
+	// 
+	// extraScopes configures the extra scopes that should be requested by the
+	// platform component when making authentication requests to the identity provider.
+	// This is useful if you have configured claim mappings that requires specific
+	// scope(s) be requested beyond the standard OIDC scopes.
+	// extraScopes is optional.
+	//
+	// When omitted, no additional scopes are requested.
 	//
 	// +listType=set
+	// +optional
 	ExtraScopes []string `json:"extraScopes"`
 }
 
+// OIDCClientStatus represents the current state
+// of platform components and how they interact with
+// the configured identity providers.
 type OIDCClientStatus struct {
-	// componentName is the name of the component that will consume a client configuration.
+	// componentName is the name of the platform component being configured
+	// to use the identity provider as an authentication mode.
+	// componentName is used in combination with componentNamespace as a unique identifier.
+	// componentName is required.
+	// componentName must not be empty and must not exceed 256 characters in length.
 	//
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=256
 	// +required
 	ComponentName string `json:"componentName"`
 
-	// componentNamespace is the namespace of the component that will consume a client configuration.
+	// componentNamespace specifies the namespace in which the platform component, being configured 
+	// to use the identity provider as an authentication mode, is running.
+	// componentNamespace is used in combination with componentName as a unique identifier.
+	// componentNamespace is required.
+	// componentNamespace must not be empty and must not exceed 63 characters in length
 	//
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=63
@@ -453,17 +546,22 @@ type OIDCClientStatus struct {
 	ComponentNamespace string `json:"componentNamespace"`
 
 	// currentOIDCClients is a list of clients that the component is currently using.
+	// currentOIDCClients is optional
 	//
 	// +listType=map
 	// +listMapKey=issuerURL
 	// +listMapKey=clientID
+	// +optional
 	CurrentOIDCClients []OIDCClientReference `json:"currentOIDCClients"`
 
 	// consumingUsers is a slice of ServiceAccounts that need to have read
 	// permission on the `clientSecret` secret.
+	// consumingUsers is optional.
+	// consumingUsers must not exceed 5 entries.
 	//
 	// +kubebuilder:validation:MaxItems=5
 	// +listType=set
+	// +optional
 	ConsumingUsers []ConsumingUser `json:"consumingUsers"`
 
 	// conditions are used to communicate the state of the `oidcClients` entry.
@@ -480,21 +578,33 @@ type OIDCClientStatus struct {
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
 }
 
+// OIDCClientReference is a reference to a platform component
+// client configuration.
 type OIDCClientReference struct {
-	// OIDCName refers to the `name` of the provider from `oidcProviders`
+	// oidcProviderName is a reference to the 'name' of the identity provider
+	// configured in 'oidcProviders' that this client is associated with.
+	// oidcProviderName is required.
+	// oidcProviderName must not be empty.
 	//
 	// +kubebuilder:validation:MinLength=1
 	// +required
 	OIDCProviderName string `json:"oidcProviderName"`
 
-	// URL is the serving URL of the token issuer.
-	// Must use the https:// scheme.
+	// issuerURL is the URL of the identity provider that this
+	// client is configured to make requests against.
+	// issuerURL is required.
+	// issuerURL must use the 'https' scheme.
 	//
 	// +kubebuilder:validation:Pattern=`^https:\/\/[^\s]`
 	// +required
 	IssuerURL string `json:"issuerURL"`
 
-	// clientID is the identifier of the OIDC client from the OIDC provider
+	// clientID is the identifier that this client uses for authentication requests 
+	// made to the identity provider.
+	// The identity provider must accept this identifier for platform components
+	// to be able to use the identity provider as an authentication mode.
+	// clientID is required.
+	// clientID must not be empty.
 	//
 	// +kubebuilder:validation:MinLength=1
 	// +required
@@ -505,32 +615,48 @@ type OIDCClientReference struct {
 type UsernameClaimMapping struct {
 	TokenClaimMapping `json:",inline"`
 
-	// prefixPolicy specifies how a prefix should apply.
+	// prefixPolicy configures how a prefix should be applied to
+	// the value of the JWT claim specified in the 'claim' field.
+	// prefixPolicy is optional.
 	//
-	// By default, claims other than `email` will be prefixed with the issuer URL to
-	// prevent naming clashes with other plugins.
+	// Allowed values are Prefix, NoPrefix, and omitted.
 	//
-	// Set to "NoPrefix" to disable prefixing.
+	// When set to Prefix, the value specifed in the prefix field will be
+	// prepended to the value of the JWT claim.
+	// The prefix field must be set when prefixPolicy is Prefix.
 	//
-	// Example:
-	//     (1) `prefix` is set to "myoidc:" and `claim` is set to "username".
-	//         If the JWT claim `username` contains value `userA`, the resulting
-	//         mapped value will be "myoidc:userA".
-	//     (2) `prefix` is set to "myoidc:" and `claim` is set to "email". If the
-	//         JWT `email` claim contains value "userA@myoidc.tld", the resulting
-	//         mapped value will be "myoidc:userA@myoidc.tld".
-	//     (3) `prefix` is unset, `issuerURL` is set to `https://myoidc.tld`,
-	//         the JWT claims include "username":"userA" and "email":"userA@myoidc.tld",
-	//         and `claim` is set to:
-	//         (a) "username": the mapped value will be "https://myoidc.tld#userA"
-	//         (b) "email": the mapped value will be "userA@myoidc.tld"
+	// When set to NoPrefix, no prefix will be prepended to the value
+	// of the JWT claim.
+	//
+	// When omitted, this means no opinion and the platform is left to choose
+	// any prefixes that are applied - which may be subject to change over time.
+	// Currently, the platform prepends `{issuerURL}#` to the value of the JWT claim
+	// when the claim is not 'email'.
+	// As an example, consider the following scenario:
+	//    `prefix` is unset, `issuerURL` is set to `https://myoidc.tld`,
+	//    the JWT claims include "username":"userA" and "email":"userA@myoidc.tld",
+	//    and `claim` is set to:
+	//    - "username": the mapped value will be "https://myoidc.tld#userA"
+	//    - "email": the mapped value will be "userA@myoidc.tld"
 	//
 	// +kubebuilder:validation:Enum={"", "NoPrefix", "Prefix"}
+	// +optional
+	// +union
 	PrefixPolicy UsernamePrefixPolicy `json:"prefixPolicy"`
 
+	// prefix configures the prefix that should be prepended to the value
+	// of the JWT claim.
+	// prefix must be set when prefixPolicy is set to 'Prefix' and must be unset otherwise.
+	//
+	// +optional
+	// +unionMember
 	Prefix *UsernamePrefix `json:"prefix"`
 }
 
+// UsernamePrefixPolicy configures how prefixes should be applied
+// to values extracted from the JWT claims during the process of mapping
+// JWT claims to cluster identity attributes.
+// +enum
 type UsernamePrefixPolicy string
 
 var (
@@ -545,26 +671,43 @@ var (
 	Prefix UsernamePrefixPolicy = "Prefix"
 )
 
+// UsernamePrefix configures the string that should
+// be used as a prefix for username claim mappings.
 type UsernamePrefix struct {
+	// prefixString configures the prefix that will
+	// be applied to cluster identity username attribute
+	// during the process of mapping JWT claims to cluster identity attributes.
+	// prefixString is required.
+	// prefixString must not be empty.
+	//
 	// +kubebuilder:validation:MinLength=1
 	// +required
 	PrefixString string `json:"prefixString"`
 }
 
+// PrefixedClaimMapping configures a claim mapping
+// that allows for an optional prefix.
 type PrefixedClaimMapping struct {
 	TokenClaimMapping `json:",inline"`
 
-	// prefix is a string to prefix the value from the token in the result of the
-	// claim mapping.
+	// prefix configures the prefix that will be applied to the cluster
+	// identity attribute during the process of mapping JWT
+	// claims to cluster identity attributes.
+	// prefix is optional.
 	//
-	// By default, no prefixing occurs.
+	// When omitted, no prefix is applied to the cluster identity attribute.
 	//
 	// Example: if `prefix` is set to "myoidc:"" and the `claim` in JWT contains
 	// an array of strings "a", "b" and  "c", the mapping will result in an
 	// array of string "myoidc:a", "myoidc:b" and "myoidc:c".
+	//
+	// +optional
 	Prefix string `json:"prefix"`
 }
 
+// TokenValidationRuleType represents the different
+// claim validation rule types that can be configured.
+// +enum
 type TokenValidationRuleType string
 
 const (
@@ -574,24 +717,48 @@ const (
 type TokenClaimValidationRule struct {
 	// type sets the type of the validation rule
 	//
+	// type configures the type of the validation rule.
+	// type is optional.
+	//
+	// Allowed values are RequiredClaim and omitted.
+	//
+	// When set to RequiredClaim, the Kubernetes API Server
+	// will be configured to validate that the incoming JWT
+	// contains the required claim and that it's value matches
+	// the required value.
+	//
+	// Defaults to RequiredClaim.
+	//
 	// +kubebuilder:validation:Enum={"RequiredClaim"}
 	// +kubebuilder:default="RequiredClaim"
+	// +optional
 	Type TokenValidationRuleType `json:"type"`
 
-	// requiredClaim allows configuring a required claim name and its expected
-	// value
+	// requiredClaim configures the required claim and value that the Kubernetes
+	// API Server will use to validate whether or not the incoming JWT is
+	// valid for this identity provider.
+	// requiredClaim is optional.
+	//
+	// +optional
 	RequiredClaim *TokenRequiredClaim `json:"requiredClaim"`
 }
 
 type TokenRequiredClaim struct {
-	// claim is a name of a required claim. Only claims with string values are
-	// supported.
+	// claim configures the name of the required claim.
+	// When taken from the JWT claims, claim must be a string value.
+	// claim is required.
+	// claim must not be empty.
 	//
 	// +kubebuilder:validation:MinLength=1
 	// +required
 	Claim string `json:"claim"`
 
-	// requiredValue is the required value for the claim.
+	// requiredValue configures the value that 'claim' must
+	// have when taken from the incoming JWT claims.
+	// If the value in the JWT claims does not match, the token
+	// will be rejected for authentication.
+	// requiredValue is required.
+	// requiredValue must not be empty.
 	//
 	// +kubebuilder:validation:MinLength=1
 	// +required

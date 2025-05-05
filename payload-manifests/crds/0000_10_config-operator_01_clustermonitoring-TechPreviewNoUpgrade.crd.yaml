@@ -50,11 +50,25 @@ spec:
             properties:
               alertmanagerMainConfig:
                 description: |-
-                  alertmanagerMainConfig provides configuration options for the default Alertmanager instance
-                  running in the `openshift-monitoring` namespace. It allows users to control whether Alertmanager
-                  is enabled, its logging behavior, pod scheduling preferences, and resource requests.
-                  Required: This field must be specified.
+                  alertmanagerMainConfig allows users to configure how the default Alertmanager instance
+                  should be deployed in the `openshift-monitoring` namespace.
+                  alertmanagerMainConfig is required.
                 properties:
+                  deploymentMode:
+                    description: |-
+                      deploymentMode determines whether the default Alertmanager instance should be deployed
+                      as part of the monitoring stack.
+                      mode is required.
+                      Allowed values are Deployed and Deployed`
+                      When set to "Enabled", the Cluster Monitoring Operator
+                      ensures that an Alertmanager instance is created and managed in the `openshift-monitoring` namespace.
+                      When set to "Disabled", the operator will not deploy the Alertmanager instance.
+                      Use this field if you want to explicitly opt in or out of running a platform-level Alertmanager.
+                      Required: This field must be specified.
+                    enum:
+                    - Deployed
+                    - NotDeployed
+                    type: string
                   logLevel:
                     description: |-
                       logLevel defines the verbosity of logs emitted by Alertmanager.
@@ -65,20 +79,11 @@ spec:
                       - `Warn`: Logs warnings and errors.
                       - `Info`: Logs general information, warnings, and errors. Default.
                       - `Debug`: Logs detailed debug information.
-                      When omitted, the default value `Info` is used.
-                    maxLength: 253
-                    type: string
-                  mode:
-                    description: |-
-                      mode determines whether the default/main Alertmanager instance should be deployed
-                      as part of the monitoring stack. When set to "Enabled", the Cluster Monitoring Operator
-                      ensures that an Alertmanager instance is created and managed in the `openshift-monitoring` namespace.
-                      When set to "Disabled", the operator will not deploy the Alertmanager instance.
-                      Use this field if you want to explicitly opt in or out of running a platform-level Alertmanager.
-                      Required: This field must be specified.
                     enum:
-                    - Enabled
-                    - Disabled
+                    - Error
+                    - Warn
+                    - Info
+                    - Debug
                     type: string
                   nodeSelector:
                     additionalProperties:
@@ -406,14 +411,15 @@ spec:
                     description: |-
                       userMode controls whether Alertmanager should process configurations from user-defined (non-platform)
                       namespaces for AlertmanagerConfig lookups.
-                      When set to true, Alertmanager will search for AlertmanagerConfig resources in user-defined namespaces.
+                      Alertmanager will search for AlertmanagerConfig resources in user-defined namespaces.
                       This field is only effective when the user workload Alertmanager instance is not enabled.
                       If the user workload monitoring Alertmanager is enabled, this field is ignored.
                       Required: This field must be specified.
+                      Allowed values are Selectable and None
                     enum:
                     - ""
-                    - Enabled
-                    - Disabled
+                    - Selectable
+                    - None
                     type: string
                   volumeClaimTemplate:
                     description: |-
@@ -832,7 +838,7 @@ spec:
                         type: object
                     type: object
                 required:
-                - mode
+                - deploymentMode
                 - userMode
                 type: object
               userDefined:

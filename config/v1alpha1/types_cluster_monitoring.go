@@ -78,10 +78,9 @@ type ClusterMonitoringSpec struct {
 	// userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring.
 	// +required
 	UserDefined UserDefinedMonitoring `json:"userDefined"`
-	// alertmanagerMainConfig provides configuration options for the default Alertmanager instance
-	// running in the `openshift-monitoring` namespace. It allows users to control whether Alertmanager
-	// is enabled, its logging behavior, pod scheduling preferences, and resource requests.
-	// Required: This field must be specified.
+	// alertmanagerMainConfig allows users to configure how the default Alertmanager instance
+	// should be deployed in the `openshift-monitoring` namespace.
+	// alertmanagerMainConfig is required.
 	// +required
 	AlertmanagerMainConfig AlertmanagerMainConfig `json:"alertmanagerMainConfig"`
 }
@@ -115,22 +114,26 @@ const (
 //
 // Required: This field must be specified. a
 type AlertmanagerMainConfig struct {
-	// mode determines whether the default/main Alertmanager instance should be deployed
-	// as part of the monitoring stack. When set to "Enabled", the Cluster Monitoring Operator
+	// deploymentMode determines whether the default Alertmanager instance should be deployed
+	// as part of the monitoring stack.
+	// mode is required.
+	// Allowed values are Deployed and Deployed`
+	// When set to "Enabled", the Cluster Monitoring Operator
 	// ensures that an Alertmanager instance is created and managed in the `openshift-monitoring` namespace.
 	// When set to "Disabled", the operator will not deploy the Alertmanager instance.
 	// Use this field if you want to explicitly opt in or out of running a platform-level Alertmanager.
 	// Required: This field must be specified.
-	// +kubebuilder:validation:Enum:=Enabled;Disabled;
+	// +kubebuilder:validation:Enum:=Deployed;NotDeployed;
 	// +required
-	DeploymentMode AlertManagerMode `json:"mode"`
+	DeploymentMode AlertManagerDeployMode `json:"deploymentMode"`
 	// userMode controls whether Alertmanager should process configurations from user-defined (non-platform)
 	// namespaces for AlertmanagerConfig lookups.
-	// When set to true, Alertmanager will search for AlertmanagerConfig resources in user-defined namespaces.
+	// Alertmanager will search for AlertmanagerConfig resources in user-defined namespaces.
 	// This field is only effective when the user workload Alertmanager instance is not enabled.
 	// If the user workload monitoring Alertmanager is enabled, this field is ignored.
 	// Required: This field must be specified.
-	// +kubebuilder:validation:Enum="";Enabled;Disabled
+	// Allowed values are Selectable and None
+	// +kubebuilder:validation:Enum="";Selectable;None
 	// +required
 	UserMode UserAlertManagerMode `json:"userMode"`
 	// logLevel defines the verbosity of logs emitted by Alertmanager.
@@ -141,10 +144,8 @@ type AlertmanagerMainConfig struct {
 	// - `Warn`: Logs warnings and errors.
 	// - `Info`: Logs general information, warnings, and errors. Default.
 	// - `Debug`: Logs detailed debug information.
-	// When omitted, the default value `Info` is used.
-	// +kubebuilder:validation:MaxLength=253
 	// +optional
-	LogLevel string `json:"logLevel,omitempty"`
+	LogLevel LogLevel `json:"logLevel,omitempty"`
 	// nodeSelector is the node selector applied to network diagnostics components
 	//
 	// When omitted, this means the user has no opinion and the platform is left
@@ -204,44 +205,43 @@ type AlertmanagerMainConfig struct {
 // +kubebuilder:validation:MaxLength=253
 type SecretName string
 
-// AlertManagerMode defines the deployment state of the platform Alertmanager instance.
+// AlertManagerDeployMode defines the deployment state of the platform Alertmanager instance.
 //
 // Possible values:
-// - "Enabled": The Alertmanager instance will be deployed and managed by the operator.
-// - "Disabled": The operator will not deploy an Alertmanager instance.
-type AlertManagerMode string
+// - "Deployed": The Alertmanager instance will be deployed and managed by the operator.
+// - "NotDeployed": The operator will not deploy an Alertmanager instance.
+type AlertManagerDeployMode string
 
 const (
 	// AlertManagerModeEnabled means the Alertmanager instance will be deployed and managed by the operator.
-	AlertManagerModeEnabled AlertManagerMode = "Enabled"
+	AlertManagerManagerDeployed AlertManagerDeployMode = "Deployed"
 
 	// AlertManagerModeDisabled means the operator will not deploy the Alertmanager instance.
-	AlertManagerModeDisabled AlertManagerMode = "Disabled"
+	AlertManagerModeNotDeployed AlertManagerDeployMode = "NonDeployed"
 )
 
 // UserAlertManagerMode defines mode for user-defines namespaced
 //
 // Possible values:
-// - "Enabled": User-defined namespaces can be selected for AlertmanagerConfig lookups.
-// - "Disabled": User-defined namespaces cannot be selected for AlertmanagerConfig lookups.
+// - "Selectable": User-defined namespaces can be selected for AlertmanagerConfig lookups.
+// - "None": User-defined namespaces cannot be selected for AlertmanagerConfig lookups.
 type UserAlertManagerMode string
 
 const (
 	// UserAlertmanagerEnabled enables user-defined namespaces to be selected for `AlertmanagerConfig` lookups. This setting only
 	// applies if the user workload monitoring instance of Alertmanager is not enabled.
-	UserAlertManagerEnabled UserAlertManagerMode = "Enabled"
+	UserAlertManagerSelectable UserAlertManagerMode = "Selectable"
 	// UserAlertManagerDisabled disables user-defined namespaces to be selected for `AlertmanagerConfig` lookups. This setting only
 	// applies if the user workload monitoring instance of Alertmanager is not enabled.
-	UserAlertManagerDisabled UserAlertManagerMode = "Disabled"
+	UserAlertManagerNone UserAlertManagerMode = "None"
 )
 
 // +kubebuilder:validation:Enum=Error;Warn;Info;Debug
-// +default=Info
-type LogLevelType string
+type LogLevel string
 
 const (
-	LogLevelError LogLevelType = "Error"
-	LogLevelWarn  LogLevelType = "Warn"
-	LogLevelInfo  LogLevelType = "Info"
-	LogLevelDebug LogLevelType = "Debug"
+	LogLevelError LogLevel = "Error"
+	LogLevelWarn  LogLevel = "Warn"
+	LogLevelInfo  LogLevel = "Info"
+	LogLevelDebug LogLevel = "Debug"
 )

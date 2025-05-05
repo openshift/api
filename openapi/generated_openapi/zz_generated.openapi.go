@@ -404,6 +404,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.VSpherePlatformTopology":                                         schema_openshift_api_config_v1_VSpherePlatformTopology(ref),
 		"github.com/openshift/api/config/v1.VSpherePlatformVCenterSpec":                                      schema_openshift_api_config_v1_VSpherePlatformVCenterSpec(ref),
 		"github.com/openshift/api/config/v1.WebhookTokenAuthenticator":                                       schema_openshift_api_config_v1_WebhookTokenAuthenticator(ref),
+		"github.com/openshift/api/config/v1alpha1.AlertmanagerMainConfig":                                    schema_openshift_api_config_v1alpha1_AlertmanagerMainConfig(ref),
 		"github.com/openshift/api/config/v1alpha1.Backup":                                                    schema_openshift_api_config_v1alpha1_Backup(ref),
 		"github.com/openshift/api/config/v1alpha1.BackupList":                                                schema_openshift_api_config_v1alpha1_BackupList(ref),
 		"github.com/openshift/api/config/v1alpha1.BackupSpec":                                                schema_openshift_api_config_v1alpha1_BackupSpec(ref),
@@ -20480,6 +20481,117 @@ func schema_openshift_api_config_v1_WebhookTokenAuthenticator(ref common.Referen
 	}
 }
 
+func schema_openshift_api_config_v1alpha1_AlertmanagerMainConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "alertmanagerMainConfig provides configuration options for the default Alertmanager instance that runs in the `openshift-monitoring` namespace. Use this configuration to control whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.\n\nRequired: This field must be specified. a",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"deploymentMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "deploymentMode determines whether the default Alertmanager instance should be deployed as part of the monitoring stack. mode is required. Allowed values are Deployed and Deployed` When set to \"Enabled\", the Cluster Monitoring Operator ensures that an Alertmanager instance is created and managed in the `openshift-monitoring` namespace. When set to \"Disabled\", the operator will not deploy the Alertmanager instance. Use this field if you want to explicitly opt in or out of running a platform-level Alertmanager. Required: This field must be specified.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"userMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "userMode controls whether Alertmanager should process configurations from user-defined (non-platform) namespaces for AlertmanagerConfig lookups. Alertmanager will search for AlertmanagerConfig resources in user-defined namespaces. This field is only effective when the user workload Alertmanager instance is not enabled. If the user workload monitoring Alertmanager is enabled, this field is ignored. Required: This field must be specified. Allowed values are Selectable and None",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"logLevel": {
+						SchemaProps: spec.SchemaProps{
+							Description: "logLevel defines the verbosity of logs emitted by Alertmanager. This field allows users to control the amount and severity of logs generated, which can be useful for debugging issues or reducing noise in production environments. Allowed values are: - `Error`: Logs only errors. - `Warn`: Logs warnings and errors. - `Info`: Logs general information, warnings, and errors. Default. - `Debug`: Logs detailed debug information.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"nodeSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "nodeSelector is the node selector applied to network diagnostics components\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default is `kubernetes.io/os: linux`.\n\nThis field is optional. When omitted, Pods can be scheduled onto any available node.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"resources": {
+						SchemaProps: spec.SchemaProps{
+							Description: "resources defines the compute resource requests and limits for the Alertmanager container. This includes CPU and memory constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
+							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
+					"secrets": {
+						SchemaProps: spec.SchemaProps{
+							Description: "secrets Defines a list of secrets that need to be mounted into the Alertmanager. The secrets must reside within the same namespace as the Alertmanager object. They will be added as volumes named secret-<secret-name> and mounted at /etc/alertmanager/secrets/<secret-name> within the 'alertmanager' container of the Alertmanager Pods. This field is optional.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"tolerations": {
+						SchemaProps: spec.SchemaProps{
+							Description: "tolerations is a list of tolerations applied to network diagnostics components\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default is `- operator: \"Exists\"` which means that all taints are tolerated. This field is optional.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.Toleration"),
+									},
+								},
+							},
+						},
+					},
+					"topologySpreadConstraints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "topologySpreadConstraints defines rules for how Alertmanager Pods should be distributed across topology domains such as zones, nodes, or other user-defined labels.\n\nThis helps improve high availability and resource efficiency by avoiding placing too many replicas in the same failure domain.\n\nWhen omitted, no constraints are applied and Pod scheduling is left to the default behavior. This field maps directly to the `topologySpreadConstraints` field in the Pod spec.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.TopologySpreadConstraint"),
+									},
+								},
+							},
+						},
+					},
+					"volumeClaimTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "volumeClaimTemplate Defines persistent storage for Alertmanager. Use this setting to configure the persistent volume claim, including storage class, volume size, and name. If omitted, the Pod uses ephemeral storage and alert data will not persist across restarts. // This field is optional.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaim"),
+						},
+					},
+				},
+				Required: []string{"deploymentMode", "userMode"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.PersistentVolumeClaim", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint"},
+	}
+}
+
 func schema_openshift_api_config_v1alpha1_Backup(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -20908,12 +21020,19 @@ func schema_openshift_api_config_v1alpha1_ClusterMonitoringSpec(ref common.Refer
 							Ref:         ref("github.com/openshift/api/config/v1alpha1.UserDefinedMonitoring"),
 						},
 					},
+					"alertmanagerMainConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "alertmanagerMainConfig allows users to configure how the default Alertmanager instance should be deployed in the `openshift-monitoring` namespace. alertmanagerMainConfig is required.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.AlertmanagerMainConfig"),
+						},
+					},
 				},
-				Required: []string{"userDefined"},
+				Required: []string{"userDefined", "alertmanagerMainConfig"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.UserDefinedMonitoring"},
+			"github.com/openshift/api/config/v1alpha1.AlertmanagerMainConfig", "github.com/openshift/api/config/v1alpha1.UserDefinedMonitoring"},
 	}
 }
 

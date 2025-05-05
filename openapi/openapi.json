@@ -30550,6 +30550,10 @@
           "description": "logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for their operands.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
           "type": "string"
         },
+        "machineConfigurationValidationPolicy": {
+          "description": "machineConfigurationValidationPolicy tells the operator how new machine configurations should be validated. Allowed values are Strict, Relaxed, and omitted. DefaultValidationPolicy represents a configuration validation mode chosen by the system. Currently, the default is StrictValidationPolicy. StrictValidationPolicy represents a configuration validation mode that enforces that changes to the rendered MCs are not altering fields outside the supported ones. More info about supported fields: https://docs.redhat.com/en/documentation/openshift_container_platform/latest/html/machine_configuration/machine-config-index#what-can-you-change-with-machine-configs RelaxedValidationPolicy represents a configuration validation mode that does not perform any validation over the fields that cannot be changed. Usage of this mode is discouraged.",
+          "type": "string"
+        },
         "managedBootImages": {
           "description": "managedBootImages allows configuration for the management of boot images for machine resources within the cluster. This configuration allows users to select resources that should be updated to the latest boot images during cluster upgrades, ensuring that new machines always boot with the current cluster version's boot image. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default for each machine manager mode is All for GCP and AWS platforms, and None for all other platforms.",
           "default": {},

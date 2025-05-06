@@ -4,7 +4,6 @@ source "$(dirname "${BASH_SOURCE}")/lib/init.sh"
 
 crd_globs="\
     authorization/v1/zz_generated.crd-manifests/*_config-operator_*.crd*yaml\
-    config/v1/zz_generated.crd-manifests/*_config-operator_*.crd*yaml\
     machine/v1/zz_generated.crd-manifests/*.crd*yaml\
     operator/v1/zz_generated.crd-manifests//*_config-operator_*.crd*yaml\
     operator/v1alpha1/zz_generated.crd-manifests//*_config-operator_*.crd*yaml\
@@ -28,6 +27,23 @@ crd_globs="\
     config/v1alpha1/zz_generated.crd-manifests/0000_10_config-operator_01_clustermonitoring*.crd.yaml
     operator/v1/zz_generated.crd-manifests/*_storage_01_storages*.crd.yaml
     operator/v1/zz_generated.crd-manifests/*_csi-driver_01_clustercsidrivers*.crd.yaml
+    config/v1/zz_generated.crd-manifests/0000_03_config-operator_01_proxies.crd.yaml
+    config/v1/zz_generated.crd-manifests/0000_10_config-operator_01_apiservers-*.crd.yaml
+    config/v1/zz_generated.crd-manifests/0000_10_config-operator_01_authentications-*.crd.yaml
+    config/v1/zz_generated.crd-manifests/0000_10_config-operator_01_consoles.crd.yaml
+    config/v1/zz_generated.crd-manifests/0000_10_config-operator_01_dnses.crd.yaml
+    config/v1/zz_generated.crd-manifests/0000_10_config-operator_01_featuregates.crd.yaml
+    config/v1/zz_generated.crd-manifests/0000_10_config-operator_01_imagecontentpolicies.crd.yaml
+    config/v1/zz_generated.crd-manifests/0000_10_config-operator_01_imagedigestmirrorsets.crd.yaml
+    config/v1/zz_generated.crd-manifests/0000_10_config-operator_01_images-*.crd.yaml
+    config/v1/zz_generated.crd-manifests/0000_10_config-operator_01_imagetagmirrorsets.crd.yaml
+    config/v1/zz_generated.crd-manifests/0000_10_config-operator_01_infrastructures-*.crd.yaml
+    config/v1/zz_generated.crd-manifests/0000_10_config-operator_01_ingresses.crd.yaml
+    config/v1/zz_generated.crd-manifests/0000_10_config-operator_01_networks.crd.yaml
+    config/v1/zz_generated.crd-manifests/0000_10_config-operator_01_nodes-*.crd.yaml
+    config/v1/zz_generated.crd-manifests/0000_10_config-operator_01_oauths.crd.yaml
+    config/v1/zz_generated.crd-manifests/0000_10_config-operator_01_projects.crd.yaml
+    config/v1/zz_generated.crd-manifests/0000_10_config-operator_01_schedulers-*.crd.yaml
     "
 
 # To allow the crd_globs to be sourced in the verify script,

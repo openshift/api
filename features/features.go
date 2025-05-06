@@ -835,4 +835,12 @@ var (
 									enhancementPR("https://github.com/openshift/enhancements/pull/1748").
 									enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 									mustRegister()
+
+	FeatureGateAzureMultiDisk = newFeatureGate("AzureMultiDisk").
+					reportProblemsToJiraComponent("splat").
+					contactPerson("jcpowermac").
+					productScope(ocpSpecific).
+					enhancementPR("https://github.com/openshift/enhancements/pull/1779").
+					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+					mustRegister()
 )

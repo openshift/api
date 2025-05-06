@@ -81,6 +81,9 @@
                         "name": "AutomatedEtcdBackup"
                     },
                     {
+                        "name": "AzureMultiDisk"
+                    },
+                    {
                         "name": "AzureWorkloadIdentity"
                     },
                     {

@@ -404,6 +404,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.VSpherePlatformTopology":                                         schema_openshift_api_config_v1_VSpherePlatformTopology(ref),
 		"github.com/openshift/api/config/v1.VSpherePlatformVCenterSpec":                                      schema_openshift_api_config_v1_VSpherePlatformVCenterSpec(ref),
 		"github.com/openshift/api/config/v1.WebhookTokenAuthenticator":                                       schema_openshift_api_config_v1_WebhookTokenAuthenticator(ref),
+		"github.com/openshift/api/config/v1alpha1.AlertmanagerContainerResources":                            schema_openshift_api_config_v1alpha1_AlertmanagerContainerResources(ref),
 		"github.com/openshift/api/config/v1alpha1.AlertmanagerMainConfig":                                    schema_openshift_api_config_v1alpha1_AlertmanagerMainConfig(ref),
 		"github.com/openshift/api/config/v1alpha1.Backup":                                                    schema_openshift_api_config_v1alpha1_Backup(ref),
 		"github.com/openshift/api/config/v1alpha1.BackupList":                                                schema_openshift_api_config_v1alpha1_BackupList(ref),
@@ -420,6 +421,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1alpha1.EtcdBackupSpec":                                            schema_openshift_api_config_v1alpha1_EtcdBackupSpec(ref),
 		"github.com/openshift/api/config/v1alpha1.FulcioCAWithRekor":                                         schema_openshift_api_config_v1alpha1_FulcioCAWithRekor(ref),
 		"github.com/openshift/api/config/v1alpha1.GatherConfig":                                              schema_openshift_api_config_v1alpha1_GatherConfig(ref),
+		"github.com/openshift/api/config/v1alpha1.HugePageResource":                                          schema_openshift_api_config_v1alpha1_HugePageResource(ref),
 		"github.com/openshift/api/config/v1alpha1.ImagePolicy":                                               schema_openshift_api_config_v1alpha1_ImagePolicy(ref),
 		"github.com/openshift/api/config/v1alpha1.ImagePolicyList":                                           schema_openshift_api_config_v1alpha1_ImagePolicyList(ref),
 		"github.com/openshift/api/config/v1alpha1.ImagePolicySpec":                                           schema_openshift_api_config_v1alpha1_ImagePolicySpec(ref),
@@ -439,6 +441,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1alpha1.PolicyMatchRemapIdentity":                                  schema_openshift_api_config_v1alpha1_PolicyMatchRemapIdentity(ref),
 		"github.com/openshift/api/config/v1alpha1.PolicyRootOfTrust":                                         schema_openshift_api_config_v1alpha1_PolicyRootOfTrust(ref),
 		"github.com/openshift/api/config/v1alpha1.PublicKey":                                                 schema_openshift_api_config_v1alpha1_PublicKey(ref),
+		"github.com/openshift/api/config/v1alpha1.ResourceSpec":                                              schema_openshift_api_config_v1alpha1_ResourceSpec(ref),
 		"github.com/openshift/api/config/v1alpha1.RetentionNumberConfig":                                     schema_openshift_api_config_v1alpha1_RetentionNumberConfig(ref),
 		"github.com/openshift/api/config/v1alpha1.RetentionPolicy":                                           schema_openshift_api_config_v1alpha1_RetentionPolicy(ref),
 		"github.com/openshift/api/config/v1alpha1.RetentionSizeConfig":                                       schema_openshift_api_config_v1alpha1_RetentionSizeConfig(ref),
@@ -20445,11 +20448,60 @@ func schema_openshift_api_config_v1_WebhookTokenAuthenticator(ref common.Referen
 	}
 }
 
+func schema_openshift_api_config_v1alpha1_AlertmanagerContainerResources(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "AlertmanagerContainerResources defines simplified resource requirements for a container.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"cpu": {
+						SchemaProps: spec.SchemaProps{
+							Description: "cpu defines the CPU resource limits and requests. Format: \"<request>,<limit>\" (e.g. \"100m,500m\")",
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.ResourceSpec"),
+						},
+					},
+					"memory": {
+						SchemaProps: spec.SchemaProps{
+							Description: "memory defines the memory resource limits and requests. Format: \"<request>,<limit>\" (e.g. \"128Mi,512Mi\")",
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.ResourceSpec"),
+						},
+					},
+					"hugepages": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"size",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "hugepages is a list of hugepage resource specifications by page size.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1alpha1.HugePageResource"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha1.HugePageResource", "github.com/openshift/api/config/v1alpha1.ResourceSpec"},
+	}
+}
+
 func schema_openshift_api_config_v1alpha1_AlertmanagerMainConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "alertmanagerMainConfig provides configuration options for the default Alertmanager instance that runs in the `openshift-monitoring` namespace. Use this configuration to control whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.\n\nRequired: This field must be specified. a",
+				Description: "alertmanagerMainConfig provides configuration options for the default Alertmanager instance that runs in the `openshift-monitoring` namespace. Use this configuration to control whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.\n\nRequired: This field must be specified.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"deploymentMode": {
@@ -20493,8 +20545,8 @@ func schema_openshift_api_config_v1alpha1_AlertmanagerMainConfig(ref common.Refe
 					},
 					"resources": {
 						SchemaProps: spec.SchemaProps{
-							Description: "resources defines the compute resource requests and limits for the Alertmanager container. This includes CPU and memory constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
-							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
+							Description: "resources defines the compute resource requests and limits for the Alertmanager container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements.",
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.AlertmanagerContainerResources"),
 						},
 					},
 					"secrets": {
@@ -20552,7 +20604,7 @@ func schema_openshift_api_config_v1alpha1_AlertmanagerMainConfig(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PersistentVolumeClaim", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint"},
+			"github.com/openshift/api/config/v1alpha1.AlertmanagerContainerResources", "k8s.io/api/core/v1.PersistentVolumeClaim", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint"},
 	}
 }
 
@@ -21134,6 +21186,41 @@ func schema_openshift_api_config_v1alpha1_GatherConfig(ref common.ReferenceCallb
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/config/v1alpha1.Storage"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_HugePageResource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "HugePageResource describes hugepages resources by page size (e.g. 2Mi, 1Gi).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"size": {
+						SchemaProps: spec.SchemaProps{
+							Description: "size of the hugepage (e.g. \"2Mi\", \"1Gi\").",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"request": {
+						SchemaProps: spec.SchemaProps{
+							Description: "request amount for this hugepage size.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"limit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "limit amount for this hugepage size.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
 	}
 }
 
@@ -21803,6 +21890,33 @@ func schema_openshift_api_config_v1alpha1_PublicKey(ref common.ReferenceCallback
 					},
 				},
 				Required: []string{"keyData"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_ResourceSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ResourceSpec defines the requested and limited value of a resource.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"request": {
+						SchemaProps: spec.SchemaProps{
+							Description: "request is the minimum amount of the resource required.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"limit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "limit is the maximum amount of the resource allowed.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
 			},
 		},
 	}

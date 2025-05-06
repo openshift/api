@@ -11118,8 +11118,34 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1alpha1.AlertmanagerContainerResources": {
+      "description": "AlertmanagerContainerResources defines simplified resource requirements for a container.",
+      "type": "object",
+      "properties": {
+        "cpu": {
+          "description": "cpu defines the CPU resource limits and requests. Format: \"<request>,<limit>\" (e.g. \"100m,500m\")",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ResourceSpec"
+        },
+        "hugepages": {
+          "description": "hugepages is a list of hugepage resource specifications by page size.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.HugePageResource"
+          },
+          "x-kubernetes-list-map-keys": [
+            "size"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "memory": {
+          "description": "memory defines the memory resource limits and requests. Format: \"<request>,<limit>\" (e.g. \"128Mi,512Mi\")",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ResourceSpec"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1alpha1.AlertmanagerMainConfig": {
-      "description": "alertmanagerMainConfig provides configuration options for the default Alertmanager instance that runs in the `openshift-monitoring` namespace. Use this configuration to control whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.\n\nRequired: This field must be specified. a",
+      "description": "alertmanagerMainConfig provides configuration options for the default Alertmanager instance that runs in the `openshift-monitoring` namespace. Use this configuration to control whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.\n\nRequired: This field must be specified.",
       "type": "object",
       "required": [
         "deploymentMode",
@@ -11144,8 +11170,8 @@
           }
         },
         "resources": {
-          "description": "resources defines the compute resource requests and limits for the Alertmanager container. This includes CPU and memory constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
-          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+          "description": "resources defines the compute resource requests and limits for the Alertmanager container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements.",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.AlertmanagerContainerResources"
         },
         "secrets": {
           "description": "secrets Defines a list of secrets that need to be mounted into the Alertmanager. The secrets must reside within the same namespace as the Alertmanager object. They will be added as volumes named secret-<secret-name> and mounted at /etc/alertmanager/secrets/<secret-name> within the 'alertmanager' container of the Alertmanager Pods. This field is optional.",
@@ -11518,6 +11544,25 @@
         "storage": {
           "description": "storage is an optional field that allows user to define persistent storage for gathering jobs to store the Insights data archive. If omitted, the gathering job will use ephemeral storage.",
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.Storage"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.HugePageResource": {
+      "description": "HugePageResource describes hugepages resources by page size (e.g. 2Mi, 1Gi).",
+      "type": "object",
+      "properties": {
+        "limit": {
+          "description": "limit amount for this hugepage size.",
+          "type": "string"
+        },
+        "request": {
+          "description": "request amount for this hugepage size.",
+          "type": "string"
+        },
+        "size": {
+          "description": "size of the hugepage (e.g. \"2Mi\", \"1Gi\").",
+          "type": "string",
+          "default": ""
         }
       }
     },
@@ -11924,6 +11969,20 @@
           "description": "rekorKeyData contains inline base64-encoded data for the PEM format from the Rekor public key. rekorKeyData must be at most 8192 characters.",
           "type": "string",
           "format": "byte"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.ResourceSpec": {
+      "description": "ResourceSpec defines the requested and limited value of a resource.",
+      "type": "object",
+      "properties": {
+        "limit": {
+          "description": "limit is the maximum amount of the resource allowed.",
+          "type": "string"
+        },
+        "request": {
+          "description": "request is the minimum amount of the resource required.",
+          "type": "string"
         }
       }
     },

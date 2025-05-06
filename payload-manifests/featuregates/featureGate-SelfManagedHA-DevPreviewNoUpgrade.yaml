@@ -309,9 +309,6 @@
                         "name": "VSphereMultiVCenters"
                     },
                     {
-                        "name": "ValidatingAdmissionPolicy"
-                    },
-                    {
                         "name": "VolumeAttributesClass"
                     },
                     {

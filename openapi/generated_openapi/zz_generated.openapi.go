@@ -185,6 +185,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.CloudLoadBalancerConfig":                                         schema_openshift_api_config_v1_CloudLoadBalancerConfig(ref),
 		"github.com/openshift/api/config/v1.CloudLoadBalancerIPs":                                            schema_openshift_api_config_v1_CloudLoadBalancerIPs(ref),
 		"github.com/openshift/api/config/v1.ClusterCondition":                                                schema_openshift_api_config_v1_ClusterCondition(ref),
+		"github.com/openshift/api/config/v1.ClusterImagePolicy":                                              schema_openshift_api_config_v1_ClusterImagePolicy(ref),
+		"github.com/openshift/api/config/v1.ClusterImagePolicyList":                                          schema_openshift_api_config_v1_ClusterImagePolicyList(ref),
+		"github.com/openshift/api/config/v1.ClusterImagePolicySpec":                                          schema_openshift_api_config_v1_ClusterImagePolicySpec(ref),
+		"github.com/openshift/api/config/v1.ClusterImagePolicyStatus":                                        schema_openshift_api_config_v1_ClusterImagePolicyStatus(ref),
 		"github.com/openshift/api/config/v1.ClusterNetworkEntry":                                             schema_openshift_api_config_v1_ClusterNetworkEntry(ref),
 		"github.com/openshift/api/config/v1.ClusterOperator":                                                 schema_openshift_api_config_v1_ClusterOperator(ref),
 		"github.com/openshift/api/config/v1.ClusterOperatorList":                                             schema_openshift_api_config_v1_ClusterOperatorList(ref),
@@ -237,6 +241,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.FeatureGateSpec":                                                 schema_openshift_api_config_v1_FeatureGateSpec(ref),
 		"github.com/openshift/api/config/v1.FeatureGateStatus":                                               schema_openshift_api_config_v1_FeatureGateStatus(ref),
 		"github.com/openshift/api/config/v1.FeatureGateTests":                                                schema_openshift_api_config_v1_FeatureGateTests(ref),
+		"github.com/openshift/api/config/v1.FulcioCAWithRekor":                                               schema_openshift_api_config_v1_FulcioCAWithRekor(ref),
 		"github.com/openshift/api/config/v1.GCPPlatformSpec":                                                 schema_openshift_api_config_v1_GCPPlatformSpec(ref),
 		"github.com/openshift/api/config/v1.GCPPlatformStatus":                                               schema_openshift_api_config_v1_GCPPlatformStatus(ref),
 		"github.com/openshift/api/config/v1.GCPResourceLabel":                                                schema_openshift_api_config_v1_GCPResourceLabel(ref),
@@ -267,6 +272,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.ImageDigestMirrors":                                              schema_openshift_api_config_v1_ImageDigestMirrors(ref),
 		"github.com/openshift/api/config/v1.ImageLabel":                                                      schema_openshift_api_config_v1_ImageLabel(ref),
 		"github.com/openshift/api/config/v1.ImageList":                                                       schema_openshift_api_config_v1_ImageList(ref),
+		"github.com/openshift/api/config/v1.ImagePolicy":                                                     schema_openshift_api_config_v1_ImagePolicy(ref),
+		"github.com/openshift/api/config/v1.ImagePolicyList":                                                 schema_openshift_api_config_v1_ImagePolicyList(ref),
+		"github.com/openshift/api/config/v1.ImagePolicySpec":                                                 schema_openshift_api_config_v1_ImagePolicySpec(ref),
+		"github.com/openshift/api/config/v1.ImagePolicyStatus":                                               schema_openshift_api_config_v1_ImagePolicyStatus(ref),
 		"github.com/openshift/api/config/v1.ImageSpec":                                                       schema_openshift_api_config_v1_ImageSpec(ref),
 		"github.com/openshift/api/config/v1.ImageStatus":                                                     schema_openshift_api_config_v1_ImageStatus(ref),
 		"github.com/openshift/api/config/v1.ImageTagMirrorSet":                                               schema_openshift_api_config_v1_ImageTagMirrorSet(ref),
@@ -342,8 +351,16 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.OvirtPlatformLoadBalancer":                                       schema_openshift_api_config_v1_OvirtPlatformLoadBalancer(ref),
 		"github.com/openshift/api/config/v1.OvirtPlatformSpec":                                               schema_openshift_api_config_v1_OvirtPlatformSpec(ref),
 		"github.com/openshift/api/config/v1.OvirtPlatformStatus":                                             schema_openshift_api_config_v1_OvirtPlatformStatus(ref),
+		"github.com/openshift/api/config/v1.PKI":                                                             schema_openshift_api_config_v1_PKI(ref),
+		"github.com/openshift/api/config/v1.PKICertificateSubject":                                           schema_openshift_api_config_v1_PKICertificateSubject(ref),
 		"github.com/openshift/api/config/v1.PlatformSpec":                                                    schema_openshift_api_config_v1_PlatformSpec(ref),
 		"github.com/openshift/api/config/v1.PlatformStatus":                                                  schema_openshift_api_config_v1_PlatformStatus(ref),
+		"github.com/openshift/api/config/v1.Policy":                                                          schema_openshift_api_config_v1_Policy(ref),
+		"github.com/openshift/api/config/v1.PolicyFulcioSubject":                                             schema_openshift_api_config_v1_PolicyFulcioSubject(ref),
+		"github.com/openshift/api/config/v1.PolicyIdentity":                                                  schema_openshift_api_config_v1_PolicyIdentity(ref),
+		"github.com/openshift/api/config/v1.PolicyMatchExactRepository":                                      schema_openshift_api_config_v1_PolicyMatchExactRepository(ref),
+		"github.com/openshift/api/config/v1.PolicyMatchRemapIdentity":                                        schema_openshift_api_config_v1_PolicyMatchRemapIdentity(ref),
+		"github.com/openshift/api/config/v1.PolicyRootOfTrust":                                               schema_openshift_api_config_v1_PolicyRootOfTrust(ref),
 		"github.com/openshift/api/config/v1.PowerVSPlatformSpec":                                             schema_openshift_api_config_v1_PowerVSPlatformSpec(ref),
 		"github.com/openshift/api/config/v1.PowerVSPlatformStatus":                                           schema_openshift_api_config_v1_PowerVSPlatformStatus(ref),
 		"github.com/openshift/api/config/v1.PowerVSServiceEndpoint":                                          schema_openshift_api_config_v1_PowerVSServiceEndpoint(ref),
@@ -358,6 +375,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.ProxyList":                                                       schema_openshift_api_config_v1_ProxyList(ref),
 		"github.com/openshift/api/config/v1.ProxySpec":                                                       schema_openshift_api_config_v1_ProxySpec(ref),
 		"github.com/openshift/api/config/v1.ProxyStatus":                                                     schema_openshift_api_config_v1_ProxyStatus(ref),
+		"github.com/openshift/api/config/v1.PublicKey":                                                       schema_openshift_api_config_v1_PublicKey(ref),
 		"github.com/openshift/api/config/v1.RegistryLocation":                                                schema_openshift_api_config_v1_RegistryLocation(ref),
 		"github.com/openshift/api/config/v1.RegistrySources":                                                 schema_openshift_api_config_v1_RegistrySources(ref),
 		"github.com/openshift/api/config/v1.Release":                                                         schema_openshift_api_config_v1_Release(ref),
@@ -10249,6 +10267,187 @@ func schema_openshift_api_config_v1_ClusterCondition(ref common.ReferenceCallbac
 	}
 }
 
+func schema_openshift_api_config_v1_ClusterImagePolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClusterImagePolicy holds cluster-wide configuration for image signature verification\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec contains the configuration for the cluster image policy.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.ClusterImagePolicySpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status contains the observed state of the resource.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.ClusterImagePolicyStatus"),
+						},
+					},
+				},
+				Required: []string{"spec"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.ClusterImagePolicySpec", "github.com/openshift/api/config/v1.ClusterImagePolicyStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_openshift_api_config_v1_ClusterImagePolicyList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClusterImagePolicyList is a list of ClusterImagePolicy resources\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "items is a list of ClusterImagePolices",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.ClusterImagePolicy"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.ClusterImagePolicy", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_openshift_api_config_v1_ClusterImagePolicySpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CLusterImagePolicySpec is the specification of the ClusterImagePolicy custom resource.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"scopes": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "scopes defines the list of image identities assigned to a policy. Each item refers to a scope in a registry implementing the \"Docker Registry HTTP API V2\". Scopes matching individual images are named Docker references in the fully expanded form, either using a tag or digest. For example, docker.io/library/busybox:latest (not busybox:latest). More general scopes are prefixes of individual-image scopes, and specify a repository (by omitting the tag or digest), a repository namespace, or a registry host (by only specifying the host name and possibly a port number) or a wildcard expression starting with `*.`, for matching all subdomains (not including a port number). Wildcards are only supported for subdomain matching, and may not be used in the middle of the host, i.e.  *.example.com is a valid case, but example*.*.com is not. If multiple scopes match a given image, only the policy requirements for the most specific scope apply. The policy requirements for more general scopes are ignored. In addition to setting a policy appropriate for your own deployed applications, make sure that a policy on the OpenShift image repositories quay.io/openshift-release-dev/ocp-release, quay.io/openshift-release-dev/ocp-v4.0-art-dev (or on a more general scope) allows deployment of the OpenShift images required for cluster operation. If a scope is configured in both the ClusterImagePolicy and the ImagePolicy, or if the scope in ImagePolicy is nested under one of the scopes from the ClusterImagePolicy, only the policy from the ClusterImagePolicy will be applied. For additional details about the format, please refer to the document explaining the docker transport field, which can be found at: https://github.com/containers/image/blob/main/docs/containers-policy.json.5.md#docker",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"policy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "policy contains configuration to allow scopes to be verified, and defines how images not matching the verification policy will be treated.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.Policy"),
+						},
+					},
+				},
+				Required: []string{"scopes", "policy"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.Policy"},
+	}
+}
+
+func schema_openshift_api_config_v1_ClusterImagePolicyStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions provide details on the status of this API Resource.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
+	}
+}
+
 func schema_openshift_api_config_v1_ClusterNetworkEntry(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -12525,6 +12724,43 @@ func schema_openshift_api_config_v1_FeatureGateTests(ref common.ReferenceCallbac
 	}
 }
 
+func schema_openshift_api_config_v1_FulcioCAWithRekor(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "FulcioCAWithRekor defines the root of trust based on the Fulcio certificate and the Rekor public key.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"fulcioCAData": {
+						SchemaProps: spec.SchemaProps{
+							Description: "fulcioCAData contains inline base64-encoded data for the PEM format fulcio CA. fulcioCAData must be at most 8192 characters.",
+							Type:        []string{"string"},
+							Format:      "byte",
+						},
+					},
+					"rekorKeyData": {
+						SchemaProps: spec.SchemaProps{
+							Description: "rekorKeyData contains inline base64-encoded data for the PEM format from the Rekor public key. rekorKeyData must be at most 8192 characters.",
+							Type:        []string{"string"},
+							Format:      "byte",
+						},
+					},
+					"fulcioSubject": {
+						SchemaProps: spec.SchemaProps{
+							Description: "fulcioSubject specifies OIDC issuer and the email of the Fulcio authentication configuration.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.PolicyFulcioSubject"),
+						},
+					},
+				},
+				Required: []string{"fulcioCAData", "rekorKeyData", "fulcioSubject"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.PolicyFulcioSubject"},
+	}
+}
+
 func schema_openshift_api_config_v1_GCPPlatformSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -13957,6 +14193,187 @@ func schema_openshift_api_config_v1_ImageList(ref common.ReferenceCallback) comm
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/config/v1.Image", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_openshift_api_config_v1_ImagePolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ImagePolicy holds namespace-wide configuration for image signature verification\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec holds user settable values for configuration",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.ImagePolicySpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status contains the observed state of the resource.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.ImagePolicyStatus"),
+						},
+					},
+				},
+				Required: []string{"spec"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.ImagePolicySpec", "github.com/openshift/api/config/v1.ImagePolicyStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_openshift_api_config_v1_ImagePolicyList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ImagePolicyList is a list of ImagePolicy resources\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "items is a list of ImagePolicies",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.ImagePolicy"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.ImagePolicy", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_openshift_api_config_v1_ImagePolicySpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ImagePolicySpec is the specification of the ImagePolicy CRD.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"scopes": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "scopes defines the list of image identities assigned to a policy. Each item refers to a scope in a registry implementing the \"Docker Registry HTTP API V2\". Scopes matching individual images are named Docker references in the fully expanded form, either using a tag or digest. For example, docker.io/library/busybox:latest (not busybox:latest). More general scopes are prefixes of individual-image scopes, and specify a repository (by omitting the tag or digest), a repository namespace, or a registry host (by only specifying the host name and possibly a port number) or a wildcard expression starting with `*.`, for matching all subdomains (not including a port number). Wildcards are only supported for subdomain matching, and may not be used in the middle of the host, i.e.  *.example.com is a valid case, but example*.*.com is not. If multiple scopes match a given image, only the policy requirements for the most specific scope apply. The policy requirements for more general scopes are ignored. In addition to setting a policy appropriate for your own deployed applications, make sure that a policy on the OpenShift image repositories quay.io/openshift-release-dev/ocp-release, quay.io/openshift-release-dev/ocp-v4.0-art-dev (or on a more general scope) allows deployment of the OpenShift images required for cluster operation. If a scope is configured in both the ClusterImagePolicy and the ImagePolicy, or if the scope in ImagePolicy is nested under one of the scopes from the ClusterImagePolicy, only the policy from the ClusterImagePolicy will be applied. For additional details about the format, please refer to the document explaining the docker transport field, which can be found at: https://github.com/containers/image/blob/main/docs/containers-policy.json.5.md#docker",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"policy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "policy contains configuration to allow scopes to be verified, and defines how images not matching the verification policy will be treated.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.Policy"),
+						},
+					},
+				},
+				Required: []string{"scopes", "policy"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.Policy"},
+	}
+}
+
+func schema_openshift_api_config_v1_ImagePolicyStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions provide details on the status of this API Resource.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -17514,6 +17931,70 @@ func schema_openshift_api_config_v1_OvirtPlatformStatus(ref common.ReferenceCall
 	}
 }
 
+func schema_openshift_api_config_v1_PKI(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PKI defines the root of trust based on Root CA(s) and corresponding intermediate certificates.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"caRootsData": {
+						SchemaProps: spec.SchemaProps{
+							Description: "caRootsData contains base64-encoded data of a certificate bundle PEM file, which contains one or more CA roots in the PEM format. The total length of the data must not exceed 8192 characters.",
+							Type:        []string{"string"},
+							Format:      "byte",
+						},
+					},
+					"caIntermediatesData": {
+						SchemaProps: spec.SchemaProps{
+							Description: "caIntermediatesData contains base64-encoded data of a certificate bundle PEM file, which contains one or more intermediate certificates in the PEM format. The total length of the data must not exceed 8192 characters. caIntermediatesData requires caRootsData to be set.",
+							Type:        []string{"string"},
+							Format:      "byte",
+						},
+					},
+					"pkiCertificateSubject": {
+						SchemaProps: spec.SchemaProps{
+							Description: "pkiCertificateSubject defines the requirements imposed on the subject to which the certificate was issued.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.PKICertificateSubject"),
+						},
+					},
+				},
+				Required: []string{"caRootsData", "pkiCertificateSubject"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.PKICertificateSubject"},
+	}
+}
+
+func schema_openshift_api_config_v1_PKICertificateSubject(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PKICertificateSubject defines the requirements imposed on the subject to which the certificate was issued.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"email": {
+						SchemaProps: spec.SchemaProps{
+							Description: "email specifies the expected email address imposed on the subject to which the certificate was issued, and must match the email address listed in the Subject Alternative Name (SAN) field of the certificate. The email should be a valid email address and at most 320 characters in length.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"hostname": {
+						SchemaProps: spec.SchemaProps{
+							Description: "hostname specifies the expected hostname imposed on the subject to which the certificate was issued, and it must match the hostname listed in the Subject Alternative Name (SAN) DNS field of the certificate. The hostname should be a valid dns 1123 subdomain name, optionally prefixed by '*.', and at most 253 characters in length. It should consist only of lowercase alphanumeric characters, hyphens, periods and the optional preceding asterisk.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_config_v1_PlatformSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -17727,6 +18208,221 @@ func schema_openshift_api_config_v1_PlatformStatus(ref common.ReferenceCallback)
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/config/v1.AWSPlatformStatus", "github.com/openshift/api/config/v1.AlibabaCloudPlatformStatus", "github.com/openshift/api/config/v1.AzurePlatformStatus", "github.com/openshift/api/config/v1.BareMetalPlatformStatus", "github.com/openshift/api/config/v1.EquinixMetalPlatformStatus", "github.com/openshift/api/config/v1.ExternalPlatformStatus", "github.com/openshift/api/config/v1.GCPPlatformStatus", "github.com/openshift/api/config/v1.IBMCloudPlatformStatus", "github.com/openshift/api/config/v1.KubevirtPlatformStatus", "github.com/openshift/api/config/v1.NutanixPlatformStatus", "github.com/openshift/api/config/v1.OpenStackPlatformStatus", "github.com/openshift/api/config/v1.OvirtPlatformStatus", "github.com/openshift/api/config/v1.PowerVSPlatformStatus", "github.com/openshift/api/config/v1.VSpherePlatformStatus"},
+	}
+}
+
+func schema_openshift_api_config_v1_Policy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Policy defines the verification policy for the items in the scopes list.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"rootOfTrust": {
+						SchemaProps: spec.SchemaProps{
+							Description: "rootOfTrust specifies the root of trust for the policy.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.PolicyRootOfTrust"),
+						},
+					},
+					"signedIdentity": {
+						SchemaProps: spec.SchemaProps{
+							Description: "signedIdentity specifies what image identity the signature claims about the image. The required matchPolicy field specifies the approach used in the verification process to verify the identity in the signature and the actual image identity, the default matchPolicy is \"MatchRepoDigestOrExact\".",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.PolicyIdentity"),
+						},
+					},
+				},
+				Required: []string{"rootOfTrust"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.PolicyIdentity", "github.com/openshift/api/config/v1.PolicyRootOfTrust"},
+	}
+}
+
+func schema_openshift_api_config_v1_PolicyFulcioSubject(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PolicyFulcioSubject defines the OIDC issuer and the email of the Fulcio authentication configuration.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"oidcIssuer": {
+						SchemaProps: spec.SchemaProps{
+							Description: "oidcIssuer contains the expected OIDC issuer. It will be verified that the Fulcio-issued certificate contains a (Fulcio-defined) certificate extension pointing at this OIDC issuer URL. When Fulcio issues certificates, it includes a value based on an URL inside the client-provided ID token. Example: \"https://expected.OIDC.issuer/\"",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"signedEmail": {
+						SchemaProps: spec.SchemaProps{
+							Description: "signedEmail holds the email address the the Fulcio certificate is issued for. Example: \"expected-signing-user@example.com\"",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"oidcIssuer", "signedEmail"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1_PolicyIdentity(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PolicyIdentity defines image identity the signature claims about the image. When omitted, the default matchPolicy is \"MatchRepoDigestOrExact\".",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"matchPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "matchPolicy sets the type of matching to be used. Valid values are \"MatchRepoDigestOrExact\", \"MatchRepository\", \"ExactRepository\", \"RemapIdentity\". When omitted, the default value is \"MatchRepoDigestOrExact\". If set matchPolicy to ExactRepository, then the exactRepository must be specified. If set matchPolicy to RemapIdentity, then the remapIdentity must be specified. \"MatchRepoDigestOrExact\" means that the identity in the signature must be in the same repository as the image identity if the image identity is referenced by a digest. Otherwise, the identity in the signature must be the same as the image identity. \"MatchRepository\" means that the identity in the signature must be in the same repository as the image identity. \"ExactRepository\" means that the identity in the signature must be in the same repository as a specific identity specified by \"repository\". \"RemapIdentity\" means that the signature must be in the same as the remapped image identity. Remapped image identity is obtained by replacing the \"prefix\" with the specified “signedPrefix” if the the image identity matches the specified remapPrefix.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"exactRepository": {
+						SchemaProps: spec.SchemaProps{
+							Description: "exactRepository is required if matchPolicy is set to \"ExactRepository\".",
+							Ref:         ref("github.com/openshift/api/config/v1.PolicyMatchExactRepository"),
+						},
+					},
+					"remapIdentity": {
+						SchemaProps: spec.SchemaProps{
+							Description: "remapIdentity is required if matchPolicy is set to \"RemapIdentity\".",
+							Ref:         ref("github.com/openshift/api/config/v1.PolicyMatchRemapIdentity"),
+						},
+					},
+				},
+				Required: []string{"matchPolicy"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "matchPolicy",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"exactRepository": "PolicyMatchExactRepository",
+								"remapIdentity":   "PolicyMatchRemapIdentity",
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.PolicyMatchExactRepository", "github.com/openshift/api/config/v1.PolicyMatchRemapIdentity"},
+	}
+}
+
+func schema_openshift_api_config_v1_PolicyMatchExactRepository(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"repository": {
+						SchemaProps: spec.SchemaProps{
+							Description: "repository is the reference of the image identity to be matched. The value should be a repository name (by omitting the tag or digest) in a registry implementing the \"Docker Registry HTTP API V2\". For example, docker.io/library/busybox",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"repository"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1_PolicyMatchRemapIdentity(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"prefix": {
+						SchemaProps: spec.SchemaProps{
+							Description: "prefix is the prefix of the image identity to be matched. If the image identity matches the specified prefix, that prefix is replaced by the specified “signedPrefix” (otherwise it is used as unchanged and no remapping takes place). This useful when verifying signatures for a mirror of some other repository namespace that preserves the vendor’s repository structure. The prefix and signedPrefix values can be either host[:port] values (matching exactly the same host[:port], string), repository namespaces, or repositories (i.e. they must not contain tags/digests), and match as prefixes of the fully expanded form. For example, docker.io/library/busybox (not busybox) to specify that single repository, or docker.io/library (not an empty string) to specify the parent namespace of docker.io/library/busybox.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"signedPrefix": {
+						SchemaProps: spec.SchemaProps{
+							Description: "signedPrefix is the prefix of the image identity to be matched in the signature. The format is the same as \"prefix\". The values can be either host[:port] values (matching exactly the same host[:port], string), repository namespaces, or repositories (i.e. they must not contain tags/digests), and match as prefixes of the fully expanded form. For example, docker.io/library/busybox (not busybox) to specify that single repository, or docker.io/library (not an empty string) to specify the parent namespace of docker.io/library/busybox.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"prefix", "signedPrefix"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1_PolicyRootOfTrust(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PolicyRootOfTrust defines the root of trust based on the selected policyType.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"policyType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "policyType serves as the union's discriminator. Users are required to assign a value to this field, choosing one of the policy types that define the root of trust. \"PublicKey\" indicates that the policy relies on a sigstore publicKey and may optionally use a Rekor verification. \"FulcioCAWithRekor\" indicates that the policy is based on the Fulcio certification and incorporates a Rekor verification. \"PKI\" is a DevPreview feature that indicates that the policy is based on the certificates from Bring Your Own Public Key Infrastructure (BYOPKI). This value is enabled by turning on the SigstoreImageVerificationPKI feature gate.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"publicKey": {
+						SchemaProps: spec.SchemaProps{
+							Description: "publicKey defines the root of trust based on a sigstore public key.",
+							Ref:         ref("github.com/openshift/api/config/v1.PublicKey"),
+						},
+					},
+					"fulcioCAWithRekor": {
+						SchemaProps: spec.SchemaProps{
+							Description: "fulcioCAWithRekor defines the root of trust based on the Fulcio certificate and the Rekor public key. For more information about Fulcio and Rekor, please refer to the document at: https://github.com/sigstore/fulcio and https://github.com/sigstore/rekor",
+							Ref:         ref("github.com/openshift/api/config/v1.FulcioCAWithRekor"),
+						},
+					},
+					"pki": {
+						SchemaProps: spec.SchemaProps{
+							Description: "pki defines the root of trust based on Bring Your Own Public Key Infrastructure (BYOPKI) Root CA(s) and corresponding intermediate certificates.",
+							Ref:         ref("github.com/openshift/api/config/v1.PKI"),
+						},
+					},
+				},
+				Required: []string{"policyType"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "policyType",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"fulcioCAWithRekor": "FulcioCAWithRekor",
+								"pki":               "PKI",
+								"publicKey":         "PublicKey",
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.FulcioCAWithRekor", "github.com/openshift/api/config/v1.PKI", "github.com/openshift/api/config/v1.PublicKey"},
 	}
 }
 
@@ -18274,6 +18970,34 @@ func schema_openshift_api_config_v1_ProxyStatus(ref common.ReferenceCallback) co
 						},
 					},
 				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1_PublicKey(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PublicKey defines the root of trust based on a sigstore public key.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"keyData": {
+						SchemaProps: spec.SchemaProps{
+							Description: "keyData contains inline base64-encoded data for the PEM format public key. KeyData must be at most 8192 characters.",
+							Type:        []string{"string"},
+							Format:      "byte",
+						},
+					},
+					"rekorKeyData": {
+						SchemaProps: spec.SchemaProps{
+							Description: "rekorKeyData contains inline base64-encoded data for the PEM format from the Rekor public key. rekorKeyData must be at most 8192 characters.",
+							Type:        []string{"string"},
+							Format:      "byte",
+						},
+					},
+				},
+				Required: []string{"keyData"},
 			},
 		},
 	}

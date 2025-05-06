@@ -310,9 +310,6 @@
                         "name": "VSphereDriverConfiguration"
                     },
                     {
-                        "name": "VSphereMultiVCenters"
-                    },
-                    {
                         "name": "ValidatingAdmissionPolicy"
                     }
                 ],

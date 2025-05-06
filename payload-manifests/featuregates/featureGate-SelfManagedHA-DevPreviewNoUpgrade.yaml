@@ -306,9 +306,6 @@
                         "name": "VSphereMultiNetworks"
                     },
                     {
-                        "name": "VSphereMultiVCenters"
-                    },
-                    {
                         "name": "ValidatingAdmissionPolicy"
                     },
                     {

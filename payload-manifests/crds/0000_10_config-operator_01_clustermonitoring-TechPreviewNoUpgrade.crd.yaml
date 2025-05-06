@@ -100,65 +100,69 @@ spec:
                   resources:
                     description: |-
                       resources defines the compute resource requests and limits for the Alertmanager container.
-                      This includes CPU and memory constraints to help control scheduling and resource usage.
+                      This includes CPU, memory and HugePages constraints to help control scheduling and resource usage.
                       When not specified, defaults are used by the platform. Requests cannot exceed limits.
                       This field is optional.
                       More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+                      This is a simplified API that maps to Kubernetes ResourceRequirements.
                     properties:
-                      claims:
+                      cpu:
                         description: |-
-                          Claims lists the names of resources, defined in spec.resourceClaims,
-                          that are used by this container.
-
-                          This is an alpha field and requires enabling the
-                          DynamicResourceAllocation feature gate.
-
-                          This field is immutable. It can only be set for containers.
+                          cpu defines the CPU resource limits and requests.
+                          Format: "<request>,<limit>" (e.g. "100m,500m")
+                        properties:
+                          limit:
+                            description: limit is the maximum amount of the resource
+                              allowed.
+                            maxLength: 8
+                            type: string
+                          request:
+                            description: request is the minimum amount of the resource
+                              required.
+                            maxLength: 8
+                            type: string
+                        type: object
+                      hugepages:
+                        description: hugepages is a list of hugepage resource specifications
+                          by page size.
                         items:
-                          description: ResourceClaim references one entry in PodSpec.ResourceClaims.
+                          description: HugePageResource describes hugepages resources
+                            by page size (e.g. 2Mi, 1Gi).
                           properties:
-                            name:
-                              description: |-
-                                Name must match the name of one entry in pod.spec.resourceClaims of
-                                the Pod where this field is used. It makes that resource available
-                                inside a container.
+                            limit:
+                              description: limit amount for this hugepage size.
+                              maxLength: 8
                               type: string
                             request:
-                              description: |-
-                                Request is the name chosen for a request in the referenced claim.
-                                If empty, everything from the claim is made available, otherwise
-                                only the result of this request.
+                              description: request amount for this hugepage size.
+                              maxLength: 8
                               type: string
-                          required:
-                          - name
+                            size:
+                              description: size of the hugepage (e.g. "2Mi", "1Gi").
+                              maxLength: 8
+                              pattern: ^[0-9]+(Ki|Mi|Gi)$
+                              type: string
                           type: object
+                        maxItems: 10
                         type: array
                         x-kubernetes-list-map-keys:
-                        - name
+                        - size
                         x-kubernetes-list-type: map
-                      limits:
-                        additionalProperties:
-                          anyOf:
-                          - type: integer
-                          - type: string
-                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                          x-kubernetes-int-or-string: true
+                      memory:
                         description: |-
-                          Limits describes the maximum amount of compute resources allowed.
-                          More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
-                        type: object
-                      requests:
-                        additionalProperties:
-                          anyOf:
-                          - type: integer
-                          - type: string
-                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                          x-kubernetes-int-or-string: true
-                        description: |-
-                          Requests describes the minimum amount of compute resources required.
-                          If Requests is omitted for a container, it defaults to Limits if that is explicitly specified,
-                          otherwise to an implementation-defined value. Requests cannot exceed Limits.
-                          More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+                          memory defines the memory resource limits and requests.
+                          Format: "<request>,<limit>" (e.g. "128Mi,512Mi")
+                        properties:
+                          limit:
+                            description: limit is the maximum amount of the resource
+                              allowed.
+                            maxLength: 8
+                            type: string
+                          request:
+                            description: request is the minimum amount of the resource
+                              required.
+                            maxLength: 8
+                            type: string
                         type: object
                     type: object
                   secrets:

@@ -112,7 +112,7 @@ const (
 // that runs in the `openshift-monitoring` namespace. Use this configuration to control
 // whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.
 //
-// Required: This field must be specified. a
+// Required: This field must be specified.
 type AlertmanagerMainConfig struct {
 	// deploymentMode determines whether the default Alertmanager instance should be deployed
 	// as part of the monitoring stack.
@@ -156,12 +156,13 @@ type AlertmanagerMainConfig struct {
 	// +optional
 	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
 	// resources defines the compute resource requests and limits for the Alertmanager container.
-	// This includes CPU and memory constraints to help control scheduling and resource usage.
+	// This includes CPU, memory and HugePages constraints to help control scheduling and resource usage.
 	// When not specified, defaults are used by the platform. Requests cannot exceed limits.
 	// This field is optional.
 	// More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+	// This is a simplified API that maps to Kubernetes ResourceRequirements.
 	// +optional
-	Resources *v1.ResourceRequirements `json:"resources,omitempty"`
+	Resources *AlertmanagerContainerResources `json:"resources,omitempty"`
 	// secrets Defines a list of secrets that need to be mounted into the Alertmanager.
 	// The secrets must reside within the same namespace as the Alertmanager object.
 	// They will be added as volumes named secret-<secret-name> and mounted at
@@ -245,3 +246,54 @@ const (
 	LogLevelInfo  LogLevel = "Info"
 	LogLevelDebug LogLevel = "Debug"
 )
+
+// ResourceSpec defines the requested and limited value of a resource.
+type ResourceSpec struct {
+	// request is the minimum amount of the resource required.
+	// +kubebuilder:validation:MaxLength=8
+	// +optional
+	Request string `json:"request,omitempty"`
+	// limit is the maximum amount of the resource allowed.
+	// +kubebuilder:validation:MaxLength=8
+	// +optional
+	Limit string `json:"limit,omitempty"`
+}
+
+// AlertmanagerContainerResources defines simplified resource requirements for a container.
+type AlertmanagerContainerResources struct {
+	// cpu defines the CPU resource limits and requests.
+	// Format: "<request>,<limit>" (e.g. "100m,500m")
+	// +optional
+	CPU *ResourceSpec `json:"cpu,omitempty"`
+
+	// memory defines the memory resource limits and requests.
+	// Format: "<request>,<limit>" (e.g. "128Mi,512Mi")
+	// +optional
+	Memory *ResourceSpec `json:"memory,omitempty"`
+
+	// hugepages is a list of hugepage resource specifications by page size.
+	// +optional
+	// +listType=map
+	// +listMapKey=size
+	// +kubebuilder:validation:MaxItems=10
+	HugePages []HugePageResource `json:"hugepages,omitempty"`
+}
+
+// HugePageResource describes hugepages resources by page size (e.g. 2Mi, 1Gi).
+type HugePageResource struct {
+	// size of the hugepage (e.g. "2Mi", "1Gi").
+	// +kubebuilder:validation:Pattern=`^[0-9]+(Ki|Mi|Gi)$`
+	// +kubebuilder:validation:MaxLength=8
+	// +optional
+	Size string `json:"size"`
+
+	// request amount for this hugepage size.
+	// +kubebuilder:validation:MaxLength=8
+	// +optional
+	Request string `json:"request,omitempty"`
+
+	// limit amount for this hugepage size.
+	// +kubebuilder:validation:MaxLength=8
+	// +optional
+	Limit string `json:"limit,omitempty"`
+}

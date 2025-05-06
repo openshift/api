@@ -118,11 +118,10 @@ type AlertmanagerMainConfig struct {
 	// as part of the monitoring stack.
 	// mode is required.
 	// Allowed values are Deployed and Deployed`
-	// When set to "Enabled", the Cluster Monitoring Operator
+	// When set to Deployed, the Cluster Monitoring Operator
 	// ensures that an Alertmanager instance is created and managed in the `openshift-monitoring` namespace.
-	// When set to "Disabled", the operator will not deploy the Alertmanager instance.
+	// When set to NotDeployed, the operator will not deploy the Alertmanager instance.
 	// Use this field if you want to explicitly opt in or out of running a platform-level Alertmanager.
-	// Required: This field must be specified.
 	// +kubebuilder:validation:Enum:=Deployed;NotDeployed;
 	// +required
 	DeploymentMode AlertManagerDeployMode `json:"deploymentMode"`
@@ -131,7 +130,7 @@ type AlertmanagerMainConfig struct {
 	// Alertmanager will search for AlertmanagerConfig resources in user-defined namespaces.
 	// This field is only effective when the user workload Alertmanager instance is not enabled.
 	// If the user workload monitoring Alertmanager is enabled, this field is ignored.
-	// Required: This field must be specified.
+	// userMode is required.
 	// Allowed values are Selectable and None
 	// +kubebuilder:validation:Enum="";Selectable;None
 	// +required
@@ -139,20 +138,21 @@ type AlertmanagerMainConfig struct {
 	// logLevel defines the verbosity of logs emitted by Alertmanager.
 	// This field allows users to control the amount and severity of logs generated, which can be useful
 	// for debugging issues or reducing noise in production environments.
-	// Allowed values are:
-	// - `Error`: Logs only errors.
-	// - `Warn`: Logs warnings and errors.
-	// - `Info`: Logs general information, warnings, and errors. Default.
-	// - `Debug`: Logs detailed debug information.
+	// Allowed values are Error, Warn, Info, Debug, and omitted.
+	// When set to Error,  only errors will be logged.
+	// When set to Warn, both warnings and errors will be logged.
+	// When set to Info, general information, warnings, and errors will all be logged.
+	// When set to Debug, detailed debugging information will be logged.
+	// When omitted, this means no opinion and the platform is left to choose a default that is subject to change over time.
+	// Currently, the default is Info.
 	// +optional
 	LogLevel LogLevel `json:"logLevel,omitempty"`
 	// nodeSelector is the node selector applied to network diagnostics components
+	// nodeSelector is optional.
 	//
 	// When omitted, this means the user has no opinion and the platform is left
 	// to choose reasonable defaults. These defaults are subject to change over time.
-	// The current default is `kubernetes.io/os: linux`.
-	//
-	// This field is optional. When omitted, Pods can be scheduled onto any available node.
+	// The current default is `kubernetes.io/os: linux` so that Pods can be scheduled onto any available node.
 	// +optional
 	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
 	// resources defines the compute resource requests and limits for the Alertmanager container.
@@ -173,21 +173,21 @@ type AlertmanagerMainConfig struct {
 	// +kubebuilder:validation:MaxItems=10
 	Secrets []SecretName `json:"secrets,omitempty"`
 	// tolerations is a list of tolerations applied to network diagnostics components
+	// tolerations is optional.
 	//
 	// When omitted, this means the user has no opinion and the platform is left
 	// to choose reasonable defaults. These defaults are subject to change over time.
 	// The current default is `- operator: "Exists"` which means that all taints are tolerated.
-	// This field is optional.
 	// +kubebuilder:validation:MaxItems=10
 	// +optional
 	Tolerations []v1.Toleration `json:"tolerations,omitempty"`
 	// topologySpreadConstraints defines rules for how Alertmanager Pods should be distributed
 	// across topology domains such as zones, nodes, or other user-defined labels.
-	//
+	// topologySpreadConstraints is optional.
 	// This helps improve high availability and resource efficiency by avoiding placing
 	// too many replicas in the same failure domain.
 	//
-	// When omitted, no constraints are applied and Pod scheduling is left to the default behavior.
+	// When omitted, this means no opinion and the platform is left to choose a default, which is subject to change over time.
 	// This field maps directly to the `topologySpreadConstraints` field in the Pod spec.
 	// +kubebuilder:validation:MaxItems=10
 	// +optional
@@ -215,10 +215,10 @@ type AlertManagerDeployMode string
 
 const (
 	// AlertManagerModeEnabled means the Alertmanager instance will be deployed and managed by the operator.
-	AlertManagerManagerDeployed AlertManagerDeployMode = "Deployed"
+	AlertManagerDeployModeDeployed AlertManagerDeployMode = "Deployed"
 
 	// AlertManagerModeDisabled means the operator will not deploy the Alertmanager instance.
-	AlertManagerModeNotDeployed AlertManagerDeployMode = "NonDeployed"
+	AlertManagerDeployModeNotDeployed AlertManagerDeployMode = "NotDeployed"
 )
 
 // UserAlertManagerMode defines mode for user-defines namespaced

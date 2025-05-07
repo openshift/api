@@ -201,6 +201,9 @@
                         "name": "ManagedBootImagesAWS"
                     },
                     {
+                        "name": "ManagedBootImagesvSphere"
+                    },
+                    {
                         "name": "MaxUnavailableStatefulSet"
                     },
                     {

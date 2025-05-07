@@ -68,6 +68,7 @@ type IngressControllerSpec struct {
 	//
 	// If empty, defaults to ingress.config.openshift.io/cluster .spec.domain.
 	//
+	// +kubebuilder:validation:XValidation:rule="(has(oldSelf) && self == oldSelf) || self.matches('^([a-z0-9]+|[a-z0-9]+[a-z0-9\\-]*[a-z0-9]+)(\\.([a-z0-9]+|[a-z0-9]+[a-z0-9\\-]*[a-z0-9]+))*$')",message="domain must consist of lowercase alphanumeric characters, '-' or '.', and each label must start and end with an alphanumeric character"
 	// +optional
 	Domain string `json:"domain,omitempty"`
 

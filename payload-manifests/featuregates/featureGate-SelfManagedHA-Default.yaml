@@ -104,9 +104,6 @@
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
                     },
                     {
-                        "name": "MachineAPIProviderOpenStack"
-                    },
-                    {
                         "name": "MachineConfigNodes"
                     },
                     {

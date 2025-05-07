@@ -189,9 +189,6 @@
                         "name": "MachineAPIMigration"
                     },
                     {
-                        "name": "MachineAPIProviderOpenStack"
-                    },
-                    {
                         "name": "MachineConfigNodes"
                     },
                     {

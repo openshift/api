@@ -65,9 +65,6 @@
                         "name": "ExternalOIDCWithUIDAndExtraClaimMappings"
                     },
                     {
-                        "name": "GCPClusterHostedDNS"
-                    },
-                    {
                         "name": "GCPCustomAPIEndpoints"
                     },
                     {
@@ -239,6 +236,9 @@
                     },
                     {
                         "name": "ExternalOIDC"
+                    },
+                    {
+                        "name": "GCPClusterHostedDNS"
                     },
                     {
                         "name": "GCPLabelsTags"

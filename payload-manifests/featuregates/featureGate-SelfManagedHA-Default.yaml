@@ -68,9 +68,6 @@
                         "name": "ExternalOIDCWithUIDAndExtraClaimMappings"
                     },
                     {
-                        "name": "GCPClusterHostedDNS"
-                    },
-                    {
                         "name": "GCPCustomAPIEndpoints"
                     },
                     {
@@ -236,6 +233,9 @@
                     },
                     {
                         "name": "DisableKubeletCloudCredentialProviders"
+                    },
+                    {
+                        "name": "GCPClusterHostedDNS"
                     },
                     {
                         "name": "GCPLabelsTags"

@@ -73,20 +73,19 @@ type ClusterMonitoringList struct {
 }
 
 // ClusterMonitoringSpec defines the desired state of Cluster Monitoring Operator
-// +required
 type ClusterMonitoringSpec struct {
 	// userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring.
-	// +required
+	// userDefined is optional.
+	// +optional`
 	UserDefined UserDefinedMonitoring `json:"userDefined"`
 	// alertmanagerMainConfig allows users to configure how the default Alertmanager instance
 	// should be deployed in the `openshift-monitoring` namespace.
-	// alertmanagerMainConfig is required.
-	// +required
+	// alertmanagerMainConfig is optional.
+	// +optional`
 	AlertmanagerMainConfig AlertmanagerMainConfig `json:"alertmanagerMainConfig"`
 }
 
 // UserDefinedMonitoring config for user-defined projects.
-// +required
 type UserDefinedMonitoring struct {
 	// mode defines the different configurations of UserDefinedMonitoring
 	// Valid values are Disabled and NamespaceIsolated
@@ -112,19 +111,38 @@ const (
 // that runs in the `openshift-monitoring` namespace. Use this configuration to control
 // whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.
 //
-// Required: This field must be specified.
+// +union
 type AlertmanagerMainConfig struct {
 	// deploymentMode determines whether the default Alertmanager instance should be deployed
 	// as part of the monitoring stack.
-	// mode is required.
-	// Allowed values are Deployed and Deployed`
+	// Allowed values are Deployed and NotDeployed
 	// When set to Deployed, the Cluster Monitoring Operator
 	// ensures that an Alertmanager instance is created and managed in the `openshift-monitoring` namespace.
 	// When set to NotDeployed, the operator will not deploy the Alertmanager instance.
 	// Use this field if you want to explicitly opt in or out of running a platform-level Alertmanager.
-	// +kubebuilder:validation:Enum:=Deployed;NotDeployed;
-	// +required
-	DeploymentMode AlertManagerDeployMode `json:"deploymentMode"`
+	//
+	// This filed is required
+	// Allowed values are Deployed and NotDeployed.
+	// +unionDiscriminator
+	// +kubebuilder:validation:Enum=Deployed;NotDeployed
+	// +kubebuilder:validation:Required
+	DeploymentMode string `json:"deploymentMode"`
+
+	// deployed contains configuration options for the deployed Alertmanager instance.
+	// +optional
+	Deployed *AlertmanagerDeployedConfig `json:"deployed,omitempty"`
+
+	// notDeployed is an empty struct used to indicate that the Alertmanager should not be deployed.
+	// +optional
+	NotDeployed *AlertmanagerNotDeployedConfig `json:"notDeployed,omitempty"`
+}
+
+// alertmanagerMainConfig provides configuration options for the default Alertmanager instance
+// that runs in the `openshift-monitoring` namespace. Use this configuration to control
+// whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.
+//
+// Required: This field must be specified.
+type AlertmanagerDeployedConfig struct {
 	// userMode controls whether Alertmanager should process configurations from user-defined (non-platform)
 	// namespaces for AlertmanagerConfig lookups.
 	// Alertmanager will search for AlertmanagerConfig resources in user-defined namespaces.
@@ -200,6 +218,10 @@ type AlertmanagerMainConfig struct {
 	// // This field is optional.
 	// +optional
 	VolumeClaimTemplate v1.PersistentVolumeClaim `json:"volumeClaimTemplate,omitempty"`
+}
+
+type AlertmanagerNotDeployedConfig struct {
+	// Empty by design: Alertmanager will not be deployed.
 }
 
 // SecretName is a type that represents the name of a Secret in the same namespace.

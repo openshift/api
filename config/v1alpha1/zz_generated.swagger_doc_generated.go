@@ -118,32 +118,42 @@ func (ClusterImagePolicyStatus) SwaggerDoc() map[string]string {
 	return map_ClusterImagePolicyStatus
 }
 
+var map_AlertmanagerConfig = map[string]string{
+	"":               "alertmanagerMainConfig provides configuration options for the default Alertmanager instance that runs in the `openshift-monitoring` namespace. Use this configuration to control whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.",
+	"deploymentMode": "deploymentMode determines whether the default Alertmanager instance should be deployed as part of the monitoring stack. Allowed values are Deployed and NotDeployed When set to Deployed, the Cluster Monitoring Operator ensures that an Alertmanager instance is created and managed in the `openshift-monitoring` namespace. When set to NotDeployed, the operator will not deploy the Alertmanager instance. Use this field if you want to explicitly opt in or out of running a platform-level Alertmanager.\n\nThis filed is required Allowed values are Deployed and NotDeployed.",
+	"deployed":       "deployed contains configuration options for the deployed Alertmanager instance.",
+	"notDeployed":    "notDeployed is an empty struct used to indicate that the Alertmanager should not be deployed.",
+}
+
+func (AlertmanagerConfig) SwaggerDoc() map[string]string {
+	return map_AlertmanagerConfig
+}
+
 var map_AlertmanagerContainerResources = map[string]string{
 	"":          "AlertmanagerContainerResources defines simplified resource requirements for a container.",
-	"cpu":       "cpu defines the CPU resource limits and requests. Format: \"<request>,<limit>\" (e.g. \"100m,500m\")",
-	"memory":    "memory defines the memory resource limits and requests. Format: \"<request>,<limit>\" (e.g. \"128Mi,512Mi\")",
-	"hugepages": "hugepages is a list of hugepage resource specifications by page size.",
+	"cpu":       "cpu defines the CPU resource limits and requests. This filed is optional",
+	"memory":    "memory defines the memory resource limits and requests. This filed is optional",
+	"hugepages": "hugepages is a list of hugepage resource specifications by page size. defines an optional list of unique configurations identified by their `size` field. A maximum of 10 items is allowed. The list is treated as a map, using `size` as the key, which simplifies updates and replacements of individual entries.",
 }
 
 func (AlertmanagerContainerResources) SwaggerDoc() map[string]string {
 	return map_AlertmanagerContainerResources
 }
 
-var map_AlertmanagerMainConfig = map[string]string{
+var map_AlertmanagerDeployedConfig = map[string]string{
 	"":                          "alertmanagerMainConfig provides configuration options for the default Alertmanager instance that runs in the `openshift-monitoring` namespace. Use this configuration to control whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.\n\nRequired: This field must be specified.",
-	"deploymentMode":            "deploymentMode determines whether the default Alertmanager instance should be deployed as part of the monitoring stack. mode is required. Allowed values are Deployed and Deployed` When set to \"Enabled\", the Cluster Monitoring Operator ensures that an Alertmanager instance is created and managed in the `openshift-monitoring` namespace. When set to \"Disabled\", the operator will not deploy the Alertmanager instance. Use this field if you want to explicitly opt in or out of running a platform-level Alertmanager. Required: This field must be specified.",
-	"userMode":                  "userMode controls whether Alertmanager should process configurations from user-defined (non-platform) namespaces for AlertmanagerConfig lookups. Alertmanager will search for AlertmanagerConfig resources in user-defined namespaces. This field is only effective when the user workload Alertmanager instance is not enabled. If the user workload monitoring Alertmanager is enabled, this field is ignored. Required: This field must be specified. Allowed values are Selectable and None",
-	"logLevel":                  "logLevel defines the verbosity of logs emitted by Alertmanager. This field allows users to control the amount and severity of logs generated, which can be useful for debugging issues or reducing noise in production environments. Allowed values are: - `Error`: Logs only errors. - `Warn`: Logs warnings and errors. - `Info`: Logs general information, warnings, and errors. Default. - `Debug`: Logs detailed debug information.",
-	"nodeSelector":              "nodeSelector is the node selector applied to network diagnostics components\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default is `kubernetes.io/os: linux`.\n\nThis field is optional. When omitted, Pods can be scheduled onto any available node.",
+	"userMode":                  "userMode controls whether Alertmanager should process configurations from user-defined (non-platform) namespaces for AlertmanagerConfig lookups. Alertmanager will search for AlertmanagerConfig resources in user-defined namespaces. This field is only effective when the user workload Alertmanager instance is not enabled. If the user workload monitoring Alertmanager is enabled, this field is ignored. userMode is required. Allowed values are Selectable and None Default value is None",
+	"logLevel":                  "logLevel defines the verbosity of logs emitted by Alertmanager. This field allows users to control the amount and severity of logs generated, which can be useful for debugging issues or reducing noise in production environments. Allowed values are Error, Warn, Info, Debug, and omitted. When set to Error,  only errors will be logged. When set to Warn, both warnings and errors will be logged. When set to Info, general information, warnings, and errors will all be logged. When set to Debug, detailed debugging information will be logged. When omitted, this means no opinion and the platform is left to choose a default that is subject to change over time. Currently, the default is Info.",
+	"nodeSelector":              "nodeSelector is the node selector applied to network diagnostics components nodeSelector is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default is `kubernetes.io/os: linux` so that Pods can be scheduled onto any available node.",
 	"resources":                 "resources defines the compute resource requests and limits for the Alertmanager container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements.",
-	"secrets":                   "secrets Defines a list of secrets that need to be mounted into the Alertmanager. The secrets must reside within the same namespace as the Alertmanager object. They will be added as volumes named secret-<secret-name> and mounted at /etc/alertmanager/secrets/<secret-name> within the 'alertmanager' container of the Alertmanager Pods. This field is optional.",
-	"tolerations":               "tolerations is a list of tolerations applied to network diagnostics components\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default is `- operator: \"Exists\"` which means that all taints are tolerated. This field is optional.",
-	"topologySpreadConstraints": "topologySpreadConstraints defines rules for how Alertmanager Pods should be distributed across topology domains such as zones, nodes, or other user-defined labels.\n\nThis helps improve high availability and resource efficiency by avoiding placing too many replicas in the same failure domain.\n\nWhen omitted, no constraints are applied and Pod scheduling is left to the default behavior. This field maps directly to the `topologySpreadConstraints` field in the Pod spec.",
+	"secrets":                   "secrets Defines a list of secrets that need to be mounted into the Alertmanager. The secrets must reside within the same namespace as the Alertmanager object. They will be added as volumes named secret-<secret-name> and mounted at /etc/alertmanager/secrets/<secret-name> within the 'alertmanager' container of the Alertmanager Pods. This field is optional. Maximum length for this list is 10",
+	"tolerations":               "tolerations is a list of tolerations applied to network diagnostics components tolerations is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default is `- operator: \"Exists\"` which means that all taints are tolerated. Maximum length for this list is 10",
+	"topologySpreadConstraints": "topologySpreadConstraints defines rules for how Alertmanager Pods should be distributed across topology domains such as zones, nodes, or other user-defined labels. topologySpreadConstraints is optional. This helps improve high availability and resource efficiency by avoiding placing too many replicas in the same failure domain.\n\nWhen omitted, this means no opinion and the platform is left to choose a default, which is subject to change over time. This field maps directly to the `topologySpreadConstraints` field in the Pod spec. Maximum length for this list is 10",
 	"volumeClaimTemplate":       "volumeClaimTemplate Defines persistent storage for Alertmanager. Use this setting to configure the persistent volume claim, including storage class, volume size, and name. If omitted, the Pod uses ephemeral storage and alert data will not persist across restarts. // This field is optional.",
 }
 
-func (AlertmanagerMainConfig) SwaggerDoc() map[string]string {
-	return map_AlertmanagerMainConfig
+func (AlertmanagerDeployedConfig) SwaggerDoc() map[string]string {
+	return map_AlertmanagerDeployedConfig
 }
 
 var map_ClusterMonitoring = map[string]string{
@@ -169,8 +179,8 @@ func (ClusterMonitoringList) SwaggerDoc() map[string]string {
 
 var map_ClusterMonitoringSpec = map[string]string{
 	"":                       "ClusterMonitoringSpec defines the desired state of Cluster Monitoring Operator",
-	"userDefined":            "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring.",
-	"alertmanagerMainConfig": "alertmanagerMainConfig allows users to configure how the default Alertmanager instance should be deployed in the `openshift-monitoring` namespace. alertmanagerMainConfig is required.",
+	"userDefined":            "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring. userDefined is optional.",
+	"alertmanagerMainConfig": "alertmanagerMainConfig allows users to configure how the default Alertmanager instance should be deployed in the `openshift-monitoring` namespace. alertmanagerMainConfig is optional.",
 }
 
 func (ClusterMonitoringSpec) SwaggerDoc() map[string]string {
@@ -187,9 +197,9 @@ func (ClusterMonitoringStatus) SwaggerDoc() map[string]string {
 
 var map_HugePageResource = map[string]string{
 	"":        "HugePageResource describes hugepages resources by page size (e.g. 2Mi, 1Gi).",
-	"size":    "size of the hugepage (e.g. \"2Mi\", \"1Gi\").",
-	"request": "request amount for this hugepage size.",
-	"limit":   "limit amount for this hugepage size.",
+	"size":    "size of the hugepage (e.g. \"2Mi\", \"1Gi\"). This filed is optional",
+	"request": "request amount for this hugepage size. This filed is optional",
+	"limit":   "limit amount for this hugepage size. This filed is optional",
 }
 
 func (HugePageResource) SwaggerDoc() map[string]string {
@@ -198,8 +208,8 @@ func (HugePageResource) SwaggerDoc() map[string]string {
 
 var map_ResourceSpec = map[string]string{
 	"":        "ResourceSpec defines the requested and limited value of a resource.",
-	"request": "request is the minimum amount of the resource required.",
-	"limit":   "limit is the maximum amount of the resource allowed.",
+	"request": "request is the minimum amount of the resource required (e.g. \"2Mi\", \"1Gi\"). This filed is optional",
+	"limit":   "limit is the maximum amount of the resource allowed (e.g. \"2Mi\", \"1Gi\"). This filed is optional",
 }
 
 func (ResourceSpec) SwaggerDoc() map[string]string {

@@ -414,8 +414,6 @@ var KnownClusterVersionCapabilities = []ClusterVersionCapability{
 	ClusterVersionCapabilityBuild,
 	ClusterVersionCapabilityDeploymentConfig,
 	ClusterVersionCapabilityImageRegistry,
-	ClusterVersionCapabilityOperatorLifecycleManager,
-	ClusterVersionCapabilityOperatorLifecycleManagerV1,
 	ClusterVersionCapabilityCloudCredential,
 	ClusterVersionCapabilityIngress,
 	ClusterVersionCapabilityCloudControllerManager,

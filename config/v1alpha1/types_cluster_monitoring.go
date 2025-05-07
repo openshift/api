@@ -82,7 +82,7 @@ type ClusterMonitoringSpec struct {
 	// should be deployed in the `openshift-monitoring` namespace.
 	// alertmanagerMainConfig is optional.
 	// +optional`
-	AlertmanagerMainConfig AlertmanagerMainConfig `json:"alertmanagerMainConfig"`
+	AlertmanagerMainConfig AlertmanagerConfig `json:"alertmanagerMainConfig"`
 }
 
 // UserDefinedMonitoring config for user-defined projects.
@@ -112,7 +112,7 @@ const (
 // whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.
 //
 // +union
-type AlertmanagerMainConfig struct {
+type AlertmanagerConfig struct {
 	// deploymentMode determines whether the default Alertmanager instance should be deployed
 	// as part of the monitoring stack.
 	// Allowed values are Deployed and NotDeployed
@@ -150,8 +150,9 @@ type AlertmanagerDeployedConfig struct {
 	// If the user workload monitoring Alertmanager is enabled, this field is ignored.
 	// userMode is required.
 	// Allowed values are Selectable and None
+	// Default value is None
 	// +kubebuilder:validation:Enum="";Selectable;None
-	// +required
+	// +optional
 	UserMode UserAlertManagerMode `json:"userMode"`
 	// logLevel defines the verbosity of logs emitted by Alertmanager.
 	// This field allows users to control the amount and severity of logs generated, which can be useful
@@ -164,7 +165,7 @@ type AlertmanagerDeployedConfig struct {
 	// When omitted, this means no opinion and the platform is left to choose a default that is subject to change over time.
 	// Currently, the default is Info.
 	// +optional
-	LogLevel LogLevel `json:"logLevel,omitempty"`
+	LogLevel LogLevel `json:"logLevel"`
 	// nodeSelector is the node selector applied to network diagnostics components
 	// nodeSelector is optional.
 	//
@@ -187,6 +188,7 @@ type AlertmanagerDeployedConfig struct {
 	// /etc/alertmanager/secrets/<secret-name> within the 'alertmanager' container of
 	// the Alertmanager Pods.
 	// This field is optional.
+	// Maximum length for this list is 10
 	// +optional
 	// +kubebuilder:validation:MaxItems=10
 	Secrets []SecretName `json:"secrets,omitempty"`
@@ -196,6 +198,7 @@ type AlertmanagerDeployedConfig struct {
 	// When omitted, this means the user has no opinion and the platform is left
 	// to choose reasonable defaults. These defaults are subject to change over time.
 	// The current default is `- operator: "Exists"` which means that all taints are tolerated.
+	// Maximum length for this list is 10
 	// +kubebuilder:validation:MaxItems=10
 	// +optional
 	Tolerations []v1.Toleration `json:"tolerations,omitempty"`
@@ -207,6 +210,7 @@ type AlertmanagerDeployedConfig struct {
 	//
 	// When omitted, this means no opinion and the platform is left to choose a default, which is subject to change over time.
 	// This field maps directly to the `topologySpreadConstraints` field in the Pod spec.
+	// Maximum length for this list is 10
 	// +kubebuilder:validation:MaxItems=10
 	// +optional
 	TopologySpreadConstraints []v1.TopologySpreadConstraint `json:"topologySpreadConstraints,omitempty"`
@@ -217,7 +221,7 @@ type AlertmanagerDeployedConfig struct {
 	// across restarts.
 	// // This field is optional.
 	// +optional
-	VolumeClaimTemplate v1.PersistentVolumeClaim `json:"volumeClaimTemplate,omitempty"`
+	VolumeClaimTemplate *v1.PersistentVolumeClaim `json:"volumeClaimTemplate,omitempty"`
 }
 
 type AlertmanagerNotDeployedConfig struct {
@@ -225,7 +229,9 @@ type AlertmanagerNotDeployedConfig struct {
 }
 
 // SecretName is a type that represents the name of a Secret in the same namespace.
-// +kubebuilder:validation:MaxLength=253
+// It must be at most 256 characters in length.
+// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
+// +kubebuilder:validation:MaxLength=256
 type SecretName string
 
 // AlertManagerDeployMode defines the deployment state of the platform Alertmanager instance.
@@ -259,6 +265,8 @@ const (
 	UserAlertManagerNone UserAlertManagerMode = "None"
 )
 
+// logLevel defines the verbosity of logs emitted by Alertmanager.
+// Valid values are Error, Warn, Info and Debug.
 // +kubebuilder:validation:Enum=Error;Warn;Info;Debug
 type LogLevel string
 
@@ -271,12 +279,14 @@ const (
 
 // ResourceSpec defines the requested and limited value of a resource.
 type ResourceSpec struct {
-	// request is the minimum amount of the resource required.
-	// +kubebuilder:validation:MaxLength=8
+	// request is the minimum amount of the resource required (e.g. "2Mi", "1Gi").
+	// +kubebuilder:validation:MaxLength=24
+	// This filed is optional
 	// +optional
 	Request string `json:"request,omitempty"`
-	// limit is the maximum amount of the resource allowed.
-	// +kubebuilder:validation:MaxLength=8
+	// limit is the maximum amount of the resource allowed (e.g. "2Mi", "1Gi").
+	// +kubebuilder:validation:MaxLength=24
+	// This filed is optional
 	// +optional
 	Limit string `json:"limit,omitempty"`
 }
@@ -284,16 +294,20 @@ type ResourceSpec struct {
 // AlertmanagerContainerResources defines simplified resource requirements for a container.
 type AlertmanagerContainerResources struct {
 	// cpu defines the CPU resource limits and requests.
-	// Format: "<request>,<limit>" (e.g. "100m,500m")
+	// This filed is optional
 	// +optional
 	CPU *ResourceSpec `json:"cpu,omitempty"`
 
 	// memory defines the memory resource limits and requests.
-	// Format: "<request>,<limit>" (e.g. "128Mi,512Mi")
+	// This filed is optional
 	// +optional
 	Memory *ResourceSpec `json:"memory,omitempty"`
 
 	// hugepages is a list of hugepage resource specifications by page size.
+	// defines an optional list of unique configurations identified by their `size` field.
+	// A maximum of 10 items is allowed.
+	// The list is treated as a map, using `size` as the key, which simplifies updates and replacements
+	// of individual entries.
 	// +optional
 	// +listType=map
 	// +listMapKey=size
@@ -304,17 +318,19 @@ type AlertmanagerContainerResources struct {
 // HugePageResource describes hugepages resources by page size (e.g. 2Mi, 1Gi).
 type HugePageResource struct {
 	// size of the hugepage (e.g. "2Mi", "1Gi").
-	// +kubebuilder:validation:Pattern=`^[0-9]+(Ki|Mi|Gi)$`
+	// This filed is optional
 	// +kubebuilder:validation:MaxLength=8
 	// +optional
 	Size string `json:"size"`
 
 	// request amount for this hugepage size.
+	// This filed is optional
 	// +kubebuilder:validation:MaxLength=8
 	// +optional
 	Request string `json:"request,omitempty"`
 
 	// limit amount for this hugepage size.
+	// This filed is optional
 	// +kubebuilder:validation:MaxLength=8
 	// +optional
 	Limit string `json:"limit,omitempty"`

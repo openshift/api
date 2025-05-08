@@ -59,6 +59,9 @@
                     },
                     {
                         "name": "SigstoreImageVerificationPKI"
+                    },
+                    {
+                        "name": "VolumeGroupSnapshot"
                     }
                 ],
                 "enabled": [
@@ -310,9 +313,6 @@
                     },
                     {
                         "name": "VolumeAttributesClass"
-                    },
-                    {
-                        "name": "VolumeGroupSnapshot"
                     }
                 ],
                 "version": ""

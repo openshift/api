@@ -41,6 +41,9 @@
                     },
                     {
                         "name": "ShortCertRotation"
+                    },
+                    {
+                        "name": "VolumeGroupSnapshot"
                     }
                 ],
                 "enabled": [
@@ -310,9 +313,6 @@
                     },
                     {
                         "name": "VolumeAttributesClass"
-                    },
-                    {
-                        "name": "VolumeGroupSnapshot"
                     }
                 ],
                 "version": ""

@@ -490,18 +490,29 @@ func (TokenClaimOrExpressionMapping) SwaggerDoc() map[string]string {
 }
 
 var map_TokenClaimValidationRule = map[string]string{
-	"type":          "type sets the type of the validation rule",
-	"requiredClaim": "requiredClaim allows configuring a required claim name and its expected value",
+	"type":           "type sets the type of the validation rule",
+	"requiredClaim":  "requiredClaim allows configuring a required claim name and its expected value. RequiredClaim is used when type is RequiredClaim.",
+	"expressionRule": "expressionRule contains the configuration for the \"Expression\" type. Must be set if type == \"Expression\".",
 }
 
 func (TokenClaimValidationRule) SwaggerDoc() map[string]string {
 	return map_TokenClaimValidationRule
 }
 
+var map_TokenExpressionRule = map[string]string{
+	"expression": "Expression is a CEL expression evaluated against token claims. The expression must be a non-empty string and no longer than 4096 characters. This field is required.",
+	"message":    "Message allows configuring the human-readable message that is returned from the Kubernetes API server when a token fails validation based on the CEL expression defined in 'expression'. This field is optional.",
+}
+
+func (TokenExpressionRule) SwaggerDoc() map[string]string {
+	return map_TokenExpressionRule
+}
+
 var map_TokenIssuer = map[string]string{
 	"issuerURL":                  "URL is the serving URL of the token issuer. Must use the https:// scheme.",
 	"audiences":                  "audiences is an array of audiences that the token was issued for. Valid tokens must include at least one of these values in their \"aud\" claim. Must be set to exactly one value.",
 	"issuerCertificateAuthority": "CertificateAuthority is a reference to a config map in the configuration namespace. The .data of the configMap must contain the \"ca-bundle.crt\" key. If unset, system trust is used instead.",
+	"audienceMatchPolicy":        "audienceMatchPolicy specifies how token audiences are matched. If omitted, the system applies a default policy. Valid values are: - \"MatchAny\": The token is accepted if any of its audiences match any of the configured audiences.",
 }
 
 func (TokenIssuer) SwaggerDoc() map[string]string {
@@ -515,6 +526,16 @@ var map_TokenRequiredClaim = map[string]string{
 
 func (TokenRequiredClaim) SwaggerDoc() map[string]string {
 	return map_TokenRequiredClaim
+}
+
+var map_TokenUserValidationRule = map[string]string{
+	"":           "TokenUserValidationRule provides a CEL-based rule used to validate a token subject. Each rule contains a CEL expression that is evaluated against the token’s claims. If the expression evaluates to false, the token is rejected. See https://kubernetes.io/docs/reference/using-api/cel/ for CEL syntax. At least one rule must evaluate to true for the token to be considered valid.",
+	"expression": "Expression is a CEL expression that must evaluate to true for the token to be accepted. The expression is evaluated against the token's user information (e.g., username, groups). This field must be non-empty and may not exceed 4096 characters.",
+	"message":    "Message is an optional, human-readable message returned by the API server when this validation rule fails. It can help clarify why a token was rejected.",
+}
+
+func (TokenUserValidationRule) SwaggerDoc() map[string]string {
+	return map_TokenUserValidationRule
 }
 
 var map_UsernameClaimMapping = map[string]string{

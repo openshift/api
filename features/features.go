@@ -531,14 +531,6 @@ var (
 						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 						mustRegister()
 
-	FeatureGateBareMetalLoadBalancer = newFeatureGate("BareMetalLoadBalancer").
-						reportProblemsToJiraComponent("metal").
-						contactPerson("EmilienM").
-						productScope(ocpSpecific).
-						enhancementPR(legacyFeatureGateWithoutEnhancement).
-						enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-						mustRegister()
-
 	FeatureGateInsightsConfig = newFeatureGate("InsightsConfig").
 					reportProblemsToJiraComponent("insights").
 					contactPerson("tremes").

@@ -732,7 +732,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/machine/v1beta1.ConfidentialVM":                                            schema_openshift_api_machine_v1beta1_ConfidentialVM(ref),
 		"github.com/openshift/api/machine/v1beta1.DataDisk":                                                  schema_openshift_api_machine_v1beta1_DataDisk(ref),
 		"github.com/openshift/api/machine/v1beta1.DataDiskManagedDiskParameters":                             schema_openshift_api_machine_v1beta1_DataDiskManagedDiskParameters(ref),
-		"github.com/openshift/api/machine/v1beta1.DedicatedHostTenancy":                                      schema_openshift_api_machine_v1beta1_DedicatedHostTenancy(ref),
+		"github.com/openshift/api/machine/v1beta1.DedicatedHosts":                                      schema_openshift_api_machine_v1beta1_DedicatedHosts(ref),
 		"github.com/openshift/api/machine/v1beta1.DiskEncryptionSetParameters":                               schema_openshift_api_machine_v1beta1_DiskEncryptionSetParameters(ref),
 		"github.com/openshift/api/machine/v1beta1.DiskSettings":                                              schema_openshift_api_machine_v1beta1_DiskSettings(ref),
 		"github.com/openshift/api/machine/v1beta1.EBSBlockDeviceSpec":                                        schema_openshift_api_machine_v1beta1_EBSBlockDeviceSpec(ref),
@@ -37499,11 +37499,11 @@ func schema_openshift_api_machine_v1beta1_DataDiskManagedDiskParameters(ref comm
 	}
 }
 
-func schema_openshift_api_machine_v1beta1_DedicatedHostTenancy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_openshift_api_machine_v1beta1_DedicatedHosts(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "DedicatedHostTenancy describes the host tenancy configuration. This is used in scenarios where hosts are to be deployed to specific dedicated hosts.",
+				Description: "DedicatedHosts describes the host tenancy configuration. This is used in scenarios where hosts are to be deployed to specific dedicated hosts.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"hostId": {
@@ -39656,17 +39656,17 @@ func schema_openshift_api_machine_v1beta1_Placement(ref common.ReferenceCallback
 							Format:      "",
 						},
 					},
-					"dedicatedHostTenancy": {
+					"DedicatedHosts": {
 						SchemaProps: spec.SchemaProps{
-							Description: "dedicatedHostTenancy when tenancy is set to 'host', this defines the host ID and host affinty to apply to associated machines.",
-							Ref:         ref("github.com/openshift/api/machine/v1beta1.DedicatedHostTenancy"),
+							Description: "DedicatedHosts when tenancy is set to 'host', this defines the host ID and host affinty to apply to associated machines.",
+							Ref:         ref("github.com/openshift/api/machine/v1beta1.DedicatedHosts"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.DedicatedHostTenancy"},
+			"github.com/openshift/api/machine/v1beta1.DedicatedHosts"},
 	}
 }
 

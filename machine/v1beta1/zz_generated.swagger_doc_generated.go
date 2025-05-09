@@ -82,14 +82,14 @@ func (BlockDeviceMappingSpec) SwaggerDoc() map[string]string {
 	return map_BlockDeviceMappingSpec
 }
 
-var map_DedicatedHostTenancy = map[string]string{
-	"":             "DedicatedHostTenancy describes the host tenancy configuration. This is used in scenarios where hosts are to be deployed to specific dedicated hosts.",
+var map_DedicatedHosts = map[string]string{
+	"":             "DedicatedHosts describes the host tenancy configuration. This is used in scenarios where hosts are to be deployed to specific dedicated hosts.",
 	"hostId":       "HostID specifies the Dedicated Host on which the instance should be launched.",
 	"hostAffinity": "Affinity specifies the dedicated host affinity setting for the instance. When affinity is set to Host, an instance launched onto a specific host always restarts on the same host if stopped.",
 }
 
-func (DedicatedHostTenancy) SwaggerDoc() map[string]string {
-	return map_DedicatedHostTenancy
+func (DedicatedHosts) SwaggerDoc() map[string]string {
+	return map_DedicatedHosts
 }
 
 var map_EBSBlockDeviceSpec = map[string]string{
@@ -134,11 +134,11 @@ func (MetadataServiceOptions) SwaggerDoc() map[string]string {
 }
 
 var map_Placement = map[string]string{
-	"":                     "Placement indicates where to create the instance in AWS",
-	"region":               "region is the region to use to create the instance",
-	"availabilityZone":     "availabilityZone is the availability zone of the instance",
-	"tenancy":              "tenancy indicates if instance should run on shared or single-tenant hardware. There are supported 3 options: default, dedicated, and host.",
-	"dedicatedHostTenancy": "dedicatedHostTenancy when tenancy is set to 'host', this defines the host ID and host affinty to apply to associated machines.",
+	"":                 "Placement indicates where to create the instance in AWS",
+	"region":           "region is the region to use to create the instance",
+	"availabilityZone": "availabilityZone is the availability zone of the instance",
+	"tenancy":          "tenancy indicates if instance should run on shared or single-tenant hardware. There are supported 3 options: default, dedicated, and host.",
+	"DedicatedHosts":   "DedicatedHosts when tenancy is set to 'host', this defines the host ID and host affinty to apply to associated machines.",
 }
 
 func (Placement) SwaggerDoc() map[string]string {

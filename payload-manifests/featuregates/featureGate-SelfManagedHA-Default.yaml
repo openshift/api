@@ -149,9 +149,6 @@
                         "name": "PlatformOperators"
                     },
                     {
-                        "name": "ProcMountType"
-                    },
-                    {
                         "name": "RouteAdvertisements"
                     },
                     {
@@ -177,12 +174,6 @@
                     },
                     {
                         "name": "UpgradeStatus"
-                    },
-                    {
-                        "name": "UserNamespacesPodSecurityStandards"
-                    },
-                    {
-                        "name": "UserNamespacesSupport"
                     },
                     {
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"
@@ -295,6 +286,9 @@
                         "name": "PrivateHostedZoneAWS"
                     },
                     {
+                        "name": "ProcMountType"
+                    },
+                    {
                         "name": "RouteExternalCertificate"
                     },
                     {
@@ -302,6 +296,12 @@
                     },
                     {
                         "name": "SetEIPForNLBIngressController"
+                    },
+                    {
+                        "name": "UserNamespacesPodSecurityStandards"
+                    },
+                    {
+                        "name": "UserNamespacesSupport"
                     },
                     {
                         "name": "VSphereDriverConfiguration"
